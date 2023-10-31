@@ -6,6 +6,7 @@ import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
 import SoundArtistSelect from "./SoundArtistSelect"
+import SoundEdition from "./SoundEditionSelect"
 
 const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
@@ -59,6 +60,8 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
           {parseFromObject(errors, baseFieldPath)?.data?.title?.message}
         </FormErrorMessage>
       </FormControl>
+
+      <SoundEdition baseFieldPath={baseFieldPath} />
     </>
   )
 }
