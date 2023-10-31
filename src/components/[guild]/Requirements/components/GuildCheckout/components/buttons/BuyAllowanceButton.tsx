@@ -71,6 +71,7 @@ const BuyAllowanceButton = (): JSX.Element => {
       }
     >
       <Button
+        data-test="buy-allowance-button"
         size="lg"
         colorScheme={allowanceError ? "red" : "blue"}
         isDisabled={isEnoughAllowance}
