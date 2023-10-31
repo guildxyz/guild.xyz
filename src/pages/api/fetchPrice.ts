@@ -372,6 +372,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       path,
     })
   }
+  // not sure if we'll ever use this part, so haven't migrated it to viem
   // else if (type === "ERC721" || type === "ERC1155") {
   //   if (!RESERVOIR_API_URLS[chain])
   //     return res.status(400).json({ error: "Unsupported chain" })
