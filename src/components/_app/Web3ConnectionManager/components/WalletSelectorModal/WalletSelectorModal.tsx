@@ -25,7 +25,6 @@ import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
-import { SafeConnector } from "wagmi/dist/connectors/safe"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
@@ -98,12 +97,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const [isInSafeContext, setIsInSafeContext] = useState(false)
 
   useEffect(() => {
-    const [, , , safeConnector] = connectors
-    const conn = safeConnector as SafeConnector
-    conn.once("connect", () => {
+    const safeConnector = connectors?.find(({ id }) => id === "safe")
+    if (!safeConnector) return
+    safeConnector.once("connect", () => {
       setIsInSafeContext(true)
     })
-  }, [])
+  }, [connectors])
 
   return (
     <>
