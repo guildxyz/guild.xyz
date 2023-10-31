@@ -15,7 +15,7 @@ Cypress.Commands.add("connectWallet", () => {
   cy.wait("@setPubKey").its("response.statusCode").should("eq", 200)
 })
 
-Cypress.Commands.add("cleanIndexedDB", () => {
+Cypress.Commands.add("clearIndexedDB", () => {
   indexedDB.deleteDatabase("guild.xyz")
 })
 
@@ -32,7 +32,7 @@ declare namespace Cypress {
   interface Chainable {
     getByDataTest(selector: string): Chainable<JQuery<HTMLElement>>
     connectWallet(): Chainable<JQuery<HTMLElement>>
-    cleanIndexedDB(): Chainable<JQuery<HTMLElement>>
+    clearIndexedDB(): Chainable<JQuery<HTMLElement>>
     waitForAccessCheck(): Chainable<JQuery<HTMLElement>>
   }
 }

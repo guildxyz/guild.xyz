@@ -1,6 +1,6 @@
 describe("guild pins", () => {
   beforeEach(() => {
-    cy.cleanIndexedDB()
+    cy.clearIndexedDB()
   })
 
   it("should not show a guild pin reward card for unauthenticated users", () => {

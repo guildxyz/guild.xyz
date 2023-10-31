@@ -10,7 +10,7 @@ It is recommended to start each test by removing data from indexedDB & connectin
 
 ```ts
 before(() => {
-  cy.cleanIndexedDB()
+  cy.clearIndexedDB()
   cy.connectWallet()
 })
 ```
@@ -19,7 +19,7 @@ Then, you can write the actual test. The official [Cypress guide](https://docs.c
 
 ### Custom commands
 
-Sometimes you can find yourself in a situation where you start repeating yourself. In this case, you can create a custom command within the `/cypress/support/commands.ts` file. We already have a couple of custom commands, like `getByDataTest`, `connectWallet`, and `cleanIndexedDB`.
+Sometimes you can find yourself in a situation where you start repeating yourself. In this case, you can create a custom command within the `/cypress/support/commands.ts` file. We already have a couple of custom commands, like `getByDataTest`, `connectWallet`, and `clearIndexedDB`.
 
 ### How to use selectors
 

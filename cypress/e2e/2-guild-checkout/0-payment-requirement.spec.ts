@@ -2,7 +2,7 @@ const MUMBAI_USDC_ADDRESS = "0xe9dce89b076ba6107bb64ef30678efec11939234"
 
 describe("payment requirement", () => {
   beforeEach(() => {
-    cy.cleanIndexedDB()
+    cy.clearIndexedDB()
     cy.visit(`/${Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
   })

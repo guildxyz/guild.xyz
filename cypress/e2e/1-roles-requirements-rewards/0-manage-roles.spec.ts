@@ -8,7 +8,7 @@ const TEST_GUILD_URL_NAME = "guild-e2e-cypress"
 
 describe("roles", () => {
   beforeEach(() => {
-    cy.cleanIndexedDB()
+    cy.clearIndexedDB()
     cy.visit(`/${TEST_GUILD_URL_NAME}`)
     cy.connectWallet()
   })

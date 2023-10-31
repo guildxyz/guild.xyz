@@ -1,5 +1,5 @@
 before(() => {
-  cy.cleanIndexedDB()
+  cy.clearIndexedDB()
 })
 
 describe("create guild page (without wallet)", () => {
