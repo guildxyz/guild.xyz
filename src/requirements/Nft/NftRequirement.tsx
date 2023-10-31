@@ -70,7 +70,7 @@ const NftRequirement = (props: RequirementProps) => {
           <DataBlock>{guildPinGuildName}</DataBlock>
         </>
       )}
-      {" Guild Pin"}
+      <Text as="span">{" Guild Pin"}</Text>
     </>
   ) : (
     metadataWithTraits?.name || metadata?.name

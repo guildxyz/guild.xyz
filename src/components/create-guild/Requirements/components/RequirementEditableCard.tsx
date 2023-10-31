@@ -17,6 +17,7 @@ import { Modal } from "components/common/Modal"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
+import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -156,22 +157,24 @@ const RequirementEditableCard = ({
       </>
     )
 
+  const rightElement = !isEditDisabled && (
+    <Button ref={ref} size="sm" onClick={onOpen}>
+      Edit
+    </Button>
+  )
+
   return (
     <>
       <Card px="6" py="4" pr="8" pos="relative">
         <RequirementProvider requirement={field}>
-          <RequirementComponent
-            fieldRoot={`requirements.${index}`}
-            footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-            setValueForBalancy={setValueForBalancy}
-            rightElement={
-              !isEditDisabled && (
-                <Button ref={ref} size="sm" onClick={onOpen}>
-                  Edit
-                </Button>
-              )
-            }
-          />
+          <InvalidRequirementErrorBoundary rightElement={rightElement}>
+            <RequirementComponent
+              fieldRoot={`requirements.${index}`}
+              footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
+              setValueForBalancy={setValueForBalancy}
+              rightElement={rightElement}
+            />
+          </InvalidRequirementErrorBoundary>
         </RequirementProvider>
 
         <CloseButton
