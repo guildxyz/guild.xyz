@@ -60,7 +60,7 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
       new SafeConnector({
         chains,
         options: {
-          allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
+          allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
           debug: false,
         },
       }),

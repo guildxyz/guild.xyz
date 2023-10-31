@@ -1,10 +1,11 @@
-import { Center, Icon, Img, useColorMode } from "@chakra-ui/react"
+import { Center, Icon, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Wallet } from "phosphor-react"
-import { useMemo, useRef } from "react"
+import { useRef } from "react"
 import { isMobile } from "react-device-detect"
 import shortenHex from "utils/shortenHex"
 import { Connector, useAccount, useConnect } from "wagmi"
@@ -29,34 +30,8 @@ const ConnectorButton = ({ connector, connect, error }: Props): JSX.Element => {
   const { ready } = useKeyPair()
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
-  // wrapping with useMemo to make sure it updates on window.ethereum change
-  const isBraveWallet = useMemo(
-    () => typeof window !== "undefined" && window.ethereum?.isBraveWallet,
-    [window?.ethereum]
-  )
-  const { colorMode } = useColorMode()
 
-  const iconUrl =
-    connector.id === "injected"
-      ? isBraveWallet
-        ? "brave.png"
-        : "metamask.png"
-      : connector.id === "walletConnect"
-      ? "walletconnect.svg"
-      : connector.id === "safe"
-      ? colorMode === "dark"
-        ? "gnosis-safe-white.svg"
-        : "gnosis-safe-black.svg"
-      : connector.id === "coinbaseWallet"
-      ? "coinbasewallet.png"
-      : null
-
-  const connectorName =
-    connector.id === "injected"
-      ? isBraveWallet
-        ? "Brave"
-        : "MetaMask"
-      : connector.name
+  const { connectorName, connectorIcon } = useConnectorNameAndIcon(connector)
 
   if (connector.id === "injected" && isMobile && !isMetaMaskInstalled) return null
 
@@ -73,10 +48,10 @@ const ConnectorButton = ({ connector, connect, error }: Props): JSX.Element => {
       rightIcon={
         connector && ready ? (
           <GuildAvatar address={address} size={5} />
-        ) : iconUrl ? (
+        ) : connectorIcon ? (
           <Center boxSize={6}>
             <Img
-              src={`/walletLogos/${iconUrl}`}
+              src={`/walletLogos/${connectorIcon}`}
               maxW={6}
               maxH={6}
               alt={`${connectorName} logo`}

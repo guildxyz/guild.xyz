@@ -37,13 +37,21 @@ const Web3Connection = createContext({
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
+  isInSafeContext: false,
 })
 
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { isConnected } = useAccount()
+  const { isConnected, connector } = useAccount()
   const router = useRouter()
+
+  const [isInSafeContext, setIsInSafeContext] = useState(false)
+
+  useEffect(() => {
+    if (!isConnected || connector?.id !== "safe") return
+    setIsInSafeContext(true)
+  }, [isConnected, connector])
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -122,6 +130,7 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
+        isInSafeContext,
       }}
     >
       {children}
