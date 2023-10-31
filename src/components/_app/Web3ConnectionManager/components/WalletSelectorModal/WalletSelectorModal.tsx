@@ -85,7 +85,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const shouldLinkToUser = useShouldLinkToUser()
 
-  const { isDelegateConnection, setIsDelegateConnection } =
+  const { isDelegateConnection, setIsDelegateConnection, isInSafeContext } =
     useWeb3ConnectionManager()
 
   const isConnectedAndKeyPairReady = isConnected && ready
@@ -176,10 +176,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map((conn) => {
-                // WAGMI TODO: not sure how should we detect this
-                // if (conn.id === 'safe' && !conn?.sdk) return null
-                return (
+              {connectors
+                .filter((conn) => isInSafeContext || conn.id !== "safe")
+                .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
                     <ConnectorButton
                       connector={conn}
@@ -187,8 +186,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       error={error}
                     />
                   </CardMotionWrapper>
-                )
-              })}
+                ))}
               {!isDelegateConnection && (
                 <CardMotionWrapper>
                   <DelegateCashButton />
