@@ -71,7 +71,12 @@ export const InvalidRequirementErrorBoundary = ({
         </Requirement>
       }
       onError={(error, info) => {
-        captureEvent("ErrorBoundary catched error", { error, info })
+        captureEvent("ErrorBoundary catched error", {
+          requirementType: requirement?.type,
+          requirement,
+          error,
+          info,
+        })
       }}
     >
       {children}
