@@ -55,8 +55,8 @@ const useDelegateVaults = () => {
   // WAGMI TODO: not sure if this logic is correct, we'll need to test it!
   const results = data
     ?.filter((res) => res.status === "success")
-    .map((res) => res.result) as {
     .flatMap((res) => res.result) as {
+    contract_: `0x${string}`
     delegate: `0x${string}`
     type_: DelegationType
     tokenId: bigint
