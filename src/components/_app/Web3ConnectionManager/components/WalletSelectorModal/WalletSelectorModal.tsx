@@ -22,9 +22,10 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
+import { SafeConnector } from "wagmi/dist/connectors/safe"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
@@ -93,6 +94,16 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
+
+  const [isInSafeContext, setIsInSafeContext] = useState(false)
+
+  useEffect(() => {
+    const [, , , safeConnector] = connectors
+    const conn = safeConnector as SafeConnector
+    conn.once("connect", () => {
+      setIsInSafeContext(true)
+    })
+  }, [])
 
   return (
     <>
@@ -176,10 +187,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             )}
             <Stack spacing="0">
-              {connectors.map((conn) => {
-                // WAGMI TODO: not sure how should we detect this
-                // if (conn.id === 'safe' && !conn?.sdk) return null
-                return (
+              {connectors
+                .filter((conn) => isInSafeContext || conn.id !== "safe")
+                .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
                     <ConnectorButton
                       connector={conn}
@@ -187,8 +197,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       error={error}
                     />
                   </CardMotionWrapper>
-                )
-              })}
+                ))}
               {!isDelegateConnection && (
                 <CardMotionWrapper>
                   <DelegateCashButton />
