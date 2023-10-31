@@ -56,7 +56,7 @@ const useDelegateVaults = () => {
   const results = data
     ?.filter((res) => res.status === "success")
     .map((res) => res.result) as {
-    contract_: `0x${string}`
+    .flatMap((res) => res.result) as {
     delegate: `0x${string}`
     type_: DelegationType
     tokenId: bigint
