@@ -12,7 +12,7 @@ import {
   useState,
 } from "react"
 import { PlatformName } from "types"
-import { useAccount, useConnect, useSwitchNetwork } from "wagmi"
+import { useAccount, useSwitchNetwork } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -43,20 +43,15 @@ const Web3Connection = createContext({
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { isConnected } = useAccount()
-  const { connectors } = useConnect()
+  const { isConnected, connector } = useAccount()
   const router = useRouter()
 
   const [isInSafeContext, setIsInSafeContext] = useState(false)
 
   useEffect(() => {
-    if (!connectors) return
-    const safeConnector = connectors.find(({ id }) => id === "safe")
-    if (!safeConnector) return
-    safeConnector.once("connect", () => {
-      setIsInSafeContext(true)
-    })
-  }, [connectors])
+    if (!isConnected || connector.id !== "safe") return
+    setIsInSafeContext(true)
+  }, [isConnected, connector])
 
   const {
     isOpen: isWalletSelectorModalOpen,
