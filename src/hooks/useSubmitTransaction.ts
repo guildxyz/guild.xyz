@@ -145,6 +145,12 @@ const useSubmitTransaction = <
       setTxHash("")
       setTxError(false)
       setTxSuccess(false)
+
+      if (!write && error) {
+        onError?.(error, rawError)
+        return
+      }
+
       write?.()
     },
     isPreparing: isPrepareLoading || isGasEstimationLoading,
