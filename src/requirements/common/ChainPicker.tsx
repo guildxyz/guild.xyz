@@ -9,7 +9,6 @@ import {
   CHAIN_CONFIG,
   Chain,
   Chains,
-  chainIconUrls,
   supportedChains as defaultSupportedChains,
 } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
@@ -30,7 +29,7 @@ type Props = {
 
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   defaultSupportedChains.map((chainName: Chain) => ({
-    img: chainIconUrls[chainName],
+    img: CHAIN_CONFIG[chainName].iconUrl,
     label: CHAIN_CONFIG[chainName].name,
     value: chainName,
   }))
@@ -82,7 +81,7 @@ const ChainPicker = ({
         <FormLabel>Chain</FormLabel>
         <InputGroup>
           <InputLeftElement>
-            <OptionImage img={chainIconUrls[chain]} alt={chain} />
+            <OptionImage img={CHAIN_CONFIG[chain].iconUrl} alt={chain} />
           </InputLeftElement>
 
           <ControlledSelect

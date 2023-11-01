@@ -52,7 +52,6 @@ const useDelegateVaults = () => {
     enabled,
   })
 
-  // WAGMI TODO: not sure if this logic is correct, we'll need to test it!
   const results = data
     ?.filter((res) => res.status === "success")
     .flatMap((res) => res.result) as {

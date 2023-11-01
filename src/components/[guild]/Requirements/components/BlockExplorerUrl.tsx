@@ -1,5 +1,5 @@
 import { useColorMode } from "@chakra-ui/react"
-import { blockExplorerIcons, Chain, CHAIN_CONFIG } from "chains"
+import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useRequirementContext } from "./RequirementContext"
@@ -38,7 +38,7 @@ const BlockExplorerUrl = ({
   return (
     <RequirementLinkButton
       href={url}
-      imageUrl={blockExplorerIcons[chainProp ?? chain][colorMode]}
+      imageUrl={CHAIN_CONFIG[chainProp ?? chain].blockExplorerIconUrl[colorMode]}
     >
       {label ?? "View on explorer"}
     </RequirementLinkButton>

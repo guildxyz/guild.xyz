@@ -17,7 +17,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Chains, chainIconUrls } from "chains"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -124,8 +124,11 @@ const AccountModal = () => {
                       mt="-2px"
                     >
                       <Center>
-                        {chainIconUrls[Chains[chainId]] ? (
-                          <Img src={chainIconUrls[Chains[chainId]]} boxSize={4} />
+                        {CHAIN_CONFIG[Chains[chainId]] ? (
+                          <Img
+                            src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                            boxSize={4}
+                          />
                         ) : (
                           <Icon as={LinkBreak} />
                         )}

@@ -1,4 +1,4 @@
-import { Chain, CHAIN_CONFIG, coinIconUrls } from "chains"
+import { Chain, CHAIN_CONFIG } from "chains"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Token } from "types"
@@ -51,7 +51,8 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
     isCoin && chain
       ? CHAIN_CONFIG[chain].nativeCurrency.decimals
       : tokenDataFromApi?.decimals ?? swrResponse.data?.decimals
-  const logoURI = isCoin && chain ? coinIconUrls[chain] : tokenDataFromApi?.logoURI
+  const logoURI =
+    isCoin && chain ? CHAIN_CONFIG[chain].iconUrl : tokenDataFromApi?.logoURI
 
   return {
     ...swrResponse,

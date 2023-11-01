@@ -1,9 +1,9 @@
-import { etherscanApiUrls } from "chains"
+import { CHAIN_CONFIG } from "chains"
 import fetcher from "./fetcher"
 
 export const getBlockByTime = ([_, chain, timestamp]) =>
   fetcher(
-    `${etherscanApiUrls[chain]}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
+    `${CHAIN_CONFIG[chain].etherscanApiUrl}/api?module=block&action=getblocknobytime&timestamp=${timestamp}&closest=before`
   ).then((json) => {
     if (json.status !== "1")
       throw new Error("Rate limited, will try again in 5 seconds")
