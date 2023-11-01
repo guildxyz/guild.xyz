@@ -80,9 +80,11 @@ const ChainPicker = ({
       <FormControl>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
-          <InputLeftElement>
-            <OptionImage img={CHAIN_CONFIG[chain].iconUrl} alt={chain} />
-          </InputLeftElement>
+          {CHAIN_CONFIG[chain]?.iconUrl && (
+            <InputLeftElement>
+              <OptionImage img={CHAIN_CONFIG[chain].iconUrl} alt={chain} />
+            </InputLeftElement>
+          )}
 
           <ControlledSelect
             name={controlName}
