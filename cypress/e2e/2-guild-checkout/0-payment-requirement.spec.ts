@@ -7,6 +7,7 @@ describe("payment requirement", () => {
     cy.clearIndexedDB()
     cy.visit(`/${Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
+    cy.waitForAccessCheck()
   })
 
   it("should be able to create a payment requirement", () => {

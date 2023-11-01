@@ -90,6 +90,7 @@ const CollectNftButton = ({
 
   return (
     <Button
+      data-test="collect-nft-button"
       size="lg"
       isDisabled={isDisabled}
       isLoading={isLoading}

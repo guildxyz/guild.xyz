@@ -92,6 +92,10 @@ const useCollectNft = () => {
       value: claimFee,
     })
 
+    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
+      return Promise.resolve({} as TransactionReceipt)
+    }
+
     const hash = await walletClient.writeContract({
       ...request,
       account: walletClient.account,
