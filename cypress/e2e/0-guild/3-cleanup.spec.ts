@@ -3,7 +3,7 @@ before(() => {
 })
 
 const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
-  "DEPLOYMENT_ID"
+  "RUN_ID"
 )}`
 
 describe("post-test cleanup", () => {

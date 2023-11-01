@@ -45,7 +45,7 @@ describe("create guild page (with wallet)", () => {
       .contains("This field is required")
     cy.getByDataTest("create-guild-button").should("be.disabled")
     cy.get("input[name='name']").type(
-      `${Cypress.env("platformlessGuildName")} ${Cypress.env("DEPLOYMENT_ID")}`
+      `${Cypress.env("platformlessGuildName")} ${Cypress.env("RUN_ID")}`
     )
     cy.getByDataTest("create-guild-button").should("be.disabled")
 
