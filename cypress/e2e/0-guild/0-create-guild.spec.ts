@@ -73,5 +73,3 @@ describe("create guild page (with wallet)", () => {
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
   })
 })
-
-export {}

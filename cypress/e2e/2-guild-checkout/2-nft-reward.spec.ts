@@ -6,7 +6,7 @@ describe("nft reward", () => {
     cy.waitForAccessCheck()
   })
 
-  it.only("should be able to deploy an nft contract", () => {
+  it("should be able to deploy an nft contract", () => {
     cy.getByDataTest("add-reward-button").click()
     cy.get("div[role='group']").contains("Create a gated NFT").click({ force: true })
 
