@@ -1,4 +1,6 @@
 const MUMBAI_USDC_ADDRESS = "0xe9dce89b076ba6107bb64ef30678efec11939234"
+const UNHAPPY_PATH_ROLE_CARD_ID = "#role-90904"
+const HAPPY_PATH_ROLE_CARD_ID = "#role-90671"
 
 describe("payment requirement", () => {
   beforeEach(() => {
@@ -32,7 +34,7 @@ describe("payment requirement", () => {
   })
 
   it("should not be able to buy a pass without allowance", () => {
-    cy.get("#role-90904").within(() => {
+    cy.get(UNHAPPY_PATH_ROLE_CARD_ID).within(() => {
       cy.getByDataTest("payment-requirement-buy-button").click()
     })
 
@@ -55,7 +57,7 @@ describe("payment requirement", () => {
   })
 
   it("should be able to buy a pass", () => {
-    cy.get("#role-90671").within(() => {
+    cy.get(HAPPY_PATH_ROLE_CARD_ID).within(() => {
       cy.getByDataTest("payment-requirement-buy-button").click()
     })
 
@@ -78,7 +80,19 @@ describe("payment requirement", () => {
       .should("be.visible")
   })
 
-  it.skip("should be able to withdraw from a vault", () => {
-    // TODO
+  it("should be able to withdraw from a vault", () => {
+    cy.get(HAPPY_PATH_ROLE_CARD_ID).within(() => {
+      cy.getByDataTest("withdraw-button").should("be.enabled")
+      cy.getByDataTest("withdraw-button").should(
+        "contain",
+        "Switch to Polygon Mumbai to withdraw"
+      )
+      cy.getByDataTest("withdraw-button").click()
+
+      cy.getByDataTest("withdraw-button").should("be.enabled")
+      cy.getByDataTest("withdraw-button").click()
+    })
+
+    cy.get(".chakra-alert").contains("Successful withdraw").should("be.visible")
   })
 })

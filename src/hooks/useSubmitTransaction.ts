@@ -157,6 +157,7 @@ const useSubmitTransaction = <
         )
         setTxSuccess(true)
         onSuccess({} as TransactionReceipt, [])
+        return
       }
 
       write?.()

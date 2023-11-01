@@ -48,6 +48,7 @@ const WithdrawButton = (): JSX.Element => {
       placement="right"
     >
       <Button
+        data-test="withdraw-button"
         size="xs"
         borderRadius="md"
         leftIcon={
