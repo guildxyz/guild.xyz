@@ -7,7 +7,6 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
-import useTokenData from "hooks/useTokenData"
 import { useMemo } from "react"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
@@ -35,9 +34,6 @@ const usePurchaseAsset = () => {
   const { address } = useAccount()
   const chainId = useChainId()
 
-  const {
-    data: { symbol },
-  } = useTokenData(requirement.chain, requirement.address)
   const { data: priceData } = usePrice(pickedCurrency)
 
   const tokenBuyerContractData = useTokenBuyerContractData()
@@ -111,7 +107,7 @@ const usePurchaseAsset = () => {
       toast({
         status: "success",
         title: "Your new asset:",
-        description: `${requirement.data.minAmount} ${symbol}`,
+        description: `${requirement.data.minAmount} ${tokenBalanceData?.symbol}`,
       })
     },
   })
