@@ -25,11 +25,11 @@ describe("edit guild", () => {
       .should("eq", 200)
   })
 
-  it("should not be able to edit a guild as a guest", () => {
+  it("can't edit a guild as a guest", () => {
     cy.get("button[aria-label='Edit Guild']").should("not.exist")
   })
 
-  it("should be able to edit general guild data as a guild admin", () => {
+  it("can edit general guild data as a guild admin", () => {
     cy.intercept(
       "PUT",
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}`

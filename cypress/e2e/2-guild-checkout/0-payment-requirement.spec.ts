@@ -10,7 +10,7 @@ describe("payment requirement", () => {
     cy.waitForAccessCheck()
   })
 
-  it("should be able to create a payment requirement", () => {
+  it("can create a payment requirement", () => {
     cy.getByDataTest("add-role-button").click()
     cy.getByDataTest("add-requirement-button").click()
     cy.get("button")
@@ -34,7 +34,7 @@ describe("payment requirement", () => {
       .should("exist")
   })
 
-  it("should not be able to buy a pass without allowance", () => {
+  it("can't buy a pass without allowance", () => {
     cy.get(UNHAPPY_PATH_ROLE_CARD_ID).within(() => {
       cy.getByDataTest("payment-requirement-buy-button").click()
     })
@@ -57,7 +57,7 @@ describe("payment requirement", () => {
       .should("contain", "Insufficient balance")
   })
 
-  it("should be able to buy a pass", () => {
+  it("can buy a pass", () => {
     cy.get(HAPPY_PATH_ROLE_CARD_ID).within(() => {
       cy.getByDataTest("payment-requirement-buy-button").click()
     })
@@ -81,7 +81,7 @@ describe("payment requirement", () => {
       .should("be.visible")
   })
 
-  it("should be able to withdraw from a vault", () => {
+  it("can withdraw from a vault", () => {
     cy.get(HAPPY_PATH_ROLE_CARD_ID).within(() => {
       cy.getByDataTest("withdraw-button").should("be.enabled")
       cy.getByDataTest("withdraw-button").should(

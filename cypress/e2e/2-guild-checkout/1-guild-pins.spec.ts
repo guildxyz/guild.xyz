@@ -3,12 +3,12 @@ describe("guild pins", () => {
     cy.clearIndexedDB()
   })
 
-  it("should not show a guild pin reward card for unauthenticated users", () => {
+  it("can't see the guild pin reward card (unauthenticated)", () => {
     cy.visit(Cypress.env("TEST_GUILD_URL_NAME"))
     cy.getByDataTest("guild-pin-reward-card").should("not.exist")
   })
 
-  it("should show a guild pin reward card for authenticated users", () => {
+  it("can see the guild pin reward card (authenticated)", () => {
     cy.visit(Cypress.env("TEST_GUILD_URL_NAME"))
     cy.connectWallet()
 
@@ -17,7 +17,7 @@ describe("guild pins", () => {
     cy.getByDataTest("guild-pin-reward-card").should("exist")
   })
 
-  it("should see the pin setup modal", () => {
+  it("can see the pin setup modal", () => {
     cy.visit(Cypress.env("TEST_GUILD_URL_NAME"))
     cy.connectWallet()
 
@@ -31,7 +31,7 @@ describe("guild pins", () => {
     cy.get(".chakra-modal__header").contains("Setup Guild Pin").should("be.visible")
   })
 
-  it("should be able to mint a guild pin", () => {
+  it("can mint a guild pin", () => {
     cy.visit(Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME"))
     cy.connectWallet()
 

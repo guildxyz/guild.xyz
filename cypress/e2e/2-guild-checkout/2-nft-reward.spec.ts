@@ -6,7 +6,7 @@ describe("nft reward", () => {
     cy.waitForAccessCheck()
   })
 
-  it("should be able to deploy an nft contract", () => {
+  it("can deploy an nft contract", () => {
     cy.getByDataTest("add-reward-button").click()
     cy.get("div[role='group']").contains("Create a gated NFT").click({ force: true })
 
@@ -46,11 +46,11 @@ describe("nft reward", () => {
 
     // You'll see both an error and a success toast in the tests, that's expected, since we don't actually call the contract & just return an empty object
     cy.get(".chakra-alert")
-      .contains("Successfully deployed NFT contract")
+      .contains("Successfully deployed NFT contract", { timeout: 40_000 })
       .should("be.visible")
   })
 
-  it("should not be able to collect the nft if requirements aren't satisfied", () => {
+  it("can't collect the nft if requirements aren't satisfied", () => {
     cy.get("p")
       .contains("Collect: Cypress Gang #1")
       .within(() => {
@@ -65,7 +65,7 @@ describe("nft reward", () => {
     cy.getByDataTest("collect-nft-button").should("be.disabled")
   })
 
-  it("should be able to collect an nft", () => {
+  it("can collect an nft if requirements are satisfied", () => {
     cy.get("p")
       .contains("Collect: Cypress Gang #2")
       .within(() => {
@@ -81,7 +81,7 @@ describe("nft reward", () => {
     cy.getByDataTest("collect-nft-button").click()
 
     cy.get(".chakra-alert")
-      .contains("Successfully collected NFT!", { timeout: 40_000 })
+      .contains("Successfully collected NFT!")
       .should("be.visible")
   })
 })
