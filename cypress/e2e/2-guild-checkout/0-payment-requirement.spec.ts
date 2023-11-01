@@ -7,7 +7,7 @@ describe("payment requirement", () => {
     cy.connectWallet()
   })
 
-  it.skip("should be able to create a payment requirement", () => {
+  it("should be able to create a payment requirement", () => {
     cy.getByDataTest("add-role-button").click()
     cy.getByDataTest("add-requirement-button").click()
     cy.get("button")
@@ -54,7 +54,7 @@ describe("payment requirement", () => {
       .should("contain", "Insufficient balance")
   })
 
-  it.skip("should be able to buy a pass", () => {
+  it("should be able to buy a pass", () => {
     cy.get("#role-90671").within(() => {
       cy.getByDataTest("payment-requirement-buy-button").click()
     })
