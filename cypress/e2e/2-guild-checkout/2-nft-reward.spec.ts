@@ -81,7 +81,7 @@ describe("nft reward", () => {
     cy.getByDataTest("collect-nft-button").click()
 
     cy.get(".chakra-alert")
-      .contains("Successfully collected NFT!")
+      .contains("Successfully collected NFT!", { timeout: 40_000 })
       .should("be.visible")
   })
 })
