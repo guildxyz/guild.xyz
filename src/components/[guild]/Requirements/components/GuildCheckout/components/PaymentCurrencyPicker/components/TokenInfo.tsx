@@ -13,7 +13,7 @@ import { CHAIN_CONFIG, Chains } from "chains"
 import { Fragment } from "react"
 import { Rest } from "types"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance, useToken } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
 
 type Props = {
   chainId: number
@@ -44,19 +44,6 @@ const TokenInfo = ({
   const logoURI = isNativeCurrency
     ? CHAIN_CONFIG[Chains[chainId]].iconUrl
     : undefined
-  const {
-    data: tokenData,
-    error: tokenDataError,
-    isLoading: isTokenDataLoading,
-  } = useToken({
-    address: tokenAddress,
-    chainId: chainId,
-    enabled: Boolean(!isNativeCurrency && chainId),
-  })
-
-  const symbol = isNativeCurrency
-    ? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
-    : tokenData?.symbol
 
   const { address } = useAccount()
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
@@ -64,12 +51,20 @@ const TokenInfo = ({
     chainId,
   })
 
-  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
+  const {
+    data: tokenBalanceData,
+    isLoading: isTokenBalanceLoading,
+    isError: isTokenBalanceError,
+  } = useBalance({
     address,
     token: tokenAddress,
     chainId,
     enabled: tokenAddress !== NULL_ADDRESS,
   })
+
+  const symbol = isNativeCurrency
+    ? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
+    : tokenBalanceData?.symbol
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 
@@ -85,10 +80,15 @@ const TokenInfo = ({
 
   return (
     <Wrapper
-      {...(asMenuItem ? { ...rest, isDisabled: !!error || !!tokenDataError } : {})}
+      {...(asMenuItem
+        ? { ...rest, isDisabled: !!error || isTokenBalanceError }
+        : {})}
     >
       <HStack spacing={4} maxW="calc(100% - 2rem)" {...(asMenuItem ? {} : rest)}>
-        <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
+        <SkeletonCircle
+          isLoaded={!isTokenBalanceLoading}
+          size="var(--chakra-space-11)"
+        >
           <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
             {logoURI ? (
               <Img src={logoURI} alt={symbol} boxSize={6} />
@@ -106,14 +106,14 @@ const TokenInfo = ({
           alignItems={"flex-start"}
           textAlign={"left"}
         >
-          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
+          <Skeleton isLoaded={!isTokenBalanceLoading && !isLoading} w="full" h={5}>
             <Text
               as="span"
               display="block"
               isTruncated
               data-test="token-info-fee-currency"
             >
-              {tokenDataError
+              {isTokenBalanceError
                 ? "Couldn't fetch token data"
                 : error
                 ? `[?] ${symbol}`
