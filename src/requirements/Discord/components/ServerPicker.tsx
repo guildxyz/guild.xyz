@@ -55,7 +55,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
       )
     }
 
-    if (serverData) {
+    if (serverData?.serverId) {
       options.unshift({
         value: serverData.serverId,
         img: serverData.serverIcon ?? "/default_discord_icon.png",
