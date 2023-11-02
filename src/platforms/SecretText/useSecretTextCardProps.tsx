@@ -1,4 +1,5 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
+import EditRolePlatformCapacityTime from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTime"
 import platforms from "platforms/platforms"
 import { GuildPlatform, PlatformName } from "types"
 
@@ -15,6 +16,7 @@ const useSecretTextCardProps = (guildPlatform: GuildPlatform) => {
         <Icon as={platforms.TEXT.icon} boxSize={5} color="white" />
       </Circle>
     ),
+    EditRolePlatformRow: EditRolePlatformCapacityTime,
   }
 }
 
