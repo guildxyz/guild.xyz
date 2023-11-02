@@ -8,11 +8,9 @@ import GuildCreationProgress from "./GuildCreationProgress"
 import MultiPlatformsGrid from "./MultiPlatformGrid"
 
 const CreateGuildIndex = (): JSX.Element => {
-  const { platform, setPlatform, nextStep } = useCreateGuildContext()
+  const { setPlatform, nextStep } = useCreateGuildContext()
   const [whitoutPlatform, setWhitoutPlatform] = useState(false)
   const { getValues } = useFormContext<GuildFormType>()
-
-  if (platform && platform !== "DEFAULT") return <CreateGuildPlatform />
 
   return (
     <>
@@ -42,9 +40,10 @@ const CreateGuildIndex = (): JSX.Element => {
       </HStack>
       <GuildCreationProgress
         next={nextStep}
-        progress={20}
+        progress={0}
         isDisabled={getValues("guildPlatforms").length === 0 && !whitoutPlatform}
       />
+      <CreateGuildPlatform />
     </>
   )
 }

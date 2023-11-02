@@ -1,8 +1,7 @@
 import { Box, Button, Container, HStack, Text } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
 import DisplayCard from "components/common/DisplayCard"
-import { useRef } from "react"
-import { useFormContext } from "react-hook-form"
+import { useEffect, useRef, useState } from "react"
 
 type Props = {
   next: () => void
@@ -21,15 +20,20 @@ const GuildCreationProgress = ({
   const progressText = `${progress}%`
   const lottiePlayer = useRef(null)
   const lottiePlayerBg = useRef(null)
-  const methods = useFormContext()
+  const [seek, setSeek] = useState(0)
 
   function progressToLottieState(stepsProgress: number): number {
     if (stepsProgress <= 20) return 10
     if (stepsProgress <= 40) return 14
+    if (stepsProgress <= 50) return 18
+    if (stepsProgress <= 75) return 20
     else return 80
   }
-
   const logoSize = 24
+
+  useEffect(() => {
+    lottiePlayer.current?.setSeeker(seek, false)
+  }, [seek])
 
   return (
     <Box position={"fixed"} bottom={0} left={0} w={"full"}>
@@ -62,17 +66,12 @@ const GuildCreationProgress = ({
                 <Box position={"absolute"} top={0} left={0} zIndex={1}>
                   <Player
                     ref={lottiePlayer}
+                    src="/logo_lottie.json"
                     onEvent={(event) => {
                       if (event === "load") {
-                        lottiePlayer.current?.setSeeker(
-                          progressToLottieState(progress),
-                          true
-                        )
+                        setSeek(progressToLottieState(progress))
                       }
                     }}
-                    keepLastFrame
-                    speed={1}
-                    src="/logo_lottie.json"
                     style={{
                       marginBottom: 24,
                       height: logoSize,

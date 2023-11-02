@@ -174,8 +174,6 @@ const RewardIcon = ({
 }: RewardIconProps) => {
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
 
-  console.log("xy rewrad icon", guildPlatform)
-
   const props = {
     src:
       guildPlatform?.platformGuildData?.imageUrl ??

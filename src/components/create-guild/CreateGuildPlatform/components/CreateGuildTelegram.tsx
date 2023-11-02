@@ -42,6 +42,7 @@ const CreateGuildTelegram = (): JSX.Element => {
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
       )
     },
+    onError: () => {},
   })
 
   const {

@@ -5,17 +5,37 @@ import {
   ModalHeader,
 } from "@chakra-ui/react"
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
-import { defaultValues } from "components/create-guild/CreateGuildContext"
+import {
+  defaultValues,
+  useCreateGuildContext,
+} from "components/create-guild/CreateGuildContext"
 import Pagination from "components/create-guild/Pagination"
-import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import {
+  FormProvider,
+  useFieldArray,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form"
+import { GuildFormType, PlatformType } from "types"
 
 const CreateGuildGoogle = (): JSX.Element => {
-  const { control } = useFormContext<GuildFormType>()
+  const methods = useFormContext<GuildFormType>()
+  const googleMethods = useForm()
+  const { setPlatform } = useCreateGuildContext()
+  const { append } = useFieldArray({
+    control: methods.control,
+    name: "guildPlatforms",
+  })
 
-  const selectedDocument = useWatch({
-    control,
-    name: "guildPlatforms.0.platformGuildId",
+  const permission = useWatch({
+    control: googleMethods.control,
+    name: "permission",
+  })
+
+  const googleData = useWatch({
+    control: googleMethods.control,
+    name: "googleData",
   })
 
   return (
@@ -23,15 +43,36 @@ const CreateGuildGoogle = (): JSX.Element => {
       <ModalHeader>Add Google files</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
-        <GoogleGuildSetup
-          defaultValues={defaultValues.GOOGLE}
-          fieldNameBase="guildPlatforms.0."
-          shouldSetName
-          permissionField="roles.0.rolePlatforms.0.platformRoleId"
-        />
+        <FormProvider {...googleMethods}>
+          <GoogleGuildSetup
+            defaultValues={defaultValues.GOOGLE}
+            fieldNameBase="googleData."
+            shouldSetName
+            permissionField="permission"
+          />
+        </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <Pagination nextButtonDisabled={!selectedDocument} />
+        <Pagination
+          nextButtonDisabled={!permission}
+          nextStepHandler={() => {
+            append({
+              platformName: "GOOGLE",
+              platformGuildId: googleMethods.getValues("googleData.platformGuildId"),
+              platformId: PlatformType.GOOGLE,
+              platformGuildData: {
+                text: undefined,
+                name: googleMethods.getValues("name"),
+                imageUrl: googleMethods.getValues(
+                  "googleData.platformGuildData.iconLink"
+                ),
+                ...googleData.platformGuildData,
+                role: googleMethods.getValues("permission"),
+              },
+            })
+            setPlatform("DEFAULT")
+          }}
+        />
       </ModalFooter>
     </>
   )

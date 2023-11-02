@@ -8,11 +8,12 @@ import CreateGuildGithub from "./components/CreateGuildGithub"
 import CreateGuildGoogle from "./components/CreateGuildGoogle"
 import CreateGuildSecretText from "./components/CreateGuildSecretText"
 import CreateGuildTelegram from "./components/CreateGuildTelegram"
+import CreateGuildTwitter from "./components/CreateGuildTwitter"
 import CreateGuildUniqueText from "./components/CreateGuildUniqueText"
 
 // TODO: we could move these to platforms.tsx too?
 const createGuildPlatformComponents: Record<
-  Exclude<PlatformName, "POAP" | "TWITTER" | "TWITTER_V1" | "EMAIL">,
+  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL">,
   () => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,
@@ -21,6 +22,7 @@ const createGuildPlatformComponents: Record<
   GITHUB: CreateGuildGithub,
   CONTRACT_CALL: CreateGuildContractCall,
   TEXT: CreateGuildSecretText,
+  TWITTER: CreateGuildTwitter,
   UNIQUE_TEXT: CreateGuildUniqueText,
 }
 
@@ -32,7 +34,7 @@ const CreateGuildPlatform = (): JSX.Element => {
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={platform && platform !== "DEFAULT"}
       onClose={() => {
         setPlatform("DEFAULT")
       }}

@@ -21,9 +21,8 @@ const ChooseTemplate = (): JSX.Element => {
 
   const { TEMPLATES, getTemplate, setTemplate, nextStep } = useCreateGuildContext()
 
-  const { control, getValues, formState } = useFormContext<GuildFormType>()
+  const { control, getValues } = useFormContext<GuildFormType>()
 
-  const requirements = useWatch({ control, name: "roles.0.requirements" })
   const roles = useWatch({ control, name: "roles" })
 
   return (
@@ -43,9 +42,7 @@ const ChooseTemplate = (): JSX.Element => {
               }
               {...template}
               onClick={(newTemplateId: TemplateType) => {
-                const role = TEMPLATES[newTemplateId].roles[0]
-
-                console.log("xy ", roles, template.name)
+                const role = getTemplate()[newTemplateId].roles[0]
 
                 role.rolePlatforms = convertRolePlatformsToGuildPLatformIndecies(
                   findRelevantPlatforms(newTemplateId, getValues("guildPlatforms")),
@@ -60,7 +57,7 @@ const ChooseTemplate = (): JSX.Element => {
       </VStack>
       <GuildCreationProgress
         next={nextStep}
-        progress={65}
+        progress={50}
         isDisabled={!roles.length}
         customButton={<CreateGuildButton isDisabled={!roles.length} />}
       />
@@ -87,7 +84,7 @@ function convertRolePlatformsToGuildPLatformIndecies(
       guildPlatformIndex: index,
       platformRoleId:
         rolePlatform.platformName === "GOOGLE"
-          ? rolePlatform.platformGuildId
+          ? rolePlatform.platformGuildData.role
           : undefined,
     }
   })

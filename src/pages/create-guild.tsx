@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import Card from "components/common/Card"
+import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import {
   CreateGuildProvider,
@@ -48,14 +49,27 @@ const CreateGuildPage = (): JSX.Element => {
       ? getValues("theme.color")
       : localThemeColor
 
+  const imageUrl = getValues("imageUrl")
+
   return (
     <>
       <Layout
-        title="Create Guild"
+        title={getValues("name") ? getValues("name") : "Create Guild"}
         backgroundOffset={47}
         textColor={textColor}
         background={color}
         backgroundImage={localBackgroundImage}
+        image={
+          imageUrl && (
+            <GuildLogo
+              imageUrl={imageUrl}
+              size={{ base: "56px", lg: "72px" }}
+              mt={{ base: 1, lg: 2 }}
+              bgColor={"primary.800"}
+            />
+          )
+        }
+        imageUrl={imageUrl}
       >
         <Card
           pos="relative"
@@ -146,7 +160,7 @@ const CreateGuildPage = (): JSX.Element => {
             ))}
           </Stepper>
           {steps[activeStep].label && (
-            <Text pt={7} colorScheme="gray" position={"relative"}>
+            <Text pt={7} position={"relative"}>
               {steps[activeStep].label}
             </Text>
           )}

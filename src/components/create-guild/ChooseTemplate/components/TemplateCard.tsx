@@ -44,7 +44,7 @@ const getRewardLabel = (platform: Partial<GuildPlatform>) => {
       return "Role in: "
 
     case PlatformType.GOOGLE:
-      return `${capitalize(platform.platformGuildId ?? "reader")} access to: `
+      return `${capitalize(platform.platformGuildData.role ?? "reader")} access to: `
 
     default:
       return "Access to: "
@@ -74,7 +74,7 @@ const TemplateCard = ({
         onClick(id)
       }}
       position="relative"
-      mb={{ base: 4, md: 6 }}
+      mb={2}
       borderRadius="2xl"
       overflow="hidden"
       _before={{
@@ -261,6 +261,9 @@ function getValueToDisplay(
 
   if (platform.platformId == PlatformType.CONTRACT_CALL)
     return platform.platformGuildData.name ?? "NFT"
+
+  if (platform.platformId == PlatformType.GOOGLE)
+    return platform.platformGuildData.name ?? "File"
 
   return platform.platformGuildName || platform.platformGuildId
 }

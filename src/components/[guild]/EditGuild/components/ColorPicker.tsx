@@ -39,7 +39,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
   return (
     <VStack spacing={2} alignItems="start">
       <FormControl isInvalid={!!errors[fieldName]}>
-        <FormLabel>Main color</FormLabel>
+        <FormLabel color={"theme.text"}>Main color</FormLabel>
         <HStack spacing={2}>
           <Flex
             flexShrink={0}

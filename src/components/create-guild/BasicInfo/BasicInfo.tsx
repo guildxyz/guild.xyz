@@ -3,7 +3,6 @@ import BackgroundImageUploader from "components/[guild]/EditGuild/components/Bac
 import ColorPicker from "components/[guild]/EditGuild/components/ColorPicker"
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import Card from "components/common/Card"
 import Section from "components/common/Section"
 import usePinata from "hooks/usePinata"
 import { useEffect } from "react"
@@ -51,19 +50,33 @@ const BasicInfo = (): JSX.Element => {
     },
   })
 
+  const discordPlatformData = guildPlatforms.find(
+    (platform) => platform.platformName === "DISCORD"
+  )?.platformGuildData
+
+  const telegramPlatformData = guildPlatforms.find(
+    (platform) => platform.platformName === "TELEGRAM"
+  )?.platformGuildData
+
+  const imageUrlFromPlatformData = () => {
+    if (discordPlatformData?.imageUrl) return discordPlatformData.imageUrl
+
+    if (telegramPlatformData?.imageUrl) return telegramPlatformData.imageUrl
+
+    return undefined
+  }
+
+  const nameFromPlatformData = () => {
+    if (discordPlatformData?.name) return discordPlatformData.name
+
+    if (telegramPlatformData?.name) return telegramPlatformData.name
+
+    return undefined
+  }
+
   useSetImageAndNameFromPlatformData(
-    guildPlatforms.find((platform) => platform.platformName === "DISCORD")
-      ?.platformGuildData.imageUrl
-      ? guildPlatforms.find((platform) => platform.platformName === "DISCORD")
-          ?.platformGuildData.imageUrl
-      : guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
-          ?.platformGuildData.imageUrl,
-    guildPlatforms.find((platform) => platform.platformName === "DISCORD")
-      ?.platformGuildData.name
-      ? guildPlatforms.find((platform) => platform.platformName === "DISCORD")
-          ?.platformGuildData.name
-      : guildPlatforms.find((platform) => platform.platformName === "TELEGRAM")
-          ?.platformGuildData.name,
+    imageUrlFromPlatformData(),
+    nameFromPlatformData(),
     iconUploader.onUpload
   )
 
@@ -89,37 +102,35 @@ const BasicInfo = (): JSX.Element => {
 
   return (
     <>
-      <Card px={{ base: 5, sm: 6 }} py={8}>
-        <Stack spacing={10}>
-          <Stack spacing={{ base: 5, md: 6 }}>
-            <SimpleGrid
-              w="full"
-              spacing="5"
-              templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-            >
-              <Box flex="1">
-                <FormLabel>Logo and name</FormLabel>
-                <HStack alignItems="start">
-                  <IconSelector uploader={iconUploader} minW={512} minH={512} />
-                  <Name width={null} />
-                </HStack>
-              </Box>
-              <UrlName maxWidth="unset" />
-            </SimpleGrid>
-            <Description />
-          </Stack>
-          <Stack direction={{ base: "column", md: "row" }} spacing="5">
-            <ColorPicker fieldName="theme.color" />
-            <BackgroundImageUploader uploader={backgroundUploader} />
-          </Stack>
-          <Section title="How could we contact you?" spacing="4">
-            <ContactInfo showAddButton={false} />
-          </Section>
+      <Stack spacing={10}>
+        <Stack spacing={{ base: 5, md: 6 }}>
+          <SimpleGrid
+            w="full"
+            spacing="5"
+            templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+          >
+            <Box flex="1">
+              <FormLabel>Logo and name</FormLabel>
+              <HStack alignItems="start">
+                <IconSelector uploader={iconUploader} minW={512} minH={512} />
+                <Name width={null} />
+              </HStack>
+            </Box>
+            <UrlName maxWidth="unset" />
+          </SimpleGrid>
+          <Description />
         </Stack>
-      </Card>
+        <Stack direction={{ base: "column", md: "row" }} spacing="5">
+          <ColorPicker fieldName="theme.color" />
+          <BackgroundImageUploader uploader={backgroundUploader} />
+        </Stack>
+        <Section title="How could we contact you?" spacing="4">
+          <ContactInfo showAddButton={false} />
+        </Section>
+      </Stack>
       <GuildCreationProgress
         next={nextStep}
-        progress={35}
+        progress={25}
         isDisabled={!name || !!Object.values(errors).length}
       />
     </>

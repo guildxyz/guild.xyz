@@ -62,6 +62,7 @@ const MultiPlatformSelectButton = ({
   )
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
+  const twitterLink = useWatch({ name: "socialLinks.TWITTER" })
 
   const selectPlatform = () => onSelection(platform)
 
@@ -71,9 +72,27 @@ const MultiPlatformSelectButton = ({
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly
+    ) ||
+    platform === "TWITTER"
+
+  const circleBgBaseColor = useColorModeValue("gray.700", "gray.600")
+  const circleBgColor = platform === "TWITTER" ? "white" : circleBgBaseColor
+
+  const isDone = () => {
+    const platformAddedToGuild = guildPlatforms.find(
+      (platfomAdded) => platform === platfomAdded.platformName
     )
 
-  const circleBgColor = useColorModeValue("gray.700", "gray.600")
+    if (platform === "TWITTER") {
+      if (twitterLink) {
+        return true
+      } else {
+        return false
+      }
+    }
+
+    return platformAddedToGuild
+  }
 
   return (
     <DisplayCard
@@ -98,7 +117,12 @@ const MultiPlatformSelectButton = ({
           </Circle>
         ) : (
           <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
-            <Icon as={icon} boxSize={5} weight="regular" color="white" />
+            <Icon
+              as={icon}
+              boxSize={platform === "TWITTER" ? 8 : 5}
+              weight={platform === "TWITTER" ? "fill" : "regular"}
+              color={platform === "TWITTER" ? "#26a7de" : "white"}
+            />
           </Circle>
         )}
         <VStack
@@ -122,9 +146,9 @@ const MultiPlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        {guildPlatforms.find(
-          (platfomAdded) => platform === platfomAdded.platformName
-        ) && <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />}
+        {isDone() && (
+          <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />
+        )}
       </HStack>
     </DisplayCard>
   )

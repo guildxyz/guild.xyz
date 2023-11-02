@@ -8,66 +8,36 @@ type Props = {
   showPoap?: boolean
 }
 
-type PlatformsGridData = {
-  description?: string
-}
-
 const MultiPlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
-  const platformsData: Record<
-    Exclude<
-      PlatformName,
-      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT"
-    >,
-    PlatformsGridData
-  > = {
-    DISCORD: {
-      description: "Manage roles",
-    },
-    TELEGRAM: {
-      description: "Manage groups",
-    },
-    GOOGLE: {
-      description: "Manage documents",
-    },
-    GITHUB: {
-      description: "Manage repositories",
-    },
-    ...(showPoap
-      ? {
-          POAP: {
-            description: "Mint POAP",
-          },
-        }
-      : {}),
-    CONTRACT_CALL: {
-      description: "Create a gated NFT",
-    },
-    TEXT: {
-      description: "Gate any info as revealable text",
-    },
-  }
+  const platformsData: Array<PlatformName> = [
+    "DISCORD",
+    "TELEGRAM",
+    "GOOGLE",
+    "GITHUB",
+    "CONTRACT_CALL",
+    "TWITTER",
+  ]
 
   return (
     <Stack spacing={8}>
       <SimpleGrid
         data-test="platforms-grid"
-        columns={{ base: 1, md: 2 }}
+        columns={{ base: 1, md: 3 }}
         gap={{ base: 4, md: 5 }}
       >
-        {Object.entries(platformsData).map(
-          ([platform, { description }]: [PlatformName, { description: string }]) => (
-            <MultiPlatformSelectButton
-              key={platform}
-              platform={platform}
-              title={platforms[platform].name}
-              description={description}
-              icon={platforms[platform].icon}
-              imageUrl={platforms[platform].imageUrl}
-              onSelection={onSelection}
-            />
-          )
-        )}
+        {platformsData.map((platform) => (
+          <MultiPlatformSelectButton
+            key={platform}
+            platform={platform}
+            title={platforms[platform].name}
+            //TODO get discord server name
+            description={""}
+            icon={platforms[platform].icon}
+            imageUrl={platforms[platform].imageUrl}
+            onSelection={onSelection}
+          />
+        ))}
       </SimpleGrid>
     </Stack>
   )

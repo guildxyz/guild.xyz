@@ -273,7 +273,7 @@ const GuildPage = (): JSX.Element => {
           />
         )}
 
-        <AccessHub />
+        {!showOnboarding && <AccessHub />}
 
         <Section
           title={

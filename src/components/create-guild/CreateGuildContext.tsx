@@ -21,7 +21,7 @@ type TemplateType = "VERIFIED" | "MEMBER" | "SUPPORTER" | "OG_MEMBER"
 
 type Step = {
   title: string
-  label?: string
+  label?: string | JSX.Element
   description?: string
   content: JSX.Element
 }
@@ -177,8 +177,19 @@ const CreateGuildProvider = ({
   const buildTemplate = () => {
     const newTemplates = JSON.parse(JSON.stringify(TEMPLATES))
 
-    Object.entries(newTemplates).forEach(([id], index) => {
-      newTemplates[id].roles[0].rolePlatforms = methods.getValues("guildPlatforms")
+    Object.entries(newTemplates).forEach(([key, value]) => {
+      const role = newTemplates[key].roles[0]
+
+      const twitterRequirementIndex = role.requirements.findIndex(
+        (requriement) => requriement.type === "TWITTER_FOLLOW"
+      )
+
+      const idAfterDomain = /(?<=com\/).*$/
+
+      if (twitterRequirementIndex > -1)
+        role.requirements[twitterRequirementIndex].data.id = idAfterDomain.exec(
+          methods.getValues("socialLinks.TWITTER")
+        )
     })
 
     return newTemplates
@@ -210,10 +221,13 @@ const CreateGuildProvider = ({
     },
     {
       title: "Customize guild",
-      content: <BasicInfo />,
+      label: <BasicInfo />,
+      content: <></>,
     },
     {
       title: "Choose template",
+      label:
+        "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
       content: <ChooseTemplate />,
     },
     {
