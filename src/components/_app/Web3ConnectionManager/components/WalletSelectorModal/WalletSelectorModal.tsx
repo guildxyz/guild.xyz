@@ -42,7 +42,7 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { connectors, error, connect } = useConnect()
+  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
 
   const { disconnect } = useDisconnect()
   const { isConnected, connector } = useAccount()
@@ -183,6 +183,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     <ConnectorButton
                       connector={conn}
                       connect={connect}
+                      isLoading={isLoading}
+                      pendingConnector={pendingConnector}
                       error={error}
                     />
                   </CardMotionWrapper>
