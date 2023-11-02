@@ -38,7 +38,7 @@ const PlatformCard = ({
         !!EditRolePlatformRow && withEditRolePlatformRow ? (
           <EditRolePlatformRow
             platformType={PlatformType[guildPlatform.platformId]}
-            // onDone={console.log}
+            onDone={console.log}
           />
         ) : (
           info
