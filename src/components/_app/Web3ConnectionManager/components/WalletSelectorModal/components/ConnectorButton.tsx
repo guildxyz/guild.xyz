@@ -8,15 +8,23 @@ import { Wallet } from "phosphor-react"
 import { useRef } from "react"
 import { isMobile } from "react-device-detect"
 import shortenHex from "utils/shortenHex"
-import { Connector, useAccount, useConnect } from "wagmi"
+import { Connector, useAccount } from "wagmi"
 
 type Props = {
   connector: Connector
+  pendingConnector: Connector
+  isLoading: boolean
   connect: (args) => void
   error?: Error
 }
 
-const ConnectorButton = ({ connector, connect, error }: Props): JSX.Element => {
+const ConnectorButton = ({
+  connector,
+  pendingConnector,
+  isLoading,
+  connect,
+  error,
+}: Props): JSX.Element => {
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
   if (typeof window !== "undefined") {
@@ -25,7 +33,6 @@ const ConnectorButton = ({ connector, connect, error }: Props): JSX.Element => {
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
   const { address, isConnected, connector: activeConnector } = useAccount()
-  const { pendingConnector } = useConnect()
 
   const { ready } = useKeyPair()
 
@@ -61,13 +68,9 @@ const ConnectorButton = ({ connector, connect, error }: Props): JSX.Element => {
           <Icon as={Wallet} boxSize={6} />
         )
       }
-      isDisabled={
-        pendingConnector?.id === connector.id ||
-        (isConnected && activeConnector?.id === connector.id && !ready) ||
-        activeConnector?.id === connector.id
-      }
+      isDisabled={activeConnector?.id === connector.id}
       isLoading={
-        (pendingConnector?.id === connector.id ||
+        ((isLoading && pendingConnector?.id === connector.id) ||
           (isConnected && activeConnector?.id === connector.id && !ready)) &&
         !error
       }
