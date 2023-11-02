@@ -42,8 +42,6 @@ const CheckboxColorCard = forwardRef(
 
     const [isChecked, setIsChecked] = useState(rest.defaultChecked)
 
-    const isDisabled = !!disabledText || rest.isDisabled
-
     return (
       <ColorCard
         color={isChecked ? `${colorScheme}.500` : "transparent"}
@@ -58,7 +56,7 @@ const CheckboxColorCard = forwardRef(
             flexDirection="row-reverse"
             justifyContent="space-between"
             colorScheme={colorScheme}
-            isDisabled={isDisabled}
+            isDisabled={!!disabledText}
             _checked={{
               "> .chakra-checkbox__control[data-checked]": {
                 bgColor: `var(--chakra-colors-${colorScheme}-500)`,
@@ -98,9 +96,7 @@ const CheckboxColorCard = forwardRef(
           </Checkbox>
 
           <Collapse in={isChecked}>
-            <Box pt={6} opacity={isDisabled ? 0.5 : 1}>
-              {children}
-            </Box>
+            <Box pt={6}>{children}</Box>
           </Collapse>
         </Stack>
       </ColorCard>

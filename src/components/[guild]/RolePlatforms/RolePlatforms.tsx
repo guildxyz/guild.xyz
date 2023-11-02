@@ -124,7 +124,6 @@ const RolePlatforms = ({ roleId }: Props) => {
                     )
                   }
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
-                  withEditRolePlatformRow
                 />
               </RolePlatformProvider>
             )
