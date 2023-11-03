@@ -4,19 +4,19 @@ const CONTEXT = {
   createdRequirement: undefined,
 }
 
-const TEST_GUILD_URL_NAME = "guild-e2e-cypress"
-
 describe("roles", () => {
   beforeEach(() => {
     cy.clearIndexedDB()
-    cy.visit(`/${TEST_GUILD_URL_NAME}`)
+    cy.visit(`/${Cypress.env("TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
   })
 
   it("can fetch guild id", () => {
     cy.intercept(
       "GET",
-      `${Cypress.env("guildApiUrl")}/guilds/guild-page/${TEST_GUILD_URL_NAME}`
+      `${Cypress.env("guildApiUrl")}/guilds/guild-page/${Cypress.env(
+        "TEST_GUILD_URL_NAME"
+      )}`
     ).as("fetchGuild")
 
     cy.wait("@fetchGuild")
