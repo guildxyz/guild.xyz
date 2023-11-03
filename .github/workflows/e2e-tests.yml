@@ -1,6 +1,8 @@
 name: E2E tests
 
 on:
+  schedule:
+    - cron: "0 */2 * * *"
   push:
     branches: main
   pull_request:
@@ -54,10 +56,10 @@ jobs:
             cypress/screenshots
             cypress/videos
 
-      - name: Send Discord notification
-        if: ${{ failure() && github.ref == 'refs/heads/main' }}
-        shell: bash
-        run: curl -X POST -H 'Content-Type:application/json' -d '{"embeds":[{"title":"Failing test","fields":[{"name":"Trigger","value":"${{github.event_name}}"},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"}],"color":15548997}]}' ${{ secrets.FAILING_E2E_TEST_DC_WEBHOOK }}
+      # - name: Send Discord notification
+      #   if: ${{ failure() && github.ref == 'refs/heads/main' }}
+      #   shell: bash
+      #   run: curl -X POST -H 'Content-Type:application/json' -d '{"embeds":[{"title":"Failing test","fields":[{"name":"Trigger","value":"${{github.event_name}}"},{"name":"Action","value":"https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}"}],"color":15548997}]}' ${{ secrets.FAILING_E2E_TEST_DC_WEBHOOK }}
 
       - name: Save build cache
         uses: actions/cache/save@v3
