@@ -23,6 +23,7 @@ export default defineConfig({
       RUN_ID: "localhost",
       TEST_GUILD_URL_NAME: "guild-e2e-cypress",
       GUILD_CHECKOUT_TEST_GUILD_URL_NAME: "guild-checkout-e2e-cypress",
+      PINATA_PIN_FILE_API_URL: "https://api.pinata.cloud/pinning/pinFileToIPFS",
     },
     setupNodeEvents(on, config) {
       on(

@@ -68,16 +68,9 @@ const useCreateNft = (
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
     setLoadingText("Uploading image")
 
-    let imageCID
-
-    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
-      imageCID = "QmcTynAiKGnwnF77xMEdNAPkjpmpWiWUwcnNdXKU84uJPt"
-    } else {
-      const { IpfsHash } = await pinFileToIPFS({
-        data: [data.image],
-      })
-      imageCID = IpfsHash
-    }
+    const { IpfsHash: imageCID } = await pinFileToIPFS({
+      data: [data.image],
+    })
 
     setLoadingText("Uploading metadata")
 
@@ -96,16 +89,10 @@ const useCreateNft = (
 
     const metadataJSON = JSON.stringify(metadata)
 
-    let metadataCID
-    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
-      metadataCID = ""
-    } else {
-      const { IpfsHash } = await pinFileToIPFS({
-        data: [metadataJSON],
-        fileNames: ["metadata.json"],
-      })
-      metadataCID = IpfsHash
-    }
+    const { IpfsHash: metadataCID } = await pinFileToIPFS({
+      data: [metadataJSON],
+      fileNames: ["metadata.json"],
+    })
 
     setLoadingText("Deploying contract")
 

@@ -44,6 +44,20 @@ describe("nft reward", () => {
 
     cy.getByDataTest("create-nft-button").click()
 
+    cy.intercept("GET", "/api/pinata-key", {
+      body: {
+        jwt: "mockJWT",
+        key: "mockKey",
+      },
+    })
+    cy.intercept("POST", Cypress.env("PINATA_PIN_FILE_API_URL"), (req) => {
+      req.reply({
+        body: {
+          IpfsHash: "QmcTynAiKGnwnF77xMEdNAPkjpmpWiWUwcnNdXKU84uJPt",
+        },
+      })
+    })
+
     // You'll see both an error and a success toast in the tests, that's expected, since we don't actually call the contract & just return an empty object
     cy.get(".chakra-alert")
       .contains("Successfully deployed NFT contract", { timeout: 40_000 })
