@@ -1,5 +1,4 @@
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
-import EditRolePlatformCapacityTime from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTime"
 import { GuildPlatform, PlatformName } from "types"
 
 const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
@@ -11,7 +10,6 @@ const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
     name: data?.name || guildPlatform.platformGuildData?.name,
     image: data?.image || guildPlatform.platformGuildData?.imageUrl,
     info: data?.description,
-    EditRolePlatformRow: EditRolePlatformCapacityTime,
   }
 }
 

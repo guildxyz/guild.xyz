@@ -31,23 +31,36 @@ type RolePlatformCapacityTimeForm = {
   endTime?: string
 }
 
-type RolePlatformCapacityTime = {
-  capacity?: number
-  startTime?: number
-  endTime?: number
-}
-
 type Props = {
   platformType: PlatformName
-  compact?: boolean
-  onDone: (data: RolePlatformCapacityTime) => void
+  defaultValues?: RolePlatformCapacityTimeForm
+  onDone: (data: RolePlatformCapacityTimeForm) => void
+  isCompact?: boolean
 }
 
-const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT", "CONTRACT_CALL"]
+const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT"]
 
-const EditRolePlatformCapacityTime = ({ platformType, compact, onDone }: Props) => {
+const normalizeDate = (isoDate: string): string | undefined => {
+  if (!isoDate) return undefined
+
+  try {
+    return new Date(isoDate.split("T")[0]).toISOString()
+  } catch {
+    return undefined
+  }
+}
+
+const EditRolePlatformCapacityTime = ({
+  platformType,
+  defaultValues,
+  onDone,
+  isCompact,
+}: Props) => {
   const { control, register, setValue, handleSubmit } =
-    useForm<RolePlatformCapacityTimeForm>()
+    useForm<RolePlatformCapacityTimeForm>({
+      mode: "all",
+      defaultValues,
+    })
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
@@ -79,7 +92,7 @@ const EditRolePlatformCapacityTime = ({ platformType, compact, onDone }: Props) 
 
   return (
     <>
-      {compact ? (
+      {isCompact ? (
         <IconButton
           {...buttonProps}
           aria-label="Limit availibility"
@@ -115,7 +128,8 @@ const EditRolePlatformCapacityTime = ({ platformType, compact, onDone }: Props) 
                   <CheckboxColorCard
                     isDisabled={AUTO_SUPPLY_PLATFORMS.includes(platformType)}
                     defaultChecked={
-                      AUTO_SUPPLY_PLATFORMS.includes(platformType) || undefined
+                      AUTO_SUPPLY_PLATFORMS.includes(platformType) ||
+                      !!defaultValues?.capacity
                     }
                     colorScheme="purple"
                     icon={Hash}
@@ -155,6 +169,9 @@ const EditRolePlatformCapacityTime = ({ platformType, compact, onDone }: Props) 
                   icon={Clock}
                   title="Limit claiming time"
                   description="Set a time frame the reward will be only claimable within"
+                  defaultChecked={
+                    !!defaultValues?.startTime || !!defaultValues?.endTime
+                  }
                   onChange={(e) => {
                     if (e.target.checked) return
                     setValue("startTime", "")
@@ -183,15 +200,11 @@ const EditRolePlatformCapacityTime = ({ platformType, compact, onDone }: Props) 
               <Button
                 colorScheme="green"
                 ml="auto"
-                onClick={handleSubmit((data) => {
+                onClick={handleSubmit(({ capacity, startTime, endTime }) => {
                   onDone({
-                    capacity: data.capacity,
-                    startTime: data.startTime
-                      ? new Date(data.startTime).getTime()
-                      : undefined,
-                    endTime: data.endTime
-                      ? new Date(data.endTime).getTime()
-                      : undefined,
+                    capacity,
+                    startTime: normalizeDate(startTime),
+                    endTime: normalizeDate(endTime),
                   })
                   onClose()
                 })}

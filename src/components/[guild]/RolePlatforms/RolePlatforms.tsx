@@ -5,6 +5,7 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
+  Wrap,
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
@@ -13,11 +14,13 @@ import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/compone
 import { Plus } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatform, PlatformName, PlatformType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
+import EditRolePlatformCapacityTime from "./components/EditRolePlatformCapacityTime"
 import PlatformCard from "./components/PlatformCard"
+import CapacityTag from "./components/PlatformCard/components/CapacityTag"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -81,6 +84,12 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             if (!type) return null
 
+            const shouldShowCapacityTag =
+              typeof rolePlatform.capacity === "number" &&
+              typeof rolePlatform.claimedCapacity === "number"
+            const shouldShowStartTimeTag = !!rolePlatform.startTime
+            const shouldShowEndTimeTag = !!rolePlatform.endTime
+
             const { cardPropsHook: useCardProps, cardSettingsComponent } =
               platforms[type]
 
@@ -124,7 +133,39 @@ const RolePlatforms = ({ roleId }: Props) => {
                     )
                   }
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
-                  withEditRolePlatformRow
+                  contentRow={
+                    <Wrap>
+                      {shouldShowCapacityTag && (
+                        <CapacityTag rolePlatform={rolePlatform} />
+                      )}
+                      <EditRolePlatformCapacityTime
+                        platformType={
+                          PlatformType[guildPlatform.platformId] as PlatformName
+                        }
+                        defaultValues={{
+                          capacity: rolePlatform.capacity,
+                          startTime: rolePlatform.startTime,
+                          endTime: rolePlatform.endTime,
+                        }}
+                        onDone={({ capacity, startTime, endTime }) => {
+                          setValue(`rolePlatforms.${index}.capacity`, capacity, {
+                            shouldDirty: true,
+                          })
+                          setValue(`rolePlatforms.${index}.startTime`, startTime, {
+                            shouldDirty: true,
+                          })
+                          setValue(`rolePlatforms.${index}.endTime`, endTime, {
+                            shouldDirty: true,
+                          })
+                        }}
+                        isCompact={
+                          shouldShowCapacityTag ||
+                          shouldShowStartTimeTag ||
+                          shouldShowEndTimeTag
+                        }
+                      />
+                    </Wrap>
+                  }
                 />
               </RolePlatformProvider>
             )
