@@ -47,6 +47,7 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
           showQrModal: true,
           qrModalOptions: {
             explorerRecommendedWalletIds: [
+              "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709", // OKX
               "107bb20463699c4e614d3a2fb7b961e66f48774cb8f6d6c1aee789853280972c", // Bitcoin.com
               "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust
               "2c81da3add65899baeac53758a07e652eea46dbb5195b8074772c62a77bbf568", // Ambire
