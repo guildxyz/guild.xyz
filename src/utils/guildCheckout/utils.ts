@@ -1,46 +1,43 @@
-import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
-import { Chains, RPC } from "connectors"
+import { Chains } from "chains"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import {
-  getAssetsCallParams,
   NULL_ADDRESS,
   PurchaseAssetData,
+  getAssetsCallParams,
   purchaseSupportedChains,
 } from "./constants"
 
 export type GeneratedGetAssetsParams =
-  | [
-      number,
-      {
-        tokenAddress: string
-        amount: BigNumberish
-      },
-      string,
-      string[],
-      {
-        value?: BigNumberish
-        gasLimit?: BigNumberish
-      }
-    ]
-  | [
-      {
-        tokenAddress: string
-        amount: BigNumberish
-      },
-      string,
-      string[],
-      {
-        value?: BigNumberish
-        gasLimit?: BigNumberish
-      }
-    ]
+  | {
+      params: [
+        bigint,
+        {
+          tokenAddress: `0x${string}`
+          amount: bigint
+        },
+        `0x${string}`,
+        `0x${string}`[]
+      ]
+      value?: bigint
+    }
+  | {
+      params: [
+        {
+          tokenAddress: `0x${string}`
+          amount: bigint
+        },
+        `0x${string}`,
+        `0x${string}`[]
+      ]
+      value?: bigint
+    }
 
 const generateGetAssetsParams = (
   guildId: number,
   account: string,
   chainId: number,
-  pickedCurrency: string,
-  priceData: FetchPriceResponse
+  pickedCurrency: `0x${string}`,
+  priceData: FetchPriceResponse<bigint>
 ): GeneratedGetAssetsParams => {
   if (!priceData || !purchaseSupportedChains.ERC20?.includes(Chains[chainId]))
     return undefined
@@ -65,10 +62,10 @@ const generateGetAssetsParams = (
   )
     return undefined
 
-  const amountIn = BigNumber.from(maxPriceInWei)
-  const guildFeeInWei = BigNumber.from(rawMaxGuildFeeInWei)
-  const amountInWithFee = amountIn.add(guildFeeInWei)
-  const amountOut = BigNumber.from(buyAmountInWei)
+  const amountIn = maxPriceInWei
+  const guildFeeInWei = rawMaxGuildFeeInWei
+  const amountInWithFee = amountIn + guildFeeInWei
+  const amountOut = buyAmountInWei
 
   const formattedData: PurchaseAssetData = {
     chainId,
@@ -82,15 +79,31 @@ const generateGetAssetsParams = (
     tokenAddressPath,
   }
 
-  const isNativeCurrency = Object.values(RPC)
-    .map((rpcData) => rpcData.nativeCurrency.symbol)
-    .includes(pickedCurrency)
+  const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
   if (Chains[chainId] === "ARBITRUM")
-    return [
+    return {
+      params: [
+        {
+          tokenAddress: pickedCurrency,
+          amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
+        },
+        `0x${
+          getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands
+        }`,
+        getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
+          source
+        ].getEncodedParams(formattedData),
+      ],
+      value: isNativeCurrency ? amountInWithFee : undefined,
+    }
+
+  return {
+    params: [
+      BigInt(guildId),
       {
-        tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
-        amount: isNativeCurrency ? 0 : amountInWithFee,
+        tokenAddress: pickedCurrency,
+        amount: isNativeCurrency ? BigInt(0) : amountInWithFee,
       },
       `0x${
         getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands
@@ -98,21 +111,9 @@ const generateGetAssetsParams = (
       getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
         source
       ].getEncodedParams(formattedData),
-      { value: isNativeCurrency ? amountInWithFee : undefined },
-    ]
-
-  return [
-    guildId,
-    {
-      tokenAddress: isNativeCurrency ? NULL_ADDRESS : pickedCurrency,
-      amount: isNativeCurrency ? 0 : amountInWithFee,
-    },
-    `0x${getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][source].commands}`,
-    getAssetsCallParams[isNativeCurrency ? "COIN" : "ERC20"][
-      source
-    ].getEncodedParams(formattedData),
-    { value: isNativeCurrency ? amountInWithFee : undefined },
-  ]
+    ],
+    value: isNativeCurrency ? amountInWithFee : undefined,
+  }
 }
 
 const flipPath = (pathToFlip: string): string => {
@@ -141,4 +142,4 @@ const flipPath = (pathToFlip: string): string => {
   return flippedPath
 }
 
-export { generateGetAssetsParams, flipPath }
+export { flipPath, generateGetAssetsParams }

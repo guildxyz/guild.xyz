@@ -1,7 +1,8 @@
-import { Chain, Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { CoingeckoToken } from "types"
 import fetcher from "utils/fetcher"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 
 export const TokenApiURLs: Record<Chain, string[]> = {
   ETHEREUM: ["https://tokens.coingecko.com/uniswap/all.json"],
@@ -61,8 +62,14 @@ const fetchTokens = async ([_, chain]) =>
           ),
         []
       )
-      return RPC[chain]
-        ? [RPC[chain].nativeCurrency].concat(finalTokenArray)
+      return CHAIN_CONFIG[chain]
+        ? [
+            {
+              ...CHAIN_CONFIG[chain].nativeCurrency,
+              logoURI: CHAIN_CONFIG[chain].iconUrl,
+              address: NULL_ADDRESS,
+            },
+          ].concat(finalTokenArray)
         : finalTokenArray
     }
   )

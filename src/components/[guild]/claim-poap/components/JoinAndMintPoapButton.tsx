@@ -1,21 +1,21 @@
 import { ButtonProps, useDisclosure } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
 import { MintModal } from "components/[guild]/CreatePoap/hooks/useMintPoapButton"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useClaimPoap from "components/[guild]/claim-poap/hooks/useClaimPoap"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import { ArrowSquareOut } from "phosphor-react"
-import { forwardRef, PropsWithChildren } from "react"
+import { forwardRef } from "react"
+import { useAccount } from "wagmi"
 
 type Props = {
   poapId: number
 } & ButtonProps
 
 const JoinAndMintPoapButton = forwardRef(
-  ({ poapId, children, ...buttonProps }: PropsWithChildren<Props>, ref: any) => {
-    const { account } = useWeb3React()
+  ({ poapId, ...buttonProps }: Props, ref: any) => {
+    const { address } = useAccount()
     const isMember = useIsMember()
     const toast = useToast()
 
@@ -50,7 +50,7 @@ const JoinAndMintPoapButton = forwardRef(
       ? {
           as: "a",
           target: "_blank",
-          href: `${response}?address=${account}`,
+          href: `${response}?address=${address}`,
           rightIcon: <ArrowSquareOut />,
           children: "Go to minting page",
         }

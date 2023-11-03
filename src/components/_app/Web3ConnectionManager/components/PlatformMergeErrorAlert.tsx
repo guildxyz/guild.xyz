@@ -11,7 +11,6 @@ import {
   UnorderedList,
   chakra,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
@@ -24,6 +23,7 @@ import { useRef } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
+import { useAccount } from "wagmi"
 
 type Props = {
   isOpen: boolean
@@ -38,7 +38,7 @@ const PlatformMergeErrorAlert = ({
   addressOrDomain,
   platformName,
 }: Props) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const toast = useToast()
   const socialAccountName = platforms[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(
@@ -84,7 +84,7 @@ const PlatformMergeErrorAlert = ({
               <Text>
                 Switch to the address above and link your current address (
                 <chakra.span fontWeight={"semibold"}>
-                  {account ? shortenHex(account) : ""}
+                  {address ? shortenHex(address) : ""}
                 </chakra.span>
                 ) to it by following{" "}
                 <Link

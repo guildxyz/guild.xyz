@@ -9,12 +9,12 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { Chains } from "connectors"
 import dynamic from "next/dynamic"
 import { useState } from "react"
 import { useMintGuildPinContext } from "../MintGuildPinContext"

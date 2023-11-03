@@ -8,7 +8,6 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
@@ -19,6 +18,7 @@ import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
+import { useAccount } from "wagmi"
 
 export type PlatformHookType = ({
   platform,
@@ -52,7 +52,7 @@ const PlatformSelectButton = ({
   onSelection,
   ...rest
 }: Props) => {
-  const { account } = useWeb3React()
+  const { isConnected } = useAccount()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
@@ -82,7 +82,7 @@ const PlatformSelectButton = ({
     <DisplayCard
       cursor="pointer"
       onClick={
-        !account
+        !isConnected
           ? openWalletSelectorModal
           : isPlatformConnected
           ? selectPlatform
@@ -125,7 +125,9 @@ const PlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        <Icon as={isLoading ? Spinner : (account && DynamicCtaIcon) ?? CaretRight} />
+        <Icon
+          as={isLoading ? Spinner : (isConnected && DynamicCtaIcon) ?? CaretRight}
+        />
       </HStack>
     </DisplayCard>
   )

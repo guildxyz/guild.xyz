@@ -1,9 +1,9 @@
 import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { RPC } from "connectors"
+import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { Info, Question } from "phosphor-react"
-import { GUILD_FEE_PERCENTAGE } from "utils/guildCheckout/constants"
+import { GUILD_FEE_PERCENTAGE, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
 import { useRequirementContext } from "../../RequirementContext"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
@@ -33,21 +33,18 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     error,
   } = usePrice(pickedCurrency)
 
-  const {
-    estimatedGasFee,
-    estimatedGasFeeInUSD,
-    estimateGasError,
-    isLoading: isEstimateGasLoading,
-  } = usePurchaseAsset()
+  const { estimatedGas, estimatedGasInUSD, isPreparing } = usePurchaseAsset()
 
-  const estimatedGasInFloat = estimatedGasFee
+  const estimatedGasInFloat = estimatedGas
     ? parseFloat(
-        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
+        formatUnits(
+          estimatedGas,
+          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+        )
       )
     : null
 
-  const isNativeCurrency =
-    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
+  const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
   // 1% + base fee on the estimated price
   const guildFee = Number((estimatedGuildFeeInSellToken ?? 0)?.toFixed(3))
@@ -83,7 +80,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
                     ? `$${(
                         estimatedPriceInUSD +
                         estimatedGuildFeeInUSD +
-                        (estimatedGasFeeInUSD ?? 0)
+                        (estimatedGasInUSD ?? 0)
                       )?.toFixed(2)}`
                     : "$0.00"}
                   {" = "}
@@ -166,12 +163,12 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
       <Tr>
         <Td>Gas fee</Td>
         <Td isNumeric>
-          <Skeleton isLoaded={!isEstimateGasLoading}>
+          <Skeleton isLoaded={!isPreparing}>
             <Text as="span">
-              {error || estimateGasError || !estimatedGasInFloat
+              {!estimatedGasInFloat
                 ? "Couldn't estimate"
                 : `${estimatedGasInFloat.toFixed(8)} ${
-                    RPC[requirement.chain].nativeCurrency.symbol
+                    CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
                   }`}
             </Text>
           </Skeleton>
