@@ -9,6 +9,7 @@ describe("roles", () => {
     cy.clearIndexedDB()
     cy.visit(`/${Cypress.env("TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
+    cy.waitForAccessCheck()
   })
 
   it("can fetch guild id", () => {
