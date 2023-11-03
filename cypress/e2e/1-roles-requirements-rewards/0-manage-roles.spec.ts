@@ -9,17 +9,17 @@ describe("roles", () => {
     cy.clearIndexedDB()
     cy.visit(`/${Cypress.env("TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
-    cy.waitForAccessCheck()
-  })
 
-  it("can fetch guild id", () => {
     cy.intercept(
       "GET",
       `${Cypress.env("guildApiUrl")}/guilds/guild-page/${Cypress.env(
         "TEST_GUILD_URL_NAME"
       )}`
     ).as("fetchGuild")
+    cy.waitForAccessCheck()
+  })
 
+  it("can fetch guild id", () => {
     cy.wait("@fetchGuild")
       .then((intercept) => {
         CONTEXT.guild = intercept.response.body
