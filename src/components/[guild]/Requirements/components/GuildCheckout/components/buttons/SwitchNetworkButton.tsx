@@ -16,6 +16,7 @@ const SwitchNetworkButton = ({ targetChainId }: Props): JSX.Element => {
   return (
     <Collapse in={chainId !== targetChainId}>
       <Button
+        data-test="switch-network-button"
         size="lg"
         colorScheme="blue"
         isLoading={isNetworkChangeInProgress}

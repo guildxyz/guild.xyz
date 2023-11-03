@@ -58,6 +58,11 @@ const useRegisterVault = ({
         })
       },
       onSuccess: (_, events) => {
+        if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
+          onSuccess("0")
+          return
+        }
+
         const vaultRegisteredEvent: {
           eventName: "VaultRegistered"
           args: {

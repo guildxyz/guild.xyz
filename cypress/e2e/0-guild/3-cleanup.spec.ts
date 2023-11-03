@@ -1,9 +1,9 @@
 before(() => {
-  cy.disconnectMetamaskWalletFromAllDapps()
+  cy.clearIndexedDB()
 })
 
 const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
-  "DEPLOYMENT_ID"
+  "RUN_ID"
 )}`
 
 describe("post-test cleanup", () => {
@@ -21,15 +21,13 @@ describe("post-test cleanup", () => {
             $h1.text().toString() !== "404" &&
             $h1.text().toString() !== "Client-side error"
           ) {
-            cy.connectWalletAndVerifyAccount()
+            cy.connectWallet()
 
             cy.get(".chakra-button[aria-label='Edit Guild']").click()
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
 
             cy.get(".chakra-button[aria-label='Delete guild']").click()
-            cy.findByText("Delete").click()
-
-            cy.confirmMetamaskSignatureRequest()
+            cy.getByDataTest("delete-guild-button").click()
           } else {
             cy.visit("/explorer")
           }

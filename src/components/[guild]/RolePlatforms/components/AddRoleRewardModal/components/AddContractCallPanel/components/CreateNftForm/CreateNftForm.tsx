@@ -415,6 +415,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
         <HStack justifyContent="end">
           {chain && Chains[chainId] !== chain && (
             <Button
+              data-test="create-nft-switch-network-button"
               isLoading={isNetworkChangeInProgress}
               loadingText="Check your wallet"
               onClick={() => requestNetworkChange(Chains[chain])}
@@ -425,6 +426,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
             isDisabled={!shouldSwitchChain}
           >
             <Button
+              data-test="create-nft-button"
               colorScheme="indigo"
               isDisabled={shouldSwitchChain || isLoading}
               isLoading={isLoading}

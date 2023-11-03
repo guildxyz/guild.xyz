@@ -275,7 +275,7 @@ export const sign = async ({
     }
 
     sig = await walletClient.signMessage({
-      account: address,
+      account: walletClient.account,
       message: getMessage(params),
     })
   }

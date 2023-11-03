@@ -25,9 +25,9 @@ import { WagmiConfig, createConfig } from "wagmi"
 import "wicg-inert"
 
 const config = createConfig({
-  autoConnect: true,
-  connectors,
+  autoConnect: !process.env.NEXT_PUBLIC_MOCK_CONNECTOR,
   publicClient,
+  connectors,
 })
 
 const App = ({

@@ -38,7 +38,7 @@ const WithdrawButton = (): JSX.Element => {
       ? "Withdrawable amount is 0"
       : owner && owner !== address
       ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
-      : error
+      : isOnVaultsChain && error
 
   return (
     <Tooltip
@@ -48,6 +48,7 @@ const WithdrawButton = (): JSX.Element => {
       placement="right"
     >
       <Button
+        data-test="withdraw-button"
         size="xs"
         borderRadius="md"
         leftIcon={
