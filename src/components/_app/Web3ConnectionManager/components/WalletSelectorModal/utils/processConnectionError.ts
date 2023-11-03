@@ -11,7 +11,7 @@ const processConnectionError = (error: WalletError & Error): ErrorInfo => {
 
   return {
     title: "Error",
-    description: error.message,
+    description: (error.cause as Error)?.message ?? "Unknown error",
   }
 }
 

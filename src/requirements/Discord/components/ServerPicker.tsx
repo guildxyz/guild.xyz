@@ -7,9 +7,12 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useGateables from "hooks/useGateables"
+import useServerData from "hooks/useServerData"
+import { useMemo } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
+import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
@@ -20,15 +23,48 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
   const { errors } = useFormState()
   const { register, setValue } = useFormContext()
 
+  const { guildPlatforms } = useGuild()
+
   const serverId = useWatch({ name: `${baseFieldPath}.data.serverId` })
 
-  const { gateables, isLoading } = useGateables(PlatformType.DISCORD)
+  const { gateables, isLoading: isGateablesLoading } = useGateables(
+    PlatformType.DISCORD
+  )
+  /**
+   * Important note: this will of course only display the first Discord server from
+   * guildPlatforms. We should make it work with multiple Discord rewards in the
+   * future.
+   */
+  const { data: serverData, isValidating: isServerDataValidating } = useServerData(
+    guildPlatforms?.find((gp) => gp.platformId === PlatformType.DISCORD)
+      ?.platformGuildId
+  )
 
-  const serverOptions = (gateables ?? []).map(({ img, name, id }) => ({
-    value: id,
-    img,
-    label: name,
-  }))
+  const isLoading = isGateablesLoading || isServerDataValidating
+
+  const serverOptions = useMemo(() => {
+    const options: SelectOption[] = []
+
+    if (gateables?.length) {
+      options.push(
+        ...gateables.map(({ img, name, id }) => ({
+          value: id,
+          img,
+          label: name,
+        }))
+      )
+    }
+
+    if (serverData?.serverId) {
+      options.unshift({
+        value: serverData.serverId,
+        img: serverData.serverIcon ?? "/default_discord_icon.png",
+        label: serverData.serverName,
+      })
+    }
+
+    return options
+  }, [gateables, serverData])
 
   const selectedServer = serverOptions.find((reqType) => reqType.value === serverId)
 

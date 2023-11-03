@@ -1,16 +1,19 @@
-import { hexStripZeros } from "@ethersproject/bytes"
-import { keccak256 } from "@ethersproject/keccak256"
-import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers"
-import { toUtf8Bytes } from "@ethersproject/strings"
-import { useWeb3React } from "@web3-react/core"
 import { useKeyPair } from "components/_app/KeyPairProvider"
-import { Chains, RPC } from "connectors"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
+import { keccak256, stringToBytes, trim } from "viem"
+import {
+  PublicClient,
+  WalletClient,
+  useAccount,
+  useChainId,
+  usePublicClient,
+  useWalletClient,
+} from "wagmi"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -119,7 +122,6 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     keyPair: undefined,
   }
 ) => {
-  const { account, provider, chainId } = useWeb3React()
   const { data: peerMeta } = useSWR<any>(
     typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
     () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
@@ -135,14 +137,20 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const [isSigning, setIsSigning] = useState<boolean>(false)
   const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
+  const { address } = useAccount()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+  const chainId = useChainId()
+
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       const payload = JSON.stringify(data ?? {})
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
       const [signedPayload, validation] = await sign({
-        provider,
-        address: account,
+        publicClient,
+        walletClient,
+        address,
         payload,
         chainId: chainId.toString(),
         forcePrompt,
@@ -158,7 +166,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
             const msg = getMessage(val.params)
             await callbackData
-              .signCallback(msg, account, chainId)
+              .signCallback(msg, address, chainId)
               .finally(() => setSignLoadingText(defaultLoadingText))
           }
           return [signed, val] as [string, Validation]
@@ -212,8 +220,9 @@ const useSubmitWithSign = <ResponseType>(
 }
 
 export type SignProps = {
-  provider: Web3Provider
-  address: string
+  publicClient: PublicClient
+  walletClient: WalletClient
+  address: `0x${string}`
   payload: string
   chainId: string
   forcePrompt: boolean
@@ -222,11 +231,12 @@ export type SignProps = {
   ts: number
 }
 
-const sign = async ({
-  provider,
+export const sign = async ({
+  publicClient,
+  walletClient,
   address,
   payload,
-  chainId: paramChainId,
+  chainId,
   keyPair,
   forcePrompt,
   msg = DEFAULT_MESSAGE,
@@ -236,7 +246,7 @@ const sign = async ({
     addr: address.toLowerCase(),
     nonce: randomBytes(32).toString("base64"),
     ts: ts.toString(),
-    hash: payload !== "{}" ? keccak256(toUtf8Bytes(payload)) : undefined,
+    hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
     method: null,
     msg,
     chainId: undefined,
@@ -253,31 +263,25 @@ const sign = async ({
       )
       .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
   } else {
-    const rpcUrl = RPC[Chains[paramChainId]]?.rpcUrls?.[0]
-    const prov =
-      typeof rpcUrl === "string" && rpcUrl.length > 0
-        ? new JsonRpcProvider(rpcUrl)
-        : provider
-
-    const bytecode = await prov.getCode(address).catch(() => null)
-
-    const isSmartContract = bytecode && hexStripZeros(bytecode) !== "0x"
+    const bytecode = await publicClient.getBytecode({ address }).catch(() => null)
+    const isSmartContract = bytecode && trim(bytecode) !== "0x"
 
     params.method = isSmartContract
       ? ValidationMethod.EIP1271
       : ValidationMethod.STANDARD
 
     if (isSmartContract) {
-      params.chainId = paramChainId
+      params.chainId = chainId
     }
 
-    sig = await provider
-      .getSigner(address.toLowerCase())
-      .signMessage(getMessage(params))
+    sig = await walletClient.signMessage({
+      account: walletClient.account,
+      message: getMessage(params),
+    })
   }
 
   return [payload, { params, sig }]
 }
 
 export default useSubmit
-export { sign, useSubmitWithSign, useSubmitWithSignWithParamKeyPair }
+export { useSubmitWithSign, useSubmitWithSignWithParamKeyPair }

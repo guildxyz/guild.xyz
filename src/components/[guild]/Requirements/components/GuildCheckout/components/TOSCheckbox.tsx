@@ -8,6 +8,7 @@ const TOSCheckbox = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
 
   return (
     <Checkbox
+      data-test="tos-checkbox"
       alignItems="start"
       sx={{
         "> .chakra-checkbox__control": {

@@ -24,7 +24,7 @@ const FeesTable = ({
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Stack w="full" spacing={0}>
+    <Stack w="full" spacing={0} data-test="fees-table">
       <Button
         display="flex"
         w="full"

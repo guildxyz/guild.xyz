@@ -1,18 +1,20 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { ArrowSquareOut } from "phosphor-react"
+import { useChainId } from "wagmi"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"
 
 const TransactionLink = (): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const { txHash } = useTransactionStatusContext()
 
   return (
     <Text mb={6} colorScheme="gray">
       <Link
         isExternal
-        href={`${RPC[Chains[chainId]].blockExplorerUrls[0]}/tx/${txHash}`}
+        href={`${
+          CHAIN_CONFIG[Chains[chainId]].blockExplorers.default.url
+        }/tx/${txHash}`}
       >
         View on block explorer
         <Icon ml={1} as={ArrowSquareOut} />

@@ -1,28 +1,24 @@
 import { useDisclosure } from "@chakra-ui/react"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { useWeb3React } from "@web3-react/core"
-import { WalletConnect } from "@web3-react/walletconnect-v2"
-import { Chains, getConnectorName, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
+import ClientOnly from "components/common/ClientOnly"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import {
-  createContext,
   PropsWithChildren,
+  createContext,
   useContext,
   useEffect,
   useState,
 } from "react"
 import { PlatformName } from "types"
-import requestNetworkChangeHandler from "utils/requestNetworkChange"
+import { useAccount, useSwitchNetwork } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
-import useEagerConnect from "./hooks/useEagerConnect"
 import useNewSharedSocialsToast from "./hooks/useNewSharedSocialsToast"
 
 const Web3Connection = createContext({
-  triedEager: false,
   isWalletSelectorModalOpen: false,
   openWalletSelectorModal: () => {},
   closeWalletSelectorModal: () => {},
@@ -30,9 +26,9 @@ const Web3Connection = createContext({
   openAccountModal: () => {},
   closeAccountModal: () => {},
   requestNetworkChange: (
-    chainId: number,
-    callback?: () => void,
-    errorHandler?: (err) => void
+    _chainId: number,
+    _callback?: () => void,
+    _errorHandler?: (err) => void
   ) => {},
   isDelegateConnection: false,
   setIsDelegateConnection: (_: boolean) => {},
@@ -41,19 +37,21 @@ const Web3Connection = createContext({
     _addressOrDomain: string,
     _platformName: PlatformName
   ) => {},
+  isInSafeContext: false,
 })
 
 const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
-  const { isActive, connector } = useWeb3React()
+  const { isConnected, connector } = useAccount()
   const router = useRouter()
 
+  const [isInSafeContext, setIsInSafeContext] = useState(false)
+
   useEffect(() => {
-    if (!connector || !isActive) return
-    const connectorName = getConnectorName(connector)
-    window.localStorage.setItem("connector", connectorName)
-  }, [connector, isActive])
+    if (!isConnected || connector?.id !== "safe") return
+    setIsInSafeContext(true)
+  }, [isConnected, connector])
 
   const {
     isOpen: isWalletSelectorModalOpen,
@@ -80,37 +78,32 @@ const Web3ConnectionManager = ({
 
   const [isDelegateConnection, setIsDelegateConnection] = useState<boolean>(false)
 
-  // try to eagerly connect to an injected provider, if it exists and has granted access already
-  const triedEager = useEagerConnect()
-
   useEffect(() => {
-    if (triedEager && !isActive && router.query.redirectUrl)
-      openWalletSelectorModal()
-  }, [triedEager, isActive, router.query])
+    if (!isConnected && router.query.redirectUrl) openWalletSelectorModal()
+  }, [isConnected, router.query])
 
-  const [isNetworkChangeInProgress, setNetworkChangeInProgress] = useState(false)
+  const { switchNetworkAsync, isLoading: isNetworkChangeInProgress } =
+    useSwitchNetwork()
+
   const toast = useToast()
-  const requestManualNetworkChange = (chain) => () =>
-    toast({
-      title: "Your wallet doesn't support switching chains automatically",
-      description: `Please switch to ${RPC[chain].chainName} from your wallet manually!`,
-      status: "info",
-    })
 
   const requestNetworkChange = async (
     newChainId: number,
     callback?: () => void,
     errorHandler?: (err: unknown) => void
   ) => {
-    if (connector instanceof WalletConnect || connector instanceof CoinbaseWallet)
-      requestManualNetworkChange(Chains[newChainId])()
-    else {
-      setNetworkChangeInProgress(true)
-      await requestNetworkChangeHandler(
-        Chains[newChainId],
-        callback,
-        errorHandler
-      )().finally(() => setNetworkChangeInProgress(false))
+    if (!switchNetworkAsync) {
+      toast({
+        title: "Your wallet doesn't support switching chains automatically",
+        description: `Please switch to ${
+          CHAIN_CONFIG[Chains[newChainId]].name
+        } from your wallet manually!`,
+        status: "info",
+      })
+    } else {
+      switchNetworkAsync(newChainId)
+        .then(() => callback?.())
+        .catch(errorHandler)
     }
   }
 
@@ -130,7 +123,6 @@ const Web3ConnectionManager = ({
         isWalletSelectorModalOpen,
         openWalletSelectorModal,
         closeWalletSelectorModal,
-        triedEager,
         isAccountModalOpen,
         openAccountModal,
         closeAccountModal,
@@ -138,14 +130,18 @@ const Web3ConnectionManager = ({
         isDelegateConnection,
         setIsDelegateConnection,
         isNetworkChangeInProgress,
+        isInSafeContext,
       }}
     >
       {children}
-      <WalletSelectorModal
-        isOpen={isWalletSelectorModalOpen}
-        onOpen={openWalletSelectorModal}
-        onClose={closeWalletSelectorModal}
-      />
+
+      <ClientOnly>
+        <WalletSelectorModal
+          isOpen={isWalletSelectorModalOpen}
+          onOpen={openWalletSelectorModal}
+          onClose={closeWalletSelectorModal}
+        />
+      </ClientOnly>
       <PlatformMergeErrorAlert
         onClose={closePlatformMergeAlert}
         isOpen={isPlatformMergeAlertOpen}
@@ -158,4 +154,4 @@ const Web3ConnectionManager = ({
 
 const useWeb3ConnectionManager = () => useContext(Web3Connection)
 
-export { useWeb3ConnectionManager, Web3ConnectionManager }
+export { Web3ConnectionManager, useWeb3ConnectionManager }

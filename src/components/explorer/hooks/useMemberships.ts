@@ -1,5 +1,5 @@
-import { useWeb3React } from "@web3-react/core"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useAccount } from "wagmi"
 
 export type Memberships = Array<{
   guildId: number
@@ -9,12 +9,10 @@ export type Memberships = Array<{
 }>
 
 const useMemberships = () => {
-  const { account } = useWeb3React()
-
-  const shouldFetch = !!account
+  const { address, isConnected } = useAccount()
 
   const { data, mutate, ...rest } = useSWRWithOptionalAuth<Memberships>(
-    shouldFetch ? `/v2/users/${account}/memberships` : null
+    isConnected ? `/v2/users/${address}/memberships` : null
   )
 
   return {

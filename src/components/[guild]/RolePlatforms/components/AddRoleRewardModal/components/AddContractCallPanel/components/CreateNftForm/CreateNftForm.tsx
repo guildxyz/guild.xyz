@@ -25,17 +25,15 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { Chain, Chains, RPC } from "connectors"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
   FormProvider,
@@ -46,6 +44,8 @@ import {
 } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
+import { useAccount, useChainId } from "wagmi"
 import ImagePicker from "./components/ImagePicker"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
 import useCreateNft, { CreateNFTResponse } from "./hooks/useCreateNft"
@@ -56,7 +56,7 @@ type Props = {
 
 export type CreateNftFormType = {
   chain: Chain
-  tokenTreasury: string
+  tokenTreasury: `0x${string}`
   name: string
   symbol: string
   price: number
@@ -78,7 +78,8 @@ export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
 
@@ -121,7 +122,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const { guildFee } = useGuildFee(chain)
   const formattedGuildFee =
     guildFee && chain
-      ? Number(formatUnits(guildFee, RPC[chain].nativeCurrency.decimals))
+      ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
       : undefined
 
   const { fields, append, remove } = useFieldArray({
@@ -356,9 +357,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                     </NumberInputStepper>
                   </NumberInput>
 
-                  <InputRightAddon>
-                    {RPC[chain]?.nativeCurrency?.symbol}
-                  </InputRightAddon>
+                  {chain && (
+                    <InputRightAddon>
+                      {CHAIN_CONFIG[chain].nativeCurrency.symbol}
+                    </InputRightAddon>
+                  )}
                 </InputGroup>
 
                 <FormHelperText>
@@ -366,7 +369,9 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   <Skeleton display="inline" h={3} isLoaded={!!formattedGuildFee}>
                     {formattedGuildFee ?? "..."}
                   </Skeleton>
-                  {` ${RPC[chain]?.nativeCurrency?.symbol} Guild minting fee. `}
+                  {` ${
+                    chain ? CHAIN_CONFIG[chain].nativeCurrency.symbol : "COIN"
+                  } Guild minting fee. `}
                   <Link
                     href="https://help.guild.xyz/en/articles/8193498-guild-base-fee"
                     isExternal
@@ -392,8 +397,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                         "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
                     },
                   })}
-                  defaultValue={account}
-                  placeholder={`e.g. ${account}`}
+                  defaultValue={address}
+                  placeholder={`e.g. ${address}`}
                 />
 
                 <FormHelperText>
@@ -408,18 +413,20 @@ const CreateNftForm = ({ onSuccess }: Props) => {
         </Grid>
 
         <HStack justifyContent="end">
-          {Chains[chainId] !== chain && (
+          {chain && Chains[chainId] !== chain && (
             <Button
+              data-test="create-nft-switch-network-button"
               isLoading={isNetworkChangeInProgress}
               loadingText="Check your wallet"
               onClick={() => requestNetworkChange(Chains[chain])}
-            >{`Switch to ${RPC[chain]?.chainName}`}</Button>
+            >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
           )}
           <Tooltip
             label="Please switch to a supported chain"
             isDisabled={!shouldSwitchChain}
           >
             <Button
+              data-test="create-nft-button"
               colorScheme="indigo"
               isDisabled={shouldSwitchChain || isLoading}
               isLoading={isLoading}

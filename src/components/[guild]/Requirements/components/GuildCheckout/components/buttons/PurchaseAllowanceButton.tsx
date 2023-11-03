@@ -1,13 +1,13 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { BigNumber } from "@ethersproject/bignumber"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import useGuild from "components/[guild]/hooks/useGuild"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains, RPC } from "connectors"
+import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
@@ -21,13 +21,13 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const {
     data: { symbol, name },
   } = useTokenData(requirement.chain, pickedCurrency)
-  const nativeCurrency = RPC[Chains[chainId]]?.nativeCurrency
-  const isNativeCurrencyPicked = pickedCurrency === nativeCurrency?.symbol
+  const nativeCurrency = CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency
+  const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
 
   const tokenSymbol = isNativeCurrencyPicked ? nativeCurrency.symbol : symbol
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
@@ -44,15 +44,16 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     isAllowanceLoading,
     isAllowing,
     allowanceError,
-    onSubmit,
-    isLoading,
+    allowSpendingTokens,
   } = useAllowance(pickedCurrency, tokenBuyerContractData[Chains[chainId]]?.address)
 
   const isEnoughAllowance =
-    maxPriceInWei && allowance ? BigNumber.from(maxPriceInWei).lte(allowance) : false
+    typeof maxPriceInWei === "bigint" && typeof allowance === "bigint"
+      ? maxPriceInWei <= allowance
+      : false
 
   const onClick = () => {
-    onSubmit()
+    allowSpendingTokens()
     captureEvent("Click: PurchaseAllowanceButton (GuildCheckout)", {
       guild: urlName,
     })
@@ -71,7 +72,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
         size="lg"
         colorScheme={allowanceError ? "red" : "blue"}
         isDisabled={isEnoughAllowance}
-        isLoading={isPriceLoading || isAllowanceLoading || isLoading}
+        isLoading={isPriceLoading || isAllowanceLoading || isAllowing}
         loadingText={
           isPriceLoading || isAllowanceLoading
             ? "Checking allowance"

@@ -9,17 +9,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
-import { Chains, RPC } from "connectors"
-import useBalance from "hooks/useBalance"
-import useTokenData from "hooks/useTokenData"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { Fragment } from "react"
 import { Rest } from "types"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { useAccount, useBalance } from "wagmi"
 
 type Props = {
   chainId: number
-  address: string
+  address: `0x${string}`
   isLoading?: boolean
   error?: any
   requiredAmount: number
@@ -28,7 +26,7 @@ type Props = {
 
 const TokenInfo = ({
   chainId,
-  address,
+  address: tokenAddress,
   asMenuItem,
   isLoading,
   error,
@@ -41,37 +39,56 @@ const TokenInfo = ({
     ? parseFloat(requiredAmount.toFixed(3)) <= 0.0
     : undefined
 
-  const {
-    data: { symbol, decimals, logoURI },
-    error: tokenDataError,
-    isValidating: isTokenDataLoading,
-  } = useTokenData(Chains[chainId], address)
+  const isNativeCurrency = tokenAddress === NULL_ADDRESS
 
-  const { account } = useWeb3React()
-  const {
-    coinBalance,
-    tokenBalance,
-    isLoading: isBalanceLoading,
-  } = useBalance(address, chainId)
+  const logoURI = isNativeCurrency
+    ? CHAIN_CONFIG[Chains[chainId]].iconUrl
+    : undefined
 
-  const balance = formatUnits(
-    (address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
-      ? coinBalance
-      : tokenBalance) ?? "0",
-    address === RPC[Chains[chainId]]?.nativeCurrency?.symbol
-      ? RPC[Chains[chainId]]?.nativeCurrency?.decimals
-      : decimals ?? 18
+  const { address } = useAccount()
+  const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
+    address,
+    chainId,
+  })
+
+  const {
+    data: tokenBalanceData,
+    isLoading: isTokenBalanceLoading,
+    isError: isTokenBalanceError,
+  } = useBalance({
+    address,
+    token: tokenAddress,
+    chainId,
+    enabled: tokenAddress !== NULL_ADDRESS,
+  })
+
+  const symbol = isNativeCurrency
+    ? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol
+    : tokenBalanceData?.symbol
+
+  const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
+
+  const formattedBalance = Number(
+    Number(
+      (tokenAddress === NULL_ADDRESS
+        ? coinBalanceData?.formatted
+        : tokenBalanceData?.formatted) ?? 0
+    ).toFixed(3)
   )
-  const formattedBalance = Number(Number(balance).toFixed(3))
 
   const Wrapper = asMenuItem ? MenuItem : Fragment
 
   return (
     <Wrapper
-      {...(asMenuItem ? { ...rest, isDisabled: !!error || !!tokenDataError } : {})}
+      {...(asMenuItem
+        ? { ...rest, isDisabled: !!error || isTokenBalanceError }
+        : {})}
     >
       <HStack spacing={4} maxW="calc(100% - 2rem)" {...(asMenuItem ? {} : rest)}>
-        <SkeletonCircle isLoaded={!isTokenDataLoading} size="var(--chakra-space-11)">
+        <SkeletonCircle
+          isLoaded={!isTokenBalanceLoading}
+          size="var(--chakra-space-11)"
+        >
           <Circle size="var(--chakra-space-11)" bgColor={circleBgColor}>
             {logoURI ? (
               <Img src={logoURI} alt={symbol} boxSize={6} />
@@ -89,9 +106,14 @@ const TokenInfo = ({
           alignItems={"flex-start"}
           textAlign={"left"}
         >
-          <Skeleton isLoaded={!isTokenDataLoading && !isLoading} w="full" h={5}>
-            <Text as="span" display="block" isTruncated>
-              {tokenDataError
+          <Skeleton isLoaded={!isTokenBalanceLoading && !isLoading} w="full" h={5}>
+            <Text
+              as="span"
+              display="block"
+              isTruncated
+              data-test="token-info-fee-currency"
+            >
+              {isTokenBalanceError
                 ? "Couldn't fetch token data"
                 : error
                 ? `[?] ${symbol}`
@@ -101,13 +123,13 @@ const TokenInfo = ({
                       : Number(requiredAmount?.toFixed(3))
                   } ${symbol}`}
               <Text as="span" colorScheme="gray">
-                {` (${RPC[Chains[chainId]].chainName})`}
+                {` (${CHAIN_CONFIG[Chains[chainId]].name})`}
               </Text>
             </Text>
           </Skeleton>
 
           <Text as="span" colorScheme="gray" fontSize="xs">
-            {account ? (
+            {address ? (
               <>
                 {`Balance: `}
                 <Skeleton
@@ -115,6 +137,7 @@ const TokenInfo = ({
                   h={4}
                   display="inline-flex"
                   alignItems="center"
+                  data-test="token-info-balance"
                 >
                   {`${formattedBalance ?? "0.00"} ${symbol ?? "currency"}`}
                 </Skeleton>

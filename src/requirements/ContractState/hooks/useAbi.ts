@@ -1,4 +1,4 @@
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
@@ -40,7 +40,8 @@ const fetchAbi = ([_, baseUrl, contract]) => {
 }
 
 const useAbi = (chain: Chains, address: string) => {
-  const baseUrl = RPC[chain ?? "ETHEREUM"].apiUrl
+  const baseUrl = CHAIN_CONFIG[chain ?? "ETHEREUM"].etherscanApiUrl
+
   return useSWRImmutable<any[]>(
     address ? ["getabi", baseUrl, address] : null,
     fetchAbi

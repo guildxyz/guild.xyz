@@ -1,14 +1,14 @@
 import { Collapse } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Button from "components/common/Button"
+import { useChainId } from "wagmi"
 
 type Props = {
   targetChainId: number
 }
 
 const SwitchNetworkButton = ({ targetChainId }: Props): JSX.Element => {
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
 
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
@@ -16,6 +16,7 @@ const SwitchNetworkButton = ({ targetChainId }: Props): JSX.Element => {
   return (
     <Collapse in={chainId !== targetChainId}>
       <Button
+        data-test="switch-network-button"
         size="lg"
         colorScheme="blue"
         isLoading={isNetworkChangeInProgress}

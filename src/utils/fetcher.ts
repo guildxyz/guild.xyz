@@ -1,10 +1,9 @@
-import { Web3Provider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import { sign } from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
@@ -120,17 +119,23 @@ const fetcherWithSign = async (
 }
 
 const useFetcherWithSign = () => {
-  const { account, chainId, provider } = useWeb3React<Web3Provider>()
   const { keyPair } = useKeyPair()
   const timeInaccuracy = useTimeInaccuracy()
 
+  const { address } = useAccount()
+  const chainId = useChainId()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+
   return (props) => {
     const [resource, { signOptions, ...options }] = props
+
     return fetcherWithSign(
       {
-        address: account,
+        address,
         chainId: chainId.toString(),
-        provider,
+        publicClient,
+        walletClient,
         keyPair,
         ts: Date.now() + timeInaccuracy,
         ...signOptions,

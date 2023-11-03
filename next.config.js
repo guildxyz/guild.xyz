@@ -23,17 +23,13 @@ module.exports = {
         "@chakra-ui/anatomy": false,
         "@chakra-ui/react": false,
         "@chakra-ui/theme-tools": false,
-        "@web3-react/coinbase-wallet": false,
-        "@web3-react/core": false,
-        "@web3-react/metamask": false,
-        "@web3-react/walletconnect-v2": false,
-        "@ethersproject/keccak256": false,
         "chakra-react-select": false,
         "chakra-ui-steps": false,
         stream: false,
         "crypto-addr-codec": false,
         "@ensdomains/address-encoder": false,
         "decode-named-character-reference": false,
+        isows: false,
       }
     }
 

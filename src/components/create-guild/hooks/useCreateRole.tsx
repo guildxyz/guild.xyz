@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
@@ -13,6 +12,7 @@ import { GuildPlatform, PlatformType, Requirement, Role, Visibility } from "type
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
+import { useAccount } from "wagmi"
 
 export type RoleToCreate = Omit<
   Role,
@@ -32,7 +32,7 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }
 
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
@@ -76,7 +76,7 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
 
       triggerConfetti()
 
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
       mutate(`/statusUpdate/guild/${id}`)
 
       matchMutate(/^\/guild\/address\//)

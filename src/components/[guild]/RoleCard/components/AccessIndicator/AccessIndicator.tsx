@@ -6,7 +6,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -15,6 +14,7 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import Button from "components/common/Button"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
+import { useAccount } from "wagmi"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -34,7 +34,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   )?.length
 
   const { openAccountModal } = useWeb3ConnectionManager()
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -54,7 +54,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
-  if (!isActive || (hasAccess && !isMember))
+  if (!isConnected || (hasAccess && !isMember))
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}

@@ -1,4 +1,4 @@
-import { Chain } from "connectors"
+import { Chain } from "chains"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { getBlockByTime } from "utils/getBlockByTime"
