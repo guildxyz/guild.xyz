@@ -7,12 +7,7 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
-import Link from "components/common/Link"
-import LinkPreviewHead from "components/common/LinkPreviewHead"
-import PulseMarker from "components/common/PulseMarker"
+import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
@@ -27,17 +22,23 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ReportGuildButton from "components/[guild]/ReportGuildButton"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
-import { Chain } from "connectors"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import ClientOnly from "components/common/ClientOnly"
+import GuildLogo from "components/common/GuildLogo"
+import Layout from "components/common/Layout"
+import Link from "components/common/Link"
+import LinkPreviewHead from "components/common/LinkPreviewHead"
+import PulseMarker from "components/common/PulseMarker"
 import { AnimatePresence, motion } from "framer-motion"
 import useLocalStorage from "hooks/useLocalStorage"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { useRouter } from "next/router"
+import ErrorPage from "pages/_error"
 import {
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
-import ErrorPage from "pages/_error"
 import { useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, Requirement } from "types"
@@ -45,7 +46,7 @@ import fetcher from "utils/fetcher"
 
 type Props = {
   chain: Chain
-  address: string
+  address: `0x${string}`
   fallback: { [x: string]: Guild }
 }
 const Page = ({
@@ -58,8 +59,15 @@ const Page = ({
   const chain = chainFromProps ?? validateNftChain(chainFromQuery)
   const address = addressFromProps ?? validateNftAddress(addressFromQuery)
 
-  const { theme, imageUrl, name, urlName, roles, guildPlatforms, isFallback } =
-    useGuild()
+  const {
+    theme,
+    imageUrl,
+    name: guildName,
+    urlName,
+    roles,
+    guildPlatforms,
+    isFallback,
+  } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { textColor, buttonColorScheme } = useThemeContext()
 
@@ -87,10 +95,10 @@ const Page = ({
   const [shouldShowSmallImage, setShouldShowSmallImage] = useState(false)
   useScrollEffect(() => {
     const nftDescription = nftDescriptionRef.current
-    setShouldShowSmallImage(nftDescription.getBoundingClientRect().top < 100)
+    setShouldShowSmallImage(nftDescription?.getBoundingClientRect().top < 100)
   }, [])
 
-  const { data, isValidating } = useNftDetails(chain, address)
+  const { name, image, totalCollectors, isLoading } = useNftDetails(chain, address)
 
   const [hasClickedShareButton, setHasClickedShareButton] = useLocalStorage(
     `${chain}_${address}_hasClickedShareButton`,
@@ -100,136 +108,133 @@ const Page = ({
   if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
-    <CollectNftProvider
-      roleId={role?.id}
-      rolePlatformId={rolePlatformId}
-      guildPlatform={guildPlatform}
-      chain={chain}
-      address={address}
-    >
-      <Layout
-        ogTitle="Collect NFT"
-        background={theme?.color ?? "gray.900"}
-        backgroundImage={theme?.backgroundImage}
-        maxWidth="container.xl"
+    <ClientOnly>
+      <CollectNftProvider
+        roleId={role?.id}
+        rolePlatformId={rolePlatformId}
+        guildPlatform={guildPlatform}
+        chain={chain}
+        nftAddress={address}
       >
-        <Stack spacing={4}>
-          <HStack justifyContent="space-between">
-            <HStack>
-              <GuildLogo imageUrl={imageUrl} size={8} />
-              <Link
-                href={`/${urlName}`}
-                fontFamily="display"
-                fontWeight="bold"
-                color={textColor}
-              >
-                {name}
-              </Link>
-            </HStack>
-
-            <HStack>
-              <PulseMarker
-                placement="top"
-                hidden={
-                  !isAdmin || hasClickedShareButton || data?.totalCollectors > 0
-                }
-              >
-                <ShareButton onClick={() => setHasClickedShareButton(true)} />
-              </PulseMarker>
-              {!isAdmin && (
-                <ReportGuildButton
-                  layout="ICON"
-                  colorScheme={buttonColorScheme}
-                  color={textColor}
-                />
-              )}
-            </HStack>
-          </HStack>
-
-          <SimpleGrid
-            templateColumns={{
-              base: "1fr",
-              md: "7fr 5fr",
-            }}
-            gap={{ base: 6, lg: 8 }}
-          >
-            <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
-              <CollectibleImage src={data?.image} isLoading={isValidating} />
-
-              <Stack spacing={6}>
-                <Heading
-                  as="h2"
+        <Layout
+          ogTitle="Collect NFT"
+          background={theme?.color ?? "gray.900"}
+          backgroundImage={theme?.backgroundImage}
+          maxWidth="container.xl"
+        >
+          <Stack spacing={4}>
+            <HStack justifyContent="space-between">
+              <HStack>
+                <GuildLogo imageUrl={imageUrl} size={8} />
+                <Link
+                  href={`/${urlName}`}
                   fontFamily="display"
-                  fontSize={{ base: "3xl", lg: "4xl" }}
+                  fontWeight="bold"
+                  color={textColor}
                 >
-                  {data?.name}
-                </Heading>
-                {isMobile && (
-                  <RequirementsCard
-                    requirements={requirements}
-                    logic={role?.logic}
-                    anyOfNum={role?.anyOfNum}
+                  {guildName}
+                </Link>
+              </HStack>
+
+              <HStack>
+                <PulseMarker
+                  placement="top"
+                  hidden={!isAdmin || hasClickedShareButton || totalCollectors > 0}
+                >
+                  <ShareButton onClick={() => setHasClickedShareButton(true)} />
+                </PulseMarker>
+                {!isAdmin && (
+                  <ReportGuildButton
+                    layout="ICON"
+                    colorScheme={buttonColorScheme}
+                    color={textColor}
                   />
                 )}
+              </HStack>
+            </HStack>
 
-                <Box ref={nftDescriptionRef} lineHeight={1.75}>
-                  <RichTextDescription
-                    text={guildPlatform?.platformGuildData?.description}
-                  />
-                </Box>
-              </Stack>
-              <Divider />
-              <Links />
-              <Divider />
-              <Details />
-              <Divider />
-              <TopCollectors />
-            </Stack>
+            <SimpleGrid
+              templateColumns={{
+                base: "1fr",
+                md: "7fr 5fr",
+              }}
+              gap={{ base: 6, lg: 8 }}
+            >
+              <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
+                <CollectibleImage src={image} isLoading={isLoading} />
 
-            {!isMobile && (
-              <AnimatePresence>
-                <Stack
-                  position="sticky"
-                  top={{ base: 4, md: 5 }}
-                  spacing={8}
-                  h="max-content"
-                >
-                  {shouldShowSmallImage && (
-                    <CardMotionWrapper animateOnMount>
-                      <SimpleGrid
-                        gridTemplateColumns="var(--chakra-sizes-24) auto"
-                        gap={4}
-                      >
-                        <CollectibleImage
-                          src={data?.image}
-                          isLoading={isValidating}
-                        />
-
-                        <Stack spacing={3} justifyContent={"center"}>
-                          <Heading as="h2" fontFamily="display" fontSize="2xl">
-                            {data?.name}
-                          </Heading>
-
-                          <NftByRole role={role} />
-                        </Stack>
-                      </SimpleGrid>
-                    </CardMotionWrapper>
-                  )}
-
-                  <motion.div layout="position">
+                <Stack spacing={6}>
+                  <Heading
+                    as="h2"
+                    fontFamily="display"
+                    fontSize={{ base: "3xl", lg: "4xl" }}
+                  >
+                    {name}
+                  </Heading>
+                  {isMobile && (
                     <RequirementsCard
                       requirements={requirements}
                       logic={role?.logic}
                       anyOfNum={role?.anyOfNum}
                     />
-                  </motion.div>
+                  )}
+
+                  <Box ref={nftDescriptionRef} lineHeight={1.75}>
+                    <RichTextDescription
+                      text={guildPlatform?.platformGuildData?.description}
+                    />
+                  </Box>
                 </Stack>
-              </AnimatePresence>
-            )}
-          </SimpleGrid>
-        </Stack>
-      </Layout>
-    </CollectNftProvider>
+                <Divider />
+                <Links />
+                <Divider />
+                <Details />
+                <Divider />
+                <TopCollectors />
+              </Stack>
+
+              {!isMobile && (
+                <AnimatePresence>
+                  <Stack
+                    position="sticky"
+                    top={{ base: 4, md: 5 }}
+                    spacing={8}
+                    h="max-content"
+                  >
+                    {shouldShowSmallImage && (
+                      <CardMotionWrapper animateOnMount>
+                        <SimpleGrid
+                          gridTemplateColumns="var(--chakra-sizes-24) auto"
+                          gap={4}
+                        >
+                          <CollectibleImage src={image} isLoading={isLoading} />
+
+                          <Stack spacing={3} justifyContent={"center"}>
+                            <Heading as="h2" fontFamily="display" fontSize="2xl">
+                              {name}
+                            </Heading>
+
+                            <NftByRole role={role} />
+                          </Stack>
+                        </SimpleGrid>
+                      </CardMotionWrapper>
+                    )}
+
+                    <motion.div layout="position">
+                      <RequirementsCard
+                        requirements={requirements}
+                        logic={role?.logic}
+                        anyOfNum={role?.anyOfNum}
+                      />
+                    </motion.div>
+                  </Stack>
+                </AnimatePresence>
+              )}
+            </SimpleGrid>
+          </Stack>
+        </Layout>
+      </CollectNftProvider>
+    </ClientOnly>
   )
 }
 

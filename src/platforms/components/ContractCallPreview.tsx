@@ -10,16 +10,16 @@ const ContractCallPreview = (): JSX.Element => {
   const contractAddress = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData.contractAddress",
   })
-  const { data, isValidating } = useNftDetails(chain, contractAddress)
+  const { name, image, isLoading } = useNftDetails(chain, contractAddress)
 
-  useSetRoleImageAndNameFromPlatformData(data?.image, data?.name)
+  useSetRoleImageAndNameFromPlatformData(image, name)
 
   return (
     <PlatformPreview
       type="CONTRACT_CALL"
-      isLoading={isValidating}
-      name={data?.name}
-      image={data?.image}
+      isLoading={isLoading}
+      name={name}
+      image={image}
     />
   )
 }

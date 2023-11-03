@@ -1,6 +1,4 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { Web3ReactProvider } from "@web3-react/core"
-import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { AddressLinkProvider } from "components/_app/AddressLinkProvider"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -8,7 +6,9 @@ import IntercomProvider from "components/_app/IntercomProvider"
 import { KeyPairProvider } from "components/_app/KeyPairProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { connectors } from "connectors"
+import ClientOnly from "components/common/ClientOnly"
+import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
+import { connectors, publicClient } from "connectors"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -17,11 +17,18 @@ import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
+import { WagmiConfig, createConfig } from "wagmi"
 /**
  * Polyfill HTML inert property for Firefox support:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
  */
 import "wicg-inert"
+
+const config = createConfig({
+  autoConnect: true,
+  connectors,
+  publicClient,
+})
 
 const App = ({
   Component,
@@ -77,7 +84,7 @@ const App = ({
           }}
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <Web3ReactProvider connectors={connectors}>
+            <WagmiConfig config={config}>
               <PostHogProvider>
                 <AddressLinkProvider>
                   <KeyPairProvider>
@@ -85,14 +92,16 @@ const App = ({
                       <IntercomProvider>
                         <ExplorerProvider>
                           <Component {...pageProps} />
-                          <AccountModal />
+                          <ClientOnly>
+                            <AccountModal />
+                          </ClientOnly>
                         </ExplorerProvider>
                       </IntercomProvider>
                     </Web3ConnectionManager>
                   </KeyPairProvider>
                 </AddressLinkProvider>
               </PostHogProvider>
-            </Web3ReactProvider>
+            </WagmiConfig>
           </SWRConfig>
         </IconContext.Provider>
       </Chakra>

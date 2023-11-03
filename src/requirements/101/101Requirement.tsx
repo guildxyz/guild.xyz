@@ -1,10 +1,10 @@
 import { Img, Link } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chains } from "chains"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { Chains, RPC } from "connectors"
 import use101Courses from "./hooks/use101Courses"
 
 const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
@@ -51,7 +51,7 @@ const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {
         </Link>
       )}
 
-      {` 101 course (${RPC[requirement?.chain]?.chainName})`}
+      {` 101 course (${CHAIN_CONFIG[requirement?.chain]?.name})`}
     </Requirement>
   )
 }

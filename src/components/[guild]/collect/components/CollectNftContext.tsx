@@ -1,15 +1,27 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Chain, Chains } from "connectors"
-import useBalance from "hooks/useBalance"
-import { PropsWithChildren, createContext, useContext } from "react"
+import { Text } from "@chakra-ui/react"
+import { Chain, Chains } from "chains"
+import {
+  TransactionStatusProvider,
+  useTransactionStatusContext,
+} from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
+import TransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal"
+import OpenseaLink from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusModal/components/OpenseaLink"
+import {
+  RewardDisplay,
+  RewardIcon,
+} from "components/[guild]/RoleCard/components/Reward"
+import useNftBalance from "hooks/useNftBalance"
+import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { GuildPlatform } from "types"
+import { useAccount } from "wagmi"
+import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
   roleId: number
   rolePlatformId: number
   guildPlatform: GuildPlatform
   chain: Chain
-  address: string
+  nftAddress: `0x${string}`
   alreadyCollected: boolean
 }
 
@@ -20,12 +32,25 @@ const CollectNftProvider = ({
   rolePlatformId,
   guildPlatform,
   chain,
-  address,
+  nftAddress,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
   // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
-  const { tokenBalance: nftBalance } = useBalance(address, Chains[chain])
-  const alreadyCollected = nftBalance?.gt(BigNumber.from(0))
+  const { address } = useAccount()
+  const { data: nftBalance } = useNftBalance({
+    address,
+    nftAddress,
+    chainId: Chains[chain],
+  })
+  const alreadyCollected = nftBalance > 0
+
+  const { name } = useNftDetails(chain, nftAddress)
+
+  const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
+  useEffect(() => {
+    if (!txHash || isTxModalOpen) return
+    onTxModalOpen()
+  }, [txHash])
 
   return (
     <CollectNftContext.Provider
@@ -34,15 +59,64 @@ const CollectNftProvider = ({
         rolePlatformId,
         guildPlatform,
         chain,
-        address,
+        nftAddress,
         alreadyCollected,
       }}
     >
       {children}
+
+      <TransactionStatusModal
+        title="Collect NFT"
+        successTitle="Success"
+        successText="Successfully collected NFT!"
+        successLinkComponent={<OpenseaLink />}
+        errorComponent={<Text mb={4}>Couldn't collect NFT</Text>}
+        progressComponent={
+          <>
+            <Text fontWeight={"bold"} mb="2">
+              You'll get:
+            </Text>
+            <RewardDisplay
+              icon={
+                <RewardIcon
+                  guildPlatform={guildPlatform}
+                  rolePlatformId={rolePlatformId}
+                />
+              }
+              label={name}
+            />
+          </>
+        }
+        successComponent={
+          <>
+            <Text fontWeight={"bold"} mb="2">
+              Your new asset:
+            </Text>
+            <RewardDisplay
+              icon={
+                <RewardIcon
+                  guildPlatform={guildPlatform}
+                  rolePlatformId={rolePlatformId}
+                />
+              }
+              label={name}
+            />
+          </>
+        }
+      />
     </CollectNftContext.Provider>
   )
 }
 
+const CollectNftProviderWrapper = ({
+  children,
+  ...props
+}: PropsWithChildren<Omit<Props, "alreadyCollected">>) => (
+  <TransactionStatusProvider>
+    <CollectNftProvider {...props}>{children}</CollectNftProvider>
+  </TransactionStatusProvider>
+)
+
 const useCollectNftContext = () => useContext(CollectNftContext)
 
-export { CollectNftProvider, useCollectNftContext }
+export { CollectNftProviderWrapper as CollectNftProvider, useCollectNftContext }

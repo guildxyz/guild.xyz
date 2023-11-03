@@ -1,30 +1,25 @@
 import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import GuildAvatar from "components/common/GuildAvatar"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import useResolveAddress from "hooks/resolving/useResolveAddress"
+import GuildAvatar from "components/common/GuildAvatar"
+import useResolveAddress from "hooks/useResolveAddress"
 import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
+import { useAccount } from "wagmi"
 import AccountButton from "./components/AccountButton"
-import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 import UserActivityLogPopover from "./components/UserActivityLogPopover"
+import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
-  const { account } = useWeb3React()
-  const { openWalletSelectorModal, openAccountModal, triedEager } =
-    useWeb3ConnectionManager()
+  const { address, isConnected } = useAccount()
+  const { openWalletSelectorModal, openAccountModal } = useWeb3ConnectionManager()
 
-  const domainName = useResolveAddress(account)
+  const domainName = useResolveAddress(address)
   const { addresses } = useUser()
 
-  if (!account) {
+  if (!isConnected) {
     return (
-      <AccountButton
-        leftIcon={<SignIn />}
-        isLoading={!triedEager}
-        onClick={openWalletSelectorModal}
-      >
+      <AccountButton leftIcon={<SignIn />} onClick={openWalletSelectorModal}>
         Connect to a wallet
       </AccountButton>
     )
@@ -54,7 +49,7 @@ const Account = (): JSX.Element => {
                 fontSize={linkedAddressesCount ? "sm" : "md"}
                 fontWeight={linkedAddressesCount ? "bold" : "semibold"}
               >
-                {domainName || `${shortenHex(account, 3)}`}
+                {domainName || `${shortenHex(address, 3)}`}
               </Text>
               {linkedAddressesCount && (
                 <Text
@@ -69,7 +64,7 @@ const Account = (): JSX.Element => {
                 </Text>
               )}
             </VStack>
-            <GuildAvatar address={account} size={4} />
+            <GuildAvatar address={address} size={4} />
           </HStack>
         </AccountButton>
       </DelegatePopoverWrapper>

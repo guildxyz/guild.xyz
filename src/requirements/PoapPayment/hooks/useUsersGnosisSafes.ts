@@ -1,5 +1,5 @@
-import { useWeb3React } from "@web3-react/core"
 import useSWRImmutable from "swr/immutable"
+import { useAccount, useChainId } from "wagmi"
 import GnosisApiUrls from "../gnosisAPiUrls"
 
 const fetchUsersGnosisSafes = ([_, account, chainId]) =>
@@ -14,11 +14,12 @@ const useUsersGnosisSafes = (): {
   usersGnosisSafes: string[]
   isUsersGnosisSafesLoading: boolean
 } => {
-  const { account, chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const { data, isValidating } = useSWRImmutable(
-    account && chainId && GnosisApiUrls[chainId]
-      ? ["usersGnosisSafes", account, chainId]
+    address && chainId && GnosisApiUrls[chainId]
+      ? ["usersGnosisSafes", address, chainId]
       : null,
     fetchUsersGnosisSafes
   )

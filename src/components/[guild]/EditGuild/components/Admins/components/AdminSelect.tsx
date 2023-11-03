@@ -8,10 +8,10 @@ import {
 } from "chakra-react-select"
 import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
-import useReverseENSName from "hooks/resolving/useReverseENSName"
 import { Bug } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { mainnet, useEnsAddress } from "wagmi"
 
 const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
 
@@ -23,7 +23,11 @@ const CustomMultiValueContainer = ({
   const domain = ADDRESS_REGEX.test(multiValueContainerProps.data.value)
     ? undefined
     : multiValueContainerProps.data.value
-  const resolvedAddress = useReverseENSName(domain)
+  const { data: resolvedAddress } = useEnsAddress({
+    name: domain,
+    chainId: mainnet.id,
+  })
+
   const { setError, setValue, control, trigger } = useFormContext()
   const admins = useWatch({ control: control, name: "admins" })
 
@@ -35,8 +39,11 @@ const CustomMultiValueContainer = ({
     ) {
       setValue(
         "admins",
-        admins.map((admin) => (admin === domain ? resolvedAddress : admin))
+        admins.map((admin) =>
+          admin.address === domain ? { address: resolvedAddress } : admin
+        )
       )
+
       trigger("admins")
     }
 

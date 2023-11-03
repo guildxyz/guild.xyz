@@ -1,13 +1,13 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { Chains } from "chains"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { Chains } from "connectors"
+import Button from "components/common/Button"
 import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
+import { useAccount, useChainId } from "wagmi"
 import RegisterVaultForm, {
   RegisterVaultFormType,
 } from "./components/RegisterVaultForm"
@@ -18,7 +18,8 @@ const PaymentForm = ({
   addRequirement,
   setOnCloseAttemptToast,
 }: RequirementFormProps): JSX.Element => {
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange } = useWeb3ConnectionManager()
 
   const { setValue } = useFormContext()
@@ -32,7 +33,7 @@ const PaymentForm = ({
 
   const registerVaultFormMethods = useForm<RegisterVaultFormType>({
     mode: "all",
-    defaultValues: { owner: account },
+    defaultValues: { owner: address },
   })
   const {
     control: registerVaultFormControl,
@@ -48,10 +49,16 @@ const PaymentForm = ({
 
   const token = useWatch({ control: registerVaultFormControl, name: "token" })
   const fee = useWatch({ control: registerVaultFormControl, name: "fee" })
+  const owner = useWatch({ control: registerVaultFormControl, name: "owner" })
 
-  const { onSubmit, isLoading } = useRegisterVault((registeredVaultId) =>
-    setValue(`${baseFieldPath}.data.id`, registeredVaultId)
-  )
+  const { onSubmitTransaction, isLoading } = useRegisterVault({
+    chain,
+    token,
+    fee,
+    owner,
+    onSuccess: (registeredVaultId) =>
+      setValue(`${baseFieldPath}.data.id`, registeredVaultId),
+  })
 
   useEffect(() => {
     if (!vaultId) return
@@ -76,7 +83,7 @@ const PaymentForm = ({
         {isOnCorrectChain ? (
           <Button
             colorScheme={isOnCorrectChain ? "green" : "gray"}
-            onClick={registerVaultFormHandleSubmit(onSubmit)}
+            onClick={registerVaultFormHandleSubmit(() => onSubmitTransaction())}
             isDisabled={
               vaultId ||
               !!Object.keys(registerVaultFormErrors).length ||

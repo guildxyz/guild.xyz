@@ -1,22 +1,22 @@
 import { Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useIsMember from "components/[guild]/hooks/useIsMember"
+import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import platforms from "platforms/platforms"
 import useClaimText, {
   ClaimTextModal,
 } from "platforms/SecretText/hooks/useClaimText"
+import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
+import { useAccount } from "wagmi"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
@@ -35,7 +35,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const isMember = useIsMember()
   const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
-  const { account } = useWeb3React()
+  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
@@ -46,7 +46,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
         tooltipLabel: label,
         buttonProps: {},
       }
-    if (!account || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -60,7 +60,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account])
+  }, [isMember, hasAccess, isConnected])
 
   return (
     <>

@@ -5,19 +5,19 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
+import {
+  CHAIN_CONFIG,
+  Chain,
+  Chains,
+  supportedChains as defaultSupportedChains,
+} from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
-import {
-  Chain,
-  Chains,
-  RPC,
-  supportedChains as defaultSupportedChains,
-} from "connectors"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { useChainId } from "wagmi"
 
 type Props = {
   controlName: string
@@ -29,8 +29,8 @@ type Props = {
 
 const mappedChains: Array<{ img: string; label: string; value: Chain }> =
   defaultSupportedChains.map((chainName: Chain) => ({
-    img: RPC[chainName]?.iconUrls?.[0] || "",
-    label: RPC[chainName]?.chainName,
+    img: CHAIN_CONFIG[chainName].iconUrl,
+    label: CHAIN_CONFIG[chainName].name,
     value: chainName,
   }))
 
@@ -46,7 +46,7 @@ const ChainPicker = ({
 
   const { setValue } = useFormContext()
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const chain = useWatch({ name: controlName })
 
   const mappedSupportedChains = isBalancyPlayground
@@ -80,9 +80,11 @@ const ChainPicker = ({
       <FormControl>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
-          <InputLeftElement>
-            <OptionImage img={RPC[chain]?.iconUrls?.[0]} alt={chain} />
-          </InputLeftElement>
+          {CHAIN_CONFIG[chain]?.iconUrl && (
+            <InputLeftElement>
+              <OptionImage img={CHAIN_CONFIG[chain].iconUrl} alt={chain} />
+            </InputLeftElement>
+          )}
 
           <ControlledSelect
             name={controlName}

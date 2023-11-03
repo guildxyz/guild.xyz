@@ -1,15 +1,15 @@
 import { ButtonProps } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { Chains } from "chains"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains } from "connectors"
-import useBalance from "hooks/useBalance"
+import Button from "components/common/Button"
+import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
 
@@ -27,12 +27,12 @@ const CollectNftButton = ({
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
-  const { chain, address, alreadyCollected, roleId } = useCollectNftContext()
+  const { chain, nftAddress, alreadyCollected, roleId } = useCollectNftContext()
   const { id: guildId, urlName } = useGuild()
 
   const { isLoading: isAccessLoading, hasAccess } = useAccess(roleId)
 
-  const { chainId } = useWeb3React()
+  const chainId = useChainId()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
   const {
@@ -51,23 +51,28 @@ const CollectNftButton = ({
         }),
     })
 
-  const { data: nftDetails, isValidating: isNftDetailsValidating } = useNftDetails(
-    chain,
-    address
-  )
-  const { isLoading: isNftBalanceLoading } = useBalance(address, Chains[chain])
-  const { coinBalance, isLoading: isBalanceLoading } = useBalance(
-    undefined,
-    Chains[chain]
-  )
+  const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
+
+  const { address } = useAccount()
+  const { isLoading: isNftBalanceLoading } = useNftBalance({
+    address,
+    nftAddress,
+    chainId: Chains[chain],
+  })
+  const { data: coinBalanceData, isLoading: isBalanceLoading } = useBalance({
+    address,
+  })
+
   const isSufficientBalance =
-    nftDetails?.fee && coinBalance ? coinBalance.gt(nftDetails.fee) : undefined
+    typeof fee === "bigint" && coinBalanceData
+      ? coinBalanceData.value > fee
+      : undefined
 
   const isLoading =
     isAccessLoading ||
     isJoinLoading ||
     isMinting ||
-    isNftDetailsValidating ||
+    isNftDetailsLoading ||
     isBalanceLoading
   const loadingText =
     isNftBalanceLoading || isJoinLoading

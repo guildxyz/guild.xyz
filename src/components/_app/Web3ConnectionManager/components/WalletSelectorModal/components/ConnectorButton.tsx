@@ -1,30 +1,29 @@
-import { Center, Img, useColorMode } from "@chakra-ui/react"
+import { Center, Icon, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
-import { CoinbaseWallet } from "@web3-react/coinbase-wallet"
-import { useWeb3React, Web3ReactHooks } from "@web3-react/core"
-import { GnosisSafe } from "@web3-react/gnosis-safe"
-import { MetaMask } from "@web3-react/metamask"
-import { WalletConnect } from "@web3-react/walletconnect-v2"
+import { useKeyPair } from "components/_app/KeyPairProvider"
+import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
-import { useKeyPair } from "components/_app/KeyPairProvider"
-import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react"
+import { Wallet } from "phosphor-react"
+import { useRef } from "react"
 import { isMobile } from "react-device-detect"
-import { WalletError } from "types"
 import shortenHex from "utils/shortenHex"
+import { Connector, useAccount } from "wagmi"
 
 type Props = {
-  connector: MetaMask | WalletConnect | CoinbaseWallet | GnosisSafe
-  connectorHooks: Web3ReactHooks
-  error: WalletError & Error
-  setError: Dispatch<SetStateAction<WalletError & Error>>
+  connector: Connector
+  pendingConnector: Connector
+  isLoading: boolean
+  connect: (args) => void
+  error?: Error
 }
 
 const ConnectorButton = ({
   connector,
-  connectorHooks,
+  pendingConnector,
+  isLoading,
+  connect,
   error,
-  setError,
 }: Props): JSX.Element => {
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
@@ -33,110 +32,59 @@ const ConnectorButton = ({
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
-  const {
-    connector: activeConnector,
-    account,
-    isActive: isAnyConnectorActive,
-  } = useWeb3React()
-  const { useIsActive } = connectorHooks
-  const isActive = useIsActive()
+  const { address, isConnected, connector: activeConnector } = useAccount()
+
   const { ready } = useKeyPair()
 
-  const [isActivating, setIsActivating] = useState(false)
-
-  const activate = () => {
-    setError(null)
-    setIsActivating(true)
-    activeConnector?.deactivate?.()
-    connector
-      .activate()
-      .catch((err) => setError(err))
-      .finally(() => setIsActivating(false))
-  }
-
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
-  // wrapping with useMemo to make sure it updates on window.ethereum change
-  const isBraveWallet = useMemo(
-    () => typeof window !== "undefined" && (window.ethereum as any)?.isBraveWallet,
-    [window?.ethereum]
-  )
-  const isOKXWallet = useMemo(
-    () => typeof window !== "undefined" && !!(window as any)?.okxwallet,
-    [(window as any)?.okxwallet]
-  )
-  const { colorMode } = useColorMode()
 
-  const iconUrl =
-    connector instanceof MetaMask
-      ? isBraveWallet
-        ? "brave.png"
-        : isOKXWallet
-        ? "okx.png"
-        : "metamask.png"
-      : connector instanceof WalletConnect
-      ? "walletconnect.svg"
-      : connector instanceof GnosisSafe
-      ? colorMode === "dark"
-        ? "gnosis-safe-white.svg"
-        : "gnosis-safe-black.svg"
-      : "coinbasewallet.png"
+  const { connectorName, connectorIcon } = useConnectorNameAndIcon(connector)
 
-  const connectorName =
-    connector instanceof MetaMask
-      ? isBraveWallet
-        ? "Brave Wallet"
-        : isOKXWallet
-        ? "OKX Wallet"
-        : isMetaMaskInstalled
-        ? "MetaMask"
-        : "Install MetaMask"
-      : connector instanceof WalletConnect
-      ? "WalletConnect"
-      : connector instanceof GnosisSafe
-      ? "Gnosis Safe"
-      : "Coinbase Wallet"
+  if (connector.id === "injected" && isMobile && !isMetaMaskInstalled) return null
 
-  if (connector instanceof MetaMask && isMobile && !isMetaMaskInstalled) return null
-
-  if (account && !isActive && ready && isAnyConnectorActive) return null
+  if (!!activeConnector && connector.id !== activeConnector?.id && ready) return null
 
   return (
     <Button
       mb="4"
       onClick={
-        connector instanceof MetaMask && !isMetaMaskInstalled
+        connector.id === "injected" && !isMetaMaskInstalled
           ? handleOnboarding
-          : activate
+          : () => connect({ connector })
       }
       rightIcon={
-        isActive && ready ? (
-          <GuildAvatar address={account} size={5} />
-        ) : (
+        connector && ready ? (
+          <GuildAvatar address={address} size={5} />
+        ) : connectorIcon ? (
           <Center boxSize={6}>
             <Img
-              src={`/walletLogos/${iconUrl}`}
+              src={`/walletLogos/${connectorIcon}`}
               maxW={6}
               maxH={6}
               alt={`${connectorName} logo`}
             />
           </Center>
+        ) : (
+          <Icon as={Wallet} boxSize={6} />
         )
       }
-      isDisabled={
-        isActivating ||
-        (account && isActive && !ready) ||
-        (isActive && activeConnector.constructor === connector.constructor)
+      isDisabled={activeConnector?.id === connector.id}
+      isLoading={
+        ((isLoading && pendingConnector?.id === connector.id) ||
+          (isConnected && activeConnector?.id === connector.id && !ready)) &&
+        !error
       }
-      isLoading={(isActivating || (account && isActive && !ready)) && !error}
       spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
       w="full"
       size="xl"
       justifyContent="space-between"
-      border={isActive && "2px"}
+      border={activeConnector?.id === connector.id && "2px"}
       borderColor="primary.500"
     >
-      {!account || !isActive ? `${connectorName}` : shortenHex(account)}
+      {!isConnected || !(activeConnector?.id === connector.id)
+        ? `${connectorName}`
+        : shortenHex(address)}
     </Button>
   )
 }

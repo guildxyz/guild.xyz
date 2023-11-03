@@ -1,14 +1,14 @@
-import { useWeb3React } from "@web3-react/core"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+import { useAccount } from "wagmi"
 
 const useUser = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { id } = useUserPublic()
   const { keyPair, ready, isValid } = useKeyPair()
   const fetcherWithSign = useFetcherWithSign()
@@ -16,7 +16,7 @@ const useUser = (
   const idToUse = userIdOrAddress ?? id
 
   const { data, mutate, isLoading, error } = useSWRImmutable<User>(
-    (idToUse || account) && ready && keyPair && isValid
+    (idToUse || address) && ready && keyPair && isValid
       ? [`/v2/users/${idToUse}/profile`, { method: "GET", body: {} }]
       : null,
     fetcherWithSign,
@@ -34,9 +34,9 @@ const useUser = (
 const useUserPublic = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
-  const idToUse = userIdOrAddress ?? account
+  const idToUse = userIdOrAddress ?? address
 
   const { data, mutate, isLoading, error } = useSWRImmutable<User>(
     idToUse ? `/v2/users/${idToUse}/profile` : null
