@@ -15,10 +15,17 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
     [window?.ethereum]
   )
 
+  const isOKXWallet = useMemo(
+    () => typeof window !== "undefined" && !!(window as any)?.okxwallet,
+    [(window as any)?.okxwallet]
+  )
+
   const connectorIcon =
     connector?.id === "injected"
       ? isBraveWallet
         ? "brave.png"
+        : isOKXWallet
+        ? "okx.png"
         : "metamask.png"
       : connector?.id === "walletConnect"
       ? "walletconnect.svg"
@@ -35,6 +42,8 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
       connector?.id === "injected"
         ? isBraveWallet
           ? "Brave"
+          : isOKXWallet
+          ? "OKX Wallet"
           : "MetaMask"
         : connector?.name,
     connectorIcon,

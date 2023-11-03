@@ -35,7 +35,7 @@ import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { address, connector } = useAccount()
+  const { address } = useAccount()
   const { disconnect } = useDisconnect()
   const chainId = useChainId()
 
