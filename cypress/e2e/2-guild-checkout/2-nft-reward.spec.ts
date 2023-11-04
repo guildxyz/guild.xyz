@@ -7,6 +7,9 @@ describe("nft reward", () => {
   })
 
   it("can deploy an nft contract", () => {
+    // Scrolling to the top of the page to avoid a rare edge case where the add reward button isn't clickable
+    cy.scrollTo("top")
+
     cy.getByDataTest("add-reward-button").click()
     cy.get("div[role='group']").contains("Create a gated NFT").click({ force: true })
 
