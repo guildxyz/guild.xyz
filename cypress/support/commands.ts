@@ -13,7 +13,9 @@ Cypress.Commands.add("connectWallet", () => {
   cy.getByDataTest("verify-address-button").should("be.visible")
   cy.getByDataTest("verify-address-button").click()
 
-  cy.wait("@setPubKey").its("response.statusCode").should("eq", 200)
+  cy.wait("@setPubKey", { requestTimeout: 30_000, responseTimeout: 30_000 })
+    .its("response.statusCode")
+    .should("eq", 200)
 })
 
 Cypress.Commands.add("clearIndexedDB", () => {
