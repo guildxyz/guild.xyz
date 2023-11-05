@@ -35,6 +35,8 @@ describe("guild pins", () => {
     cy.visit(Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME"))
     cy.connectWallet()
 
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guilds/*/pin`).as("claim")
+
     cy.getByDataTest("guild-pin-reward-card")
       .get("button")
       .contains("Mint Guild Pin")
@@ -48,6 +50,8 @@ describe("guild pins", () => {
       .should("contain", "0.001 MATIC")
 
     cy.get(".chakra-modal__footer").get("button").contains("Mint NFT").click()
+
+    cy.wait("@claim")
 
     cy.get(".chakra-alert")
       .contains("GUILD_PIN_E2E_TEST_SUCCESS")
