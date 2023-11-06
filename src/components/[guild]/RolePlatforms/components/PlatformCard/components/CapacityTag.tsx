@@ -8,12 +8,12 @@ const CapacityTag = ({ rolePlatform }: Props) => {
   const [showClaimed, setShowClaimed] = useState(false)
 
   return (
-    <Tag onClick={() => setShowClaimed((prevValue) => !prevValue)}>
+    <Tag onClick={() => setShowClaimed((prevValue) => !prevValue)} cursor="cursor">
       {showClaimed
-        ? `${rolePlatform.claimedCapacity} / ${rolePlatform.capacity} available`
-        : `${rolePlatform.capacity - rolePlatform.claimedCapacity} / ${
+        ? `${rolePlatform.capacity - rolePlatform.claimedCapacity} / ${
             rolePlatform.capacity
-          } claimed`}
+          } available`
+        : `${rolePlatform.claimedCapacity} / ${rolePlatform.capacity} claimed`}
     </Tag>
   )
 }

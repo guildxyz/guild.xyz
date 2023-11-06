@@ -7,10 +7,10 @@ import {
   useColorModeValue,
   Wrap,
 } from "@chakra-ui/react"
+import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
-import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import { Plus } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -21,6 +21,8 @@ import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import EditRolePlatformCapacityTime from "./components/EditRolePlatformCapacityTime"
 import PlatformCard from "./components/PlatformCard"
 import CapacityTag from "./components/PlatformCard/components/CapacityTag"
+import EndTimeTag from "./components/PlatformCard/components/EndTimeTag"
+import StartTimeTag from "./components/PlatformCard/components/StartTimeTag"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -137,6 +139,12 @@ const RolePlatforms = ({ roleId }: Props) => {
                     <Wrap>
                       {shouldShowCapacityTag && (
                         <CapacityTag rolePlatform={rolePlatform} />
+                      )}
+                      {shouldShowStartTimeTag && (
+                        <StartTimeTag rolePlatform={rolePlatform} />
+                      )}
+                      {shouldShowEndTimeTag && (
+                        <EndTimeTag rolePlatform={rolePlatform} />
                       )}
                       <EditRolePlatformCapacityTime
                         platformType={
