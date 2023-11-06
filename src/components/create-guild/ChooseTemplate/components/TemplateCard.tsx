@@ -1,6 +1,8 @@
 import {
   Box,
+  Checkbox,
   Circle,
+  Collapse,
   Flex,
   HStack,
   Heading,
@@ -22,20 +24,27 @@ import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { Check } from "phosphor-react"
 import { Fragment, KeyboardEvent } from "react"
-import { GuildFormType, GuildPlatform, PlatformType, Requirement } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
+import {
+  GuildFormType,
+  GuildPlatform,
+  PlatformType,
+  Requirement,
+  RoleFormType,
+} from "types"
 import capitalize from "utils/capitalize"
 
 type Template = {
   name: string
   description?: string
-  roles: GuildFormType["roles"]
+  role: RoleFormType
 }
 
 type Props = Template & {
-  id: string
   selected?: boolean
-  selectedGuildPlatforms: (Partial<GuildPlatform> & { platformName: string })[]
-  onClick: (newTemplateId: string) => void
+  part: number
+  onClick: (templateName: string) => void
+  onCheckReward: (rewardIndex: number) => void
 }
 
 const getRewardLabel = (platform: Partial<GuildPlatform>) => {
@@ -52,26 +61,34 @@ const getRewardLabel = (platform: Partial<GuildPlatform>) => {
 }
 
 const TemplateCard = ({
-  id,
   name,
   description,
-  roles,
+  role,
   selected,
-  selectedGuildPlatforms,
+  part,
   onClick,
+  onCheckReward,
 }: Props): JSX.Element => {
   const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const roleBottomBorderColor = useColorModeValue("gray.200", "gray.600")
-  const role = roles[0]
+  const { getValues, control } = useFormContext<GuildFormType>()
+
+  const roles = useWatch({ name: "roles", control })
+
+  console.log(
+    "xy role",
+    role.name,
+    roles.find((r) => r.name === name)?.rolePlatforms
+  )
 
   return (
     <Box
       tabIndex={0}
-      onClick={() => onClick(id)}
+      onClick={() => onClick(name)}
       onKeyDown={(e: KeyboardEvent) => {
         if (e.key !== "Enter" && e.key !== " ") return
         e.preventDefault()
-        onClick(id)
+        onClick(name)
       }}
       position="relative"
       mb={2}
@@ -90,7 +107,7 @@ const TemplateCard = ({
       }}
       _hover={{
         _before: {
-          opacity: 0.1,
+          opacity: part === 1 ? 0.1 : 0,
         },
       }}
       _focus={{
@@ -104,7 +121,7 @@ const TemplateCard = ({
           opacity: 0.17,
         },
       }}
-      cursor="pointer"
+      cursor={part === 1 ? "pointer" : "default"}
       h="max-content"
       w="full"
     >
@@ -143,30 +160,64 @@ const TemplateCard = ({
                 </Wrap>
               </HStack>
             </HStack>
-            <Box pl={5}>{description}</Box>
-            <Box p={5} pt={2} mt="auto">
-              {selectedGuildPlatforms?.map((platform, i) => (
-                <RewardDisplay
-                  key={i}
-                  label={
-                    <>
-                      {getRewardLabel(platform)}
-                      <Text as="span" fontWeight="bold">
-                        {getValueToDisplay(platform)}
-                      </Text>
-                    </>
-                  }
-                  icon={
-                    <RewardIcon
-                      rolePlatformId={platform.id}
-                      guildPlatform={platform as any}
-                      withMotionImg={false}
+            <Collapse in={part === 1}>
+              <Box pl={5}>{description}</Box>
+            </Collapse>
+            <Collapse in={part === 2}>
+              <Box
+                p={5}
+                pt={2}
+                mt="auto"
+                borderWidth={2}
+                borderColor={getValues("theme.color")}
+                borderRadius={6}
+                background={roleBottomBgColor}
+                borderStyle={"dashed"}
+                m={5}
+              >
+                {getValues("guildPlatforms").map((platform, i) => (
+                  <HStack
+                    gap={3}
+                    key={i}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      onCheckReward(i)
+                    }}
+                  >
+                    <Checkbox
+                      pt={3}
+                      isChecked={
+                        !!roles
+                          .find((r) => r.name === name)
+                          ?.rolePlatforms?.find(
+                            (rolePlatform: any) =>
+                              rolePlatform.guildPlatformIndex === i
+                          )
+                      }
                     />
-                  }
-                />
-              ))}
-              {role.hiddenRewards && <HiddenRewards />}
-            </Box>
+                    <RewardDisplay
+                      styles={{ flexGrow: 1 }}
+                      label={
+                        <>
+                          {getRewardLabel(platform)}
+                          <Text as="span" fontWeight="bold">
+                            {getValueToDisplay(platform)}
+                          </Text>
+                        </>
+                      }
+                      icon={
+                        <RewardIcon
+                          rolePlatformId={platform.id}
+                          guildPlatform={platform as any}
+                          withMotionImg={false}
+                        />
+                      }
+                    />
+                  </HStack>
+                ))}
+                {role.hiddenRewards && <HiddenRewards />}
+              </Box>
+            </Collapse>
           </Flex>
           <Flex
             direction="column"
@@ -217,29 +268,31 @@ const TemplateCard = ({
         p={5}
         borderWidth={2}
         borderStyle={selected ? "solid" : "dashed"}
-        borderColor={selected && "green.500"}
+        borderColor={selected && part === 1 && "green.500"}
         borderRadius="2xl"
         pointerEvents="none"
         transition="border 0.16s ease"
       >
-        {selected ? (
-          <Circle
-            bgColor="green.500"
-            color="white"
-            size={6}
-            transition="opacity 0.16s ease"
-            opacity={selected ? 1 : 0}
-          >
-            <Icon as={Check} />
-          </Circle>
-        ) : (
-          <Circle
-            borderColor={"gray"}
-            borderStyle={"solid"}
-            borderWidth={2}
-            size={6}
-          />
-        )}
+        {part === 1 ? (
+          selected ? (
+            <Circle
+              bgColor="green.500"
+              color="white"
+              size={6}
+              transition="opacity 0.16s ease"
+              opacity={selected ? 1 : 0}
+            >
+              <Icon as={Check} />
+            </Circle>
+          ) : (
+            <Circle
+              borderColor={"gray"}
+              borderStyle={"solid"}
+              borderWidth={2}
+              size={6}
+            />
+          )
+        ) : null}
       </Flex>
     </Box>
   )

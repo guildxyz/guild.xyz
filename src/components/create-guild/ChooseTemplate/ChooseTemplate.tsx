@@ -1,94 +1,83 @@
-import { VStack } from "@chakra-ui/react"
+import { Button, Collapse, VStack } from "@chakra-ui/react"
 import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, GuildPlatform } from "types"
+import { GuildFormType } from "types"
 import CreateGuildButton from "../CreateGuildButton"
-import { TemplateType, useCreateGuildContext } from "../CreateGuildContext"
+import { useCreateGuildContext } from "../CreateGuildContext"
 import GuildCreationProgress from "../GuildCreationProgress"
-import TemplateCard, { Template } from "./components/TemplateCard"
+import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
   const { triedEager, openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
   const { account } = useWeb3React()
+  const [part, setPart] = useState(1)
 
   useEffect(() => {
     if (!triedEager || account || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
   }, [triedEager, account, isWalletSelectorModalOpen])
 
-  const { TEMPLATES, getTemplate, setTemplate, nextStep } = useCreateGuildContext()
+  const { getTemplate, setTemplate, nextStep, toggleReward } =
+    useCreateGuildContext()
 
-  const { control, getValues } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<GuildFormType>()
 
   const roles = useWatch({ control, name: "roles" })
 
   return (
     <>
       <VStack>
-        {Object.entries(getTemplate()).map(
-          ([id, template]: [id: TemplateType, template: Template], index) => (
+        {getTemplate().map((template) => (
+          <Collapse
+            in={
+              part === 1 ||
+              (part === 2 && !!roles.find((role) => role.name === template.name))
+            }
+            style={{ width: "100%" }}
+            key={template.name}
+          >
             <TemplateCard
-              key={index}
-              id={id}
-              selectedGuildPlatforms={findRelevantPlatforms(
-                id,
-                getValues("guildPlatforms")
-              )}
-              selected={
-                !!roles.find((selected) => selected.name === template.roles[0].name)
-              }
+              part={part}
+              name={template.name}
+              role={template}
+              selected={!!roles.find((role) => role.name === template.name)}
               {...template}
-              onClick={(newTemplateId: TemplateType) => {
-                const role = getTemplate()[newTemplateId].roles[0]
-
-                role.rolePlatforms = convertRolePlatformsToGuildPLatformIndecies(
-                  findRelevantPlatforms(newTemplateId, getValues("guildPlatforms")),
-                  getValues("guildPlatforms")
-                ) as any
-
-                setTemplate(id as TemplateType, role)
+              onClick={(templateName) => {
+                if (part === 1) setTemplate(templateName)
+              }}
+              onCheckReward={(rewradIndex) => {
+                toggleReward(template.name, rewradIndex)
               }}
             />
-          )
-        )}
+          </Collapse>
+        ))}
       </VStack>
       <GuildCreationProgress
-        next={nextStep}
-        progress={50}
+        next={() => {
+          if (part === 1) {
+            setPart(2)
+          } else nextStep()
+        }}
+        progress={part === 1 ? 50 : 65}
         isDisabled={!roles.length}
-        customButton={<CreateGuildButton isDisabled={!roles.length} />}
+        customButton={
+          part === 1 ? (
+            <Button colorScheme="green" onClick={() => setPart(2)}>
+              Continue
+            </Button>
+          ) : (
+            <>
+              <Button onClick={() => setPart(1)}>Cancel</Button>
+              <CreateGuildButton isDisabled={!roles.length} />
+            </>
+          )
+        }
       />
     </>
   )
 }
 
-function findRelevantPlatforms(templateId: TemplateType, guildPlatforms) {
-  if (templateId === "MEMBER") return guildPlatforms
-
-  return []
-}
-
-function convertRolePlatformsToGuildPLatformIndecies(
-  rolePlatforms: GuildPlatformExtended[],
-  guildPlatforms: GuildPlatformExtended[]
-) {
-  return rolePlatforms.map((rolePlatform) => {
-    const index = guildPlatforms.findIndex(
-      (guildPlatform) => guildPlatform.platformName === rolePlatform.platformName
-    )
-
-    return {
-      guildPlatformIndex: index,
-      platformRoleId:
-        rolePlatform.platformName === "GOOGLE"
-          ? rolePlatform.platformGuildData.role
-          : undefined,
-    }
-  })
-}
-
-type GuildPlatformExtended = Partial<GuildPlatform> & { platformName: string }
 export default ChooseTemplate

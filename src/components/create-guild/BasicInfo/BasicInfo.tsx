@@ -20,16 +20,10 @@ import ContactInfo from "./components/ContactInfo"
 
 const BasicInfo = (): JSX.Element => {
   const { nextStep } = useCreateGuildContext()
-  const {
-    setLocalBackgroundImage,
-    localThemeColor,
-    setLocalThemeColor,
-    localBackgroundImage,
-  } = useThemeContext()
+  const { setLocalBackgroundImage } = useThemeContext()
 
   const {
     control,
-    getValues,
     setValue,
     formState: { errors, dirtyFields, touchedFields },
   } = useFormContext<GuildFormType>()

@@ -29,7 +29,7 @@ const useSetImageAndNameFromPlatformData = (
       return
     }
 
-    if (!(platformImage?.length > 0) || !!touchedFields.imageUrl) {
+    if (!(platformImage?.length > 0)) {
       setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
       return
     }

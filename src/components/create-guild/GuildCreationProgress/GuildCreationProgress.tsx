@@ -1,4 +1,4 @@
-import { Box, Button, Container, HStack, Text } from "@chakra-ui/react"
+import { Box, Button, Container, HStack, Progress, Text } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
 import DisplayCard from "components/common/DisplayCard"
 import { useEffect, useRef, useState } from "react"
@@ -91,6 +91,14 @@ const GuildCreationProgress = ({
               </Button>
             )}
           </HStack>
+          <Progress
+            borderRadius="full"
+            h={1}
+            mt={2}
+            mb={-2}
+            w="full"
+            value={progress}
+          />
         </DisplayCard>
       </Container>
     </Box>

@@ -141,12 +141,14 @@ const RewardDisplay = ({
   icon,
   label,
   rightElement,
+  styles,
 }: {
   icon?: ReactNode
   label: ReactNode
   rightElement?: ReactNode
+  styles?: any
 }) => (
-  <HStack pt="3" spacing={0} alignItems={"flex-start"}>
+  <HStack pt="3" spacing={0} alignItems={"flex-start"} {...styles}>
     {icon}
 
     <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">

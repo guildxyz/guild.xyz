@@ -8,12 +8,11 @@ import {
   useEffect,
   useState,
 } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import { PlatformName as BasePlatformName, GuildFormType } from "types"
+import { FormProvider, useFieldArray, useForm } from "react-hook-form"
+import { PlatformName as BasePlatformName, GuildFormType, RoleFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
 import ChooseTemplate from "./ChooseTemplate"
-import { Template } from "./ChooseTemplate/components/TemplateCard"
 import CreateGuildIndex from "./CreateGuildIndex"
 
 type PlatformName = BasePlatformName | "DEFAULT"
@@ -27,7 +26,7 @@ type Step = {
 }
 
 const CreateGuildContext = createContext<{
-  setTemplate: (id: TemplateType, role: any) => void
+  setTemplate: (roleTemplateName: string) => void
   steps: Step[]
   prevStep: () => void
   nextStep: () => void
@@ -35,8 +34,9 @@ const CreateGuildContext = createContext<{
   platform?: PlatformName
   setActiveStep: (index: number) => void
   setPlatform: Dispatch<SetStateAction<PlatformName>>
-  getTemplate: () => Partial<Record<TemplateType, Template>>
-  TEMPLATES: Partial<Record<TemplateType, Template>>
+  getTemplate: () => Array<RoleFormType>
+  TEMPLATES: Array<RoleFormType>
+  toggleReward: (roleTemplateName: string, guildPlatformIndex: number) => void
 } | null>(null)
 
 const defaultIcon = `/guildLogos/${getRandomInt(286)}.svg`
@@ -86,76 +86,62 @@ export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
   DEFAULT: basicDefaultValues,
 }
 
-const TEMPLATES: Partial<Record<TemplateType, Template>> = {
-  MEMBER: {
-    name: "Start from scratch",
+const TEMPLATES: Array<RoleFormType> = [
+  {
+    name: "Member",
+    logic: "AND",
     description: "Default role without special requirements",
-    roles: [
+    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    requirements: [
       {
-        name: "Member",
-        logic: "AND",
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        requirements: [
-          {
-            type: "FREE",
-          },
-        ],
+        type: "FREE",
       },
-    ] as any[],
+    ],
   },
-  VERIFIED: {
-    name: "Growth",
+  {
+    name: "Verified member",
     description: "Basic anti-bot member verification",
-    roles: [
+
+    logic: "AND",
+    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    requirements: [
       {
-        name: "Verified member",
-        logic: "AND",
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        requirements: [
-          {
-            type: "COIN",
-            chain: "ETHEREUM",
-            address: "0x0000000000000000000000000000000000000000",
-            data: {
-              minAmount: 0.001,
-            },
-          },
-          {
-            type: "DISCORD_JOIN_FROM_NOW",
-            data: {
-              memberSince: 31536000000,
-            },
-          },
-        ],
+        type: "COIN",
+        chain: "ETHEREUM",
+        address: "0x0000000000000000000000000000000000000000",
+        data: {
+          minAmount: 0.001,
+        },
       },
-    ] as any[],
+      {
+        type: "DISCORD_JOIN_FROM_NOW",
+        data: {
+          memberSince: 31536000000,
+        },
+      },
+    ],
   },
-  SUPPORTER: {
-    name: "Growth",
+  {
+    name: "Twitter fam",
     description: "Basic anti-bot member verification",
-    roles: [
+    logic: "AND",
+    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+    requirements: [
       {
-        name: "Twitter fam",
-        logic: "AND",
-        imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-        requirements: [
-          {
-            type: "TWITTER_FOLLOW",
-            data: {
-              id: "{your_twitter_handle}",
-            },
-          },
-          {
-            type: "TWITTER_FOLLOWER_COUNT",
-            data: {
-              minAmount: 50,
-            },
-          },
-        ],
+        type: "TWITTER_FOLLOW",
+        data: {
+          id: "{your_twitter_handle}",
+        },
       },
-    ] as any[],
+      {
+        type: "TWITTER_FOLLOWER_COUNT",
+        data: {
+          minAmount: 50,
+        },
+      },
+    ],
   },
-}
+]
 
 const CreateGuildProvider = ({
   children,
@@ -174,41 +160,80 @@ const CreateGuildProvider = ({
     },
   })
 
+  const { append, remove } = useFieldArray({
+    name: "roles",
+    control: methods.control,
+  })
+
   const buildTemplate = () => {
-    const newTemplates = JSON.parse(JSON.stringify(TEMPLATES))
+    const newTemplates: Array<RoleFormType> = JSON.parse(JSON.stringify(TEMPLATES))
 
-    Object.entries(newTemplates).forEach(([key, value]) => {
-      const role = newTemplates[key].roles[0]
-
-      const twitterRequirementIndex = role.requirements.findIndex(
+    return newTemplates.map((template) => {
+      const twitterRequirementIndex = template.requirements.findIndex(
         (requriement) => requriement.type === "TWITTER_FOLLOW"
       )
 
       const idAfterDomain = /(?<=com\/).*$/
 
+      //template.rolePlatforms = methods.getValues("guildPlatforms")
+
       if (twitterRequirementIndex > -1)
-        role.requirements[twitterRequirementIndex].data.id = idAfterDomain.exec(
+        template.requirements[twitterRequirementIndex].data.id = idAfterDomain.exec(
           methods.getValues("socialLinks.TWITTER")
         )
-    })
 
-    return newTemplates
+      return template
+    })
   }
 
-  const toggleTemplate = (id: TemplateType, roleToSend: any) => {
-    const isSlected = methods
+  const toggleTemplate = (roleTemplateName: string) => {
+    const roleIndex = methods
       .getValues("roles")
-      .find((role) => role.name === TEMPLATES[id].roles[0].name)
+      .findIndex((role) => role.name === roleTemplateName)
 
-    if (isSlected) {
+    if (roleIndex > -1) {
+      remove(roleIndex)
+    } else {
+      append(buildTemplate().find((template) => template.name === roleTemplateName))
+    }
+  }
+
+  const toggleReward = (roleTemplateName: string, guildPlatformIndex: number) => {
+    const roleIndex = methods
+      .getValues("roles")
+      .findIndex((role) => role.name === roleTemplateName)
+
+    const roleClicked: RoleFormType = methods.getValues("roles")[roleIndex]
+
+    const reward = roleClicked.rolePlatforms?.find(
+      (rolePlatform) => rolePlatform.guildPlatformIndex === guildPlatformIndex
+    )
+
+    if (reward) {
       methods.setValue(
-        "roles",
-        methods
-          .getValues("roles")
-          .filter((role) => role.name !== TEMPLATES[id].roles[0].name) as any
+        `roles.${roleIndex}.rolePlatforms`,
+        roleClicked.rolePlatforms.filter(
+          (rolePlatform) => rolePlatform.guildPlatformIndex !== guildPlatformIndex
+        )
       )
     } else {
-      methods.setValue("roles", [roleToSend, ...methods.getValues("roles")])
+      const guildPlatform = methods.getValues("guildPlatforms")[guildPlatformIndex]
+      const currentRolePlatforms = roleClicked.rolePlatforms
+        ? roleClicked.rolePlatforms
+        : []
+
+      const rolePlatforms = [
+        {
+          guildPlatformIndex,
+          platformRoleId:
+            guildPlatform.platformName === "GOOGLE"
+              ? guildPlatform.platformGuildData.role
+              : undefined,
+        },
+        ...currentRolePlatforms,
+      ]
+
+      methods.setValue(`roles.${roleIndex}.rolePlatforms`, rolePlatforms)
     }
   }
 
@@ -226,6 +251,7 @@ const CreateGuildProvider = ({
     },
     {
       title: "Choose template",
+      description: "1/2",
       label:
         "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
       content: <ChooseTemplate />,
@@ -271,6 +297,7 @@ const CreateGuildProvider = ({
         setTemplate: toggleTemplate,
         getTemplate: buildTemplate,
         setActiveStep,
+        toggleReward,
         TEMPLATES,
       }}
     >

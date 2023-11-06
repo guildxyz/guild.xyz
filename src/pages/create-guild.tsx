@@ -128,10 +128,16 @@ const CreateGuildPage = (): JSX.Element => {
                     justifyContent={"center"}
                     spacing="0"
                     w={{ base: "full", md: "auto" }}
+                    position={"relative"}
                   >
                     <StepTitle as={"p"} style={{ fontSize: "xs" }}>
                       {step.title}
                     </StepTitle>
+                    {activeStep === index && (
+                      <Text colorScheme="gray" fontSize="sm" left={0} bottom={-5}>
+                        {step.description}
+                      </Text>
+                    )}
                   </Stack>
                   {activeStep === index && (
                     <Center>

@@ -445,6 +445,14 @@ type Guild = {
   isFallback?: boolean
   isDetailed?: boolean
 }
+
+type RoleFormType = Partial<
+  Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
+    requirements: Array<Partial<Requirement>>
+    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+  } & { name: string }
+>
+
 type GuildFormType = Partial<
   Pick<
     Guild,
@@ -462,14 +470,7 @@ type GuildFormType = Partial<
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
-  roles?: Array<
-    Partial<
-      Omit<Role, "requirements" | "rolePlatforms"> & {
-        requirements: Array<Partial<Requirement>>
-        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
-      }
-    >
-  >
+  roles?: Array<RoleFormType>
   logic?: Logic
   requirements?: Requirement[]
   socialLinks?: Record<string, string>
@@ -751,6 +752,7 @@ export type {
   RequirementType,
   Rest,
   Role,
+  RoleFormType,
   RolePlatform,
   SelectOption,
   SimpleGuild,
