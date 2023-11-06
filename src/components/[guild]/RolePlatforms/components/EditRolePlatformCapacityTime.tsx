@@ -188,7 +188,12 @@ const EditRolePlatformCapacityTime = ({
                     setValue("endTime", "")
                   }}
                 >
-                  <Stack direction={{ base: "column", md: "row" }}>
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    mx="px"
+                    pb="px"
+                    w="calc(100% - 2px)"
+                  >
                     <FormControl>
                       <FormLabel>
                         {"From "}
