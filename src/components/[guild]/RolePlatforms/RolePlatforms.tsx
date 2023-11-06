@@ -5,6 +5,7 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
+  useDisclosure,
   Wrap,
 } from "@chakra-ui/react"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
@@ -18,7 +19,8 @@ import { GuildPlatform, PlatformName, PlatformType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
-import EditRolePlatformCapacityTime from "./components/EditRolePlatformCapacityTime"
+import EditRolePlatformCapacityTimeButton from "./components/EditRolePlatformCapacityTimeButton"
+import EditRolePlatformCapacityTimeModal from "./components/EditRolePlatformCapacityTimeModal"
 import PlatformCard from "./components/PlatformCard"
 import CapacityTimeTags from "./components/PlatformCard/components/CapacityTimeTags"
 import RemovePlatformButton from "./components/RemovePlatformButton"
@@ -44,6 +46,12 @@ const RolePlatforms = ({ roleId }: Props) => {
   const rewardsLabel = useBreakpointValue({
     sm: "/ platform accesses",
   })
+
+  const {
+    isOpen: isCapacityTimeOpen,
+    onOpen: onCapacityTimeOpen,
+    onClose: onCapacityTimeClose,
+  } = useDisclosure()
 
   return (
     <Section
@@ -138,7 +146,15 @@ const RolePlatforms = ({ roleId }: Props) => {
                       {showCapacityTimeTags && (
                         <CapacityTimeTags rolePlatform={rolePlatform} />
                       )}
-                      <EditRolePlatformCapacityTime
+
+                      <EditRolePlatformCapacityTimeButton
+                        onClick={onCapacityTimeOpen}
+                        isCompact={showCapacityTimeTags}
+                      />
+
+                      <EditRolePlatformCapacityTimeModal
+                        isOpen={isCapacityTimeOpen}
+                        onClose={onCapacityTimeClose}
                         platformType={
                           PlatformType[guildPlatform.platformId] as PlatformName
                         }
@@ -158,7 +174,6 @@ const RolePlatforms = ({ roleId }: Props) => {
                             shouldDirty: true,
                           })
                         }}
-                        isCompact={showCapacityTimeTags}
                       />
                     </Wrap>
                   }
