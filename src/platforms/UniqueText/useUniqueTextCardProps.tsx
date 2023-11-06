@@ -22,7 +22,7 @@ const useUniqueTextCardProps = (guildPlatform: GuildPlatform) => {
         <Icon as={platforms.UNIQUE_TEXT.icon} boxSize={5} color="white" />
       </Circle>
     ),
-    info: rolePlatform && <CapacityTimeTags rolePlatform={rolePlatform} />,
+    info: rolePlatform && <CapacityTimeTags rolePlatform={rolePlatform} mt={1} />,
   }
 }
 

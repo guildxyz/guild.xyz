@@ -5,21 +5,22 @@ import {
   TagProps,
   Tooltip,
   Wrap,
+  WrapProps,
 } from "@chakra-ui/react"
 import { Clock } from "phosphor-react"
 import { useState } from "react"
 import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
-type Props = { rolePlatform: RolePlatform }
+type Props = { rolePlatform: RolePlatform } & WrapProps
 
 export const getTimeDiff = (dateString: string) => {
   if (!dateString) return undefined
   return new Date(dateString).getTime() - Date.now()
 }
 
-const CapacityTimeTags = ({ rolePlatform }: Props) => (
-  <Wrap>
+const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => (
+  <Wrap {...wrapProps}>
     {typeof rolePlatform.capacity === "number" && (
       <CapacityTag
         capacity={rolePlatform.capacity}

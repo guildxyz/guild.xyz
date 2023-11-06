@@ -16,7 +16,7 @@ const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
     type: "CONTRACT_CALL" as PlatformName,
     name: name || guildPlatform.platformGuildData?.name,
     image: image || guildPlatform.platformGuildData?.imageUrl,
-    info: rolePlatform && <CapacityTimeTags rolePlatform={rolePlatform} />,
+    info: rolePlatform && <CapacityTimeTags rolePlatform={rolePlatform} mt={1} />,
   }
 }
 
