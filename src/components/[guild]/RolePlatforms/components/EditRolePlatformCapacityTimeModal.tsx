@@ -34,6 +34,7 @@ type Props = {
   onClose: () => void
   platformType: PlatformName
   defaultValues?: RolePlatformCapacityTimeForm
+  isLoading?: boolean
   onDone: (data: RolePlatformCapacityTimeForm) => void
 }
 
@@ -55,11 +56,12 @@ const getShortDate = (isoDate: string): string | undefined => {
   return isoDate.split("T")[0]
 }
 
-const EditRolePlatformCapacityTime = ({
+const EditRolePlatformCapacityTimeModal = ({
   isOpen,
   onClose,
   platformType,
   defaultValues,
+  isLoading,
   onDone,
 }: Props) => {
   const { control, register, setValue, handleSubmit } =
@@ -71,7 +73,6 @@ const EditRolePlatformCapacityTime = ({
         endTime: getShortDate(defaultValues?.endTime),
       },
     })
-  // const { isOpen, onOpen, onClose } = useDisclosure()
 
   const {
     field: {
@@ -199,8 +200,9 @@ const EditRolePlatformCapacityTime = ({
                   startTime: normalizeDate(startTime),
                   endTime: normalizeDate(endTime),
                 })
-                onClose()
               })}
+              isLoading={isLoading}
+              loadingText="Saving"
             >
               Done
             </Button>
@@ -211,4 +213,4 @@ const EditRolePlatformCapacityTime = ({
   )
 }
 
-export default EditRolePlatformCapacityTime
+export default EditRolePlatformCapacityTimeModal

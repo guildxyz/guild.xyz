@@ -174,6 +174,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                             setValue(`rolePlatforms.${index}.endTime`, endTime, {
                               shouldDirty: true,
                             })
+                            onCapacityTimeClose()
                           }}
                         />
                       </Wrap>
