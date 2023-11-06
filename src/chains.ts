@@ -86,8 +86,8 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     coinIconUrl:
       "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png",
     blockExplorerIconUrl: {
-      light: "/networkLogos/polygon.svg",
-      dark: "/networkLogos/polygon.svg",
+      light: "/explorerLogos/bscscan-light.svg",
+      dark: "/explorerLogos/bscscan-dark.svg",
     },
     etherscanApiUrl: "https://api.bscscan.com",
   },
