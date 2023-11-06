@@ -15,6 +15,7 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
   } = useFormContext()
 
   const handle = useWatch({ name: `${baseFieldPath}.data.id` })
+  const songTitle = useWatch({ name: `${baseFieldPath}.data.title` })
 
   const { data: artist, isValidating: artistLoading } = useSWRImmutable(
     handle ? `/api/sound/sound-artist-by-handle?soundHandle=${handle}` : null
@@ -61,7 +62,9 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
         </FormErrorMessage>
       </FormControl>
 
-      <SoundEdition baseFieldPath={baseFieldPath} />
+      {songsData?.find((song) => song.title === songTitle)?.hasEditions && (
+        <SoundEdition baseFieldPath={baseFieldPath} />
+      )}
     </>
   )
 }

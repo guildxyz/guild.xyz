@@ -25,7 +25,6 @@ const SoundEdition = ({ baseFieldPath }: PropsWithChildren<Props>) => {
 
   return (
     <FormControl
-      isRequired
       isInvalid={parseFromObject(errors, baseFieldPath)?.data?.tierNumber}
     >
       <FormLabel>Edition:</FormLabel>

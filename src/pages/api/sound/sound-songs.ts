@@ -11,13 +11,14 @@ const fetch51Songs = (id: string, after: string) =>
     body: {
       query: `{
         artist(id: "${id}"){
-          mintedReleasesPaginated(pagination: {first: 51, sort: DESC, after : "${after}"}){
+          releases(pagination: {first: 51, sort: DESC, after : "${after}"}){
             edges{
               node {
                 title
                 coverImage{
                   url
                 }
+                auctionContractType
               }
             }
             pageInfo {
@@ -28,7 +29,7 @@ const fetch51Songs = (id: string, after: string) =>
         }
       }`,
     },
-  }).then((res) => res?.data?.artist?.mintedReleasesPaginated)
+  }).then((res) => res?.data?.artist?.releases)
 
 const handler: NextApiHandler = async (req, res) => {
   const id = req.query.id.toString()
@@ -45,7 +46,7 @@ const handler: NextApiHandler = async (req, res) => {
       do {
         newSongs = fetch51Songs(id, after)
         songs = songs.concat(newSongs?.edges)
-        after = newSongs?.data?.artist?.mintedReleasesPaginated?.pageInfo?.endCursor
+        after = newSongs?.data?.artist?.releases?.pageInfo?.endCursor
       } while (newSongs?.length > 0)
 
       return songs.filter((data) => data != null)
@@ -56,6 +57,7 @@ const handler: NextApiHandler = async (req, res) => {
     data?.map((info) => ({
       title: info?.node?.title,
       image: info?.node?.coverImage?.url,
+      hasEditions: info?.node?.auctionContractType === "TIERED_EDITION",
     }))
   )
 
