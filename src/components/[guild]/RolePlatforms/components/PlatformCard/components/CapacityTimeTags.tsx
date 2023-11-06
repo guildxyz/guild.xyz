@@ -1,4 +1,11 @@
-import { Tag, TagLabel, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
+import {
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  TagProps,
+  Tooltip,
+  Wrap,
+} from "@chakra-ui/react"
 import { Clock } from "phosphor-react"
 import { useState } from "react"
 import { RolePlatform } from "types"
@@ -6,77 +13,97 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 type Props = { rolePlatform: RolePlatform }
 
-const currentTime = Date.now()
+export const getTimeDiff = (dateString: string) => {
+  if (!dateString) return undefined
+  return new Date(dateString).getTime() - Date.now()
+}
 
-const CapacityTimeTags = ({ rolePlatform }: Props) => {
+const CapacityTimeTags = ({ rolePlatform }: Props) => (
+  <Wrap>
+    {typeof rolePlatform.capacity === "number" && (
+      <CapacityTag
+        capacity={rolePlatform.capacity}
+        claimedCapacity={rolePlatform.claimedCapacity}
+      />
+    )}
+
+    {rolePlatform?.startTime && <StartTimeTag startTime={rolePlatform.startTime} />}
+
+    {rolePlatform?.endTime && <EndTimeTag endTime={rolePlatform.endTime} />}
+  </Wrap>
+)
+
+const CapacityTag = ({
+  capacity,
+  claimedCapacity,
+  ...rest
+}: { capacity: number; claimedCapacity?: number } & TagProps) => {
   const [showClaimed, setShowClaimed] = useState(false)
 
-  const startTimeDiff = !rolePlatform?.startTime
-    ? undefined
-    : new Date(rolePlatform.startTime).getTime() - currentTime
+  return (
+    <Tag
+      onClick={() => setShowClaimed((prevValue) => !prevValue)}
+      cursor="default"
+      {...rest}
+    >
+      {showClaimed
+        ? `${capacity - (claimedCapacity ?? 0)} / ${capacity} available`
+        : `${claimedCapacity ?? 0} / ${capacity} claimed`}
+    </Tag>
+  )
+}
 
-  const endTimeDiff = !rolePlatform?.endTime
-    ? undefined
-    : new Date(rolePlatform.endTime).getTime() - currentTime
+const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) => {
+  if (!startTime) return null
+
+  const startTimeDiff = getTimeDiff(startTime)
+
+  if (startTimeDiff < 0) return null
 
   return (
-    <Wrap>
-      {typeof rolePlatform.capacity === "number" && (
-        <Tag
-          onClick={() => setShowClaimed((prevValue) => !prevValue)}
-          cursor="default"
-        >
-          {showClaimed
-            ? `${rolePlatform.capacity - (rolePlatform.claimedCapacity ?? 0)} / ${
-                rolePlatform.capacity
-              } available`
-            : `${rolePlatform.claimedCapacity ?? 0} / ${
-                rolePlatform.capacity
-              } claimed`}
-        </Tag>
-      )}
+    <Tooltip
+      label={new Date(startTime).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+      placement="top"
+      hasArrow
+    >
+      <Tag {...rest}>
+        <TagLeftIcon as={Clock} mr={1} />
+        <TagLabel>{`Claim starts in ${formatRelativeTimeFromNow(
+          startTimeDiff
+        )}`}</TagLabel>
+      </Tag>
+    </Tooltip>
+  )
+}
 
-      {startTimeDiff > 0 && (
-        <Tooltip
-          label={new Date(rolePlatform.startTime).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-          placement="top"
-          hasArrow
-        >
-          <Tag>
-            <TagLeftIcon as={Clock} />
-            <TagLabel>{`Claim starts in ${formatRelativeTimeFromNow(
-              startTimeDiff
-            )}`}</TagLabel>
-          </Tag>
-        </Tooltip>
-      )}
+const EndTimeTag = ({ endTime, ...rest }: { endTime: string } & TagProps) => {
+  const endTimeDiff = getTimeDiff(endTime)
 
-      {endTimeDiff > 0 && (
-        <Tooltip
-          label={new Date(rolePlatform.endTime).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
-          placement="top"
-          hasArrow
-        >
-          <Tag>
-            <TagLeftIcon as={Clock} />
-            <TagLabel>
-              {endTimeDiff <= 0
-                ? "Claim ended"
-                : `Claim ends in ${formatRelativeTimeFromNow(endTimeDiff)}`}
-            </TagLabel>
-          </Tag>
-        </Tooltip>
-      )}
-    </Wrap>
+  return (
+    <Tooltip
+      label={new Date(endTime).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}
+      placement="top"
+      hasArrow
+    >
+      <Tag {...rest}>
+        <TagLeftIcon as={Clock} mr={1} />
+        <TagLabel>
+          {endTimeDiff <= 0
+            ? "Claim ended"
+            : `Claim ends in ${formatRelativeTimeFromNow(endTimeDiff)}`}
+        </TagLabel>
+      </Tag>
+    </Tooltip>
   )
 }
 
 export default CapacityTimeTags
+export { CapacityTag, EndTimeTag, StartTimeTag }
