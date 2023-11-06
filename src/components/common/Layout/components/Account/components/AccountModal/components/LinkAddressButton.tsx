@@ -10,10 +10,11 @@ import {
 } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useUser from "components/[guild]/hooks/useUser"
-import { useAddressLinkContext } from "components/_app/AddressLinkProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { addressLinkParamsAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/hooks/useShouldLinkToUser"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
 import { useAccount, useDisconnect, useWalletClient } from "wagmi"
@@ -27,7 +28,7 @@ const LinkAddressButton = (props) => {
   const { data: walletClient } = useWalletClient()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { setAddressLinkParams } = useAddressLinkContext()
+  const [, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   if (!id) return null
