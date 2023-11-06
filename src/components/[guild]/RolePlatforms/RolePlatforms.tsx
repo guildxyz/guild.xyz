@@ -20,9 +20,7 @@ import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import EditRolePlatformCapacityTime from "./components/EditRolePlatformCapacityTime"
 import PlatformCard from "./components/PlatformCard"
-import CapacityTag from "./components/PlatformCard/components/CapacityTag"
-import EndTimeTag from "./components/PlatformCard/components/EndTimeTag"
-import StartTimeTag from "./components/PlatformCard/components/StartTimeTag"
+import CapacityTimeTags from "./components/PlatformCard/components/CapacityTimeTags"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -86,11 +84,11 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             if (!type) return null
 
-            const shouldShowCapacityTag =
-              typeof rolePlatform.capacity === "number" &&
-              typeof rolePlatform.claimedCapacity === "number"
-            const shouldShowStartTimeTag = !!rolePlatform.startTime
-            const shouldShowEndTimeTag = !!rolePlatform.endTime
+            const showCapacityTimeTags =
+              (typeof rolePlatform.capacity === "number" &&
+                typeof rolePlatform.claimedCapacity === "number") ||
+              !!rolePlatform.startTime ||
+              !!rolePlatform.endTime
 
             const { cardPropsHook: useCardProps, cardSettingsComponent } =
               platforms[type]
@@ -137,14 +135,8 @@ const RolePlatforms = ({ roleId }: Props) => {
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
                   contentRow={
                     <Wrap>
-                      {shouldShowCapacityTag && (
-                        <CapacityTag rolePlatform={rolePlatform} />
-                      )}
-                      {shouldShowStartTimeTag && (
-                        <StartTimeTag rolePlatform={rolePlatform} />
-                      )}
-                      {shouldShowEndTimeTag && (
-                        <EndTimeTag rolePlatform={rolePlatform} />
+                      {showCapacityTimeTags && (
+                        <CapacityTimeTags rolePlatform={rolePlatform} />
                       )}
                       <EditRolePlatformCapacityTime
                         platformType={
@@ -166,11 +158,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                             shouldDirty: true,
                           })
                         }}
-                        isCompact={
-                          shouldShowCapacityTag ||
-                          shouldShowStartTimeTag ||
-                          shouldShowEndTimeTag
-                        }
+                        isCompact={showCapacityTimeTags}
                       />
                     </Wrap>
                   }
