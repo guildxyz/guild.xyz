@@ -44,6 +44,12 @@ export enum PlatformAsRewardRestrictions {
   MULTIPLE_ROLES, // e.g. Discord
 }
 
+export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
+  "CONTRACT_CALL",
+  "TEXT",
+  "UNIQUE_TEXT",
+]
+
 type PlatformData<
   OAuthParams extends {
     client_id?: string

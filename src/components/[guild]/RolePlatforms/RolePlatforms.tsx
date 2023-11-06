@@ -13,7 +13,7 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { Plus } from "phosphor-react"
-import platforms from "platforms/platforms"
+import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
@@ -142,40 +142,42 @@ const RolePlatforms = ({ roleId }: Props) => {
                   }
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
                   contentRow={
-                    <Wrap>
-                      {showCapacityTimeTags && (
-                        <CapacityTimeTags rolePlatform={rolePlatform} />
-                      )}
+                    CAPACITY_TIME_PLATFORMS.includes(type) && (
+                      <Wrap>
+                        {showCapacityTimeTags && (
+                          <CapacityTimeTags rolePlatform={rolePlatform} />
+                        )}
 
-                      <EditRolePlatformCapacityTimeButton
-                        onClick={onCapacityTimeOpen}
-                        isCompact={showCapacityTimeTags}
-                      />
+                        <EditRolePlatformCapacityTimeButton
+                          onClick={onCapacityTimeOpen}
+                          isCompact={showCapacityTimeTags}
+                        />
 
-                      <EditRolePlatformCapacityTimeModal
-                        isOpen={isCapacityTimeOpen}
-                        onClose={onCapacityTimeClose}
-                        platformType={
-                          PlatformType[guildPlatform.platformId] as PlatformName
-                        }
-                        defaultValues={{
-                          capacity: rolePlatform.capacity,
-                          startTime: rolePlatform.startTime,
-                          endTime: rolePlatform.endTime,
-                        }}
-                        onDone={({ capacity, startTime, endTime }) => {
-                          setValue(`rolePlatforms.${index}.capacity`, capacity, {
-                            shouldDirty: true,
-                          })
-                          setValue(`rolePlatforms.${index}.startTime`, startTime, {
-                            shouldDirty: true,
-                          })
-                          setValue(`rolePlatforms.${index}.endTime`, endTime, {
-                            shouldDirty: true,
-                          })
-                        }}
-                      />
-                    </Wrap>
+                        <EditRolePlatformCapacityTimeModal
+                          isOpen={isCapacityTimeOpen}
+                          onClose={onCapacityTimeClose}
+                          platformType={
+                            PlatformType[guildPlatform.platformId] as PlatformName
+                          }
+                          defaultValues={{
+                            capacity: rolePlatform.capacity,
+                            startTime: rolePlatform.startTime,
+                            endTime: rolePlatform.endTime,
+                          }}
+                          onDone={({ capacity, startTime, endTime }) => {
+                            setValue(`rolePlatforms.${index}.capacity`, capacity, {
+                              shouldDirty: true,
+                            })
+                            setValue(`rolePlatforms.${index}.startTime`, startTime, {
+                              shouldDirty: true,
+                            })
+                            setValue(`rolePlatforms.${index}.endTime`, endTime, {
+                              shouldDirty: true,
+                            })
+                          }}
+                        />
+                      </Wrap>
+                    )
                   }
                 />
               </RolePlatformProvider>
