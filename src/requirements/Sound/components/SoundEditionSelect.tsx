@@ -6,7 +6,6 @@ import parseFromObject from "utils/parseFromObject"
 
 type Props = {
   baseFieldPath: string
-  onChange?: (selectedOption: string) => void
 }
 
 const options = [
