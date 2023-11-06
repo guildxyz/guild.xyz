@@ -8,7 +8,7 @@ import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { mutate } from "swr"
-import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
@@ -70,9 +70,9 @@ const usePayFee = () => {
     (multiplePayments || !hasPaid) &&
     typeof fee === "bigint" &&
     isSufficientBalance &&
-    (ADDRESS_REGEX.test(pickedCurrency)
+    (!pickedCurrencyIsNative
       ? typeof allowance === "bigint" && fee <= allowance
-      : true)
+      : fee < coinBalanceData?.value)
 
   const contractCallParams = {
     abi: feeCollectorAbi,

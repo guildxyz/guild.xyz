@@ -39,6 +39,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     error: vaultError,
   } = useVault(address, requirementData?.id, chain)
 
+  const isNativeCurrency = token === NULL_ADDRESS
+
   const {
     data: tokenData,
     error: tokenError,
@@ -46,10 +48,20 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(token !== NULL_ADDRESS && chain),
+    enabled: Boolean(!isNativeCurrency && chain),
   })
-  const convertedFee =
-    fee && tokenData?.decimals ? formatUnits(fee, tokenData.decimals) : undefined
+
+  const convertedFee = fee
+    ? isNativeCurrency
+      ? formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
+      : tokenData?.decimals
+      ? formatUnits(fee, tokenData.decimals)
+      : undefined
+    : undefined
+
+  const symbol = isNativeCurrency
+    ? CHAIN_CONFIG[chain].nativeCurrency.symbol
+    : tokenData?.symbol
 
   const { data: accessData } = useAccess(roleId ?? 0)
   // temporary until POAPs are real roles
@@ -99,9 +111,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
               : undefined
           }
         >
-          {convertedFee && tokenData?.symbol
-            ? `${convertedFee} ${tokenData.symbol}`
-            : "-"}
+          {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
         {` on ${CHAIN_CONFIG[chain].name}`}
       </>

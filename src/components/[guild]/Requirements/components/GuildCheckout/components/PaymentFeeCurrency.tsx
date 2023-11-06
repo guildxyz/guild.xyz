@@ -1,5 +1,5 @@
 import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import { Chains } from "chains"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { useEffect } from "react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -22,14 +22,21 @@ const PaymentFeeCurrency = (): JSX.Element => {
     requirement?.chain
   )
 
+  const isNativeCurrency = token === NULL_ADDRESS
+
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[requirement.chain],
-    enabled: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
+    enabled: Boolean(!isNativeCurrency && Chains[requirement.chain]),
   })
 
-  const convertedFee =
-    fee && tokenData?.decimals ? formatUnits(fee, tokenData.decimals) : undefined
+  const convertedFee = fee
+    ? isNativeCurrency
+      ? formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
+      : tokenData?.decimals
+      ? formatUnits(fee, tokenData.decimals)
+      : undefined
+    : undefined
 
   useEffect(() => {
     if (!token) return
