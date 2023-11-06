@@ -50,6 +50,12 @@ const normalizeDate = (isoDate: string): string | undefined => {
   }
 }
 
+const getShortDate = (isoDate: string): string | undefined => {
+  if (!isoDate) return undefined
+
+  return isoDate.split("T")[0]
+}
+
 const EditRolePlatformCapacityTime = ({
   platformType,
   defaultValues,
@@ -59,7 +65,11 @@ const EditRolePlatformCapacityTime = ({
   const { control, register, setValue, handleSubmit } =
     useForm<RolePlatformCapacityTimeForm>({
       mode: "all",
-      defaultValues,
+      defaultValues: {
+        capacity: defaultValues?.capacity,
+        startTime: getShortDate(defaultValues?.startTime),
+        endTime: getShortDate(defaultValues?.endTime),
+      },
     })
   const { isOpen, onOpen, onClose } = useDisclosure()
 
