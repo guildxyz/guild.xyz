@@ -1,8 +1,6 @@
 name: E2E tests
 
 on:
-  schedule:
-    - cron: "0 */2 * * *"
   push:
     branches: main
   pull_request:

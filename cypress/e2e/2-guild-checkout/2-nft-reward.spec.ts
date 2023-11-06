@@ -7,6 +7,9 @@ describe("nft reward", () => {
   })
 
   it("can deploy an nft contract", () => {
+    // Scrolling to the top of the page to avoid a rare edge case where the add reward button isn't clickable
+    cy.scrollTo("top")
+
     cy.getByDataTest("add-reward-button").click()
     cy.get("div[role='group']").contains("Create a gated NFT").click({ force: true })
 
@@ -80,6 +83,11 @@ describe("nft reward", () => {
   })
 
   it("can collect an nft if requirements are satisfied", () => {
+    cy.intercept(
+      "POST",
+      `${Cypress.env("guildApiUrl")}/guilds/*/roles/*/role-platforms/*/claim`
+    ).as("claim")
+
     cy.get("p")
       .contains("Collect: Cypress Gang #2")
       .within(() => {
@@ -93,6 +101,8 @@ describe("nft reward", () => {
 
     cy.getByDataTest("collect-nft-button").should("be.enabled")
     cy.getByDataTest("collect-nft-button").click()
+
+    cy.wait("@claim")
 
     cy.get(".chakra-alert")
       .contains("Successfully collected NFT!")

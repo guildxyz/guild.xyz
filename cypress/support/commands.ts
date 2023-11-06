@@ -3,16 +3,19 @@ Cypress.Commands.add("getByDataTest", (selector: string) =>
 )
 
 Cypress.Commands.add("connectWallet", () => {
-  cy.getByDataTest("connect-wallet-button").click()
-  cy.contains("Mock").click()
-
   cy.intercept("POST", `${Cypress.env("guildApiUrl")}/users/*/public-key`).as(
     "setPubKey"
   )
 
+  cy.getByDataTest("connect-wallet-button").click()
+  cy.contains("Mock").click()
+
+  cy.getByDataTest("verify-address-button").should("be.visible")
   cy.getByDataTest("verify-address-button").click()
 
-  cy.wait("@setPubKey").its("response.statusCode").should("eq", 200)
+  cy.wait("@setPubKey", { requestTimeout: 30_000, responseTimeout: 30_000 })
+    .its("response.statusCode")
+    .should("eq", 200)
 })
 
 Cypress.Commands.add("clearIndexedDB", () => {

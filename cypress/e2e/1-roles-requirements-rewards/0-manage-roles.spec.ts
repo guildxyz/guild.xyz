@@ -9,16 +9,17 @@ describe("roles", () => {
     cy.clearIndexedDB()
     cy.visit(`/${Cypress.env("TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
-  })
 
-  it("can fetch guild id", () => {
     cy.intercept(
       "GET",
       `${Cypress.env("guildApiUrl")}/guilds/guild-page/${Cypress.env(
         "TEST_GUILD_URL_NAME"
       )}`
     ).as("fetchGuild")
+    cy.waitForAccessCheck()
+  })
 
+  it("can fetch guild id", () => {
     cy.wait("@fetchGuild")
       .then((intercept) => {
         CONTEXT.guild = intercept.response.body
@@ -140,8 +141,13 @@ describe("roles", () => {
       cy.get("button[aria-label='Remove requirement']").first().click()
     })
 
-    cy.getByDataTest("delete-requirement-button").click()
+    cy.intercept(
+      "DELETE",
+      `${Cypress.env("guildApiUrl")}/guilds/*/roles/*/requirements/*`
+    ).as("deleteRequirement")
 
+    cy.getByDataTest("delete-requirement-button").click()
+    cy.wait("@deleteRequirement")
     cy.contains("Requirement deleted!")
   })
 
@@ -156,9 +162,12 @@ describe("roles", () => {
       "div[role='dialog'].chakra-slide button[aria-label='Delete role']"
     ).click()
 
-    cy.getByDataTest("delete-role-confirmation-button").click()
+    cy.intercept("DELETE", `${Cypress.env("guildApiUrl")}/guilds/*/roles/*`).as(
+      "deleteRole"
+    )
 
-    // Couldn't get intercept to work here, so waiting the toast for now
+    cy.getByDataTest("delete-role-confirmation-button").click()
+    cy.wait("@deleteRole")
     cy.contains("Role deleted!")
   })
 })
