@@ -329,8 +329,8 @@ type RolePlatform = {
   visibility?: Visibility
   capacity?: number
   claimedCapacity?: number
-  startTime?: number
-  endTime?: number
+  startTime?: string
+  endTime?: string
 }
 
 enum Visibility {
