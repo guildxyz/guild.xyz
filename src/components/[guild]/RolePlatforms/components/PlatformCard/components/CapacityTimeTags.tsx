@@ -21,19 +21,20 @@ const CapacityTimeTags = ({ rolePlatform }: Props) => {
 
   return (
     <Wrap>
-      {typeof rolePlatform.capacity === "number" &&
-        typeof rolePlatform.claimedCapacity === "number" && (
-          <Tag
-            onClick={() => setShowClaimed((prevValue) => !prevValue)}
-            cursor="default"
-          >
-            {showClaimed
-              ? `${rolePlatform.capacity - rolePlatform.claimedCapacity} / ${
-                  rolePlatform.capacity
-                } available`
-              : `${rolePlatform.claimedCapacity} / ${rolePlatform.capacity} claimed`}
-          </Tag>
-        )}
+      {typeof rolePlatform.capacity === "number" && (
+        <Tag
+          onClick={() => setShowClaimed((prevValue) => !prevValue)}
+          cursor="default"
+        >
+          {showClaimed
+            ? `${rolePlatform.capacity - (rolePlatform.claimedCapacity ?? 0)} / ${
+                rolePlatform.capacity
+              } available`
+            : `${rolePlatform.claimedCapacity ?? 0} / ${
+                rolePlatform.capacity
+              } claimed`}
+        </Tag>
+      )}
 
       {startTimeDiff > 0 && (
         <Tooltip

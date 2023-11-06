@@ -34,6 +34,7 @@ import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
+import CapacityTimeSetup from "./components/CapacityTimeSetup"
 import useAddReward from "./hooks/useAddReward"
 
 // temporary until POAPs are real rewards
@@ -198,7 +199,11 @@ const AddRewardButton = (): JSX.Element => {
                     </Text>
                   </HStack>
 
-                  {step === "SELECT_ROLE" && <PlatformPreview />}
+                  {step === "SELECT_ROLE" && (
+                    <PlatformPreview>
+                      <CapacityTimeSetup platformType={selection} />
+                    </PlatformPreview>
+                  )}
                 </Stack>
               </ModalHeader>
 

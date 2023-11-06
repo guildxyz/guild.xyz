@@ -10,7 +10,7 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { ComponentType, ForwardRefExoticComponent } from "react"
+import { ComponentType, ForwardRefExoticComponent, PropsWithChildren } from "react"
 import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
@@ -79,7 +79,7 @@ type PlatformData<
     onSuccess: () => void
     skipSettings?: boolean
   }>
-  PlatformPreview?: ComponentType<Record<string, never>>
+  PlatformPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
 
   oauth?: {
