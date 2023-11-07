@@ -246,7 +246,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
                     requirements: [
                       ...(prevRole.requirements
                         ?.filter(
-                          (requirement) => !deletedRequirementIds.has(requirement)
+                          (requirement) => !deletedRequirementIds.has(requirement.id)
                         )
                         ?.map((prevReq) => ({
                           ...prevReq,
