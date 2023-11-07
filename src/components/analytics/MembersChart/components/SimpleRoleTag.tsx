@@ -4,8 +4,8 @@ const SimpleRoleTag = ({ role }) => {
   const { colorMode } = useColorMode()
 
   return (
-    <HStack spacing={1}>
-      <Center boxSize="5" flexShrink={0}>
+    <HStack spacing={1} alignItems={"flex-start"}>
+      <Center boxSize="5" flexShrink={0} top="0.5" pos="relative">
         {role.imageUrl?.startsWith("/guildLogos") ? (
           <Img
             src={role.imageUrl}
@@ -16,7 +16,7 @@ const SimpleRoleTag = ({ role }) => {
           <Img src={role.imageUrl} boxSize="5" borderRadius={"full"} />
         )}
       </Center>
-      <Text noOfLines={1}>{role.name}</Text>
+      <Text>{role.name}</Text>
     </HStack>
   )
 }

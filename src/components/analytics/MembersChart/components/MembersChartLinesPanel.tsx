@@ -25,7 +25,7 @@ const MembersChartLinesPanel = ({
   return (
     <Box
       position={"relative"}
-      w={{ md: "220px" }}
+      w={{ md: "240px" }}
       flex="0 0 auto"
       borderLeftWidth={{ md: 1 }}
       borderTopWidth={{ base: 1, md: 0 }}
@@ -83,12 +83,17 @@ const LineSeriesSelector = forwardRef<any, any>(
     <Checkbox
       ref={ref}
       value={value}
-      _checked={{
+      sx={{
+        "> .chakra-checkbox__control": {
+          position: "relative",
+          top: 1,
+        },
         "> .chakra-checkbox__control[data-checked]": {
           bgColor: color,
           borderColor: color,
         },
       }}
+      alignItems={"flex-start"}
     >
       {children}
     </Checkbox>
