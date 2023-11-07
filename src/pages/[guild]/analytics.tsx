@@ -1,3 +1,4 @@
+import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -35,7 +36,9 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
       >
         <GuildTabs activeTab="ANALYTICS" />
-        <MembersCountChart />
+        <NoPermissionToPageFallback>
+          <MembersCountChart />
+        </NoPermissionToPageFallback>
       </Layout>
     </>
   )
