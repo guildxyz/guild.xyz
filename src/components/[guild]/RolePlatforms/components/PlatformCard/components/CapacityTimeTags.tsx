@@ -25,12 +25,7 @@ export const shouldShowCapacityTimeTags = (rolePlatform?: RolePlatform): boolean
   !!rolePlatform?.endTime
 
 const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => {
-  if (
-    typeof rolePlatform.capacity === "number" ||
-    !!rolePlatform.startTime ||
-    !!rolePlatform.endTime
-  )
-    return null
+  if (shouldShowCapacityTimeTags(rolePlatform)) return null
 
   return (
     <Wrap {...wrapProps}>
