@@ -15,7 +15,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useEffect, useMemo, useState } from "react"
 import getRandomInt from "utils/getRandomInt"
-import MembersChartLineSeries from "./components/MembersChartLineSeries"
+import MembersChartLinesPanel from "./components/MembersChartLinesPanel"
 import MembersChartTooltip from "./components/MembersChartTooltip"
 
 const accessors = {
@@ -47,10 +47,10 @@ const MembersChart = () => {
     return byMembers
   }, [roles])
 
-  const [shownRoleIds, setShownRoleIds] = useState(["total"])
+  const [shownLines, setShownLines] = useState(["total"])
   useEffect(() => {
     if (!roles) return
-    setShownRoleIds(["total", ...roles?.map((role) => role.id.toString())])
+    setShownLines(["total", ...roles?.map((role) => role.id.toString())])
   }, [roles])
 
   const roleColors = useMemo(
@@ -72,8 +72,6 @@ const MembersChart = () => {
         overflow={"hidden"}
         sx={{
           ".visx-axis-tick": { text: { fill: "currentColor" } },
-          // WebkitMaskImage:
-          //   "linear-gradient(to right, transparent 0px, black 20px, black calc(100% - 20px), transparent)",
         }}
       >
         <HStack p="4" justifyContent={"space-between"}>
@@ -102,9 +100,9 @@ const MembersChart = () => {
           <XYChart
             height={chartHeight}
             margin={{
-              left: CHART_MARGIN_X,
               top: 35,
               bottom: 35,
+              left: CHART_MARGIN_X,
               right: CHART_MARGIN_X,
             }}
             xScale={{ type: "time" }}
@@ -152,7 +150,7 @@ const MembersChart = () => {
                 textAnchor: "start",
               })}
             />
-            {data?.total && shownRoleIds?.includes("total") && (
+            {data?.total && shownLines?.includes("total") && (
               <LineSeries
                 stroke="currentColor"
                 dataKey="total"
@@ -162,7 +160,7 @@ const MembersChart = () => {
             )}
             {data?.roles &&
               data.roles
-                .filter((role) => shownRoleIds?.includes(role.roleId.toString()))
+                .filter((role) => shownLines?.includes(role.roleId.toString()))
                 .map(({ roleId, memberCounts }) => (
                   <LineSeries
                     key={roleId}
@@ -176,8 +174,13 @@ const MembersChart = () => {
           </XYChart>
         )}
       </Box>
-      <MembersChartLineSeries
-        {...{ sortedRoles, roleColors, shownRoleIds, setShownRoleIds }}
+      <MembersChartLinesPanel
+        {...{
+          sortedRoles,
+          roleColors,
+          shownRoleIds: shownLines,
+          setShownRoleIds: setShownLines,
+        }}
       />
     </Card>
   )

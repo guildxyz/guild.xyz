@@ -8,7 +8,7 @@ import {
 import { forwardRef, useRef } from "react"
 import SimpleRoleTag from "./SimpleRoleTag"
 
-const MembersChartLineSeries = ({
+const MembersChartLinesPanel = ({
   sortedRoles,
   roleColors,
   shownRoleIds,
@@ -95,4 +95,4 @@ const LineSeriesSelector = forwardRef<any, any>(
   )
 )
 
-export default MembersChartLineSeries
+export default MembersChartLinesPanel
