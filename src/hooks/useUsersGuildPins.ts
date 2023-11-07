@@ -1,28 +1,41 @@
-import { BigNumber } from "@ethersproject/bignumber"
-import { Contract } from "@ethersproject/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
-import { Chain, Chains, RPC } from "connectors"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
-import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import {
+  GUILD_PIN_CONTRACTS,
+  GuildPinsSupportedChain,
+} from "utils/guildCheckout/constants"
+import { createPublicClient, http } from "viem"
+import { useAccount } from "wagmi"
 
-const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
-  const provider = new JsonRpcProvider(RPC[chain].rpcUrls[0])
-  const contract = new Contract(
-    GUILD_PIN_CONTRACTS[chain].address,
-    GUILD_PIN_CONTRACTS[chain].abi,
-    provider
-  )
+const fetchGuildPinsOnChain = async (
+  address: `0x${string}`,
+  chain: GuildPinsSupportedChain
+) => {
+  const publicClient = createPublicClient({
+    chain: CHAIN_CONFIG[chain],
+    transport: http(),
+  })
 
-  const usersGuildPinIdsOnChain: BigNumber[] = []
+  const usersGuildPinIdsOnChain: bigint[] = []
 
-  const balance = await contract.balanceOf(address)
+  const balance = await publicClient.readContract({
+    abi: GUILD_PIN_CONTRACTS[chain].abi,
+    address: GUILD_PIN_CONTRACTS[chain].address,
+    functionName: "balanceOf",
+    args: [address],
+  })
 
   for (let i = 0; i < balance; i++) {
-    const newTokenId = await contract.tokenOfOwnerByIndex(address, i)
+    const newTokenId = await publicClient.readContract({
+      abi: GUILD_PIN_CONTRACTS[chain].abi,
+      address: GUILD_PIN_CONTRACTS[chain].address,
+      functionName: "tokenOfOwnerByIndex",
+      args: [address, BigInt(i)],
+    })
+
     if (newTokenId) usersGuildPinIdsOnChain.push(newTokenId)
   }
 
@@ -32,10 +45,16 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
     tokenUri: string
   }>(
     usersGuildPinIdsOnChain.map(async (tokenId) => {
-      const tokenUri: string = await contract.tokenURI(tokenId)
+      const tokenUri = await publicClient.readContract({
+        abi: GUILD_PIN_CONTRACTS[chain].abi,
+        address: GUILD_PIN_CONTRACTS[chain].address,
+        functionName: "tokenURI",
+        args: [tokenId],
+      })
+
       return {
         chainId: Chains[chain],
-        tokenId: tokenId.toNumber(),
+        tokenId: Number(tokenId),
         tokenUri,
       }
     })
@@ -61,14 +80,13 @@ const fetchGuildPinsOnChain = async (address: string, chain: Chain) => {
 }
 
 const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
-  const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS) as Chain[]
+  const guildPinChains = Object.keys(
+    GUILD_PIN_CONTRACTS
+  ) as GuildPinsSupportedChain[]
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
       addresses.flatMap((addressData) =>
-        fetchGuildPinsOnChain(
-          typeof addressData === "string" ? addressData : addressData?.address,
-          chain
-        )
+        fetchGuildPinsOnChain(addressData?.address, chain)
       )
     )
   )
@@ -77,10 +95,10 @@ const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
 }
 
 const useUsersGuildPins = (disabled = false) => {
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
   const { addresses } = useUser()
 
-  const shouldFetch = Boolean(!disabled && isActive && addresses?.length)
+  const shouldFetch = Boolean(!disabled && isConnected && addresses?.length)
 
   return useSWRImmutable<
     ({ chainId: number; tokenId: number } & GuildPinMetadata)[]

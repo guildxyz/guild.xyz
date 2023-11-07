@@ -39,8 +39,7 @@ const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
     name: data?.serverName || "",
     info:
       roleName ??
-      // temporary for zkSync launch
-      ((isAfterJoin || urlName === "zksync-era") && (
+      (isAfterJoin && (
         <Text>
           <Icon as={Info} display="inline-block" mr="0.5" mb="-2px" />
           You might need to wait a few minutes to get your roles

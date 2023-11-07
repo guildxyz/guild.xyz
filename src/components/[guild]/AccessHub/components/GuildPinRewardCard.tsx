@@ -24,6 +24,7 @@ const GuildPinRewardCard = () => {
   return (
     <CardMotionWrapper>
       <RewardCard
+        data-test="guild-pin-reward-card"
         label={
           <>
             <Icon as={CircleWavyCheck} mb="-2px" mr="1.5" />

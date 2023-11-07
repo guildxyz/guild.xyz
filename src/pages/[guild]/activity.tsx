@@ -1,4 +1,5 @@
 import { Box, Stack, Text } from "@chakra-ui/react"
+import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
@@ -12,7 +13,6 @@ import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleto
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
-import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -45,17 +45,9 @@ const ActivityLog = (): JSX.Element => {
     >
       <GuildTabs activeTab="ACTIVITY" isSticky={false} />
 
-      {userId && !isAdmin ? (
-        <Card>
-          <ErrorAlert
-            label="You do not have permission to view this activity log"
-            mb={0}
-          />
-        </Card>
-      ) : (
+      <NoPermissionToPageFallback>
         <ActivityLogFiltersProvider>
           <ActivityLogFiltersBar />
-
           <SectionTitle title="Actions" mt={8} mb="4" />
           <Stack spacing={2.5}>
             {isLoading ? (
@@ -84,7 +76,7 @@ const ActivityLog = (): JSX.Element => {
             {!isLoading && isValidating && <ActivityLogSkeletons />}
           </Stack>
         </ActivityLogFiltersProvider>
-      )}
+      </NoPermissionToPageFallback>
     </Layout>
   )
 }

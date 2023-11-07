@@ -1,10 +1,10 @@
 import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { Chains, RPC } from "connectors"
-import useTokenData from "hooks/useTokenData"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { useEffect } from "react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
+import { useToken } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "./GuildCheckoutContex"
 import TokenInfo from "./PaymentCurrencyPicker/components/TokenInfo"
@@ -16,23 +16,31 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const requirement = useRequirementContext()
   const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
-  const {
-    data: { token, fee },
-    error,
-    isValidating,
-  } = useVault(requirement?.address, requirement?.data?.id, requirement?.chain)
+  const { token, fee, error, isLoading } = useVault(
+    requirement?.address,
+    requirement?.data?.id,
+    requirement?.chain
+  )
 
-  const {
-    data: { decimals },
-  } = useTokenData(requirement.chain, token)
+  const isNativeCurrency = token === NULL_ADDRESS
 
-  const convertedFee = fee && decimals ? formatUnits(fee, decimals) : undefined
+  const { data: tokenData } = useToken({
+    address: token,
+    chainId: Chains[requirement.chain],
+    enabled: Boolean(!isNativeCurrency && Chains[requirement.chain]),
+  })
+
+  const convertedFee = fee
+    ? isNativeCurrency
+      ? formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
+      : tokenData?.decimals
+      ? formatUnits(fee, tokenData.decimals)
+      : undefined
+    : undefined
 
   useEffect(() => {
     if (!token) return
-    setPickedCurrency(
-      token === NULL_ADDRESS ? RPC[requirement.chain].nativeCurrency.symbol : token
-    )
+    setPickedCurrency(token)
   }, [token])
 
   return (
@@ -54,7 +62,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
           address={pickedCurrency}
           chainId={Chains[requirement?.chain]}
           requiredAmount={Number(convertedFee)}
-          isLoading={isValidating}
+          isLoading={isLoading}
           error={error}
         />
       </Box>

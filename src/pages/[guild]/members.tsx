@@ -4,6 +4,7 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
@@ -214,10 +215,12 @@ const GuildPage = (): JSX.Element => {
         />
         {/* for debugging */}
         {/* {JSON.stringify(table.getState(), null, 2)} */}
-        <CrmTableWrapper {...{ isValidating, setSize }}>
-          <CrmThead {...{ table, isLoading }} />
-          <CrmTbody {...{ table, isValidating, data, error }} />
-        </CrmTableWrapper>
+        <NoPermissionToPageFallback>
+          <CrmTableWrapper {...{ isValidating, setSize }}>
+            <CrmThead {...{ table, isLoading }} />
+            <CrmTbody {...{ table, isValidating, data, error }} />
+          </CrmTableWrapper>
+        </NoPermissionToPageFallback>
       </Layout>
     </>
   )

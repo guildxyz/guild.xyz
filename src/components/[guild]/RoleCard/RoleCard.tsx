@@ -14,6 +14,7 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import ClientOnly from "components/common/ClientOnly"
 import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
@@ -246,9 +247,11 @@ const RoleCard = memo(({ role }: Props) => {
                 Requirements to qualify
               </Text>
               <Spacer />
-              {!isMobile && (
-                <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />
-              )}
+              <ClientOnly>
+                {!isMobile && (
+                  <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />
+                )}
+              </ClientOnly>
             </HStack>
             <RoleRequirements
               {...{
@@ -263,7 +266,10 @@ const RoleCard = memo(({ role }: Props) => {
           </Flex>
         </SimpleGrid>
       </Collapse>
-      {isMobile && <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />}
+
+      <ClientOnly>
+        {isMobile && <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />}
+      </ClientOnly>
     </Card>
   )
 })

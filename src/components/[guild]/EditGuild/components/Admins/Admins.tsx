@@ -6,17 +6,17 @@ import {
   Tag,
   usePrevious,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import GuildAvatar from "components/common/GuildAvatar"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
+import GuildAvatar from "components/common/GuildAvatar"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { SelectOption } from "types"
 import shortenHex from "utils/shortenHex"
+import { usePublicClient } from "wagmi"
 import TransferOwnership from "../TransferOwnership"
 import AdminSelect from "./components/AdminSelect"
 
@@ -28,12 +28,13 @@ const validateAdmins = (admins: string[]) =>
     : admins.every((addr: any) => ADDRESS_REGEX.test(addr?.address.trim()))) ||
   "Every admin should be a valid address"
 
-const fetchMemberOptions = ([_, members, provider]) =>
+const fetchMemberOptions = ([_, members, publicClient]) =>
   Promise.all(
     members.map(async (member) => ({
       label:
-        (await provider.lookupAddress(member).catch(() => shortenHex(member))) ||
-        shortenHex(member),
+        (await publicClient
+          .getEnsName({ address: member })
+          .catch(() => shortenHex(member))) || shortenHex(member),
       value: member,
       img: <GuildAvatar address={member} size={4} mr="2" />,
     }))
@@ -48,7 +49,8 @@ const Admins = () => {
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
     [guildAdmins]
   )
-  const { provider } = useWeb3React()
+  const publicClient = usePublicClient()
+
   const members = useUniqueMembers(roles)
 
   const {
@@ -59,7 +61,9 @@ const Admins = () => {
   })
 
   const { data: options } = useSWR(
-    !!members && !!admins && !!ownerAddress ? ["options", members, provider] : null,
+    !!members && !!admins && !!ownerAddress
+      ? ["options", members, publicClient]
+      : null,
     fetchMemberOptions
   )
 

@@ -1,9 +1,9 @@
 import { Img } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import Link from "components/common/Link"
 import useSWRImmutable from "swr/immutable"
 import slugify from "utils/slugify"
 
@@ -62,7 +62,9 @@ const SoundRequirement = (props: RequirementProps) => {
           case "SOUND_ARTIST_BACKED":
             return (
               <>
-                {`Collect any song from `}
+                {`Collect any ${
+                  requirement.data.tierNumber === 1 ? "limited edition" : ""
+                } song from `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
               </>
@@ -81,7 +83,9 @@ const SoundRequirement = (props: RequirementProps) => {
                 >
                   {requirement.data.title}
                 </Link>
-                {` song from `}
+                {`${
+                  requirement.data.tierNumber === 1 ? " limited edition" : ""
+                } song from `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
               </>

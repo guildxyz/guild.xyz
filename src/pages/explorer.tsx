@@ -1,4 +1,5 @@
 import { useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
@@ -52,12 +53,13 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         backgroundOffset={usersGuilds?.length ? 135 : 120}
         textColor="white"
       >
-        <ExplorerTabs
-          {...{ yourGuildsRef, allGuildsRef }}
-          rightElement={usersGuilds?.length && <GoToCreateGuildButton />}
-        />
-
-        <YourGuilds ref={yourGuildsRef} />
+        <ClientOnly>
+          <ExplorerTabs
+            {...{ yourGuildsRef, allGuildsRef }}
+            rightElement={usersGuilds?.length && <GoToCreateGuildButton />}
+          />
+          <YourGuilds ref={yourGuildsRef} />
+        </ClientOnly>
 
         <ExploreAllGuilds ref={allGuildsRef} {...{ guildsInitial }} />
       </Layout>

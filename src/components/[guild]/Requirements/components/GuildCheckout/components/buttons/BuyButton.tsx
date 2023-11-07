@@ -1,13 +1,13 @@
-import { useWeb3React } from "@web3-react/core"
-import Button from "components/common/Button"
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains, RPC } from "connectors"
-import useBalance from "hooks/useBalance"
+import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import fetcher from "utils/fetcher"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePayFee from "../../hooks/usePayFee"
@@ -18,18 +18,20 @@ const BuyButton = (): JSX.Element => {
   const { urlName, id: guildId } = useGuild()
   const toast = useToast()
 
-  const { chainId } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
-    data: { fee, multiplePayments },
-    isValidating: isVaultLoading,
+    fee,
+    multiplePayments,
+    isLoading: isVaultLoading,
     error,
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
-  const { data: hasPaid, isValidating: isHasPaidLoading } = useHasPaid(
+  const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
     requirement.address,
     requirement.data.id,
     requirement.chain
@@ -40,7 +42,13 @@ const BuyButton = (): JSX.Element => {
     requirement.address
   )
 
-  const { estimateGasError, onSubmit, isLoading } = usePayFee()
+  const {
+    error: payFeeError,
+    isPreparing,
+    estimatedGas,
+    payFee,
+    isLoading,
+  } = usePayFee()
 
   // temporary (in it's current form) until POAPs are real roles and there's a capacity attribute
   const handleSubmit = async () => {
@@ -54,31 +62,43 @@ const BuyButton = (): JSX.Element => {
           title: "All available POAPs have already been claimed",
         })
     }
-    onSubmit()
+    payFee()
     captureEvent("Click: BuyButton (GuildCheckout)", {
       guild: urlName,
     })
   }
 
-  const isSufficientAllowance = fee && allowance ? fee.lte(allowance) : false
+  const isSufficientAllowance =
+    typeof fee === "bigint" && typeof allowance === "bigint"
+      ? fee <= allowance
+      : false
 
-  const {
-    coinBalance,
-    tokenBalance,
-    isLoading: isBalanceLoading,
-  } = useBalance(pickedCurrency, Chains[requirement?.chain])
+  const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
+    address,
+    chainId,
+  })
+  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
+    address,
+    token: pickedCurrency,
+    chainId,
+    enabled: pickedCurrency !== NULL_ADDRESS,
+  })
 
-  const pickedCurrencyIsNative =
-    pickedCurrency === RPC[requirement?.chain]?.nativeCurrency?.symbol
+  const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
+
+  const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const isSufficientBalance =
     fee &&
-    (coinBalance || tokenBalance) &&
-    (pickedCurrencyIsNative ? coinBalance?.gte(fee) : tokenBalance?.gte(fee))
+    (coinBalanceData?.value || tokenBalanceData?.value) &&
+    (pickedCurrencyIsNative
+      ? coinBalanceData?.value >= fee
+      : tokenBalanceData?.value >= fee)
 
   const isDisabled =
+    !payFee ||
     error ||
-    estimateGasError ||
+    payFeeError ||
     !agreeWithTOS ||
     Chains[chainId] !== requirement.chain ||
     (!isVaultLoading && !isHasPaidLoading && !multiplePayments && hasPaid) ||
@@ -88,16 +108,14 @@ const BuyButton = (): JSX.Element => {
     !isSufficientBalance
 
   const errorMsg =
-    (error && "Couldn't calculate price") ||
-    (estimateGasError &&
-      (estimateGasError?.data?.message?.includes("insufficient")
-        ? "Insufficient funds for gas"
-        : "Couldn't estimate gas")) ||
+    (!multiplePayments && hasPaid && "Already paid") ||
     (!isSufficientBalance && "Insufficient balance") ||
-    (!multiplePayments && hasPaid && "Already paid")
+    (error && "Couldn't calculate price") ||
+    (!isPreparing && !estimatedGas && "Couldn't estimate gas")
 
   return (
     <Button
+      data-test="buy-button"
       size="lg"
       isDisabled={isDisabled}
       isLoading={isLoading}

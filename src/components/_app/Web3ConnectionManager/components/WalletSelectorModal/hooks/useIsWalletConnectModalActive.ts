@@ -6,14 +6,14 @@ const useIsWalletConnectModalActive = () => {
   const w3mModalRef = useRef(null)
   useEffect(() => {
     if (typeof window === "undefined" || w3mModalRef.current) return
-    w3mModalRef.current = document.querySelector("w3m-modal")
+    w3mModalRef.current = document.querySelector("wcm-modal")
   })
 
   useEffect(() => {
     if (!w3mModalRef.current) return
 
     const observerTarget =
-      w3mModalRef.current.shadowRoot?.getElementById("w3m-modal")
+      w3mModalRef.current.shadowRoot?.getElementById("wcm-modal")
 
     if (!observerTarget) return
 
@@ -23,7 +23,7 @@ const useIsWalletConnectModalActive = () => {
       )
       if (!classNameChange) return
       const classNameChangeTarget = classNameChange.target as HTMLElement
-      const isW3mModalActive = classNameChangeTarget.classList.contains("w3m-active")
+      const isW3mModalActive = classNameChangeTarget.classList.contains("wcm-active")
 
       setIsWalletConnectModalActive(isW3mModalActive)
     }

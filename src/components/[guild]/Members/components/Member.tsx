@@ -1,6 +1,6 @@
 import { Icon, Text, Tooltip, VStack } from "@chakra-ui/react"
 import GuildAvatar from "components/common/GuildAvatar"
-import useResolveAddress from "hooks/resolving/useResolveAddress"
+import useResolveAddress from "hooks/useResolveAddress"
 import { Crown } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 

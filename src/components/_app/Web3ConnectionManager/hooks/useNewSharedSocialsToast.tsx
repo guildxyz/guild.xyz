@@ -1,23 +1,26 @@
+import { ToastId } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useToastWithButton } from "hooks/useToast"
 import { ArrowRight } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 const useNewSharedSocialsToast = (openAccountModal) => {
   const { sharedSocials } = useUser()
   const toastWithButton = useToastWithButton()
+  const toastIdRef = useRef<ToastId>()
 
   const onClick = () => {
     openAccountModal()
     setTimeout(() => {
       document.getElementById("sharedSocialsButton").focus()
     }, 300)
+    toastIdRef.current = null
   }
 
   useEffect(() => {
-    if (!sharedSocials) return
+    if (!sharedSocials || !!toastIdRef.current) return
     if (sharedSocials?.some((sharedSocial) => sharedSocial.isShared === null))
-      toastWithButton({
+      toastIdRef.current = toastWithButton({
         status: "info",
         title: "New privacy settings",
         description:
