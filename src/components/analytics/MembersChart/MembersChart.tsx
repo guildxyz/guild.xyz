@@ -11,6 +11,7 @@ import {
 import { Axis, Grid, LineSeries, XYChart, allColors } from "@visx/xychart"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useEffect, useMemo, useState } from "react"
 import MembersChartLineSeries from "./components/MembersChartLineSeries"
@@ -34,7 +35,7 @@ const MembersChart = () => {
   const { id, roles } = useGuild()
   const chartHeight = useBreakpointValue({ base: 250, md: 500 })
 
-  const { data, isLoading } = useSWRWithOptionalAuth(
+  const { data, isLoading, error } = useSWRWithOptionalAuth(
     id
       ? `/v2/analytics/guilds/${id}/member-counts?fetchTotal=true&from=${prev}&to=${current}`
       : null
@@ -86,7 +87,15 @@ const MembersChart = () => {
             </Select>
           </Tooltip>
         </HStack>
-        {isLoading ? (
+        {error ? (
+          <Center w="full" h={chartHeight}>
+            <ErrorAlert
+              label="Couldn't load chart"
+              description={error?.error}
+              maxW="300px"
+            />
+          </Center>
+        ) : isLoading ? (
           <Center w="full" h={chartHeight}>
             <Spinner />
           </Center>
