@@ -31,7 +31,7 @@ import { useFormContext } from "react-hook-form"
 
 const CreateGuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const { steps, activeStep, setActiveStep } = useCreateGuildContext()
+  const { steps, activeStep, setActiveStep, stepPart } = useCreateGuildContext()
   const { control, getValues } = useFormContext()
 
   const { isOpen, onToggle } = useDisclosure()
@@ -135,7 +135,7 @@ const CreateGuildPage = (): JSX.Element => {
                     </StepTitle>
                     {activeStep === index && (
                       <Text colorScheme="gray" fontSize="sm" left={0} bottom={-5}>
-                        {step.description}
+                        {step.description?.[stepPart]}
                       </Text>
                     )}
                   </Stack>
@@ -167,7 +167,7 @@ const CreateGuildPage = (): JSX.Element => {
           </Stepper>
           {steps[activeStep].label && (
             <Text pt={7} position={"relative"}>
-              {steps[activeStep].label}
+              {steps[activeStep].label?.[stepPart]}
             </Text>
           )}
         </Card>

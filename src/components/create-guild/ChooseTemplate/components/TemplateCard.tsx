@@ -75,11 +75,7 @@ const TemplateCard = ({
 
   const roles = useWatch({ name: "roles", control })
 
-  console.log(
-    "xy role",
-    role.name,
-    roles.find((r) => r.name === name)?.rolePlatforms
-  )
+  const guildPlatforms = getValues("guildPlatforms")
 
   return (
     <Box
@@ -107,7 +103,7 @@ const TemplateCard = ({
       }}
       _hover={{
         _before: {
-          opacity: part === 1 ? 0.1 : 0,
+          opacity: part === 0 ? 0.1 : 0,
         },
       }}
       _focus={{
@@ -121,7 +117,7 @@ const TemplateCard = ({
           opacity: 0.17,
         },
       }}
-      cursor={part === 1 ? "pointer" : "default"}
+      cursor={part === 0 ? "pointer" : "default"}
       h="max-content"
       w="full"
     >
@@ -160,10 +156,10 @@ const TemplateCard = ({
                 </Wrap>
               </HStack>
             </HStack>
-            <Collapse in={part === 1}>
+            <Collapse in={part === 0}>
               <Box pl={5}>{description}</Box>
             </Collapse>
-            <Collapse in={part === 2}>
+            <Collapse in={part === 1}>
               <Box
                 p={5}
                 pt={2}
@@ -175,46 +171,64 @@ const TemplateCard = ({
                 borderStyle={"dashed"}
                 m={5}
               >
-                {getValues("guildPlatforms").map((platform, i) => (
-                  <HStack
-                    gap={3}
-                    key={i}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onCheckReward(i)
-                    }}
-                  >
-                    <Checkbox
-                      pt={3}
-                      isChecked={
-                        !!roles
-                          .find((r) => r.name === name)
-                          ?.rolePlatforms?.find(
-                            (rolePlatform: any) =>
-                              rolePlatform.guildPlatformIndex === i
-                          )
-                      }
-                    />
-                    <RewardDisplay
-                      styles={{ flexGrow: 1 }}
-                      label={
-                        <>
-                          {getRewardLabel(platform)}
-                          <Text as="span" fontWeight="bold">
-                            {getValueToDisplay(platform)}
-                          </Text>
-                        </>
-                      }
-                      icon={
-                        <RewardIcon
-                          rolePlatformId={platform.id}
-                          guildPlatform={platform as any}
-                          withMotionImg={false}
-                        />
-                      }
-                    />
-                  </HStack>
-                ))}
+                {guildPlatforms?.length ? (
+                  guildPlatforms.map((platform, i) => (
+                    <HStack
+                      gap={3}
+                      key={i}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        onCheckReward(i)
+                      }}
+                    >
+                      <Checkbox
+                        pt={3}
+                        isDisabled={
+                          platform.platformName === "TELEGRAM" &&
+                          roles
+                            .filter((r) => r.name !== name)
+                            .some((r) =>
+                              r.rolePlatforms?.find(
+                                (rolePlatform: any) =>
+                                  rolePlatform.guildPlatformIndex === i
+                              )
+                            )
+                        }
+                        isChecked={
+                          !!roles
+                            .find((r) => r.name === name)
+                            ?.rolePlatforms?.find(
+                              (rolePlatform: any) =>
+                                rolePlatform.guildPlatformIndex === i
+                            )
+                        }
+                      />
+                      <RewardDisplay
+                        styles={{ flexGrow: 1 }}
+                        label={
+                          <>
+                            {getRewardLabel(platform)}
+                            <Text as="span" fontWeight="bold">
+                              {getValueToDisplay(platform)}
+                            </Text>
+                          </>
+                        }
+                        icon={
+                          <RewardIcon
+                            rolePlatformId={platform.id}
+                            guildPlatform={platform as any}
+                            withMotionImg={false}
+                          />
+                        }
+                      />
+                    </HStack>
+                  ))
+                ) : (
+                  <Text colorScheme="gray" fontSize={14} pt={3}>
+                    You haven't set any platforms that could be rewards in step 1.
+                    You can go back and set some now, or add rewards later
+                  </Text>
+                )}
                 {role.hiddenRewards && <HiddenRewards />}
               </Box>
             </Collapse>
@@ -268,12 +282,12 @@ const TemplateCard = ({
         p={5}
         borderWidth={2}
         borderStyle={selected ? "solid" : "dashed"}
-        borderColor={selected && part === 1 && "green.500"}
+        borderColor={selected && part === 0 && "green.500"}
         borderRadius="2xl"
         pointerEvents="none"
         transition="border 0.16s ease"
       >
-        {part === 1 ? (
+        {part === 0 ? (
           selected ? (
             <Circle
               bgColor="green.500"

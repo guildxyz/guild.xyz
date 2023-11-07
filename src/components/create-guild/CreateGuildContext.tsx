@@ -20,8 +20,8 @@ type TemplateType = "VERIFIED" | "MEMBER" | "SUPPORTER" | "OG_MEMBER"
 
 type Step = {
   title: string
-  label?: string | JSX.Element
-  description?: string
+  label?: string[] | JSX.Element[]
+  description?: string[]
   content: JSX.Element
 }
 
@@ -37,6 +37,8 @@ const CreateGuildContext = createContext<{
   getTemplate: () => Array<RoleFormType>
   TEMPLATES: Array<RoleFormType>
   toggleReward: (roleTemplateName: string, guildPlatformIndex: number) => void
+  stepPart: number
+  setPart: (part: number) => void
 } | null>(null)
 
 const defaultIcon = `/guildLogos/${getRandomInt(286)}.svg`
@@ -147,6 +149,7 @@ const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
+  const [stepPart, setPart] = useState(0)
 
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -175,12 +178,17 @@ const CreateGuildProvider = ({
 
       const idAfterDomain = /(?<=com\/).*$/
 
-      //template.rolePlatforms = methods.getValues("guildPlatforms")
-
       if (twitterRequirementIndex > -1)
         template.requirements[twitterRequirementIndex].data.id = idAfterDomain.exec(
           methods.getValues("socialLinks.TWITTER")
         )
+
+      const discordPlatfromIndex = methods
+        .getValues("guildPlatforms")
+        .findIndex((guildPlatform) => guildPlatform.platformName === "DISCORD")
+
+      if (discordPlatfromIndex > -1)
+        template.rolePlatforms = [{ guildPlatformIndex: discordPlatfromIndex }]
 
       return template
     })
@@ -240,20 +248,23 @@ const CreateGuildProvider = ({
   const steps: Step[] = [
     {
       title: "Set platforms",
-      label:
+      label: [
         "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
+      ],
       content: <CreateGuildIndex />,
     },
     {
       title: "Customize guild",
-      label: <BasicInfo />,
+      label: [<BasicInfo key={0} />],
       content: <></>,
     },
     {
       title: "Choose template",
-      description: "1/2",
-      label:
+      description: ["1/2", "2/2"],
+      label: [
         "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
+        "Choose rewards to selected roles.",
+      ],
       content: <ChooseTemplate />,
     },
     {
@@ -289,16 +300,27 @@ const CreateGuildProvider = ({
     <CreateGuildContext.Provider
       value={{
         steps,
-        prevStep,
-        nextStep,
+        prevStep: () => {
+          prevStep()
+          setPart(0)
+        },
+        nextStep: () => {
+          nextStep()
+          setPart(0)
+        },
         activeStep,
         platform,
         setPlatform,
         setTemplate: toggleTemplate,
         getTemplate: buildTemplate,
-        setActiveStep,
+        setActiveStep: (step) => {
+          setActiveStep(step)
+          setPart(0)
+        },
         toggleReward,
         TEMPLATES,
+        setPart,
+        stepPart,
       }}
     >
       <FormProvider {...methods}>{children}</FormProvider>

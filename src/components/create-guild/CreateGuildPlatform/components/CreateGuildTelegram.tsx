@@ -35,15 +35,7 @@ const CreateGuildTelegram = (): JSX.Element => {
     name: "telegramGroupId",
   })
 
-  const { onUpload } = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-      )
-    },
-    onError: () => {},
-  })
+  const { onUpload } = usePinata()
 
   const {
     data: { ok },
