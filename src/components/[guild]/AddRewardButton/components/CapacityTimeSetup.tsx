@@ -1,7 +1,9 @@
 import { Wrap, useDisclosure } from "@chakra-ui/react"
 import EditRolePlatformCapacityTimeButton from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTimeButton"
 import EditRolePlatformCapacityTimeModal from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTimeModal"
-import CapacityTimeTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
+import CapacityTimeTags, {
+  shouldShowCapacityTimeTags,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -14,10 +16,7 @@ const CapacityTimeSetup = ({ platformType }: Props) => {
   })
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const showCapacityTimeTags =
-    typeof rolePlatform?.capacity === "number" ||
-    !!rolePlatform?.startTime ||
-    !!rolePlatform?.endTime
+  const showCapacityTimeTags = shouldShowCapacityTimeTags(rolePlatform)
 
   return (
     <Wrap>

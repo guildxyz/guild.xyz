@@ -22,7 +22,9 @@ import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import EditRolePlatformCapacityTimeButton from "./components/EditRolePlatformCapacityTimeButton"
 import EditRolePlatformCapacityTimeModal from "./components/EditRolePlatformCapacityTimeModal"
 import PlatformCard from "./components/PlatformCard"
-import CapacityTimeTags from "./components/PlatformCard/components/CapacityTimeTags"
+import CapacityTimeTags, {
+  shouldShowCapacityTimeTags,
+} from "./components/PlatformCard/components/CapacityTimeTags"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -92,11 +94,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             if (!type) return null
 
-            const showCapacityTimeTags =
-              (typeof rolePlatform.capacity === "number" &&
-                typeof rolePlatform.claimedCapacity === "number") ||
-              !!rolePlatform.startTime ||
-              !!rolePlatform.endTime
+            const showCapacityTimeTags = shouldShowCapacityTimeTags(rolePlatform)
 
             const { cardPropsHook: useCardProps, cardSettingsComponent } =
               platforms[type]

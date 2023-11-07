@@ -19,20 +19,36 @@ export const getTimeDiff = (dateString: string) => {
   return new Date(dateString).getTime() - Date.now()
 }
 
-const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => (
-  <Wrap {...wrapProps}>
-    {typeof rolePlatform.capacity === "number" && (
-      <CapacityTag
-        capacity={rolePlatform.capacity}
-        claimedCapacity={rolePlatform.claimedCapacity}
-      />
-    )}
+export const shouldShowCapacityTimeTags = (rolePlatform?: RolePlatform): boolean =>
+  typeof rolePlatform?.capacity === "number" ||
+  !!rolePlatform?.startTime ||
+  !!rolePlatform?.endTime
 
-    {rolePlatform?.startTime && <StartTimeTag startTime={rolePlatform.startTime} />}
+const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => {
+  if (
+    typeof rolePlatform.capacity === "number" ||
+    !!rolePlatform.startTime ||
+    !!rolePlatform.endTime
+  )
+    return null
 
-    {rolePlatform?.endTime && <EndTimeTag endTime={rolePlatform.endTime} />}
-  </Wrap>
-)
+  return (
+    <Wrap {...wrapProps}>
+      {typeof rolePlatform.capacity === "number" && (
+        <CapacityTag
+          capacity={rolePlatform.capacity}
+          claimedCapacity={rolePlatform.claimedCapacity}
+        />
+      )}
+
+      {rolePlatform?.startTime && (
+        <StartTimeTag startTime={rolePlatform.startTime} />
+      )}
+
+      {rolePlatform?.endTime && <EndTimeTag endTime={rolePlatform.endTime} />}
+    </Wrap>
+  )
+}
 
 const CapacityTag = ({
   capacity,

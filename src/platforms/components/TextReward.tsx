@@ -5,7 +5,9 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import CapacityTimeTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
+import CapacityTimeTags, {
+  shouldShowCapacityTimeTags,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -63,10 +65,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     }
   }, [isMember, hasAccess, isConnected])
 
-  const showCapacityTimeTags =
-    typeof platform.capacity === "number" ||
-    !!platform.startTime ||
-    !!platform.endTime
+  const showCapacityTimeTags = shouldShowCapacityTimeTags(platform)
 
   return (
     <>
