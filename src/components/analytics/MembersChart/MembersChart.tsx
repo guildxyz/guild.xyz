@@ -14,10 +14,9 @@ import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useEffect, useMemo, useState } from "react"
+import getRandomInt from "utils/getRandomInt"
 import MembersChartLineSeries from "./components/MembersChartLineSeries"
 import MembersChartTooltip from "./components/MembersChartTooltip"
-
-const getRandomInt = (max) => Math.floor(Math.random() * max)
 
 const accessors = {
   xAccessor: (d) => new Date(d?.timestamp),
