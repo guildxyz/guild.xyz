@@ -1,28 +1,28 @@
-import { useWeb3React } from "@web3-react/core"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import {
-  MysteryBoxResponse,
   MYSTERY_BOX_MESSAGE_TO_SIGN,
+  MysteryBoxResponse,
 } from "pages/api/leaderboard/mystery-box"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
+import { useSignMessage } from "wagmi"
 import { ClaimMysteryBoxForm } from "../MysteryBoxCard"
 import useHasAlreadyClaimedMysteryBox from "./useHasAlreadyClaimedMysteryBox"
 
 const useClaimMysteryBox = (onSuccess: () => void) => {
-  const { account, provider } = useWeb3React()
+  const { signMessageAsync } = useSignMessage()
 
   const [loadingText, setLoadingText] = useState<string>()
 
   const claim = async (data: ClaimMysteryBoxForm) => {
     setLoadingText("Check your wallet")
 
-    const signedMessage = await provider
-      .getSigner(account)
-      .signMessage(MYSTERY_BOX_MESSAGE_TO_SIGN)
+    const signedMessage = await signMessageAsync({
+      message: MYSTERY_BOX_MESSAGE_TO_SIGN,
+    })
 
     setLoadingText("Saving data")
 

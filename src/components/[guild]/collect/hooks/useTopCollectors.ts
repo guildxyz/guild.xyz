@@ -3,13 +3,11 @@ import useSWRImmutable from "swr/immutable"
 import { useCollectNftContext } from "../components/CollectNftContext"
 
 const useTopCollectors = () => {
-  const { chain, address } = useCollectNftContext()
-  const shouldFetch = chain && address
+  const { chain, nftAddress } = useCollectNftContext()
+  const shouldFetch = chain && nftAddress
 
   return useSWRImmutable<TopCollectorsResponse>(
-    shouldFetch
-      ? `/api/nft/collectors/${chain}/${address.toString().toLowerCase()}`
-      : null
+    shouldFetch ? `/api/nft/collectors/${chain}/${nftAddress.toLowerCase()}` : null
   )
 }
 

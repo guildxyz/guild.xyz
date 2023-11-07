@@ -21,7 +21,6 @@ import {
   useColorMode,
   Wrap,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import LinkButton from "components/common/LinkButton"
@@ -41,19 +40,18 @@ import { ArrowLeft, Clock } from "phosphor-react"
 import React, { useMemo } from "react"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import BuyPoapRequirement from "requirements/PoapPayment/components/BuyPoapRequirement"
-import PoapPaymentRequirement from "requirements/PoapPayment/PoapPaymentRequirement"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import PoapVoiceRequirement from "requirements/PoapVoice/PoapVoiceRequirement"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import parseDescription from "utils/parseDescription"
+import { useAccount } from "wagmi"
 
 const Page = (): JSX.Element => {
   const router = useRouter()
   const { colorMode } = useColorMode()
 
-  const { account } = useWeb3React()
-  const { theme, urlName, imageUrl, name, poaps } = useGuild()
+  const { isConnected } = useAccount()
+  const { theme, urlName, name, poaps } = useGuild()
 
   const rawPoapFancyIdFromUrl = router.query.fancyId?.toString()
   const poapFancyIdFromUrl =
@@ -67,7 +65,7 @@ const Page = (): JSX.Element => {
 
   const { poapEventDetails } = usePoapEventDetails(poap?.id)
   const {
-    data: { access, hasPaid },
+    data: { access },
   } = useUserPoapEligibility(poap?.id)
 
   const timeDiff = guildPoap?.expiryDate * 1000 - Date.now()
@@ -106,7 +104,7 @@ const Page = (): JSX.Element => {
       }
 
   const requirementRightElement = isActive ? (
-    account ? (
+    isConnected ? (
       <PoapRequiementAccessIndicator poapIdentifier={guildPoap?.poapIdentifier} />
     ) : (
       <ConnectWalletButton />
@@ -122,46 +120,19 @@ const Page = (): JSX.Element => {
                   key="voice"
                   guildPoap={guildPoap}
                   rightElement={
-                    isActive && account && !discordFromDb ? (
+                    isActive && isConnected && !discordFromDb ? (
                       <ConnectDiscordButton />
                     ) : (
                       requirementRightElement
                     )
                   }
                 />
-                {guildPoap.poapContracts?.length ||
-                guildPoap.poapRequirements?.length ? (
+                {guildPoap.poapRequirements?.length ? (
                   <LogicDivider logic="AND" />
                 ) : null}
               </>,
             ]
           : []),
-        ...(guildPoap.poapContracts ?? []).map((poapContract, i) => (
-          <React.Fragment key={poapContract.id}>
-            <PoapPaymentRequirement
-              key={poapContract.id}
-              poapContract={poapContract}
-              guildPoap={guildPoap}
-              rightElement={
-                isActive && !hasPaid ? (
-                  <BuyPoapRequirement
-                    size="md"
-                    borderRadius={"xl"}
-                    h="10"
-                    {...{ guildPoap: guildPoap, poapContract }}
-                  />
-                ) : (
-                  requirementRightElement
-                )
-              }
-            />
-            {i < guildPoap.poapContracts?.length - 1 ? (
-              <LogicDivider logic={"OR"} />
-            ) : guildPoap.poapRequirements?.length ? (
-              <LogicDivider logic={"AND"} />
-            ) : null}
-          </React.Fragment>
-        )),
         ...(guildPoap.poapRequirements ?? []).map((requirement: any, i) => (
           <React.Fragment key={requirement.id}>
             <RequirementDisplayComponent
@@ -304,7 +275,7 @@ const Page = (): JSX.Element => {
                       )
                     ) : (
                       <FreeRequirement
-                        rightElement={!account && <ConnectWalletButton />}
+                        rightElement={!isConnected && <ConnectWalletButton />}
                       />
                     )}
                   </Stack>
@@ -319,7 +290,7 @@ const Page = (): JSX.Element => {
                         poapId={guildPoap?.poapIdentifier}
                         colorScheme="purple"
                         w="full"
-                        isDisabled={!isActive || !account || !access}
+                        isDisabled={!isActive || !isConnected || !access}
                       >
                         Mint POAP
                       </JoinAndMintPoapButton>

@@ -25,7 +25,6 @@ import { Image, Question, WarningCircle } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType } from "types"
-import RequestsMintLinks from "../RequestMintLinks"
 
 const IMAGE_SIZE = 32
 
@@ -218,7 +217,7 @@ const PoapDataForm = ({ isCreate = false }): JSX.Element => {
               <Icon as={Question} position="relative" top={0.5} left={-2} />
             </Tooltip>
           </HStack>
-          {isCreate ? (
+          {isCreate && (
             <Controller
               name="requested_codes"
               control={control}
@@ -247,8 +246,6 @@ const PoapDataForm = ({ isCreate = false }): JSX.Element => {
                 </NumberInput>
               )}
             />
-          ) : (
-            <RequestsMintLinks />
           )}
           <FormErrorMessage>{errors?.requested_codes?.message}</FormErrorMessage>
         </FormControl>

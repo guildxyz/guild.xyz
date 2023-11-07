@@ -16,7 +16,7 @@ import { Row } from "@tanstack/react-table"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useResolveAddress from "hooks/resolving/useResolveAddress"
+import useResolveAddress from "hooks/useResolveAddress"
 import { IdentityTag, PrivateSocialsTag, WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
@@ -30,6 +30,10 @@ type Props = {
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
     row.original
+
+  const rolesColumn = row
+    .getVisibleCells()
+    .find((cell) => cell.column.id === "publicRoles").column.parent
 
   const primaryAddress = addresses?.[0]
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
@@ -98,7 +102,13 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
             {Object.values(roles)
               .flat()
               .map(({ roleId, amount }) => (
-                <ClickableCrmRoleTag key={roleId} roleId={roleId} amount={amount} />
+                <ClickableCrmRoleTag
+                  key={roleId}
+                  roleId={roleId}
+                  amount={amount}
+                  column={rolesColumn}
+                  onFilter={onClose}
+                />
               ))}
           </Wrap>
         </ModalBody>

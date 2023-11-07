@@ -10,7 +10,7 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { ComponentType } from "react"
+import { ComponentType, ForwardRefExoticComponent } from "react"
 import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
@@ -53,7 +53,7 @@ type PlatformData<
     scope?: string | { membership: string; creation: string }
   } & Record<string, any>
 > = {
-  icon: (props: IconProps) => JSX.Element
+  icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
   colorScheme: ChakraProps["color"]

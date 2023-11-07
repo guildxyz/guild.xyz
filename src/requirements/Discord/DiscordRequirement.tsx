@@ -17,10 +17,10 @@ const DiscordRequirement = (props: RequirementProps) => {
   const { guildPlatforms } = useGuild()
   const {
     data: { serverName, serverIcon, roles, isAdmin },
-  } = useServerData(requirement.data.serverId)
+  } = useServerData(requirement.data?.serverId)
 
   const renderedServerIcon = guildPlatforms?.find(
-    (p) => p.platformGuildId === requirement.data.serverId
+    (p) => p.platformGuildId === requirement.data?.serverId
   )
     ? null
     : serverIcon || null
@@ -36,15 +36,15 @@ const DiscordRequirement = (props: RequirementProps) => {
           case "DISCORD_ROLE":
             const role =
               typeof isAdmin === "boolean"
-                ? roles?.find(({ id }) => id === requirement.data.roleId)
+                ? roles?.find(({ id }) => id === requirement.data?.roleId)
                 : undefined
 
             return (
               <>
                 {`Have the `}
-                <DataBlock>{role?.name || requirement.data.roleName}</DataBlock>
+                <DataBlock>{role?.name || requirement.data?.roleName}</DataBlock>
                 {` role in the `}
-                <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
+                <DataBlock>{serverName || requirement.data?.serverName}</DataBlock>
                 {` server`}
               </>
             )
@@ -54,20 +54,20 @@ const DiscordRequirement = (props: RequirementProps) => {
             return requirement.type === "DISCORD_MEMBER_SINCE" ? (
               <>
                 {`Be member of the `}
-                <DataBlock>{serverName || requirement.data.serverName}</DataBlock>
+                <DataBlock>{serverName || requirement.data?.serverName}</DataBlock>
                 {` server since at least `}
-                <DataBlockWithDate timestamp={requirement.data.memberSince} />
+                <DataBlockWithDate timestamp={requirement.data?.memberSince} />
               </>
             ) : (
               <>
                 {`Be a Discord user since at least `}
-                <DataBlockWithDate timestamp={requirement.data.memberSince} />
+                <DataBlockWithDate timestamp={requirement.data?.memberSince} />
               </>
             )
 
           case "DISCORD_JOIN_FROM_NOW":
             const formattedMemberSince = formatRelativeTimeFromNow(
-              requirement.data.memberSince
+              requirement.data?.memberSince
             )
 
             return (

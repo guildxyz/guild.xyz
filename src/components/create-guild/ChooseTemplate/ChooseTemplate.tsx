@@ -1,24 +1,24 @@
 import { Button, Collapse, VStack } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { ArrowLeft } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import { useAccount } from "wagmi"
 import CreateGuildButton from "../CreateGuildButton"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import GuildCreationProgress from "../GuildCreationProgress"
 import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
-  const { triedEager, openWalletSelectorModal, isWalletSelectorModalOpen } =
+  const { openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   useEffect(() => {
-    if (!triedEager || account || isWalletSelectorModalOpen) return
+    if (address || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
-  }, [triedEager, account, isWalletSelectorModalOpen])
+  }, [address, isWalletSelectorModalOpen])
 
   const { getTemplate, setTemplate, nextStep, toggleReward, stepPart, setPart } =
     useCreateGuildContext()

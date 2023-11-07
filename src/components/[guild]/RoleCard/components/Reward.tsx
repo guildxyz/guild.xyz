@@ -8,7 +8,6 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Visibility from "components/[guild]/Visibility"
@@ -23,6 +22,7 @@ import platforms from "platforms/platforms"
 import { ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
+import { useAccount } from "wagmi"
 
 export type RewardProps = {
   role: Role // should change to just roleId when we won't need memberCount anymore
@@ -53,7 +53,7 @@ const Reward = ({
   isLinkColorful,
 }: RewardProps) => {
   const isMember = useIsMember()
-  const { account } = useWeb3React()
+  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const { hasAccess, isValidating } = useAccess(role.id)
@@ -69,7 +69,7 @@ const Reward = ({
           ? { ...accessButtonProps, colorScheme: "blue" }
           : accessButtonProps,
       }
-    if (!account || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
           <>
@@ -83,7 +83,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, account, accessButtonProps, isLinkColorful])
+  }, [isMember, hasAccess, isConnected, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay

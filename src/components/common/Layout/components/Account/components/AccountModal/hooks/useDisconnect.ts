@@ -1,4 +1,3 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -7,10 +6,11 @@ import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
+import { useAccount } from "wagmi"
 
 const useDisconnect = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { mutate: mutateUser, id: userId } = useUser()
   const { id } = useGuild()
   const toast = useToast()
@@ -38,7 +38,7 @@ const useDisconnect = (onSuccess?: () => void) => {
         }),
         { revalidate: false }
       )
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
 
       toast({
         title: `Account disconnected!`,
@@ -54,16 +54,18 @@ const useDisconnect = (onSuccess?: () => void) => {
 const useDisconnectAddress = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { id } = useGuild()
   const toast = useToast()
 
   const submit = async (signedValidation: SignedValdation) => {
-    const { address } = JSON.parse(signedValidation.signedPayload)
-    return fetcher(`/v2/users/${userId}/addresses/${address}`, {
+    const { address: addressFromValidation } = JSON.parse(
+      signedValidation.signedPayload
+    )
+    return fetcher(`/v2/users/${userId}/addresses/${addressFromValidation}`, {
       method: "DELETE",
       ...signedValidation,
-    }).then(() => address)
+    }).then(() => addressFromValidation)
   }
 
   return useSubmitWithSign(submit, {
@@ -72,12 +74,12 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
         (prev) => ({
           ...prev,
           addresses: (prev?.addresses ?? []).filter(
-            ({ address }) => address !== deletedAddress
+            ({ address: a }) => a !== deletedAddress
           ),
         }),
         { revalidate: false }
       )
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
 
       toast({
         title: `Account disconnected!`,

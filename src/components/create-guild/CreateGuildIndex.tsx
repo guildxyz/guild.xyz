@@ -1,4 +1,5 @@
 import { Checkbox, HStack, Text } from "@chakra-ui/react"
+import ClientOnly from "components/common/ClientOnly"
 import { useState } from "react"
 import { useFormContext } from "react-hook-form"
 import { GuildFormType } from "types"
@@ -13,13 +14,14 @@ const CreateGuildIndex = (): JSX.Element => {
   const { getValues } = useFormContext<GuildFormType>()
 
   return (
-    <>
+    <ClientOnly>
       <MultiPlatformsGrid
         onSelection={(platformName) => {
           setPlatform(platformName)
           setWhitoutPlatform(false)
         }}
       />
+
       <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 6 }}>
         <Text fontWeight="medium" colorScheme="gray" opacity=".7">
           or
@@ -44,7 +46,7 @@ const CreateGuildIndex = (): JSX.Element => {
         isDisabled={getValues("guildPlatforms").length === 0 && !whitoutPlatform}
       />
       <CreateGuildPlatform />
-    </>
+    </ClientOnly>
   )
 }
 

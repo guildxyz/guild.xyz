@@ -139,6 +139,7 @@ const AddRewardButton = (): JSX.Element => {
   return (
     <>
       <Button
+        data-test="add-reward-button"
         leftIcon={<Plus />}
         onClick={onOpen}
         variant="ghost"

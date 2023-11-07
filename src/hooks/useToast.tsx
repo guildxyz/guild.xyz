@@ -75,6 +75,8 @@ const useToastWithButton = () => {
       ),
       ...rest,
     })
+
+    return toastIdRef.current
   }
 }
 

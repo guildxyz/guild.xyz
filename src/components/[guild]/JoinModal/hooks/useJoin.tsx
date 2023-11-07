@@ -1,10 +1,10 @@
 import type { JoinJob } from "@guildxyz/types"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useAtom } from "jotai"
@@ -56,6 +56,11 @@ const useJoin = (
   const user = useUser()
 
   const hasFeatureFlag = guild?.featureFlags?.includes(QUEUE_FEATURE_FLAG)
+
+  const posthogOptions = {
+    guild: guild.urlName,
+    version: hasFeatureFlag ? "v2" : "v1",
+  }
 
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
@@ -169,7 +174,7 @@ const useJoin = (
   const useSubmitResponse = useSubmit(submit, {
     onSuccess: hasFeatureFlag ? undefined : onJoinSuccess,
     onError: (error) => {
-      captureEvent(`Guild join error`, { error })
+      captureEvent(`Guild join error`, { ...posthogOptions, error })
       onError?.(error)
     },
   })
