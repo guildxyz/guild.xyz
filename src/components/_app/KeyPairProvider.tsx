@@ -1,6 +1,7 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useFuel from "hooks/useFuel"
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtom } from "jotai"
 import randomBytes from "randombytes"
@@ -205,7 +206,9 @@ const KeyPairContext = createContext<{
 const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { address } = useAccount()
+  const { address: evmAddress } = useAccount()
+  const { address: fuelAddress } = useFuel()
+  const address = evmAddress || fuelAddress
 
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { isDelegateConnection, setIsDelegateConnection } =

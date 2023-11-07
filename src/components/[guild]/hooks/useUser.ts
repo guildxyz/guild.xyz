@@ -1,4 +1,5 @@
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useFuel from "hooks/useFuel"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
@@ -34,7 +35,9 @@ const useUser = (
 const useUserPublic = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
-  const { address } = useAccount()
+  const { address: evmAddress } = useAccount()
+  const { address: fuelAddress } = useFuel()
+  const address = evmAddress || fuelAddress
 
   const idToUse = userIdOrAddress ?? address
 

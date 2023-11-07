@@ -2,6 +2,7 @@ import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import GuildAvatar from "components/common/GuildAvatar"
+import useFuel from "hooks/useFuel"
 import useResolveAddress from "hooks/useResolveAddress"
 import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
@@ -11,7 +12,12 @@ import UserActivityLogPopover from "./components/UserActivityLogPopover"
 import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
-  const { address, isConnected } = useAccount()
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount()
+  const { address: fuelAddress, isConnected: isFuelConnected } = useFuel()
+
+  const address = evmAddress || fuelAddress
+  const isConnected = isEvmConnected || isFuelConnected
+
   const { openWalletSelectorModal, openAccountModal } = useWeb3ConnectionManager()
 
   const domainName = useResolveAddress(address)

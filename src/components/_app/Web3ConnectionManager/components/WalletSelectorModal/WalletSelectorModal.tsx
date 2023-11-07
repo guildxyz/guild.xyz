@@ -20,6 +20,7 @@ import { Error } from "components/common/Error"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
+import useFuel from "hooks/useFuel"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -28,6 +29,7 @@ import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
+import FuelConnectorButton from "./components/FuelConnectorButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
 import processConnectionError from "./utils/processConnectionError"
@@ -45,7 +47,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
 
   const { disconnect } = useDisconnect()
-  const { isConnected, connector } = useAccount()
+  const { isConnected: isEvmConnected, connector } = useAccount()
+  const { isConnected: isFuelConnected } = useFuel()
   const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
@@ -74,7 +77,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       ready &&
       !keyPair &&
       router.isReady &&
-      !ignoredRoutes.includes(router.route)
+      !ignoredRoutes.includes(router.route) &&
+      !!connector?.connect
     ) {
       const activate = connector.connect()
       if (typeof activate !== "undefined") {
@@ -88,9 +92,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { isDelegateConnection, setIsDelegateConnection, isInSafeContext } =
     useWeb3ConnectionManager()
 
+  const isConnected = isEvmConnected || isFuelConnected
   const isConnectedAndKeyPairReady = isConnected && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
+
+  const { windowFuel } = useFuel()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
 
@@ -194,7 +201,13 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   <DelegateCashButton />
                 </CardMotionWrapper>
               )}
+              {windowFuel && (
+                <CardMotionWrapper key="fuel">
+                  <FuelConnectorButton />
+                </CardMotionWrapper>
+              )}
             </Stack>
+
             {isConnectedAndKeyPairReady && !keyPair && (
               <>
                 <ReCAPTCHA

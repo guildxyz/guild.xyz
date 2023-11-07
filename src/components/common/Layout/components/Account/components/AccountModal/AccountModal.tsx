@@ -26,6 +26,7 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
+import useFuel from "hooks/useFuel"
 import useResolveAddress from "hooks/useResolveAddress"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount, useChainId, useDisconnect } from "wagmi"
@@ -35,8 +36,25 @@ import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { address } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { address: evmAddress, isConnected: isEvmConnected } = useAccount()
+  const { disconnect: disconnectEvm } = useDisconnect()
+  const {
+    address: fuelAddress,
+    isConnected: isFuelConnected,
+    disconnect: disconnectFuel,
+  } = useFuel()
+  const address = evmAddress || fuelAddress
+
+  const disconnect = () => {
+    if (isEvmConnected && typeof disconnectEvm === "function") {
+      disconnectEvm()
+    }
+
+    if (isFuelConnected && typeof disconnectFuel === "function") {
+      disconnectFuel()
+    }
+  }
+
   const chainId = useChainId()
 
   const {
@@ -67,7 +85,7 @@ const AccountModal = () => {
     deleteKeyPairFromIdb(id)?.catch(() => {})
   }
 
-  const domain = useResolveAddress(address)
+  const domain = useResolveAddress(evmAddress)
 
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
 
@@ -116,24 +134,30 @@ const AccountModal = () => {
                     >
                       {`Connected with ${connectorName} on`}
                     </Text>
-                    <Button
-                      variant="ghost"
-                      p="0"
-                      onClick={openNetworkModal}
-                      size="xs"
-                      mt="-2px"
-                    >
-                      <Center>
-                        {CHAIN_CONFIG[Chains[chainId]] ? (
-                          <Img
-                            src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon as={LinkBreak} />
-                        )}
+                    {isEvmConnected ? (
+                      <Button
+                        variant="ghost"
+                        p="0"
+                        onClick={openNetworkModal}
+                        size="xs"
+                        mt="-2px"
+                      >
+                        <Center>
+                          {CHAIN_CONFIG[Chains[chainId]] ? (
+                            <Img
+                              src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                              boxSize={4}
+                            />
+                          ) : (
+                            <Icon as={LinkBreak} />
+                          )}
+                        </Center>
+                      </Button>
+                    ) : (
+                      <Center ml={1}>
+                        <Img src="/walletLogos/fuel.svg" boxSize={4} />
                       </Center>
-                    </Button>
+                    )}
                   </HStack>
                   <NetworkModal
                     isOpen={isNetworkModalOpen}
