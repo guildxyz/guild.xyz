@@ -41,12 +41,12 @@ type Props = {
 const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT"]
 
 const normalizeDate = (isoDate: string): string | undefined => {
-  if (!isoDate) return undefined
+  if (!isoDate) return null
 
   try {
     return new Date(isoDate.split("T")[0]).toISOString()
   } catch {
-    return undefined
+    return null
   }
 }
 
@@ -163,8 +163,8 @@ const EditRolePlatformCapacityTimeModal = ({
                 }
                 onChange={(e) => {
                   if (e.target.checked) return
-                  setValue("startTime", "")
-                  setValue("endTime", "")
+                  setValue("startTime", null)
+                  setValue("endTime", null)
                 }}
               >
                 <Stack
