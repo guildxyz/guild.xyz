@@ -29,6 +29,7 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
       }}
       unstyled
       applyPositionStyle
+      detectBounds
       renderTooltip={({ tooltipData }) => (
         <Card
           py="2.5"
@@ -38,6 +39,7 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
           borderRadius="lg"
           pointerEvents={"none"}
           borderWidth="1px"
+          minW="300px"
         >
           <Text fontSize={"sm"} fontWeight={"semibold"} colorScheme="gray" mb="3">
             {new Date(
@@ -45,39 +47,33 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
             ).toLocaleString()}
           </Text>
           <Stack spacing={1}>
-            {Object.entries(tooltipData.datumByKey)
-              ?.sort(
-                ([_1, data1], [_2, data2]) =>
-                  accessors.yAccessor(data2.datum) - accessors.yAccessor(data1.datum)
-              )
-              .map((lineDataArray) => {
-                const [key, value] = lineDataArray
+            {(() => {
+              const { key, datum } = tooltipData.nearestDatum as any
 
-                if (key === "total")
-                  return (
-                    <LineSeriesData
-                      key={key}
-                      color={"currentColor"}
-                      count={accessors.yAccessor(value.datum)}
-                    >
-                      <Text>Total</Text>
-                    </LineSeriesData>
-                  )
-
+              if (key === "total")
                 return (
                   <LineSeriesData
                     key={key}
-                    color={roleColors[key]}
-                    count={accessors.yAccessor(value.datum)}
+                    color={"currentColor"}
+                    count={accessors.yAccessor(datum)}
                   >
-                    <SimpleRoleTag
-                      role={roles.find((role) => role.id.toString() === key) as any} // casting to any because there's a strange type error otherways that I couldn't solve
-                      isTruncated
-                      minW="200px"
-                    />
+                    <Text>Total</Text>
                   </LineSeriesData>
                 )
-              })}
+
+              return (
+                <LineSeriesData
+                  key={key}
+                  color={roleColors[key]}
+                  count={accessors.yAccessor(datum)}
+                >
+                  <SimpleRoleTag
+                    role={roles.find((role) => role.id === key) as any} // casting to any because there's a strange type error otherways that I couldn't solve
+                    isTruncated
+                  />
+                </LineSeriesData>
+              )
+            })()}
           </Stack>
         </Card>
       )}
