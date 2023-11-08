@@ -585,6 +585,18 @@ export const REQUIREMENTS_DATA = [
       "FARCASTER_RECAST",
     ],
   },
+  {
+    icon: "/networkLogos/base.svg",
+    name: "Coinbase",
+    fileNameBase: "Coinbase",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
+    ),
+    types: ["COINBASE_EAS_ATTESTED_BY"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA
