@@ -58,10 +58,8 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
           options={options}
           afterOnChange={(newSchemaId) => {
             if (newSchemaId.value === EAS_CB_VERIFIED_COUNTRY_SCHEMA_ID) {
-              console.log("setting to verifiedCountry")
               setValue(`${baseFieldPath}.data.key`, "verifiedCountry")
             } else {
-              console.log("setting to undefined")
               setValue(`${baseFieldPath}.data.key`, undefined)
             }
 
