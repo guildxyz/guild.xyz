@@ -27,8 +27,9 @@ const CHART_MARGIN_X = 18
 
 const date = new Date()
 const current = date.toISOString()
-date.setMonth(date.getMonth() - 3)
-const prev = date.toISOString()
+// we only have correct data since 26 october
+const startDate = new Date("2023-10-26")
+const prev = startDate.toISOString()
 
 const MembersChart = () => {
   const { id, roles } = useGuild()
@@ -80,7 +81,7 @@ const MembersChart = () => {
           </Text>
           <Tooltip label="Soon" hasArrow>
             <Select size="sm" w="auto" isDisabled>
-              <option>Last 3 months</option>
+              <option>Since October 26</option>
             </Select>
           </Tooltip>
         </HStack>
