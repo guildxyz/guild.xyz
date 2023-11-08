@@ -1,13 +1,6 @@
-import {
-  FormControl,
-  FormLabel,
-  InputGroup,
-  InputLeftElement,
-  Stack,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -32,9 +25,6 @@ const options: SelectOption[] = [
   },
 ]
 
-const getOptionImage = (alpha2: string): string =>
-  `https://flagcdn.com/40x30/${alpha2.toLowerCase()}.webp`
-
 const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
     setValue,
@@ -48,12 +38,11 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
   }, [setValue])
 
   const schemaId = useWatch({ name: `${baseFieldPath}.data.schemaId` })
-  const country = useWatch({ name: `${baseFieldPath}.data.val` })
 
   const countryOptions: SelectOption[] = countryCodes.map(({ name, alpha2 }) => ({
     label: name,
     value: alpha2,
-    img: getOptionImage(alpha2),
+    img: `https://flagcdn.com/40x30/${alpha2.toLowerCase()}.webp`,
   }))
 
   return (
@@ -88,17 +77,10 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
         <FormControl>
           <FormLabel>Country</FormLabel>
 
-          <InputGroup>
-            {country && (
-              <InputLeftElement>
-                <OptionImage img={getOptionImage(country)} alt={country} />
-              </InputLeftElement>
-            )}
-            <ControlledSelect
-              name={`${baseFieldPath}.data.val`}
-              options={countryOptions}
-            />
-          </InputGroup>
+          <ControlledSelect
+            name={`${baseFieldPath}.data.val`}
+            options={countryOptions}
+          />
         </FormControl>
       )}
     </Stack>
