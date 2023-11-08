@@ -1,6 +1,6 @@
 import { Box, Button, Container, HStack, Progress, Text } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
-import DisplayCard from "components/common/DisplayCard"
+import Card from "components/common/Card"
 import { useEffect, useRef, useState } from "react"
 
 type Props = {
@@ -38,7 +38,7 @@ const GuildCreationProgress = ({
   return (
     <Box position={"fixed"} bottom={0} left={0} w={"full"}>
       <Container maxW={"container.lg"}>
-        <DisplayCard
+        <Card
           w={"fit-content"}
           px={{ base: 2, md: 2 }}
           py={{ base: 2, md: 2 }}
@@ -99,7 +99,7 @@ const GuildCreationProgress = ({
             w="full"
             value={progress}
           />
-        </DisplayCard>
+        </Card>
       </Container>
     </Box>
   )

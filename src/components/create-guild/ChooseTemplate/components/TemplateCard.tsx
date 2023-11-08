@@ -109,12 +109,12 @@ const TemplateCard = ({
       _focus={{
         outline: "none",
         _before: {
-          opacity: 0.1,
+          opacity: part === 0 ? 0.1 : 0,
         },
       }}
       _active={{
         _before: {
-          opacity: 0.17,
+          opacity: part === 0 ? 0.17 : 0,
         },
       }}
       cursor={part === 0 ? "pointer" : "default"}
@@ -176,13 +176,14 @@ const TemplateCard = ({
                     <HStack
                       gap={3}
                       key={i}
+                      alignItems={"flex-start"}
                       onClick={(e) => {
                         e.preventDefault()
                         onCheckReward(i)
                       }}
                     >
                       <Checkbox
-                        pt={3}
+                        pt={4}
                         isDisabled={
                           platform.platformName === "TELEGRAM" &&
                           roles

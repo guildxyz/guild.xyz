@@ -169,29 +169,38 @@ const CreateGuildProvider = ({
   })
 
   const buildTemplate = () => {
-    const newTemplates: Array<RoleFormType> = JSON.parse(JSON.stringify(TEMPLATES))
+    const templatesCopy: Array<RoleFormType> = JSON.parse(JSON.stringify(TEMPLATES))
 
-    return newTemplates.map((template) => {
-      const twitterRequirementIndex = template.requirements.findIndex(
-        (requriement) => requriement.type === "TWITTER_FOLLOW"
-      )
-
-      const idAfterDomain = /(?<=com\/).*$/
-
-      if (twitterRequirementIndex > -1)
-        template.requirements[twitterRequirementIndex].data.id = idAfterDomain.exec(
-          methods.getValues("socialLinks.TWITTER")
+    return templatesCopy
+      .map((template) => {
+        const twitterRequirementIndex = template.requirements.findIndex(
+          (requriement) => requriement.type === "TWITTER_FOLLOW"
         )
 
-      const discordPlatfromIndex = methods
-        .getValues("guildPlatforms")
-        .findIndex((guildPlatform) => guildPlatform.platformName === "DISCORD")
+        const idAfterDomain = /(?<=com\/).*$/
 
-      if (discordPlatfromIndex > -1)
-        template.rolePlatforms = [{ guildPlatformIndex: discordPlatfromIndex }]
+        if (twitterRequirementIndex > -1)
+          template.requirements[twitterRequirementIndex].data.id =
+            idAfterDomain.exec(methods.getValues("socialLinks.TWITTER"))
 
-      return template
-    })
+        const discordPlatfromIndex = methods
+          .getValues("guildPlatforms")
+          .findIndex((guildPlatform) => guildPlatform.platformName === "DISCORD")
+
+        if (discordPlatfromIndex > -1)
+          template.rolePlatforms = [{ guildPlatformIndex: discordPlatfromIndex }]
+
+        return template
+      })
+      .filter((template) => {
+        const twitterRequirementIndex = template.requirements.findIndex(
+          (requriement) => requriement.type === "TWITTER_FOLLOW"
+        )
+        const hasTwitter = methods.getValues("socialLinks.TWITTER")
+        const twitterIsRequired = twitterRequirementIndex > -1
+
+        return !(twitterIsRequired && !hasTwitter)
+      })
   }
 
   const toggleTemplate = (roleTemplateName: string) => {
@@ -202,7 +211,17 @@ const CreateGuildProvider = ({
     if (roleIndex > -1) {
       remove(roleIndex)
     } else {
-      append(buildTemplate().find((template) => template.name === roleTemplateName))
+      const originalTemplate = buildTemplate().find(
+        (template) => template.name === roleTemplateName
+      )
+
+      const templateCopy = JSON.parse(JSON.stringify(originalTemplate))
+
+      templateCopy.description = undefined
+
+      console.log("xy", templateCopy)
+
+      append(templateCopy)
     }
   }
 
