@@ -1,4 +1,11 @@
-import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
+import {
+  Circle,
+  FormControl,
+  FormLabel,
+  Img,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
@@ -26,6 +33,11 @@ const options: SelectOption[] = [
 ]
 
 const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+  const selectOptionImgBgColor = useColorModeValue(
+    "blackAlpha.100",
+    "blackAlpha.300"
+  )
+
   const {
     setValue,
     formState: { errors },
@@ -42,7 +54,15 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
   const countryOptions: SelectOption[] = countryCodes.map(({ name, alpha2 }) => ({
     label: name,
     value: alpha2,
-    img: `https://flagcdn.com/40x30/${alpha2.toLowerCase()}.webp`,
+    img: (
+      <Circle size={5} bgColor={selectOptionImgBgColor}>
+        <Img
+          w={3}
+          src={`https://flagcdn.com/40x30/${alpha2.toLowerCase()}.webp`}
+          alt={name}
+        />
+      </Circle>
+    ),
   }))
 
   return (
