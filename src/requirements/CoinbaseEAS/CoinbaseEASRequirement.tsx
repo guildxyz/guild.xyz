@@ -12,7 +12,7 @@ const CoinbaseEASRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
-      image={<Img src="/networkLogos/base.svg" />}
+      image={<Img src="/requirementLogos/coinbase.png" />}
       footer={<EthereumAttestationRequirementFooter />}
       {...props}
     >

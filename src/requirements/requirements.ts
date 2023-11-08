@@ -586,7 +586,7 @@ export const REQUIREMENTS_DATA = [
     ],
   },
   {
-    icon: "/networkLogos/base.svg",
+    icon: "/requirementLogos/coinbase.png",
     name: "Coinbase",
     fileNameBase: "Coinbase",
     displayComponent: dynamic<RequirementProps>(
