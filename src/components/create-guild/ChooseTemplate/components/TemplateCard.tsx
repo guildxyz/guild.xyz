@@ -205,7 +205,7 @@ const TemplateCard = ({
                         }
                       />
                       <RewardDisplay
-                        styles={{ flexGrow: 1 }}
+                        flexGrow={1}
                         label={
                           <>
                             {getRewardLabel(platform)}

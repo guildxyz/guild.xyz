@@ -103,7 +103,6 @@ const CreateGuildPage = (): JSX.Element => {
               >
                 <Step
                   {...{
-                    alignItems: activeStep === index && !isOpen && "center",
                     gap: 3,
                   }}
                 >

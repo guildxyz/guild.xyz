@@ -15,11 +15,11 @@ import {
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
+  useSteps,
 } from "@chakra-ui/react"
-import { useSteps } from "chakra-ui-steps"
 import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import { useOnboardingContext } from "./components/OnboardingProvider"
@@ -46,11 +46,9 @@ const steps = [
   {
     title: "Edit roles",
     note: (
-      <>
-        <Text colorScheme="gray" mt={8}>
-          Your guild is created, and you’re already in! Edit & add roles as you want
-        </Text>
-      </>
+      <Text colorScheme="gray" mt={8}>
+        Your guild is created, and you’re already in! Edit & add roles as you want
+      </Text>
     ),
   },
   {
@@ -64,8 +62,8 @@ const Onboarding = (): JSX.Element => {
   const { localThemeColor, textColor } = useThemeContext()
   const bannerColor = useColorModeValue("gray.200", "gray.700")
   const { localStep, setLocalStep } = useOnboardingContext()
-  const { nextStep, prevStep, activeStep, setStep } = useSteps({
-    initialStep: localStep,
+  const { activeStep } = useSteps({
+    index: localStep,
   })
   const { isOpen, onToggle } = useDisclosure()
   const WrapperComponent = useBreakpointValue<any>({
@@ -82,22 +80,6 @@ const Onboarding = (): JSX.Element => {
   useEffect(() => {
     setLocalStep(activeStep === steps.length ? undefined : activeStep)
   }, [activeStep])
-
-  const [prevActiveStep, setPrevActiveStep] = useState(-1)
-
-  const [player, setPlayer] = useState<any>()
-
-  useEffect(() => {
-    if (!player) return
-    player.playSegments(
-      [
-        GUILD_CASTLE_COMPLETED_FRAME * (prevActiveStep + 1) * 0.25,
-        GUILD_CASTLE_COMPLETED_FRAME * (activeStep + 1) * 0.25,
-      ],
-      true
-    )
-    setPrevActiveStep(activeStep)
-  }, [activeStep, player])
 
   return (
     <Collapse in={!onboardingComplete} unmountOnExit>
@@ -138,7 +120,6 @@ const Onboarding = (): JSX.Element => {
               <Step
                 {...{
                   gap: 3,
-                  transition: "padding .2s",
                 }}
               >
                 <StepIndicator

@@ -25,7 +25,7 @@ const BasicInfo = (): JSX.Element => {
   const {
     control,
     setValue,
-    formState: { errors, dirtyFields, touchedFields },
+    formState: { errors, dirtyFields },
   } = useFormContext<GuildFormType>()
 
   const name = useWatch({ control, name: "name" })
@@ -78,8 +78,6 @@ const BasicInfo = (): JSX.Element => {
     if (name && !dirtyFields.urlName)
       setValue("urlName", slugify(name), { shouldValidate: true })
   }, [name, dirtyFields])
-
-  useEffect(() => {}, [touchedFields.imageUrl])
 
   const backgroundUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {

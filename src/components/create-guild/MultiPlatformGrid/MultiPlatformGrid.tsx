@@ -8,8 +8,7 @@ type Props = {
   showPoap?: boolean
 }
 
-const MultiPlatformsGrid = ({ onSelection, showPoap = false }: Props) => {
-  // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
+const MultiPlatformsGrid = ({ onSelection }: Props) => {
   const platformsData: Array<PlatformName> = [
     "DISCORD",
     "TELEGRAM",
