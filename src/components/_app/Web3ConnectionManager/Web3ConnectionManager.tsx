@@ -2,43 +2,49 @@ import { useDisclosure } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import ClientOnly from "components/common/ClientOnly"
 import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
+import useFuel from "hooks/useFuel"
 import useToast from "hooks/useToast"
+import { SetStateAction } from "jotai"
 import { useRouter } from "next/router"
 import {
+  Dispatch,
   PropsWithChildren,
   createContext,
   useContext,
   useEffect,
   useState,
 } from "react"
-import { PlatformName } from "types"
+import { PlatformName, User } from "types"
 import { useAccount, useSwitchNetwork } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 import useNewSharedSocialsToast from "./hooks/useNewSharedSocialsToast"
 
-const Web3Connection = createContext({
-  isWalletSelectorModalOpen: false,
-  openWalletSelectorModal: () => {},
-  closeWalletSelectorModal: () => {},
-  isAccountModalOpen: false,
-  openAccountModal: () => {},
-  closeAccountModal: () => {},
+const Web3Connection = createContext<{
+  isWalletSelectorModalOpen: boolean
+  openWalletSelectorModal: () => void
+  closeWalletSelectorModal: () => void
+  isAccountModalOpen: boolean
+  openAccountModal: () => void
+  closeAccountModal: () => void
   requestNetworkChange: (
-    _chainId: number,
-    _callback?: () => void,
-    _errorHandler?: (err) => void
-  ) => {},
-  isDelegateConnection: false,
-  setIsDelegateConnection: (_: boolean) => {},
-  isNetworkChangeInProgress: false,
+    chainId: number,
+    callback?: () => void,
+    errorHandler?: (err: any) => void
+  ) => void
+  isDelegateConnection: boolean
+  setIsDelegateConnection: Dispatch<SetStateAction<boolean>>
+  isNetworkChangeInProgress: boolean
   showPlatformMergeAlert: (
-    _addressOrDomain: string,
-    _platformName: PlatformName
-  ) => {},
-  isInSafeContext: false,
-})
+    addressOrDomain: string,
+    platformName: PlatformName
+  ) => void
+  isInSafeContext: boolean
+  isWeb3Connected: boolean
+  address?: `0x${string}`
+  type: User["addresses"][number]["type"]
+}>(undefined)
 
 const Web3ConnectionManager = ({
   children,
@@ -116,6 +122,9 @@ const Web3ConnectionManager = ({
     openPlatformMergeAlert()
   }
 
+  const { isConnected: isEvmConnected, address: evmAddress } = useAccount()
+  const { isConnected: isFuelConnected, address: fuelAddress } = useFuel()
+
   return (
     <Web3Connection.Provider
       value={{
@@ -131,6 +140,9 @@ const Web3ConnectionManager = ({
         setIsDelegateConnection,
         isNetworkChangeInProgress,
         isInSafeContext,
+        isWeb3Connected: isEvmConnected || isFuelConnected,
+        address: evmAddress || fuelAddress,
+        type: isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null,
       }}
     >
       {children}

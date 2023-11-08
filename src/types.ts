@@ -120,6 +120,7 @@ type User = {
     isPrimary: boolean
     provider: AddressConnectionProvider
     createdAt: string
+    type: "EVM" | "FUEL"
   }>
   platformUsers: PlatformAccountDetails[]
   sharedSocials: SharedSocial[]

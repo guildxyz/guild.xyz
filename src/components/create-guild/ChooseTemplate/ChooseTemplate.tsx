@@ -3,7 +3,6 @@ import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import { useAccount } from "wagmi"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Pagination from "../Pagination"
 import TemplateCard from "./components/TemplateCard"
@@ -11,12 +10,12 @@ import TemplateCard from "./components/TemplateCard"
 const ChooseTemplate = (): JSX.Element => {
   const { openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
-  const { address } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
 
   useEffect(() => {
-    if (address || isWalletSelectorModalOpen) return
+    if (isWeb3Connected || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
-  }, [address, isWalletSelectorModalOpen])
+  }, [isWeb3Connected, isWalletSelectorModalOpen])
 
   const {
     TEMPLATES,

@@ -15,12 +15,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import { SectionProps } from "components/common/Section"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformName } from "types"
-import { useAccount } from "wagmi"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
@@ -29,15 +29,8 @@ import SharedSocials from "./SharedSocials"
 import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
-  const {
-    isLoading,
-    addresses,
-    platformUsers,
-    id: userId,
-    addressProviders,
-    sharedSocials,
-  } = useUser()
-  const { address } = useAccount()
+  const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
+  const { address } = useWeb3ConnectionManager()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
@@ -126,25 +119,9 @@ const AccountConnections = () => {
           </Stack>
         ) : (
           linkedAddresses
-            .map((addressData) =>
-              typeof addressData === "string" ? (
-                <LinkedAddress
-                  key={addressData}
-                  addressData={{
-                    address: addressData,
-                    userId,
-                    createdAt: null,
-                    isPrimary: addresses.findIndex((a) => a === addressData) === 0,
-                    provider: addressProviders?.[addressData],
-                  }}
-                />
-              ) : (
-                <LinkedAddress
-                  key={addressData?.address}
-                  addressData={addressData}
-                />
-              )
-            )
+            .map((addressData) => (
+              <LinkedAddress key={addressData?.address} addressData={addressData} />
+            ))
             .concat(
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
             )
