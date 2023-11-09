@@ -52,6 +52,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
       ...guildPlatform.platformGuildData,
       invite: guildPlatform.invite,
     },
+    platformGuildId: guildPlatform.platformGuildId,
   }
 
   const methods = useForm({
