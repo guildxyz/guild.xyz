@@ -43,6 +43,7 @@ const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"
 })
 
 const defaultValues = {
+  rolePlatforms: [],
   requirements: [],
   roleIds: [],
   visibility: Visibility.PUBLIC,
@@ -201,7 +202,11 @@ const AddRewardButton = (): JSX.Element => {
 
                   {step === "SELECT_ROLE" && (
                     <PlatformPreview>
-                      <CapacityTimeSetup platformType={selection} />
+                      <CapacityTimeSetup
+                        platformType={methods.getValues(
+                          "rolePlatforms.0.guildPlatform.platformName"
+                        )}
+                      />
                     </PlatformPreview>
                   )}
                 </Stack>

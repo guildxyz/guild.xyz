@@ -15,6 +15,9 @@ const CapacityTimeSetup = ({ platformType }: Props) => {
     name: "rolePlatforms.0",
   })
 
+  const capacityFromGuildPlatform =
+    rolePlatform?.guildPlatform?.platformGuildData?.texts?.length
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const showCapacityTimeTags = shouldShowCapacityTimeTags(rolePlatform)
 
@@ -29,7 +32,7 @@ const CapacityTimeSetup = ({ platformType }: Props) => {
       />
       <EditRolePlatformCapacityTimeModal
         defaultValues={{
-          capacity: rolePlatform?.capacity,
+          capacity: capacityFromGuildPlatform,
           startTime: rolePlatform?.startTime,
           endTime: rolePlatform?.endTime,
         }}
