@@ -179,12 +179,7 @@ const EditRolePlatformCapacityTimeModal = ({
                   w="calc(100% - 2px)"
                 >
                   <FormControl>
-                    <FormLabel>
-                      {"From "}
-                      <Text as="span" colorScheme="gray">
-                        (optional)
-                      </Text>
-                    </FormLabel>
+                    <FormLabel>From</FormLabel>
                     <Input
                       type="date"
                       {...register("startTime")}
