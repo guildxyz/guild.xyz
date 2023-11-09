@@ -29,7 +29,9 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import FloatingProgress from "components/[guild]/Onboarding/components/FloatingProgress"
-import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
+import OnboardingProvider, {
+  useOnboardingContext,
+} from "components/[guild]/Onboarding/components/OnboardingProvider"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
@@ -100,6 +102,7 @@ const GuildPage = (): JSX.Element => {
     isDetailed,
   } = useGuild()
   useAutoStatusUpdate()
+  const { localStep, setLocalStep } = useOnboardingContext()
 
   const roles = allRoles.filter((role) => !role.groupId)
 

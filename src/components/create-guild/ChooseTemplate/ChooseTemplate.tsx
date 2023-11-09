@@ -77,7 +77,11 @@ const ChooseTemplate = (): JSX.Element => {
         isDisabled={!roles.length}
         customButton={
           stepPart === 0 ? (
-            <Button colorScheme="green" onClick={() => setPart(1)}>
+            <Button
+              isDisabled={!roles.length}
+              colorScheme="green"
+              onClick={() => setPart(1)}
+            >
               Continue
             </Button>
           ) : (
