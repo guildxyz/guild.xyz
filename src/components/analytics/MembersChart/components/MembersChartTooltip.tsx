@@ -20,7 +20,6 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
 
   return (
     <Tooltip
-      snapTooltipToDatumX
       snapTooltipToDatumY
       showSeriesGlyphs
       glyphStyle={{
@@ -29,17 +28,14 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
       }}
       unstyled
       applyPositionStyle
-      detectBounds
       renderTooltip={({ tooltipData }) => (
         <Card
           py="2.5"
           px="4"
-          pos="absolute"
           boxShadow="md"
           borderRadius="lg"
           pointerEvents={"none"}
           borderWidth="1px"
-          minW="300px"
         >
           <Text fontSize={"sm"} fontWeight={"semibold"} colorScheme="gray" mb="3">
             {new Date(
