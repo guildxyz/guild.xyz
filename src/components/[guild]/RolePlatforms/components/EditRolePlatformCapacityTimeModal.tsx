@@ -20,7 +20,7 @@ import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
 import { Clock, Hash } from "phosphor-react"
-import { useController, useForm } from "react-hook-form"
+import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
 type RolePlatformCapacityTimeForm = {
@@ -39,6 +39,8 @@ type Props = {
 }
 
 const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT"]
+
+const DAY_IN_MS = 1000 * 60 * 60 * 24
 
 const normalizeDate = (isoDate: string): string | undefined => {
   if (!isoDate) return null
@@ -92,6 +94,9 @@ const EditRolePlatformCapacityTimeModal = ({
       },
     },
   })
+
+  const startTimeValue = useWatch({ control, name: "startTime" })
+  const endTimeValue = useWatch({ control, name: "endTime" })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark" size="xl">
@@ -180,12 +185,39 @@ const EditRolePlatformCapacityTimeModal = ({
                         (optional)
                       </Text>
                     </FormLabel>
-                    <Input type="date" {...register("startTime")} />
+                    <Input
+                      type="date"
+                      {...register("startTime")}
+                      max={
+                        endTimeValue
+                          ? getShortDate(
+                              new Date(
+                                new Date(endTimeValue).getTime() - DAY_IN_MS
+                              ).toISOString()
+                            )
+                          : undefined
+                      }
+                    />
                   </FormControl>
 
                   <FormControl>
                     <FormLabel>Available until</FormLabel>
-                    <Input type="date" {...register("endTime")} />
+                    <Input
+                      type="date"
+                      {...register("endTime")}
+                      min={
+                        startTimeValue &&
+                        new Date(startTimeValue).getTime() > Date.now()
+                          ? getShortDate(
+                              new Date(
+                                new Date(startTimeValue).getTime() + DAY_IN_MS
+                              ).toISOString()
+                            )
+                          : getShortDate(
+                              new Date(Date.now() + DAY_IN_MS).toISOString()
+                            )
+                      }
+                    />
                   </FormControl>
                 </Stack>
               </CheckboxColorCard>
