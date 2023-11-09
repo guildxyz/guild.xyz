@@ -1,11 +1,9 @@
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import useFuel from "hooks/useFuel"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import { useAccount } from "wagmi"
 
 const useUser = (
   userIdOrAddress?: number | string
@@ -36,9 +34,7 @@ const useUser = (
 const useUserPublic = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
-  const { address: evmAddress } = useAccount()
-  const { address: fuelAddress } = useFuel()
-  const address = evmAddress || fuelAddress
+  const { address } = useWeb3ConnectionManager()
 
   const idToUse = userIdOrAddress ?? address
 
