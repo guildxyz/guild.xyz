@@ -36,21 +36,17 @@ import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { address: evmAddress, isConnected: isEvmConnected } = useAccount()
+  const { address, type } = useWeb3ConnectionManager()
+  const { address: evmAddress } = useAccount()
   const { disconnect: disconnectEvm } = useDisconnect()
-  const {
-    address: fuelAddress,
-    isConnected: isFuelConnected,
-    disconnect: disconnectFuel,
-  } = useFuel()
-  const address = evmAddress || fuelAddress
+  const { disconnect: disconnectFuel } = useFuel()
 
   const disconnect = () => {
-    if (isEvmConnected && typeof disconnectEvm === "function") {
+    if (type === "EVM" && typeof disconnectEvm === "function") {
       disconnectEvm()
     }
 
-    if (isFuelConnected && typeof disconnectFuel === "function") {
+    if (type === "FUEL" && typeof disconnectFuel === "function") {
       disconnectFuel()
     }
   }
@@ -134,7 +130,7 @@ const AccountModal = () => {
                     >
                       {`Connected with ${connectorName} on`}
                     </Text>
-                    {isEvmConnected ? (
+                    {type === "EVM" ? (
                       <Button
                         variant="ghost"
                         p="0"
