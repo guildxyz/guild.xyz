@@ -1,5 +1,4 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { AddressLinkProvider } from "components/_app/AddressLinkProvider"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
@@ -86,20 +85,18 @@ const App = ({
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiConfig config={config}>
               <PostHogProvider>
-                <AddressLinkProvider>
-                  <KeyPairProvider>
-                    <Web3ConnectionManager>
-                      <IntercomProvider>
-                        <ExplorerProvider>
-                          <Component {...pageProps} />
-                          <ClientOnly>
-                            <AccountModal />
-                          </ClientOnly>
-                        </ExplorerProvider>
-                      </IntercomProvider>
-                    </Web3ConnectionManager>
-                  </KeyPairProvider>
-                </AddressLinkProvider>
+                <KeyPairProvider>
+                  <Web3ConnectionManager>
+                    <IntercomProvider>
+                      <ExplorerProvider>
+                        <Component {...pageProps} />
+                        <ClientOnly>
+                          <AccountModal />
+                        </ClientOnly>
+                      </ExplorerProvider>
+                    </IntercomProvider>
+                  </Web3ConnectionManager>
+                </KeyPairProvider>
               </PostHogProvider>
             </WagmiConfig>
           </SWRConfig>

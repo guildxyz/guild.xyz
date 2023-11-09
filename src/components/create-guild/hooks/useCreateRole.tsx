@@ -82,10 +82,15 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
 
-      await mutateGuild(async (curr) => ({
-        ...curr,
-        roles: [...curr.roles, response_],
-      }))
+      mutateGuild(
+        (curr) => ({
+          ...curr,
+          roles: [...curr.roles, response_],
+        }),
+        {
+          revalidate: false,
+        }
+      )
       window.location.hash = `role-${response_.id}`
 
       onSuccess?.()

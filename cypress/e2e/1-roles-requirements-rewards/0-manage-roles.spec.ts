@@ -35,7 +35,7 @@ describe("roles", () => {
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles`
     ).as("createRoleApiCall")
 
-    cy.getByDataTest("add-role-button").click()
+    cy.getByDataTest("add-role-button").click({ force: true })
 
     cy.get("div[role='dialog'].chakra-slide").within(() => {
       cy.get("input[name='name']").focus().blur()

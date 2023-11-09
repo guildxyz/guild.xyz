@@ -1,10 +1,19 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { useAddressLinkContext } from "components/_app/AddressLinkProvider"
 import {
   deleteKeyPairFromIdb,
   getKeyPairFromIdb,
 } from "components/_app/KeyPairProvider"
+import { atom, useAtom } from "jotai"
 import useSWR, { mutate, unstable_serialize } from "swr"
+
+type AddressLinkParams = {
+  userId?: number
+  address?: string
+}
+export const addressLinkParamsAtom = atom<AddressLinkParams>({
+  userId: undefined,
+  address: undefined,
+})
 
 const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
   const { userId: userIdToConnectTo } = connectParams ?? {}
@@ -29,7 +38,7 @@ const fetchShouldLinkToUser = async ([_, userId, connectParams]) => {
 
 const useShouldLinkToUser = () => {
   const { id } = useUserPublic()
-  const { setAddressLinkParams, addressLinkParams } = useAddressLinkContext()
+  const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
 
   const { data: shouldLinkToUser } = useSWR(
     addressLinkParams?.userId ? ["shouldLinkToUser", id, addressLinkParams] : null,

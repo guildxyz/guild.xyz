@@ -1,5 +1,6 @@
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
+import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
 
@@ -27,12 +28,16 @@ const useSimpleGuild = (guildId?: string | number) => {
   const router = useRouter()
   const id = guildId ?? router.query.guild
 
+  const { cache } = useSWRConfig()
+  const guildFromCache = cache.get(`/v2/guilds/guild-page/${id}`)
+    ?.data as SimpleGuild
+
   const { data, ...swrProps } = useSWRImmutable<SimpleGuild>(
-    id ? `/v2/guilds/${id}` : null
+    id && !guildFromCache ? `/v2/guilds/${id}` : null
   )
 
   return {
-    ...data,
+    ...(guildFromCache ?? data),
     ...swrProps,
   }
 }

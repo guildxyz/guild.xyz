@@ -16,7 +16,7 @@ type Props = {
   eventSource: EventSourcesKey
 }
 
-const placeholders: Record<EventSourcesKey, string> = {
+const eventSourceNames: Record<EventSourcesKey, string> = {
   EVENTBRITE: "Eventbrite",
   LINK3: "Link3",
   LUMA: "lu.ma",
@@ -28,6 +28,21 @@ const logos: Record<EventSourcesKey, string> = {
   LINK3: "/platforms/link3.png",
   LUMA: "/platforms/luma.png",
   DISCORD: "/platforms/discord.png",
+}
+
+const placeholders: Record<Exclude<EventSourcesKey, "DISCORD">, string> = {
+  EVENTBRITE: "https://www.eventbrite.com/e/...",
+  LUMA: "https://lu.ma/u/...",
+  LINK3: "https://link3.to/e/...",
+}
+
+const validators: Record<
+  Exclude<EventSourcesKey, "DISCORD">,
+  (value?: string) => true | string
+> = {
+  EVENTBRITE: (url) => !!url.match(/(.)+eventbrite\.com\/e\/(.)+/) || "Invalid URL",
+  LUMA: (url) => !!url.match(/(.)+lu\.ma\/u\/(.)+/) || "Invalid URL",
+  LINK3: (url) => !!url.match(/(.)+link3\.to\/e\/(.)+/) || "Invalid URL",
 }
 
 const EventInput = ({ eventSource }: Props) => {
@@ -54,6 +69,7 @@ const EventInput = ({ eventSource }: Props) => {
         <Input
           {...register(`eventSources.${eventSource}`, {
             required: "This field is required.",
+            validate: validators[eventSource],
           })}
           size={"lg"}
           placeholder={placeholders[eventSource]}
@@ -78,5 +94,5 @@ const EventInput = ({ eventSource }: Props) => {
   )
 }
 
-export { logos, placeholders }
+export { eventSourceNames, logos }
 export default EventInput

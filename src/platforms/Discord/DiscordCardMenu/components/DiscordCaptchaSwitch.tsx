@@ -55,6 +55,7 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
         ...guildPlatform.platformGuildData,
         needCaptcha: newIsChecked,
       },
+      platformGuildId: guildPlatform.platformGuildId,
     })
   }
 
