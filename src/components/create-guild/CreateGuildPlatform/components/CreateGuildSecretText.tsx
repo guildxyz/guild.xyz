@@ -1,4 +1,5 @@
 import {
+  Button,
   ModalBody,
   ModalCloseButton,
   ModalFooter,
@@ -6,7 +7,6 @@ import {
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
-import Pagination from "components/create-guild/Pagination"
 import SecretTextDataForm, {
   SecretTextRewardForm,
 } from "platforms/SecretText/SecretTextDataForm"
@@ -46,9 +46,10 @@ const CreateGuildSecretText = () => {
         </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <Pagination
-          nextButtonDisabled={!name?.length || !text?.length}
-          nextStepHandler={() => {
+        <Button
+          colorScheme="green"
+          isDisabled={!name?.length || !text?.length}
+          onClick={() => {
             append({
               platformName: "TEXT",
               platformGuildId: `text-${userId}-${Date.now()}`,
@@ -61,7 +62,9 @@ const CreateGuildSecretText = () => {
             })
             setPlatform("DEFAULT")
           }}
-        />
+        >
+          Add{/*nextStepText*/}
+        </Button>
       </ModalFooter>
     </>
   )

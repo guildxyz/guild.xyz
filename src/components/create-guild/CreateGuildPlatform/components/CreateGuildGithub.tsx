@@ -1,12 +1,6 @@
-import {
-  ModalBody,
-  ModalCloseButton,
-  ModalFooter,
-  ModalHeader,
-} from "@chakra-ui/react"
+import { ModalBody, ModalCloseButton, ModalHeader } from "@chakra-ui/react"
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
-import Pagination from "components/create-guild/Pagination"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
 
@@ -39,9 +33,6 @@ const CreateGuildGithub = (): JSX.Element => {
           }}
         />
       </ModalBody>
-      <ModalFooter>
-        <Pagination nextButtonHidden />
-      </ModalFooter>
     </>
   )
 }

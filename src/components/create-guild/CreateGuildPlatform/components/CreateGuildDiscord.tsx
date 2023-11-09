@@ -1,4 +1,5 @@
 import {
+  Button,
   ModalBody,
   ModalCloseButton,
   ModalFooter,
@@ -6,6 +7,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
+import useGateables from "hooks/useGateables"
 import {
   FormProvider,
   useFieldArray,
@@ -15,7 +17,6 @@ import {
 } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
 import { defaultValues, useCreateGuildContext } from "../../CreateGuildContext"
-import Pagination from "../../Pagination"
 
 const CreateGuildDiscord = (): JSX.Element => {
   const { setPlatform } = useCreateGuildContext()
@@ -32,6 +33,12 @@ const CreateGuildDiscord = (): JSX.Element => {
     name: `discordServerId`,
   })
 
+  const discordServers = useGateables(PlatformType.DISCORD)
+
+  const selectedDiscordServerData = discordServers.gateables?.find(
+    (server) => server.id === discordMethods.getValues("discordServerId")
+  )
+
   return (
     <>
       <ModalHeader>Connect to Discord</ModalHeader>
@@ -45,30 +52,29 @@ const CreateGuildDiscord = (): JSX.Element => {
             defaultValues={defaultValues.DISCORD}
             selectedServer={selectedServer}
             fieldName={`discordServerId`}
-            onSelect={(serverData) => {
-              discordMethods.setValue("img", serverData.img)
-              discordMethods.setValue("name", serverData.name)
-            }}
           />
         </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <Pagination
-          nextButtonDisabled={!selectedServer}
-          nextStepHandler={() => {
+        <Button
+          colorScheme="green"
+          isDisabled={!selectedServer}
+          onClick={() => {
             append({
               platformName: "DISCORD",
               platformGuildId: discordMethods.getValues("discordServerId"),
               platformId: PlatformType.DISCORD,
               platformGuildData: {
                 text: undefined,
-                name: discordMethods.getValues("name"),
-                imageUrl: discordMethods.getValues("img"),
+                name: selectedDiscordServerData.name,
+                imageUrl: selectedDiscordServerData.img,
               },
             })
             setPlatform("DEFAULT")
           }}
-        />
+        >
+          Add
+        </Button>
       </ModalFooter>
     </>
   )

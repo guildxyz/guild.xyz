@@ -1,4 +1,5 @@
 import {
+  Button,
   ModalBody,
   ModalCloseButton,
   ModalFooter,
@@ -9,7 +10,6 @@ import {
   defaultValues,
   useCreateGuildContext,
 } from "components/create-guild/CreateGuildContext"
-import Pagination from "components/create-guild/Pagination"
 import {
   FormProvider,
   useFieldArray,
@@ -53,9 +53,10 @@ const CreateGuildGoogle = (): JSX.Element => {
         </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <Pagination
-          nextButtonDisabled={!permission}
-          nextStepHandler={() => {
+        <Button
+          colorScheme="green"
+          isDisabled={!permission}
+          onClick={() => {
             append({
               platformName: "GOOGLE",
               platformGuildId: googleMethods.getValues("googleData.platformGuildId"),
@@ -72,7 +73,9 @@ const CreateGuildGoogle = (): JSX.Element => {
             })
             setPlatform("DEFAULT")
           }}
-        />
+        >
+          Add{/*nextStepText*/}
+        </Button>
       </ModalFooter>
     </>
   )

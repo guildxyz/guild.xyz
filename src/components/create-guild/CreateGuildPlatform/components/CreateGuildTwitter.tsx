@@ -1,4 +1,5 @@
 import {
+  Button,
   ModalBody,
   ModalCloseButton,
   ModalFooter,
@@ -6,7 +7,6 @@ import {
 } from "@chakra-ui/react"
 import TwitterUrlInput from "components/create-guild/BasicInfo/components/TwitterUrlInput"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
-import Pagination from "components/create-guild/Pagination"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
@@ -30,13 +30,16 @@ const CreateGuildTwitter = () => {
         </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <Pagination
-          nextButtonDisabled={!link}
-          nextStepHandler={() => {
+        <Button
+          colorScheme="green"
+          isDisabled={!link}
+          onClick={() => {
             methods.setValue("socialLinks.TWITTER", link)
             setPlatform("DEFAULT")
           }}
-        />
+        >
+          Add{/*nextStepText*/}
+        </Button>
       </ModalFooter>
     </>
   )

@@ -24,11 +24,6 @@ const useSetImageAndNameFromPlatformData = (
   useEffect(() => {
     if (!onUpload) return
 
-    if (platformImage && platformImage.includes("/guildLogos")) {
-      setValue("imageUrl", platformImage)
-      return
-    }
-
     if (!(platformImage?.length > 0)) {
       setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`)
       return

@@ -1,6 +1,6 @@
-import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
-import Pagination from "components/create-guild/Pagination"
+import { Button } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import UniqueTextDataForm, {
   UniqueTextRewardForm,
 } from "platforms/UniqueText/UniqueTextDataForm"
@@ -24,10 +24,10 @@ const CreateGuildUniqueText = () => {
       <FormProvider {...methods}>
         <UniqueTextDataForm />
       </FormProvider>
-
-      <Pagination
-        nextButtonDisabled={!name?.length}
-        nextStepHandler={() => {
+      <Button
+        colorScheme="green"
+        isDisabled={!name?.length}
+        onClick={() => {
           setValue("guildPlatforms.0", {
             platformName: "UNIQUE_TEXT",
             platformGuildId: `unique-text-${userId}-${Date.now()}`,
@@ -39,7 +39,9 @@ const CreateGuildUniqueText = () => {
           })
           nextStep()
         }}
-      />
+      >
+        Add{/*nextStepText*/}
+      </Button>
     </>
   )
 }

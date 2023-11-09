@@ -1,4 +1,5 @@
 import {
+  Button,
   ModalBody,
   ModalCloseButton,
   ModalFooter,
@@ -6,10 +7,8 @@ import {
 } from "@chakra-ui/react"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import Pagination from "components/create-guild/Pagination"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
-import usePinata from "hooks/usePinata"
 import {
   FormProvider,
   useFieldArray,
@@ -35,10 +34,8 @@ const CreateGuildTelegram = (): JSX.Element => {
     name: "telegramGroupId",
   })
 
-  const { onUpload } = usePinata()
-
   const {
-    data: { ok },
+    data: { ok, groupName, groupIcon },
   } = useIsTGBotIn(guildPlatformId, { refreshInterval: 5000 })
 
   return (
@@ -47,26 +44,29 @@ const CreateGuildTelegram = (): JSX.Element => {
       <ModalCloseButton />
       <ModalBody>
         <FormProvider {...telegramMethods}>
-          <TelegramGroup onUpload={onUpload} fieldName={"telegramGroupId"} />
+          <TelegramGroup fieldName={"telegramGroupId"} />
         </FormProvider>
       </ModalBody>
       <ModalFooter>
-        <Pagination
-          nextButtonDisabled={!guildPlatformId || !ok}
-          nextStepHandler={() => {
+        <Button
+          colorScheme="green"
+          isDisabled={!guildPlatformId || !ok}
+          onClick={() => {
             append({
               platformName: "TELEGRAM",
               platformGuildId: telegramMethods.getValues("telegramGroupId"),
               platformId: PlatformType.TELEGRAM,
               platformGuildData: {
                 text: undefined,
-                name: telegramMethods.getValues("name"),
-                imageUrl: telegramMethods.getValues("imageUrl"),
+                name: groupName,
+                imageUrl: groupIcon,
               },
             })
             setPlatform("DEFAULT")
           }}
-        />
+        >
+          Add{/*nextStepText*/}
+        </Button>
       </ModalFooter>
 
       <DynamicDevTool control={methods.control} />

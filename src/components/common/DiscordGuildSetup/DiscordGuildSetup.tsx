@@ -18,7 +18,6 @@ const DiscordGuildSetup = ({
   fieldName,
   rolePlatforms = undefined,
   onSubmit = undefined,
-  onSelect = undefined,
 }) => {
   const { reset, setValue } = useFormContext()
 
@@ -96,7 +95,6 @@ const DiscordGuildSetup = ({
                   ? undefined
                   : (newServerId) => {
                       setValue(fieldName, newServerId)
-                      if (onSelect) onSelect(serverData)
                     }
               }
               onCancel={
@@ -107,7 +105,7 @@ const DiscordGuildSetup = ({
       </AnimatePresence>
       {debounceSelectedServer && (
         <GridItem>
-          <ServerSetupCard selectedServer={selectedServer} onSubmit={onSubmit} />
+          <ServerSetupCard onSubmit={onSubmit} />
         </GridItem>
       )}
     </SimpleGrid>
