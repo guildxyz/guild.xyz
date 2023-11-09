@@ -1,7 +1,7 @@
 import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
 import { useOnboardingContext } from "./OnboardingProvider"
 
-const FloatingProgress = ({}) => {
+const FloatingProgress = () => {
   const { localStep, setLocalStep } = useOnboardingContext()
 
   if (localStep == 3)

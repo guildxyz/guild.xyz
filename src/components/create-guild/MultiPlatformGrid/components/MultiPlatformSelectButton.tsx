@@ -64,26 +64,26 @@ const MultiPlatformSelectButton = ({
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitterLink = useWatch({ name: "socialLinks.TWITTER" })
 
-  const selectPlatform = () => onSelection(platform)
-
   const user = useUser()
+
+  const isTwitter = platform === "TWITTER"
   const isPlatformConnected =
     !platforms[platform].oauth ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly
     ) ||
-    platform === "TWITTER"
+    isTwitter
 
   const circleBgBaseColor = useColorModeValue("gray.700", "gray.600")
-  const circleBgColor = platform === "TWITTER" ? "white" : circleBgBaseColor
+  const circleBgColor = isTwitter ? "white" : circleBgBaseColor
 
   const isDone = () => {
     const platformAddedToGuild = guildPlatforms.find(
       (platfomAdded) => platform === platfomAdded.platformName
     )
 
-    if (platform === "TWITTER") {
+    if (isTwitter) {
       if (twitterLink) {
         return true
       } else {
@@ -101,7 +101,7 @@ const MultiPlatformSelectButton = ({
         !address
           ? openWalletSelectorModal
           : isPlatformConnected
-          ? selectPlatform
+          ? () => onSelection(platform)
           : onConnect
       }
       h="auto"
@@ -119,9 +119,9 @@ const MultiPlatformSelectButton = ({
           <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
             <Icon
               as={icon}
-              boxSize={platform === "TWITTER" ? 8 : 5}
-              weight={platform === "TWITTER" ? "fill" : "regular"}
-              color={platform === "TWITTER" ? "#26a7de" : "white"}
+              boxSize={isTwitter ? 8 : 5}
+              weight={isTwitter ? "fill" : "regular"}
+              color={isTwitter ? "#26a7de" : "white"}
             />
           </Circle>
         )}

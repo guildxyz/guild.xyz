@@ -57,15 +57,14 @@ const CreateGuildTelegram = (): JSX.Element => {
               platformGuildId: telegramMethods.getValues("telegramGroupId"),
               platformId: PlatformType.TELEGRAM,
               platformGuildData: {
-                text: undefined,
                 name: groupName,
                 imageUrl: groupIcon,
-              },
+              } as any, // TODO for later: define the PlatformGuildData types properly,
             })
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         >
-          Add{/*nextStepText*/}
+          Add
         </Button>
       </ModalFooter>
 

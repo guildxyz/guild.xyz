@@ -27,12 +27,13 @@ import {
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { CaretDown } from "phosphor-react"
 import React from "react"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType } from "types"
 
 const CreateGuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { steps, activeStep, setActiveStep, stepPart } = useCreateGuildContext()
-  const { control, getValues } = useFormContext()
+  const { control } = useFormContext<GuildFormType>()
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -44,17 +45,16 @@ const CreateGuildPage = (): JSX.Element => {
     md: React.Fragment,
   })
 
-  const color =
-    localThemeColor !== getValues("theme.color")
-      ? getValues("theme.color")
-      : localThemeColor
+  const name = useWatch({ name: "name" })
+  const imageUrl = useWatch({ name: "imageUrl" })
 
-  const imageUrl = getValues("imageUrl")
+  const themeColor = useWatch({ name: "theme.color" })
+  const color = localThemeColor !== themeColor ? themeColor : localThemeColor
 
   return (
     <>
       <Layout
-        title={getValues("name") ? getValues("name") : "Create Guild"}
+        title={name || "Create Guild"}
         backgroundOffset={47}
         textColor={textColor}
         background={color}

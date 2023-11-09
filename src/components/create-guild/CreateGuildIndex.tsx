@@ -31,14 +31,15 @@ const CreateGuildIndex = (): JSX.Element => {
           isDisabled={!!getValues("guildPlatforms").length}
           onChange={(e) => {
             if (getValues("guildPlatforms").length === 0) {
-              setPlatform("DEFAULT")
+              setPlatform(null)
               setWhitoutPlatform(e?.target?.checked)
             }
           }}
-        />
-        <Text fontWeight="medium" colorScheme="gray" opacity=".7">
-          continue without platform
-        </Text>
+        >
+          <Text fontWeight="medium" colorScheme="gray" opacity=".7">
+            continue without platform
+          </Text>
+        </Checkbox>
       </HStack>
       <GuildCreationProgress
         next={nextStep}

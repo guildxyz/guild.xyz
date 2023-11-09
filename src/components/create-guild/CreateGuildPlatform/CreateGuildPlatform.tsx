@@ -34,9 +34,9 @@ const CreateGuildPlatform = (): JSX.Element => {
 
   return (
     <Modal
-      isOpen={platform && platform !== "DEFAULT"}
+      isOpen={!!platform}
       onClose={() => {
-        setPlatform("DEFAULT")
+        setPlatform(null)
       }}
       scrollBehavior="inside"
       size="3xl"

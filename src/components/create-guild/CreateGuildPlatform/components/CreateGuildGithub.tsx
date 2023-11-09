@@ -24,12 +24,10 @@ const CreateGuildGithub = (): JSX.Element => {
               platformGuildId: newSelectedRepo,
               platformId: PlatformType.GITHUB,
               platformGuildData: {
-                text: undefined,
                 name: newSelectedRepo,
-                imageUrl: undefined,
-              },
+              } as any, // TODO for later: define the PlatformGuildData types properly
             })
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         />
       </ModalBody>

@@ -19,7 +19,7 @@ const CreateGuildContractCall = (): JSX.Element => {
         <CreateNftForm
           onSuccess={(newGuildPlatform) => {
             append(newGuildPlatform)
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         />
       </ModalBody>

@@ -13,11 +13,11 @@ import { GuildFormType } from "types"
 const CreateGuildTwitter = () => {
   const { setPlatform } = useCreateGuildContext()
   const methods = useFormContext<GuildFormType>()
-  const methodsTwitter = useForm()
+  const methodsTwitter = useForm<{ twitterUrl: string }>({ mode: "all" })
 
   const link = useWatch({
     control: methodsTwitter.control,
-    name: "socialLinks.TWITTER",
+    name: "twitterUrl",
   })
 
   return (
@@ -32,13 +32,13 @@ const CreateGuildTwitter = () => {
       <ModalFooter>
         <Button
           colorScheme="green"
-          isDisabled={!link}
+          isDisabled={!link || !!methodsTwitter.formState.errors.twitterUrl}
           onClick={() => {
             methods.setValue("socialLinks.TWITTER", link)
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         >
-          Add{/*nextStepText*/}
+          Add
         </Button>
       </ModalFooter>
     </>

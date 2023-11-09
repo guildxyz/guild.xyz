@@ -71,10 +71,10 @@ const CreateGuildGoogle = (): JSX.Element => {
                 role: googleMethods.getValues("permission"),
               },
             })
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         >
-          Add{/*nextStepText*/}
+          Add
         </Button>
       </ModalFooter>
     </>

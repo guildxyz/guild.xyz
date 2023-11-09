@@ -411,36 +411,38 @@ const CreateNftForm = ({ onSuccess }: Props) => {
             </Stack>
           </GridItem>
         </Grid>
-      </Stack>
-      <HStack justifyContent="end">
-        {chain && Chains[chainId] !== chain && (
-          <Button
-            data-test="create-nft-switch-network-button"
-            isLoading={isNetworkChangeInProgress}
-            loadingText="Check your wallet"
-            onClick={() => requestNetworkChange(Chains[chain])}
-          >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
-        )}
-        <Tooltip
-          label="Please switch to a supported chain"
-          isDisabled={!shouldSwitchChain}
-        >
-          <Button
-            data-test="create-nft-button"
-            colorScheme="indigo"
-            isDisabled={shouldSwitchChain || isLoading}
-            isLoading={isLoading}
-            loadingText={loadingText}
-            onClick={(e) => {
-              setShouldShowCloseAlert?.(true)
-              setIsBackButtonDisabled?.(true)
-              return handleSubmit(onSubmit)(e)
-            }}
+
+        <HStack justifyContent="end">
+          {chain && Chains[chainId] !== chain && (
+            <Button
+              data-test="create-nft-switch-network-button"
+              isLoading={isNetworkChangeInProgress}
+              loadingText="Check your wallet"
+              onClick={() => requestNetworkChange(Chains[chain])}
+            >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
+          )}
+          <Tooltip
+            label="Please switch to a supported chain"
+            isDisabled={!shouldSwitchChain}
           >
-            Create NFT & continue setup
-          </Button>
-        </Tooltip>
-      </HStack>
+            <Button
+              data-test="create-nft-button"
+              colorScheme="indigo"
+              isDisabled={shouldSwitchChain || isLoading}
+              isLoading={isLoading}
+              loadingText={loadingText}
+              onClick={(e) => {
+                setShouldShowCloseAlert?.(true)
+                setIsBackButtonDisabled?.(true)
+                return handleSubmit(onSubmit)(e)
+              }}
+            >
+              Create NFT & continue setup
+            </Button>
+          </Tooltip>
+        </HStack>
+      </Stack>
+
       <DynamicDevTool control={control} />
     </FormProvider>
   )

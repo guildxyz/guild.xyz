@@ -9,14 +9,12 @@ import {
   useState,
 } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
-import { PlatformName as BasePlatformName, GuildFormType, RoleFormType } from "types"
+import { GuildFormType, PlatformName, RoleFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
 import ChooseTemplate from "./ChooseTemplate"
 import CreateGuildIndex from "./CreateGuildIndex"
-
-type PlatformName = BasePlatformName | "DEFAULT"
-type TemplateType = "VERIFIED" | "MEMBER" | "SUPPORTER" | "OG_MEMBER"
+import { TEMPLATES } from "./templates"
 
 type Step = {
   title: string
@@ -24,6 +22,8 @@ type Step = {
   description?: string[]
   content: JSX.Element
 }
+
+const ID_AFTER_DOMAIN_REGEX = /(?<=com\/).*$/
 
 const CreateGuildContext = createContext<{
   setTemplate: (roleTemplateName: string) => void
@@ -35,7 +35,6 @@ const CreateGuildContext = createContext<{
   setActiveStep: (index: number) => void
   setPlatform: Dispatch<SetStateAction<PlatformName>>
   getTemplate: () => Array<RoleFormType>
-  TEMPLATES: Array<RoleFormType>
   toggleReward: (roleTemplateName: string, guildPlatformIndex: number) => void
   stepPart: number
   setPart: (part: number) => void
@@ -85,63 +84,37 @@ export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
       },
     ],
   },
-  DEFAULT: basicDefaultValues,
 }
 
-const TEMPLATES: Array<RoleFormType> = [
+const STEPS: Step[] = [
   {
-    name: "Member",
-    logic: "AND",
-    description: "Default role without special requirements",
-    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    requirements: [
-      {
-        type: "FREE",
-      },
+    title: "Set platforms",
+    label: [
+      "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
     ],
+    content: <CreateGuildIndex />,
   },
   {
-    name: "Verified member",
-    description: "Basic anti-bot member verification",
-
-    logic: "AND",
-    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    requirements: [
-      {
-        type: "COIN",
-        chain: "ETHEREUM",
-        address: "0x0000000000000000000000000000000000000000",
-        data: {
-          minAmount: 0.001,
-        },
-      },
-      {
-        type: "DISCORD_JOIN_FROM_NOW",
-        data: {
-          memberSince: 31536000000,
-        },
-      },
-    ],
+    title: "Customize guild",
+    label: [<BasicInfo key={0} />],
+    content: <></>,
   },
   {
-    name: "Twitter fam",
-    description: "Basic anti-bot member verification",
-    logic: "AND",
-    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    requirements: [
-      {
-        type: "TWITTER_FOLLOW",
-        data: {
-          id: "{your_twitter_handle}",
-        },
-      },
-      {
-        type: "TWITTER_FOLLOWER_COUNT",
-        data: {
-          minAmount: 50,
-        },
-      },
+    title: "Choose template",
+    description: ["1/2", "2/2"],
+    label: [
+      "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
+      "Choose rewards to selected roles.",
     ],
+    content: <ChooseTemplate />,
+  },
+  {
+    title: "Edit roles",
+    content: <></>,
+  },
+  {
+    title: "Finish",
+    content: <></>,
   },
 ]
 
@@ -177,11 +150,9 @@ const CreateGuildProvider = ({
           (requriement) => requriement.type === "TWITTER_FOLLOW"
         )
 
-        const idAfterDomain = /(?<=com\/).*$/
-
         if (twitterRequirementIndex > -1)
           template.requirements[twitterRequirementIndex].data.id =
-            idAfterDomain.exec(methods.getValues("socialLinks.TWITTER"))
+            ID_AFTER_DOMAIN_REGEX.exec(methods.getValues("socialLinks.TWITTER"))
 
         const discordPlatfromIndex = methods
           .getValues("guildPlatforms")
@@ -218,8 +189,6 @@ const CreateGuildProvider = ({
       const templateCopy = JSON.parse(JSON.stringify(originalTemplate))
 
       templateCopy.description = undefined
-
-      console.log("xy", templateCopy)
 
       append(templateCopy)
     }
@@ -264,38 +233,6 @@ const CreateGuildProvider = ({
     }
   }
 
-  const steps: Step[] = [
-    {
-      title: "Set platforms",
-      label: [
-        "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
-      ],
-      content: <CreateGuildIndex />,
-    },
-    {
-      title: "Customize guild",
-      label: [<BasicInfo key={0} />],
-      content: <></>,
-    },
-    {
-      title: "Choose template",
-      description: ["1/2", "2/2"],
-      label: [
-        "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
-        "Choose rewards to selected roles.",
-      ],
-      content: <ChooseTemplate />,
-    },
-    {
-      title: "Edit roles",
-      content: <></>,
-    },
-    {
-      title: "Finish",
-      content: <></>,
-    },
-  ]
-
   const {
     goToPrevious: prevStep,
     goToNext: nextStep,
@@ -303,7 +240,7 @@ const CreateGuildProvider = ({
     setActiveStep,
   } = useSteps({
     index: 0,
-    count: steps.length,
+    count: STEPS.length,
   })
 
   useEffect(() => {
@@ -318,7 +255,7 @@ const CreateGuildProvider = ({
   return (
     <CreateGuildContext.Provider
       value={{
-        steps,
+        steps: STEPS,
         prevStep: () => {
           prevStep()
           setPart(0)
@@ -337,7 +274,6 @@ const CreateGuildProvider = ({
           setPart(0)
         },
         toggleReward,
-        TEMPLATES,
         setPart,
         stepPart,
       }}
@@ -349,4 +285,4 @@ const CreateGuildProvider = ({
 
 const useCreateGuildContext = () => useContext(CreateGuildContext)
 
-export { CreateGuildProvider, useCreateGuildContext, type TemplateType }
+export { CreateGuildProvider, useCreateGuildContext }

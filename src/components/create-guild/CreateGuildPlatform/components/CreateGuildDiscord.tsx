@@ -15,7 +15,7 @@ import {
   useFormContext,
   useWatch,
 } from "react-hook-form"
-import { GuildFormType, PlatformType } from "types"
+import { GuildFormType, PlatformGuildData, PlatformType } from "types"
 import { defaultValues, useCreateGuildContext } from "../../CreateGuildContext"
 
 const CreateGuildDiscord = (): JSX.Element => {
@@ -65,12 +65,11 @@ const CreateGuildDiscord = (): JSX.Element => {
               platformGuildId: discordMethods.getValues("discordServerId"),
               platformId: PlatformType.DISCORD,
               platformGuildData: {
-                text: undefined,
                 name: selectedDiscordServerData.name,
                 imageUrl: selectedDiscordServerData.img,
-              },
+              } as PlatformGuildData["DISCORD"],
             })
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         >
           Add

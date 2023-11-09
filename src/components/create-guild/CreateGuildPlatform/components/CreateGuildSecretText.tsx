@@ -60,10 +60,10 @@ const CreateGuildSecretText = () => {
                 imageUrl,
               },
             })
-            setPlatform("DEFAULT")
+            setPlatform(null)
           }}
         >
-          Add{/*nextStepText*/}
+          Add
         </Button>
       </ModalFooter>
     </>

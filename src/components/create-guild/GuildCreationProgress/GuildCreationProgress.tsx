@@ -1,22 +1,21 @@
 import { Box, Button, Container, HStack, Progress, Text } from "@chakra-ui/react"
 import { Player } from "@lottiefiles/react-lottie-player"
 import Card from "components/common/Card"
-import { useEffect, useRef, useState } from "react"
+import { PropsWithChildren, useEffect, useRef, useState } from "react"
 
 type Props = {
   next: () => void
   prev?: () => void
   progress: number
   isDisabled?: boolean
-  customButton?: JSX.Element
 }
 
 const GuildCreationProgress = ({
   next,
   progress,
   isDisabled,
-  customButton,
-}: Props): JSX.Element => {
+  children,
+}: PropsWithChildren<Props>): JSX.Element => {
   const progressText = `${progress}%`
   const lottiePlayer = useRef(null)
   const lottiePlayerBg = useRef(null)
@@ -83,9 +82,7 @@ const GuildCreationProgress = ({
               </Box>
               <Text colorScheme="gray">Guild {progressText} completed</Text>
             </HStack>
-            {customButton ? (
-              customButton
-            ) : (
+            {children ?? (
               <Button colorScheme={"green"} onClick={next} isDisabled={isDisabled}>
                 Continue
               </Button>

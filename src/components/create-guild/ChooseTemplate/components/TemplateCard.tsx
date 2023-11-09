@@ -23,8 +23,9 @@ import {
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { Check } from "phosphor-react"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { Fragment, KeyboardEvent } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useWatch } from "react-hook-form"
 import {
   GuildFormType,
   GuildPlatform,
@@ -71,11 +72,11 @@ const TemplateCard = ({
 }: Props): JSX.Element => {
   const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const roleBottomBorderColor = useColorModeValue("gray.200", "gray.600")
-  const { getValues, control } = useFormContext<GuildFormType>()
 
-  const roles = useWatch({ name: "roles", control })
-
-  const guildPlatforms = getValues("guildPlatforms")
+  const roles = useWatch<GuildFormType, "roles">({ name: "roles" })
+  const guildPlatforms = useWatch<GuildFormType, "guildPlatforms">({
+    name: "guildPlatforms",
+  })
 
   return (
     <Box
@@ -129,9 +130,6 @@ const TemplateCard = ({
             boxShadow: "var(--chakra-shadows-outline)",
           },
         }}
-        onClick={() => {
-          if (window.location.hash === `#role-${role.id}`) window.location.hash = "!"
-        }}
       >
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex direction="column">
@@ -152,20 +150,21 @@ const TemplateCard = ({
                   >
                     {role.name}
                   </Heading>
-                  {/*<Visibility entityVisibility={role.visibility} showTagLabel />*/}
                 </Wrap>
               </HStack>
             </HStack>
+
             <Collapse in={part === 0}>
               <Box pl={5}>{description}</Box>
             </Collapse>
+
             <Collapse in={part === 1}>
               <Box
                 p={5}
                 pt={2}
                 mt="auto"
                 borderWidth={2}
-                borderColor={getValues("theme.color")}
+                borderColor="primary.500"
                 borderRadius={6}
                 background={roleBottomBgColor}
                 borderStyle={"dashed"}
@@ -185,12 +184,13 @@ const TemplateCard = ({
                       <Checkbox
                         pt={4}
                         isDisabled={
-                          platform.platformName === "TELEGRAM" &&
+                          platforms[platform.platformName].asRewardRestriction ===
+                            PlatformAsRewardRestrictions.SINGLE_ROLE &&
                           roles
                             .filter((r) => r.name !== name)
                             .some((r) =>
                               r.rolePlatforms?.find(
-                                (rolePlatform: any) =>
+                                (rolePlatform) =>
                                   rolePlatform.guildPlatformIndex === i
                               )
                             )
@@ -199,8 +199,7 @@ const TemplateCard = ({
                           !!roles
                             .find((r) => r.name === name)
                             ?.rolePlatforms?.find(
-                              (rolePlatform: any) =>
-                                rolePlatform.guildPlatformIndex === i
+                              (rolePlatform) => rolePlatform.guildPlatformIndex === i
                             )
                         }
                       />
@@ -217,7 +216,7 @@ const TemplateCard = ({
                         icon={
                           <RewardIcon
                             rolePlatformId={platform.id}
-                            guildPlatform={platform as any}
+                            guildPlatform={platform as GuildPlatform}
                             withMotionImg={false}
                           />
                         }
@@ -234,6 +233,7 @@ const TemplateCard = ({
               </Box>
             </Collapse>
           </Flex>
+
           <Flex
             direction="column"
             bgColor={roleBottomBgColor}
@@ -313,27 +313,15 @@ const TemplateCard = ({
   )
 }
 
-function getValueToDisplay(
+const getValueToDisplay = (
   platform: Partial<GuildPlatform> & {
     platformName: string
   }
-): string {
-  if (platform.platformId == PlatformType.TEXT)
-    return platform.platformGuildData.name ?? "Secret"
+): string =>
+  platform.platformGuildData.name ??
+  `${platforms[platform.platformName].name} ${
+    platforms[platform.platformName].gatedEntity
+  }`
 
-  if (platform.platformId == PlatformType.TELEGRAM)
-    return platform.platformGuildData.name ?? "Telegram group"
-
-  if (platform.platformId == PlatformType.DISCORD)
-    return platform.platformGuildData.name ?? "Discord server"
-
-  if (platform.platformId == PlatformType.CONTRACT_CALL)
-    return platform.platformGuildData.name ?? "NFT"
-
-  if (platform.platformId == PlatformType.GOOGLE)
-    return platform.platformGuildData.name ?? "File"
-
-  return platform.platformGuildName || platform.platformGuildId
-}
 export default TemplateCard
 export type { Template }
