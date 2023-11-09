@@ -1,7 +1,6 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import useFuel from "hooks/useFuel"
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtom } from "jotai"
 import randomBytes from "randombytes"
@@ -10,7 +9,6 @@ import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import fetcher from "utils/fetcher"
-import { useAccount } from "wagmi"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
@@ -206,9 +204,7 @@ const KeyPairContext = createContext<{
 const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { address: evmAddress } = useAccount()
-  const { address: fuelAddress } = useFuel()
-  const address = evmAddress || fuelAddress
+  const { address } = useWeb3ConnectionManager()
 
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { isDelegateConnection, setIsDelegateConnection } =
