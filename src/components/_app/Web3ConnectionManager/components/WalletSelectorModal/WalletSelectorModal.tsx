@@ -47,8 +47,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
 
   const { disconnect } = useDisconnect()
-  const { isConnected: isEvmConnected, connector } = useAccount()
-  const { isConnected: isFuelConnected } = useFuel()
+  const { connector } = useAccount()
   const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
@@ -92,8 +91,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { isDelegateConnection, setIsDelegateConnection, isInSafeContext } =
     useWeb3ConnectionManager()
 
-  const isConnected = isEvmConnected || isFuelConnected
-  const isConnectedAndKeyPairReady = isConnected && ready
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const isConnectedAndKeyPairReady = isWeb3Connected && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
@@ -106,8 +105,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       <Modal
         isOpen={isOpen}
         onClose={closeModalAndSendAction}
-        closeOnOverlayClick={!isConnected || !!keyPair}
-        closeOnEsc={!isConnected || !!keyPair}
+        closeOnOverlayClick={!isWeb3Connected || !!keyPair}
+        closeOnEsc={!isWeb3Connected || !!keyPair}
         trapFocus={!isWalletConnectModalActive}
       >
         <ModalOverlay />
