@@ -1,6 +1,7 @@
 import {
   bobaAvax,
   exosama,
+  lukso,
   neonEVM,
   palm,
   pgn,
@@ -22,7 +23,9 @@ import {
   gnosis,
   goerli,
   harmonyOne,
+  linea,
   mainnet,
+  mantle,
   metis,
   moonbeam,
   moonriver,
@@ -369,6 +372,42 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/neonscan.svg",
     },
   },
+  LINEA: {
+    ...linea,
+    iconUrl: "/networkLogos/linea.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/linea.png",
+      dark: "/networkLogos/linea.png",
+    },
+  },
+  LUKSO: {
+    ...lukso,
+    iconUrl: "/networkLogos/lukso.svg",
+    coinIconUrl: "/networkLogos/lukso.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/lukso.svg",
+      dark: "/networkLogos/lukso.svg",
+    },
+  },
+  // BITFINITY: {
+  //   ...bitfinity,
+  //   iconUrl: "",
+  //   coinIconUrl: "",
+  //   blockExplorerIconUrl: {
+  //     light: "",
+  //     dark: "",
+  //   },
+  // },
+  MANTLE: {
+    ...mantle,
+    iconUrl: "/networkLogos/mantle.svg",
+    coinIconUrl: "/networkLogos/mantle.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/mantle-light.svg",
+      dark: "/networkLogos/mantle.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -404,6 +443,10 @@ enum Chains {
   POLYGON_ZKEVM = polygonZkEvm.id,
   PGN = pgn.id,
   NEON_EVM = neonEVM.id,
+  LINEA = linea.id,
+  LUKSO = lukso.id,
+  // BITFINITY = bitfinity.id,
+  MANTLE = mantle.id,
 }
 
 export type Chain = keyof typeof Chains

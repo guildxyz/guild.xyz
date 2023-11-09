@@ -48,6 +48,10 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   ZORA: [],
   PGN: [],
   NEON_EVM: [],
+  LINEA: [],
+  LUKSO: [],
+  // BITFINITY: [],
+  MANTLE: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

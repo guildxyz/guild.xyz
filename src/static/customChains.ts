@@ -210,3 +210,66 @@ export const goerli = /*#__PURE__*/ defineChain({
     },
   },
 })
+
+export const lukso = /*#__PURE__*/ defineChain({
+  id: 42,
+  name: "LUKSO Mainnet",
+  network: "lukso",
+  nativeCurrency: {
+    decimals: 18,
+    name: "LUKSO",
+    symbol: "LYX",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.mainnet.lukso.network"],
+    },
+    public: {
+      http: ["https://rpc.mainnet.lukso.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.execution.mainnet.lukso.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 468183,
+    },
+  },
+})
+
+// TODO
+export const bitfinity = /*#__PURE__*/ defineChain({
+  id: 355110,
+  name: "Bitfinity",
+  network: "bitfinity",
+  nativeCurrency: {
+    decimals: 18,
+    name: "LUKSO",
+    symbol: "LYX",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://mainnet.bitfinity.network"],
+    },
+    public: {
+      http: ["https://mainnet.bitfinity.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.execution.mainnet.lukso.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 468183,
+    },
+  },
+})
