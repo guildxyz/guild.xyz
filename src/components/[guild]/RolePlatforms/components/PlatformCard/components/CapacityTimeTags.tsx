@@ -32,7 +32,7 @@ const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => {
       {typeof rolePlatform.capacity === "number" && (
         <CapacityTag
           capacity={rolePlatform.capacity}
-          claimedCapacity={rolePlatform.claimedCapacity}
+          claimedCount={rolePlatform.claimedCount}
         />
       )}
 
@@ -47,9 +47,9 @@ const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => {
 
 const CapacityTag = ({
   capacity,
-  claimedCapacity,
+  claimedCount,
   ...rest
-}: { capacity: number; claimedCapacity?: number } & TagProps) => {
+}: { capacity: number; claimedCount?: number } & TagProps) => {
   const [showClaimed, setShowClaimed] = useState(false)
 
   return (
@@ -59,8 +59,8 @@ const CapacityTag = ({
       {...rest}
     >
       {showClaimed
-        ? `${capacity - (claimedCapacity ?? 0)} / ${capacity} available`
-        : `${claimedCapacity ?? 0} / ${capacity} claimed`}
+        ? `${capacity - (claimedCount ?? 0)} / ${capacity} available`
+        : `${claimedCount ?? 0} / ${capacity} claimed`}
     </Tag>
   )
 }

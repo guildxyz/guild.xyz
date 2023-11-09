@@ -328,7 +328,7 @@ type RolePlatform = {
   roleId?: number
   visibility?: Visibility
   capacity?: number
-  claimedCapacity?: number
+  claimedCount?: number
   startTime?: string
   endTime?: string
 }

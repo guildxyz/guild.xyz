@@ -138,7 +138,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
                 <>
                   <CapacityTag
                     capacity={rolePlatform.capacity}
-                    claimedCapacity={rolePlatform.claimedCapacity}
+                    claimedCount={rolePlatform.claimedCount}
                     {...capacityTimeTagStyleProps}
                   />
                   <CircleDivider />
