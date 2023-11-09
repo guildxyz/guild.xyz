@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import dynamic from "next/dynamic"
 import Image from "next/image"

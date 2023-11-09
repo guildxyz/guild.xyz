@@ -1,5 +1,5 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { default as useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LinkButton from "components/common/LinkButton"

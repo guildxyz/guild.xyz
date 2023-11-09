@@ -26,7 +26,7 @@ import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
-import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
+import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import FuelConnectorButton from "./components/FuelConnectorButton"
@@ -88,10 +88,13 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const shouldLinkToUser = useShouldLinkToUser()
 
-  const { isDelegateConnection, setIsDelegateConnection, isInSafeContext } =
-    useWeb3ConnectionManager()
+  const {
+    isWeb3Connected,
+    isDelegateConnection,
+    setIsDelegateConnection,
+    isInSafeContext,
+  } = useWeb3ConnectionManager()
 
-  const { isWeb3Connected } = useWeb3ConnectionManager()
   const isConnectedAndKeyPairReady = isWeb3Connected && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()

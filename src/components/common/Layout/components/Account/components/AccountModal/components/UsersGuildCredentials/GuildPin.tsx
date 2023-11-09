@@ -1,6 +1,6 @@
 import { Card, Circle, Img, Tag, useColorModeValue } from "@chakra-ui/react"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Link from "components/common/Link"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 
 type Props = {
   name: string

@@ -20,8 +20,8 @@ import {
 import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import { default as useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
@@ -36,7 +36,14 @@ import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { address, type } = useWeb3ConnectionManager()
+  const {
+    address,
+    type,
+    setIsDelegateConnection,
+    isAccountModalOpen: isOpen,
+    closeAccountModal: onClose,
+  } = useWeb3ConnectionManager()
+
   const { address: evmAddress } = useAccount()
   const { disconnect: disconnectEvm } = useDisconnect()
   const { disconnect: disconnectFuel } = useFuel()
@@ -58,11 +65,6 @@ const AccountModal = () => {
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
-  const {
-    setIsDelegateConnection,
-    isAccountModalOpen: isOpen,
-    closeAccountModal: onClose,
-  } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
 
   const handleLogout = () => {

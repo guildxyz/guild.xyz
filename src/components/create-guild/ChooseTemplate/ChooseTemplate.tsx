@@ -1,5 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { default as useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
@@ -8,9 +8,8 @@ import Pagination from "../Pagination"
 import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
-  const { openWalletSelectorModal, isWalletSelectorModalOpen } =
+  const { isWeb3Connected, openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
-  const { isWeb3Connected } = useWeb3ConnectionManager()
 
   useEffect(() => {
     if (isWeb3Connected || isWalletSelectorModalOpen) return
