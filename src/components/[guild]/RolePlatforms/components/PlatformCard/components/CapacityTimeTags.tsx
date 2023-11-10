@@ -11,6 +11,7 @@ import { Clock } from "phosphor-react"
 import { useState } from "react"
 import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import { DAY_IN_MS } from "../../EditRolePlatformCapacityTimeModal"
 
 type Props = { rolePlatform: RolePlatform } & WrapProps
 
@@ -110,7 +111,11 @@ const EndTimeTag = ({ endTime, ...rest }: { endTime: string } & TagProps) => {
         <TagLabel>
           {endTimeDiff <= 0
             ? "Claim ended"
-            : `Claim ends in ${formatRelativeTimeFromNow(endTimeDiff)}`}
+            : `Claim ends ${
+                endTimeDiff > DAY_IN_MS
+                  ? `in ${formatRelativeTimeFromNow(endTimeDiff)}`
+                  : "today"
+              }`}
         </TagLabel>
       </Tag>
     </Tooltip>
