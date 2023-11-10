@@ -107,18 +107,12 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   )
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
-  const {
-    isConnected: isEvmConnected,
-    connector: evmConnector,
-    address: evmAddress,
-  } = useAccount()
+  const { isConnected, connector } = useAccount()
 
   useEffect(() => {
-    if (!isEvmConnected || evmConnector?.id !== "safe") return
+    if (!isConnected || connector?.id !== "safe") return
     setIsInSafeContext(true)
-  }, [isEvmConnected, evmConnector])
-
-  const { isConnected } = useAccount()
+  }, [isConnected, connector])
 
   useEffect(() => {
     if (!isConnected && router.query.redirectUrl) openWalletSelectorModal()
