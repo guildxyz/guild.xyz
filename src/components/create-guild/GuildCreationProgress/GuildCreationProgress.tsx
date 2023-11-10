@@ -58,7 +58,6 @@ const GuildCreationProgress = ({
                       marginBottom: 24,
                       height: logoSize,
                       width: logoSize,
-                      color: "white",
                     }}
                   />
                 </Box>
@@ -75,7 +74,6 @@ const GuildCreationProgress = ({
                       marginBottom: 24,
                       height: logoSize,
                       width: logoSize,
-                      color: "white",
                     }}
                   />
                 </Box>
