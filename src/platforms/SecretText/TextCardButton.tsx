@@ -25,15 +25,23 @@ const TextCardButton = ({ platform }: Props) => {
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
 
-  const isButtonDisabled = startTimeDiff > 0 || endTimeDiff < 0
+  const isButtonDisabled =
+    startTimeDiff > 0 ||
+    endTimeDiff < 0 ||
+    rolePlatform?.capacity === rolePlatform?.claimedCount
+
+  const tooltipLabel =
+    rolePlatform?.capacity === rolePlatform?.claimedCount
+      ? "All available rewards have already been claimed"
+      : startTimeDiff > 0
+      ? "Claim hasn't started yet"
+      : "Claim already ended"
 
   return (
     <>
       <Tooltip
         isDisabled={!isButtonDisabled}
-        label={
-          startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
-        }
+        label={tooltipLabel}
         hasArrow
         shouldWrapChildren
       >

@@ -44,15 +44,23 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
-  const startTimeDiff = getTimeDiff(platform?.startTime)
-  const endTimeDiff = getTimeDiff(platform?.endTime)
-
   const state = useMemo(() => {
     if (isMember && hasAccess) {
-      if (startTimeDiff > 0 || endTimeDiff < 0)
+      const startTimeDiff = getTimeDiff(platform?.startTime)
+      const endTimeDiff = getTimeDiff(platform?.endTime)
+
+      if (
+        startTimeDiff > 0 ||
+        endTimeDiff < 0 ||
+        platform?.capacity === platform?.claimedCount
+      )
         return {
           tooltipLabel:
-            startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended",
+            platform?.capacity === platform?.claimedCount
+              ? "All available rewards have already been claimed"
+              : startTimeDiff > 0
+              ? "Claim hasn't started yet"
+              : "Claim already ended",
           buttonProps: {
             isDisabled: true,
           },
@@ -78,7 +86,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected, startTimeDiff, endTimeDiff])
+  }, [isMember, hasAccess, isConnected, platform])
 
   const showCapacityTimeTags = shouldShowCapacityTimeTags(platform)
 
