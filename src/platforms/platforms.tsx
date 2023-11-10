@@ -28,12 +28,11 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
-import SecretTextCardButton from "./SecretText/SecretTextCardButton"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
+import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
-import UniqueTextCardButton from "./UniqueText/UniqueTextCardButton"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 import PlatformPreview from "./components/PlatformPreview"
@@ -334,7 +333,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useSecretTextCardProps,
-    cardButton: SecretTextCardButton,
+    cardButton: TextCardButton,
     cardMenuComponent: SecretTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
@@ -362,7 +361,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useUniqueTextCardProps,
-    cardButton: UniqueTextCardButton,
+    cardButton: TextCardButton,
     cardMenuComponent: UniqueTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,

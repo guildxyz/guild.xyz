@@ -115,7 +115,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
             shouldWrapChildren
           >
             <CollectNftButton
-              isDisabled={startTimeDiff > 0 || endTimeDiff > 0}
+              isDisabled={startTimeDiff > 0 || endTimeDiff < 0}
               label="Collect now"
               colorScheme="green"
             />
