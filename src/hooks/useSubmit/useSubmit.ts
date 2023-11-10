@@ -191,8 +191,8 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 
       return fetch({ signedPayload, validation }).catch((e) => {
         if (
-          e?.message === "Invalid or expired timestamp!" ||
-          e?.message ===
+          e?.error === "Invalid or expired timestamp!" ||
+          e?.error ===
             "Invalid timestamp! The creation of timestamp too far in future!"
         ) {
           setShouldFetchTimestamp(true)

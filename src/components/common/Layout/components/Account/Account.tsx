@@ -1,6 +1,6 @@
 import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { default as useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
 import { SignIn } from "phosphor-react"

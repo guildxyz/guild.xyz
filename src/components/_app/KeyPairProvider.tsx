@@ -1,5 +1,6 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtom } from "jotai"
 import randomBytes from "randombytes"
@@ -14,7 +15,6 @@ import {
 } from "../../hooks/useSubmit/useSubmit"
 import useToast from "../../hooks/useToast"
 import { addressLinkParamsAtom } from "./Web3ConnectionManager/components/WalletSelectorModal/hooks/useShouldLinkToUser"
-import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair

@@ -1,10 +1,10 @@
 import type { JoinJob } from "@guildxyz/types"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useAtom } from "jotai"
@@ -149,7 +149,8 @@ const useJoin = (
     if (shouldShowSuccessToast) {
       if (
         pathname === "/[guild]" &&
-        guild.featureFlags.includes("GUILD_CREDENTIAL")
+        guild.featureFlags.includes("GUILD_CREDENTIAL") &&
+        guild.guildPin?.isActive
       ) {
         toastWithButton({
           status: "success",

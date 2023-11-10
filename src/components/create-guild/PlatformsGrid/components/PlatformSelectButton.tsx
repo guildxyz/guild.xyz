@@ -125,9 +125,7 @@ const PlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        <Icon
-          as={isLoading ? Spinner : (isConnected && DynamicCtaIcon) ?? CaretRight}
-        />
+        <Icon as={isLoading ? Spinner : isConnected ? DynamicCtaIcon : CaretRight} />
       </HStack>
     </DisplayCard>
   )

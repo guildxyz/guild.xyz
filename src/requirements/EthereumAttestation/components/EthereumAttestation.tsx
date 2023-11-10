@@ -6,7 +6,7 @@ import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import parseFromObject from "utils/parseFromObject"
-import { EAS_SCAN_BASE } from "../EthereumAttestationRequirement"
+import { EAS_SCAN_BASE } from "./EthereumAttestationRequirementFooter"
 
 const HEX_STRING_REGEX = /^0x[A-F0-9]+$/i
 

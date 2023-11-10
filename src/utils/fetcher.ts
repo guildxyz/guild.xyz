@@ -65,8 +65,8 @@ const fetcher = async (
 
     if (!response.ok) {
       if (
-        res?.message === "Invalid or expired timestamp!" ||
-        res?.message ===
+        res?.error === "Invalid or expired timestamp!" ||
+        res?.error ===
           "Invalid timestamp! The creation of timestamp too far in future!"
       ) {
         window.localStorage.setItem("shouldFetchTimestamp", "true")
