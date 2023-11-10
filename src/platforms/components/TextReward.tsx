@@ -52,7 +52,8 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       if (
         startTimeDiff > 0 ||
         endTimeDiff < 0 ||
-        platform?.capacity === platform?.claimedCount
+        (typeof platform?.capacity === "number" &&
+          platform?.capacity === platform?.claimedCount)
       )
         return {
           tooltipLabel:

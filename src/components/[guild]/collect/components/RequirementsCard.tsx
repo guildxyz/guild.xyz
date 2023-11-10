@@ -58,6 +58,11 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
 
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
+  const isButtonDisabled =
+    startTimeDiff > 0 ||
+    endTimeDiff < 0 ||
+    (typeof rolePlatform?.capacity === "number" &&
+      rolePlatform?.capacity === rolePlatform?.claimedCount)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
@@ -107,7 +112,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
           )}
 
           <Tooltip
-            isDisabled={!(startTimeDiff > 0 || endTimeDiff < 0)}
+            isDisabled={!isButtonDisabled}
             label={
               startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
             }
@@ -115,7 +120,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
             shouldWrapChildren
           >
             <CollectNftButton
-              isDisabled={startTimeDiff > 0 || endTimeDiff < 0}
+              isDisabled={isButtonDisabled}
               label="Collect now"
               colorScheme="green"
             />

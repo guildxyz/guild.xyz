@@ -28,9 +28,11 @@ const TextCardButton = ({ platform }: Props) => {
   const isButtonDisabled =
     startTimeDiff > 0 ||
     endTimeDiff < 0 ||
-    rolePlatform?.capacity === rolePlatform?.claimedCount
+    (typeof rolePlatform?.capacity === "number" &&
+      rolePlatform?.capacity === rolePlatform?.claimedCount)
 
   const tooltipLabel =
+    typeof rolePlatform?.capacity === "number" &&
     rolePlatform?.capacity === rolePlatform?.claimedCount
       ? "All available rewards have already been claimed"
       : startTimeDiff > 0
