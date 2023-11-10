@@ -5,6 +5,7 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import { useAccount } from "wagmi"
+import CreateGuildButton from "../CreateGuildButton"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import GuildCreationProgress from "../GuildCreationProgress"
 import TemplateCard from "./components/TemplateCard"
@@ -76,7 +77,7 @@ const ChooseTemplate = (): JSX.Element => {
         progress={stepPart === 0 ? 50 : 65}
         isDisabled={!roles.length}
       >
-        {stepPart === 0 && (
+        {stepPart === 0 ? (
           <Button
             isDisabled={!roles.length}
             colorScheme="green"
@@ -84,6 +85,10 @@ const ChooseTemplate = (): JSX.Element => {
           >
             Continue
           </Button>
+        ) : (
+          <>
+            <CreateGuildButton isDisabled={!roles.length} />
+          </>
         )}
       </GuildCreationProgress>
     </>

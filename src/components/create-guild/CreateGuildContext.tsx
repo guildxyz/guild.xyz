@@ -10,7 +10,6 @@ import {
 } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { GuildFormType, PlatformName, RoleFormType } from "types"
-import getRandomInt from "utils/getRandomInt"
 import BasicInfo from "./BasicInfo"
 import ChooseTemplate from "./ChooseTemplate"
 import CreateGuildIndex from "./CreateGuildIndex"
@@ -40,52 +39,6 @@ const CreateGuildContext = createContext<{
   setPart: (part: number) => void
 } | null>(null)
 
-const defaultIcon = `/guildLogos/${getRandomInt(286)}.svg`
-const basicDefaultValues: GuildFormType = {
-  name: "",
-  description: "",
-  imageUrl: defaultIcon,
-  contacts: [{ type: "EMAIL", contact: "" }],
-}
-export const defaultValues: Partial<Record<PlatformName, GuildFormType>> = {
-  DISCORD: {
-    ...basicDefaultValues,
-    guildPlatforms: [
-      {
-        platformName: "DISCORD",
-        platformGuildId: "",
-      },
-    ],
-  },
-  TELEGRAM: {
-    ...basicDefaultValues,
-    guildPlatforms: [
-      {
-        platformName: "TELEGRAM",
-        platformGuildId: "",
-      },
-    ],
-  },
-  GITHUB: {
-    ...basicDefaultValues,
-    guildPlatforms: [
-      {
-        platformName: "GITHUB",
-        platformGuildId: "",
-      },
-    ],
-  },
-  GOOGLE: {
-    ...basicDefaultValues,
-    guildPlatforms: [
-      {
-        platformName: "GOOGLE",
-        platformGuildId: "",
-      },
-    ],
-  },
-}
-
 const STEPS: Step[] = [
   {
     title: "Set platforms",
@@ -104,7 +57,7 @@ const STEPS: Step[] = [
     description: ["1/2", "2/2"],
     label: [
       "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
-      "Choose rewards to selected roles.",
+      "Choose rewards for the selected roles.",
     ],
     content: <ChooseTemplate />,
   },

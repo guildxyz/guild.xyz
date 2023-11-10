@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Spacer,
   Text,
+  Tooltip,
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
@@ -171,58 +172,71 @@ const TemplateCard = ({
                 m={5}
               >
                 {guildPlatforms?.length ? (
-                  guildPlatforms.map((platform, i) => (
-                    <HStack
-                      gap={3}
-                      key={i}
-                      alignItems={"flex-start"}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        onCheckReward(i)
-                      }}
-                    >
-                      <Checkbox
-                        pt={4}
-                        isDisabled={
-                          platforms[platform.platformName].asRewardRestriction ===
-                            PlatformAsRewardRestrictions.SINGLE_ROLE &&
-                          roles
-                            .filter((r) => r.name !== name)
-                            .some((r) =>
-                              r.rolePlatforms?.find(
-                                (rolePlatform) =>
-                                  rolePlatform.guildPlatformIndex === i
-                              )
-                            )
-                        }
-                        isChecked={
-                          !!roles
-                            .find((r) => r.name === name)
-                            ?.rolePlatforms?.find(
-                              (rolePlatform) => rolePlatform.guildPlatformIndex === i
-                            )
-                        }
-                      />
-                      <RewardDisplay
-                        flexGrow={1}
+                  guildPlatforms.map((platform, i) => {
+                    const isDisabled =
+                      platforms[platform.platformName].asRewardRestriction ===
+                        PlatformAsRewardRestrictions.SINGLE_ROLE &&
+                      roles
+                        .filter((r) => r.name !== name)
+                        .some((r) =>
+                          r.rolePlatforms?.find(
+                            (rolePlatform) => rolePlatform.guildPlatformIndex === i
+                          )
+                        )
+
+                    return (
+                      <Tooltip
                         label={
-                          <>
-                            {getRewardLabel(platform)}
-                            <Text as="span" fontWeight="bold">
-                              {getValueToDisplay(platform)}
-                            </Text>
-                          </>
+                          isDisabled
+                            ? `${
+                                platforms[platform.platformName].name
+                              } rewards can only be added to a single role`
+                            : ""
                         }
-                        icon={
-                          <RewardIcon
-                            rolePlatformId={platform.id}
-                            guildPlatform={platform as GuildPlatform}
-                            withMotionImg={false}
+                        key={i}
+                      >
+                        <HStack
+                          gap={3}
+                          alignItems={"flex-start"}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            if (!isDisabled) onCheckReward(i)
+                          }}
+                        >
+                          <Checkbox
+                            pt={4}
+                            isDisabled={isDisabled}
+                            isChecked={
+                              !!roles
+                                .find((r) => r.name === name)
+                                ?.rolePlatforms?.find(
+                                  (rolePlatform) =>
+                                    rolePlatform.guildPlatformIndex === i
+                                )
+                            }
                           />
-                        }
-                      />
-                    </HStack>
-                  ))
+                          <RewardDisplay
+                            flexGrow={1}
+                            label={
+                              <>
+                                {getRewardLabel(platform)}
+                                <Text as="span" fontWeight="bold">
+                                  {getValueToDisplay(platform)}
+                                </Text>
+                              </>
+                            }
+                            icon={
+                              <RewardIcon
+                                rolePlatformId={platform.id}
+                                guildPlatform={platform as GuildPlatform}
+                                withMotionImg={false}
+                              />
+                            }
+                          />
+                        </HStack>
+                      </Tooltip>
+                    )
+                  })
                 ) : (
                   <Text colorScheme="gray" fontSize={14} pt={3}>
                     You haven't set any platforms that could be rewards in step 1.

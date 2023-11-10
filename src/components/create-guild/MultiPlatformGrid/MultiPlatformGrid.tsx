@@ -1,6 +1,7 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
-import { PlatformName } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType, PlatformName } from "types"
 import MultiPlatformSelectButton from "./components/MultiPlatformSelectButton"
 
 type Props = {
@@ -17,6 +18,11 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
     "CONTRACT_CALL",
     "TWITTER",
   ]
+  const { control } = useFormContext<GuildFormType>()
+  const guildPlatforms = useWatch({
+    name: "guildPlatforms",
+    control,
+  })
 
   return (
     <Stack spacing={8}>
@@ -31,7 +37,11 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
             platform={platform}
             title={platforms[platform].name}
             //TODO get discord server name
-            description={""}
+            description={
+              guildPlatforms.find(
+                (guildPlatform) => guildPlatform.platformName === platform
+              )?.platformGuildData.name
+            }
             icon={platforms[platform].icon}
             imageUrl={platforms[platform].imageUrl}
             onSelection={onSelection}

@@ -6,10 +6,7 @@ import {
   ModalHeader,
 } from "@chakra-ui/react"
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
-import {
-  defaultValues,
-  useCreateGuildContext,
-} from "components/create-guild/CreateGuildContext"
+import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import {
   FormProvider,
   useFieldArray,
@@ -18,6 +15,7 @@ import {
   useWatch,
 } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
+import getRandomInt from "utils/getRandomInt"
 
 const CreateGuildGoogle = (): JSX.Element => {
   const methods = useFormContext<GuildFormType>()
@@ -45,7 +43,18 @@ const CreateGuildGoogle = (): JSX.Element => {
       <ModalBody>
         <FormProvider {...googleMethods}>
           <GoogleGuildSetup
-            defaultValues={defaultValues.GOOGLE}
+            defaultValues={{
+              name: "",
+              description: "",
+              imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+              contacts: [{ type: "EMAIL", contact: "" }],
+              guildPlatforms: [
+                {
+                  platformName: "GOOGLE",
+                  platformGuildId: "",
+                },
+              ],
+            }}
             fieldNameBase="googleData."
             shouldSetName
             permissionField="permission"

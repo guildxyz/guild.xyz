@@ -256,7 +256,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
-    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>

@@ -16,7 +16,8 @@ import {
   useWatch,
 } from "react-hook-form"
 import { GuildFormType, PlatformGuildData, PlatformType } from "types"
-import { defaultValues, useCreateGuildContext } from "../../CreateGuildContext"
+import getRandomInt from "utils/getRandomInt"
+import { useCreateGuildContext } from "../../CreateGuildContext"
 
 const CreateGuildDiscord = (): JSX.Element => {
   const { setPlatform } = useCreateGuildContext()
@@ -49,7 +50,18 @@ const CreateGuildDiscord = (): JSX.Element => {
         </Text>
         <FormProvider {...discordMethods}>
           <DiscordGuildSetup
-            defaultValues={defaultValues.DISCORD}
+            defaultValues={{
+              name: "",
+              description: "",
+              imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+              contacts: [{ type: "EMAIL", contact: "" }],
+              guildPlatforms: [
+                {
+                  platformName: "DISCORD",
+                  platformGuildId: "",
+                },
+              ],
+            }}
             selectedServer={selectedServer}
             fieldName={`discordServerId`}
           />
