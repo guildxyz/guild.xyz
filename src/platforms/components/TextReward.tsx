@@ -6,6 +6,7 @@ import {
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
 import CapacityTimeTags, {
+  getTimeDiff,
   shouldShowCapacityTimeTags,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
 import useAccess from "components/[guild]/hooks/useAccess"
@@ -43,12 +44,26 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
+  const startTimeDiff = getTimeDiff(platform?.startTime)
+  const endTimeDiff = getTimeDiff(platform?.endTime)
+
   const state = useMemo(() => {
-    if (isMember && hasAccess)
+    if (isMember && hasAccess) {
+      if (startTimeDiff > 0 || endTimeDiff < 0)
+        return {
+          tooltipLabel:
+            startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended",
+          buttonProps: {
+            isDisabled: true,
+          },
+        }
+
       return {
         tooltipLabel: label,
         buttonProps: {},
       }
+    }
+
     if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
@@ -63,7 +78,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected])
+  }, [isMember, hasAccess, isConnected, startTimeDiff, endTimeDiff])
 
   const showCapacityTimeTags = shouldShowCapacityTimeTags(platform)
 
