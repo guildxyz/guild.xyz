@@ -1,4 +1,5 @@
 import {
+  bitfinity,
   bobaAvax,
   exosama,
   lukso,
@@ -390,15 +391,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/lukso.svg",
     },
   },
-  // BITFINITY: {
-  //   ...bitfinity,
-  //   iconUrl: "",
-  //   coinIconUrl: "",
-  //   blockExplorerIconUrl: {
-  //     light: "",
-  //     dark: "",
-  //   },
-  // },
+  BITFINITY: {
+    ...bitfinity,
+    iconUrl: "/networkLogos/bitfinity.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/bitfinity-light.svg",
+      dark: "/explorerLogos/bitfinity.svg",
+    },
+  },
   MANTLE: {
     ...mantle,
     iconUrl: "/networkLogos/mantle.svg",
@@ -445,7 +446,7 @@ enum Chains {
   NEON_EVM = neonEVM.id,
   LINEA = linea.id,
   LUKSO = lukso.id,
-  // BITFINITY = bitfinity.id,
+  BITFINITY = bitfinity.id,
   MANTLE = mantle.id,
 }
 

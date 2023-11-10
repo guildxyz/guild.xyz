@@ -249,8 +249,8 @@ export const bitfinity = /*#__PURE__*/ defineChain({
   network: "bitfinity",
   nativeCurrency: {
     decimals: 18,
-    name: "LUKSO",
-    symbol: "LYX",
+    name: "Ether",
+    symbol: "ETH",
   },
   rpcUrls: {
     default: {
@@ -263,13 +263,13 @@ export const bitfinity = /*#__PURE__*/ defineChain({
   blockExplorers: {
     default: {
       name: "BlockScout",
-      url: "https://explorer.execution.mainnet.lukso.network",
+      url: "",
     },
   },
   contracts: {
     multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 468183,
+      address: "0x",
+      blockCreated: 0,
     },
   },
 })
