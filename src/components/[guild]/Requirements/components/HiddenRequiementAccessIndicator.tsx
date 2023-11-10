@@ -13,10 +13,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import Button from "components/common/Button"
 import {
   ArrowSquareIn,
   CaretDown,

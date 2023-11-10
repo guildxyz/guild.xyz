@@ -5,12 +5,12 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "components/[guild]/Requirements/components/RequiementAccessIndicatorUI"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import Button from "components/common/Button"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS, { RequirementType } from "requirements"
 import { useAccount } from "wagmi"
