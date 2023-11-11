@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
@@ -19,7 +20,7 @@ const OtterspaceRequirement = (props: RequirementProps) => {
       footer={<RequirementChainIndicator />}
       {...props}
     >
-      {`Have the `}
+      <Text as="span">{"Have the "}</Text>
       {!badge || isValidating || error ? (
         <DataBlock
           isLoading={isValidating}
@@ -30,7 +31,7 @@ const OtterspaceRequirement = (props: RequirementProps) => {
       ) : (
         badge.label
       )}
-      {" Otterspace badge"}
+      <Text as="span">{" Otterspace badge"}</Text>
     </Requirement>
   )
 }

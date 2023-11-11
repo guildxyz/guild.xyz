@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react"
+import { Link, Text } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
@@ -39,7 +39,7 @@ const NooxRequirement = (props: RequirementProps) => {
       isImageLoading={isLoading}
       {...props}
     >
-      {`Have the `}
+      <Text as="span">{`Have the `}</Text>
       {!badgeData || isLoading || isError ? (
         <DataBlock
           isLoading={isLoading}
@@ -59,7 +59,7 @@ const NooxRequirement = (props: RequirementProps) => {
         </Link>
       )}
 
-      {` Noox badge`}
+      <Text as="span">{` Noox badge`}</Text>
     </Requirement>
   )
 }

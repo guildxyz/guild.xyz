@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react"
+import { Icon, Text } from "@chakra-ui/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
@@ -40,17 +40,17 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_NAME":
             return (
               <>
-                {`Have "`}
+                <Text as="span">{`Have "`}</Text>
                 <DataBlockWithCopy text={requirement.data.id} />
-                {`" in your Twitter username`}
+                <Text as="span">{`" in your Twitter username`}</Text>
               </>
             )
           case "TWITTER_BIO":
             return (
               <>
-                {`Have "`}
+                <Text as="span">{`Have "`}</Text>
                 <DataBlockWithCopy text={requirement.data.id} />
-                {`" in your Twitter bio`}
+                <Text as="span">{`" in your Twitter bio`}</Text>
               </>
             )
           case "TWITTER_FOLLOWER_COUNT":
@@ -105,17 +105,16 @@ const TwitterRequirement = (props: RequirementProps) => {
             const formattedAccountAge = formatRelativeTimeFromNow(
               requirement.data.minAmount
             )
-
             return (
               <>
-                {`Have a Twitter account older than `}
+                <Text as="span">{`Have a Twitter account older than `}</Text>
                 <DataBlock>{formattedAccountAge}</DataBlock>
               </>
             )
           case "TWITTER_ACCOUNT_AGE":
             return (
               <>
-                {`Have a Twitter account since at least `}
+                <Text as="span">{`Have a Twitter account since at least `}</Text>
                 <DataBlockWithDate timestamp={requirement.data.minAmount} />
               </>
             )

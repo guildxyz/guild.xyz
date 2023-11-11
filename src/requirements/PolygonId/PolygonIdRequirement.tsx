@@ -8,6 +8,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   Portal,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -35,9 +36,9 @@ const PolygonIDRequirement = (props: RequirementProps) => {
           footer={<ConnectPolygonID />}
           {...props}
         >
-          {`Satisfy the `}
+          <Text as="span">{`Satisfy the `}</Text>
           <DataBlock>{requirement.data.query[0]?.query?.type}</DataBlock>
-          {` PolygonID `}
+          <Text as="span">{` PolygonID `}</Text>
           <PopoverTrigger>
             <Button
               variant="link"
