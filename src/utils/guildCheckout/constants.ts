@@ -225,16 +225,20 @@ export const GUILD_PIN_CONTRACTS = {
     address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
     abi: guildPinAbi,
   },
+  BASE_MAINNET: {
+    address: "0x326f14942f8899406e3224bd63e9f250d275a52e",
+    abi: guildPinAbi,
+  },
+  ZKSYNC_ERA: {
+    address: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
+    abi: guildPinAbi,
+  },
   BSC: {
     address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
     abi: guildPinAbi,
   },
   ARBITRUM: {
     address: "0x0e6a14106497a7de36fba446628860c062e9e302",
-    abi: guildPinAbi,
-  },
-  ZKSYNC_ERA: {
-    address: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
     abi: guildPinAbi,
   },
 } as const
@@ -250,4 +254,5 @@ export const openseaBaseUrl: Partial<Record<Chain, string>> = {
   ARBITRUM: "https://opensea.io/assets/arbitrum",
   OPTIMISM: "https://opensea.io/assets/optimism",
   AVALANCHE: "https://opensea.io/assets/avalanche",
+  BASE_MAINNET: "https://opensea.io/assets/base",
 }
