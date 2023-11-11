@@ -1,4 +1,4 @@
-import { useColorMode } from "@chakra-ui/react"
+import { useColorMode, useColorModeValue } from "@chakra-ui/react"
 import useFuel from "hooks/useFuel"
 import { useMemo } from "react"
 import { Connector, useAccount } from "wagmi"
@@ -19,9 +19,15 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   )
 
   const isOKXWallet = useMemo(
-    () => typeof window !== "undefined" && !!window?.okxwallet,
+    () => typeof window !== "undefined" && !!window.okxwallet,
     [window?.okxwallet]
   )
+
+  const isFueletWallet = useMemo(
+    () => typeof window !== "undefined" && !!window.fuelet,
+    [window?.fuelet]
+  )
+  const fueletLogo = useColorModeValue("fuelet-black.svg", "fuelet-white.svg")
 
   const connectorIcon =
     connector?.id === "injected"
@@ -39,7 +45,9 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
       : connector?.id === "coinbaseWallet"
       ? "coinbasewallet.png"
       : isFuelConnected
-      ? "fuel.svg"
+      ? isFueletWallet
+        ? fueletLogo
+        : "fuel.svg"
       : null
 
   return {

@@ -4,6 +4,8 @@ import type { WalletUnlocked } from "@fuel-ts/wallet"
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
 
+type FuelConnectorName = "Fuel Wallet" | "Fuelet Wallet"
+
 const fuelConnectedAtom = atom(false)
 const fuelConnectingAtom = atom(false)
 const fuelAddress = atom("" as `0x${string}`)
@@ -93,7 +95,9 @@ const useFuel = () => {
   // provider,
   // })
 
-  const connectorName = windowFuel ? window.fuel.connectorName : undefined
+  const connectorName: FuelConnectorName | undefined = windowFuel
+    ? window.fuel.connectorName
+    : undefined
 
   // TODO: event listeners
 
@@ -113,6 +117,7 @@ const useFuel = () => {
 declare global {
   interface Window {
     fuel: any
+    fuelet: any
   }
 }
 
