@@ -27,9 +27,10 @@ import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
+import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
-import FuelConnectorButton from "./components/FuelConnectorButton"
+import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
 import processConnectionError from "./utils/processConnectionError"
@@ -184,31 +185,38 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 Sign message to verify that you're the owner of this address.
               </Text>
             )}
-            <Stack spacing="0">
-              {connectors
-                .filter((conn) => isInSafeContext || conn.id !== "safe")
-                .map((conn) => (
-                  <CardMotionWrapper key={conn.id}>
-                    <ConnectorButton
-                      connector={conn}
-                      connect={connect}
-                      isLoading={isLoading}
-                      pendingConnector={pendingConnector}
-                      error={error}
-                    />
+
+            {isWeb3Connected ? (
+              <CardMotionWrapper>
+                <AccountButton />
+              </CardMotionWrapper>
+            ) : (
+              <Stack spacing="0">
+                {connectors
+                  .filter((conn) => isInSafeContext || conn.id !== "safe")
+                  .map((conn) => (
+                    <CardMotionWrapper key={conn.id}>
+                      <ConnectorButton
+                        connector={conn}
+                        connect={connect}
+                        isLoading={isLoading}
+                        pendingConnector={pendingConnector}
+                        error={error}
+                      />
+                    </CardMotionWrapper>
+                  ))}
+                {!isDelegateConnection && (
+                  <CardMotionWrapper>
+                    <DelegateCashButton />
                   </CardMotionWrapper>
-                ))}
-              {!isDelegateConnection && (
-                <CardMotionWrapper>
-                  <DelegateCashButton />
-                </CardMotionWrapper>
-              )}
-              {windowFuel && (
-                <CardMotionWrapper key="fuel">
-                  <FuelConnectorButton />
-                </CardMotionWrapper>
-              )}
-            </Stack>
+                )}
+                {windowFuel && (
+                  <CardMotionWrapper key="fuel">
+                    <FuelConnectorButtons />
+                  </CardMotionWrapper>
+                )}
+              </Stack>
+            )}
 
             {isConnectedAndKeyPairReady && !keyPair && (
               <>

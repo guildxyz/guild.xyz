@@ -5,7 +5,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useFuel from "hooks/useFuel"
 import shortenHex from "utils/shortenHex"
 
-const FuelConnectorButton = () => {
+const FuelConnectorButtons = () => {
   const { connect, isConnecting, isConnected, address } = useFuel()
   const { ready } = useKeyPair()
 
@@ -35,4 +35,4 @@ const FuelConnectorButton = () => {
   )
 }
 
-export default FuelConnectorButton
+export default FuelConnectorButtons
