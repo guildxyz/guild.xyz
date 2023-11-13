@@ -28,7 +28,10 @@ const CreateGuildIndex = (): JSX.Element => {
         </Text>
         <Checkbox
           isChecked={whitoutPlatform}
-          isDisabled={!!getValues("guildPlatforms").length}
+          isDisabled={
+            !!getValues("guildPlatforms").length ||
+            !!getValues("socialLinks.TWITTER")
+          }
           onChange={(e) => {
             if (getValues("guildPlatforms").length === 0) {
               setPlatform(null)
@@ -37,14 +40,18 @@ const CreateGuildIndex = (): JSX.Element => {
           }}
         >
           <Text fontWeight="medium" colorScheme="gray" opacity=".7">
-            continue without platform
+            add platform later
           </Text>
         </Checkbox>
       </HStack>
       <GuildCreationProgress
         next={nextStep}
         progress={0}
-        isDisabled={getValues("guildPlatforms").length === 0 && !whitoutPlatform}
+        isDisabled={
+          !getValues("socialLinks.TWITTER") &&
+          getValues("guildPlatforms").length === 0 &&
+          !whitoutPlatform
+        }
       />
       <CreateGuildPlatform />
     </ClientOnly>

@@ -114,6 +114,18 @@ const CreateGuildProvider = ({
         if (discordPlatfromIndex > -1)
           template.rolePlatforms = [{ guildPlatformIndex: discordPlatfromIndex }]
 
+        const joinDiscordServerRequirementIndex = template.requirements.findIndex(
+          (requriement) => requriement.type === "DISCORD_MEMBER_SINCE"
+        )
+
+        if (joinDiscordServerRequirementIndex > -1)
+          template.requirements[joinDiscordServerRequirementIndex].data.serverId =
+            methods
+              .getValues("guildPlatforms")
+              .find(
+                (guildPlatform) => guildPlatform.platformName === "DISCORD"
+              )?.platformGuildId
+
         return template
       })
       .filter((template) => {
@@ -123,7 +135,18 @@ const CreateGuildProvider = ({
         const hasTwitter = methods.getValues("socialLinks.TWITTER")
         const twitterIsRequired = twitterRequirementIndex > -1
 
-        return !(twitterIsRequired && !hasTwitter)
+        const discordRequirementIndex = template.requirements.findIndex(
+          (requriement) => requriement.type === "DISCORD_MEMBER_SINCE"
+        )
+        const hasDiscord = methods
+          .getValues("guildPlatforms")
+          .find((guildPlatform) => guildPlatform.platformName === "DISCORD")
+        const discordIsRequired = discordRequirementIndex > -1
+
+        return !(
+          (twitterIsRequired && !hasTwitter) ||
+          (discordIsRequired && !hasDiscord)
+        )
       })
   }
 

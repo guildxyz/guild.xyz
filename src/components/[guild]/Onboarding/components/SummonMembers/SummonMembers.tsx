@@ -38,7 +38,7 @@ const SummonMembers = ({ activeStep }: Props) => {
   const discordPlatform = guildPlatforms?.find(
     (p) => p.platformId === PlatformType.DISCORD
   )
-  const hasJoinButton = discordPlatform?.platformGuildData?.joinButton !== false
+  const hasJoinButton = !!discordPlatform?.platformGuildData?.joinButton
 
   const { onSubmit, isLoading, response } = useEditGuild()
   const handleFinish = () => {

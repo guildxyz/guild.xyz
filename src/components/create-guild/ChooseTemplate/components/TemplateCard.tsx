@@ -190,7 +190,7 @@ const TemplateCard = ({
                           isDisabled
                             ? `${
                                 platforms[platform.platformName].name
-                              } rewards can only be added to a single role`
+                              } rewards can only be added to one role`
                             : ""
                         }
                         key={i}
@@ -280,9 +280,14 @@ const TemplateCard = ({
                 <Fragment key={i}>
                   <RequirementDisplayComponent
                     requirement={requirement as Requirement}
+                    {...(["EMAIL_VERIFIED", "TWITTER_FOLLOWER_COUNT"].includes(
+                      requirement.type
+                    )
+                      ? { footer: null }
+                      : undefined)}
                   />
                   {i < role.requirements.length - 1 && (
-                    <LogicDivider logic="AND" py={1} />
+                    <LogicDivider logic={role.logic} py={1} />
                   )}
                 </Fragment>
               ))}
