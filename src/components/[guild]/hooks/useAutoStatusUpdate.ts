@@ -1,14 +1,14 @@
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
-import { useAccount } from "wagmi"
 import useAccess from "./useAccess"
 import useGuild from "./useGuild"
 
 const useAutoStatusUpdate = () => {
-  const { isConnected, address } = useAccount()
+  const { isWeb3Connected, address } = useWeb3ConnectionManager()
   const { id } = useGuild()
   const { keyPair } = useKeyPair()
 
@@ -24,7 +24,7 @@ const useAutoStatusUpdate = () => {
   useEffect(() => {
     if (
       !keyPair ||
-      !isConnected ||
+      !isWeb3Connected ||
       !Array.isArray(accesses) ||
       !Array.isArray(roleMemberships) ||
       !accesses?.length ||
