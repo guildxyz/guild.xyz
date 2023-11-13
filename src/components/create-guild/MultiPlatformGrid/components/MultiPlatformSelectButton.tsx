@@ -11,6 +11,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
+import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import Image from "next/image"
 import { CheckCircle, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
@@ -53,6 +54,7 @@ const MultiPlatformSelectButton = ({
 }: Props) => {
   const { address } = useAccount()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { removePlatform } = useCreateGuildContext()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
@@ -101,7 +103,9 @@ const MultiPlatformSelectButton = ({
         !address
           ? openWalletSelectorModal
           : isPlatformConnected
-          ? () => onSelection(platform)
+          ? isDone()
+            ? () => removePlatform(platform)
+            : () => onSelection(platform)
           : onConnect
       }
       h="auto"

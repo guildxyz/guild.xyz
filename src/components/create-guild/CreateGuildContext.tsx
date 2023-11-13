@@ -33,6 +33,7 @@ const CreateGuildContext = createContext<{
   platform?: PlatformName
   setActiveStep: (index: number) => void
   setPlatform: Dispatch<SetStateAction<PlatformName>>
+  removePlatform: (platformName) => void
   getTemplate: () => Array<RoleFormType>
   toggleReward: (roleTemplateName: string, guildPlatformIndex: number) => void
   stepPart: number
@@ -93,6 +94,19 @@ const CreateGuildProvider = ({
     name: "roles",
     control: methods.control,
   })
+
+  const removePlatform = (platformName: PlatformName) => {
+    const guildPlatforms = JSON.parse(
+      JSON.stringify(methods.getValues("guildPlatforms"))
+    )
+
+    methods.setValue(
+      "guildPlatforms",
+      guildPlatforms.filter(
+        (guildPlatform) => guildPlatform.platformName !== platformName
+      )
+    )
+  }
 
   const buildTemplate = () => {
     const templatesCopy: Array<RoleFormType> = JSON.parse(JSON.stringify(TEMPLATES))
@@ -243,6 +257,7 @@ const CreateGuildProvider = ({
         activeStep,
         platform,
         setPlatform,
+        removePlatform,
         setTemplate: toggleTemplate,
         getTemplate: buildTemplate,
         setActiveStep: (step) => {
