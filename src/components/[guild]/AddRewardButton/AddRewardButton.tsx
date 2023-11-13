@@ -125,6 +125,7 @@ const AddRewardButton = (): JSX.Element => {
           .map((roleId) => ({
             // We'll be able to send additional params here, like capacity & time
             roleId: +roleId,
+            ...data.rolePlatforms[0],
             visibility:
               saveAs === "DRAFT"
                 ? Visibility.HIDDEN
