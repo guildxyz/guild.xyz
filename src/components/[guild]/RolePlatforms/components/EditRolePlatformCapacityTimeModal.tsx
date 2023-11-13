@@ -75,7 +75,6 @@ const EditRolePlatformCapacityTimeModal = ({
   } = useController({
     control,
     name: "capacity",
-    defaultValue: 1,
     rules: {
       min: {
         value: 1,
