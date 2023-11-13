@@ -1,12 +1,12 @@
-import { Icon, Img } from "@chakra-ui/react"
-import Link from "components/common/Link"
-import { useSimpleGuild } from "components/[guild]/hooks/useGuild"
-import useRole from "components/[guild]/hooks/useRole"
+import { Icon, Img, Text } from "@chakra-ui/react"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { useSimpleGuild } from "components/[guild]/hooks/useGuild"
+import useRole from "components/[guild]/hooks/useRole"
+import Link from "components/common/Link"
 import { Detective } from "phosphor-react"
 import pluralize from "utils/pluralize"
 
@@ -48,7 +48,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
         "The required guild role is invisible"
       ) : (
         <>
-          {"Have the "}
+          <Text as="span">{"Have the "}</Text>
           <Link
             href={`/${urlName ?? requirement.data.guildId}#role-${roleId}`}
             colorScheme="blue"
@@ -68,7 +68,7 @@ const UserSince = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
-      {"Be a Guild.xyz user since at least "}
+      <Text as="span">{"Be a Guild.xyz user since at least "}</Text>
       <DataBlockWithDate timestamp={requirement.data.creationDate} />
     </Requirement>
   )
