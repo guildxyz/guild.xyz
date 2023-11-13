@@ -28,6 +28,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "CRONOS",
   "PGN",
   "NEON_EVM",
+  "OPTIMISM",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do

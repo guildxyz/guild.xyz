@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/react"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Wallet } from "phosphor-react"
 
 const ConnectWalletButton = () => {

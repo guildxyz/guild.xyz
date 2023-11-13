@@ -6,6 +6,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   useContext,
+  useEffect,
   useState,
 } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -59,7 +60,7 @@ const MintGuildPinProviderComponent = ({
 }: PropsWithChildren<unknown>): JSX.Element => {
   const guildCheckoutContext = useGuildCheckoutContext()
 
-  const { id, imageUrl } = useGuild()
+  const { id, imageUrl, featureFlags } = useGuild()
   const isInvalidImage = !imageUrl || imageUrl?.startsWith("/guildLogos")
 
   // TODO: allow the guild owners and admins to mint the other 2 pin types too
@@ -75,7 +76,24 @@ const MintGuildPinProviderComponent = ({
     data &&
     (data.width < MIN_IMAGE_WH || data.height < MIN_IMAGE_WH)
 
-  const shouldFetchImage = id && typeof pinType === "number"
+  const {
+    isOpen: isActivateModalOpen,
+    onOpen: onActivateModalOpen,
+    onClose: onActivateModalClose,
+  } = useDisclosure()
+
+  const [isPinVisible, setIsPinVisible] = useState(false)
+  useEffect(() => {
+    if (isPinVisible || (!isActivateModalOpen && !guildCheckoutContext.isOpen))
+      return
+    setIsPinVisible(true)
+  }, [isPinVisible, isActivateModalOpen, guildCheckoutContext.isOpen])
+
+  const shouldFetchImage =
+    featureFlags.includes("GUILD_CREDENTIAL") &&
+    id &&
+    typeof pinType === "number" &&
+    isPinVisible
   const {
     data: pinImage,
     isValidating: isImageValidating,
@@ -85,12 +103,6 @@ const MintGuildPinProviderComponent = ({
   )
 
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
-
-  const {
-    isOpen: isActivateModalOpen,
-    onOpen: onActivateModalOpen,
-    onClose: onActivateModalClose,
-  } = useDisclosure()
 
   return (
     <MintGuildPinContext.Provider

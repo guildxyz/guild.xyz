@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react"
+import { Icon, Text } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -41,11 +41,11 @@ const DiscordRequirement = (props: RequirementProps) => {
 
             return (
               <>
-                {`Have the `}
+                <Text as="span">{`Have the `}</Text>
                 <DataBlock>{role?.name || requirement.data?.roleName}</DataBlock>
-                {` role in the `}
+                <Text as="span">{` role in the `}</Text>
                 <DataBlock>{serverName || requirement.data?.serverName}</DataBlock>
-                {` server`}
+                <Text as="span">{` server`}</Text>
               </>
             )
 
@@ -53,14 +53,14 @@ const DiscordRequirement = (props: RequirementProps) => {
           case "DISCORD_JOIN":
             return requirement.type === "DISCORD_MEMBER_SINCE" ? (
               <>
-                {`Be member of the `}
+                <Text as="span">{`Be member of the `}</Text>
                 <DataBlock>{serverName || requirement.data?.serverName}</DataBlock>
-                {` server since at least `}
+                <Text as="span">{` server since at least `}</Text>
                 <DataBlockWithDate timestamp={requirement.data?.memberSince} />
               </>
             ) : (
               <>
-                {`Be a Discord user since at least `}
+                <Text as="span">{`Be a Discord user since at least `}</Text>
                 <DataBlockWithDate timestamp={requirement.data?.memberSince} />
               </>
             )
@@ -72,7 +72,7 @@ const DiscordRequirement = (props: RequirementProps) => {
 
             return (
               <>
-                {`Have a Discord account older than `}
+                <Text as="span">{`Have a Discord account older than `}</Text>
                 <DataBlock>{formattedMemberSince}</DataBlock>
               </>
             )
