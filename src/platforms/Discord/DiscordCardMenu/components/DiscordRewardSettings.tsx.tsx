@@ -10,14 +10,17 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Controller, FormProvider, useForm } from "react-hook-form"
+import { GuildPlatform, PlatformGuildData } from "types"
 import fetcher from "utils/fetcher"
+
+type DCPlatformGuildData = PlatformGuildData["DISCORD"]
 
 const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
   const { id, guildPlatforms, mutateGuild } = useGuild()
@@ -34,14 +37,30 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
       ...signedValidation,
     })
 
-  const { onSubmit, isLoading } = useSubmitWithSign(submit, {
-    onSuccess: () => {
+  const { onSubmit, isLoading } = useSubmitWithSign<GuildPlatform>(submit, {
+    onSuccess: (response) => {
       toast({
         status: "success",
         title: "Successfully updated invite link",
       })
       methods.reset(undefined, { keepValues: true })
-      mutateGuild()
+      mutateGuild(
+        (prev) => ({
+          ...prev,
+          guildPlatforms: prev.guildPlatforms.map((gp) => {
+            if (gp.id !== response.id) return gp
+
+            return {
+              ...gp,
+              platformGuildData: {
+                ...gp.platformGuildData,
+                invite: (response.platformGuildData as DCPlatformGuildData).invite,
+              } as DCPlatformGuildData,
+            }
+          }),
+        }),
+        { revalidate: false }
+      )
       onClose()
     },
     onError: (err) => showErrorToast(err),

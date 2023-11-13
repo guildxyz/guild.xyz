@@ -142,8 +142,6 @@ const useJoin = (
         ],
         { revalidate: false }
       )
-      // show user in guild's members
-      guild.mutateGuild()
     }, 800)
 
     if (shouldShowSuccessToast) {
