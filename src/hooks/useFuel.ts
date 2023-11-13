@@ -56,7 +56,7 @@ const useFuel = () => {
       windowFuel.off("currentAccount", onAccountChange)
       windowFuel.off("connection", onConnectionChange)
     }
-  }, [windowFuel])
+  }, [])
 
   const _setupState = async () => {
     const [account] = await windowFuel.accounts()
