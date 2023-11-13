@@ -40,22 +40,11 @@ type Props = {
 
 const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT"]
 
-const DAY_IN_MS = 1000 * 60 * 60 * 24
-
-const normalizeDate = (isoDate: string): string | undefined => {
-  if (!isoDate) return null
-
-  try {
-    return new Date(isoDate.split("T")[0]).toISOString()
-  } catch {
-    return null
-  }
-}
+export const DAY_IN_MS = 1000 * 60 * 60 * 24
 
 const getShortDate = (isoDate: string): string | undefined => {
   if (!isoDate) return undefined
-
-  return isoDate.split("T")[0]
+  return isoDate.split(/:\d{2}\.\d{3}Z/)[0]
 }
 
 const EditRolePlatformCapacityTimeModal = ({
@@ -99,7 +88,7 @@ const EditRolePlatformCapacityTimeModal = ({
   const endTimeValue = useWatch({ control, name: "endTime" })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark" size="xl">
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark" size="2xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Limit reward availibility</ModalHeader>
@@ -179,9 +168,14 @@ const EditRolePlatformCapacityTimeModal = ({
                   w="calc(100% - 2px)"
                 >
                   <FormControl>
-                    <FormLabel>From</FormLabel>
+                    <FormLabel>
+                      From{" "}
+                      <Text as="span" colorScheme="gray">
+                        (UTC)
+                      </Text>
+                    </FormLabel>
                     <Input
-                      type="date"
+                      type="datetime-local"
                       {...register("startTime")}
                       max={
                         endTimeValue
@@ -196,9 +190,14 @@ const EditRolePlatformCapacityTimeModal = ({
                   </FormControl>
 
                   <FormControl>
-                    <FormLabel>Available until</FormLabel>
+                    <FormLabel>
+                      Available until{" "}
+                      <Text as="span" colorScheme="gray">
+                        (UTC)
+                      </Text>
+                    </FormLabel>
                     <Input
-                      type="date"
+                      type="datetime-local"
                       {...register("endTime")}
                       min={
                         startTimeValue &&
@@ -224,8 +223,8 @@ const EditRolePlatformCapacityTimeModal = ({
               onClick={handleSubmit(({ capacity, startTime, endTime }) => {
                 onDone({
                   capacity,
-                  startTime: normalizeDate(startTime),
-                  endTime: normalizeDate(endTime),
+                  startTime: startTime,
+                  endTime: endTime,
                 })
               })}
               isLoading={isLoading}
