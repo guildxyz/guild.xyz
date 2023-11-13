@@ -79,6 +79,8 @@ const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) 
         year: "numeric",
         month: "long",
         day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
       })}
       placement="top"
       hasArrow
@@ -102,6 +104,8 @@ const EndTimeTag = ({ endTime, ...rest }: { endTime: string } & TagProps) => {
         year: "numeric",
         month: "long",
         day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
       })}
       placement="top"
       hasArrow
