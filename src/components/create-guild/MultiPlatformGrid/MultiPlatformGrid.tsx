@@ -36,7 +36,6 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
             key={platform}
             platform={platform}
             title={platforms[platform].name}
-            //TODO get discord server name
             description={
               guildPlatforms.find(
                 (guildPlatform) => guildPlatform.platformName === platform

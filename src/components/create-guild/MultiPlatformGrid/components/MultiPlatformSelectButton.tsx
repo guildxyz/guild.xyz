@@ -16,8 +16,8 @@ import Image from "next/image"
 import { CheckCircle, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes } from "react"
-import { useWatch } from "react-hook-form"
-import { PlatformName, Rest } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
+import { GuildFormType, PlatformName, Rest } from "types"
 import { useAccount } from "wagmi"
 
 export type PlatformHookType = ({
@@ -55,6 +55,7 @@ const MultiPlatformSelectButton = ({
   const { address } = useAccount()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
   const { removePlatform } = useCreateGuildContext()
+  const { setValue } = useFormContext<GuildFormType>()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
@@ -104,7 +105,13 @@ const MultiPlatformSelectButton = ({
           ? openWalletSelectorModal
           : isPlatformConnected
           ? isDone()
-            ? () => removePlatform(platform)
+            ? () => {
+                if (isTwitter) {
+                  setValue("socialLinks.TWITTER", "")
+                } else {
+                  removePlatform(platform)
+                }
+              }
             : () => onSelection(platform)
           : onConnect
       }
