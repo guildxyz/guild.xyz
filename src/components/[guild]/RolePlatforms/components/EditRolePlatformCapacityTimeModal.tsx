@@ -222,8 +222,8 @@ const EditRolePlatformCapacityTimeModal = ({
               onClick={handleSubmit(({ capacity, startTime, endTime }) => {
                 onDone({
                   capacity,
-                  startTime: startTime,
-                  endTime: endTime,
+                  startTime: startTime || undefined,
+                  endTime: endTime || undefined,
                 })
               })}
               isLoading={isLoading}
