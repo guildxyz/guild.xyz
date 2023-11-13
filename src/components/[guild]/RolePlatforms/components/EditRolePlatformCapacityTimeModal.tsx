@@ -47,6 +47,16 @@ const getShortDate = (isoDate: string): string | undefined => {
   return isoDate.split(/:\d{2}\.\d{3}Z/)[0]
 }
 
+const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => {
+  if (!datetimeLocal) return undefined
+
+  try {
+    return new Date(datetimeLocal).toISOString()
+  } catch {
+    return undefined
+  }
+}
+
 const EditRolePlatformCapacityTimeModal = ({
   isOpen,
   onClose,
@@ -222,8 +232,8 @@ const EditRolePlatformCapacityTimeModal = ({
               onClick={handleSubmit(({ capacity, startTime, endTime }) => {
                 onDone({
                   capacity,
-                  startTime: startTime || undefined,
-                  endTime: endTime || undefined,
+                  startTime: datetimeLocalToIsoString(startTime),
+                  endTime: datetimeLocalToIsoString(endTime),
                 })
               })}
               isLoading={isLoading}
