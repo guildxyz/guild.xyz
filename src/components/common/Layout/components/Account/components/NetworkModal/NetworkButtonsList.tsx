@@ -1,6 +1,6 @@
 import { SimpleGrid } from "@chakra-ui/react"
 import { Chains, supportedChains } from "chains"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import NetworkButton from "./NetworkButton"
 
 type Props = {
