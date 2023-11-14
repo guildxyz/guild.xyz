@@ -82,6 +82,7 @@ const CreateGuildPage = (): JSX.Element => {
           )
         }
         imageUrl={imageUrl}
+        showFooter={false}
       >
         <Card
           pos="relative"
@@ -182,7 +183,12 @@ const CreateGuildPage = (): JSX.Element => {
             </Text>
           )}
         </Card>
-        <Stack w="full" spacing={{ base: 4, md: 4 }} pt="6">
+        <Stack
+          w="full"
+          spacing={{ base: 4, md: 4 }}
+          pt={steps[activeStep].content ? 6 : 0}
+          pb="24"
+        >
           {steps[activeStep].content}
         </Stack>
         <GuildCreationProgress

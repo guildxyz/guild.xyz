@@ -1,4 +1,4 @@
-import { useSteps } from "@chakra-ui/react"
+import { Text, useSteps } from "@chakra-ui/react"
 import {
   Dispatch,
   PropsWithChildren,
@@ -19,7 +19,7 @@ type Step = {
   title: string
   label?: string[] | JSX.Element[]
   description?: string[]
-  content: JSX.Element
+  content?: JSX.Element
   progress?: number[]
 }
 
@@ -55,7 +55,6 @@ const STEPS: Step[] = [
   {
     title: "Customize guild",
     label: [<BasicInfo key={0} />],
-    content: <></>,
     progress: [25],
   },
   {
@@ -70,11 +69,9 @@ const STEPS: Step[] = [
   },
   {
     title: "Edit roles",
-    content: <></>,
   },
   {
     title: "Finish",
-    content: <></>,
   },
 ]
 

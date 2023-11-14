@@ -21,21 +21,20 @@ const GuildCreationProgress = ({
   return (
     <Box
       position={"fixed"}
-      bottom={{ base: 0, md: 3 }}
+      bottom={0}
       left={0}
       w={"full"}
       zIndex={1201} // above intercom floating button
     >
       <Container maxW={"container.lg"} px={{ base: 0, md: 8, lg: 10 }}>
         <Card
-          w={{ md: "365px" }}
-          ml={"auto"}
-          borderRadius={{ base: 0, md: "2xl" }}
-          shadow={{ base: "dark-lg", md: "2xl" }}
-          transition="0.2s ease"
+          borderRadius={0}
+          borderTopRadius={{ md: "2xl" }}
+          borderWidth={{ base: "1px 0 0 0", md: "1px 1px 0 1px" }}
+          shadow={"rgba(0, 0, 0, 0.1) 0px 5px 10px,rgba(0, 0, 0, 0.2) 0px 15px 40px"}
         >
-          <HStack justify={"space-between"} p={2} py={{ base: 3, md: 2 }}>
-            <HStack gap={4} pl={3} pr={3}>
+          <HStack justify={"space-between"} py={3} px={{ base: 2, md: 3 }}>
+            <HStack gap={4} px={3}>
               <GuildLottieProgress progress={progress} />
               <Text colorScheme="gray" fontWeight={"semibold"} fontSize={"sm"}>
                 Guild {progressText} completed
