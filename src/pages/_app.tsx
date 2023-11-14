@@ -1,6 +1,7 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
+import FuelSetup from "components/_app/FuelSetup"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { KeyPairProvider } from "components/_app/KeyPairProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
@@ -99,6 +100,7 @@ const App = ({
                 </KeyPairProvider>
               </PostHogProvider>
             </WagmiConfig>
+            <FuelSetup />
           </SWRConfig>
         </IconContext.Provider>
       </Chakra>

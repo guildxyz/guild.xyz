@@ -1,23 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Provider } from "@fuel-ts/providers"
-import type { WalletUnlocked } from "@fuel-ts/wallet"
-import { atom, useAtom } from "jotai"
-import { useEffect } from "react"
+import {
+  fuelAddressAtom,
+  fuelConnectedAtom,
+  fuelConnectingAtom,
+  fuelProviderAtom,
+  fuelWalletAtom,
+} from "components/_app/FuelSetup"
+import { useAtom } from "jotai"
 
 type FuelConnectorName = "Fuel Wallet" | "Fuelet Wallet"
-
-const fuelConnectedAtom = atom(false)
-const fuelConnectingAtom = atom(false)
-const fuelAddress = atom("" as `0x${string}`)
-const fuelWallet = atom(null as WalletUnlocked)
-const fuelProvider = atom(null as Provider)
 
 const useFuel = () => {
   const [isConnected, setIsConnected] = useAtom(fuelConnectedAtom)
   const [isConnecting, setIsConnecting] = useAtom(fuelConnectingAtom)
-  const [address, setAddress] = useAtom(fuelAddress)
-  const [wallet, setWallet] = useAtom(fuelWallet)
-  const [provider, setProvider] = useAtom(fuelProvider)
+  const [address, setAddress] = useAtom(fuelAddressAtom)
+  const [wallet, setWallet] = useAtom(fuelWalletAtom)
+  const [provider, setProvider] = useAtom(fuelProviderAtom)
 
   const onAccountChange = async (_newAccount: string) => {
     const Fuel = await import("fuels")
@@ -31,40 +29,14 @@ const useFuel = () => {
     setProvider(_provider)
   }
 
-  const onConnectionChange = (_isConnected: boolean) => {
-    setIsConnected(_isConnected)
-
-    if (!_isConnected) {
-      setAddress(null)
-      setWallet(null)
-      setProvider(null)
-    }
-  }
-
   const windowFuel = typeof window !== "undefined" && window.fuel
-
-  useEffect(() => {
-    if (!windowFuel) return
-    setTimeout(() => {
-      _checkConnection()
-    }, 200)
-
-    windowFuel.on("currentAccount", onAccountChange)
-    windowFuel.on("connection", onConnectionChange)
-
-    return () => {
-      windowFuel.off("currentAccount", onAccountChange)
-      windowFuel.off("connection", onConnectionChange)
-    }
-  }, [])
 
   const _setupState = async () => {
     const [account] = await windowFuel.accounts()
 
     if (!account) return
 
-    onAccountChange(account)
-
+    await onAccountChange(account)
     setIsConnected(true)
   }
 
@@ -74,7 +46,7 @@ const useFuel = () => {
     try {
       setIsConnecting(true)
       await windowFuel.connect()
-      _setupState()
+      await _setupState()
     } catch (error) {
       console.error("[FUEL]: connectError: ", error)
     } finally {
@@ -82,7 +54,7 @@ const useFuel = () => {
     }
   }
 
-  const _checkConnection = async () => {
+  const checkConnection = async () => {
     if (!windowFuel) return
 
     const _isConnected = await windowFuel.isConnected()
@@ -112,7 +84,9 @@ const useFuel = () => {
     windowFuel,
     isConnecting,
     isConnected,
+    onAccountChange,
     connect,
+    checkConnection,
     disconnect,
     connectorName,
     address,
