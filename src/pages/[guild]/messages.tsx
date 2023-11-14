@@ -3,10 +3,9 @@ import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import NoMessages from "components/[guild]/messages/NoMessages"
-import Button from "components/common/Button"
+import SendNewMessage from "components/[guild]/messages/SendNewMessage"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import { Chat } from "phosphor-react"
 
 const Messages = () => {
   const { name, imageUrl } = useGuild()
@@ -31,11 +30,7 @@ const Messages = () => {
     >
       <GuildTabs
         activeTab="MESSAGES"
-        rightElement={
-          <Button size="sm" variant="ghost" leftIcon={<Chat />}>
-            New message
-          </Button>
-        }
+        rightElement={<SendNewMessage size="sm" variant="ghost" />}
       />
 
       <NoPermissionToPageFallback>

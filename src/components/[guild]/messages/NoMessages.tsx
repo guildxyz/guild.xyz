@@ -1,8 +1,8 @@
 import { HStack, Icon, Img, Stack, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "components/common/Link"
-import { ArrowSquareOut, Chat } from "phosphor-react"
+import { ArrowSquareOut } from "phosphor-react"
+import SendNewMessage from "./SendNewMessage"
 
 const NoMessages = () => (
   <Card p="6">
@@ -30,9 +30,8 @@ const NoMessages = () => (
           </Text>
         </Stack>
       </HStack>
-      <Button leftIcon={<Chat />} colorScheme="indigo" minW="max-content" h={10}>
-        New message
-      </Button>
+
+      <SendNewMessage colorScheme="indigo" minW="max-content" h={10} />
     </Stack>
   </Card>
 )
