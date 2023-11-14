@@ -158,9 +158,9 @@ const Onboarding = (): JSX.Element => {
                   top: "unset !important",
                   left: "unset !important",
                   marginLeft: 4,
-                  minHeight: { base: isMobile && !isOpen ? 0 : 4, md: "2px" },
+                  minHeight: { base: !isOpen ? 0 : 4, md: "2px" },
                   height: {
-                    base: isMobile && !isOpen ? 0 : "4 !important",
+                    base: !isOpen ? 0 : "4 !important",
                     md: "2px !important",
                   },
                   transition: ".2s ease",
