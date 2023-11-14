@@ -1,3 +1,4 @@
+import type { WalletUnlocked } from "@fuel-ts/wallet"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useFuel from "hooks/useFuel"
@@ -250,8 +251,7 @@ export type SignProps = SignBaseProps & {
   chainId: string
 }
 
-// We use any here, because when we imported the types from fuels, our bundle size increased by 150kB...
-export type FuelSignProps = SignBaseProps & { wallet: any }
+export type FuelSignProps = SignBaseProps & { wallet: WalletUnlocked }
 
 export const fuelSign = async ({
   wallet,
