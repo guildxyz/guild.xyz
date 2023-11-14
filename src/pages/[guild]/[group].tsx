@@ -236,7 +236,7 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
       <Center h="100vh" w="screen">
         <Spinner />
         <Heading fontFamily={"display"} size="md" ml="4" mb="1">
-          Loading campaign...
+          Loading page...
         </Heading>
       </Center>
     )

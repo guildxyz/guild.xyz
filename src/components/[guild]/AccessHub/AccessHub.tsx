@@ -177,7 +177,7 @@ const AccessHub = (): JSX.Element => {
                   <AlertDescription>
                     {!group
                       ? "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"
-                      : "This campaign doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
+                      : "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
                   </AlertDescription>
                 </Stack>
               </Alert>
