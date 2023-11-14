@@ -1,7 +1,9 @@
+import { Stack } from "@chakra-ui/react"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Message from "components/[guild]/messages/Message"
 import NoMessages from "components/[guild]/messages/NoMessages"
 import SendNewMessage from "components/[guild]/messages/SendNewMessage"
 import GuildLogo from "components/common/GuildLogo"
@@ -34,7 +36,10 @@ const Messages = () => {
       />
 
       <NoPermissionToPageFallback>
-        <NoMessages />
+        <Stack>
+          <NoMessages />
+          <Message />
+        </Stack>
       </NoPermissionToPageFallback>
     </Layout>
   )

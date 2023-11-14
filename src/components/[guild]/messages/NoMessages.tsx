@@ -5,12 +5,12 @@ import { ArrowSquareOut } from "phosphor-react"
 import SendNewMessage from "./SendNewMessage"
 
 const NoMessages = () => (
-  <Card p="6">
+  <Card p={6}>
     <Stack
       direction={{ base: "column", md: "row" }}
       justifyContent="space-between"
       alignItems={{ base: "start", md: "center" }}
-      spacing="6"
+      spacing={6}
     >
       <HStack spacing={4} alignItems={{ base: "start", md: "center" }}>
         <Img src="/img/message.svg" boxSize="2em" />
