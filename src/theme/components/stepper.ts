@@ -24,11 +24,13 @@ const baseStyle = {
     flex: "unset",
   },
   title: {
+    "&[data-status=active]": {
+      fontWeight: "semibold",
+    },
     "&[data-status=incomplete]": {
-      fontWeight: "normal",
-      color: "gray.600",
+      color: "gray",
       _dark: {
-        color: "gray.300",
+        color: "whiteAlpha.600",
       },
     },
   },

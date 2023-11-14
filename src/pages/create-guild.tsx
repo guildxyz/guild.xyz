@@ -77,7 +77,7 @@ const CreateGuildPage = (): JSX.Element => {
               imageUrl={imageUrl}
               size={{ base: "56px", lg: "72px" }}
               mt={{ base: 1, lg: 2 }}
-              bgColor={"primary.800"}
+              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
             />
           )
         }

@@ -81,6 +81,7 @@ const TemplateCard = ({
 
   return (
     <Box
+      shadow={part === 0 ? "sm" : "md"}
       tabIndex={0}
       onClick={() => onClick(name)}
       onKeyDown={(e: KeyboardEvent) => {
@@ -89,7 +90,7 @@ const TemplateCard = ({
         onClick(name)
       }}
       position="relative"
-      mb={2}
+      mb={3}
       borderRadius="2xl"
       overflow="hidden"
       _before={{
@@ -99,17 +100,11 @@ const TemplateCard = ({
         bottom: 0,
         left: 0,
         right: 0,
-        bg: "primary.300",
+        bg: "gray.300",
         opacity: 0,
         transition: "opacity 0.2s",
       }}
       _hover={{
-        _before: {
-          opacity: part === 0 ? 0.1 : 0,
-        },
-      }}
-      _focus={{
-        outline: "none",
         _before: {
           opacity: part === 0 ? 0.1 : 0,
         },
@@ -159,11 +154,10 @@ const TemplateCard = ({
               <Box pl={5}>{description}</Box>
             </Collapse>
 
-            <Collapse in={part === 1}>
+            <Collapse in={part === 1} style={{ marginTop: "auto" }}>
               <Box
                 p={5}
                 pt={2}
-                mt="auto"
                 borderWidth={2}
                 borderColor="primary.500"
                 borderRadius={6}
@@ -186,6 +180,7 @@ const TemplateCard = ({
 
                     return (
                       <Tooltip
+                        key={i}
                         label={
                           isDisabled
                             ? `${
@@ -193,7 +188,7 @@ const TemplateCard = ({
                               } rewards can only be added to one role`
                             : ""
                         }
-                        key={i}
+                        hasArrow
                       >
                         <HStack
                           gap={3}
@@ -295,20 +290,20 @@ const TemplateCard = ({
           </Flex>
         </SimpleGrid>
       </Card>
-      <Flex
-        position="absolute"
-        inset={0}
-        justifyContent="end"
-        p={5}
-        borderWidth={2}
-        borderStyle={selected ? "solid" : "dashed"}
-        borderColor={selected && part === 0 && "green.500"}
-        borderRadius="2xl"
-        pointerEvents="none"
-        transition="border 0.16s ease"
-      >
-        {part === 0 ? (
-          selected ? (
+      {part === 0 && (
+        <Flex
+          position="absolute"
+          inset={0}
+          justifyContent="end"
+          p={5}
+          borderWidth={2}
+          borderStyle={selected ? "solid" : "dashed"}
+          borderColor={selected && part === 0 && "green.500"}
+          borderRadius="2xl"
+          pointerEvents="none"
+          transition="border 0.16s ease"
+        >
+          {selected ? (
             <Circle
               bgColor="green.500"
               color="white"
@@ -325,9 +320,9 @@ const TemplateCard = ({
               borderWidth={2}
               size={6}
             />
-          )
-        ) : null}
-      </Flex>
+          )}
+        </Flex>
+      )}
     </Box>
   )
 }

@@ -42,7 +42,7 @@ const CreateGuildDiscord = (): JSX.Element => {
 
   return (
     <>
-      <ModalHeader>Connect to Discord</ModalHeader>
+      <ModalHeader>Add Discord</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
         <Text colorScheme="gray" fontWeight="semibold" mb={4}>
