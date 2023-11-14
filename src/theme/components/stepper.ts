@@ -11,6 +11,8 @@ const baseStyle = {
     "&[data-status=complete]": {
       background: "primary",
       color: "white",
+      borderColor: "transparent",
+      borderWidth: "2px",
     },
   },
   separator: {
