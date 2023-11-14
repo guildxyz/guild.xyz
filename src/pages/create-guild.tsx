@@ -118,7 +118,10 @@ const CreateGuildPage = (): JSX.Element => {
                   onClick={() => {
                     if (activeStep > index) setActiveStep(index)
                   }}
-                  {...{ cursor: activeStep >= index ? "pointer" : "not-allowed" }}
+                  {...{
+                    cursor: activeStep >= index ? "pointer" : "not-allowed",
+                    alignItems: "center",
+                  }}
                 >
                   <StepIndicator
                     {...{
