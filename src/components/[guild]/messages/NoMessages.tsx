@@ -1,7 +1,8 @@
-import { HStack, Img, Stack, Text } from "@chakra-ui/react"
+import { HStack, Icon, Img, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import { Chat } from "phosphor-react"
+import Link from "components/common/Link"
+import { ArrowSquareOut, Chat } from "phosphor-react"
 
 const NoMessages = () => (
   <Card p="6">
@@ -19,8 +20,13 @@ const NoMessages = () => (
             No messages yet
           </Text>
           <Text>
-            You can send broadcast messages to the wallets of members with XMTP.
-            Learn more
+            You can send broadcast messages to the wallets of members with XMTP.{" "}
+            <Text as="span" colorScheme="gray">
+              <Link href="https://xmtp.org" isExternal>
+                Learn more
+                <Icon as={ArrowSquareOut} ml={1} />
+              </Link>
+            </Text>
           </Text>
         </Stack>
       </HStack>
