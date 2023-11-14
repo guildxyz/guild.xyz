@@ -116,6 +116,8 @@ const MultiPlatformSelectButton = ({
           : onConnect
       }
       h="auto"
+      py={6}
+      px={5}
       {...rest}
       data-test={`${platform}-select-button${
         isPlatformConnected ? "-connected" : ""
@@ -143,7 +145,7 @@ const MultiPlatformSelectButton = ({
           maxW="full"
         >
           <Heading
-            fontSize={{ lg: "lg" }}
+            fontSize={"md"}
             fontWeight="bold"
             letterSpacing="wide"
             maxW="full"

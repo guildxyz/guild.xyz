@@ -26,8 +26,8 @@ const CreateGuildIndex = (): JSX.Element => {
         }}
       />
 
-      <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 6 }}>
-        <Text fontWeight="medium" colorScheme="gray" opacity=".7">
+      <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 5 }} spacing={3}>
+        <Text fontWeight="semibold" colorScheme="gray">
           or
         </Text>
         <Checkbox
@@ -39,9 +39,10 @@ const CreateGuildIndex = (): JSX.Element => {
               setWhitoutPlatform(e?.target?.checked)
             }
           }}
+          spacing={1.5}
         >
-          <Text fontWeight="medium" colorScheme="gray" opacity=".7">
-            add platform later
+          <Text fontWeight="medium" colorScheme="gray">
+            add platforms later
           </Text>
         </Checkbox>
       </HStack>

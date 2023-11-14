@@ -43,7 +43,7 @@ const steps = [
   {
     title: "Edit roles",
     note: (
-      <Text colorScheme="gray" mt={8}>
+      <Text mt={8}>
         Your guild is created, and you’re already in! Edit & add roles as you want
       </Text>
     ),
@@ -59,7 +59,6 @@ const Onboarding = (): JSX.Element => {
   const { localThemeColor, textColor } = useThemeContext()
   const bannerColor = useColorModeValue("gray.200", "gray.700")
   const { localStep } = useOnboardingContext()
-  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const { isOpen, onToggle } = useDisclosure()
   const WrapperComponent = useBreakpointValue<any>({
@@ -99,7 +98,7 @@ const Onboarding = (): JSX.Element => {
         <Stepper
           index={localStep}
           orientation={orientation}
-          gap={{ base: 0, md: 4 }}
+          gap={{ base: 0, md: 2 }}
           w="full"
           size={"sm"}
         >
@@ -109,11 +108,7 @@ const Onboarding = (): JSX.Element => {
               in={localStep === index || isOpen}
               style={{ width: "100%" }}
             >
-              <Step
-                {...{
-                  gap: 3,
-                }}
-              >
+              <Step>
                 <StepIndicator
                   {...{
                     bg:
@@ -153,14 +148,13 @@ const Onboarding = (): JSX.Element => {
               </Step>
               <StepSeparator
                 {...({
-                  minWidth: { md: "4" },
                   position: "relative !important",
                   top: "unset !important",
                   left: "unset !important",
                   marginLeft: 4,
-                  minHeight: { base: isMobile && !isOpen ? 0 : 4, md: "2px" },
+                  minHeight: { base: !isOpen ? 0 : 4, md: "2px" },
                   height: {
-                    base: isMobile && !isOpen ? 0 : "4 !important",
+                    base: !isOpen ? 0 : "4 !important",
                     md: "2px !important",
                   },
                   transition: ".2s ease",

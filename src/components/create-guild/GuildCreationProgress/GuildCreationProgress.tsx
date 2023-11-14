@@ -31,7 +31,7 @@ const GuildCreationProgress = ({
           w={{ md: "365px" }}
           ml={"auto"}
           borderRadius={{ base: 0, md: "2xl" }}
-          shadow={{ base: "dark-lg", md: "xl" }}
+          shadow={{ base: "dark-lg", md: "2xl" }}
           transition="0.2s ease"
         >
           <HStack justify={"space-between"} p={2} py={{ base: 3, md: 2 }}>
@@ -52,6 +52,7 @@ const GuildCreationProgress = ({
             h={1}
             w="100%"
             value={progress}
+            colorScheme="primary"
             sx={{
               "& > div:first-child": {
                 transitionProperty: "width",

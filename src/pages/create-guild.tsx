@@ -61,7 +61,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
-  const islastSubStep = steps[activeStep].progress.length === stepPart + 1
+  const isLastSubStep = steps[activeStep].progress.length === stepPart + 1
 
   return (
     <>
@@ -77,7 +77,7 @@ const CreateGuildPage = (): JSX.Element => {
               imageUrl={imageUrl}
               size={{ base: "56px", lg: "72px" }}
               mt={{ base: 1, lg: 2 }}
-              bgColor={"primary.800"}
+              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
             />
           )
         }
@@ -165,9 +165,9 @@ const CreateGuildPage = (): JSX.Element => {
                     top: "unset !important",
                     left: "unset !important",
                     marginLeft: 4,
-                    minHeight: { base: isMobile && !isOpen ? 0 : 4, md: "2px" },
+                    minHeight: { base: !isOpen ? 0 : 4, md: "2px" },
                     height: {
-                      base: isMobile && !isOpen ? 0 : "4 !important",
+                      base: !isOpen ? 0 : "4 !important",
                       md: "2px !important",
                     },
                     transition: ".2s ease",
@@ -186,7 +186,7 @@ const CreateGuildPage = (): JSX.Element => {
           {steps[activeStep].content}
         </Stack>
         <GuildCreationProgress
-          next={islastSubStep ? nextStep : () => setPart(stepPart + 1)}
+          next={isLastSubStep ? nextStep : () => setPart(stepPart + 1)}
           progress={steps[activeStep].progress[stepPart]}
           isDisabled={nextStepIsDisabled}
         >

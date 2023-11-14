@@ -1,4 +1,4 @@
-import { Button, Collapse, VStack } from "@chakra-ui/react"
+import { Box, Button, Collapse } from "@chakra-ui/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { ArrowLeft } from "phosphor-react"
 import { useEffect } from "react"
@@ -31,7 +31,7 @@ const ChooseTemplate = (): JSX.Element => {
 
   return (
     <>
-      <VStack>
+      <Box>
         {stepPart === 1 && (
           <Button
             onClick={() => setPart(0)}
@@ -50,7 +50,7 @@ const ChooseTemplate = (): JSX.Element => {
               stepPart === 0 ||
               (stepPart === 1 && !!roles.find((r) => r.name === role.name))
             }
-            style={{ width: "100%" }}
+            style={{ width: "100%", padding: 1, margin: -1 }}
             key={role.name}
           >
             <TemplateCard
@@ -68,7 +68,7 @@ const ChooseTemplate = (): JSX.Element => {
             />
           </Collapse>
         ))}
-      </VStack>
+      </Box>
     </>
   )
 }
