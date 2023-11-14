@@ -108,7 +108,7 @@ const SummonMembers = ({ activeStep }: Props) => {
             }}
           />
           <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
-            guild {(activeStep + 1) * 25}% complete
+            Guild {(activeStep + 1) * 25}% complete
           </Text>
         </HStack>
         <Button

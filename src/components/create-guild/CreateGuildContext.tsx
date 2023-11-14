@@ -61,8 +61,22 @@ const STEPS: Step[] = [
     title: "Choose template",
     description: ["1/2", "2/2"],
     label: [
-      "Your guild consists of roles that the members can satisfy the requirements of to gain access to their rewards. Choose some defaults to get you started!",
-      "Choose rewards for the selected roles.",
+      <Text key={0}>
+        Your guild consists of
+        <Text as="b" fontWeight={"semibold"}>
+          {` roles `}
+        </Text>
+        that the members can satisfy the
+        <Text as="b" fontWeight={"semibold"}>
+          {` requirements `}
+        </Text>
+        of to gain access to their
+        <Text as="b" fontWeight={"semibold"}>
+          {` rewards`}
+        </Text>
+        . Choose some defaults to get you started!
+      </Text>,
+      <Text key={1}>Choose rewards for the selected roles!</Text>,
     ],
     content: <ChooseTemplate />,
     progress: [50, 66],
