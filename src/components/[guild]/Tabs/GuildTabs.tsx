@@ -1,13 +1,13 @@
-import PulseMarker from "components/common/PulseMarker"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import PulseMarker from "components/common/PulseMarker"
 import useLocalStorage from "hooks/useLocalStorage"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import TabButton from "./components/TabButton"
 import Tabs, { TabsProps } from "./Tabs"
+import TabButton from "./components/TabButton"
 
 type Props = {
-  activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY"
+  activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY" | "MESSAGES"
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
@@ -49,6 +49,11 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
       {isAdmin && (
         <TabButton href={`/${urlName}/activity`} isActive={activeTab === "ACTIVITY"}>
           Activity log
+        </TabButton>
+      )}
+      {isAdmin && (
+        <TabButton href={`/${urlName}/messages`} isActive={activeTab === "MESSAGES"}>
+          Messages
         </TabButton>
       )}
     </Tabs>
