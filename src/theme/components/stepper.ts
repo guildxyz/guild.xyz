@@ -1,9 +1,9 @@
 const baseStyle = {
   indicator: {
     background: "gray.700",
-    padding: "4",
+    padding: "3.5",
     "&[data-status=incomplete]": {
-      borderWidth: 0,
+      borderColor: "transparent",
     },
     "&[data-status=active]": {
       borderColor: "primary",
@@ -24,7 +24,6 @@ const baseStyle = {
   title: {
     "&[data-status=incomplete]": {
       fontWeight: "normal",
-      fontSize: "xs",
       color: "gray.300",
     },
   },

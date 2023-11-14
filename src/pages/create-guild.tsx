@@ -37,6 +37,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   const { isOpen, onToggle } = useDisclosure()
 
+  const isMobile = useBreakpointValue({ base: true, md: false })
   const bannerColor = useColorModeValue("gray.200", "gray.700")
   const cardBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const orientation = useBreakpointValue<any>({ base: "vertical", md: "horizontal" })
@@ -91,7 +92,7 @@ const CreateGuildPage = (): JSX.Element => {
           <Stepper
             index={activeStep}
             orientation={orientation}
-            gap={{ base: 0, md: 4 }}
+            gap={{ base: 0, md: 2 }}
             w="full"
             size={"sm"}
           >
@@ -102,19 +103,16 @@ const CreateGuildPage = (): JSX.Element => {
                 style={{ width: "100%" }}
               >
                 <Step
-                  {...{
-                    gap: 3,
+                  onClick={() => {
+                    if (activeStep > index) setActiveStep(index)
                   }}
+                  {...{ cursor: activeStep >= index ? "pointer" : "not-allowed" }}
                 >
                   <StepIndicator
                     {...{
                       bg: activeStep > index ? `${color} !important` : bannerColor,
                       borderColor:
                         activeStep === index ? `${color} !important` : "none",
-                      cursor: activeStep > index ? "pointer" : "default",
-                    }}
-                    onClick={() => {
-                      if (activeStep > index) setActiveStep(index)
                     }}
                   >
                     <StepStatus
@@ -138,10 +136,9 @@ const CreateGuildPage = (): JSX.Element => {
                       </Text>
                     )}
                   </Stack>
-                  {activeStep === index && (
+                  {isMobile && activeStep === index && (
                     <Center>
                       <Icon
-                        display={{ md: "none" }}
                         as={CaretDown}
                         boxSize={4}
                         transform={isOpen && "rotate(-180deg)"}
@@ -152,7 +149,6 @@ const CreateGuildPage = (): JSX.Element => {
                 </Step>
                 <StepSeparator
                   {...({
-                    minWidth: { md: "4" },
                     position: "relative !important",
                     top: "unset !important",
                     left: "unset !important",
