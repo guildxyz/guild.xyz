@@ -35,17 +35,16 @@ const GuildCreationProgress = ({
   }, [seek])
 
   return (
-    <Box position={"fixed"} bottom={0} left={0} w={"full"}>
-      <Container maxW={"container.lg"}>
+    <Box position={"fixed"} bottom={{ base: 0, md: 3 }} left={0} w={"full"}>
+      <Container maxW={"container.lg"} px={{ base: 0, md: 8, lg: 10 }}>
         <Card
-          w={"fit-content"}
-          px={{ base: 2, md: 2 }}
-          py={{ base: 2, md: 2 }}
+          w={{ md: "fit-content" }}
           ml={"auto"}
-          mb={3}
+          borderRadius={{ base: 0, md: "2xl" }}
+          shadow={{ base: "dark-lg", md: "xl" }}
         >
-          <HStack justify={"space-between"}>
-            <HStack gap={5} pl={3} pr={3}>
+          <HStack justify={"space-between"} p={2}>
+            <HStack gap={4} pl={3} pr={3}>
               <Box position={"relative"} w={`${logoSize}px`} h={`${logoSize}px`}>
                 <Box opacity={0.1} position={"absolute"} top={0} left={0} zIndex={0}>
                   <Player
@@ -78,7 +77,9 @@ const GuildCreationProgress = ({
                   />
                 </Box>
               </Box>
-              <Text colorScheme="gray">Guild {progressText} completed</Text>
+              <Text colorScheme="gray" fontWeight={"semibold"} fontSize={"sm"}>
+                Guild {progressText} completed
+              </Text>
             </HStack>
             {children ?? (
               <Button colorScheme={"green"} onClick={next} isDisabled={isDisabled}>
@@ -86,14 +87,7 @@ const GuildCreationProgress = ({
               </Button>
             )}
           </HStack>
-          <Progress
-            borderRadius="full"
-            h={1}
-            mt={2}
-            mb={-2}
-            w="full"
-            value={progress}
-          />
+          <Progress borderRadius="full" h={1} w="full" value={progress} />
         </Card>
       </Container>
     </Box>
