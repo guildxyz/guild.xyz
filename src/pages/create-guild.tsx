@@ -147,16 +147,18 @@ const CreateGuildPage = (): JSX.Element => {
                     </Center>
                   )}
                 </Step>
-                <StepSeparator
-                  {...({
-                    position: "relative !important",
-                    top: "unset !important",
-                    left: "unset !important",
-                    marginLeft: 4,
-                    minHeight: { base: 4, md: "2px" },
-                    height: { base: "4 !important", md: "2px !important" },
-                  } as any)}
-                />
+                {isMobile && !isOpen ? null : (
+                  <StepSeparator
+                    {...({
+                      position: "relative !important",
+                      top: "unset !important",
+                      left: "unset !important",
+                      marginLeft: 4,
+                      minHeight: { base: 4, md: "2px" },
+                      height: { base: "4 !important", md: "2px !important" },
+                    } as any)}
+                  />
+                )}
               </WrapperComponent>
             ))}
           </Stepper>

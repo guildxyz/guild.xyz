@@ -30,8 +30,6 @@ type Props = {
   nextStep: () => void
 }
 
-const GUILD_CASTLE_COMPLETED_FRAME = 38
-
 const steps = [
   {
     title: "Set platforms",
@@ -61,6 +59,7 @@ const Onboarding = (): JSX.Element => {
   const { localThemeColor, textColor } = useThemeContext()
   const bannerColor = useColorModeValue("gray.200", "gray.700")
   const { localStep } = useOnboardingContext()
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const { isOpen, onToggle } = useDisclosure()
   const WrapperComponent = useBreakpointValue<any>({
@@ -152,17 +151,19 @@ const Onboarding = (): JSX.Element => {
                   </Center>
                 )}
               </Step>
-              <StepSeparator
-                {...({
-                  minWidth: { md: "4" },
-                  position: "relative !important",
-                  top: "unset !important",
-                  left: "unset !important",
-                  marginLeft: 4,
-                  minHeight: { base: 4, md: "2px" },
-                  height: { base: "4 !important", md: "2px !important" },
-                } as any)}
-              />
+              {isMobile && !isOpen ? null : (
+                <StepSeparator
+                  {...({
+                    minWidth: { md: "4" },
+                    position: "relative !important",
+                    top: "unset !important",
+                    left: "unset !important",
+                    marginLeft: 4,
+                    minHeight: { base: 4, md: "2px" },
+                    height: { base: "4 !important", md: "2px !important" },
+                  } as any)}
+                />
+              )}
             </WrapperComponent>
           ))}
         </Stepper>

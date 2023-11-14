@@ -39,7 +39,7 @@ const CreateGuildPlatform = (): JSX.Element => {
         setPlatform(null)
       }}
       scrollBehavior="inside"
-      size="3xl"
+      size={platform === "TWITTER" ? "sm" : "3xl"}
       colorScheme="dark"
     >
       <ModalOverlay />

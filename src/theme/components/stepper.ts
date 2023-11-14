@@ -24,7 +24,10 @@ const baseStyle = {
   title: {
     "&[data-status=incomplete]": {
       fontWeight: "normal",
-      color: "gray.300",
+      color: "gray.600",
+      _dark: {
+        color: "gray.300",
+      },
     },
   },
 }

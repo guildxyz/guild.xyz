@@ -20,6 +20,7 @@ const GuildCreationProgress = ({
   const lottiePlayer = useRef(null)
   const lottiePlayerBg = useRef(null)
   const [seek, setSeek] = useState(0)
+  const [seekBg, setSeekBG] = useState(0)
 
   function progressToLottieState(stepsProgress: number): number {
     if (stepsProgress <= 20) return 10
@@ -34,8 +35,18 @@ const GuildCreationProgress = ({
     lottiePlayer.current?.setSeeker(seek, false)
   }, [seek])
 
+  useEffect(() => {
+    lottiePlayerBg.current?.setSeeker(seekBg, false)
+  }, [seekBg])
+
   return (
-    <Box position={"fixed"} bottom={{ base: 0, md: 3 }} left={0} w={"full"}>
+    <Box
+      position={"fixed"}
+      bottom={{ base: 0, md: 3 }}
+      left={0}
+      w={"full"}
+      zIndex={1201} // above intercom floating button
+    >
       <Container maxW={"container.lg"} px={{ base: 0, md: 8, lg: 10 }}>
         <Card
           w={{ md: "fit-content" }}
@@ -43,15 +54,17 @@ const GuildCreationProgress = ({
           borderRadius={{ base: 0, md: "2xl" }}
           shadow={{ base: "dark-lg", md: "xl" }}
         >
-          <HStack justify={"space-between"} p={2}>
+          <HStack justify={"space-between"} p={2} py={{ base: 3, md: 2 }}>
             <HStack gap={4} pl={3} pr={3}>
               <Box position={"relative"} w={`${logoSize}px`} h={`${logoSize}px`}>
                 <Box opacity={0.1} position={"absolute"} top={0} left={0} zIndex={0}>
                   <Player
                     ref={lottiePlayerBg}
-                    autoplay
-                    keepLastFrame
-                    speed={1}
+                    onEvent={(event) => {
+                      if (event === "load") {
+                        setSeekBG(50)
+                      }
+                    }}
                     src="/logo_lottie.json"
                     style={{
                       marginBottom: 24,
