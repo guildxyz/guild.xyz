@@ -20,6 +20,7 @@ type Step = {
   label?: string[] | JSX.Element[]
   description?: string[]
   content: JSX.Element
+  progress?: number[]
 }
 
 const ID_AFTER_DOMAIN_REGEX = /(?<=com\/).*$/
@@ -38,6 +39,8 @@ const CreateGuildContext = createContext<{
   toggleReward: (roleTemplateName: string, guildPlatformIndex: number) => void
   stepPart: number
   setPart: (part: number) => void
+  nextStepIsDisabled: boolean
+  setDisabled: (value: boolean) => void
 } | null>(null)
 
 const STEPS: Step[] = [
@@ -47,11 +50,13 @@ const STEPS: Step[] = [
       "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
     ],
     content: <CreateGuildIndex />,
+    progress: [0],
   },
   {
     title: "Customize guild",
     label: [<BasicInfo key={0} />],
     content: <></>,
+    progress: [25],
   },
   {
     title: "Choose template",
@@ -61,6 +66,7 @@ const STEPS: Step[] = [
       "Choose rewards for the selected roles.",
     ],
     content: <ChooseTemplate />,
+    progress: [50, 66],
   },
   {
     title: "Edit roles",
@@ -77,6 +83,7 @@ const CreateGuildProvider = ({
 }: PropsWithChildren<unknown>): JSX.Element => {
   const [platform, setPlatform] = useState<PlatformName>(null)
   const [stepPart, setPart] = useState(0)
+  const [nextStepIsDisabled, setDisabled] = useState(false)
 
   const methods = useForm<GuildFormType>({
     mode: "all",
@@ -267,6 +274,8 @@ const CreateGuildProvider = ({
         toggleReward,
         setPart,
         stepPart,
+        nextStepIsDisabled,
+        setDisabled,
       }}
     >
       <FormProvider {...methods}>{children}</FormProvider>

@@ -20,11 +20,13 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import CreateGuildButton from "components/create-guild/CreateGuildButton"
 import {
   CreateGuildProvider,
   useCreateGuildContext,
 } from "components/create-guild/CreateGuildContext"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
 import { CaretDown } from "phosphor-react"
 import React from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -32,7 +34,15 @@ import { GuildFormType } from "types"
 
 const CreateGuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const { steps, activeStep, setActiveStep, stepPart } = useCreateGuildContext()
+  const {
+    steps,
+    activeStep,
+    setActiveStep,
+    stepPart,
+    nextStep,
+    nextStepIsDisabled,
+    setPart,
+  } = useCreateGuildContext()
   const { control } = useFormContext<GuildFormType>()
 
   const { isOpen, onToggle } = useDisclosure()
@@ -51,6 +61,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
+  const islastSubStep = steps[activeStep].progress.length === stepPart + 1
 
   return (
     <>
@@ -174,6 +185,13 @@ const CreateGuildPage = (): JSX.Element => {
         <Stack w="full" spacing={{ base: 4, md: 4 }} pt="6">
           {steps[activeStep].content}
         </Stack>
+        <GuildCreationProgress
+          next={islastSubStep ? nextStep : () => setPart(stepPart + 1)}
+          progress={steps[activeStep].progress[stepPart]}
+          isDisabled={nextStepIsDisabled}
+        >
+          {stepPart === 1 ? <CreateGuildButton /> : null}
+        </GuildCreationProgress>
       </Layout>
       <DynamicDevTool control={control} />
     </>

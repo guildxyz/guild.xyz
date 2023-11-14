@@ -1,7 +1,7 @@
 import { Box, Button, Container, HStack, Progress, Text } from "@chakra-ui/react"
-import { Player } from "@lottiefiles/react-lottie-player"
 import Card from "components/common/Card"
-import { PropsWithChildren, useEffect, useRef, useState } from "react"
+import { PropsWithChildren } from "react"
+import GuildLottieProgress from "./components/GuildLottieProgress"
 
 type Props = {
   next: () => void
@@ -17,27 +17,6 @@ const GuildCreationProgress = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const progressText = `${progress}%`
-  const lottiePlayer = useRef(null)
-  const lottiePlayerBg = useRef(null)
-  const [seek, setSeek] = useState(0)
-  const [seekBg, setSeekBG] = useState(0)
-
-  function progressToLottieState(stepsProgress: number): number {
-    if (stepsProgress <= 20) return 10
-    if (stepsProgress <= 40) return 14
-    if (stepsProgress <= 50) return 18
-    if (stepsProgress <= 75) return 20
-    else return 80
-  }
-  const logoSize = 24
-
-  useEffect(() => {
-    lottiePlayer.current?.setSeeker(seek, false)
-  }, [seek])
-
-  useEffect(() => {
-    lottiePlayerBg.current?.setSeeker(seekBg, false)
-  }, [seekBg])
 
   return (
     <Box
@@ -49,47 +28,15 @@ const GuildCreationProgress = ({
     >
       <Container maxW={"container.lg"} px={{ base: 0, md: 8, lg: 10 }}>
         <Card
-          w={{ md: "fit-content" }}
+          w={{ md: "365px" }}
           ml={"auto"}
           borderRadius={{ base: 0, md: "2xl" }}
           shadow={{ base: "dark-lg", md: "xl" }}
+          transition="0.2s ease"
         >
           <HStack justify={"space-between"} p={2} py={{ base: 3, md: 2 }}>
             <HStack gap={4} pl={3} pr={3}>
-              <Box position={"relative"} w={`${logoSize}px`} h={`${logoSize}px`}>
-                <Box opacity={0.1} position={"absolute"} top={0} left={0} zIndex={0}>
-                  <Player
-                    ref={lottiePlayerBg}
-                    onEvent={(event) => {
-                      if (event === "load") {
-                        setSeekBG(50)
-                      }
-                    }}
-                    src="/logo_lottie.json"
-                    style={{
-                      marginBottom: 24,
-                      height: logoSize,
-                      width: logoSize,
-                    }}
-                  />
-                </Box>
-                <Box position={"absolute"} top={0} left={0} zIndex={1}>
-                  <Player
-                    ref={lottiePlayer}
-                    src="/logo_lottie.json"
-                    onEvent={(event) => {
-                      if (event === "load") {
-                        setSeek(progressToLottieState(progress))
-                      }
-                    }}
-                    style={{
-                      marginBottom: 24,
-                      height: logoSize,
-                      width: logoSize,
-                    }}
-                  />
-                </Box>
-              </Box>
+              <GuildLottieProgress progress={progress} />
               <Text colorScheme="gray" fontWeight={"semibold"} fontSize={"sm"}>
                 Guild {progressText} completed
               </Text>
@@ -100,7 +47,17 @@ const GuildCreationProgress = ({
               </Button>
             )}
           </HStack>
-          <Progress borderRadius="full" h={1} w="full" value={progress} />
+          <Progress
+            borderRadius="full"
+            h={1}
+            w="100%"
+            value={progress}
+            sx={{
+              "& > div:first-child": {
+                transitionProperty: "width",
+              },
+            }}
+          />
         </Card>
       </Container>
     </Box>

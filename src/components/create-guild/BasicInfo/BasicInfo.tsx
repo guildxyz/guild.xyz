@@ -12,14 +12,13 @@ import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Description from "../Description"
-import GuildCreationProgress from "../GuildCreationProgress"
 import IconSelector from "../IconSelector"
 import Name from "../Name"
 import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
 import ContactInfo from "./components/ContactInfo"
 
 const BasicInfo = (): JSX.Element => {
-  const { nextStep } = useCreateGuildContext()
+  const { nextStep, setDisabled } = useCreateGuildContext()
   const { setLocalBackgroundImage } = useThemeContext()
 
   const {
@@ -30,6 +29,10 @@ const BasicInfo = (): JSX.Element => {
 
   const name = useWatch({ control, name: "name" })
   const guildPlatforms = useWatch({ control, name: "guildPlatforms" })
+
+  useEffect(() => {
+    setDisabled(!name || !!Object.values(errors).length)
+  }, [name, errors])
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -120,11 +123,6 @@ const BasicInfo = (): JSX.Element => {
           <ContactInfo showAddButton={false} />
         </Section>
       </Stack>
-      <GuildCreationProgress
-        next={nextStep}
-        progress={25}
-        isDisabled={!name || !!Object.values(errors).length}
-      />
     </>
   )
 }

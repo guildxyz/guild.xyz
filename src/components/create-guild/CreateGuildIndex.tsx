@@ -1,18 +1,21 @@
 import { Checkbox, HStack, Text } from "@chakra-ui/react"
 import ClientOnly from "components/common/ClientOnly"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useWatch } from "react-hook-form"
 import { useCreateGuildContext } from "./CreateGuildContext"
 import CreateGuildPlatform from "./CreateGuildPlatform"
-import GuildCreationProgress from "./GuildCreationProgress"
 import MultiPlatformsGrid from "./MultiPlatformGrid"
 
 const CreateGuildIndex = (): JSX.Element => {
-  const { setPlatform, nextStep } = useCreateGuildContext()
+  const { setPlatform, setDisabled } = useCreateGuildContext()
   const [whitoutPlatform, setWhitoutPlatform] = useState(false)
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitter = useWatch({ name: "socialLinks.TWITTER" })
+
+  useEffect(() => {
+    setDisabled(!twitter && guildPlatforms.length === 0 && !whitoutPlatform)
+  }, [twitter, guildPlatforms.length, whitoutPlatform])
 
   return (
     <ClientOnly>
@@ -42,11 +45,6 @@ const CreateGuildIndex = (): JSX.Element => {
           </Text>
         </Checkbox>
       </HStack>
-      <GuildCreationProgress
-        next={nextStep}
-        progress={0}
-        isDisabled={!twitter && guildPlatforms.length === 0 && !whitoutPlatform}
-      />
       <CreateGuildPlatform />
     </ClientOnly>
   )

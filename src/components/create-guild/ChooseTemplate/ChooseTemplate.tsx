@@ -5,9 +5,7 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 import { useAccount } from "wagmi"
-import CreateGuildButton from "../CreateGuildButton"
 import { useCreateGuildContext } from "../CreateGuildContext"
-import GuildCreationProgress from "../GuildCreationProgress"
 import TemplateCard from "./components/TemplateCard"
 
 const ChooseTemplate = (): JSX.Element => {
@@ -20,12 +18,16 @@ const ChooseTemplate = (): JSX.Element => {
     openWalletSelectorModal()
   }, [address, isWalletSelectorModalOpen])
 
-  const { getTemplate, setTemplate, nextStep, toggleReward, stepPart, setPart } =
+  const { getTemplate, setTemplate, setDisabled, toggleReward, stepPart, setPart } =
     useCreateGuildContext()
 
   const { control } = useFormContext<GuildFormType>()
 
   const roles = useWatch({ control, name: "roles" })
+
+  useEffect(() => {
+    setDisabled(!roles.length)
+  }, [roles.length])
 
   return (
     <>
@@ -67,30 +69,6 @@ const ChooseTemplate = (): JSX.Element => {
           </Collapse>
         ))}
       </VStack>
-
-      <GuildCreationProgress
-        next={() => {
-          if (stepPart === 0) {
-            setPart(1)
-          } else nextStep()
-        }}
-        progress={stepPart === 0 ? 50 : 65}
-        isDisabled={!roles.length}
-      >
-        {stepPart === 0 ? (
-          <Button
-            isDisabled={!roles.length}
-            colorScheme="green"
-            onClick={() => setPart(1)}
-          >
-            Continue
-          </Button>
-        ) : (
-          <>
-            <CreateGuildButton isDisabled={!roles.length} />
-          </>
-        )}
-      </GuildCreationProgress>
     </>
   )
 }
