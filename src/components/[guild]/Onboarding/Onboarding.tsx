@@ -151,19 +151,21 @@ const Onboarding = (): JSX.Element => {
                   </Center>
                 )}
               </Step>
-              {isMobile && !isOpen ? null : (
-                <StepSeparator
-                  {...({
-                    minWidth: { md: "4" },
-                    position: "relative !important",
-                    top: "unset !important",
-                    left: "unset !important",
-                    marginLeft: 4,
-                    minHeight: { base: 4, md: "2px" },
-                    height: { base: "4 !important", md: "2px !important" },
-                  } as any)}
-                />
-              )}
+              <StepSeparator
+                {...({
+                  minWidth: { md: "4" },
+                  position: "relative !important",
+                  top: "unset !important",
+                  left: "unset !important",
+                  marginLeft: 4,
+                  minHeight: { base: isMobile && !isOpen ? 0 : 4, md: "2px" },
+                  height: {
+                    base: isMobile && !isOpen ? 0 : "4 !important",
+                    md: "2px !important",
+                  },
+                  transition: ".2s ease",
+                } as any)}
+              />
             </WrapperComponent>
           ))}
         </Stepper>
