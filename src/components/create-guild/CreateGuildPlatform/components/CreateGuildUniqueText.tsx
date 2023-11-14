@@ -6,6 +6,7 @@ import UniqueTextDataForm, {
 } from "platforms/UniqueText/UniqueTextDataForm"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildUniqueText = () => {
   const { id: userId } = useUser()
@@ -20,7 +21,7 @@ const CreateGuildUniqueText = () => {
   const imageUrl = useWatch({ control: methods.control, name: "imageUrl" })
 
   return (
-    <>
+    <CreatePlatformModalWrapper>
       <FormProvider {...methods}>
         <UniqueTextDataForm />
       </FormProvider>
@@ -42,7 +43,7 @@ const CreateGuildUniqueText = () => {
       >
         Add{/*nextStepText*/}
       </Button>
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 export default CreateGuildUniqueText

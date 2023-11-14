@@ -16,6 +16,7 @@ import {
 } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildGoogle = (): JSX.Element => {
   const methods = useFormContext<GuildFormType>()
@@ -37,7 +38,7 @@ const CreateGuildGoogle = (): JSX.Element => {
   })
 
   return (
-    <>
+    <CreatePlatformModalWrapper size="3xl">
       <ModalHeader>Add Google files</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
@@ -86,7 +87,7 @@ const CreateGuildGoogle = (): JSX.Element => {
           Add
         </Button>
       </ModalFooter>
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 

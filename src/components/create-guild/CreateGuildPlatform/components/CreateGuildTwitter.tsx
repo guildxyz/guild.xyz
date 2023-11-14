@@ -9,6 +9,7 @@ import TwitterUrlInput from "components/create-guild/BasicInfo/components/Twitte
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildTwitter = () => {
   const { setPlatform } = useCreateGuildContext()
@@ -21,7 +22,7 @@ const CreateGuildTwitter = () => {
   })
 
   return (
-    <>
+    <CreatePlatformModalWrapper>
       <ModalHeader>Add twitter link</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
@@ -41,7 +42,7 @@ const CreateGuildTwitter = () => {
           Add
         </Button>
       </ModalFooter>
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 

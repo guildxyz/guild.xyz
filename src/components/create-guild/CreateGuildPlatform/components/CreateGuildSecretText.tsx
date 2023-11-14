@@ -18,6 +18,7 @@ import {
   useWatch,
 } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildSecretText = () => {
   const { id: userId } = useUser()
@@ -37,7 +38,7 @@ const CreateGuildSecretText = () => {
   const imageUrl = useWatch({ control: methods.control, name: "imageUrl" })
 
   return (
-    <>
+    <CreatePlatformModalWrapper size="3xl">
       <ModalHeader>Add Secret</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
@@ -66,7 +67,7 @@ const CreateGuildSecretText = () => {
           Add
         </Button>
       </ModalFooter>
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 export default CreateGuildSecretText

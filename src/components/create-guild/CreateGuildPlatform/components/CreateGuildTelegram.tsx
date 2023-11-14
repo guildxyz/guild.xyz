@@ -17,6 +17,7 @@ import {
   useWatch,
 } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildTelegram = (): JSX.Element => {
   const methods = useFormContext<GuildFormType>()
@@ -39,7 +40,7 @@ const CreateGuildTelegram = (): JSX.Element => {
   } = useIsTGBotIn(guildPlatformId, { refreshInterval: 5000 })
 
   return (
-    <>
+    <CreatePlatformModalWrapper size="3xl">
       <ModalHeader>Add Telegram</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
@@ -69,7 +70,7 @@ const CreateGuildTelegram = (): JSX.Element => {
       </ModalFooter>
 
       <DynamicDevTool control={methods.control} />
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 

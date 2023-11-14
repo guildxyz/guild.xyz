@@ -18,6 +18,7 @@ import {
 import { GuildFormType, PlatformGuildData, PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useCreateGuildContext } from "../../CreateGuildContext"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildDiscord = (): JSX.Element => {
   const { setPlatform } = useCreateGuildContext()
@@ -41,7 +42,7 @@ const CreateGuildDiscord = (): JSX.Element => {
   )
 
   return (
-    <>
+    <CreatePlatformModalWrapper size="3xl">
       <ModalHeader>Connect to Discord</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
@@ -87,7 +88,7 @@ const CreateGuildDiscord = (): JSX.Element => {
           Add
         </Button>
       </ModalFooter>
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 

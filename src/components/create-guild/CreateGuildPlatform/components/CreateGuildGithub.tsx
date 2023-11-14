@@ -3,6 +3,7 @@ import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, PlatformType } from "types"
+import CreatePlatformModalWrapper from "./CreatePlatformModalWrapper"
 
 const CreateGuildGithub = (): JSX.Element => {
   const { setPlatform } = useCreateGuildContext()
@@ -13,7 +14,7 @@ const CreateGuildGithub = (): JSX.Element => {
   })
 
   return (
-    <>
+    <CreatePlatformModalWrapper size="3xl">
       <ModalHeader>Add Repositories</ModalHeader>
       <ModalCloseButton />
       <ModalBody>
@@ -31,7 +32,7 @@ const CreateGuildGithub = (): JSX.Element => {
           }}
         />
       </ModalBody>
-    </>
+    </CreatePlatformModalWrapper>
   )
 }
 
