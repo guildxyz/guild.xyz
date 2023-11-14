@@ -151,7 +151,9 @@ const TemplateCard = ({
             </HStack>
 
             <Collapse in={part === 0}>
-              <Box pl={5}>{description}</Box>
+              <Box pl={5} pb={5}>
+                {description}
+              </Box>
             </Collapse>
 
             <Collapse in={part === 1} style={{ marginTop: "auto" }}>
