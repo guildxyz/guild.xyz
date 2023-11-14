@@ -253,6 +253,30 @@ export type SignProps = SignBaseProps & {
 
 export type FuelSignProps = SignBaseProps & { wallet: WalletUnlocked }
 
+const createMessageParams = (
+  address: `0x${string}`,
+  ts: number,
+  msg: string,
+  payload: string
+): MessageParams => ({
+  addr: address.toLowerCase(),
+  nonce: randomBytes(32).toString("base64"),
+  ts: ts.toString(),
+  hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
+  method: null,
+  msg,
+  chainId: undefined,
+})
+
+const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
+  window.crypto.subtle
+    .sign(
+      { name: "ECDSA", hash: "SHA-512" },
+      keyPair.privateKey,
+      Buffer.from(getMessage(params))
+    )
+    .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
+
 export const fuelSign = async ({
   wallet,
   address,
@@ -262,27 +286,12 @@ export const fuelSign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: FuelSignProps): Promise<[string, Validation]> => {
-  const params: MessageParams = {
-    addr: address.toLowerCase(),
-    nonce: randomBytes(32).toString("base64"),
-    ts: ts.toString(),
-    hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
-    method: null,
-    msg,
-    chainId: undefined,
-  }
-
+  const params = createMessageParams(address, ts, msg, payload)
   let sig = null
 
   if (!!keyPair && !forcePrompt) {
     params.method = ValidationMethod.KEYPAIR
-    sig = await window.crypto.subtle
-      .sign(
-        { name: "ECDSA", hash: "SHA-512" },
-        keyPair.privateKey,
-        Buffer.from(getMessage(params))
-      )
-      .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
+    sig = await signWithKeyPair(keyPair, params)
   } else {
     params.method = ValidationMethod.STANDARD
     sig = await wallet.signMessage(getMessage(params))
@@ -302,26 +311,12 @@ export const sign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: SignProps): Promise<[string, Validation]> => {
-  const params: MessageParams = {
-    addr: address.toLowerCase(),
-    nonce: randomBytes(32).toString("base64"),
-    ts: ts.toString(),
-    hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
-    method: null,
-    msg,
-    chainId: undefined,
-  }
+  const params = createMessageParams(address, ts, msg, payload)
   let sig = null
 
   if (!!keyPair && !forcePrompt) {
     params.method = ValidationMethod.KEYPAIR
-    sig = await window.crypto.subtle
-      .sign(
-        { name: "ECDSA", hash: "SHA-512" },
-        keyPair.privateKey,
-        Buffer.from(getMessage(params))
-      )
-      .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
+    sig = await signWithKeyPair(keyPair, params)
   } else {
     const bytecode = await publicClient.getBytecode({ address }).catch(() => null)
     const isSmartContract = bytecode && trim(bytecode) !== "0x"
