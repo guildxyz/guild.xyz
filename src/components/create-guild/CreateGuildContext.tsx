@@ -1,8 +1,6 @@
 import { Text, useSteps } from "@chakra-ui/react"
 import {
-  Dispatch,
   PropsWithChildren,
-  SetStateAction,
   createContext,
   useContext,
   useEffect,
@@ -33,7 +31,6 @@ const CreateGuildContext = createContext<{
   activeStep: number
   platform?: PlatformName
   setActiveStep: (index: number) => void
-  setPlatform: Dispatch<SetStateAction<PlatformName>>
   removePlatform: (platformName) => void
   getTemplate: () => Array<RoleFormType>
   toggleReward: (roleTemplateName: string, guildPlatformIndex: number) => void
@@ -92,7 +89,6 @@ const STEPS: Step[] = [
 const CreateGuildProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const [platform, setPlatform] = useState<PlatformName>(null)
   const [stepPart, setPart] = useState(0)
   const [nextStepIsDisabled, setDisabled] = useState(false)
 
@@ -258,7 +254,7 @@ const CreateGuildProvider = ({
         behavior: "smooth",
       })
     if (activeStep > 0) return
-  }, [activeStep, platform])
+  }, [activeStep])
 
   return (
     <CreateGuildContext.Provider
@@ -273,8 +269,6 @@ const CreateGuildProvider = ({
           setPart(0)
         },
         activeStep,
-        platform,
-        setPlatform,
         removePlatform,
         setTemplate: toggleTemplate,
         getTemplate: buildTemplate,

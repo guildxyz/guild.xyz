@@ -3,11 +3,10 @@ import ClientOnly from "components/common/ClientOnly"
 import { useEffect, useState } from "react"
 import { useWatch } from "react-hook-form"
 import { useCreateGuildContext } from "./CreateGuildContext"
-import CreateGuildPlatform from "./CreateGuildPlatform"
 import MultiPlatformsGrid from "./MultiPlatformGrid"
 
 const CreateGuildIndex = (): JSX.Element => {
-  const { setPlatform, setDisabled } = useCreateGuildContext()
+  const { setDisabled } = useCreateGuildContext()
   const [whitoutPlatform, setWhitoutPlatform] = useState(false)
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
@@ -20,8 +19,7 @@ const CreateGuildIndex = (): JSX.Element => {
   return (
     <ClientOnly>
       <MultiPlatformsGrid
-        onSelection={(platformName) => {
-          setPlatform(platformName)
+        onSelection={() => {
           setWhitoutPlatform(false)
         }}
       />
@@ -35,7 +33,6 @@ const CreateGuildIndex = (): JSX.Element => {
           isDisabled={!!guildPlatforms.length || !!twitter}
           onChange={(e) => {
             if (guildPlatforms.length === 0) {
-              setPlatform(null)
               setWhitoutPlatform(e?.target?.checked)
             }
           }}
@@ -46,7 +43,6 @@ const CreateGuildIndex = (): JSX.Element => {
           </Text>
         </Checkbox>
       </HStack>
-      <CreateGuildPlatform />
     </ClientOnly>
   )
 }
