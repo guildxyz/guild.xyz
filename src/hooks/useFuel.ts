@@ -54,18 +54,19 @@ const useFuel = () => {
     }
   }
 
-  const checkConnection = async () => {
-    if (!windowFuel) return
+  // Used for autoConnect behaviour, but we don't need that for now
+  // const checkConnection = async () => {
+  //   if (!windowFuel) return
 
-    const _isConnected = await windowFuel.isConnected()
-    if (_isConnected) {
-      try {
-        _setupState()
-      } catch (error) {
-        console.error("[FUEL]: checkConnectionError: ", error)
-      }
-    }
-  }
+  //   const _isConnected = await windowFuel.isConnected()
+  //   if (_isConnected) {
+  //     try {
+  //       _setupState()
+  //     } catch (error) {
+  //       console.error("[FUEL]: checkConnectionError: ", error)
+  //     }
+  //   }
+  // }
 
   const disconnect = async () => {
     if (!windowFuel) return
@@ -86,7 +87,7 @@ const useFuel = () => {
     isConnected,
     onAccountChange,
     connect,
-    checkConnection,
+    // checkConnection,
     disconnect,
     connectorName,
     address,

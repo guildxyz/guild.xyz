@@ -12,7 +12,7 @@ export const fuelWalletAtom = atom(null as WalletUnlocked)
 export const fuelProviderAtom = atom(null as Provider)
 
 const FuelSetup = () => {
-  const { windowFuel, checkConnection, onAccountChange } = useFuel()
+  const { windowFuel, onAccountChange } = useFuel()
 
   const [, setIsConnected] = useAtom(fuelConnectedAtom)
   const [, setAddress] = useAtom(fuelAddressAtom)
@@ -32,10 +32,10 @@ const FuelSetup = () => {
       }
     }
 
-    setTimeout(async () => {
-      console.log("checking...")
-      await checkConnection()
-    }, 200)
+    // autoConnect - we don't need this for now
+    // setTimeout(async () => {
+    //   await checkConnection()
+    // }, 200)
 
     windowFuel.on("currentAccount", onAccountChange)
     windowFuel.on("connection", onConnectionChange)
