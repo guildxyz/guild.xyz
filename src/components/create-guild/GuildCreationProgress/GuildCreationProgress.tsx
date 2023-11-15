@@ -27,6 +27,10 @@ const GuildCreationProgress = ({
       zIndex={1201} // above intercom floating button
     >
       <Container maxW={"container.lg"} px={{ base: 0, md: 8, lg: 10 }}>
+        {/**
+         * Intercom: This box keeps the container padding, so the Card inside could be
+         * `width:100%`
+         */}
         <Box position="relative">
           <Card
             borderRadius={0}

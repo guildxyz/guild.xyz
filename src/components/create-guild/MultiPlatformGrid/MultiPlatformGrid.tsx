@@ -12,15 +12,19 @@ type Props = {
 const MultiPlatformsGrid = ({ onSelection }: Props) => {
   const platformsData: Array<PlatformName> = [
     "DISCORD",
+    "TWITTER",
     "TELEGRAM",
     "GOOGLE",
     "GITHUB",
     "CONTRACT_CALL",
-    "TWITTER",
   ]
   const { control } = useFormContext<GuildFormType>()
   const guildPlatforms = useWatch({
     name: "guildPlatforms",
+    control,
+  })
+  const twitterLink = useWatch({
+    name: "socialLinks.TWITTER",
     control,
   })
 
@@ -37,9 +41,11 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
             platform={platform}
             title={platforms[platform].name}
             description={
-              guildPlatforms.find(
-                (guildPlatform) => guildPlatform.platformName === platform
-              )?.platformGuildData.name
+              platform === "TWITTER"
+                ? twitterLink
+                : guildPlatforms.find(
+                    (guildPlatform) => guildPlatform.platformName === platform
+                  )?.platformGuildData.name
             }
             icon={platforms[platform].icon}
             imageUrl={platforms[platform].imageUrl}
