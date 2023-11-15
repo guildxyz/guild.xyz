@@ -1,12 +1,11 @@
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Wallet } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
-import { useAccount } from "wagmi"
 import ConnectAccount from "./ConnectAccount"
 
 const WalletAuthButton = (): JSX.Element => {
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
-  const { address } = useAccount()
+  const { address } = useWeb3ConnectionManager()
 
   return (
     <ConnectAccount

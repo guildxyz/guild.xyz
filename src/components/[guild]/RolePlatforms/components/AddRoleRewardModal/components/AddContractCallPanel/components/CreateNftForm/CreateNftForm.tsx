@@ -80,7 +80,7 @@ export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
-  const { address } = useAccount()
+  const { isConnected: isEvmConnected, address } = useAccount()
   const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
@@ -424,13 +424,18 @@ const CreateNftForm = ({ onSuccess }: Props) => {
             >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
           )}
           <Tooltip
-            label="Please switch to a supported chain"
-            isDisabled={!shouldSwitchChain}
+            label={
+              isEvmConnected
+                ? "Please switch to a supported chain"
+                : "Please connect an EVM wallet"
+            }
+            isDisabled={isEvmConnected && !shouldSwitchChain}
+            hasArrow
           >
             <Button
               data-test="create-nft-button"
               colorScheme="indigo"
-              isDisabled={shouldSwitchChain || isLoading}
+              isDisabled={!isEvmConnected || shouldSwitchChain || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
               onClick={(e) => {

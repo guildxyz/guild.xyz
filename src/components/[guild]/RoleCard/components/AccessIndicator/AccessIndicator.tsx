@@ -14,7 +14,6 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
-import { useAccount } from "wagmi"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -33,8 +32,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     (r) => r.access
   )?.length
 
-  const { openAccountModal } = useWeb3ConnectionManager()
-  const { isConnected } = useAccount()
+  const { openAccountModal, isWeb3Connected } = useWeb3ConnectionManager()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -54,7 +52,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
-  if (!isConnected || (hasAccess && !isMember))
+  if (!isWeb3Connected || (hasAccess && !isMember))
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}

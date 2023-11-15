@@ -18,7 +18,6 @@ import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
-import { useAccount } from "wagmi"
 
 export type PlatformHookType = ({
   platform,
@@ -52,7 +51,7 @@ const PlatformSelectButton = ({
   onSelection,
   ...rest
 }: Props) => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
@@ -82,7 +81,7 @@ const PlatformSelectButton = ({
     <DisplayCard
       cursor="pointer"
       onClick={
-        !isConnected
+        !isWeb3Connected
           ? openWalletSelectorModal
           : isPlatformConnected
           ? selectPlatform
@@ -125,7 +124,9 @@ const PlatformSelectButton = ({
             </Text>
           )}
         </VStack>
-        <Icon as={isLoading ? Spinner : isConnected ? DynamicCtaIcon : CaretRight} />
+        <Icon
+          as={isLoading ? Spinner : isWeb3Connected ? DynamicCtaIcon : CaretRight}
+        />
       </HStack>
     </DisplayCard>
   )
