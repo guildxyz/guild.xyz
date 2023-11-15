@@ -28,7 +28,7 @@ import OpenseaLink from "../components/TransactionStatusModal/components/Opensea
 import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
 
-export const GUILD_PIN_MAINTENANCE = true
+export const GUILD_PIN_MAINTENANCE = false
 
 const DynamicActivateGuildPinModal = dynamic(
   () => import("./components/ActivateGuildPinModal")
