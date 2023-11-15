@@ -25,6 +25,8 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   BASE_MAINNET: `https://base-mainnet.g.alchemy.com/nft/v3/${process.env.BASE_ALCHEMY_KEY}/getOwnersForContract`,
   ETHEREUM: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/v2/${process.env.OPTIMISM_ALCHEMY_KEY}`,
+  BSC: "",
+  CRONOS: "",
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
@@ -51,6 +53,14 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
 
   if (!chain || !address)
     return res.status(400).json({ error: "Invalid chain or address" })
+
+  if (!alchemyApiUrl[chain]) {
+    res.json({
+      topCollectors: [],
+      uniqueCollectors: 0,
+    })
+    return
+  }
 
   const kvKey = `nftCollectors:${chain}:${address.toLowerCase()}`
   const cachedResponse: TopCollectorsResponse = await kv.get(kvKey)

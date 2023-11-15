@@ -70,6 +70,8 @@ const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "ETHEREUM",
   "BASE_MAINNET",
   "OPTIMISM",
+  "BSC",
+  "CRONOS",
   "POLYGON",
   "POLYGON_MUMBAI",
 ] as const

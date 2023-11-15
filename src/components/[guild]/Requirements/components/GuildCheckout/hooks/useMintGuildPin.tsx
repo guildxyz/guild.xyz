@@ -12,7 +12,7 @@ import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
-import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
@@ -27,8 +27,12 @@ type MintData = {
   guildId: number
   guildName: string
   createdAt: number
+  adminTreasury: `0x${string}`
+  adminFee: string
   timestamp: number
   cid: string
+  chainId: number
+  contractAddress: `0x${string}`
   signature: `0x${string}`
 }
 
@@ -70,6 +74,8 @@ const useMintGuildPin = () => {
       guildId,
       guildName,
       createdAt,
+      adminTreasury,
+      adminFee,
       timestamp,
       cid,
       signature,
@@ -87,7 +93,6 @@ const useMintGuildPin = () => {
     // params: paytoken address, { receiver address, guildAction uint8, userId uint256, guildId uint256, guildName string, createdAt uint256}, signedAt uint256, cid string, signature bytes
 
     const contractCallParams = [
-      NULL_ADDRESS,
       {
         receiver: userAddress,
         guildAction,
@@ -96,6 +101,8 @@ const useMintGuildPin = () => {
         guildName,
         createdAt: BigInt(createdAt),
       },
+      adminTreasury,
+      BigInt(adminFee),
       BigInt(timestamp),
       cid,
       signature,
