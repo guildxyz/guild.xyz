@@ -7,6 +7,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
@@ -26,6 +27,8 @@ import TransactionStatusModal from "../components/TransactionStatusModal"
 import OpenseaLink from "../components/TransactionStatusModal/components/OpenseaLink"
 import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
+
+export const GUILD_PIN_MAINTENANCE = true
 
 const DynamicActivateGuildPinModal = dynamic(
   () => import("./components/ActivateGuildPinModal")
@@ -48,32 +51,43 @@ const MintGuildPin = (): JSX.Element => {
 
   return (
     <>
-      <Button
-        onClick={() => {
-          if (!guildPin?.isActive) {
-            onActivateModalOpen()
-          } else {
-            onOpen()
-            captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
-              guild: urlName,
-            })
-          }
-        }}
-        variant="outline"
-        borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
-        {...(colorMode === "light"
-          ? {
-              _hover: {
-                bg: "blackAlpha.50",
-              },
-              _active: {
-                bg: "blackAlpha.200",
-              },
-            }
-          : {})}
+      <Tooltip
+        isDisabled={!GUILD_PIN_MAINTENANCE}
+        label="Under maintenance, please check back later!"
+        hasArrow
       >
-        {!guildPin?.isActive ? "Setup Guild Pin" : "Mint Guild Pin"}
-      </Button>
+        <Button
+          isDisabled={GUILD_PIN_MAINTENANCE}
+          onClick={
+            GUILD_PIN_MAINTENANCE
+              ? undefined
+              : () => {
+                  if (!guildPin?.isActive) {
+                    onActivateModalOpen()
+                  } else {
+                    onOpen()
+                    captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
+                      guild: urlName,
+                    })
+                  }
+                }
+          }
+          variant="outline"
+          borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
+          {...(colorMode === "light"
+            ? {
+                _hover: {
+                  bg: "blackAlpha.50",
+                },
+                _active: {
+                  bg: "blackAlpha.200",
+                },
+              }
+            : {})}
+        >
+          {!guildPin?.isActive ? "Setup Guild Pin" : "Mint Guild Pin"}
+        </Button>
+      </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
         <ModalOverlay />
