@@ -42,7 +42,7 @@ const SummonMembers = ({ activeStep }: Props) => {
 
   const { onSubmit, isLoading, response } = useEditGuild()
   const handleFinish = () => {
-    if (!hasJoinButton) {
+    if (discordPlatform && !hasJoinButton) {
       onAlertOpen()
       return
     }
@@ -59,7 +59,7 @@ const SummonMembers = ({ activeStep }: Props) => {
       </Text>
       <Wrap overflow="visible">
         <Button h="10" onClick={onCopy} leftIcon={hasCopied ? <Check /> : <Copy />}>
-          Copy link
+          {hasCopied ? "Copied" : "Copy link"}
         </Button>
         {discordPlatform &&
           (hasJoinButton ? (
