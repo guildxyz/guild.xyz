@@ -17,6 +17,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
+import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
 import { CaretDown } from "phosphor-react"
 import React from "react"
 import { useThemeContext } from "../ThemeContext"
@@ -58,7 +59,7 @@ const Onboarding = (): JSX.Element => {
   const { onboardingComplete } = useGuild()
   const { localThemeColor, textColor } = useThemeContext()
   const bannerColor = useColorModeValue("gray.200", "gray.700")
-  const { localStep } = useOnboardingContext()
+  const { localStep, setLocalStep } = useOnboardingContext()
 
   const { isOpen, onToggle } = useDisclosure()
   const WrapperComponent = useBreakpointValue<any>({
@@ -73,99 +74,111 @@ const Onboarding = (): JSX.Element => {
   const isDarkMode = useColorModeValue(false, true)
 
   return (
-    <Collapse in={!onboardingComplete} unmountOnExit>
-      <Card
-        borderColor={localThemeColor}
-        borderWidth={3}
-        p={{ base: 4, sm: 6 }}
-        mb="8"
-        pos="relative"
-        _before={
-          isDarkMode && {
-            content: `""`,
-            position: "absolute",
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            bg: "blackAlpha.300",
-            zIndex: 0,
+    <>
+      <Collapse in={!onboardingComplete} unmountOnExit>
+        <Card
+          borderColor={localThemeColor}
+          borderWidth={3}
+          p={{ base: 4, sm: 6 }}
+          mb="8"
+          pos="relative"
+          _before={
+            isDarkMode && {
+              content: `""`,
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              bg: "blackAlpha.300",
+              zIndex: 0,
+            }
           }
-        }
-        sx={{ "*": { zIndex: 1 } }}
-        onClick={onToggle}
-      >
-        <Stepper
-          index={localStep}
-          orientation={orientation}
-          gap={{ base: 0, md: 2 }}
-          w="full"
-          size={"sm"}
+          sx={{ "*": { zIndex: 1 } }}
+          onClick={onToggle}
         >
-          {steps.map((step, index) => (
-            <WrapperComponent
-              key={index}
-              in={localStep === index || isOpen}
-              style={{ width: "100%" }}
-            >
-              <Step>
-                <StepIndicator
-                  {...{
-                    bg:
-                      localStep > index
-                        ? `${localThemeColor} !important`
-                        : bannerColor,
-                    borderColor:
-                      localStep === index ? `${localThemeColor} !important` : "none",
-                  }}
-                >
-                  <StepStatus
-                    complete={<StepIcon color={textColor} />}
-                    incomplete={<StepNumber />}
-                    active={<StepNumber />}
-                  />
-                </StepIndicator>
-                <Stack
-                  justifyContent={"center"}
-                  spacing="0"
-                  w={{ base: "full", md: "auto" }}
-                >
-                  <StepTitle as={"p"} style={{ fontSize: "xs" }}>
-                    {step.title}
-                  </StepTitle>
-                </Stack>
-                {localStep === index && (
-                  <Center>
-                    <Icon
-                      display={{ md: "none" }}
-                      as={CaretDown}
-                      boxSize={4}
-                      transform={isOpen && "rotate(-180deg)"}
-                      transition="transform .3s"
+          <Stepper
+            index={localStep}
+            orientation={orientation}
+            gap={{ base: 0, md: 2 }}
+            w="full"
+            size={"sm"}
+          >
+            {steps.map((step, index) => (
+              <WrapperComponent
+                key={index}
+                in={localStep === index || isOpen}
+                style={{ width: "100%" }}
+              >
+                <Step>
+                  <StepIndicator
+                    {...{
+                      bg:
+                        localStep > index
+                          ? `${localThemeColor} !important`
+                          : bannerColor,
+                      borderColor:
+                        localStep === index
+                          ? `${localThemeColor} !important`
+                          : "none",
+                    }}
+                  >
+                    <StepStatus
+                      complete={<StepIcon color={textColor} />}
+                      incomplete={<StepNumber />}
+                      active={<StepNumber />}
                     />
-                  </Center>
-                )}
-              </Step>
-              <StepSeparator
-                {...({
-                  position: "relative !important",
-                  top: "unset !important",
-                  left: "unset !important",
-                  marginLeft: 4,
-                  minHeight: { base: !isOpen ? 0 : 4, md: "2px" },
-                  height: {
-                    base: !isOpen ? 0 : "4 !important",
-                    md: "2px !important",
-                  },
-                  transition: ".2s ease",
-                } as any)}
-              />
-            </WrapperComponent>
-          ))}
-        </Stepper>
-        {steps[localStep].note}
-      </Card>
-    </Collapse>
+                  </StepIndicator>
+                  <Stack
+                    justifyContent={"center"}
+                    spacing="0"
+                    w={{ base: "full", md: "auto" }}
+                  >
+                    <StepTitle as={"p"} style={{ fontSize: "xs" }}>
+                      {step.title}
+                    </StepTitle>
+                  </Stack>
+                  {localStep === index && (
+                    <Center>
+                      <Icon
+                        display={{ md: "none" }}
+                        as={CaretDown}
+                        boxSize={4}
+                        transform={isOpen && "rotate(-180deg)"}
+                        transition="transform .3s"
+                      />
+                    </Center>
+                  )}
+                </Step>
+                <StepSeparator
+                  {...({
+                    position: "relative !important",
+                    top: "unset !important",
+                    left: "unset !important",
+                    marginLeft: 4,
+                    minHeight: { base: !isOpen ? 0 : 4, md: "2px" },
+                    height: {
+                      base: !isOpen ? 0 : "4 !important",
+                      md: "2px !important",
+                    },
+                    transition: ".2s ease",
+                  } as any)}
+                />
+              </WrapperComponent>
+            ))}
+          </Stepper>
+          {steps[localStep].note}
+        </Card>
+      </Collapse>
+      {localStep === 3 && (
+        <GuildCreationProgress
+          progress={75}
+          next={() => {
+            setLocalStep(4)
+          }}
+        />
+      )}
+    </>
   )
 }
 
