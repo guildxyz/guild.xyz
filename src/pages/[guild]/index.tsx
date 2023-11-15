@@ -199,34 +199,36 @@ const GuildPage = (): JSX.Element => {
         textColor={textColor}
         ogDescription={description}
         description={
-          <>
-            {description && parseDescription(description)}
-            {Object.keys(socialLinks ?? {}).length > 0 && (
-              <Wrap w="full" spacing={3} mt="3">
-                {Object.entries(socialLinks).map(([type, link]) => {
-                  const prettyLink = link
-                    .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
-                    .replace(/\/+$/, "")
+          (description || Object.keys(socialLinks ?? {}).length > 0) && (
+            <>
+              {description && parseDescription(description)}
+              {Object.keys(socialLinks ?? {}).length > 0 && (
+                <Wrap w="full" spacing={3} mt="3">
+                  {Object.entries(socialLinks).map(([type, link]) => {
+                    const prettyLink = link
+                      .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
+                      .replace(/\/+$/, "")
 
-                  return (
-                    <HStack key={type} spacing={1.5} maxW="full">
-                      <SocialIcon type={type as SocialLinkKey} size="sm" />
-                      <Link
-                        href={link?.startsWith("http") ? link : `https://${link}`}
-                        isExternal
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color={textColor}
-                        noOfLines={1}
-                      >
-                        {prettyLink}
-                      </Link>
-                    </HStack>
-                  )
-                })}
-              </Wrap>
-            )}
-          </>
+                    return (
+                      <HStack key={type} spacing={1.5} maxW="full">
+                        <SocialIcon type={type as SocialLinkKey} size="sm" />
+                        <Link
+                          href={link?.startsWith("http") ? link : `https://${link}`}
+                          isExternal
+                          fontSize="sm"
+                          fontWeight="semibold"
+                          color={textColor}
+                          noOfLines={1}
+                        >
+                          {prettyLink}
+                        </Link>
+                      </HStack>
+                    )
+                  })}
+                </Wrap>
+              )}
+            </>
+          )
         }
         image={
           <GuildLogo
@@ -238,6 +240,7 @@ const GuildPage = (): JSX.Element => {
         }
         imageUrl={imageUrl}
         background={localThemeColor}
+        backgroundOffset={showOnboarding ? 70 : undefined}
         backgroundImage={localBackgroundImage}
         action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={<BackButton />}
