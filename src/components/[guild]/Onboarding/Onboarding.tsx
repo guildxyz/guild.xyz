@@ -18,18 +18,12 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
+import { atom, useAtom } from "jotai"
 import { CaretDown } from "phosphor-react"
 import React from "react"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
-import { useOnboardingContext } from "./components/OnboardingProvider"
 import SummonMembers from "./components/SummonMembers"
-
-type Props = {
-  activeStep: number
-  prevStep: () => void
-  nextStep: () => void
-}
 
 const steps = [
   {
@@ -55,11 +49,13 @@ const steps = [
   },
 ]
 
+export const onboardingStepAtom = atom(3)
+
 const Onboarding = (): JSX.Element => {
   const { onboardingComplete } = useGuild()
   const { localThemeColor, textColor } = useThemeContext()
   const bannerColor = useColorModeValue("gray.200", "gray.700")
-  const { localStep, setLocalStep } = useOnboardingContext()
+  const [activeStep, setActiveStep] = useAtom(onboardingStepAtom)
 
   const { isOpen, onToggle } = useDisclosure()
   const WrapperComponent = useBreakpointValue<any>({
@@ -98,7 +94,7 @@ const Onboarding = (): JSX.Element => {
           onClick={onToggle}
         >
           <Stepper
-            index={localStep}
+            index={activeStep}
             orientation={orientation}
             gap={{ base: 0, md: 2 }}
             w="full"
@@ -107,18 +103,18 @@ const Onboarding = (): JSX.Element => {
             {steps.map((step, index) => (
               <WrapperComponent
                 key={index}
-                in={localStep === index || isOpen}
+                in={activeStep === index || isOpen}
                 style={{ width: "100%" }}
               >
                 <Step>
                   <StepIndicator
                     {...{
                       bg:
-                        localStep > index
+                        activeStep > index
                           ? `${localThemeColor} !important`
                           : bannerColor,
                       borderColor:
-                        localStep === index
+                        activeStep === index
                           ? `${localThemeColor} !important`
                           : "none",
                     }}
@@ -138,7 +134,7 @@ const Onboarding = (): JSX.Element => {
                       {step.title}
                     </StepTitle>
                   </Stack>
-                  {localStep === index && (
+                  {activeStep === index && (
                     <Center>
                       <Icon
                         display={{ md: "none" }}
@@ -167,14 +163,14 @@ const Onboarding = (): JSX.Element => {
               </WrapperComponent>
             ))}
           </Stepper>
-          {steps[localStep].note}
+          {steps[activeStep]?.note}
         </Card>
       </Collapse>
-      {localStep === 3 && (
+      {activeStep === 3 && (
         <GuildCreationProgress
           progress={75}
           next={() => {
-            setLocalStep(4)
+            setActiveStep(4)
           }}
         />
       )}

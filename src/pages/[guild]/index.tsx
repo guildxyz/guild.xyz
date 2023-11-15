@@ -28,7 +28,6 @@ import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
-import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
@@ -49,7 +48,7 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
@@ -164,10 +163,6 @@ const GuildPage = (): JSX.Element => {
     setIsAfterJoin(false)
   }, [])
 
-  // not importing it dynamically because that way the whole page flashes once when it loads
-  const DynamicOnboardingProvider =
-    isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
-
   const showOnboarding = isAdmin && !onboardingComplete
 
   const currentTime = Date.now() / 1000
@@ -189,7 +184,7 @@ const GuildPage = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
   return (
-    <DynamicOnboardingProvider>
+    <>
       <Head>
         <meta name="theme-color" content={localThemeColor} />
       </Head>
@@ -250,9 +245,7 @@ const GuildPage = (): JSX.Element => {
           )
         }
       >
-        {showOnboarding ? (
-          <DynamicOnboarding />
-        ) : (
+        {!showOnboarding && (
           <GuildTabs
             activeTab="HOME"
             rightElement={
@@ -273,8 +266,8 @@ const GuildPage = (): JSX.Element => {
             }
           />
         )}
-
-        {!showOnboarding && <AccessHub />}
+        <DynamicOnboarding />
+        <AccessHub />
 
         <Section
           title={
@@ -376,7 +369,7 @@ const GuildPage = (): JSX.Element => {
           </>
         )}
       </Layout>
-    </DynamicOnboardingProvider>
+    </>
   )
 }
 
