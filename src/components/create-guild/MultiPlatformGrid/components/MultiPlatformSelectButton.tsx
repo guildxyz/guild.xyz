@@ -13,7 +13,6 @@ import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
-import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import CreateGuildContractCall from "components/create-guild/MultiPlatformGrid/components/CreateGuildContractCall"
 import CreateGuildDiscord from "components/create-guild/MultiPlatformGrid/components/CreateGuildDiscord"
 import CreateGuildGithub from "components/create-guild/MultiPlatformGrid/components/CreateGuildGithub"
@@ -78,7 +77,7 @@ const MultiPlatformSelectButton = ({
 }: Props) => {
   const { address } = useAccount()
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
-  const { removePlatform } = useCreateGuildContext()
+  const methods = useFormContext()
   const { setValue } = useFormContext<GuildFormType>()
   const { isOpen, onClose, onOpen } = useDisclosure()
   const user = useUser()
@@ -93,6 +92,17 @@ const MultiPlatformSelectButton = ({
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitterLink = useWatch({ name: "socialLinks.TWITTER" })
 
+  const removePlatform = (platformName: PlatformName) => {
+    const guildPlatformsCopy = JSON.parse(JSON.stringify(guildPlatforms))
+
+    methods.setValue(
+      "guildPlatforms",
+      guildPlatformsCopy.filter(
+        (guildPlatform) => guildPlatform.platformName !== platformName
+      )
+    )
+  }
+
   const isTwitter = platform === "TWITTER"
   const isPlatformConnected =
     !platforms[platform].oauth ||
@@ -104,30 +114,18 @@ const MultiPlatformSelectButton = ({
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
 
-  const isDone = () => {
-    const platformAddedToGuild = guildPlatforms.find(
-      (platfomAdded) => platform === platfomAdded.platformName
-    )
-
-    if (isTwitter) {
-      if (twitterLink) {
-        return true
-      } else {
-        return false
-      }
-    }
-
-    return platformAddedToGuild
-  }
+  const isAdded =
+    (isTwitter && twitterLink) ||
+    guildPlatforms.find((platfomAdded) => platform === platfomAdded.platformName)
 
   const PlatformModal = createGuildPlatformComponents[platform]
 
   return (
     <>
       <Tooltip
-        label={isDone() ? "Remove platform" : ""}
-        arrowSize={10}
+        label={"Remove platform"}
         hasArrow
+        isDisabled={!isAdded}
         placement="top"
       >
         <DisplayCard
@@ -136,7 +134,7 @@ const MultiPlatformSelectButton = ({
             !address
               ? openWalletSelectorModal
               : isPlatformConnected
-              ? isDone()
+              ? isAdded
                 ? () => {
                     if (isTwitter) {
                       setValue("socialLinks.TWITTER", "")
@@ -194,7 +192,7 @@ const MultiPlatformSelectButton = ({
                 </Text>
               )}
             </VStack>
-            {isDone() && (
+            {isAdded && (
               <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />
             )}
           </HStack>

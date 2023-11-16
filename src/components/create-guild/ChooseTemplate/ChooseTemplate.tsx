@@ -7,19 +7,20 @@ import { GuildFormType } from "types"
 import { useAccount } from "wagmi"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import TemplateCard from "./components/TemplateCard"
+import useTemplate from "./useTemplate"
 
 const ChooseTemplate = (): JSX.Element => {
   const { openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
   const { address } = useAccount()
+  const { buildTemplate, toggleReward, toggleTemplate } = useTemplate()
 
   useEffect(() => {
     if (address || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
   }, [address, isWalletSelectorModalOpen])
 
-  const { getTemplate, setTemplate, setDisabled, toggleReward, stepPart, setPart } =
-    useCreateGuildContext()
+  const { setDisabled, stepPart, setPart } = useCreateGuildContext()
 
   const { control } = useFormContext<GuildFormType>()
 
@@ -44,7 +45,7 @@ const ChooseTemplate = (): JSX.Element => {
           </Button>
         )}
 
-        {getTemplate().map((role) => (
+        {buildTemplate().map((role) => (
           <Collapse
             in={
               stepPart === 0 ||
@@ -60,7 +61,7 @@ const ChooseTemplate = (): JSX.Element => {
               selected={!!roles.find((r) => r.name === role.name)}
               {...role}
               onClick={(templateName) => {
-                if (stepPart === 0) setTemplate(templateName)
+                if (stepPart === 0) toggleTemplate(templateName)
               }}
               onCheckReward={(rewradIndex) => {
                 toggleReward(role.name, rewradIndex)
