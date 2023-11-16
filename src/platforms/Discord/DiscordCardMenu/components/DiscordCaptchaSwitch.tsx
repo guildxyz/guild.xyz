@@ -1,11 +1,12 @@
 import { Box, HStack, Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
-import Switch from "components/common/Switch"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Switch from "components/common/Switch"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Question, Shield } from "phosphor-react"
 import { useState } from "react"
+import { GuildPlatform, PlatformGuildData } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
@@ -27,13 +28,29 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
       ...signedValidation,
     })
 
-  const { onSubmit, isLoading } = useSubmitWithSign(submit, {
-    onSuccess: () => {
+  const { onSubmit, isLoading } = useSubmitWithSign<GuildPlatform>(submit, {
+    onSuccess: (response) => {
       toast({
         status: "success",
         title: "Successfully updated Discord settings",
       })
-      mutateGuild()
+      mutateGuild(
+        (prev) => ({
+          ...prev,
+          guildPlatforms: prev.guildPlatforms.map((gp) => {
+            if (gp.id !== response.id) return gp
+
+            return {
+              ...gp,
+              platformGuildData: {
+                ...gp.platformGuildData,
+                needCaptcha: response.platformGuildData.needCaptcha,
+              } as PlatformGuildData["DISCORD"],
+            }
+          }),
+        }),
+        { revalidate: false }
+      )
     },
     onError: (err) => showErrorToast(err),
   })

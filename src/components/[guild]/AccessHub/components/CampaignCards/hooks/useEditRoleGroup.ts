@@ -23,12 +23,15 @@ const useEditRoleGroup = (groupId: number, onSuccess: () => void) => {
         status: "success",
         title: "Successfully edited campaign",
       })
-      mutateGuild((curr) => ({
-        ...curr,
-        groups: curr.groups.map((group) =>
-          group.id !== groupId ? group : response
-        ),
-      }))
+      mutateGuild(
+        (curr) => ({
+          ...curr,
+          groups: curr.groups.map((group) =>
+            group.id !== groupId ? group : response
+          ),
+        }),
+        { revalidate: false }
+      )
       onSuccess()
     },
     onError: (error) => showErrorToast(error),
