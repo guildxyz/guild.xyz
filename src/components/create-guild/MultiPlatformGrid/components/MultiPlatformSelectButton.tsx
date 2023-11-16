@@ -4,6 +4,7 @@ import {
   HStack,
   Icon,
   Text,
+  Tooltip,
   useColorModeValue,
   useDisclosure,
   VStack,
@@ -125,80 +126,88 @@ const MultiPlatformSelectButton = ({
 
   return (
     <>
-      <DisplayCard
-        cursor="pointer"
-        onClick={
-          !address
-            ? openWalletSelectorModal
-            : isPlatformConnected
-            ? isDone()
-              ? () => {
-                  if (isTwitter) {
-                    setValue("socialLinks.TWITTER", "")
-                  } else {
-                    removePlatform(platform)
-                  }
-                }
-              : () => {
-                  onOpen()
-                  onSelection(platform)
-                }
-            : onConnect
-        }
-        h="auto"
-        py={6}
-        px={5}
-        {...rest}
-        data-test={`${platform}-select-button${
-          isPlatformConnected ? "-connected" : ""
-        }`}
+      <Tooltip
+        label={isDone() ? "Remove platform" : ""}
+        arrowSize={10}
+        hasArrow
+        placement="top"
       >
-        <HStack spacing={4}>
-          {imageUrl ? (
-            <Circle size="12" pos="relative" overflow="hidden">
-              <Image src={imageUrl} alt="Guild logo" layout="fill" />
-            </Circle>
-          ) : (
-            <Circle
-              bgColor={circleBgColor}
-              size="12"
-              pos="relative"
-              overflow="hidden"
-            >
-              <Icon
-                as={icon}
-                boxSize={isTwitter ? 8 : 5}
-                weight={isTwitter ? "fill" : "regular"}
-                color={isTwitter ? "#26a7de" : "white"}
-              />
-            </Circle>
-          )}
-          <VStack
-            spacing={{ base: 0.5, lg: 1 }}
-            alignItems="start"
-            w="full"
-            maxW="full"
-          >
-            <Heading
-              fontSize={"md"}
-              fontWeight="bold"
-              letterSpacing="wide"
-              maxW="full"
-              noOfLines={1}
-            >
-              {title}
-            </Heading>
-            {description && (
-              <Text letterSpacing="wide" colorScheme="gray">
-                {(isLoading && `${loadingText}...`) || description}
-              </Text>
+        <DisplayCard
+          cursor="pointer"
+          onClick={
+            !address
+              ? openWalletSelectorModal
+              : isPlatformConnected
+              ? isDone()
+                ? () => {
+                    if (isTwitter) {
+                      setValue("socialLinks.TWITTER", "")
+                    } else {
+                      removePlatform(platform)
+                    }
+                  }
+                : () => {
+                    onOpen()
+                    onSelection(platform)
+                  }
+              : onConnect
+          }
+          h="auto"
+          py={6}
+          px={5}
+          {...rest}
+          data-test={`${platform}-select-button${
+            isPlatformConnected ? "-connected" : ""
+          }`}
+        >
+          <HStack spacing={4}>
+            {imageUrl ? (
+              <Circle size="12" pos="relative" overflow="hidden">
+                <Image src={imageUrl} alt="Guild logo" layout="fill" />
+              </Circle>
+            ) : (
+              <Circle
+                bgColor={circleBgColor}
+                size="12"
+                pos="relative"
+                overflow="hidden"
+              >
+                <Icon
+                  as={icon}
+                  boxSize={isTwitter ? 8 : 5}
+                  weight={isTwitter ? "fill" : "regular"}
+                  color={isTwitter ? "#26a7de" : "white"}
+                />
+              </Circle>
             )}
-          </VStack>
-          {isDone() && (
-            <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />
-          )}
-        </HStack>
-      </DisplayCard>
+            <VStack
+              spacing={{ base: 0.5, lg: 1 }}
+              alignItems="start"
+              w="full"
+              maxW="full"
+            >
+              <Heading
+                fontSize={"md"}
+                fontWeight="bold"
+                letterSpacing="wide"
+                maxW="full"
+                noOfLines={1}
+              >
+                {title}
+              </Heading>
+              {description && (
+                <Text letterSpacing="wide" colorScheme="gray">
+                  {(isLoading && `${loadingText}...`) || description}
+                </Text>
+              )}
+            </VStack>
+            {isDone() && (
+              <Icon as={CheckCircle} weight="fill" boxSize={6} color={"green.500"} />
+            )}
+          </HStack>
+        </DisplayCard>
+      </Tooltip>
+
       <PlatformModal isOpen={isOpen} onClose={onClose} />
     </>
   )
