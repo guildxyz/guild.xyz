@@ -17,7 +17,13 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
   const platformsData: Record<
     Exclude<
       PlatformName,
-      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT"
+      | ""
+      | "TWITTER"
+      | "TWITTER_V1"
+      | "POAP"
+      | "EMAIL"
+      | "UNIQUE_TEXT"
+      | "GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY"
     >,
     PlatformsGridData
   > = {

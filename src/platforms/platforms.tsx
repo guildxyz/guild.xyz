@@ -371,6 +371,23 @@ const platforms: Record<PlatformName, PlatformData> = {
       ssr: false,
     }),
   },
+
+  GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY: {
+    icon: GoogleLogo,
+    name: "Google Drive",
+    colorScheme: "blue",
+    gatedEntity: "",
+    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+
+    oauth: {
+      url: "https://accounts.google.com/o/oauth2/v2/auth",
+      params: {
+        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        scope: "https://www.googleapis.com/auth/drive.file",
+        response_type: "token",
+      },
+    },
+  },
 }
 
 export default platforms

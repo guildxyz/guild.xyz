@@ -14,22 +14,23 @@ import {
   ModalOverlay,
   PinInput,
   PinInputField,
+  PinInputProps,
   Text,
   Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
+import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useEffect, useRef, useState } from "react"
-import { useController, useForm, useWatch } from "react-hook-form"
+import { forwardRef, useEffect, useRef, useState } from "react"
+import { useForm, useWatch } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import { useDisconnectEmail } from "../../hooks/useDisconnect"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
@@ -38,6 +39,35 @@ import processEmailError from "./utils/processEmailError"
 
 const TOO_MANY_ATTEMPTS_ERROR =
   "The code has been invalidated due to too many attempts"
+
+const EmailPinEntry = forwardRef<
+  HTMLInputElement,
+  {
+    onCodeEntered: (code: string) => void
+  } & Omit<PinInputProps, "children">
+>(({ onCodeEntered, ...rest }, ref) => {
+  const [code, setCode] = useState("")
+
+  return (
+    <PinInput
+      value={code}
+      onChange={(value) => {
+        setCode(value)
+        if (value.length === PIN_LENGTH) {
+          onCodeEntered(value)
+        }
+      }}
+      {...rest}
+    >
+      <PinInputField autoFocus ref={ref} />
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+      <PinInputField />
+    </PinInput>
+  )
+})
 
 const EmailAddress = () => {
   const { emails } = useUser()
@@ -74,7 +104,6 @@ const ConnectEmailButton = ({
   }>({
     defaultValues: { email: "", code: "" },
   })
-  const { field } = useController({ control, name: "code" })
   const email = useWatch({ control, name: "email" })
   const { id: userId } = useUser()
   const toast = useToast()
@@ -210,26 +239,13 @@ const ConnectEmailButton = ({
                     />
                   </Text>
                   <HStack justifyContent={"center"}>
-                    <PinInput
+                    <EmailPinEntry
+                      ref={pinInputRef}
                       isInvalid={connect.error}
-                      value={field.value}
-                      onChange={(value) => {
-                        field.onChange(value)
-                        if (value.length === PIN_LENGTH) {
-                          connect.onSubmit({
-                            authData: { code: value },
-                            emailAddress: email,
-                          })
-                        }
+                      onCodeEntered={(code) => {
+                        connect.onSubmit({ authData: { code }, emailAddress: email })
                       }}
-                    >
-                      <PinInputField autoFocus ref={pinInputRef} />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                      <PinInputField />
-                    </PinInput>
+                    />
                   </HStack>
                 </VStack>
               </Collapse>
@@ -290,5 +306,5 @@ const DisconnectEmailButton = () => {
   )
 }
 
-export { ConnectEmailButton }
+export { ConnectEmailButton, EmailPinEntry }
 export default EmailAddress

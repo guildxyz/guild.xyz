@@ -36,7 +36,9 @@ const useUserPublic = (
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
   const { address } = useAccount()
 
-  const idToUse = userIdOrAddress ?? address
+  const idToUseRaw = userIdOrAddress ?? address
+  const idToUse =
+    typeof idToUseRaw === "string" ? idToUseRaw?.toLowerCase() : idToUseRaw
 
   const { data, mutate, isLoading, error } = useSWRImmutable<User>(
     idToUse ? `/v2/users/${idToUse}/profile` : null

@@ -20,7 +20,7 @@ const Account = (): JSX.Element => {
   if (!isConnected) {
     return (
       <AccountButton leftIcon={<SignIn />} onClick={openWalletSelectorModal}>
-        Connect to a wallet
+        Sign in
       </AccountButton>
     )
   }

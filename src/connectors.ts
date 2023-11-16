@@ -1,4 +1,5 @@
 import { CHAIN_CONFIG } from "chains"
+import { CWaaSConnector } from "waasConnector"
 import { configureChains } from "wagmi"
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet"
 import { InjectedConnector } from "wagmi/connectors/injected"
@@ -47,6 +48,24 @@ const connectors = [
     options: {
       allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
       debug: false,
+    },
+  }),
+  new CWaaSConnector({
+    chains,
+    options: {
+      provideAuthToken: async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:8989/v2/third-party/coinbase/token`
+          )
+          const token = await response.json()
+          return token
+        } catch (error) {
+          console.error("[provideAuthToken] failed", error)
+          throw error
+        }
+      },
+      collectAndReportMetrics: true,
     },
   }),
 ]

@@ -12,7 +12,8 @@ import {
   useState,
 } from "react"
 import { PlatformName } from "types"
-import { useAccount, useSwitchNetwork } from "wagmi"
+import type { CWaaSConnector } from "waasConnector"
+import { useAccount, useConnect, useSwitchNetwork } from "wagmi"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -44,7 +45,20 @@ const Web3ConnectionManager = ({
   children,
 }: PropsWithChildren<any>): JSX.Element => {
   const { isConnected, connector } = useAccount()
+  const { connect, connectors } = useConnect()
   const router = useRouter()
+
+  // Auto connect to CWaaS if there is a wallet within the sandbox
+  useEffect(() => {
+    const cwaasConnector = connectors.find(
+      ({ id }) => id === "cwaasWallet"
+    ) as CWaaSConnector
+    cwaasConnector.getProvider().then((waas) => {
+      if (!!waas.wallets.wallet) {
+        connect({ connector: cwaasConnector })
+      }
+    })
+  }, [])
 
   const [isInSafeContext, setIsInSafeContext] = useState(false)
 

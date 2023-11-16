@@ -10,6 +10,8 @@ import { AddressConnectionProvider, User } from "types"
 import fetcher from "utils/fetcher"
 import { useAccount } from "wagmi"
 import {
+  OnSubmitResult,
+  SignProps,
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "../../hooks/useSubmit/useSubmit"
@@ -99,7 +101,6 @@ const getKeyPair = async ([_, id]) => {
 }
 
 const setKeyPair = async ({
-  address,
   mutateKeyPair,
   generatedKeyPair,
   signedValidation,
@@ -111,6 +112,7 @@ const setKeyPair = async ({
   signedValidation: SignedValdation
   id: number
 }): Promise<[StoredKeyPair, boolean]> => {
+  const address = signedValidation?.validation?.params?.addr
   const {
     userId: signedUserId,
     signature,
@@ -196,8 +198,9 @@ const KeyPairContext = createContext<{
     onSubmit: (
       shouldLinkToUser: boolean,
       provider?: AddressConnectionProvider,
-      reCaptchaToken?: string
-    ) => Promise<void>
+      reCaptchaToken?: string,
+      signProps?: Partial<SignProps>
+    ) => Promise<OnSubmitResult<[StoredKeyPair, boolean]>>
   }
 }>(undefined)
 
@@ -386,9 +389,12 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
           onSubmit: async (
             shouldLinkToUser: boolean,
             provider?: AddressConnectionProvider,
-            reCaptchaToken?: string
+            reCaptchaToken?: string,
+            signProps?: Partial<SignProps>
           ) => {
-            const body: SetKeypairPayload = { pubKey: undefined }
+            const body: SetKeypairPayload & { signProps?: Partial<SignProps> } = {
+              pubKey: undefined,
+            }
 
             if (reCaptchaToken) {
               body.verificationParams = {
@@ -441,6 +447,10 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
               const prevKeyPair = await getKeyPairFromIdb(id)
               body.addressConnectionProvider = "DELEGATE"
               body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
+            }
+
+            if (signProps) {
+              body.signProps = signProps
             }
 
             return setSubmitResponse.onSubmit(body)

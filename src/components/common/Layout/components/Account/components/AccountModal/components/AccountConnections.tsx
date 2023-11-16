@@ -4,6 +4,16 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
+  Img,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -12,15 +22,25 @@ import {
   Spacer,
   Stack,
   Text,
+  Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
+import type { UserAddress } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
+import Button from "components/common/Button"
 import { SectionProps } from "components/common/Section"
+import { randomBytes } from "crypto"
+import useSubmit from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
+import { mutate } from "swr"
 import { PlatformName } from "types"
-import { useAccount } from "wagmi"
+import { useFetcherWithSign } from "utils/fetcher"
+import type { CWaaSConnector } from "waasConnector"
+import { useAccount, useConnect } from "wagmi"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
@@ -59,7 +79,62 @@ const AccountConnections = () => {
   const linkedAddresses = addresses?.filter(
     (addr) =>
       (typeof addr === "string" ? addr : addr?.address)?.toLowerCase() !==
-      address.toLowerCase()
+      address?.toLowerCase()
+  )
+
+  const coinbaseRestoreModal = useDisclosure()
+  const [backupData, setBackupData] = useState("")
+  const { connectors, connect } = useConnect()
+  const fetcherWithSign = useFetcherWithSign()
+  const toast = useToast()
+  const restore = useSubmit(
+    async () => {
+      const cwaasConnector = connectors.find(
+        ({ id }) => id === "cwaasWallet"
+      ) as CWaaSConnector
+
+      const { account } = await cwaasConnector.restoreWallet(backupData)
+
+      const timestamp = Date.now()
+      const nonce = randomBytes(32).toString("hex")
+      const addr = account.address.toLowerCase()
+      const message = `Address: ${addr}\nNonce: ${nonce}\n Timestamp: ${timestamp}`
+      const signature = await account.signMessage({
+        message,
+      })
+
+      const body = {
+        address: addr,
+        signature,
+        nonce,
+        timestamp,
+        isPrimary: true,
+        isDelegated: false,
+      }
+
+      const userAddress: UserAddress = await fetcherWithSign([
+        `/v2/users/${userId}/addresses`,
+        { method: "POST", body },
+      ])
+
+      await mutate(
+        [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
+        (prev) => ({
+          ...prev,
+          addresses: [userAddress],
+        }),
+        { revalidate: false }
+      )
+
+      connect({ connector: cwaasConnector })
+    },
+    {
+      onSuccess: () => {
+        toast({ status: "success", title: "Wallet restored!" })
+        coinbaseRestoreModal.onClose()
+        setBackupData("")
+      },
+    }
   )
 
   return (
@@ -121,7 +196,62 @@ const AccountConnections = () => {
                 <LinkDelegateVaultButton vaults={vaults} />
               </ButtonGroup>
             ) : (
-              <LinkAddressButton />
+              <>
+                <ButtonGroup isAttached>
+                  <LinkAddressButton />
+
+                  <Divider
+                    orientation="vertical"
+                    borderColor="whiteAlpha.500"
+                    h="8"
+                  />
+
+                  <Tooltip label="Restore and link Coinbase wallet">
+                    <IconButton
+                      onClick={() => {
+                        coinbaseRestoreModal.onOpen()
+                      }}
+                      size={"sm"}
+                      icon={
+                        <Img w={5} h={5} src="/walletLogos/coinbasewallet.png" />
+                      }
+                      aria-label="Restore and link Coinbase wallet"
+                    />
+                  </Tooltip>
+                </ButtonGroup>
+                <Modal
+                  isOpen={coinbaseRestoreModal.isOpen}
+                  onClose={coinbaseRestoreModal.onClose}
+                >
+                  <ModalOverlay />
+                  <ModalContent>
+                    <ModalHeader>Restore and link Coinbase wallet</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                      <Stack>
+                        <Text>
+                          Paste the backup data of the Coinbase wallet here
+                        </Text>
+                        <Input
+                          value={backupData}
+                          onChange={({ target: { value } }) => setBackupData(value)}
+                        />
+                      </Stack>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button
+                        colorScheme="green"
+                        isDisabled={!backupData}
+                        isLoading={restore.isLoading}
+                        loadingText="Restoring"
+                        onClick={restore.onSubmit}
+                      >
+                        Restore
+                      </Button>
+                    </ModalFooter>
+                  </ModalContent>
+                </Modal>
+              </>
             )}
           </Stack>
         ) : (

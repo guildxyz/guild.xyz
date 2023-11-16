@@ -86,6 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
+  | "GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY"
 
 type PlatformUserData = {
   acessToken?: string
@@ -587,6 +588,7 @@ enum ValidationMethod {
   STANDARD = 1,
   KEYPAIR = 2,
   EIP1271 = 3,
+  EMAIL = 5,
 }
 
 type MonetizePoapForm = {

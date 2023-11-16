@@ -30,6 +30,7 @@ module.exports = {
         "@ensdomains/address-encoder": false,
         "decode-named-character-reference": false,
         isows: false,
+        "@wagmi/connectors": false,
       }
     }
 

@@ -10,7 +10,14 @@ import CreateGuildUniqueText from "./components/CreateGuildUniqueText"
 
 // TODO: we could move these to platforms.tsx too?
 const createGuildPlatformComponents: Record<
-  Exclude<PlatformName, "POAP" | "TWITTER" | "TWITTER_V1" | "EMAIL">,
+  Exclude<
+    PlatformName,
+    | "POAP"
+    | "TWITTER"
+    | "TWITTER_V1"
+    | "EMAIL"
+    | "GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY"
+  >,
   () => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,

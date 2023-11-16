@@ -54,7 +54,9 @@ type TGAuthResult = {
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
   authLevel: AuthLevel = "membership"
-): OAuthState<OAuthResponse> & { onOpen: () => Promise<void> } => {
+): OAuthState<OAuthResponse> & {
+  onOpen: () => Promise<OAuthState<OAuthResponse>>
+} => {
   const { captureEvent } = usePostHogContext()
 
   const { params, url, oauthOptionsInitializer } = platforms[platformName].oauth ?? {
@@ -78,11 +80,12 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   })
 
   const oauthPopupHandler = async () => {
-    setOauthState({
+    let result: OAuthState<OAuthResponse> = {
       isAuthenticating: true,
       authData: null,
       error: null,
-    })
+    }
+    setOauthState(oauthState)
 
     let finalOauthParams = params
 
@@ -91,14 +94,16 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         finalOauthParams = await oauthOptionsInitializer(redirectUri)
       } catch (error) {
         captureEvent("Failed to generate Twitter 1.0 request token", { error })
-        setOauthState({
+        result = {
           error: {
             error: "Error",
             errorDescription: error.message,
           },
           isAuthenticating: false,
           authData: null,
-        })
+        }
+
+        setOauthState(result)
         return
       }
     }
@@ -140,7 +145,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
                   data: { error: string; errorDescription: string }
                 }
 
-            setOauthState(
+            result =
               type === "TG_AUTH_SUCCESS"
                 ? {
                     isAuthenticating: false,
@@ -152,7 +157,8 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
                     error: data,
                     authData: null,
                   }
-            )
+
+            setOauthState(result)
             resolve()
           } catch {}
         }
@@ -168,17 +174,19 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
         const { type, data } = event.data
 
         if (type === "OAUTH_ERROR") {
-          setOauthState({
+          result = {
             isAuthenticating: false,
             error: data,
             authData: null,
-          })
+          }
+          setOauthState(result)
         } else {
-          setOauthState({
+          result = {
             isAuthenticating: false,
             error: null,
             authData: data,
-          })
+          }
+          setOauthState(result)
         }
 
         resolve()
@@ -205,6 +213,8 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       channel.close()
       window.removeEventListener("message", tgListener)
     })
+
+    return result
   }
 
   useEffect(() => {

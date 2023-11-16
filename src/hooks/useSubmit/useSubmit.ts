@@ -4,7 +4,7 @@ import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
-import { ValidationMethod } from "types"
+import { OneOf, ValidationMethod } from "types"
 import { keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
@@ -20,6 +20,11 @@ export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }
+
+export type OnSubmitResult<ResponseType> = OneOf<
+  { data: ResponseType },
+  { error: any }
+>
 
 type FetcherFunction<ResponseType> = ({
   signedPayload,
@@ -38,17 +43,19 @@ const useSubmit = <DataType, ResponseType>(
   const [response, setResponse] = useState<ResponseType>(undefined)
 
   return {
-    onSubmit: (data?: DataType) => {
+    onSubmit: (data?: DataType): Promise<OnSubmitResult<ResponseType>> => {
       setIsLoading(true)
       setError(undefined)
-      fetch(data)
+      return fetch(data)
         .then((d) => {
           onSuccess?.(d)
           setResponse(d)
+          return <OnSubmitResult<ResponseType>>{ data: d }
         })
         .catch((e) => {
           onError?.(e)
           setError(e)
+          return <OnSubmitResult<ResponseType>>{ error: e }
         })
         .finally(() => setIsLoading(false))
     },
@@ -143,7 +150,10 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const chainId = useChainId()
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
-    async (data: DataType | Record<string, unknown> = {}) => {
+    async ({
+      signProps,
+      ...data
+    }: (DataType | Record<string, unknown>) & { signProps?: SignProps } = {}) => {
       const payload = JSON.stringify(data ?? {})
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
@@ -157,6 +167,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         keyPair,
         msg: message,
         ts: Date.now() + timeInaccuracy,
+        ...signProps,
       })
         .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ domain }) =>
@@ -224,7 +235,7 @@ export type SignProps = {
   walletClient: WalletClient
   address: `0x${string}`
   payload: string
-  chainId: string
+  chainId?: string
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
   msg?: string
@@ -274,10 +285,17 @@ export const sign = async ({
       params.chainId = chainId
     }
 
-    sig = await walletClient.signMessage({
-      account: address,
-      message: getMessage(params),
-    })
+    if (walletClient.account.type === "local") {
+      // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
+      sig = await walletClient.account.signMessage({
+        message: getMessage(params),
+      })
+    } else {
+      sig = await walletClient.signMessage({
+        account: address,
+        message: getMessage(params),
+      })
+    }
   }
 
   return [payload, { params, sig }]
