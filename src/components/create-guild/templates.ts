@@ -1,10 +1,11 @@
-import { RoleFormType } from "types"
+import { RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Member",
     description: "Free entry",
+    visibility: Visibility.PUBLIC,
 
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
@@ -17,6 +18,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Not a robot",
     description: "Basic anti-bot member verification",
+    visibility: Visibility.PUBLIC,
 
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
@@ -29,6 +31,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Socialite",
     description: "",
+    visibility: Visibility.PUBLIC,
     logic: "OR",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -55,6 +58,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Developer",
     description: "",
+    visibility: Visibility.PUBLIC,
     logic: "OR",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -104,6 +108,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Onchain Citizen",
     description: "",
+    visibility: Visibility.PUBLIC,
     logic: "OR",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -152,6 +157,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Discord Fellow",
     description: "",
+    visibility: Visibility.PUBLIC,
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -166,6 +172,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Sybil Resistant",
     description: "",
+    visibility: Visibility.PUBLIC,
     logic: "ANY_OF",
     anyOfNum: 3,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,

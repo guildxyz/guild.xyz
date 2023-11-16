@@ -5,13 +5,10 @@ import {
   Collapse,
   Flex,
   HStack,
-  Heading,
   Icon,
   SimpleGrid,
-  Spacer,
   Text,
   Tooltip,
-  Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
@@ -21,8 +18,11 @@ import {
   RewardDisplay,
   RewardIcon,
 } from "components/[guild]/RoleCard/components/Reward"
+import RoleHeader from "components/[guild]/RoleCard/components/RoleHeader"
+import RoleRequirementsSection, {
+  RoleRequirementsSectionHeader,
+} from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
-import GuildLogo from "components/common/GuildLogo"
 import { Check } from "phosphor-react"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { Fragment, KeyboardEvent } from "react"
@@ -71,8 +71,7 @@ const TemplateCard = ({
   onClick,
   onCheckReward,
 }: Props): JSX.Element => {
-  const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const roleBottomBorderColor = useColorModeValue("gray.200", "gray.600")
+  const roleRewardsBgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
   const roles = useWatch<GuildFormType, "roles">({ name: "roles" })
   const guildPlatforms = useWatch<GuildFormType, "guildPlatforms">({
@@ -121,26 +120,7 @@ const TemplateCard = ({
       <Card overflow="hidden">
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex direction="column">
-            <HStack spacing={3} p={5}>
-              <HStack spacing={4} minW={0}>
-                <GuildLogo
-                  imageUrl={role.imageUrl}
-                  size={{ base: "48px", md: "52px" }}
-                />
-                <Wrap spacingX={3} spacingY={1}>
-                  <Heading
-                    as="h3"
-                    fontSize="xl"
-                    fontFamily="display"
-                    minW={0}
-                    overflowWrap={"break-word"}
-                    mt="-1px !important"
-                  >
-                    {role.name}
-                  </Heading>
-                </Wrap>
-              </HStack>
-            </HStack>
+            <RoleHeader role={role} />
 
             <Collapse in={part === 0}>
               <Box pl={5} pb={5}>
@@ -155,7 +135,7 @@ const TemplateCard = ({
                 borderWidth={2}
                 borderColor="primary.500"
                 borderRadius={6}
-                background={roleBottomBgColor}
+                background={roleRewardsBgColor}
                 borderStyle={"dashed"}
                 m={5}
               >
@@ -237,33 +217,8 @@ const TemplateCard = ({
             </Collapse>
           </Flex>
 
-          <Flex
-            direction="column"
-            bgColor={roleBottomBgColor}
-            borderLeftWidth={{ base: 0, md: 1 }}
-            borderLeftColor={roleBottomBorderColor}
-            transition="background .2s"
-            // Card's `overflow: clip` isn't enough in Safari
-            borderTopRightRadius={{ md: "2xl" }}
-            borderBottomRightRadius={{ md: "2xl" }}
-            pos="relative"
-          >
-            <HStack p={5} pb={0} mb={{ base: 4, md: 6 }} transition="transform .2s">
-              <Text
-                as="span"
-                mt="1"
-                mr="2"
-                fontSize="xs"
-                fontWeight="bold"
-                color="gray"
-                textTransform="uppercase"
-                noOfLines={1}
-                transition="opacity .2s"
-              >
-                Requirements to qualify
-              </Text>
-              <Spacer />
-            </HStack>
+          <RoleRequirementsSection>
+            <RoleRequirementsSectionHeader />
             <Box p={5} pt={0}>
               {role.requirements.map((requirement, i) => (
                 <Fragment key={i}>
@@ -281,7 +236,7 @@ const TemplateCard = ({
                 </Fragment>
               ))}
             </Box>
-          </Flex>
+          </RoleRequirementsSection>
         </SimpleGrid>
       </Card>
       {part === 0 && (
