@@ -118,15 +118,7 @@ const TemplateCard = ({
       h="max-content"
       w="full"
     >
-      <Card
-        scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
-        overflow="clip"
-        sx={{
-          ":target": {
-            boxShadow: "var(--chakra-shadows-outline)",
-          },
-        }}
-      >
+      <Card overflow="hidden">
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex direction="column">
             <HStack spacing={3} p={5}>
