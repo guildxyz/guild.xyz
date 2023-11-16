@@ -4,7 +4,6 @@ import getRandomInt from "utils/getRandomInt"
 export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Member",
-    description: "Free entry",
     visibility: Visibility.PUBLIC,
 
     logic: "AND",
@@ -17,7 +16,6 @@ export const TEMPLATES: Array<RoleFormType> = [
   },
   {
     name: "Not a robot",
-    description: "Basic anti-bot member verification",
     visibility: Visibility.PUBLIC,
 
     logic: "AND",
@@ -181,7 +179,6 @@ export const TEMPLATES: Array<RoleFormType> = [
         type: "EMAIL_VERIFIED",
       },
       {
-        id: 294887,
         data: {
           schemaId:
             "0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9",
@@ -192,7 +189,6 @@ export const TEMPLATES: Array<RoleFormType> = [
         chain: "BASE_MAINNET",
       },
       {
-        id: 294888,
         data: { minAmount: 100 },
         type: "GUILD_ADMIN",
         chain: "ETHEREUM",
@@ -219,7 +215,8 @@ export const TEMPLATES: Array<RoleFormType> = [
       },
       {
         type: "RABBITHOLE",
-        address: "0x2fAcE815247A997eAa29881C16F75FD83f4Df65b",
+        address: "0x2face815247a997eaa29881c16f75fd83f4df65b",
+        chain: "ETHEREUM",
       },
       {
         data: { minAmount: 10 },
