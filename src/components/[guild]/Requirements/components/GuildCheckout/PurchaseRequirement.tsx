@@ -121,24 +121,19 @@ const PurchaseRequirement = (): JSX.Element => {
                   },
                 }}
               >
-                {!isConnected ? (
-                  <ConnectWalletButton />
-                ) : (
-                  !error && (
-                    <>
-                      <SwitchNetworkButton
-                        targetChainId={Chains[requirement.chain]}
-                      />
+                <ConnectWalletButton />
+                {!error && (
+                  <>
+                    <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
-                      <Collapse in={chainId === Chains[requirement.chain]}>
-                        <TOSCheckbox>
-                          {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
-                        </TOSCheckbox>
+                    <Collapse in={chainId === Chains[requirement.chain]}>
+                      <TOSCheckbox>
+                        {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
+                      </TOSCheckbox>
 
-                        <PurchaseAllowanceButton />
-                      </Collapse>
-                    </>
-                  )
+                      <PurchaseAllowanceButton />
+                    </Collapse>
+                  </>
                 )}
                 <PurchaseButton />
               </Stack>

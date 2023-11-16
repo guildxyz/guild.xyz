@@ -2,12 +2,14 @@ import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { Chains } from "chains"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
+import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Card from "components/common/Card"
 import { Logic, Requirement } from "types"
+import { useAccount } from "wagmi"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
@@ -20,6 +22,8 @@ type Props = {
 const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
+
+  const { isConnected } = useAccount()
 
   const { chain, nftAddress, alreadyCollected } = useCollectNftContext()
   const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
@@ -70,9 +74,11 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
         <CollectNftFeesTable bgColor={requirementsSectionBgColor} />
 
         <Stack w="full" spacing={2}>
-          {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
-            <SwitchNetworkButton targetChainId={Chains[chain]} />
-          )}
+          <ConnectWalletButton />
+          <SwitchNetworkButton
+            targetChainId={Chains[chain]}
+            hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
+          />
           <CollectNftButton label="Collect now" colorScheme="green" />
         </Stack>
 
