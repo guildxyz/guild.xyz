@@ -1,4 +1,4 @@
-import { Text, useSteps } from "@chakra-ui/react"
+import { useSteps } from "@chakra-ui/react"
 import {
   PropsWithChildren,
   createContext,
@@ -8,24 +8,12 @@ import {
 } from "react"
 import { FormProvider, useFieldArray, useForm } from "react-hook-form"
 import { GuildFormType, PlatformName, RoleFormType } from "types"
-import BasicInfo from "./BasicInfo"
-import ChooseTemplate from "./ChooseTemplate"
-import CreateGuildIndex from "./CreateGuildIndex"
 import { TEMPLATES } from "./templates"
-
-type Step = {
-  title: string
-  label?: string[] | JSX.Element[]
-  description?: string[]
-  content?: JSX.Element
-  progress?: number[]
-}
 
 const ID_AFTER_DOMAIN_REGEX = /(?<=com\/).*$/
 
 const CreateGuildContext = createContext<{
   setTemplate: (roleTemplateName: string) => void
-  steps: Step[]
   prevStep: () => void
   nextStep: () => void
   activeStep: number
@@ -39,52 +27,6 @@ const CreateGuildContext = createContext<{
   nextStepIsDisabled: boolean
   setDisabled: (value: boolean) => void
 } | null>(null)
-
-const STEPS: Step[] = [
-  {
-    title: "Set platforms",
-    label: [
-      "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
-    ],
-    content: <CreateGuildIndex />,
-    progress: [0],
-  },
-  {
-    title: "Customize guild",
-    label: [<BasicInfo key={0} />],
-    progress: [25],
-  },
-  {
-    title: "Choose template",
-    description: ["1/2", "2/2"],
-    label: [
-      <Text key={0}>
-        Your guild consists of
-        <Text as="b" fontWeight={"semibold"}>
-          {` roles `}
-        </Text>
-        that the members can satisfy the
-        <Text as="b" fontWeight={"semibold"}>
-          {` requirements `}
-        </Text>
-        of to gain access to their
-        <Text as="b" fontWeight={"semibold"}>
-          {` rewards`}
-        </Text>
-        . Choose some defaults to get you started!
-      </Text>,
-      <Text key={1}>Choose rewards for the selected roles!</Text>,
-    ],
-    content: <ChooseTemplate />,
-    progress: [50, 66],
-  },
-  {
-    title: "Edit roles",
-  },
-  {
-    title: "Finish",
-  },
-]
 
 const CreateGuildProvider = ({
   children,
@@ -244,7 +186,7 @@ const CreateGuildProvider = ({
     setActiveStep,
   } = useSteps({
     index: 0,
-    count: STEPS.length,
+    count: 5,
   })
 
   useEffect(() => {
@@ -259,7 +201,6 @@ const CreateGuildProvider = ({
   return (
     <CreateGuildContext.Provider
       value={{
-        steps: STEPS,
         prevStep: () => {
           prevStep()
           setPart(0)

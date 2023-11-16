@@ -1,6 +1,7 @@
 const baseStyle = {
   indicator: {
-    background: "gray.700",
+    background: "gray.200",
+    _dark: { background: "gray.700" },
     padding: "3.5",
     "&[data-status=incomplete]": {
       borderColor: "transparent",

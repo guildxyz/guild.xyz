@@ -11,10 +11,6 @@ import { PlatformType } from "types"
 import SendDiscordJoinButtonAlert from "./components/SendDiscordJoinButtonAlert"
 import SendDiscordJoinButtonModal from "./components/SendDiscordJoinButtonModal"
 
-type Props = {
-  activeStep: number
-}
-
 export type SummonMembersForm = {
   channelId: string
   serverId: string
@@ -23,7 +19,7 @@ export type SummonMembersForm = {
   button: string
 }
 
-const SummonMembers = ({ activeStep }: Props) => {
+const SummonMembers = () => {
   const [player, setPlayer] = useState<any>()
   const { asPath } = useRouter()
 
@@ -53,7 +49,7 @@ const SummonMembers = ({ activeStep }: Props) => {
 
   return (
     <>
-      <Text mb="2" mt={8}>
+      <Text mb="2">
         If you're satisfied with everything, it's time to invite your community to
         join!
       </Text>
@@ -108,7 +104,7 @@ const SummonMembers = ({ activeStep }: Props) => {
             }}
           />
           <Text colorScheme="gray" fontSize={"sm"} fontWeight="medium">
-            Guild {(activeStep + 1) * 25}% complete
+            Guild 100% complete
           </Text>
         </HStack>
         <Button
