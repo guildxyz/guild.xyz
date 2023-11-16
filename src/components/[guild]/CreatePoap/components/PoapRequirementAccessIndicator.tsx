@@ -5,15 +5,15 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "components/[guild]/Requirements/components/RequiementAccessIndicatorUI"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS, { RequirementType } from "requirements"
+import { useAccount } from "wagmi"
 
 /**
  * This is copy-pasted from RequiementAccessIndicator and adjusted to work with
@@ -21,7 +21,7 @@ import REQUIREMENTS, { RequirementType } from "requirements"
  */
 const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
   const { openAccountModal } = useWeb3ConnectionManager()
-  const { account } = useWeb3React()
+  const { isConnected } = useAccount()
   const { id, type, data, isNegated } = useRequirementContext()
 
   const { data: accessData } = useUserPoapEligibility(poapIdentifier)
@@ -31,7 +31,7 @@ const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
     (obj) => obj.requirementId === id
   )
 
-  if (!account) return null
+  if (!isConnected) return null
 
   if (
     reqAccessData?.access ||

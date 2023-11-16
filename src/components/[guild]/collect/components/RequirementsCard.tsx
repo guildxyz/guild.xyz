@@ -1,13 +1,13 @@
 import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import { Chains } from "chains"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
+import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import { TransactionStatusProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import { Chains } from "connectors"
+import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
+import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import Card from "components/common/Card"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
@@ -22,8 +22,11 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
 
-  const { chain, address, alreadyCollected } = useCollectNftContext()
-  const { data, isValidating } = useNftDetails(chain, address)
+  const { chain, nftAddress, alreadyCollected } = useCollectNftContext()
+  const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
+    chain,
+    nftAddress
+  )
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
@@ -68,29 +71,34 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
         <CollectNftFeesTable bgColor={requirementsSectionBgColor} />
 
         <Stack w="full" spacing={2}>
-          {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
-            <SwitchNetworkButton targetChainId={Chains[chain]} />
-          )}
-          <TransactionStatusProvider>
-            <CollectNftButton label="Collect now" colorScheme="green" />
-          </TransactionStatusProvider>
+          <ConnectWalletButton />
+          <SwitchNetworkButton
+            targetChainId={Chains[chain]}
+            hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
+          />
+          <CollectNftButton label="Collect now" colorScheme="green" />
         </Stack>
 
-        {(data || isValidating) && (
-          <Skeleton maxW="max-content" isLoaded={!isValidating && !!data}>
-            <Text fontSize="sm" colorScheme="gray" fontWeight="medium">
-              {`${
-                new Intl.NumberFormat("en", {
-                  notation: "standard",
-                }).format(data?.totalCollectors) ?? 0
-              } collected - ${
-                new Intl.NumberFormat("en", {
-                  notation: "standard",
-                }).format(data?.totalCollectorsToday) ?? 0
-              } collected today`}
-            </Text>
-          </Skeleton>
-        )}
+        <Skeleton
+          maxW="max-content"
+          isLoaded={
+            !isLoading &&
+            typeof totalCollectors !== "undefined" &&
+            typeof totalCollectorsToday !== "undefined"
+          }
+        >
+          <Text fontSize="sm" colorScheme="gray" fontWeight="medium">
+            {`${
+              new Intl.NumberFormat("en", {
+                notation: "standard",
+              }).format(totalCollectors) ?? 0
+            } collected - ${
+              new Intl.NumberFormat("en", {
+                notation: "standard",
+              }).format(totalCollectorsToday) ?? 0
+            } collected today`}
+          </Text>
+        </Skeleton>
       </Stack>
     </Card>
   )

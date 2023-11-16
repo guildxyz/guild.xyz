@@ -1,10 +1,10 @@
+import type { Chain, Chains } from "chains"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import type { Chain, Chains } from "connectors"
 import { RequirementType } from "requirements"
 
 type Token = {
-  address: string
+  address: `0x${string}`
   name: string
   symbol: string
   decimals: number
@@ -115,7 +115,7 @@ type AddressConnectionProvider = "DELEGATE"
 type User = {
   id: number
   addresses: Array<{
-    address: string
+    address: `0x${string}`
     userId: number
     isPrimary: boolean
     provider: AddressConnectionProvider
@@ -230,7 +230,7 @@ type PlatformGuildData = {
   }
   CONTRACT_CALL: {
     chain: Chain
-    contractAddress: string
+    contractAddress: `0x${string}`
     function: ContractCallFunction
     argsToSign: string[]
     name: string
@@ -296,7 +296,7 @@ type Trait = {
 type Requirement = {
   id: number
   type: RequirementType
-  address: string
+  address?: `0x${string}`
   chain: Chain
   data?: Record<string, any>
   roleId: number
@@ -371,7 +371,7 @@ type PoapContract = {
   poapId: number
   chainId: number
   vaultId: number
-  contract: string
+  contract: `0x${string}`
 }
 
 type GuildPoap = {

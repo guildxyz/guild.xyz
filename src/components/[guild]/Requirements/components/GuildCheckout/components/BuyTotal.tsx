@@ -1,8 +1,9 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
-import { RPC } from "connectors"
-import useTokenData from "hooks/useTokenData"
+import { CHAIN_CONFIG, Chains } from "chains"
 import useVault from "requirements/Payment/hooks/useVault"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
+import { useToken } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -13,31 +14,42 @@ const BuyTotal = (): JSX.Element => {
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const {
-    data: { token, fee },
-    isValidating,
-    error,
-  } = useVault(requirement.address, requirement.data.id, requirement.chain)
+  const { token, fee, isLoading, error } = useVault(
+    requirement.address,
+    requirement.data.id,
+    requirement.chain
+  )
 
-  const {
-    data: { decimals, symbol },
-  } = useTokenData(requirement.chain, token)
+  const { data: tokenData } = useToken({
+    address: token,
+    chainId: Chains[requirement.chain],
+    enabled: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
+  })
 
-  const isNativeCurrency =
-    pickedCurrency === RPC[requirement.chain].nativeCurrency.symbol
+  const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 
-  const { estimatedGasFee, estimateGasError, isEstimateGasLoading } = usePayFee()
-  const estimatedGasInFloat = estimatedGasFee
-    ? parseFloat(
-        formatUnits(estimatedGasFee, RPC[requirement.chain].nativeCurrency.decimals)
-      )
-    : null
+  const { isPreparing, estimatedGas } = usePayFee()
 
-  const priceInSellToken =
-    fee && decimals
-      ? Number(formatUnits(fee, decimals)) +
+  const estimatedGasInFloat =
+    typeof estimatedGas === "bigint"
+      ? parseFloat(
+          formatUnits(
+            estimatedGas,
+            CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
+          )
+        )
+      : null
+
+  const priceInSellToken = fee
+    ? isNativeCurrency
+      ? Number(
+          formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
+        )
+      : tokenData?.decimals
+      ? Number(formatUnits(fee, tokenData.decimals)) +
         (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
       : 0
+    : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001
 
@@ -51,7 +63,7 @@ const BuyTotal = (): JSX.Element => {
 
           <PriceFallback {...{ error, pickedCurrency }}>
             <Text as="span">
-              <Skeleton isLoaded={!isValidating}>
+              <Skeleton isLoaded={!isLoading}>
                 <Text as="span" fontWeight="semibold">
                   {priceInSellToken
                     ? `${
@@ -60,7 +72,7 @@ const BuyTotal = (): JSX.Element => {
                           : Number(priceInSellToken.toFixed(3))
                       } `
                     : "0.00 "}
-                  {symbol}
+                  {tokenData?.symbol}
                 </Text>
                 {!isNativeCurrency && (
                   <Text as="span" colorScheme="gray">
@@ -79,21 +91,18 @@ const BuyTotal = (): JSX.Element => {
           {priceInSellToken
             ? `${isTooSmallPrice ? "< 0.001" : Number(priceInSellToken.toFixed(3))} `
             : "0.00 "}
-          {symbol}
+          {tokenData?.symbol}
         </Td>
       </Tr>
       <Tr>
         <Td>Gas fee</Td>
         <Td isNumeric>
-          <Skeleton isLoaded={!isEstimateGasLoading}>
-            {estimateGasError || !estimatedGasFee
+          <Skeleton isLoaded={!isPreparing}>
+            {!estimatedGasInFloat
               ? "Couldn't estimate"
-              : `${parseFloat(
-                  formatUnits(
-                    estimatedGasFee,
-                    RPC[requirement.chain].nativeCurrency.decimals
-                  )
-                ).toFixed(8)} ${RPC[requirement.chain].nativeCurrency.symbol}`}
+              : `${Number(estimatedGasInFloat.toFixed(8))} ${
+                  CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+                }`}
           </Skeleton>
         </Td>
       </Tr>

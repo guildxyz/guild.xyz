@@ -1,89 +1,87 @@
-import { Contract } from "@ethersproject/contracts"
-import { parseUnits } from "@ethersproject/units"
-import { useWeb3React } from "@web3-react/core"
-import { Chains, RPC } from "connectors"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
-import ERC20_ABI from "static/abis/erc20Abi.json"
-import FEE_COLLECTOR_ABI from "static/abis/feeCollectorAbi.json"
+import useSubmitTransaction from "hooks/useSubmitTransaction"
+import feeCollectorAbi from "static/abis/feeCollector"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { parseUnits } from "viem"
+import { useChainId, useToken } from "wagmi"
 
 type RegisterVaultParams = {
-  owner: string
-  token: string
+  owner: `0x${string}`
+  token: `0x${string}`
   fee: number
+  chain: Chain
 }
 
-const useRegisterVault = (onSuccess: (registeredVaultId: string) => void) => {
-  const { chainId, account, provider } = useWeb3React()
+const useRegisterVault = ({
+  chain,
+  token,
+  fee,
+  owner,
+  onSuccess,
+}: RegisterVaultParams & { onSuccess: (registeredVaultId: string) => void }) => {
+  const { captureEvent } = usePostHogContext()
+  const chainId = useChainId()
+
   const showErrorToast = useShowErrorToast()
 
-  const registerVault = async (data: RegisterVaultParams): Promise<string> => {
-    const { owner, token, fee } = data
-
-    if (!owner || !token || !fee) throw new Error("Invalid data")
-
-    const erc20Contract = new Contract(token, ERC20_ABI, provider)
-
-    let tokenDecimals =
-      token === NULL_ADDRESS
-        ? RPC[Chains[chainId]].nativeCurrency.decimals
-        : undefined
-    if (token !== NULL_ADDRESS) {
-      try {
-        tokenDecimals = await erc20Contract?.decimals()
-      } catch (_) {
-        throw new Error("Couldn't fetch token decimals.")
-      }
-    }
-
-    let feeInWei
-    try {
-      feeInWei = parseUnits(fee.toString(), tokenDecimals)
-    } catch (_) {
-      throw new Error("Couldn't convert fee to WEI.")
-    }
-
-    const feeCollectorContract = new Contract(
-      FEE_COLLECTOR_CONTRACT[Chains[chainId]],
-      FEE_COLLECTOR_ABI,
-      provider.getSigner(account).connectUnchecked()
-    )
-
-    // TODO: checkbox for multiple payments (3rd param) - will add it in a later PR
-    const registerVaultParams = [owner, token, false, feeInWei]
-
-    try {
-      await feeCollectorContract.callStatic.registerVault(...registerVaultParams)
-    } catch (callStaticRegisterVaultError) {
-      throw callStaticRegisterVaultError
-    }
-
-    const registerVaultCall = await feeCollectorContract.registerVault(
-      ...registerVaultParams
-    )
-    const registeredVault = await registerVaultCall?.wait()
-    const rawVaultId = registeredVault?.events?.find(
-      (e) => e.event === "VaultRegistered"
-    )?.args?.[0]
-
-    if (!rawVaultId)
-      throw new Error("Vault registration error - couldn't find vault ID")
-
-    const vaultId = rawVaultId.toString()
-    return vaultId
-  }
-
-  return useSubmit<RegisterVaultParams, string>(registerVault, {
-    onError: (error) => {
-      const prettyError =
-        error?.code === "ACTION_REJECTED"
-          ? "User rejected the transaction"
-          : error?.message ?? error
-      showErrorToast(prettyError)
-    },
-    onSuccess,
+  const { data: tokenData } = useToken({
+    address: token,
+    chainId: Chains[chain],
+    enabled: Boolean(token !== NULL_ADDRESS && chain),
   })
+  const tokenDecimals =
+    token === NULL_ADDRESS
+      ? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
+      : tokenData?.decimals
+  const feeInWei =
+    fee && tokenDecimals ? parseUnits(fee.toString(), tokenDecimals) : undefined
+
+  const registerVaultParams = [owner, token, false, BigInt(feeInWei ?? 0)] as const
+
+  return useSubmitTransaction(
+    {
+      abi: feeCollectorAbi,
+      address: FEE_COLLECTOR_CONTRACT[Chains[chainId]],
+      functionName: "registerVault",
+      args: registerVaultParams,
+      chainId: Chains[chain],
+      enabled: Boolean(feeInWei && chainId === Chains[chain]),
+    },
+    {
+      setContext: false,
+      onError: (errorMessage, error) => {
+        showErrorToast(errorMessage)
+        captureEvent("Register vault error", {
+          error,
+        })
+      },
+      onSuccess: (_, events) => {
+        if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
+          onSuccess("0")
+          return
+        }
+
+        const vaultRegisteredEvent: {
+          eventName: "VaultRegistered"
+          args: {
+            fee: bigint
+            owner: `0x${string}`
+            token: `0x${string}`
+            vaultId: bigint
+          }
+        } = events.find((event) => event.eventName === "VaultRegistered")
+
+        if (!vaultRegisteredEvent) {
+          showErrorToast("Couldn't find 'VaultRegistered' event")
+          return
+        }
+
+        onSuccess(vaultRegisteredEvent.args.vaultId.toString())
+      },
+    }
+  )
 }
 
 export default useRegisterVault

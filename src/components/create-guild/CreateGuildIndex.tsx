@@ -1,5 +1,6 @@
 import { HStack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import ClientOnly from "components/common/ClientOnly"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { CaretRight } from "phosphor-react"
 import { useCreateGuildContext } from "./CreateGuildContext"
@@ -11,7 +12,7 @@ const CreateGuildIndex = (): JSX.Element => {
   if (platform && platform !== "DEFAULT") return <CreateGuildPlatform />
 
   return (
-    <>
+    <ClientOnly>
       <PlatformsGrid onSelection={setPlatform} />
 
       <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 6 }}>
@@ -32,7 +33,7 @@ const CreateGuildIndex = (): JSX.Element => {
           Create guild without platform
         </Button>
       </HStack>
-    </>
+    </ClientOnly>
   )
 }
 

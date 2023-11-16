@@ -1,5 +1,5 @@
 import { Box, Flex, Text } from "@chakra-ui/react"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { AccountSectionTitle } from "../AccountConnections"
 import GuildPin from "./GuildPin"

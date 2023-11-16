@@ -8,23 +8,27 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Web3Provider } from "@ethersproject/providers"
-import { useWeb3React } from "@web3-react/core"
+import LogicDivider from "components/[guild]/LogicDivider"
+import useUser from "components/[guild]/hooks/useUser"
+import { addressLinkParamsAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/hooks/useShouldLinkToUser"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import LogicDivider from "components/[guild]/LogicDivider"
-import { useAddressLinkContext } from "components/_app/AddressLinkProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import { useAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
+import { useAccount, useDisconnect, useWalletClient } from "wagmi"
 
 const LinkAddressButton = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
-  const { provider, connector, account } = useWeb3React<Web3Provider>()
+
+  const { address } = useAccount()
+  const { disconnect } = useDisconnect()
+  const { data: walletClient } = useWalletClient()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { setAddressLinkParams } = useAddressLinkContext()
+  const [, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { openWalletSelectorModal } = useWeb3ConnectionManager()
 
   if (!id) return null
@@ -32,13 +36,10 @@ const LinkAddressButton = (props) => {
   const onClick = async () => {
     setIsLoading(true)
     onOpen()
-    setAddressLinkParams({ userId: id, address: account })
+    setAddressLinkParams({ userId: id, address })
 
     try {
-      await provider.provider.request({
-        method: "wallet_requestPermissions",
-        params: [{ eth_accounts: {} }],
-      })
+      await walletClient.requestPermissions({ eth_accounts: {} })
     } finally {
       setIsLoading(false)
     }
@@ -51,8 +52,7 @@ const LinkAddressButton = (props) => {
 
   const handleLogout = () => {
     handleClose()
-    connector.resetState()
-    connector.deactivate?.()
+    disconnect()
     openWalletSelectorModal()
   }
 

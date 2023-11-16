@@ -1,5 +1,5 @@
-import { Icon } from "@chakra-ui/react"
-import { formatUnits } from "@ethersproject/units"
+import { Icon, Text } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chains } from "chains"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
@@ -12,9 +12,10 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { RPC } from "connectors"
-import useTokenData from "hooks/useTokenData"
 import { Coins } from "phosphor-react"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
+import { useToken } from "wagmi"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
@@ -31,17 +32,36 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     data: requirementData,
   } = useRequirementContext()
   const {
-    data: { token, fee, multiplePayments },
-    isValidating: isVaultLoading,
+    token,
+    fee,
+    multiplePayments,
+    isLoading: isVaultLoading,
     error: vaultError,
   } = useVault(address, requirementData?.id, chain)
 
+  const isNativeCurrency = token === NULL_ADDRESS
+
   const {
-    data: { symbol, decimals },
+    data: tokenData,
     error: tokenError,
-    isValidating: isTokenDataLoading,
-  } = useTokenData(chain, token)
-  const convertedFee = fee && decimals ? formatUnits(fee, decimals) : undefined
+    isLoading: isTokenDataLoading,
+  } = useToken({
+    address: token,
+    chainId: Chains[chain],
+    enabled: Boolean(!isNativeCurrency && chain),
+  })
+
+  const convertedFee = fee
+    ? isNativeCurrency
+      ? formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
+      : tokenData?.decimals
+      ? formatUnits(fee, tokenData.decimals)
+      : undefined
+    : undefined
+
+  const symbol = isNativeCurrency
+    ? CHAIN_CONFIG[chain].nativeCurrency.symbol
+    : tokenData?.symbol
 
   const { data: accessData } = useAccess(roleId ?? 0)
   // temporary until POAPs are real roles
@@ -80,7 +100,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
       }
     >
       <>
-        {"Pay "}
+        <Text as="span">{"Pay "}</Text>
         <DataBlock
           isLoading={isVaultLoading || isTokenDataLoading}
           error={
@@ -93,7 +113,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
-        {` on ${RPC[chain].chainName}`}
+        <Text as="span">{` on ${CHAIN_CONFIG[chain].name}`}</Text>
       </>
     </Requirement>
   )

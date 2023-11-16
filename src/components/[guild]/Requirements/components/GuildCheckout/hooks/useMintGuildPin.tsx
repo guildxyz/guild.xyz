@@ -1,31 +1,39 @@
-import { useWeb3React } from "@web3-react/core"
+import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Chains } from "connectors"
-import useContract from "hooks/useContract"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
+import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
+import guildPinAbi from "static/abis/guildPin"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
+import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
+import processViemContractError from "utils/processViemContractError"
+import { TransactionReceipt } from "viem"
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
+import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 import useGuildPinFee from "./useGuildPinFee"
-import useSubmitTransaction from "./useSubmitTransaction"
 
 type MintData = {
-  userAddress: string
+  userAddress: `0x${string}`
   guildAction: GuildAction
   userId: number
   guildId: number
   guildName: string
   createdAt: number
+  adminTreasury: `0x${string}`
+  adminFee: string
   timestamp: number
   cid: string
-  signature: string
+  chainId: number
+  contractAddress: `0x${string}`
+  signature: `0x${string}`
 }
 
 const useMintGuildPin = () => {
@@ -38,19 +46,26 @@ const useMintGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { chainId, account } = useWeb3React()
+  const { address } = useAccount()
+  const chainId = useChainId()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+
   const { pinType, setMintedTokenId } = useMintGuildPinContext()
+  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
+
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const guildPinContract = useContract(
-    GUILD_PIN_CONTRACTS[Chains[chainId]]?.address,
-    GUILD_PIN_CONTRACTS[Chains[chainId]]?.abi,
-    true
-  )
+  const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]?.address
 
   const { guildPinFee } = useGuildPinFee()
 
+  const fetcherWithSign = useFetcherWithSign()
+
   const mintGuildPin = async () => {
+    setTxError?.(false)
+    setTxSuccess?.(false)
+
     setLoadingText("Uploading metadata")
     const {
       userAddress,
@@ -59,122 +74,151 @@ const useMintGuildPin = () => {
       guildId,
       guildName,
       createdAt,
+      adminTreasury,
+      adminFee,
       timestamp,
       cid,
       signature,
     }: MintData = await fetcher(`/v2/guilds/${id}/pin`, {
       body: {
-        userAddress: account,
+        userAddress: address,
         guildId: id,
         guildAction: pinType,
         chainId,
-        contractAddress: guildPinContract.address,
+        contractAddress,
       },
     })
 
     setLoadingText("Check your wallet")
+    // params: paytoken address, { receiver address, guildAction uint8, userId uint256, guildId uint256, guildName string, createdAt uint256}, signedAt uint256, cid string, signature bytes
+
     const contractCallParams = [
-      NULL_ADDRESS,
       {
         receiver: userAddress,
         guildAction,
-        userId,
-        guildId,
+        userId: BigInt(userId),
+        guildId: BigInt(guildId),
         guildName,
-        createdAt,
+        createdAt: BigInt(createdAt),
       },
-      timestamp,
+      adminTreasury,
+      BigInt(adminFee),
+      BigInt(timestamp),
       cid,
       signature,
-      { value: guildPinFee },
-    ]
+    ] as const
 
-    try {
-      await guildPinContract.callStatic.claim(...contractCallParams)
-    } catch (callstaticError) {
-      return Promise.reject(
-        callstaticError.errorName ?? callstaticError.reason ?? "Contract error"
-      )
+    const { request } = await publicClient.simulateContract({
+      abi: guildPinAbi,
+      address: contractAddress,
+      functionName: "claim",
+      args: contractCallParams,
+      value: guildPinFee,
+    })
+
+    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
+      toastWithTweetButton({
+        title: "GUILD_PIN_E2E_TEST_SUCCESS",
+        tweetText: "",
+      })
+      return Promise.resolve()
     }
 
-    return guildPinContract.claim(...contractCallParams)
+    const hash = await walletClient.writeContract({
+      ...request,
+      account: walletClient.account,
+    })
+
+    setTxHash?.(hash)
+
+    const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
+      { hash }
+    )
+
+    if (receipt.status !== "success") {
+      throw new Error(`Transaction failed. Hash: ${hash}`)
+    }
+
+    const events = getEventsFromViemTxReceipt(guildPinAbi, receipt)
+
+    const transferEvent: {
+      eventName: "Transfer"
+      args: {
+        from: `0x${string}`
+        to: `0x${string}`
+        tokenId: bigint
+      }
+    } = events.find((event) => event.eventName === "Transfer")
+
+    let tokenId: number, tokenURI: string
+    if (transferEvent) {
+      try {
+        tokenId = Number(transferEvent.args.tokenId)
+        setMintedTokenId(tokenId)
+        tokenURI = await publicClient.readContract({
+          abi: guildPinAbi,
+          address: contractAddress,
+          functionName: "tokenURI",
+          args: [transferEvent.args.tokenId],
+        })
+      } catch {}
+    }
+
+    captureEvent("Minted Guild Pin (GuildCheckout)", postHogOptions)
+
+    try {
+      const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenURI)
+
+      mutate((prevData) => [
+        ...(prevData ?? []),
+        {
+          chainId,
+          tokenId,
+          ...metadata,
+          image: metadata.image.replace(
+            "ipfs://",
+            process.env.NEXT_PUBLIC_IPFS_GATEWAY
+          ),
+        },
+      ])
+    } catch {}
+
+    const hasGuildPinRequirement = roles
+      .flatMap((r) => r.requirements)
+      .some(
+        (req) =>
+          req.type === "ERC721" &&
+          req.chain === Chains[chainId] &&
+          req.address.toLowerCase() === contractAddress.toLowerCase()
+      )
+
+    if (hasGuildPinRequirement) {
+      fetcherWithSign([`/user/join`, { method: "POST", body: { guildId: id } }])
+    }
+
+    toastWithTweetButton({
+      title: "Successfully minted Guild Pin!",
+      tweetText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
+    })
   }
 
-  const fetcherWithSign = useFetcherWithSign()
-
   return {
-    ...useSubmitTransaction<null>(mintGuildPin, {
-      onSuccess: async (txReceipt) => {
-        setLoadingText("")
-
-        if (txReceipt.status !== 1) {
-          showErrorToast("Transaction failed")
-          captureEvent("Mint Guild Pin error (GuildCheckout)", {
-            ...postHogOptions,
-            txReceipt,
-          })
-          captureEvent("claim error (GuildCheckout)", {
-            ...postHogOptions,
-            txReceipt,
-          })
-          return
-        }
-
-        const transferEvent = txReceipt.events?.find((e) => e.event === "Transfer")
-
-        let tokenId: number, tokenURI: string
-
-        if (transferEvent) {
-          try {
-            tokenId = transferEvent.args.tokenId.toNumber()
-            setMintedTokenId(tokenId)
-            tokenURI = await guildPinContract.tokenURI(tokenId)
-          } catch {}
-        }
-
-        captureEvent("Minted Guild Pin (GuildCheckout)", postHogOptions)
-
-        try {
-          const metadata: GuildPinMetadata =
-            base64ToObject<GuildPinMetadata>(tokenURI)
-
-          mutate((prevData) => [
-            ...(prevData ?? []),
-            {
-              chainId,
-              tokenId,
-              ...metadata,
-            },
-          ])
-        } catch {}
-
-        const hasGuildPinRequirement = roles
-          .flatMap((r) => r.requirements)
-          .some(
-            (req) =>
-              req.type === "ERC721" &&
-              req.chain === Chains[chainId] &&
-              req.address.toLowerCase() === guildPinContract.address.toLowerCase()
-          )
-
-        if (hasGuildPinRequirement) {
-          fetcherWithSign([`/user/join`, { method: "POST", body: { guildId: id } }])
-        }
-
-        toastWithTweetButton({
-          title: "Successfully minted Guild Pin!",
-          tweetText: `Just minted my Guild Pin for joining ${name}!\nguild.xyz/${urlName}`,
-        })
-      },
+    ...useSubmit(mintGuildPin, {
       onError: (error) => {
-        showErrorToast(error)
         setLoadingText("")
+        setTxError?.(true)
 
-        captureEvent("Mint Guild Pin error (GuildCheckout)", postHogOptions)
-        captureEvent("claim pre-call error (GuildCheckout)", {
+        const prettyError = processViemContractError(error)
+        showErrorToast(prettyError)
+
+        captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,
           error,
         })
+      },
+      onSuccess: () => {
+        setLoadingText("")
+        setTxSuccess?.(true)
       },
     }),
     loadingText,

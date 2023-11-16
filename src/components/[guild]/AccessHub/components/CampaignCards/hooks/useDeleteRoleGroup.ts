@@ -22,10 +22,13 @@ const useDeleteRoleGroup = (groupId: number) => {
         status: "success",
         title: "Successfully deleted campaign",
       })
-      mutateGuild((curr) => ({
-        ...curr,
-        groups: curr.groups.filter((group) => group.id !== groupId),
-      }))
+      mutateGuild(
+        (curr) => ({
+          ...curr,
+          groups: curr.groups.filter((group) => group.id !== groupId),
+        }),
+        { revalidate: false }
+      )
     },
     onError: (error) => showErrorToast(error),
   })

@@ -1,5 +1,4 @@
 import { Icon } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
 import useAccess from "components/[guild]/hooks/useAccess"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
@@ -9,6 +8,7 @@ import platforms from "platforms/platforms"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
+import { useAccount } from "wagmi"
 import useConnectPlatform from "../hooks/useConnectPlatform"
 import ConnectAccount from "./ConnectAccount"
 
@@ -17,7 +17,7 @@ type Props = {
 }
 
 const ConnectPlatform = ({ platform }: Props) => {
-  const { isActive } = useWeb3React()
+  const { isConnected } = useAccount()
   const { platformUsers, isLoading: isLoadingUser } = useUser()
 
   const platformsToReconnect = usePlatformsToReconnect()
@@ -37,8 +37,8 @@ const ConnectPlatform = ({ platform }: Props) => {
   const { setValue } = useFormContext()
 
   useEffect(() => {
-    if (!isActive && authData) setValue(`platforms.${platform}`, { authData })
-  }, [isActive, authData])
+    if (!isConnected && authData) setValue(`platforms.${platform}`, { authData })
+  }, [isConnected, authData])
 
   useEffect(() => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
@@ -67,7 +67,7 @@ const ConnectPlatform = ({ platform }: Props) => {
         (platform === "TWITTER" ||
           platform === "TWITTER_V1" ||
           platform === "DISCORD") &&
-        !isActive &&
+        !isConnected &&
         "Connect wallet first"
       }
       titleRightElement={platform === "TWITTER_V1" && <TwitterV1Tooltip />}

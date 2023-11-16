@@ -1,6 +1,6 @@
 import { kv } from "@vercel/kv"
+import { Chain } from "chains"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
-import { Chain } from "connectors"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"
@@ -24,7 +24,9 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
   BASE_MAINNET: `https://base-mainnet.g.alchemy.com/nft/v3/${process.env.BASE_ALCHEMY_KEY}/getOwnersForContract`,
   ETHEREUM: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
-  OPTIMISM: `https://opt-mainnet.g.alchemy.com/v2/${process.env.OPTIMISM_ALCHEMY_KEY}`,
+  OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${process.env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
+  BSC: "",
+  CRONOS: "",
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
@@ -32,10 +34,10 @@ export const validateNftChain = (value: string | string[]): Chain => {
   if (!value || !Object.keys(alchemyApiUrl).includes(valueAsString)) return null
   return valueAsString as Chain
 }
-export const validateNftAddress = (value: string | string[]): string => {
+export const validateNftAddress = (value: string | string[]): `0x${string}` => {
   const valueAsString = value?.toString()
   if (!ADDRESS_REGEX.test(valueAsString)) return null
-  return valueAsString
+  return valueAsString as `0x${string}`
 }
 
 const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
@@ -51,6 +53,14 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
 
   if (!chain || !address)
     return res.status(400).json({ error: "Invalid chain or address" })
+
+  if (!alchemyApiUrl[chain]) {
+    res.json({
+      topCollectors: [],
+      uniqueCollectors: 0,
+    })
+    return
+  }
 
   const kvKey = `nftCollectors:${chain}:${address.toLowerCase()}`
   const cachedResponse: TopCollectorsResponse = await kv.get(kvKey)

@@ -1,24 +1,24 @@
 import { ToastId } from "@chakra-ui/react"
-import { useWeb3React } from "@web3-react/core"
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
-import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
 import { Role } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
+import { useAccount } from "wagmi"
 
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateHiddenRole = (onSuccess?: () => void) => {
   const toastIdRef = useRef<ToastId>()
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
   const fetcherWithSign = useFetcherWithSign()
 
@@ -51,7 +51,7 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
         status: "success",
       })
 
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
 
       // Disabled temporarily, until we test it properly
       // await fetcherWithSign([
@@ -66,10 +66,13 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       // ])
       mutateActiveStatusUpdates()
 
-      await mutateGuild(async (curr) => ({
-        ...curr,
-        roles: [...curr.roles, response_],
-      }))
+      await mutateGuild(
+        async (curr) => ({
+          ...curr,
+          roles: [...curr.roles, response_],
+        }),
+        { revalidate: false }
+      )
 
       onSuccess?.()
     },

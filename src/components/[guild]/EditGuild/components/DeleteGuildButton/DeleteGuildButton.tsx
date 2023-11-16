@@ -7,10 +7,10 @@ import {
   FormLabel,
   useDisclosure,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Alert } from "components/common/Modal"
 import DeleteButton from "components/[guild]/DeleteButton"
 import ShouldKeepPlatformAccesses from "components/[guild]/ShouldKeepPlatformAccesses"
+import Button from "components/common/Button"
+import { Alert } from "components/common/Modal"
 import { useRef, useState } from "react"
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
@@ -52,6 +52,7 @@ const DeleteGuildButton = ({ beforeDelete }: Props): JSX.Element => {
                 Cancel
               </Button>
               <Button
+                data-test="delete-guild-button"
                 colorScheme="red"
                 ml={3}
                 isLoading={isLoading}

@@ -1,5 +1,4 @@
 import type { AccessCheckJob } from "@guildxyz/types"
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import { useKeyPair } from "components/_app/KeyPairProvider"
@@ -8,19 +7,20 @@ import { SWRConfiguration } from "swr"
 import useSWRImmutable from "swr/immutable"
 import createAndAwaitJob from "utils/createAndAwaitJob"
 import { useFetcherWithSign } from "utils/fetcher"
+import { useAccount } from "wagmi"
 import { QUEUE_FEATURE_FLAG } from "../JoinModal/hooks/useJoin"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
-  const { account } = useWeb3React()
+  const { isConnected, address } = useAccount()
   const { id, featureFlags, roles } = useGuild()
   const { isValid } = useKeyPair()
 
-  const shouldFetch = account && id && roleId !== 0 && isValid
+  const shouldFetch = isConnected && id && roleId !== 0 && isValid
 
   const fetcherWithSign = useFetcherWithSign()
 
   const { data, error, isLoading, isValidating, mutate } = useSWRImmutable(
-    shouldFetch ? `/guild/access/${id}/${account}` : null,
+    shouldFetch ? `/guild/access/${id}/${address}` : null,
     async (key) => {
       if (featureFlags.includes(QUEUE_FEATURE_FLAG)) {
         const requirementIdToRoleId = Object.fromEntries(

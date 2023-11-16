@@ -1,7 +1,7 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
@@ -25,8 +25,10 @@ const PolygonIdForm = ({
   baseFieldPath,
   field,
 }: RequirementFormProps): JSX.Element => {
-  const { errors } = useFormState()
-  const { resetField } = useFormContext()
+  const {
+    setValue,
+    formState: { errors },
+  } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -35,8 +37,12 @@ const PolygonIdForm = ({
   )
 
   const resetFields = () => {
-    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.query`, { defaultValue: "" })
+    setValue(`${baseFieldPath}.data.maxAmount`, undefined, {
+      shouldValidate: true,
+    })
+    setValue(`${baseFieldPath}.data.query`, "", {
+      shouldValidate: true,
+    })
   }
 
   return (

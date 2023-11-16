@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import { Chain } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Chain } from "connectors"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"

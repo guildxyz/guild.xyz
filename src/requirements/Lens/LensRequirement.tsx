@@ -1,8 +1,8 @@
-import Link from "components/common/Link"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import Link from "components/common/Link"
 
 const LensRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
@@ -49,7 +49,10 @@ const LensRequirement = (props: RequirementProps) => {
               <>
                 {`Follow `}
                 <Link
-                  href={`https://lensfrens.xyz/${requirement.data.id}`}
+                  href={`https://lensfrens.xyz/${requirement.data.id.replace(
+                    ".lens",
+                    ""
+                  )}`}
                   isExternal
                   colorScheme="blue"
                   fontWeight="medium"
@@ -64,7 +67,10 @@ const LensRequirement = (props: RequirementProps) => {
               <>
                 {`Be followed by `}
                 <Link
-                  href={`https://lensfrens.xyz/${requirement.data.id}`}
+                  href={`https://lensfrens.xyz/${requirement.data.id.replace(
+                    ".lens",
+                    ""
+                  )}`}
                   isExternal
                   colorScheme="blue"
                   fontWeight="medium"

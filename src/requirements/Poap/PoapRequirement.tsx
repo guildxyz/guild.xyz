@@ -1,4 +1,4 @@
-import { Link } from "@chakra-ui/react"
+import { Link, Text } from "@chakra-ui/react"
 import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
@@ -13,7 +13,7 @@ const PoapRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement image={poap?.image_url} isImageLoading={isLoading} {...props}>
-      {"Own the "}
+      <Text as="span">{"Own the "}</Text>
       {!poap || isLoading || error ? (
         <DataBlock
           isLoading={isLoading}
@@ -32,7 +32,7 @@ const PoapRequirement = (props: RequirementProps) => {
           {poap.name}
         </Link>
       )}
-      {" POAP"}
+      <Text as="span">{" POAP"}</Text>
     </Requirement>
   )
 }

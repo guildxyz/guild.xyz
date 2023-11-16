@@ -1,10 +1,8 @@
-import { useWeb3React } from "@web3-react/core"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
-import useToast from "hooks/useToast"
 import { useSWRConfig } from "swr"
 import { OneOf, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -21,9 +19,9 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }
 
-  const { account } = useWeb3React()
   const { mutate } = useSWRConfig()
-  const toast = useToast()
+  const { mutate: mutateAccess } = useAccess()
+
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
@@ -247,7 +245,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
                     requirements: [
                       ...(prevRole.requirements
                         ?.filter(
-                          (requirement) => !deletedRequirementIds.has(requirement)
+                          (requirement) => !deletedRequirementIds.has(requirement.id)
                         )
                         ?.map((prevReq) => ({
                           ...prevReq,
@@ -268,7 +266,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         }),
         { revalidate: false }
       )
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${account}`)
+
+      mutateAccess()
       mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),

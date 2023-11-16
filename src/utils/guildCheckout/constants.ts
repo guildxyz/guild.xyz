@@ -1,10 +1,9 @@
-import { BigNumberish } from "@ethersproject/bignumber"
-import { Chain, RPC } from "connectors"
+import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementType } from "requirements"
-import GUILD_PIN_ABI from "static/abis/guildPin.json"
-import GUILD_PIN_ZKSYNC_ABI from "static/abis/guildPinZkSync.json"
-import OLD_TOKEN_BUYER_ABI from "static/abis/oldTokenBuyerAbi.json"
-import TOKEN_BUYER_ABI from "static/abis/tokenBuyerAbi.json"
+import guildPinAbi from "static/abis/guildPin"
+import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
+import tokenBuyerAbi from "static/abis/tokenBuyer"
+import { Abi, toBytes } from "viem"
 import {
   encodePermit2Permit,
   encodeUnwrapEth,
@@ -18,8 +17,8 @@ export type TokenBuyerContractConfig = Partial<
   Record<
     Chain,
     {
-      address: string
-      abi: object
+      address: `0x${string}`
+      abi: Abi
     }
   >
 >
@@ -30,28 +29,29 @@ export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 export const GUILD_FEE_PERCENTAGE = 0.01
 
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-export const NULL_ADDRESS = "0x0000000000000000000000000000000000000000"
+export const NULL_ADDRESS: `0x${string}` =
+  "0x0000000000000000000000000000000000000000"
 
 const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
   ETHEREUM: {
     address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
-    abi: TOKEN_BUYER_ABI,
+    abi: tokenBuyerAbi,
   },
   POLYGON: {
     address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
-    abi: TOKEN_BUYER_ABI,
+    abi: tokenBuyerAbi,
   },
   ARBITRUM: {
     address: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
-    abi: OLD_TOKEN_BUYER_ABI,
+    abi: oldTokenBuyerAbi,
   },
   // BSC: {
   //   address: "0xde0d301c75779423d962c2e538d0f326004e7c83",
-  //   abi: TOKEN_BUYER_ABI,
+  //   abi: tokenBuyerAbi,
   // },
   GOERLI: {
     address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
-    abi: TOKEN_BUYER_ABI,
+    abi: tokenBuyerAbi,
   },
 }
 
@@ -61,11 +61,11 @@ const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = 
   //   ...DEFAULT_TOKEN_BUYER_CONTRACTS,
   //   ETHEREUM: {
   //     address: "0x4aff02d7aa6be3ef2b1df629e51dcc9109427a07",
-  //     abi: TOKEN_BUYER_ABI,
+  //     abi: tokenBuyerAbi,
   //   },
   //   POLYGON: {
   //     address: "0x151c518390d38487a4ddcb02e3f156a77c184cb9",
-  //     abi: TOKEN_BUYER_ABI,
+  //     abi: tokenBuyerAbi,
   //   },
   // },
 }
@@ -110,11 +110,11 @@ export const PURCHASABLE_REQUIREMENT_TYPES: RequirementType[] = [
   "ERC1155",
 ]
 
-export const SUPPORTED_CURRENCIES: { chainId: number; address: string }[] = [
+export const SUPPORTED_CURRENCIES: { chainId: number; address: `0x${string}` }[] = [
   // Add native currencies automatically
   ...allPurchaseSupportedChains.map((c) => ({
-    chainId: RPC[c].chainId,
-    address: RPC[c].nativeCurrency.symbol,
+    chainId: CHAIN_CONFIG[c].id,
+    address: NULL_ADDRESS,
   })),
   /**
    * We'll be able to add ERC20 tokens here in the following format:
@@ -127,9 +127,9 @@ export type PurchaseAssetData = {
   chainId: number
   account: string
   tokenAddress: string
-  amountIn: BigNumberish // amount which we got back from the 0x API (in WEI)
-  amountInWithFee: BigNumberish // amount which we got back from the 0x API + Guild fee (in WEI)
-  amountOut: BigNumberish // token amount which we'd like to purchase (in WEI)
+  amountIn: bigint // amount which we got back from the 0x API (in WEI)
+  amountInWithFee: bigint // amount which we got back from the 0x API + Guild fee (in WEI)
+  amountOut: bigint // token amount which we'd like to purchase (in WEI)
   source: ZeroXSupportedSources
   path: string
   tokenAddressPath: string[]
@@ -137,21 +137,15 @@ export type PurchaseAssetData = {
 
 export type BuyTokenType = "COIN" | "ERC20"
 
-export const permit2PermitFakeParams: [
-  string,
-  number,
-  number,
-  string,
-  string,
-  string
-] = [
-  "1461501637330902918203684832716283019655932542975",
-  1706751423,
-  0,
+// amount: bigint, expiration: bigint, nonce: bigint, spender: string, sigDeadline: bigint, data: Uint8Array
+export const permit2PermitFakeParams = [
+  BigInt("1461501637330902918203684832716283019655932542975"),
+  BigInt("1706751423"),
+  BigInt(0),
   "0x4C60051384bd2d3C01bfc845Cf5F4b44bcbE9de5",
-  "1704161223",
-  "0x00",
-]
+  BigInt("1704161223"),
+  toBytes("0x00"),
+] as const
 
 const {
   WRAP_ETH,
@@ -167,7 +161,7 @@ export const getAssetsCallParams: Record<
     ZeroXSupportedSources,
     {
       commands: string
-      getEncodedParams: (data: PurchaseAssetData) => string[]
+      getEncodedParams: (data: PurchaseAssetData) => `0x${string}`[]
     }
   >
 > = {
@@ -177,15 +171,15 @@ export const getAssetsCallParams: Record<
       getEncodedParams: ({ account, amountIn, amountOut, tokenAddressPath }) => [
         encodeWrapEth("0x0000000000000000000000000000000000000002", amountIn),
         encodeV2SwapExactOut(account, amountOut, amountIn, tokenAddressPath, false),
-        encodeUnwrapEth(account, 0),
+        encodeUnwrapEth(account, BigInt(0)),
       ],
     },
     Uniswap_V3: {
       commands: WRAP_ETH + V3_SWAP_EXACT_OUT + UNWRAP_WETH,
       getEncodedParams: ({ account, amountIn, amountOut, path }) => [
         encodeWrapEth("0x0000000000000000000000000000000000000002", amountIn),
-        encodeV3SwapExactOut(account, amountOut, amountIn, path, false),
-        encodeUnwrapEth(account, 0),
+        encodeV3SwapExactOut(account, amountOut, amountIn, toBytes(path), false),
+        encodeUnwrapEth(account, BigInt(0)),
       ],
     },
   },
@@ -207,7 +201,7 @@ export const getAssetsCallParams: Record<
       commands: PERMIT2_PERMIT + V3_SWAP_EXACT_OUT,
       getEncodedParams: ({ account, amountIn, amountOut, path, tokenAddress }) => [
         encodePermit2Permit(tokenAddress, ...permit2PermitFakeParams),
-        encodeV3SwapExactOut(account, amountOut, amountIn, path, false),
+        encodeV3SwapExactOut(account, amountOut, amountIn, toBytes(path), false),
       ],
     },
   },
@@ -225,23 +219,31 @@ export const paymentSupportedChains: Chain[] = Object.keys(
 export const GUILD_PIN_CONTRACTS = {
   POLYGON: {
     address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
-    abi: GUILD_PIN_ABI,
+    abi: guildPinAbi,
   },
   POLYGON_MUMBAI: {
     address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-    abi: GUILD_PIN_ABI,
+    abi: guildPinAbi,
   },
-  BSC: {
-    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-    abi: GUILD_PIN_ABI,
-  },
-  ARBITRUM: {
-    address: "0x0e6a14106497a7de36fba446628860c062e9e302",
-    abi: GUILD_PIN_ABI,
+  BASE_MAINNET: {
+    address: "0x326f14942f8899406e3224bd63e9f250d275a52e",
+    abi: guildPinAbi,
   },
   ZKSYNC_ERA: {
     address: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
-    abi: GUILD_PIN_ZKSYNC_ABI,
+    abi: guildPinAbi,
+  },
+  BSC: {
+    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+    abi: guildPinAbi,
+  },
+  ARBITRUM: {
+    address: "0x0e6a14106497a7de36fba446628860c062e9e302",
+    abi: guildPinAbi,
+  },
+  CRONOS: {
+    address: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
+    abi: guildPinAbi,
   },
 } as const
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
@@ -256,4 +258,5 @@ export const openseaBaseUrl: Partial<Record<Chain, string>> = {
   ARBITRUM: "https://opensea.io/assets/arbitrum",
   OPTIMISM: "https://opensea.io/assets/optimism",
   AVALANCHE: "https://opensea.io/assets/avalanche",
+  BASE_MAINNET: "https://opensea.io/assets/base",
 }

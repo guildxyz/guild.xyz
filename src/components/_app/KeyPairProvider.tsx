@@ -1,20 +1,21 @@
-import { useWeb3React } from "@web3-react/core"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { createStore, del, get, set } from "idb-keyval"
+import { useAtom } from "jotai"
 import randomBytes from "randombytes"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { AddressConnectionProvider, User } from "types"
 import fetcher from "utils/fetcher"
+import { useAccount } from "wagmi"
 import {
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
 } from "../../hooks/useSubmit/useSubmit"
 import useToast from "../../hooks/useToast"
-import { useAddressLinkContext } from "./AddressLinkProvider"
+import { addressLinkParamsAtom } from "./Web3ConnectionManager/components/WalletSelectorModal/hooks/useShouldLinkToUser"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
@@ -99,13 +100,13 @@ const getKeyPair = async ([_, id]) => {
 }
 
 const setKeyPair = async ({
-  account,
+  address,
   mutateKeyPair,
   generatedKeyPair,
   signedValidation,
   id,
 }: {
-  account: string
+  address: string
   mutateKeyPair: KeyedMutator<StoredKeyPair>
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
@@ -123,7 +124,7 @@ const setKeyPair = async ({
     typeof signature === "string" &&
     typeof nonce === "string"
 
-  const newUser: User = await fetcher(`/v2/users/${id ?? account}/public-key`, {
+  const newUser: User = await fetcher(`/v2/users/${id ?? address}/public-key`, {
     method: "POST",
     ...signedValidation,
   })
@@ -152,7 +153,7 @@ const setKeyPair = async ({
     revalidate: false,
   })
   mutate(
-    `/v2/users/${account}/profile`,
+    `/v2/users/${address}/profile`,
     {
       id: newUser?.id,
       publicKey: newUser?.publicKey,
@@ -204,9 +205,9 @@ const KeyPairContext = createContext<{
 const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { account } = useWeb3React()
+  const { address } = useAccount()
 
-  const { addressLinkParams, setAddressLinkParams } = useAddressLinkContext()
+  const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { isDelegateConnection, setIsDelegateConnection } =
     useWeb3ConnectionManager()
 
@@ -285,7 +286,7 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
   >(
     (signedValidation: SignedValdation) =>
       setKeyPair({
-        account,
+        address,
         mutateKeyPair,
         generatedKeyPair,
         signedValidation,
@@ -419,7 +420,7 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
                   { name: "ECDSA", hash: "SHA-512" },
                   mainKeyPair?.privateKey,
                   Buffer.from(
-                    `Address: ${account.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
+                    `Address: ${address.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
                   )
                 )
                 .then((signatureBuffer) =>

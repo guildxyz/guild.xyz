@@ -1,17 +1,17 @@
-import { useWeb3React } from "@web3-react/core"
 import useGuild from "components/[guild]/hooks/useGuild"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import useSWR from "swr"
+import { useAccount } from "wagmi"
 
 const useUserPoapEligibility = (poapIdentifier: number) => {
-  const { account } = useWeb3React()
+  const { address } = useAccount()
   const { poapEventDetails } = usePoapEventDetails(poapIdentifier)
   const { poaps } = useGuild()
   const guildPoap = poaps?.find((p) => p.poapIdentifier === poapIdentifier)
 
   const { data, isValidating, mutate } = useSWR(
-    account && poapIdentifier
-      ? `/v2/guilds/:guildId/poaps/${poapIdentifier}/users/${account}/eligibility`
+    address && poapIdentifier
+      ? `/v2/guilds/:guildId/poaps/${poapIdentifier}/users/${address}/eligibility`
       : null,
     {
       revalidateOnFocus: false,
