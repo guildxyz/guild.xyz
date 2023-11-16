@@ -10,9 +10,8 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import HiddenRewards from "components/[guild]/RoleCard/components/HiddenRewards"
 import {
   RewardDisplay,
@@ -25,16 +24,11 @@ import RoleRequirementsSection, {
 import Card from "components/common/Card"
 import { Check } from "phosphor-react"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
-import { Fragment, KeyboardEvent } from "react"
+import { KeyboardEvent, useRef } from "react"
 import { useWatch } from "react-hook-form"
-import {
-  GuildFormType,
-  GuildPlatform,
-  PlatformType,
-  Requirement,
-  RoleFormType,
-} from "types"
+import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
 import capitalize from "utils/capitalize"
+import TemplateRequriements from "./TemplateRequriements"
 
 type Template = {
   name: string
@@ -77,6 +71,12 @@ const TemplateCard = ({
   const guildPlatforms = useWatch<GuildFormType, "guildPlatforms">({
     name: "guildPlatforms",
   })
+
+  const { isOpen: isExpanded, onToggle: onToggleExpanded } = useDisclosure({
+    defaultIsOpen: false,
+  })
+  const initialRequirementsRef = useRef<HTMLDivElement>(null)
+  const descriptionRef = useRef<HTMLDivElement>(null)
 
   return (
     <Box
@@ -216,26 +216,17 @@ const TemplateCard = ({
               </Box>
             </Collapse>
           </Flex>
-
           <RoleRequirementsSection>
             <RoleRequirementsSectionHeader />
-            <Box p={5} pt={0}>
-              {role.requirements.map((requirement, i) => (
-                <Fragment key={i}>
-                  <RequirementDisplayComponent
-                    requirement={requirement as Requirement}
-                    {...(["EMAIL_VERIFIED", "TWITTER_FOLLOWER_COUNT"].includes(
-                      requirement.type
-                    )
-                      ? { footer: null }
-                      : undefined)}
-                  />
-                  {i < role.requirements.length - 1 && (
-                    <LogicDivider logic={role.logic} py={1} />
-                  )}
-                </Fragment>
-              ))}
-            </Box>
+            <TemplateRequriements
+              {...{
+                role,
+                isExpanded,
+                onToggleExpanded,
+                descriptionRef,
+                initialRequirementsRef,
+              }}
+            />
           </RoleRequirementsSection>
         </SimpleGrid>
       </Card>
