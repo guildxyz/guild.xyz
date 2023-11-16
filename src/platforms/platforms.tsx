@@ -208,6 +208,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   TWITTER: {
     icon: TwitterLogo,
+    imageUrl: "/platforms/twitter.png",
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",

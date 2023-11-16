@@ -93,9 +93,7 @@ const DiscordGuildSetup = ({
               onSelect={
                 selectedServer
                   ? undefined
-                  : (newServerId) => {
-                      setValue(fieldName, newServerId)
-                    }
+                  : (newServerId) => setValue(fieldName, newServerId)
               }
               onCancel={
                 selectedServer !== serverData.id ? undefined : () => resetForm()

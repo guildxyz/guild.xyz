@@ -55,25 +55,9 @@ const BasicInfo = (): JSX.Element => {
     (platform) => platform.platformName === "TELEGRAM"
   )?.platformGuildData
 
-  const imageUrlFromPlatformData = () => {
-    if (discordPlatformData?.imageUrl) return discordPlatformData.imageUrl
-
-    if (telegramPlatformData?.imageUrl) return telegramPlatformData.imageUrl
-
-    return undefined
-  }
-
-  const nameFromPlatformData = () => {
-    if (discordPlatformData?.name) return discordPlatformData.name
-
-    if (telegramPlatformData?.name) return telegramPlatformData.name
-
-    return undefined
-  }
-
   useSetImageAndNameFromPlatformData(
-    imageUrlFromPlatformData(),
-    nameFromPlatformData(),
+    discordPlatformData?.imageUrl ?? telegramPlatformData?.imageUrl,
+    discordPlatformData?.name ?? telegramPlatformData?.name,
     iconUploader.onUpload
   )
 
