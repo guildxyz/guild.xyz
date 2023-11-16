@@ -42,7 +42,7 @@ const validators: Record<
 > = {
   EVENTBRITE: (url) => !!url.match(/(.)+eventbrite\.com\/e\/(.)+/) || "Invalid URL",
   LUMA: (url) => !!url.match(/(.)+lu\.ma\/u\/(.)+/) || "Invalid URL",
-  LINK3: (url) => !!url.match(/(.)+link3\.to\/e\/(.)+/) || "Invalid URL",
+  LINK3: (url) => !!url.match(/(.)+link3\.to\/(.)+/) || "Invalid URL",
 }
 
 const EventInput = ({ eventSource }: Props) => {
