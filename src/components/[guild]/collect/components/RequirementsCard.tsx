@@ -9,7 +9,6 @@ import CollectNftButton from "components/[guild]/collect/components/CollectNftBu
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Card from "components/common/Card"
 import { Logic, Requirement } from "types"
-import { useAccount } from "wagmi"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
@@ -22,8 +21,6 @@ type Props = {
 const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
-
-  const { isConnected } = useAccount()
 
   const { chain, nftAddress, alreadyCollected } = useCollectNftContext()
   const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
