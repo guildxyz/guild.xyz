@@ -80,6 +80,7 @@ const MultiPlatformSelectButton = ({
   const { removePlatform } = useCreateGuildContext()
   const { setValue } = useFormContext<GuildFormType>()
   const { isOpen, onClose, onOpen } = useDisclosure()
+  const user = useUser()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
@@ -91,8 +92,6 @@ const MultiPlatformSelectButton = ({
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitterLink = useWatch({ name: "socialLinks.TWITTER" })
 
-  const user = useUser()
-
   const isTwitter = platform === "TWITTER"
   const isPlatformConnected =
     !platforms[platform].oauth ||
@@ -102,8 +101,7 @@ const MultiPlatformSelectButton = ({
     ) ||
     isTwitter
 
-  const circleBgBaseColor = useColorModeValue("gray.700", "gray.600")
-  const circleBgColor = isTwitter ? "white" : circleBgBaseColor
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
 
   const isDone = () => {
     const platformAddedToGuild = guildPlatforms.find(
@@ -165,12 +163,7 @@ const MultiPlatformSelectButton = ({
               pos="relative"
               overflow="hidden"
             >
-              <Icon
-                as={icon}
-                boxSize={isTwitter ? 8 : 5}
-                weight={isTwitter ? "fill" : "regular"}
-                color={isTwitter ? "#26a7de" : "white"}
-              />
+              <Icon as={icon} boxSize={5} color={"white"} />
             </Circle>
           )}
           <VStack
