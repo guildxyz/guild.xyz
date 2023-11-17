@@ -76,7 +76,7 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
 
       <Tr>
         <Td>Total</Td>
-        <Td isNumeric color="WindowText">
+        <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
           <Text as="span">
             <Skeleton
               display="inline"

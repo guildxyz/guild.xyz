@@ -87,7 +87,7 @@ const BuyTotal = (): JSX.Element => {
     >
       <Tr>
         <Td>Price</Td>
-        <Td isNumeric color="WindowText">
+        <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
           {priceInSellToken
             ? `${isTooSmallPrice ? "< 0.001" : Number(priceInSellToken.toFixed(3))} `
             : "0.00 "}

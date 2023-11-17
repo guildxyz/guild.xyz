@@ -1,17 +1,21 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
+  HStack,
+  Input,
   InputGroup,
   InputLeftElement,
+  Spinner,
   Stack,
+  Text,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
+import useNooxBadge, { NUMBER_REGEX } from "./hooks/useNooxBadge"
 
 export type NooxBadge = {
   id: string
@@ -23,53 +27,72 @@ export type NooxBadge = {
   imageThumbnail: string
 }
 
+const NOOX_BADGE_URL_REGEX = /^https:\/\/noox\.world\/badge\/(\d+)$/
+
 const NooxForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
     formState: { errors },
   } = useFormContext()
 
-  const id = useWatch({ name: `${baseFieldPath}.data.id` })
+  const {
+    field: { onChange, ...idFieldProps },
+  } = useController({
+    name: `${baseFieldPath}.data.id`,
+    rules: {
+      required: "This field is required",
+      validate: (value) => NUMBER_REGEX.test(value) || "Invalid badge ID",
+    },
+  })
 
-  const { data, error, isValidating } = useSWRImmutable<NooxBadge[]>("/api/noox")
-
-  const options = data?.map((badge) => ({
-    label: badge.name,
-    value: badge.id,
-    img: badge.imageThumbnail,
-    // details: noox.descriptionEligibility.match(/[0-9]+. times/),
-  }))
-
-  const selectedOption = options?.find((option) => option.value === id)
+  const { badgeMetaData, isLoading, isError } = useNooxBadge(idFieldProps.value)
 
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
         isRequired
-        isInvalid={error || parseFromObject(errors, baseFieldPath)?.data?.id}
+        isInvalid={isError || parseFromObject(errors, baseFieldPath)?.data?.id}
       >
         <FormLabel>Badge:</FormLabel>
 
         <InputGroup>
-          {selectedOption && (
+          {badgeMetaData && (
             <InputLeftElement>
-              <OptionImage img={selectedOption.img} alt={selectedOption.label} />
+              <OptionImage
+                img={badgeMetaData.image_thumbnail?.replace(
+                  "ipfs://",
+                  "https://ipfs.io/ipfs/"
+                )}
+                alt={badgeMetaData.name}
+              />
             </InputLeftElement>
           )}
 
-          <ControlledSelect
-            name={`${baseFieldPath}.data.id`}
-            rules={{ required: "This field is required." }}
-            isClearable
-            isLoading={isValidating}
-            options={options}
-            placeholder="Choose Noox badge"
+          <Input
+            {...idFieldProps}
+            onChange={(e) => {
+              const newValue = e.target.value
+              const [, badgeId] = newValue.match(NOOX_BADGE_URL_REGEX) ?? []
+              onChange(badgeId ?? newValue)
+            }}
+            placeholder="Paste noox.world badge URL"
           />
         </InputGroup>
 
         <FormErrorMessage>
-          {(error && "Couldn't fetch Noox badges") ||
+          {(isError && "Couldn't fetch Noox badge") ||
             parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
+
+        <FormHelperText>
+          {isLoading ? (
+            <HStack>
+              <Spinner size="xs" />
+              <Text as="span">Loading badge...</Text>
+            </HStack>
+          ) : (
+            badgeMetaData?.name
+          )}
+        </FormHelperText>
       </FormControl>
     </Stack>
   )

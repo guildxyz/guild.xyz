@@ -89,7 +89,7 @@ const GuildPinFees = (): JSX.Element => {
 
       <Tr>
         <Td>Total</Td>
-        <Td isNumeric color="WindowText">
+        <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
           {`${
             guildPinFeeInFloat
               ? `${Number(guildPinFeeInFloat.toFixed(5))} `

@@ -2,24 +2,17 @@ import { FormControl, FormLabel, HStack, Icon, Input, Stack } from "@chakra-ui/r
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Uploader } from "hooks/usePinata/usePinata"
 import { ArrowSquareOut, Check } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
-import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
 
 type Props = {
   fieldName: string
-  onUpload?: Uploader["onUpload"]
 }
 
-const TelegramGroup = ({
-  fieldName,
-  onUpload,
-  children,
-}: PropsWithChildren<Props>) => {
+const TelegramGroup = ({ fieldName, children }: PropsWithChildren<Props>) => {
   const {
     register,
     trigger,
@@ -31,11 +24,9 @@ const TelegramGroup = ({
   })
 
   const {
-    data: { ok: isIn, message: errorMessage, groupIcon, groupName },
+    data: { ok: isIn, message: errorMessage },
     isValidating,
   } = useIsTGBotIn(platformId, { refreshInterval: 5000 })
-
-  useSetImageAndNameFromPlatformData(groupIcon, groupName, onUpload)
 
   useEffect(() => {
     if (isIn && !errorMessage) trigger(fieldName)
