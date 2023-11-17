@@ -30,7 +30,7 @@ import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
-  const { address } = useWeb3ConnectionManager()
+  const { address, type } = useWeb3ConnectionManager()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
@@ -70,63 +70,72 @@ const AccountConnections = () => {
           )
         )}
       </AccountSection>
-      <AccountSectionTitle
-        title="Linked addresses"
-        titleRightElement={
-          addresses?.length > 1 && (
-            <>
-              <Popover placement="top" trigger="hover">
-                <PopoverTrigger>
-                  <Icon as={Question} />
-                </PopoverTrigger>
-                <PopoverContent>
-                  <PopoverArrow />
-                  <PopoverBody>
-                    Each of your addresses will be used for requirement checks.
-                  </PopoverBody>
-                </PopoverContent>
-              </Popover>
-              <Spacer />
-              <LinkAddressButton variant="ghost" my="-1 !important" />
-            </>
-          )
-        }
-        spacing={3}
-        pt="4"
-      />
-      <AccountSection divider={<Divider />}>
-        {isLoading ? (
-          <LinkedAddressSkeleton />
-        ) : !linkedAddresses?.length ? (
-          <Stack
-            {...(!vaults?.length && {
-              direction: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            })}
-          >
-            <Text fontSize={"sm"} fontWeight={"medium"}>
-              No linked addresses yet
-            </Text>
-            {vaults?.length ? (
-              <ButtonGroup w="full">
-                <LinkAddressButton />
-                <LinkDelegateVaultButton vaults={vaults} />
-              </ButtonGroup>
+
+      {type === "EVM" && (
+        <>
+          <AccountSectionTitle
+            title="Linked addresses"
+            titleRightElement={
+              addresses?.length > 1 && (
+                <>
+                  <Popover placement="top" trigger="hover">
+                    <PopoverTrigger>
+                      <Icon as={Question} />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverBody>
+                        Each of your addresses will be used for requirement checks.
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                  <Spacer />
+                  <LinkAddressButton variant="ghost" my="-1 !important" />
+                </>
+              )
+            }
+            spacing={3}
+            pt="4"
+          />
+
+          <AccountSection divider={<Divider />}>
+            {isLoading ? (
+              <LinkedAddressSkeleton />
+            ) : !linkedAddresses?.length ? (
+              <Stack
+                {...(!vaults?.length && {
+                  direction: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                })}
+              >
+                <Text fontSize={"sm"} fontWeight={"medium"}>
+                  No linked addresses yet
+                </Text>
+                {vaults?.length ? (
+                  <ButtonGroup w="full">
+                    <LinkAddressButton />
+                    <LinkDelegateVaultButton vaults={vaults} />
+                  </ButtonGroup>
+                ) : (
+                  <LinkAddressButton />
+                )}
+              </Stack>
             ) : (
-              <LinkAddressButton />
+              linkedAddresses
+                .map((addressData) => (
+                  <LinkedAddress
+                    key={addressData?.address}
+                    addressData={addressData}
+                  />
+                ))
+                .concat(
+                  vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
+                )
             )}
-          </Stack>
-        ) : (
-          linkedAddresses
-            .map((addressData) => (
-              <LinkedAddress key={addressData?.address} addressData={addressData} />
-            ))
-            .concat(
-              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
-            )
-        )}
-      </AccountSection>
+          </AccountSection>
+        </>
+      )}
     </>
   )
 }
