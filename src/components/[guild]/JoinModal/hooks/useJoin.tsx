@@ -130,20 +130,18 @@ const useJoin = (
 
     setIsAfterJoin(true)
 
-    setTimeout(() => {
-      mutate(
-        (prev) => [
-          ...(prev ?? []),
-          {
-            guildId: guild.id,
-            isAdmin: false,
-            roleIds: response.accessedRoleIds,
-            joinedAt: new Date().toISOString(),
-          },
-        ],
-        { revalidate: false }
-      )
-    }, 800)
+    mutate(
+      (prev) => [
+        ...(prev ?? []),
+        {
+          guildId: guild.id,
+          isAdmin: false,
+          roleIds: response.accessedRoleIds,
+          joinedAt: new Date().toISOString(),
+        },
+      ],
+      { revalidate: false }
+    )
 
     if (shouldShowSuccessToast) {
       if (
