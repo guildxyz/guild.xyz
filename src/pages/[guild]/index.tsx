@@ -158,7 +158,7 @@ const GuildPage = (): JSX.Element => {
    * Temporary to show "You might need to wait a few minutes to get your roles" on
    * the Discord reward card until after join we implement queues generally
    */
-  const [isAfterJoin, setIsAfterJoin] = useAtom(isAfterJoinAtom)
+  const [, setIsAfterJoin] = useAtom(isAfterJoinAtom)
   useEffect(() => {
     setIsAfterJoin(false)
   }, [])
@@ -245,7 +245,9 @@ const GuildPage = (): JSX.Element => {
           )
         }
       >
-        {!showOnboarding && (
+        {showOnboarding ? (
+          <DynamicOnboarding />
+        ) : (
           <GuildTabs
             activeTab="HOME"
             rightElement={
@@ -266,7 +268,7 @@ const GuildPage = (): JSX.Element => {
             }
           />
         )}
-        <DynamicOnboarding />
+
         <AccessHub />
 
         <Section
