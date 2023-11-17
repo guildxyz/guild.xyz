@@ -28,7 +28,6 @@ import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
-import OnboardingProvider from "components/[guild]/Onboarding/components/OnboardingProvider"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
@@ -49,7 +48,7 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
-import React, { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
@@ -164,10 +163,6 @@ const GuildPage = (): JSX.Element => {
     setIsAfterJoin(false)
   }, [])
 
-  // not importing it dynamically because that way the whole page flashes once when it loads
-  const DynamicOnboardingProvider =
-    isAdmin && !onboardingComplete ? OnboardingProvider : React.Fragment
-
   const showOnboarding = isAdmin && !onboardingComplete
 
   const currentTime = Date.now() / 1000
@@ -189,7 +184,7 @@ const GuildPage = (): JSX.Element => {
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
   return (
-    <DynamicOnboardingProvider>
+    <>
       <Head>
         <meta name="theme-color" content={localThemeColor} />
       </Head>
@@ -199,34 +194,36 @@ const GuildPage = (): JSX.Element => {
         textColor={textColor}
         ogDescription={description}
         description={
-          <>
-            {description && parseDescription(description)}
-            {Object.keys(socialLinks ?? {}).length > 0 && (
-              <Wrap w="full" spacing={3} mt="3">
-                {Object.entries(socialLinks).map(([type, link]) => {
-                  const prettyLink = link
-                    .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
-                    .replace(/\/+$/, "")
+          (description || Object.keys(socialLinks ?? {}).length > 0) && (
+            <>
+              {description && parseDescription(description)}
+              {Object.keys(socialLinks ?? {}).length > 0 && (
+                <Wrap w="full" spacing={3} mt="3">
+                  {Object.entries(socialLinks).map(([type, link]) => {
+                    const prettyLink = link
+                      .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
+                      .replace(/\/+$/, "")
 
-                  return (
-                    <HStack key={type} spacing={1.5} maxW="full">
-                      <SocialIcon type={type as SocialLinkKey} size="sm" />
-                      <Link
-                        href={link?.startsWith("http") ? link : `https://${link}`}
-                        isExternal
-                        fontSize="sm"
-                        fontWeight="semibold"
-                        color={textColor}
-                        noOfLines={1}
-                      >
-                        {prettyLink}
-                      </Link>
-                    </HStack>
-                  )
-                })}
-              </Wrap>
-            )}
-          </>
+                    return (
+                      <HStack key={type} spacing={1.5} maxW="full">
+                        <SocialIcon type={type as SocialLinkKey} size="sm" />
+                        <Link
+                          href={link?.startsWith("http") ? link : `https://${link}`}
+                          isExternal
+                          fontSize="sm"
+                          fontWeight="semibold"
+                          color={textColor}
+                          noOfLines={1}
+                        >
+                          {prettyLink}
+                        </Link>
+                      </HStack>
+                    )
+                  })}
+                </Wrap>
+              )}
+            </>
+          )
         }
         image={
           <GuildLogo
@@ -238,6 +235,7 @@ const GuildPage = (): JSX.Element => {
         }
         imageUrl={imageUrl}
         background={localThemeColor}
+        backgroundOffset={showOnboarding ? 70 : undefined}
         backgroundImage={localBackgroundImage}
         action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={<BackButton />}
@@ -247,9 +245,7 @@ const GuildPage = (): JSX.Element => {
           )
         }
       >
-        {showOnboarding ? (
-          <DynamicOnboarding />
-        ) : (
+        {!showOnboarding && (
           <GuildTabs
             activeTab="HOME"
             rightElement={
@@ -270,7 +266,7 @@ const GuildPage = (): JSX.Element => {
             }
           />
         )}
-
+        <DynamicOnboarding />
         <AccessHub />
 
         <Section
@@ -373,7 +369,7 @@ const GuildPage = (): JSX.Element => {
           </>
         )}
       </Layout>
-    </DynamicOnboardingProvider>
+    </>
   )
 }
 

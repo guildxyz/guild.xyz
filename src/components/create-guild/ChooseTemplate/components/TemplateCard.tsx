@@ -1,55 +1,95 @@
 import {
   Box,
+  Checkbox,
   Circle,
+  Collapse,
   Flex,
-  Heading,
+  HStack,
   Icon,
-  Stack,
+  SimpleGrid,
   Text,
+  Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
+import HiddenRewards from "components/[guild]/RoleCard/components/HiddenRewards"
+import {
+  RewardDisplay,
+  RewardIcon,
+} from "components/[guild]/RoleCard/components/Reward"
+import RoleHeader from "components/[guild]/RoleCard/components/RoleHeader"
+import RoleRequirementsSection, {
+  RoleRequirementsSectionHeader,
+} from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
-import LogicDivider from "components/[guild]/LogicDivider"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import { Check } from "phosphor-react"
-import { Fragment, KeyboardEvent } from "react"
-import { GuildFormType, Requirement } from "types"
+import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import { KeyboardEvent, useRef } from "react"
+import { useWatch } from "react-hook-form"
+import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
+import capitalize from "utils/capitalize"
+import TemplateRequriements from "./TemplateRequriements"
 
 type Template = {
   name: string
   description?: string
-  roles: GuildFormType["roles"]
+  role: RoleFormType
 }
 
 type Props = Template & {
-  id: string
   selected?: boolean
-  onClick: (newTemplateId: string) => void
+  part: number
+  onClick: (templateName: string) => void
+  onCheckReward: (rewardIndex: number) => void
+}
+
+const getRewardLabel = (platform: Partial<GuildPlatform>) => {
+  switch (platform.platformId) {
+    case PlatformType.DISCORD:
+      return "Role in: "
+
+    case PlatformType.GOOGLE:
+      return `${capitalize(platform.platformGuildData.role ?? "reader")} access to: `
+
+    default:
+      return "Access to: "
+  }
 }
 
 const TemplateCard = ({
-  id,
   name,
   description,
-  roles,
+  role,
   selected,
+  part,
   onClick,
+  onCheckReward,
 }: Props): JSX.Element => {
-  const bottomBgColor = useColorModeValue("gray.100", "gray.800")
-  const roleBottomBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const roleBottomBorderColor = useColorModeValue("gray.200", "gray.600")
+  const roleRewardsBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+
+  const roles = useWatch<GuildFormType, "roles">({ name: "roles" })
+  const guildPlatforms = useWatch<GuildFormType, "guildPlatforms">({
+    name: "guildPlatforms",
+  })
+
+  const { isOpen: isExpanded, onToggle: onToggleExpanded } = useDisclosure({
+    defaultIsOpen: false,
+  })
+  const initialRequirementsRef = useRef<HTMLDivElement>(null)
+  const descriptionRef = useRef<HTMLDivElement>(null)
 
   return (
     <Box
+      shadow={part === 0 ? "sm" : "md"}
       tabIndex={0}
-      onClick={() => onClick(id)}
+      onClick={() => onClick(name)}
       onKeyDown={(e: KeyboardEvent) => {
         if (e.key !== "Enter" && e.key !== " ") return
         e.preventDefault()
-        onClick(id)
+        onClick(name)
       }}
       position="relative"
-      mb={{ base: 4, md: 6 }}
+      mb={3}
       borderRadius="2xl"
       overflow="hidden"
       _before={{
@@ -59,121 +99,183 @@ const TemplateCard = ({
         bottom: 0,
         left: 0,
         right: 0,
-        bg: "primary.300",
+        bg: "gray.300",
         opacity: 0,
         transition: "opacity 0.2s",
       }}
       _hover={{
         _before: {
-          opacity: 0.1,
-        },
-      }}
-      _focus={{
-        outline: "none",
-        _before: {
-          opacity: 0.1,
+          opacity: part === 0 ? 0.1 : 0,
         },
       }}
       _active={{
         _before: {
-          opacity: 0.17,
+          opacity: part === 0 ? 0.17 : 0,
         },
       }}
-      cursor="pointer"
+      cursor={part === 0 ? "pointer" : "default"}
       h="max-content"
+      w="full"
     >
-      <Stack>
-        <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }}>
-          <Heading
-            as="h2"
-            fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-            fontFamily="display"
-          >
-            {name}
-          </Heading>
+      <Card overflow="hidden">
+        <SimpleGrid columns={{ base: 1, md: 2 }}>
+          <Flex direction="column">
+            <RoleHeader role={role} />
 
-          <Text colorScheme="gray" fontWeight="semibold">
-            {description}
-          </Text>
-        </Stack>
+            <Collapse in={part === 0}>
+              <Box pl={5} pb={5}>
+                {description}
+              </Box>
+            </Collapse>
 
-        <Stack p={{ base: 5, sm: 6 }} bgColor={bottomBgColor} spacing={4}>
-          {roles?.map((role, index) => (
-            <Card key={index}>
-              <Stack>
-                <Stack px={{ base: 5, sm: 6 }} pt={{ base: 5, sm: 6 }} pb={4}>
-                  <Heading
-                    as="h3"
-                    fontSize={{ base: "md", md: "lg" }}
-                    fontFamily="display"
-                  >
-                    {role.name}
-                  </Heading>
-                </Stack>
+            <Collapse in={part === 1} style={{ marginTop: "auto" }}>
+              <Box
+                p={5}
+                pt={2}
+                borderWidth={2}
+                borderColor="primary.500"
+                borderRadius={6}
+                background={roleRewardsBgColor}
+                borderStyle={"dashed"}
+                m={5}
+              >
+                {guildPlatforms?.length ? (
+                  guildPlatforms.map((platform, i) => {
+                    const isDisabled =
+                      platforms[platform.platformName].asRewardRestriction ===
+                        PlatformAsRewardRestrictions.SINGLE_ROLE &&
+                      roles
+                        .filter((r) => r.name !== name)
+                        .some((r) =>
+                          r.rolePlatforms?.find(
+                            (rolePlatform) => rolePlatform.guildPlatformIndex === i
+                          )
+                        )
 
-                <Stack
-                  p={{ base: 5, sm: 6 }}
-                  bgColor={roleBottomBgColor}
-                  borderTopWidth={1}
-                  borderTopColor={roleBottomBorderColor}
-                >
-                  <Text
-                    as="span"
-                    mt={1}
-                    mr={2}
-                    mb={2}
-                    fontSize="xs"
-                    fontWeight="bold"
-                    color="gray"
-                    textTransform="uppercase"
-                    noOfLines={1}
-                  >
-                    Requirements to qualify
+                    return (
+                      <Tooltip
+                        key={i}
+                        label={
+                          isDisabled
+                            ? `${
+                                platforms[platform.platformName].name
+                              } rewards can only be added to one role`
+                            : ""
+                        }
+                        hasArrow
+                      >
+                        <HStack
+                          gap={3}
+                          alignItems={"flex-start"}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            if (!isDisabled) onCheckReward(i)
+                          }}
+                        >
+                          <Checkbox
+                            pt={4}
+                            isDisabled={isDisabled}
+                            isChecked={
+                              !!roles
+                                .find((r) => r.name === name)
+                                ?.rolePlatforms?.find(
+                                  (rolePlatform) =>
+                                    rolePlatform.guildPlatformIndex === i
+                                )
+                            }
+                          />
+                          <RewardDisplay
+                            flexGrow={1}
+                            label={
+                              <>
+                                {getRewardLabel(platform)}
+                                <Text as="span" fontWeight="bold">
+                                  {getValueToDisplay(platform)}
+                                </Text>
+                              </>
+                            }
+                            icon={
+                              <RewardIcon
+                                rolePlatformId={platform.id}
+                                guildPlatform={platform as GuildPlatform}
+                                withMotionImg={false}
+                              />
+                            }
+                          />
+                        </HStack>
+                      </Tooltip>
+                    )
+                  })
+                ) : (
+                  <Text colorScheme="gray" fontSize={14} pt={3}>
+                    You haven't set any platforms that could be rewards in step 1.
+                    You can go back and set some now, or add rewards later
                   </Text>
-
-                  {role.requirements.map((requirement, i) => (
-                    <Fragment key={i}>
-                      <RequirementDisplayComponent
-                        requirement={requirement as Requirement}
-                      />
-                      {i < role.requirements.length - 1 && (
-                        <LogicDivider logic="AND" py={1} />
-                      )}
-                    </Fragment>
-                  ))}
-                </Stack>
-              </Stack>
-            </Card>
-          ))}
-        </Stack>
-      </Stack>
-
-      <Flex
-        position="absolute"
-        inset={0}
-        justifyContent="end"
-        px={{ base: 5, sm: 6 }}
-        py={7}
-        borderWidth={2}
-        borderStyle={selected ? "solid" : "dashed"}
-        borderColor={selected && "green.500"}
-        borderRadius="2xl"
-        pointerEvents="none"
-        transition="border 0.16s ease"
-      >
-        <Circle
-          bgColor="green.500"
-          color="white"
-          size={6}
-          transition="opacity 0.16s ease"
-          opacity={selected ? 1 : 0}
+                )}
+                {role.hiddenRewards && <HiddenRewards />}
+              </Box>
+            </Collapse>
+          </Flex>
+          <RoleRequirementsSection>
+            <RoleRequirementsSectionHeader />
+            <TemplateRequriements
+              {...{
+                role,
+                isExpanded,
+                onToggleExpanded,
+                descriptionRef,
+                initialRequirementsRef,
+              }}
+            />
+          </RoleRequirementsSection>
+        </SimpleGrid>
+      </Card>
+      {part === 0 && (
+        <Flex
+          position="absolute"
+          inset={0}
+          justifyContent="end"
+          p={5}
+          borderWidth={2}
+          borderStyle={selected ? "solid" : "dashed"}
+          borderColor={selected && part === 0 && "green.500"}
+          borderRadius="2xl"
+          pointerEvents="none"
+          transition="border 0.16s ease"
         >
-          <Icon as={Check} />
-        </Circle>
-      </Flex>
+          {selected ? (
+            <Circle
+              bgColor="green.500"
+              color="white"
+              size={6}
+              transition="opacity 0.16s ease"
+              opacity={selected ? 1 : 0}
+            >
+              <Icon as={Check} />
+            </Circle>
+          ) : (
+            <Circle
+              borderColor={"gray"}
+              borderStyle={"solid"}
+              borderWidth={2}
+              size={6}
+            />
+          )}
+        </Flex>
+      )}
     </Box>
   )
 }
+
+const getValueToDisplay = (
+  platform: Partial<GuildPlatform> & {
+    platformName: string
+  }
+): string =>
+  platform.platformGuildData.name ??
+  `${platforms[platform.platformName].name} ${
+    platforms[platform.platformName].gatedEntity
+  }`
 
 export default TemplateCard
 export type { Template }

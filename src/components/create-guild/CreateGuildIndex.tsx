@@ -1,37 +1,47 @@
-import { HStack, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { Checkbox, HStack, Text } from "@chakra-ui/react"
 import ClientOnly from "components/common/ClientOnly"
-import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { CaretRight } from "phosphor-react"
+import { useEffect, useState } from "react"
+import { useWatch } from "react-hook-form"
 import { useCreateGuildContext } from "./CreateGuildContext"
-import CreateGuildPlatform from "./CreateGuildPlatform"
+import MultiPlatformsGrid from "./MultiPlatformGrid"
 
 const CreateGuildIndex = (): JSX.Element => {
-  const { platform, setPlatform, nextStep } = useCreateGuildContext()
+  const { setDisabled } = useCreateGuildContext()
+  const [whitoutPlatform, setWhitoutPlatform] = useState(false)
 
-  if (platform && platform !== "DEFAULT") return <CreateGuildPlatform />
+  const guildPlatforms = useWatch({ name: "guildPlatforms" })
+  const twitter = useWatch({ name: "socialLinks.TWITTER" })
+
+  useEffect(() => {
+    setDisabled(!twitter && guildPlatforms.length === 0 && !whitoutPlatform)
+  }, [twitter, guildPlatforms.length, whitoutPlatform])
 
   return (
     <ClientOnly>
-      <PlatformsGrid onSelection={setPlatform} />
+      <MultiPlatformsGrid
+        onSelection={() => {
+          setWhitoutPlatform(false)
+        }}
+      />
 
-      <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 6 }}>
-        <Text fontWeight="medium" colorScheme="gray" opacity=".7">
+      <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 5 }} spacing={3}>
+        <Text fontWeight="semibold" colorScheme="gray">
           or
         </Text>
-        <Button
-          rightIcon={<CaretRight />}
-          variant="link"
-          color="gray"
-          fontWeight="medium"
-          iconSpacing="1.5"
-          onClick={() => {
-            setPlatform("DEFAULT")
-            nextStep()
+        <Checkbox
+          isChecked={whitoutPlatform}
+          isDisabled={!!guildPlatforms.length || !!twitter}
+          onChange={(e) => {
+            if (guildPlatforms.length === 0) {
+              setWhitoutPlatform(e?.target?.checked)
+            }
           }}
+          spacing={1.5}
         >
-          Create guild without platform
-        </Button>
+          <Text fontWeight="medium" colorScheme="gray">
+            add platforms later
+          </Text>
+        </Checkbox>
       </HStack>
     </ClientOnly>
   )
