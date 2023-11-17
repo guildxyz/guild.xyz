@@ -1,23 +1,28 @@
-import { Collapse } from "@chakra-ui/react"
+import { Collapse, Tooltip } from "@chakra-ui/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { useAccount } from "wagmi"
 
 const ConnectWalletButton = (): JSX.Element => {
-  const { isConnected } = useAccount()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { openWalletSelectorModal, type, isWeb3Connected } =
+    useWeb3ConnectionManager()
 
   return (
-    <Collapse in={!isConnected}>
-      <Button
-        size="lg"
-        colorScheme="blue"
-        onClick={openWalletSelectorModal}
-        isDisabled={isConnected}
-        w="full"
+    <Collapse in={type !== "EVM"}>
+      <Tooltip
+        label="Disconnect your Fuel wallet first"
+        isDisabled={!isWeb3Connected}
+        hasArrow
       >
-        Connect wallet
-      </Button>
+        <Button
+          size="lg"
+          colorScheme="blue"
+          onClick={openWalletSelectorModal}
+          isDisabled={isWeb3Connected}
+          w="full"
+        >
+          Connect wallet
+        </Button>
+      </Tooltip>
     </Collapse>
   )
 }
