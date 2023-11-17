@@ -24,7 +24,7 @@ import GuildPinFees from "../components/GuildPinFees"
 import GuildPinImage from "../components/GuildPinImage"
 import GuildPinReward from "../components/GuildPinReward"
 import TransactionStatusModal from "../components/TransactionStatusModal"
-import OpenseaLink from "../components/TransactionStatusModal/components/OpenseaLink"
+import GuildPinOpenseaLink from "../components/TransactionStatusModal/components/GuildPinOpenseaLink"
 import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
 
@@ -127,7 +127,7 @@ const MintGuildPin = (): JSX.Element => {
         title="Mint Guild Pin"
         successTitle="Successful mint"
         successText="Successful transaction! Your Guild Pin NFT is now on chain!"
-        successLinkComponent={<OpenseaLink />}
+        successLinkComponent={<GuildPinOpenseaLink />}
         errorComponent={<Text mb={4}>Couldn't mint Guild Pin</Text>}
         progressComponent={
           <>

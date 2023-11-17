@@ -120,7 +120,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
             </Tooltip>
           </HStack>
         </Td>
-        <Td isNumeric color="WindowText">
+        <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
           <Skeleton isLoaded={!isValidating}>
             <Text as="span">{`${maxPriceSum} ${symbol}`}</Text>
           </Skeleton>
