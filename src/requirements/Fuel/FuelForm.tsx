@@ -1,6 +1,7 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -34,6 +35,11 @@ const FuelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       `${baseFieldPath}.data.maxAmount`,
     ])
   }
+
+  useEffect(() => {
+    if (!setValue) return
+    setValue(`${baseFieldPath}.chain`, "ETHEREUM")
+  }, [setValue])
 
   return (
     <Stack spacing={4} alignItems="start">
