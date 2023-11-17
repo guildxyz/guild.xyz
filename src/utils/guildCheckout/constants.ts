@@ -241,6 +241,10 @@ export const GUILD_PIN_CONTRACTS = {
     address: "0x0e6a14106497a7de36fba446628860c062e9e302",
     abi: guildPinAbi,
   },
+  CRONOS: {
+    address: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
+    abi: guildPinAbi,
+  },
 } as const
 // TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 

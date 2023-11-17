@@ -44,7 +44,6 @@
     "@zag-js/combobox": "^0.16.0",
     "@zag-js/react": "^0.16.0",
     "chakra-react-select": "^4.5.0",
-    "chakra-ui-steps": "2.1.0",
     "color": "^4.2.3",
     "colorthief": "^2.3.2",
     "events": "^3.3.0",

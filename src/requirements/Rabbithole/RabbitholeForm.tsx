@@ -1,20 +1,28 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
 const options = [
-  { label: "Intro to DeFi", value: "0x2fAcE815247A997eAa29881C16F75FD83f4Df65b" },
-  { label: "Intro to NFTs", value: "0xa3B61c077dA9Da080D22A4cE24f9Fd5f139634cA" },
-  { label: "Intro to DAOs", value: "0xc9A42690912F6Bd134DBc4e2493158b3D72cAd21" },
+  { label: "Intro to DeFi", value: "0x2face815247a997eaa29881c16f75fd83f4df65b" },
+  { label: "Intro to NFTs", value: "0xa3b61c077da9da080d22a4ce24f9fd5f139634ca" },
+  { label: "Intro to DAOs", value: "0xc9a42690912f6bd134dbc4e2493158b3d72cad21" },
 ]
 
 const RabbitholeForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
+    setValue,
     formState: { errors },
   } = useFormContext()
+
+  useEffect(() => {
+    if (!setValue) return
+    setValue(`${baseFieldPath}.chain`, "ETHEREUM")
+    setValue(`${baseFieldPath}.data`, {})
+  }, [setValue])
 
   return (
     <>

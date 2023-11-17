@@ -104,7 +104,7 @@ const AccessHub = (): JSX.Element => {
 
   const showAccessHub =
     (isAdmin ? !!onboardingComplete : isMember) ||
-    !!accessedGuildPlatforms?.length ||
+    (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
     (!!groups?.length && !group)
 
   return (

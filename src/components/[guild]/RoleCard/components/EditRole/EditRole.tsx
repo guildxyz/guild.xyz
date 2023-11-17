@@ -182,7 +182,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0} onClick={handleOpen}>
+      <OnboardingMarker step={3} onClick={handleOpen}>
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}
@@ -295,7 +295,7 @@ const EditRoleWrapper = ({ roleId }) => {
   const { isDetailed } = useGuild()
   if (!isDetailed)
     return (
-      <OnboardingMarker step={0}>
+      <OnboardingMarker step={3}>
         <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
       </OnboardingMarker>
     )

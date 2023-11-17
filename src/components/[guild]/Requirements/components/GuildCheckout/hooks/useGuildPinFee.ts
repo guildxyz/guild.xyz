@@ -1,6 +1,6 @@
 import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { GUILD_PIN_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import { useContractRead } from "wagmi"
 
 const useGuildPinFee = (): {
@@ -18,7 +18,6 @@ const useGuildPinFee = (): {
     abi: GUILD_PIN_CONTRACTS[guildPin.chain].abi,
     address: GUILD_PIN_CONTRACTS[guildPin.chain].address,
     functionName: "fee",
-    args: [NULL_ADDRESS],
     chainId: Chains[guildPin.chain],
   })
 

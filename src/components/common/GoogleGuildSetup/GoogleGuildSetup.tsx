@@ -156,7 +156,6 @@ const GoogleGuildSetup = ({
           </GridItem>
         )}
       </SimpleGrid>
-
       <AddDocumentModal isOpen={isOpen} onClose={onClose} />
     </>
   )

@@ -2,35 +2,33 @@ import {
   Box,
   Collapse,
   Flex,
-  Heading,
   HStack,
   SimpleGrid,
   SlideFade,
   Spacer,
-  Text,
   useBreakpointValue,
-  useColorModeValue,
   useDisclosure,
-  Wrap,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
-import GuildLogo from "components/common/GuildLogo"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
 import { memo, useEffect, useRef } from "react"
 import { PlatformType, Role, Visibility as VisibilityType } from "types"
+import RoleRequirements from "../Requirements"
 import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
-import RoleRequirements from "../Requirements"
-import Visibility from "../Visibility"
 import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
 import MemberCount from "./components/MemberCount"
 import Reward, { RewardIcon } from "./components/Reward"
 import RoleDescription from "./components/RoleDescription"
+import RoleHeader from "./components/RoleHeader"
+import RoleRequirementsSection, {
+  RoleRequirementsSectionHeader,
+} from "./components/RoleRequirementsSection"
 
 type Props = {
   role: Role
@@ -70,8 +68,6 @@ const RoleCard = memo(({ role }: Props) => {
   }, [hasAccess, isMember])
 
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
-  const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
 
   const collapsedHeight =
     isMobile && role.visibility === VisibilityType.PUBLIC ? "90px" : "94px"
@@ -100,27 +96,7 @@ const RoleCard = memo(({ role }: Props) => {
       <Collapse in={isOpen} startingHeight={collapsedHeight}>
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex direction="column">
-            <HStack spacing={3} p={5}>
-              <HStack spacing={4} minW={0}>
-                <GuildLogo
-                  imageUrl={role.imageUrl}
-                  size={{ base: "48px", md: "52px" }}
-                />
-                <Wrap spacingX={3} spacingY={1}>
-                  <Heading
-                    as="h3"
-                    fontSize="xl"
-                    fontFamily="display"
-                    minW={0}
-                    overflowWrap={"break-word"}
-                    noOfLines={!isOpen && 1}
-                    mt="-1px !important"
-                  >
-                    {role.name}
-                  </Heading>
-                  <Visibility entityVisibility={role.visibility} showTagLabel />
-                </Wrap>
-              </HStack>
+            <RoleHeader {...{ role, isOpen }}>
               {!isOpen && (
                 <HStack
                   flex="1 0 auto"
@@ -164,7 +140,7 @@ const RoleCard = memo(({ role }: Props) => {
                   </>
                 )}
               </HStack>
-            </HStack>
+            </RoleHeader>
             {role.description && (
               <SlideFade
                 offsetY={10}
@@ -213,46 +189,15 @@ const RoleCard = memo(({ role }: Props) => {
               {role.hiddenRewards && <HiddenRewards />}
             </Box>
           </Flex>
-          <Flex
-            direction="column"
-            bgColor={isOpen && requirementsSectionBgColor}
-            borderLeftWidth={{ base: 0, md: 1 }}
-            borderLeftColor={isOpen ? requirementsSectionBorderColor : "transparent"}
-            transition="background .2s"
-            // Card's `overflow: clip` isn't enough in Safari
-            borderTopRightRadius={{ md: "2xl" }}
-            borderBottomRightRadius={{ md: "2xl" }}
-            pos="relative"
-          >
-            <HStack
-              p={5}
-              pb={0}
-              mb={{ base: 4, md: 6 }}
-              transform={!isOpen && "translateY(10px)"}
-              transition="transform .2s"
-            >
-              <Text
-                as="span"
-                mt="1"
-                mr="2"
-                fontSize="xs"
-                fontWeight="bold"
-                color="gray"
-                textTransform="uppercase"
-                noOfLines={1}
-                opacity={isOpen ? 1 : 0}
-                pointerEvents={!isOpen ? "none" : "auto"}
-                transition="opacity .2s"
-              >
-                Requirements to qualify
-              </Text>
+          <RoleRequirementsSection isOpen={isOpen}>
+            <RoleRequirementsSectionHeader isOpen={isOpen}>
               <Spacer />
               <ClientOnly>
                 {!isMobile && (
                   <AccessIndicator roleId={role.id} {...{ isOpen, onToggle }} />
                 )}
               </ClientOnly>
-            </HStack>
+            </RoleRequirementsSectionHeader>
             <RoleRequirements
               {...{
                 role,
@@ -263,7 +208,7 @@ const RoleCard = memo(({ role }: Props) => {
                 initialRequirementsRef,
               }}
             />
-          </Flex>
+          </RoleRequirementsSection>
         </SimpleGrid>
       </Collapse>
 
