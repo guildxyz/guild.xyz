@@ -38,7 +38,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   return (
     <>
       <ButtonGroup isAttached size="sm" variant="ghost">
-        <OnboardingMarker step={0} onClick={onAddDrawerOpen}>
+        <OnboardingMarker step={3} onClick={onAddDrawerOpen}>
           <Button
             ref={addRoleButtonRef}
             leftIcon={<Icon as={Plus} />}
