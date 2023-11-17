@@ -217,6 +217,7 @@ export const TEMPLATES: Array<RoleFormType> = [
         type: "RABBITHOLE",
         address: "0x2face815247a997eaa29881c16f75fd83f4df65b",
         chain: "ETHEREUM",
+        data: {},
       },
       {
         data: { minAmount: 10 },

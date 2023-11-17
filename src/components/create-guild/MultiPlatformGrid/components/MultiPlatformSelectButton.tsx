@@ -93,11 +93,9 @@ const MultiPlatformSelectButton = ({
   const twitterLink = useWatch({ name: "socialLinks.TWITTER" })
 
   const removePlatform = (platformName: PlatformName) => {
-    const guildPlatformsCopy = JSON.parse(JSON.stringify(guildPlatforms))
-
     methods.setValue(
       "guildPlatforms",
-      guildPlatformsCopy.filter(
+      guildPlatforms.filter(
         (guildPlatform) => guildPlatform.platformName !== platformName
       )
     )

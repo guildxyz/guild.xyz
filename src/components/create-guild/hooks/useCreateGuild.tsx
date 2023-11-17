@@ -36,24 +36,22 @@ const useCreateGuild = () => {
     onSuccess: (response_) => {
       triggerConfetti()
 
-      setTimeout(() => {
-        yourGuilds.mutate(
-          (prev) => [
-            ...(prev ?? []),
-            {
-              hideFromExplorer: false,
-              id: response_.id,
-              imageUrl: response_.imageUrl,
-              memberCount: 1,
-              name: response_.name,
-              rolesCount: response_.roles.length,
-              tags: [],
-              urlName: response_.urlName,
-            },
-          ],
-          { revalidate: false }
-        )
-      }, 800)
+      yourGuilds.mutate(
+        (prev) => [
+          ...(prev ?? []),
+          {
+            hideFromExplorer: false,
+            id: response_.id,
+            imageUrl: response_.imageUrl,
+            memberCount: 1,
+            name: response_.name,
+            rolesCount: response_.roles.length,
+            tags: [],
+            urlName: response_.urlName,
+          },
+        ],
+        { revalidate: false }
+      )
 
       toast({
         title: `Guild successfully created!`,
