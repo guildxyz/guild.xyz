@@ -4,43 +4,24 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import { nooxAbi } from "static/abis/noox"
-import useSWRImmutable from "swr/immutable"
-import { mainnet, useContractRead } from "wagmi"
-
-type NooxBadgeMetadata = {
-  name: string
-  image_thumbnail: string
-}
+import useNooxBadge from "./hooks/useNooxBadge"
 
 const NooxRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
-  const {
-    data: ipfsURL,
-    isLoading: isContractCallLoading,
-    isError,
-  } = useContractRead({
-    abi: nooxAbi,
-    address: "0xf1c121a563a84d62a5f11152d064dd0d554024f9",
-    chainId: mainnet.id,
-    functionName: "uri",
-    args: [BigInt(requirement.data.id)],
-  })
-
-  const { data: badgeData, isValidating } =
-    useSWRImmutable<NooxBadgeMetadata>(ipfsURL)
-
-  const isLoading = isContractCallLoading || isValidating
+  const { badgeMetaData, isError, isLoading } = useNooxBadge(requirement.data.id)
 
   return (
     <Requirement
-      image={badgeData?.image_thumbnail?.replace("ipfs://", "https://ipfs.io/ipfs/")}
+      image={badgeMetaData?.image_thumbnail?.replace(
+        "ipfs://",
+        "https://ipfs.io/ipfs/"
+      )}
       isImageLoading={isLoading}
       {...props}
     >
       <Text as="span">{`Have the `}</Text>
-      {!badgeData || isLoading || isError ? (
+      {!badgeMetaData || isLoading || isError ? (
         <DataBlock
           isLoading={isLoading}
           error={isError && "Couldn't fetch Noox badge data"}
@@ -55,7 +36,7 @@ const NooxRequirement = (props: RequirementProps) => {
           colorScheme="blue"
           fontWeight="medium"
         >
-          {badgeData.name}
+          {badgeMetaData.name}
         </Link>
       )}
 
