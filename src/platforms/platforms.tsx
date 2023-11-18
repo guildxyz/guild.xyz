@@ -213,6 +213,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   TWITTER: {
     icon: TwitterLogo,
+    imageUrl: "/platforms/twitter.png",
     name: "Twitter",
     colorScheme: "TWITTER",
     gatedEntity: "account",
@@ -261,7 +262,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
-    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: true,
     AddPlatformPanel: dynamic(
       () =>

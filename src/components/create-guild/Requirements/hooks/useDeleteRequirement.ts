@@ -1,3 +1,4 @@
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -10,6 +11,8 @@ const useDeleteRequirement = (
   onSuccess?: () => void
 ) => {
   const { mutateGuild, id } = useGuild()
+  const { mutate: mutateAccess } = useAccess()
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -46,6 +49,8 @@ const useDeleteRequirement = (
         }),
         { revalidate: false }
       )
+
+      mutateAccess()
     },
     onError: (error) => showErrorToast(error),
   })

@@ -12,7 +12,7 @@ type Props = {
 }
 
 const NoRolesAlert = ({ type = "GUILD" }: Props): JSX.Element => {
-  const entity = type === "GUILD" ? "guild" : "campaign"
+  const entity = type === "GUILD" ? "guild" : "page"
 
   return (
     <Card>

@@ -20,7 +20,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
+import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
@@ -136,7 +136,7 @@ const SharedSocials = () => {
  * on edit success that way for some reason, regardless of the mutate
  */
 const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
-  const { imageUrl, name } = useGuild(guildId)
+  const { imageUrl, name } = useSimpleGuild(guildId)
   const { onSubmit, isLoading, submit } = useEditSharedSocials(guildId)
 
   const isShared = sharedSocials?.find(

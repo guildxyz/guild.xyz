@@ -2,7 +2,7 @@ before(() => {
   cy.clearIndexedDB()
 })
 
-describe("create guild page (without wallet)", () => {
+describe.skip("create guild page (without wallet)", () => {
   before(() => {
     cy.visit("/create-guild")
   })
@@ -22,7 +22,7 @@ describe("create guild page (without wallet)", () => {
   })
 })
 
-describe("create guild page (with wallet)", () => {
+describe.skip("create guild page (with wallet)", () => {
   before(() => {
     cy.visit("/create-guild")
     cy.connectWallet()

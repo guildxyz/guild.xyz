@@ -35,14 +35,14 @@ const CampaignCardMenu = ({ groupId }: Props) => {
     <Box position="absolute" top={2} right={2}>
       <PlatformCardMenu>
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
-          Edit campaign appearance
+          Edit page appearance
         </MenuItem>
         <MenuItem
           icon={<TrashSimple />}
           color={removeMenuItemColor}
           onClick={onDeleteOpen}
         >
-          Delete campaign
+          Delete page
         </MenuItem>
       </PlatformCardMenu>
 
@@ -69,9 +69,9 @@ const DeleteCampaignAlert = ({ groupId, isOpen, onClose }) => {
     <Alert isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
       <AlertDialogOverlay />
       <AlertDialogContent>
-        <AlertDialogHeader pb="6">Delete campaign</AlertDialogHeader>
+        <AlertDialogHeader pb="6">Delete page</AlertDialogHeader>
         <AlertDialogBody>
-          Are you sure to delete this campaign and all roles in it?
+          Are you sure to delete this page and all roles in it?
         </AlertDialogBody>
         <AlertDialogFooter display={"flex"} gap={2}>
           <Button ref={cancelRef} onClick={onClose} variant="outline">
@@ -82,7 +82,7 @@ const DeleteCampaignAlert = ({ groupId, isOpen, onClose }) => {
             isLoading={isLoading}
             colorScheme="red"
           >
-            Delete campaign
+            Delete page
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

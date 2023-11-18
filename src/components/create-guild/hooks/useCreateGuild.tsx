@@ -1,6 +1,7 @@
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -19,6 +20,7 @@ const useCreateGuild = () => {
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
+  const yourGuilds = useYourGuilds()
 
   const fetcherWithSign = useFetcherWithSign()
 
@@ -33,6 +35,23 @@ const useCreateGuild = () => {
       }),
     onSuccess: (response_) => {
       triggerConfetti()
+
+      yourGuilds.mutate(
+        (prev) => [
+          ...(prev ?? []),
+          {
+            hideFromExplorer: false,
+            id: response_.id,
+            imageUrl: response_.imageUrl,
+            memberCount: 1,
+            name: response_.name,
+            rolesCount: response_.roles.length,
+            tags: [],
+            urlName: response_.urlName,
+          },
+        ],
+        { revalidate: false }
+      )
 
       toast({
         title: `Guild successfully created!`,

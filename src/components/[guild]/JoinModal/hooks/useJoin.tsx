@@ -1,4 +1,5 @@
 import type { JoinJob } from "@guildxyz/types"
+import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -129,28 +130,25 @@ const useJoin = (
 
     setIsAfterJoin(true)
 
-    setTimeout(() => {
-      mutate(
-        (prev) => [
-          ...(prev ?? []),
-          {
-            guildId: guild.id,
-            isAdmin: false,
-            roleIds: response.accessedRoleIds,
-            joinedAt: new Date().toISOString(),
-          },
-        ],
-        { revalidate: false }
-      )
-      // show user in guild's members
-      guild.mutateGuild()
-    }, 800)
+    mutate(
+      (prev) => [
+        ...(prev ?? []),
+        {
+          guildId: guild.id,
+          isAdmin: false,
+          roleIds: response.accessedRoleIds,
+          joinedAt: new Date().toISOString(),
+        },
+      ],
+      { revalidate: false }
+    )
 
     if (shouldShowSuccessToast) {
       if (
         pathname === "/[guild]" &&
         guild.featureFlags.includes("GUILD_CREDENTIAL") &&
-        guild.guildPin?.isActive
+        guild.guildPin?.isActive &&
+        !GUILD_PIN_MAINTENANCE
       ) {
         toastWithButton({
           status: "success",

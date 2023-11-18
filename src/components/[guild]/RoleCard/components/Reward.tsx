@@ -1,4 +1,5 @@
 import {
+  ChakraProps,
   Circle,
   HStack,
   Icon,
@@ -143,12 +144,15 @@ const RewardDisplay = ({
   label,
   rightElement,
   children,
-}: PropsWithChildren<{
-  icon?: ReactNode
-  label: ReactNode
-  rightElement?: ReactNode
-}>) => (
-  <HStack pt="3" spacing={2} alignItems={"flex-start"}>
+  ...chakraProps
+}: PropsWithChildren<
+  {
+    icon?: ReactNode
+    label: ReactNode
+    rightElement?: ReactNode
+  } & ChakraProps
+>) => (
+  <HStack pt="3" spacing={2} alignItems={"flex-start"} {...chakraProps}>
     {icon}
 
     <Stack w="full" spacing={0.5}>
@@ -244,5 +248,5 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   return <Component platform={platformWithGuildPlatform} {...props} />
 }
 
-export { RewardDisplay, RewardIcon }
+export { Reward, RewardDisplay, RewardIcon, getRewardLabel }
 export default RewardWrapper

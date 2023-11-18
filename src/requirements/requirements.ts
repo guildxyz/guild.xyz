@@ -17,7 +17,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wallet,
     name: "Free",
-    fileNameBase: "Free",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Free/FreeRequirement")
     ),
@@ -26,7 +25,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ImageSquare,
     name: "NFT",
-    fileNameBase: "Nft",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Nft/NftRequirement")
     ),
@@ -38,7 +36,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: CurrencyCircleDollar,
     name: "Token",
-    fileNameBase: "Token",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Token/TokenRequirement")
     ),
@@ -50,7 +47,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ListChecks,
     name: "Allowlist",
-    fileNameBase: "Allowlist",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Allowlist/AllowlistRequirement")
     ),
@@ -62,7 +58,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Coins,
     name: "Payment",
-    fileNameBase: "Payment",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Payment/PaymentRequirement")
     ),
@@ -74,7 +69,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wrench,
     name: "Contract query",
-    fileNameBase: "ContractState",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
     ),
@@ -86,7 +80,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wallet,
     name: "Wallet activity",
-    fileNameBase: "WalletActivity",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/WalletActivity/WalletActivityRequirement")
     ),
@@ -116,7 +109,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Robot,
     name: "Captcha",
-    fileNameBase: "Captcha",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Captcha/CaptchaRequirement")
     ),
@@ -128,7 +120,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: GuildLogo,
     name: "Guild",
-    fileNameBase: "Guild",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Guild/GuildRequirement")
     ),
@@ -146,7 +137,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: platforms.EMAIL.icon,
     name: platforms.EMAIL.name,
-    fileNameBase: platforms.EMAIL.name,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Email/EmailRequirement")
     ),
@@ -158,7 +148,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/twitter.svg",
     name: "Twitter",
-    fileNameBase: "Twitter",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Twitter/TwitterRequirement")
     ),
@@ -184,7 +173,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/platforms/github.png",
     name: "GitHub",
-    fileNameBase: "Github",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Github/GithubRequirement")
     ),
@@ -204,7 +192,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/platforms/discord.png",
     name: "Discord",
-    fileNameBase: "Discord",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Discord/DiscordRequirement")
     ),
@@ -223,7 +210,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/eas.png",
     name: "EAS",
-    fileNameBase: "EAS",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
     ),
@@ -235,7 +221,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
-    fileNameBase: "Unlock",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Unlock/UnlockRequirement")
     ),
@@ -247,7 +232,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/poap.svg",
     name: "Poap",
-    fileNameBase: "Poap",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Poap/PoapRequirement")
     ),
@@ -259,7 +243,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/gitpoap.svg",
     name: "GitPOAP",
-    fileNameBase: "GitPoap",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/GitPoap/GitPoapRequirement")
     ),
@@ -271,7 +254,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
-    fileNameBase: "Mirror",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Mirror/MirrorRequirement")
     ),
@@ -283,7 +265,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/snapshot.png",
     name: "Snapshot",
-    fileNameBase: "Snapshot",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Snapshot/SnapshotRequirement")
     ),
@@ -306,7 +287,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/juicebox.png",
     name: "Juicebox",
-    fileNameBase: "Juicebox",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Juicebox/JuiceboxRequirement")
     ),
@@ -318,7 +298,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/galaxy.svg",
     name: "Galxe",
-    fileNameBase: "Galaxy",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Galaxy/GalaxyRequirement")
     ),
@@ -330,7 +309,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
-    fileNameBase: "Noox",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Noox/NooxRequirement")
     ),
@@ -342,7 +320,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/disco.png",
     name: "Disco",
-    fileNameBase: "Disco",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Disco/DiscoRequirement")
     ),
@@ -354,7 +331,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/lens.png",
     name: "Lens",
-    fileNameBase: "Lens",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Lens/LensRequirement")
     ),
@@ -375,7 +351,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/otterspace.png",
     name: "Otterspace",
-    fileNameBase: "Otterspace",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Otterspace/OtterspaceRequirement")
     ),
@@ -387,7 +362,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/orange.png",
     name: "Orange",
-    fileNameBase: "Orange",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Orange/OrangeRequirement")
     ),
@@ -399,7 +373,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/cask.png",
     name: "Cask",
-    fileNameBase: "Cask",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Cask/CaskRequirement")
     ),
@@ -408,22 +381,9 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["CASK"],
   },
-  // {
-  //   icon: "/requirementLogos/101.png",
-  //   name: "101",
-  //   fileNameBase: "101",
-  //   displayComponent: dynamic<RequirementProps>(
-  //     () => import("requirements/101/101Requirement")
-  //   ),
-  //   formComponent: dynamic<RequirementFormProps>(
-  //     () => import("requirements/101/101Form")
-  //   ),
-  //   types: ["101"],
-  // },
   {
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",
-    fileNameBase: "Rabbithole",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rabbithole/RabbitholeRequirement")
     ),
@@ -435,7 +395,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/kycdao.svg",
     name: "kycDAO",
-    fileNameBase: "KycDAO",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/KycDAO/KycDAORequirement")
     ),
@@ -447,7 +406,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/sismo.svg",
     name: "Sismo",
-    fileNameBase: "Sismo",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Sismo/SismoRequirement")
     ),
@@ -459,7 +417,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
-    fileNameBase: "Sound",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Sound/SoundRequirement")
     ),
@@ -478,7 +435,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/networkLogos/optimism.svg",
     name: "OP Attestation",
-    fileNameBase: "Optimism",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Optimism/OptimismRequirement")
     ),
@@ -490,7 +446,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
-    fileNameBase: "Yup",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Yup/YupRequirement")
     ),
@@ -502,7 +457,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
-    fileNameBase: "Rep3",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rep3/Rep3Requirement")
     ),
@@ -514,7 +468,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
-    fileNameBase: "Parallel",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Parallel/ParallelRequirement")
     ),
@@ -526,7 +479,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/shield.png",
     name: "Shield",
-    fileNameBase: "Shield",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Shield/ShieldRequirement")
     ),
@@ -544,7 +496,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/gitcoin-passport.svg",
     name: "Gitcoin Passport",
-    fileNameBase: "GitcoinPassport",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
     ),
@@ -556,7 +507,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
-    fileNameBase: "PolygonID",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/PolygonId/PolygonIdRequirement")
     ),
@@ -568,7 +518,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/farcaster.png",
     name: "Farcaster",
-    fileNameBase: "Farcaster",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Farcaster/FarcasterRequirement")
     ),
@@ -588,7 +537,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/coinbase.png",
     name: "Coinbase",
-    fileNameBase: "Coinbase",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
     ),

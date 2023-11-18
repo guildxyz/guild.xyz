@@ -12,6 +12,7 @@ import {
 import { Chains } from "chains"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
+import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import {
@@ -107,10 +108,11 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
         <CollectNftFeesTable bgColor={requirementsSectionBgColor} />
 
         <Stack w="full" spacing={2}>
-          {typeof alreadyCollected !== "undefined" && !alreadyCollected && (
-            <SwitchNetworkButton targetChainId={Chains[chain]} />
-          )}
-
+          <ConnectWalletButton />
+          <SwitchNetworkButton
+            targetChainId={Chains[chain]}
+            hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
+          />
           <Tooltip
             isDisabled={!isButtonDisabled}
             label={

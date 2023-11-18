@@ -5,6 +5,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
@@ -35,6 +36,8 @@ const CollectNftButton = ({
   const chainId = useChainId()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
+  const { mutate: mutateMemberships } = useMemberships()
+
   const {
     onSubmit: onMintSubmit,
     isLoading: isMinting,
@@ -42,7 +45,7 @@ const CollectNftButton = ({
   } = useCollectNft()
 
   const { onSubmit: onJoinAndMintSubmit, isLoading: isJoinLoading } =
-    useSubmitWithSign(join, {
+    useSubmitWithSign((params) => join(params).then(() => mutateMemberships()), {
       onSuccess: onMintSubmit,
       onError: (error) =>
         showErrorToast({
