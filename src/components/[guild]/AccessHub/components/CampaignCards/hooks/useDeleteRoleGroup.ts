@@ -20,7 +20,7 @@ const useDeleteRoleGroup = (groupId: number) => {
     onSuccess: () => {
       toast({
         status: "success",
-        title: "Successfully deleted campaign",
+        title: "Successfully deleted page",
       })
       mutateGuild(
         (curr) => ({

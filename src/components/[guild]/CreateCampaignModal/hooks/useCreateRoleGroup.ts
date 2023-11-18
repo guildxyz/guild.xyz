@@ -25,7 +25,7 @@ const useCreateRoleGroup = () => {
       triggerConfetti()
       toast({
         status: "success",
-        title: "Successfully created campaign",
+        title: "Successfully created page",
       })
 
       mutateGuild(
