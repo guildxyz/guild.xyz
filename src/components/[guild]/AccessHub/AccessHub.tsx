@@ -169,7 +169,7 @@ const AccessHub = (): JSX.Element => {
           )}
 
           {(isMember || isAdmin) &&
-            !groups?.length &&
+            (!group ? !groups?.length : true) &&
             !shouldShowGuildPin &&
             !accessedGuildPlatforms?.length &&
             !futurePoaps?.length && (
