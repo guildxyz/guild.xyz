@@ -6,7 +6,6 @@ import Button from "components/common/Button"
 import { Wallet } from "phosphor-react"
 import { useRef } from "react"
 import { isMobile } from "react-device-detect"
-import shortenHex from "utils/shortenHex"
 import { Connector, useAccount } from "wagmi"
 
 type Props = {
@@ -75,9 +74,7 @@ const ConnectorButton = ({
       size="xl"
       justifyContent="space-between"
     >
-      {!isConnected || !(activeConnector?.id === connector.id)
-        ? `${connectorName}`
-        : shortenHex(address)}
+      {connectorName}
     </Button>
   )
 }
