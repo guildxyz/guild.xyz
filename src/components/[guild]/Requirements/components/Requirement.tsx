@@ -1,16 +1,12 @@
 import {
   Box,
-  Circle,
   HStack,
   IconButton,
-  Img,
   SimpleGrid,
   Skeleton,
-  SkeletonCircle,
   Tag,
   Text,
   Tooltip,
-  useColorMode,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -19,7 +15,9 @@ import Visibility from "components/[guild]/Visibility"
 import { Check, PencilSimple } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
+import OriginalRequirementPreview from "./OriginalRequirementPreview"
 import { useRequirementContext } from "./RequirementContext"
+import RequirementImage from "./RequirementImage"
 import RequirementImageEditor from "./RequirementImageEditor"
 import RequirementNameEditor from "./RequirementNameEditor"
 
@@ -41,7 +39,6 @@ const Requirement = ({
   children,
   fieldRoot,
 }: RequirementProps): JSX.Element => {
-  const { colorMode } = useColorMode()
   const requirement = useRequirementContext()
   const {
     isOpen: isEditing,
@@ -60,51 +57,17 @@ const Requirement = ({
       alignItems="center"
     >
       <Box mt="3px" alignSelf={"start"}>
-        <SkeletonCircle
-          minW={"var(--chakra-space-11)"}
-          boxSize={"var(--chakra-space-11)"}
-          isLoaded={!isImageLoading}
-        >
-          <Circle
-            size={"var(--chakra-space-11)"}
-            backgroundColor={
-              withImgBg &&
-              (colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300")
-            }
-            alignItems="center"
-            justifyContent="center"
-            overflow={withImgBg ? "hidden" : undefined}
-          >
-            {isEditing ? (
+        <RequirementImage
+          image={
+            isEditing ? (
               <RequirementImageEditor id={requirement.id} />
-            ) : requirement?.data?.customImage ? (
-              <Img
-                src={requirement?.data?.customImage}
-                maxWidth={"var(--chakra-space-11)"}
-                maxHeight={"var(--chakra-space-11)"}
-              />
-            ) : typeof image === "string" ? (
-              image.endsWith(".mp4") ? (
-                <video
-                  src={image}
-                  width={"var(--chakra-space-11)"}
-                  height={"var(--chakra-space-11)"}
-                  muted
-                  autoPlay
-                  loop
-                />
-              ) : (
-                <Img
-                  src={image}
-                  maxWidth={"var(--chakra-space-11)"}
-                  maxHeight={"var(--chakra-space-11)"}
-                />
-              )
             ) : (
-              image
-            )}
-          </Circle>
-        </SkeletonCircle>
+              requirement?.data?.customImage || image
+            )
+          }
+          isImageLoading={isImageLoading}
+          withImgBg={withImgBg}
+        />
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center">
         <HStack>
@@ -153,7 +116,14 @@ const Requirement = ({
             )}
           </Text>
         </HStack>
-
+        {!isEditing && (
+          <OriginalRequirementPreview
+            isImageLoading={isImageLoading}
+            withImgBg={withImgBg}
+            image={image}
+            title={children}
+          />
+        )}
         {footer}
       </VStack>
       {rightElement}

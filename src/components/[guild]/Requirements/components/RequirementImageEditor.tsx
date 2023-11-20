@@ -1,12 +1,12 @@
 import {
   Box,
   Button,
-  Center,
+  Circle,
   FormControl,
   FormErrorMessage,
+  Icon,
   Img,
   Text,
-  Tooltip,
   Wrap,
 } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
@@ -61,24 +61,23 @@ const RequirementImageEditor = ({ id }: Props) => {
       <Wrap>
         {customImage ? (
           <Box position={"relative"}>
-            <Center
-              w={"full"}
-              top={"0.5"}
-              left={0}
-              aria-label="reset-image"
+            <Circle
               position="absolute"
-              maxHeight={"var(--chakra-space-11)"}
-              cursor={"pointer"}
               onClick={() => {
                 setValue(`requirements.${index}.data.customImage`, undefined, {
                   shouldDirty: true,
                 })
               }}
+              opacity={0}
+              _hover={{
+                opacity: 1,
+              }}
+              background={"blackAlpha.400"}
+              p={3.5}
+              cursor={"pointer"}
             >
-              <Tooltip label="remove custom image">
-                <X />
-              </Tooltip>
-            </Center>
+              <Icon as={X} boxSize={4} />
+            </Circle>
             <Img
               src={customImage}
               maxWidth={"var(--chakra-space-11)"}
