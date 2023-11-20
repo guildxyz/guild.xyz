@@ -2,20 +2,26 @@ import {
   Box,
   Circle,
   HStack,
+  IconButton,
   Img,
   SimpleGrid,
   Skeleton,
   SkeletonCircle,
   Tag,
   Text,
+  Tooltip,
   useColorMode,
+  useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
+import { Check, PencilSimple } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
+import RequirementImageEditor from "./RequirementImageEditor"
+import RequirementNameEditor from "./RequirementNameEditor"
 
 export type RequirementProps = PropsWithChildren<{
   fieldRoot?: string
@@ -37,6 +43,13 @@ const Requirement = ({
 }: RequirementProps): JSX.Element => {
   const { colorMode } = useColorMode()
   const requirement = useRequirementContext()
+  const {
+    isOpen: isEditing,
+    onOpen: onEdit,
+    onClose: onDone,
+  } = useDisclosure({
+    defaultIsOpen: false,
+  })
 
   return (
     <SimpleGrid
@@ -62,7 +75,15 @@ const Requirement = ({
             justifyContent="center"
             overflow={withImgBg ? "hidden" : undefined}
           >
-            {typeof image === "string" ? (
+            {isEditing ? (
+              <RequirementImageEditor id={requirement.id} />
+            ) : requirement?.data?.customImage ? (
+              <Img
+                src={requirement?.data?.customImage}
+                maxWidth={"var(--chakra-space-11)"}
+                maxHeight={"var(--chakra-space-11)"}
+              />
+            ) : typeof image === "string" ? (
               image.endsWith(".mp4") ? (
                 <video
                   src={image}
@@ -89,7 +110,39 @@ const Requirement = ({
         <HStack>
           <Text wordBreak="break-word">
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-            {children}
+            {isEditing ? (
+              <RequirementNameEditor id={requirement.id} />
+            ) : (
+              requirement?.data?.customName || children
+            )}
+            {fieldRoot &&
+              (isEditing ? (
+                <Tooltip label="Done" hasArrow placement="top">
+                  <IconButton
+                    icon={<Check />}
+                    boxSize={3.5}
+                    ml={1}
+                    variant="ghost"
+                    color="green.500"
+                    bg="unset !important"
+                    aria-label="done"
+                    onClick={onDone}
+                  />
+                </Tooltip>
+              ) : (
+                <Tooltip label="Edit title or image" hasArrow placement="top">
+                  <IconButton
+                    icon={<PencilSimple />}
+                    boxSize={3.5}
+                    ml={1}
+                    variant="ghost"
+                    color="gray"
+                    bg="unset !important"
+                    aria-label="edit title or image"
+                    onClick={onEdit}
+                  />
+                </Tooltip>
+              ))}
             {fieldRoot ? (
               <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
             ) : (
