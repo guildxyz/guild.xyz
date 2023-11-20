@@ -105,12 +105,13 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
 }
 
 const fetchSpaceIdName = async (address: string): Promise<string> => {
-  const endpoints = [
-    `https://api.prd.space.id/v1/getName?tld=bnb&address=${address}`,
-    `https://api.prd.space.id/v1/getName?tld=arb1&address=${address}`,
-  ]
+  const tlds = ["bnb", "arb"]
 
-  const spaceIds = await Promise.all(endpoints.map((url) => fetcher(url)))
+  const spaceIds = await Promise.all(
+    tlds.map((tld) =>
+      fetcher(`https://api.prd.space.id/v1/getName?tld=${tld}&address=${address}`)
+    )
+  )
 
   const spaceId = spaceIds.find((data) => !!data.name)?.name
 
