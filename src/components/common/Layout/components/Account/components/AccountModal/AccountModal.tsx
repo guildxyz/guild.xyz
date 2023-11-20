@@ -26,10 +26,9 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useFuel from "hooks/useFuel"
 import useResolveAddress from "hooks/useResolveAddress"
 import { LinkBreak, SignOut } from "phosphor-react"
-import { useAccount, useChainId, useDisconnect } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
@@ -42,21 +41,10 @@ const AccountModal = () => {
     setIsDelegateConnection,
     isAccountModalOpen: isOpen,
     closeAccountModal: onClose,
+    disconnect,
   } = useWeb3ConnectionManager()
 
   const { address: evmAddress } = useAccount()
-  const { disconnect: disconnectEvm } = useDisconnect()
-  const { disconnect: disconnectFuel } = useFuel()
-
-  const disconnect = () => {
-    if (type === "EVM" && typeof disconnectEvm === "function") {
-      disconnectEvm()
-    }
-
-    if (type === "FUEL" && typeof disconnectFuel === "function") {
-      disconnectFuel()
-    }
-  }
 
   const chainId = useChainId()
 

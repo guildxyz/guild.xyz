@@ -25,7 +25,7 @@ import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
-import { useAccount, useConnect, useDisconnect } from "wagmi"
+import { useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
@@ -45,11 +45,16 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
-  const { disconnect: disconnectEvm } = useDisconnect()
-  const { connector } = useAccount()
+  const {
+    isWeb3Connected,
+    isDelegateConnection,
+    setIsDelegateConnection,
+    isInSafeContext,
+    disconnect,
+  } = useWeb3ConnectionManager()
 
-  const { disconnect: disconnectFuel } = useFuel()
+  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const { connector } = useAccount()
 
   const { captchaVerifiedSince } = useUserPublic()
 
@@ -62,8 +67,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const closeModalAndSendAction = () => {
     onClose()
     setTimeout(() => {
-      disconnectEvm?.()
-      disconnectFuel?.()
+      disconnect()
     }, 200)
   }
 
@@ -91,13 +95,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   }, [keyPair, ready, router])
 
   const shouldLinkToUser = useShouldLinkToUser()
-
-  const {
-    isWeb3Connected,
-    isDelegateConnection,
-    setIsDelegateConnection,
-    isInSafeContext,
-  } = useWeb3ConnectionManager()
 
   const isConnectedAndKeyPairReady = isWeb3Connected && ready
 
@@ -147,8 +144,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     return
                   }
                   set.reset()
-                  disconnectEvm?.()
-                  disconnectFuel?.()
+                  disconnect()
                 }}
               />
             </Box>

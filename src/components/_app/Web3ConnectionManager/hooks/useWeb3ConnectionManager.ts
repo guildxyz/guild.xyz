@@ -5,7 +5,7 @@ import { atom, useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { PlatformName, User } from "types"
-import { useAccount, useSwitchNetwork } from "wagmi"
+import { useAccount, useDisconnect, useSwitchNetwork } from "wagmi"
 
 const delegateConnectionAtom = atom(false)
 const safeContextAtom = atom(false)
@@ -44,6 +44,7 @@ type Web3ConnectionManagerType = {
   isWeb3Connected: boolean
   address?: `0x${string}`
   type?: User["addresses"][number]["type"]
+  disconnect: () => void
 }
 
 const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
@@ -131,6 +132,17 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     if (!isWeb3Connected && router.query.redirectUrl) openWalletSelectorModal()
   }, [isWeb3Connected, router.query])
 
+  const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
+
+  const { disconnect: disconnectEvm } = useDisconnect()
+  const { disconnect: disconnectFuel } = useFuel()
+
+  const disconnect = () => {
+    if (type === "EVM" && typeof disconnectEvm === "function") disconnectEvm()
+
+    if (type === "FUEL" && typeof disconnectFuel === "function") disconnectFuel()
+  }
+
   return {
     accountMergeAddress,
     accountMergePlatformName,
@@ -150,7 +162,8 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     isInSafeContext,
     isWeb3Connected,
     address,
-    type: isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null,
+    type,
+    disconnect,
   }
 }
 
