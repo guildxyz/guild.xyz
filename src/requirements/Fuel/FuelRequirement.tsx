@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { Img, Tag, TagLabel, Text, useColorModeValue } from "@chakra-ui/react"
 import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import Requirement, {
   RequirementProps,
@@ -11,6 +11,7 @@ const NULL_FUEL_ADDRESS =
 
 const FuelRequirement = (props: RequirementProps) => {
   const { address, data } = useRequirementContext()
+  const tagBg = useColorModeValue("white", "blackAlpha.300")
 
   return (
     <Requirement
@@ -18,6 +19,12 @@ const FuelRequirement = (props: RequirementProps) => {
         <Text as="span" fontWeight="bold" fontSize="xx-small">
           TOKEN
         </Text>
+      }
+      footer={
+        <Tag size="sm" bg={tagBg}>
+          <Img src="/walletLogos/fuel.svg" alt="Fuel" boxSize={3} mr={1} />
+          <TagLabel>Fuel</TagLabel>
+        </Tag>
       }
       {...props}
     >
