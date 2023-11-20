@@ -21,7 +21,7 @@ const useEditRoleGroup = (groupId: number, onSuccess: () => void) => {
     onSuccess: (response) => {
       toast({
         status: "success",
-        title: "Successfully edited campaign",
+        title: "Successfully edited page",
       })
       mutateGuild(
         (curr) => ({

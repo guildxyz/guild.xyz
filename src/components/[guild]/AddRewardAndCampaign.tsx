@@ -51,11 +51,11 @@ const AddRewardAndCampaign = () => {
               >
                 <Stack spacing={0.5}>
                   <Text as="span" fontWeight="semibold" fontSize="sm">
-                    Add campaign
+                    Create new page
                   </Text>
                   <Text colorScheme="gray" fontSize="sm">
-                    A campaign is a separate page with it’s own roles and rewards,
-                    highlighted at the top of your guild for everyone
+                    Add a separate page with it’s own roles and rewards, highlighted
+                    at the top of your guild for everyone
                   </Text>
                 </Stack>
               </MenuItem>

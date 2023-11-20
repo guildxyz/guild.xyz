@@ -174,7 +174,9 @@ const GroupPage = (): JSX.Element => {
         <AccessHub />
 
         <Section
-          title={(isMember || !!accessedGuildPlatforms?.length) && "Roles"}
+          title={
+            (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
+          }
           titleRightElement={
             isAdmin && (
               <Box my="-2 !important" ml="auto !important">
@@ -236,7 +238,7 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
       <Center h="100vh" w="screen">
         <Spinner />
         <Heading fontFamily={"display"} size="md" ml="4" mb="1">
-          Loading campaign...
+          Loading page...
         </Heading>
       </Center>
     )
