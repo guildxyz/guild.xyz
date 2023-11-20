@@ -45,8 +45,6 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { type } = useWeb3ConnectionManager()
-
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
   const { disconnect: disconnectEvm } = useDisconnect()
   const { connector } = useAccount()

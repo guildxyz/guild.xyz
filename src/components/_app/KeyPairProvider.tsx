@@ -205,8 +205,12 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
   const { captureEvent } = usePostHogContext()
 
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
-  const { address, isDelegateConnection, setIsDelegateConnection } =
-    useWeb3ConnectionManager()
+  const {
+    address,
+    isDelegateConnection,
+    setIsDelegateConnection,
+    openWalletSelectorModal,
+  } = useWeb3ConnectionManager()
 
   const {
     id,
@@ -262,6 +266,7 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
               "You've connected your account from a new device, so you have to sign a new message to stay logged in",
             duration: 5000,
           })
+          openWalletSelectorModal()
 
           deleteKeyPairFromIdb(id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined }).then(() => {
