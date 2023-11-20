@@ -14,18 +14,22 @@ import { addressLinkParamsAtom } from "components/_app/Web3ConnectionManager/com
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useFuel from "hooks/useFuel"
 import { useAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
-import { useAccount, useDisconnect, useWalletClient } from "wagmi"
+import { useDisconnect, useWalletClient } from "wagmi"
 
 const LinkAddressButton = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
 
-  const { address } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { address } = useWeb3ConnectionManager()
+
+  const { disconnect: disconnectEvm } = useDisconnect()
   const { data: walletClient } = useWalletClient()
+
+  const { disconnect: disconnectFuel } = useFuel()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
@@ -40,6 +44,7 @@ const LinkAddressButton = (props) => {
 
     try {
       await walletClient.requestPermissions({ eth_accounts: {} })
+    } catch {
     } finally {
       setIsLoading(false)
     }
@@ -52,7 +57,9 @@ const LinkAddressButton = (props) => {
 
   const handleLogout = () => {
     handleClose()
-    disconnect()
+    disconnectEvm?.()
+    disconnectFuel?.()
+
     openWalletSelectorModal()
   }
 
