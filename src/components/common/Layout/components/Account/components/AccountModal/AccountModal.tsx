@@ -28,6 +28,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { LinkBreak, SignOut } from "phosphor-react"
+import { useSWRConfig } from "swr"
 import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
@@ -55,11 +56,9 @@ const AccountModal = () => {
   } = useDisclosure()
   const { id, addresses } = useUser()
 
-  const handleLogout = () => {
-    setIsDelegateConnection(false)
-    onClose()
-    disconnect()
+  const { mutate } = useSWRConfig()
 
+  const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)
     )
@@ -68,7 +67,14 @@ const AccountModal = () => {
       window.localStorage.removeItem(key)
     })
 
-    deleteKeyPairFromIdb(id)?.catch(() => {})
+    deleteKeyPairFromIdb(id)
+      ?.catch(() => {})
+      .finally(() => {
+        setIsDelegateConnection(false)
+        onClose()
+        disconnect()
+        mutate(["keyPair", id])
+      })
   }
 
   const domain = useResolveAddress(evmAddress)
