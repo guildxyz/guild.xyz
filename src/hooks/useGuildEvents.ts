@@ -66,21 +66,9 @@ const useGuildEvents = () => {
     >
   >(guildId ? `/v2/guilds/${guildId}/events` : null)
 
-  const swrResponseDiscord = useSWRImmutable<
-    OneOf<{ events: DiscordEvent[] }, { error: any }>
-  >(platformGuildId ? `/discord/events/${platformGuildId}` : null)
-
   const data = []
 
   if (swrResponseEvents.data?.events) data.push(...swrResponseEvents.data.events)
-  if (swrResponseDiscord.data?.events)
-    data.push(
-      ...swrResponseDiscord.data.events.map((event) =>
-        discordEventToGuildEvent(event, guildId)
-      )
-    )
-
-  //todo: if we have a unified events endpoint, this error logic will be removed.
 
   const error = []
   const serverError = []
@@ -93,20 +81,15 @@ const useGuildEvents = () => {
       ...swrResponseEvents.data.errors.filter((err) => err.type !== "DISCORD")
     )
 
-  if (swrResponseDiscord.error)
-    serverError.push({ type: "DISCORD", ...swrResponseDiscord.error })
-
-  if (swrResponseDiscord.data?.error) error.push(...swrResponseDiscord.data.error)
 
   const mutate = () => {
-    swrResponseDiscord.mutate()
     swrResponseEvents.mutate()
   }
 
   return {
-    isValidating: swrResponseEvents.isValidating || swrResponseDiscord.isValidating,
+    isValidating: swrResponseEvents.isValidating,
     data:
-      swrResponseEvents.data?.events || swrResponseDiscord.data?.events
+      swrResponseEvents.data?.events
         ? data
         : undefined,
     error,
