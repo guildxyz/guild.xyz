@@ -45,10 +45,14 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const { type } = useWeb3ConnectionManager()
 
-  const { disconnect } = useDisconnect()
+  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const { disconnect: disconnectEvm } = useDisconnect()
   const { connector } = useAccount()
+
+  const { disconnect: disconnectFuel } = useFuel()
+
   const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
@@ -60,7 +64,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const closeModalAndSendAction = () => {
     onClose()
     setTimeout(() => {
-      disconnect()
+      disconnectEvm?.()
+      disconnectFuel?.()
     }, 200)
   }
 
@@ -144,7 +149,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     return
                   }
                   set.reset()
-                  disconnect()
+                  disconnectEvm?.()
+                  disconnectFuel?.()
                 }}
               />
             </Box>
