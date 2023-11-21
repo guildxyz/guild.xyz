@@ -1,9 +1,12 @@
 import {
   Box,
   Button,
-  Collapse,
   HStack,
   IconButton,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Portal,
   SimpleGrid,
   Skeleton,
   Tag,
@@ -127,37 +130,45 @@ const Requirement = ({
             </Text>
           </HStack>
           {previewAvailable && !isEditing && (
-            <Button
-              size={"xs"}
-              variant={"ghost"}
-              rightIcon={<CaretDown />}
-              aria-label="view original"
-              mt={-2}
-              ml={-2}
-              opacity={0.5}
-              colorScheme="gray"
-              onClick={togglePreview}
-            >
-              View original
-            </Button>
+            <Popover matchWidth>
+              <PopoverTrigger>
+                <Button
+                  size={"xs"}
+                  variant={"ghost"}
+                  rightIcon={<CaretDown />}
+                  aria-label="view original"
+                  mt={-2}
+                  ml={-2}
+                  opacity={0.5}
+                  colorScheme="gray"
+                  onClick={togglePreview}
+                >
+                  View original
+                </Button>
+              </PopoverTrigger>
+              <Portal>
+                <PopoverContent
+                  minW="none"
+                  w={{ base: "xs", sm: "sm", md: "md" }}
+                  ml={-16}
+                >
+                  <OriginalRequirementPreview
+                    isImageLoading={isImageLoading}
+                    withImgBg={withImgBg}
+                    image={image}
+                    title={children}
+                    isOpen={showPreview}
+                    showReset={!!fieldRoot}
+                    id={requirement.id}
+                  />
+                </PopoverContent>
+              </Portal>
+            </Popover>
           )}
           {footer}
         </VStack>
         {rightElement}
       </SimpleGrid>
-      {previewAvailable && !isEditing && (
-        <Collapse in={showPreview}>
-          <OriginalRequirementPreview
-            isImageLoading={isImageLoading}
-            withImgBg={withImgBg}
-            image={image}
-            title={children}
-            isOpen={showPreview}
-            showReset={!!fieldRoot}
-            id={requirement.id}
-          />
-        </Collapse>
-      )}
     </>
   )
 }
