@@ -1,11 +1,10 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { FUEL_ADDRESS_REGEX } from "hooks/useFuel"
 import { useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
 import parseFromObject from "utils/parseFromObject"
-
-const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
 const FuelBalance = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {

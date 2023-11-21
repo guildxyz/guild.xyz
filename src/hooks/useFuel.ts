@@ -12,6 +12,8 @@ const fuelAddressAtom = atom("" as `0x${string}`)
 const fuelWalletAtom = atom(null as WalletUnlocked)
 const fuelProviderAtom = atom(null as Provider)
 
+export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
+
 const useFuel = () => {
   const [isConnected, setIsConnected] = useAtom(fuelConnectedAtom)
   const [isConnecting, setIsConnecting] = useAtom(fuelConnectingAtom)
