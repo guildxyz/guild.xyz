@@ -95,6 +95,7 @@ const RequirementImageEditor = ({ id }: Props) => {
             variant="outline"
             rounded={"full"}
             p={3}
+            onClick={(e) => e.stopPropagation()}
           >
             <input {...getInputProps()} hidden />
             <Upload />

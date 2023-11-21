@@ -1,60 +1,39 @@
-import {
-  Box,
-  Button,
-  Card,
-  Collapse,
-  HStack,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { CaretDown } from "phosphor-react"
+import { Card, HStack, Text } from "@chakra-ui/react"
 import { ReactNode } from "react"
 import RequirementImage from "./RequirementImage"
+import ResetRequirementButton from "./ResetRequirementButton"
 
 type Props = {
+  id: number
   isImageLoading?: boolean
   image?: string | JSX.Element
   withImgBg?: boolean
   title: ReactNode
+  isOpen: boolean
+  showReset?: boolean
 }
 
 const OriginalRequirementPreview = ({
+  id,
   isImageLoading,
   withImgBg,
   image,
   title,
-}: Props) => {
-  const { isOpen, onToggle } = useDisclosure()
-
-  return (
-    <Box position="relative">
-      <Button
-        size={"xs"}
-        variant={"ghost"}
-        rightIcon={<CaretDown />}
-        aria-label="view original"
-        mt={-2}
-        ml={-2}
-        opacity={0.5}
-        colorScheme="gray"
-        onClick={onToggle}
-      >
-        View original
-      </Button>
-      <Collapse in={isOpen}>
-        <Card w={"full"} background={"gray.700"}>
-          <HStack p={2} gap={4}>
-            <RequirementImage
-              isImageLoading={isImageLoading}
-              withImgBg={withImgBg}
-              image={image}
-            />
-            <Text wordBreak="break-word">{title}</Text>
-          </HStack>
-        </Card>
-      </Collapse>
-    </Box>
-  )
-}
+  showReset = false,
+}: Props) => (
+  <Card w={"full"} background={"gray.600"} border={"1px"} borderColor={"gray.500"}>
+    <HStack p={3} gap={4}>
+      <RequirementImage
+        isImageLoading={isImageLoading}
+        withImgBg={withImgBg}
+        image={image}
+      />
+      <Text wordBreak="break-word" flexGrow={1}>
+        {title}
+      </Text>
+      {showReset && <ResetRequirementButton id={id} />}
+    </HStack>
+  </Card>
+)
 
 export default OriginalRequirementPreview
