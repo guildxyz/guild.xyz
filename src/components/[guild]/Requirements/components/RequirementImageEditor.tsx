@@ -76,7 +76,7 @@ const RequirementImageEditor = ({ id }: Props) => {
               p={3.5}
               cursor={"pointer"}
             >
-              <Icon as={X} boxSize={4} />
+              <Icon as={X} boxSize={4} color={"white"} />
             </Circle>
             <Img
               src={customImage}
