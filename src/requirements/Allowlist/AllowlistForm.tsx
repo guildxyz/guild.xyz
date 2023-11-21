@@ -6,6 +6,7 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
+import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
@@ -14,8 +15,6 @@ import { File } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-
-const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
 const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const {
@@ -80,7 +79,7 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
             required: "This field is required",
             validate: (value_) => {
               const validAddresses = value_.filter(
-                (address) => address !== "" && ADDRESS_REGEX.test(address)
+                (address) => address !== "" && isValidAddress(address)
               )
               // for useBalancy
               setValue(`${baseFieldPath}.data.validAddresses`, validAddresses)
