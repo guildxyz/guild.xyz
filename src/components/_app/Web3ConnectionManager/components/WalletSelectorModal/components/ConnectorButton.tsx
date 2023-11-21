@@ -30,7 +30,7 @@ const ConnectorButton = ({
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
-  const { address, isConnected, connector: activeConnector } = useAccount()
+  const { isConnected, connector: activeConnector } = useAccount()
 
   const { ready } = useKeyPair()
 

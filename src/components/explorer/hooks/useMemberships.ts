@@ -1,5 +1,5 @@
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { useAccount } from "wagmi"
 
 export type Memberships = Array<{
   guildId: number
@@ -9,10 +9,10 @@ export type Memberships = Array<{
 }>
 
 const useMemberships = () => {
-  const { address, isConnected } = useAccount()
+  const { address, isWeb3Connected } = useWeb3ConnectionManager()
 
   const { data, mutate, ...rest } = useSWRWithOptionalAuth<Memberships>(
-    isConnected ? `/v2/users/${address}/memberships` : null
+    isWeb3Connected ? `/v2/users/${address}/memberships` : null
   )
 
   return {
