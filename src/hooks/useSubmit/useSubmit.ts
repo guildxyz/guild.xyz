@@ -293,7 +293,7 @@ export const fuelSign = async ({
     params.method = ValidationMethod.KEYPAIR
     sig = await signWithKeyPair(keyPair, params)
   } else {
-    params.method = ValidationMethod.STANDARD
+    params.method = ValidationMethod.FUEL
     sig = await wallet.signMessage(getMessage(params))
   }
 
