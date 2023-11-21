@@ -346,6 +346,7 @@ type SimpleRole = {
   visibility: Visibility
   position?: number
   anyOfNum?: number
+  groupId?: number
 }
 
 type Role = SimpleRole & {

@@ -24,7 +24,6 @@ export type RequirementFormProps = {
 export type RequirementData = {
   icon: string | Icon
   name: string
-  fileNameBase: string
   readonly types: string[]
   disabled?: boolean
   isPlatform?: boolean
