@@ -147,7 +147,7 @@ const EditRolePlatformCapacityTimeModal = ({
                       )
                     }}
                   >
-                    <NumberInputField />
+                    <NumberInputField placeholder="0" />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
