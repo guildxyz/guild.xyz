@@ -80,34 +80,32 @@ const BasicInfo = (): JSX.Element => {
   })
 
   return (
-    <>
-      <Stack spacing={10}>
-        <Stack spacing={{ base: 5, md: 6 }}>
-          <SimpleGrid
-            w="full"
-            spacing="5"
-            templateColumns={{ base: "1fr", md: "1fr 1fr" }}
-          >
-            <Box flex="1">
-              <FormLabel>Logo and name</FormLabel>
-              <HStack alignItems="start">
-                <IconSelector uploader={iconUploader} minW={512} minH={512} />
-                <Name width={null} />
-              </HStack>
-            </Box>
-            <UrlName maxWidth="unset" />
-          </SimpleGrid>
-          <Description />
-        </Stack>
-        <Stack direction={{ base: "column", md: "row" }} spacing="5">
-          <ColorPicker fieldName="theme.color" />
-          <BackgroundImageUploader uploader={backgroundUploader} />
-        </Stack>
-        <Section title="How could we contact you?" spacing="4">
-          <ContactInfo showAddButton={false} />
-        </Section>
+    <Stack spacing={10}>
+      <Stack spacing={{ base: 5, md: 6 }}>
+        <SimpleGrid
+          w="full"
+          spacing="5"
+          templateColumns={{ base: "1fr", md: "1fr 1fr" }}
+        >
+          <Box flex="1">
+            <FormLabel>Logo and name</FormLabel>
+            <HStack alignItems="start">
+              <IconSelector uploader={iconUploader} minW={512} minH={512} />
+              <Name width={null} />
+            </HStack>
+          </Box>
+          <UrlName maxWidth="unset" />
+        </SimpleGrid>
+        <Description />
       </Stack>
-    </>
+      <Stack direction={{ base: "column", md: "row" }} spacing="5">
+        <ColorPicker fieldName="theme.color" />
+        <BackgroundImageUploader uploader={backgroundUploader} />
+      </Stack>
+      <Section title="How could we contact you?" spacing="4">
+        <ContactInfo showAddButton={false} />
+      </Section>
+    </Stack>
   )
 }
 
