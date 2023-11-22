@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import type { Provider } from "@fuel-ts/providers"
-import type { WalletUnlocked } from "@fuel-ts/wallet"
-import useFuel from "hooks/useFuel"
+import type { Provider, WalletUnlocked } from "fuels"
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
+import useFuel from "./useFuel"
 
 export const fuelConnectedAtom = atom(false)
 export const fuelConnectingAtom = atom(false)
@@ -11,7 +9,7 @@ export const fuelAddressAtom = atom("" as `0x${string}`)
 export const fuelWalletAtom = atom(null as WalletUnlocked)
 export const fuelProviderAtom = atom(null as Provider)
 
-const FuelSetup = () => {
+const useSetupFuel = () => {
   const { windowFuel, onAccountChange } = useFuel()
 
   const [, setIsConnected] = useAtom(fuelConnectedAtom)
@@ -45,7 +43,6 @@ const FuelSetup = () => {
       windowFuel.off("connection", onConnectionChange)
     }
   }, [])
-
-  return null
 }
-export default FuelSetup
+
+export default useSetupFuel

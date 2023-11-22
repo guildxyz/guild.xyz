@@ -5,7 +5,7 @@ import {
   fuelConnectingAtom,
   fuelProviderAtom,
   fuelWalletAtom,
-} from "components/_app/FuelSetup"
+} from "hooks/useSetupFuel"
 import { useAtom } from "jotai"
 
 type FuelConnectorName = "Fuel Wallet" | "Fuelet Wallet"
