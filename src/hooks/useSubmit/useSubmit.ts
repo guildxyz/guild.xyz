@@ -286,17 +286,13 @@ export const fuelSign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: FuelSignProps): Promise<[string, Validation]> => {
-  console.log("fuelSign:START")
   const params = createMessageParams(address, ts, msg, payload)
   let sig = null
-
-  console.log("fuelSign:PARAMS", params)
 
   if (!!keyPair && !forcePrompt) {
     params.method = ValidationMethod.KEYPAIR
     sig = await signWithKeyPair(keyPair, params)
   } else {
-    console.log("fielSign:MANUAL", wallet)
     params.method = ValidationMethod.FUEL
     sig = await wallet.signMessage(getMessage(params))
   }
