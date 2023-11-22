@@ -54,15 +54,17 @@ const CapacityTag = ({
   const [showClaimed, setShowClaimed] = useState(false)
 
   return (
-    <Tag
-      onClick={() => setShowClaimed((prevValue) => !prevValue)}
-      cursor="default"
-      {...rest}
-    >
-      {showClaimed
-        ? `${capacity - (claimedCount ?? 0)} / ${capacity} available`
-        : `${claimedCount ?? 0} / ${capacity} claimed`}
-    </Tag>
+    <Tooltip label={showClaimed ? "Show available" : "Show claimed"} hasArrow>
+      <Tag
+        onClick={() => setShowClaimed((prevValue) => !prevValue)}
+        cursor="pointer"
+        {...rest}
+      >
+        {showClaimed
+          ? `${claimedCount ?? 0} / ${capacity} claimed`
+          : `${capacity - (claimedCount ?? 0)} / ${capacity} available`}
+      </Tag>
+    </Tooltip>
   )
 }
 
@@ -82,7 +84,6 @@ const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) 
         hour: "numeric",
         minute: "numeric",
       })}
-      placement="top"
       hasArrow
     >
       <Tag {...rest}>
