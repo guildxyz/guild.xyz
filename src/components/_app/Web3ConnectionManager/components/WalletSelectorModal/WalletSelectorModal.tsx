@@ -224,10 +224,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   ref={recaptchaRef}
                   sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
                   size="invisible"
-                  onChange={(token) => {
-                    console.log("TOKEN", token)
-                    return set.onSubmit(shouldLinkToUser, undefined, token)
-                  }}
+                  {...({
+                    isolated: true,
+                  } as any)}
                 />
                 <Box animation={"fadeIn .3s .1s both"}>
                   <ModalButton
@@ -235,22 +234,17 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     size="xl"
                     mb="4"
                     colorScheme={"green"}
-                    onClick={() => {
-                      if (!recaptchaRef.current || !!captchaVerifiedSince) {
-                        set.onSubmit(shouldLinkToUser, undefined, undefined)
-                      } else {
-                        recaptchaRef.current.execute()
+                    onClick={async () => {
+                      const token =
+                        !recaptchaRef.current || !!captchaVerifiedSince
+                          ? undefined
+                          : await recaptchaRef.current.executeAsync()
+
+                      if (token) {
+                        recaptchaRef.current.reset()
                       }
-                      // const token =
-                      //   !recaptchaRef.current || !!captchaVerifiedSince
-                      //     ? undefined
-                      //     : await recaptchaRef.current.executeAsync()
 
-                      // if (token) {
-                      //   recaptchaRef.current.reset()
-                      // }
-
-                      // return set.onSubmit(shouldLinkToUser, undefined, token)
+                      return set.onSubmit(shouldLinkToUser, undefined, token)
                     }}
                     isLoading={set.isLoading || !ready}
                     isDisabled={!ready}
