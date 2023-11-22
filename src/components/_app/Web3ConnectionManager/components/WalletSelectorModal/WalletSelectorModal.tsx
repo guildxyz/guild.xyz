@@ -107,6 +107,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   return (
     <>
+      <ReCAPTCHA
+        ref={recaptchaRef}
+        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+        size="invisible"
+      />
+
       <Modal
         isOpen={isOpen}
         onClose={closeModalAndSendAction}
@@ -221,14 +227,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
             {isConnectedAndKeyPairReady && !keyPair && (
               <>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                  size="invisible"
-                  {...({
-                    isolated: true,
-                  } as any)}
-                />
                 <Box animation={"fadeIn .3s .1s both"}>
                   <ModalButton
                     data-test="verify-address-button"
