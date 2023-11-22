@@ -97,9 +97,9 @@ const EditRolePlatformCapacityTimeModal = ({
   const endTimeValue = useWatch({ control, name: "endTime" })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark" size="2xl">
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent maxW="39rem">
         <ModalHeader>Limit reward availibility</ModalHeader>
         <ModalCloseButton />
 
