@@ -103,231 +103,229 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { windowFuel } = useFuel()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
-  console.log(recaptchaRef)
 
   return (
-    <>
-      <ReCAPTCHA
-        ref={recaptchaRef}
-        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        size="invisible"
-      />
-
-      <Modal
-        isOpen={isOpen}
-        onClose={closeModalAndSendAction}
-        closeOnOverlayClick={!isWeb3Connected || !!keyPair}
-        closeOnEsc={!isWeb3Connected || !!keyPair}
-        trapFocus={!isWalletConnectModalActive}
-      >
-        <ModalOverlay />
-        <ModalContent data-test="wallet-selector-modal">
-          <ModalHeader display={"flex"}>
-            <Box
-              {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
-                ? {
-                    w: "10",
-                    opacity: 1,
-                  }
-                : {
-                    w: "0",
-                    opacity: 0,
-                  })}
-              transition="width .2s, opacity .2s"
-              mt="-1px"
-            >
-              <IconButton
-                rounded={"full"}
-                aria-label="Back"
-                size="sm"
-                icon={<ArrowLeft size={20} />}
-                variant="ghost"
-                onClick={() => {
-                  if (
-                    isDelegateConnection &&
-                    !(isConnectedAndKeyPairReady && !keyPair)
-                  ) {
-                    setIsDelegateConnection(false)
-                    return
-                  }
-                  set.reset()
-                  disconnect()
-                }}
-              />
-            </Box>
-            <Text>
-              {shouldLinkToUser
-                ? "Link address"
-                : isDelegateConnection
-                ? "Connect hot wallet"
-                : "Connect wallet"}
-            </Text>
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Error
-              {...(set.error
-                ? {
-                    error: set.error,
-                    processError: (err: any) => {
-                      if (err?.code === "ACTION_REJECTED") {
-                        return {
-                          title: "Rejected",
-                          description: "Signature request has been rejected",
-                        }
-                      }
-
-                      return {
-                        title: "Error",
-                        description:
-                          err?.message ??
-                          (typeof err === "string" ? err : err?.errors?.[0]?.msg),
-                      }
-                    },
-                  }
-                : { error, processError: processConnectionError })}
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModalAndSendAction}
+      closeOnOverlayClick={!isWeb3Connected || !!keyPair}
+      closeOnEsc={!isWeb3Connected || !!keyPair}
+      trapFocus={!isWalletConnectModalActive}
+    >
+      <ModalOverlay />
+      <ModalContent data-test="wallet-selector-modal">
+        <ModalHeader display={"flex"}>
+          <Box
+            {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
+              ? {
+                  w: "10",
+                  opacity: 1,
+                }
+              : {
+                  w: "0",
+                  opacity: 0,
+                })}
+            transition="width .2s, opacity .2s"
+            mt="-1px"
+          >
+            <IconButton
+              rounded={"full"}
+              aria-label="Back"
+              size="sm"
+              icon={<ArrowLeft size={20} />}
+              variant="ghost"
+              onClick={() => {
+                if (
+                  isDelegateConnection &&
+                  !(isConnectedAndKeyPairReady && !keyPair)
+                ) {
+                  setIsDelegateConnection(false)
+                  return
+                }
+                set.reset()
+                disconnect()
+              }}
             />
-            {isConnectedAndKeyPairReady && !keyPair && (
-              <Text mb="6" animation={"fadeIn .3s .1s both"}>
-                Sign message to verify that you're the owner of this address.
-              </Text>
-            )}
-
-            {isWeb3Connected ? (
-              <CardMotionWrapper>
-                <AccountButton />
-              </CardMotionWrapper>
-            ) : (
-              <Stack spacing="0">
-                {connectors
-                  .filter((conn) => isInSafeContext || conn.id !== "safe")
-                  .map((conn) => (
-                    <CardMotionWrapper key={conn.id}>
-                      <ConnectorButton
-                        connector={conn}
-                        connect={connect}
-                        isLoading={isLoading}
-                        pendingConnector={pendingConnector}
-                        error={error}
-                      />
-                    </CardMotionWrapper>
-                  ))}
-                {!isDelegateConnection && (
-                  <CardMotionWrapper>
-                    <DelegateCashButton />
-                  </CardMotionWrapper>
-                )}
-                {windowFuel && (
-                  <CardMotionWrapper key="fuel">
-                    <FuelConnectorButtons />
-                  </CardMotionWrapper>
-                )}
-              </Stack>
-            )}
-
-            {isConnectedAndKeyPairReady && !keyPair && (
-              <>
-                <Box animation={"fadeIn .3s .1s both"}>
-                  <ModalButton
-                    data-test="verify-address-button"
-                    size="xl"
-                    mb="4"
-                    colorScheme={"green"}
-                    onClick={async () => {
-                      const token =
-                        !recaptchaRef.current || !!captchaVerifiedSince
-                          ? undefined
-                          : await recaptchaRef.current
-                              .executeAsync()
-                              .catch((err) => {
-                                console.log("executeAsync error", err)
-                                return undefined
-                              })
-
-                      if (token) {
-                        recaptchaRef.current.reset()
+          </Box>
+          <Text>
+            {shouldLinkToUser
+              ? "Link address"
+              : isDelegateConnection
+              ? "Connect hot wallet"
+              : "Connect wallet"}
+          </Text>
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Error
+            {...(set.error
+              ? {
+                  error: set.error,
+                  processError: (err: any) => {
+                    if (err?.code === "ACTION_REJECTED") {
+                      return {
+                        title: "Rejected",
+                        description: "Signature request has been rejected",
                       }
-
-                      return set.onSubmit(shouldLinkToUser, undefined, token)
-                    }}
-                    isLoading={set.isLoading || !ready}
-                    isDisabled={!ready}
-                    loadingText={
-                      !ready
-                        ? "Looking for keypairs"
-                        : set.signLoadingText || "Check your wallet"
                     }
-                  >
-                    {shouldLinkToUser ? "Link address" : "Verify address"}
-                  </ModalButton>
-                </Box>
-              </>
-            )}
-          </ModalBody>
-          <ModalFooter mt="-4">
-            {!isConnectedAndKeyPairReady ? (
-              <Stack textAlign="center" fontSize="sm" w="full">
-                <Text colorScheme="gray">
-                  New to Ethereum wallets?{" "}
-                  <Link
-                    colorScheme="blue"
-                    href="https://ethereum.org/en/wallets/"
-                    isExternal
-                  >
-                    Learn more
-                    <Icon as={ArrowSquareOut} mx="1" />
-                  </Link>
-                </Text>
 
-                <Text colorScheme="gray">
-                  By continuing, you agree to our{" "}
-                  <Link
-                    href="/privacy-policy"
-                    fontWeight={"semibold"}
-                    onClick={onClose}
-                  >
-                    Privacy Policy
-                  </Link>
-                  {` and `}
-                  <Link
-                    href="/terms-and-conditions"
-                    fontWeight={"semibold"}
-                    onClick={onClose}
-                  >
-                    Terms & conditions
-                  </Link>
-                </Text>
-              </Stack>
-            ) : (
-              <Stack textAlign="center" fontSize="sm" w="full">
-                <Text colorScheme={"gray"}>
-                  Signing the message doesn't cost any gas
-                </Text>
-                <Text colorScheme="gray">
-                  This site is protected by reCAPTCHA, so the Google{" "}
-                  <Link
-                    href="https://policies.google.com/privacy"
-                    isExternal
-                    fontWeight={"semibold"}
-                  >
-                    Privacy Policy
-                  </Link>{" "}
-                  and{" "}
-                  <Link
-                    href="https://policies.google.com/terms"
-                    isExternal
-                    fontWeight={"semibold"}
-                  >
-                    Terms of Service
-                  </Link>{" "}
-                  apply
-                </Text>
-              </Stack>
-            )}
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+                    return {
+                      title: "Error",
+                      description:
+                        err?.message ??
+                        (typeof err === "string" ? err : err?.errors?.[0]?.msg),
+                    }
+                  },
+                }
+              : { error, processError: processConnectionError })}
+          />
+          {isConnectedAndKeyPairReady && !keyPair && (
+            <Text mb="6" animation={"fadeIn .3s .1s both"}>
+              Sign message to verify that you're the owner of this address.
+            </Text>
+          )}
+
+          {isWeb3Connected ? (
+            <CardMotionWrapper>
+              <AccountButton />
+            </CardMotionWrapper>
+          ) : (
+            <Stack spacing="0">
+              {connectors
+                .filter((conn) => isInSafeContext || conn.id !== "safe")
+                .map((conn) => (
+                  <CardMotionWrapper key={conn.id}>
+                    <ConnectorButton
+                      connector={conn}
+                      connect={connect}
+                      isLoading={isLoading}
+                      pendingConnector={pendingConnector}
+                      error={error}
+                    />
+                  </CardMotionWrapper>
+                ))}
+              {!isDelegateConnection && (
+                <CardMotionWrapper>
+                  <DelegateCashButton />
+                </CardMotionWrapper>
+              )}
+              {windowFuel && (
+                <CardMotionWrapper key="fuel">
+                  <FuelConnectorButtons />
+                </CardMotionWrapper>
+              )}
+            </Stack>
+          )}
+
+          {isConnectedAndKeyPairReady && !keyPair && (
+            <>
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                size="invisible"
+                {...({
+                  isolated: true,
+                } as any)}
+              />
+              <Box animation={"fadeIn .3s .1s both"}>
+                <ModalButton
+                  data-test="verify-address-button"
+                  size="xl"
+                  mb="4"
+                  colorScheme={"green"}
+                  onClick={async () => {
+                    console.log(recaptchaRef)
+                    const token =
+                      !recaptchaRef.current || !!captchaVerifiedSince
+                        ? undefined
+                        : await recaptchaRef.current.executeAsync().catch((err) => {
+                            console.log("executeAsync error", err)
+                            return undefined
+                          })
+                    console.log("token", token)
+                    if (token) {
+                      recaptchaRef.current.reset()
+                    }
+
+                    return set.onSubmit(shouldLinkToUser, undefined, token)
+                  }}
+                  isLoading={set.isLoading || !ready}
+                  isDisabled={!ready}
+                  loadingText={
+                    !ready
+                      ? "Looking for keypairs"
+                      : set.signLoadingText || "Check your wallet"
+                  }
+                >
+                  {shouldLinkToUser ? "Link address" : "Verify address"}
+                </ModalButton>
+              </Box>
+            </>
+          )}
+        </ModalBody>
+        <ModalFooter mt="-4">
+          {!isConnectedAndKeyPairReady ? (
+            <Stack textAlign="center" fontSize="sm" w="full">
+              <Text colorScheme="gray">
+                New to Ethereum wallets?{" "}
+                <Link
+                  colorScheme="blue"
+                  href="https://ethereum.org/en/wallets/"
+                  isExternal
+                >
+                  Learn more
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </Link>
+              </Text>
+
+              <Text colorScheme="gray">
+                By continuing, you agree to our{" "}
+                <Link
+                  href="/privacy-policy"
+                  fontWeight={"semibold"}
+                  onClick={onClose}
+                >
+                  Privacy Policy
+                </Link>
+                {` and `}
+                <Link
+                  href="/terms-and-conditions"
+                  fontWeight={"semibold"}
+                  onClick={onClose}
+                >
+                  Terms & conditions
+                </Link>
+              </Text>
+            </Stack>
+          ) : (
+            <Stack textAlign="center" fontSize="sm" w="full">
+              <Text colorScheme={"gray"}>
+                Signing the message doesn't cost any gas
+              </Text>
+              <Text colorScheme="gray">
+                This site is protected by reCAPTCHA, so the Google{" "}
+                <Link
+                  href="https://policies.google.com/privacy"
+                  isExternal
+                  fontWeight={"semibold"}
+                >
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="https://policies.google.com/terms"
+                  isExternal
+                  fontWeight={"semibold"}
+                >
+                  Terms of Service
+                </Link>{" "}
+                apply
+              </Text>
+            </Stack>
+          )}
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
 }
 
