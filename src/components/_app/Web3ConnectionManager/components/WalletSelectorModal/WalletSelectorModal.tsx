@@ -217,50 +217,46 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
           )}
 
-          {isConnectedAndKeyPairReady && !keyPair && (
-            <>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                size="invisible"
-                {...({
-                  isolated: true,
-                } as any)}
-              />
-              <Box animation={"fadeIn .3s .1s both"}>
-                <ModalButton
-                  data-test="verify-address-button"
-                  size="xl"
-                  mb="4"
-                  colorScheme={"green"}
-                  onClick={async () => {
-                    console.log(recaptchaRef)
-                    const token =
-                      !recaptchaRef.current || !!captchaVerifiedSince
-                        ? undefined
-                        : await recaptchaRef.current.executeAsync().catch((err) => {
-                            console.log("executeAsync error", err)
-                            return undefined
-                          })
-                    console.log("token", token)
-                    if (token) {
-                      recaptchaRef.current.reset()
-                    }
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+            size="invisible"
+          />
 
-                    return set.onSubmit(shouldLinkToUser, undefined, token)
-                  }}
-                  isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
-                  loadingText={
-                    !ready
-                      ? "Looking for keypairs"
-                      : set.signLoadingText || "Check your wallet"
+          {isConnectedAndKeyPairReady && !keyPair && (
+            <Box animation={"fadeIn .3s .1s both"}>
+              <ModalButton
+                data-test="verify-address-button"
+                size="xl"
+                mb="4"
+                colorScheme={"green"}
+                onClick={async () => {
+                  console.log(recaptchaRef)
+                  const token =
+                    !recaptchaRef.current || !!captchaVerifiedSince
+                      ? undefined
+                      : await recaptchaRef.current.executeAsync().catch((err) => {
+                          console.log("executeAsync error", err)
+                          return undefined
+                        })
+                  console.log("token", token)
+                  if (token) {
+                    recaptchaRef.current.reset()
                   }
-                >
-                  {shouldLinkToUser ? "Link address" : "Verify address"}
-                </ModalButton>
-              </Box>
-            </>
+
+                  return set.onSubmit(shouldLinkToUser, undefined, token)
+                }}
+                isLoading={set.isLoading || !ready}
+                isDisabled={!ready}
+                loadingText={
+                  !ready
+                    ? "Looking for keypairs"
+                    : set.signLoadingText || "Check your wallet"
+                }
+              >
+                {shouldLinkToUser ? "Link address" : "Verify address"}
+              </ModalButton>
+            </Box>
           )}
         </ModalBody>
         <ModalFooter mt="-4">
