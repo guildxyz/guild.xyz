@@ -10,7 +10,6 @@ import {
   Skeleton,
   Tag,
   Text,
-  useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
@@ -18,12 +17,12 @@ import Visibility from "components/[guild]/Visibility"
 import { CaretDown } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
-import OriginalRequirementPreview from "./OriginalRequirementPreview"
 import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
 import RequirementImage from "./RequirementImage"
 import RequirementImageEditor from "./RequirementImageEditor"
 import RequirementNameEditor from "./RequirementNameEditor"
+import ResetRequirementButton from "./ResetRequirementButton"
 
 export type RequirementProps = PropsWithChildren<{
   fieldRoot?: string
@@ -44,7 +43,6 @@ const Requirement = ({
   fieldRoot,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
-  const { isOpen: showPreview, onToggle: togglePreview } = useDisclosure()
   const previewAvailable =
     requirement?.data?.customName || requirement?.data?.customImage
 
@@ -78,9 +76,7 @@ const Requirement = ({
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
             {fieldRoot ? (
               <RequirementNameEditor>
-                <Text wordBreak="break-word">
-                  {requirement?.data?.customName || children}
-                </Text>
+                {requirement?.data?.customName || children}
               </RequirementNameEditor>
             ) : (
               <Text wordBreak="break-word">
@@ -102,24 +98,23 @@ const Requirement = ({
             {previewAvailable && (
               <Popover placement="bottom-start">
                 <PopoverTrigger>
-                  <RequirementButton
-                    rightIcon={<Icon as={CaretDown} />}
-                    onClick={togglePreview}
-                  >
+                  <RequirementButton rightIcon={<Icon as={CaretDown} />}>
                     View original
                   </RequirementButton>
                 </PopoverTrigger>
                 <Portal>
                   <PopoverContent minW="max-content">
-                    <OriginalRequirementPreview
-                      isImageLoading={isImageLoading}
-                      withImgBg={withImgBg}
-                      image={image}
-                      title={children}
-                      isOpen={showPreview}
-                      showReset={!!fieldRoot}
-                      id={requirement.id}
-                    />
+                    <HStack p={3} gap={4}>
+                      <RequirementImage
+                        isImageLoading={isImageLoading}
+                        withImgBg={withImgBg}
+                        image={image}
+                      />
+                      <Text wordBreak="break-word" flexGrow={1}>
+                        {children}
+                      </Text>
+                      {!!fieldRoot && <ResetRequirementButton />}
+                    </HStack>
                   </PopoverContent>
                 </Portal>
               </Popover>

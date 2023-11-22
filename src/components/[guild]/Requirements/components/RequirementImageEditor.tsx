@@ -1,5 +1,4 @@
 import {
-  Button,
   Center,
   Circle,
   FormControl,
@@ -76,7 +75,7 @@ const RequirementImageEditor = ({ orignalImage }: Props) => {
               _hover={{
                 opacity: 1,
               }}
-              background={"blackAlpha.400"}
+              background={"blackAlpha.600"}
               p={3.5}
               cursor={"pointer"}
             >
@@ -97,25 +96,16 @@ const RequirementImageEditor = ({ orignalImage }: Props) => {
             <Circle
               position="absolute"
               opacity={0}
-              left={0}
               _hover={{
                 opacity: 1,
               }}
-              background={"blackAlpha.800"}
+              p={3.5}
+              background={"blackAlpha.700"}
               cursor={"pointer"}
+              {...getRootProps()}
             >
-              <Button
-                {...getRootProps()}
-                as="label"
-                variant="ghost"
-                rounded={"full"}
-                width={"var(--chakra-space-11)"}
-                maxWidth={"var(--chakra-space-11)"}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <input {...getInputProps()} hidden />
-                <Upload />
-              </Button>
+              <input {...getInputProps()} hidden />
+              <Icon as={Upload} boxSize={4} color={"white"} />
             </Circle>
             <RequirementImage image={orignalImage} />
           </Center>
