@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Provider } from "@fuel-ts/providers"
-import type { WalletUnlocked } from "@fuel-ts/wallet"
-import { atom, useAtom } from "jotai"
-import { useEffect } from "react"
+import {
+  fuelAddressAtom,
+  fuelConnectedAtom,
+  fuelConnectingAtom,
+  fuelProviderAtom,
+  fuelWalletAtom,
+} from "components/_app/FuelSetup"
+import { useAtom } from "jotai"
 
 type FuelConnectorName = "Fuel Wallet" | "Fuelet Wallet"
-
-const fuelConnectedAtom = atom(false)
-const fuelConnectingAtom = atom(false)
-const fuelAddressAtom = atom("" as `0x${string}`)
-const fuelWalletAtom = atom(null as WalletUnlocked)
-const fuelProviderAtom = atom(null as Provider)
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
@@ -34,33 +32,6 @@ const useFuel = () => {
   }
 
   const windowFuel = typeof window !== "undefined" && window.fuel
-
-  const onConnectionChange = (_isConnected: boolean) => {
-    setIsConnected(_isConnected)
-
-    if (!_isConnected) {
-      setAddress(null)
-      setWallet(null)
-      setProvider(null)
-    }
-  }
-
-  useEffect(() => {
-    if (!windowFuel) return
-
-    // autoConnect - we don't need this for now
-    // setTimeout(async () => {
-    //   await checkConnection()
-    // }, 200)
-
-    windowFuel.on("currentAccount", onAccountChange)
-    windowFuel.on("connection", onConnectionChange)
-
-    return () => {
-      windowFuel.off("currentAccount", onAccountChange)
-      windowFuel.off("connection", onConnectionChange)
-    }
-  }, [windowFuel])
 
   const _setupState = async () => {
     const [account] = await windowFuel.accounts()
