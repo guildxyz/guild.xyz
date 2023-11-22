@@ -5,6 +5,7 @@ const AnimatedLogo = (props: Partial<IPlayerProps> = {}) => {
 
   return (
     <Player
+      className="lottie-bw"
       autoplay
       keepLastFrame
       speed={2}

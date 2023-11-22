@@ -126,6 +126,7 @@ const Onboarding = (): JSX.Element => {
           display={{ base: "none", md: "flex" }}
         >
           <Player
+            className="lottie-bw"
             autoplay
             keepLastFrame
             speed={0.5}

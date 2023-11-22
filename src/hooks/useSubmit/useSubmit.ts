@@ -4,7 +4,7 @@ import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
-import { OneOf, ValidationMethod } from "types"
+import { ValidationMethod } from "types"
 import { keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
@@ -20,11 +20,6 @@ export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
 }
-
-export type OnSubmitResult<ResponseType> = OneOf<
-  { data: ResponseType },
-  { error: any }
->
 
 type FetcherFunction<ResponseType> = ({
   signedPayload,
@@ -43,19 +38,22 @@ const useSubmit = <DataType, ResponseType>(
   const [response, setResponse] = useState<ResponseType>(undefined)
 
   return {
-    onSubmit: (data?: DataType): Promise<OnSubmitResult<ResponseType>> => {
+    onSubmit: (data?: DataType, allowThrow = false): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
       return fetch(data)
         .then((d) => {
           onSuccess?.(d)
           setResponse(d)
-          return <OnSubmitResult<ResponseType>>{ data: d }
+          return d
         })
         .catch((e) => {
           onError?.(e)
           setError(e)
-          return <OnSubmitResult<ResponseType>>{ error: e }
+          if (allowThrow) {
+            throw e
+          }
+          return null
         })
         .finally(() => setIsLoading(false))
     },

@@ -85,7 +85,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       authData: null,
       error: null,
     }
-    setOauthState(oauthState)
+    setOauthState(result)
 
     let finalOauthParams = params
 

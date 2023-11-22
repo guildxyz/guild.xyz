@@ -18,6 +18,8 @@ type Props = {
   error?: Error
 }
 
+// TODO: Move some common props to an exported const here, and use it for Google & Delegate buttons
+
 const ConnectorButton = ({
   connector,
   pendingConnector,
@@ -52,7 +54,7 @@ const ConnectorButton = ({
           ? handleOnboarding
           : () => connect({ connector })
       }
-      rightIcon={
+      leftIcon={
         connector && ready ? (
           <GuildAvatar address={address} size={5} />
         ) : connectorIcon ? (
@@ -78,7 +80,8 @@ const ConnectorButton = ({
       loadingText={`${connectorName} - connecting...`}
       w="full"
       size="xl"
-      justifyContent="space-between"
+      justifyContent="start"
+      gap={3}
       border={activeConnector?.id === connector.id && "2px"}
       borderColor="primary.500"
     >

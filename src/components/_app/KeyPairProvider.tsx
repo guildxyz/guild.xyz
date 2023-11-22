@@ -10,7 +10,6 @@ import { AddressConnectionProvider, User } from "types"
 import fetcher from "utils/fetcher"
 import { useAccount } from "wagmi"
 import {
-  OnSubmitResult,
   SignProps,
   SignedValdation,
   useSubmitWithSignWithParamKeyPair,
@@ -111,7 +110,7 @@ const setKeyPair = async ({
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
   id: number
-}): Promise<[StoredKeyPair, boolean]> => {
+}): Promise<[StoredKeyPair, boolean, User]> => {
   const address = signedValidation?.validation?.params?.addr
   const {
     userId: signedUserId,
@@ -177,7 +176,7 @@ const setKeyPair = async ({
 
   await mutateKeyPair()
 
-  return [storedKeyPair, shouldSendLink]
+  return [storedKeyPair, shouldSendLink, newUser]
 }
 
 const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
@@ -190,7 +189,7 @@ const KeyPairContext = createContext<{
   set: {
     isSigning: boolean
     signLoadingText: string
-    response: [StoredKeyPair, boolean]
+    response: [StoredKeyPair, boolean, User]
     isLoading: boolean
     error: any
     reset: () => void
@@ -199,8 +198,9 @@ const KeyPairContext = createContext<{
       shouldLinkToUser: boolean,
       provider?: AddressConnectionProvider,
       reCaptchaToken?: string,
-      signProps?: Partial<SignProps>
-    ) => Promise<OnSubmitResult<[StoredKeyPair, boolean]>>
+      signProps?: Partial<SignProps>,
+      allowThrow?: boolean
+    ) => Promise<[StoredKeyPair, boolean, User]>
   }
 }>(undefined)
 
@@ -284,7 +284,7 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
     SetKeypairPayload,
-    [StoredKeyPair, boolean]
+    [StoredKeyPair, boolean, User]
   >(
     (signedValidation: SignedValdation) =>
       setKeyPair({
@@ -390,7 +390,8 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
             shouldLinkToUser: boolean,
             provider?: AddressConnectionProvider,
             reCaptchaToken?: string,
-            signProps?: Partial<SignProps>
+            signProps?: Partial<SignProps>,
+            allowThrow?: boolean
           ) => {
             const body: SetKeypairPayload & { signProps?: Partial<SignProps> } = {
               pubKey: undefined,
@@ -453,7 +454,7 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
               body.signProps = signProps
             }
 
-            return setSubmitResponse.onSubmit(body)
+            return setSubmitResponse.onSubmit(body, allowThrow)
           },
         },
       }}
