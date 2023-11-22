@@ -1,7 +1,7 @@
 import {
   Box,
-  Button,
   HStack,
+  Icon,
   IconButton,
   Popover,
   PopoverContent,
@@ -21,6 +21,7 @@ import { CaretDown, Check, PencilSimple } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
 import OriginalRequirementPreview from "./OriginalRequirementPreview"
+import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
 import RequirementImage from "./RequirementImage"
 import RequirementImageEditor from "./RequirementImageEditor"
@@ -78,7 +79,7 @@ const Requirement = ({
             withImgBg={withImgBg}
           />
         </Box>
-        <VStack alignItems={"flex-start"} alignSelf="center">
+        <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
           <HStack>
             <Text wordBreak="break-word">
               {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
@@ -129,43 +130,35 @@ const Requirement = ({
               )}
             </Text>
           </HStack>
-          {previewAvailable && !isEditing && (
-            <Popover matchWidth>
-              <PopoverTrigger>
-                <Button
-                  size={"xs"}
-                  variant={"ghost"}
-                  rightIcon={<CaretDown />}
-                  aria-label="view original"
-                  mt={-2}
-                  ml={-2}
-                  opacity={0.5}
-                  colorScheme="gray"
-                  onClick={togglePreview}
-                >
-                  View original
-                </Button>
-              </PopoverTrigger>
-              <Portal>
-                <PopoverContent
-                  minW="none"
-                  w={{ base: "xs", sm: "sm", md: "md" }}
-                  ml={-16}
-                >
-                  <OriginalRequirementPreview
-                    isImageLoading={isImageLoading}
-                    withImgBg={withImgBg}
-                    image={image}
-                    title={children}
-                    isOpen={showPreview}
-                    showReset={!!fieldRoot}
-                    id={requirement.id}
-                  />
-                </PopoverContent>
-              </Portal>
-            </Popover>
-          )}
-          {footer}
+
+          <HStack>
+            {previewAvailable && !isEditing && (
+              <Popover placement="bottom-start">
+                <PopoverTrigger>
+                  <RequirementButton
+                    rightIcon={<Icon as={CaretDown} />}
+                    onClick={togglePreview}
+                  >
+                    View original
+                  </RequirementButton>
+                </PopoverTrigger>
+                <Portal>
+                  <PopoverContent minW="max-content">
+                    <OriginalRequirementPreview
+                      isImageLoading={isImageLoading}
+                      withImgBg={withImgBg}
+                      image={image}
+                      title={children}
+                      isOpen={showPreview}
+                      showReset={!!fieldRoot}
+                      id={requirement.id}
+                    />
+                  </PopoverContent>
+                </Portal>
+              </Popover>
+            )}
+            {footer}
+          </HStack>
         </VStack>
         {rightElement}
       </SimpleGrid>
