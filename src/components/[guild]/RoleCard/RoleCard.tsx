@@ -162,32 +162,39 @@ const RoleCard = memo(({ role }: Props) => {
                 />
               </SlideFade>
             )}
-            <Box p={5} pt={2} mt="auto">
-              {role.rolePlatforms?.map((platform, i) => {
-                const guildPlatformType = guildPlatforms.find(
-                  (gp) => gp.id === platform.guildPlatformId
-                )?.platformId
+            <ClientOnly>
+              <Box p={5} pt={2} mt="auto">
+                {role.rolePlatforms?.map((platform, i) => {
+                  const guildPlatformType = guildPlatforms.find(
+                    (gp) => gp.id === platform.guildPlatformId
+                  )?.platformId
 
-                if (!platforms[PlatformType[guildPlatformType]]) return
+                  if (!platforms[PlatformType[guildPlatformType]]) return
 
-                return (
-                  <SlideFade
-                    key={platform.guildPlatformId}
-                    offsetY={10}
-                    in={isOpen}
-                    transition={{ enter: { delay: i * 0.1 } }}
-                    /**
-                     * Spreading inert because it's not added to @types/react yet:
-                     * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-                     */
-                    {...(!isOpen && { inert: "true" })}
-                  >
-                    <Reward platform={platform} role={role} withLink withMotionImg />
-                  </SlideFade>
-                )
-              })}
-              {role.hiddenRewards && <HiddenRewards />}
-            </Box>
+                  return (
+                    <SlideFade
+                      key={platform.guildPlatformId}
+                      offsetY={10}
+                      in={isOpen}
+                      transition={{ enter: { delay: i * 0.1 } }}
+                      /**
+                       * Spreading inert because it's not added to @types/react yet:
+                       * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
+                       */
+                      {...(!isOpen && { inert: "true" })}
+                    >
+                      <Reward
+                        platform={platform}
+                        role={role}
+                        withLink
+                        withMotionImg
+                      />
+                    </SlideFade>
+                  )
+                })}
+                {role.hiddenRewards && <HiddenRewards />}
+              </Box>
+            </ClientOnly>
           </Flex>
           <RoleRequirementsSection isOpen={isOpen}>
             <RoleRequirementsSectionHeader isOpen={isOpen}>

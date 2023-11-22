@@ -19,11 +19,11 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
+import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
-import useUser from "components/[guild]/hooks/useUser"
-import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
@@ -59,7 +59,7 @@ const TIMEOUT = 10_000
 
 const ConnectEmailButton = ({
   onSuccess,
-
+  isReconnection: _,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { emails } = useUser()

@@ -63,7 +63,12 @@ const GuildCreationProgress = ({
               value={progress}
               colorScheme="primary"
               sx={{
-                "& > div:first-child": {
+                /**
+                 * This equals to :first-child, just changed it so we don't get the
+                 * annoying emotion error in the console:
+                 * https://github.com/emotion-js/emotion/issues/2917#issuecomment-1791940421
+                 */
+                "& > div:not(:not(:last-child) ~ *)": {
                   transitionProperty: "width",
                 },
               }}
