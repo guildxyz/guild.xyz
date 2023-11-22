@@ -1,6 +1,6 @@
 import {
-  Box,
   Button,
+  Center,
   Circle,
   FormControl,
   FormErrorMessage,
@@ -15,12 +15,17 @@ import { useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useRequirementContext } from "./RequirementContext"
+import RequirementImage from "./RequirementImage"
 
 const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const RequirementImageEditor = () => {
+type Props = {
+  orignalImage: string | JSX.Element
+}
+
+const RequirementImageEditor = ({ orignalImage }: Props) => {
   const { id } = useRequirementContext()
 
   const { control, setValue } = useFormContext()
@@ -59,11 +64,11 @@ const RequirementImageEditor = () => {
     <FormControl isInvalid={!!fileRejections?.[0]}>
       <Wrap>
         {customImage ? (
-          <Box position={"relative"}>
+          <Center position={"relative"} minH={"var(--chakra-space-11)"}>
             <Circle
               position="absolute"
               onClick={() => {
-                setValue(`requirements.${index}.data.customImage`, undefined, {
+                setValue(`requirements.${index}.data.customImage`, "", {
                   shouldDirty: true,
                 })
               }}
@@ -82,23 +87,38 @@ const RequirementImageEditor = () => {
               maxWidth={"var(--chakra-space-11)"}
               maxHeight={"var(--chakra-space-11)"}
             />
-          </Box>
+          </Center>
         ) : uploader.isUploading ? (
           <Text fontSize={13} textAlign={"center"} w={"full"}>
             {progress * 100}%
           </Text>
         ) : (
-          <Button
-            {...getRootProps()}
-            as="label"
-            variant="outline"
-            rounded={"full"}
-            p={3}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <input {...getInputProps()} hidden />
-            <Upload />
-          </Button>
+          <Center position={"relative"} minH={"var(--chakra-space-11)"}>
+            <Circle
+              position="absolute"
+              opacity={0}
+              left={0}
+              _hover={{
+                opacity: 1,
+              }}
+              background={"blackAlpha.800"}
+              cursor={"pointer"}
+            >
+              <Button
+                {...getRootProps()}
+                as="label"
+                variant="ghost"
+                rounded={"full"}
+                width={"var(--chakra-space-11)"}
+                maxWidth={"var(--chakra-space-11)"}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <input {...getInputProps()} hidden />
+                <Upload />
+              </Button>
+            </Circle>
+            <RequirementImage image={orignalImage} />
+          </Center>
         )}
       </Wrap>
       <FormErrorMessage>

@@ -1,11 +1,9 @@
 import { Button } from "@chakra-ui/react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { useRequirementContext } from "./RequirementContext"
 
-type Props = {
-  id: number
-}
-
-const ResetRequirementButton = ({ id }: Props) => {
+const ResetRequirementButton = () => {
+  const { id } = useRequirementContext()
   const { control, setValue } = useFormContext()
   const requirements = useWatch({ name: "requirements", control })
   const index = requirements.findIndex((requirement) => requirement.id === id)

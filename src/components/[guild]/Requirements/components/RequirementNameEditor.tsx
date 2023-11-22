@@ -1,4 +1,5 @@
 import {
+  Box,
   Editable,
   EditablePreview,
   Input,
@@ -19,7 +20,12 @@ const RequirementNameEditor = ({ children }: PropsWithChildren<unknown>) => {
   const index = requirements.findIndex((requirement) => requirement.id === id)
 
   return (
-    <>
+    <Box
+      borderWidth={isEditing ? 1 : 0}
+      borderRadius="lg"
+      display="flex"
+      pl={isEditing ? 2 : 0}
+    >
       <EditablePreview />
       {isEditing ? (
         <Input
@@ -30,18 +36,12 @@ const RequirementNameEditor = ({ children }: PropsWithChildren<unknown>) => {
         children
       )}
       <EditableControls variant="unstyled" display="flex" alignItems="center" />
-    </>
+    </Box>
   )
 }
 
 const RequirementNameEditorWrapper = ({ children }: PropsWithChildren<unknown>) => (
-  <Editable
-    size="sm"
-    bg="transparent"
-    borderWidth={1}
-    borderRadius="lg"
-    display="flex"
-  >
+  <Editable size="sm" bg="transparent">
     <RequirementNameEditor>{children}</RequirementNameEditor>
   </Editable>
 )

@@ -44,17 +44,10 @@ const Requirement = ({
   fieldRoot,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
-  const {
-    isOpen: isEditing,
-    onOpen: onEdit,
-    onClose: onDone,
-  } = useDisclosure({
-    defaultIsOpen: false,
-  })
   const { isOpen: showPreview, onToggle: togglePreview } = useDisclosure()
-
   const previewAvailable =
     requirement?.data?.customName || requirement?.data?.customImage
+
   return (
     <>
       <SimpleGrid
@@ -68,7 +61,7 @@ const Requirement = ({
           <RequirementImage
             image={
               fieldRoot ? (
-                <RequirementImageEditor />
+                <RequirementImageEditor orignalImage={image} />
               ) : (
                 requirement?.data?.customImage || image
               )
@@ -78,34 +71,35 @@ const Requirement = ({
           />
         </Box>
         <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-          <HStack>
-            <Text wordBreak="break-word">
-              {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-              {fieldRoot ? (
-                <RequirementNameEditor>
+          <HStack
+            flexDirection={{ base: "column", sm: "row" }}
+            alignItems={{ base: "flex-start", sm: "center" }}
+          >
+            {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+            {fieldRoot ? (
+              <RequirementNameEditor>
+                <Text wordBreak="break-word">
                   {requirement?.data?.customName || children}
-                </RequirementNameEditor>
-              ) : (
-                requirement?.data?.customName || children
-              )}
+                </Text>
+              </RequirementNameEditor>
+            ) : (
+              <Text wordBreak="break-word">
+                {requirement?.data?.customName || children}
+              </Text>
+            )}
 
-              {fieldRoot ? (
-                <SetVisibility
-                  ml={2}
-                  entityType="requirement"
-                  fieldBase={fieldRoot}
-                />
-              ) : (
-                <Visibility
-                  entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-                  ml="1"
-                />
-              )}
-            </Text>
+            {fieldRoot ? (
+              <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
+            ) : (
+              <Visibility
+                entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+                ml="1"
+              />
+            )}
           </HStack>
 
           <HStack>
-            {previewAvailable && !isEditing && (
+            {previewAvailable && (
               <Popover placement="bottom-start">
                 <PopoverTrigger>
                   <RequirementButton

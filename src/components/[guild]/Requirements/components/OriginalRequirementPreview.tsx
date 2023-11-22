@@ -14,7 +14,6 @@ type Props = {
 }
 
 const OriginalRequirementPreview = ({
-  id,
   isImageLoading,
   withImgBg,
   image,
@@ -30,7 +29,7 @@ const OriginalRequirementPreview = ({
     <Text wordBreak="break-word" flexGrow={1}>
       {title}
     </Text>
-    {showReset && <ResetRequirementButton id={id} />}
+    {showReset && <ResetRequirementButton />}
   </HStack>
 )
 
