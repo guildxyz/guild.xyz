@@ -232,19 +232,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     mb="4"
                     colorScheme={"green"}
                     onClick={async () => {
-                      console.log("ONCLICK")
                       const token =
                         !recaptchaRef.current || !!captchaVerifiedSince
                           ? undefined
                           : await recaptchaRef.current.executeAsync()
 
-                      console.log("TOKEN", token)
-
                       if (token) {
                         recaptchaRef.current.reset()
                       }
-
-                      console.log("BEFORE ONSUBMIT")
 
                       return set.onSubmit(shouldLinkToUser, undefined, token)
                     }}
