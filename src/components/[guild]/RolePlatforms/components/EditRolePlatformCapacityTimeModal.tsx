@@ -175,6 +175,7 @@ const EditRolePlatformCapacityTimeModal = ({
                   mx="px"
                   pb="px"
                   w="calc(100% - 2px)"
+                  spacing={{ base: 4, md: 2 }}
                 >
                   <FormControl>
                     <FormLabel>
