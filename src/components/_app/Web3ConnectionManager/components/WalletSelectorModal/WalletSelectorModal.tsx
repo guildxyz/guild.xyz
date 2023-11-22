@@ -103,6 +103,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { windowFuel } = useFuel()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
+  console.log(recaptchaRef)
 
   return (
     <>
@@ -238,7 +239,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       const token =
                         !recaptchaRef.current || !!captchaVerifiedSince
                           ? undefined
-                          : await recaptchaRef.current.executeAsync()
+                          : await recaptchaRef.current
+                              .executeAsync()
+                              .catch((err) => {
+                                console.log("executeAsync error", err)
+                                return undefined
+                              })
 
                       if (token) {
                         recaptchaRef.current.reset()
