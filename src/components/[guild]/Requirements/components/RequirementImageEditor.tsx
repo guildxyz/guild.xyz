@@ -14,16 +14,15 @@ import { Upload, X } from "phosphor-react"
 import { useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
-
-type Props = {
-  id: number
-}
+import { useRequirementContext } from "./RequirementContext"
 
 const errorMessages = {
   "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
-const RequirementImageEditor = ({ id }: Props) => {
+const RequirementImageEditor = () => {
+  const { id } = useRequirementContext()
+
   const { control, setValue } = useFormContext()
   const requirements = useWatch({ name: "requirements", control })
   const index = requirements.findIndex((requirement) => requirement.id === id)

@@ -11,10 +11,10 @@ const ResetRequirementButton = ({ id }: Props) => {
   const index = requirements.findIndex((requirement) => requirement.id === id)
 
   const onReset = () => {
-    setValue(`requirements.${index}.data.customName`, undefined, {
+    setValue(`requirements.${index}.data.customName`, "", {
       shouldDirty: true,
     })
-    setValue(`requirements.${index}.data.customImage`, undefined, {
+    setValue(`requirements.${index}.data.customImage`, "", {
       shouldDirty: true,
     })
   }

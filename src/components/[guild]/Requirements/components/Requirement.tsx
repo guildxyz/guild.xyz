@@ -2,7 +2,6 @@ import {
   Box,
   HStack,
   Icon,
-  IconButton,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -11,13 +10,12 @@ import {
   Skeleton,
   Tag,
   Text,
-  Tooltip,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
-import { CaretDown, Check, PencilSimple } from "phosphor-react"
+import { CaretDown } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
 import OriginalRequirementPreview from "./OriginalRequirementPreview"
@@ -69,8 +67,8 @@ const Requirement = ({
         <Box mt="3px" alignSelf={"start"}>
           <RequirementImage
             image={
-              isEditing ? (
-                <RequirementImageEditor id={requirement.id} />
+              fieldRoot ? (
+                <RequirementImageEditor />
               ) : (
                 requirement?.data?.customImage || image
               )
@@ -83,39 +81,14 @@ const Requirement = ({
           <HStack>
             <Text wordBreak="break-word">
               {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-              {isEditing ? (
-                <RequirementNameEditor id={requirement.id} />
+              {fieldRoot ? (
+                <RequirementNameEditor>
+                  {requirement?.data?.customName || children}
+                </RequirementNameEditor>
               ) : (
                 requirement?.data?.customName || children
               )}
-              {fieldRoot &&
-                (isEditing ? (
-                  <Tooltip label="Done" hasArrow placement="top">
-                    <IconButton
-                      icon={<Check />}
-                      boxSize={3.5}
-                      ml={1}
-                      variant="ghost"
-                      color="green.500"
-                      bg="unset !important"
-                      aria-label="done"
-                      onClick={onDone}
-                    />
-                  </Tooltip>
-                ) : (
-                  <Tooltip label="Edit title or image" hasArrow placement="top">
-                    <IconButton
-                      icon={<PencilSimple />}
-                      boxSize={3.5}
-                      ml={1}
-                      variant="ghost"
-                      color="gray"
-                      bg="unset !important"
-                      aria-label="edit title or image"
-                      onClick={onEdit}
-                    />
-                  </Tooltip>
-                ))}
+
               {fieldRoot ? (
                 <SetVisibility
                   ml={2}
