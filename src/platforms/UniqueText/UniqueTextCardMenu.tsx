@@ -49,11 +49,9 @@ const UniqueTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
           Edit unique secret
         </MenuItem>
-        {rolePlatform && (
-          <MenuItem icon={<Clock />} onClick={onCapacityTimeOpen}>
-            Edit availibility
-          </MenuItem>
-        )}
+        <MenuItem icon={<Clock />} onClick={onCapacityTimeOpen}>
+          Edit availibility
+        </MenuItem>
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
