@@ -5,7 +5,6 @@ import {
   palm,
   pgn,
   scrollAlpha,
-  x1Testnet,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
 import {
@@ -400,15 +399,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/ronin.svg",
     },
   },
-  X1_TESTNET: {
-    ...x1Testnet,
-    iconUrl: "/walletLogos/okx.png",
-    coinIconUrl: "/walletLogos/okx.png",
-    blockExplorerIconUrl: {
-      light: "/walletLogos/okx.png",
-      dark: "/walletLogos/okx.png",
-    },
-  },
+  // X1_TESTNET: {
+  //   ...x1Testnet,
+  //   iconUrl: "/walletLogos/okx.png",
+  //   coinIconUrl: "/walletLogos/okx.png",
+  //   blockExplorerIconUrl: {
+  //     light: "/walletLogos/okx.png",
+  //     dark: "/walletLogos/okx.png",
+  //   },
+  // },
 }
 
 enum Chains {
@@ -447,7 +446,7 @@ enum Chains {
   PGN = pgn.id,
   NEON_EVM = neonEVM.id,
   RONIN = ronin.id,
-  X1_TESTNET = x1Testnet.id,
+  // X1_TESTNET = x1Testnet.id,
 }
 
 export type Chain = keyof typeof Chains
