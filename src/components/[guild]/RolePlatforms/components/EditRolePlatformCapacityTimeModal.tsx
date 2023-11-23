@@ -23,7 +23,7 @@ import { Clock, Hash } from "phosphor-react"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
-type RolePlatformCapacityTimeForm = {
+export type RolePlatformCapacityTimeForm = {
   capacity?: number
   startTime?: string
   endTime?: string

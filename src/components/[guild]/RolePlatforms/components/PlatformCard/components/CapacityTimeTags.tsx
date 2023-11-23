@@ -8,7 +8,7 @@ import {
   WrapProps,
 } from "@chakra-ui/react"
 import { Clock } from "phosphor-react"
-import { useState } from "react"
+import { PropsWithChildren, useState } from "react"
 import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { DAY_IN_MS } from "../../EditRolePlatformCapacityTimeModal"
@@ -25,8 +25,12 @@ export const shouldShowCapacityTimeTags = (rolePlatform?: RolePlatform): boolean
   !!rolePlatform?.startTime ||
   !!rolePlatform?.endTime
 
-const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => {
-  if (!shouldShowCapacityTimeTags(rolePlatform)) return null
+const CapacityTimeTags = ({
+  rolePlatform,
+  children,
+  ...wrapProps
+}: PropsWithChildren<Props>) => {
+  if (!children && !shouldShowCapacityTimeTags(rolePlatform)) return null
 
   return (
     <Wrap {...wrapProps}>
@@ -42,6 +46,8 @@ const CapacityTimeTags = ({ rolePlatform, ...wrapProps }: Props) => {
       )}
 
       {rolePlatform?.endTime && <EndTimeTag endTime={rolePlatform.endTime} />}
+
+      {children}
     </Wrap>
   )
 }

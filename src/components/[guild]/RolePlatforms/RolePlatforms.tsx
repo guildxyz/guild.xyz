@@ -6,7 +6,6 @@ import {
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
-  Wrap,
 } from "@chakra-ui/react"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
@@ -16,15 +15,11 @@ import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
+import CapacityTimeSetup from "../AddRewardButton/components/CapacityTimeSetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
-import EditRolePlatformCapacityTimeButton from "./components/EditRolePlatformCapacityTimeButton"
-import EditRolePlatformCapacityTimeModal from "./components/EditRolePlatformCapacityTimeModal"
 import PlatformCard from "./components/PlatformCard"
-import CapacityTimeTags, {
-  shouldShowCapacityTimeTags,
-} from "./components/PlatformCard/components/CapacityTimeTags"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
@@ -94,8 +89,6 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             if (!type) return null
 
-            const showCapacityTimeTags = shouldShowCapacityTimeTags(rolePlatform)
-
             const { cardPropsHook: useCardProps, cardSettingsComponent } =
               platforms[type]
 
@@ -141,39 +134,29 @@ const RolePlatforms = ({ roleId }: Props) => {
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
                   contentRow={
                     CAPACITY_TIME_PLATFORMS.includes(type) && (
-                      <Wrap>
-                        <CapacityTimeTags rolePlatform={rolePlatform} />
-
-                        <EditRolePlatformCapacityTimeButton
-                          onClick={onCapacityTimeOpen}
-                          isCompact={showCapacityTimeTags}
-                        />
-
-                        <EditRolePlatformCapacityTimeModal
-                          isOpen={isCapacityTimeOpen}
-                          onClose={onCapacityTimeClose}
-                          platformType={
-                            PlatformType[guildPlatform.platformId] as PlatformName
-                          }
-                          defaultValues={{
-                            capacity: rolePlatform.capacity,
-                            startTime: rolePlatform.startTime,
-                            endTime: rolePlatform.endTime,
-                          }}
-                          onDone={({ capacity, startTime, endTime }) => {
-                            setValue(`rolePlatforms.${index}.capacity`, capacity, {
-                              shouldDirty: true,
-                            })
-                            setValue(`rolePlatforms.${index}.startTime`, startTime, {
-                              shouldDirty: true,
-                            })
-                            setValue(`rolePlatforms.${index}.endTime`, endTime, {
-                              shouldDirty: true,
-                            })
-                            onCapacityTimeClose()
-                          }}
-                        />
-                      </Wrap>
+                      <CapacityTimeSetup
+                        platformType={
+                          PlatformType[guildPlatform.platformId] as PlatformName
+                        }
+                        rolePlatform={rolePlatform}
+                        defaultValues={{
+                          capacity: rolePlatform.capacity,
+                          startTime: rolePlatform.startTime,
+                          endTime: rolePlatform.endTime,
+                        }}
+                        onDone={({ capacity, startTime, endTime }) => {
+                          setValue(`rolePlatforms.${index}.capacity`, capacity, {
+                            shouldDirty: true,
+                          })
+                          setValue(`rolePlatforms.${index}.startTime`, startTime, {
+                            shouldDirty: true,
+                          })
+                          setValue(`rolePlatforms.${index}.endTime`, endTime, {
+                            shouldDirty: true,
+                          })
+                          onCapacityTimeClose()
+                        }}
+                      />
                     )
                   }
                 />

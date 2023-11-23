@@ -1,51 +1,46 @@
-import { Wrap, useDisclosure } from "@chakra-ui/react"
+import { useDisclosure } from "@chakra-ui/react"
 import EditRolePlatformCapacityTimeButton from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTimeButton"
-import EditRolePlatformCapacityTimeModal from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTimeModal"
+import EditRolePlatformCapacityTimeModal, {
+  RolePlatformCapacityTimeForm,
+} from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTimeModal"
 import CapacityTimeTags, {
   shouldShowCapacityTimeTags,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
-import { useFormContext, useWatch } from "react-hook-form"
-import { PlatformName } from "types"
+import { PlatformName, RolePlatform } from "types"
 
-type Props = { platformType: PlatformName }
+type Props = {
+  platformType: PlatformName
+  rolePlatform?: RolePlatform
+  defaultValues?: RolePlatformCapacityTimeForm
+  onDone: (data: RolePlatformCapacityTimeForm) => void
+}
 
-const CapacityTimeSetup = ({ platformType }: Props) => {
-  const { setValue } = useFormContext()
-  const rolePlatform = useWatch({
-    name: "rolePlatforms.0",
-  })
-
-  const capacityFromGuildPlatform =
-    rolePlatform?.guildPlatform?.platformGuildData?.texts?.length
-
+const CapacityTimeSetup = ({
+  platformType,
+  rolePlatform,
+  defaultValues,
+  onDone,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const showCapacityTimeTags = shouldShowCapacityTimeTags(rolePlatform)
 
   return (
-    <Wrap>
-      <CapacityTimeTags rolePlatform={rolePlatform ?? {}} />
-
+    <CapacityTimeTags rolePlatform={rolePlatform ?? ({} as RolePlatform)}>
       <EditRolePlatformCapacityTimeButton
         onClick={onOpen}
         isCompact={showCapacityTimeTags}
       />
       <EditRolePlatformCapacityTimeModal
-        defaultValues={{
-          capacity: capacityFromGuildPlatform,
-          startTime: rolePlatform?.startTime,
-          endTime: rolePlatform?.endTime,
-        }}
+        defaultValues={defaultValues}
         isOpen={isOpen}
         onClose={onClose}
         platformType={platformType}
-        onDone={({ capacity, startTime, endTime }) => {
-          setValue(`rolePlatforms.0.capacity`, capacity)
-          setValue(`rolePlatforms.0.startTime`, startTime)
-          setValue(`rolePlatforms.0.endTime`, endTime)
+        onDone={(data) => {
+          onDone(data)
           onClose()
         }}
       />
-    </Wrap>
+    </CapacityTimeTags>
   )
 }
 export default CapacityTimeSetup

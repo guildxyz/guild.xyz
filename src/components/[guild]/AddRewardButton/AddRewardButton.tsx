@@ -139,6 +139,8 @@ const AddRewardButton = (): JSX.Element => {
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
+  const rolePlatform = methods.getValues("rolePlatforms.0")
+
   return (
     <>
       <Button
@@ -204,9 +206,18 @@ const AddRewardButton = (): JSX.Element => {
                   {step === "SELECT_ROLE" && (
                     <PlatformPreview>
                       <CapacityTimeSetup
-                        platformType={methods.getValues(
-                          "rolePlatforms.0.guildPlatform.platformName"
-                        )}
+                        platformType={rolePlatform?.guildPlatform?.platformName}
+                        rolePlatform={rolePlatform}
+                        defaultValues={{
+                          capacity:
+                            rolePlatform?.guildPlatform?.platformGuildData?.texts
+                              ?.length,
+                        }}
+                        onDone={({ capacity, startTime, endTime }) => {
+                          methods.setValue(`rolePlatforms.0.capacity`, capacity)
+                          methods.setValue(`rolePlatforms.0.startTime`, startTime)
+                          methods.setValue(`rolePlatforms.0.endTime`, endTime)
+                        }}
                       />
                     </PlatformPreview>
                   )}
