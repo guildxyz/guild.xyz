@@ -1,11 +1,13 @@
 import {
   bobaAvax,
   exosama,
+  kava,
   lukso,
   neonEVM,
   palm,
   pgn,
   scrollAlpha,
+  shimmer,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
 import {
@@ -429,6 +431,24 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/ronin.svg",
     },
   },
+  SHIMMER: {
+    ...shimmer,
+    iconUrl: "/networkLogos/shimmer.svg",
+    coinIconUrl: "/networkLogos/shimmer.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/shimmer.svg",
+      dark: "/networkLogos/shimmer.svg",
+    },
+  },
+  KAVA: {
+    ...kava,
+    iconUrl: "/networkLogos/kava.svg",
+    coinIconUrl: "/networkLogos/kava.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/kava.svg",
+      dark: "/networkLogos/kava.svg",
+    },
+  },
   // X1_TESTNET: {
   //   ...x1Testnet,
   //   iconUrl: "/walletLogos/okx.png",
@@ -479,6 +499,8 @@ enum Chains {
   LUKSO = lukso.id,
   MANTLE = mantle.id,
   RONIN = ronin.id,
+  SHIMMER = shimmer.id,
+  KAVA = kava.id,
   // X1_TESTNET = x1Testnet.id,
 }
 

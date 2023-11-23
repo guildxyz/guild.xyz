@@ -54,6 +54,8 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   LUKSO: [],
   MANTLE: [],
   RONIN: [],
+  SHIMMER: [],
+  KAVA: [],
   // X1_TESTNET: [],
 }
 
