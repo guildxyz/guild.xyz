@@ -23,7 +23,7 @@ import { Clock, Hash } from "phosphor-react"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
-export type RolePlatformCapacityTimeForm = {
+export type RolePlatformAvailibiltyForm = {
   capacity?: number
   startTime?: string
   endTime?: string
@@ -33,9 +33,9 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   platformType: PlatformName
-  defaultValues?: RolePlatformCapacityTimeForm
+  defaultValues?: RolePlatformAvailibiltyForm
   isLoading?: boolean
-  onDone: (data: RolePlatformCapacityTimeForm) => void
+  onDone: (data: RolePlatformAvailibiltyForm) => void
 }
 
 const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT"]
@@ -57,7 +57,7 @@ const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => 
   }
 }
 
-const EditRolePlatformCapacityTimeModal = ({
+const EditRolePlatformAvailibiltyModal = ({
   isOpen,
   onClose,
   platformType,
@@ -66,7 +66,7 @@ const EditRolePlatformCapacityTimeModal = ({
   onDone,
 }: Props) => {
   const { control, register, setValue, handleSubmit } =
-    useForm<RolePlatformCapacityTimeForm>({
+    useForm<RolePlatformAvailibiltyForm>({
       mode: "all",
       defaultValues: {
         capacity: defaultValues?.capacity,
@@ -249,4 +249,4 @@ const EditRolePlatformCapacityTimeModal = ({
   )
 }
 
-export default EditRolePlatformCapacityTimeModal
+export default EditRolePlatformAvailibiltyModal

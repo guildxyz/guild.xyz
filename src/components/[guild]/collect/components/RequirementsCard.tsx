@@ -20,7 +20,7 @@ import {
   EndTimeTag,
   StartTimeTag,
   getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -38,7 +38,7 @@ type Props = {
 const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
-  const capacityTimeTagStyleProps = {
+  const availibiltyTagStyleProps = {
     bgColor: "transparent",
     fontSize: "sm",
     fontWeight: "medium",
@@ -146,7 +146,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
                   <CapacityTag
                     capacity={rolePlatform.capacity}
                     claimedCount={rolePlatform.claimedCount}
-                    {...capacityTimeTagStyleProps}
+                    {...availibiltyTagStyleProps}
                   />
                   <CircleDivider />
                 </>
@@ -156,7 +156,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
                 <>
                   <StartTimeTag
                     startTime={rolePlatform?.startTime}
-                    {...capacityTimeTagStyleProps}
+                    {...availibiltyTagStyleProps}
                   />
                   <CircleDivider />
                 </>
@@ -166,7 +166,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
                 <>
                   <EndTimeTag
                     endTime={rolePlatform?.endTime}
-                    {...capacityTimeTagStyleProps}
+                    {...availibiltyTagStyleProps}
                   />
                   <CircleDivider />
                 </>
@@ -174,7 +174,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
 
               {typeof rolePlatform?.capacity !== "number" && (
                 <>
-                  <Tag {...capacityTimeTagStyleProps} colorScheme="gray">
+                  <Tag {...availibiltyTagStyleProps} colorScheme="gray">
                     {`${
                       new Intl.NumberFormat("en", {
                         notation: "standard",
@@ -185,7 +185,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
                 </>
               )}
 
-              <Tag {...capacityTimeTagStyleProps} colorScheme="gray">
+              <Tag {...availibiltyTagStyleProps} colorScheme="gray">
                 {`${
                   new Intl.NumberFormat("en", {
                     notation: "standard",

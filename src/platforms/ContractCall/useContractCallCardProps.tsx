@@ -1,4 +1,4 @@
-import CapacityTimeTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
+import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { GuildPlatform, PlatformName } from "types"
@@ -16,7 +16,7 @@ const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
     type: "CONTRACT_CALL" as PlatformName,
     name: name || guildPlatform.platformGuildData?.name,
     image: image || guildPlatform.platformGuildData?.imageUrl,
-    info: rolePlatform && <CapacityTimeTags rolePlatform={rolePlatform} mt={1} />,
+    info: rolePlatform && <AvailibiltyTags rolePlatform={rolePlatform} mt={1} />,
   }
 }
 

@@ -1,5 +1,5 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
-import CapacityTimeTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
+import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { GuildPlatform, PlatformName } from "types"
@@ -22,7 +22,7 @@ const useUniqueTextCardProps = (guildPlatform: GuildPlatform) => {
         <Icon as={platforms.UNIQUE_TEXT.icon} boxSize={5} color="white" />
       </Circle>
     ),
-    info: rolePlatform && <CapacityTimeTags rolePlatform={rolePlatform} mt={1} />,
+    info: rolePlatform && <AvailibiltyTags rolePlatform={rolePlatform} mt={1} />,
   }
 }
 

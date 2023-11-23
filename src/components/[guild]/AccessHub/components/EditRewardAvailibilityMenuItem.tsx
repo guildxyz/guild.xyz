@@ -1,5 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import EditRolePlatformCapacityTimeModal from "components/[guild]/RolePlatforms/components/EditRolePlatformCapacityTimeModal"
+import EditRolePlatformAvailibiltyModal from "components/[guild]/RolePlatforms/components/EditRolePlatformAvailibiltyModal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { Clock } from "phosphor-react"
@@ -20,11 +20,7 @@ const EditRewardAvailibilityMenuItem = ({ platformGuildId }: Props) => {
     .flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
 
-  const {
-    isOpen: isCapacityTimeOpen,
-    onOpen: onCapacityTimeOpen,
-    onClose: onCapacityTimeClose,
-  } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const toast = useToast()
 
@@ -35,19 +31,19 @@ const EditRewardAvailibilityMenuItem = ({ platformGuildId }: Props) => {
         status: "success",
         title: "Successfully updated reward",
       })
-      onCapacityTimeClose()
+      onClose()
     },
   })
 
   return (
     <>
-      <MenuItem icon={<Clock />} onClick={onCapacityTimeOpen}>
+      <MenuItem icon={<Clock />} onClick={onOpen}>
         Edit availibility
       </MenuItem>
 
-      <EditRolePlatformCapacityTimeModal
-        isOpen={isCapacityTimeOpen}
-        onClose={onCapacityTimeClose}
+      <EditRolePlatformAvailibiltyModal
+        isOpen={isOpen}
+        onClose={onClose}
         platformType={PlatformType[guildPlatform.platformId] as PlatformName}
         defaultValues={{
           capacity: rolePlatform?.capacity,

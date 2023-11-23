@@ -5,7 +5,6 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
@@ -15,7 +14,7 @@ import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
-import CapacityTimeSetup from "../AddRewardButton/components/CapacityTimeSetup"
+import AvailibiltySetup from "../AddRewardButton/components/AvailibiltySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
@@ -43,12 +42,6 @@ const RolePlatforms = ({ roleId }: Props) => {
   const rewardsLabel = useBreakpointValue({
     sm: "/ platform accesses",
   })
-
-  const {
-    isOpen: isCapacityTimeOpen,
-    onOpen: onCapacityTimeOpen,
-    onClose: onCapacityTimeClose,
-  } = useDisclosure()
 
   return (
     <Section
@@ -134,7 +127,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
                   contentRow={
                     CAPACITY_TIME_PLATFORMS.includes(type) && (
-                      <CapacityTimeSetup
+                      <AvailibiltySetup
                         platformType={
                           PlatformType[guildPlatform.platformId] as PlatformName
                         }
@@ -154,7 +147,6 @@ const RolePlatforms = ({ roleId }: Props) => {
                           setValue(`rolePlatforms.${index}.endTime`, endTime, {
                             shouldDirty: true,
                           })
-                          onCapacityTimeClose()
                         }}
                       />
                     )
