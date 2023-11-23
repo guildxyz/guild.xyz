@@ -1,6 +1,7 @@
 import {
   bobaAvax,
   exosama,
+  lukso,
   neonEVM,
   palm,
   pgn,
@@ -409,6 +410,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/linea.png",
     },
   },
+  LUKSO: {
+    ...lukso,
+    iconUrl: "/networkLogos/lukso.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/lukso.svg",
+      dark: "/networkLogos/lukso.svg",
+    },
+  },
   // X1_TESTNET: {
   //   ...x1Testnet,
   //   iconUrl: "/walletLogos/okx.png",
@@ -456,6 +466,7 @@ enum Chains {
   PGN = pgn.id,
   NEON_EVM = neonEVM.id,
   LINEA = linea.id,
+  LUKSO = lukso.id,
   RONIN = ronin.id,
   // X1_TESTNET = x1Testnet.id,
 }
