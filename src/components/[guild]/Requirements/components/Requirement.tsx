@@ -78,7 +78,7 @@ const Requirement = ({
           >
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
             {fieldRoot && isCustomizable ? (
-              <RequirementNameEditor>
+              <RequirementNameEditor baseFieldPath={fieldRoot}>
                 {requirement?.data?.customName || children}
               </RequirementNameEditor>
             ) : (
