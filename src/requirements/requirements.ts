@@ -545,6 +545,18 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["COINBASE_EAS_ATTESTED_BY"],
   },
+  {
+    icon: "/walletLogos/fuel.svg",
+    name: "Fuel",
+    fileNameBase: "Fuel",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Fuel/FuelRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Fuel/FuelForm")
+    ),
+    types: ["FUEL", "FUEL_BALANCE"],
+  },
 ] as const
 
 export default REQUIREMENTS_DATA

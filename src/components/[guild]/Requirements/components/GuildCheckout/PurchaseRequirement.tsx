@@ -37,7 +37,7 @@ import usePrice from "./hooks/usePrice"
 const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { isConnected } = useAccount()
+  const { isConnected: isEvmConnected } = useAccount()
   const chainId = useChainId()
 
   const requirement = useRequirementContext()
@@ -122,7 +122,7 @@ const PurchaseRequirement = (): JSX.Element => {
                 }}
               >
                 <ConnectWalletButton />
-                {!error && (
+                {!error && isEvmConnected && (
                   <>
                     <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 

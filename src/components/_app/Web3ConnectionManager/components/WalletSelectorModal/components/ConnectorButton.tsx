@@ -3,11 +3,9 @@ import MetaMaskOnboarding from "@metamask/onboarding"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
-import GuildAvatar from "components/common/GuildAvatar"
 import { Wallet } from "phosphor-react"
 import { useRef } from "react"
 import { isMobile } from "react-device-detect"
-import shortenHex from "utils/shortenHex"
 import { Connector, useAccount } from "wagmi"
 
 type Props = {
@@ -32,7 +30,7 @@ const ConnectorButton = ({
   }
   const handleOnboarding = () => onboarding.current?.startOnboarding()
 
-  const { address, isConnected, connector: activeConnector } = useAccount()
+  const { isConnected, connector: activeConnector } = useAccount()
 
   const { ready } = useKeyPair()
 
@@ -41,8 +39,6 @@ const ConnectorButton = ({
   const { connectorName, connectorIcon } = useConnectorNameAndIcon(connector)
 
   if (connector.id === "injected" && isMobile && !isMetaMaskInstalled) return null
-
-  if (!!activeConnector && connector.id !== activeConnector?.id && ready) return null
 
   return (
     <Button
@@ -53,9 +49,7 @@ const ConnectorButton = ({
           : () => connect({ connector })
       }
       rightIcon={
-        connector && ready ? (
-          <GuildAvatar address={address} size={5} />
-        ) : connectorIcon ? (
+        connectorIcon ? (
           <Center boxSize={6}>
             <Img
               src={`/walletLogos/${connectorIcon}`}
@@ -79,12 +73,8 @@ const ConnectorButton = ({
       w="full"
       size="xl"
       justifyContent="space-between"
-      border={activeConnector?.id === connector.id && "2px"}
-      borderColor="primary.500"
     >
-      {!isConnected || !(activeConnector?.id === connector.id)
-        ? `${connectorName}`
-        : shortenHex(address)}
+      {connectorName}
     </Button>
   )
 }

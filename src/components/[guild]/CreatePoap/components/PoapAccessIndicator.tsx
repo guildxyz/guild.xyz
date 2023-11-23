@@ -4,9 +4,9 @@ import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "components/[guild]/RoleCard/components/AccessIndicator/components/AccessIndicatorUI"
 import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Check, Clock, EyeSlash, LockSimple, Warning, X } from "phosphor-react"
-import { useAccount } from "wagmi"
 
 type Props = {
   poapIdentifier: number
@@ -25,7 +25,7 @@ const PoapAccessIndicator = ({
 }: Props): JSX.Element => {
   const { isLoading, data } = useUserPoapEligibility(poapIdentifier)
 
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -37,7 +37,7 @@ const PoapAccessIndicator = ({
       <AccessIndicatorUI colorScheme="gray" label="Not active yet" icon={EyeSlash} />
     )
 
-  if (!isConnected)
+  if (!isWeb3Connected)
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}

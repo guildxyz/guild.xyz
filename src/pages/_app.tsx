@@ -9,6 +9,7 @@ import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
+import useSetupFuel from "hooks/useSetupFuel"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -52,6 +53,8 @@ const App = ({
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
   }, [])
+
+  useSetupFuel()
 
   return (
     <>

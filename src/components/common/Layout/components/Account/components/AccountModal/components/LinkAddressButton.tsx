@@ -17,14 +17,14 @@ import { Modal } from "components/common/Modal"
 import { useAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
-import { useAccount, useDisconnect, useWalletClient } from "wagmi"
+import { useWalletClient } from "wagmi"
 
 const LinkAddressButton = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
 
-  const { address } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { address, disconnect } = useWeb3ConnectionManager()
+
   const { data: walletClient } = useWalletClient()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -40,6 +40,7 @@ const LinkAddressButton = (props) => {
 
     try {
       await walletClient.requestPermissions({ eth_accounts: {} })
+    } catch {
     } finally {
       setIsLoading(false)
     }
@@ -53,6 +54,7 @@ const LinkAddressButton = (props) => {
   const handleLogout = () => {
     handleClose()
     disconnect()
+
     openWalletSelectorModal()
   }
 

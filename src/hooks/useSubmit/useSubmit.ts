@@ -1,4 +1,7 @@
+import type { WalletUnlocked } from "@fuel-ts/wallet"
 import { useKeyPair } from "components/_app/KeyPairProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useFuel from "hooks/useFuel"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
@@ -9,7 +12,6 @@ import { keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
   WalletClient,
-  useAccount,
   useChainId,
   usePublicClient,
   useWalletClient,
@@ -137,27 +139,42 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const [isSigning, setIsSigning] = useState<boolean>(false)
   const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
-  const { address } = useAccount()
+  const { address, type } = useWeb3ConnectionManager()
+
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
   const chainId = useChainId()
+
+  const { wallet: fuelWallet } = useFuel()
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async (data: DataType | Record<string, unknown> = {}) => {
       const payload = JSON.stringify(data ?? {})
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
-      const [signedPayload, validation] = await sign({
-        publicClient,
-        walletClient,
-        address,
-        payload,
-        chainId: chainId.toString(),
-        forcePrompt,
-        keyPair,
-        msg: message,
-        ts: Date.now() + timeInaccuracy,
-      })
+
+      const [signedPayload, validation] = await (type === "EVM"
+        ? sign({
+            publicClient,
+            walletClient,
+            address,
+            payload,
+            chainId: chainId.toString(),
+            forcePrompt,
+            keyPair,
+            msg: message,
+            ts: Date.now() + timeInaccuracy,
+          })
+        : fuelSign({
+            wallet: fuelWallet,
+            address,
+            payload,
+            forcePrompt,
+            keyPair,
+            msg: message,
+            ts: Date.now() + timeInaccuracy,
+          })
+      )
         .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ domain }) =>
             peerMeta?.url?.includes?.(domain)
@@ -219,16 +236,68 @@ const useSubmitWithSign = <ResponseType>(
   })
 }
 
-export type SignProps = {
-  publicClient: PublicClient
-  walletClient: WalletClient
+type SignBaseProps = {
   address: `0x${string}`
   payload: string
-  chainId: string
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
   msg?: string
   ts: number
+}
+
+export type SignProps = SignBaseProps & {
+  publicClient: PublicClient
+  walletClient: WalletClient
+  chainId: string
+}
+
+export type FuelSignProps = SignBaseProps & { wallet: WalletUnlocked }
+
+const createMessageParams = (
+  address: `0x${string}`,
+  ts: number,
+  msg: string,
+  payload: string
+): MessageParams => ({
+  addr: address.toLowerCase(),
+  nonce: randomBytes(32).toString("base64"),
+  ts: ts.toString(),
+  hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
+  method: null,
+  msg,
+  chainId: undefined,
+})
+
+const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
+  window.crypto.subtle
+    .sign(
+      { name: "ECDSA", hash: "SHA-512" },
+      keyPair.privateKey,
+      Buffer.from(getMessage(params))
+    )
+    .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
+
+export const fuelSign = async ({
+  wallet,
+  address,
+  payload,
+  keyPair,
+  forcePrompt,
+  msg = DEFAULT_MESSAGE,
+  ts,
+}: FuelSignProps): Promise<[string, Validation]> => {
+  const params = createMessageParams(address, ts, msg, payload)
+  let sig = null
+
+  if (!!keyPair && !forcePrompt) {
+    params.method = ValidationMethod.KEYPAIR
+    sig = await signWithKeyPair(keyPair, params)
+  } else {
+    params.method = ValidationMethod.FUEL
+    sig = await wallet.signMessage(getMessage(params))
+  }
+
+  return [payload, { params, sig }]
 }
 
 export const sign = async ({
@@ -242,26 +311,12 @@ export const sign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: SignProps): Promise<[string, Validation]> => {
-  const params: MessageParams = {
-    addr: address.toLowerCase(),
-    nonce: randomBytes(32).toString("base64"),
-    ts: ts.toString(),
-    hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
-    method: null,
-    msg,
-    chainId: undefined,
-  }
+  const params = createMessageParams(address, ts, msg, payload)
   let sig = null
 
   if (!!keyPair && !forcePrompt) {
     params.method = ValidationMethod.KEYPAIR
-    sig = await window.crypto.subtle
-      .sign(
-        { name: "ECDSA", hash: "SHA-512" },
-        keyPair.privateKey,
-        Buffer.from(getMessage(params))
-      )
-      .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
+    sig = await signWithKeyPair(keyPair, params)
   } else {
     const bytecode = await publicClient.getBytecode({ address }).catch(() => null)
     const isSmartContract = bytecode && trim(bytecode) !== "0x"
