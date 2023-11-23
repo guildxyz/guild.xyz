@@ -32,12 +32,12 @@ import {
   polygonMumbai,
   polygonZkEvm,
   ronin,
+  scroll,
+  scrollSepolia,
   sepolia,
   zetachainAthensTestnet,
   zkSync,
   zora,
-  scrollSepolia,
-  scroll,
 } from "viem/chains"
 
 type GuildChain = ViemChain & {
@@ -330,29 +330,29 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   },
   SCROLL_ALPHA: {
     ...scrollAlpha,
-    iconUrl: "/networkLogos/scroll.png",
+    iconUrl: "/networkLogos/scroll.svg",
     coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
-      light: "/networkLogos/scroll.png",
-      dark: "/networkLogos/scroll.png",
+      light: "/networkLogos/scroll.svg",
+      dark: "/networkLogos/scroll.svg",
     },
   },
   SCROLL_SEPOLIA: {
     ...scrollSepolia,
-    iconUrl: "/networkLogos/scroll.png",
+    iconUrl: "/networkLogos/scroll.svg",
     coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
-      light: "/networkLogos/scroll.png",
-      dark: "/networkLogos/scroll.png",
+      light: "/networkLogos/scroll.svg",
+      dark: "/networkLogos/scroll.svg",
     },
   },
   SCROLL: {
     ...scroll,
-    iconUrl: "/networkLogos/scroll.png",
+    iconUrl: "/networkLogos/scroll.svg",
     coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
-      light: "/networkLogos/scroll.png",
-      dark: "/networkLogos/scroll.png",
+      light: "/networkLogos/scroll.svg",
+      dark: "/networkLogos/scroll.svg",
     },
   },
   ZKSYNC_ERA: {
