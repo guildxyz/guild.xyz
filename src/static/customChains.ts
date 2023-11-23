@@ -103,7 +103,7 @@ export const scrollAlpha = /*#__PURE__*/ defineChain({
   blockExplorers: {
     default: {
       name: "BlockScout",
-      url: "https://blockscout.scroll.io",
+      url: "https://alpha-blockscout.scroll.io",
     },
   },
   contracts: {
@@ -207,6 +207,162 @@ export const goerli = /*#__PURE__*/ defineChain({
     multicall3: {
       address: "0xca11bde05977b3631167028862be2a173976ca11",
       blockCreated: 6507670,
+    },
+  },
+})
+
+export const lukso = /*#__PURE__*/ defineChain({
+  id: 42,
+  name: "LUKSO Mainnet",
+  network: "lukso",
+  nativeCurrency: {
+    decimals: 18,
+    name: "LUKSO",
+    symbol: "LYX",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.mainnet.lukso.network"],
+    },
+    public: {
+      http: ["https://rpc.mainnet.lukso.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.execution.mainnet.lukso.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 468183,
+    },
+  },
+})
+
+export const shimmer = /*#__PURE__*/ defineChain({
+  id: 148,
+  name: "Shimmer EVM",
+  network: "shimmer-evm-mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Shimmer",
+    symbol: "SMR",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://json-rpc.evm.shimmer.network"],
+    },
+    public: {
+      http: ["https://json-rpc.evm.shimmer.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Shimmer",
+      url: "https://explorer.evm.shimmer.network/shimmer",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 1290,
+    },
+  },
+})
+
+export const kava = /*#__PURE__*/ defineChain({
+  id: 2222,
+  name: "Kava",
+  network: "kava",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Kava",
+    symbol: "KAVA",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://kava-evm.publicnode.com"],
+    },
+    public: {
+      http: ["https://kava-evm.publicnode.com"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://kavascan.com",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 3661165,
+    },
+  },
+})
+
+// TODO
+export const bitfinity = /*#__PURE__*/ defineChain({
+  id: 355110,
+  name: "Bitfinity",
+  network: "bitfinity",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://mainnet.bitfinity.network"],
+    },
+    public: {
+      http: ["https://mainnet.bitfinity.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x",
+      blockCreated: 0,
+    },
+  },
+})
+
+export const x1Testnet = /*#__PURE__*/ defineChain({
+  id: 195,
+  name: "X1 Testnet",
+  network: "x1testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "OKB",
+    symbol: "OKB",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://testrpc.x1.tech", "https://x1testrpc.okx.com"],
+    },
+    public: {
+      http: ["https://testrpc.x1.tech", "https://x1testrpc.okx.com"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "OKLink",
+      url: "https://www.oklink.com/x1-test",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x",
+      blockCreated: 0,
     },
   },
 })
