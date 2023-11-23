@@ -16,6 +16,7 @@ import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
 import { CaretDown } from "phosphor-react"
 import { PropsWithChildren } from "react"
+import REQUIREMENTS from "requirements"
 import { Visibility as VisibilityType } from "types"
 import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
@@ -46,6 +47,8 @@ const Requirement = ({
   const previewAvailable =
     requirement?.data?.customName || requirement?.data?.customImage
 
+  const isCustomizable = REQUIREMENTS[requirement.type].isCustomizable
+
   return (
     <>
       <SimpleGrid
@@ -58,7 +61,7 @@ const Requirement = ({
         <Box mt="3px" alignSelf={"start"}>
           <RequirementImage
             image={
-              fieldRoot ? (
+              fieldRoot && isCustomizable ? (
                 <RequirementImageEditor orignalImage={image} />
               ) : (
                 requirement?.data?.customImage || image
@@ -74,7 +77,7 @@ const Requirement = ({
             alignItems={{ base: "flex-start", sm: "center" }}
           >
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-            {fieldRoot ? (
+            {fieldRoot && isCustomizable ? (
               <RequirementNameEditor>
                 {requirement?.data?.customName || children}
               </RequirementNameEditor>
