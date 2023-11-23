@@ -120,6 +120,7 @@ type User = {
     isPrimary: boolean
     provider: AddressConnectionProvider
     createdAt: string
+    type: "EVM" | "FUEL"
   }>
   platformUsers: PlatformAccountDetails[]
   sharedSocials: SharedSocial[]
@@ -589,6 +590,7 @@ enum ValidationMethod {
   STANDARD = 1,
   KEYPAIR = 2,
   EIP1271 = 3,
+  FUEL = 4,
 }
 
 type MonetizePoapForm = {

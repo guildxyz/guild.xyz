@@ -8,6 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
@@ -15,7 +16,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import platforms from "platforms/platforms"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
-import { useAccount } from "wagmi"
 import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
@@ -40,7 +40,7 @@ const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const { name, requiredPlatforms, featureFlags } = useGuild()
 
   const methods = useForm({
@@ -109,7 +109,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               colorScheme="green"
               isLoading={isLoading}
               loadingText={"Checking access"}
-              isDisabled={!isConnected}
+              isDisabled={!isWeb3Connected}
             >
               Check access to join
             </ModalButton>

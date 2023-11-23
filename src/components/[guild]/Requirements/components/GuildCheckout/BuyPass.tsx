@@ -18,13 +18,14 @@ import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { Coin } from "phosphor-react"
 import { useEffect } from "react"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
-import { useAccount, useChainId } from "wagmi"
+import { useChainId } from "wagmi"
 import { useRequirementContext } from "../RequirementContext"
 import BuyTotal from "./components/BuyTotal"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
@@ -34,12 +35,13 @@ import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import TOSCheckbox from "./components/TOSCheckbox"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
+import DisconnectFuelButton from "./components/buttons/DisconnectFuelButton"
 import SwitchNetworkButton from "./components/buttons/SwitchNetworkButton"
 
 const BuyPass = () => {
   const { captureEvent } = usePostHogContext()
 
-  const { isConnected } = useAccount()
+  const { isWeb3Connected, type } = useWeb3ConnectionManager()
   const chainId = useChainId()
   const requirement = useRequirementContext()
   const { isOpen, onOpen, onClose, setAgreeWithTOS } = useGuildCheckoutContext()
@@ -69,7 +71,7 @@ const BuyPass = () => {
   }
 
   if (
-    !isConnected ||
+    !isWeb3Connected ||
     (!accessData && isAccessValidating) ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)
@@ -149,20 +151,26 @@ const BuyPass = () => {
                   },
                 }}
               >
-                <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
+                {type === "EVM" ? (
+                  <>
+                    <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
-                <Collapse in={chainId === Chains[requirement.chain]}>
-                  {!guildPoap && (
-                    <TOSCheckbox>
-                      I understand that if the owner changes the requirements, I
-                      could lose access.
-                    </TOSCheckbox>
-                  )}
+                    <Collapse in={chainId === Chains[requirement.chain]}>
+                      {!guildPoap && (
+                        <TOSCheckbox>
+                          I understand that if the owner changes the requirements, I
+                          could lose access.
+                        </TOSCheckbox>
+                      )}
 
-                  <BuyAllowanceButton />
-                </Collapse>
+                      <BuyAllowanceButton />
+                    </Collapse>
 
-                <BuyButton />
+                    <BuyButton />
+                  </>
+                ) : (
+                  <DisconnectFuelButton>Buy pass</DisconnectFuelButton>
+                )}
               </Stack>
             </Stack>
           </ModalFooter>

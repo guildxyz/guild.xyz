@@ -27,7 +27,6 @@ import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, PlatformName, Rest } from "types"
-import { useAccount } from "wagmi"
 
 export type PlatformHookType = ({
   platform,
@@ -75,8 +74,7 @@ const MultiPlatformSelectButton = ({
   onSelection,
   ...rest
 }: Props) => {
-  const { address } = useAccount()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
   const methods = useFormContext()
   const { setValue } = useFormContext<GuildFormType>()
   const { isOpen, onClose, onOpen } = useDisclosure()
@@ -129,7 +127,7 @@ const MultiPlatformSelectButton = ({
         <DisplayCard
           cursor="pointer"
           onClick={
-            !address
+            !isWeb3Connected
               ? openWalletSelectorModal
               : isPlatformConnected
               ? isAdded

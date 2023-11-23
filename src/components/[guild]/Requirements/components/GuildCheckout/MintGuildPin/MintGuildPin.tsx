@@ -14,6 +14,7 @@ import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
@@ -25,6 +26,7 @@ import GuildPinImage from "../components/GuildPinImage"
 import GuildPinReward from "../components/GuildPinReward"
 import TransactionStatusModal from "../components/TransactionStatusModal"
 import GuildPinOpenseaLink from "../components/TransactionStatusModal/components/GuildPinOpenseaLink"
+import DisconnectFuelButton from "../components/buttons/DisconnectFuelButton"
 import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
 
@@ -48,6 +50,8 @@ const MintGuildPin = (): JSX.Element => {
   const { isOpen, onOpen, onClose, onActivateModalOpen } = useMintGuildPinContext()
 
   const { colorMode } = useColorMode()
+
+  const { isWeb3Connected, type } = useWeb3ConnectionManager()
 
   return (
     <>
@@ -109,8 +113,14 @@ const MintGuildPin = (): JSX.Element => {
               <GuildPinFees />
 
               <Stack w="full" spacing={2}>
-                <SwitchNetworkButton targetChainId={Chains[guildPin?.chain]} />
-                <MintGuildPinButton />
+                {type === "EVM" ? (
+                  <>
+                    <SwitchNetworkButton targetChainId={Chains[guildPin?.chain]} />
+                    <MintGuildPinButton />
+                  </>
+                ) : (
+                  <DisconnectFuelButton>Mint NFT</DisconnectFuelButton>
+                )}
               </Stack>
 
               <Text colorScheme="gray" fontSize="sm">

@@ -10,22 +10,25 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import GuildAvatar from "components/common/GuildAvatar"
+import { FUEL_ADDRESS_REGEX } from "hooks/useFuel"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
 import { SelectOption } from "types"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { usePublicClient } from "wagmi"
 import TransferOwnership from "../TransferOwnership"
 import AdminSelect from "./components/AdminSelect"
 
-const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
+export const isValidAddress = (address: string) =>
+  ADDRESS_REGEX.test(address) || FUEL_ADDRESS_REGEX.test(address)
 
 const validateAdmins = (admins: string[]) =>
   (typeof admins?.[0] === "string"
-    ? admins.every((admin) => ADDRESS_REGEX.test(admin.trim()))
-    : admins.every((addr: any) => ADDRESS_REGEX.test(addr?.address.trim()))) ||
+    ? admins.every((admin) => isValidAddress(admin.trim()))
+    : admins.every((addr: any) => isValidAddress(addr?.address.trim()))) ||
   "Every admin should be a valid address"
 
 const fetchMemberOptions = ([_, members, publicClient]) =>
@@ -81,7 +84,7 @@ const Admins = () => {
     const ownerOption = {
       ...(options.find((o) => o.value === ownerAddress) ?? {
         value: ownerAddress,
-        label: ADDRESS_REGEX.test(ownerAddress)
+        label: isValidAddress(ownerAddress)
           ? shortenHex(ownerAddress)
           : ownerAddress,
         img: <GuildAvatar address={ownerAddress} size={4} mr="2" />,
@@ -97,7 +100,7 @@ const Admins = () => {
         return {
           ...(option ?? {
             value: admin.address,
-            label: ADDRESS_REGEX.test(ownerAddress)
+            label: isValidAddress(ownerAddress)
               ? shortenHex(admin.address)
               : admin.address,
             img: <GuildAvatar address={admin.address} size={4} mr="2" />,
@@ -138,7 +141,7 @@ const Admins = () => {
                   ?.trim()
                   ?.toLowerCase()
 
-                if (!ADDRESS_REGEX.test(pastedData)) return
+                if (!isValidAddress(pastedData)) return
                 event.preventDefault()
                 if (admins.some(({ address }) => address === pastedData)) return
                 onChange([...admins, { address: pastedData }])

@@ -1,13 +1,10 @@
-import useGuild from "components/[guild]/hooks/useGuild"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import usePoapEventDetails from "requirements/PoapVoice/hooks/usePoapEventDetails"
 import useSWR from "swr"
-import { useAccount } from "wagmi"
 
 const useUserPoapEligibility = (poapIdentifier: number) => {
-  const { address } = useAccount()
+  const { address } = useWeb3ConnectionManager()
   const { poapEventDetails } = usePoapEventDetails(poapIdentifier)
-  const { poaps } = useGuild()
-  const guildPoap = poaps?.find((p) => p.poapIdentifier === poapIdentifier)
 
   const { data, isValidating, mutate } = useSWR(
     address && poapIdentifier
