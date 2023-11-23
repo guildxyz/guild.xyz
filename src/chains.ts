@@ -393,15 +393,6 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/neonscan.svg",
     },
   },
-  RONIN: {
-    ...ronin,
-    iconUrl: "/networkLogos/ronin.svg",
-    coinIconUrl: "/networkLogos/ronin.svg",
-    blockExplorerIconUrl: {
-      light: "/networkLogos/ronin.svg",
-      dark: "/networkLogos/ronin.svg",
-    },
-  },
   LINEA: {
     ...linea,
     iconUrl: "/networkLogos/linea.png",
@@ -427,6 +418,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     blockExplorerIconUrl: {
       light: "/explorerLogos/mantle-light.svg",
       dark: "/networkLogos/mantle.svg",
+    },
+  },
+  RONIN: {
+    ...ronin,
+    iconUrl: "/networkLogos/ronin.svg",
+    coinIconUrl: "/networkLogos/ronin.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/ronin.svg",
+      dark: "/networkLogos/ronin.svg",
     },
   },
   // X1_TESTNET: {
