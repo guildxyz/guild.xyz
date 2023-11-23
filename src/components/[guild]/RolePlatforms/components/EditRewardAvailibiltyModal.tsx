@@ -57,7 +57,7 @@ const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => 
   }
 }
 
-const EditRolePlatformAvailibiltyModal = ({
+const EditRewardAvailibiltyModal = ({
   isOpen,
   onClose,
   platformType,
@@ -249,4 +249,4 @@ const EditRolePlatformAvailibiltyModal = ({
   )
 }
 
-export default EditRolePlatformAvailibiltyModal
+export default EditRewardAvailibiltyModal

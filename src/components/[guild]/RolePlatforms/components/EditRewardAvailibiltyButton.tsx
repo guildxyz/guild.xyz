@@ -7,7 +7,7 @@ type Props = {
   isCompact?: boolean
 }
 
-const EditRolePlatformAvailibiltyButton = ({ onClick, isCompact }: Props) => {
+const EditRewardAvailibiltyButton = ({ onClick, isCompact }: Props) => {
   const buttonProps = {
     variant: "outline",
     size: "xs",
@@ -29,4 +29,4 @@ const EditRolePlatformAvailibiltyButton = ({ onClick, isCompact }: Props) => {
     </Button>
   )
 }
-export default EditRolePlatformAvailibiltyButton
+export default EditRewardAvailibiltyButton

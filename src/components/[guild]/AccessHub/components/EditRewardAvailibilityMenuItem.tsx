@@ -1,5 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import EditRolePlatformAvailibiltyModal from "components/[guild]/RolePlatforms/components/EditRolePlatformAvailibiltyModal"
+import EditRewardAvailibiltyModal from "components/[guild]/RolePlatforms/components/EditRewardAvailibiltyModal"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { Clock } from "phosphor-react"
@@ -41,7 +41,7 @@ const EditRewardAvailibilityMenuItem = ({ platformGuildId }: Props) => {
         Edit availibility
       </MenuItem>
 
-      <EditRolePlatformAvailibiltyModal
+      <EditRewardAvailibiltyModal
         isOpen={isOpen}
         onClose={onClose}
         platformType={PlatformType[guildPlatform.platformId] as PlatformName}

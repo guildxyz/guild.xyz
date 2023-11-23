@@ -11,7 +11,7 @@ import { Clock } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import { DAY_IN_MS } from "../../EditRolePlatformAvailibiltyModal"
+import { DAY_IN_MS } from "../../EditRewardAvailibiltyModal"
 
 type Props = { rolePlatform: RolePlatform } & WrapProps
 

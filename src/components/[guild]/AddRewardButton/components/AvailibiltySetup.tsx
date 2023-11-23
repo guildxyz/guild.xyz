@@ -1,8 +1,8 @@
 import { useDisclosure } from "@chakra-ui/react"
-import EditRolePlatformAvailibiltyButton from "components/[guild]/RolePlatforms/components/EditRolePlatformAvailibiltyButton"
-import EditRolePlatformAvailibiltyModal, {
+import EditRewardAvailibiltyButton from "components/[guild]/RolePlatforms/components/EditRewardAvailibiltyButton"
+import EditRewardAvailibiltyModal, {
   RolePlatformAvailibiltyForm,
-} from "components/[guild]/RolePlatforms/components/EditRolePlatformAvailibiltyModal"
+} from "components/[guild]/RolePlatforms/components/EditRewardAvailibiltyModal"
 import AvailibiltyTags, {
   shouldShowAvailibiltyTags,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
@@ -26,11 +26,11 @@ const AvailibiltySetup = ({
 
   return (
     <AvailibiltyTags rolePlatform={rolePlatform ?? ({} as RolePlatform)}>
-      <EditRolePlatformAvailibiltyButton
+      <EditRewardAvailibiltyButton
         onClick={onOpen}
         isCompact={showAvailibiltyTags}
       />
-      <EditRolePlatformAvailibiltyModal
+      <EditRewardAvailibiltyModal
         defaultValues={defaultValues}
         isOpen={isOpen}
         onClose={onClose}
