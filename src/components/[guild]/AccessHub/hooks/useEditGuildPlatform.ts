@@ -51,7 +51,8 @@ const useEditGuildPlatform = ({
 
                     return {
                       ...rp,
-                      capacity: response.platformGuildData?.texts?.length ?? 0,
+                      capacity:
+                        response.platformGuildData?.texts?.length ?? rp.capacity,
                     }
                   }),
                 }
