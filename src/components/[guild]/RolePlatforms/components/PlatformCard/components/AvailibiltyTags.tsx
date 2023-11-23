@@ -33,7 +33,7 @@ const AvailibiltyTags = ({
   if (!children && !shouldShowAvailibiltyTags(rolePlatform)) return null
 
   return (
-    <Wrap {...wrapProps}>
+    <Wrap spacing={1} {...wrapProps}>
       {typeof rolePlatform.capacity === "number" && (
         <CapacityTag
           capacity={rolePlatform.capacity}
