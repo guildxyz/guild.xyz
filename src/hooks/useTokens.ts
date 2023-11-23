@@ -50,7 +50,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   ZORA: [],
   PGN: [],
   NEON_EVM: [],
-  // LINEA: [],
+  LINEA: [],
   // LUKSO: [],
   // BITFINITY: [],
   // MANTLE: [],

@@ -22,6 +22,7 @@ import {
   gnosis,
   goerli,
   harmonyOne,
+  linea,
   mainnet,
   metis,
   moonbeam,
@@ -399,6 +400,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/ronin.svg",
     },
   },
+  LINEA: {
+    ...linea,
+    iconUrl: "/networkLogos/linea.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/linea.png",
+      dark: "/networkLogos/linea.png",
+    },
+  },
   // X1_TESTNET: {
   //   ...x1Testnet,
   //   iconUrl: "/walletLogos/okx.png",
@@ -445,6 +455,7 @@ enum Chains {
   POLYGON_ZKEVM = polygonZkEvm.id,
   PGN = pgn.id,
   NEON_EVM = neonEVM.id,
+  LINEA = linea.id,
   RONIN = ronin.id,
   // X1_TESTNET = x1Testnet.id,
 }

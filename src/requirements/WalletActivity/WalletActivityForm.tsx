@@ -30,7 +30,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "PGN",
   "NEON_EVM",
   "OPTIMISM",
-  // "LINEA",
+  "LINEA",
   // "MANTLE",
 ])
 
@@ -125,7 +125,7 @@ const WalletActivityForm = ({
     "CRONOS",
     "PGN",
     "NEON_EVM",
-    // "LINEA",
+    "LINEA",
     // "MANTLE",
     "GOERLI",
     "POLYGON_MUMBAI",
