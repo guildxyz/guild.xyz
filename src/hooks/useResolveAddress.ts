@@ -235,7 +235,7 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
 
 const useResolveAddress = (accountParam: string): string => {
   const { data } = useSWRImmutable(
-    !!accountParam ? ["domain", "0x2e552e3ad9f7446e9cab378c008315e0c26c0398"] : null,
+    !!accountParam ? ["domain", accountParam] : null,
     fetchDomains
   )
 
