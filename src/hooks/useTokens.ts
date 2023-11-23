@@ -52,8 +52,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   NEON_EVM: [],
   LINEA: [],
   LUKSO: [],
-  // BITFINITY: [],
-  // MANTLE: [],
+  MANTLE: [],
   RONIN: [],
   // X1_TESTNET: [],
 }

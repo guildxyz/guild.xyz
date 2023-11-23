@@ -25,6 +25,7 @@ import {
   harmonyOne,
   linea,
   mainnet,
+  mantle,
   metis,
   moonbeam,
   moonriver,
@@ -419,6 +420,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/lukso.svg",
     },
   },
+  MANTLE: {
+    ...mantle,
+    iconUrl: "/networkLogos/mantle.svg",
+    coinIconUrl: "/networkLogos/mantle.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/mantle-light.svg",
+      dark: "/networkLogos/mantle.svg",
+    },
+  },
   // X1_TESTNET: {
   //   ...x1Testnet,
   //   iconUrl: "/walletLogos/okx.png",
@@ -467,6 +477,7 @@ enum Chains {
   NEON_EVM = neonEVM.id,
   LINEA = linea.id,
   LUKSO = lukso.id,
+  MANTLE = mantle.id,
   RONIN = ronin.id,
   // X1_TESTNET = x1Testnet.id,
 }
