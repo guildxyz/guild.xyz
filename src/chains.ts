@@ -1,12 +1,11 @@
 import {
-  bitfinity,
   bobaAvax,
   exosama,
-  lukso,
   neonEVM,
   palm,
   pgn,
   scrollAlpha,
+  x1Testnet,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
 import {
@@ -24,9 +23,7 @@ import {
   gnosis,
   goerli,
   harmonyOne,
-  linea,
   mainnet,
-  mantle,
   metis,
   moonbeam,
   moonriver,
@@ -34,6 +31,7 @@ import {
   polygon,
   polygonMumbai,
   polygonZkEvm,
+  ronin,
   sepolia,
   zetachainAthensTestnet,
   zkSync,
@@ -373,40 +371,22 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/neonscan.svg",
     },
   },
-  LINEA: {
-    ...linea,
-    iconUrl: "/networkLogos/linea.png",
-    coinIconUrl: ETH_ICON,
+  RONIN: {
+    ...ronin,
+    iconUrl: "/networkLogos/ronin.svg",
+    coinIconUrl: "/networkLogos/ronin.svg",
     blockExplorerIconUrl: {
-      light: "/networkLogos/linea.png",
-      dark: "/networkLogos/linea.png",
+      light: "/networkLogos/ronin.svg",
+      dark: "/networkLogos/ronin.svg",
     },
   },
-  LUKSO: {
-    ...lukso,
-    iconUrl: "/networkLogos/lukso.svg",
-    coinIconUrl: "/networkLogos/lukso.svg",
+  X1_TESTNET: {
+    ...x1Testnet,
+    iconUrl: "/walletLogos/okx.png",
+    coinIconUrl: "/walletLogos/okx.png",
     blockExplorerIconUrl: {
-      light: "/networkLogos/lukso.svg",
-      dark: "/networkLogos/lukso.svg",
-    },
-  },
-  BITFINITY: {
-    ...bitfinity,
-    iconUrl: "/networkLogos/bitfinity.svg",
-    coinIconUrl: ETH_ICON,
-    blockExplorerIconUrl: {
-      light: "/explorerLogos/bitfinity-light.svg",
-      dark: "/explorerLogos/bitfinity.svg",
-    },
-  },
-  MANTLE: {
-    ...mantle,
-    iconUrl: "/networkLogos/mantle.svg",
-    coinIconUrl: "/networkLogos/mantle.svg",
-    blockExplorerIconUrl: {
-      light: "/explorerLogos/mantle-light.svg",
-      dark: "/networkLogos/mantle.svg",
+      light: "/walletLogos/okx.png",
+      dark: "/walletLogos/okx.png",
     },
   },
 }
@@ -444,10 +424,8 @@ enum Chains {
   POLYGON_ZKEVM = polygonZkEvm.id,
   PGN = pgn.id,
   NEON_EVM = neonEVM.id,
-  LINEA = linea.id,
-  LUKSO = lukso.id,
-  BITFINITY = bitfinity.id,
-  MANTLE = mantle.id,
+  RONIN = ronin.id,
+  X1_TESTNET = x1Testnet.id,
 }
 
 export type Chain = keyof typeof Chains

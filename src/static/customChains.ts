@@ -273,3 +273,34 @@ export const bitfinity = /*#__PURE__*/ defineChain({
     },
   },
 })
+
+export const x1Testnet = /*#__PURE__*/ defineChain({
+  id: 195,
+  name: "X1 Testnet",
+  network: "x1testnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "OKB",
+    symbol: "OKB",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://testrpc.x1.tech", "https://x1testrpc.okx.com"],
+    },
+    public: {
+      http: ["https://testrpc.x1.tech", "https://x1testrpc.okx.com"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "OKLink",
+      url: "https://www.oklink.com/x1-test",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x",
+      blockCreated: 0,
+    },
+  },
+})
