@@ -7,7 +7,6 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import CapacityTimeTags, {
   getTimeDiff,
-  shouldShowCapacityTimeTags,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -89,8 +88,6 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     }
   }, [isMember, hasAccess, isConnected, platform])
 
-  const showCapacityTimeTags = shouldShowCapacityTimeTags(platform)
-
   return (
     <>
       <RewardDisplay
@@ -130,7 +127,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
           )
         }
       >
-        {showCapacityTimeTags && <CapacityTimeTags rolePlatform={platform} />}
+        <CapacityTimeTags rolePlatform={platform} />
       </RewardDisplay>
 
       <ClaimTextModal

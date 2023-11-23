@@ -23,9 +23,8 @@ const CapacityTimeSetup = ({ platformType }: Props) => {
 
   return (
     <Wrap>
-      {showCapacityTimeTags && (
-        <CapacityTimeTags rolePlatform={rolePlatform ?? {}} />
-      )}
+      <CapacityTimeTags rolePlatform={rolePlatform ?? {}} />
+
       <EditRolePlatformCapacityTimeButton
         onClick={onOpen}
         isCompact={showCapacityTimeTags}

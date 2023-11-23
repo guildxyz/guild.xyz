@@ -10,9 +10,7 @@ import {
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/Reward"
 
-import CapacityTimeTags, {
-  shouldShowCapacityTimeTags,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
+import CapacityTimeTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/CapacityTimeTags"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { forwardRef } from "react"
 
@@ -28,8 +26,6 @@ const ContractCallReward = ({
 
   const { chain, contractAddress } = platform.guildPlatform.platformGuildData ?? {}
   const { name, isLoading } = useNftDetails(chain, contractAddress)
-
-  const showCapacityTimeTags = shouldShowCapacityTimeTags(platform)
 
   return (
     <RewardDisplay
@@ -63,7 +59,7 @@ const ContractCallReward = ({
         </>
       }
     >
-      {showCapacityTimeTags && <CapacityTimeTags rolePlatform={platform} />}
+      <CapacityTimeTags rolePlatform={platform} />
     </RewardDisplay>
   )
 }

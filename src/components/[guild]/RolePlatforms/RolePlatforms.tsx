@@ -142,9 +142,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                   contentRow={
                     CAPACITY_TIME_PLATFORMS.includes(type) && (
                       <Wrap>
-                        {showCapacityTimeTags && (
-                          <CapacityTimeTags rolePlatform={rolePlatform} />
-                        )}
+                        <CapacityTimeTags rolePlatform={rolePlatform} />
 
                         <EditRolePlatformCapacityTimeButton
                           onClick={onCapacityTimeOpen}
