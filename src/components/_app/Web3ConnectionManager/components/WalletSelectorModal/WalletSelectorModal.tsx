@@ -548,24 +548,27 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
             )}
             <Stack spacing="0">
-              {!connector && <GoogleLoginButton />}
-
-              <Text
-                mt={6}
-                mb={2}
-                textTransform={"uppercase"}
-                fontSize={"xs"}
-                fontWeight={700}
-                color={"gray"}
-              >
-                Or connect with wallet
-              </Text>
+              {!connector && (
+                <>
+                  <GoogleLoginButton />
+                  <Text
+                    mt={6}
+                    mb={2}
+                    textTransform={"uppercase"}
+                    fontSize={"xs"}
+                    fontWeight={700}
+                    color={"gray"}
+                  >
+                    Or connect with wallet
+                  </Text>
+                </>
+              )}
 
               {connectors
                 .filter(
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
-                    conn.id !== "cwaasWallet"
+                    (!!connector || conn.id !== "cwaasWallet")
                 )
                 .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
