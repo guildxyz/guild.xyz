@@ -1,13 +1,12 @@
 import {
   Box,
   Editable,
-  EditablePreview,
-  Input,
+  EditableInput,
   Text,
   useEditableControls,
 } from "@chakra-ui/react"
 import EditableControls from "components/[guild]/Onboarding/components/SummonMembers/components/PanelBody/components/EditableControls"
-import { PropsWithChildren, useEffect, useRef } from "react"
+import { PropsWithChildren, useEffect, useRef, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -20,14 +19,20 @@ const RequirementNameEditor = ({ children }: PropsWithChildren<unknown>) => {
   const requirements = useWatch({ name: "requirements", control })
   const index = requirements.findIndex((requirement) => requirement.id === id)
   const textRef = useRef(null)
+  const [original, setOrignal] = useState("")
 
   useEffect(() => {
     if (isEditing && !getValues(`requirements.${index}.data.customName`)) {
-      setValue(`requirements.${index}.data.customName`, textRef.current?.innerText, {
+      //console.log("xy effect 1 original", original.current)
+      /*setValue(`requirements.${index}.data.customName`, original, {
         shouldDirty: true,
-      })
+      })*/
     }
   }, [isEditing])
+
+  useEffect(() => {
+    setOrignal(textRef.current?.innerText)
+  }, [])
 
   return (
     <Box
@@ -36,11 +41,13 @@ const RequirementNameEditor = ({ children }: PropsWithChildren<unknown>) => {
       display="flex"
       pl={isEditing ? 2 : 0}
     >
-      <EditablePreview />
       {isEditing && (
-        <Input
+        <EditableInput
           {...register(`requirements.${index}.data.customName`)}
-          variant="unstyled"
+          _focus={{
+            boxShadow: "none",
+          }}
+          p={0}
         />
       )}
       <Text
