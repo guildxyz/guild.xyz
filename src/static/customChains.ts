@@ -103,7 +103,7 @@ export const scrollAlpha = /*#__PURE__*/ defineChain({
   blockExplorers: {
     default: {
       name: "BlockScout",
-      url: "https://blockscout.scroll.io",
+      url: "https://alpha-blockscout.scroll.io",
     },
   },
   contracts: {

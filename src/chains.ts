@@ -36,6 +36,8 @@ import {
   zetachainAthensTestnet,
   zkSync,
   zora,
+  scrollSepolia,
+  scroll,
 } from "viem/chains"
 
 type GuildChain = ViemChain & {
@@ -335,6 +337,24 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/scroll.png",
     },
   },
+  SCROLL_SEPOLIA: {
+    ...scrollSepolia,
+    iconUrl: "/networkLogos/scroll.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/scroll.png",
+      dark: "/networkLogos/scroll.png",
+    },
+  },
+  SCROLL: {
+    ...scroll,
+    iconUrl: "/networkLogos/scroll.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/scroll.png",
+      dark: "/networkLogos/scroll.png",
+    },
+  },
   ZKSYNC_ERA: {
     ...zkSync,
     iconUrl: "/networkLogos/zksync-era.svg",
@@ -415,6 +435,8 @@ enum Chains {
   EVMOS = evmos.id,
   ZETACHAIN_ATHENS = zetachainAthensTestnet.id,
   SCROLL_ALPHA = scrollAlpha.id,
+  SCROLL_SEPOLIA = scrollSepolia.id,
+  SCROLL = scroll.id,
   ZKSYNC_ERA = zkSync.id,
   SEPOLIA = sepolia.id,
   GOERLI = goerli.id,

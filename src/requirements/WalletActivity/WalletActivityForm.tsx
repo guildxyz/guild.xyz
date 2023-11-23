@@ -20,7 +20,7 @@ import AlchemyTxValueRelative from "./components/AlchemyTxValueRelative"
 export const COVALENT_CHAINS = new Set<Chain>([
   "BASE_GOERLI",
   "BASE_MAINNET",
-  "SCROLL_ALPHA",
+  "SCROLL",
   "ZORA",
   "AVALANCHE",
   "ZKSYNC_ERA",
@@ -115,7 +115,7 @@ const WalletActivityForm = ({
     "POLYGON_ZKEVM",
     "ARBITRUM",
     "OPTIMISM",
-    "SCROLL_ALPHA",
+    "SCROLL",
     "BASE_MAINNET",
     "BASE_GOERLI",
     "ZORA",
