@@ -47,7 +47,7 @@ const Requirement = ({
   const previewAvailable =
     requirement?.data?.customName || requirement?.data?.customImage
 
-  const isCustomizable = REQUIREMENTS[requirement.type].isCustomizable
+  const isCustomizable = REQUIREMENTS[requirement?.type]?.isCustomizable
 
   return (
     <>
