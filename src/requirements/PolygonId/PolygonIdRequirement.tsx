@@ -30,12 +30,12 @@ const PolygonIDRequirement = (props: RequirementProps) => {
 
   if (requirement?.data?.query)
     return (
-      <Popover placement="bottom">
-        <Requirement
-          image={`/requirementLogos/polygonId.svg`}
-          footer={<ConnectPolygonID />}
-          {...props}
-        >
+      <Requirement
+        image={`/requirementLogos/polygonId.svg`}
+        footer={<ConnectPolygonID />}
+        {...props}
+      >
+        <Popover placement="bottom">
           <Text as="span">{`Satisfy the `}</Text>
           <DataBlock>{requirement.data.query[0]?.query?.type}</DataBlock>
           <Text as="span">{` PolygonID `}</Text>
@@ -48,24 +48,24 @@ const PolygonIDRequirement = (props: RequirementProps) => {
               query
             </Button>
           </PopoverTrigger>
-        </Requirement>
-        <Portal>
-          <PopoverContent>
-            <PopoverArrow />
-            <PopoverBody
-              p={2}
-              bgColor={bg}
-              borderRadius={"xl"}
-              maxH={"md"}
-              overflow={"auto"}
-            >
-              <Box as="pre" fontSize="sm">
-                {JSON.stringify(requirement.data.query, null, 2)}
-              </Box>
-            </PopoverBody>
-          </PopoverContent>
-        </Portal>
-      </Popover>
+          <Portal>
+            <PopoverContent>
+              <PopoverArrow />
+              <PopoverBody
+                p={2}
+                bgColor={bg}
+                borderRadius={"xl"}
+                maxH={"md"}
+                overflow={"auto"}
+              >
+                <Box as="pre" fontSize="sm">
+                  {JSON.stringify(requirement.data.query, null, 2)}
+                </Box>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+      </Requirement>
     )
 
   return (
