@@ -1,10 +1,11 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
+import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { KeyPairProvider } from "components/_app/KeyPairProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
-import { Web3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
@@ -17,6 +18,7 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { WagmiConfig, createConfig } from "wagmi"
+
 /**
  * Polyfill HTML inert property for Firefox support:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
@@ -86,16 +88,19 @@ const App = ({
             <WagmiConfig config={config}>
               <PostHogProvider>
                 <KeyPairProvider>
-                  <Web3ConnectionManager>
-                    <IntercomProvider>
-                      <ExplorerProvider>
+                  <IntercomProvider>
+                    <ExplorerProvider>
+                      <AppErrorBoundary>
                         <Component {...pageProps} />
-                        <ClientOnly>
-                          <AccountModal />
-                        </ClientOnly>
-                      </ExplorerProvider>
-                    </IntercomProvider>
-                  </Web3ConnectionManager>
+                      </AppErrorBoundary>
+
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
+                    </ExplorerProvider>
+                  </IntercomProvider>
+
+                  <Web3ConnectionManager />
                 </KeyPairProvider>
               </PostHogProvider>
             </WagmiConfig>

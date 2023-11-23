@@ -11,7 +11,7 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react"
 import { useKeyPair } from "components/_app/KeyPairProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 import { useAccount } from "wagmi"

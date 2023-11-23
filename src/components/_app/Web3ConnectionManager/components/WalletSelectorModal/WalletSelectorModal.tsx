@@ -25,7 +25,7 @@ import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
-import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
+import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
@@ -257,8 +257,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     onClick={onClose}
                   >
                     Privacy Policy
-                  </Link>{" "}
-                  and
+                  </Link>
+                  {` and `}
                   <Link
                     href="/terms-and-conditions"
                     fontWeight={"semibold"}

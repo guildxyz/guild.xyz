@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { isMobile } from "react-device-detect"
 
 type WindowFeatures = Partial<{
   width: number
@@ -42,7 +43,7 @@ const usePopupWindow = (
     setWindowInstance(
       window.open(
         typeof url === "string" ? url : uri,
-        "_blank",
+        isMobile ? "_self" : "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })
           .map(([key, value]) =>
             typeof value === "number" ? `${key}=${value}` : key

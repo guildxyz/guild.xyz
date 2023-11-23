@@ -1,6 +1,6 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
-import ErrorAlert from "components/common/ErrorAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ErrorAlert from "components/common/ErrorAlert"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
@@ -103,7 +103,7 @@ const DiscordGuildSetup = ({
       </AnimatePresence>
       {debounceSelectedServer && (
         <GridItem>
-          <ServerSetupCard selectedServer={selectedServer} onSubmit={onSubmit} />
+          <ServerSetupCard onSubmit={onSubmit} />
         </GridItem>
       )}
     </SimpleGrid>

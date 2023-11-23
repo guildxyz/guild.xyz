@@ -104,7 +104,7 @@ const AccessHub = (): JSX.Element => {
 
   const showAccessHub =
     (isAdmin ? !!onboardingComplete : isMember) ||
-    !!accessedGuildPlatforms?.length ||
+    (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
     (!!groups?.length && !group)
 
   return (
@@ -120,7 +120,7 @@ const AccessHub = (): JSX.Element => {
         >
           {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-          {accessedGuildPlatforms?.length || futurePoaps?.length ? (
+          {(accessedGuildPlatforms?.length > 0 || futurePoaps?.length > 0) && (
             <>
               {accessedGuildPlatforms.map((platform) => {
                 if (!platforms[PlatformType[platform.platformId]]) return null
@@ -166,23 +166,30 @@ const AccessHub = (): JSX.Element => {
                   />
                 ))}
             </>
-          ) : isMember || isAdmin ? (
-            <Card>
-              <Alert status="info" h="full">
-                <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
-                <Stack>
-                  <AlertTitle>
-                    {!group ? "No accessed reward" : "No rewards yet"}
-                  </AlertTitle>
-                  <AlertDescription>
-                    {!group
-                      ? "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"
-                      : "This campaign doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
-                  </AlertDescription>
-                </Stack>
-              </Alert>
-            </Card>
-          ) : null}
+          )}
+
+          {(isMember || isAdmin) &&
+            (!group ? !groups?.length : true) &&
+            !shouldShowGuildPin &&
+            !accessedGuildPlatforms?.length &&
+            !futurePoaps?.length && (
+              <Card>
+                <Alert status="info" h="full">
+                  <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
+                  <Stack>
+                    <AlertTitle>
+                      {!group ? "No accessed reward" : "No rewards yet"}
+                    </AlertTitle>
+                    <AlertDescription>
+                      {!group
+                        ? "You're a member of the guild, but your roles don't give you any auto-managed rewards. The owner might add some in the future or reward you another way!"
+                        : "This page doesn’t have any auto-managed rewards yet. Add some roles below so their rewards will appear here!"}
+                    </AlertDescription>
+                  </Stack>
+                </Alert>
+              </Card>
+            )}
+
           {guildId !== 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         </SimpleGrid>
       </Collapse>

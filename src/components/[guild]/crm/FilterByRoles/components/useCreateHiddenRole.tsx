@@ -66,10 +66,13 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       // ])
       mutateActiveStatusUpdates()
 
-      await mutateGuild(async (curr) => ({
-        ...curr,
-        roles: [...curr.roles, response_],
-      }))
+      await mutateGuild(
+        async (curr) => ({
+          ...curr,
+          roles: [...curr.roles, response_],
+        }),
+        { revalidate: false }
+      )
 
       onSuccess?.()
     },

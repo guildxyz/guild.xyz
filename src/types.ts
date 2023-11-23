@@ -345,6 +345,7 @@ type SimpleRole = {
   visibility: Visibility
   position?: number
   anyOfNum?: number
+  groupId?: number
 }
 
 type Role = SimpleRole & {
@@ -364,6 +365,7 @@ type GuildPlatform = {
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   invite?: string
   platformGuildName: string
+  permission?: string
 }
 
 type PoapContract = {
@@ -443,6 +445,14 @@ type Guild = {
   isFallback?: boolean
   isDetailed?: boolean
 }
+
+type RoleFormType = Partial<
+  Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
+    requirements: Array<Partial<Requirement>>
+    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+  } & { name: string }
+>
+
 type GuildFormType = Partial<
   Pick<
     Guild,
@@ -451,7 +461,6 @@ type GuildFormType = Partial<
     | "name"
     | "imageUrl"
     | "description"
-    | "roles"
     | "theme"
     | "contacts"
     | "featureFlags"
@@ -460,14 +469,7 @@ type GuildFormType = Partial<
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
-  roles?: Array<
-    Partial<
-      Omit<Role, "requirements" | "rolePlatforms"> & {
-        requirements: Array<Partial<Requirement>>
-        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
-      }
-    >
-  >
+  roles?: Array<RoleFormType>
   logic?: Logic
   requirements?: Requirement[]
   socialLinks?: Record<string, string>
@@ -749,6 +751,7 @@ export type {
   RequirementType,
   Rest,
   Role,
+  RoleFormType,
   RolePlatform,
   SelectOption,
   SimpleGuild,
