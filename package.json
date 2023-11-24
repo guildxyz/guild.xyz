@@ -21,6 +21,7 @@
     "@chakra-ui/anatomy": "^2.1.2",
     "@chakra-ui/react": "^2.6.1",
     "@chakra-ui/theme-tools": "^2.0.17",
+    "@coinbase/cbpay-js": "^1.9.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@hcaptcha/react-hcaptcha": "^1.4.4",

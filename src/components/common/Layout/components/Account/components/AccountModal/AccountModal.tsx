@@ -26,8 +26,9 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
+import useCoinbasePay from "hooks/useCoinbasePay"
 import useResolveAddress from "hooks/useResolveAddress"
-import { LinkBreak, SignOut } from "phosphor-react"
+import { LinkBreak, SignOut, UploadSimple } from "phosphor-react"
 import { useSWRConfig } from "swr"
 import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
@@ -82,6 +83,8 @@ const AccountModal = () => {
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
 
   const { connectorName } = useConnectorNameAndIcon()
+
+  const onOpen = useCoinbasePay()
 
   return (
     <Modal
@@ -156,6 +159,17 @@ const AccountModal = () => {
                     onClose={closeNetworkModal}
                   />
                 </Stack>
+                {type === "EVM" && (
+                  <Tooltip label="Top up wallet">
+                    <IconButton
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onOpen(address)}
+                      icon={<Icon as={UploadSimple} p="1px" />}
+                      aria-label="Top up wallet"
+                    />
+                  </Tooltip>
+                )}
                 <Tooltip label="Disconnect">
                   <IconButton
                     size="sm"
