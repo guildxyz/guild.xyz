@@ -5,6 +5,9 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
+import AvailibiltyTags, {
+  getTimeDiff,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -41,11 +44,34 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
   const state = useMemo(() => {
-    if (isMember && hasAccess)
+    if (isMember && hasAccess) {
+      const startTimeDiff = getTimeDiff(platform?.startTime)
+      const endTimeDiff = getTimeDiff(platform?.endTime)
+
+      if (
+        startTimeDiff > 0 ||
+        endTimeDiff < 0 ||
+        (typeof platform?.capacity === "number" &&
+          platform?.capacity === platform?.claimedCount)
+      )
+        return {
+          tooltipLabel:
+            platform?.capacity === platform?.claimedCount
+              ? "All available rewards have already been claimed"
+              : startTimeDiff > 0
+              ? "Claim hasn't started yet"
+              : "Claim already ended",
+          buttonProps: {
+            isDisabled: true,
+          },
+        }
+
       return {
         tooltipLabel: label,
         buttonProps: {},
       }
+    }
+
     if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
@@ -60,7 +86,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected])
+  }, [isMember, hasAccess, isConnected, platform])
 
   return (
     <>
@@ -100,7 +126,9 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
             </Tooltip>
           )
         }
-      />
+      >
+        <AvailibiltyTags rolePlatform={platform} />
+      </RewardDisplay>
 
       <ClaimTextModal
         title={platformGuildData.name}

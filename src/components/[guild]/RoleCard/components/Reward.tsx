@@ -5,6 +5,7 @@ import {
   Icon,
   Img,
   Spinner,
+  Stack,
   Text,
   Tooltip,
   useColorModeValue,
@@ -20,7 +21,7 @@ import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import platforms from "platforms/platforms"
-import { ReactNode, useMemo } from "react"
+import { PropsWithChildren, ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 import { useAccount } from "wagmi"
@@ -142,19 +143,26 @@ const RewardDisplay = ({
   icon,
   label,
   rightElement,
+  children,
   ...chakraProps
-}: {
-  icon?: ReactNode
-  label: ReactNode
-  rightElement?: ReactNode
-} & ChakraProps) => (
-  <HStack pt="3" spacing={0} alignItems={"flex-start"} {...chakraProps}>
+}: PropsWithChildren<
+  {
+    icon?: ReactNode
+    label: ReactNode
+    rightElement?: ReactNode
+  } & ChakraProps
+>) => (
+  <HStack pt="3" spacing={2} alignItems={"flex-start"} {...chakraProps}>
     {icon}
 
-    <Text px="2" maxW="calc(100% - var(--chakra-sizes-12))">
-      {label}
-    </Text>
-    {rightElement}
+    <Stack w="full" spacing={0.5}>
+      <HStack spacing={0}>
+        <Text maxW="calc(100% - var(--chakra-sizes-12))">{label}</Text>
+        {rightElement}
+      </HStack>
+
+      {children}
+    </Stack>
   </HStack>
 )
 

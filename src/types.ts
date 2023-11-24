@@ -328,6 +328,10 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   visibility?: Visibility
+  capacity?: number
+  claimedCount?: number
+  startTime?: string
+  endTime?: string
 }
 
 enum Visibility {

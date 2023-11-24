@@ -6,14 +6,15 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
+import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
-import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import { Plus } from "phosphor-react"
-import platforms from "platforms/platforms"
+import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatform, PlatformName, PlatformType } from "types"
+import AvailibiltySetup from "../AddRewardButton/components/AvailibiltySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
@@ -124,6 +125,32 @@ const RolePlatforms = ({ roleId }: Props) => {
                     )
                   }
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
+                  contentRow={
+                    CAPACITY_TIME_PLATFORMS.includes(type) && (
+                      <AvailibiltySetup
+                        platformType={
+                          PlatformType[guildPlatform.platformId] as PlatformName
+                        }
+                        rolePlatform={rolePlatform}
+                        defaultValues={{
+                          capacity: rolePlatform.capacity,
+                          startTime: rolePlatform.startTime,
+                          endTime: rolePlatform.endTime,
+                        }}
+                        onDone={({ capacity, startTime, endTime }) => {
+                          setValue(`rolePlatforms.${index}.capacity`, capacity, {
+                            shouldDirty: true,
+                          })
+                          setValue(`rolePlatforms.${index}.startTime`, startTime, {
+                            shouldDirty: true,
+                          })
+                          setValue(`rolePlatforms.${index}.endTime`, endTime, {
+                            shouldDirty: true,
+                          })
+                        }}
+                      />
+                    )
+                  }
                 />
               </RolePlatformProvider>
             )
