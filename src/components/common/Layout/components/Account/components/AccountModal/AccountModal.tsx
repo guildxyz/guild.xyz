@@ -84,7 +84,7 @@ const AccountModal = () => {
 
   const { connectorName } = useConnectorNameAndIcon()
 
-  const onOpen = useCoinbasePay()
+  const { onOpen, isLoading } = useCoinbasePay()
 
   return (
     <Modal
@@ -159,17 +159,24 @@ const AccountModal = () => {
                     onClose={closeNetworkModal}
                   />
                 </Stack>
-                {type === "EVM" && (
-                  <Tooltip label="Top up wallet">
-                    <IconButton
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onOpen(address)}
-                      icon={<Icon as={UploadSimple} p="1px" />}
-                      aria-label="Top up wallet"
-                    />
-                  </Tooltip>
-                )}
+                <Tooltip
+                  label={
+                    type !== "EVM"
+                      ? "Please switch to an EVM wallet"
+                      : "Top up wallet"
+                  }
+                >
+                  <IconButton
+                    isDisabled={type !== "EVM"}
+                    size="sm"
+                    variant="outline"
+                    isLoading={isLoading}
+                    onClick={() => onOpen(address)}
+                    icon={<Icon as={UploadSimple} p="1px" />}
+                    aria-label="Top up wallet"
+                  />
+                </Tooltip>
+
                 <Tooltip label="Disconnect">
                   <IconButton
                     size="sm"
@@ -180,6 +187,8 @@ const AccountModal = () => {
                   />
                 </Tooltip>
               </HStack>
+
+              <div id="cbpay-container"></div>
 
               <AccountConnections />
               <Divider my="7" />

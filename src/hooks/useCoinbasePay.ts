@@ -1,14 +1,22 @@
 import { CBPayInstance, InitOnRampParams, initOnRamp } from "@coinbase/cbpay-js"
-import { useRef } from "react"
+import { useRef, useState } from "react"
+import useToast from "./useToast"
 
-const useCoinbasePay = (target = "#cbpay-container") => {
+// TODO: Wrap in a useSubmit, instead of using additional useState-s here
+const useCoinbasePay = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<Error>()
   const onrampInstance = useRef<CBPayInstance>()
 
+  const toast = useToast()
+
   const onOpen = (destinationWalletAddress: string) => {
-    // initOnRamp parameters
+    setIsLoading(true)
+    setError(undefined)
+
     const options: InitOnRampParams = {
       appId: process.env.NEXT_PUBLIC_COINBASE_PAY_APPID,
-      // target,
+      target: "#cbpay-container",
       widgetParameters: {
         destinationWallets: [
           {
@@ -18,40 +26,56 @@ const useCoinbasePay = (target = "#cbpay-container") => {
         ],
       },
       onSuccess: () => {
-        console.log("CB PAY SUCCESS")
-        // handle navigation when user successfully completes the flow
+        setIsLoading(false)
+        toast({
+          status: "success",
+          title: "Coinbase Pay",
+          description: "Wallet successfully topped up",
+        })
       },
       onExit: (err) => {
-        console.log("CB PAY ERROR")
+        setIsLoading(false)
         if (err) {
+          setError(err)
+          toast({
+            status: "error",
+            title: "Coinbase Pay",
+            description: "Failed to top up wallet",
+          })
           console.error(err)
+        } else {
+          toast({
+            status: "warning",
+            title: "Coinbase Pay",
+            description: "Operation cancelled",
+          })
         }
-        // handle navigation from dismiss / exit events due to errors
       },
       onEvent: (event) => {
-        // event stream
         console.log("CB PAY EVENT", event)
       },
-      experienceLoggedIn: "popup", // "embedded",
-      experienceLoggedOut: "popup",
+      experienceLoggedIn: "embedded",
+      experienceLoggedOut: "embedded",
+      debug: true,
     }
 
-    // instance.destroy() should be called before initOnramp if there is already an instance.
     if (onrampInstance.current) {
       onrampInstance.current.destroy()
     }
 
-    initOnRamp(options, (error?: Error, instance?: CBPayInstance) => {
+    initOnRamp(options, (e?: Error, instance?: CBPayInstance) => {
       if (instance) {
         onrampInstance.current = instance
         onrampInstance.current.open()
-      } else if (error) {
-        console.error(error)
+      } else if (e) {
+        setIsLoading(false)
+        setError(e)
+        console.error(e)
       }
     })
   }
 
-  return onOpen
+  return { isLoading, onOpen, error }
 }
 
 export default useCoinbasePay
