@@ -50,85 +50,83 @@ const Requirement = ({
   const isCustomizable = REQUIREMENTS[requirement?.type]?.isCustomizable
 
   return (
-    <>
-      <SimpleGrid
-        spacing={4}
-        w="full"
-        py={2}
-        templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
-        alignItems="center"
-      >
-        <Box mt="3px" alignSelf={"start"}>
-          <RequirementImage
-            image={
-              fieldRoot && isCustomizable ? (
-                <RequirementImageEditor orignalImage={image} />
-              ) : (
-                requirement?.data?.customImage || image
-              )
-            }
-            isImageLoading={isImageLoading}
-            withImgBg={withImgBg}
-          />
-        </Box>
-        <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-          <HStack
-            flexDirection={{ base: "column", sm: "row" }}
-            alignItems={{ base: "flex-start", sm: "center" }}
-            spacing={0}
-          >
-            {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-            {fieldRoot && isCustomizable ? (
-              <RequirementNameEditor baseFieldPath={fieldRoot}>
-                {requirement?.data?.customName || children}
-              </RequirementNameEditor>
+    <SimpleGrid
+      spacing={4}
+      w="full"
+      py={2}
+      templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
+      alignItems="center"
+    >
+      <Box mt="3px" alignSelf={"start"}>
+        <RequirementImage
+          image={
+            fieldRoot && isCustomizable ? (
+              <RequirementImageEditor orignalImage={image} />
             ) : (
-              <Box display="inline-block" wordBreak="break-word">
-                {requirement?.data?.customName || children}
-              </Box>
-            )}
+              requirement?.data?.customImage || image
+            )
+          }
+          isImageLoading={isImageLoading}
+          withImgBg={withImgBg}
+        />
+      </Box>
+      <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
+        <HStack
+          flexDirection={{ base: "column", sm: "row" }}
+          alignItems={{ base: "flex-start", sm: "center" }}
+          spacing={0}
+        >
+          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+          {fieldRoot && isCustomizable ? (
+            <RequirementNameEditor baseFieldPath={fieldRoot}>
+              {requirement?.data?.customName || children}
+            </RequirementNameEditor>
+          ) : (
+            <Box display="inline-block" wordBreak="break-word">
+              {requirement?.data?.customName || children}
+            </Box>
+          )}
 
-            {fieldRoot ? (
-              <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
-            ) : (
-              <Visibility
-                entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-                ml="1"
-              />
-            )}
-          </HStack>
+          {fieldRoot ? (
+            <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
+          ) : (
+            <Visibility
+              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+              ml="1"
+            />
+          )}
+        </HStack>
 
-          <HStack>
-            {previewAvailable && (
-              <Popover placement="bottom-start">
-                <PopoverTrigger>
-                  <RequirementButton rightIcon={<Icon as={CaretDown} />}>
-                    View original
-                  </RequirementButton>
-                </PopoverTrigger>
-                <Portal>
-                  <PopoverContent minW="max-content">
-                    <HStack p={3} gap={4}>
-                      <RequirementImage
-                        isImageLoading={isImageLoading}
-                        withImgBg={withImgBg}
-                        image={image}
-                      />
-                      <Text wordBreak="break-word" flexGrow={1}>
-                        {children}
-                      </Text>
-                      {!!fieldRoot && <ResetRequirementButton />}
-                    </HStack>
-                  </PopoverContent>
-                </Portal>
-              </Popover>
-            )}
-            {footer}
-          </HStack>
-        </VStack>
-        {rightElement}
-      </SimpleGrid>
-    </>
+        <HStack>
+          {previewAvailable && (
+            <Popover placement="bottom-start">
+              <PopoverTrigger>
+                <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+                  View original
+                </RequirementButton>
+              </PopoverTrigger>
+              <Portal>
+                <PopoverContent minW="max-content">
+                  <HStack p={3} gap={4}>
+                    <RequirementImage
+                      isImageLoading={isImageLoading}
+                      withImgBg={withImgBg}
+                      image={image}
+                    />
+                    <Text wordBreak="break-word" flexGrow={1}>
+                      {children}
+                    </Text>
+                    {!!fieldRoot && <ResetRequirementButton />}
+                  </HStack>
+                </PopoverContent>
+              </Portal>
+            </Popover>
+          )}
+          {footer}
+        </HStack>
+      </VStack>
+      {rightElement}
+    </SimpleGrid>
   )
 }
 
