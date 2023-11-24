@@ -56,7 +56,11 @@ const RoleRequirements = ({
      * Spreading inert because it's not added to @types/react yet:
      * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
      */
-    <SlideFade in={isOpen} {...(!isOpen && { inert: "true" })}>
+    <SlideFade
+      in={isOpen}
+      {...(!isOpen && { inert: "true" })}
+      style={{ width: "100%" }}
+    >
       <VStack spacing="0">
         {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
@@ -139,7 +143,7 @@ const VirtualRequirements = memo(
     isExpanded: boolean
     requirements: Requirement[]
     logic: Logic
-    descriptionRef: MutableRefObject<HTMLDivElement>
+    descriptionRef?: MutableRefObject<HTMLDivElement>
   }) => {
     const listWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -147,9 +151,9 @@ const VirtualRequirements = memo(
     const rowHeights = useRef<Record<number, number>>({})
     const expandedHeight = useMemo(() => {
       const descriptionHeight =
-        descriptionRef.current?.getBoundingClientRect().height ?? 0
+        descriptionRef?.current?.getBoundingClientRect().height ?? 0
       return Math.max(descriptionHeight + 50, 500)
-    }, [descriptionRef.current])
+    }, [descriptionRef?.current])
 
     const Row = memo(({ index, style }: any) => {
       const rowRef = useRef<HTMLDivElement>(null)
@@ -187,6 +191,7 @@ const VirtualRequirements = memo(
             marginBottom: isExpanded && `calc(${PARENT_PADDING} * -1)`,
             overflowY: isExpanded ? "scroll" : "hidden",
             WebkitMaskImage: `linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)`,
+            transition: "height 0.24s ease",
           }}
         >
           {Row}

@@ -24,7 +24,7 @@ import RoleRequirementsSection, {
 import Card from "components/common/Card"
 import { Check } from "phosphor-react"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
-import { KeyboardEvent, useRef } from "react"
+import { KeyboardEvent } from "react"
 import { useWatch } from "react-hook-form"
 import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
 import capitalize from "utils/capitalize"
@@ -75,8 +75,6 @@ const TemplateCard = ({
   const { isOpen: isExpanded, onToggle: onToggleExpanded } = useDisclosure({
     defaultIsOpen: false,
   })
-  const initialRequirementsRef = useRef<HTMLDivElement>(null)
-  const descriptionRef = useRef<HTMLDivElement>(null)
 
   return (
     <Box
@@ -223,8 +221,6 @@ const TemplateCard = ({
                 role,
                 isExpanded,
                 onToggleExpanded,
-                descriptionRef,
-                initialRequirementsRef,
               }}
             />
           </RoleRequirementsSection>

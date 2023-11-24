@@ -1,20 +1,18 @@
 import {
-  Box,
   Circle,
   Flex,
   Skeleton,
   Stack,
   Tag,
-  Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
-import LogicDivider from "components/[guild]/LogicDivider"
-import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
+import RoleRequirements from "components/[guild]/Requirements"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import {
   CapacityTag,
   EndTimeTag,
@@ -25,19 +23,20 @@ import CollectNftButton from "components/[guild]/collect/components/CollectNftBu
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
-import { Logic, Requirement } from "types"
+import { Role } from "types"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
 type Props = {
-  requirements: Requirement[]
-  logic: Logic
-  anyOfNum?: number
+  role: Role
 }
 
-const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
+const RequirementsCard = ({ role }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
+
+  const { isOpen: isExpanded, onToggle: onToggleExpanded } = useDisclosure()
+
   const availibiltyTagStyleProps = {
     bgColor: "transparent",
     fontSize: "sm",
@@ -50,7 +49,7 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const { chain, nftAddress, alreadyCollected, rolePlatformId } =
     useCollectNftContext()
   const rolePlatform = roles
-    ?.flatMap((role) => role.rolePlatforms)
+    ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
   const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
     chain,
@@ -70,38 +69,22 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   return (
     <Card w="full" h="max-content">
       <Stack
+        position="relative"
         bgColor={requirementsSectionBgColor}
         w="full"
         alignItems="center"
         borderBottomWidth={1}
         borderColor={requirementsSectionBorderColor}
       >
-        <Text
-          as="span"
-          pt={padding}
-          px={padding}
-          pb={2}
-          w="full"
-          fontSize="xs"
-          fontWeight="bold"
-          color="gray"
-          textTransform="uppercase"
-          noOfLines={1}
-        >
-          Requirements to qualify
-        </Text>
-
-        <Stack spacing={0} w="full">
-          {logic === "ANY_OF" && <AnyOfHeader anyOfNum={anyOfNum} />}
-          <Stack spacing={0} w="full" px={padding} pb={padding}>
-            {requirements.map((requirement, i) => (
-              <Box key={requirement.id}>
-                <RequirementDisplayComponent requirement={requirement} />
-                {i < requirements.length - 1 && <LogicDivider logic={logic} />}
-              </Box>
-            ))}
-          </Stack>
-        </Stack>
+        <RoleRequirementsSectionHeader />
+        <RoleRequirements
+          {...{
+            role,
+            isExpanded,
+            onToggleExpanded,
+            isOpen: true,
+          }}
+        />
       </Stack>
 
       <Stack p={padding} w="full" alignItems="center" spacing={4}>

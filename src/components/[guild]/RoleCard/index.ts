@@ -2,8 +2,8 @@ import { MutableRefObject } from "react"
 import RoleCard from "./RoleCard"
 
 export type RoleCardCollapseProps = {
-  descriptionRef: MutableRefObject<HTMLDivElement>
-  initialRequirementsRef: MutableRefObject<HTMLDivElement>
+  descriptionRef?: MutableRefObject<HTMLDivElement>
+  initialRequirementsRef?: MutableRefObject<HTMLDivElement>
   isExpanded: boolean
   onToggleExpanded: () => void
 }
