@@ -2,20 +2,50 @@ import {
   Box,
   Editable,
   EditableInput,
+  IconButton,
   Text,
   useEditableControls,
 } from "@chakra-ui/react"
-import EditableControls from "components/[guild]/Onboarding/components/SummonMembers/components/PanelBody/components/EditableControls"
-import { PropsWithChildren, Ref, useEffect, useRef } from "react"
+import { Check, PencilSimple } from "phosphor-react"
+import {
+  MutableRefObject,
+  PropsWithChildren,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { useController, useFormContext } from "react-hook-form"
 
 const RequirementNameEditor = ({
+  baseFieldPath,
   textRef,
   children,
 }: PropsWithChildren<{
-  textRef: Ref<HTMLParagraphElement>
+  baseFieldPath: string
+  textRef: MutableRefObject<HTMLParagraphElement>
 }>) => {
-  const { isEditing } = useEditableControls()
+  const { isEditing, getSubmitButtonProps, getEditButtonProps } =
+    useEditableControls()
+  const { resetField } = useFormContext()
+
+  const iconButtonProps = isEditing
+    ? {
+        "aria-label": "Edit",
+        icon: <Check />,
+        color: "green.500",
+        ...getSubmitButtonProps(),
+      }
+    : {
+        "aria-label": "Save",
+        icon: <PencilSimple />,
+        color: "gray",
+        ...getEditButtonProps({
+          onClick: () =>
+            resetField(`${baseFieldPath}.data.customName`, {
+              defaultValue: textRef.current?.innerText,
+            }),
+        }),
+      }
 
   return (
     <Box
@@ -36,7 +66,14 @@ const RequirementNameEditor = ({
           {children}
         </Text>
       )}
-      <EditableControls variant="unstyled" display="flex" alignItems="center" />
+
+      <IconButton
+        size="xs"
+        variant="unstyled"
+        display="flex"
+        alignItems="center"
+        {...iconButtonProps}
+      />
     </Box>
   )
 }
@@ -45,23 +82,36 @@ const RequirementNameEditorWrapper = ({
   baseFieldPath,
   children,
 }: PropsWithChildren<{ baseFieldPath: string }>) => {
-  const textRef = useRef(null)
+  const textRef = useRef<HTMLParagraphElement>(null)
+  const [originalValue, setOriginalValue] = useState("")
+
+  useEffect(() => {
+    if (!textRef.current || !!originalValue) return
+    setOriginalValue(textRef.current.innerText)
+  }, [textRef.current, originalValue])
 
   const { resetField } = useFormContext()
   const { field } = useController({
     name: `${baseFieldPath}.data.customName`,
   })
 
-  useEffect(() => {
-    if (!textRef.current || !!field.value) return
-    resetField(`${baseFieldPath}.data.customName`, {
-      defaultValue: textRef.current.innerText,
-    })
-  }, [textRef.current])
+  const conditionallyResetToOriginal = (value) => {
+    if (value === originalValue) {
+      resetField(`${baseFieldPath}.data.customName`, { defaultValue: "" })
+    }
+  }
 
   return (
-    <Editable size="sm" bg="transparent" {...field}>
-      <RequirementNameEditor textRef={textRef}>{children}</RequirementNameEditor>
+    <Editable
+      size="sm"
+      bg="transparent"
+      {...field}
+      onSubmit={conditionallyResetToOriginal}
+      onCancel={conditionallyResetToOriginal}
+    >
+      <RequirementNameEditor baseFieldPath={baseFieldPath} textRef={textRef}>
+        {children}
+      </RequirementNameEditor>
     </Editable>
   )
 }
