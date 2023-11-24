@@ -1,4 +1,11 @@
-import { Menu, MenuButton, MenuItem, MenuList, useClipboard } from "@chakra-ui/react"
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+  useClipboard,
+} from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import Button from "components/common/Button"
@@ -33,28 +40,30 @@ const ShareButton = ({ onClick }: Props): JSX.Element => {
       >
         Share
       </MenuButton>
-      <MenuList>
-        <MenuItem icon={<CopySimple size={12} />} fontSize="sm" onClick={onCopy}>
-          {hasCopied ? "Copied!" : "Copy URL"}
-        </MenuItem>
-        <MenuItem
-          icon={<TwitterLogo size={12} />}
-          fontSize="sm"
-          onClick={() => {
-            if (typeof window === "undefined") return
-            window.open(
-              `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `Check out and collect this awesome ${
-                  name ? `${name} ` : " "
-                }NFT on Guild!\n${pageLink}`
-              )}`,
-              "_blank"
-            )
-          }}
-        >
-          Tweet
-        </MenuItem>
-      </MenuList>
+      <Portal>
+        <MenuList>
+          <MenuItem icon={<CopySimple size={12} />} fontSize="sm" onClick={onCopy}>
+            {hasCopied ? "Copied!" : "Copy URL"}
+          </MenuItem>
+          <MenuItem
+            icon={<TwitterLogo size={12} />}
+            fontSize="sm"
+            onClick={() => {
+              if (typeof window === "undefined") return
+              window.open(
+                `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  `Check out and collect this awesome ${
+                    name ? `${name} ` : " "
+                  }NFT on Guild!\n${pageLink}`
+                )}`,
+                "_blank"
+              )
+            }}
+          >
+            Tweet
+          </MenuItem>
+        </MenuList>
+      </Portal>
     </Menu>
   )
 }
