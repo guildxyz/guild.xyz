@@ -35,10 +35,10 @@ const PolygonIDRequirement = (props: RequirementProps) => {
         footer={<ConnectPolygonID />}
         {...props}
       >
+        <Text as="span">{`Satisfy the `}</Text>
+        <DataBlock>{requirement.data.query[0]?.query?.type}</DataBlock>
+        <Text as="span">{` PolygonID `}</Text>
         <Popover placement="bottom">
-          <Text as="span">{`Satisfy the `}</Text>
-          <DataBlock>{requirement.data.query[0]?.query?.type}</DataBlock>
-          <Text as="span">{` PolygonID `}</Text>
           <PopoverTrigger>
             <Button
               variant="link"
