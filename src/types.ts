@@ -120,6 +120,7 @@ type User = {
     isPrimary: boolean
     provider: AddressConnectionProvider
     createdAt: string
+    type: "EVM" | "FUEL"
   }>
   platformUsers: PlatformAccountDetails[]
   sharedSocials: SharedSocial[]
@@ -327,6 +328,10 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   visibility?: Visibility
+  capacity?: number
+  claimedCount?: number
+  startTime?: string
+  endTime?: string
 }
 
 enum Visibility {
@@ -345,6 +350,7 @@ type SimpleRole = {
   visibility: Visibility
   position?: number
   anyOfNum?: number
+  groupId?: number
 }
 
 type Role = SimpleRole & {
@@ -588,6 +594,7 @@ enum ValidationMethod {
   STANDARD = 1,
   KEYPAIR = 2,
   EIP1271 = 3,
+  FUEL = 4,
 }
 
 type MonetizePoapForm = {

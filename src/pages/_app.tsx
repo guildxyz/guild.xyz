@@ -1,4 +1,5 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
+import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
@@ -8,6 +9,7 @@ import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
+import useSetupFuel from "hooks/useSetupFuel"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -17,6 +19,7 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { WagmiConfig, createConfig } from "wagmi"
+
 /**
  * Polyfill HTML inert property for Firefox support:
  * https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/inert#browser_compatibility
@@ -50,6 +53,8 @@ const App = ({
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
   }, [])
+
+  useSetupFuel()
 
   return (
     <>
@@ -88,7 +93,10 @@ const App = ({
                 <KeyPairProvider>
                   <IntercomProvider>
                     <ExplorerProvider>
-                      <Component {...pageProps} />
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
+
                       <ClientOnly>
                         <AccountModal />
                       </ClientOnly>

@@ -4,21 +4,19 @@ import { ArrowLeft } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import { useAccount } from "wagmi"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import TemplateCard from "./components/TemplateCard"
 import useTemplate from "./useTemplate"
 
 const ChooseTemplate = (): JSX.Element => {
-  const { openWalletSelectorModal, isWalletSelectorModalOpen } =
+  const { isWeb3Connected, openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
-  const { address } = useAccount()
   const { buildTemplate, toggleReward, toggleTemplate } = useTemplate()
 
   useEffect(() => {
-    if (address || isWalletSelectorModalOpen) return
+    if (isWeb3Connected || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
-  }, [address, isWalletSelectorModalOpen])
+  }, [isWeb3Connected, isWalletSelectorModalOpen])
 
   const { setDisabled, stepPart, setPart } = useCreateGuildContext()
 

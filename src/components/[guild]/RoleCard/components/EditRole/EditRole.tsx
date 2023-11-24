@@ -38,6 +38,7 @@ import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
+import RoleGroupSelect from "./components/RoleGroupSelect"
 import useEditRole from "./hooks/useEditRole"
 
 type Props = {
@@ -53,6 +54,8 @@ export type RoleEditFormData = {
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   visibility: Visibility
+  anyOfNum?: number
+  groupId?: number
 }
 
 const MotionDrawerFooter = motion(DrawerFooter)
@@ -74,10 +77,11 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     requirements,
     rolePlatforms,
     visibility,
+    groupId,
   } = roles?.find((role) => role.id === roleId) ?? {}
 
-  const defaultValues = {
-    roleId: id,
+  const defaultValues: RoleEditFormData = {
+    id,
     name,
     description,
     imageUrl,
@@ -86,8 +90,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
     visibility,
+    groupId,
   }
-  const methods = useForm({
+  const methods = useForm<RoleEditFormData>({
     mode: "all",
     defaultValues,
   })
@@ -98,7 +103,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
     methods.reset({
       ...role,
-      roleId: role.id,
       requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
       anyOfNum: role.anyOfNum ?? 1,
@@ -239,6 +243,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
+                  <RoleGroupSelect />
                 </Section>
 
                 <SetRequirements />

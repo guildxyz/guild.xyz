@@ -95,7 +95,7 @@ const CollectNftButton = ({
     <Button
       data-test="collect-nft-button"
       size="lg"
-      isDisabled={isDisabled}
+      isDisabled={isDisabled || rest?.isDisabled}
       isLoading={isLoading}
       loadingText={loadingText}
       colorScheme={!isDisabled ? "blue" : "gray"}

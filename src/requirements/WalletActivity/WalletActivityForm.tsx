@@ -20,7 +20,8 @@ import AlchemyTxValueRelative from "./components/AlchemyTxValueRelative"
 export const COVALENT_CHAINS = new Set<Chain>([
   "BASE_GOERLI",
   "BASE_MAINNET",
-  "SCROLL_ALPHA",
+  "SCROLL",
+  "SCROLL_SEPOLIA",
   "ZORA",
   "AVALANCHE",
   "ZKSYNC_ERA",
@@ -29,6 +30,9 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "PGN",
   "NEON_EVM",
   "OPTIMISM",
+  "LINEA",
+  "MANTLE",
+  "RONIN",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do
@@ -113,7 +117,8 @@ const WalletActivityForm = ({
     "POLYGON_ZKEVM",
     "ARBITRUM",
     "OPTIMISM",
-    "SCROLL_ALPHA",
+    "SCROLL",
+    "SCROLL_SEPOLIA",
     "BASE_MAINNET",
     "BASE_GOERLI",
     "ZORA",
@@ -121,6 +126,9 @@ const WalletActivityForm = ({
     "CRONOS",
     "PGN",
     "NEON_EVM",
+    "LINEA",
+    "MANTLE",
+    "RONIN",
     "GOERLI",
     "POLYGON_MUMBAI",
   ]

@@ -11,6 +11,7 @@ import {
   StepStatus,
   StepTitle,
   Stepper,
+  StepperProps,
   Text,
   useBreakpointValue,
   useColorModeValue,
@@ -19,7 +20,7 @@ import {
 import SummonMembers from "components/[guild]/Onboarding/components/SummonMembers"
 import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
-import React from "react"
+import { Fragment } from "react"
 import BasicInfo from "./BasicInfo"
 import ChooseTemplate from "./ChooseTemplate"
 import CreateGuildIndex from "./CreateGuildIndex"
@@ -92,10 +93,17 @@ const CreateGuildStepper = ({
   const { isOpen, onToggle } = useDisclosure()
 
   const cardBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const orientation = useBreakpointValue<any>({ base: "vertical", md: "horizontal" })
-  const StepWrapperComponent = useBreakpointValue<any>({
+  const orientation = useBreakpointValue<StepperProps["orientation"]>({
+    base: "vertical",
+    md: "horizontal",
+  })
+  const StepWrapperComponent = useBreakpointValue({
     base: Collapse,
-    md: React.Fragment,
+    md: Fragment,
+  })
+  const shouldPassCollapseProps = useBreakpointValue({
+    base: true,
+    md: false,
   })
 
   return (
@@ -127,8 +135,14 @@ const CreateGuildStepper = ({
         {STEPS.map((step, index) => (
           <StepWrapperComponent
             key={index}
-            in={activeStep === index || isOpen}
-            style={{ width: "100%" }}
+            {...(shouldPassCollapseProps
+              ? {
+                  in: activeStep === index || isOpen,
+                  style: {
+                    width: "100%",
+                  },
+                }
+              : undefined)}
           >
             <Step
               onClick={() => {

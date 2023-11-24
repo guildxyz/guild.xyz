@@ -9,11 +9,11 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { reactMarkdownComponents } from "components/[guild]/collect/components/RichTextDescription"
+import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
-import { reactMarkdownComponents } from "components/[guild]/collect/components/RichTextDescription"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import ReactMarkdown from "react-markdown"
@@ -33,7 +33,7 @@ const useClaimText = (rolePlatformId: number) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { id: guildId, roles } = useGuild()
+  const { id: guildId, roles, mutateGuild } = useGuild()
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
@@ -64,6 +64,25 @@ const useClaimText = (rolePlatformId: number) => {
          * versa)
          */
         mutateCachedResponse(response)
+        mutateGuild((prevGuild) => ({
+          ...prevGuild,
+          roles: prevGuild.roles.map((role) => {
+            if (!role.rolePlatforms?.some((rp) => rp.id === rolePlatformId))
+              return role
+
+            return {
+              ...role,
+              rolePlatforms: role.rolePlatforms.map((rp) => {
+                if (rp.id !== rolePlatformId) return rp
+
+                return {
+                  ...rp,
+                  claimedCount: rp.claimedCount + 1,
+                }
+              }),
+            }
+          }),
+        }))
       },
       onError: (error) => showErrorToast(error),
     }

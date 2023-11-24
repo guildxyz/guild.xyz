@@ -1,7 +1,7 @@
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWR, { mutate, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
-import { useAccount } from "wagmi"
 import { useKeyPair } from "../components/_app/KeyPairProvider"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
@@ -14,10 +14,10 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
 ): SWRResponse<Data, Error> & { isSigned: boolean } => {
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const { keyPair, isValid, ready } = useKeyPair()
 
-  const shouldSendAuth = !!keyPair && ready && isValid && isConnected
+  const shouldSendAuth = !!keyPair && ready && isValid && isWeb3Connected
 
   const fetcherWithSign = useFetcherWithSign()
   const authenticatedResponse = useSWRHook<Data, Error, any>(

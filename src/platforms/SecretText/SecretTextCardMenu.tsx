@@ -1,4 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import EditRewardAvailibilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailibilityMenuItem"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { PencilSimple } from "phosphor-react"
@@ -23,6 +24,7 @@ const SecretTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
           Edit secret
         </MenuItem>
+        <EditRewardAvailibilityMenuItem platformGuildId={platformGuildId} />
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 

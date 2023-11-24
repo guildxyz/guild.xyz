@@ -14,6 +14,7 @@ type Props = {
     info?: string | JSX.Element
     type: PlatformName
   }
+  contentRow?: JSX.Element
 } & Rest
 
 const PlatformCard = ({
@@ -21,6 +22,7 @@ const PlatformCard = ({
   guildPlatform,
   actionRow,
   cornerButton,
+  contentRow,
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
@@ -30,7 +32,7 @@ const PlatformCard = ({
     <RewardCard
       label={platforms[type].name}
       title={name}
-      description={info}
+      description={contentRow ?? info}
       image={image}
       colorScheme={platforms[type].colorScheme}
       {...{ actionRow, cornerButton }}

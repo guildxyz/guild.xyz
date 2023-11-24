@@ -12,15 +12,14 @@ import { Bug } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { mainnet, useEnsAddress } from "wagmi"
-
-const ADDRESS_REGEX = /^0x[a-f0-9]{40}$/i
+import { isValidAddress } from "../Admins"
 
 type PropsHelper = MultiValueGenericProps<unknown, boolean, GroupBase<unknown>>
 const CustomMultiValueContainer = ({
   children,
   ...multiValueContainerProps
 }: PropsWithChildren<PropsHelper>) => {
-  const domain = ADDRESS_REGEX.test(multiValueContainerProps.data.value)
+  const domain = isValidAddress(multiValueContainerProps.data.value)
     ? undefined
     : multiValueContainerProps.data.value
   const { data: resolvedAddress } = useEnsAddress({

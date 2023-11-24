@@ -29,7 +29,7 @@ type Props = {
 }
 
 const DESCRIPTION =
-  "This board shows top Guild Pin collectors. Keep your eyes open for new ones launching every week. Gotta catch 'em all! There is something cool being prepared for the top collectors. (Disclaimer: It won't be a token airdrop.)"
+  "This board shows top Guild Pin collectors. The first leaderboard season was closed in July and top 100 collectors received a non-transferable Mystery Box NFT unlocking physical goodies. Keep your eyes open for new ones. Gotta catch 'em all!"
 const PAGE_SIZE = 25
 const MAX_SWR_INFINITE_SIZE = 4 // fetching at most MAX_SWR_INFINITE_SIZE * PAGE_SIZE entries
 const SCROLL_PADDING = 40

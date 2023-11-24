@@ -85,7 +85,7 @@ const CampaignCards = () => {
                 href={`/${guildUrlName}/${urlName}`}
                 rightIcon={<ArrowRight />}
               >
-                View campaign
+                View page
               </LinkButton>
             ) : (
               <LinkButton
@@ -101,7 +101,7 @@ const CampaignCards = () => {
             <ColorCardLabel
               fallbackColor="white"
               backgroundColor={groupHasRoles ? "primary.500" : "gray.500"}
-              label="Campaign"
+              label="Page"
               top="-2px"
               left="-2px"
               borderBottomRightRadius="xl"

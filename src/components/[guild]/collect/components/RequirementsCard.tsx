@@ -1,12 +1,29 @@
-import { Box, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Circle,
+  Flex,
+  Skeleton,
+  Stack,
+  Tag,
+  Text,
+  Tooltip,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import { Chains } from "chains"
 import LogicDivider from "components/[guild]/LogicDivider"
 import AnyOfHeader from "components/[guild]/Requirements/components/AnyOfHeader"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import {
+  CapacityTag,
+  EndTimeTag,
+  StartTimeTag,
+  getTimeDiff,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
 import { Logic, Requirement } from "types"
 import useNftDetails from "../hooks/useNftDetails"
@@ -21,12 +38,32 @@ type Props = {
 const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
   const requirementsSectionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const requirementsSectionBorderColor = useColorModeValue("gray.200", "gray.600")
+  const availibiltyTagStyleProps = {
+    bgColor: "transparent",
+    fontSize: "sm",
+    fontWeight: "medium",
+    colorScheme: "purple",
+    p: 0,
+  }
 
-  const { chain, nftAddress, alreadyCollected } = useCollectNftContext()
+  const { roles } = useGuild()
+  const { chain, nftAddress, alreadyCollected, rolePlatformId } =
+    useCollectNftContext()
+  const rolePlatform = roles
+    ?.flatMap((role) => role.rolePlatforms)
+    .find((rp) => rp.id === rolePlatformId)
   const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
     chain,
     nftAddress
   )
+
+  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
+  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
+  const isButtonDisabled =
+    startTimeDiff > 0 ||
+    endTimeDiff < 0 ||
+    (typeof rolePlatform?.capacity === "number" &&
+      rolePlatform?.capacity === rolePlatform?.claimedCount)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
@@ -76,7 +113,20 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
             targetChainId={Chains[chain]}
             hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
           />
-          <CollectNftButton label="Collect now" colorScheme="green" />
+          <Tooltip
+            isDisabled={!isButtonDisabled}
+            label={
+              startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
+            }
+            hasArrow
+            shouldWrapChildren
+          >
+            <CollectNftButton
+              isDisabled={isButtonDisabled}
+              label="Collect now"
+              colorScheme="green"
+            />
+          </Tooltip>
         </Stack>
 
         <Skeleton
@@ -87,21 +137,69 @@ const RequirementsCard = ({ requirements, logic, anyOfNum }: Props) => {
             typeof totalCollectorsToday !== "undefined"
           }
         >
-          <Text fontSize="sm" colorScheme="gray" fontWeight="medium">
-            {`${
-              new Intl.NumberFormat("en", {
-                notation: "standard",
-              }).format(totalCollectors) ?? 0
-            } collected - ${
-              new Intl.NumberFormat("en", {
-                notation: "standard",
-              }).format(totalCollectorsToday) ?? 0
-            } collected today`}
-          </Text>
+          {isLoading ? (
+            "Loading collectors..."
+          ) : (
+            <Flex justifyContent="center" alignItems="center" wrap="wrap">
+              {typeof rolePlatform?.capacity === "number" && (
+                <>
+                  <CapacityTag
+                    capacity={rolePlatform.capacity}
+                    claimedCount={rolePlatform.claimedCount}
+                    {...availibiltyTagStyleProps}
+                  />
+                  <CircleDivider />
+                </>
+              )}
+
+              {rolePlatform?.startTime && startTimeDiff > 0 && (
+                <>
+                  <StartTimeTag
+                    startTime={rolePlatform?.startTime}
+                    {...availibiltyTagStyleProps}
+                  />
+                  <CircleDivider />
+                </>
+              )}
+
+              {rolePlatform?.endTime && (
+                <>
+                  <EndTimeTag
+                    endTime={rolePlatform?.endTime}
+                    {...availibiltyTagStyleProps}
+                  />
+                  <CircleDivider />
+                </>
+              )}
+
+              {typeof rolePlatform?.capacity !== "number" && (
+                <>
+                  <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+                    {`${
+                      new Intl.NumberFormat("en", {
+                        notation: "standard",
+                      }).format(totalCollectors) ?? 0
+                    } collected`}
+                  </Tag>
+                  <CircleDivider />
+                </>
+              )}
+
+              <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+                {`${
+                  new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(totalCollectorsToday) ?? 0
+                } collected today`}
+              </Tag>
+            </Flex>
+          )}
         </Skeleton>
       </Stack>
     </Card>
   )
 }
+
+const CircleDivider = () => <Circle size={1} mx={1.5} bgColor="gray.400" />
 
 export default RequirementsCard

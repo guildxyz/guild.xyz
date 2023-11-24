@@ -28,15 +28,25 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { LinkBreak, SignOut } from "phosphor-react"
-import { useAccount, useChainId, useDisconnect } from "wagmi"
+import { useSWRConfig } from "swr"
+import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { address } = useAccount()
-  const { disconnect } = useDisconnect()
+  const {
+    address,
+    type,
+    setIsDelegateConnection,
+    isAccountModalOpen: isOpen,
+    closeAccountModal: onClose,
+    disconnect,
+  } = useWeb3ConnectionManager()
+
+  const { address: evmAddress } = useAccount()
+
   const chainId = useChainId()
 
   const {
@@ -44,18 +54,11 @@ const AccountModal = () => {
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
-  const {
-    setIsDelegateConnection,
-    isAccountModalOpen: isOpen,
-    closeAccountModal: onClose,
-  } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
 
-  const handleLogout = () => {
-    setIsDelegateConnection(false)
-    onClose()
-    disconnect()
+  const { mutate } = useSWRConfig()
 
+  const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)
     )
@@ -64,10 +67,17 @@ const AccountModal = () => {
       window.localStorage.removeItem(key)
     })
 
-    deleteKeyPairFromIdb(id)?.catch(() => {})
+    deleteKeyPairFromIdb(id)
+      ?.catch(() => {})
+      .finally(() => {
+        setIsDelegateConnection(false)
+        onClose()
+        disconnect()
+        mutate(["keyPair", id])
+      })
   }
 
-  const domain = useResolveAddress(address)
+  const domain = useResolveAddress(evmAddress)
 
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
 
@@ -116,24 +126,30 @@ const AccountModal = () => {
                     >
                       {`Connected with ${connectorName} on`}
                     </Text>
-                    <Button
-                      variant="ghost"
-                      p="0"
-                      onClick={openNetworkModal}
-                      size="xs"
-                      mt="-2px"
-                    >
-                      <Center>
-                        {CHAIN_CONFIG[Chains[chainId]] ? (
-                          <Img
-                            src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon as={LinkBreak} />
-                        )}
+                    {type === "EVM" ? (
+                      <Button
+                        variant="ghost"
+                        p="0"
+                        onClick={openNetworkModal}
+                        size="xs"
+                        mt="-2px"
+                      >
+                        <Center>
+                          {CHAIN_CONFIG[Chains[chainId]] ? (
+                            <Img
+                              src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                              boxSize={4}
+                            />
+                          ) : (
+                            <Icon as={LinkBreak} />
+                          )}
+                        </Center>
+                      </Button>
+                    ) : (
+                      <Center ml={1}>
+                        <Img src="/walletLogos/fuel.svg" boxSize={4} />
                       </Center>
-                    </Button>
+                    )}
                   </HStack>
                   <NetworkModal
                     isOpen={isNetworkModalOpen}

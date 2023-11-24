@@ -10,7 +10,7 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { ComponentType, ForwardRefExoticComponent } from "react"
+import { ComponentType, ForwardRefExoticComponent, PropsWithChildren } from "react"
 import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
@@ -28,12 +28,11 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
-import SecretTextCardButton from "./SecretText/SecretTextCardButton"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
+import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
-import UniqueTextCardButton from "./UniqueText/UniqueTextCardButton"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 import PlatformPreview from "./components/PlatformPreview"
@@ -43,6 +42,12 @@ export enum PlatformAsRewardRestrictions {
   SINGLE_ROLE, // e.g. Telegram
   MULTIPLE_ROLES, // e.g. Discord
 }
+
+export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
+  "CONTRACT_CALL",
+  "TEXT",
+  "UNIQUE_TEXT",
+]
 
 type PlatformData<
   OAuthParams extends {
@@ -73,7 +78,7 @@ type PlatformData<
     onSuccess: () => void
     skipSettings?: boolean
   }>
-  PlatformPreview?: ComponentType<Record<string, never>>
+  PlatformPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
 
   oauth?: {
@@ -329,7 +334,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useSecretTextCardProps,
-    cardButton: SecretTextCardButton,
+    cardButton: TextCardButton,
     cardMenuComponent: SecretTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
@@ -357,7 +362,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "gray",
     gatedEntity: "",
     cardPropsHook: useUniqueTextCardProps,
-    cardButton: UniqueTextCardButton,
+    cardButton: TextCardButton,
     cardMenuComponent: UniqueTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
