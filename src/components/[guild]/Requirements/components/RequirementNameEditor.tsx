@@ -43,6 +43,7 @@ const RequirementNameEditor = ({
           onClick: () =>
             resetField(`${baseFieldPath}.data.customName`, {
               defaultValue: textRef.current?.innerText,
+              keepDirty: true,
             }),
         }),
       }
@@ -85,19 +86,23 @@ const RequirementNameEditorWrapper = ({
   const textRef = useRef<HTMLParagraphElement>(null)
   const [originalValue, setOriginalValue] = useState("")
 
-  useEffect(() => {
-    if (!textRef.current || !!originalValue) return
-    setOriginalValue(textRef.current.innerText)
-  }, [textRef.current, originalValue])
-
-  const { resetField } = useFormContext()
   const { field } = useController({
     name: `${baseFieldPath}.data.customName`,
   })
 
+  useEffect(() => {
+    if (!textRef.current || !!originalValue || !!field.value) return
+    setOriginalValue(textRef.current.innerText)
+  }, [textRef.current, originalValue, field.value])
+
+  const { resetField } = useFormContext()
+
   const conditionallyResetToOriginal = (value) => {
     if (value === originalValue) {
-      resetField(`${baseFieldPath}.data.customName`, { defaultValue: "" })
+      resetField(`${baseFieldPath}.data.customName`, {
+        defaultValue: "",
+        keepDirty: true,
+      })
     }
   }
 
