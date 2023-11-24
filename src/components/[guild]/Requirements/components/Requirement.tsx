@@ -61,7 +61,10 @@ const Requirement = ({
         <RequirementImage
           image={
             fieldRoot && isCustomizable ? (
-              <RequirementImageEditor orignalImage={image} />
+              <RequirementImageEditor
+                baseFieldPath={fieldRoot}
+                orignalImage={image}
+              />
             ) : (
               requirement?.data?.customImage || image
             )

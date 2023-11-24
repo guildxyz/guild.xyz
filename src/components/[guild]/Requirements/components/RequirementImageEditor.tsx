@@ -8,30 +8,24 @@ import {
   Text,
   Wrap,
 } from "@chakra-ui/react"
+import { ERROR_MESSAGES } from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { Upload, X } from "phosphor-react"
 import { useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
-import { useRequirementContext } from "./RequirementContext"
 import RequirementImage from "./RequirementImage"
 
-const errorMessages = {
-  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
-}
-
 type Props = {
+  baseFieldPath: string
   orignalImage: string | JSX.Element
 }
 
-const RequirementImageEditor = ({ orignalImage }: Props) => {
-  const { id } = useRequirementContext()
-
+const RequirementImageEditor = ({ baseFieldPath, orignalImage }: Props) => {
   const { control, setValue } = useFormContext()
-  const requirements = useWatch({ name: "requirements", control })
-  const index = requirements.findIndex((requirement) => requirement.id === id)
+
   const customImage = useWatch({
-    name: `requirements.${index}.data.customImage`,
+    name: `${baseFieldPath}.data.customImage`,
     control,
   })
 
@@ -40,13 +34,13 @@ const RequirementImageEditor = ({ orignalImage }: Props) => {
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
       setValue(
-        `requirements.${index}.data.customImage`,
+        `${baseFieldPath}.data.customImage`,
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
         { shouldDirty: true }
       )
     },
     onError: () => {
-      setValue(`requirements.${index}.data.customImage`, undefined)
+      setValue(`${baseFieldPath}.data.customImage`, undefined)
     },
   })
 
@@ -67,7 +61,7 @@ const RequirementImageEditor = ({ orignalImage }: Props) => {
             <Circle
               position="absolute"
               onClick={() => {
-                setValue(`requirements.${index}.data.customImage`, "", {
+                setValue(`${baseFieldPath}.data.customImage`, "", {
                   shouldDirty: true,
                 })
               }}
@@ -112,7 +106,7 @@ const RequirementImageEditor = ({ orignalImage }: Props) => {
         )}
       </Wrap>
       <FormErrorMessage>
-        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
+        {ERROR_MESSAGES[fileRejections?.[0]?.errors?.[0]?.code] ??
           fileRejections?.[0]?.errors?.[0]?.message}
       </FormErrorMessage>
     </FormControl>

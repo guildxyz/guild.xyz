@@ -1,4 +1,4 @@
-import { Circle, Img, SkeletonCircle, useColorMode } from "@chakra-ui/react"
+import { Circle, Img, SkeletonCircle, useColorModeValue } from "@chakra-ui/react"
 
 type Props = {
   isImageLoading?: boolean
@@ -7,7 +7,7 @@ type Props = {
 }
 
 const RequirementImage = ({ isImageLoading, withImgBg, image }: Props) => {
-  const { colorMode } = useColorMode()
+  const imageBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
     <SkeletonCircle
@@ -17,9 +17,7 @@ const RequirementImage = ({ isImageLoading, withImgBg, image }: Props) => {
     >
       <Circle
         size={"var(--chakra-space-11)"}
-        backgroundColor={
-          withImgBg && (colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300")
-        }
+        backgroundColor={withImgBg && imageBgColor}
         alignItems="center"
         justifyContent="center"
         overflow={withImgBg ? "hidden" : undefined}
