@@ -75,6 +75,7 @@ const Requirement = ({
           <HStack
             flexDirection={{ base: "column", sm: "row" }}
             alignItems={{ base: "flex-start", sm: "center" }}
+            spacing={0}
           >
             {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
             {fieldRoot && isCustomizable ? (
@@ -82,9 +83,9 @@ const Requirement = ({
                 {requirement?.data?.customName || children}
               </RequirementNameEditor>
             ) : (
-              <Text wordBreak="break-word">
+              <Box display="inline-block" wordBreak="break-word">
                 {requirement?.data?.customName || children}
-              </Text>
+              </Box>
             )}
 
             {fieldRoot ? (
