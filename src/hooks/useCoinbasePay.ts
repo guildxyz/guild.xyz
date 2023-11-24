@@ -26,7 +26,7 @@ const useCoinbasePay = () => {
 
   const onDone = () => {
     setIsLoading(false)
-    hideOverflow()
+    showOverflow()
   }
 
   const onOpen = (destinationWalletAddress: string) => {
@@ -86,11 +86,12 @@ const useCoinbasePay = () => {
       if (instance) {
         onrampInstance.current = instance
 
+        onrampInstance.current.open()
+
         try {
           hideOverflow()
           document.getElementById(CB_PAY_IFRAME_ID).style.zIndex = "99999"
         } catch {}
-        onrampInstance.current.open()
       } else if (e) {
         onDone()
         setError(e)
