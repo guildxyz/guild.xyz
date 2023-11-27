@@ -1,4 +1,5 @@
 import {
+  bitfinityTestnet,
   bobaAvax,
   exosama,
   kava,
@@ -449,6 +450,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/kava.svg",
     },
   },
+  BITFINITY_TESTNET: {
+    ...bitfinityTestnet,
+    iconUrl: "/networkLogos/bitfinity.svg",
+    coinIconUrl: "/networkLogos/bitfinity.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/bitfinity-light.svg",
+      dark: "/explorerLogos/bitfinity.svg",
+    },
+  },
   // X1_TESTNET: {
   //   ...x1Testnet,
   //   iconUrl: "/walletLogos/okx.png",
@@ -501,6 +511,7 @@ enum Chains {
   RONIN = ronin.id,
   SHIMMER = shimmer.id,
   KAVA = kava.id,
+  BITFINITY_TESTNET = bitfinityTestnet.id,
   // X1_TESTNET = x1Testnet.id,
 }
 

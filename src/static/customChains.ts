@@ -304,34 +304,33 @@ export const kava = /*#__PURE__*/ defineChain({
   },
 })
 
-// TODO
-export const bitfinity = /*#__PURE__*/ defineChain({
-  id: 355110,
-  name: "Bitfinity",
-  network: "bitfinity",
+export const bitfinityTestnet = /*#__PURE__*/ defineChain({
+  id: 355113,
+  name: "Bitfinity Testnet",
+  network: "bitfinity-testnet",
   nativeCurrency: {
     decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
+    name: "Bitfinity",
+    symbol: "BFT",
   },
   rpcUrls: {
     default: {
-      http: ["https://mainnet.bitfinity.network"],
+      http: ["https://testnet.bitfinity.network"],
     },
     public: {
-      http: ["https://mainnet.bitfinity.network"],
+      http: ["https://testnet.bitfinity.network"],
     },
   },
   blockExplorers: {
     default: {
-      name: "BlockScout",
-      url: "",
+      name: "Bitfinity",
+      url: "https://explorer.bitfinity.network",
     },
   },
   contracts: {
     multicall3: {
-      address: "0x",
-      blockCreated: 0,
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 7032,
     },
   },
 })
