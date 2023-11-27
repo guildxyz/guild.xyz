@@ -6,7 +6,6 @@ import {
   Icon,
   Img,
   Text,
-  Wrap,
 } from "@chakra-ui/react"
 import { ERROR_MESSAGES } from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
@@ -55,56 +54,54 @@ const RequirementImageEditor = ({ baseFieldPath, orignalImage }: Props) => {
 
   return (
     <FormControl isInvalid={!!fileRejections?.[0]}>
-      <Wrap>
-        {customImage ? (
-          <Center position={"relative"} minH={"var(--chakra-space-11)"}>
-            <Circle
-              position="absolute"
-              onClick={() => {
-                setValue(`${baseFieldPath}.data.customImage`, "", {
-                  shouldDirty: true,
-                })
-              }}
-              opacity={0}
-              _hover={{
-                opacity: 1,
-              }}
-              background={"blackAlpha.600"}
-              p={3.5}
-              cursor={"pointer"}
-            >
-              <Icon as={X} boxSize={4} color={"white"} />
-            </Circle>
-            <Img
-              src={customImage}
-              maxWidth={"var(--chakra-space-11)"}
-              maxHeight={"var(--chakra-space-11)"}
-            />
-          </Center>
-        ) : uploader.isUploading ? (
-          <Text fontSize={13} textAlign={"center"} w={"full"}>
-            {progress * 100}%
-          </Text>
-        ) : (
-          <Center position={"relative"} minH={"var(--chakra-space-11)"}>
-            <Circle
-              position="absolute"
-              opacity={0}
-              _hover={{
-                opacity: 1,
-              }}
-              p={3.5}
-              background={"blackAlpha.700"}
-              cursor={"pointer"}
-              {...getRootProps()}
-            >
-              <input {...getInputProps()} hidden />
-              <Icon as={Upload} boxSize={4} color={"white"} />
-            </Circle>
-            <RequirementImage image={orignalImage} />
-          </Center>
-        )}
-      </Wrap>
+      {customImage ? (
+        <Center position={"relative"} height={"var(--chakra-space-11)"}>
+          <Circle
+            position="absolute"
+            onClick={() => {
+              setValue(`${baseFieldPath}.data.customImage`, "", {
+                shouldDirty: true,
+              })
+            }}
+            opacity={0}
+            _hover={{
+              opacity: 1,
+            }}
+            background={"blackAlpha.600"}
+            p={3.5}
+            cursor={"pointer"}
+          >
+            <Icon as={X} boxSize={4} color={"white"} />
+          </Circle>
+          <Img
+            src={customImage}
+            maxWidth={"var(--chakra-space-11)"}
+            maxHeight={"var(--chakra-space-11)"}
+          />
+        </Center>
+      ) : uploader.isUploading ? (
+        <Text fontSize={13} textAlign={"center"} w={"full"}>
+          {(progress * 100).toFixed()}%
+        </Text>
+      ) : (
+        <Center position={"relative"} minH={"var(--chakra-space-11)"}>
+          <Circle
+            position="absolute"
+            opacity={0}
+            _hover={{
+              opacity: 1,
+            }}
+            p={3.5}
+            background={"blackAlpha.700"}
+            cursor={"pointer"}
+            {...getRootProps()}
+          >
+            <input {...getInputProps()} hidden />
+            <Icon as={Upload} boxSize={4} color={"white"} />
+          </Circle>
+          <RequirementImage image={orignalImage} />
+        </Center>
+      )}
       <FormErrorMessage>
         {ERROR_MESSAGES[fileRejections?.[0]?.errors?.[0]?.code] ??
           fileRejections?.[0]?.errors?.[0]?.message}
