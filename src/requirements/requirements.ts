@@ -208,26 +208,37 @@ export const REQUIREMENTS_DATA = [
     isPlatform: true,
   },
   {
-    icon: "/requirementLogos/eas.png",
-    name: "EAS",
+    icon: "/requirementLogos/coinbase.png",
+    name: "Coinbase",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
+      () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
+      () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
     ),
-    types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
+    types: ["COINBASE_EAS_ATTESTED_BY"],
   },
   {
-    icon: "/requirementLogos/unlock.png",
-    name: "Unlock",
+    icon: "/requirementLogos/polygonId.svg",
+    name: "PolygonID",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Unlock/UnlockRequirement")
+      () => import("requirements/PolygonId/PolygonIdRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Unlock/UnlockForm")
+      () => import("requirements/PolygonId/PolygonIdForm")
     ),
-    types: ["UNLOCK"],
+    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
+  },
+  {
+    icon: "/requirementLogos/gitcoin-passport.svg",
+    name: "Gitcoin Passport",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
+    ),
+    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
   },
   {
     icon: "/requirementLogos/poap.svg",
@@ -252,15 +263,65 @@ export const REQUIREMENTS_DATA = [
     types: ["GITPOAP"],
   },
   {
-    icon: "/requirementLogos/mirror.svg",
-    name: "Mirror",
+    icon: "/requirementLogos/eas.png",
+    name: "EAS",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Mirror/MirrorRequirement")
+      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Mirror/MirrorForm")
+      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
     ),
-    types: ["MIRROR", "MIRROR_COLLECT"],
+    types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
+  },
+  {
+    icon: "/requirementLogos/farcaster.png",
+    name: "Farcaster",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Farcaster/FarcasterRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Farcaster/FarcasterForm")
+    ),
+    types: [
+      "FARCASTER",
+      "FARCASTER_PROFILE",
+      "FARCASTER_TOTAL_FOLLOWERS",
+      "FARCASTER_FOLLOW",
+      "FARCASTER_FOLLOWED_BY",
+      "FARCASTER_LIKE",
+      "FARCASTER_RECAST",
+    ],
+  },
+  {
+    icon: "/requirementLogos/lens.png",
+    name: "Lens",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Lens/LensRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Lens/LensForm")
+    ),
+    types: [
+      "LENS",
+      "LENS_PROFILE",
+      "LENS_FOLLOW",
+      "LENS_COLLECT",
+      "LENS_MIRROR",
+      "LENS_TOTAL_FOLLOWERS",
+      "LENS_TOTAL_POSTS",
+      "LENS_FOLLOWED_BY",
+    ],
+  },
+  {
+    icon: "/requirementLogos/galaxy.svg",
+    name: "Galxe",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Galaxy/GalaxyRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Galaxy/GalaxyForm")
+    ),
+    types: ["GALAXY", "GALAXY_PARTICIPATION"],
   },
   {
     icon: "/requirementLogos/snapshot.png",
@@ -285,37 +346,33 @@ export const REQUIREMENTS_DATA = [
     ],
   },
   {
-    icon: "/requirementLogos/juicebox.png",
-    name: "Juicebox",
+    icon: "/requirementLogos/mirror.svg",
+    name: "Mirror",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Juicebox/JuiceboxRequirement")
+      () => import("requirements/Mirror/MirrorRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Juicebox/JuiceboxForm")
+      () => import("requirements/Mirror/MirrorForm")
     ),
-    types: ["JUICEBOX"],
+    types: ["MIRROR", "MIRROR_COLLECT"],
   },
   {
-    icon: "/requirementLogos/galaxy.svg",
-    name: "Galxe",
+    icon: "/requirementLogos/sound.png",
+    name: "Sound",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Galaxy/GalaxyRequirement")
+      () => import("requirements/Sound/SoundRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Galaxy/GalaxyForm")
+      () => import("requirements/Sound/SoundForm")
     ),
-    types: ["GALAXY", "GALAXY_PARTICIPATION"],
-  },
-  {
-    icon: "/requirementLogos/noox.svg",
-    name: "Noox",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Noox/NooxRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Noox/NooxForm")
-    ),
-    types: ["NOOX"],
+    types: [
+      "SOUND",
+      "SOUND_ARTIST_BACKED",
+      "SOUND_COLLECTED",
+      "SOUND_ARTIST",
+      "SOUND_TOP_COLLECTOR",
+      "SOUND_NFTS",
+    ],
   },
   {
     icon: "/requirementLogos/disco.png",
@@ -329,24 +386,143 @@ export const REQUIREMENTS_DATA = [
     types: ["DISCO"],
   },
   {
-    icon: "/requirementLogos/lens.png",
-    name: "Lens",
+    icon: "/requirementLogos/unlock.png",
+    name: "Unlock",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Lens/LensRequirement")
+      () => import("requirements/Unlock/UnlockRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Lens/LensForm")
+      () => import("requirements/Unlock/UnlockForm")
+    ),
+    types: ["UNLOCK"],
+  },
+  {
+    icon: "/requirementLogos/juicebox.png",
+    name: "Juicebox",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Juicebox/JuiceboxRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Juicebox/JuiceboxForm")
+    ),
+    types: ["JUICEBOX"],
+  },
+  {
+    icon: "/walletLogos/fuel.svg",
+    name: "Fuel",
+    fileNameBase: "Fuel",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Fuel/FuelRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Fuel/FuelForm")
+    ),
+    types: ["FUEL", "FUEL_BALANCE"],
+  },
+  {
+    icon: "/requirementLogos/sismo.svg",
+    name: "Sismo",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Sismo/SismoRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Sismo/SismoForm")
+    ),
+    types: ["SISMO"],
+  },
+  {
+    icon: "/requirementLogos/noox.svg",
+    name: "Noox",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Noox/NooxRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Noox/NooxForm")
+    ),
+    types: ["NOOX"],
+  },
+  {
+    icon: "/requirementLogos/yup.svg",
+    name: "Yup",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Yup/YupRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Yup/YupForm")
+    ),
+    types: ["YUP"],
+  },
+  {
+    icon: "/requirementLogos/rabbithole.png",
+    name: "RabbitHole",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Rabbithole/RabbitholeRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Rabbithole/RabbitholeForm")
+    ),
+    types: ["RABBITHOLE"],
+  },
+  {
+    icon: "/networkLogos/optimism.svg",
+    name: "OP Attestation",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Optimism/OptimismRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Optimism/OptimismForm")
+    ),
+    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
+  },
+  {
+    icon: "/requirementLogos/rep3.png",
+    name: "Rep3",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Rep3/Rep3Requirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Rep3/Rep3Form")
+    ),
+    types: ["REP3"],
+  },
+  {
+    icon: "/requirementLogos/shield.png",
+    name: "Shield",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Shield/ShieldRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Shield/ShieldForm")
     ),
     types: [
-      "LENS",
-      "LENS_PROFILE",
-      "LENS_FOLLOW",
-      "LENS_COLLECT",
-      "LENS_MIRROR",
-      "LENS_TOTAL_FOLLOWERS",
-      "LENS_TOTAL_POSTS",
-      "LENS_FOLLOWED_BY",
+      "SHIELD_ANOM_TX",
+      "SHIELD_UNVERIFIED_CONTRACT",
+      "SHIELD_EXPLOIT_INTERACTION",
+      "SHIELD_INDIRECT_DEPOSITS",
+      "SHIELD_TORNADO_CASH",
     ],
+  },
+  {
+    icon: "/requirementLogos/parallel.png",
+    name: "Parallel",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Parallel/ParallelRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Parallel/ParallelForm")
+    ),
+    types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
+  },
+  {
+    icon: "/requirementLogos/kycdao.svg",
+    name: "kycDAO",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/KycDAO/KycDAORequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/KycDAO/KycDAOForm")
+    ),
+    types: ["KYC_DAO"],
   },
   {
     icon: "/requirementLogos/otterspace.png",
@@ -380,182 +556,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Cask/CaskForm")
     ),
     types: ["CASK"],
-  },
-  {
-    icon: "/requirementLogos/rabbithole.png",
-    name: "RabbitHole",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rabbithole/RabbitholeRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rabbithole/RabbitholeForm")
-    ),
-    types: ["RABBITHOLE"],
-  },
-  {
-    icon: "/requirementLogos/kycdao.svg",
-    name: "kycDAO",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/KycDAO/KycDAORequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/KycDAO/KycDAOForm")
-    ),
-    types: ["KYC_DAO"],
-  },
-  {
-    icon: "/requirementLogos/sismo.svg",
-    name: "Sismo",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sismo/SismoRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sismo/SismoForm")
-    ),
-    types: ["SISMO"],
-  },
-  {
-    icon: "/requirementLogos/sound.png",
-    name: "Sound",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sound/SoundRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sound/SoundForm")
-    ),
-    types: [
-      "SOUND",
-      "SOUND_ARTIST_BACKED",
-      "SOUND_COLLECTED",
-      "SOUND_ARTIST",
-      "SOUND_TOP_COLLECTOR",
-      "SOUND_NFTS",
-    ],
-  },
-  {
-    icon: "/networkLogos/optimism.svg",
-    name: "OP Attestation",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Optimism/OptimismRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Optimism/OptimismForm")
-    ),
-    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
-  },
-  {
-    icon: "/requirementLogos/yup.svg",
-    name: "Yup",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Yup/YupRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Yup/YupForm")
-    ),
-    types: ["YUP"],
-  },
-  {
-    icon: "/requirementLogos/rep3.png",
-    name: "Rep3",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rep3/Rep3Requirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rep3/Rep3Form")
-    ),
-    types: ["REP3"],
-  },
-  {
-    icon: "/requirementLogos/parallel.png",
-    name: "Parallel",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Parallel/ParallelRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Parallel/ParallelForm")
-    ),
-    types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
-  },
-  {
-    icon: "/requirementLogos/shield.png",
-    name: "Shield",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Shield/ShieldRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Shield/ShieldForm")
-    ),
-    types: [
-      "SHIELD_ANOM_TX",
-      "SHIELD_UNVERIFIED_CONTRACT",
-      "SHIELD_EXPLOIT_INTERACTION",
-      "SHIELD_INDIRECT_DEPOSITS",
-      "SHIELD_TORNADO_CASH",
-    ],
-  },
-  {
-    icon: "/requirementLogos/gitcoin-passport.svg",
-    name: "Gitcoin Passport",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
-    ),
-    types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
-  },
-  {
-    icon: "/requirementLogos/polygonId.svg",
-    name: "PolygonID",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/PolygonId/PolygonIdRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/PolygonId/PolygonIdForm")
-    ),
-    types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
-  },
-  {
-    icon: "/requirementLogos/farcaster.png",
-    name: "Farcaster",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Farcaster/FarcasterRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Farcaster/FarcasterForm")
-    ),
-    types: [
-      "FARCASTER",
-      "FARCASTER_PROFILE",
-      "FARCASTER_TOTAL_FOLLOWERS",
-      "FARCASTER_FOLLOW",
-      "FARCASTER_FOLLOWED_BY",
-      "FARCASTER_LIKE",
-      "FARCASTER_RECAST",
-    ],
-  },
-  {
-    icon: "/requirementLogos/coinbase.png",
-    name: "Coinbase",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
-    ),
-    types: ["COINBASE_EAS_ATTESTED_BY"],
-  },
-  {
-    icon: "/walletLogos/fuel.svg",
-    name: "Fuel",
-    fileNameBase: "Fuel",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Fuel/FuelRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Fuel/FuelForm")
-    ),
-    types: ["FUEL", "FUEL_BALANCE"],
   },
 ] as const
 
