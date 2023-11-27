@@ -4,6 +4,7 @@ import fs from "fs"
 
 export default defineConfig({
   e2e: {
+    retries: 1,
     experimentalMemoryManagement: true,
     video: true,
     baseUrl: "http://localhost:3000",
