@@ -10,6 +10,11 @@ const styles = {
       "--fg-color-5": "var(--chakra-colors-gray-600) !important",
     },
 
+    // Coinbase Pay embed
+    ".cbpay-embedded-onramp": {
+      zIndex: 999999,
+    },
+
     ul: {
       listStyle: "none",
     },

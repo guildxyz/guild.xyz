@@ -2,8 +2,6 @@ import { CBPayInstance, InitOnRampParams, initOnRamp } from "@coinbase/cbpay-js"
 import { useRef, useState } from "react"
 import useToast from "./useToast"
 
-const CB_PAY_IFRAME_ID = "cbpay-embedded-onramp"
-
 const hideOverflow = () => {
   try {
     document.querySelector("body").style.overflow = "hidden"
@@ -90,7 +88,7 @@ const useCoinbasePay = () => {
 
         try {
           hideOverflow()
-          document.getElementById(CB_PAY_IFRAME_ID).style.zIndex = "99999"
+          // document.getElementById(CB_PAY_IFRAME_ID).style.zIndex = "99999"
         } catch {}
       } else if (e) {
         onDone()
