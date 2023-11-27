@@ -35,7 +35,14 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
     data: authenticatedResponse.data ?? publicResponse.data,
     isLoading: authenticatedResponse.isLoading ?? publicResponse.isLoading,
     isValidating: authenticatedResponse.isValidating ?? publicResponse.isValidating,
-    mutate: authenticatedResponse.mutate ?? publicResponse.mutate,
+    mutate: async (...args) => {
+      const [mutatedAuthenticatedData, mutatedPublicData] = await Promise.all([
+        authenticatedResponse.mutate(...args),
+        publicResponse.mutate(...args),
+      ])
+
+      return mutatedAuthenticatedData ?? mutatedPublicData
+    },
     error: authenticatedResponse.error ?? publicResponse.error,
     isSigned: !!authenticatedResponse.data,
   }
