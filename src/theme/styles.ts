@@ -11,7 +11,7 @@ const styles = {
     },
 
     // Coinbase Pay embed
-    ".cbpay-embedded-onramp": {
+    "#cbpay-embedded-onramp": {
       zIndex: 999999,
     },
 
