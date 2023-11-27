@@ -43,7 +43,7 @@ import {
 import { useRef, useState } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
-import { Guild, Requirement } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
@@ -85,11 +85,6 @@ const Page = ({
   const rolePlatformId = role?.rolePlatforms?.find(
     (rp) => rp.guildPlatformId === guildPlatform?.id
   )?.id
-  const requirements = !!role
-    ? role.hiddenRequirements || (role.requirements.length === 0 && !isFallback)
-      ? [...role.requirements, { type: "HIDDEN", roleId: role.id } as Requirement]
-      : role.requirements
-    : []
 
   const isMobile = useBreakpointValue({ base: true, md: false })
 
@@ -187,13 +182,7 @@ const Page = ({
                     >
                       {name}
                     </Heading>
-                    {isMobile && (
-                      <RequirementsCard
-                        requirements={requirements}
-                        logic={role?.logic}
-                        anyOfNum={role?.anyOfNum}
-                      />
-                    )}
+                    {isMobile && <RequirementsCard role={role} />}
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
                       <RichTextDescription
@@ -237,11 +226,7 @@ const Page = ({
                       )}
 
                       <motion.div layout="position">
-                        <RequirementsCard
-                          requirements={requirements}
-                          logic={role?.logic}
-                          anyOfNum={role?.anyOfNum}
-                        />
+                        <RequirementsCard role={role} />
                       </motion.div>
                     </Stack>
                   </AnimatePresence>

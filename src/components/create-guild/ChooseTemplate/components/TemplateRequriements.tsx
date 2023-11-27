@@ -13,12 +13,7 @@ type Props = {
   onToggleExpanded: () => void
 } & RoleCardCollapseProps
 
-const TemplateRequirements = ({
-  role,
-  isExpanded,
-  onToggleExpanded,
-  initialRequirementsRef,
-}: Props) => {
+const TemplateRequirements = ({ role, isExpanded, onToggleExpanded }: Props) => {
   const requirements = role.requirements
 
   const sliceIndex = (requirements?.length ?? 0) - 3
@@ -34,8 +29,8 @@ const TemplateRequirements = ({
   return (
     <VStack spacing="0">
       {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
-      <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
-        <VStack ref={initialRequirementsRef} spacing={0} w="full">
+      <VStack spacing={0} w="full" p={5} pt={0}>
+        <VStack spacing={0} w="full">
           {shownRequirements.map((requirement, i) => (
             <>
               <RequirementDisplayComponent

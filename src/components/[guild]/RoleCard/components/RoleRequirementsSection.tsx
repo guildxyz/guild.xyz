@@ -30,6 +30,7 @@ const RoleRequirementsSectionHeader = ({
   children,
 }: PropsWithChildren<any>) => (
   <HStack
+    w="full"
     p={5}
     pb={0}
     mb={{ base: 4, md: 6 }}
