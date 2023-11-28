@@ -23,6 +23,7 @@ const useFuel = () => {
     const Fuel = await import("fuels")
 
     const _address = Fuel.Address.fromString(_newAccount).toB256()
+
     const _provider = await windowFuel.getProvider()
     const _wallet = await windowFuel.getWallet(_address)
 
@@ -74,10 +75,11 @@ const useFuel = () => {
     if (!windowFuel) return
     try {
       await windowFuel.disconnect()
-      setAddress("" as `0x${string}`)
-      setIsConnected(false)
     } catch (error) {
       console.error("[FUEL]: disconnectError: ", error)
+    } finally {
+      setAddress("" as `0x${string}`)
+      setIsConnected(false)
     }
   }
 
