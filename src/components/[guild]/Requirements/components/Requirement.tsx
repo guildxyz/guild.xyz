@@ -15,14 +15,11 @@ import {
 import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
 import { CaretDown } from "phosphor-react"
-import { PropsWithChildren } from "react"
-import REQUIREMENTS from "requirements"
+import { PropsWithChildren, ReactNode } from "react"
 import { Visibility as VisibilityType } from "types"
 import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
 import RequirementImage from "./RequirementImage"
-import RequirementImageEditor from "./RequirementImageEditor"
-import RequirementNameEditor from "./RequirementNameEditor"
 import ResetRequirementButton from "./ResetRequirementButton"
 
 export type RequirementProps = PropsWithChildren<{
@@ -32,6 +29,8 @@ export type RequirementProps = PropsWithChildren<{
   withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
+  imageEditor?: (originalImage: string | JSX.Element) => JSX.Element
+  nameEditor?: (originalName: ReactNode) => JSX.Element
 }>
 
 const Requirement = ({
@@ -42,12 +41,12 @@ const Requirement = ({
   rightElement,
   children,
   fieldRoot,
+  imageEditor,
+  nameEditor,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const previewAvailable =
     requirement?.data?.customName || requirement?.data?.customImage
-
-  const isCustomizable = REQUIREMENTS[requirement?.type]?.isCustomizable
 
   return (
     <SimpleGrid
@@ -60,14 +59,9 @@ const Requirement = ({
       <Box mt="3px" alignSelf={"start"}>
         <RequirementImage
           image={
-            fieldRoot && isCustomizable ? (
-              <RequirementImageEditor
-                baseFieldPath={fieldRoot}
-                orignalImage={image}
-              />
-            ) : (
-              requirement?.data?.customImage || image
-            )
+            !!imageEditor
+              ? imageEditor(image)
+              : requirement?.data?.customImage || image
           }
           isImageLoading={isImageLoading}
           withImgBg={withImgBg}
@@ -80,10 +74,8 @@ const Requirement = ({
           spacing={0}
         >
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {fieldRoot && isCustomizable ? (
-            <RequirementNameEditor baseFieldPath={fieldRoot}>
-              {requirement?.data?.customName || children}
-            </RequirementNameEditor>
+          {!!nameEditor ? (
+            nameEditor(children)
           ) : (
             <Box display="inline-block" wordBreak="break-word">
               {requirement?.data?.customName || children}

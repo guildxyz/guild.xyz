@@ -15,6 +15,8 @@ import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
+import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import Card from "components/common/Card"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
@@ -56,6 +58,8 @@ const RequirementEditableCard = ({
 
   const isPoap = !!formState?.defaultValues?.poapId
   const poapId = formState?.defaultValues?.poapId
+
+  const isCustomizable = REQUIREMENTS[type].isCustomizable
 
   const {
     onSubmit: onDeleteRequirement,
@@ -172,6 +176,25 @@ const RequirementEditableCard = ({
               footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
               setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
+              imageEditor={
+                isCustomizable
+                  ? (originalImage) => (
+                      <RequirementImageEditor
+                        baseFieldPath={`requirements.${index}`}
+                        orignalImage={originalImage}
+                      />
+                    )
+                  : undefined
+              }
+              nameEditor={
+                isCustomizable
+                  ? (originalText) => (
+                      <RequirementNameEditor baseFieldPath={`requirements.${index}`}>
+                        {field.data.customName || originalText}
+                      </RequirementNameEditor>
+                    )
+                  : undefined
+              }
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
