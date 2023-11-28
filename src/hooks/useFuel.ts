@@ -3,16 +3,18 @@ import {
   fuelAddressAtom,
   fuelConnectedAtom,
   fuelConnectingAtom,
+  fuelConnectorsAtom,
   fuelProviderAtom,
   fuelWalletAtom,
 } from "hooks/useSetupFuel"
 import { useAtom } from "jotai"
 
-type FuelConnectorName = "Fuel Wallet" | "Fuelet Wallet"
+export type FuelConnectorName = "Fuel Wallet" | "Fuelet Wallet"
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
 const useFuel = () => {
+  const [connectors] = useAtom(fuelConnectorsAtom)
   const [isConnected, setIsConnected] = useAtom(fuelConnectedAtom)
   const [isConnecting, setIsConnecting] = useAtom(fuelConnectingAtom)
   const [address, setAddress] = useAtom(fuelAddressAtom)
@@ -23,6 +25,7 @@ const useFuel = () => {
     const Fuel = await import("fuels")
 
     const _address = Fuel.Address.fromString(_newAccount).toB256()
+
     const _provider = await windowFuel.getProvider()
     const _wallet = await windowFuel.getWallet(_address)
 
@@ -42,11 +45,16 @@ const useFuel = () => {
     setIsConnected(true)
   }
 
-  const connect = async () => {
+  const connect = async (options?: { connector: FuelConnectorName }) => {
     if (!windowFuel) return
 
     try {
       setIsConnecting(true)
+
+      if (options?.connector) {
+        await windowFuel.selectConnector(options.connector)
+      }
+
       await windowFuel.connect()
       await _setupState()
     } catch (error) {
@@ -74,10 +82,11 @@ const useFuel = () => {
     if (!windowFuel) return
     try {
       await windowFuel.disconnect()
-      setAddress("" as `0x${string}`)
-      setIsConnected(false)
     } catch (error) {
       console.error("[FUEL]: disconnectError: ", error)
+    } finally {
+      setAddress("" as `0x${string}`)
+      setIsConnected(false)
     }
   }
 
@@ -85,6 +94,7 @@ const useFuel = () => {
 
   return {
     windowFuel,
+    connectors,
     isConnecting,
     isConnected,
     onAccountChange,

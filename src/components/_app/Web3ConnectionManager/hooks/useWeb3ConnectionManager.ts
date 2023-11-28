@@ -43,7 +43,7 @@ type Web3ConnectionManagerType = {
   isInSafeContext: boolean
   isWeb3Connected: boolean
   address?: `0x${string}`
-  type?: User["addresses"][number]["type"]
+  type?: User["addresses"][number]["walletType"]
   disconnect: () => void
 }
 

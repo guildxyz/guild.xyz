@@ -96,7 +96,7 @@ const AccountModal = () => {
         <ModalCloseButton />
         {address ? (
           <>
-            <ModalBody>
+            <ModalBody className="custom-scrollbar">
               <HStack spacing="3" alignItems="center" mb="8">
                 <Circle size={12} bg={avatarBg}>
                   <GuildAvatar address={address} size={5} />

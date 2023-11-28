@@ -1,5 +1,6 @@
 import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
@@ -8,7 +9,6 @@ import {
   GuildPinsSupportedChain,
 } from "utils/guildCheckout/constants"
 import { createPublicClient, http } from "viem"
-import { useAccount } from "wagmi"
 
 const fetchGuildPinsOnChain = async (
   address: `0x${string}`,
@@ -95,14 +95,16 @@ const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
 }
 
 const useUsersGuildPins = (disabled = false) => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const { addresses } = useUser()
 
-  const shouldFetch = Boolean(!disabled && isConnected && addresses?.length)
+  const evmAddresses = addresses?.filter((address) => address.walletType === "EVM")
+
+  const shouldFetch = Boolean(!disabled && isWeb3Connected && evmAddresses?.length)
 
   return useSWRImmutable<
     ({ chainId: number; tokenId: number } & GuildPinMetadata)[]
-  >(shouldFetch ? ["guildPins", addresses] : null, fetchGuildPins)
+  >(shouldFetch ? ["guildPins", evmAddresses] : null, fetchGuildPins)
 }
 
 export default useUsersGuildPins
