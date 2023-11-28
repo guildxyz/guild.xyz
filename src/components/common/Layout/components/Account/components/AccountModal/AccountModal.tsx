@@ -89,7 +89,6 @@ const AccountModal = () => {
       onClose={onClose}
       colorScheme="duotone"
       scrollBehavior="inside"
-      size="lg"
     >
       <ModalOverlay />
       <ModalContent>

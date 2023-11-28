@@ -1,11 +1,4 @@
-import {
-  Img,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  ThemingProps,
-  useBreakpointValue,
-} from "@chakra-ui/react"
+import { Img, Tag, ThemingProps, Tooltip } from "@chakra-ui/react"
 import { User } from "types"
 
 type AddressType = Exclude<User["addresses"][number]["walletType"], "EVM">
@@ -23,16 +16,12 @@ const TYPE_NAMES: Record<AddressType, string> = {
   FUEL: "Fuel",
 }
 
-const AddressTypeTag = ({ type, size }: Props) => {
-  const tagLeftIconMr = useBreakpointValue({ base: 0, sm: 1 })
-  const tagPx = useBreakpointValue({ base: 1, sm: 2 })
-  const showTagLabel = useBreakpointValue({ base: false, sm: true })
-
-  return (
-    <Tag size={size} px={tagPx}>
-      <TagLeftIcon as={Img} src={TYPE_ICONS[type]} alt={type} mr={tagLeftIconMr} />
-      {showTagLabel && <TagLabel>{TYPE_NAMES[type]}</TagLabel>}
+const AddressTypeTag = ({ type, size }: Props) => (
+  <Tooltip placement="top" hasArrow label={TYPE_NAMES[type]}>
+    <Tag size={size} px={1}>
+      <Img src={TYPE_ICONS[type]} alt={TYPE_NAMES[type]} />
     </Tag>
-  )
-}
+  </Tooltip>
+)
+
 export default AddressTypeTag
