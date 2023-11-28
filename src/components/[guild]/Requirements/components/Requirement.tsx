@@ -31,6 +31,7 @@ export type RequirementProps = PropsWithChildren<{
   rightElement?: JSX.Element
   imageEditor?: (originalImage: string | JSX.Element) => JSX.Element
   nameEditor?: (originalName: ReactNode) => JSX.Element
+  previewAvailable?: boolean
 }>
 
 const Requirement = ({
@@ -43,10 +44,9 @@ const Requirement = ({
   fieldRoot,
   imageEditor,
   nameEditor,
+  previewAvailable,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
-  const previewAvailable =
-    requirement?.data?.customName || requirement?.data?.customImage
 
   return (
     <SimpleGrid

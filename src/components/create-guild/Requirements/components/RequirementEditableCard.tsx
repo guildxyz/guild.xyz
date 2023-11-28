@@ -61,6 +61,11 @@ const RequirementEditableCard = ({
 
   const isCustomizable = REQUIREMENTS[type].isCustomizable
 
+  const isNameChanged =
+    formState.dirtyFields?.requirements && formState.dirtyFields.requirements[index]
+  const previewAvailable =
+    (field?.data?.customName && isNameChanged) || field?.data?.customImage
+
   const {
     onSubmit: onDeleteRequirement,
     isLoading: isRequirementDeleteLoading,
@@ -176,6 +181,7 @@ const RequirementEditableCard = ({
               footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
               setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
+              previewAvailable={previewAvailable}
               imageEditor={
                 isCustomizable
                   ? (originalImage) => (
