@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { Chains } from "chains"
 import RoleRequirements from "components/[guild]/Requirements"
+import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
@@ -77,14 +78,18 @@ const RequirementsCard = ({ role }: Props) => {
         borderColor={requirementsSectionBorderColor}
       >
         <RoleRequirementsSectionHeader />
-        <RoleRequirements
-          {...{
-            role,
-            isExpanded,
-            onToggleExpanded,
-            isOpen: true,
-          }}
-        />
+        {!role ? (
+          <RoleRequirementsSkeleton />
+        ) : (
+          <RoleRequirements
+            {...{
+              role,
+              isExpanded,
+              onToggleExpanded,
+              isOpen: true,
+            }}
+          />
+        )}
       </Stack>
 
       <Stack p={padding} w="full" alignItems="center" spacing={4}>

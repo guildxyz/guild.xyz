@@ -6,7 +6,14 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
-import React, { memo, MutableRefObject, useEffect, useMemo, useRef } from "react"
+import React, {
+  Fragment,
+  memo,
+  MutableRefObject,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import useGuild from "../hooks/useGuild"
@@ -14,6 +21,7 @@ import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
 import AnyOfHeader from "./components/AnyOfHeader"
 import ExpandRequirementsButton from "./components/ExpandRequirementsButton"
+import { RequirementSkeleton } from "./components/Requirement"
 import RequirementDisplayComponent from "./components/RequirementDisplayComponent"
 
 type Props = {
@@ -199,4 +207,16 @@ const VirtualRequirements = memo(
   }
 )
 
+const RoleRequirementsSkeleton = () => (
+  <VStack spacing={0} w="full" p={5} pt={0}>
+    {[...Array(3)].map((_, i) => (
+      <Fragment key={i}>
+        <RequirementSkeleton key={i} />
+        {i !== 2 && <LogicDivider logic="ANY_OF" />}
+      </Fragment>
+    ))}
+  </VStack>
+)
+
 export default memo(RoleRequirements)
+export { RoleRequirementsSkeleton }
