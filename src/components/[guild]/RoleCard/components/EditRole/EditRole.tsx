@@ -131,7 +131,12 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     onSuccess
   )
 
-  const isDirty = !!Object.keys(methods.formState.dirtyFields).length
+  /**
+   * TODO: for some reason, isDirty was true & dirtyFields was an empty object and I
+   * couldn't find the underlying problem, so used this workaround here, but we
+   * should definitely find out what causes this strange behaviour!
+   */
+  const isDirty = Object.values(methods.formState.dirtyFields).length > 0
   useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
 
   const {

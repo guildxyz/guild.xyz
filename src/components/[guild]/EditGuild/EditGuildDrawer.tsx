@@ -147,7 +147,7 @@ const EditGuildDrawer = ({
   } = useThemeContext()
 
   useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
+    methods.formState.isDirty && !methods.formState.isSubmitted
   )
 
   const {

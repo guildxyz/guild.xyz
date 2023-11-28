@@ -10,6 +10,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,7 +23,6 @@ import useCreateRole, {
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -81,9 +81,13 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     defaultValues,
   })
 
-  useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
-  )
+  /**
+   * TODO: for some reason, isDirty was true & dirtyFields was an empty object and I
+   * couldn't find the underlying problem, so used this workaround here, but we
+   * should definitely find out what causes this strange behaviour!
+   */
+  const isDirty = Object.values(methods.formState.dirtyFields).length > 0
+  useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -143,7 +147,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
         isOpen={isOpen}
         placement="left"
         size={{ base: "full", md: "lg" }}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        onClose={isDirty ? onAlertOpen : onClose}
         finalFocusRef={finalFocusRef}
       >
         <DrawerOverlay />
