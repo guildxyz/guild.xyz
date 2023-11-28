@@ -12,7 +12,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
 import { CaretDown } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
@@ -68,29 +67,21 @@ const Requirement = ({
         />
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-        <HStack
-          flexDirection={{ base: "column", sm: "row" }}
-          alignItems={{ base: "flex-start", sm: "center" }}
-          spacing={0}
-        >
-          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {!!nameEditor ? (
-            nameEditor(children)
-          ) : (
-            <Box display="inline-block" wordBreak="break-word">
-              {requirement?.data?.customName || children}
-            </Box>
-          )}
+        {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+        {!!nameEditor ? (
+          nameEditor(children)
+        ) : (
+          <Box display="inline-block" wordBreak="break-word">
+            {requirement?.data?.customName || children}
+          </Box>
+        )}
 
-          {fieldRoot ? (
-            <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
-          ) : (
-            <Visibility
-              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-              ml="1"
-            />
-          )}
-        </HStack>
+        {!fieldRoot && (
+          <Visibility
+            entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+            ml="1"
+          />
+        )}
 
         <HStack>
           {previewAvailable && (

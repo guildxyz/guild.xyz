@@ -192,15 +192,14 @@ const RequirementEditableCard = ({
                     )
                   : undefined
               }
-              nameEditor={
-                isCustomizable
-                  ? (originalText) => (
-                      <RequirementNameEditor baseFieldPath={`requirements.${index}`}>
-                        {field.data.customName || originalText}
-                      </RequirementNameEditor>
-                    )
-                  : undefined
-              }
+              nameEditor={(originalText) => (
+                <RequirementNameEditor
+                  baseFieldPath={`requirements.${index}`}
+                  nameEditingEnabled={isCustomizable}
+                >
+                  {field.data.customName || originalText}
+                </RequirementNameEditor>
+              )}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
