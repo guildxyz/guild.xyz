@@ -7,6 +7,8 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Skeleton,
+  SkeletonText,
   Stack,
   Table,
   Tag,
@@ -190,4 +192,19 @@ const Message = () => {
   )
 }
 
+const MessageSkeleton = () => (
+  <Card p={6}>
+    <Stack spacing={4} w="full">
+      <Skeleton h={4} w={36} />
+      <SkeletonText noOfLines={3} skeletonHeight={4} spacing={2.5} />
+
+      <HStack justifyContent="space-between">
+        <Skeleton w="40%" h={4} />
+        <Skeleton w={24} h={4} />
+      </HStack>
+    </Stack>
+  </Card>
+)
+
 export default Message
+export { MessageSkeleton }

@@ -4,6 +4,7 @@ import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import { MessageSkeleton } from "components/[guild]/messages/Message"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
@@ -48,6 +49,7 @@ const Messages = () => {
         <Stack>
           <DynamicNoMessages />
           <DynamicMessage />
+          <MessageSkeleton />
         </Stack>
       </NoPermissionToPageFallback>
     </Layout>
