@@ -148,10 +148,12 @@ const useCollectNft = () => {
         setLoadingText("")
         setTxError(true)
 
-        const prettyError = processViemContractError(error, (errorName) => {
-          if (errorName === "AlreadyClaimed")
-            return "You've already collected this NFT"
-        })
+        const prettyError = error.correlationId
+          ? error
+          : processViemContractError(error, (errorName) => {
+              if (errorName === "AlreadyClaimed")
+                return "You've already collected this NFT"
+            })
         showErrorToast(prettyError)
 
         captureEvent("Mint NFT error (GuildCheckout)", {
