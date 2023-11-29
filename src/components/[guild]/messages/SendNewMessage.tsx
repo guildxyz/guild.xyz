@@ -26,7 +26,7 @@ const SendNewMessage = (props: ButtonProps) => {
         New message
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Send new message</ModalHeader>

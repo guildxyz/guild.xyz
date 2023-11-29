@@ -3,15 +3,24 @@ import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFal
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Message from "components/[guild]/messages/Message"
-import NoMessages from "components/[guild]/messages/NoMessages"
-import SendNewMessage from "components/[guild]/messages/SendNewMessage"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import dynamic from "next/dynamic"
+
+const DynamicSendNewMessage = dynamic(
+  () => import("components/[guild]/messages/SendNewMessage")
+)
+const DynamicNoMessages = dynamic(
+  () => import("components/[guild]/messages/NoMessages")
+)
 
 const Messages = () => {
-  const { name, imageUrl } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+
+  const { name, imageUrl } = useGuild()
+  const { isAdmin } = useGuildPermission()
 
   return (
     <Layout
@@ -32,12 +41,12 @@ const Messages = () => {
     >
       <GuildTabs
         activeTab="MESSAGES"
-        rightElement={<SendNewMessage size="sm" variant="ghost" />}
+        rightElement={isAdmin && <DynamicSendNewMessage size="sm" variant="ghost" />}
       />
 
       <NoPermissionToPageFallback>
         <Stack>
-          <NoMessages />
+          <DynamicNoMessages />
           <Message />
         </Stack>
       </NoPermissionToPageFallback>
