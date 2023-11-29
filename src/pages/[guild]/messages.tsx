@@ -4,7 +4,6 @@ import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import Message from "components/[guild]/messages/Message"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
@@ -15,6 +14,7 @@ const DynamicSendNewMessage = dynamic(
 const DynamicNoMessages = dynamic(
   () => import("components/[guild]/messages/NoMessages")
 )
+const DynamicMessage = dynamic(() => import("components/[guild]/messages/Message"))
 
 const Messages = () => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
@@ -47,7 +47,7 @@ const Messages = () => {
       <NoPermissionToPageFallback>
         <Stack>
           <DynamicNoMessages />
-          <Message />
+          <DynamicMessage />
         </Stack>
       </NoPermissionToPageFallback>
     </Layout>
