@@ -52,53 +52,44 @@ const RequirementNameEditor = ({
       }
 
   return (
-    <>
-      <Box
-        borderWidth={isEditing ? 1 : 0}
-        borderRadius="lg"
-        display={isEditing ? "flex" : "inline-block"}
-        pl={isEditing ? 2 : 0}
-      >
-        {isEditing ? (
-          <EditableInput
-            _focus={{
-              boxShadow: "none",
-            }}
-            p={0}
-          />
-        ) : (
-          <Text wordBreak="break-word" ref={textRef}>
-            {children}
-            <IconButton
-              size="xs"
-              variant="unstyled"
-              display={nameEditingEnabled ? "inline-block" : "none"}
-              alignItems="center"
-              ml={2}
-              {...iconButtonProps}
-            />
-            <SetVisibility
-              ml={2}
-              entityType="requirement"
-              fieldBase={baseFieldPath}
-            />
-          </Text>
-        )}
-        {isEditing && (
+    <Box
+      borderWidth={isEditing ? 1 : 0}
+      borderRadius="lg"
+      display={isEditing ? "flex" : "inline-block"}
+      pl={isEditing ? 2 : 0}
+    >
+      {isEditing ? (
+        <EditableInput
+          _focus={{
+            boxShadow: "none",
+          }}
+          p={0}
+        />
+      ) : (
+        <Text wordBreak="break-word" ref={textRef}>
+          {children}
           <IconButton
             size="xs"
             variant="unstyled"
-            display={"inline-block"}
+            display={nameEditingEnabled ? "inline-block" : "none"}
             alignItems="center"
             ml={2}
             {...iconButtonProps}
           />
-        )}
-      </Box>
-      {isEditing && (
-        <SetVisibility ml={2} entityType="requirement" fieldBase={baseFieldPath} />
+          <SetVisibility ml={2} entityType="requirement" fieldBase={baseFieldPath} />
+        </Text>
       )}
-    </>
+      {isEditing && (
+        <IconButton
+          size="xs"
+          variant="unstyled"
+          display={"inline-block"}
+          alignItems="center"
+          ml={2}
+          {...iconButtonProps}
+        />
+      )}
+    </Box>
   )
 }
 
