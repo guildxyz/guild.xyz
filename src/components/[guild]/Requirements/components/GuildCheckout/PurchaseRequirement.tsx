@@ -37,7 +37,7 @@ import usePrice from "./hooks/usePrice"
 const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { isConnected } = useAccount()
+  const { isConnected: isEvmConnected } = useAccount()
   const chainId = useChainId()
 
   const requirement = useRequirementContext()
@@ -121,24 +121,19 @@ const PurchaseRequirement = (): JSX.Element => {
                   },
                 }}
               >
-                {!isConnected ? (
-                  <ConnectWalletButton />
-                ) : (
-                  !error && (
-                    <>
-                      <SwitchNetworkButton
-                        targetChainId={Chains[requirement.chain]}
-                      />
+                <ConnectWalletButton />
+                {!error && isEvmConnected && (
+                  <>
+                    <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
-                      <Collapse in={chainId === Chains[requirement.chain]}>
-                        <TOSCheckbox>
-                          {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
-                        </TOSCheckbox>
+                    <Collapse in={chainId === Chains[requirement.chain]}>
+                      <TOSCheckbox>
+                        {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}
+                      </TOSCheckbox>
 
-                        <PurchaseAllowanceButton />
-                      </Collapse>
-                    </>
-                  )
+                      <PurchaseAllowanceButton />
+                    </Collapse>
+                  </>
                 )}
                 <PurchaseButton />
               </Stack>

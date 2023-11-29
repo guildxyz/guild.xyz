@@ -1,5 +1,6 @@
 import { ChakraProps } from "@chakra-ui/react"
-import { useOnboardingContext } from "components/[guild]/Onboarding/components/OnboardingProvider"
+import { onboardingStepAtom } from "components/[guild]/Onboarding/Onboarding"
+import { useAtom } from "jotai"
 import { PropsWithChildren, useState } from "react"
 import PulseMarker from "./PulseMarker"
 
@@ -14,7 +15,7 @@ const OnboardingMarker = ({
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
-  const { localStep } = useOnboardingContext()
+  const [localStep] = useAtom(onboardingStepAtom)
   const [hasClicked, setHasClicked] = useState(false)
   const handleClick = () => {
     setHasClicked(true)

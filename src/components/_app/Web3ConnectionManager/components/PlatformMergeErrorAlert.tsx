@@ -23,7 +23,7 @@ import { useRef } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
-import { useAccount } from "wagmi"
+import useWeb3ConnectionManager from "../hooks/useWeb3ConnectionManager"
 
 type Props = {
   isOpen: boolean
@@ -38,7 +38,7 @@ const PlatformMergeErrorAlert = ({
   addressOrDomain,
   platformName,
 }: Props) => {
-  const { address } = useAccount()
+  const { address } = useWeb3ConnectionManager()
   const toast = useToast()
   const socialAccountName = platforms[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(

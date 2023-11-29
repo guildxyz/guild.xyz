@@ -52,6 +52,7 @@ const EditPoapModal = ({ guildPoap, poap, isOpen, onClose }): JSX.Element => {
       expiryDate: data.expiry_date?.length
         ? new Date(data.expiry_date).getTime() / 1000
         : undefined,
+      activated: guildPoap?.activated,
     })
   }
 

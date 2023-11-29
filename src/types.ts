@@ -120,6 +120,7 @@ type User = {
     isPrimary: boolean
     provider: AddressConnectionProvider
     createdAt: string
+    walletType: "EVM" | "FUEL"
   }>
   platformUsers: PlatformAccountDetails[]
   sharedSocials: SharedSocial[]
@@ -327,6 +328,10 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   visibility?: Visibility
+  capacity?: number
+  claimedCount?: number
+  startTime?: string
+  endTime?: string
 }
 
 enum Visibility {
@@ -345,6 +350,7 @@ type SimpleRole = {
   visibility: Visibility
   position?: number
   anyOfNum?: number
+  groupId?: number
 }
 
 type Role = SimpleRole & {
@@ -364,6 +370,7 @@ type GuildPlatform = {
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   invite?: string
   platformGuildName: string
+  permission?: string
 }
 
 type PoapContract = {
@@ -443,6 +450,14 @@ type Guild = {
   isFallback?: boolean
   isDetailed?: boolean
 }
+
+type RoleFormType = Partial<
+  Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
+    requirements: Array<Partial<Requirement>>
+    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+  } & { name: string }
+>
+
 type GuildFormType = Partial<
   Pick<
     Guild,
@@ -451,7 +466,6 @@ type GuildFormType = Partial<
     | "name"
     | "imageUrl"
     | "description"
-    | "roles"
     | "theme"
     | "contacts"
     | "featureFlags"
@@ -460,14 +474,7 @@ type GuildFormType = Partial<
   >
 > & {
   guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
-  roles?: Array<
-    Partial<
-      Omit<Role, "requirements" | "rolePlatforms"> & {
-        requirements: Array<Partial<Requirement>>
-        rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
-      }
-    >
-  >
+  roles?: Array<RoleFormType>
   logic?: Logic
   requirements?: Requirement[]
   socialLinks?: Record<string, string>
@@ -587,6 +594,7 @@ enum ValidationMethod {
   STANDARD = 1,
   KEYPAIR = 2,
   EIP1271 = 3,
+  FUEL = 4,
 }
 
 type MonetizePoapForm = {
@@ -749,6 +757,7 @@ export type {
   RequirementType,
   Rest,
   Role,
+  RoleFormType,
   RolePlatform,
   SelectOption,
   SimpleGuild,

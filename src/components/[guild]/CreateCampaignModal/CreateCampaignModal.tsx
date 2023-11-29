@@ -39,7 +39,7 @@ const CreateCampaignModal = (props: Props) => {
       <Modal {...props} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create campaign page</ModalHeader>
+          <ModalHeader>Create page</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
@@ -52,7 +52,7 @@ const CreateCampaignModal = (props: Props) => {
               rightIcon={<ArrowRight />}
               onClick={handleSubmitWithUpload}
               isLoading={isUploadingShown || isLoading}
-              loadingText="Creating campaign"
+              loadingText="Creating page"
             >
               Create & set roles
             </Button>

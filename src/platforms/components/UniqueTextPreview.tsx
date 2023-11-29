@@ -3,7 +3,7 @@ import platforms from "platforms/platforms"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
-const UniqueTextPreview = (): JSX.Element => {
+const UniqueTextPreview = ({ children }): JSX.Element => {
   const platformGuildData = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData",
   })
@@ -25,7 +25,9 @@ const UniqueTextPreview = (): JSX.Element => {
           </Circle>
         )
       }
-    />
+    >
+      {children}
+    </PlatformPreview>
   )
 }
 

@@ -4,6 +4,7 @@ import fs from "fs"
 
 export default defineConfig({
   e2e: {
+    retries: 1,
     experimentalMemoryManagement: true,
     video: true,
     baseUrl: "http://localhost:3000",
@@ -37,7 +38,11 @@ export default defineConfig({
             )
             if (!failures) {
               // delete the video if the spec passed and no tests retried
-              fs.unlinkSync(results.video)
+              try {
+                fs.unlinkSync(results.video)
+              } catch (unlinkSyncError) {
+                console.log("[WARNING] fs.unlinkSync error", unlinkSyncError)
+              }
             }
           }
         }

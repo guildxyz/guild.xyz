@@ -7,12 +7,14 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
@@ -23,9 +25,12 @@ import GuildPinFees from "../components/GuildPinFees"
 import GuildPinImage from "../components/GuildPinImage"
 import GuildPinReward from "../components/GuildPinReward"
 import TransactionStatusModal from "../components/TransactionStatusModal"
-import OpenseaLink from "../components/TransactionStatusModal/components/OpenseaLink"
+import GuildPinOpenseaLink from "../components/TransactionStatusModal/components/GuildPinOpenseaLink"
+import DisconnectFuelButton from "../components/buttons/DisconnectFuelButton"
 import MintGuildPinButton from "../components/buttons/MintGuildPinButton"
 import SwitchNetworkButton from "../components/buttons/SwitchNetworkButton"
+
+export const GUILD_PIN_MAINTENANCE = false
 
 const DynamicActivateGuildPinModal = dynamic(
   () => import("./components/ActivateGuildPinModal")
@@ -46,34 +51,47 @@ const MintGuildPin = (): JSX.Element => {
 
   const { colorMode } = useColorMode()
 
+  const { isWeb3Connected, type } = useWeb3ConnectionManager()
+
   return (
     <>
-      <Button
-        onClick={() => {
-          if (!guildPin?.isActive) {
-            onActivateModalOpen()
-          } else {
-            onOpen()
-            captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
-              guild: urlName,
-            })
-          }
-        }}
-        variant="outline"
-        borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
-        {...(colorMode === "light"
-          ? {
-              _hover: {
-                bg: "blackAlpha.50",
-              },
-              _active: {
-                bg: "blackAlpha.200",
-              },
-            }
-          : {})}
+      <Tooltip
+        isDisabled={!GUILD_PIN_MAINTENANCE}
+        label="Under maintenance, please check back later!"
+        hasArrow
       >
-        {!guildPin?.isActive ? "Setup Guild Pin" : "Mint Guild Pin"}
-      </Button>
+        <Button
+          isDisabled={GUILD_PIN_MAINTENANCE}
+          onClick={
+            GUILD_PIN_MAINTENANCE
+              ? undefined
+              : () => {
+                  if (!guildPin?.isActive) {
+                    onActivateModalOpen()
+                  } else {
+                    onOpen()
+                    captureEvent("Click: Mint Guild Pin (GuildPinRewardCard)", {
+                      guild: urlName,
+                    })
+                  }
+                }
+          }
+          variant="outline"
+          borderColor={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
+          {...(colorMode === "light"
+            ? {
+                _hover: {
+                  bg: "blackAlpha.50",
+                },
+                _active: {
+                  bg: "blackAlpha.200",
+                },
+              }
+            : {})}
+        >
+          {!guildPin?.isActive ? "Setup Guild Pin" : "Mint Guild Pin"}
+        </Button>
+      </Tooltip>
 
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
         <ModalOverlay />
@@ -95,8 +113,14 @@ const MintGuildPin = (): JSX.Element => {
               <GuildPinFees />
 
               <Stack w="full" spacing={2}>
-                <SwitchNetworkButton targetChainId={Chains[guildPin?.chain]} />
-                <MintGuildPinButton />
+                {type === "EVM" ? (
+                  <>
+                    <SwitchNetworkButton targetChainId={Chains[guildPin?.chain]} />
+                    <MintGuildPinButton />
+                  </>
+                ) : (
+                  <DisconnectFuelButton>Mint NFT</DisconnectFuelButton>
+                )}
               </Stack>
 
               <Text colorScheme="gray" fontSize="sm">
@@ -113,7 +137,7 @@ const MintGuildPin = (): JSX.Element => {
         title="Mint Guild Pin"
         successTitle="Successful mint"
         successText="Successful transaction! Your Guild Pin NFT is now on chain!"
-        successLinkComponent={<OpenseaLink />}
+        successLinkComponent={<GuildPinOpenseaLink />}
         errorComponent={<Text mb={4}>Couldn't mint Guild Pin</Text>}
         progressComponent={
           <>

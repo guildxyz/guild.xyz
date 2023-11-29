@@ -1,10 +1,11 @@
 import { CHAIN_CONFIG, Chains } from "chains"
+import useFuel from "hooks/useFuel"
 import useToast from "hooks/useToast"
 import { atom, useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { PlatformName } from "types"
-import { useAccount, useSwitchNetwork } from "wagmi"
+import { PlatformName, User } from "types"
+import { useAccount, useDisconnect, useSwitchNetwork } from "wagmi"
 
 const delegateConnectionAtom = atom(false)
 const safeContextAtom = atom(false)
@@ -40,6 +41,10 @@ type Web3ConnectionManagerType = {
   isDelegateConnection: boolean
   setIsDelegateConnection: (newValue: boolean) => void
   isInSafeContext: boolean
+  isWeb3Connected: boolean
+  address?: `0x${string}`
+  type?: User["addresses"][number]["walletType"]
+  disconnect: () => void
 }
 
 const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
@@ -107,16 +112,36 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   )
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
-  const { isConnected, connector } = useAccount()
+  const {
+    isConnected: isEvmConnected,
+    connector: evmConnector,
+    address: evmAddress,
+  } = useAccount()
 
   useEffect(() => {
-    if (!isConnected || connector?.id !== "safe") return
+    if (!isEvmConnected || evmConnector?.id !== "safe") return
     setIsInSafeContext(true)
-  }, [isConnected, connector])
+  }, [isEvmConnected, evmConnector])
+
+  const { address: fuelAddress, isConnected: isFuelConnected } = useFuel()
+
+  const isWeb3Connected = isEvmConnected || isFuelConnected
+  const address = evmAddress || fuelAddress
 
   useEffect(() => {
-    if (!isConnected && router.query.redirectUrl) openWalletSelectorModal()
-  }, [isConnected, router.query])
+    if (!isWeb3Connected && router.query.redirectUrl) openWalletSelectorModal()
+  }, [isWeb3Connected, router.query])
+
+  const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
+
+  const { disconnect: disconnectEvm } = useDisconnect()
+  const { disconnect: disconnectFuel } = useFuel()
+
+  const disconnect = () => {
+    if (type === "EVM" && typeof disconnectEvm === "function") disconnectEvm()
+
+    if (type === "FUEL" && typeof disconnectFuel === "function") disconnectFuel()
+  }
 
   return {
     accountMergeAddress,
@@ -135,6 +160,10 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     isDelegateConnection,
     setIsDelegateConnection,
     isInSafeContext,
+    isWeb3Connected,
+    address,
+    type,
+    disconnect,
   }
 }
 

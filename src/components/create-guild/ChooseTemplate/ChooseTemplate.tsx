@@ -1,50 +1,73 @@
-import { SimpleGrid } from "@chakra-ui/react"
+import { Box, Button, Collapse } from "@chakra-ui/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { ArrowLeft } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import { useAccount } from "wagmi"
 import { useCreateGuildContext } from "../CreateGuildContext"
-import Pagination from "../Pagination"
 import TemplateCard from "./components/TemplateCard"
+import useTemplate from "./useTemplate"
 
 const ChooseTemplate = (): JSX.Element => {
-  const { openWalletSelectorModal, isWalletSelectorModalOpen } =
+  const { isWeb3Connected, openWalletSelectorModal, isWalletSelectorModalOpen } =
     useWeb3ConnectionManager()
-  const { address } = useAccount()
+  const { buildTemplate, toggleReward, toggleTemplate } = useTemplate()
 
   useEffect(() => {
-    if (address || isWalletSelectorModalOpen) return
+    if (isWeb3Connected || isWalletSelectorModalOpen) return
     openWalletSelectorModal()
-  }, [address, isWalletSelectorModalOpen])
+  }, [isWeb3Connected, isWalletSelectorModalOpen])
 
-  const {
-    TEMPLATES,
-    template: templateInContext,
-    setTemplate,
-  } = useCreateGuildContext()
+  const { setDisabled, stepPart, setPart } = useCreateGuildContext()
 
-  const { control, setValue } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<GuildFormType>()
 
-  const requirements = useWatch({ control, name: "roles.0.requirements" })
+  const roles = useWatch({ control, name: "roles" })
+
+  useEffect(() => {
+    setDisabled(!roles.length)
+  }, [roles.length])
 
   return (
     <>
-      <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 6 }}>
-        {Object.entries(TEMPLATES).map(([id, template], index) => (
-          <TemplateCard
-            key={index}
-            id={id}
-            {...template}
-            selected={id === templateInContext}
-            onClick={(newTemplateId) => {
-              setValue("roles", TEMPLATES[newTemplateId].roles)
-              setTemplate(newTemplateId)
-            }}
-          />
+      <Box>
+        {stepPart === 1 && (
+          <Button
+            onClick={() => setPart(0)}
+            variant={"link"}
+            leftIcon={<ArrowLeft />}
+            alignSelf={"flex-start"}
+            mb={4}
+          >
+            Go back and choose more templates
+          </Button>
+        )}
+
+        {buildTemplate().map((role) => (
+          <Collapse
+            in={
+              stepPart === 0 ||
+              (stepPart === 1 && !!roles.find((r) => r.name === role.name))
+            }
+            style={{ width: "100%", padding: 1, margin: -1 }}
+            key={role.name}
+          >
+            <TemplateCard
+              part={stepPart}
+              name={role.name}
+              role={role}
+              selected={!!roles.find((r) => r.name === role.name)}
+              {...role}
+              onClick={(templateName) => {
+                if (stepPart === 0) toggleTemplate(templateName)
+              }}
+              onCheckReward={(rewradIndex) => {
+                toggleReward(role.name, rewradIndex)
+              }}
+            />
+          </Collapse>
         ))}
-      </SimpleGrid>
-      <Pagination nextButtonDisabled={!requirements?.length} />
+      </Box>
     </>
   )
 }

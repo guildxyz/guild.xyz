@@ -6,12 +6,12 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import CampaignForm, {
   CampaignFormType,
 } from "components/[guild]/CreateCampaignModal/components/CampaignForm"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { FormProvider, useForm } from "react-hook-form"
@@ -56,7 +56,7 @@ const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
       <Modal {...modalProps} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Edit campaign</ModalHeader>
+          <ModalHeader>Edit page</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>

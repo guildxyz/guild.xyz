@@ -2,6 +2,7 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
@@ -12,7 +13,6 @@ import { GuildPlatform, PlatformType, Requirement, Role, Visibility } from "type
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
-import { useAccount } from "wagmi"
 
 export type RoleToCreate = Omit<
   Role,
@@ -32,7 +32,7 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName, memberCount }
 
-  const { address } = useAccount()
+  const { address } = useWeb3ConnectionManager()
 
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()

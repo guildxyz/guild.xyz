@@ -91,10 +91,12 @@ const RewardCard = ({
                 />
               )}
             </HStack>
-            {description && (
+            {typeof description === "string" ? (
               <Text as="span" color="gray" fontSize="sm" noOfLines={3}>
                 {description}
               </Text>
+            ) : (
+              description
             )}
           </Stack>
         </HStack>

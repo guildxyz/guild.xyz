@@ -38,7 +38,12 @@ const TabButton = ({
       isActive={isActive}
       mx={isActive && 2}
       sx={{
-        ":first-child": {
+        /**
+         * This equals to :first-child, just changed it so we don't get the annoying
+         * emotion error in the console:
+         * https://github.com/emotion-js/emotion/issues/2917#issuecomment-1791940421
+         */
+        ":not(:not(:last-child) ~ *)": {
           ml: 0,
         },
         ":last-child": {

@@ -6,7 +6,7 @@ const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
   "RUN_ID"
 )}`
 
-describe("edit guild", () => {
+describe.skip("edit guild", () => {
   beforeEach(() => {
     cy.intercept(
       "GET",

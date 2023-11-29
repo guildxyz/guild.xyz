@@ -5,11 +5,13 @@ import {
   Img,
   Skeleton,
   SkeletonCircle,
+  Stack,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { PropsWithChildren } from "react"
 import { PlatformName } from "types"
 
 type Props = {
@@ -19,7 +21,13 @@ type Props = {
   name?: string
 }
 
-const PlatformPreview = ({ isLoading, type, image, name }: Props) => {
+const PlatformPreview = ({
+  isLoading,
+  type,
+  image,
+  name,
+  children,
+}: PropsWithChildren<Props>) => {
   const circleBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
@@ -43,11 +51,15 @@ const PlatformPreview = ({ isLoading, type, image, name }: Props) => {
         )}
       </SkeletonCircle>
 
-      <Skeleton isLoaded={!isLoading}>
-        <Text as="span" fontSize="lg" fontFamily="body">
-          {name ?? `${platforms[type]?.name ?? "Unknown"} reward`}
-        </Text>
-      </Skeleton>
+      <Stack spacing={0.5} fontFamily="body">
+        <Skeleton isLoaded={!isLoading}>
+          <Text as="span" fontSize="lg">
+            {name ?? `${platforms[type]?.name ?? "Unknown"} reward`}
+          </Text>
+        </Skeleton>
+
+        {children}
+      </Stack>
     </HStack>
   )
 }

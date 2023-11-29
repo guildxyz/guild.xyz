@@ -13,15 +13,13 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS, { RequirementType } from "requirements"
-import { useAccount } from "wagmi"
 
 /**
  * This is copy-pasted from RequiementAccessIndicator and adjusted to work with
  * legacy POAP logic. Will delete once POAP is a real reward
  */
 const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
-  const { openAccountModal } = useWeb3ConnectionManager()
-  const { isConnected } = useAccount()
+  const { openAccountModal, isWeb3Connected } = useWeb3ConnectionManager()
   const { id, type, data, isNegated } = useRequirementContext()
 
   const { data: accessData } = useUserPoapEligibility(poapIdentifier)
@@ -31,7 +29,7 @@ const PoapRequiementAccessIndicator = ({ poapIdentifier }) => {
     (obj) => obj.requirementId === id
   )
 
-  if (!isConnected) return null
+  if (!isWeb3Connected) return null
 
   if (
     reqAccessData?.access ||

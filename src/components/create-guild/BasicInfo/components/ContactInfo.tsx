@@ -46,7 +46,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
     <>
       <Text colorScheme="gray">
         Only visible to the Guild Team to reach you with support and partnership
-        initiatives if needed.{" "}
+        initiatives if needed.
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
         {fields.map((contactField, index) => (

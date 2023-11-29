@@ -5,19 +5,18 @@ import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
 import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
-import { useAccount } from "wagmi"
 import AccountButton from "./components/AccountButton"
 import UserActivityLogPopover from "./components/UserActivityLogPopover"
 import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
-  const { address, isConnected } = useAccount()
-  const { openWalletSelectorModal, openAccountModal } = useWeb3ConnectionManager()
+  const { address, openWalletSelectorModal, openAccountModal } =
+    useWeb3ConnectionManager()
 
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
 
-  if (!isConnected) {
+  if (!address) {
     return (
       <AccountButton
         leftIcon={<SignIn />}
