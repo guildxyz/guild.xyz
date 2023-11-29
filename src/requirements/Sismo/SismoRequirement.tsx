@@ -21,7 +21,6 @@ const SismoRequirement = (props: RequirementProps) => {
     <Requirement
       image={badge?.img}
       isImageLoading={isValidating}
-      withImgBg={false}
       footer={<RequirementChainIndicator />}
       {...props}
     >

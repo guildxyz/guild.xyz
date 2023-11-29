@@ -8,7 +8,7 @@ const BalancyFooter = ({ baseFieldPath }) => {
 
   if (typeof holders === "number")
     return (
-      <Text color="gray" fontSize="sm">
+      <Text color="gray" fontSize="xs" fontWeight={"medium"}>
         {isLoading ? (
           <Spinner color="gray" size="xs" mx={1} />
         ) : (

@@ -2,7 +2,7 @@ import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
-import useDropzone from "hooks/useDropzone"
+import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { File } from "phosphor-react"
 import { useState } from "react"
@@ -17,10 +17,6 @@ type Props = {
 }
 
 type FileWithWidthandHeight = File & { width: number; height: number }
-
-const errorMessages = {
-  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
-}
 
 const getWidthAndHeightFromFile = (
   file: File
@@ -141,7 +137,7 @@ const PhotoUploader = ({
         </Button>
       </HStack>
       <FormErrorMessage>
-        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
+        {ERROR_MESSAGES[fileRejections?.[0]?.errors?.[0]?.code] ??
           fileRejections?.[0]?.errors?.[0]?.message}
       </FormErrorMessage>
     </FormControl>
