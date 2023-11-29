@@ -83,7 +83,7 @@ const Requirement = ({
           />
         )}
 
-        <HStack>
+        <HStack wrap={"wrap"}>
           {previewAvailable && (
             <Popover placement="bottom-start">
               <PopoverTrigger>
@@ -92,7 +92,7 @@ const Requirement = ({
                 </RequirementButton>
               </PopoverTrigger>
               <Portal>
-                <PopoverContent minW="max-content">
+                <PopoverContent w="max-content" maxWidth={"100vw"}>
                   <HStack p={3} gap={4}>
                     <RequirementImage
                       isImageLoading={isImageLoading}
