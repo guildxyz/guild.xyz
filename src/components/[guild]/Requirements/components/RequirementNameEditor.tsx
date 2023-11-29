@@ -100,7 +100,7 @@ const RequirementNameEditorWrapper = ({
   const { resetField } = useFormContext()
 
   const conditionallyResetToOriginal = (value) => {
-    if (value === originalValue) {
+    if (value === originalValue || value.trim() === "") {
       resetField(`${baseFieldPath}.data.customName`, {
         defaultValue: "",
         keepDirty: true,
