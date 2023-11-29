@@ -8,42 +8,41 @@ import {
   Portal,
   SimpleGrid,
   Skeleton,
+  Stack,
   Tag,
   Text,
   VStack,
 } from "@chakra-ui/react"
 import Visibility from "components/[guild]/Visibility"
 import { CaretDown } from "phosphor-react"
-import { PropsWithChildren, ReactNode } from "react"
+import React, { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
 import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
-import RequirementImage from "./RequirementImage"
+import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
 
 export type RequirementProps = PropsWithChildren<{
   fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
-  withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
-  imageEditor?: (originalImage: string | JSX.Element) => JSX.Element
-  nameEditor?: (originalName: ReactNode) => JSX.Element
-  previewAvailable?: boolean
+  imageWrapper?: React.FC<any>
+  childrenWrapper?: React.FC<any>
+  showViewOriginal?: boolean
 }>
 
 const Requirement = ({
   isImageLoading,
   image,
   footer,
-  withImgBg = true,
   rightElement,
   children,
   fieldRoot,
-  imageEditor,
-  nameEditor,
-  previewAvailable,
+  imageWrapper: ImageWrapper = React.Fragment,
+  childrenWrapper: ChildrenWrapper = Box,
+  showViewOriginal,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
@@ -56,35 +55,26 @@ const Requirement = ({
       alignItems="center"
     >
       <Box mt="3px" alignSelf={"start"}>
-        <RequirementImage
-          image={
-            !!imageEditor
-              ? imageEditor(image)
-              : requirement?.data?.customImage || image
-          }
-          isImageLoading={isImageLoading}
-          withImgBg={withImgBg}
-        />
+        <RequirementImageCircle isImageLoading={isImageLoading}>
+          <ImageWrapper baseFieldPath={fieldRoot}>
+            <RequirementImage image={requirement?.data?.customImage || image} />
+          </ImageWrapper>
+        </RequirementImageCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
         {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-        {!!nameEditor ? (
-          nameEditor(children)
-        ) : (
-          <Box display="inline-block" wordBreak="break-word">
-            {requirement?.data?.customName || children}
-          </Box>
-        )}
-
-        {!fieldRoot && (
-          <Visibility
-            entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-            ml="1"
-          />
-        )}
+        <ChildrenWrapper baseFieldPath={fieldRoot}>
+          {requirement?.data?.customName || children}
+          {!fieldRoot && (
+            <Visibility
+              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+              ml="1"
+            />
+          )}
+        </ChildrenWrapper>
 
         <HStack wrap={"wrap"}>
-          {previewAvailable && (
+          {showViewOriginal && (
             <Popover placement="bottom-start">
               <PopoverTrigger>
                 <RequirementButton rightIcon={<Icon as={CaretDown} />}>
@@ -94,15 +84,19 @@ const Requirement = ({
               <Portal>
                 <PopoverContent w="max-content" maxWidth={"100vw"}>
                   <HStack p={3} gap={4}>
-                    <RequirementImage
-                      isImageLoading={isImageLoading}
-                      withImgBg={withImgBg}
-                      image={image}
-                    />
-                    <Text wordBreak="break-word" flexGrow={1}>
-                      {children}
-                    </Text>
-                    {!!fieldRoot && <ResetRequirementButton />}
+                    <RequirementImageCircle isImageLoading={isImageLoading}>
+                      <RequirementImage image={image} />
+                    </RequirementImageCircle>
+                    <Stack
+                      direction={{ base: "column", md: "row" }}
+                      alignItems={{ base: "flex-start", md: "center" }}
+                      spacing={{ base: 2, md: 5 }}
+                    >
+                      <Text wordBreak="break-word" flexGrow={1}>
+                        {children}
+                      </Text>
+                      {!!fieldRoot && <ResetRequirementButton />}
+                    </Stack>
                   </HStack>
                 </PopoverContent>
               </Portal>

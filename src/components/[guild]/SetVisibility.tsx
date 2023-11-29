@@ -152,18 +152,17 @@ const SetVisibility = ({
           label={`${VISIBILITY_DATA[currentVisibility].title}: ${VISIBILITY_DATA[currentVisibility].description}`}
           placement="top"
           hasArrow
-          shouldWrapChildren
         >
           <IconButton
-            size={"sm"}
+            size={"xs"}
             variant="ghost"
-            bg="unset !important"
             icon={<Icon />}
             aria-label="Set visibility"
             onClick={onOpen}
             ref={buttonRef}
             ml={1}
             color="gray"
+            {...buttonProps}
           />
         </Tooltip>
       )}

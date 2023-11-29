@@ -20,84 +20,71 @@ import { useController, useFormContext } from "react-hook-form"
 const RequirementNameEditor = ({
   baseFieldPath,
   textRef,
-  nameEditingEnabled,
   children,
 }: PropsWithChildren<{
   baseFieldPath: string
   textRef: MutableRefObject<HTMLParagraphElement>
-  nameEditingEnabled: boolean
 }>) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =
     useEditableControls()
   const { resetField } = useFormContext()
 
-  const iconButtonProps = isEditing
-    ? {
-        "aria-label": "Edit",
-        icon: <Check />,
-        color: "green.500",
-        ...getSubmitButtonProps(),
-      }
-    : {
-        "aria-label": "Save",
-        icon: <PencilSimple />,
-        color: "gray",
-        ...getEditButtonProps({
-          onClick: () =>
-            resetField(`${baseFieldPath}.data.customName`, {
-              defaultValue: textRef.current?.textContent,
-              keepDirty: true,
-            }),
-        }),
-      }
-
-  return (
-    <Box
-      borderWidth={isEditing ? 1 : 0}
-      borderRadius="lg"
-      display={isEditing ? "flex" : "inline-block"}
-      pl={isEditing ? 2 : 0}
-    >
-      {isEditing ? (
+  if (isEditing)
+    return (
+      <Box
+        borderWidth={1}
+        borderRadius="lg"
+        display={"flex"}
+        pl={2}
+        overflow={"hidden"}
+      >
         <EditableInput
           _focus={{
             boxShadow: "none",
           }}
           p={0}
+          borderRadius={0}
         />
-      ) : (
-        <Text wordBreak="break-word" ref={textRef}>
-          {children}
-          <IconButton
-            size="xs"
-            variant="unstyled"
-            display={nameEditingEnabled ? "inline-block" : "none"}
-            alignItems="center"
-            ml={2}
-            {...iconButtonProps}
-          />
-          <SetVisibility ml={2} entityType="requirement" fieldBase={baseFieldPath} />
-        </Text>
-      )}
-      {isEditing && (
         <IconButton
           size="xs"
-          variant="unstyled"
-          display={"inline-block"}
-          alignItems="center"
-          ml={2}
-          {...iconButtonProps}
+          variant="ghost"
+          borderRadius={0}
+          aria-label="Edit"
+          icon={<Check />}
+          colorScheme={"green"}
+          {...getSubmitButtonProps()}
         />
-      )}
-    </Box>
+      </Box>
+    )
+
+  return (
+    <Text wordBreak="break-word" ref={textRef}>
+      {children}
+      <IconButton
+        size="xs"
+        variant="ghost"
+        ml={0.5}
+        mt={-0.5}
+        aria-label="Save"
+        icon={<PencilSimple />}
+        color="gray"
+        {...getEditButtonProps({
+          onClick: () =>
+            resetField(`${baseFieldPath}.data.customName`, {
+              defaultValue: textRef.current?.textContent,
+              keepDirty: true,
+            }),
+        })}
+      />
+      <SetVisibility entityType="requirement" fieldBase={baseFieldPath} mt={-0.5} />
+    </Text>
   )
 }
 
 const RequirementNameEditorWrapper = ({
   baseFieldPath,
-  nameEditingEnabled,
   children,
-}: PropsWithChildren<{ baseFieldPath: string; nameEditingEnabled: boolean }>) => {
+}: PropsWithChildren<{ baseFieldPath: string }>) => {
   const textRef = useRef<HTMLParagraphElement>(null)
   const [originalValue, setOriginalValue] = useState("")
 
@@ -124,17 +111,12 @@ const RequirementNameEditorWrapper = ({
   return (
     <Editable
       size="sm"
-      bg="transparent"
+      width="full"
       {...field}
       onSubmit={conditionallyResetToOriginal}
       onCancel={conditionallyResetToOriginal}
-      isDisabled={!nameEditingEnabled}
     >
-      <RequirementNameEditor
-        baseFieldPath={baseFieldPath}
-        textRef={textRef}
-        nameEditingEnabled={nameEditingEnabled}
-      >
+      <RequirementNameEditor baseFieldPath={baseFieldPath} textRef={textRef}>
         {children}
       </RequirementNameEditor>
     </Editable>

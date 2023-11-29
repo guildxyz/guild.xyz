@@ -1,27 +1,21 @@
-import {
-  Center,
-  Circle,
-  FormControl,
-  FormErrorMessage,
-  Icon,
-  Img,
-  Text,
-} from "@chakra-ui/react"
-import { ERROR_MESSAGES } from "hooks/useDropzone"
+import { Circle, Icon, Text } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
+import useToast from "hooks/useToast"
 import { Upload, X } from "phosphor-react"
-import { useState } from "react"
+import { PropsWithChildren, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
-import RequirementImage from "./RequirementImage"
 
 type Props = {
   baseFieldPath: string
-  orignalImage: string | JSX.Element
 }
 
-const RequirementImageEditor = ({ baseFieldPath, orignalImage }: Props) => {
+const RequirementImageEditor = ({
+  baseFieldPath,
+  children,
+}: PropsWithChildren<Props>) => {
   const { control, setValue } = useFormContext()
+  const toast = useToast()
 
   const customImage = useWatch({
     name: `${baseFieldPath}.data.customImage`,
@@ -43,70 +37,65 @@ const RequirementImageEditor = ({ baseFieldPath, orignalImage }: Props) => {
     },
   })
 
-  const { fileRejections, getRootProps, getInputProps } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: (accepted) => {
       if (accepted.length > 0) {
         uploader.onUpload({ data: [accepted[0]], onProgress: setProgress })
       }
     },
+    onError: (error) => toast({ status: "error", title: error.message }),
   })
 
+  if (customImage)
+    return (
+      <>
+        <Circle
+          position="absolute"
+          onClick={() => {
+            setValue(`${baseFieldPath}.data.customImage`, "", {
+              shouldDirty: true,
+            })
+          }}
+          opacity={0}
+          _hover={{
+            opacity: 1,
+          }}
+          background={"blackAlpha.600"}
+          p={3.5}
+          cursor={"pointer"}
+        >
+          <Icon as={X} boxSize={4} color={"white"} />
+        </Circle>
+        {children}
+      </>
+    )
+
+  if (uploader.isUploading)
+    return (
+      <Text fontSize={13} textAlign={"center"} w={"full"}>
+        {(progress * 100).toFixed()}%
+      </Text>
+    )
+
   return (
-    <FormControl isInvalid={!!fileRejections?.[0]}>
-      {customImage ? (
-        <Center position={"relative"} height={"var(--chakra-space-11)"}>
-          <Circle
-            position="absolute"
-            onClick={() => {
-              setValue(`${baseFieldPath}.data.customImage`, "", {
-                shouldDirty: true,
-              })
-            }}
-            opacity={0}
-            _hover={{
-              opacity: 1,
-            }}
-            background={"blackAlpha.600"}
-            p={3.5}
-            cursor={"pointer"}
-          >
-            <Icon as={X} boxSize={4} color={"white"} />
-          </Circle>
-          <Img
-            src={customImage}
-            maxWidth={"var(--chakra-space-11)"}
-            maxHeight={"var(--chakra-space-11)"}
-          />
-        </Center>
-      ) : uploader.isUploading ? (
-        <Text fontSize={13} textAlign={"center"} w={"full"}>
-          {(progress * 100).toFixed()}%
-        </Text>
-      ) : (
-        <Center position={"relative"} minH={"var(--chakra-space-11)"}>
-          <Circle
-            position="absolute"
-            opacity={0}
-            _hover={{
-              opacity: 1,
-            }}
-            p={3.5}
-            background={"blackAlpha.700"}
-            cursor={"pointer"}
-            {...getRootProps()}
-          >
-            <input {...getInputProps()} hidden />
-            <Icon as={Upload} boxSize={4} color={"white"} />
-          </Circle>
-          <RequirementImage image={orignalImage} />
-        </Center>
-      )}
-      <FormErrorMessage>
-        {ERROR_MESSAGES[fileRejections?.[0]?.errors?.[0]?.code] ??
-          fileRejections?.[0]?.errors?.[0]?.message}
-      </FormErrorMessage>
-    </FormControl>
+    <>
+      <Circle
+        position="absolute"
+        opacity={0}
+        _hover={{
+          opacity: 1,
+        }}
+        p={3.5}
+        background={"blackAlpha.700"}
+        cursor={"pointer"}
+        {...getRootProps()}
+      >
+        <input {...getInputProps()} hidden />
+        <Icon as={Upload} boxSize={4} color={"white"} />
+      </Circle>
+      {children}
+    </>
   )
 }
 

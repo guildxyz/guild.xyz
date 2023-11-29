@@ -61,9 +61,8 @@ const RequirementEditableCard = ({
 
   const isCustomizable = REQUIREMENTS[type].isCustomizable
 
-  const isNameChanged =
-    formState.dirtyFields?.requirements && formState.dirtyFields.requirements[index]
-  const previewAvailable =
+  const isNameChanged = formState.dirtyFields.requirements?.[index]
+  const showViewOriginal =
     (field?.data?.customName && isNameChanged) || field?.data?.customImage
 
   const {
@@ -181,25 +180,9 @@ const RequirementEditableCard = ({
               footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
               setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
-              previewAvailable={previewAvailable}
-              imageEditor={
-                isCustomizable
-                  ? (originalImage) => (
-                      <RequirementImageEditor
-                        baseFieldPath={`requirements.${index}`}
-                        orignalImage={originalImage}
-                      />
-                    )
-                  : undefined
-              }
-              nameEditor={(originalText) => (
-                <RequirementNameEditor
-                  baseFieldPath={`requirements.${index}`}
-                  nameEditingEnabled={isCustomizable}
-                >
-                  {field.data.customName || originalText}
-                </RequirementNameEditor>
-              )}
+              showViewOriginal={showViewOriginal}
+              imageWrapper={isCustomizable ? RequirementImageEditor : undefined}
+              childrenWrapper={isCustomizable ? RequirementNameEditor : undefined}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>

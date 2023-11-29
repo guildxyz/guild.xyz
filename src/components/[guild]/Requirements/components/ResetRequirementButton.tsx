@@ -18,7 +18,7 @@ const ResetRequirementButton = () => {
   }
 
   return (
-    <Button size={"xs"} onClick={onReset}>
+    <Button size={"sm"} onClick={onReset}>
       Reset to original
     </Button>
   )

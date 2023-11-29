@@ -48,7 +48,7 @@ const RequirementDisplayComponent = ({
       <InvalidRequirementErrorBoundary>
         <RequirementComponent
           rightElement={rightElement}
-          previewAvailable={
+          showViewOriginal={
             requirement.data?.customName || requirement.data?.customImage
           }
           {...rest}
