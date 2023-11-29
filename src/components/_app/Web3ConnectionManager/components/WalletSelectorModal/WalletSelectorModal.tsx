@@ -17,10 +17,12 @@ import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
+import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useFuel from "hooks/useFuel"
+import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -32,7 +34,7 @@ import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
-import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
+import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -55,6 +57,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
   const { connector } = useAccount()
+
+  const [addressLinkParams] = useAtom(addressLinkParamsAtom)
+  const isAddressLink = !!addressLinkParams?.userId
 
   const { captchaVerifiedSince } = useUserPublic()
 
@@ -94,8 +99,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }
   }, [keyPair, ready, router])
 
-  const shouldLinkToUser = useShouldLinkToUser()
-
   const isConnectedAndKeyPairReady = isWeb3Connected && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
@@ -103,6 +106,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { windowFuel } = useFuel()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
+
+  const linkAddress = useLinkAddress()
 
   return (
     <Modal
@@ -148,7 +153,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             />
           </Box>
           <Text>
-            {shouldLinkToUser
+            {isAddressLink
               ? "Link address"
               : isDelegateConnection
               ? "Connect hot wallet"
@@ -158,9 +163,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         <ModalCloseButton />
         <ModalBody>
           <Error
-            {...(set.error
+            {...(set.error || linkAddress.error
               ? {
-                  error: set.error,
+                  error: set.error ?? linkAddress.error,
                   processError: (err: any) => {
                     if (err?.code === "ACTION_REJECTED") {
                       return {
@@ -234,6 +239,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   mb="4"
                   colorScheme={"green"}
                   onClick={async () => {
+                    if (isAddressLink) {
+                      linkAddress.onSubmit(addressLinkParams)
+                      return
+                    }
+
                     const token =
                       !recaptchaRef.current || !!captchaVerifiedSince
                         ? undefined
@@ -243,9 +253,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       recaptchaRef.current.reset()
                     }
 
-                    return set.onSubmit(shouldLinkToUser, undefined, token)
+                    return set.onSubmit(undefined, token)
                   }}
-                  isLoading={set.isLoading || !ready}
+                  isLoading={linkAddress.isLoading || set.isLoading || !ready}
                   isDisabled={!ready}
                   loadingText={
                     !ready
@@ -253,7 +263,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       : set.signLoadingText || "Check your wallet"
                   }
                 >
-                  {shouldLinkToUser ? "Link address" : "Verify address"}
+                  {isAddressLink ? "Link address" : "Verify address"}
                 </ModalButton>
               </Box>
             </>

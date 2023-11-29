@@ -1,9 +1,9 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtom } from "jotai"
-import randomBytes from "randombytes"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import useSWR, { KeyedMutator, mutate, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
@@ -14,7 +14,6 @@ import {
   useSubmitWithSignWithParamKeyPair,
 } from "../../hooks/useSubmit/useSubmit"
 import useToast from "../../hooks/useToast"
-import { addressLinkParamsAtom } from "./Web3ConnectionManager/components/WalletSelectorModal/hooks/useShouldLinkToUser"
 
 type StoredKeyPair = {
   keyPair: CryptoKeyPair
@@ -110,18 +109,8 @@ const setKeyPair = async ({
   generatedKeyPair: StoredKeyPair
   signedValidation: SignedValdation
   id: number
-}): Promise<[StoredKeyPair, boolean]> => {
-  const {
-    userId: signedUserId,
-    signature,
-    nonce,
-    addressConnectionProvider,
-  } = JSON.parse(signedValidation.signedPayload)
-
-  const shouldSendLink =
-    typeof signedUserId === "number" &&
-    typeof signature === "string" &&
-    typeof nonce === "string"
+}) => {
+  const { addressConnectionProvider } = JSON.parse(signedValidation.signedPayload)
 
   const newUser: User = await fetcher(`/v2/users/${id ?? address}/public-key`, {
     method: "POST",
@@ -134,7 +123,7 @@ const setKeyPair = async ({
     (newUser as any)?.userId ?? newUser.id
   ).catch(() => null)
 
-  if (!shouldSendLink && (!addressConnectionProvider || !prevKeyPair)) {
+  if (!addressConnectionProvider || !prevKeyPair) {
     storedKeyPair = generatedKeyPair
 
     /**
@@ -163,19 +152,9 @@ const setKeyPair = async ({
     }
   )
 
-  if (shouldSendLink) {
-    mutate(
-      [`/v2/users/${signedUserId}/profile`, { method: "GET", body: {} }],
-      newUser,
-      {
-        revalidate: false,
-      }
-    )
-  }
-
   await mutateKeyPair()
 
-  return [storedKeyPair, shouldSendLink]
+  return storedKeyPair
 }
 
 const checkKeyPair = ([_, savedPubKey, pubKey]): boolean => savedPubKey === pubKey
@@ -188,13 +167,12 @@ const KeyPairContext = createContext<{
   set: {
     isSigning: boolean
     signLoadingText: string
-    response: [StoredKeyPair, boolean]
+    response: StoredKeyPair
     isLoading: boolean
     error: any
     reset: () => void
 
     onSubmit: (
-      shouldLinkToUser: boolean,
       provider?: AddressConnectionProvider,
       reCaptchaToken?: string
     ) => Promise<void>
@@ -267,12 +245,6 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
             duration: 5000,
           })
           openWalletSelectorModal()
-
-          deleteKeyPairFromIdb(id).then(() => {
-            mutateKeyPair({ pubKey: undefined, keyPair: undefined }).then(() => {
-              mutate(unstable_serialize(["shouldLinkToUser", id]))
-            })
-          })
         } else if (!!addressLinkParams?.userId && addressLinkParams?.userId !== id) {
           deleteKeyPairFromIdb(id).then(() => {
             mutateKeyPair({ pubKey: undefined, keyPair: undefined })
@@ -284,7 +256,7 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
 
   const setSubmitResponse = useSubmitWithSignWithParamKeyPair<
     SetKeypairPayload,
-    [StoredKeyPair, boolean]
+    StoredKeyPair
   >(
     (signedValidation: SignedValdation) =>
       setKeyPair({
@@ -308,74 +280,20 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
           const trace = error?.stack || new Error().stack
           captureEvent(`Failed to set keypair`, { error, trace })
         }
-
-        try {
-          setAddressLinkParams({ userId: null, address: null })
-          mutate(unstable_serialize(["shouldLinkToUser", id]))
-        } catch (err) {
-          captureEvent(
-            `Failed to remove userId from localStorage after unsuccessful account link`,
-            {
-              error: err?.message || err?.toString?.() || err,
-            }
-          )
-        }
       },
-      onSuccess: ([newKeyPair, shouldDeleteUserId]) => {
+      onSuccess: (newKeyPair) => {
         mutate(unstable_serialize(["delegateCashVaults", id])).then(() => {
           window.localStorage.removeItem(`isDelegateDismissed_${id}`)
         })
 
         setIsDelegateConnection(false)
-        if (shouldDeleteUserId) {
-          try {
-            setAddressLinkParams({ userId: null, address: null })
-          } catch (error) {
-            captureEvent(
-              `Failed to remove userId from localStorage after account link`,
-              {
-                error: error?.message || error?.toString?.() || error,
-              }
-            )
-          }
-        } else {
-          mutateKeyPair(newKeyPair)
-        }
+        mutateKeyPair(newKeyPair)
       },
     }
   )
 
   const ready =
     !(keyPair === undefined && keyPairError === undefined) || !!publicUserError
-
-  const {
-    id: mainUserId,
-    publicKey: mainUserPublicKey,
-    ...mainUser
-  } = useUserPublic(addressLinkParams?.address)
-
-  const { data: mainUserKeyPair, error } = useSWRImmutable(
-    mainUserId ? ["mainUserKeyPair", mainUserId] : null,
-    ([_, mainUserIdToGet]) => getKeyPairFromIdb(mainUserIdToGet)
-  )
-
-  const isMainUserKeyInvalid =
-    !!error ||
-    (!!mainUserId &&
-      !!addressLinkParams?.userId &&
-      mainUserId !== id &&
-      mainUserKeyPair &&
-      (mainUserPublicKey ?? (mainUser as any)?.signingKey) !==
-        mainUserKeyPair.pubKey)
-
-  useEffect(() => {
-    if (isMainUserKeyInvalid) {
-      setAddressLinkParams({ userId: null, address: null })
-      deleteKeyPairFromIdb(mainUserId).then(() =>
-        mutate(unstable_serialize(["shouldLinkToUser", id]))
-      )
-    }
-  }, [isMainUserKeyInvalid])
 
   return (
     <KeyPairContext.Provider
@@ -387,7 +305,6 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
         set: {
           ...setSubmitResponse,
           onSubmit: async (
-            shouldLinkToUser: boolean,
             provider?: AddressConnectionProvider,
             reCaptchaToken?: string
           ) => {
@@ -402,42 +319,12 @@ const KeyPairProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element 
             try {
               body.pubKey = generatedKeyPair.pubKey
             } catch (err) {
-              if (error?.code !== 4001) {
+              if (err?.code !== 4001) {
                 captureEvent(`Keypair generation error`, {
                   error: err?.message || err?.toString?.() || err,
                 })
               }
               throw err
-            }
-
-            if (shouldLinkToUser) {
-              const userId = addressLinkParams?.userId
-
-              const { keyPair: mainKeyPair } = await getKeyPairFromIdb(userId)
-
-              const nonce = randomBytes(32).toString("base64")
-
-              const mainUserSig = await window.crypto.subtle
-                .sign(
-                  { name: "ECDSA", hash: "SHA-512" },
-                  mainKeyPair?.privateKey,
-                  Buffer.from(
-                    `Address: ${address.toLowerCase()}\nNonce: ${nonce}\nUserID: ${userId}`
-                  )
-                )
-                .then((signatureBuffer) =>
-                  Buffer.from(signatureBuffer).toString("hex")
-                )
-
-              if (
-                typeof mainUserSig === "string" &&
-                mainUserSig.length > 0 &&
-                typeof userId === "number"
-              ) {
-                body.signature = mainUserSig
-                body.userId = userId
-                body.nonce = nonce
-              }
             }
 
             if (isDelegateConnection || provider === "DELEGATE") {
