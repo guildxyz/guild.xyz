@@ -86,6 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
+  | "POLYGON_ID"
 
 type PlatformUserData = {
   acessToken?: string

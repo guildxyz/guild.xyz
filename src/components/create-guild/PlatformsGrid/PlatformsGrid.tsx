@@ -46,7 +46,12 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
     TEXT: {
       description: "Gate special content, links, etc",
     },
+    POLYGON_ID: {
+      description: "Proof role membership",
+    },
   }
+
+  console.log("xy proof")
 
   return (
     <Stack spacing={8} {...rest}>

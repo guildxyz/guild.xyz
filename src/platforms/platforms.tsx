@@ -377,6 +377,28 @@ const platforms: Record<PlatformName, PlatformData> = {
       ssr: false,
     }),
   },
+  POLYGON_ID: {
+    icon: Key,
+    imageUrl: "/networkLogos/polygon.svg",
+    name: "PolygonID Proof",
+    colorScheme: "gray",
+    gatedEntity: "",
+    cardPropsHook: useUniqueTextCardProps,
+    cardButton: TextCardButton,
+    cardMenuComponent: UniqueTextCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: false,
+    PlatformPreview: dynamic(
+      () => import("platforms/components/UniqueTextPreview"),
+      {
+        ssr: false,
+        loading: () => <PlatformPreview isLoading={true} />,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
+      ssr: false,
+    }),
+  },
 }
 
 export default platforms
