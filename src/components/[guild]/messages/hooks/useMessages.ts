@@ -11,12 +11,13 @@ export type Message = {
   destination: MessageDestination
   message: string
   status: "PENDING" | "SENT"
+  roleIds: number[]
+  receiverCount: number
   createdAt: string
 }
 
 const useMessages = () => {
   const { id } = useGuild()
-
   const { isValid } = useKeyPair()
   const fetcherWithSign = useFetcherWithSign()
 

@@ -14,14 +14,14 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import useReachableUsers from "../hooks/useReachableUsers"
 import useSendMessage, { SendMessageForm } from "../hooks/useSendMessage"
+import useTargetedCount from "../hooks/useTargetedCount"
 import RoleIdsSelect from "./components/RoleIdsSelect"
 
 const SendNewMessage = (props: ButtonProps) => {
@@ -49,26 +49,13 @@ const SendNewMessage = (props: ButtonProps) => {
     onClose()
   })
 
-  const { id } = useGuild()
-  const { data: members, isValidating: isMembersValidating } =
-    useSWRWithOptionalAuth<{ roleId: number; members: `0x${string}`[] }[]>(
-      isOpen ? `/v2/guilds/${id}/members` : null
-    )
-
   const roleIds = useWatch({ control, name: "roleIds" })
 
-  const targetedCount =
-    !members || !roleIds.length
-      ? 0
-      : [
-          ...new Set(
-            members
-              .filter((role) => roleIds.includes(role.roleId))
-              .flatMap((role) => role.members)
-          ),
-        ].length
+  const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
 
-  const reachableCount = 0 // TODO: fetch from API
+  const { data: reachableUsers, isValidating: isReachableUsersLoading } =
+    useReachableUsers("WEB3INBOX", "ROLES", roleIds)
+
   const greenText = useColorModeValue("green.500", "green.300")
 
   return (
@@ -96,18 +83,26 @@ const SendNewMessage = (props: ButtonProps) => {
                     <Text
                       as="span"
                       fontWeight="bold"
-                      color={reachableCount > 0 && greenText}
+                      color={reachableUsers?.length > 0 && greenText}
                     >
-                      {reachableCount}
+                      {isReachableUsersLoading ? (
+                        <Spinner size="xs" />
+                      ) : (
+                        reachableUsers?.length
+                      )}
                     </Text>
-                    <Text as="span" color={reachableCount > 0 && greenText}>
+                    <Text as="span" color={reachableUsers?.length > 0 && greenText}>
                       {" reachable "}
                     </Text>
                     <Text as="span" color="chakra-body-text">
                       {"/ "}
                     </Text>
                     <Text as="span" fontWeight="bold">
-                      {isMembersValidating ? <Spinner size="xs" /> : targetedCount}
+                      {isTargetedCountValidating ? (
+                        <Spinner size="xs" />
+                      ) : (
+                        targetedCount
+                      )}
                     </Text>
                     {" targeted"}
                   </Text>

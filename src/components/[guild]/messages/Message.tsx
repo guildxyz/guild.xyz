@@ -31,6 +31,7 @@ import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
 import { Message as MessageType } from "./hooks/useMessages"
+import useTargetedCount from "./hooks/useTargetedCount"
 
 const DISPLAYED_ROLES_COUNT = 3
 
@@ -66,6 +67,8 @@ const Message = ({
     pt: 0,
     pb: 4,
   }
+
+  const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
 
   return (
     <>
@@ -178,7 +181,7 @@ const Message = ({
                     <Td {...tableRightColStyles}>2023.10.21 18:00</Td>
                   </Tr>
                   <Tr>
-                    <Td {...tableLeftColStyles}>Sent to</Td>
+                    <Td {...tableLeftColStyles}>Targeted</Td>
                     <Td {...tableRightColStyles}>
                       <Wrap>
                         {targetedRoles.slice(0, 5).map((role) => (
@@ -193,9 +196,17 @@ const Message = ({
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td {...tableLeftColStyles}>Seen by</Td>
+                    <Td {...tableLeftColStyles}>Sent to</Td>
                     <Td {...tableRightColStyles}>
-                      <b>17</b> / 200 members
+                      <b>{receiverCount}</b>
+                      <Text as="span">
+                        /
+                        {isTargetedCountValidating ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          targetedCount
+                        )}
+                      </Text>
                     </Td>
                   </Tr>
                 </Tbody>
