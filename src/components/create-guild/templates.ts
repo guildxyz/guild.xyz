@@ -23,9 +23,7 @@ export const TEMPLATES: Array<RoleFormType> = [
     requirements: [
       {
         type: "CAPTCHA",
-        data: {
-          maxAmount: 864000000,
-        },
+        data: {},
       },
     ],
   },
