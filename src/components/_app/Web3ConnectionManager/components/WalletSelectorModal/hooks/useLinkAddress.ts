@@ -3,6 +3,7 @@ import {
   deleteKeyPairFromIdb,
   getKeyPairFromIdb,
 } from "components/_app/KeyPairProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   AddressLinkParams,
   addressLinkParamsAtom,
@@ -13,19 +14,16 @@ import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { mutate } from "swr"
 import { fetcherWithSign } from "utils/fetcher"
-import { useAccount, useSignMessage } from "wagmi"
 
 const getAddressLinkProof = async (
   address: `0x${string}`,
-  signMessageAsync: (
-    args?: Parameters<ReturnType<typeof useSignMessage>["signMessageAsync"]>[0]
-  ) => Promise<`0x${string}`>
+  signMessage: (message: string) => Promise<string>
 ) => {
   const addr = address.toLowerCase()
   const timestamp = Date.now()
   const nonce = randomBytes(32).toString("hex")
   const message = `Address: ${addr}\nNonce: ${nonce}\n Timestamp: ${timestamp}`
-  const signature = await signMessageAsync({ message })
+  const signature = await signMessage(message)
 
   return { address: addr, nonce, timestamp, signature }
 }
@@ -40,10 +38,8 @@ const checkAndDeleteKeys = async (userId: number) => {
     { revalidate: false }
   )
 }
-
 const useLinkAddress = () => {
-  const { address: addressToLink } = useAccount()
-  const { signMessageAsync } = useSignMessage()
+  const { signMessage, address: addressToLink } = useWeb3ConnectionManager()
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { id: currentUserId } = useUserPublic()
 
@@ -67,7 +63,7 @@ const useLinkAddress = () => {
       )
     }
 
-    const body = await getAddressLinkProof(addressToLink, signMessageAsync)
+    const body = await getAddressLinkProof(addressToLink, signMessage)
 
     const newAddress = await fetcherWithSign(
       {
