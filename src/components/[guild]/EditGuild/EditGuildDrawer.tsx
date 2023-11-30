@@ -246,7 +246,7 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                {isOwner ? (
+                {isOwner || isSuperAdmin ? (
                   <DeleteGuildButton
                     beforeDelete={() => methods.reset(defaultValues)}
                   />
