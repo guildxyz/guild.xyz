@@ -46,7 +46,13 @@ const RequirementDisplayComponent = ({
   return (
     <RequirementProvider requirement={requirement}>
       <InvalidRequirementErrorBoundary>
-        <RequirementComponent rightElement={rightElement} {...rest} />
+        <RequirementComponent
+          rightElement={rightElement}
+          showViewOriginal={
+            requirement.data?.customName || requirement.data?.customImage
+          }
+          {...rest}
+        />
       </InvalidRequirementErrorBoundary>
     </RequirementProvider>
   )

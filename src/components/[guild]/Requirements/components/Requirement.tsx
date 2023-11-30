@@ -1,41 +1,49 @@
 import {
   Box,
-  Circle,
   HStack,
-  Img,
+  Icon,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  Portal,
   SimpleGrid,
   Skeleton,
-  SkeletonCircle,
+  Stack,
   Tag,
   Text,
-  useColorMode,
   VStack,
 } from "@chakra-ui/react"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
-import { PropsWithChildren } from "react"
+import { CaretDown } from "phosphor-react"
+import React, { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
+import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
+import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
+import ResetRequirementButton from "./ResetRequirementButton"
 
 export type RequirementProps = PropsWithChildren<{
   fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
-  withImgBg?: boolean
   footer?: JSX.Element
   rightElement?: JSX.Element
+  imageWrapper?: React.FC<any>
+  childrenWrapper?: React.FC<any>
+  showViewOriginal?: boolean
 }>
 
 const Requirement = ({
   isImageLoading,
   image,
   footer,
-  withImgBg = true,
   rightElement,
   children,
   fieldRoot,
+  imageWrapper: ImageWrapper = React.Fragment,
+  childrenWrapper: ChildrenWrapper = Box,
+  showViewOriginal,
 }: RequirementProps): JSX.Element => {
-  const { colorMode } = useColorMode()
   const requirement = useRequirementContext()
 
   return (
@@ -47,61 +55,55 @@ const Requirement = ({
       alignItems="center"
     >
       <Box mt="3px" alignSelf={"start"}>
-        <SkeletonCircle
-          minW={"var(--chakra-space-11)"}
-          boxSize={"var(--chakra-space-11)"}
-          isLoaded={!isImageLoading}
-        >
-          <Circle
-            size={"var(--chakra-space-11)"}
-            backgroundColor={
-              withImgBg &&
-              (colorMode === "light" ? "blackAlpha.100" : "blackAlpha.300")
-            }
-            alignItems="center"
-            justifyContent="center"
-            overflow={withImgBg ? "hidden" : undefined}
-          >
-            {typeof image === "string" ? (
-              image.endsWith(".mp4") ? (
-                <video
-                  src={image}
-                  width={"var(--chakra-space-11)"}
-                  height={"var(--chakra-space-11)"}
-                  muted
-                  autoPlay
-                  loop
-                />
-              ) : (
-                <Img
-                  src={image}
-                  maxWidth={"var(--chakra-space-11)"}
-                  maxHeight={"var(--chakra-space-11)"}
-                />
-              )
-            ) : (
-              image
-            )}
-          </Circle>
-        </SkeletonCircle>
+        <RequirementImageCircle isImageLoading={isImageLoading}>
+          <ImageWrapper baseFieldPath={fieldRoot}>
+            <RequirementImage image={requirement?.data?.customImage || image} />
+          </ImageWrapper>
+        </RequirementImageCircle>
       </Box>
-      <VStack alignItems={"flex-start"} alignSelf="center">
-        <HStack>
-          <Text wordBreak="break-word">
-            {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-            {children}
-            {fieldRoot ? (
-              <SetVisibility ml={2} entityType="requirement" fieldBase={fieldRoot} />
-            ) : (
-              <Visibility
-                entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-                ml="1"
-              />
-            )}
-          </Text>
-        </HStack>
+      <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
+        {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+        <ChildrenWrapper baseFieldPath={fieldRoot}>
+          {requirement?.data?.customName || children}
+          {!fieldRoot && (
+            <Visibility
+              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+              ml="1"
+            />
+          )}
+        </ChildrenWrapper>
 
-        {footer}
+        <HStack wrap={"wrap"}>
+          {showViewOriginal && (
+            <Popover placement="bottom-start">
+              <PopoverTrigger>
+                <RequirementButton rightIcon={<Icon as={CaretDown} />}>
+                  View original
+                </RequirementButton>
+              </PopoverTrigger>
+              <Portal>
+                <PopoverContent w="max-content" maxWidth={"100vw"}>
+                  <HStack p={3} gap={4}>
+                    <RequirementImageCircle isImageLoading={isImageLoading}>
+                      <RequirementImage image={image} />
+                    </RequirementImageCircle>
+                    <Stack
+                      direction={{ base: "column", md: "row" }}
+                      alignItems={{ base: "flex-start", md: "center" }}
+                      spacing={{ base: 2, md: 5 }}
+                    >
+                      <Text wordBreak="break-word" flexGrow={1}>
+                        {children}
+                      </Text>
+                      {!!fieldRoot && <ResetRequirementButton />}
+                    </Stack>
+                  </HStack>
+                </PopoverContent>
+              </Portal>
+            </Popover>
+          )}
+          {footer}
+        </HStack>
       </VStack>
       {rightElement}
     </SimpleGrid>

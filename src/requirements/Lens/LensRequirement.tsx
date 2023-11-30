@@ -9,7 +9,7 @@ const LensRequirement = (props: RequirementProps) => {
   requirement.chain = "POLYGON"
 
   return (
-    <Requirement image={"requirementLogos/lens.png"} {...props}>
+    <Requirement image="/requirementLogos/lens.png" {...props}>
       {(() => {
         switch (requirement.type) {
           case "LENS_COLLECT":

@@ -31,7 +31,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
       <JoinStep
         isDone={isPIDConnected}
         colorScheme="purple"
-        icon={<Img src="requirementLogos/polygonId_white.svg" width="1.5em" />}
+        icon={<Img src="/requirementLogos/polygonId_white.svg" width="1.5em" />}
         title="Connect PolygonID"
         buttonLabel={isPIDConnected ? "Connected" : "Connect"}
         onClick={onOpen}

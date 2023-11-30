@@ -25,6 +25,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ImageSquare,
     name: "NFT",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Nft/NftRequirement")
     ),
@@ -36,6 +37,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: CurrencyCircleDollar,
     name: "Token",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Token/TokenRequirement")
     ),
@@ -47,6 +49,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ListChecks,
     name: "Allowlist",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Allowlist/AllowlistRequirement")
     ),
@@ -69,6 +72,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wrench,
     name: "Contract query",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
     ),
@@ -221,6 +225,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/PolygonId/PolygonIdRequirement")
     ),
@@ -265,6 +270,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/eas.png",
     name: "EAS",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
     ),
@@ -348,6 +354,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Mirror/MirrorRequirement")
     ),
@@ -377,6 +384,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/disco.png",
     name: "Disco",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Disco/DiscoRequirement")
     ),
@@ -444,6 +452,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Yup/YupRequirement")
     ),
@@ -466,6 +475,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/networkLogos/optimism.svg",
     name: "OP Attestation",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Optimism/OptimismRequirement")
     ),
@@ -477,6 +487,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rep3/Rep3Requirement")
     ),
@@ -538,6 +549,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/orange.png",
     name: "Orange",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Orange/OrangeRequirement")
     ),
@@ -549,6 +561,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/cask.png",
     name: "Cask",
+    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Cask/CaskRequirement")
     ),
