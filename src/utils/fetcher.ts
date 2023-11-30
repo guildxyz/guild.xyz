@@ -1,7 +1,7 @@
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useFuel from "hooks/useFuel"
+import useKeyPair from "hooks/useKeyPair"
 import { sign } from "hooks/useSubmit"
 import { FuelSignProps, SignProps, fuelSign } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"

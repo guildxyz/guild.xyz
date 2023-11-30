@@ -1,4 +1,4 @@
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import useKeyPair from "hooks/useKeyPair"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useContext } from "react"
@@ -100,7 +100,7 @@ const ActivityLogProvider = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { query } = useRouter()
 
-  const { keyPair, ready, isValid } = useKeyPair()
+  const { keyPair } = useKeyPair()
 
   const getKey = (
     pageIndex: number,
@@ -109,8 +109,6 @@ const ActivityLogProvider = ({
     if (
       (!guildId && !userId) ||
       !keyPair ||
-      !ready ||
-      !isValid ||
       (previousPageData?.entries && !previousPageData.entries.length)
     )
       return null
