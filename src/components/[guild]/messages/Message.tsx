@@ -9,10 +9,12 @@ import {
   ModalOverlay,
   Skeleton,
   SkeletonText,
+  Spinner,
   Stack,
   Table,
   Tag,
   TagLabel,
+  TagLeftIcon,
   Tbody,
   Td,
   Text,
@@ -28,10 +30,15 @@ import { Checks, Users } from "phosphor-react"
 import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
+import { Message as MessageType } from "./hooks/useMessages"
 
 const DISPLAYED_ROLES_COUNT = 3
 
-const Message = () => {
+type Props = {
+  message: MessageType
+}
+
+const Message = ({ message: { message, status, createdAt } }: Props) => {
   // Using this as mock data
   const { roles } = useGuild()
 
@@ -64,15 +71,24 @@ const Message = () => {
       <Card p={6}>
         <Stack spacing={4} w="full">
           <Stack spacing={2} w="full">
-            <Text as="span" fontWeight="bold" colorScheme="gray" fontSize="sm">
-              2023.10.21 18:00
-            </Text>
-            <Text>
-              Lorem Ipsum is simply dummy text of the printing and typesetting
-              industry. Lorem Ipsum has been the industry's standard dummy text ever
-              since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book. It has...
-            </Text>
+            <Wrap>
+              <Text as="span" fontWeight="bold" colorScheme="gray" fontSize="sm">
+                {new Date(createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                })}
+              </Text>
+              {status === "PENDING" && (
+                <Tag colorScheme="blue" size="sm">
+                  <TagLeftIcon as={Spinner} />
+                  <TagLabel>Pending</TagLabel>
+                </Tag>
+              )}
+            </Wrap>
+            <Text>{message}</Text>
           </Stack>
 
           <HStack justifyContent="space-between">

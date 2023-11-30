@@ -5,6 +5,9 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { MessageSkeleton } from "components/[guild]/messages/Message"
+import useMessages from "components/[guild]/messages/hooks/useMessages"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
@@ -22,6 +25,8 @@ const Messages = () => {
 
   const { name, imageUrl } = useGuild()
   const { isAdmin } = useGuildPermission()
+
+  const { data, error, isLoading } = useMessages()
 
   return (
     <Layout
@@ -47,9 +52,26 @@ const Messages = () => {
 
       <NoPermissionToPageFallback>
         <Stack>
-          <DynamicNoMessages />
-          <DynamicMessage />
-          <MessageSkeleton />
+          {isLoading ? (
+            [...Array(3)].map((_, i) => <MessageSkeleton key={i} />)
+          ) : error ? (
+            <Card>
+              <ErrorAlert
+                mb={0}
+                label={
+                  typeof error?.error === "string"
+                    ? error.error
+                    : "An unknown error occurred"
+                }
+              />
+            </Card>
+          ) : data?.length > 0 ? (
+            data.map((message) => (
+              <DynamicMessage key={message.id} message={message} />
+            ))
+          ) : (
+            <DynamicNoMessages />
+          )}
         </Stack>
       </NoPermissionToPageFallback>
     </Layout>
