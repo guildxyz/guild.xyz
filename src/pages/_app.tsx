@@ -9,7 +9,7 @@ import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
 import useSetupFuel from "hooks/useSetupFuel"
-import { atom, useSetAtom } from "jotai"
+import { useSetAtom } from "jotai"
 import type { AppProps } from "next/app"
 import { useRouter } from "next/router"
 import Script from "next/script"
@@ -19,6 +19,7 @@ import ReCAPTCHA from "react-google-recaptcha"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
+import { recaptchaAtom } from "utils/recaptcha"
 import { WagmiConfig, createConfig } from "wagmi"
 
 /**
@@ -32,10 +33,6 @@ const config = createConfig({
   publicClient,
   connectors,
 })
-
-export const recaptchaAtom = atom(null as ReCAPTCHA)
-
-export const RECAPTCHA_CONTAINER_ID = "recaptcha-container"
 
 const App = ({
   Component,
@@ -69,7 +66,6 @@ const App = ({
         ref={(recaptcha) => {
           setRecaptcha(recaptcha)
         }}
-        id={RECAPTCHA_CONTAINER_ID}
         sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
         size="invisible"
       />
