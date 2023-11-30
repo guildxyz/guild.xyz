@@ -32,7 +32,6 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
-import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
@@ -292,35 +291,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
               <Divider />
 
-              <HStack>
-                <ChainPicker
-                  controlName="chain"
-                  supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
-                  showDivider={false}
-                />
-                <FormControl>
-                  <FormLabel>Supply</FormLabel>
-                  <StyledSelect
-                    value={{
-                      label: "Unlimited",
-                      value: "UNLIMITED",
-                    }}
-                    options={[
-                      {
-                        label: "Unlimited",
-                        value: "UNLIMITED",
-                      },
-                      {
-                        label: "Fixed",
-                        value: "FIXED",
-                        isDisabled: true,
-                        details: "Coming soon",
-                      },
-                    ]}
-                    filterOption={() => true}
-                  />
-                </FormControl>
-              </HStack>
+              <ChainPicker
+                controlName="chain"
+                supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
+                showDivider={false}
+              />
 
               <FormControl isInvalid={!!errors?.price}>
                 <FormLabel>Price</FormLabel>
