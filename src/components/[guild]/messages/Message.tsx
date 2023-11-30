@@ -38,15 +38,16 @@ type Props = {
   message: MessageType
 }
 
-const Message = ({ message: { message, status, createdAt } }: Props) => {
-  // Using this as mock data
-  const { roles } = useGuild()
-
+const Message = ({
+  message: { createdAt, status, message, roleIds, receiverCount },
+}: Props) => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const moreRolesTagBorderColorVar = useColorModeValue("gray-300", "whiteAlpha-300")
   const tableLeftColTextColor = useColorModeValue("black", "gray.400")
 
-  const moreRolesCount = roles.length - DISPLAYED_ROLES_COUNT
+  const { roles } = useGuild()
+  const targetedRoles = roles.filter((role) => roleIds.includes(role.id))
+  const moreRolesCount = targetedRoles.length - DISPLAYED_ROLES_COUNT
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -108,11 +109,11 @@ const Message = ({ message: { message, status, createdAt } }: Props) => {
                   }}
                   onClick={onOpen}
                 >
-                  <TagLabel>{`${roles.length} roles`}</TagLabel>
+                  <TagLabel>{`${targetedRoles.length} roles`}</TagLabel>
                 </Tag>
               ) : (
                 <>
-                  {roles.slice(0, DISPLAYED_ROLES_COUNT)?.map((role) => (
+                  {targetedRoles.slice(0, DISPLAYED_ROLES_COUNT).map((role) => (
                     <RoleTag
                       key={role.id}
                       name={role.name}
@@ -141,8 +142,7 @@ const Message = ({ message: { message, status, createdAt } }: Props) => {
             <HStack>
               <Icon as={Checks} color="gray.400" />
               <Text as="span" colorScheme="gray" fontSize="sm">
-                <b>42</b>
-                /56
+                {receiverCount}
               </Text>
               <Icon as={Users} color="gray.400" />
             </HStack>
@@ -181,7 +181,7 @@ const Message = ({ message: { message, status, createdAt } }: Props) => {
                     <Td {...tableLeftColStyles}>Sent to</Td>
                     <Td {...tableRightColStyles}>
                       <Wrap>
-                        {roles?.slice(0, 5)?.map((role) => (
+                        {targetedRoles.slice(0, 5).map((role) => (
                           <RoleTag
                             key={role.id}
                             name={role.name}
