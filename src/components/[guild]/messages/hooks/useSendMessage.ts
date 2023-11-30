@@ -3,6 +3,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
+import useMessages, { Message } from "./useMessages"
 
 export type MessageProtocol = "XMTP" | "WEB3INBOX"
 export type MessageDestination = "GUILD" | "ADMINS" | "ROLES"
@@ -26,14 +27,16 @@ const useSendMessage = (onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  return useSubmitWithSign(sendMessage, {
+  const { mutate: mutateMessages } = useMessages()
+
+  return useSubmitWithSign<{ job: { id: string }; message: Message }>(sendMessage, {
     onSuccess: (response) => {
       toast({
         status: "success",
         title: "Successfully sent message!",
       })
-      // TODO: mutate useMessages here
-      console.log("RES", response)
+
+      mutateMessages((prev) => [response.message, ...prev], { revalidate: false })
 
       onSuccess?.()
     },
