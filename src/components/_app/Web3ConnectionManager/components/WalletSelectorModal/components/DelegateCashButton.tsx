@@ -10,22 +10,22 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@chakra-ui/react"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import useKeyPair from "hooks/useKeyPair"
 import { ArrowSquareOut } from "phosphor-react"
 import { useAccount } from "wagmi"
 
 const DelegateCashButton = (): JSX.Element => {
   const { isConnected } = useAccount()
-  const { ready } = useKeyPair()
+  const { keyPair } = useKeyPair()
 
   const iconUrl = "delegatecash.png"
   const connectorName = "Delegate"
 
   const { setIsDelegateConnection } = useWeb3ConnectionManager()
 
-  if (ready && isConnected) return null
+  if (keyPair && isConnected) return null
 
   return (
     <Popover trigger="hover">

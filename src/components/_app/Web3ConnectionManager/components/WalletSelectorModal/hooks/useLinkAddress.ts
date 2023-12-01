@@ -1,14 +1,12 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import {
-  deleteKeyPairFromIdb,
-  getKeyPairFromIdb,
-} from "components/_app/KeyPairProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   AddressLinkParams,
   addressLinkParamsAtom,
 } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { randomBytes } from "crypto"
+import useKeyPair from "hooks/useKeyPair"
+import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
@@ -32,16 +30,12 @@ const checkAndDeleteKeys = async (userId: number) => {
   const keys = await getKeyPairFromIdb(userId)
   if (!keys) return
   await deleteKeyPairFromIdb(userId)
-  await mutate(
-    ["keyPair", userId],
-    { pubKey: undefined, keyPair: undefined },
-    { revalidate: false }
-  )
 }
 const useLinkAddress = () => {
   const { signMessage, address: addressToLink } = useWeb3ConnectionManager()
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { id: currentUserId } = useUserPublic()
+  const { deleteKeyOfUser } = useKeyPair()
 
   // When we link an address, that has a registered keypair, we need to delete that keypair to trigger the modal. Plus that keys are invalidated anyway, and would end up sitting in the indexeddb util they are manually deleted
   useEffect(() => {
@@ -52,7 +46,7 @@ const useLinkAddress = () => {
     )
       return
 
-    checkAndDeleteKeys(currentUserId)
+    checkAndDeleteKeys(currentUserId).then(() => deleteKeyOfUser())
   }, [addressLinkParams, currentUserId])
 
   return useSubmit(async ({ userId, address }: AddressLinkParams) => {
