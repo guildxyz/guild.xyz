@@ -242,7 +242,7 @@ type SignBaseProps = {
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
   msg?: string
-  ts: number
+  ts?: number
 }
 
 export type SignProps = SignBaseProps & {
@@ -311,7 +311,7 @@ export const sign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: SignProps): Promise<[string, Validation]> => {
-  const params = createMessageParams(address, ts, msg, payload)
+  const params = createMessageParams(address, ts ?? Date.now(), msg, payload)
   let sig = null
 
   if (!!keyPair && !forcePrompt) {

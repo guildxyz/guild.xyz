@@ -69,7 +69,7 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
                 loadingText={"Loading"}
                 size="sm"
                 onClick={() => {
-                  set.onSubmit(false, "DELEGATE")
+                  set.onSubmit("DELEGATE")
                 }}
               >
                 Link vault{vaults?.length === 1 ? "" : "s"}

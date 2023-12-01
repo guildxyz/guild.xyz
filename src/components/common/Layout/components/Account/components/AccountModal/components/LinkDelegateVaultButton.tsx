@@ -17,7 +17,7 @@ const LinkDelegateVaultButton = ({ vaults }) => {
       }
       size="sm"
       onClick={() => {
-        set.onSubmit(false, "DELEGATE")
+        set.onSubmit("DELEGATE")
       }}
       isLoading={set.isLoading || set.isSigning}
       loadingText="Check your wallet"
