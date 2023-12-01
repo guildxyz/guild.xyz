@@ -17,8 +17,7 @@ const useKeyPair = () => {
   }, [id, keys, publicKey, error])
 
   return {
-    pubKey: keysOfUser?.pubKey,
-    keyPair: keysOfUser?.keyPair,
+    ...keysOfUser,
     deleteKeyOfUser: () => setKeys((prev) => ({ ...prev, [id]: undefined })),
   }
 }
