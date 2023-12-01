@@ -53,7 +53,8 @@ type TGAuthResult = {
 
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
-  authLevel: AuthLevel = "membership"
+  authLevel: AuthLevel = "membership",
+  paramOverrides = {}
 ): OAuthState<OAuthResponse> & {
   onOpen: () => Promise<OAuthState<OAuthResponse>>
 } => {
@@ -88,6 +89,13 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     setOauthState(result)
 
     let finalOauthParams = params
+
+    if (paramOverrides) {
+      finalOauthParams = {
+        ...finalOauthParams,
+        ...paramOverrides,
+      }
+    }
 
     if (oauthOptionsInitializer) {
       try {

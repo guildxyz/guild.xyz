@@ -86,7 +86,6 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
-  | "GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY"
 
 type PlatformUserData = {
   acessToken?: string

@@ -23,7 +23,6 @@ import {
 } from "@chakra-ui/react"
 import { IPlayerProps, Player } from "@lottiefiles/react-lottie-player"
 import MetaMaskOnboarding from "@metamask/onboarding"
-import useOauthPopupWindow from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
@@ -35,6 +34,7 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { publicClient } from "connectors"
+import useDriveOAuth from "hooks/useDriveOauth"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
@@ -94,8 +94,7 @@ const GoogleLoginButton = () => {
     ({ id }) => id === "cwaasWallet"
   ) as CWaaSConnector
 
-  // TODO: Retain access code until it expires (or gets revoked), so if something fails, and has to retry, doesn't need to OAuth again
-  const googleAuth = useOauthPopupWindow("GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY")
+  const googleAuth = useDriveOAuth()
 
   const { set } = useKeyPair()
   const toast = useToast()

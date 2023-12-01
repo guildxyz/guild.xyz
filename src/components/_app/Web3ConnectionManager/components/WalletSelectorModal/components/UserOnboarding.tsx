@@ -8,12 +8,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import useOauthPopupWindow from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import { EmailPinEntry } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import useVerificationRequest from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/hooks/useEmailVerificationRequest"
 import useVerifyEmail from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/hooks/useVerifyEmail"
+import useDriveOAuth from "hooks/useDriveOauth"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
@@ -65,9 +65,7 @@ export default function UserOnboarding({
   const linkWallet = useVerifyEmail({}, cwaasConnector)
 
   const [shouldBackupAfterConnect, setShouldBackupAfterConnect] = useState(false)
-  const { authData, error, isAuthenticating, onOpen } = useOauthPopupWindow(
-    "GOOGLE_DRIVE_FOR_WALLET_BACKUP_ONLY"
-  )
+  const { authData, error, isAuthenticating, onOpen } = useDriveOAuth()
 
   const { ready, set, keyPair, isValid } = useKeyPair()
   const recaptchaRef = useRef<ReCAPTCHA>()
@@ -77,7 +75,7 @@ export default function UserOnboarding({
       uploadBackupDataToDrive(
         backupData,
         createWallet.response.account.address.toLowerCase(),
-        (authData as any).access_token
+        authData.access_token
       ),
     {
       onSuccess: async () => {
