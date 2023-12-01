@@ -144,13 +144,12 @@ const useSetKeyPair = () => {
           id: userProfile?.id,
           publicKey: userProfile?.publicKey,
           captchaVerifiedSince: userProfile?.captchaVerifiedSince,
+          keyPair: generatedKeys,
         },
         {
           revalidate: false,
         }
       )
-
-      setKeys(generatedKeys)
     },
     {
       onError: (error) => {
