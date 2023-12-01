@@ -1,6 +1,6 @@
 import { Center, Icon, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
 import { Wallet } from "phosphor-react"
@@ -32,7 +32,7 @@ const ConnectorButton = ({
 
   const { isConnected, connector: activeConnector } = useAccount()
 
-  const { ready } = useKeyPair()
+  const { keyPair, id } = useUserPublic()
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
@@ -65,7 +65,7 @@ const ConnectorButton = ({
       isDisabled={activeConnector?.id === connector.id}
       isLoading={
         ((isLoading && pendingConnector?.id === connector.id) ||
-          (isConnected && activeConnector?.id === connector.id && !ready)) &&
+          (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
         !error
       }
       spinnerPlacement="end"

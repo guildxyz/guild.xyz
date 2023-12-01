@@ -1,10 +1,10 @@
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import { createContext, PropsWithChildren, useContext } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { OneOf, PlatformName, Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+import { useUserPublic } from "../hooks/useUser"
 import {
   isSupportedQueryParam,
   SupportedQueryParam,
@@ -100,7 +100,7 @@ const ActivityLogProvider = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { query } = useRouter()
 
-  const { keyPair, ready, isValid } = useKeyPair()
+  const { keyPair } = useUserPublic()
 
   const getKey = (
     pageIndex: number,
@@ -109,8 +109,6 @@ const ActivityLogProvider = ({
     if (
       (!guildId && !userId) ||
       !keyPair ||
-      !ready ||
-      !isValid ||
       (previousPageData?.entries && !previousPageData.entries.length)
     )
       return null

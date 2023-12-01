@@ -14,7 +14,6 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
@@ -22,6 +21,7 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useFuel from "hooks/useFuel"
+import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
@@ -76,7 +76,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { ready, set, keyPair } = useKeyPair()
+  const { keyPair, id } = useUserPublic()
+  const set = useSetKeyPair()
 
   useEffect(() => {
     if (keyPair) onClose()
@@ -86,7 +87,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   useEffect(() => {
     if (
-      ready &&
+      !!id &&
       !keyPair &&
       router.isReady &&
       !ignoredRoutes.includes(router.route) &&
@@ -97,9 +98,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, ready, router])
+  }, [keyPair, router])
 
-  const isConnectedAndKeyPairReady = isWeb3Connected && ready
+  const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
@@ -238,30 +239,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={async () => {
+                  onClick={() => {
                     if (isAddressLink) {
-                      linkAddress.onSubmit(addressLinkParams)
-                      return
+                      return linkAddress.onSubmit(addressLinkParams)
                     }
-
-                    const token =
-                      !recaptchaRef.current || !!captchaVerifiedSince
-                        ? undefined
-                        : await recaptchaRef.current.executeAsync()
-
-                    if (token) {
-                      recaptchaRef.current.reset()
-                    }
-
-                    return set.onSubmit(undefined, token)
+                    return set.onSubmit()
                   }}
-                  isLoading={linkAddress.isLoading || set.isLoading || !ready}
-                  isDisabled={!ready}
-                  loadingText={
-                    !ready
-                      ? "Looking for keypairs"
-                      : set.signLoadingText || "Check your wallet"
-                  }
+                  isLoading={linkAddress.isLoading || set.isLoading || !id}
+                  isDisabled={keyPair === undefined}
+                  loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
                 >
                   {isAddressLink ? "Link address" : "Verify address"}
                 </ModalButton>

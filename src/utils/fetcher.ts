@@ -1,5 +1,5 @@
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useFuel from "hooks/useFuel"
 import { sign } from "hooks/useSubmit"
@@ -137,7 +137,7 @@ const fuelFetcherWithSign = async (
 }
 
 const useFetcherWithSign = () => {
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
   const timeInaccuracy = useTimeInaccuracy()
 
   const { type, address } = useWeb3ConnectionManager()
@@ -158,7 +158,7 @@ const useFetcherWithSign = () => {
             chainId: chainId.toString(),
             publicClient,
             walletClient,
-            keyPair,
+            keyPair: keyPair?.keyPair,
             ts: Date.now() + timeInaccuracy,
             ...signOptions,
           },
@@ -169,7 +169,7 @@ const useFetcherWithSign = () => {
           {
             address,
             wallet: fuelWallet,
-            keyPair,
+            keyPair: keyPair?.keyPair,
             ts: Date.now() + timeInaccuracy,
             ...signOptions,
           },
