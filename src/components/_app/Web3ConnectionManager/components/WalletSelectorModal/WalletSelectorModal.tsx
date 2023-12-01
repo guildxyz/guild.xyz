@@ -246,7 +246,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     return set.onSubmit()
                   }}
                   isLoading={linkAddress.isLoading || set.isLoading || !id}
-                  isDisabled={keyPair === undefined}
+                  isDisabled={!id}
                   loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
                 >
                   {isAddressLink ? "Link address" : "Verify address"}
