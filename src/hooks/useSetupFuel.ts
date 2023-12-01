@@ -57,7 +57,7 @@ const useSetupFuel = () => {
       windowFuel.off("currentAccount", onAccountChange)
       windowFuel.off("connection", onConnectionChange)
     }
-  }, [])
+  }, [windowFuel])
 }
 
 export default useSetupFuel

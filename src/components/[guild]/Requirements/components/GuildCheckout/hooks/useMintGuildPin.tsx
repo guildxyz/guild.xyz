@@ -208,7 +208,9 @@ const useMintGuildPin = () => {
         setLoadingText("")
         setTxError?.(true)
 
-        const prettyError = processViemContractError(error)
+        const prettyError = error.correlationId
+          ? error
+          : processViemContractError(error)
         showErrorToast(prettyError)
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {

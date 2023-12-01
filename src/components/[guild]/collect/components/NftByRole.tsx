@@ -11,13 +11,15 @@ type Props = {
 const NftByRole = ({ role }: Props) => {
   const { urlName } = useGuild()
 
+  if (!role) return null
+
   return (
     <HStack>
       <Text colorScheme="gray" as="span" flexShrink={0}>
         by role:
       </Text>
       <HStack spacing="1">
-        <GuildLogo imageUrl={role.imageUrl} size={6} />
+        {role?.imageUrl && <GuildLogo imageUrl={role.imageUrl} size={6} />}
 
         <Link href={`/${urlName}#role-${role.id}`} fontWeight="bold" noOfLines={1}>
           {role.name}
