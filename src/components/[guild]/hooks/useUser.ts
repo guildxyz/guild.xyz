@@ -97,10 +97,12 @@ const useUserPublic = (
     isLoading,
     ...data,
     deleteKeys: async () => {
-      await mutate((prev) => ({ ...prev, keyPair: undefined }))
+      await mutate((prev) => ({ ...prev, keyPair: undefined }), {
+        revalidate: false,
+      })
     },
     setKeys: async (keyPair: StoredKeyPair) => {
-      await mutate((prev) => ({ ...prev, keyPair }))
+      await mutate((prev) => ({ ...prev, keyPair }), { revalidate: false })
     },
     mutate,
     error,
