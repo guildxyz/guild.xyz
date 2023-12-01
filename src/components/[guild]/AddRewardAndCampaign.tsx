@@ -42,7 +42,12 @@ const AddRewardAndCampaign = () => {
             })}
           />
           <Portal>
-            <MenuList maxW="sm" py={0} zIndex="popover" overflow="hidden">
+            <MenuList
+              maxW={{ base: "100vw", sm: "sm" }}
+              py={0}
+              zIndex="popover"
+              overflow="hidden"
+            >
               <MenuItem
                 onClick={onOpen}
                 icon={<Icon as={Plus} mt="1" />}

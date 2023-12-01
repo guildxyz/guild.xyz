@@ -23,6 +23,7 @@ export const TEMPLATES: Array<RoleFormType> = [
     requirements: [
       {
         type: "CAPTCHA",
+        data: {},
       },
     ],
   },

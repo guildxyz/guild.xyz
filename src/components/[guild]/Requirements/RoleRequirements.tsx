@@ -166,11 +166,20 @@ const VirtualRequirements = memo(
 
       useEffect(() => {
         if (!rowRef.current) return
-        // Recalculating row heights, then setting new row heights
-        listRef.current.resetAfterIndex(0)
-        rowHeights.current = {
-          ...rowHeights.current,
-          [index]: rowRef.current.clientHeight,
+
+        const observer = new ResizeObserver(() => {
+          // Recalculating row heights, then setting new row heights
+          listRef.current.resetAfterIndex(0)
+          rowHeights.current = {
+            ...rowHeights.current,
+            [index]: rowRef.current.clientHeight,
+          }
+        })
+
+        observer.observe(rowRef.current)
+
+        return () => {
+          observer.disconnect()
         }
       }, [rowRef])
 

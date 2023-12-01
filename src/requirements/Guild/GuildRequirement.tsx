@@ -61,7 +61,10 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
       ) : (
         <>
           <Text as="span">{"Have the "}</Text>
-          <Skeleton isLoaded={!isGuildLoading && !isRoleLoading && !isGroupLoading}>
+          <Skeleton
+            display="inline-block"
+            isLoaded={!isGuildLoading && !isRoleLoading && !isGroupLoading}
+          >
             <Link
               href={`/${urlName ?? requirement.data.guildId}${
                 group ? `/${group.urlName}` : ""

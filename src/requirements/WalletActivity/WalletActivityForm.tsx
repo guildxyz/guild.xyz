@@ -18,14 +18,16 @@ import AlchemyTxValueRelative from "./components/AlchemyTxValueRelative"
 
 // These can be extended for additional Covalent support
 export const COVALENT_CHAINS = new Set<Chain>([
-  "BASE_GOERLI",
+  "ETHEREUM",
+  "POLYGON",
+  "POLYGON_ZKEVM",
   "BASE_MAINNET",
+  "BASE_GOERLI",
   "SCROLL",
   "SCROLL_SEPOLIA",
   "ZORA",
   "AVALANCHE",
   "ZKSYNC_ERA",
-  "POLYGON_ZKEVM",
   "CRONOS",
   "PGN",
   "NEON_EVM",
@@ -33,6 +35,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "LINEA",
   "MANTLE",
   "RONIN",
+  "ARBITRUM",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do
