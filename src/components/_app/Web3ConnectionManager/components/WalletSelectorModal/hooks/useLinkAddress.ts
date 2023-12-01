@@ -5,7 +5,6 @@ import {
   addressLinkParamsAtom,
 } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { randomBytes } from "crypto"
-import useKeyPair from "hooks/useKeyPair"
 import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import { useAtom } from "jotai"
@@ -34,8 +33,7 @@ const checkAndDeleteKeys = async (userId: number) => {
 const useLinkAddress = () => {
   const { signMessage, address: addressToLink } = useWeb3ConnectionManager()
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
-  const { id: currentUserId } = useUserPublic()
-  const { deleteKeyOfUser } = useKeyPair()
+  const { id: currentUserId, deleteKeys } = useUserPublic()
 
   // When we link an address, that has a registered keypair, we need to delete that keypair to trigger the modal. Plus that keys are invalidated anyway, and would end up sitting in the indexeddb util they are manually deleted
   useEffect(() => {
@@ -46,7 +44,7 @@ const useLinkAddress = () => {
     )
       return
 
-    checkAndDeleteKeys(currentUserId).then(() => deleteKeyOfUser())
+    checkAndDeleteKeys(currentUserId).then(() => deleteKeys())
   }, [addressLinkParams, currentUserId])
 
   return useSubmit(async ({ userId, address }: AddressLinkParams) => {

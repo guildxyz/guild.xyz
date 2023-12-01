@@ -1,14 +1,13 @@
 import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
-import useUser from "components/[guild]/hooks/useUser"
+import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useKeyPair from "hooks/useKeyPair"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
 
 const useConnectFromLocalStorage = () => {
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
   const { onSubmit } = useConnect(() => {

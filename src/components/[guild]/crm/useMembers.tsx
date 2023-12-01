@@ -1,10 +1,10 @@
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
-import useKeyPair from "hooks/useKeyPair"
 import { useCallback, useMemo } from "react"
 import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
+import { useUserPublic } from "../hooks/useUser"
 import { sortAccounts } from "./Identities"
 
 type CrmRole = {
@@ -30,7 +30,7 @@ const LIMIT = 50
 
 const useMembers = (queryString: string) => {
   const { id } = useGuild()
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
 
   const getKey = useCallback(
     (pageIndex, previousPageData) => {

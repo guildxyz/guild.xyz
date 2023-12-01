@@ -2,12 +2,11 @@ import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { createStore, del, get, set } from "idb-keyval"
-import { useAtomValue, useSetAtom } from "jotai"
+import { useAtomValue } from "jotai"
 import { mutate } from "swr"
 import { AddressConnectionProvider } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { recaptchaAtom } from "utils/recaptcha"
-import { keyPairsAtom } from "./useKeyPair"
 import useSubmit from "./useSubmit"
 
 /**
@@ -71,9 +70,8 @@ const useSetKeyPair = () => {
     useWeb3ConnectionManager()
   const fetcherWithSign = useFetcherWithSign()
 
-  const { id, captchaVerifiedSince } = useUserPublic()
+  const { id, captchaVerifiedSince, setKeys } = useUserPublic()
 
-  const setKeys = useSetAtom(keyPairsAtom)
   const recaptcha = useAtomValue(recaptchaAtom)
 
   const setSubmitResponse = useSubmit(
@@ -152,7 +150,7 @@ const useSetKeyPair = () => {
         }
       )
 
-      setKeys((prev) => ({ ...prev, [userProfile.id]: generatedKeys }))
+      setKeys(generatedKeys)
     },
     {
       onError: (error) => {

@@ -21,7 +21,6 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useFuel from "hooks/useFuel"
-import useKeyPair from "hooks/useKeyPair"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
@@ -77,7 +76,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { keyPair } = useKeyPair()
+  const { keyPair, id } = useUserPublic()
   const set = useSetKeyPair()
 
   useEffect(() => {
@@ -88,7 +87,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   useEffect(() => {
     if (
-      keyPair === null &&
+      !!id &&
+      !keyPair &&
       router.isReady &&
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
@@ -100,8 +100,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }
   }, [keyPair, router])
 
-  const isConnectedAndKeyPairReady =
-    isWeb3Connected && (!!keyPair || keyPair === null)
+  const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
@@ -246,15 +245,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     }
                     return set.onSubmit()
                   }}
-                  isLoading={
-                    linkAddress.isLoading || set.isLoading || keyPair === undefined
-                  }
+                  isLoading={linkAddress.isLoading || set.isLoading || !id}
                   isDisabled={keyPair === undefined}
-                  loadingText={
-                    keyPair === undefined
-                      ? "Looking for keypairs"
-                      : "Check your wallet"
-                  }
+                  loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
                 >
                   {isAddressLink ? "Link address" : "Verify address"}
                 </ModalButton>

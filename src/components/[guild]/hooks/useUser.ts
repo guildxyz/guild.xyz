@@ -1,9 +1,11 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import useKeyPair, { keyPairsAtom } from "hooks/useKeyPair"
-import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
+import {
+  StoredKeyPair,
+  deleteKeyPairFromIdb,
+  getKeyPairFromIdb,
+} from "hooks/useSetKeyPair"
 import useToast from "hooks/useToast"
-import { useAtom } from "jotai"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
@@ -14,7 +16,7 @@ const useUser = (
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
   const { address } = useWeb3ConnectionManager()
   const { id } = useUserPublic()
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
   const fetcherWithSign = useFetcherWithSign()
 
   const idToUse = userIdOrAddress ?? id
@@ -35,26 +37,38 @@ const useUser = (
   }
 }
 
+type PublicUser = {
+  id: number
+  publicKey?: string
+  captchaVerifiedSince?: string
+  keyPair?: StoredKeyPair
+}
+
 const useUserPublic = (
   userIdOrAddress?: number | string
-): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
+): PublicUser & {
+  isLoading: boolean
+  mutate: KeyedMutator<PublicUser>
+  error: any
+  deleteKeys: () => Promise<void>
+  setKeys: (keyPair: StoredKeyPair) => Promise<void>
+} => {
   const { address, openWalletSelectorModal } = useWeb3ConnectionManager()
-  const [, setKeys] = useAtom(keyPairsAtom)
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
 
   const idToUse = userIdOrAddress ?? address
 
-  const { data, mutate, isLoading, error } = useSWRImmutable<User>(
+  const { data, mutate, isLoading, error } = useSWRImmutable<PublicUser>(
     idToUse ? `/v2/users/${idToUse}/profile` : null,
     async (url: string) => {
-      const user = await fetcher(url)
+      const user: PublicUser = await fetcher(url)
 
       const keys = await getKeyPairFromIdb(user.id)
 
       if (keys) {
         if (keys.pubKey === user.publicKey) {
-          setKeys((prev) => ({ ...prev, [user.id]: keys }))
+          user.keyPair = keys
         } else {
           await deleteKeyPairFromIdb(user.id)
 
@@ -82,6 +96,12 @@ const useUserPublic = (
   return {
     isLoading,
     ...data,
+    deleteKeys: async () => {
+      await mutate((prev) => ({ ...prev, keyPair: undefined }))
+    },
+    setKeys: async (keyPair: StoredKeyPair) => {
+      await mutate((prev) => ({ ...prev, keyPair }))
+    },
     mutate,
     error,
   }

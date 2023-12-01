@@ -1,8 +1,8 @@
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWR, { mutate, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "./useKeyPair"
 
 type SWRSettings = Parameters<typeof useSWR>[2]
 
@@ -15,7 +15,7 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
   const useSWRHook = isMutable ? useSWR : useSWRImmutable
 
   const { isWeb3Connected } = useWeb3ConnectionManager()
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
 
   const shouldSendAuth = !!keyPair && isWeb3Connected
 

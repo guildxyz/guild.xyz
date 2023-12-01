@@ -1,7 +1,7 @@
 import type { WalletUnlocked } from "@fuel-ts/wallet"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useFuel from "hooks/useFuel"
-import useKeyPair from "hooks/useKeyPair"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
@@ -227,12 +227,12 @@ const useSubmitWithSign = <ResponseType>(
     forcePrompt: false,
   }
 ) => {
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
   return useSubmitWithSignWithParamKeyPair(fetch, {
     message,
     forcePrompt,
     ...options,
-    keyPair,
+    keyPair: keyPair?.keyPair,
   })
 }
 

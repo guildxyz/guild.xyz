@@ -1,8 +1,7 @@
-import useUser from "components/[guild]/hooks/useUser"
+import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import useSWR, { SWRConfiguration } from "swr"
 import { GoogleFile, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import useKeyPair from "./useKeyPair"
 
 type Gateables = {
   [PlatformType.DISCORD]: Array<{
@@ -27,7 +26,7 @@ const useGateables = <K extends keyof Gateables>(
   platformId: K,
   swrConfig?: SWRConfiguration
 ) => {
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
 
   const { platformUsers, id: userId } = useUser()
   const isConnected = !!platformUsers?.some(

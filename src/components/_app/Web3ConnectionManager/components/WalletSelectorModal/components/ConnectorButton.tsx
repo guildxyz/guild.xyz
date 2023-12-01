@@ -1,8 +1,8 @@
 import { Center, Icon, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
-import useKeyPair from "hooks/useKeyPair"
 import { Wallet } from "phosphor-react"
 import { useRef } from "react"
 import { isMobile } from "react-device-detect"
@@ -32,7 +32,7 @@ const ConnectorButton = ({
 
   const { isConnected, connector: activeConnector } = useAccount()
 
-  const { keyPair } = useKeyPair()
+  const { keyPair, id } = useUserPublic()
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
