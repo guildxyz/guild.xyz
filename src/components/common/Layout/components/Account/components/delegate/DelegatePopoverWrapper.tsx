@@ -10,9 +10,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import useSetKeyPair from "hooks/useSetKeyPair"
 import Image from "next/image"
 import { PropsWithChildren, useEffect, useState } from "react"
 
@@ -27,7 +27,7 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
   }, [id])
 
   const vaults = useDelegateVaults()
-  const set = useSetKeyPair()
+  const { set } = useKeyPair()
 
   return (
     <Popover isOpen={!isDismissed && vaults && vaults.length > 0}>
@@ -65,11 +65,11 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
                 Dismiss
               </Button>
               <Button
-                isLoading={set.isLoading}
+                isLoading={set.isLoading || set.isSigning}
                 loadingText={"Loading"}
                 size="sm"
                 onClick={() => {
-                  set.onSubmit({ provider: "DELEGATE" })
+                  set.onSubmit("DELEGATE")
                 }}
               >
                 Link vault{vaults?.length === 1 ? "" : "s"}

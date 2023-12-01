@@ -19,16 +19,16 @@ import {
 } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
+import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useKeyPair from "hooks/useKeyPair"
 import useResolveAddress from "hooks/useResolveAddress"
-import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { LinkBreak, SignOut } from "phosphor-react"
+import { useSWRConfig } from "swr"
 import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
@@ -55,7 +55,8 @@ const AccountModal = () => {
     onClose: closeNetworkModal,
   } = useDisclosure()
   const { id, addresses } = useUser()
-  const { deleteKeyOfUser } = useKeyPair()
+
+  const { mutate } = useSWRConfig()
 
   const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
@@ -72,7 +73,7 @@ const AccountModal = () => {
         setIsDelegateConnection(false)
         onClose()
         disconnect()
-        deleteKeyOfUser()
+        mutate(["keyPair", id])
       })
   }
 

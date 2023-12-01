@@ -14,6 +14,7 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
@@ -21,8 +22,6 @@ import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useFuel from "hooks/useFuel"
-import useKeyPair from "hooks/useKeyPair"
-import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
@@ -77,8 +76,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { keyPair } = useKeyPair()
-  const set = useSetKeyPair()
+  const { ready, set, keyPair } = useKeyPair()
 
   useEffect(() => {
     if (keyPair) onClose()
@@ -88,7 +86,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   useEffect(() => {
     if (
-      keyPair === null &&
+      ready &&
+      !keyPair &&
       router.isReady &&
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
@@ -98,10 +97,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, router])
+  }, [keyPair, ready, router])
 
-  const isConnectedAndKeyPairReady =
-    isWeb3Connected && (!!keyPair || keyPair === null)
+  const isConnectedAndKeyPairReady = isWeb3Connected && ready
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
@@ -240,20 +238,29 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={() => {
+                  onClick={async () => {
                     if (isAddressLink) {
-                      return linkAddress.onSubmit(addressLinkParams)
+                      linkAddress.onSubmit(addressLinkParams)
+                      return
                     }
-                    return set.onSubmit()
+
+                    const token =
+                      !recaptchaRef.current || !!captchaVerifiedSince
+                        ? undefined
+                        : await recaptchaRef.current.executeAsync()
+
+                    if (token) {
+                      recaptchaRef.current.reset()
+                    }
+
+                    return set.onSubmit(undefined, token)
                   }}
-                  isLoading={
-                    linkAddress.isLoading || set.isLoading || keyPair === undefined
-                  }
-                  isDisabled={keyPair === undefined}
+                  isLoading={linkAddress.isLoading || set.isLoading || !ready}
+                  isDisabled={!ready}
                   loadingText={
-                    keyPair === undefined
+                    !ready
                       ? "Looking for keypairs"
-                      : "Check your wallet"
+                      : set.signLoadingText || "Check your wallet"
                   }
                 >
                   {isAddressLink ? "Link address" : "Verify address"}
