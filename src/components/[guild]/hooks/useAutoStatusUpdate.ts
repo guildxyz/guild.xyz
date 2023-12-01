@@ -1,19 +1,18 @@
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useMemberships from "components/explorer/hooks/useMemberships"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
 import useAccess from "./useAccess"
 import useGuild from "./useGuild"
+import { useUserPublic } from "./useUser"
 
 const useAutoStatusUpdate = () => {
   const { isWeb3Connected, address } = useWeb3ConnectionManager()
   const { id } = useGuild()
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
 
-  const { data: accesses } = useAccess()
-  const { memberships } = useMemberships()
+  const { data: accesses, mutate: mutateAccess } = useAccess()
+  const { memberships, mutate: mutateMemberships } = useMemberships()
 
   const roleMemberships = memberships?.find(
     (membership) => membership.guildId === id
@@ -43,7 +42,9 @@ const useAutoStatusUpdate = () => {
     )
 
     const shouldSendStatusUpdate =
-      !accesses.some((roleAccess) => roleAccess.errors) &&
+      accesses.every(
+        (roleAccess) => !!roleAccess || !roleAccess.roleAccess.errors
+      ) &&
       (accessedRoleIds.some(
         (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
       ) ||
@@ -55,12 +56,7 @@ const useAutoStatusUpdate = () => {
           method: "GET",
           body: {},
         },
-      ]).then(() =>
-        Promise.all([
-          mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`),
-          mutateOptionalAuthSWRKey(`/v2/users/${address}/memberships`),
-        ])
-      )
+      ]).then(() => Promise.all([mutateAccess(), mutateMemberships()]))
     }
   }, [accesses, roleMemberships, address, id])
 }

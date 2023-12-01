@@ -41,7 +41,7 @@ const Requirement = ({
   children,
   fieldRoot,
   imageWrapper: ImageWrapper = React.Fragment,
-  childrenWrapper: ChildrenWrapper = Box,
+  childrenWrapper: ChildrenWrapper = Text,
   showViewOriginal,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -62,8 +62,8 @@ const Requirement = ({
         </RequirementImageCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-        {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
         <ChildrenWrapper baseFieldPath={fieldRoot}>
+          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.data?.customName || children}
           {!fieldRoot && (
             <Visibility

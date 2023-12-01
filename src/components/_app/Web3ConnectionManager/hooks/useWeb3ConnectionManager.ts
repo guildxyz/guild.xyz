@@ -5,7 +5,7 @@ import { atom, useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { PlatformName, User } from "types"
-import { useAccount, useDisconnect, useSwitchNetwork } from "wagmi"
+import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wagmi"
 
 const delegateConnectionAtom = atom(false)
 const safeContextAtom = atom(false)
@@ -45,6 +45,7 @@ type Web3ConnectionManagerType = {
   address?: `0x${string}`
   type?: User["addresses"][number]["walletType"]
   disconnect: () => void
+  signMessage: (message: string) => Promise<string>
 }
 
 const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
@@ -117,6 +118,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     connector: evmConnector,
     address: evmAddress,
   } = useAccount()
+  const { signMessageAsync } = useSignMessage()
 
   useEffect(() => {
     if (!isEvmConnected || evmConnector?.id !== "safe") return
@@ -135,12 +137,19 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
 
   const { disconnect: disconnectEvm } = useDisconnect()
-  const { disconnect: disconnectFuel } = useFuel()
+  const { disconnect: disconnectFuel, wallet } = useFuel()
 
   const disconnect = () => {
     if (type === "EVM" && typeof disconnectEvm === "function") disconnectEvm()
 
     if (type === "FUEL" && typeof disconnectFuel === "function") disconnectFuel()
+  }
+
+  const signMessage = (message: string) => {
+    if (type === "EVM") {
+      return signMessageAsync({ message })
+    }
+    return wallet.signMessage(message)
   }
 
   return {
@@ -164,6 +173,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     address,
     type,
     disconnect,
+    signMessage,
   }
 }
 
