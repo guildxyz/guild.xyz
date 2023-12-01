@@ -1,6 +1,5 @@
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useMemberships from "components/explorer/hooks/useMemberships"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import { useEffect } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
 import useAccess from "./useAccess"
@@ -12,8 +11,8 @@ const useAutoStatusUpdate = () => {
   const { id } = useGuild()
   const { keyPair } = useUserPublic()
 
-  const { data: accesses } = useAccess()
-  const { memberships } = useMemberships()
+  const { data: accesses, mutate: mutateAccess } = useAccess()
+  const { memberships, mutate: mutateMemberships } = useMemberships()
 
   const roleMemberships = memberships?.find(
     (membership) => membership.guildId === id
@@ -57,12 +56,7 @@ const useAutoStatusUpdate = () => {
           method: "GET",
           body: {},
         },
-      ]).then(() =>
-        Promise.all([
-          mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`),
-          mutateOptionalAuthSWRKey(`/v2/users/${address}/memberships`),
-        ])
-      )
+      ]).then(() => Promise.all([mutateAccess(), mutateMemberships()]))
     }
   }, [accesses, roleMemberships, address, id])
 }
