@@ -9,6 +9,11 @@ const useKeyPair = () => {
   const [keys, setKeys] = useAtom(keyPairsAtom)
   const { id, publicKey, error } = useUserPublic()
 
+  /*
+   * undefined -> We haven't fetched the data yet (loading state)
+   * null -> We fetched the data, and it shows that the user needs to verify (either no key exists, or it is invalid)
+   * string / CryptoKeyPair instance -> A valid keypair, which is in sync with the backend state, therefore usable for authenticationg requests
+   */
   const keysOfUser = useMemo(() => {
     if (error || (!!id && !publicKey)) return { pubKey: null, keyPair: null }
     if (!id) return { pubKey: undefined, keyPair: undefined }
