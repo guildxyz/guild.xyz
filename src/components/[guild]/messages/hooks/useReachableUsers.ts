@@ -19,7 +19,7 @@ const useReachableUsers = (
   })
 
   for (const roleId of roleIds ?? []) {
-    searchParams.append("roleIds", roleId.toString())
+    searchParams.append("roleId", roleId.toString())
   }
 
   return useSWRImmutable<string[]>(
