@@ -4,10 +4,10 @@ import {
   AddressLinkParams,
   addressLinkParamsAtom,
 } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import { randomBytes } from "crypto"
 import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import { useAtom } from "jotai"
+import randomBytes from "randombytes"
 import { useEffect } from "react"
 import { mutate } from "swr"
 import { fetcherWithSign } from "utils/fetcher"
