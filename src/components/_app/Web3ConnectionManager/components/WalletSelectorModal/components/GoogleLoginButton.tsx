@@ -20,6 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { IPlayerProps, Player } from "@lottiefiles/react-lottie-player"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
@@ -56,6 +57,7 @@ const genericErrorToastCallback =
   }
 
 const GoogleLoginButton = () => {
+  const { captureEvent } = usePostHogContext()
   const onboardingModal = useDisclosure()
   const recaptchaRef = useRef<ReCAPTCHA>()
   const { connectors, connectAsync, connect } = useConnect()
@@ -98,12 +100,13 @@ const GoogleLoginButton = () => {
     },
     {
       onError: (error) => {
-        console.error(error)
+        captureEvent("Wallet creation / restoration failed", { error })
         genericErrorToastCallback(toast)(error)
       },
     }
   )
 
+  // TODO: use useSetKeyPair
   const verify = useSubmit(
     async () => {
       const walletClient = await cwaasConnector.getWalletClient()
@@ -120,7 +123,12 @@ const GoogleLoginButton = () => {
 
       return verifyResult
     },
-    { onError: genericErrorToastCallback(toast) }
+    {
+      onError: (error) => {
+        captureEvent("Failed to verify", { error })
+        genericErrorToastCallback(toast)(error)
+      },
+    }
   )
   // TODO use this, need to pass sign props
   // const connectGoogle = usePlatformConnect()
@@ -159,8 +167,17 @@ const GoogleLoginButton = () => {
 
   const logInWithGoogle = useSubmit(
     async () => {
+      captureEvent("Log in with Google clicked")
+
       // 1) Google OAuth
-      const { authData } = await googleAuth.onOpen()
+      const { authData, error } = await googleAuth.onOpen()
+
+      if (!authData || !!error) {
+        captureEvent("Google OAuth failed", { error })
+        return
+      }
+
+      captureEvent("Successful Google OAuth")
 
       // 2) Create or Restore wallet
       const isNew = await createOrRestoreWallet.onSubmit(
@@ -168,14 +185,24 @@ const GoogleLoginButton = () => {
         true
       )
 
+      captureEvent("Wallet successfully initialized", { isNew })
+
       const { keyPair, user } = await verify.onSubmit(null, true)
+
+      captureEvent("Keypair verified")
 
       await connectGoogle
         .onSubmit({ authData, userId: user?.id, keyPair: keyPair?.keyPair }, true)
-        .catch(() => {})
+        .then(() => {
+          captureEvent("Google platform connected")
+        })
+        .catch(() => {
+          captureEvent("Google platform connection failed")
+        })
 
       if (!isNew) {
         await connectAsync({ connector: cwaasConnector })
+        captureEvent("Wallet is connected")
         onboardingModal.onClose()
       }
 
@@ -320,7 +347,13 @@ const GoogleLoginButton = () => {
               {isNewWallet && (
                 <Accordion index={accordionIndex}>
                   <AccordionItem borderTop={"none"} pb={2}>
-                    <AccordionButton px={1} onClick={() => setAccordionIndex(0)}>
+                    <AccordionButton
+                      px={1}
+                      onClick={() => {
+                        captureEvent("Click onboarding accordion", { index: 0 })
+                        setAccordionIndex(0)
+                      }}
+                    >
                       <Question size={18} />
                       <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
                         What's a wallet?
@@ -336,7 +369,13 @@ const GoogleLoginButton = () => {
                   </AccordionItem>
 
                   <AccordionItem borderBottom={"none"} pt={2}>
-                    <AccordionButton px={1} onClick={() => setAccordionIndex(1)}>
+                    <AccordionButton
+                      px={1}
+                      onClick={() => {
+                        captureEvent("Click onboarding accordion", { index: 1 })
+                        setAccordionIndex(1)
+                      }}
+                    >
                       <LockSimple size={18} />
                       <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
                         How can I access my wallet?
@@ -363,6 +402,7 @@ const GoogleLoginButton = () => {
                 onClick={() => {
                   connect({ connector: cwaasConnector })
                   onboardingModal.onClose()
+                  captureEvent("Wallet is connected")
                 }}
               >
                 {seconds > 0 ? `Wait ${seconds} sec...` : "Got it"}
