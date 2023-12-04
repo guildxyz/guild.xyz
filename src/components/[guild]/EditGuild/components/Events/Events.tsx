@@ -3,13 +3,13 @@ import StyledSelect from "components/common/StyledSelect"
 import { Plus } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { EventSourcesKey, SelectOption } from "types"
-import EventInput, { logos, placeholders } from "./EventInput"
+import EventInput, { eventSourceNames, logos } from "./EventInput"
 
 const EventProviders: EventSourcesKey[] = ["EVENTBRITE", "LINK3", "LUMA"]
 
 const eventOptions: SelectOption<EventSourcesKey>[] = EventProviders.map(
   (eventProvider) => ({
-    label: placeholders[eventProvider],
+    label: eventSourceNames[eventProvider],
     value: eventProvider,
     img: <Img boxSize={5} src={logos[eventProvider]} borderRadius={"full"} />,
   })

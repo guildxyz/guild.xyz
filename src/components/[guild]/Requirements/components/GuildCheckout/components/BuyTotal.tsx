@@ -40,11 +40,16 @@ const BuyTotal = (): JSX.Element => {
         )
       : null
 
-  const priceInSellToken =
-    fee && tokenData?.decimals
+  const priceInSellToken = fee
+    ? isNativeCurrency
+      ? Number(
+          formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
+        )
+      : tokenData?.decimals
       ? Number(formatUnits(fee, tokenData.decimals)) +
         (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
       : 0
+    : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001
 
@@ -82,7 +87,7 @@ const BuyTotal = (): JSX.Element => {
     >
       <Tr>
         <Td>Price</Td>
-        <Td isNumeric color="WindowText">
+        <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
           {priceInSellToken
             ? `${isTooSmallPrice ? "< 0.001" : Number(priceInSellToken.toFixed(3))} `
             : "0.00 "}

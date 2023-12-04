@@ -32,14 +32,17 @@ const CreateCampaignModal = (props: Props) => {
   const { onSubmit, isLoading } = useCreateRoleGroup()
 
   const { handleSubmit: handleSubmitWithUpload, isUploadingShown } =
-    useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
+    useSubmitWithUpload(
+      handleSubmit((data) => onSubmit(data)),
+      iconUploader.isUploading
+    )
 
   return (
     <FormProvider {...methods}>
       <Modal {...props} size="lg">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create campaign page</ModalHeader>
+          <ModalHeader>Create page</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
@@ -52,7 +55,7 @@ const CreateCampaignModal = (props: Props) => {
               rightIcon={<ArrowRight />}
               onClick={handleSubmitWithUpload}
               isLoading={isUploadingShown || isLoading}
-              loadingText="Creating campaign"
+              loadingText="Creating page"
             >
               Create & set roles
             </Button>

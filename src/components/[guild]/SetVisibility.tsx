@@ -16,10 +16,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import PulseMarker from "components/common/PulseMarker"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
-import useLocalStorage from "hooks/useLocalStorage"
 import { Detective, EyeSlash, GlobeHemisphereEast, IconProps } from "phosphor-react"
 import { useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
@@ -130,13 +128,6 @@ const SetVisibility = ({
     name: `${parentField}.visibility`,
   })
 
-  const [hasSeenRoleVisibility, setHasSeenRoleVisibility] = useLocalStorage(
-    "hasSeenRoleVisibility",
-    false
-  )
-  const [hasSeenRequirementVisibility, setHasSeenRequirementVisibility] =
-    useLocalStorage("hasSeenRequirementVisibility", false)
-
   if (!currentVisibility) {
     return null
   }
@@ -146,44 +137,33 @@ const SetVisibility = ({
   return (
     <>
       {entityType === "role" ? (
-        <PulseMarker placement="top" hidden={hasSeenRoleVisibility}>
-          <Button
-            ml={3}
-            size="xs"
-            leftIcon={<Icon />}
-            onClick={() => {
-              setHasSeenRoleVisibility(true)
-              onOpen()
-            }}
-            ref={buttonRef}
-            {...buttonProps}
-          >
-            {VISIBILITY_DATA[currentVisibility].title}
-          </Button>
-        </PulseMarker>
+        <Button
+          ml={3}
+          size="xs"
+          leftIcon={<Icon />}
+          onClick={onOpen}
+          ref={buttonRef}
+          {...buttonProps}
+        >
+          {VISIBILITY_DATA[currentVisibility].title}
+        </Button>
       ) : (
         <Tooltip
           label={`${VISIBILITY_DATA[currentVisibility].title}: ${VISIBILITY_DATA[currentVisibility].description}`}
           placement="top"
           hasArrow
-          shouldWrapChildren
         >
-          <PulseMarker placement="top" hidden={hasSeenRequirementVisibility}>
-            <IconButton
-              size={"sm"}
-              variant="ghost"
-              bg="unset !important"
-              icon={<Icon />}
-              aria-label="Set visibility"
-              onClick={() => {
-                setHasSeenRequirementVisibility(true)
-                onOpen()
-              }}
-              ref={buttonRef}
-              ml={1}
-              color="gray"
-            />
-          </PulseMarker>
+          <IconButton
+            size={"xs"}
+            variant="ghost"
+            icon={<Icon />}
+            aria-label="Set visibility"
+            onClick={onOpen}
+            ref={buttonRef}
+            ml={1}
+            color="gray"
+            {...buttonProps}
+          />
         </Tooltip>
       )}
 

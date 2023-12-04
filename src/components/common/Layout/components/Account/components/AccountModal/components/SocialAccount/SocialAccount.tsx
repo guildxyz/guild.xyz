@@ -48,7 +48,7 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
       ) : (
         <HStack spacing="1">
           {isReconnect && <ConnectPlatformButton type={type} isReconnect />}
-          <DisconnectPlatformButton type={type} name={name} />
+          <DisconnectPlatformButton type={type} />
         </HStack>
       )}
     </SocialAccountUI>
@@ -97,7 +97,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   )
 }
 
-const DisconnectPlatformButton = ({ type, name }) => {
+const DisconnectPlatformButton = ({ type }: { type: PlatformName }) => {
   const disclosure = useDisclosure()
 
   const { onSubmit, isLoading, signLoadingText } = useDisconnect(disclosure.onClose)
@@ -106,7 +106,13 @@ const DisconnectPlatformButton = ({ type, name }) => {
 
   return (
     <DisconnectAccountButton
-      {...{ disclosure, isLoading, loadingText, onConfirm, name }}
+      {...{
+        disclosure,
+        isLoading,
+        loadingText,
+        onConfirm,
+        name: platforms[type].name,
+      }}
     />
   )
 }

@@ -1,8 +1,8 @@
 import { IconButton, useDisclosure } from "@chakra-ui/react"
 import { GearSix } from "phosphor-react"
 import EditCampaignModal from "../AccessHub/components/CampaignCards/components/EditCampaignModal"
-import useRoleGroup from "../hooks/useRoleGroup"
 import { useThemeContext } from "../ThemeContext"
+import useRoleGroup from "../hooks/useRoleGroup"
 
 const EditCampaignButton = () => {
   const group = useRoleGroup()
@@ -15,7 +15,7 @@ const EditCampaignButton = () => {
     <>
       <IconButton
         icon={<GearSix />}
-        aria-label="Edit campaign"
+        aria-label="Edit page"
         minW="44px"
         rounded="full"
         colorScheme={buttonColorScheme}

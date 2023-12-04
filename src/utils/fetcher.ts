@@ -1,9 +1,11 @@
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useFuel from "hooks/useFuel"
 import { sign } from "hooks/useSubmit"
-import { SignProps } from "hooks/useSubmit/useSubmit"
+import { FuelSignProps, SignProps, fuelSign } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
-import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
@@ -63,8 +65,8 @@ const fetcher = async (
 
     if (!response.ok) {
       if (
-        res?.message === "Invalid or expired timestamp!" ||
-        res?.message ===
+        res?.error === "Invalid or expired timestamp!" ||
+        res?.error ===
           "Invalid timestamp! The creation of timestamp too far in future!"
       ) {
         window.localStorage.setItem("shouldFetchTimestamp", "true")
@@ -118,31 +120,62 @@ const fetcherWithSign = async (
   return fetcher(resource, { signedPayload, validation, ...rest })
 }
 
+const fuelFetcherWithSign = async (
+  signProps: Omit<FuelSignProps, "payload" | "forcePrompt"> & {
+    forcePrompt?: boolean
+  },
+  resource: string,
+  { body = {}, ...rest }: Record<string, any> = {}
+) => {
+  const [signedPayload, validation] = await fuelSign({
+    forcePrompt: false,
+    ...signProps,
+    payload: JSON.stringify(body),
+  })
+
+  return fetcher(resource, { signedPayload, validation, ...rest })
+}
+
 const useFetcherWithSign = () => {
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
   const timeInaccuracy = useTimeInaccuracy()
 
-  const { address } = useAccount()
+  const { type, address } = useWeb3ConnectionManager()
+
   const chainId = useChainId()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
+  const { wallet: fuelWallet } = useFuel()
+
   return (props) => {
     const [resource, { signOptions, ...options }] = props
 
-    return fetcherWithSign(
-      {
-        address,
-        chainId: chainId.toString(),
-        publicClient,
-        walletClient,
-        keyPair,
-        ts: Date.now() + timeInaccuracy,
-        ...signOptions,
-      },
-      resource,
-      options
-    )
+    return type === "EVM"
+      ? fetcherWithSign(
+          {
+            address,
+            chainId: chainId.toString(),
+            publicClient,
+            walletClient,
+            keyPair: keyPair?.keyPair,
+            ts: Date.now() + timeInaccuracy,
+            ...signOptions,
+          },
+          resource,
+          options
+        )
+      : fuelFetcherWithSign(
+          {
+            address,
+            wallet: fuelWallet,
+            keyPair: keyPair?.keyPair,
+            ts: Date.now() + timeInaccuracy,
+            ...signOptions,
+          },
+          resource,
+          options
+        )
   }
 }
 

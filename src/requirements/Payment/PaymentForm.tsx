@@ -1,6 +1,6 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
 import { Chains } from "chains"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
@@ -82,6 +82,7 @@ const PaymentForm = ({
       <HStack pt={4} w="full" justifyContent="end">
         {isOnCorrectChain ? (
           <Button
+            data-test="payment-form-register-vault-button"
             colorScheme={isOnCorrectChain ? "green" : "gray"}
             onClick={registerVaultFormHandleSubmit(() => onSubmitTransaction())}
             isDisabled={
@@ -99,6 +100,7 @@ const PaymentForm = ({
           </Button>
         ) : (
           <Button
+            data-test="payment-form-switch-network-button"
             colorScheme="blue"
             onClick={() => requestNetworkChange(Chains[chain])}
             rightIcon={

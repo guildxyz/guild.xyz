@@ -6,6 +6,7 @@ import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
 import SoundArtistSelect from "./SoundArtistSelect"
+import SoundEdition from "./SoundEditionSelect"
 
 const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
@@ -14,6 +15,7 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
   } = useFormContext()
 
   const handle = useWatch({ name: `${baseFieldPath}.data.id` })
+  const songTitle = useWatch({ name: `${baseFieldPath}.data.title` })
 
   const { data: artist, isValidating: artistLoading } = useSWRImmutable(
     handle ? `/api/sound/sound-artist-by-handle?soundHandle=${handle}` : null
@@ -59,6 +61,10 @@ const SoundOwnASong = ({ baseFieldPath, field }: RequirementFormProps) => {
           {parseFromObject(errors, baseFieldPath)?.data?.title?.message}
         </FormErrorMessage>
       </FormControl>
+
+      {songsData?.find((song) => song.title === songTitle)?.hasEditions && (
+        <SoundEdition baseFieldPath={baseFieldPath} />
+      )}
     </>
   )
 }

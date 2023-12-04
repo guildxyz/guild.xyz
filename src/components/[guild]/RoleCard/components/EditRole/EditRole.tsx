@@ -12,6 +12,9 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import RolePlatforms from "components/[guild]/RolePlatforms"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -22,9 +25,6 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
-import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -38,6 +38,7 @@ import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import mapRequirements from "utils/mapRequirements"
 import DeleteRoleButton from "./components/DeleteRoleButton"
+import RoleGroupSelect from "./components/RoleGroupSelect"
 import useEditRole from "./hooks/useEditRole"
 
 type Props = {
@@ -53,6 +54,8 @@ export type RoleEditFormData = {
   requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   visibility: Visibility
+  anyOfNum?: number
+  groupId?: number
 }
 
 const MotionDrawerFooter = motion(DrawerFooter)
@@ -74,10 +77,11 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     requirements,
     rolePlatforms,
     visibility,
+    groupId,
   } = roles?.find((role) => role.id === roleId) ?? {}
 
-  const defaultValues = {
-    roleId: id,
+  const defaultValues: RoleEditFormData = {
+    id,
     name,
     description,
     imageUrl,
@@ -86,8 +90,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
     visibility,
+    groupId,
   }
-  const methods = useForm({
+  const methods = useForm<RoleEditFormData>({
     mode: "all",
     defaultValues,
   })
@@ -98,7 +103,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
     methods.reset({
       ...role,
-      roleId: role.id,
       requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
       anyOfNum: role.anyOfNum ?? 1,
@@ -127,7 +131,12 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     onSuccess
   )
 
-  const isDirty = !!Object.keys(methods.formState.dirtyFields).length
+  /**
+   * TODO: for some reason, isDirty was true & dirtyFields was an empty object and I
+   * couldn't find the underlying problem, so used this workaround here, but we
+   * should definitely find out what causes this strange behaviour!
+   */
+  const isDirty = Object.values(methods.formState.dirtyFields).length > 0
   useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
 
   const {
@@ -178,7 +187,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={0} onClick={handleOpen}>
+      <OnboardingMarker step={3} onClick={handleOpen}>
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}
@@ -239,6 +248,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                     </HStack>
                   </Box>
                   <Description />
+                  <RoleGroupSelect />
                 </Section>
 
                 <SetRequirements />
@@ -290,7 +300,7 @@ const EditRoleWrapper = ({ roleId }) => {
   const { isDetailed } = useGuild()
   if (!isDetailed)
     return (
-      <OnboardingMarker step={0}>
+      <OnboardingMarker step={3}>
         <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
       </OnboardingMarker>
     )

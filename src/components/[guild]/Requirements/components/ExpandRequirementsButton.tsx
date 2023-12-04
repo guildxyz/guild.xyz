@@ -8,7 +8,7 @@ type Props = {
   logic: Logic
   hiddenRequirements: number
   isRequirementsExpanded: boolean
-  onToggleExpanded: () => void
+  onToggleExpanded: (event: React.MouseEvent<HTMLElement>) => void
 }
 
 const ExpandRequirementsButton = ({

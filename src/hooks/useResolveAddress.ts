@@ -104,6 +104,27 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
   return lens
 }
 
+const fetchSpaceIdName = async (address: string): Promise<string> => {
+  const tlds = ["bnb", "arb"]
+
+  const spaceIds = await Promise.all(
+    tlds.map((tld) =>
+      fetcher(`https://api.prd.space.id/v1/getName?tld=${tld}&address=${address}`)
+    )
+  )
+
+  const spaceId = spaceIds.find((data) => !!data.name)?.name
+
+  if (spaceId) {
+    await setResolvedAddressToIdb(address, {
+      resolvedAddress: spaceId,
+      createdAt: Date.now(),
+    }).catch(() => {})
+  }
+
+  return spaceId
+}
+
 const fetchDotbitName = async (address: string): Promise<string> => {
   const dotbit = await fetcher("https://indexer-basic.did.id", {
     body: {
@@ -196,6 +217,10 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
   // test address: 0xe055721b972d58f0bcf6370c357879fb3a37d2f3 - ladidaix.eth
   const lens = await fetchLensProtocolName(lowerCaseAddress)
   if (lens) return lens
+
+  // test address: 0x2e552e3ad9f7446e9cab378c008315e0c26c0398 - allen.bnb / 0x5206.arb
+  const spaceId = await fetchSpaceIdName(lowerCaseAddress)
+  if (spaceId) return spaceId
 
   // test address: 0x94ef5300cbc0aa600a821ccbc561b057e456ab23 - sandy.nft
   const unstoppableDomain = await fetchUnstoppableName(lowerCaseAddress)

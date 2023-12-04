@@ -1,8 +1,8 @@
 import { FormControl, FormLabel, Progress, Wrap } from "@chakra-ui/react"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useThemeContext } from "components/[guild]/ThemeContext"
-import useDropzone from "hooks/useDropzone"
+import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { File } from "phosphor-react"
 import { useState } from "react"
@@ -10,10 +10,6 @@ import RemoveBackgroundImage from "./RemoveBackgroundImage"
 
 type Props = {
   uploader: Uploader
-}
-
-const errorMessages = {
-  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
 }
 
 const BackgroundImageUploader = ({
@@ -60,7 +56,7 @@ const BackgroundImageUploader = ({
       </Wrap>
 
       <FormErrorMessage>
-        {errorMessages[fileRejections?.[0]?.errors?.[0]?.code] ??
+        {ERROR_MESSAGES[fileRejections?.[0]?.errors?.[0]?.code] ??
           fileRejections?.[0]?.errors?.[0]?.message}
       </FormErrorMessage>
     </FormControl>

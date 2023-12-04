@@ -27,6 +27,8 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   ],
   ZETACHAIN_ATHENS: [],
   SCROLL_ALPHA: [],
+  SCROLL_SEPOLIA: [],
+  SCROLL: ["https://tokens.coingecko.com/scroll/all.json"],
   ZKSYNC_ERA: [],
   SEPOLIA: [],
   GOERLI: [
@@ -48,6 +50,14 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   ZORA: [],
   PGN: [],
   NEON_EVM: [],
+  LINEA: [],
+  LUKSO: [],
+  MANTLE: [],
+  RONIN: [],
+  SHIMMER: [],
+  KAVA: [],
+  BITFINITY_TESTNET: [],
+  // X1_TESTNET: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

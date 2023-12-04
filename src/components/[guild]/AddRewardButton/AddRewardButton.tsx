@@ -34,6 +34,7 @@ import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
+import AvailibiltySetup from "./components/AvailibiltySetup"
 import useAddReward from "./hooks/useAddReward"
 
 // temporary until POAPs are real rewards
@@ -42,6 +43,7 @@ const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"
 })
 
 const defaultValues = {
+  rolePlatforms: [],
   requirements: [],
   roleIds: [],
   visibility: Visibility.PUBLIC,
@@ -123,6 +125,7 @@ const AddRewardButton = (): JSX.Element => {
           .map((roleId) => ({
             // We'll be able to send additional params here, like capacity & time
             roleId: +roleId,
+            ...data.rolePlatforms[0],
             visibility:
               saveAs === "DRAFT"
                 ? Visibility.HIDDEN
@@ -136,9 +139,12 @@ const AddRewardButton = (): JSX.Element => {
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
+  const rolePlatform = methods.getValues("rolePlatforms.0")
+
   return (
     <>
       <Button
+        data-test="add-reward-button"
         leftIcon={<Plus />}
         onClick={onOpen}
         variant="ghost"
@@ -197,7 +203,24 @@ const AddRewardButton = (): JSX.Element => {
                     </Text>
                   </HStack>
 
-                  {step === "SELECT_ROLE" && <PlatformPreview />}
+                  {step === "SELECT_ROLE" && (
+                    <PlatformPreview>
+                      <AvailibiltySetup
+                        platformType={rolePlatform?.guildPlatform?.platformName}
+                        rolePlatform={rolePlatform}
+                        defaultValues={{
+                          capacity:
+                            rolePlatform?.guildPlatform?.platformGuildData?.texts
+                              ?.length,
+                        }}
+                        onDone={({ capacity, startTime, endTime }) => {
+                          methods.setValue(`rolePlatforms.0.capacity`, capacity)
+                          methods.setValue(`rolePlatforms.0.startTime`, startTime)
+                          methods.setValue(`rolePlatforms.0.endTime`, endTime)
+                        }}
+                      />
+                    </PlatformPreview>
+                  )}
                 </Stack>
               </ModalHeader>
 

@@ -9,7 +9,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import SoundArtistSelect from "./components/SoundArtistSelect"
+import SoundArtistCollector from "./components/SoundArtistCollector"
 import SoundMinAmount from "./components/SoundMinAmount"
 import SoundOwnASong from "./components/SoundOwnASong"
 import SoundTopCollector from "./components/SoundTopCollector"
@@ -27,7 +27,7 @@ const soundRequirementTypes = [
   {
     label: "Collect any song from artist",
     value: "SOUND_ARTIST_BACKED",
-    SoundRequirement: SoundArtistSelect,
+    SoundRequirement: SoundArtistCollector,
   },
   {
     label: "Be a top x collector of artist",

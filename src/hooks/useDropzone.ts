@@ -8,6 +8,10 @@ type Props = {
   maxSizeMb?: number
 } & DropzoneOptions
 
+export const ERROR_MESSAGES = {
+  "file-too-large": "This image is too large, maximum allowed file size is 5MB",
+}
+
 const useDropzone = ({
   maxSizeMb = 5,
   ...dropzoneOptions

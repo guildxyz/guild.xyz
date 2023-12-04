@@ -19,6 +19,7 @@ const CustomSelectOption = ({
 
   return (
     <Flex
+      data-test="custom-select-option"
       px={4}
       py={2}
       width="full"

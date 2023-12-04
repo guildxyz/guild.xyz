@@ -1,16 +1,16 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
-import { useAccount } from "wagmi"
 
 const useDisconnect = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
-  const { address } = useAccount()
+  const { address } = useWeb3ConnectionManager()
   const { mutate: mutateUser, id: userId } = useUser()
   const { id } = useGuild()
   const toast = useToast()
@@ -54,7 +54,7 @@ const useDisconnect = (onSuccess?: () => void) => {
 const useDisconnectAddress = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateUser, id: userId } = useUser()
-  const { address } = useAccount()
+  const { address } = useWeb3ConnectionManager()
   const { id } = useGuild()
   const toast = useToast()
 

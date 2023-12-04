@@ -1,10 +1,14 @@
 import {
+  bitfinityTestnet,
   bobaAvax,
   exosama,
+  kava,
+  lukso,
   neonEVM,
   palm,
   pgn,
   scrollAlpha,
+  shimmer,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
 import {
@@ -22,7 +26,9 @@ import {
   gnosis,
   goerli,
   harmonyOne,
+  linea,
   mainnet,
+  mantle,
   metis,
   moonbeam,
   moonriver,
@@ -30,6 +36,9 @@ import {
   polygon,
   polygonMumbai,
   polygonZkEvm,
+  ronin,
+  scroll,
+  scrollSepolia,
   sepolia,
   zetachainAthensTestnet,
   zkSync,
@@ -86,8 +95,8 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     coinIconUrl:
       "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png",
     blockExplorerIconUrl: {
-      light: "/networkLogos/polygon.svg",
-      dark: "/networkLogos/polygon.svg",
+      light: "/explorerLogos/bscscan-light.svg",
+      dark: "/explorerLogos/bscscan-dark.svg",
     },
     etherscanApiUrl: "https://api.bscscan.com",
   },
@@ -326,11 +335,29 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   },
   SCROLL_ALPHA: {
     ...scrollAlpha,
-    iconUrl: "/networkLogos/scroll.png",
+    iconUrl: "/networkLogos/scroll.svg",
     coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
-      light: "/networkLogos/scroll.png",
-      dark: "/networkLogos/scroll.png",
+      light: "/networkLogos/scroll.svg",
+      dark: "/networkLogos/scroll.svg",
+    },
+  },
+  SCROLL_SEPOLIA: {
+    ...scrollSepolia,
+    iconUrl: "/networkLogos/scroll.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/scroll.svg",
+      dark: "/networkLogos/scroll.svg",
+    },
+  },
+  SCROLL: {
+    ...scroll,
+    iconUrl: "/networkLogos/scroll.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/scroll.svg",
+      dark: "/networkLogos/scroll.svg",
     },
   },
   ZKSYNC_ERA: {
@@ -369,6 +396,78 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/neonscan.svg",
     },
   },
+  LINEA: {
+    ...linea,
+    iconUrl: "/networkLogos/linea.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/linea.png",
+      dark: "/networkLogos/linea.png",
+    },
+  },
+  LUKSO: {
+    ...lukso,
+    iconUrl: "/networkLogos/lukso.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/lukso.svg",
+      dark: "/networkLogos/lukso.svg",
+    },
+  },
+  MANTLE: {
+    ...mantle,
+    iconUrl: "/networkLogos/mantle.svg",
+    coinIconUrl: "/networkLogos/mantle.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/mantle-light.svg",
+      dark: "/networkLogos/mantle.svg",
+    },
+  },
+  RONIN: {
+    ...ronin,
+    iconUrl: "/networkLogos/ronin.svg",
+    coinIconUrl: "/networkLogos/ronin.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/ronin.svg",
+      dark: "/networkLogos/ronin.svg",
+    },
+  },
+  SHIMMER: {
+    ...shimmer,
+    iconUrl: "/networkLogos/shimmer.svg",
+    coinIconUrl: "/networkLogos/shimmer.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/shimmer.svg",
+      dark: "/networkLogos/shimmer.svg",
+    },
+  },
+  KAVA: {
+    ...kava,
+    iconUrl: "/networkLogos/kava.svg",
+    coinIconUrl: "/networkLogos/kava.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/kava.svg",
+      dark: "/networkLogos/kava.svg",
+    },
+  },
+  BITFINITY_TESTNET: {
+    ...bitfinityTestnet,
+    iconUrl: "/networkLogos/bitfinity.svg",
+    coinIconUrl: "/networkLogos/bitfinity.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/bitfinity-light.svg",
+      dark: "/explorerLogos/bitfinity.svg",
+    },
+  },
+  // X1_TESTNET: {
+  //   ...x1Testnet,
+  //   iconUrl: "/walletLogos/okx.png",
+  //   coinIconUrl: "/walletLogos/okx.png",
+  //   blockExplorerIconUrl: {
+  //     light: "/walletLogos/okx.png",
+  //     dark: "/walletLogos/okx.png",
+  //   },
+  // },
 }
 
 enum Chains {
@@ -395,6 +494,8 @@ enum Chains {
   EVMOS = evmos.id,
   ZETACHAIN_ATHENS = zetachainAthensTestnet.id,
   SCROLL_ALPHA = scrollAlpha.id,
+  SCROLL_SEPOLIA = scrollSepolia.id,
+  SCROLL = scroll.id,
   ZKSYNC_ERA = zkSync.id,
   SEPOLIA = sepolia.id,
   GOERLI = goerli.id,
@@ -404,6 +505,14 @@ enum Chains {
   POLYGON_ZKEVM = polygonZkEvm.id,
   PGN = pgn.id,
   NEON_EVM = neonEVM.id,
+  LINEA = linea.id,
+  LUKSO = lukso.id,
+  MANTLE = mantle.id,
+  RONIN = ronin.id,
+  SHIMMER = shimmer.id,
+  KAVA = kava.id,
+  BITFINITY_TESTNET = bitfinityTestnet.id,
+  // X1_TESTNET = x1Testnet.id,
 }
 
 export type Chain = keyof typeof Chains

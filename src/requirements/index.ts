@@ -24,10 +24,10 @@ export type RequirementFormProps = {
 export type RequirementData = {
   icon: string | Icon
   name: string
-  fileNameBase: string
   readonly types: string[]
   disabled?: boolean
   isPlatform?: boolean
+  isCustomizable?: boolean
   displayComponent: ComponentType<RequirementProps>
   formComponent: ComponentType<RequirementFormProps>
 }

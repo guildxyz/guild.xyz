@@ -24,19 +24,22 @@ import {
 import { IPlayerProps, Player } from "@lottiefiles/react-lottie-player"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import CopyableAddress from "components/common/CopyableAddress"
-import { Error as CustomError } from "components/common/Error"
+import { Error as ErrorComponent } from "components/common/Error"
 import GuildAvatar from "components/common/GuildAvatar"
+import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import { publicClient } from "connectors"
-import useDriveOAuth from "hooks/useDriveOauth"
+import useDriveOAuth from "hooks/useDriveOAuth"
+import useFuel from "hooks/useFuel"
+import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import {
   ArrowLeft,
@@ -54,16 +57,17 @@ import {
   listWalletsOnDrive,
   uploadBackupDataToDrive,
 } from "utils/googleDrive"
-import { getRecaptchaToken } from "utils/recaptcha"
 import type { CWaaSConnector } from "waasConnector"
-import { useAccount, useConnect, useDisconnect } from "wagmi"
-import { useWeb3ConnectionManager } from "../../Web3ConnectionManager"
+import { useAccount, useConnect } from "wagmi"
+import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
+import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
+import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import GoogleTerms from "./components/GoogleTerms"
 import useCountdownSeconds from "./hooks/useCountdownSeconds"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
-import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
+import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -96,7 +100,7 @@ const GoogleLoginButton = () => {
 
   const googleAuth = useDriveOAuth()
 
-  const { set } = useKeyPair()
+  const set = useSetKeyPair()
   const toast = useToast()
 
   const [isNewWallet, setIsNewWallet] = useState(false)
@@ -137,16 +141,14 @@ const GoogleLoginButton = () => {
 
   const verify = useSubmit(
     async () => {
-      const recaptchaToken = await getRecaptchaToken(recaptchaRef)
       const walletClient = await cwaasConnector.getWalletClient()
 
       const verifyResult = await set.onSubmit(
-        false,
-        undefined,
-        recaptchaToken,
         {
-          walletClient,
-          address: walletClient.account.address,
+          signProps: {
+            walletClient,
+            address: walletClient.account.address,
+          },
         },
         true
       )
@@ -166,7 +168,6 @@ const GoogleLoginButton = () => {
         walletClient,
         address: walletClient.account.address,
         publicClient: publicClient({}),
-        ts: Date.now(),
       },
       `/v2/users/${walletClient.account.address}/platform-users`,
       {
@@ -202,11 +203,10 @@ const GoogleLoginButton = () => {
         true
       )
 
-      const [{ keyPair = undefined } = {}, , { id: userId = undefined } = {}] =
-        await verify.onSubmit(null, true)
+      const { keyPair, user } = await verify.onSubmit(null, true)
 
       await connectGoogle
-        .onSubmit({ authData, userId, keyPair }, true)
+        .onSubmit({ authData, userId: user?.id, keyPair: keyPair?.keyPair }, true)
         .catch(() => {})
 
       if (!isNew) {
@@ -413,10 +413,20 @@ const GoogleLoginButton = () => {
 }
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const {
+    isWeb3Connected,
+    isDelegateConnection,
+    setIsDelegateConnection,
+    isInSafeContext,
+    disconnect,
+  } = useWeb3ConnectionManager()
 
-  const { disconnect } = useDisconnect()
-  const { isConnected, connector } = useAccount()
+  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const { connector } = useAccount()
+
+  const [addressLinkParams] = useAtom(addressLinkParamsAtom)
+  const isAddressLink = !!addressLinkParams?.userId
+
   const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
@@ -432,7 +442,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { ready, set, keyPair } = useKeyPair()
+  const { keyPair, id } = useUserPublic()
+  const set = useSetKeyPair()
 
   useEffect(() => {
     if (keyPair) onClose()
@@ -442,110 +453,118 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   useEffect(() => {
     if (
-      ready &&
+      !!id &&
       !keyPair &&
       router.isReady &&
-      !ignoredRoutes.includes(router.route)
+      !ignoredRoutes.includes(router.route) &&
+      !!connector?.connect
     ) {
       const activate = connector.connect()
       if (typeof activate !== "undefined") {
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, ready, router])
+  }, [keyPair, router])
 
-  const shouldLinkToUser = useShouldLinkToUser()
-
-  const { isDelegateConnection, setIsDelegateConnection, isInSafeContext } =
-    useWeb3ConnectionManager()
-
-  const isConnectedAndKeyPairReady = isConnected && ready
+  const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
+  const { windowFuel } = useFuel()
+
   const recaptchaRef = useRef<ReCAPTCHA>()
 
-  return (
-    <>
-      <Modal
-        isOpen={isOpen}
-        onClose={closeModalAndSendAction}
-        closeOnOverlayClick={!isConnected || !!keyPair}
-        closeOnEsc={!isConnected || !!keyPair}
-        trapFocus={!isWalletConnectModalActive}
-      >
-        <ModalOverlay />
-        <ModalCloseButton />
-        <ModalContent data-test="wallet-selector-modal">
-          <ModalHeader display={"flex"}>
-            <Box
-              {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
-                ? {
-                    w: "10",
-                    opacity: 1,
-                  }
-                : {
-                    w: "0",
-                    opacity: 0,
-                  })}
-              transition="width .2s, opacity .2s"
-              mt="-1px"
-            >
-              <IconButton
-                rounded={"full"}
-                aria-label="Back"
-                size="sm"
-                icon={<ArrowLeft size={20} />}
-                variant="ghost"
-                onClick={() => {
-                  if (
-                    isDelegateConnection &&
-                    !(isConnectedAndKeyPairReady && !keyPair)
-                  ) {
-                    setIsDelegateConnection(false)
-                    return
-                  }
-                  set.reset()
-                  disconnect()
-                }}
-              />
-            </Box>
-            <Text>
-              {shouldLinkToUser
-                ? "Link address"
-                : isDelegateConnection
-                ? "Connect hot wallet"
-                : "Connect wallet"}
-            </Text>
-          </ModalHeader>
-          <ModalBody>
-            <CustomError
-              {...(set.error
-                ? {
-                    error: set.error,
-                    processError: (err: any) => {
-                      if (err?.code === "ACTION_REJECTED") {
-                        return {
-                          title: "Rejected",
-                          description: "Signature request has been rejected",
-                        }
-                      }
+  const linkAddress = useLinkAddress()
 
-                      return {
-                        title: "Error",
-                        description:
-                          err?.message ??
-                          (typeof err === "string" ? err : err?.errors?.[0]?.msg),
-                      }
-                    },
-                  }
-                : { error, processError: processConnectionError })}
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={closeModalAndSendAction}
+      closeOnOverlayClick={!isWeb3Connected || !!keyPair}
+      closeOnEsc={!isWeb3Connected || !!keyPair}
+      trapFocus={!isWalletConnectModalActive}
+    >
+      <ModalOverlay />
+      <ModalContent data-test="wallet-selector-modal">
+        <ModalHeader display={"flex"}>
+          <Box
+            {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
+              ? {
+                  w: "10",
+                  opacity: 1,
+                }
+              : {
+                  w: "0",
+                  opacity: 0,
+                })}
+            transition="width .2s, opacity .2s"
+            mt="-1px"
+          >
+            <IconButton
+              rounded={"full"}
+              aria-label="Back"
+              size="sm"
+              icon={<ArrowLeft size={20} />}
+              variant="ghost"
+              onClick={() => {
+                if (
+                  isDelegateConnection &&
+                  !(isConnectedAndKeyPairReady && !keyPair)
+                ) {
+                  setIsDelegateConnection(false)
+                  return
+                }
+                set.reset()
+                disconnect()
+              }}
             />
-            {isConnectedAndKeyPairReady && !keyPair && (
-              <Text mb="6" animation={"fadeIn .3s .1s both"}>
-                Sign message to verify that you're the owner of this address.
-              </Text>
-            )}
+          </Box>
+          <Text>
+            {isAddressLink
+              ? "Link address"
+              : isDelegateConnection
+              ? "Connect hot wallet"
+              : "Connect wallet"}
+          </Text>
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <ErrorComponent
+            {...(set.error || linkAddress.error
+              ? {
+                  error: set.error ?? linkAddress.error,
+                  processError: (err: any) => {
+                    if (err?.code === "ACTION_REJECTED") {
+                      return {
+                        title: "Rejected",
+                        description: "Signature request has been rejected",
+                      }
+                    }
+
+                    return {
+                      title: "Error",
+                      description:
+                        err?.message ?? typeof err?.error === "string"
+                          ? err?.error
+                          : typeof err === "string"
+                          ? err
+                          : err?.errors?.[0]?.msg,
+                    }
+                  },
+                }
+              : { error, processError: processConnectionError })}
+          />
+          {isConnectedAndKeyPairReady && !keyPair && (
+            <Text mb="6" animation={"fadeIn .3s .1s both"}>
+              Sign message to verify that you're the owner of this address.
+            </Text>
+          )}
+
+          {isWeb3Connected ? (
+            <CardMotionWrapper>
+              <AccountButton />
+            </CardMotionWrapper>
+          ) : (
             <Stack spacing="0">
               {!connector && (
                 <>
@@ -585,87 +604,106 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   <DelegateCashButton />
                 </CardMotionWrapper>
               )}
+              {windowFuel && (
+                <CardMotionWrapper key="fuel">
+                  <FuelConnectorButtons />
+                </CardMotionWrapper>
+              )}
             </Stack>
-            {isConnectedAndKeyPairReady && !keyPair && (
-              <>
-                <ReCAPTCHA
-                  ref={recaptchaRef}
-                  sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                  size="invisible"
-                />
-                <Box animation={"fadeIn .3s .1s both"}>
-                  <ModalButton
-                    size="xl"
-                    mb="4"
-                    colorScheme={"green"}
-                    onClick={async () =>
-                      set.onSubmit(
-                        shouldLinkToUser,
-                        undefined,
-                        await getRecaptchaToken(recaptchaRef, !!captchaVerifiedSince)
-                      )
-                    }
-                    isLoading={set.isLoading || !ready}
-                    isDisabled={!ready}
-                    loadingText={
-                      !ready
-                        ? "Looking for keypairs"
-                        : set.signLoadingText || "Check your wallet"
-                    }
-                  >
-                    {shouldLinkToUser ? "Link address" : "Verify address"}
-                  </ModalButton>
-                </Box>
-              </>
-            )}
-          </ModalBody>
+          )}
 
-          <ModalFooter mt="-4">
-            {!isConnectedAndKeyPairReady ? (
-              <Stack textAlign="center" fontSize="sm" w="full">
-                <Text colorScheme="gray">
-                  New to Ethereum wallets?{" "}
-                  <Link
-                    colorScheme="blue"
-                    href="https://ethereum.org/en/wallets/"
-                    isExternal
-                  >
-                    Learn more
-                    <Icon as={ArrowSquareOut} mx="1" />
-                  </Link>
-                </Text>
+          {isConnectedAndKeyPairReady && !keyPair && (
+            <>
+              <ReCAPTCHA
+                ref={recaptchaRef}
+                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                size="invisible"
+              />
+              <Box animation={"fadeIn .3s .1s both"}>
+                <ModalButton
+                  data-test="verify-address-button"
+                  size="xl"
+                  mb="4"
+                  colorScheme={"green"}
+                  onClick={() => {
+                    if (isAddressLink) {
+                      return linkAddress.onSubmit(addressLinkParams)
+                    }
+                    return set.onSubmit()
+                  }}
+                  isLoading={linkAddress.isLoading || set.isLoading || !id}
+                  isDisabled={!id}
+                  loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+                >
+                  {isAddressLink ? "Link address" : "Verify address"}
+                </ModalButton>
+              </Box>
+            </>
+          )}
+        </ModalBody>
+        <ModalFooter mt="-4">
+          {!isConnectedAndKeyPairReady ? (
+            <Stack textAlign="center" fontSize="sm" w="full">
+              <Text colorScheme="gray">
+                New to Ethereum wallets?{" "}
+                <Link
+                  colorScheme="blue"
+                  href="https://ethereum.org/en/wallets/"
+                  isExternal
+                >
+                  Learn more
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </Link>
+              </Text>
 
-                <Text colorScheme="gray">
-                  By continuing, you agree to our{" "}
-                  <Link
-                    href="/privacy-policy"
-                    fontWeight={"semibold"}
-                    onClick={onClose}
-                  >
-                    Privacy Policy
-                  </Link>{" "}
-                  and
-                  <Link
-                    href="/terms-and-conditions"
-                    fontWeight={"semibold"}
-                    onClick={onClose}
-                  >
-                    Terms & conditions
-                  </Link>
-                </Text>
-              </Stack>
-            ) : (
-              <Stack textAlign="center" fontSize="sm" w="full">
-                <Text colorScheme={"gray"}>
-                  Signing the message doesn't cost any gas
-                </Text>
-                <GoogleTerms />
-              </Stack>
-            )}
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+              <Text colorScheme="gray">
+                By continuing, you agree to our{" "}
+                <Link
+                  href="/privacy-policy"
+                  fontWeight={"semibold"}
+                  onClick={onClose}
+                >
+                  Privacy Policy
+                </Link>
+                {` and `}
+                <Link
+                  href="/terms-and-conditions"
+                  fontWeight={"semibold"}
+                  onClick={onClose}
+                >
+                  Terms & conditions
+                </Link>
+              </Text>
+            </Stack>
+          ) : (
+            <Stack textAlign="center" fontSize="sm" w="full">
+              <Text colorScheme={"gray"}>
+                Signing the message doesn't cost any gas
+              </Text>
+              <Text colorScheme="gray">
+                This site is protected by reCAPTCHA, so the Google{" "}
+                <Link
+                  href="https://policies.google.com/privacy"
+                  isExternal
+                  fontWeight={"semibold"}
+                >
+                  Privacy Policy
+                </Link>{" "}
+                and{" "}
+                <Link
+                  href="https://policies.google.com/terms"
+                  isExternal
+                  fontWeight={"semibold"}
+                >
+                  Terms of Service
+                </Link>{" "}
+                apply
+              </Text>
+            </Stack>
+          )}
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   )
 }
 

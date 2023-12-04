@@ -60,7 +60,8 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 } => {
   const { captureEvent } = usePostHogContext()
 
-  const { params, url, oauthOptionsInitializer } = platforms[platformName].oauth ?? {
+  const { params, url, oauthOptionsInitializer } = platforms[platformName]
+    ?.oauth ?? {
     params: {} as any,
   }
 
@@ -234,7 +235,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     toast({ status: "error", title, description: errorDescription })
   }, [oauthState.error])
 
-  if (!platforms[platformName].oauth) {
+  if (!platforms[platformName]?.oauth) {
     return {} as any
   }
 

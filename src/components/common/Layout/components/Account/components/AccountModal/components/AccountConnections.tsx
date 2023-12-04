@@ -27,7 +27,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import type { UserAddress } from "@guildxyz/types"
-import useUser from "components/[guild]/hooks/useUser"
+import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { SectionProps } from "components/common/Section"
 import { randomBytes } from "crypto"
@@ -40,7 +41,7 @@ import { mutate } from "swr"
 import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import type { CWaaSConnector } from "waasConnector"
-import { useAccount, useConnect } from "wagmi"
+import { useConnect } from "wagmi"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
 import LinkAddressButton from "./LinkAddressButton"
 import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
@@ -49,16 +50,10 @@ import SharedSocials from "./SharedSocials"
 import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
-  const {
-    isLoading,
-    addresses,
-    platformUsers,
-    id: userId,
-    addressProviders,
-    sharedSocials,
-  } = useUser()
-  const { address } = useAccount()
+  const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
+  const { address, type } = useWeb3ConnectionManager()
   const vaults = useDelegateVaults()
+  const { id: userId } = useUserPublic()
 
   const orderedSocials = useMemo(() => {
     const connectedPlatforms =
@@ -152,6 +147,7 @@ const AccountConnections = () => {
           )
         )}
       </AccountSection>
+
       <AccountSectionTitle
         title="Linked addresses"
         titleRightElement={
@@ -176,6 +172,7 @@ const AccountConnections = () => {
         spacing={3}
         pt="4"
       />
+
       <AccountSection divider={<Divider />}>
         {isLoading ? (
           <LinkedAddressSkeleton />
@@ -256,25 +253,9 @@ const AccountConnections = () => {
           </Stack>
         ) : (
           linkedAddresses
-            .map((addressData) =>
-              typeof addressData === "string" ? (
-                <LinkedAddress
-                  key={addressData}
-                  addressData={{
-                    address: addressData,
-                    userId,
-                    createdAt: null,
-                    isPrimary: addresses.findIndex((a) => a === addressData) === 0,
-                    provider: addressProviders?.[addressData],
-                  }}
-                />
-              ) : (
-                <LinkedAddress
-                  key={addressData?.address}
-                  addressData={addressData}
-                />
-              )
-            )
+            .map((addressData) => (
+              <LinkedAddress key={addressData?.address} addressData={addressData} />
+            ))
             .concat(
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
             )

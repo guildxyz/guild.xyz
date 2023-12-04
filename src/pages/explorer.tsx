@@ -5,8 +5,7 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
 import ExplorerTabs from "components/explorer/ExplorerTabs"
 import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
-import YourGuilds from "components/explorer/YourGuilds"
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import YourGuilds, { useYourGuilds } from "components/explorer/YourGuilds"
 import { GetStaticProps } from "next"
 import { useRef } from "react"
 import { GuildBase } from "types"
@@ -20,8 +19,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const yourGuildsRef = useRef(null)
   const allGuildsRef = useRef(null)
 
-  // ? is included, so the request hits v2Replacer in fetcher
-  const { data: usersGuilds } = useSWRWithOptionalAuth(`/v2/guilds`)
+  const { data: usersGuilds } = useYourGuilds()
 
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)

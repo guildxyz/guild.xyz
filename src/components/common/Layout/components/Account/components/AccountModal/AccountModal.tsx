@@ -18,25 +18,34 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
-import useUser from "components/[guild]/hooks/useUser"
-import { deleteKeyPairFromIdb } from "components/_app/KeyPairProvider"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
+import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { LinkBreak, SignOut } from "phosphor-react"
-import { useAccount, useChainId, useDisconnect } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const { address, connector } = useAccount()
-  const { disconnect } = useDisconnect()
+  const {
+    address,
+    type,
+    setIsDelegateConnection,
+    isAccountModalOpen: isOpen,
+    closeAccountModal: onClose,
+    disconnect,
+  } = useWeb3ConnectionManager()
+
+  const { address: evmAddress } = useAccount()
+
   const chainId = useChainId()
 
   const {
@@ -44,18 +53,10 @@ const AccountModal = () => {
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
-  const {
-    setIsDelegateConnection,
-    isAccountModalOpen: isOpen,
-    closeAccountModal: onClose,
-  } = useWeb3ConnectionManager()
   const { id, addresses } = useUser()
+  const { deleteKeys } = useUserPublic()
 
   const handleLogout = () => {
-    setIsDelegateConnection(false)
-    onClose()
-    disconnect()
-
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
       /^dc_auth_[a-z]*$/.test(key)
     )
@@ -64,10 +65,17 @@ const AccountModal = () => {
       window.localStorage.removeItem(key)
     })
 
-    deleteKeyPairFromIdb(id)?.catch(() => {})
+    deleteKeyPairFromIdb(id)
+      ?.catch(() => {})
+      .finally(() => {
+        setIsDelegateConnection(false)
+        onClose()
+        disconnect()
+        deleteKeys()
+      })
   }
 
-  const domain = useResolveAddress(address)
+  const domain = useResolveAddress(evmAddress)
 
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
 
@@ -86,7 +94,7 @@ const AccountModal = () => {
         <ModalCloseButton />
         {address ? (
           <>
-            <ModalBody>
+            <ModalBody className="custom-scrollbar">
               <HStack spacing="3" alignItems="center" mb="8">
                 <Circle size={12} bg={avatarBg}>
                   <GuildAvatar address={address} size={5} />
@@ -116,24 +124,30 @@ const AccountModal = () => {
                     >
                       {`Connected with ${connectorName} on`}
                     </Text>
-                    <Button
-                      variant="ghost"
-                      p="0"
-                      onClick={openNetworkModal}
-                      size="xs"
-                      mt="-2px"
-                    >
-                      <Center>
-                        {CHAIN_CONFIG[Chains[chainId]] ? (
-                          <Img
-                            src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
-                            boxSize={4}
-                          />
-                        ) : (
-                          <Icon as={LinkBreak} />
-                        )}
+                    {type === "EVM" ? (
+                      <Button
+                        variant="ghost"
+                        p="0"
+                        onClick={openNetworkModal}
+                        size="xs"
+                        mt="-2px"
+                      >
+                        <Center>
+                          {CHAIN_CONFIG[Chains[chainId]] ? (
+                            <Img
+                              src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
+                              boxSize={4}
+                            />
+                          ) : (
+                            <Icon as={LinkBreak} />
+                          )}
+                        </Center>
+                      </Button>
+                    ) : (
+                      <Center ml={1}>
+                        <Img src="/walletLogos/fuel.svg" boxSize={4} />
                       </Center>
-                    </Button>
+                    )}
                   </HStack>
                   <NetworkModal
                     isOpen={isNetworkModalOpen}

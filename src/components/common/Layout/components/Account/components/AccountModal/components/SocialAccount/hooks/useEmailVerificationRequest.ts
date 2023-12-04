@@ -41,7 +41,6 @@ const useVerificationRequest = (
       return rawFetcherWithSign(
         {
           publicClient: publicClient({}),
-          ts: Date.now(),
           walletClient,
           address: walletClient.account.address,
         },

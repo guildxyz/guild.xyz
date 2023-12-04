@@ -127,9 +127,11 @@ const preprocessRequirements = (
         if (
           requirement.type === "ALLOWLIST" &&
           !requirement.data?.addresses &&
-          !requirement.data?.hideAllowlist
-        )
+          !requirement.data?.hideAllowlist &&
+          !!processedRequirement.data
+        ) {
           processedRequirement.data.addresses = []
+        }
 
         if (
           requirement.type === "CONTRACT" &&

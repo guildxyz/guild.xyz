@@ -14,7 +14,7 @@ const FarcasterRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={farcasterUser?.img || "requirementLogos/farcaster.png"}
+      image={farcasterUser?.img || "/requirementLogos/farcaster.png"}
       {...props}
     >
       {(() => {

@@ -1,14 +1,13 @@
 import { useConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
-import useUser from "components/[guild]/hooks/useUser"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
 
 const useConnectFromLocalStorage = () => {
-  const { keyPair, isValid } = useKeyPair()
+  const { keyPair } = useUserPublic()
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
   const { onSubmit } = useConnect(() => {
@@ -17,7 +16,7 @@ const useConnectFromLocalStorage = () => {
   const { platformUsers } = useUser()
 
   useEffect(() => {
-    if (!keyPair || !isValid || !platformUsers) return
+    if (!keyPair || !platformUsers) return
 
     Object.keys(platforms).forEach((platformName) => {
       const storageKey = `${platformName}_shouldConnect`
@@ -45,7 +44,7 @@ const useConnectFromLocalStorage = () => {
         }
       }
     })
-  }, [keyPair, isValid, platformUsers])
+  }, [keyPair, platformUsers])
 }
 
 export default useConnectFromLocalStorage

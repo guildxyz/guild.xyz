@@ -15,6 +15,7 @@ import {
   TABS_SM_BUTTONS_STYLES,
 } from "components/[guild]/Tabs/Tabs"
 import { BATCH_SIZE } from "components/_app/ExplorerProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import Section from "components/common/Section"
 import ExplorerCardMotionWrapper from "components/explorer/ExplorerCardMotionWrapper"
@@ -27,7 +28,6 @@ import useScrollEffect from "hooks/useScrollEffect"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
-import { useAccount } from "wagmi"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
 }
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<Filters>("order", "FEATURED")
@@ -98,7 +98,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
 
   return (
     <Stack spacing={{ base: 8, md: 10 }}>
-      <ClientOnly>{isConnected && <Divider />}</ClientOnly>
+      <ClientOnly>{isWeb3Connected && <Divider />}</ClientOnly>
       <Section
         title="Explore all guilds"
         ref={ref}

@@ -23,7 +23,7 @@
     "./src/**/*.ts",
     "./src/**/*.tsx",
     "api/**/*.ts",
-    "synpress.config.ts",
+    "cypress.config.ts",
     "cypress/**/*.ts"
   ],
   "exclude": ["node_modules", ".next", "out"]

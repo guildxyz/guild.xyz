@@ -89,7 +89,7 @@ const TIMEOUT = 10_000
 
 const ConnectEmailButton = ({
   onSuccess,
-
+  isReconnection: _,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
   const { emails } = useUser()

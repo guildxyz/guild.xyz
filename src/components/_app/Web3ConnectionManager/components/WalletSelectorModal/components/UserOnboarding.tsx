@@ -8,20 +8,18 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import Button from "components/common/Button"
 import { EmailPinEntry } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import useVerificationRequest from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/hooks/useEmailVerificationRequest"
 import useVerifyEmail from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/hooks/useVerifyEmail"
-import useDriveOAuth from "hooks/useDriveOauth"
+import useDriveOAuth from "hooks/useDriveOAuth"
+import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
 import { Check, GoogleLogo } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
+import { useEffect, useState } from "react"
 import { uploadBackupDataToDrive } from "utils/googleDrive"
-import { getRecaptchaToken } from "utils/recaptcha"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
 
@@ -67,8 +65,7 @@ export default function UserOnboarding({
   const [shouldBackupAfterConnect, setShouldBackupAfterConnect] = useState(false)
   const { authData, error, isAuthenticating, onOpen } = useDriveOAuth()
 
-  const { ready, set, keyPair, isValid } = useKeyPair()
-  const recaptchaRef = useRef<ReCAPTCHA>()
+  const set = useSetKeyPair()
 
   const uploadToDrive = useSubmit(
     (backupData: string) =>
@@ -86,13 +83,13 @@ export default function UserOnboarding({
             "Make sure you see a new '.wallet' file in your Google Drive!",
         })
 
-        const recaptchaToken = await getRecaptchaToken(recaptchaRef)
-
         const walletClient = await cwaasConnector.getWalletClient()
 
-        await set.onSubmit(false, undefined, recaptchaToken, {
-          walletClient,
-          address: walletClient.account.address,
+        await set.onSubmit({
+          signProps: {
+            walletClient,
+            address: walletClient.account.address,
+          },
         })
 
         connect({ connector: cwaasConnector })
@@ -201,18 +198,8 @@ export default function UserOnboarding({
         </Stack>
       </ModalBody>
       <ModalFooter>
-        <ReCAPTCHA
-          ref={recaptchaRef}
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-          size="invisible"
-        />
         <Button
-          isLoading={
-            uploadToDrive.isLoading ||
-            isAuthenticating ||
-            set.isLoading ||
-            set.isSigning
-          }
+          isLoading={uploadToDrive.isLoading || isAuthenticating || set.isLoading}
           size={"sm"}
           rightIcon={<GoogleLogo />}
           colorScheme="blue"

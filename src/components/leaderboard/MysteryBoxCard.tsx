@@ -198,7 +198,7 @@ const MysteryBoxCard = () => {
               w="full"
               size="lg"
               colorScheme="indigo"
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit((data) => onSubmit(data))}
               isLoading={isLoading}
               loadingText={loadingText}
             >

@@ -115,6 +115,7 @@ const BuyButton = (): JSX.Element => {
 
   return (
     <Button
+      data-test="buy-button"
       size="lg"
       isDisabled={isDisabled}
       isLoading={isLoading}

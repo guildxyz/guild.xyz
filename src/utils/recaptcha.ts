@@ -1,3 +1,4 @@
+import { atom } from "jotai"
 import { MutableRefObject } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 
@@ -16,3 +17,5 @@ export const getRecaptchaToken = async (
 
   return token
 }
+
+export const recaptchaAtom = atom(null as ReCAPTCHA)
