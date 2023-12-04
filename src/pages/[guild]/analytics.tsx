@@ -18,6 +18,12 @@ const GuildPage = (): JSX.Element => {
       <Head>
         <meta name="theme-color" content={localThemeColor} />
       </Head>
+      {/**
+       * The visx tooltip has some overflow problems (it's most apparent on mobile where
+       * the whole site jumpshifts around, but also visible on desktop as a horizontal
+       * scrollbar), these styles prevent it
+       */}
+      <style>{`html, body {overflow-x: hidden}`}</style>
 
       <Layout
         title={name}
@@ -35,7 +41,8 @@ const GuildPage = (): JSX.Element => {
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
       >
-        <GuildTabs activeTab="ANALYTICS" />
+        {/* we can't use sticky tabs because of the hidden overflow on body */}
+        <GuildTabs activeTab="ANALYTICS" isSticky={false} />
         <NoPermissionToPageFallback>
           <MembersCountChart />
         </NoPermissionToPageFallback>
