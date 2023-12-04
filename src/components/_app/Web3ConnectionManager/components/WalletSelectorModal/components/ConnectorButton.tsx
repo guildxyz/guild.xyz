@@ -50,7 +50,7 @@ const ConnectorButton = ({
           ? handleOnboarding
           : () => connect({ connector })
       }
-      rightIcon={
+      leftIcon={
         connectorIcon ? (
           <Center boxSize={6}>
             <Img
@@ -74,6 +74,7 @@ const ConnectorButton = ({
       loadingText={`${connectorName} - connecting...`}
       w="full"
       size="xl"
+      gap={3}
       justifyContent="start"
     >
       {connectorName}
