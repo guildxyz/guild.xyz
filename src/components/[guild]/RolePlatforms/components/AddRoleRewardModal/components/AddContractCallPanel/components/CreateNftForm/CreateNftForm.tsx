@@ -28,11 +28,10 @@ import {
 import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
-import StyledSelect from "components/common/StyledSelect"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
@@ -70,6 +69,8 @@ const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "ETHEREUM",
   "BASE_MAINNET",
   "OPTIMISM",
+  "BSC",
+  "CRONOS",
   "POLYGON",
   "POLYGON_MUMBAI",
 ] as const
@@ -78,7 +79,7 @@ export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
-  const { address } = useAccount()
+  const { isConnected: isEvmConnected, address } = useAccount()
   const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useWeb3ConnectionManager()
@@ -290,35 +291,11 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
               <Divider />
 
-              <HStack>
-                <ChainPicker
-                  controlName="chain"
-                  supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
-                  showDivider={false}
-                />
-                <FormControl>
-                  <FormLabel>Supply</FormLabel>
-                  <StyledSelect
-                    value={{
-                      label: "Unlimited",
-                      value: "UNLIMITED",
-                    }}
-                    options={[
-                      {
-                        label: "Unlimited",
-                        value: "UNLIMITED",
-                      },
-                      {
-                        label: "Fixed",
-                        value: "FIXED",
-                        isDisabled: true,
-                        details: "Coming soon",
-                      },
-                    ]}
-                    filterOption={() => true}
-                  />
-                </FormControl>
-              </HStack>
+              <ChainPicker
+                controlName="chain"
+                supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
+                showDivider={false}
+              />
 
               <FormControl isInvalid={!!errors?.price}>
                 <FormLabel>Price</FormLabel>
@@ -422,13 +399,18 @@ const CreateNftForm = ({ onSuccess }: Props) => {
             >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
           )}
           <Tooltip
-            label="Please switch to a supported chain"
-            isDisabled={!shouldSwitchChain}
+            label={
+              isEvmConnected
+                ? "Please switch to a supported chain"
+                : "Please connect an EVM wallet"
+            }
+            isDisabled={isEvmConnected && !shouldSwitchChain}
+            hasArrow
           >
             <Button
               data-test="create-nft-button"
               colorScheme="indigo"
-              isDisabled={shouldSwitchChain || isLoading}
+              isDisabled={!isEvmConnected || shouldSwitchChain || isLoading}
               isLoading={isLoading}
               loadingText={loadingText}
               onClick={(e) => {

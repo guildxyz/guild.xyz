@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"

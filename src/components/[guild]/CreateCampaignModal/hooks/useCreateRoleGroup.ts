@@ -1,5 +1,5 @@
-import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -25,13 +25,16 @@ const useCreateRoleGroup = () => {
       triggerConfetti()
       toast({
         status: "success",
-        title: "Successfully created campaign",
+        title: "Successfully created page",
       })
 
-      mutateGuild((curr) => ({
-        ...curr,
-        groups: [...(curr.groups ?? []), response],
-      }))
+      mutateGuild(
+        (curr) => ({
+          ...curr,
+          groups: [...(curr.groups ?? []), response],
+        }),
+        { revalidate: false }
+      )
 
       router.push(`/${urlName}/${response.urlName}`)
     },

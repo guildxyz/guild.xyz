@@ -3,7 +3,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
-const ContractCallPreview = (): JSX.Element => {
+const ContractCallPreview = ({ children }): JSX.Element => {
   const chain = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData.chain",
   })
@@ -20,7 +20,9 @@ const ContractCallPreview = (): JSX.Element => {
       isLoading={isLoading}
       name={name}
       image={image}
-    />
+    >
+      {children}
+    </PlatformPreview>
   )
 }
 

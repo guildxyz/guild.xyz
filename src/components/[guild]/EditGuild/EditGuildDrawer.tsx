@@ -147,7 +147,7 @@ const EditGuildDrawer = ({
   } = useThemeContext()
 
   useWarnIfUnsavedChanges(
-    methods.formState?.isDirty && !methods.formState.isSubmitted
+    methods.formState.isDirty && !methods.formState.isSubmitted
   )
 
   const {
@@ -246,7 +246,7 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                {isOwner ? (
+                {isOwner || isSuperAdmin ? (
                   <DeleteGuildButton
                     beforeDelete={() => methods.reset(defaultValues)}
                   />

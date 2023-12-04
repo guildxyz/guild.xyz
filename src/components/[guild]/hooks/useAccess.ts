@@ -1,21 +1,21 @@
 import type { AccessCheckJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { useEffect } from "react"
 import { SWRConfiguration } from "swr"
 import useSWRImmutable from "swr/immutable"
 import createAndAwaitJob from "utils/createAndAwaitJob"
 import { useFetcherWithSign } from "utils/fetcher"
-import { useAccount } from "wagmi"
 import { QUEUE_FEATURE_FLAG } from "../JoinModal/hooks/useJoin"
+import { useUserPublic } from "./useUser"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
-  const { isConnected, address } = useAccount()
+  const { isWeb3Connected, address } = useWeb3ConnectionManager()
   const { id, featureFlags, roles } = useGuild()
-  const { isValid } = useKeyPair()
+  const { keyPair } = useUserPublic()
 
-  const shouldFetch = isConnected && id && roleId !== 0 && isValid
+  const shouldFetch = isWeb3Connected && id && roleId !== 0 && !!keyPair
 
   const fetcherWithSign = useFetcherWithSign()
 

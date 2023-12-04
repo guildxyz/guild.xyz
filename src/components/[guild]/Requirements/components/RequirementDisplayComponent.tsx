@@ -46,7 +46,13 @@ const RequirementDisplayComponent = ({
   return (
     <RequirementProvider requirement={requirement}>
       <InvalidRequirementErrorBoundary>
-        <RequirementComponent rightElement={rightElement} {...rest} />
+        <RequirementComponent
+          rightElement={rightElement}
+          showViewOriginal={
+            requirement.data?.customName || requirement.data?.customImage
+          }
+          {...rest}
+        />
       </InvalidRequirementErrorBoundary>
     </RequirementProvider>
   )
@@ -71,6 +77,7 @@ export const InvalidRequirementErrorBoundary = ({
         </Requirement>
       }
       onError={(error, info) => {
+        console.log(error)
         captureEvent("ErrorBoundary catched error", {
           requirementType: requirement?.type,
           requirement,

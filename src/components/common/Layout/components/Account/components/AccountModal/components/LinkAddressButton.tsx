@@ -10,21 +10,29 @@ import {
 } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useUser from "components/[guild]/hooks/useUser"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
-import { addressLinkParamsAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/hooks/useShouldLinkToUser"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { useAtom } from "jotai"
+import { atom, useAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
-import { useAccount, useDisconnect, useWalletClient } from "wagmi"
+import { useWalletClient } from "wagmi"
+
+export type AddressLinkParams = {
+  userId?: number
+  address?: `0x${string}`
+}
+export const addressLinkParamsAtom = atom<AddressLinkParams>({
+  userId: undefined,
+  address: undefined,
+})
 
 const LinkAddressButton = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const { id } = useUser()
 
-  const { address } = useAccount()
-  const { disconnect } = useDisconnect()
+  const { address, disconnect } = useWeb3ConnectionManager()
+
   const { data: walletClient } = useWalletClient()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -40,6 +48,7 @@ const LinkAddressButton = (props) => {
 
     try {
       await walletClient.requestPermissions({ eth_accounts: {} })
+    } catch {
     } finally {
       setIsLoading(false)
     }
@@ -53,6 +62,7 @@ const LinkAddressButton = (props) => {
   const handleLogout = () => {
     handleClose()
     disconnect()
+
     openWalletSelectorModal()
   }
 

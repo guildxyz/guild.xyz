@@ -28,6 +28,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
 
   const {
     data: { isAdmin, channels },
+    error,
   } = useServerData(serverData.id, {
     swrOptions: {
       refreshInterval: !!activeAddBotPopup ? 2000 : 0,
@@ -66,9 +67,9 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
-        ) : isAdmin === undefined || isValidating ? (
+        ) : isValidating ? (
           <Button h={10} isLoading />
-        ) : !isAdmin ? (
+        ) : !isAdmin || !!error ? (
           <Button
             h={10}
             colorScheme="DISCORD"

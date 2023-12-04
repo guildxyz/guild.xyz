@@ -42,7 +42,12 @@ const AddRewardAndCampaign = () => {
             })}
           />
           <Portal>
-            <MenuList maxW="sm" py={0} zIndex="popover" overflow="hidden">
+            <MenuList
+              maxW={{ base: "100vw", sm: "sm" }}
+              py={0}
+              zIndex="popover"
+              overflow="hidden"
+            >
               <MenuItem
                 onClick={onOpen}
                 icon={<Icon as={Plus} mt="1" />}
@@ -51,11 +56,11 @@ const AddRewardAndCampaign = () => {
               >
                 <Stack spacing={0.5}>
                   <Text as="span" fontWeight="semibold" fontSize="sm">
-                    Add campaign
+                    Create new page
                   </Text>
                   <Text colorScheme="gray" fontSize="sm">
-                    A campaign is a separate page with it’s own roles and rewards,
-                    highlighted at the top of your guild for everyone
+                    Add a separate page with it’s own roles and rewards, highlighted
+                    at the top of your guild for everyone
                   </Text>
                 </Stack>
               </MenuItem>

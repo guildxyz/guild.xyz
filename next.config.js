@@ -24,12 +24,12 @@ module.exports = {
         "@chakra-ui/react": false,
         "@chakra-ui/theme-tools": false,
         "chakra-react-select": false,
-        "chakra-ui-steps": false,
         stream: false,
         "crypto-addr-codec": false,
         "@ensdomains/address-encoder": false,
         "decode-named-character-reference": false,
         isows: false,
+        fuels: false,
       }
     }
 

@@ -21,6 +21,7 @@ import {
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import LinkButton from "components/common/LinkButton"
 import { ArrowRight, Bell } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
@@ -30,6 +31,7 @@ const VIEWPORT_GAP_PX = 8
 
 const UserActivityLogPopover = () => {
   const { id } = useUser()
+  const { captureEvent } = usePostHogContext()
 
   return (
     <Popover
@@ -40,39 +42,49 @@ const UserActivityLogPopover = () => {
         { name: "preventOverflow", options: { padding: VIEWPORT_GAP_PX } },
       ]}
     >
-      <PopoverTrigger>
-        <AccountButton aria-label="Activity log">
-          <Icon as={Bell} />
-        </AccountButton>
-      </PopoverTrigger>
+      {({ isOpen }) => (
+        <>
+          <PopoverTrigger>
+            <AccountButton
+              aria-label="Activity log"
+              onClick={() => {
+                if (isOpen) return
+                captureEvent("opened UserActivityLogPopover")
+              }}
+            >
+              <Icon as={Bell} />
+            </AccountButton>
+          </PopoverTrigger>
 
-      <PopoverContent
-        minW="none"
-        maxW={`calc(100vw - ${2 * VIEWPORT_GAP_PX}px)`}
-        w="400px"
-      >
-        <PopoverArrow />
+          <PopoverContent
+            minW="none"
+            maxW={`calc(100vw - ${2 * VIEWPORT_GAP_PX}px)`}
+            w="400px"
+          >
+            <PopoverArrow />
 
-        <PopoverHeader border="0" pt="3" pb="1" px={4}>
-          <Text
-            fontSize="xs"
-            fontWeight="bold"
-            textTransform="uppercase"
-            colorScheme="gray"
-          >
-            Recent activity
-          </Text>
-        </PopoverHeader>
-        <PopoverBody px={4} pt="0" pb="3">
-          <ActivityLogProvider
-            userId={id}
-            withSearchParams={false}
-            isInfinite={false}
-          >
-            <UserActivityLog />
-          </ActivityLogProvider>
-        </PopoverBody>
-      </PopoverContent>
+            <PopoverHeader border="0" pt="3" pb="1" px={4}>
+              <Text
+                fontSize="xs"
+                fontWeight="bold"
+                textTransform="uppercase"
+                colorScheme="gray"
+              >
+                Recent activity
+              </Text>
+            </PopoverHeader>
+            <PopoverBody px={4} pt="0" pb="3">
+              <ActivityLogProvider
+                userId={id}
+                withSearchParams={false}
+                isInfinite={false}
+              >
+                <UserActivityLog />
+              </ActivityLogProvider>
+            </PopoverBody>
+          </PopoverContent>
+        </>
+      )}
     </Popover>
   )
 }

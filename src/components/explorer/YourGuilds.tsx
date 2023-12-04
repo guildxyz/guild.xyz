@@ -1,5 +1,5 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
-import { useWeb3ConnectionManager } from "components/_app/Web3ConnectionManager"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import LinkButton from "components/common/LinkButton"
@@ -8,7 +8,6 @@ import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Plus, Wallet } from "phosphor-react"
 import { forwardRef } from "react"
-import { useAccount } from "wagmi"
 
 const useYourGuilds = () =>
   useSWRWithOptionalAuth(`/v2/guilds`, {
@@ -17,8 +16,7 @@ const useYourGuilds = () =>
   })
 
 const YourGuilds = forwardRef((_, ref: any) => {
-  const { isConnected } = useAccount()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
 
   const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()
 
@@ -30,7 +28,7 @@ const YourGuilds = forwardRef((_, ref: any) => {
       sx={{ ".chakra-heading": { color: "white" } }}
       scrollMarginTop={20}
     >
-      {!isConnected ? (
+      {!isWeb3Connected ? (
         <Card p="6">
           <Stack
             direction={{ base: "column", sm: "row" }}

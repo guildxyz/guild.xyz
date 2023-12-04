@@ -5,7 +5,7 @@ import {
   usePostHog,
 } from "posthog-js/react"
 import { PropsWithChildren, createContext, useContext } from "react"
-import { useAccount } from "wagmi"
+import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -35,7 +35,7 @@ const PostHogContext = createContext<{
 const CustomPostHogProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const { address } = useAccount()
+  const { address, type: walletType } = useWeb3ConnectionManager()
   const { id } = useUserPublic()
   const ph = usePostHog()
 
@@ -46,6 +46,7 @@ const CustomPostHogProvider = ({
           ph.capture(event, {
             userId: id,
             userAddress: address?.toLowerCase(),
+            walletType,
             ...options,
           }),
       }}

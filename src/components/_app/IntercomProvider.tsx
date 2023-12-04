@@ -1,7 +1,7 @@
 import useUser from "components/[guild]/hooks/useUser"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
-import { useAccount } from "wagmi"
+import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 const IntercomContext = createContext<{
   addIntercomSettings: (newData: Record<string, string | number>) => void
@@ -54,13 +54,13 @@ const triggerChat = () => {
 }
 
 const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
-  const { address, isConnected } = useAccount()
+  const { address, isWeb3Connected, type: walletType } = useWeb3ConnectionManager()
   const user = useUser()
 
   const { memberships } = useMemberships()
 
   useEffect(() => {
-    if (!isConnected || !user || !memberships) return
+    if (!isWeb3Connected || !user || !memberships) return
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
@@ -74,10 +74,11 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
     addIntercomSettings({
       userId: user.id,
       address: address.toLowerCase(),
+      walletType,
       connectedPlatforms,
       managedGuilds,
     })
-  }, [address, isConnected, user, memberships])
+  }, [address, isWeb3Connected, user, memberships])
 
   return (
     <IntercomContext.Provider

@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react"
+import { Icon, Text } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
@@ -100,7 +100,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
       }
     >
       <>
-        {"Pay "}
+        <Text as="span">{"Pay "}</Text>
         <DataBlock
           isLoading={isVaultLoading || isTokenDataLoading}
           error={
@@ -113,7 +113,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
-        {` on ${CHAIN_CONFIG[chain].name}`}
+        <Text as="span">{` on ${CHAIN_CONFIG[chain].name}`}</Text>
       </>
     </Requirement>
   )
