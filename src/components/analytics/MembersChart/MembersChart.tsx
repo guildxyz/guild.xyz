@@ -34,6 +34,7 @@ const prev = startDate.toISOString()
 const MembersChart = () => {
   const { id, roles } = useGuild()
   const chartHeight = useBreakpointValue({ base: 250, md: 500 })
+  const numberOfDateMarkers = useBreakpointValue({ base: 2, sm: 4 })
 
   const { data, isLoading, error } = useSWRWithOptionalAuth(
     id
@@ -132,8 +133,7 @@ const MembersChart = () => {
                     ? "end"
                     : "middle",
               })}
-              numTicks={4}
-              left={16}
+              numTicks={numberOfDateMarkers}
             />
             <Axis
               hideAxisLine
