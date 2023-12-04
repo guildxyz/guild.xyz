@@ -217,7 +217,9 @@ const RequirementEditableCard = ({
             />
             <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
             <ModalBody>
-              <IsNegatedPicker baseFieldPath={``} />
+              {REQUIREMENTS[type].isNegatable && (
+                <IsNegatedPicker baseFieldPath={``} />
+              )}
               <FormComponent baseFieldPath={``} field={field} />
             </ModalBody>
             <ModalFooter gap="3">

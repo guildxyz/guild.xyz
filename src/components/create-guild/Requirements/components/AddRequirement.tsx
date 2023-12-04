@@ -211,7 +211,9 @@ const AddRequirementForm = forwardRef(
       >
         <FormProvider {...methods}>
           <ModalBody>
-            {selectedType !== "PAYMENT" && <IsNegatedPicker baseFieldPath="" />}
+            {REQUIREMENTS[selectedType].isNegatable && (
+              <IsNegatedPicker baseFieldPath="" />
+            )}
             <FormComponent
               baseFieldPath=""
               addRequirement={onSubmit}
