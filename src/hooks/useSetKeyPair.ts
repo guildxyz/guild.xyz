@@ -115,11 +115,11 @@ const useSetKeyPair = () => {
       }
 
       const userProfile = await fetcherWithSign([
-        `/v2/users/${id ?? address}/public-key`,
+        `/v2/users/${signProps?.address ?? id ?? address}/public-key`,
         {
           method: "POST",
           body,
-          signProps: {
+          signOptions: {
             forcePropmt: true,
             message:
               "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
