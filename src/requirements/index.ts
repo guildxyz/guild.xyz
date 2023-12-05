@@ -28,6 +28,7 @@ export type RequirementData = {
   disabled?: boolean
   isPlatform?: boolean
   isCustomizable?: boolean
+  isNegatable?: boolean
   displayComponent: ComponentType<RequirementProps>
   formComponent: ComponentType<RequirementFormProps>
 }

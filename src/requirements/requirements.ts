@@ -4,6 +4,7 @@ import {
   Coins,
   CurrencyCircleDollar,
   ImageSquare,
+  Link,
   ListChecks,
   Robot,
   Wallet,
@@ -144,6 +145,17 @@ export const REQUIREMENTS_DATA = [
       "GUILD_USER_SINCE",
     ],
     isNegatable: true,
+  },
+  {
+    icon: Link,
+    name: "Visit link",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/VisitLink/VisitLinkRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/VisitLink/VisitLinkForm")
+    ),
+    types: ["LINK_VISIT"],
   },
   {
     icon: platforms.EMAIL.icon,
