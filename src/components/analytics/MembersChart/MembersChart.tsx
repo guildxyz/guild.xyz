@@ -37,6 +37,7 @@ const accessors: MembersChartAccessors = {
 }
 
 const CHART_MARGIN_X = 18
+const COLOR_PALETTES = Object.values(allColors)
 
 const date = new Date()
 const current = date.toISOString()
@@ -77,7 +78,7 @@ const MembersChart = () => {
         acc[curr.id] =
           /* curr.imageUrl
           ? await getColorByImage(curr.imageUrl)
-          : */ Object.values(allColors)[getRandomInt(9)][4]
+          : */ COLOR_PALETTES[getRandomInt(COLOR_PALETTES.length - 1)][4]
         return acc
       }, {}),
     [roles]
