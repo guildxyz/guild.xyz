@@ -14,18 +14,24 @@ import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useEffect, useMemo, useState } from "react"
+import { Role } from "types"
 import getRandomInt from "utils/getRandomInt"
 import MembersChartLinesPanel from "./components/MembersChartLinesPanel"
 import MembersChartTooltip from "./components/MembersChartTooltip"
 
-type MemberCountData = {
+export type MemberCountData = {
   count: number
   timestamp: string
 }
 
+export type MembersChartAccessors = {
+  xAccessor: (d: MemberCountData) => any
+  yAccessor: (d: MemberCountData) => any
+}
+
 type MemberCountByRole = { roleId: number; memberCounts: MemberCountData[] }
 
-const accessors = {
+const accessors: MembersChartAccessors = {
   xAccessor: (d) => new Date(d?.timestamp),
   yAccessor: (d) => d.count,
 }
@@ -52,7 +58,7 @@ const MembersChart = () => {
       : null
   )
 
-  const sortedRoles = useMemo(() => {
+  const sortedRoles: Role[] = useMemo(() => {
     const byMembers = roles?.sort(
       (role1, role2) => role2.memberCount - role1.memberCount
     )
@@ -65,7 +71,7 @@ const MembersChart = () => {
     setShownLines(["total", ...roles?.map((role) => role.id.toString())])
   }, [roles])
 
-  const roleColors = useMemo(
+  const roleColors: Record<number, string> = useMemo(
     () =>
       roles?.reduce((acc, curr) => {
         acc[curr.id] =

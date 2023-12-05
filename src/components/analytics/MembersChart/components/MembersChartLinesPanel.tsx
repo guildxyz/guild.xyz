@@ -2,18 +2,27 @@ import {
   Box,
   Checkbox,
   CheckboxGroup,
+  CheckboxProps,
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { forwardRef, useRef } from "react"
+import { Dispatch, SetStateAction, forwardRef, useRef } from "react"
+import { Role } from "types"
 import SimpleRoleTag from "./SimpleRoleTag"
+
+type Props = {
+  sortedRoles: Role[]
+  roleColors: Record<number, string>
+  shownRoleIds: string[]
+  setShownRoleIds: Dispatch<SetStateAction<string[]>>
+}
 
 const MembersChartLinesPanel = ({
   sortedRoles,
   roleColors,
   shownRoleIds,
   setShownRoleIds,
-}) => {
+}: Props) => {
   const lineSelectorBg = useColorModeValue("gray.50", "blackAlpha.300")
   const lineSelectorBorderColor = useColorModeValue("gray.200", "gray.600")
   const shadowColor = useColorModeValue(
@@ -33,7 +42,7 @@ const MembersChartLinesPanel = ({
     >
       <CheckboxGroup
         value={shownRoleIds}
-        onChange={(newValue) => setShownRoleIds(newValue)}
+        onChange={(newValue) => setShownRoleIds(newValue as string[])}
       >
         <Stack
           ref={scrollRef}
@@ -78,7 +87,7 @@ const MembersChartLinesPanel = ({
   )
 }
 
-const LineSeriesSelector = forwardRef<any, any>(
+const LineSeriesSelector = forwardRef<HTMLInputElement, CheckboxProps>(
   ({ value, color, children }, ref) => (
     <Checkbox
       ref={ref}

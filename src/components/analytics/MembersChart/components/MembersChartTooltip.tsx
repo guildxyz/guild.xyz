@@ -8,13 +8,20 @@ import {
   TagLeftIcon,
   Text,
 } from "@chakra-ui/react"
-import { Tooltip } from "@visx/xychart"
+import { Tooltip, TooltipDatum } from "@visx/xychart"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card, { useCardBg } from "components/common/Card"
 import { Users } from "phosphor-react"
+import { PropsWithChildren } from "react"
+import { MemberCountData, MembersChartAccessors } from "../MembersChart"
 import SimpleRoleTag from "./SimpleRoleTag"
 
-const MembersChartTooltip = ({ accessors, roleColors }) => {
+type Props = {
+  accessors: MembersChartAccessors
+  roleColors: Record<number, string>
+}
+
+const MembersChartTooltip = ({ accessors, roleColors }: Props) => {
   const cardBg = useCardBg()
   const { roles } = useGuild()
 
@@ -39,12 +46,13 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
         >
           <Text fontSize={"sm"} fontWeight={"semibold"} colorScheme="gray" mb="3">
             {new Date(
-              accessors.xAccessor(tooltipData.nearestDatum.datum)
+              accessors.xAccessor(tooltipData.nearestDatum.datum as MemberCountData)
             ).toLocaleString()}
           </Text>
           <Stack spacing={1}>
             {(() => {
-              const { key, datum } = tooltipData.nearestDatum as any
+              const { key, datum } =
+                tooltipData.nearestDatum as TooltipDatum<MemberCountData>
 
               if (key === "total")
                 return (
@@ -77,7 +85,11 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
   )
 }
 
-const LineSeriesData = ({ color, count, children }) => (
+const LineSeriesData = ({
+  color,
+  count,
+  children,
+}: PropsWithChildren<{ color: string; count: number }>) => (
   <HStack>
     <Box bg={color} width="4" height="0.5" borderRadius="sm" flexShrink={0} />
     {children}
