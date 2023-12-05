@@ -26,7 +26,12 @@ const useSendMessage = (onSuccess?: () => void) => {
         title: "Successfully sent message!",
       })
 
-      mutateMessages((prev) => [response.message, ...prev], { revalidate: false })
+      mutateMessages((prev) => [response.message, ...prev], {
+        revalidate: false,
+      })
+
+      // Refetching after 5s, to update its status
+      setTimeout(() => mutateMessages(), 5000)
 
       onSuccess?.()
     },
