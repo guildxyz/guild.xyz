@@ -30,7 +30,7 @@ import { ArrowRight } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 
-const Web3InboxSubscribe = () => {
+const Web3Inbox = () => {
   const { address } = useAccount()
   const { signMessageAsync } = useSignMessage()
 
@@ -247,4 +247,4 @@ const Web3InboxMessage = ({
   )
 }
 
-export default Web3InboxSubscribe
+export default Web3Inbox

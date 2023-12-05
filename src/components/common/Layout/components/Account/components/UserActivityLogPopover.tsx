@@ -28,7 +28,7 @@ import { ArrowRight, Bell } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
 import AccountButton from "./AccountButton"
 import NotificationsSection from "./NotificationsSection"
-import Web3InboxSubscribe from "./Web3InboxSubscribe"
+import Web3Inbox from "./Web3Inbox"
 
 const VIEWPORT_GAP_PX = 8
 
@@ -94,7 +94,7 @@ const UserActivityLogPopover = () => {
             <PopoverBody px={4} py={3}>
               <Stack spacing={4} divider={<Divider />}>
                 <NotificationsSection title="Messages">
-                  <Web3InboxSubscribe />
+                  <Web3Inbox />
                 </NotificationsSection>
 
                 <ActivityLogProvider
