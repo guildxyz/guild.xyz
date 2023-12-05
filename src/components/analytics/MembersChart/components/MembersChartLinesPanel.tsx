@@ -57,7 +57,7 @@ const MembersChartLinesPanel = ({
               color={roleColors[role.id]}
               value={role.id.toString()}
             >
-              <SimpleRoleTag role={role} />
+              <SimpleRoleTag roleData={role} />
             </LineSeriesSelector>
           ))}
         </Stack>

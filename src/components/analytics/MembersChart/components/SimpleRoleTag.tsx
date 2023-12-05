@@ -9,27 +9,27 @@ import {
 import { Role } from "types"
 
 type Props = {
-  role: Role
+  roleData: Role
   isTruncated?: boolean
 } & StackProps
 
-const SimpleRoleTag = ({ role, isTruncated, ...rest }: Props) => {
+const SimpleRoleTag = ({ roleData, isTruncated, ...rest }: Props) => {
   const { colorMode } = useColorMode()
 
   return (
     <HStack spacing={1} alignItems={"flex-start"} {...rest}>
       <Center boxSize="5" flexShrink={0} top="0.5" pos="relative">
-        {role.imageUrl?.startsWith("/guildLogos") ? (
+        {roleData.imageUrl?.startsWith("/guildLogos") ? (
           <Img
-            src={role.imageUrl}
+            src={roleData.imageUrl}
             boxSize="3"
             filter={colorMode === "light" && "brightness(0)"}
           />
         ) : (
-          <Img src={role.imageUrl} boxSize="5" borderRadius={"full"} />
+          <Img src={roleData.imageUrl} boxSize="5" borderRadius={"full"} />
         )}
       </Center>
-      <Text noOfLines={isTruncated ? 1 : null}>{role.name}</Text>
+      <Text noOfLines={isTruncated ? 1 : null}>{roleData.name}</Text>
     </HStack>
   )
 }

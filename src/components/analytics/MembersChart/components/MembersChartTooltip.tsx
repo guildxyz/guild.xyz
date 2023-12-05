@@ -64,7 +64,7 @@ const MembersChartTooltip = ({ accessors, roleColors }) => {
                   count={accessors.yAccessor(datum)}
                 >
                   <SimpleRoleTag
-                    role={roles.find((role) => role.id === key) as any} // casting to any because there's a strange type error otherways that I couldn't solve
+                    roleData={roles.find((role) => role.id.toString() === key)}
                     isTruncated
                   />
                 </LineSeriesData>
