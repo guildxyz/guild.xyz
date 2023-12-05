@@ -1,5 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import { MessageDestination, MessageProtocol } from "./useSendMessage"
@@ -10,7 +10,7 @@ const useReachableUsers = (
   roleIds: number[]
 ) => {
   const { id } = useGuild()
-  const { isValid } = useKeyPair()
+  const { keyPair } = useUserPublic()
   const fetcherWithSign = useFetcherWithSign()
 
   const searchParams = new URLSearchParams({
@@ -23,7 +23,7 @@ const useReachableUsers = (
   }
 
   return useSWRImmutable<string[]>(
-    isValid && roleIds?.length > 0
+    !!keyPair && roleIds?.length > 0
       ? ["messages/reachable-targets", id, roleIds.join()]
       : null,
     ([_, guildId]) =>
