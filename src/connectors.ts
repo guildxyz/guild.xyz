@@ -53,7 +53,7 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
               "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust
             ],
             themeVariables: {
-              "--wcm-z-index": "10001",
+              "--w3m-z-index": "10001",
             },
           },
         },
