@@ -40,11 +40,16 @@ const Requirement = ({
   rightElement,
   children,
   fieldRoot,
-  imageWrapper: ImageWrapper = React.Fragment,
-  childrenWrapper: ChildrenWrapper = Text,
+  imageWrapper,
+  childrenWrapper,
   showViewOriginal,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+
+  const ChildrenWrapper = childrenWrapper ?? Box
+  const ImageWrapper = imageWrapper ?? React.Fragment
+  const wrapperProps =
+    !!childrenWrapper && !!imageWrapper ? { baseFieldPath: fieldRoot } : {}
 
   return (
     <SimpleGrid
@@ -56,13 +61,13 @@ const Requirement = ({
     >
       <Box mt="3px" alignSelf={"start"}>
         <RequirementImageCircle isImageLoading={isImageLoading}>
-          <ImageWrapper baseFieldPath={fieldRoot}>
+          <ImageWrapper {...wrapperProps}>
             <RequirementImage image={requirement?.data?.customImage || image} />
           </ImageWrapper>
         </RequirementImageCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-        <ChildrenWrapper baseFieldPath={fieldRoot}>
+        <ChildrenWrapper {...wrapperProps} display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.data?.customName || children}
           {!fieldRoot && (

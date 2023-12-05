@@ -36,6 +36,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "MANTLE",
   "RONIN",
   "ARBITRUM",
+  "X1_TESTNET",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do
@@ -132,6 +133,7 @@ const WalletActivityForm = ({
     "LINEA",
     "MANTLE",
     "RONIN",
+    "X1_TESTNET",
     "GOERLI",
     "POLYGON_MUMBAI",
   ]
