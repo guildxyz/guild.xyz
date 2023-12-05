@@ -54,10 +54,10 @@ const Web3Inbox = () => {
       toast({
         status: "success",
         title: "Success",
-        description: "Successfully subscribed to Guild notifications via Web3Inbox",
+        description: "Successfully subscribed to Guild messages via Web3Inbox",
       })
     } catch {
-      showErrorToast("Couldn't subscribe to Guild notifications")
+      showErrorToast("Couldn't subscribe to Guild messages")
     }
   }
 
