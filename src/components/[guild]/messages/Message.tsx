@@ -131,11 +131,11 @@ const Message = ({
               </HStack>
 
               <HStack>
-                <Icon as={Check} color="gray.400" />
+                <Icon as={Check} color="GrayText" />
                 <Text as="span" colorScheme="gray" fontSize="sm">
                   {receiverCount}
                 </Text>
-                <Icon as={Users} color="gray.400" />
+                <Icon as={Users} color="GrayText" />
               </HStack>
             </HStack>
           </Stack>
