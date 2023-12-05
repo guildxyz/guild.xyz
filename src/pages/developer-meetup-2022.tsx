@@ -109,7 +109,7 @@ const Page = (): JSX.Element => (
               </LinkButton>
 
               <LinkButton
-                href="https://github.com/agoraxyz/guild.xyz"
+                href="https://github.com/guildxyz/guild.xyz"
                 colorScheme="white"
                 rightIcon={<Icon as={GithubLogo} />}
                 w="full"

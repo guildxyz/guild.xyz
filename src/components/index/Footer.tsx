@@ -46,7 +46,7 @@ const Footer = (): JSX.Element => (
             <Link href="https://twitter.com/guildxyz" isExternal>
               twitter
             </Link>
-            <Link href="https://github.com/agoraxyz/guild.xyz" isExternal>
+            <Link href="https://github.com/guildxyz/guild.xyz" isExternal>
               github
             </Link>
             <Link href="https://guild.mirror.xyz" isExternal>
