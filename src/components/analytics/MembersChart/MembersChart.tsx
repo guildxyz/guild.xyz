@@ -18,6 +18,13 @@ import getRandomInt from "utils/getRandomInt"
 import MembersChartLinesPanel from "./components/MembersChartLinesPanel"
 import MembersChartTooltip from "./components/MembersChartTooltip"
 
+type MemberCountData = {
+  count: number
+  timestamp: string
+}
+
+type MemberCountByRole = { roleId: number; memberCounts: MemberCountData[] }
+
 const accessors = {
   xAccessor: (d) => new Date(d?.timestamp),
   yAccessor: (d) => d.count,
@@ -36,7 +43,10 @@ const MembersChart = () => {
   const chartHeight = useBreakpointValue({ base: 250, md: 500 })
   const numberOfDateMarkers = useBreakpointValue({ base: 2, sm: 4 })
 
-  const { data, isLoading, error } = useSWRWithOptionalAuth(
+  const { data, isLoading, error } = useSWRWithOptionalAuth<{
+    roles: MemberCountByRole[]
+    total: MemberCountData[]
+  }>(
     id
       ? `/v2/analytics/guilds/${id}/member-counts?fetchTotal=true&from=${prev}&to=${current}`
       : null
@@ -159,18 +169,17 @@ const MembersChart = () => {
                 {...accessors}
               />
             )}
-            {data?.roles &&
-              data.roles
-                .filter((role) => shownLines?.includes(role.roleId.toString()))
-                .map(({ roleId, memberCounts }) => (
-                  <LineSeries
-                    key={roleId}
-                    dataKey={roleId}
-                    stroke={roleColors[roleId]}
-                    data={memberCounts}
-                    {...accessors}
-                  />
-                ))}
+            {data?.roles
+              ?.filter((role) => shownLines?.includes(role.roleId.toString()))
+              .map(({ roleId, memberCounts }) => (
+                <LineSeries
+                  key={roleId}
+                  dataKey={roleId.toString()}
+                  stroke={roleColors[roleId]}
+                  data={memberCounts}
+                  {...accessors}
+                />
+              ))}
             <MembersChartTooltip {...{ accessors, roleColors }} />
           </XYChart>
         )}
