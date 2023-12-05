@@ -70,6 +70,14 @@ const Message = ({
 
   const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
 
+  const prettyCreatedAt = new Date(createdAt).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  })
+
   return (
     <>
       <Card p={6}>
@@ -77,13 +85,7 @@ const Message = ({
           <Stack spacing={2} w="full">
             <Wrap>
               <Text as="span" fontWeight="bold" colorScheme="gray" fontSize="sm">
-                {new Date(createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
+                {prettyCreatedAt}
               </Text>
               {status === "PENDING" && (
                 <Tag colorScheme="blue" size="sm">
@@ -168,7 +170,7 @@ const Message = ({
                 <Tbody>
                   <Tr>
                     <Td {...tableLeftColStyles}>Sent on</Td>
-                    <Td {...tableRightColStyles}>2023.10.21 18:00</Td>
+                    <Td {...tableRightColStyles}>{prettyCreatedAt}</Td>
                   </Tr>
                   <Tr>
                     <Td {...tableLeftColStyles}>Targeted</Td>
