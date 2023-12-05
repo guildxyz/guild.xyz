@@ -6,7 +6,6 @@ import {
   PopoverArrow,
   PopoverBody,
   PopoverContent,
-  PopoverHeader,
   PopoverTrigger,
   Skeleton,
   SkeletonCircle,
@@ -23,15 +22,22 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import LinkButton from "components/common/LinkButton"
+import useLocalStorage from "hooks/useLocalStorage"
 import { ArrowRight, Bell } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
 import AccountButton from "./AccountButton"
+import Web3InboxSubscribe from "./Web3InboxSubscribe"
 
 const VIEWPORT_GAP_PX = 8
 
 const UserActivityLogPopover = () => {
   const { id } = useUser()
   const { captureEvent } = usePostHogContext()
+
+  const [clickedOnNotifications, setClickedOnNotifications] = useLocalStorage(
+    "clicked-web3inbox-feature-notification",
+    false
+  )
 
   return (
     <Popover
@@ -48,11 +54,29 @@ const UserActivityLogPopover = () => {
             <AccountButton
               aria-label="Activity log"
               onClick={() => {
+                setClickedOnNotifications(true)
                 if (isOpen) return
                 captureEvent("opened UserActivityLogPopover")
               }}
+              sx={{
+                "@keyframes notification": {
+                  "0%": { transform: "rotate(0deg)" },
+                  "2.5%": { transform: "rotate(15deg)" },
+                  "5%": { transform: "rotate(-15deg)" },
+                  "7.5": { transform: "rotate(15deg)" },
+                  "10%": { transform: "rotate(0deg)" },
+                },
+              }}
             >
-              <Icon as={Bell} />
+              <Icon
+                as={Bell}
+                transformOrigin="top center"
+                animation={
+                  clickedOnNotifications
+                    ? undefined
+                    : "notification 4s ease-in-out infinite"
+                }
+              />
             </AccountButton>
           </PopoverTrigger>
 
@@ -63,24 +87,26 @@ const UserActivityLogPopover = () => {
           >
             <PopoverArrow />
 
-            <PopoverHeader border="0" pt="3" pb="1" px={4}>
-              <Text
-                fontSize="xs"
-                fontWeight="bold"
-                textTransform="uppercase"
-                colorScheme="gray"
-              >
-                Recent activity
-              </Text>
-            </PopoverHeader>
             <PopoverBody px={4} pt="0" pb="3">
-              <ActivityLogProvider
-                userId={id}
-                withSearchParams={false}
-                isInfinite={false}
-              >
-                <UserActivityLog />
-              </ActivityLogProvider>
+              <Stack pt={3} divider={<Divider />} spacing={6}>
+                <Web3InboxSubscribe />
+
+                <ActivityLogProvider
+                  userId={id}
+                  withSearchParams={false}
+                  isInfinite={false}
+                >
+                  <Text
+                    fontSize="xs"
+                    fontWeight="bold"
+                    textTransform="uppercase"
+                    colorScheme="gray"
+                  >
+                    Recent activity
+                  </Text>
+                  <UserActivityLog />
+                </ActivityLogProvider>
+              </Stack>
             </PopoverBody>
           </PopoverContent>
         </>
