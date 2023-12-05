@@ -8,6 +8,7 @@ import {
   Tooltip,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import { curveMonotoneX } from "@visx/curve"
 import { Axis, Grid, LineSeries, XYChart, allColors } from "@visx/xychart"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Card from "components/common/Card"
@@ -173,6 +174,7 @@ const MembersChart = () => {
                 stroke="currentColor"
                 dataKey="total"
                 data={data.total}
+                curve={curveMonotoneX}
                 {...accessors}
               />
             )}
@@ -184,6 +186,7 @@ const MembersChart = () => {
                   dataKey={roleId.toString()}
                   stroke={roleColors[roleId]}
                   data={memberCounts}
+                  curve={curveMonotoneX}
                   {...accessors}
                 />
               ))}
