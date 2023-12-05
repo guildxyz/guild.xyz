@@ -34,16 +34,10 @@ const MembersChartTooltip = ({ accessors, roleColors }: Props) => {
         fill: cardBg,
       }}
       unstyled
+      className={"noPointerEvents"}
       applyPositionStyle
       renderTooltip={({ tooltipData }) => (
-        <Card
-          py="2.5"
-          px="4"
-          boxShadow="md"
-          borderRadius="lg"
-          pointerEvents={"none"}
-          borderWidth="1px"
-        >
+        <Card py="2.5" px="4" boxShadow="md" borderRadius="lg" borderWidth="1px">
           <Text fontSize={"sm"} fontWeight={"semibold"} colorScheme="gray" mb="3">
             {new Date(
               accessors.xAccessor(tooltipData.nearestDatum.datum as MemberCountData)
