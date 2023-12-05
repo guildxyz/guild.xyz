@@ -42,7 +42,7 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Activity log
         </TabButton>
       )}
-      {isAdmin && (
+      {isAdmin && featureFlags.includes("MESSAGING") && (
         <TabButton href={`/${urlName}/messages`} isActive={activeTab === "MESSAGES"}>
           Messages
         </TabButton>
