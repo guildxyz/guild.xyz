@@ -61,13 +61,11 @@ const SendNewMessage = (props: ButtonProps) => {
   })
 
   const roleIds = useWatch({ control, name: "roleIds" })
-
   const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
-
   const { data: reachableUsers, isValidating: isReachableUsersLoading } =
     useReachableUsers("WEB3INBOX", "ROLES", roleIds)
 
-  const greenText = useColorModeValue("green.500", "green.300")
+  const greenTextColor = useColorModeValue("green.500", "green.300")
 
   return (
     <>
@@ -86,16 +84,14 @@ const SendNewMessage = (props: ButtonProps) => {
                 <Stack>
                   <FormControl isRequired isInvalid={!!errors.roleIds}>
                     <FormLabel>Receipent roles</FormLabel>
-
                     <RoleIdsSelect />
-
                     <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
 
                     <Text as="span" display="block" colorScheme="gray" pt={2}>
                       <Text
                         as="span"
                         fontWeight="bold"
-                        color={reachableUsers?.length > 0 && greenText}
+                        color={reachableUsers?.length > 0 && greenTextColor}
                       >
                         {isReachableUsersLoading ? (
                           <Spinner size="xs" />
@@ -105,7 +101,7 @@ const SendNewMessage = (props: ButtonProps) => {
                       </Text>
                       <Text
                         as="span"
-                        color={reachableUsers?.length > 0 && greenText}
+                        color={reachableUsers?.length > 0 && greenTextColor}
                       >
                         {" reachable "}
                       </Text>
