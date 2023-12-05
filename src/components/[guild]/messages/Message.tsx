@@ -1,5 +1,4 @@
 import {
-  ChakraProps,
   Divider,
   HStack,
   Icon,
@@ -54,20 +53,13 @@ const Message = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const tableLeftColStyles: ChakraProps = {
-    display: "block",
-    minW: "max-content",
-    pl: 0,
-    pt: 0,
-    pr: 4,
-    pb: 4,
-    color: tableLeftColTextColor,
-  }
-
-  const tableRightColStyles: ChakraProps = {
-    px: 0,
-    pt: 0,
-    pb: 4,
+  const outlineTagStyles = {
+    variant: "outline",
+    color: "var(--chakra-colors-chakra-body-text)",
+    w: "max-content",
+    sx: {
+      "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
+    },
   }
 
   const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
@@ -116,14 +108,7 @@ const Message = ({
                 </Text>
 
                 {isMobile ? (
-                  <Tag
-                    variant="outline"
-                    color="var(--chakra-colors-chakra-body-text)"
-                    w="max-content"
-                    sx={{
-                      "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
-                    }}
-                  >
+                  <Tag {...outlineTagStyles}>
                     <TagLabel>{`${targetedRoles.length} roles`}</TagLabel>
                   </Tag>
                 ) : (
@@ -137,14 +122,7 @@ const Message = ({
                       />
                     ))}
                     {moreRolesCount > 0 && (
-                      <Tag
-                        variant="outline"
-                        color="var(--chakra-colors-chakra-body-text)"
-                        w="max-content"
-                        sx={{
-                          "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
-                        }}
-                      >
+                      <Tag {...outlineTagStyles}>
                         <TagLabel>{`+ ${moreRolesCount} more`}</TagLabel>
                       </Tag>
                     )}
@@ -175,15 +153,33 @@ const Message = ({
 
               <Divider />
 
-              <Table variant="unstyled">
+              <Table
+                variant="unstyled"
+                sx={{
+                  "tr td:nth-child(odd)": {
+                    display: "block",
+                    minW: "max-content",
+                    pl: 0,
+                    pt: 0,
+                    pr: 4,
+                    pb: 4,
+                    color: tableLeftColTextColor,
+                  },
+                  "tr td:nth-child(even)": {
+                    px: 0,
+                    pt: 0,
+                    pb: 4,
+                  },
+                }}
+              >
                 <Tbody>
                   <Tr>
-                    <Td {...tableLeftColStyles}>Sent on</Td>
-                    <Td {...tableRightColStyles}>{prettyCreatedAt}</Td>
+                    <Td>Sent on</Td>
+                    <Td>{prettyCreatedAt}</Td>
                   </Tr>
                   <Tr>
-                    <Td {...tableLeftColStyles}>Targeted</Td>
-                    <Td {...tableRightColStyles}>
+                    <Td>Targeted</Td>
+                    <Td>
                       <Wrap>
                         {targetedRoles.slice(0, 5).map((role) => (
                           <RoleTag
@@ -197,8 +193,8 @@ const Message = ({
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td {...tableLeftColStyles}>Sent to</Td>
-                    <Td {...tableRightColStyles}>
+                    <Td>Sent to</Td>
+                    <Td>
                       <HStack spacing={0.5}>
                         <b>{receiverCount}</b>
                         <Text as="span" colorScheme="gray">
