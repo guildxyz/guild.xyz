@@ -26,7 +26,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
-import { Checks, Users } from "phosphor-react"
+import { Check, Users } from "phosphor-react"
 import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
@@ -145,7 +145,7 @@ const Message = ({
             </HStack>
 
             <HStack>
-              <Icon as={Checks} color="gray.400" />
+              <Icon as={Check} color="gray.400" />
               <Text as="span" colorScheme="gray" fontSize="sm">
                 {receiverCount}
               </Text>
