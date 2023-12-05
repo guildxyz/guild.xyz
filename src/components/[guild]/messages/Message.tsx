@@ -3,6 +3,7 @@ import {
   Divider,
   HStack,
   Icon,
+  LinkBox,
   ModalBody,
   ModalContent,
   ModalHeader,
@@ -81,80 +82,87 @@ const Message = ({
 
   return (
     <>
-      <Card p={6}>
-        <Stack spacing={4} w="full">
-          <Stack spacing={2} w="full">
-            <Wrap>
-              <Text as="span" fontWeight="bold" colorScheme="gray" fontSize="sm">
-                {prettyCreatedAt}
-              </Text>
-              {status === "PENDING" && (
-                <Tag colorScheme="blue" size="sm">
-                  <TagLeftIcon as={Spinner} />
-                  <TagLabel>Pending</TagLabel>
-                </Tag>
-              )}
-            </Wrap>
-            <Text>{message}</Text>
+      <LinkBox
+        as="button"
+        textAlign="left"
+        onClick={onOpen}
+        borderRadius="2xl"
+        _focusVisible={{
+          outline: "none",
+          boxShadow: "outline",
+        }}
+      >
+        <Card p={6}>
+          <Stack spacing={4} w="full">
+            <Stack spacing={2} w="full">
+              <Wrap>
+                <Text as="span" fontWeight="bold" colorScheme="gray" fontSize="sm">
+                  {prettyCreatedAt}
+                </Text>
+                {status === "PENDING" && (
+                  <Tag colorScheme="blue" size="sm">
+                    <TagLeftIcon as={Spinner} />
+                    <TagLabel>Pending</TagLabel>
+                  </Tag>
+                )}
+              </Wrap>
+              <Text>{message}</Text>
+            </Stack>
+
+            <HStack justifyContent="space-between">
+              <HStack>
+                <Text as="span" colorScheme="gray">
+                  to:
+                </Text>
+
+                {isMobile ? (
+                  <Tag
+                    variant="outline"
+                    color="var(--chakra-colors-chakra-body-text)"
+                    w="max-content"
+                    sx={{
+                      "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
+                    }}
+                  >
+                    <TagLabel>{`${targetedRoles.length} roles`}</TagLabel>
+                  </Tag>
+                ) : (
+                  <>
+                    {targetedRoles.slice(0, DISPLAYED_ROLES_COUNT).map((role) => (
+                      <RoleTag
+                        key={role.id}
+                        name={role.name}
+                        imageUrl={role.imageUrl}
+                        isHidden={role.visibility === Visibility.HIDDEN}
+                      />
+                    ))}
+                    {moreRolesCount > 0 && (
+                      <Tag
+                        variant="outline"
+                        color="var(--chakra-colors-chakra-body-text)"
+                        w="max-content"
+                        sx={{
+                          "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
+                        }}
+                      >
+                        <TagLabel>{`+ ${moreRolesCount} more`}</TagLabel>
+                      </Tag>
+                    )}
+                  </>
+                )}
+              </HStack>
+
+              <HStack>
+                <Icon as={Check} color="gray.400" />
+                <Text as="span" colorScheme="gray" fontSize="sm">
+                  {receiverCount}
+                </Text>
+                <Icon as={Users} color="gray.400" />
+              </HStack>
+            </HStack>
           </Stack>
-
-          <HStack justifyContent="space-between">
-            <HStack>
-              <Text as="span" colorScheme="gray">
-                to:
-              </Text>
-
-              {isMobile ? (
-                <Tag
-                  as="button"
-                  variant="outline"
-                  color="var(--chakra-colors-chakra-body-text)"
-                  w="max-content"
-                  sx={{
-                    "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
-                  }}
-                  onClick={onOpen}
-                >
-                  <TagLabel>{`${targetedRoles.length} roles`}</TagLabel>
-                </Tag>
-              ) : (
-                <>
-                  {targetedRoles.slice(0, DISPLAYED_ROLES_COUNT).map((role) => (
-                    <RoleTag
-                      key={role.id}
-                      name={role.name}
-                      imageUrl={role.imageUrl}
-                      isHidden={role.visibility === Visibility.HIDDEN}
-                    />
-                  ))}
-                  {moreRolesCount > 0 && (
-                    <Tag
-                      as="button"
-                      variant="outline"
-                      color="var(--chakra-colors-chakra-body-text)"
-                      w="max-content"
-                      sx={{
-                        "--badge-color": `var(--chakra-colors-${moreRolesTagBorderColorVar}) !important`,
-                      }}
-                      onClick={onOpen}
-                    >
-                      <TagLabel>{`+ ${moreRolesCount} more`}</TagLabel>
-                    </Tag>
-                  )}
-                </>
-              )}
-            </HStack>
-
-            <HStack>
-              <Icon as={Check} color="gray.400" />
-              <Text as="span" colorScheme="gray" fontSize="sm">
-                {receiverCount}
-              </Text>
-              <Icon as={Users} color="gray.400" />
-            </HStack>
-          </HStack>
-        </Stack>
-      </Card>
+        </Card>
+      </LinkBox>
 
       <Modal isOpen={isOpen} onClose={onClose} size="lg">
         <ModalOverlay />
