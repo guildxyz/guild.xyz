@@ -18,6 +18,7 @@ import {
   Tbody,
   Td,
   Text,
+  Tooltip,
   Tr,
   Wrap,
   useBreakpointValue,
@@ -26,7 +27,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
-import { Check, Users } from "phosphor-react"
+import { Check, Question, Users } from "phosphor-react"
 import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
@@ -190,15 +191,25 @@ const Message = ({
                   <Tr>
                     <Td {...tableLeftColStyles}>Sent to</Td>
                     <Td {...tableRightColStyles}>
-                      <b>{receiverCount}</b>
-                      <Text as="span">
-                        /
-                        {isTargetedCountValidating ? (
-                          <Spinner size="xs" />
-                        ) : (
-                          targetedCount
-                        )}
-                      </Text>
+                      <HStack spacing={0.5}>
+                        <b>{receiverCount}</b>
+                        <Text as="span" colorScheme="gray">
+                          {` (out of `}
+                          {isTargetedCountValidating ? (
+                            <Spinner size="xs" />
+                          ) : (
+                            targetedCount
+                          )}
+                          {` targeted)`}
+                        </Text>
+                        <Tooltip
+                          label="You can only message users who've subscribed to the Guild.xyz app on Web3Inbox"
+                          placement="top"
+                          hasArrow
+                        >
+                          <Icon as={Question} color="GrayText" ml={1} mt={0.5} />
+                        </Tooltip>
+                      </HStack>
                     </Td>
                   </Tr>
                 </Tbody>
