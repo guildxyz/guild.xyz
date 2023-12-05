@@ -2,7 +2,10 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
-import { MessageDestination, MessageProtocol } from "./useSendMessage"
+import {
+  MessageDestination,
+  MessageProtocol,
+} from "../SendNewMessage/SendNewMessage"
 
 export type Message = {
   id: number

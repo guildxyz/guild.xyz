@@ -5,16 +5,6 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import useMessages, { Message } from "./useMessages"
 
-export type MessageProtocol = "XMTP" | "WEB3INBOX"
-export type MessageDestination = "GUILD" | "ADMINS" | "ROLES"
-
-export type SendMessageForm = {
-  protocol: MessageProtocol
-  destination: MessageDestination
-  roleIds: number[]
-  message: string
-}
-
 const useSendMessage = (onSuccess?: () => void) => {
   const { id } = useGuild()
 

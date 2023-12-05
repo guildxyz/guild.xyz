@@ -20,9 +20,18 @@ import { Modal } from "components/common/Modal"
 import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useReachableUsers from "../hooks/useReachableUsers"
-import useSendMessage, { SendMessageForm } from "../hooks/useSendMessage"
+import useSendMessage from "../hooks/useSendMessage"
 import useTargetedCount from "../hooks/useTargetedCount"
 import RoleIdsSelect from "./components/RoleIdsSelect"
+
+export type MessageProtocol = "XMTP" | "WEB3INBOX"
+export type MessageDestination = "GUILD" | "ADMINS" | "ROLES"
+type SendMessageForm = {
+  protocol: MessageProtocol
+  destination: MessageDestination
+  roleIds: number[]
+  message: string
+}
 
 const SendNewMessage = (props: ButtonProps) => {
   const methods = useForm<SendMessageForm>({
