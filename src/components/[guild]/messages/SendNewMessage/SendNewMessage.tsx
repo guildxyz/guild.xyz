@@ -136,7 +136,14 @@ const SendNewMessage = (props: ButtonProps) => {
                   <FormLabel>Message</FormLabel>
                   <Textarea
                     placeholder="Write your message here"
-                    {...register("message", { required: "This field is required" })}
+                    {...register("message", {
+                      required: "This field is required",
+                      maxLength: {
+                        value: 255,
+                        message:
+                          "Maximum Web3Inbox message length is 255 characters",
+                      },
+                    })}
                   />
                   <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
                 </FormControl>
