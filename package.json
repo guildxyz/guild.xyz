@@ -41,6 +41,8 @@
     "@vercel/kv": "^0.2.1",
     "@vercel/og": "^0.5.0",
     "@vercel/postgres": "^0.4.0",
+    "@web3inbox/core": "^0.0.25",
+    "@web3inbox/widget-react": "^0.6.25",
     "@zag-js/combobox": "^0.16.0",
     "@zag-js/react": "^0.16.0",
     "chakra-react-select": "^4.5.0",
