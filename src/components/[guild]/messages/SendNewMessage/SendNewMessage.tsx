@@ -2,6 +2,7 @@ import {
   ButtonProps,
   FormControl,
   FormLabel,
+  Icon,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -16,8 +17,9 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
-import { Chat, PaperPlaneRight } from "phosphor-react"
+import { ArrowSquareOut, Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useReachableUsers from "../hooks/useReachableUsers"
 import useSendMessage from "../hooks/useSendMessage"
@@ -81,41 +83,54 @@ const SendNewMessage = (props: ButtonProps) => {
           <ModalBody>
             <FormProvider {...methods}>
               <Stack spacing={6}>
-                <FormControl isRequired isInvalid={!!errors.roleIds}>
-                  <FormLabel>Receipent roles</FormLabel>
+                <Stack>
+                  <FormControl isRequired isInvalid={!!errors.roleIds}>
+                    <FormLabel>Receipent roles</FormLabel>
 
-                  <RoleIdsSelect />
+                    <RoleIdsSelect />
 
-                  <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
+                    <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
 
-                  <Text as="span" display="block" colorScheme="gray" pt={2}>
-                    <Text
-                      as="span"
-                      fontWeight="bold"
-                      color={reachableUsers?.length > 0 && greenText}
-                    >
-                      {isReachableUsersLoading ? (
-                        <Spinner size="xs" />
-                      ) : (
-                        reachableUsers?.length
-                      )}
+                    <Text as="span" display="block" colorScheme="gray" pt={2}>
+                      <Text
+                        as="span"
+                        fontWeight="bold"
+                        color={reachableUsers?.length > 0 && greenText}
+                      >
+                        {isReachableUsersLoading ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          reachableUsers?.length
+                        )}
+                      </Text>
+                      <Text
+                        as="span"
+                        color={reachableUsers?.length > 0 && greenText}
+                      >
+                        {" reachable "}
+                      </Text>
+                      <Text as="span" color="chakra-body-text">
+                        {"/ "}
+                      </Text>
+                      <Text as="span" fontWeight="bold">
+                        {isTargetedCountValidating ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          targetedCount
+                        )}
+                      </Text>
+                      {" targeted"}
                     </Text>
-                    <Text as="span" color={reachableUsers?.length > 0 && greenText}>
-                      {" reachable "}
-                    </Text>
-                    <Text as="span" color="chakra-body-text">
-                      {"/ "}
-                    </Text>
-                    <Text as="span" fontWeight="bold">
-                      {isTargetedCountValidating ? (
-                        <Spinner size="xs" />
-                      ) : (
-                        targetedCount
-                      )}
-                    </Text>
-                    {" targeted"}
+                  </FormControl>
+
+                  <Text>
+                    {`You can only message users who've subscribed to the Guild.xyz app on `}
+                    <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
+                      Web3Inbox
+                      <Icon as={ArrowSquareOut} ml={1} />
+                    </Link>
                   </Text>
-                </FormControl>
+                </Stack>
 
                 <FormControl isRequired isInvalid={!!errors.message}>
                   <FormLabel>Message</FormLabel>
