@@ -5,6 +5,7 @@ import {
   Popover,
   PopoverArrow,
   PopoverBody,
+  PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
   Skeleton,
@@ -26,6 +27,7 @@ import useLocalStorage from "hooks/useLocalStorage"
 import { ArrowRight, Bell } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
 import AccountButton from "./AccountButton"
+import NotificationsSection from "./NotificationsSection"
 import Web3InboxSubscribe from "./Web3InboxSubscribe"
 
 const VIEWPORT_GAP_PX = 8
@@ -44,6 +46,7 @@ const UserActivityLogPopover = () => {
       placement="bottom"
       isLazy
       strategy="absolute"
+      closeOnBlur={false}
       modifiers={[
         { name: "preventOverflow", options: { padding: VIEWPORT_GAP_PX } },
       ]}
@@ -86,25 +89,22 @@ const UserActivityLogPopover = () => {
             w="400px"
           >
             <PopoverArrow />
+            <PopoverCloseButton />
 
-            <PopoverBody px={4} pt="0" pb="3">
-              <Stack pt={3} divider={<Divider />} spacing={6}>
-                <Web3InboxSubscribe />
+            <PopoverBody px={4} py={3}>
+              <Stack spacing={4} divider={<Divider />}>
+                <NotificationsSection title="Messages">
+                  <Web3InboxSubscribe />
+                </NotificationsSection>
 
                 <ActivityLogProvider
                   userId={id}
                   withSearchParams={false}
                   isInfinite={false}
                 >
-                  <Text
-                    fontSize="xs"
-                    fontWeight="bold"
-                    textTransform="uppercase"
-                    colorScheme="gray"
-                  >
-                    Recent activity
-                  </Text>
-                  <UserActivityLog />
+                  <NotificationsSection title="Recent activity">
+                    <UserActivityLog />
+                  </NotificationsSection>
                 </ActivityLogProvider>
               </Stack>
             </PopoverBody>
