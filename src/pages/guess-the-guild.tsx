@@ -5,7 +5,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import GuessName from "components/guess-the-guild/GuessName"
+import AssignLogos from "components/guess-the-guild/AssignLogos"
 
 const GuessTheGuild = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
@@ -40,7 +40,8 @@ const GuessTheGuild = (): JSX.Element => {
         <Container p="0">
           <Card mt="0px" py="7" px="4">
             {/* <StartGame /> */}
-            <GuessName />
+            {/* <GuessName /> */}
+            <AssignLogos />
           </Card>
         </Container>
       </Layout>
