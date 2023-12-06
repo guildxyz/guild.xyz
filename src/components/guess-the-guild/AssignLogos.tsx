@@ -1,9 +1,10 @@
-import { Alert, AlertIcon, Divider, Heading, VStack } from "@chakra-ui/react"
+import { Divider, Heading, VStack } from "@chakra-ui/react"
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
 import { GuildBase } from "types"
+import ResultAlert from "./ResultAlert"
 import Draggable from "./assign-logos/Draggable"
 import GuildCardWithDropzone from "./assign-logos/GuildCardWithDropzone"
 import SourceDropzone from "./assign-logos/SourceDropzone"
@@ -44,6 +45,15 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
   )
   const isLogoCorrectForGuild = (guild: GuildBase) =>
     dropzones[guild.id]?.id === guild?.id
+
+  const canSubmit = useMemo(() => {
+    for (const key of Object.keys(dropzones)) {
+      if (key !== "source" && dropzones[key] === null) {
+        return false
+      }
+    }
+    return true
+  }, [dropzones])
 
   return (
     <>
@@ -87,16 +97,7 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
 
         <Divider />
 
-        {isAnswerSubmitted && (
-          <Alert
-            status={isAnswerCorrect ? "success" : "warning"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <AlertIcon />{" "}
-            {isAnswerCorrect ? "Your answer is correct!" : "Wrong answer!"}
-          </Alert>
-        )}
+        {isAnswerSubmitted && <ResultAlert isAnswerCorrect={isAnswerCorrect} />}
 
         {isAnswerSubmitted && (
           <Button colorScheme="green" w="100%">
@@ -107,6 +108,7 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
           <Button
             colorScheme="green"
             w="100%"
+            isDisabled={!canSubmit}
             onClick={() => setIsAnswerSubmitted(true)}
           >
             Submit
