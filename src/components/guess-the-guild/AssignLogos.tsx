@@ -1,4 +1,4 @@
-import { Divider, Heading, VStack } from "@chakra-ui/react"
+import { Alert, AlertIcon, Divider, Heading, VStack } from "@chakra-ui/react"
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
@@ -14,7 +14,7 @@ export const START_ZONE_ID = "source"
 type DropzoneDict = Record<string, GuildBase | null>
 
 const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
-  const [submitted, setSubmitted] = useState(false)
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const avatarSize = 90
 
   const [movingGuild, setMovingGuild] = useState<GuildBase | null>(null)
@@ -34,10 +34,12 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
   }
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (isAnswerSubmitted) return
     setMovingGuild(guilds.find((g) => g.id.toString() === event.active.id))
   }
 
   const handleDragEnd = (event: DragEndEvent) => {
+    if (isAnswerSubmitted) return
     const { over } = event
 
     if (!over || !movingGuild) {
@@ -115,6 +117,12 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
     )
   }
 
+  const isAnswerCorrect = Object.entries(dropzones).every(
+    ([zoneId, guild]) => `${guild?.id}` === zoneId
+  )
+  const isLogoCorrectForGuild = (guild: GuildBase) =>
+    dropzones[guild.id]?.id === guild?.id
+
   return (
     <>
       <VStack gap="5">
@@ -128,12 +136,18 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
         </Heading>
 
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-          <SourceDropzone id={START_ZONE_ID} size={avatarSize}>
-            {startZone.map((guild) => renderDraggableAvatar(guild))}
-          </SourceDropzone>
+          {!isAnswerSubmitted && (
+            <>
+              <SourceDropzone id={START_ZONE_ID} size={avatarSize}>
+                {startZone.map((guild) => renderDraggableAvatar(guild))}
+              </SourceDropzone>
+            </>
+          )}
 
           <DragOverlay>
-            {movingGuild ? <GuildLogo w={avatarSize} h={avatarSize} /> : null}
+            {movingGuild && !isAnswerSubmitted ? (
+              <GuildLogo w={avatarSize} h={avatarSize} />
+            ) : null}
           </DragOverlay>
 
           {guilds.map((guild) => (
@@ -141,6 +155,8 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
               key={guild.id}
               guild={guild}
               avatarSize={avatarSize}
+              isAnswerSubmitted={isAnswerSubmitted}
+              isLogoCorrect={isLogoCorrectForGuild(guild)}
             >
               {renderDraggableAvatar(dropzones[`${guild.id}`])}
             </GuildCardWithDropzone>
@@ -149,13 +165,28 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
 
         <Divider />
 
-        {submitted && (
+        {isAnswerSubmitted && (
+          <Alert
+            status={isAnswerCorrect ? "success" : "warning"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <AlertIcon />{" "}
+            {isAnswerCorrect ? "Your answer is correct!" : "Wrong answer!"}
+          </Alert>
+        )}
+
+        {isAnswerSubmitted && (
           <Button colorScheme="green" w="100%">
             Continue
           </Button>
         )}
-        {!submitted && (
-          <Button colorScheme="green" w="100%" onClick={() => setSubmitted(true)}>
+        {!isAnswerSubmitted && (
+          <Button
+            colorScheme="green"
+            w="100%"
+            onClick={() => setIsAnswerSubmitted(true)}
+          >
             Submit
           </Button>
         )}
