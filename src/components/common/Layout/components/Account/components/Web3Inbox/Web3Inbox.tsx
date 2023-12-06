@@ -22,8 +22,8 @@ const Web3Inbox = () => {
   const toast = useToast()
 
   const isReady = useInitWeb3InboxClient({
-    projectId: "d851f25304d67fc8e2dd3b354223e4fa",
-    domain: "guild-xyz.vercel.app",
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+    domain: "guild.xyz",
     // isLimited: process.env.NODE_ENV === "production",
     isLimited: false,
   })
