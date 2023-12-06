@@ -30,7 +30,11 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const { id: requirementId, data } = useRequirementContext()
   const { id: userId } = useUser()
 
-  const { mutate: mutateAccess } = useAccess()
+  const { data: accesses, mutate: mutateAccess } = useAccess()
+  const hasAccess = accesses
+    ?.flatMap((role) => role.requirements)
+    .find((req) => req.requirementId === requirementId).access
+
   const showErrorToast = useShowErrorToast()
 
   const { onSubmit } = useSubmitWithSign(visitLink, {
@@ -46,12 +50,14 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     href: data.id,
     isExternal: true,
     colorScheme: "blue",
-    onClick: () =>
+    onClick: () => {
+      if (!userId || hasAccess) return
       onSubmit({
         requirementId,
         id: data.id,
         userId,
-      }),
+      })
+    },
   }
 
   const Original = () => (
