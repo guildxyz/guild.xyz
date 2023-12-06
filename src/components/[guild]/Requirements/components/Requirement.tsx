@@ -13,6 +13,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
 import { CaretDown } from "phosphor-react"
 import React, { PropsWithChildren } from "react"
@@ -70,12 +71,14 @@ const Requirement = ({
         <ChildrenWrapper {...wrapperProps} display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.data?.customName || children}
-          {!fieldRoot && (
+          {!fieldRoot ? (
             <Visibility
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
-          )}
+          ) : !childrenWrapper ? (
+            <SetVisibility entityType="requirement" />
+          ) : null}
         </ChildrenWrapper>
 
         <HStack wrap={"wrap"}>
