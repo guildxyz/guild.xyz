@@ -61,8 +61,19 @@ const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
     if (isAnswerCorrect) onCorrect()
   }
 
+  const liftUpAnimation = `
+      @keyframes liftUp {
+        from {
+          transform: scale(1.0);
+        }
+        to {
+          transform: scale(1.1);
+        }
+      }`
+
   return (
     <>
+      <style>{liftUpAnimation}</style>
       <VStack gap="5">
         <Heading
           as="h2"
@@ -88,6 +99,9 @@ const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
                 w={avatarSize}
                 h={avatarSize}
                 imageUrl={movingGuild?.imageUrl}
+                animation={"liftUp 0.3s ease-in-out"}
+                transform={"scale(1.1)"}
+                boxShadow={"lg"}
               />
             ) : null}
           </DragOverlay>
