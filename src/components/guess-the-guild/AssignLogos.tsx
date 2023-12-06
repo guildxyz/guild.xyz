@@ -1,6 +1,5 @@
 import {
   Box,
-  Card,
   Divider,
   HStack,
   Heading,
@@ -13,6 +12,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import { Users } from "phosphor-react"
 import { useState } from "react"
@@ -51,7 +51,7 @@ const AssignLogos = () => {
           <GuildLogo size={avatarSize} />
         </Box>
 
-        <Card w="100%" py="5" px="5" rounded="20" background={bgColor}>
+        <Card w="100%" py="5" px="5" background={bgColor}>
           <HStack gap="6">
             <Box
               h={avatarSize}

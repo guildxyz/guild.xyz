@@ -1,11 +1,7 @@
-import {
-  Card,
-  Container,
-  useBreakpointValue,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Container, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Layout from "components/common/Layout"
-import EndGame from "components/guess-the-guild/EndGame"
+import AssignLogos from "components/guess-the-guild/AssignLogos"
 
 const GuessTheGuild = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
@@ -41,8 +37,8 @@ const GuessTheGuild = (): JSX.Element => {
           <Card mt="0px" py="7" px="4">
             {/* <StartGame /> */}
             {/* <GuessName /> */}
-            {/* <AssignLogos /> */}
-            <EndGame />
+            <AssignLogos />
+            {/* <EndGame /> */}
           </Card>
         </Container>
       </Layout>
