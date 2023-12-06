@@ -73,6 +73,7 @@ const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "CRONOS",
   "POLYGON",
   "POLYGON_MUMBAI",
+  "MANTLE"
 ] as const
 
 export type ContractCallSupportedChain =

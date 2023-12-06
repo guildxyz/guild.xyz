@@ -107,7 +107,7 @@ const NavMenu = (): JSX.Element => {
               </NavButton>
               <NavButton
                 target="_blank"
-                href="https://github.com/agoraxyz/guild.xyz"
+                href="https://github.com/guildxyz/guild.xyz"
                 rel="noopener"
                 leftIcon={<Code />}
               >

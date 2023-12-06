@@ -57,7 +57,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   SHIMMER: [],
   KAVA: [],
   BITFINITY_TESTNET: [],
-  // X1_TESTNET: [],
+  X1_TESTNET: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
