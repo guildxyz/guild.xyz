@@ -33,7 +33,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const { data: accesses, mutate: mutateAccess } = useAccess()
   const hasAccess = accesses
     ?.flatMap((role) => role.requirements)
-    .find((req) => req.requirementId === requirementId).access
+    .find((req) => req.requirementId === requirementId)?.access
 
   const showErrorToast = useShowErrorToast()
 
