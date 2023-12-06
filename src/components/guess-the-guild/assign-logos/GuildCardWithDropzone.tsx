@@ -25,7 +25,7 @@ const GuildCardWithDropzone = ({
   isLogoCorrect,
 }: {
   guild: GuildBase
-  avatarSize: number
+  avatarSize: any
   children: ReactNode
   isAnswerSubmitted: boolean
   isLogoCorrect: boolean

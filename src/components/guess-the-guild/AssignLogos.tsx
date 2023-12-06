@@ -11,7 +11,7 @@ import useDragAndDrop, { START_ZONE_ID } from "./assign-logos/useDragAndDrop"
 
 const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
-  const avatarSize = 90
+  const avatarSize = { base: "60px", sm: "70px", md: "80px" }
 
   const { startZone, dropzones, movingGuild, dragStart, dragEnd } =
     useDragAndDrop(guilds)
