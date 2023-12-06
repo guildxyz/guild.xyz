@@ -1,4 +1,4 @@
-import { Center, Img, useColorModeValue } from "@chakra-ui/react"
+import { Center, Img, useColorMode, useColorModeValue } from "@chakra-ui/react"
 import {
   GroupBase,
   MultiValueGenericProps,
@@ -61,15 +61,17 @@ const RoleIdsSelectMultiValuesContainer = ({
   const { roles } = useGuild()
   const publicRoleBg = useColorModeValue("gray.700", "blackAlpha.300")
 
+  const isPublic =
+    roles.find((role) => role.id === props.data.value).visibility === "PUBLIC"
+
   return (
     <chakraComponents.MultiValueContainer
       {...props}
       sx={{
         ...props.sx,
-        backgroundColor:
-          roles.find((role) => role.id === props.data.value).visibility !== "PUBLIC"
-            ? undefined
-            : publicRoleBg,
+        color: isPublic ? "white" : null,
+        backgroundColor: isPublic ? publicRoleBg : undefined,
+        img: isPublic && { filter: "unset" },
       }}
     >
       {props.data.img}
@@ -78,14 +80,22 @@ const RoleIdsSelectMultiValuesContainer = ({
   )
 }
 
-const RoleImage = ({ imageUrl }) => (
-  <Center boxSize={4} mr={1.5}>
-    {imageUrl.startsWith("/guildLogos") ? (
-      <Img src={imageUrl} boxSize={3.5} />
-    ) : (
-      <Img src={imageUrl} boxSize={4} borderRadius="full" />
-    )}
-  </Center>
-)
+const RoleImage = ({ imageUrl }) => {
+  const { colorMode } = useColorMode()
+
+  return (
+    <Center boxSize={4} mr={1.5}>
+      {imageUrl.startsWith("/guildLogos") ? (
+        <Img
+          src={imageUrl}
+          boxSize={3.5}
+          filter={colorMode === "light" && "brightness(0)"}
+        />
+      ) : (
+        <Img src={imageUrl} boxSize={4} borderRadius="full" />
+      )}
+    </Center>
+  )
+}
 
 export default RoleIdsSelect

@@ -15,6 +15,8 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useIsTabsStuck } from "components/[guild]/Tabs"
+import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
@@ -54,6 +56,8 @@ const SendNewMessage = (props: ButtonProps) => {
   } = methods
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext()
 
   const { onSubmit, isLoading } = useSendMessage(() => {
     reset()
@@ -69,7 +73,15 @@ const SendNewMessage = (props: ButtonProps) => {
 
   return (
     <>
-      <Button leftIcon={<Chat />} {...props} onClick={onOpen}>
+      <Button
+        leftIcon={<Chat />}
+        {...props}
+        onClick={onOpen}
+        {...(!isStuck && {
+          color: textColor,
+          colorScheme: buttonColorScheme,
+        })}
+      >
         New message
       </Button>
 
