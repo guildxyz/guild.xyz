@@ -1,6 +1,8 @@
 import { Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { DIFFICULTY_GUILD_POOL_SIZE } from "pages/guess-the-guild"
 import { Difficulty } from "./guess-the-guild-types"
+import { DIFFICULTY_MULTIPLIERS } from "./hooks/useGameLogic"
 
 type Props = {
   onStart: () => void
@@ -94,11 +96,10 @@ const StartGame = ({
       </Button>
 
       <Text textAlign="center" fontSize="sm" opacity="0.6">
-        Selection from the top {difficulty == 0 && "100"} {difficulty == 1 && "500"}{" "}
-        {difficulty == 2 && "1000"} guilds.
+        Selection from the top {DIFFICULTY_GUILD_POOL_SIZE[difficulty]} guilds.
         <br />
-        Solving this difficulty awards {difficulty == 0 && "1x"}{" "}
-        {difficulty == 1 && "2x"} {difficulty == 2 && "3x"} the usual points.
+        Solving this difficulty awards {DIFFICULTY_MULTIPLIERS[difficulty]}x the
+        usual points.
       </Text>
     </VStack>
     <Button w="100%" colorScheme="green" onClick={() => onStart()}>

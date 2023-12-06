@@ -2,6 +2,19 @@ import useLocalStorage from "hooks/useLocalStorage"
 import { useEffect, useState } from "react"
 import { Difficulty, GameMode, GameState } from "../guess-the-guild-types"
 
+// The amount of points that a right answer in a game mode yields
+export const GAME_MODE_POINTS: Record<GameMode, number> = {
+  [GameMode.GuessNameMode]: 1,
+  [GameMode.AssignLogosMode]: 2,
+}
+
+// The earned points get multiplied by this factor depending upon the difficulty
+export const DIFFICULTY_MULTIPLIERS: Record<Difficulty, number> = {
+  [Difficulty.Easy]: 1,
+  [Difficulty.Medium]: 2,
+  [Difficulty.Hard]: 3,
+}
+
 const useGameLogic = () => {
   const [savedHighscore, setSavedHighscore] = useLocalStorage("highscore", 0)
   const [score, setScore] = useState(0)
@@ -15,10 +28,9 @@ const useGameLogic = () => {
     setHighscore(savedHighscore)
   }, [])
 
-  const addPoints = (points: number) => {
-    let pointsToAdd = points
-    if (difficulty === Difficulty.Medium) pointsToAdd *= 2
-    if (difficulty === Difficulty.Hard) pointsToAdd *= 3
+  const addPoints = () => {
+    const pointsToAdd =
+      GAME_MODE_POINTS[gameMode] * DIFFICULTY_MULTIPLIERS[difficulty]
     const updatedPoints = score + pointsToAdd
     setScore(updatedPoints)
     updateHighscore(updatedPoints)

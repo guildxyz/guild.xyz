@@ -18,6 +18,13 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import React, { useEffect, useState } from "react"
 import useSWR from "swr"
 
+// The number of guilds to fetch from the API for each difficulty level
+export const DIFFICULTY_GUILD_POOL_SIZE: Record<Difficulty, number> = {
+  [Difficulty.Easy]: 100,
+  [Difficulty.Medium]: 500,
+  [Difficulty.Hard]: 1000,
+}
+
 const GuessTheGuild = (): JSX.Element => {
   const gameLogic = useGameLogic()
 
@@ -25,13 +32,9 @@ const GuessTheGuild = (): JSX.Element => {
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
-  const nToFetch =
-    gameLogic.state.difficulty === Difficulty.Easy
-      ? 100
-      : gameLogic.state.difficulty === Difficulty.Medium
-      ? 500
-      : 1000
-  const apiUrl = `/v2/guilds?sort=members&limit=${nToFetch}`
+  const apiUrl = `/v2/guilds?sort=members&limit=${
+    DIFFICULTY_GUILD_POOL_SIZE[gameLogic.state.difficulty]
+  }`
 
   const [guilds, setGuilds] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -132,7 +135,7 @@ const GuessTheGuild = (): JSX.Element => {
                           guilds={guilds}
                           onNext={handleNext}
                           onExit={() => gameLogic.transition.endGame()}
-                          onCorrect={() => gameLogic.action.addPoints(2)}
+                          onCorrect={() => gameLogic.action.addPoints()}
                         />
                       </>
                     )}
@@ -149,7 +152,7 @@ const GuessTheGuild = (): JSX.Element => {
                           guilds={guilds}
                           onNext={handleNext}
                           onExit={() => gameLogic.transition.endGame()}
-                          onCorrect={() => gameLogic.action.addPoints(1)}
+                          onCorrect={() => gameLogic.action.addPoints()}
                         />
                       </>
                     )}
