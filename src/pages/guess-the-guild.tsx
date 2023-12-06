@@ -1,7 +1,7 @@
 import { Container, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
-import GuessName from "components/guess-the-guild/GuessName"
+import AssignLogos from "components/guess-the-guild/AssignLogos"
 import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
 import { GuildBase } from "types"
 
@@ -86,8 +86,8 @@ const GuessTheGuild = (): JSX.Element => {
           <ScoreIndicator />
           <Card mt="0px" py="7" px="4">
             {/* <StartGame /> */}
-            <GuessName guilds={mockGuilds} />
-            {/* <AssignLogos /> */}
+            {/* <GuessName guilds={mockGuilds} /> */}
+            <AssignLogos guilds={mockGuilds} />
             {/* <EndGame /> */}
           </Card>
         </Container>
