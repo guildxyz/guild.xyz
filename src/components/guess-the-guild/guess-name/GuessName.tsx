@@ -2,9 +2,9 @@ import { Button, Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import { useState } from "react"
 import { GuildBase } from "types"
-import AnswerButton from "./AnswerButton"
-import ResultAlert from "./ResultAlert"
-import { GameModeProps } from "./guess-the-guild-types"
+import ResultAlert from "../components/ResultAlert"
+import { GameModeProps } from "../guess-the-guild-types"
+import AnswerButton from "./components/AnswerButton"
 
 const getRandomGuild = (guilds: GuildBase[]) =>
   guilds[Math.floor(Math.random() * guilds.length)]

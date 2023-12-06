@@ -1,6 +1,6 @@
 import useLocalStorage from "hooks/useLocalStorage"
 import { useEffect, useState } from "react"
-import { Difficulty, GameMode, GameState } from "./guess-the-guild-types"
+import { Difficulty, GameMode, GameState } from "../guess-the-guild-types"
 
 const useGameLogic = () => {
   const [savedHighscore, setSavedHighscore] = useLocalStorage("highscore", 0)

@@ -4,12 +4,12 @@ import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import React, { useMemo, useState } from "react"
 import { GuildBase } from "types"
-import ResultAlert from "./ResultAlert"
-import Draggable from "./assign-logos/Draggable"
-import GuildCardWithDropzone from "./assign-logos/GuildCardWithDropzone"
-import SourceDropzone from "./assign-logos/SourceDropzone"
-import useDragAndDrop, { START_ZONE_ID } from "./assign-logos/useDragAndDrop"
-import { GameModeProps } from "./guess-the-guild-types"
+import ResultAlert from "../components/ResultAlert"
+import { GameModeProps } from "../guess-the-guild-types"
+import Draggable from "./components/Draggable"
+import GuildCardWithDropzone from "./components/GuildCardWithDropzone"
+import SourceDropzone from "./components/SourceDropzone"
+import useDragAndDrop, { START_ZONE_ID } from "./hooks/useDragAndDrop"
 
 const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)

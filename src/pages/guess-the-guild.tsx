@@ -1,19 +1,19 @@
 import { Container, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
-import AssignLogos from "components/guess-the-guild/AssignLogos"
 import EndGame from "components/guess-the-guild/EndGame"
-import GuessName from "components/guess-the-guild/GuessName"
-import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
-import SkeletonAssignLogos from "components/guess-the-guild/SkeletonAssignLogos"
-import SkeletonGuessName from "components/guess-the-guild/SkeletonGuessName"
 import StartGame from "components/guess-the-guild/StartGame"
+import AssignLogos from "components/guess-the-guild/assign-logos/AssignLogos"
+import SkeletonAssignLogos from "components/guess-the-guild/assign-logos/components/SkeletonAssignLogos"
+import ScoreIndicator from "components/guess-the-guild/components/ScoreIndicator"
+import GuessName from "components/guess-the-guild/guess-name/GuessName"
+import SkeletonGuessName from "components/guess-the-guild/guess-name/components/SkeletonGuessName"
 import {
   Difficulty,
   GameMode,
   GameState,
 } from "components/guess-the-guild/guess-the-guild-types"
-import useGameLogic from "components/guess-the-guild/useGameLogic"
+import useGameLogic from "components/guess-the-guild/hooks/useGameLogic"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import React, { useEffect, useState } from "react"
 import useSWR from "swr"
