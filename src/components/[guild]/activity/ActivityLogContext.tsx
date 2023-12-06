@@ -51,24 +51,7 @@ const transformActivityLogInfiniteResponse = (
   }
 
   rawResponse.forEach((chunk) => {
-    transformedResponse.entries.push(
-      ...chunk.entries
-        // We should remove this filter once these logs will have hierarchy!
-        .filter(
-          (entry) =>
-            entry.action !== ACTION.SendReward &&
-            entry.action !== ACTION.RevokeReward
-        )
-        .map((entry) => ({
-          ...entry,
-          children:
-            entry.children?.filter(
-              (childAction) =>
-                childAction.action !== ACTION.SendReward &&
-                childAction.action !== ACTION.RevokeReward
-            ) ?? [],
-        }))
-    )
+    transformedResponse.entries.push(...chunk.entries)
 
     Object.keys(chunk.values).forEach((key) =>
       transformedResponse.values[key]?.push(...chunk.values[key])
