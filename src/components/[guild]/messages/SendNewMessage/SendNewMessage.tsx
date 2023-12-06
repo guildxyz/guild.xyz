@@ -83,7 +83,7 @@ const SendNewMessage = (props: ButtonProps) => {
               <Stack spacing={6}>
                 <Stack>
                   <FormControl isRequired isInvalid={!!errors.roleIds}>
-                    <FormLabel>Receipent roles</FormLabel>
+                    <FormLabel>Recipient roles</FormLabel>
                     <RoleIdsSelect />
                     <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
 

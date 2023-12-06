@@ -20,9 +20,9 @@ const NoMessages = () => (
             No messages yet
           </Text>
           <Text>
-            You can send broadcast messages to the wallets of members with XMTP.{" "}
+            You can send broadcast messages to the wallets of members with Web3Inbox.{" "}
             <Text as="span" colorScheme="gray">
-              <Link href="https://xmtp.org" isExternal>
+              <Link href="https://web3inbox.com" isExternal>
                 Learn more
                 <Icon as={ArrowSquareOut} ml={1} />
               </Link>
