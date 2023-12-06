@@ -1,4 +1,4 @@
-import { HStack, Icon, Text } from "@chakra-ui/react"
+import { HStack, Icon, Stack, Text } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -7,6 +7,7 @@ import {
   RequirementImage,
   RequirementImageCircle,
 } from "components/[guild]/Requirements/components/RequirementImage"
+import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
@@ -17,7 +18,7 @@ import { Link as LinkIcon } from "phosphor-react"
 import { ComponentProps } from "react"
 import fetcher from "utils/fetcher"
 
-const visitLinkRegex = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
+export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
 
 const visitLink = (signedValidation: SignedValdation) =>
   fetcher("/v2/util/gate-callbacks?requirementType=LINK_VISIT", {
@@ -38,7 +39,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   })
 
   const [, first, , link, , second] = !!data.customName
-    ? visitLinkRegex.exec(data.customName) ?? []
+    ? VISIT_LINK_REGEX.exec(data.customName) ?? []
     : []
 
   const linkProps: ComponentProps<typeof Link> = {
@@ -72,9 +73,16 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
               <RequirementImageCircle>
                 <RequirementImage image={<Icon as={LinkIcon} boxSize={6} />} />
               </RequirementImageCircle>
-              <Text>
-                <Original />
-              </Text>
+              <Stack
+                direction={{ base: "column", md: "row" }}
+                alignItems={{ base: "flex-start", md: "center" }}
+                spacing={{ base: 2, md: 5 }}
+              >
+                <Text wordBreak="break-word" flexGrow={1}>
+                  <Original />
+                </Text>
+                {!!props.fieldRoot && <ResetRequirementButton />}
+              </Stack>
             </HStack>
           </ViewOriginalPopover>
         )

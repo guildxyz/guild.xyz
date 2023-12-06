@@ -1,6 +1,7 @@
 import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import { Icon } from "phosphor-react"
 import { ComponentType } from "react"
+import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
 import REQUIREMENTS_DATA from "./requirements"
 
@@ -28,6 +29,7 @@ export type RequirementData = {
   disabled?: boolean
   isPlatform?: boolean
   isCustomizable?: boolean
+  customNameRules?: UseControllerProps["rules"]
   isNegatable?: boolean
   displayComponent: ComponentType<RequirementProps>
   formComponent: ComponentType<RequirementFormProps>

@@ -12,6 +12,7 @@ import {
 } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { RequirementFormProps } from "requirements"
+import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
@@ -157,6 +158,12 @@ export const REQUIREMENTS_DATA = [
     ),
     types: ["LINK_VISIT"],
     isCustomizable: true,
+    customNameRules: {
+      pattern: {
+        value: VISIT_LINK_REGEX,
+        message: "The label has to contain the link as [link title]",
+      },
+    },
   },
   {
     icon: platforms.EMAIL.icon,
