@@ -1,4 +1,12 @@
-import { Button, Divider, Heading, Text, VStack } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertIcon,
+  Button,
+  Divider,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import { useState } from "react"
 import { GuildBase } from "types"
@@ -9,10 +17,10 @@ const getRandomGuild = (guilds: GuildBase[]) =>
 
 const GuessName = ({ guilds }: { guilds: GuildBase[] }) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
-  const [solutionGuild, setSolutionGuild] = useState<GuildBase>(
-    getRandomGuild(guilds)
-  )
+  const [solutionGuild] = useState<GuildBase>(getRandomGuild(guilds))
   const [selectedGuildId, setSelectedGuildId] = useState<number | null>()
+
+  const isAnswerCorrect = selectedGuildId === solutionGuild.id
 
   return (
     <>
@@ -44,6 +52,17 @@ const GuessName = ({ guilds }: { guilds: GuildBase[] }) => {
         </VStack>
 
         <Divider />
+
+        {isAnswerSubmitted && (
+          <Alert
+            status={isAnswerCorrect ? "success" : "warning"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
+            <AlertIcon />{" "}
+            {isAnswerCorrect ? "Your answer is correct!" : "Wrong answer!"}
+          </Alert>
+        )}
 
         {isAnswerSubmitted && (
           <Button colorScheme="green" w="100%">
