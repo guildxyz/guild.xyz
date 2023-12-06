@@ -22,7 +22,12 @@ const handler: NextApiHandler<LinkMetadata> = async (request, response) => {
   }
 
   const html = await fetch(url.toString()).then((res) => res.text())
-  const [, title] = new RegExp(/<title>(.*?)<\/title>/gi).exec(html)
+  const [, , title] = new RegExp(/<title(.*)>(.*)<\/title>/gi).exec(html) ?? []
+
+  if (!title) {
+    response.status(404).json({ error: "Not found" })
+    return
+  }
 
   // Cache the response for 5 minutes
   response.setHeader("Cache-Control", "s-maxage=300")
