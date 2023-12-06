@@ -24,7 +24,8 @@ const Web3Inbox = () => {
   const isReady = useInitWeb3InboxClient({
     projectId: "d851f25304d67fc8e2dd3b354223e4fa",
     domain: "guild-xyz.vercel.app",
-    isLimited: process.env.NODE_ENV === "production",
+    // isLimited: process.env.NODE_ENV === "production",
+    isLimited: false,
   })
 
   const { setAccount, register, isRegistering } = useW3iAccount()
