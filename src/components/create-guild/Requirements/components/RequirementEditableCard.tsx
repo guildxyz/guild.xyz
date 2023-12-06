@@ -59,7 +59,7 @@ const RequirementEditableCard = ({
   const isPoap = !!formState?.defaultValues?.poapId
   const poapId = formState?.defaultValues?.poapId
 
-  const isCustomizable = REQUIREMENTS[type].isCustomizable
+  const isCustomizable = REQUIREMENTS[type]?.isCustomizable
 
   const isNameChanged = formState.dirtyFields.requirements?.[index]
   const showViewOriginal =
