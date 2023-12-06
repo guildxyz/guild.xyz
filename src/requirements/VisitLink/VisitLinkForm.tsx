@@ -1,4 +1,5 @@
 import {
+  Collapse,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -41,6 +42,10 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
       <Input
         {...register(`${baseFieldPath}.data.id`, {
           required: "This field is required",
+          pattern: {
+            value: /^https:\/\/(.)+\.(.)+$/,
+            message: "Invalid URL",
+          },
         })}
         placeholder="https://guild.xyz"
       />
@@ -49,7 +54,7 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
         {parseFromObject(errors, baseFieldPath).data?.id?.message}
       </FormErrorMessage>
 
-      {(!!metadata || isValidating) && (
+      <Collapse in={!!metadata?.title || isValidating}>
         <FormHelperText>
           {isValidating ? (
             <HStack>
@@ -57,10 +62,10 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
               <Text as="span">Loading metadata...</Text>
             </HStack>
           ) : (
-            metadata.title
+            metadata?.title
           )}
         </FormHelperText>
-      )}
+      </Collapse>
     </FormControl>
   )
 }
