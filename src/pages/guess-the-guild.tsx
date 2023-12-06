@@ -17,6 +17,7 @@ import useGameLogic from "components/guess-the-guild/hooks/useGameLogic"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import React, { useEffect, useState } from "react"
 import useSWR from "swr"
+import { GuildBase } from "types"
 
 // The number of guilds to fetch from the API for each difficulty level
 export const DIFFICULTY_GUILD_POOL_SIZE: Record<Difficulty, number> = {
@@ -39,7 +40,7 @@ const GuessTheGuild = (): JSX.Element => {
   const [guilds, setGuilds] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const { data: allGuilds, error } = useSWR(apiUrl, {
+  const { data: allGuilds, error } = useSWR<GuildBase[]>(apiUrl, {
     revalidateOnFocus: false,
     refreshInterval: 86400000, // 24 hours
   })
@@ -50,7 +51,8 @@ const GuessTheGuild = (): JSX.Element => {
 
   useEffect(() => {
     if (allGuilds) {
-      setGuilds(allGuilds.sort(() => 0.5 - Math.random()).slice(0, 4))
+      const guildsCopy = allGuilds.filter((guild) => guild.imageUrl)
+      setGuilds(guildsCopy.sort(() => 0.5 - Math.random()).slice(0, 4))
       setIsLoading(false)
     } else {
       setIsLoading(true)
