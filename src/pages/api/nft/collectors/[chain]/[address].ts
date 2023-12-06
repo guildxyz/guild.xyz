@@ -27,7 +27,7 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${process.env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
   BSC: "",
   CRONOS: "",
-  MANTLE: ""
+  MANTLE: "",
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
