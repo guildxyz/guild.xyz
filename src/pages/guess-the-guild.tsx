@@ -5,6 +5,8 @@ import AssignLogos from "components/guess-the-guild/AssignLogos"
 import EndGame from "components/guess-the-guild/EndGame"
 import GuessName from "components/guess-the-guild/GuessName"
 import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
+import SkeletonAssignLogos from "components/guess-the-guild/SkeletonAssignLogos"
+import SkeletonGuessName from "components/guess-the-guild/SkeletonGuessName"
 import StartGame from "components/guess-the-guild/StartGame"
 import {
   Difficulty,
@@ -123,6 +125,7 @@ const GuessTheGuild = (): JSX.Element => {
                 {/* Name Guessing Mode */}
                 {gameLogic.state.gameMode === GameMode.AssignLogosMode && (
                   <>
+                    {isLoading && <SkeletonAssignLogos />}
                     {!isLoading && (
                       <>
                         <AssignLogos
@@ -139,6 +142,7 @@ const GuessTheGuild = (): JSX.Element => {
                 {/* Assign Logo Mode */}
                 {gameLogic.state.gameMode === GameMode.GuessNameMode && (
                   <>
+                    {isLoading && <SkeletonGuessName />}
                     {!isLoading && (
                       <>
                         <GuessName
