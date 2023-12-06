@@ -33,7 +33,7 @@ const GuessName = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
           Guess the guild by the logo!
         </Heading>
         <VStack>
-          <GuildLogo size="100px" />
+          <GuildLogo size="100px" imageUrl={solutionGuild.imageUrl} />
           <Text>{isAnswerSubmitted ? solutionGuild.name : "???"}</Text>
         </VStack>
 

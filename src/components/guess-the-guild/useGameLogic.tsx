@@ -19,7 +19,7 @@ const useGameLogic = () => {
     let pointsToAdd = points
     if (difficulty === Difficulty.Medium) pointsToAdd *= 2
     if (difficulty === Difficulty.Hard) pointsToAdd *= 3
-    const updatedPoints = points + pointsToAdd
+    const updatedPoints = score + pointsToAdd
     setScore(updatedPoints)
     updateHighscore(updatedPoints)
   }

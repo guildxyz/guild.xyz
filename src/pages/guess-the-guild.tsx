@@ -12,8 +12,9 @@ import {
   GameState,
 } from "components/guess-the-guild/guess-the-guild-types"
 import useGameLogic from "components/guess-the-guild/useGameLogic"
-import React from "react"
-import { GuildBase } from "types"
+import useShowErrorToast from "hooks/useShowErrorToast"
+import React, { useEffect, useState } from "react"
+import useSWR from "swr"
 
 const GuessTheGuild = (): JSX.Element => {
   const gameLogic = useGameLogic()
@@ -22,58 +23,48 @@ const GuessTheGuild = (): JSX.Element => {
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
-  const mockGuilds: GuildBase[] = [
-    {
-      id: 1,
-      name: "Guild1",
-      urlName: "guild1",
-      imageUrl: "",
-      roles: ["role1", "role2"],
-      platforms: ["DISCORD"],
-      memberCount: 12,
-      rolesCount: 2,
-      tags: ["FEATURED", "VERIFIED"],
-    },
-    {
-      id: 2,
-      name: "Guild2",
-      urlName: "guild1",
-      imageUrl: "",
-      roles: ["role1", "role2"],
-      platforms: ["DISCORD"],
-      memberCount: 12,
-      rolesCount: 2,
-      tags: ["FEATURED", "VERIFIED"],
-    },
-    {
-      id: 3,
-      name: "Guild3",
-      urlName: "guild1",
-      imageUrl: "",
-      roles: ["role1", "role2"],
-      platforms: ["DISCORD"],
-      memberCount: 12,
-      rolesCount: 2,
-      tags: ["FEATURED", "VERIFIED"],
-    },
-    {
-      id: 4,
-      name: "Guild4",
-      urlName: "guild1",
-      imageUrl: "",
-      roles: ["role1", "role2"],
-      platforms: ["DISCORD"],
-      memberCount: 12,
-      rolesCount: 2,
-      tags: ["FEATURED", "VERIFIED"],
-    },
-  ]
+  const nToFetch =
+    gameLogic.state.difficulty === Difficulty.Easy
+      ? 100
+      : gameLogic.state.difficulty === Difficulty.Medium
+      ? 500
+      : 1000
+  const apiUrl = `/v2/guilds?sort=members&limit=${nToFetch}`
+
+  const [guilds, setGuilds] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  const { data: allGuilds, error } = useSWR(apiUrl, {
+    revalidateOnFocus: false,
+    refreshInterval: 86400000, // 24 hours
+  })
+
+  const selectGuilds = () => {
+    if (allGuilds) setGuilds(allGuilds.sort(() => 0.5 - Math.random()).slice(0, 4))
+  }
+
+  useEffect(() => {
+    if (allGuilds) {
+      setGuilds(allGuilds.sort(() => 0.5 - Math.random()).slice(0, 4))
+      setIsLoading(false)
+    } else {
+      setIsLoading(true)
+    }
+  }, [allGuilds])
+
+  const showErrorToast = useShowErrorToast()
+
+  useEffect(() => {
+    if (error) showErrorToast("Failed to load guilds! Please try again later.")
+  }, [error, showErrorToast])
 
   const handleStart = () => {
+    selectGuilds()
     gameLogic.transition.startGame()
   }
 
   const handleNext = () => {
+    selectGuilds()
     gameLogic.transition.nextGame()
   }
 
@@ -132,24 +123,32 @@ const GuessTheGuild = (): JSX.Element => {
                 {/* Name Guessing Mode */}
                 {gameLogic.state.gameMode === GameMode.AssignLogosMode && (
                   <>
-                    <AssignLogos
-                      guilds={mockGuilds}
-                      onNext={handleNext}
-                      onExit={() => gameLogic.transition.endGame()}
-                      onCorrect={() => gameLogic.action.addPoints(2)}
-                    />
+                    {!isLoading && (
+                      <>
+                        <AssignLogos
+                          guilds={guilds}
+                          onNext={handleNext}
+                          onExit={() => gameLogic.transition.endGame()}
+                          onCorrect={() => gameLogic.action.addPoints(2)}
+                        />
+                      </>
+                    )}
                   </>
                 )}
 
                 {/* Assign Logo Mode */}
                 {gameLogic.state.gameMode === GameMode.GuessNameMode && (
                   <>
-                    <GuessName
-                      guilds={mockGuilds}
-                      onNext={handleNext}
-                      onExit={() => gameLogic.transition.endGame()}
-                      onCorrect={() => gameLogic.action.addPoints(1)}
-                    />
+                    {!isLoading && (
+                      <>
+                        <GuessName
+                          guilds={guilds}
+                          onNext={handleNext}
+                          onExit={() => gameLogic.transition.endGame()}
+                          onCorrect={() => gameLogic.action.addPoints(1)}
+                        />
+                      </>
+                    )}
                   </>
                 )}
               </React.Fragment>

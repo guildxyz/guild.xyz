@@ -84,7 +84,11 @@ const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
 
           <DragOverlay>
             {movingGuild && !isAnswerSubmitted ? (
-              <GuildLogo w={avatarSize} h={avatarSize} />
+              <GuildLogo
+                w={avatarSize}
+                h={avatarSize}
+                imageUrl={movingGuild?.imageUrl}
+              />
             ) : null}
           </DragOverlay>
 
