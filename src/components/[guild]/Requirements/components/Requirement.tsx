@@ -65,7 +65,7 @@ const Requirement = ({
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.type === "LINK_VISIT"
             ? children
-            : requirement?.data?.customName ?? children}
+            : requirement?.data?.customName || children}
           {!fieldRoot && (
             <Visibility
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
