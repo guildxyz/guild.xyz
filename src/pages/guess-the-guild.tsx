@@ -1,12 +1,11 @@
 import {
   Card,
   Container,
-  Heading,
-  Text,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
+import StartGame from "components/guess-the-guild/StartGame"
 
 const GuessTheGuild = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
@@ -40,19 +39,7 @@ const GuessTheGuild = (): JSX.Element => {
       >
         <Container p="0">
           <Card mt="0px" py="7" px="4">
-            <Heading
-              as="h2"
-              mb="3"
-              fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
-              textAlign="center"
-              fontFamily="display"
-            >
-              GuildGesser 1.0
-            </Heading>
-            <Text textAlign="center">
-              Are you an expert on Guilds? <br /> Test your knowledge in our guild
-              guesser mini game!
-            </Text>
+            <StartGame />
           </Card>
         </Container>
       </Layout>
