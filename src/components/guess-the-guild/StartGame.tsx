@@ -40,8 +40,7 @@ const StartGame = () => {
           textTransform="uppercase"
           noOfLines={1}
         >
-          {" "}
-          Your highscore
+          {"Your highscore"}
         </Text>
         <Text
           fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
@@ -65,8 +64,7 @@ const StartGame = () => {
         textTransform="uppercase"
         noOfLines={1}
       >
-        {" "}
-        Select Difficulty
+        {"Select Difficulty"}
       </Text>
 
       <VStack w="100%">
