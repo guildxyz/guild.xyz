@@ -6,7 +6,7 @@ import { shuffleArray } from "utils/shuffleArray"
 export const START_ZONE_ID = "source"
 type DropzoneDict = Record<string, GuildBase | null>
 
-const useDragAndDrop = (guilds) => {
+const useDragAndDrop = (guilds: GuildBase[]) => {
   const [startZone, setStartZone] = useState<GuildBase[]>(shuffleArray(guilds))
   const [movingGuild, setMovingGuild] = useState<GuildBase | null>(null)
 
@@ -16,11 +16,11 @@ const useDragAndDrop = (guilds) => {
 
   const [dropzones, setDropzones] = useState<DropzoneDict>(initialDropzones)
 
-  const addToStartZone = (guild) => {
+  const addToStartZone = (guild: GuildBase) => {
     setStartZone((prev) => [...prev, guild])
   }
 
-  const removeFromStartZone = (guildId) => {
+  const removeFromStartZone = (guildId: number) => {
     setStartZone((prev) => prev.filter((g) => g.id !== guildId))
   }
 
@@ -37,7 +37,7 @@ const useDragAndDrop = (guilds) => {
     }
 
     const sourceZoneId = findSourceZoneId(movingGuild)
-    const targetZoneId = over.id
+    const targetZoneId = over.id as string
 
     if (!isMoveAllowed(sourceZoneId, targetZoneId)) {
       setMovingGuild(null)
@@ -50,7 +50,7 @@ const useDragAndDrop = (guilds) => {
     setMovingGuild(null)
   }
 
-  const updateDropzones = (sourceZoneId, targetZoneId) => {
+  const updateDropzones = (sourceZoneId: string, targetZoneId: string) => {
     const updatedDropzones = { ...dropzones }
 
     if (targetZoneId !== START_ZONE_ID) {
@@ -66,7 +66,7 @@ const useDragAndDrop = (guilds) => {
     setDropzones(updatedDropzones)
   }
 
-  const updateStartZone = (sourceZoneId, targetZoneId) => {
+  const updateStartZone = (sourceZoneId: string, targetZoneId: string) => {
     if (targetZoneId === START_ZONE_ID) {
       addToStartZone(movingGuild)
     }
@@ -75,7 +75,7 @@ const useDragAndDrop = (guilds) => {
     }
   }
 
-  const isMoveAllowed = (sourceZoneId, targetZoneId) => {
+  const isMoveAllowed = (sourceZoneId: string, targetZoneId: string): boolean => {
     if (sourceZoneId === targetZoneId) return false
 
     if (targetZoneId !== START_ZONE_ID && dropzones[targetZoneId]) return false
@@ -83,7 +83,7 @@ const useDragAndDrop = (guilds) => {
     return true
   }
 
-  const findSourceZoneId = (guild: GuildBase): string | number | null => {
+  const findSourceZoneId = (guild: GuildBase): string | null => {
     const isInStartZone = startZone.some((g) => g.id === guild.id)
     if (isInStartZone) return START_ZONE_ID
 
