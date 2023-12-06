@@ -1,10 +1,15 @@
 import { Alert, Button, Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import pluralize from "utils/pluralize"
 
-const EndGame = ({ onRestart }: { onRestart: () => void }) => {
-  const score = 22
-  const highscore = 30
-
+const EndGame = ({
+  score,
+  highscore,
+  onRestart,
+}: {
+  score: number
+  highscore: number
+  onRestart: () => void
+}) => {
   const getMessage = () => {
     if (score <= 10) return "Better luck next time!"
     if (score <= 20) return "You're getting the hang of it!"

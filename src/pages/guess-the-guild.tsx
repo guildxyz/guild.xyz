@@ -6,7 +6,8 @@ import EndGame from "components/guess-the-guild/EndGame"
 import GuessName from "components/guess-the-guild/GuessName"
 import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
 import StartGame from "components/guess-the-guild/StartGame"
-import React, { useState } from "react"
+import useLocalStorage from "hooks/useLocalStorage"
+import React, { useEffect, useState } from "react"
 import { GuildBase } from "types"
 
 export enum GameMode {
@@ -24,6 +25,13 @@ export type GameModeProps = {
   guilds: GuildBase[]
   onNext: () => void
   onExit: () => void
+  onCorrect: () => void
+}
+
+export enum Difficulty {
+  Easy,
+  Medium,
+  Hard,
 }
 
 const GuessTheGuild = (): JSX.Element => {
@@ -34,6 +42,15 @@ const GuessTheGuild = (): JSX.Element => {
   const [round, setRound] = useState(0)
   const [gameMode, setGameMode] = useState<GameMode>(GameMode.GuessNameMode)
   const [gameState, setGameState] = useState<GameState>(GameState.Start)
+  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.Easy)
+
+  const [score, setScore] = useState(0)
+  const [highscore, setHighscore] = useState(0)
+  const [savedHighscore, setSavedHighscore] = useLocalStorage("highscore", 0)
+
+  useEffect(() => {
+    setHighscore(savedHighscore)
+  }, [])
 
   const selectGameMode = () => {
     if (Math.random() >= 0.5) {
@@ -109,6 +126,25 @@ const GuessTheGuild = (): JSX.Element => {
     },
   ]
 
+  const addPoints = (points: number) => {
+    let pointsToAdd = points
+    if (difficulty === Difficulty.Medium) pointsToAdd *= 2
+    if (difficulty === Difficulty.Hard) pointsToAdd *= 3
+    const updatedPoints = points + pointsToAdd
+    setScore(updatedPoints)
+    updateHighscore(updatedPoints)
+  }
+
+  const updateHighscore = (updatedPoints: number) => {
+    if (updatedPoints > highscore) {
+      setSavedHighscore(updatedPoints)
+    }
+  }
+
+  const handleDifficultyChange = (diff: Difficulty) => {
+    setDifficulty(diff)
+  }
+
   return (
     <>
       <Layout
@@ -135,10 +171,18 @@ const GuessTheGuild = (): JSX.Element => {
         textColor="white"
       >
         <Container p="0">
-          <ScoreIndicator />
+          {gameState === GameState.Game && (
+            <ScoreIndicator score={score} highscore={highscore} />
+          )}
+
           <Card mt="0px" py="7" px="4">
             {gameState === GameState.Start && (
-              <StartGame onStart={() => startGame()} />
+              <StartGame
+                onStart={() => startGame()}
+                highscore={highscore}
+                onDifficultyChange={handleDifficultyChange}
+                difficulty={difficulty}
+              />
             )}
 
             {gameState === GameState.Game && (
@@ -149,6 +193,7 @@ const GuessTheGuild = (): JSX.Element => {
                       guilds={mockGuilds}
                       onNext={() => nextGame()}
                       onExit={() => endGame()}
+                      onCorrect={() => addPoints(2)}
                     />
                   </>
                 )}
@@ -159,6 +204,7 @@ const GuessTheGuild = (): JSX.Element => {
                       guilds={mockGuilds}
                       onNext={() => nextGame()}
                       onExit={() => endGame()}
+                      onCorrect={() => addPoints(1)}
                     />
                   </>
                 )}
@@ -166,7 +212,7 @@ const GuessTheGuild = (): JSX.Element => {
             )}
 
             {gameState === GameState.End && (
-              <EndGame onRestart={() => restartGame()} />
+              <EndGame onRestart={restartGame} highscore={highscore} score={score} />
             )}
           </Card>
         </Container>

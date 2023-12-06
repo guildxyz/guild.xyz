@@ -1,10 +1,13 @@
 import { Alert, HStack, Progress, Tag, chakra } from "@chakra-ui/react"
 import Card from "components/common/Card"
 
-const ScoreIndicator = () => {
-  const score = 100
-  const highscore = 200
-
+const ScoreIndicator = ({
+  score,
+  highscore,
+}: {
+  score: number
+  highscore: number
+}) => {
   const isHighscore = score > highscore
 
   return (

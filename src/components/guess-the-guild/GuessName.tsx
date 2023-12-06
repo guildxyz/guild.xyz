@@ -9,12 +9,17 @@ import ResultAlert from "./ResultAlert"
 const getRandomGuild = (guilds: GuildBase[]) =>
   guilds[Math.floor(Math.random() * guilds.length)]
 
-const GuessName = ({ guilds, onNext, onExit }: GameModeProps) => {
+const GuessName = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const [solutionGuild] = useState<GuildBase>(getRandomGuild(guilds))
   const [selectedGuildId, setSelectedGuildId] = useState<number | null>()
 
   const isAnswerCorrect = selectedGuildId === solutionGuild.id
+
+  const handleSubmit = () => {
+    setIsAnswerSubmitted(true)
+    if (isAnswerCorrect) onCorrect()
+  }
 
   return (
     <>
@@ -54,20 +59,20 @@ const GuessName = ({ guilds, onNext, onExit }: GameModeProps) => {
             colorScheme="green"
             w="100%"
             isDisabled={typeof selectedGuildId === "undefined"}
-            onClick={() => setIsAnswerSubmitted(true)}
+            onClick={handleSubmit}
           >
             Submit
           </Button>
         )}
 
         {isAnswerSubmitted && isAnswerCorrect && (
-          <Button colorScheme="green" w="100%" onClick={() => onNext()}>
+          <Button colorScheme="green" w="100%" onClick={onNext}>
             Continue
           </Button>
         )}
 
         {isAnswerSubmitted && !isAnswerCorrect && (
-          <Button colorScheme="green" w="100%" onClick={() => onExit()}>
+          <Button colorScheme="green" w="100%" onClick={onExit}>
             End Game
           </Button>
         )}

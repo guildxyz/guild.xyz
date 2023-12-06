@@ -11,7 +11,7 @@ import GuildCardWithDropzone from "./assign-logos/GuildCardWithDropzone"
 import SourceDropzone from "./assign-logos/SourceDropzone"
 import useDragAndDrop, { START_ZONE_ID } from "./assign-logos/useDragAndDrop"
 
-const AssignLogos = ({ guilds, onNext, onExit }: GameModeProps) => {
+const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const avatarSize = { base: "60px", sm: "70px", md: "80px" }
 
@@ -55,6 +55,11 @@ const AssignLogos = ({ guilds, onNext, onExit }: GameModeProps) => {
     }
     return true
   }, [dropzones])
+
+  const handleSubmit = () => {
+    setIsAnswerSubmitted(true)
+    if (isAnswerCorrect) onCorrect()
+  }
 
   return (
     <>
@@ -105,20 +110,20 @@ const AssignLogos = ({ guilds, onNext, onExit }: GameModeProps) => {
             colorScheme="green"
             w="100%"
             isDisabled={!canSubmit}
-            onClick={() => setIsAnswerSubmitted(true)}
+            onClick={handleSubmit}
           >
             Submit
           </Button>
         )}
 
         {isAnswerSubmitted && isAnswerCorrect && (
-          <Button colorScheme="green" w="100%" onClick={() => onNext()}>
+          <Button colorScheme="green" w="100%" onClick={onNext}>
             Continue
           </Button>
         )}
 
         {isAnswerSubmitted && !isAnswerCorrect && (
-          <Button colorScheme="green" w="100%" onClick={() => onExit()}>
+          <Button colorScheme="green" w="100%" onClick={onExit}>
             End Game
           </Button>
         )}
