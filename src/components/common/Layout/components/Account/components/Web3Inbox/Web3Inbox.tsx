@@ -34,22 +34,20 @@ const Web3Inbox = () => {
     setAccount(`eip155:1:${address}`)
   }, [address, setAccount])
 
-  const performRegistration = async () => {
+  const { isSubscribed, subscribe, isSubscribing } = useManageSubscription()
+  const { messages } = useMessages()
+
+  const performSubscribe = async () => {
     if (!address) return
 
     try {
       await register(async (message) => signMessageAsync({ message }))
     } catch (registerIdentityError) {
       showErrorToast("Web3Inbox registration error")
+      return
     }
-  }
 
-  const { isSubscribed, subscribe, isSubscribing } = useManageSubscription()
-  const { messages } = useMessages()
-
-  const performSubscribe = async () => {
     try {
-      await performRegistration()
       await subscribe()
       toast({
         status: "success",
