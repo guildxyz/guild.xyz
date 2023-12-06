@@ -156,6 +156,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/VisitLink/VisitLinkForm")
     ),
     types: ["LINK_VISIT"],
+    isCustomizable: true,
   },
   {
     icon: platforms.EMAIL.icon,
