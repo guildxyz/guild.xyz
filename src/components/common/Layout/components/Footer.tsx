@@ -8,7 +8,7 @@ const Footer = (): JSX.Element => (
       <Text as="span" colorScheme="gray" lineHeight={2}>
         {`This website is `}
       </Text>
-      <Link href="https://github.com/agoraxyz/guild.xyz" isExternal>
+      <Link href="https://github.com/guildxyz/guild.xyz" isExternal>
         open-source
         <Icon as={ArrowSquareOut} ml="1" />
       </Link>
