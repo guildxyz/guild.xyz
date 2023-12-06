@@ -2,7 +2,6 @@ import { Divider, Heading, VStack } from "@chakra-ui/react"
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
-import { GameModeProps } from "pages/guess-the-guild"
 import React, { useMemo, useState } from "react"
 import { GuildBase } from "types"
 import ResultAlert from "./ResultAlert"
@@ -10,6 +9,7 @@ import Draggable from "./assign-logos/Draggable"
 import GuildCardWithDropzone from "./assign-logos/GuildCardWithDropzone"
 import SourceDropzone from "./assign-logos/SourceDropzone"
 import useDragAndDrop, { START_ZONE_ID } from "./assign-logos/useDragAndDrop"
+import { GameModeProps } from "./guess-the-guild-types"
 
 const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)

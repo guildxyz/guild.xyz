@@ -6,78 +6,21 @@ import EndGame from "components/guess-the-guild/EndGame"
 import GuessName from "components/guess-the-guild/GuessName"
 import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
 import StartGame from "components/guess-the-guild/StartGame"
-import useLocalStorage from "hooks/useLocalStorage"
-import React, { useEffect, useState } from "react"
+import {
+  Difficulty,
+  GameMode,
+  GameState,
+} from "components/guess-the-guild/guess-the-guild-types"
+import useGameLogic from "components/guess-the-guild/useGameLogic"
+import React from "react"
 import { GuildBase } from "types"
 
-export enum GameMode {
-  GuessNameMode,
-  AssignLogosMode,
-}
-
-export enum GameState {
-  Start,
-  Game,
-  End,
-}
-
-export type GameModeProps = {
-  guilds: GuildBase[]
-  onNext: () => void
-  onExit: () => void
-  onCorrect: () => void
-}
-
-export enum Difficulty {
-  Easy,
-  Medium,
-  Hard,
-}
-
 const GuessTheGuild = (): JSX.Element => {
+  const gameLogic = useGameLogic()
+
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
-
-  const [round, setRound] = useState(0)
-  const [gameMode, setGameMode] = useState<GameMode>(GameMode.GuessNameMode)
-  const [gameState, setGameState] = useState<GameState>(GameState.Start)
-  const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.Easy)
-
-  const [score, setScore] = useState(0)
-  const [highscore, setHighscore] = useState(0)
-  const [savedHighscore, setSavedHighscore] = useLocalStorage("highscore", 0)
-
-  useEffect(() => {
-    setHighscore(savedHighscore)
-  }, [])
-
-  const selectGameMode = () => {
-    if (Math.random() >= 0.5) {
-      setGameMode(GameMode.AssignLogosMode)
-    } else {
-      setGameMode(GameMode.GuessNameMode)
-    }
-  }
-
-  const startGame = () => {
-    setGameState(GameState.Game)
-    selectGameMode()
-  }
-
-  const nextGame = () => {
-    selectGameMode()
-    setRound(round + 1)
-  }
-
-  const endGame = () => {
-    setGameState(GameState.End)
-  }
-
-  const restartGame = () => {
-    setRound(0)
-    setGameState(GameState.Start)
-  }
 
   const mockGuilds: GuildBase[] = [
     {
@@ -126,23 +69,16 @@ const GuessTheGuild = (): JSX.Element => {
     },
   ]
 
-  const addPoints = (points: number) => {
-    let pointsToAdd = points
-    if (difficulty === Difficulty.Medium) pointsToAdd *= 2
-    if (difficulty === Difficulty.Hard) pointsToAdd *= 3
-    const updatedPoints = points + pointsToAdd
-    setScore(updatedPoints)
-    updateHighscore(updatedPoints)
+  const handleStart = () => {
+    gameLogic.transition.startGame()
   }
 
-  const updateHighscore = (updatedPoints: number) => {
-    if (updatedPoints > highscore) {
-      setSavedHighscore(updatedPoints)
-    }
+  const handleNext = () => {
+    gameLogic.transition.nextGame()
   }
 
   const handleDifficultyChange = (diff: Difficulty) => {
-    setDifficulty(diff)
+    gameLogic.action.setDifficulty(diff)
   }
 
   return (
@@ -171,48 +107,61 @@ const GuessTheGuild = (): JSX.Element => {
         textColor="white"
       >
         <Container p="0">
-          {gameState === GameState.Game && (
-            <ScoreIndicator score={score} highscore={highscore} />
+          {/* Show points indicator when the game is on */}
+          {gameLogic.state.gameState === GameState.Game && (
+            <ScoreIndicator
+              score={gameLogic.state.score}
+              highscore={gameLogic.state.highscore}
+            />
           )}
 
           <Card mt="0px" py="7" px="4">
-            {gameState === GameState.Start && (
+            {/* Start Screen */}
+            {gameLogic.state.gameState === GameState.Start && (
               <StartGame
-                onStart={() => startGame()}
-                highscore={highscore}
+                onStart={handleStart}
+                highscore={gameLogic.state.highscore}
                 onDifficultyChange={handleDifficultyChange}
-                difficulty={difficulty}
+                difficulty={gameLogic.state.difficulty}
               />
             )}
 
-            {gameState === GameState.Game && (
-              <React.Fragment key={round}>
-                {gameMode === GameMode.AssignLogosMode && (
+            {/* Game Screen */}
+            {gameLogic.state.gameState === GameState.Game && (
+              <React.Fragment key={gameLogic.state.round}>
+                {/* Name Guessing Mode */}
+                {gameLogic.state.gameMode === GameMode.AssignLogosMode && (
                   <>
                     <AssignLogos
                       guilds={mockGuilds}
-                      onNext={() => nextGame()}
-                      onExit={() => endGame()}
-                      onCorrect={() => addPoints(2)}
+                      onNext={handleNext}
+                      onExit={() => gameLogic.transition.endGame()}
+                      onCorrect={() => gameLogic.action.addPoints(2)}
                     />
                   </>
                 )}
 
-                {gameMode === GameMode.GuessNameMode && (
+                {/* Assign Logo Mode */}
+                {gameLogic.state.gameMode === GameMode.GuessNameMode && (
                   <>
                     <GuessName
                       guilds={mockGuilds}
-                      onNext={() => nextGame()}
-                      onExit={() => endGame()}
-                      onCorrect={() => addPoints(1)}
+                      onNext={handleNext}
+                      onExit={() => gameLogic.transition.endGame()}
+                      onCorrect={() => gameLogic.action.addPoints(1)}
                     />
                   </>
                 )}
               </React.Fragment>
             )}
 
-            {gameState === GameState.End && (
-              <EndGame onRestart={restartGame} highscore={highscore} score={score} />
+            {/* End Screen */}
+            {gameLogic.state.gameState === GameState.End && (
+              <EndGame
+                onRestart={gameLogic.transition.restartGame}
+                highscore={gameLogic.state.highscore}
+                score={gameLogic.state.score}
+              />
             )}
           </Card>
         </Container>

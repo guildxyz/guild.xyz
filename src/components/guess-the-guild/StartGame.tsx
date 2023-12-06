@@ -1,6 +1,6 @@
 import { Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { Difficulty } from "pages/guess-the-guild"
+import { Difficulty } from "./guess-the-guild-types"
 
 type Props = {
   onStart: () => void
