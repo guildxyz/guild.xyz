@@ -6,7 +6,7 @@ import {
   Select,
   SelectInstance,
 } from "chakra-react-select"
-import { forwardRef, Ref } from "react"
+import { Ref, forwardRef } from "react"
 import { OneOf } from "types"
 import CustomClearIndicator from "./components/CustomClearIndicator"
 import CustomMenuList from "./components/CustomMenuList"

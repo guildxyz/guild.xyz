@@ -65,7 +65,7 @@ const SendNewMessage = (props: ButtonProps) => {
   const { data: reachableUsers, isValidating: isReachableUsersLoading } =
     useReachableUsers("WEB3INBOX", "ROLES", roleIds)
 
-  const greenTextColor = useColorModeValue("green.500", "green.300")
+  const greenTextColor = useColorModeValue("green.600", "green.300")
 
   return (
     <>
@@ -87,7 +87,7 @@ const SendNewMessage = (props: ButtonProps) => {
                     <RoleIdsSelect />
                     <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
 
-                    <Text as="span" display="block" colorScheme="gray" pt={2}>
+                    <Text colorScheme="gray" pt={2}>
                       <Text
                         as="span"
                         fontWeight="bold"
@@ -96,7 +96,7 @@ const SendNewMessage = (props: ButtonProps) => {
                         {isReachableUsersLoading ? (
                           <Spinner size="xs" />
                         ) : (
-                          reachableUsers?.length
+                          reachableUsers?.length ?? 0
                         )}
                       </Text>
                       <Text

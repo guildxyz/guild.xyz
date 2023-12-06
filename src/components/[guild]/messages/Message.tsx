@@ -45,7 +45,7 @@ const Message = ({
 }: Props) => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const moreRolesTagBorderColorVar = useColorModeValue("gray-300", "whiteAlpha-300")
-  const tableLeftColTextColor = useColorModeValue("black", "gray.400")
+  const tableLeftColTextColor = useColorModeValue("gray", "whiteAlpha.600")
 
   const { roles } = useGuild()
   const targetedRoles = roles.filter((role) => roleIds.includes(role.id))
@@ -102,8 +102,8 @@ const Message = ({
             </Stack>
 
             <HStack justifyContent="space-between">
-              <HStack>
-                <Text as="span" colorScheme="gray">
+              <HStack spacing={1}>
+                <Text as="span" colorScheme="gray" pr="0.5">
                   to:
                 </Text>
 
@@ -157,30 +157,29 @@ const Message = ({
                 variant="unstyled"
                 sx={{
                   "tr td:nth-child(odd)": {
-                    display: "block",
-                    minW: "max-content",
+                    verticalAlign: "top",
                     pl: 0,
                     pt: 0,
                     pr: 4,
-                    pb: 4,
                     color: tableLeftColTextColor,
+                    fontWeight: "medium",
                   },
                   "tr td:nth-child(even)": {
                     px: 0,
                     pt: 0,
-                    pb: 4,
                   },
                 }}
+                mb={-4}
               >
                 <Tbody>
                   <Tr>
-                    <Td>Sent on</Td>
+                    <Td>Sent on:</Td>
                     <Td>{prettyCreatedAt}</Td>
                   </Tr>
                   <Tr>
-                    <Td>Targeted</Td>
+                    <Td>Targeted:</Td>
                     <Td>
-                      <Wrap>
+                      <Wrap spacing={1}>
                         {targetedRoles.slice(0, 5).map((role) => (
                           <RoleTag
                             key={role.id}
@@ -193,7 +192,7 @@ const Message = ({
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td>Sent to</Td>
+                    <Td>Sent to:</Td>
                     <Td>
                       <HStack spacing={0.5}>
                         <b>{receiverCount}</b>

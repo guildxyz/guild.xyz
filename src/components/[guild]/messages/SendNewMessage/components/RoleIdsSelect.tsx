@@ -1,11 +1,11 @@
-import { Img, useColorModeValue } from "@chakra-ui/react"
+import { Center, Img, useColorModeValue } from "@chakra-ui/react"
 import {
   GroupBase,
   MultiValueGenericProps,
   Props,
   chakraComponents,
 } from "chakra-react-select"
-import { VISIBILITY_DATA } from "components/[guild]/SetVisibility"
+import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import StyledSelect from "components/common/StyledSelect"
 import { PropsWithChildren, Ref, forwardRef } from "react"
@@ -17,8 +17,8 @@ const RoleIdsSelect = forwardRef((props: Props, ref: Ref<any>) => {
   const roleOptions = roles.map((role) => ({
     value: role.id,
     label: role.name,
-    img: role.imageUrl,
-    details: VISIBILITY_DATA[role.visibility].title,
+    img: <RoleImage imageUrl={role.imageUrl} />,
+    details: <MemberCount memberCount={role.memberCount || 0} />,
   }))
   const {
     field: { onChange, value, ...roleSelectProps },
@@ -39,6 +39,13 @@ const RoleIdsSelect = forwardRef((props: Props, ref: Ref<any>) => {
       }}
       {...props}
       {...roleSelectProps}
+      chakraStyles={{
+        valueContainer: (provided) => ({
+          ...provided,
+          px: 2.5,
+          py: 1.5,
+        }),
+      }}
       value={value.map((roleId) => roleOptions.find((o) => o.value === roleId))}
       onChange={(newValue) => onChange(newValue.map((option) => option.value))}
     />
@@ -65,20 +72,20 @@ const RoleIdsSelectMultiValuesContainer = ({
             : publicRoleBg,
       }}
     >
-      {props.data.img.startsWith("/guildLogos") ? (
-        <Img src={props.data.img} alt={props.data.label} boxSize={3} mr={2} />
-      ) : (
-        <Img
-          src={props.data.img}
-          alt={props.data.label}
-          boxSize={4}
-          mr={2}
-          borderRadius="full"
-        />
-      )}
+      {props.data.img}
       {children}
     </chakraComponents.MultiValueContainer>
   )
 }
+
+const RoleImage = ({ imageUrl }) => (
+  <Center boxSize={4} mr={1.5}>
+    {imageUrl.startsWith("/guildLogos") ? (
+      <Img src={imageUrl} boxSize={3.5} />
+    ) : (
+      <Img src={imageUrl} boxSize={4} borderRadius="full" />
+    )}
+  </Center>
+)
 
 export default RoleIdsSelect
