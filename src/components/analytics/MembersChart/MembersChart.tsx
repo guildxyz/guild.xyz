@@ -73,6 +73,25 @@ const MembersChart = () => {
     setShownLines(["total", ...roles?.map((role) => role.id.toString())])
   }, [roles])
 
+  const shownRoles = data?.roles?.filter((role) =>
+    shownLines?.includes(role.roleId.toString())
+  )
+
+  const allShownValues = useMemo(() => {
+    if (!data) return []
+    return [
+      ...(shownLines.includes("total")
+        ? data.total.map((dataPoint) => dataPoint.count)
+        : []),
+      ...shownRoles?.flatMap((role) =>
+        role.memberCounts.map((dataPoint) => dataPoint.count)
+      ),
+    ]
+  }, [data, shownLines, shownRoles])
+
+  const minValue = Math.min(...allShownValues)
+  const maxValue = Math.max(...allShownValues)
+
   const roleColors: Record<number, string> = useMemo(
     () =>
       roles?.reduce((acc, curr) => {
@@ -126,7 +145,19 @@ const MembersChart = () => {
               right: CHART_MARGIN_X,
             }}
             xScale={{ type: "time" }}
-            yScale={{ type: "linear" }}
+            yScale={
+              maxValue > 100
+                ? {
+                    /**
+                     * Using log would be even better, but in that case the yAxis
+                     * gets cluttered with too much values in some guilds for some
+                     * reason (regardless of the numTicks={4})
+                     */
+                    type: "sqrt",
+                    domain: [minValue, maxValue],
+                  }
+                : { type: "linear" }
+            }
           >
             <Grid
               columns={false}
@@ -178,18 +209,16 @@ const MembersChart = () => {
                 {...accessors}
               />
             )}
-            {data?.roles
-              ?.filter((role) => shownLines?.includes(role.roleId.toString()))
-              .map(({ roleId, memberCounts }) => (
-                <LineSeries
-                  key={roleId}
-                  dataKey={roleId.toString()}
-                  stroke={roleColors[roleId]}
-                  data={memberCounts}
-                  curve={curveMonotoneX}
-                  {...accessors}
-                />
-              ))}
+            {shownRoles?.map(({ roleId, memberCounts }) => (
+              <LineSeries
+                key={roleId}
+                dataKey={roleId.toString()}
+                stroke={roleColors[roleId]}
+                data={memberCounts}
+                curve={curveMonotoneX}
+                {...accessors}
+              />
+            ))}
             <MembersChartTooltip {...{ accessors, roleColors }} />
           </XYChart>
         )}
