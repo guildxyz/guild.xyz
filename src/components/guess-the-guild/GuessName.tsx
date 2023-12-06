@@ -1,10 +1,18 @@
 import { Button, Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
 import { useState } from "react"
+import { GuildBase } from "types"
+import AnswerButton from "./AnswerButton"
 
-const GuessName = () => {
-  const [submitted, setSubmitted] = useState(false)
-  const [answer, setAnswer] = useState<number | null>()
+const getRandomGuild = (guilds: GuildBase[]) =>
+  guilds[Math.floor(Math.random()) * guilds.length]
+
+const GuessName = ({ guilds }: { guilds: GuildBase[] }) => {
+  const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
+  const [solutionGuild, setSolutionGuild] = useState<GuildBase>(
+    getRandomGuild(guilds)
+  )
+  const [selectedGuildId, setSelectedGuildId] = useState<number | null>()
 
   return (
     <>
@@ -19,53 +27,35 @@ const GuessName = () => {
         </Heading>
         <VStack>
           <GuildLogo size="100px" />
-          <Text>{"???"}</Text>
+          <Text>{isAnswerSubmitted ? solutionGuild.name : "???"}</Text>
         </VStack>
 
         <VStack gap="3" w="100%">
-          <Button
-            id="1"
-            w="100%"
-            colorScheme={answer === 1 ? "green" : "gray"}
-            onClick={() => setAnswer(1)}
-          >
-            A
-          </Button>
-          <Button
-            id="2"
-            w="100%"
-            colorScheme={answer === 2 ? "green" : "gray"}
-            onClick={() => setAnswer(2)}
-          >
-            B
-          </Button>
-          <Button
-            id="3"
-            w="100%"
-            colorScheme={answer === 3 ? "green" : "gray"}
-            onClick={() => setAnswer(3)}
-          >
-            C
-          </Button>
-          <Button
-            id="4"
-            w="100%"
-            colorScheme={answer === 4 ? "green" : "gray"}
-            onClick={() => setAnswer(4)}
-          >
-            D
-          </Button>
+          {guilds.map((guild) => (
+            <AnswerButton
+              key={guild.id}
+              guild={guild}
+              solutionGuild={solutionGuild}
+              selectedGuildId={selectedGuildId}
+              isAnswerSubmitted={isAnswerSubmitted}
+              onSelect={() => setSelectedGuildId(guild.id)}
+            />
+          ))}
         </VStack>
 
         <Divider />
 
-        {submitted && (
+        {isAnswerSubmitted && (
           <Button colorScheme="green" w="100%">
             Continue
           </Button>
         )}
-        {!submitted && (
-          <Button colorScheme="green" w="100%" onClick={() => setSubmitted(true)}>
+        {!isAnswerSubmitted && (
+          <Button
+            colorScheme="green"
+            w="100%"
+            onClick={() => setIsAnswerSubmitted(true)}
+          >
             Submit
           </Button>
         )}

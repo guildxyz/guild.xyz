@@ -1,13 +1,61 @@
 import { Container, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
-import AssignLogos from "components/guess-the-guild/AssignLogos"
+import GuessName from "components/guess-the-guild/GuessName"
 import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
+import { GuildBase } from "types"
 
 const GuessTheGuild = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
+
+  const mockGuilds: GuildBase[] = [
+    {
+      id: 1,
+      name: "Guild1",
+      urlName: "guild1",
+      imageUrl: "",
+      roles: ["role1", "role2"],
+      platforms: ["DISCORD"],
+      memberCount: 12,
+      rolesCount: 2,
+      tags: ["FEATURED", "VERIFIED"],
+    },
+    {
+      id: 2,
+      name: "Guild2",
+      urlName: "guild1",
+      imageUrl: "",
+      roles: ["role1", "role2"],
+      platforms: ["DISCORD"],
+      memberCount: 12,
+      rolesCount: 2,
+      tags: ["FEATURED", "VERIFIED"],
+    },
+    {
+      id: 3,
+      name: "Guild3",
+      urlName: "guild1",
+      imageUrl: "",
+      roles: ["role1", "role2"],
+      platforms: ["DISCORD"],
+      memberCount: 12,
+      rolesCount: 2,
+      tags: ["FEATURED", "VERIFIED"],
+    },
+    {
+      id: 4,
+      name: "Guild4",
+      urlName: "guild1",
+      imageUrl: "",
+      roles: ["role1", "role2"],
+      platforms: ["DISCORD"],
+      memberCount: 12,
+      rolesCount: 2,
+      tags: ["FEATURED", "VERIFIED"],
+    },
+  ]
 
   return (
     <>
@@ -38,8 +86,8 @@ const GuessTheGuild = (): JSX.Element => {
           <ScoreIndicator />
           <Card mt="0px" py="7" px="4">
             {/* <StartGame /> */}
-            {/* <GuessName /> */}
-            <AssignLogos />
+            <GuessName guilds={mockGuilds} />
+            {/* <AssignLogos /> */}
             {/* <EndGame /> */}
           </Card>
         </Container>
