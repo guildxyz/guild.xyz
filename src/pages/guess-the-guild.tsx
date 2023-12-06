@@ -2,13 +2,65 @@ import { Container, useBreakpointValue, useColorModeValue } from "@chakra-ui/rea
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import AssignLogos from "components/guess-the-guild/AssignLogos"
+import EndGame from "components/guess-the-guild/EndGame"
+import GuessName from "components/guess-the-guild/GuessName"
 import ScoreIndicator from "components/guess-the-guild/ScoreIndicator"
+import StartGame from "components/guess-the-guild/StartGame"
+import React, { useState } from "react"
 import { GuildBase } from "types"
+
+export enum GameMode {
+  GuessNameMode,
+  AssignLogosMode,
+}
+
+export enum GameState {
+  Start,
+  Game,
+  End,
+}
+
+export type GameModeProps = {
+  guilds: GuildBase[]
+  onNext: () => void
+  onExit: () => void
+}
 
 const GuessTheGuild = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
+
+  const [round, setRound] = useState(0)
+  const [gameMode, setGameMode] = useState<GameMode>(GameMode.GuessNameMode)
+  const [gameState, setGameState] = useState<GameState>(GameState.Start)
+
+  const selectGameMode = () => {
+    if (Math.random() >= 0.5) {
+      setGameMode(GameMode.AssignLogosMode)
+    } else {
+      setGameMode(GameMode.GuessNameMode)
+    }
+  }
+
+  const startGame = () => {
+    setGameState(GameState.Game)
+    selectGameMode()
+  }
+
+  const nextGame = () => {
+    selectGameMode()
+    setRound(round + 1)
+  }
+
+  const endGame = () => {
+    setGameState(GameState.End)
+  }
+
+  const restartGame = () => {
+    setRound(0)
+    setGameState(GameState.Start)
+  }
 
   const mockGuilds: GuildBase[] = [
     {
@@ -85,10 +137,37 @@ const GuessTheGuild = (): JSX.Element => {
         <Container p="0">
           <ScoreIndicator />
           <Card mt="0px" py="7" px="4">
-            {/* <StartGame /> */}
-            {/* <GuessName guilds={mockGuilds} /> */}
-            <AssignLogos guilds={mockGuilds} />
-            {/* <EndGame /> */}
+            {gameState === GameState.Start && (
+              <StartGame onStart={() => startGame()} />
+            )}
+
+            {gameState === GameState.Game && (
+              <React.Fragment key={round}>
+                {gameMode === GameMode.AssignLogosMode && (
+                  <>
+                    <AssignLogos
+                      guilds={mockGuilds}
+                      onNext={() => nextGame()}
+                      onExit={() => endGame()}
+                    />
+                  </>
+                )}
+
+                {gameMode === GameMode.GuessNameMode && (
+                  <>
+                    <GuessName
+                      guilds={mockGuilds}
+                      onNext={() => nextGame()}
+                      onExit={() => endGame()}
+                    />
+                  </>
+                )}
+              </React.Fragment>
+            )}
+
+            {gameState === GameState.End && (
+              <EndGame onRestart={() => restartGame()} />
+            )}
           </Card>
         </Container>
       </Layout>

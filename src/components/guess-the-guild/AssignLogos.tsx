@@ -2,6 +2,7 @@ import { Divider, Heading, VStack } from "@chakra-ui/react"
 import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
+import { GameModeProps } from "pages/guess-the-guild"
 import React, { useMemo, useState } from "react"
 import { GuildBase } from "types"
 import ResultAlert from "./ResultAlert"
@@ -10,7 +11,7 @@ import GuildCardWithDropzone from "./assign-logos/GuildCardWithDropzone"
 import SourceDropzone from "./assign-logos/SourceDropzone"
 import useDragAndDrop, { START_ZONE_ID } from "./assign-logos/useDragAndDrop"
 
-const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
+const AssignLogos = ({ guilds, onNext, onExit }: GameModeProps) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const avatarSize = { base: "60px", sm: "70px", md: "80px" }
 
@@ -99,11 +100,6 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
 
         {isAnswerSubmitted && <ResultAlert isAnswerCorrect={isAnswerCorrect} />}
 
-        {isAnswerSubmitted && (
-          <Button colorScheme="green" w="100%">
-            Continue
-          </Button>
-        )}
         {!isAnswerSubmitted && (
           <Button
             colorScheme="green"
@@ -112,6 +108,18 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
             onClick={() => setIsAnswerSubmitted(true)}
           >
             Submit
+          </Button>
+        )}
+
+        {isAnswerSubmitted && isAnswerCorrect && (
+          <Button colorScheme="green" w="100%" onClick={() => onNext()}>
+            Continue
+          </Button>
+        )}
+
+        {isAnswerSubmitted && !isAnswerCorrect && (
+          <Button colorScheme="green" w="100%" onClick={() => onExit()}>
+            End Game
           </Button>
         )}
       </VStack>

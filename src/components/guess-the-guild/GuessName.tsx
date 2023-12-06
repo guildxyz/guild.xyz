@@ -1,14 +1,15 @@
 import { Button, Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
+import { GameModeProps } from "pages/guess-the-guild"
 import { useState } from "react"
 import { GuildBase } from "types"
 import AnswerButton from "./AnswerButton"
 import ResultAlert from "./ResultAlert"
 
 const getRandomGuild = (guilds: GuildBase[]) =>
-  guilds[Math.floor(Math.random()) * guilds.length]
+  guilds[Math.floor(Math.random() * guilds.length)]
 
-const GuessName = ({ guilds }: { guilds: GuildBase[] }) => {
+const GuessName = ({ guilds, onNext, onExit }: GameModeProps) => {
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState(false)
   const [solutionGuild] = useState<GuildBase>(getRandomGuild(guilds))
   const [selectedGuildId, setSelectedGuildId] = useState<number | null>()
@@ -48,11 +49,6 @@ const GuessName = ({ guilds }: { guilds: GuildBase[] }) => {
 
         {isAnswerSubmitted && <ResultAlert isAnswerCorrect={isAnswerCorrect} />}
 
-        {isAnswerSubmitted && (
-          <Button colorScheme="green" w="100%">
-            Continue
-          </Button>
-        )}
         {!isAnswerSubmitted && (
           <Button
             colorScheme="green"
@@ -61,6 +57,18 @@ const GuessName = ({ guilds }: { guilds: GuildBase[] }) => {
             onClick={() => setIsAnswerSubmitted(true)}
           >
             Submit
+          </Button>
+        )}
+
+        {isAnswerSubmitted && isAnswerCorrect && (
+          <Button colorScheme="green" w="100%" onClick={() => onNext()}>
+            Continue
+          </Button>
+        )}
+
+        {isAnswerSubmitted && !isAnswerCorrect && (
+          <Button colorScheme="green" w="100%" onClick={() => onExit()}>
+            End Game
           </Button>
         )}
       </VStack>

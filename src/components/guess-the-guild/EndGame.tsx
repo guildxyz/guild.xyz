@@ -1,7 +1,7 @@
 import { Alert, Button, Divider, Heading, Text, VStack } from "@chakra-ui/react"
 import pluralize from "utils/pluralize"
 
-const EndGame = () => {
+const EndGame = ({ onRestart }: { onRestart: () => void }) => {
   const score = 22
   const highscore = 30
 
@@ -65,7 +65,7 @@ const EndGame = () => {
 
         <Divider mt="2" />
 
-        <Button colorScheme="green" w="100%" mt="3">
+        <Button colorScheme="green" w="100%" mt="3" onClick={() => onRestart()}>
           Try Again!
         </Button>
       </VStack>

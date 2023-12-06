@@ -8,7 +8,7 @@ enum Difficulty {
   Hard,
 }
 
-const StartGame = () => {
+const StartGame = ({ onStart }: { onStart: () => void }) => {
   const [difficulty, setDifficulty] = useState<Difficulty>(Difficulty.Easy)
 
   return (
@@ -98,7 +98,7 @@ const StartGame = () => {
           {difficulty == 1 && "2x"} {difficulty == 2 && "3x"} the usual points.
         </Text>
       </VStack>
-      <Button w="100%" colorScheme="green">
+      <Button w="100%" colorScheme="green" onClick={() => onStart()}>
         Let's Go!
       </Button>
     </VStack>
