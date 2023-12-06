@@ -1,44 +1,118 @@
-import {
-  Box,
-  Divider,
-  HStack,
-  Heading,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
-  Text,
-  VStack,
-  Wrap,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import { DndContext, DragOverlay } from "@dnd-kit/core"
+import { Divider, Heading, VStack } from "@chakra-ui/react"
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent } from "@dnd-kit/core"
 import Button from "components/common/Button"
-import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
-import { Users } from "phosphor-react"
-import { useState } from "react"
+import React, { useState } from "react"
 import { GuildBase } from "types"
-import pluralize from "utils/pluralize"
+import { shuffleArray } from "utils/shuffleArray"
 import Draggable from "./assign-logos/Draggable"
+import GuildCardWithDropzone from "./assign-logos/GuildCardWithDropzone"
 import SourceDropzone from "./assign-logos/SourceDropzone"
 
 export const START_ZONE_ID = "source"
 
-const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
-  const bgColor = useColorModeValue("gray.100", "whiteAlpha.200")
-  const borderColor = useColorModeValue("gray.300", "gray.500")
+type DropzoneDict = Record<string, GuildBase | null>
 
+const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
   const [submitted, setSubmitted] = useState(false)
   const avatarSize = 90
 
   const [movingGuild, setMovingGuild] = useState<GuildBase | null>(null)
 
-  const handleDragStart = (event) => {
+  const [startZone, setStartZone] = useState<GuildBase[]>(shuffleArray(guilds))
+  const initialDropzones = Object.fromEntries(
+    guilds.map((guild) => [guild.id, null])
+  )
+  const [dropzones, setDropzones] = useState<DropzoneDict>(initialDropzones)
+
+  const addToStartZone = (guild) => {
+    setStartZone((prev) => [...prev, guild])
+  }
+
+  const removeFromStartZone = (guildId) => {
+    setStartZone((prev) => prev.filter((g) => g.id !== guildId))
+  }
+
+  const handleDragStart = (event: DragStartEvent) => {
     setMovingGuild(guilds.find((g) => g.id.toString() === event.active.id))
   }
 
-  const handleDragEnd = () => {
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { over } = event
+
+    if (!over || !movingGuild) {
+      setMovingGuild(null)
+      return
+    }
+
+    const sourceZoneId = findSourceZoneId(movingGuild)
+    const targetZoneId = over.id
+
+    if (!isMoveAllowed(sourceZoneId, targetZoneId)) {
+      setMovingGuild(null)
+      return
+    }
+
+    updateDropzones(sourceZoneId, targetZoneId)
+    updateStartZone(sourceZoneId, targetZoneId)
+
     setMovingGuild(null)
+  }
+
+  const updateDropzones = (sourceZoneId, targetZoneId) => {
+    const updatedDropzones = { ...dropzones }
+
+    if (targetZoneId !== START_ZONE_ID) {
+      updatedDropzones[targetZoneId] = guilds.find(
+        (guild) => guild.id === movingGuild.id
+      )
+    }
+
+    if (sourceZoneId !== START_ZONE_ID) {
+      updatedDropzones[sourceZoneId] = null
+    }
+
+    setDropzones(updatedDropzones)
+  }
+
+  const updateStartZone = (sourceZoneId, targetZoneId) => {
+    if (targetZoneId === START_ZONE_ID) {
+      addToStartZone(movingGuild)
+    }
+    if (sourceZoneId === START_ZONE_ID) {
+      removeFromStartZone(movingGuild.id)
+    }
+  }
+
+  const isMoveAllowed = (sourceZoneId, targetZoneId) => {
+    if (sourceZoneId === targetZoneId) return false
+
+    if (targetZoneId !== START_ZONE_ID && dropzones[targetZoneId]) return false
+
+    return true
+  }
+
+  const findSourceZoneId = (guild: GuildBase): string | number | null => {
+    const isInStartZone = startZone.some((g) => g.id === guild.id)
+    if (isInStartZone) return START_ZONE_ID
+
+    const sourceDropzone = Object.entries(dropzones).find(
+      ([_, dzGuild]) => dzGuild?.id === guild.id
+    )
+    return sourceDropzone ? sourceDropzone[0] : null
+  }
+
+  const renderDraggableAvatar = (guild: GuildBase) => {
+    if (!guild) return
+    return (
+      <React.Fragment key={guild.id}>
+        {guild.id != movingGuild?.id && (
+          <Draggable id={`${guild.id}`}>
+            <GuildLogo w={avatarSize} h={avatarSize} imageUrl={guild.imageUrl} />
+          </Draggable>
+        )}
+      </React.Fragment>
+    )
   }
 
   return (
@@ -55,57 +129,23 @@ const AssignLogos = ({ guilds }: { guilds: GuildBase[] }) => {
 
         <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
           <SourceDropzone id={START_ZONE_ID} size={avatarSize}>
-            <Draggable id="1">
-              <GuildLogo />
-            </Draggable>
+            {startZone.map((guild) => renderDraggableAvatar(guild))}
           </SourceDropzone>
 
-          <DragOverlay>{movingGuild ? <GuildLogo /> : null}</DragOverlay>
-        </DndContext>
+          <DragOverlay>
+            {movingGuild ? <GuildLogo w={avatarSize} h={avatarSize} /> : null}
+          </DragOverlay>
 
-        <Card w="100%" py="5" px="5" background={bgColor}>
-          <HStack gap="6">
-            <Box
-              h={avatarSize}
-              w={avatarSize}
-              minW={avatarSize}
-              minH={avatarSize}
-              rounded="100%"
-              border="2px"
-              borderStyle="dashed"
-              borderColor={borderColor}
-              p="1"
-              boxSizing="content-box"
-            ></Box>
-            <VStack alignItems="start">
-              <Text
-                as="span"
-                fontFamily="display"
-                fontSize="lg"
-                fontWeight="bold"
-                letterSpacing="wide"
-                maxW="full"
-                noOfLines={1}
-                wordBreak="break-all"
-              >
-                Guild Name
-              </Text>
-              <Wrap zIndex="1">
-                <Tag as="li">
-                  <TagLabel>{pluralize(1234, "role")}</TagLabel>
-                </Tag>
-                <Tag as="li">
-                  <TagLeftIcon as={Users} />
-                  <TagLabel>
-                    {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                      1234
-                    )}
-                  </TagLabel>
-                </Tag>
-              </Wrap>
-            </VStack>
-          </HStack>
-        </Card>
+          {guilds.map((guild) => (
+            <GuildCardWithDropzone
+              key={guild.id}
+              guild={guild}
+              avatarSize={avatarSize}
+            >
+              {renderDraggableAvatar(dropzones[`${guild.id}`])}
+            </GuildCardWithDropzone>
+          ))}
+        </DndContext>
 
         <Divider />
 

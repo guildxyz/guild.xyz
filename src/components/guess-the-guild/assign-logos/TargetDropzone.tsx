@@ -2,33 +2,32 @@ import { Box, useColorModeValue } from "@chakra-ui/react"
 import { useDroppable } from "@dnd-kit/core"
 import { ReactNode } from "react"
 
-const SourceDropzone = ({
+const TargetDropzone = ({
   id,
   children,
-  size,
+  avatarSize,
 }: {
   id: string
   children?: ReactNode
-  size: any
+  avatarSize: any
 }) => {
   const { isOver, setNodeRef } = useDroppable({ id })
-  const borderColor = "transparent"
+  const borderColor = useColorModeValue("gray.300", "gray.500")
   const borderColorHover = useColorModeValue("green.400", "green.600")
 
   return (
     <Box
-      p="2"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      gap="2"
-      w="100%"
-      minHeight={size}
-      border={2}
-      borderColor={isOver ? borderColorHover : borderColor}
+      h={avatarSize}
+      w={avatarSize}
+      minW={avatarSize}
+      minH={avatarSize}
+      rounded="100%"
+      border="2px"
       borderStyle="dashed"
+      borderColor={isOver ? borderColorHover : borderColor}
+      p="1"
+      boxSizing="content-box"
       transition="0.5s"
-      rounded="15"
       ref={setNodeRef}
     >
       {children}
@@ -36,4 +35,4 @@ const SourceDropzone = ({
   )
 }
 
-export default SourceDropzone
+export default TargetDropzone
