@@ -23,7 +23,7 @@ const useRemoveGuildPlatform = (guildPlatformId: number) => {
     forcePrompt: true,
     onSuccess: () => {
       toast({
-        title: `Platform removed!`,
+        title: "Reward removed!",
         status: "success",
       })
 
