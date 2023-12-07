@@ -101,6 +101,7 @@ const Web3Inbox = () => {
           className="custom-scrollbar"
           sx={{
             WebkitMaskImage:
+              messages?.length > 4 &&
               "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
           }}
         >
