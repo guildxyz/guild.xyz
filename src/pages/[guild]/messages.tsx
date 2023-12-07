@@ -47,7 +47,11 @@ const Messages = () => {
     >
       <GuildTabs
         activeTab="MESSAGES"
-        rightElement={isAdmin && <DynamicSendNewMessage size="sm" variant="ghost" />}
+        rightElement={
+          isAdmin && (
+            <DynamicSendNewMessage size="sm" variant="ghost" flexShrink={0} />
+          )
+        }
       />
 
       <NoPermissionToPageFallback>

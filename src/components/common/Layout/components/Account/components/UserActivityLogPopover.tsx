@@ -101,7 +101,7 @@ const UserActivityLogPopover = () => {
             <PopoverArrow />
             <PopoverCloseButton textColor={popoverCloseButtonColor} />
 
-            <PopoverBody px={4} py={3}>
+            <PopoverBody py={3} px={0}>
               <Stack spacing={4} divider={<Divider />}>
                 {type === "EVM" && (
                   <NotificationsSection title="Messages">
@@ -127,6 +127,8 @@ const UserActivityLogPopover = () => {
   )
 }
 
+const SHOWN_ACTIONS_COUNT = 4
+
 const UserActivityLog = (): JSX.Element => {
   const { data, isValidating } = useActivityLog()
 
@@ -134,7 +136,7 @@ const UserActivityLog = (): JSX.Element => {
     <>
       <Stack minW="xs" spacing={0.5} divider={<Divider />}>
         {!data || isValidating ? (
-          [...Array(5)].map((_, i) => (
+          [...Array(SHOWN_ACTIONS_COUNT)].map((_, i) => (
             <HStack key={i} spacing={4} py={4}>
               <SkeletonCircle boxSize={8} />
               <Stack spacing={1}>
@@ -149,7 +151,7 @@ const UserActivityLog = (): JSX.Element => {
             <Text>No actions yet</Text>
           </HStack>
         ) : (
-          data.entries.slice(0, 5)?.map((action) => (
+          data.entries.slice(0, SHOWN_ACTIONS_COUNT)?.map((action) => (
             <ActivityLogActionProvider key={action.id} action={action}>
               <HStack spacing={4} py={4} pl="1">
                 <ActionIcon size={6} />

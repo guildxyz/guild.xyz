@@ -1,4 +1,21 @@
-import { Box, Collapse, HStack, Img, Stack, Text } from "@chakra-ui/react"
+import {
+  Box,
+  Center,
+  Collapse,
+  HStack,
+  Icon,
+  IconButton,
+  Img,
+  Link,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react"
 import {
   useInitWeb3InboxClient,
   useManageSubscription,
@@ -6,9 +23,11 @@ import {
   useW3iAccount,
 } from "@web3inbox/widget-react"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
+import { ArrowRight, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 
@@ -16,78 +35,34 @@ const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 
 const Web3Inbox = () => {
   const { address } = useAccount()
-  const { signMessageAsync } = useSignMessage()
-
-  const showErrorToast = useShowErrorToast()
-  const toast = useToast()
-
-  const isReady = useInitWeb3InboxClient({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-    domain: "guild.xyz",
-    // isLimited: process.env.NODE_ENV === "production",
-    isLimited: false,
-  })
-
-  const { setAccount, register, isRegistering } = useW3iAccount()
+  const { isSubscribed } = useManageSubscription()
+  // const isSubscribed = false
+  const { setAccount } = useW3iAccount()
 
   useEffect(() => {
     if (!address) return
     setAccount(`eip155:1:${address}`)
   }, [address, setAccount])
 
-  const { isSubscribed, subscribe, isSubscribing } = useManageSubscription()
   const { messages } = useMessages()
-
-  const performSubscribe = async () => {
-    if (!address) return
-
-    try {
-      await register(async (message) => signMessageAsync({ message }))
-    } catch (registerIdentityError) {
-      showErrorToast("Web3Inbox registration error")
-      return
-    }
-
-    try {
-      await subscribe()
-      toast({
-        status: "success",
-        title: "Success",
-        description: "Successfully subscribed to Guild messages via Web3Inbox",
-      })
-    } catch {
-      showErrorToast("Couldn't subscribe to Guild messages")
-    }
-  }
 
   return (
     <Stack spacing={0}>
       <Collapse in={!isSubscribed}>
-        <HStack alignItems="start" pt={4}>
-          <Img src="/img/message.svg" boxSize={6} alt="Messages" mt={0.5} mr={2} />
-          <Stack spacing={2.5}>
-            <Stack spacing={0.5}>
-              <Text as="span" fontWeight="bold">
-                Subscribe to messages
-              </Text>
-              <Text as="span" fontSize="sm" colorScheme="gray" lineHeight={1.25}>
-                Receive messages from guild admins
-              </Text>
-            </Stack>
-
-            <Button
-              variant="solid"
-              size="sm"
-              colorScheme="blue"
-              onClick={performSubscribe}
-              isDisabled={!isReady || isSubscribed}
-              isLoading={!isReady || isRegistering || isSubscribing}
-              minW="max-content"
-              maxW="max-content"
-            >
-              {isSubscribed ? "Subscribed" : "Subscribe"}
-            </Button>
+        <HStack pt={4} pb={1} pl={1} spacing={4}>
+          <Center boxSize="6" flexShrink={0}>
+            <Img src="/img/message.svg" boxSize={5} alt="Messages" mt={0.5} />
+          </Center>
+          <Stack spacing={0.5} w="full">
+            <Text as="span" fontWeight="semibold">
+              Subscribe to messages
+            </Text>
+            <Text as="span" fontSize="sm" colorScheme="gray" lineHeight={1.25}>
+              Receive messages from guild admins
+            </Text>
           </Stack>
+
+          <SubscribeToMessages />
         </HStack>
       </Collapse>
 
@@ -121,21 +96,98 @@ const Web3Inbox = () => {
               )}
             </Stack>
           ) : (
-            <HStack pt={4} pb={2} px={4}>
-              <Img
-                src="/img/message.svg"
-                boxSize={6}
-                alt="Messages"
-                mt={0.5}
-                mr={2}
-              />
-
-              <Text colorScheme="gray">Your messages will appear here</Text>
+            <HStack pt={3} px={4}>
+              <Text colorScheme="gray">
+                Your messages from guilds will appear here
+              </Text>
             </HStack>
           )}
         </Box>
       </Collapse>
     </Stack>
+  )
+}
+
+const SubscribeToMessages = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { address } = useAccount()
+  const { subscribe, isSubscribing } = useManageSubscription()
+  const { signMessageAsync } = useSignMessage()
+  const { register, isRegistering } = useW3iAccount()
+
+  const showErrorToast = useShowErrorToast()
+  const toast = useToast()
+
+  const isReady = useInitWeb3InboxClient({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+    domain: "guild.xyz",
+    // isLimited: process.env.NODE_ENV === "production",
+    isLimited: false,
+  })
+
+  const performSubscribe = async () => {
+    if (!address) return
+
+    try {
+      await register(async (message) => signMessageAsync({ message }))
+    } catch (registerIdentityError) {
+      showErrorToast("Web3Inbox registration error")
+      return
+    }
+
+    try {
+      await subscribe()
+      toast({
+        status: "success",
+        title: "Success",
+        description: "Successfully subscribed to Guild messages via Web3Inbox",
+      })
+      onClose()
+    } catch {
+      showErrorToast("Couldn't subscribe to Guild messages")
+    }
+  }
+
+  return (
+    <>
+      <IconButton
+        variant="solid"
+        colorScheme="blue"
+        size="sm"
+        onClick={onOpen}
+        isLoading={isSubscribing}
+        icon={<ArrowRight />}
+        aria-label="Open subscribe modal"
+      />
+      <Modal {...{ isOpen, onClose }}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader pb="4">Subscribe to messages</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text mb="8">
+              Guild admins can send broadcast messages to your wallet through{" "}
+              <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
+                Web3Inbox
+                <Icon as={ArrowSquareOut} ml={1} />
+              </Link>
+              . Sign a message to start recieving them!
+            </Text>
+            <Button
+              variant="solid"
+              colorScheme="blue"
+              onClick={performSubscribe}
+              isDisabled={!isReady}
+              isLoading={!isReady || isRegistering || isSubscribing}
+              loadingText={isReady && "Check your wallet"}
+              w="full"
+            >
+              Sign to subscribe
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </>
   )
 }
 

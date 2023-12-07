@@ -6,7 +6,7 @@ type Props = {
 } & StackProps
 
 const NotificationsSection = ({ title, children }: PropsWithChildren<Props>) => (
-  <Stack spacing={0}>
+  <Stack spacing={0} px={4}>
     <Text
       fontSize="xs"
       fontWeight="bold"
