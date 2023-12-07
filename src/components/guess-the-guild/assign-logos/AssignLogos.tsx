@@ -129,6 +129,7 @@ const AssignLogos = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
             w="100%"
             isDisabled={!canSubmit}
             onClick={handleSubmit}
+            data-test="submit"
           >
             Submit
           </Button>

@@ -56,6 +56,7 @@ const GuessName = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
 
         {!isAnswerSubmitted && (
           <Button
+            data-test="submit"
             colorScheme="green"
             w="100%"
             isDisabled={typeof selectedGuildId === "undefined"}
@@ -66,13 +67,13 @@ const GuessName = ({ guilds, onNext, onExit, onCorrect }: GameModeProps) => {
         )}
 
         {isAnswerSubmitted && isAnswerCorrect && (
-          <Button colorScheme="green" w="100%" onClick={onNext}>
+          <Button colorScheme="green" w="100%" onClick={onNext} data-test="continue">
             Continue
           </Button>
         )}
 
         {isAnswerSubmitted && !isAnswerCorrect && (
-          <Button colorScheme="green" w="100%" onClick={onExit}>
+          <Button colorScheme="green" w="100%" onClick={onExit} data-test="end-game">
             End Game
           </Button>
         )}

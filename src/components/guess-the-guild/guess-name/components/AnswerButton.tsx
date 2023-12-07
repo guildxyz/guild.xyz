@@ -50,6 +50,7 @@ const AnswerButton = ({
       variant={variant}
       isActive={isActive}
       onClick={() => handleClick(guild.id)}
+      data-test="answer-button"
     >
       {guild.name}
     </Button>

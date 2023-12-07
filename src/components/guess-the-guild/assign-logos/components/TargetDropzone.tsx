@@ -29,6 +29,7 @@ const TargetDropzone = ({
       boxSizing="content-box"
       transition="0.5s"
       ref={setNodeRef}
+      data-test={`dropzone-${id}`}
     >
       {children}
     </Box>
