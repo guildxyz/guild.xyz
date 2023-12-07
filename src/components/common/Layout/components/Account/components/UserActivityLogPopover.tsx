@@ -23,14 +23,16 @@ import {
 } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import LinkButton from "components/common/LinkButton"
 import useLocalStorage from "hooks/useLocalStorage"
+import dynamic from "next/dynamic"
 import { ArrowRight, Bell } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
 import AccountButton from "./AccountButton"
 import NotificationsSection from "./NotificationsSection"
-import Web3Inbox from "./Web3Inbox"
 
+const DynamicWeb3Inbox = dynamic(() => import("./Web3Inbox"))
 const VIEWPORT_GAP_PX = 8
 
 const UserActivityLogPopover = () => {
@@ -41,6 +43,8 @@ const UserActivityLogPopover = () => {
     "clicked-web3inbox-feature-notification",
     false
   )
+
+  const { type } = useWeb3ConnectionManager()
 
   const popoverCloseButtonColor = useColorModeValue(
     "black!important",
@@ -81,7 +85,7 @@ const UserActivityLogPopover = () => {
                 as={Bell}
                 transformOrigin="top center"
                 animation={
-                  clickedOnNotifications
+                  clickedOnNotifications || type !== "EVM"
                     ? undefined
                     : "notification 4s ease-in-out infinite"
                 }
@@ -99,9 +103,11 @@ const UserActivityLogPopover = () => {
 
             <PopoverBody px={4} py={3}>
               <Stack spacing={4} divider={<Divider />}>
-                <NotificationsSection title="Messages">
-                  <Web3Inbox />
-                </NotificationsSection>
+                {type === "EVM" && (
+                  <NotificationsSection title="Messages">
+                    <DynamicWeb3Inbox />
+                  </NotificationsSection>
+                )}
 
                 <ActivityLogProvider
                   userId={id}
