@@ -12,6 +12,7 @@ import {
   SkeletonCircle,
   Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityLogAction/ActivityLogActionContext"
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
@@ -39,6 +40,11 @@ const UserActivityLogPopover = () => {
   const [clickedOnNotifications, setClickedOnNotifications] = useLocalStorage(
     "clicked-web3inbox-feature-notification",
     false
+  )
+
+  const popoverCloseButtonColor = useColorModeValue(
+    "black!important",
+    "white!important"
   )
 
   return (
@@ -89,7 +95,7 @@ const UserActivityLogPopover = () => {
             w="400px"
           >
             <PopoverArrow />
-            <PopoverCloseButton />
+            <PopoverCloseButton textColor={popoverCloseButtonColor} />
 
             <PopoverBody px={4} py={3}>
               <Stack spacing={4} divider={<Divider />}>
