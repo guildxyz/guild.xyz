@@ -28,7 +28,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
 import { ArrowRight, ArrowSquareOut } from "phosphor-react"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 
 const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
@@ -45,6 +45,11 @@ const Web3Inbox = () => {
   }, [address, setAccount])
 
   const { messages } = useMessages()
+
+  const inboxContainerRef = useRef(null)
+  const isScrollable = !!inboxContainerRef.current
+    ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
+    : false
 
   return (
     <Stack spacing={0}>
@@ -71,12 +76,13 @@ const Web3Inbox = () => {
         style={{ marginInline: "calc(-1 * var(--chakra-space-4))" }}
       >
         <Box
+          ref={inboxContainerRef}
           maxH="30vh"
           overflowY="auto"
           className="custom-scrollbar"
           sx={{
             WebkitMaskImage:
-              messages?.length > 4 &&
+              isScrollable &&
               "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
           }}
         >
