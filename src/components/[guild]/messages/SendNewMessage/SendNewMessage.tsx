@@ -4,6 +4,7 @@ import {
   FormLabel,
   Icon,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -89,6 +90,7 @@ const SendNewMessage = (props: ButtonProps) => {
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Send new message</ModalHeader>
+          <ModalCloseButton />
 
           <ModalBody>
             <FormProvider {...methods}>
