@@ -11,15 +11,21 @@ const ScoreIndicator = ({
   const isHighscore = score > highscore
 
   return (
-    <Card py="7" px="4" mb="3">
+    <Card py="7" px="4" mb="3" id="score-indicator">
       {!isHighscore && (
         <>
           <HStack justifyContent="space-between" mb="2">
             <Tag>
-              <chakra.span opacity="0.5">Score: </chakra.span> {score}
+              <chakra.span opacity="0.5" mr="1">
+                Score:{" "}
+              </chakra.span>{" "}
+              {score}
             </Tag>
             <Tag>
-              <chakra.span opacity="0.5">Highscore: </chakra.span> {highscore}
+              <chakra.span opacity="0.5" mr="1">
+                Highscore:{" "}
+              </chakra.span>{" "}
+              {highscore}
             </Tag>
           </HStack>
 
@@ -28,7 +34,7 @@ const ScoreIndicator = ({
             w="100%"
             size="sm"
             colorScheme="green"
-            value={(score / highscore) * 100}
+            value={highscore ? (score / highscore) * 100 : 0}
           />
         </>
       )}
