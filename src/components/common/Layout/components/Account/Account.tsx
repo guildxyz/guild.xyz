@@ -6,7 +6,7 @@ import useResolveAddress from "hooks/useResolveAddress"
 import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
-import UserActivityLogPopover from "./components/UserActivityLogPopover"
+import Notifications from "./components/Notifications/Notifications"
 import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
@@ -32,7 +32,7 @@ const Account = (): JSX.Element => {
 
   return (
     <ButtonGroup isAttached variant="ghost" alignItems="center" borderRadius="2xl">
-      <UserActivityLogPopover />
+      <Notifications />
 
       <Divider
         orientation="vertical"

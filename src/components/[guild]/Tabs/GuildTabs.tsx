@@ -5,7 +5,7 @@ import Tabs, { TabsProps } from "./Tabs"
 import TabButton from "./components/TabButton"
 
 type Props = {
-  activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY" | "ANALYTICS"
+  activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY" | "ANALYTICS" | "MESSAGES"
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
@@ -48,6 +48,11 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           isActive={activeTab === "ANALYTICS"}
         >
           Analytics
+        </TabButton>
+      )}
+      {isAdmin && featureFlags.includes("MESSAGING") && (
+        <TabButton href={`/${urlName}/messages`} isActive={activeTab === "MESSAGES"}>
+          Messages
         </TabButton>
       )}
     </Tabs>

@@ -42,19 +42,20 @@ const baseStyleHeader: SystemStyleObject = {
   borderBottomWidth: "1px",
 }
 
-const baseStyleCloseButton: SystemStyleObject = {
+const baseStyleCloseButton: SystemStyleFunction = (props) => ({
   position: "absolute",
   borderRadius: "md",
   top: 2,
   insetEnd: 2,
   padding: 2,
-}
+  color: mode("black!important", "white!important")(props),
+})
 
 const baseStyle = (props) => ({
   popper: baseStylePopper,
   content: baseStyleContent(props),
   header: baseStyleHeader,
-  closeButton: baseStyleCloseButton,
+  closeButton: baseStyleCloseButton(props),
 })
 
 const styles = {
