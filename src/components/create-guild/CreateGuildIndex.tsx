@@ -39,7 +39,7 @@ const CreateGuildIndex = (): JSX.Element => {
           spacing={1.5}
         >
           <Text fontWeight="medium" colorScheme="gray">
-            add platforms later
+            add rewards later
           </Text>
         </Checkbox>
       </HStack>

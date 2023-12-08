@@ -33,7 +33,7 @@ export const STEPS: {
   progress?: number[]
 }[] = [
   {
-    title: "Set platforms",
+    title: "Set rewards",
     label: [
       "Connect platforms below that you build your community around. We’ll generate templates for your guild based on this",
     ],
