@@ -2,7 +2,6 @@ import {
   ButtonProps,
   FormControl,
   FormLabel,
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -22,7 +21,7 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
-import { ArrowSquareOut, Chat, PaperPlaneRight } from "phosphor-react"
+import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useReachableUsers from "../hooks/useReachableUsers"
 import useSendMessage from "../hooks/useSendMessage"
@@ -76,12 +75,12 @@ const SendNewMessage = (props: ButtonProps) => {
     <>
       <Button
         leftIcon={<Chat />}
-        {...props}
         onClick={onOpen}
         {...(!isStuck && {
           color: textColor,
           colorScheme: buttonColorScheme,
         })}
+        {...props}
       >
         New message
       </Button>
@@ -137,8 +136,8 @@ const SendNewMessage = (props: ButtonProps) => {
                     {`You can only message users who've subscribed to the Guild.xyz app on `}
                     <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
                       Web3Inbox
-                      <Icon as={ArrowSquareOut} ml={1} />
                     </Link>
+                    {`. They can do it from the notifications menu easily!`}
                   </Text>
                 </Stack>
 

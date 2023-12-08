@@ -48,7 +48,8 @@ const Messages = () => {
       <GuildTabs
         activeTab="MESSAGES"
         rightElement={
-          isAdmin && (
+          isAdmin &&
+          data?.length > 0 && (
             <DynamicSendNewMessage size="sm" variant="ghost" flexShrink={0} />
           )
         }

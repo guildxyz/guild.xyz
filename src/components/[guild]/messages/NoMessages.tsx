@@ -16,17 +16,13 @@ const NoMessages = () => (
         <Img src="/img/message.svg" boxSize="2em" />
 
         <Stack spacing={0.5}>
-          <Text as="span" fontWeight="semibold">
-            No messages yet
-          </Text>
-          <Text>
-            You can send broadcast messages to the wallets of members with Web3Inbox.{" "}
-            <Text as="span" colorScheme="gray">
-              <Link href="https://web3inbox.com" isExternal>
-                Learn more
-                <Icon as={ArrowSquareOut} ml={1} />
-              </Link>
-            </Text>
+          <Text fontWeight="semibold">No messages yet</Text>
+          <Text colorScheme="gray">
+            You can send broadcast messages to the wallets of members with{" "}
+            <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
+              Web3Inbox
+              <Icon as={ArrowSquareOut} ml={1} />
+            </Link>
           </Text>
         </Stack>
       </HStack>
