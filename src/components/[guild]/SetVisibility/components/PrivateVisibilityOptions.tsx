@@ -45,9 +45,9 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
       // --chakra-space-4 -> Flex gap
       ml={`calc(1em + var(--chakra-space-3) * 2 + var(--chakra-space-5) + var(--chakra-space-4))`}
       mr={6}
-      my={3}
+      mb={3}
       alignItems={"start"}
-      spacing={4}
+      spacing={2}
     >
       <ButtonGroup size="sm" w="full">
         <Button
