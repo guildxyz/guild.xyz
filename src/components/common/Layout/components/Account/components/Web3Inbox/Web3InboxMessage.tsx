@@ -1,10 +1,10 @@
 import {
   HStack,
-  Icon,
   Img,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
@@ -13,9 +13,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import Link from "components/common/Link"
+import LinkButton from "components/common/LinkButton"
 import { Modal } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 const Web3InboxMessage = ({
   publishedAt,
@@ -32,7 +33,6 @@ const Web3InboxMessage = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const hoverBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.200")
-  const lightModalBgColor = useColorModeValue("white", "gray.700")
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   const prettyDate = new Date(publishedAt).toLocaleDateString("en-US", {
@@ -50,7 +50,8 @@ const Web3InboxMessage = ({
         spacing={4}
         textAlign="left"
         px={4}
-        py={2}
+        pl={5}
+        py={3}
         _focusVisible={{
           outline: "none",
           bgColor: hoverBgColor,
@@ -61,15 +62,15 @@ const Web3InboxMessage = ({
         transition="background 0.2s ease"
         onClick={onOpen}
       >
-        <Img src={icon} alt={title} boxSize={6} borderRadius="full" />
+        <Img src={icon} alt={title} boxSize={10} borderRadius="full" />
 
         <Stack spacing={0} w="full">
           <HStack justifyContent="space-between">
             <Text as="span" fontWeight="bold" noOfLines={1}>
               {title}
             </Text>
-            <Text as="span" colorScheme="gray" fontSize="sm">
-              {prettyDate}
+            <Text as="span" colorScheme="gray" fontSize="xs">
+              {formatRelativeTimeFromNow(Date.now() - publishedAt)}
             </Text>
           </HStack>
           <Text noOfLines={1} colorScheme="gray">
@@ -78,31 +79,36 @@ const Web3InboxMessage = ({
         </Stack>
       </HStack>
 
-      <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader bgColor={lightModalBgColor}>
-            <HStack spacing={4}>
-              <Img src={icon} alt={title} boxSize={12} borderRadius="full" />
-              <Stack spacing={0.5}>
-                <Text as="span">{title}</Text>
-                <Text fontFamily="body" colorScheme="gray" fontSize="sm">
-                  {prettyDate}
-                </Text>
-              </Stack>
+          <ModalHeader pb="6">
+            <HStack spacing={3}>
+              <Img src={icon} alt={title} boxSize={8} borderRadius="full" />
+              <Text mt="-1">{title}</Text>
             </HStack>
           </ModalHeader>
           <ModalCloseButton />
 
-          <ModalBody pt={8}>
+          <ModalBody>
             <Stack spacing={4}>
               <Text>{body}</Text>
-              <Link href={url} colorScheme="blue" ml="auto">
-                Visit guild
-                <Icon as={ArrowRight} ml={1} />
-              </Link>
             </Stack>
           </ModalBody>
+          <ModalFooter pt="0">
+            <Text fontFamily="body" colorScheme="gray" fontSize="sm">
+              {prettyDate}
+            </Text>
+            <LinkButton
+              href={url}
+              variant="ghost"
+              size="sm"
+              ml="auto"
+              rightIcon={<ArrowRight />}
+            >
+              Go to guild
+            </LinkButton>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

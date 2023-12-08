@@ -54,7 +54,7 @@ const Web3Inbox = () => {
   return (
     <Stack spacing={0}>
       <Collapse in={!isSubscribed}>
-        <HStack pt={4} pb={1} pl={1} spacing={4}>
+        <HStack pt={4} pb={5} pl={1} spacing={4}>
           <Center boxSize="6" flexShrink={0}>
             <Img src="/img/message.svg" boxSize={5} alt="Messages" mt={0.5} />
           </Center>
@@ -80,6 +80,7 @@ const Web3Inbox = () => {
           maxH="30vh"
           overflowY="auto"
           className="custom-scrollbar"
+          pb="4"
           sx={{
             WebkitMaskImage:
               isScrollable &&
@@ -88,8 +89,9 @@ const Web3Inbox = () => {
         >
           {messages?.length > 0 ? (
             <Stack pt={2} spacing={0}>
-              {messages.map(
-                ({ publishedAt, message: { id, icon, title, body, url } }) => (
+              {messages
+                .sort((msgA, msgB) => msgB.publishedAt - msgA.publishedAt)
+                .map(({ publishedAt, message: { id, icon, title, body, url } }) => (
                   <DynamicWeb3InboxMessage
                     key={id}
                     publishedAt={publishedAt}
@@ -98,8 +100,7 @@ const Web3Inbox = () => {
                     body={body}
                     url={url}
                   />
-                )
-              )}
+                ))}
             </Stack>
           ) : (
             <HStack pt={3} px={4}>

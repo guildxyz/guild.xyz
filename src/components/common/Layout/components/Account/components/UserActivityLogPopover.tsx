@@ -102,12 +102,14 @@ const UserActivityLogPopover = () => {
             <PopoverCloseButton textColor={popoverCloseButtonColor} />
 
             <PopoverBody py={3} px={0}>
-              <Stack spacing={4} divider={<Divider />}>
+              <Stack spacing={0}>
                 {type === "EVM" && (
                   <NotificationsSection title="Messages">
                     <DynamicWeb3Inbox />
                   </NotificationsSection>
                 )}
+
+                <Divider mb="4" />
 
                 <ActivityLogProvider
                   userId={id}
@@ -127,8 +129,7 @@ const UserActivityLogPopover = () => {
   )
 }
 
-const SHOWN_ACTIONS_COUNT = 4
-
+const SHOWN_ACTIONS_COUNT = 3
 const UserActivityLog = (): JSX.Element => {
   const { data, isValidating } = useActivityLog()
 
