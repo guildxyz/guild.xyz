@@ -3,7 +3,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
-import useMessages, { Message } from "./useMessages"
+import useGuildMessages, { Message } from "./useGuildMessages"
 
 const useSendMessage = (onSuccess?: () => void) => {
   const { id } = useGuild()
@@ -17,7 +17,7 @@ const useSendMessage = (onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const { mutate: mutateMessages } = useMessages()
+  const { mutate: mutateMessages } = useGuildMessages()
 
   return useSubmitWithSign<{ job: { id: string }; message: Message }>(sendMessage, {
     onSuccess: (response) => {

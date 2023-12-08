@@ -5,7 +5,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { MessageSkeleton } from "components/[guild]/messages/Message"
-import useMessages from "components/[guild]/messages/hooks/useMessages"
+import useGuildMessages from "components/[guild]/messages/hooks/useGuildMessages"
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
@@ -26,7 +26,7 @@ const Messages = () => {
   const { name, imageUrl } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const { data, error, isLoading } = useMessages()
+  const { data, error, isLoading } = useGuildMessages()
 
   return (
     <Layout

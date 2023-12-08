@@ -19,7 +19,7 @@ export type Message = {
   createdAt: string
 }
 
-const useMessages = () => {
+const useGuildMessages = () => {
   const { id } = useGuild()
   const { keyPair } = useUserPublic()
   const fetcherWithSign = useFetcherWithSign()
@@ -37,4 +37,4 @@ const useMessages = () => {
   )
 }
 
-export default useMessages
+export default useGuildMessages
