@@ -27,8 +27,10 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
   const link = useWatch({ name: `${baseFieldPath}.data.id` })
   const debounceLink = useDebouncedState(link)
 
+  const error = !!parseFromObject(errors, baseFieldPath).data?.id
+
   const { data: metadata, isValidating } = useSWRImmutable<LinkMetadata>(
-    debounceLink ? `/api/link-metadata?url=${debounceLink}` : null
+    debounceLink && !error ? `/api/link-metadata?url=${debounceLink}` : null
   )
 
   useEffect(() => {
@@ -37,7 +39,7 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
   }, [metadata])
 
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath).data?.id}>
+    <FormControl isInvalid={error}>
       <FormLabel>Link user has to go to</FormLabel>
       <Input
         {...register(`${baseFieldPath}.data.id`, {
