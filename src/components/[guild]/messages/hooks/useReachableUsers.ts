@@ -1,7 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import {
   MessageDestination,
   MessageProtocol,
@@ -13,9 +11,6 @@ const useReachableUsers = (
   roleIds: number[]
 ) => {
   const { id } = useGuild()
-  const { keyPair } = useUserPublic()
-  const fetcherWithSign = useFetcherWithSign()
-
   const searchParams = new URLSearchParams({
     protocol,
     destination,
@@ -25,17 +20,10 @@ const useReachableUsers = (
     searchParams.append("roleId", roleId.toString())
   }
 
-  return useSWRImmutable<string[]>(
-    !!keyPair && roleIds?.length > 0
-      ? ["messages/reachable-targets", id, roleIds.join()]
-      : null,
-    ([_, guildId]) =>
-      fetcherWithSign([
-        `/v2/guilds/${guildId}/messages/reachable-targets?${searchParams.toString()}`,
-        {
-          method: "GET",
-        },
-      ])
+  return useSWRWithOptionalAuth<string[]>(
+    roleIds?.length > 0
+      ? `/v2/guilds/${id}/messages/reachable-targets?${searchParams.toString()}`
+      : null
   )
 }
 

@@ -1,7 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
-import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import {
   MessageDestination,
   MessageProtocol,
@@ -21,20 +19,7 @@ export type Message = {
 
 const useGuildMessages = () => {
   const { id } = useGuild()
-  const { keyPair } = useUserPublic()
-  const fetcherWithSign = useFetcherWithSign()
-
-  return useSWRImmutable<Message[]>(
-    !!keyPair ? ["messages", id] : null,
-    ([_, guildId]) =>
-      fetcherWithSign([
-        `/v2/guilds/${guildId}/messages`,
-        {
-          method: "GET",
-          body: {},
-        },
-      ])
-  )
+  return useSWRWithOptionalAuth<Message[]>(!!id ? `/v2/guilds/${id}/messages` : null)
 }
 
 export default useGuildMessages
