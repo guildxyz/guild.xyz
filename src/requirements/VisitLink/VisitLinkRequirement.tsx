@@ -1,4 +1,5 @@
-import { HStack, Icon, Stack, Text } from "@chakra-ui/react"
+import { Link as ChakraLink, HStack, Icon, Stack, Text } from "@chakra-ui/react"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -10,6 +11,7 @@ import {
 import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useAccess from "components/[guild]/hooks/useAccess"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import useUser from "components/[guild]/hooks/useUser"
 import Link from "components/common/Link"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -35,8 +37,10 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     ?.flatMap((role) => role.requirements)
     .find((req) => req.requirementId === requirementId)?.access
 
-  const showErrorToast = useShowErrorToast()
+  const isMember = useIsMember()
+  const openJoinModal = useOpenJoinModal()
 
+  const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
     onSuccess: () => mutateAccess(),
     onError: () => showErrorToast("Something went wrong"),
@@ -46,12 +50,20 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     ? VISIT_LINK_REGEX.exec(data.customName) ?? []
     : []
 
+  const chakraLinkprops: Pick<
+    ComponentProps<typeof ChakraLink>,
+    "colorScheme" | "onClick"
+  > = {
+    colorScheme: "blue",
+    onClick: () => openJoinModal(),
+  }
+
   const linkProps: ComponentProps<typeof Link> = {
     href: data.id,
     isExternal: true,
-    colorScheme: "blue",
     onClick: () => {
       if (!userId || hasAccess) return
+
       onSubmit({
         requirementId,
         id: data.id,
@@ -63,7 +75,13 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const Original = () => (
     <>
       {"Visit link: "}
-      <Link {...linkProps}>{data.id}</Link>
+      {isMember || hasAccess ? (
+        <Link {...chakraLinkprops} {...linkProps}>
+          {data.id}
+        </Link>
+      ) : (
+        <ChakraLink {...chakraLinkprops}>{data.id}</ChakraLink>
+      )}
     </>
   )
 
@@ -97,7 +115,13 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       {!!link ? (
         <Text as="span">
           {first}
-          <Link {...linkProps}>{link}</Link>
+          {isMember || hasAccess ? (
+            <Link {...chakraLinkprops} {...linkProps}>
+              {link}
+            </Link>
+          ) : (
+            <ChakraLink {...chakraLinkprops}>{link}</ChakraLink>
+          )}
           {second}
         </Text>
       ) : (
