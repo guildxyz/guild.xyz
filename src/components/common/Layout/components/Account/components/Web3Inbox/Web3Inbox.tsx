@@ -36,7 +36,6 @@ const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 const Web3Inbox = () => {
   const { address } = useAccount()
   const { isSubscribed } = useManageSubscription()
-  // const isSubscribed = false
   const { setAccount } = useW3iAccount()
 
   useEffect(() => {
