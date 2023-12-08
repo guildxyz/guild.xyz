@@ -4,6 +4,7 @@ import {
   Coins,
   CurrencyCircleDollar,
   ImageSquare,
+  Link,
   ListChecks,
   Robot,
   Wallet,
@@ -11,6 +12,7 @@ import {
 } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { RequirementFormProps } from "requirements"
+import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
@@ -25,7 +27,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ImageSquare,
     name: "NFT",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Nft/NftRequirement")
     ),
@@ -33,11 +34,12 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Nft/NftForm")
     ),
     types: ["ERC721", "ERC1155", "NOUNS"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: CurrencyCircleDollar,
     name: "Token",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Token/TokenRequirement")
     ),
@@ -45,11 +47,12 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Token/TokenForm")
     ),
     types: ["ERC20", "COIN"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: ListChecks,
     name: "Allowlist",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Allowlist/AllowlistRequirement")
     ),
@@ -57,6 +60,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Allowlist/AllowlistForm")
     ),
     types: ["ALLOWLIST"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: Coins,
@@ -72,7 +77,6 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wrench,
     name: "Contract query",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
     ),
@@ -80,6 +84,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/ContractState/ContractStateForm")
     ),
     types: ["CONTRACT"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: Wallet,
@@ -109,6 +115,7 @@ export const REQUIREMENTS_DATA = [
       "COVALENT_TX_COUNT",
       "COVALENT_TX_COUNT_RELATIVE",
     ],
+    isNegatable: true,
   },
   {
     icon: Robot,
@@ -120,6 +127,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Captcha/CaptchaForm")
     ),
     types: ["CAPTCHA"],
+    isNegatable: true,
   },
   {
     icon: GuildLogo,
@@ -137,6 +145,25 @@ export const REQUIREMENTS_DATA = [
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
     ],
+    isNegatable: true,
+  },
+  {
+    icon: Link,
+    name: "Visit link",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/VisitLink/VisitLinkRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/VisitLink/VisitLinkForm")
+    ),
+    types: ["LINK_VISIT"],
+    isCustomizable: true,
+    customNameRules: {
+      pattern: {
+        value: VISIT_LINK_REGEX,
+        message: "The label has to contain the link as [link title]",
+      },
+    },
   },
   {
     icon: platforms.EMAIL.icon,
@@ -148,6 +175,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Email/EmailForm")
     ),
     types: ["EMAIL", "EMAIL_VERIFIED", "EMAIL_DOMAIN"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/twitter.svg",
@@ -173,6 +201,7 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_ACCOUNT_AGE_RELATIVE",
     ],
     isPlatform: true,
+    isNegatable: true,
   },
   {
     icon: "/platforms/github.png",
@@ -192,6 +221,7 @@ export const REQUIREMENTS_DATA = [
       "GITHUB_COMMIT_COUNT_RELATIVE",
     ],
     isPlatform: true,
+    isNegatable: true,
   },
   {
     icon: "/platforms/discord.png",
@@ -210,6 +240,7 @@ export const REQUIREMENTS_DATA = [
       "DISCORD_MEMBER_SINCE",
     ],
     isPlatform: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/coinbase.png",
@@ -221,11 +252,11 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
     ),
     types: ["COINBASE_EAS_ATTESTED_BY"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/PolygonId/PolygonIdRequirement")
     ),
@@ -233,6 +264,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/PolygonId/PolygonIdForm")
     ),
     types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/gitcoin-passport.svg",
@@ -244,6 +277,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/GitcoinPassport/GitcoinPassportForm")
     ),
     types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/poap.svg",
@@ -255,6 +289,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Poap/PoapForm")
     ),
     types: ["POAP"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/gitpoap.svg",
@@ -266,11 +301,11 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/GitPoap/GitPoapForm")
     ),
     types: ["GITPOAP"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/eas.png",
     name: "EAS",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
     ),
@@ -278,6 +313,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/EthereumAttestation/EthereumAttestationForm")
     ),
     types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/farcaster.png",
@@ -297,6 +334,7 @@ export const REQUIREMENTS_DATA = [
       "FARCASTER_LIKE",
       "FARCASTER_RECAST",
     ],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/lens.png",
@@ -317,6 +355,7 @@ export const REQUIREMENTS_DATA = [
       "LENS_TOTAL_POSTS",
       "LENS_FOLLOWED_BY",
     ],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/galaxy.svg",
@@ -328,6 +367,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Galaxy/GalaxyForm")
     ),
     types: ["GALAXY", "GALAXY_PARTICIPATION"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/snapshot.png",
@@ -350,11 +390,11 @@ export const REQUIREMENTS_DATA = [
       "SNAPSHOT_PROPOSALS",
       "SNAPSHOT_MAJORITY_VOTES",
     ],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Mirror/MirrorRequirement")
     ),
@@ -362,6 +402,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Mirror/MirrorForm")
     ),
     types: ["MIRROR", "MIRROR_COLLECT"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/sound.png",
@@ -380,11 +422,11 @@ export const REQUIREMENTS_DATA = [
       "SOUND_TOP_COLLECTOR",
       "SOUND_NFTS",
     ],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/disco.png",
     name: "Disco",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Disco/DiscoRequirement")
     ),
@@ -392,6 +434,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Disco/DiscoForm")
     ),
     types: ["DISCO"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/unlock.png",
@@ -403,6 +447,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Unlock/UnlockForm")
     ),
     types: ["UNLOCK"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/juicebox.png",
@@ -414,11 +459,11 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Juicebox/JuiceboxForm")
     ),
     types: ["JUICEBOX"],
+    isNegatable: true,
   },
   {
     icon: "/walletLogos/fuel.svg",
     name: "Fuel",
-    fileNameBase: "Fuel",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Fuel/FuelRequirement")
     ),
@@ -426,6 +471,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Fuel/FuelForm")
     ),
     types: ["FUEL", "FUEL_BALANCE"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/sismo.svg",
@@ -437,6 +483,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Sismo/SismoForm")
     ),
     types: ["SISMO"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/noox.svg",
@@ -448,11 +495,11 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Noox/NooxForm")
     ),
     types: ["NOOX"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Yup/YupRequirement")
     ),
@@ -460,6 +507,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Yup/YupForm")
     ),
     types: ["YUP"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/rabbithole.png",
@@ -471,11 +520,11 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Rabbithole/RabbitholeForm")
     ),
     types: ["RABBITHOLE"],
+    isNegatable: true,
   },
   {
     icon: "/networkLogos/optimism.svg",
     name: "OP Attestation",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Optimism/OptimismRequirement")
     ),
@@ -483,11 +532,12 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Optimism/OptimismForm")
     ),
     types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rep3/Rep3Requirement")
     ),
@@ -495,6 +545,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Rep3/Rep3Form")
     ),
     types: ["REP3"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/shield.png",
@@ -512,6 +564,7 @@ export const REQUIREMENTS_DATA = [
       "SHIELD_INDIRECT_DEPOSITS",
       "SHIELD_TORNADO_CASH",
     ],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/parallel.png",
@@ -523,6 +576,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Parallel/ParallelForm")
     ),
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/kycdao.svg",
@@ -534,6 +588,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/KycDAO/KycDAOForm")
     ),
     types: ["KYC_DAO"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/otterspace.png",
@@ -545,11 +600,11 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Otterspace/OtterspaceForm")
     ),
     types: ["OTTERSPACE"],
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/orange.png",
     name: "Orange",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Orange/OrangeRequirement")
     ),
@@ -557,11 +612,12 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Orange/OrangeForm")
     ),
     types: ["ORANGE"],
+    isCustomizable: true,
+    isNegatable: true,
   },
   {
     icon: "/requirementLogos/cask.png",
     name: "Cask",
-    isCustomizable: true,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Cask/CaskRequirement")
     ),
@@ -569,6 +625,8 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Cask/CaskForm")
     ),
     types: ["CASK"],
+    isCustomizable: true,
+    isNegatable: true,
   },
 ] as const
 
