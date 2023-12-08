@@ -127,8 +127,7 @@ const SubscribeToMessages = () => {
   const isReady = useInitWeb3InboxClient({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     domain: "guild.xyz",
-    // isLimited: process.env.NODE_ENV === "production",
-    isLimited: false,
+    isLimited: process.env.NODE_ENV === "production",
   })
 
   const performSubscribe = async () => {
