@@ -8,7 +8,6 @@ import {
   PopoverContent,
   PopoverTrigger,
   Stack,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { ActivityLogProvider } from "components/[guild]/activity/ActivityLogContext"
 import useUser from "components/[guild]/hooks/useUser"
@@ -34,11 +33,6 @@ const Notifications = () => {
   )
 
   const { type } = useWeb3ConnectionManager()
-
-  const popoverCloseButtonColor = useColorModeValue(
-    "black!important",
-    "white!important"
-  )
 
   return (
     <Popover
@@ -88,7 +82,7 @@ const Notifications = () => {
             w="400px"
           >
             <PopoverArrow />
-            <PopoverCloseButton textColor={popoverCloseButtonColor} />
+            <PopoverCloseButton />
 
             <PopoverBody py={3} px={0}>
               <Stack spacing={0}>
