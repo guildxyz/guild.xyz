@@ -8,6 +8,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
 import React, { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
@@ -66,12 +67,14 @@ const Requirement = ({
           {requirement?.type === "LINK_VISIT"
             ? children
             : requirement?.data?.customName || children}
-          {!fieldRoot && (
+          {!fieldRoot ? (
             <Visibility
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
-          )}
+          ) : !childrenWrapper ? (
+            <SetVisibility entityType="requirement" />
+          ) : null}
         </ChildrenWrapper>
 
         <HStack wrap={"wrap"}>

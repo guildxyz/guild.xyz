@@ -2,21 +2,24 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  AlertTitle,
   ChakraProps,
   Stack,
 } from "@chakra-ui/react"
 
 type Props = {
   label: string
+  description?: string
 } & ChakraProps
 
-const ErrorAlert = ({ label, ...chakraProps }: Props) => (
+const ErrorAlert = ({ label, description, ...chakraProps }: Props) => (
   <Alert status="error" mb="6" pb="5" {...chakraProps}>
     <AlertIcon />
     <Stack>
-      <AlertDescription position="relative" top={1} fontWeight="semibold">
+      <AlertTitle position="relative" top={"4px"} fontWeight="semibold">
         {label}
-      </AlertDescription>
+      </AlertTitle>
+      {description && <AlertDescription>{description}</AlertDescription>}
     </Stack>
   </Alert>
 )

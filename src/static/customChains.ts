@@ -365,3 +365,44 @@ export const x1Testnet = /*#__PURE__*/ defineChain({
     },
   },
 })
+
+export const ontology = /*#__PURE__*/ defineChain({
+  id: 58,
+  name: "Ontology",
+  network: "ontology",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ONG",
+    symbol: "ONG",
+  },
+  rpcUrls: {
+    default: {
+      http: [
+        "https://dappnode1.ont.io:10339",
+        "https://dappnode2.ont.io:10339",
+        "https://dappnode3.ont.io:10339",
+        "https://dappnode4.ont.io:10339",
+      ],
+    },
+    public: {
+      http: [
+        "https://dappnode1.ont.io:10339",
+        "https://dappnode2.ont.io:10339",
+        "https://dappnode3.ont.io:10339",
+        "https://dappnode4.ont.io:10339",
+      ],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Ontology",
+      url: "https://explorer.ont.io/",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xce6292279bf688173b269df080e14407470a9e60",
+      blockCreated: 14244158,
+    },
+  },
+})

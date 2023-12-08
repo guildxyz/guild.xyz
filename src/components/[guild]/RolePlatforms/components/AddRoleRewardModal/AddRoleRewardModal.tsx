@@ -8,9 +8,9 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { ArrowLeft } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
@@ -68,7 +68,7 @@ const AddRoleRewardModal = () => {
             <>
               <SelectExistingPlatform onClose={onClose} />
               <Text fontWeight="bold" mb="3">
-                Add new platform
+                Add new reward
               </Text>
               <PlatformsGrid onSelection={setSelection} />
             </>
