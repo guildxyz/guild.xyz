@@ -31,7 +31,7 @@ import { Check, Question, Users } from "phosphor-react"
 import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
-import { Message as MessageType } from "./hooks/useMessages"
+import { Message as MessageType } from "./hooks/useGuildMessages"
 import useTargetedCount from "./hooks/useTargetedCount"
 
 const DISPLAYED_ROLES_COUNT = 3
@@ -229,7 +229,7 @@ const MessageSkeleton = () => (
   <Card p={6}>
     <Stack spacing={4} w="full">
       <Skeleton h={4} w={36} />
-      <SkeletonText noOfLines={3} skeletonHeight={4} spacing={2.5} />
+      <SkeletonText noOfLines={2} skeletonHeight={4} spacing={2.5} />
 
       <HStack justifyContent="space-between">
         <Skeleton w="40%" h={4} />
