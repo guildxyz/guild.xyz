@@ -10,7 +10,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
 import CrmTbody from "components/[guild]/crm/CRMTable/CrmTbody"
 import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
-import ExportMembers from "components/[guild]/crm/ExportMembers"
+import CrmMenu from "components/[guild]/crm/CrmMenu"
 import FilterByRoles from "components/[guild]/crm/FilterByRoles"
 import Identities from "components/[guild]/crm/Identities"
 import IdentitiesExpansionToggle from "components/[guild]/crm/IdentitiesExpansionToggle"
@@ -108,15 +108,30 @@ const GuildPage = (): JSX.Element => {
       {
         accessorKey: "roles",
         size: "auto" as any,
-        header: ({ column }) => (
-          <HStack w="full" justifyContent={"space-between"}>
-            <Text>{`Roles ${hasHiddenRoles ? "(hidden, public)" : ""}`}</Text>
-            <HStack spacing="0">
-              <FilterByRoles column={column} />
-              <OrderByColumn label="Number of roles" column={column} />
+        header: ({ column }) => {
+          const hiddenRolesSubColumn = column.columns.find(
+            (subColumn) => subColumn.id === "hiddenRoles"
+          )
+          const publicRolesSubColumn = column.columns.find(
+            (subColumn) => subColumn.id === "publicRoles"
+          )
+
+          return (
+            <HStack w="full" justifyContent={"space-between"}>
+              <Text>
+                {!hiddenRolesSubColumn?.getIsVisible()
+                  ? "Roles"
+                  : `Roles (hidden${
+                      publicRolesSubColumn.getIsVisible() ? ", public" : ""
+                    })`}
+              </Text>
+              <HStack spacing="0">
+                <FilterByRoles column={column} />
+                <OrderByColumn label="Number of roles" column={column} />
+              </HStack>
             </HStack>
-          </HStack>
-        ),
+          )
+        },
         columns: [
           ...(hasHiddenRoles
             ? [
@@ -209,10 +224,7 @@ const GuildPage = (): JSX.Element => {
         backgroundOffset={112}
         showFooter={false}
       >
-        <GuildTabs
-          activeTab="MEMBERS"
-          rightElement={<ExportMembers table={table} />}
-        />
+        <GuildTabs activeTab="MEMBERS" rightElement={<CrmMenu table={table} />} />
         {/* for debugging */}
         {/* {JSON.stringify(table.getState(), null, 2)} */}
         <NoPermissionToPageFallback>
