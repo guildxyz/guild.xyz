@@ -31,6 +31,7 @@ import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
+import CopyCWaaSBackupData from "./components/CopyCWaaSBackupData"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
@@ -44,7 +45,7 @@ const AccountModal = () => {
     disconnect,
   } = useWeb3ConnectionManager()
 
-  const { address: evmAddress } = useAccount()
+  const { address: evmAddress, connector } = useAccount()
 
   const chainId = useChainId()
 
@@ -154,6 +155,7 @@ const AccountModal = () => {
                     onClose={closeNetworkModal}
                   />
                 </Stack>
+                {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
                 <Tooltip label="Disconnect">
                   <IconButton
                     size="sm"
