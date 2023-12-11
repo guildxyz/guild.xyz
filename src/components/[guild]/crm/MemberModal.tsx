@@ -32,8 +32,8 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
     row.original
 
   const rolesColumn = row
-    .getVisibleCells()
-    .find((cell) => cell.column.id === "publicRoles")?.column?.parent
+    .getAllCells()
+    .find((cell) => cell.column.id === "publicRoles").column.parent
 
   const primaryAddress = addresses?.[0]
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
