@@ -28,6 +28,9 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import PolygonIdCardButton from "./PolygonId/PolygonIdCardButton"
+import PolygonIdCardMenu from "./PolygonId/PolygonIdCardMenu"
+import usePolygonIdCardProps from "./PolygonId/usePolygonIdCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
@@ -380,24 +383,31 @@ const platforms: Record<PlatformName, PlatformData> = {
   POLYGON_ID: {
     icon: Key,
     imageUrl: "/networkLogos/polygon.svg",
-    name: "PolygonID Proof",
-    colorScheme: "gray",
+    name: "PolygonID",
+    colorScheme: "purple",
     gatedEntity: "",
-    cardPropsHook: useUniqueTextCardProps,
-    cardButton: TextCardButton,
-    cardMenuComponent: UniqueTextCardMenu,
+    cardPropsHook: usePolygonIdCardProps,
+    cardButton: PolygonIdCardButton,
+    cardMenuComponent: PolygonIdCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: false,
-    PlatformPreview: dynamic(
-      () => import("platforms/components/UniqueTextPreview"),
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIdPanel"
+        ),
+      { ssr: false }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    RoleCardComponent: dynamic(
+      () => import("platforms/components/PolygonIdReward"),
       {
         ssr: false,
-        loading: () => <PlatformPreview isLoading={true} />,
       }
     ),
-    RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
-      ssr: false,
-    }),
   },
 }
 

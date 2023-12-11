@@ -73,12 +73,12 @@ const AddRewardButton = (): JSX.Element => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const goBack = () => {
-    if (step === "SELECT_ROLE") {
-      setStep("HOME")
+    if (step === "SELECT_ROLE" && selection !== "POLYGON_ID") {
       methods.reset(defaultValues)
     } else {
       setSelection(null)
     }
+    setStep("HOME")
   }
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
