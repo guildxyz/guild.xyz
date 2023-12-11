@@ -1,5 +1,5 @@
 import type { WalletUnlocked } from "@fuel-ts/wallet"
-import { useKeyPair } from "components/_app/KeyPairProvider"
+import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useFuel from "hooks/useFuel"
 import useLocalStorage from "hooks/useLocalStorage"
@@ -227,12 +227,12 @@ const useSubmitWithSign = <ResponseType>(
     forcePrompt: false,
   }
 ) => {
-  const { keyPair } = useKeyPair()
+  const { keyPair } = useUserPublic()
   return useSubmitWithSignWithParamKeyPair(fetch, {
     message,
     forcePrompt,
     ...options,
-    keyPair,
+    keyPair: keyPair?.keyPair,
   })
 }
 
@@ -242,7 +242,7 @@ type SignBaseProps = {
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
   msg?: string
-  ts: number
+  ts?: number
 }
 
 export type SignProps = SignBaseProps & {
@@ -311,7 +311,7 @@ export const sign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: SignProps): Promise<[string, Validation]> => {
-  const params = createMessageParams(address, ts, msg, payload)
+  const params = createMessageParams(address, ts ?? Date.now(), msg, payload)
   let sig = null
 
   if (!!keyPair && !forcePrompt) {

@@ -4,6 +4,7 @@ import {
   EditableInput,
   IconButton,
   Text,
+  Tooltip,
   useEditableControls,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
@@ -15,7 +16,10 @@ import {
   useRef,
   useState,
 } from "react"
-import { useController, useFormContext } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
+import REQUIREMENTS from "requirements"
+import parseFromObject from "utils/parseFromObject"
+import { useRequirementContext } from "./RequirementContext"
 
 const RequirementNameEditor = ({
   baseFieldPath,
@@ -27,7 +31,12 @@ const RequirementNameEditor = ({
 }>) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =
     useEditableControls()
-  const { resetField } = useFormContext()
+  const {
+    resetField,
+    formState: { errors },
+  } = useFormContext()
+
+  const customName = useWatch({ name: `${baseFieldPath}.data.customName` })
 
   if (isEditing)
     return (
@@ -45,21 +54,37 @@ const RequirementNameEditor = ({
           p={0}
           borderRadius={0}
         />
-        <IconButton
-          size="xs"
-          variant="ghost"
-          borderRadius={0}
-          aria-label="Edit"
-          icon={<Check />}
-          colorScheme={"green"}
-          {...getSubmitButtonProps()}
-        />
+
+        <Tooltip
+          label={
+            parseFromObject(errors, `${baseFieldPath}.data.customName`)?.message
+          }
+          isDisabled={
+            isEditing && !parseFromObject(errors, `${baseFieldPath}.data.customName`)
+          }
+          hasArrow
+        >
+          <IconButton
+            size="xs"
+            variant="ghost"
+            borderRadius={0}
+            aria-label="Edit"
+            icon={<Check />}
+            colorScheme={"green"}
+            {...getSubmitButtonProps()}
+            isDisabled={
+              isEditing &&
+              !!parseFromObject(errors, `${baseFieldPath}.data.customName`)
+            }
+          />
+        </Tooltip>
       </Box>
     )
 
   return (
     <Text wordBreak="break-word" ref={textRef}>
       {children}
+
       <IconButton
         size="xs"
         variant="ghost"
@@ -69,11 +94,18 @@ const RequirementNameEditor = ({
         icon={<PencilSimple />}
         color="gray"
         {...getEditButtonProps({
-          onClick: () =>
+          onClick: () => {
+            /**
+             * The "LINK_VISIT" requirement will have a custom value by default, with
+             * a special variable ([link title]) in it, so we don't want to reset it
+             * to textRef.current.textContent
+             */
+            if (!!customName) return
             resetField(`${baseFieldPath}.data.customName`, {
               defaultValue: textRef.current?.textContent,
               keepDirty: true,
-            }),
+            })
+          },
         })}
       />
       <SetVisibility entityType="requirement" fieldBase={baseFieldPath} mt={-0.5} />
@@ -85,16 +117,24 @@ const RequirementNameEditorWrapper = ({
   baseFieldPath,
   children,
 }: PropsWithChildren<{ baseFieldPath: string }>) => {
+  const { type } = useRequirementContext()
+
   const textRef = useRef<HTMLParagraphElement>(null)
   const [originalValue, setOriginalValue] = useState("")
-
   const { field } = useController({
     name: `${baseFieldPath}.data.customName`,
+    rules: REQUIREMENTS[type].customNameRules,
   })
 
   useEffect(() => {
-    if (!textRef.current || !!originalValue || !!field.value) return
-    setOriginalValue(textRef.current.textContent)
+    if (!textRef.current) return
+
+    if (!!field.value && !originalValue) {
+      setOriginalValue(field.value)
+      return
+    } else {
+      setOriginalValue(textRef.current.textContent)
+    }
   }, [textRef.current, originalValue, field.value])
 
   const { resetField } = useFormContext()
@@ -102,7 +142,7 @@ const RequirementNameEditorWrapper = ({
   const conditionallyResetToOriginal = (value) => {
     if (value === originalValue || value.trim() === "") {
       resetField(`${baseFieldPath}.data.customName`, {
-        defaultValue: "",
+        defaultValue: originalValue,
         keepDirty: true,
       })
     }

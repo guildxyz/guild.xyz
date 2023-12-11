@@ -1,11 +1,4 @@
-import {
-  CloseButton,
-  SimpleGrid,
-  Spacer,
-  Text,
-  useBreakpointValue,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { CloseButton, SimpleGrid, Spacer, useColorModeValue } from "@chakra-ui/react"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
@@ -39,18 +32,12 @@ const RolePlatforms = ({ roleId }: Props) => {
   const fields = useWatch({ name: "rolePlatforms" })
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
-  const rewardsLabel = useBreakpointValue({
-    sm: "/ platform accesses",
-  })
 
   return (
     <Section
       title="Rewards"
       titleRightElement={
         <>
-          <Text as="span" fontSize="sm" colorScheme={"gray"}>
-            {rewardsLabel}
-          </Text>
           <Spacer />
           <Button
             variant="ghost"

@@ -54,7 +54,8 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
             ],
             themeVariables: {
               "--wcm-z-index": "10001",
-            },
+              "--w3m-z-index": "10001",
+            } as any, // casting it, so `--wcm-z-index` is accepted
           },
         },
       }),

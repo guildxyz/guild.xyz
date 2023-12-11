@@ -30,7 +30,7 @@ const useRemovePlatform = ({ onSuccess }: any) => {
     forcePrompt: true,
     onSuccess: () => {
       toast({
-        title: `Platform removed!`,
+        title: "Reward removed!",
         status: "success",
       })
       remove(index)

@@ -32,7 +32,7 @@ const SelectExistingPlatform = ({ onClose }) => {
   return (
     <>
       <Text fontWeight={"bold"} mb="3">
-        Give access to existing platform
+        Give access to existing reward
       </Text>
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>

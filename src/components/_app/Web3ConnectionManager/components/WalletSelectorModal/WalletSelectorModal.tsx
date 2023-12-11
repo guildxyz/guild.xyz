@@ -14,13 +14,15 @@ import {
 import MetaMaskOnboarding from "@metamask/onboarding"
 
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import { useKeyPair } from "components/_app/KeyPairProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error } from "components/common/Error"
+import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useFuel from "hooks/useFuel"
+import useSetKeyPair from "hooks/useSetKeyPair"
+import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
@@ -32,7 +34,7 @@ import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
-import useShouldLinkToUser from "./hooks/useShouldLinkToUser"
+import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
 
 type Props = {
@@ -56,6 +58,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
   const { connector } = useAccount()
 
+  const [addressLinkParams] = useAtom(addressLinkParamsAtom)
+  const isAddressLink = !!addressLinkParams?.userId
+
   const { captchaVerifiedSince } = useUserPublic()
 
   // initialize metamask onboarding
@@ -71,7 +76,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { ready, set, keyPair } = useKeyPair()
+  const { keyPair, id, error: publicUserError } = useUserPublic()
+  const set = useSetKeyPair()
 
   useEffect(() => {
     if (keyPair) onClose()
@@ -81,8 +87,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   useEffect(() => {
     if (
-      ready &&
-      !keyPair &&
+      ((!!id && !keyPair) || !!publicUserError) &&
       router.isReady &&
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
@@ -92,17 +97,20 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, ready, router])
+  }, [keyPair, router, id, publicUserError])
 
-  const shouldLinkToUser = useShouldLinkToUser()
-
-  const isConnectedAndKeyPairReady = isWeb3Connected && ready
+  const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
   const { windowFuel } = useFuel()
 
   const recaptchaRef = useRef<ReCAPTCHA>()
+
+  const linkAddress = useLinkAddress()
+
+  const shouldShowVerify =
+    isWeb3Connected && (!!publicUserError || (!!id && !keyPair))
 
   return (
     <Modal
@@ -148,7 +156,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             />
           </Box>
           <Text>
-            {shouldLinkToUser
+            {isAddressLink
               ? "Link address"
               : isDelegateConnection
               ? "Connect hot wallet"
@@ -158,9 +166,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         <ModalCloseButton />
         <ModalBody>
           <Error
-            {...(set.error
+            {...(set.error || linkAddress.error
               ? {
-                  error: set.error,
+                  error: set.error ?? linkAddress.error,
                   processError: (err: any) => {
                     if (err?.code === "ACTION_REJECTED") {
                       return {
@@ -182,7 +190,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 }
               : { error, processError: processConnectionError })}
           />
-          {isConnectedAndKeyPairReady && !keyPair && (
+          {shouldShowVerify && (
             <Text mb="6" animation={"fadeIn .3s .1s both"}>
               Sign message to verify that you're the owner of this address.
             </Text>
@@ -220,7 +228,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
           )}
 
-          {isConnectedAndKeyPairReady && !keyPair && (
+          {shouldShowVerify && (
             <>
               <ReCAPTCHA
                 ref={recaptchaRef}
@@ -233,27 +241,21 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   size="xl"
                   mb="4"
                   colorScheme={"green"}
-                  onClick={async () => {
-                    const token =
-                      !recaptchaRef.current || !!captchaVerifiedSince
-                        ? undefined
-                        : await recaptchaRef.current.executeAsync()
-
-                    if (token) {
-                      recaptchaRef.current.reset()
+                  onClick={() => {
+                    if (isAddressLink) {
+                      return linkAddress.onSubmit(addressLinkParams)
                     }
-
-                    return set.onSubmit(shouldLinkToUser, undefined, token)
+                    return set.onSubmit()
                   }}
-                  isLoading={set.isLoading || !ready}
-                  isDisabled={!ready}
-                  loadingText={
-                    !ready
-                      ? "Looking for keypairs"
-                      : set.signLoadingText || "Check your wallet"
+                  isLoading={
+                    linkAddress.isLoading ||
+                    set.isLoading ||
+                    (!id && !publicUserError)
                   }
+                  isDisabled={!id && !publicUserError}
+                  loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
                 >
-                  {shouldLinkToUser ? "Link address" : "Verify address"}
+                  {isAddressLink ? "Link address" : "Verify address"}
                 </ModalButton>
               </Box>
             </>

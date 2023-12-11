@@ -17,7 +17,7 @@ const valueCards = [
     image: "/landing/ghost.svg",
   },
   {
-    link: "https://github.com/agoraxyz/guild.xyz",
+    link: "https://github.com/guildxyz/guild.xyz",
     title: "Open-source",
     content: (
       <ValueText>
