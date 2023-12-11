@@ -35,10 +35,98 @@ import { Visibility } from "types"
 const columnHelper = createColumnHelper<Member>()
 const getRowId = (row: Member) => `user_${row.userId}`
 
+const columns = [
+  {
+    id: "select",
+    size: 30,
+    header: ({ table }) => (
+      <Checkbox
+        {...{
+          isChecked: table.getIsAllRowsSelected(),
+          isIndeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+        colorScheme="primary"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        {...{
+          isChecked: row.getIsSelected(),
+          isDisabled: !row.getCanSelect(),
+          isIndeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }}
+        colorScheme="primary"
+        mt="2px"
+      />
+    ),
+  },
+  columnHelper.accessor((row) => row, {
+    id: "identity",
+    size: 210,
+    cell: (info) => <Identities member={info.getValue()} />,
+    header: ({ column }) => (
+      <HStack spacing="0">
+        <IdentitiesSearch column={column} />
+        <IdentitiesExpansionToggle />
+      </HStack>
+    ),
+  }),
+  {
+    accessorKey: "roles",
+    size: "auto" as any,
+    header: ({ column }) => {
+      const [hiddenRolesSubColumn, publicRolesSubColumn] = column.columns
+
+      return (
+        <HStack w="full" justifyContent={"space-between"}>
+          <Text>
+            {!hiddenRolesSubColumn?.getIsVisible()
+              ? "Roles"
+              : `Roles (hidden${
+                  publicRolesSubColumn.getIsVisible() ? ", public" : ""
+                })`}
+          </Text>
+          <HStack spacing="0">
+            <FilterByRoles column={column} />
+            <OrderByColumn label="Number of roles" column={column} />
+          </HStack>
+        </HStack>
+      )
+    },
+    columns: [
+      {
+        id: "hiddenRoles",
+        accessorFn: (row) => row.roles.hidden,
+        cell: (info) => (
+          <RoleTags roles={info.getValue()} column={info.column.parent} />
+        ),
+      },
+      {
+        id: "publicRoles",
+        accessorFn: (row) => row.roles.public,
+        cell: (info) => (
+          <RoleTags roles={info.getValue()} column={info.column.parent} />
+        ),
+      },
+    ],
+  },
+  columnHelper.accessor("joinedAt", {
+    size: 140,
+    header: ({ column }) => (
+      <HStack w="full" justifyContent={"space-between"}>
+        <Text>Joined at</Text>
+        <OrderByColumn label="Join date" column={column} />
+      </HStack>
+    ),
+    cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+  }),
+]
+
 const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, imageUrl } = useGuild()
-  const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
 
   const router = useRouter()
   const [columnFilters, setColumnFilters] = useState(() =>
@@ -65,107 +153,6 @@ const GuildPage = (): JSX.Element => {
     window.history.pushState("", "", `?${queryString}`)
   }, [queryString])
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
-
-  const columns = useMemo(
-    () => [
-      {
-        id: "select",
-        size: 30,
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              isChecked: table.getIsAllRowsSelected(),
-              isIndeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-            colorScheme="primary"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              isChecked: row.getIsSelected(),
-              isDisabled: !row.getCanSelect(),
-              isIndeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler(),
-            }}
-            colorScheme="primary"
-            mt="2px"
-          />
-        ),
-      },
-      columnHelper.accessor((row) => row, {
-        id: "identity",
-        size: 210,
-        cell: (info) => <Identities member={info.getValue()} />,
-        header: ({ column }) => (
-          <HStack spacing="0">
-            <IdentitiesSearch column={column} />
-            <IdentitiesExpansionToggle />
-          </HStack>
-        ),
-      }),
-      {
-        accessorKey: "roles",
-        size: "auto" as any,
-        header: ({ column }) => {
-          const hiddenRolesSubColumn = column.columns.find(
-            (subColumn) => subColumn.id === "hiddenRoles"
-          )
-          const publicRolesSubColumn = column.columns.find(
-            (subColumn) => subColumn.id === "publicRoles"
-          )
-
-          return (
-            <HStack w="full" justifyContent={"space-between"}>
-              <Text>
-                {!hiddenRolesSubColumn?.getIsVisible()
-                  ? "Roles"
-                  : `Roles (hidden${
-                      publicRolesSubColumn.getIsVisible() ? ", public" : ""
-                    })`}
-              </Text>
-              <HStack spacing="0">
-                <FilterByRoles column={column} />
-                <OrderByColumn label="Number of roles" column={column} />
-              </HStack>
-            </HStack>
-          )
-        },
-        columns: [
-          ...(hasHiddenRoles
-            ? [
-                {
-                  id: "hiddenRoles",
-                  accessorFn: (row) => row.roles.hidden,
-                  cell: (info) => (
-                    <RoleTags roles={info.getValue()} column={info.column.parent} />
-                  ),
-                },
-              ]
-            : []),
-          {
-            id: "publicRoles",
-            accessorFn: (row) => row.roles.public,
-            cell: (info) => (
-              <RoleTags roles={info.getValue()} column={info.column.parent} />
-            ),
-          },
-        ],
-      },
-      columnHelper.accessor("joinedAt", {
-        size: 140,
-        header: ({ column }) => (
-          <HStack w="full" justifyContent={"space-between"}>
-            <Text>Joined at</Text>
-            <OrderByColumn label="Join date" column={column} />
-          </HStack>
-        ),
-        cell: (info) => new Date(info.getValue()).toLocaleDateString(),
-      }),
-    ],
-    [hasHiddenRoles]
-  )
 
   // TODO: keep row selection when the data changes. Right now we just reset the selection
   const handleSetColumnFilters = (props) => {
@@ -199,6 +186,21 @@ const GuildPage = (): JSX.Element => {
     getCoreRowModel: getCoreRowModel(),
     getRowId,
   })
+
+  const hasHiddenRoles = roles?.some((role) => role.visibility === Visibility.HIDDEN)
+  useEffect(() => {
+    const hiddenRolesColumn = table
+      .getAllLeafColumns()
+      .find((col) => col.id === "hiddenRoles")
+
+    if (hasHiddenRoles) {
+      hiddenRolesColumn.columnDef.enableHiding = true
+      hiddenRolesColumn.toggleVisibility(true)
+    } else {
+      hiddenRolesColumn.toggleVisibility(false)
+      hiddenRolesColumn.columnDef.enableHiding = false
+    }
+  }, [hasHiddenRoles])
 
   return (
     <>
