@@ -9,6 +9,7 @@ on:
 jobs:
   cypress-run:
     runs-on: self-hosted
+    container: cypress/browsers
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -20,8 +21,8 @@ jobs:
           cache: "npm"
 
       # https://docs.cypress.io/guides/continuous-integration/introduction#Dependencies
-      - name: Install dependencies
-        run: sudo pacman --noconfirm -Syu gtk2 gtk3 libnotify dconf nss xscreensaver alsa-lib libxtst libxss xorg-xauth xorg-server-xvfb
+      # - name: Install dependencies
+      #  run: apt update -qq && apt install -y gtk2 gtk3 libnotify dconf nss xscreensaver alsa-lib libxtst libxss xorg-xauth xorg-server-xvfb
 
       - name: Restore build cache
         id: restore-build-cache
