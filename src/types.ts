@@ -565,6 +565,7 @@ export enum PlatformType {
   "TWITTER_V1" = 8,
   "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
+  "POLYGON_ID" = 12,
 }
 
 type WalletConnectConnectionData = {
