@@ -1,27 +1,29 @@
-import { Spinner, Text, Tooltip } from "@chakra-ui/react"
+import { Icon, Spinner, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+import AvailibiltyTags, {
+  getTimeDiff,
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
-import { ArrowSquareOut } from "phosphor-react"
-import useMintPolygonIdProof, {
-  MintPolygonIdProofModal,
-} from "platforms/PolygonId/hooks/useMintPolygonIdProof"
+import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { MintPolygonIdProofModal } from "platforms/PolygonId/components/MintPolygonIdProofModal"
 import platforms from "platforms/platforms"
+import { useMemo } from "react"
 import { PlatformType } from "types"
+import { useAccount } from "wagmi"
 
 const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const {
-    isLoading,
-    roles,
-    modalProps: { isOpen, onOpen, onClose },
-  } = useMintPolygonIdProof()
-  /* const { roles } = useGuild()
+  const { roles } = useGuild()
   const role = roles.find((r) =>
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
@@ -55,7 +57,7 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
         }
 
       return {
-        tooltipLabel: label,
+        tooltipLabel: "Mint",
         buttonProps: {},
       }
     }
@@ -74,54 +76,37 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected, platform])*/
-
-  const state = {
-    tooltipLabel: "Mint proofs",
-  }
+  }, [isMember, hasAccess, isConnected, platform])
 
   return (
     <>
       <RewardDisplay
         icon={
-          isLoading ? (
-            <Spinner boxSize={6} />
-          ) : (
-            <RewardIcon
-              rolePlatformId={platform.id}
-              guildPlatform={platform?.guildPlatform}
-              withMotionImg={withMotionImg}
-            />
-          )
+          <RewardIcon
+            rolePlatformId={platform.id}
+            guildPlatform={platform?.guildPlatform}
+            withMotionImg={withMotionImg}
+          />
         }
         label={
-          isLoading ? (
-            <Text opacity={0.5}>Loading reward...</Text>
-          ) : (
-            <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
-              {`Mint: `}
-              <Button
-                variant="link"
-                rightIcon={false ? <Spinner boxSize="1em" /> : <ArrowSquareOut />}
-                iconSpacing="1"
-                maxW="full"
-                onClick={onOpen}
-              >
-                {platforms[PlatformType[platformId]].name} proof
-              </Button>
-            </Tooltip>
-          )
+          <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
+            {`Mint: `}
+            <Button
+              variant="link"
+              rightIcon={false ? <Spinner boxSize="1em" /> : <ArrowSquareOut />}
+              iconSpacing="1"
+              maxW="full"
+              onClick={onOpen}
+            >
+              {platforms[PlatformType[platformId]].name} proof
+            </Button>
+          </Tooltip>
         }
       >
         <AvailibiltyTags rolePlatform={platform} />
       </RewardDisplay>
 
-      <MintPolygonIdProofModal
-        isOpen={isOpen}
-        onClose={onClose}
-        isLoading={isLoading}
-        roles={roles}
-      />
+      <MintPolygonIdProofModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

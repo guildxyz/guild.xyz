@@ -1,25 +1,21 @@
+import { useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { GuildPlatform } from "types"
-import useMintPolygonIdProof, {
-  MintPolygonIdProofModal,
-} from "./hooks/useMintPolygonIdProof"
+import { MintPolygonIdProofModal } from "./components/MintPolygonIdProofModal"
 
 type Props = {
   platform: GuildPlatform
 }
 
 const PolygonIdCardButton = ({ platform }: Props) => {
-  const {
-    modalProps: { isOpen, onClose, onOpen },
-    roles,
-  } = useMintPolygonIdProof()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
       <Button onClick={onOpen} w="full" colorScheme="purple">
         Mint PolygonID Proofs
       </Button>
-      <MintPolygonIdProofModal isOpen={isOpen} onClose={onClose} roles={roles} />
+      <MintPolygonIdProofModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
