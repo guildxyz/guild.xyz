@@ -20,7 +20,7 @@ import fetcher from "utils/fetcher"
 
 const NoDID = () => {
   const { id } = useUser()
-  const connectPolygonId = useSubmitWithSign(
+  const { isLoading, onSubmit, error } = useSubmitWithSign(
     () => fetcher("/v1/polygon-id/connect", { method: "POST" }),
     {
       onSuccess: () => {
@@ -38,14 +38,10 @@ const NoDID = () => {
   const DID = useWatch({ name: "did", control })
 
   return (
-    <form
-      onSubmit={handleSubmit(({ did }) =>
-        connectPolygonId.onSubmit({ did, userId: id })
-      )}
-    >
+    <>
       <ModalHeader pb={0}>Connect PolygonID</ModalHeader>
       <ModalBody pt={8}>
-        {connectPolygonId.error && (
+        {error && (
           <Alert status="error" pb={5} alignItems={"center"} mb={5}>
             <AlertIcon />
             <Stack>
@@ -75,14 +71,14 @@ const NoDID = () => {
           colorScheme="green"
           mt={8}
           ml="auto"
-          type="submit"
-          isLoading={connectPolygonId.isLoading}
-          loadingText={"connecting..."}
+          isLoading={isLoading}
+          loadingText={"Connecting..."}
+          onClick={handleSubmit(({ did }) => onSubmit({ did, userId: id }))}
         >
           Connect
         </Button>
       </ModalBody>
-    </form>
+    </>
   )
 }
 

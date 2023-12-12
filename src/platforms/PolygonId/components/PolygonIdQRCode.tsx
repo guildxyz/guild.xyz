@@ -96,7 +96,9 @@ const PolygonIdQRCode = ({ role, goBack }: Props) => {
           {claim.error || qr.error ? (
             <ErrorAlert
               label={
-                qr.error ? "Couldn't generate QR code" : "Couldn't mint the proof"
+                qr.error
+                  ? "Couldn't generate QR code"
+                  : "Couldn't mint PolygonID proof"
               }
             />
           ) : claim.isLoading || qr.isLoading ? (
@@ -125,8 +127,7 @@ const PolygonIdQRCode = ({ role, goBack }: Props) => {
                 Generate new QR code
               </Button>
               <Text mt="10" textAlign="center">
-                Scan with your Polygon ID app! The modal will automatically close on
-                successful connect
+                Scan with your Polygon ID app!
               </Text>
             </>
           )}
