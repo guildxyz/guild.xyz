@@ -73,7 +73,7 @@ const Requirement = ({
               ml="1"
             />
           ) : !childrenWrapper ? (
-            <SetVisibility entityType="requirement" />
+            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
           ) : null}
         </ChildrenWrapper>
 
