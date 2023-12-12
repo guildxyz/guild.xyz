@@ -73,6 +73,8 @@ type PlatformData<
     info?: string | JSX.Element
     link?: string
   }
+  // this flag shows that the AddPlatformPanel has no user interaction and just does automated setups.
+  autoPlatformSetup?: boolean
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
@@ -391,6 +393,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: PolygonIdCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: false,
+    autoPlatformSetup: true,
     AddPlatformPanel: dynamic(
       () =>
         import(

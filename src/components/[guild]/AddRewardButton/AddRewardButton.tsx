@@ -73,7 +73,7 @@ const AddRewardButton = (): JSX.Element => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const goBack = () => {
-    if (step === "SELECT_ROLE" && selection !== "POLYGON_ID") {
+    if (step === "SELECT_ROLE" && !platforms[selection].autoPlatformSetup) {
       methods.reset(defaultValues)
     } else {
       setSelection(null)
