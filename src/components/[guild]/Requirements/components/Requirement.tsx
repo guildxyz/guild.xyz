@@ -1,11 +1,6 @@
 import {
   Box,
   HStack,
-  Icon,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  Portal,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -15,13 +10,12 @@ import {
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
-import { CaretDown } from "phosphor-react"
 import React, { PropsWithChildren } from "react"
 import { Visibility as VisibilityType } from "types"
-import { RequirementButton } from "./RequirementButton"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
+import ViewOriginalPopover from "./ViewOriginalPopover"
 
 export type RequirementProps = PropsWithChildren<{
   fieldRoot?: string
@@ -70,45 +64,38 @@ const Requirement = ({
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
         <ChildrenWrapper {...wrapperProps} display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-          {requirement?.data?.customName || children}
+          {requirement?.type === "LINK_VISIT"
+            ? children
+            : requirement?.data?.customName || children}
           {!fieldRoot ? (
             <Visibility
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
           ) : !childrenWrapper ? (
-            <SetVisibility entityType="requirement" />
+            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
           ) : null}
         </ChildrenWrapper>
 
         <HStack wrap={"wrap"}>
           {showViewOriginal && (
-            <Popover placement="bottom-start">
-              <PopoverTrigger>
-                <RequirementButton rightIcon={<Icon as={CaretDown} />}>
-                  View original
-                </RequirementButton>
-              </PopoverTrigger>
-              <Portal>
-                <PopoverContent w="max-content" maxWidth={"100vw"}>
-                  <HStack p={3} gap={4}>
-                    <RequirementImageCircle isImageLoading={isImageLoading}>
-                      <RequirementImage image={image} />
-                    </RequirementImageCircle>
-                    <Stack
-                      direction={{ base: "column", md: "row" }}
-                      alignItems={{ base: "flex-start", md: "center" }}
-                      spacing={{ base: 2, md: 5 }}
-                    >
-                      <Text wordBreak="break-word" flexGrow={1}>
-                        {children}
-                      </Text>
-                      {!!fieldRoot && <ResetRequirementButton />}
-                    </Stack>
-                  </HStack>
-                </PopoverContent>
-              </Portal>
-            </Popover>
+            <ViewOriginalPopover>
+              <HStack p={3} gap={4}>
+                <RequirementImageCircle isImageLoading={isImageLoading}>
+                  <RequirementImage image={image} />
+                </RequirementImageCircle>
+                <Stack
+                  direction={{ base: "column", md: "row" }}
+                  alignItems={{ base: "flex-start", md: "center" }}
+                  spacing={{ base: 2, md: 5 }}
+                >
+                  <Text wordBreak="break-word" flexGrow={1}>
+                    {children}
+                  </Text>
+                  {!!fieldRoot && <ResetRequirementButton />}
+                </Stack>
+              </HStack>
+            </ViewOriginalPopover>
           )}
           {footer}
         </HStack>

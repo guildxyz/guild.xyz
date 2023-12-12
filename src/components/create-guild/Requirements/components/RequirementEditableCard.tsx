@@ -61,9 +61,7 @@ const RequirementEditableCard = ({
 
   const isCustomizable = REQUIREMENTS[type]?.isCustomizable
 
-  const isNameChanged = formState.dirtyFields.requirements?.[index]
-  const showViewOriginal =
-    (field?.data?.customName && isNameChanged) || field?.data?.customImage
+  const showViewOriginal = field?.data?.customName || field?.data?.customImage
 
   const {
     onSubmit: onDeleteRequirement,
@@ -217,7 +215,9 @@ const RequirementEditableCard = ({
             />
             <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
             <ModalBody>
-              <IsNegatedPicker baseFieldPath={``} />
+              {REQUIREMENTS[type].isNegatable && (
+                <IsNegatedPicker baseFieldPath={``} />
+              )}
               <FormComponent baseFieldPath={``} field={field} />
             </ModalBody>
             <ModalFooter gap="3">

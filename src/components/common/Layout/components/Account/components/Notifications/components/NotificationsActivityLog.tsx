@@ -2,12 +2,6 @@ import {
   Divider,
   HStack,
   Icon,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
   Skeleton,
   SkeletonCircle,
   Stack,
@@ -16,87 +10,21 @@ import {
 import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityLogAction/ActivityLogActionContext"
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
 import ActionLabel from "components/[guild]/activity/ActivityLogAction/components/ActionLabel"
-import {
-  ActivityLogProvider,
-  useActivityLog,
-} from "components/[guild]/activity/ActivityLogContext"
-import useUser from "components/[guild]/hooks/useUser"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import LinkButton from "components/common/LinkButton"
-import { ArrowRight, Bell } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
-import AccountButton from "./AccountButton"
 
-const VIEWPORT_GAP_PX = 8
+const SHOWN_ACTIONS_COUNT = 3
 
-const UserActivityLogPopover = () => {
-  const { id } = useUser()
-  const { captureEvent } = usePostHogContext()
-
-  return (
-    <Popover
-      placement="bottom"
-      isLazy
-      strategy="absolute"
-      modifiers={[
-        { name: "preventOverflow", options: { padding: VIEWPORT_GAP_PX } },
-      ]}
-    >
-      {({ isOpen }) => (
-        <>
-          <PopoverTrigger>
-            <AccountButton
-              aria-label="Activity log"
-              onClick={() => {
-                if (isOpen) return
-                captureEvent("opened UserActivityLogPopover")
-              }}
-            >
-              <Icon as={Bell} />
-            </AccountButton>
-          </PopoverTrigger>
-
-          <PopoverContent
-            minW="none"
-            maxW={`calc(100vw - ${2 * VIEWPORT_GAP_PX}px)`}
-            w="400px"
-          >
-            <PopoverArrow />
-
-            <PopoverHeader border="0" pt="3" pb="1" px={4}>
-              <Text
-                fontSize="xs"
-                fontWeight="bold"
-                textTransform="uppercase"
-                colorScheme="gray"
-              >
-                Recent activity
-              </Text>
-            </PopoverHeader>
-            <PopoverBody px={4} pt="0" pb="3">
-              <ActivityLogProvider
-                userId={id}
-                withSearchParams={false}
-                isInfinite={false}
-              >
-                <UserActivityLog />
-              </ActivityLogProvider>
-            </PopoverBody>
-          </PopoverContent>
-        </>
-      )}
-    </Popover>
-  )
-}
-
-const UserActivityLog = (): JSX.Element => {
+const NotificationsActivityLog = (): JSX.Element => {
   const { data, isValidating } = useActivityLog()
 
   return (
     <>
       <Stack minW="xs" spacing={0.5} divider={<Divider />}>
         {!data || isValidating ? (
-          [...Array(5)].map((_, i) => (
+          [...Array(SHOWN_ACTIONS_COUNT)].map((_, i) => (
             <HStack key={i} spacing={4} py={4}>
               <SkeletonCircle boxSize={8} />
               <Stack spacing={1}>
@@ -111,7 +39,7 @@ const UserActivityLog = (): JSX.Element => {
             <Text>No actions yet</Text>
           </HStack>
         ) : (
-          data.entries.slice(0, 5)?.map((action) => (
+          data.entries.slice(0, SHOWN_ACTIONS_COUNT)?.map((action) => (
             <ActivityLogActionProvider key={action.id} action={action}>
               <HStack spacing={4} py={4} pl="1">
                 <ActionIcon size={6} />
@@ -146,4 +74,4 @@ const UserActivityLog = (): JSX.Element => {
   )
 }
 
-export default UserActivityLogPopover
+export default NotificationsActivityLog
