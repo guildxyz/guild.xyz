@@ -5,9 +5,7 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailibiltyTags, {
-  getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -20,7 +18,7 @@ import { PlatformType } from "types"
 import { useAccount } from "wagmi"
 
 const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
-  const { platformId, platformGuildData } = platform.guildPlatform
+  const { platformId } = platform.guildPlatform
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { roles } = useGuild()
@@ -29,33 +27,12 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
   )
 
   const isMember = useIsMember()
-  const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
+  const { hasAccess } = useAccess(role.id)
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const state = useMemo(() => {
     if (isMember && hasAccess) {
-      const startTimeDiff = getTimeDiff(platform?.startTime)
-      const endTimeDiff = getTimeDiff(platform?.endTime)
-
-      if (
-        startTimeDiff > 0 ||
-        endTimeDiff < 0 ||
-        (typeof platform?.capacity === "number" &&
-          platform?.capacity === platform?.claimedCount)
-      )
-        return {
-          tooltipLabel:
-            platform?.capacity === platform?.claimedCount
-              ? "All available rewards have already been claimed"
-              : startTimeDiff > 0
-              ? "Claim hasn't started yet"
-              : "Claim already ended",
-          buttonProps: {
-            isDisabled: true,
-          },
-        }
-
       return {
         tooltipLabel: "Mint",
         buttonProps: {},
