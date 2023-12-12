@@ -37,7 +37,10 @@ const CustomizeViewModal = ({ isOpen, onClose, table }: Props) => {
 
   const setTableOrder = () => {
     const newOrder = transformToTableOrder(localOrder)
-    // waiting for the animation to finish so the rerender doesn't cause a visible freeze
+    /**
+     * Waiting for the animation to finish so the rerender doesn't cause a visible
+     * freeze (onAnimationComplete doesn't work on Reorder.Item)
+     */
     setTimeout(() => {
       table.setColumnOrder(newOrder)
     }, 1000)
