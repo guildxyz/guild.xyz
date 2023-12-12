@@ -2,6 +2,7 @@ import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
 import dynamic from "next/dynamic"
@@ -10,6 +11,12 @@ import { CircleWavyCheck, Question } from "phosphor-react"
 const DynamicMintGuildPin = dynamic(
   () =>
     import("components/[guild]/Requirements/components/GuildCheckout/MintGuildPin")
+)
+const DynamicMintFuelGuildPin = dynamic(
+  () =>
+    import(
+      "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/MintFuelGuildPin"
+    )
 )
 
 const GuildPinRewardCard = () => {
@@ -20,6 +27,8 @@ const GuildPinRewardCard = () => {
   const { guildPin } = useGuild()
 
   const { isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
+
+  const { type } = useWeb3ConnectionManager()
 
   return (
     <CardMotionWrapper>
@@ -58,9 +67,12 @@ const GuildPinRewardCard = () => {
           opacity: "0.07",
         }}
       >
-        {(!(isInvalidImage || isTooSmallImage) || isAdmin) && (
-          <DynamicMintGuildPin />
-        )}
+        {(!(isInvalidImage || isTooSmallImage) || isAdmin) &&
+          (isInvalidImage || isTooSmallImage || guildPin?.chain !== "FUEL" ? (
+            <DynamicMintGuildPin />
+          ) : (
+            <DynamicMintFuelGuildPin />
+          ))}
       </RewardCard>
     </CardMotionWrapper>
   )
