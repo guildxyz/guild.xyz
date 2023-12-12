@@ -9,14 +9,14 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { FormProvider, useForm } from "react-hook-form"
-import useSendJoin from "../hooks/useSendJoin"
 import { SummonMembersForm } from "../SummonMembers"
+import useSendJoin from "../hooks/useSendJoin"
 import EntryChannel from "./EntryChannel"
 import PanelBody from "./PanelBody"
 import PanelButton from "./PanelButton"
@@ -91,7 +91,11 @@ const SendDiscordJoinButtonModal = ({
           </Button>
           <Button
             colorScheme="green"
-            onClick={methods.handleSubmit(onSubmit)}
+            onClick={() => {
+              console.log("ph event: 'Send Discord join button' was sended")
+
+              methods.handleSubmit(onSubmit)()
+            }}
             isLoading={isLoading}
             loadingText={"Sending"}
             isDisabled={isLoading}

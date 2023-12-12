@@ -36,6 +36,8 @@ const useCreateGuild = () => {
     onSuccess: (response_) => {
       triggerConfetti()
 
+      console.log("ph event: Guild successfully created")
+
       yourGuilds.mutate(
         (prev) => [
           ...(prev ?? []),

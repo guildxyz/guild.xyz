@@ -54,7 +54,14 @@ const SummonMembers = () => {
         join!
       </Text>
       <Wrap overflow="visible">
-        <Button h="10" onClick={onCopy} leftIcon={hasCopied ? <Check /> : <Copy />}>
+        <Button
+          h="10"
+          onClick={() => {
+            console.log("ph event: copy guild link")
+            onCopy()
+          }}
+          leftIcon={hasCopied ? <Check /> : <Copy />}
+        >
           {hasCopied ? "Copied" : "Copy link"}
         </Button>
         {discordPlatform &&
@@ -66,7 +73,10 @@ const SummonMembers = () => {
             <PulseMarker colorScheme="red" placement="top">
               <Button
                 h="10"
-                onClick={onOpen}
+                onClick={() => {
+                  console.log("ph event: click on 'Send Discord join button'")
+                  onOpen()
+                }}
                 colorScheme="DISCORD"
                 leftIcon={<DiscordLogo />}
               >
@@ -83,6 +93,9 @@ const SummonMembers = () => {
           target="_blank"
           leftIcon={<TwitterLogo />}
           colorScheme="TWITTER"
+          onClick={() => {
+            console.log("ph event: click on 'Share' (Twitter - X)")
+          }}
         >
           Share
         </Button>
@@ -109,7 +122,10 @@ const SummonMembers = () => {
         </HStack>
         <Button
           size="sm"
-          onClick={handleFinish}
+          onClick={() => {
+            console.log("ph event: onboarding close clicked")
+            handleFinish()
+          }}
           isLoading={isLoading || !!response}
           colorScheme="green"
         >

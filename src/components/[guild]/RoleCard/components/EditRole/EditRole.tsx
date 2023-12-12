@@ -187,7 +187,13 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={3} onClick={handleOpen}>
+      <OnboardingMarker
+        step={3}
+        onClick={() => {
+          console.log("ph event: pulse marker: Edit role clicked")
+          handleOpen()
+        }}
+      >
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}

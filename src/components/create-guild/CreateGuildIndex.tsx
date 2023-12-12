@@ -19,7 +19,8 @@ const CreateGuildIndex = (): JSX.Element => {
   return (
     <ClientOnly>
       <MultiPlatformsGrid
-        onSelection={() => {
+        onSelection={(platform) => {
+          console.log("ph event: platform opened", { platform })
           setWhitoutPlatform(false)
         }}
       />
@@ -34,6 +35,7 @@ const CreateGuildIndex = (): JSX.Element => {
           onChange={(e) => {
             if (guildPlatforms.length === 0) {
               setWhitoutPlatform(e?.target?.checked)
+              if (e?.target?.checked) console.log("ph event: add platforms later")
             }
           }}
           spacing={1.5}

@@ -40,7 +40,14 @@ const SendDiscordJoinButtonAlert = ({
             your Guild and unlock new roles.
           </AlertDialogBody>
           <AlertDialogFooter flexDirection="column">
-            <Button colorScheme="DISCORD" onClick={onSendEmbed} w="full">
+            <Button
+              colorScheme="DISCORD"
+              onClick={() => {
+                console.log("ph event: onboarding finished with Join link")
+                onSendEmbed()
+              }}
+              w="full"
+            >
               Send join button
             </Button>
 
@@ -51,7 +58,12 @@ const SendDiscordJoinButtonAlert = ({
               fontWeight="normal"
               maxW="max-content"
               mt={4}
-              onClick={onContinue}
+              onClick={() => {
+                console.log(
+                  "ph event: onboarding finished without sending Discord join link"
+                )
+                onContinue()
+              }}
             >
               Or continue without sending it
             </Button>

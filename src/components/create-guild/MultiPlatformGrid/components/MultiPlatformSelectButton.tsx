@@ -136,6 +136,7 @@ const MultiPlatformSelectButton = ({
                       setValue("socialLinks.TWITTER", "")
                     } else {
                       removePlatform(platform)
+                      console.log("ph event: platform removed", { platform })
                     }
                   }
                 : () => {
@@ -195,7 +196,13 @@ const MultiPlatformSelectButton = ({
         </DisplayCard>
       </Tooltip>
 
-      <PlatformModal isOpen={isOpen} onClose={onClose} />
+      <PlatformModal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          console.log("ph event: platform added", { platform })
+        }}
+      />
     </>
   )
 }

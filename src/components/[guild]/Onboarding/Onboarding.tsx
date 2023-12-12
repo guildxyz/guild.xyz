@@ -32,6 +32,7 @@ const Onboarding = (): JSX.Element => {
         <GuildCreationProgress
           progress={75}
           next={() => {
+            console.log("ph event: jump to", { step: 5 })
             setActiveStep(4)
           }}
         />

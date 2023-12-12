@@ -146,7 +146,13 @@ const CreateGuildStepper = ({
           >
             <Step
               onClick={() => {
-                if (enableGoingBack && activeStep > index) setActiveStep(index)
+                if (enableGoingBack && activeStep > index) {
+                  console.log("ph event: guild creation process step back", {
+                    to: index + 1,
+                    from: activeStep + 1 + "/" + (stepPart + 1),
+                  })
+                  setActiveStep(index)
+                }
               }}
               {...{
                 cursor:

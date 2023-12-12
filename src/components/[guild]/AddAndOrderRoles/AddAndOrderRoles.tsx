@@ -38,7 +38,13 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   return (
     <>
       <ButtonGroup isAttached size="sm" variant="ghost">
-        <OnboardingMarker step={3} onClick={onAddDrawerOpen}>
+        <OnboardingMarker
+          step={3}
+          onClick={() => {
+            console.log("ph event: pulse marker: Add role clicked")
+            onAddDrawerOpen()
+          }}
+        >
           <Button
             ref={addRoleButtonRef}
             leftIcon={<Icon as={Plus} />}
