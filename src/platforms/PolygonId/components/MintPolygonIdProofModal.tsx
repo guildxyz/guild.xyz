@@ -4,7 +4,7 @@ import {
   ModalContent,
   ModalOverlay,
 } from "@chakra-ui/react"
-import PolygonIdMintingModalContent from "./PolygonIdMintingModalContent"
+import Content from "./MintPolygonIdProofModalContent"
 
 type Props = {
   isOpen: boolean
@@ -16,7 +16,7 @@ const MintPolygonIdProofModal = ({ isOpen, onClose }: Props) => (
     <ModalOverlay />
     <ModalContent>
       <ModalCloseButton />
-      <PolygonIdMintingModalContent />
+      <Content />
     </ModalContent>
   </Modal>
 )

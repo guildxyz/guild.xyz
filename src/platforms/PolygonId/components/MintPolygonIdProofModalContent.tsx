@@ -43,7 +43,7 @@ const ErrorState = () => (
   </Alert>
 )
 
-const PolygonIdMintingModalContent = () => {
+const MintPolygonIdProofModalContent = () => {
   const { id: userId } = useUser()
   const { id: guildId, roles } = useGuild()
 
@@ -102,4 +102,4 @@ const PolygonIdMintingModalContent = () => {
   )
 }
 
-export default PolygonIdMintingModalContent
+export default MintPolygonIdProofModalContent
