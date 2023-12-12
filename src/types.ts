@@ -156,6 +156,11 @@ type GuildBase = {
   tags: Array<GuildTags>
 }
 
+type GuildPinConfig = {
+  chain: Chain | "FUEL"
+  isActive: boolean
+}
+
 type SimpleGuild = {
   id: number
   name: string
@@ -168,10 +173,7 @@ type SimpleGuild = {
   eventSources: EventSources
   onboardingComplete: boolean
   memberCount: number
-  guildPin?: {
-    chain: Chain
-    isActive: boolean
-  }
+  guildPin?: GuildPinConfig
   theme: Theme
 }
 
@@ -443,10 +445,7 @@ type Guild = {
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
   eventSources: Record<EventSourcesKey, string>
-  guildPin?: {
-    chain: Chain
-    isActive: boolean
-  }
+  guildPin?: GuildPinConfig
   isFallback?: boolean
   isDetailed?: boolean
 }
