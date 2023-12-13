@@ -53,6 +53,7 @@ const useCoinbasePay = () => {
         ],
       },
       onSuccess: () => {
+        console.log("CB SUCCESS")
         onDone()
         toast({
           status: "success",
@@ -61,6 +62,7 @@ const useCoinbasePay = () => {
         })
       },
       onExit: (err) => {
+        console.log("CB ERROR")
         onDone()
         if (err) {
           setError(err)
@@ -80,6 +82,10 @@ const useCoinbasePay = () => {
       },
       onEvent: (event) => {
         console.log("CB PAY EVENT", event)
+
+        if (event.eventName === "exit") {
+          onrampInstance.current.destroy()
+        }
       },
       experienceLoggedIn: "embedded",
       experienceLoggedOut: "embedded",
