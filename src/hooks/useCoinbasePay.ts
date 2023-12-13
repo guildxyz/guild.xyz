@@ -1,6 +1,8 @@
 import { CBPayInstance, InitOnRampParams, initOnRamp } from "@coinbase/cbpay-js"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRef, useState } from "react"
+import { useChainId } from "wagmi"
 import useToast from "./useToast"
 
 const hideOverflow = () => {
@@ -15,12 +17,21 @@ const showOverflow = () => {
   } catch {}
 }
 
+const blockchains = Object.values(CHAIN_CONFIG)
+  .map(({ coinbasePayName }) => coinbasePayName)
+  .filter(Boolean)
+
 // TODO: Wrap in a useSubmit, instead of using additional useState-s here
 const useCoinbasePay = () => {
   const { id } = useUser()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const onrampInstance = useRef<CBPayInstance>()
+  const chainId = useChainId()
+
+  const defaultNetwork =
+    CHAIN_CONFIG[Chains[chainId] as Chain]?.coinbasePayName ??
+    CHAIN_CONFIG.ETHEREUM.coinbasePayName
 
   const toast = useToast()
 
@@ -40,20 +51,11 @@ const useCoinbasePay = () => {
       target: "#cbpay-container",
       widgetParameters: {
         partnerUserId: `${id}`,
+        defaultNetwork,
         destinationWallets: [
           {
             address: destinationWalletAddress,
-
-            // https://github.com/coinbase/cbpay-js/blob/d4bda2c05c4d5917c8db6a05476b603546046394/src/types/onramp.ts#L1
-            blockchains: [
-              "ethereum",
-              "arbitrum",
-              "avalanche-c-chain",
-              "celo",
-              "kava",
-              "optimism",
-              "polygon",
-            ],
+            blockchains,
           },
         ],
       },

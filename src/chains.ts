@@ -52,6 +52,9 @@ type GuildChain = ViemChain & {
     dark: string
   }
   etherscanApiUrl?: string
+
+  // https://github.com/coinbase/cbpay-js/blob/d4bda2c05c4d5917c8db6a05476b603546046394/src/types/onramp.ts#L1
+  coinbasePayName?: string
 }
 
 const ETH_ICON =
@@ -67,6 +70,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/etherscan-dark.svg",
     },
     etherscanApiUrl: "https://api.etherscan.io",
+    coinbasePayName: "ethereum",
   },
   SEPOLIA: {
     ...sepolia,
@@ -109,6 +113,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/polygon.svg",
     },
     etherscanApiUrl: "https://api.polygonscan.com",
+    coinbasePayName: "polygon",
   },
   POLYGON_ZKEVM: {
     ...polygonZkEvm,
@@ -141,6 +146,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/snowtrace.svg",
     },
     etherscanApiUrl: "https://api.snowtrace.io",
+    coinbasePayName: "avalanche-c-chain",
   },
   GNOSIS: {
     ...gnosis,
@@ -171,6 +177,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/arbitrum.svg",
     },
     etherscanApiUrl: "https://api.arbiscan.io",
+    coinbasePayName: "arbitrum",
   },
   NOVA: {
     ...arbitrumNova,
@@ -192,6 +199,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/celo.svg",
     },
     etherscanApiUrl: "https://explorer.celo.org",
+    coinbasePayName: "celo",
   },
   HARMONY: {
     ...harmonyOne,
@@ -211,6 +219,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/optimism.svg",
     },
     etherscanApiUrl: "https://api-optimistic.etherscan.io",
+    coinbasePayName: "optimism",
   },
   MOONBEAM: {
     ...moonbeam,
@@ -448,6 +457,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       light: "/networkLogos/kava.svg",
       dark: "/networkLogos/kava.svg",
     },
+    coinbasePayName: "kava",
   },
   // X1_TESTNET: {
   //   ...x1Testnet,
