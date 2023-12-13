@@ -38,7 +38,17 @@ const useCoinbasePay = () => {
         destinationWallets: [
           {
             address: destinationWalletAddress,
-            blockchains: ["ethereum", "algorand"], // TODO
+
+            // https://github.com/coinbase/cbpay-js/blob/d4bda2c05c4d5917c8db6a05476b603546046394/src/types/onramp.ts#L1
+            blockchains: [
+              "ethereum",
+              "arbitrum",
+              "avalanche-c-chain",
+              "celo",
+              "kava",
+              "optimism",
+              "polygon",
+            ],
           },
         ],
       },
