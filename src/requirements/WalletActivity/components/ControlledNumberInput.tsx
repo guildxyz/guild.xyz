@@ -50,7 +50,7 @@ const ControlledNumberInput = ({
       onChange={handleChange}
       onBlur={onBlur}
     >
-      <NumberInputField placeholder={(props as any).placeholder} />
+      <NumberInputField placeholder={props.placeholder} />
       <NumberInputStepper>
         <NumberIncrementStepper />
         <NumberDecrementStepper />
