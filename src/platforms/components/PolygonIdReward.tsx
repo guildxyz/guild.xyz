@@ -75,7 +75,7 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
               maxW="full"
               onClick={onOpen}
             >
-              {platforms[PlatformType[platformId]].name} proof
+              {platforms[PlatformType[platformId]].name} proofs
             </Button>
           </Tooltip>
         }

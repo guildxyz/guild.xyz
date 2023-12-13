@@ -54,7 +54,7 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
     )
       ? {
           POLYGON_ID: {
-            description: "Proof role membership",
+            description: "Prove role membership",
           },
         }
       : {}),

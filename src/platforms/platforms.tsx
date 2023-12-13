@@ -384,7 +384,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   POLYGON_ID: {
     icon: Key,
-    imageUrl: "/networkLogos/polygon.svg",
+    imageUrl: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
     colorScheme: "purple",
     gatedEntity: "",

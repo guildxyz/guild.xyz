@@ -8,13 +8,14 @@ const usePolygonIdCardProps = (guildPlatform: GuildPlatform) => {
   const platformGuildData = guildPlatform.platformGuildData
 
   return {
-    name: "PolygonID",
+    name: "PolygonID proofs",
     type: "POLYGON_ID" as PlatformName,
     image: platformGuildData?.imageUrl ?? (
       <Circle size={10} bgColor={bgColor}>
         <Img src={platforms.POLYGON_ID.imageUrl} boxSize={10} color="white" />
       </Circle>
     ),
+    info: "Onchain & zero-knowledge",
   }
 }
 
