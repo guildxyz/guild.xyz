@@ -12,7 +12,7 @@ import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 
 type ActivatePinForm = {
-  chain: Chain
+  chain: Chain | "FUEL"
   shouldCreatePinHolderRole: boolean
 }
 
@@ -49,34 +49,35 @@ const ActivateGuildPinForm = (): JSX.Element => {
 
   const { onSubmit: onEditGuildSubmit, isLoading: isEditGuildLoading } =
     useEditGuild({
-      onSuccess: shouldCreatePinHolderRole
-        ? () => {
-            onCreateRoleSubmit({
-              guildId,
-              imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`,
-              name: "Pin Holder",
-              logic: "AND",
-              requirements: [
-                {
-                  type: "ERC721",
-                  chain,
-                  address: GUILD_PIN_CONTRACTS[chain].address,
-                  data: {
-                    attributes: [
-                      {
-                        trait_type: "guildId",
-                        value: guildId,
-                      },
-                    ],
+      onSuccess:
+        shouldCreatePinHolderRole && chain !== "FUEL"
+          ? () => {
+              onCreateRoleSubmit({
+                guildId,
+                imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`,
+                name: "Pin Holder",
+                logic: "AND",
+                requirements: [
+                  {
+                    type: "ERC721",
+                    chain,
+                    address: GUILD_PIN_CONTRACTS[chain].address,
+                    data: {
+                      attributes: [
+                        {
+                          trait_type: "guildId",
+                          value: guildId,
+                        },
+                      ],
+                    },
+                    isNegated: false,
                   },
-                  isNegated: false,
-                },
-              ],
-              rolePlatforms: [],
-              visibility: Visibility.PUBLIC,
-            })
-          }
-        : showSuccessToastAndCloseModal,
+                ],
+                rolePlatforms: [],
+                visibility: Visibility.PUBLIC,
+              })
+            }
+          : showSuccessToastAndCloseModal,
     })
 
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
@@ -98,12 +99,16 @@ const ActivateGuildPinForm = (): JSX.Element => {
       <Stack w="full" spacing={4}>
         <ChainPicker
           controlName="chain"
-          supportedChains={Object.keys(GUILD_PIN_CONTRACTS) as Chain[]}
+          supportedChains={[
+            ...(Object.keys(GUILD_PIN_CONTRACTS) as Chain[]),
+            "FUEL",
+          ]}
           showDivider={false}
         />
 
         <Checkbox
           {...onShouldCreatePinHolderRoleControllerProps}
+          isDisabled={chain === "FUEL"}
           alignItems="start"
           sx={{
             "> .chakra-checkbox__control": {
