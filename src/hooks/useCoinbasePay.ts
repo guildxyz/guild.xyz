@@ -1,4 +1,5 @@
 import { CBPayInstance, InitOnRampParams, initOnRamp } from "@coinbase/cbpay-js"
+import useUser from "components/[guild]/hooks/useUser"
 import { useRef, useState } from "react"
 import useToast from "./useToast"
 
@@ -16,6 +17,7 @@ const showOverflow = () => {
 
 // TODO: Wrap in a useSubmit, instead of using additional useState-s here
 const useCoinbasePay = () => {
+  const { id } = useUser()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const onrampInstance = useRef<CBPayInstance>()
@@ -31,10 +33,13 @@ const useCoinbasePay = () => {
     setIsLoading(true)
     setError(undefined)
 
+    console.log("partnerUserId", `${id}`)
+
     const options: InitOnRampParams = {
       appId: process.env.NEXT_PUBLIC_COINBASE_PAY_APPID,
       target: "#cbpay-container",
       widgetParameters: {
+        partnerUserId: `${id}`,
         destinationWallets: [
           {
             address: destinationWalletAddress,
