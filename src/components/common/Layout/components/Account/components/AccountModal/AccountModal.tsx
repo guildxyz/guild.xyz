@@ -188,8 +188,6 @@ const AccountModal = () => {
                 </Tooltip>
               </HStack>
 
-              <div id="cbpay-container"></div>
-
               <AccountConnections />
               <Divider my="7" />
               <UsersGuildPins />

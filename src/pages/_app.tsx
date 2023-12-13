@@ -104,6 +104,8 @@ const App = ({
                   </IntercomProvider>
 
                   <Web3ConnectionManager />
+
+                  <div id="cbpay-container" />
                 </KeyPairProvider>
               </PostHogProvider>
             </WagmiConfig>
