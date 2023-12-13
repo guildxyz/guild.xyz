@@ -157,6 +157,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/gnosis.svg",
     },
     etherscanApiUrl: "https://api.gnosisscan.io",
+    coinbasePayName: "gnosis",
   },
   FANTOM: {
     ...fantom,
@@ -301,6 +302,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/base.svg",
     },
     etherscanApiUrl: "https://api.basescan.org",
+    coinbasePayName: "base",
   },
   BASE_GOERLI: {
     ...baseGoerli,
