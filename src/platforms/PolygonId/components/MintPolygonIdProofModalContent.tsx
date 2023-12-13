@@ -12,6 +12,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { useState } from "react"
+import useSWR from "swr"
 import { Role } from "types"
 import MintableRole from "./MintableRole"
 import NoDID from "./NoDID"
@@ -47,30 +48,16 @@ const MintPolygonIdProofModalContent = () => {
   const { id: userId } = useUser()
   const { id: guildId, roles } = useGuild()
 
-  //const checkDID = useSWR<string>(userId ? `/v1/users/${userId}/polygon-id` : null)
-  /*const claimedRoles = useSWR(
-      `/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`,
-      fetcher
-    )*/
+  const checkDID = useSWR<string>(
+    userId
+      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id`
+      : null
+  )
+  const claimedRoles = useSWR(
+    `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
+  )
 
   const [mint, setMint] = useState<Role | null>(null)
-
-  const checkDID = {
-    isLoading: false,
-    error: null,
-    data: "fdsflksd",
-  }
-
-  const claimedRoles = {
-    isLoading: false,
-    error: null,
-    data: [
-      {
-        guildId: 56463,
-        roleIds: [92942],
-      },
-    ],
-  }
 
   if (checkDID.isLoading || claimedRoles.isLoading) return <LoadingState />
 

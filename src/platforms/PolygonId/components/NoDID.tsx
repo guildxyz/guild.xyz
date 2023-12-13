@@ -21,10 +21,13 @@ import fetcher from "utils/fetcher"
 const NoDID = () => {
   const { id } = useUser()
   const { isLoading, onSubmit, error } = useSubmitWithSign(
-    () => fetcher("/v1/polygon-id/connect", { method: "POST" }),
+    () =>
+      fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/connect`, {
+        method: "POST",
+      }),
     {
       onSuccess: () => {
-        mutate(`/v1/users/${id}/polygon-id`)
+        mutate(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${id}/polygon-id`)
       },
     }
   )
