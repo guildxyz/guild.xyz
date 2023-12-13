@@ -5,6 +5,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
@@ -24,6 +25,7 @@ const SendDiscordJoinButtonAlert = ({
   onContinue,
 }: Props): JSX.Element => {
   const cancelRef = useRef()
+  const { captureEvent } = usePostHogContext()
 
   return (
     <Alert
@@ -43,7 +45,9 @@ const SendDiscordJoinButtonAlert = ({
             <Button
               colorScheme="DISCORD"
               onClick={() => {
-                console.log("ph event: onboarding finished with Join link")
+                captureEvent(
+                  "guild creation flow > onboarding finished with Join link"
+                )
                 onSendEmbed()
               }}
               w="full"
@@ -59,8 +63,8 @@ const SendDiscordJoinButtonAlert = ({
               maxW="max-content"
               mt={4}
               onClick={() => {
-                console.log(
-                  "ph event: onboarding finished without sending Discord join link"
+                captureEvent(
+                  "guild creation flow > onboarding finished without sending Discord join link"
                 )
                 onContinue()
               }}

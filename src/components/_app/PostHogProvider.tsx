@@ -17,11 +17,11 @@ if (typeof window !== "undefined") {
 
     // Disable in development
     loaded: (ph) => {
-      if (
+      /*if (
         process.env.NODE_ENV !== "production" ||
         window.location.host !== "guild.xyz"
       )
-        ph.opt_out_capturing()
+        ph.opt_out_capturing()*/
     },
   })
 }

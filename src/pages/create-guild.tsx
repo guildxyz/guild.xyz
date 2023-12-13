@@ -1,5 +1,6 @@
 import { Stack } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import CreateGuildButton from "components/create-guild/CreateGuildButton"
@@ -31,6 +32,7 @@ const CreateGuildPage = (): JSX.Element => {
   const name = useWatch({ name: "name" })
   const imageUrl = useWatch({ name: "imageUrl" })
   const contacts = useWatch({ name: "contacts" })
+  const { captureEvent } = usePostHogContext()
 
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
@@ -38,17 +40,17 @@ const CreateGuildPage = (): JSX.Element => {
 
   const nextWithPostHog = () => {
     // +2 because, index starts with 0 and we jump to the step after the active one
-    console.log("ph event: jump to", { step: activeStep + 2 })
+    captureEvent("guild creation flow > jump to", { step: activeStep + 2 })
 
     // Email has provides in step 2
     if (activeStep === 1 && contacts[0].contact)
-      console.log("ph event: contacts added")
+      captureEvent("guild creation flow > contacts added")
 
     nextStep()
   }
 
   useEffect(() => {
-    console.log("ph event: start guild creation")
+    captureEvent("guild creation flow > start guild creation")
   }, [])
 
   return (

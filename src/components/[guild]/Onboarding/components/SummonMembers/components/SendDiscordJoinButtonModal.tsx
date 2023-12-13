@@ -10,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
@@ -27,6 +28,8 @@ const SendDiscordJoinButtonModal = ({
   onSuccess = undefined,
   serverId,
 }) => {
+  const { captureEvent } = usePostHogContext()
+
   const { isLoading, onSubmit } = useSendJoin("JOIN", () => {
     onClose()
     onSuccess?.()
@@ -92,8 +95,9 @@ const SendDiscordJoinButtonModal = ({
           <Button
             colorScheme="green"
             onClick={() => {
-              console.log("ph event: 'Send Discord join button' was sended")
-
+              captureEvent(
+                "guild creation flow > 'Send Discord join button' was sended"
+              )
               methods.handleSubmit(onSubmit)()
             }}
             isLoading={isLoading}

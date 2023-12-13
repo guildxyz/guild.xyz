@@ -1,3 +1,4 @@
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
@@ -10,6 +11,7 @@ type Props = {
 const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
   const { handleSubmit } = useFormContext<GuildFormType>()
   const roles = useWatch({ name: "roles" })
+  const { captureEvent } = usePostHogContext()
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateGuild()
@@ -22,10 +24,10 @@ const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
       isLoading={isLoading || isSigning}
       loadingText={signLoadingText || "Saving data"}
       onClick={() => {
-        console.log("ph event: templates selected", {
+        captureEvent("guild creation flow > templates selected", {
           roles: roles.map((role) => role.name),
         })
-        console.log("ph event: number of platforms added to roles", {
+        captureEvent("guild creation flow > number of platforms added to roles", {
           platformConnected: roles.reduce(
             (acc, current) => acc + current.rolePlatforms?.length,
             0

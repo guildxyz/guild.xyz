@@ -2,6 +2,7 @@ import { HStack, Text, useClipboard, useDisclosure, Wrap } from "@chakra-ui/reac
 import { Player } from "@lottiefiles/react-lottie-player"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import PulseMarker from "components/common/PulseMarker"
 import { useRouter } from "next/router"
@@ -22,6 +23,7 @@ export type SummonMembersForm = {
 const SummonMembers = () => {
   const [player, setPlayer] = useState<any>()
   const { asPath } = useRouter()
+  const { captureEvent } = usePostHogContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -57,7 +59,7 @@ const SummonMembers = () => {
         <Button
           h="10"
           onClick={() => {
-            console.log("ph event: copy guild link")
+            captureEvent("guild creation flow > copy guild link")
             onCopy()
           }}
           leftIcon={hasCopied ? <Check /> : <Copy />}
@@ -74,7 +76,9 @@ const SummonMembers = () => {
               <Button
                 h="10"
                 onClick={() => {
-                  console.log("ph event: click on 'Send Discord join button'")
+                  captureEvent(
+                    "guild creation flow > click on 'Send Discord join button'"
+                  )
                   onOpen()
                 }}
                 colorScheme="DISCORD"
@@ -94,7 +98,7 @@ const SummonMembers = () => {
           leftIcon={<TwitterLogo />}
           colorScheme="TWITTER"
           onClick={() => {
-            console.log("ph event: click on 'Share' (Twitter - X)")
+            captureEvent("guild creation flow > click on 'Share' (Twitter - X)")
           }}
         >
           Share
@@ -123,7 +127,7 @@ const SummonMembers = () => {
         <Button
           size="sm"
           onClick={() => {
-            console.log("ph event: onboarding close clicked")
+            captureEvent("guild creation flow > onboarding close clicked")
             handleFinish()
           }}
           isLoading={isLoading || !!response}
