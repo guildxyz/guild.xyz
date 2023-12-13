@@ -11,7 +11,7 @@ const useAlreadyMinted = () => {
   const { id: guildId } = useGuild()
   const { wallet } = useFuel()
 
-  const getFee = async () => {
+  const getAlreadyMinted = async () => {
     const contract = GuildPinContractAbi__factory.connect(
       FUEL_GUILD_PIN_CONTRACT_ID,
       wallet
@@ -25,7 +25,7 @@ const useAlreadyMinted = () => {
 
   return useSWRImmutable(
     !!wallet ? ["alreadyMintedFuelGuildPin", userId, guildId, "Joined"] : null,
-    getFee
+    getAlreadyMinted
   )
 }
 
