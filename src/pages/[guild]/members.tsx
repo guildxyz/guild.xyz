@@ -11,6 +11,7 @@ import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
 import CrmTbody from "components/[guild]/crm/CRMTable/CrmTbody"
 import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
 import CrmMenu from "components/[guild]/crm/CrmMenu"
+import CrmRoleAccessIndicator from "components/[guild]/crm/CrmRoleAccessIndicator"
 import FilterByRoles from "components/[guild]/crm/FilterByRoles"
 import Identities from "components/[guild]/crm/Identities"
 import IdentitiesExpansionToggle from "components/[guild]/crm/IdentitiesExpansionToggle"
@@ -22,10 +23,11 @@ import {
   parseFiltersFromQuery,
   parseSortingFromQuery,
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
-import useMembers, { Member } from "components/[guild]/crm/useMembers"
+import useMembers, { CrmRole, Member } from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
+import { atom, useAtom } from "jotai"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -124,9 +126,26 @@ const columns = [
   }),
 ]
 
+export const shownRoleColumnsAtom = atom([])
+
 const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, imageUrl } = useGuild()
+  const [shownRoleColumns] = useAtom(shownRoleColumnsAtom)
+
+  const roleColumns = useMemo(
+    () =>
+      shownRoleColumns.map((roleId) => ({
+        accessorKey: `role_${roleId}`,
+        accessorFn: (row) =>
+          Object.values(row.roles)
+            .flat()
+            .find((role: CrmRole) => role.roleId === roleId),
+        header: () => roles.find((role) => role.id === roleId)?.name,
+        cell: (info) => <CrmRoleAccessIndicator memberRole={info.getValue()} />,
+      })),
+    [shownRoleColumns]
+  )
 
   const router = useRouter()
   const [columnFilters, setColumnFilters] = useState(() =>
@@ -166,7 +185,7 @@ const GuildPage = (): JSX.Element => {
 
   const table = useReactTable({
     data: useMemo(() => data ?? [], [data]),
-    columns,
+    columns: useMemo(() => [...columns, ...roleColumns], [roleColumns]),
     state: {
       columnFilters,
       sorting,

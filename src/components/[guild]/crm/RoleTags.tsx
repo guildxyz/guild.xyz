@@ -16,7 +16,9 @@ import {
 } from "@chakra-ui/react"
 import { Column } from "@tanstack/react-table"
 import Button from "components/common/Button"
-import { Funnel } from "phosphor-react"
+import { useAtom } from "jotai"
+import { shownRoleColumnsAtom } from "pages/[guild]/members"
+import { ArrowFatRight, Funnel, X } from "phosphor-react"
 import { Visibility } from "types"
 import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
@@ -176,6 +178,7 @@ export const ClickableCrmRoleTag = ({
         <FilterByCrmRole {...{ roleId, column, onFilter }} />
         <ViewRole roleId={roleId} page="activity" />
         <ViewRole roleId={roleId} />
+        <MoveRoleToColumn roleId={roleId} />
       </>
     }
   >
@@ -202,6 +205,33 @@ const FilterByCrmRole = ({ roleId, column, onFilter }) => {
       justifyContent="start"
     >
       Filter by role
+    </Button>
+  )
+}
+
+const MoveRoleToColumn = ({ roleId }) => {
+  const [shownRoleColumns, setShownRoleColumnsAtom] = useAtom(shownRoleColumnsAtom)
+
+  const isAlreadyColumn = shownRoleColumns.includes(roleId)
+
+  const onClick = () => {
+    setShownRoleColumnsAtom((prevValue) =>
+      isAlreadyColumn
+        ? prevValue.filter((id) => id !== roleId)
+        : [...prevValue, roleId]
+    )
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      leftIcon={isAlreadyColumn ? <X /> : <ArrowFatRight />}
+      size="sm"
+      borderRadius={0}
+      onClick={onClick}
+      justifyContent="start"
+    >
+      {isAlreadyColumn ? "Remove column" : "Move to column"}
     </Button>
   )
 }
