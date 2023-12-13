@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { BN, BaseAssetId } from "fuels"
+import { BaseAssetId } from "fuels"
 import useFuel from "hooks/useFuel"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
-import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
-import { GuildPinMetadata } from "types"
 import fetcher from "utils/fetcher"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 import type { GuildActionInput } from "../GuildPinContractAbi"
@@ -44,8 +42,6 @@ const useMintFuelGuildPin = () => {
   const { pinType } = useMintGuildPinContext()
 
   const { data: fee } = useFuelGuildPinFee()
-
-  const { mutate } = useUsersGuildPins()
 
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
@@ -115,29 +111,30 @@ const useMintFuelGuildPin = () => {
       .callParams({ forward: [fee.toNumber(), BaseAssetId] })
       .call()
 
-    const mintedPinId: BN = contractCallRes.logs[0].pin_id
-    const { value: rawMetadata } = await contract.functions
-      .metadata(mintedPinId)
-      .simulate()
-      .catch(() => null)
+    // We can't fetch users Fuel Pins, since there isn't a method for it in the contract yet
+    // const mintedPinId: BN = contractCallRes.logs[0].pin_id
+    // const { value: rawMetadata } = await contract.functions
+    //   .metadata(mintedPinId)
+    //   .simulate()
+    //   .catch(() => null)
 
-    if (rawMetadata) {
-      try {
-        const metadata: GuildPinMetadata = JSON.parse(rawMetadata)
-        mutate((prevData) => [
-          ...(prevData ?? []),
-          {
-            chainId: FUEL_FAKE_CHAIN_ID,
-            tokenId: mintedPinId.toNumber(),
-            ...metadata,
-            image: metadata.image.replace(
-              "ipfs://",
-              process.env.NEXT_PUBLIC_IPFS_GATEWAY
-            ),
-          },
-        ])
-      } catch {}
-    }
+    // if (rawMetadata) {
+    //   try {
+    //     const metadata: GuildPinMetadata = JSON.parse(rawMetadata)
+    //     mutate((prevData) => [
+    //       ...(prevData ?? []),
+    //       {
+    //         chainId: FUEL_FAKE_CHAIN_ID,
+    //         tokenId: mintedPinId.toNumber(),
+    //         ...metadata,
+    //         image: metadata.image.replace(
+    //           "ipfs://",
+    //           process.env.NEXT_PUBLIC_IPFS_GATEWAY
+    //         ),
+    //       },
+    //     ])
+    //   } catch {}
+    // }
 
     captureEvent("Minted Fuel Guild Pin (GuildCheckout)", postHogOptions)
 
