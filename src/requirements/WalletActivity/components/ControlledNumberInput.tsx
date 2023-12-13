@@ -10,6 +10,7 @@ import { useController } from "react-hook-form"
 
 type Props = {
   numberFormat?: "INT" | "FLOAT"
+  placeholder?: string
 } & NumberInputProps
 
 const ControlledNumberInput = ({
