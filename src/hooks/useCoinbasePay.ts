@@ -62,7 +62,7 @@ const useCoinbasePay = () => {
         })
       },
       onExit: (err) => {
-        console.log("CB ERROR")
+        console.log("CB ERROR", err)
         onDone()
         if (err) {
           setError(err)
@@ -83,10 +83,12 @@ const useCoinbasePay = () => {
       onEvent: (event) => {
         console.log("CB PAY EVENT", event)
 
-        if (event.eventName === "exit") {
-          onrampInstance.current.destroy()
-        }
+        // if (event.eventName === "exit") {
+        //   onrampInstance.current.destroy()
+        // }
       },
+      closeOnExit: true,
+      closeOnSuccess: true,
       experienceLoggedIn: "embedded",
       experienceLoggedOut: "embedded",
       debug: true,
