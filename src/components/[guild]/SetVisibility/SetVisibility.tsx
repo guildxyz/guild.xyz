@@ -21,10 +21,7 @@ import { useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 import useVisibilityTooltipLabel from "./hooks/useVisibilityTooltipLabel"
-import {
-  VISIBILITY_DATA,
-  VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY,
-} from "./visibilityData"
+import { VISIBILITY_DATA } from "./visibilityData"
 
 type FilterableEntity = "role" | "requirement" | "reward"
 
@@ -166,9 +163,9 @@ const SetVisibilityModal = ({
         </Circle>
       ),
       ...rest,
-      ...(entityType === "role"
-        ? {}
-        : VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY[key]?.[roleVisibility] ?? {}),
+      // ...(entityType === "role"
+      //   ? {}
+      //   : VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY[key]?.[roleVisibility] ?? {}),
       children: Child && <Child fieldBase={fieldBase} />,
     })
   )

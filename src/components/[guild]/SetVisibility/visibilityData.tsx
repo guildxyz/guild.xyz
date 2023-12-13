@@ -7,6 +7,7 @@ import VisibilityTag from "./components/VisibilityTag"
 export const VISIBILITY_DATA: Record<
   Visibility,
   Partial<Option> & {
+    title: string
     Icon: React.ForwardRefExoticComponent<
       IconProps & React.RefAttributes<SVGSVGElement>
     >
