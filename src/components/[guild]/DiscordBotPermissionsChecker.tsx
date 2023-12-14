@@ -105,8 +105,7 @@ const DiscordBotPermissionsChecker = () => {
           discordRewardIds.includes(rp.guildPlatformId)
         )
       )
-      .map((role) => role.rolePlatforms)
-      .flat()
+      .flatMap((role) => role.rolePlatforms)
       .map((rp) => rp.platformRoleId) ?? []
 
   const [errorType, setErrorType] = useState<PermissionModalType>()
@@ -170,7 +169,7 @@ const DiscordBotPermissionsChecker = () => {
       if (!discordBotsRole) {
         toastIdRef.current = toastWithButton({
           title: "Guild.xyz Discord bot is misconfigured",
-          description: `Seems like you've changed our bot role's name on the ${serverName} Discord server. It might not work properly unless you keep its original name.`,
+          description: `Seems like you've changed our bot's role name on the ${serverName} Discord server. It might not work properly unless you keep its original name.`,
           ...toastOptions,
         })
         setErrorType("NAME")
