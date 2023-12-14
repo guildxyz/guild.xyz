@@ -1,4 +1,5 @@
 import { Checkbox, HStack, Text } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import ClientOnly from "components/common/ClientOnly"
 import { useEffect, useState } from "react"
 import { useWatch } from "react-hook-form"
@@ -8,6 +9,7 @@ import MultiPlatformsGrid from "./MultiPlatformGrid"
 const CreateGuildIndex = (): JSX.Element => {
   const { setDisabled } = useCreateGuildContext()
   const [whitoutPlatform, setWhitoutPlatform] = useState(false)
+  const { captureEvent } = usePostHogContext()
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitter = useWatch({ name: "socialLinks.TWITTER" })
@@ -19,7 +21,8 @@ const CreateGuildIndex = (): JSX.Element => {
   return (
     <ClientOnly>
       <MultiPlatformsGrid
-        onSelection={() => {
+        onSelection={(platform) => {
+          captureEvent("guild creation flow > platform opened", { platform })
           setWhitoutPlatform(false)
         }}
       />
@@ -34,6 +37,8 @@ const CreateGuildIndex = (): JSX.Element => {
           onChange={(e) => {
             if (guildPlatforms.length === 0) {
               setWhitoutPlatform(e?.target?.checked)
+              if (e?.target?.checked)
+                captureEvent("guild creation flow > add platforms later")
             }
           }}
           spacing={1.5}

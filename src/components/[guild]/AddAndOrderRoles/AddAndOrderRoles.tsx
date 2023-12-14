@@ -9,6 +9,7 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import useIsStuck from "hooks/useIsStuck"
@@ -18,6 +19,8 @@ import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
 
 const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
+
   const {
     isOpen: isAddDrawerOpen,
     onOpen: onAddDrawerOpen,
@@ -38,7 +41,13 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   return (
     <>
       <ButtonGroup isAttached size="sm" variant="ghost">
-        <OnboardingMarker step={3} onClick={onAddDrawerOpen}>
+        <OnboardingMarker
+          step={3}
+          onClick={() => {
+            captureEvent("guild creation flow > Add role clicked (pulse marker)")
+            onAddDrawerOpen()
+          }}
+        >
           <Button
             ref={addRoleButtonRef}
             leftIcon={<Icon as={Plus} />}
