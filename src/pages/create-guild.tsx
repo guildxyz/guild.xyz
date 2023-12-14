@@ -40,9 +40,9 @@ const CreateGuildPage = (): JSX.Element => {
 
   const nextWithPostHog = () => {
     // +2 because, index starts with 0 and we jump to the step after the active one
-    captureEvent("guild creation flow > jump to", { step: activeStep + 2 })
+    captureEvent("guild creation flow > continue", { to: activeStep + 2 })
 
-    // Email has provides in step 2
+    // email can be added in step 2
     if (activeStep === 1 && contacts[0].contact)
       captureEvent("guild creation flow > contacts added")
 

@@ -44,7 +44,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
         <OnboardingMarker
           step={3}
           onClick={() => {
-            captureEvent("guild creation flow > pulse marker: Add role clicked")
+            captureEvent("guild creation flow > Add role clicked (pulse marker)")
             onAddDrawerOpen()
           }}
         >

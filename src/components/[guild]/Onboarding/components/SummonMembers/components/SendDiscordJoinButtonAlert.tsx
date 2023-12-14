@@ -46,7 +46,7 @@ const SendDiscordJoinButtonAlert = ({
               colorScheme="DISCORD"
               onClick={() => {
                 captureEvent(
-                  "guild creation flow > onboarding finished with Join link"
+                  "guild creation flow > onboarding finished WITH Discord embed"
                 )
                 onSendEmbed()
               }}
@@ -64,7 +64,7 @@ const SendDiscordJoinButtonAlert = ({
               mt={4}
               onClick={() => {
                 captureEvent(
-                  "guild creation flow > onboarding finished without sending Discord join link"
+                  "guild creation flow > onboarding finished WITHOUT Discord embed"
                 )
                 onContinue()
               }}

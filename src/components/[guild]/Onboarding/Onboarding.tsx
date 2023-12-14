@@ -34,7 +34,7 @@ const Onboarding = (): JSX.Element => {
         <GuildCreationProgress
           progress={75}
           next={() => {
-            captureEvent("guild creation flow > jump to", { step: 5 })
+            captureEvent("guild creation flow > continue", { to: 5 })
             setActiveStep(4)
           }}
         />

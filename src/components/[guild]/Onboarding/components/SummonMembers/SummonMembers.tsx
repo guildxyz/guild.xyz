@@ -76,9 +76,7 @@ const SummonMembers = () => {
               <Button
                 h="10"
                 onClick={() => {
-                  captureEvent(
-                    "guild creation flow > click on 'Send Discord join button'"
-                  )
+                  captureEvent("guild creation flow > Discord embed sent")
                   onOpen()
                 }}
                 colorScheme="DISCORD"

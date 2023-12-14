@@ -27,7 +27,7 @@ const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
         captureEvent("guild creation flow > templates selected", {
           roles: roles.map((role) => role.name),
         })
-        captureEvent("guild creation flow > number of platforms added to roles", {
+        captureEvent("guild creation flow > number of platforms added", {
           platformConnected: roles.reduce(
             (acc, current) => acc + current.rolePlatforms?.length,
             0
