@@ -452,6 +452,7 @@ type Guild = {
   }
   isFallback?: boolean
   isDetailed?: boolean
+  parentRoles: number[]
 }
 
 type RoleFormType = Partial<
