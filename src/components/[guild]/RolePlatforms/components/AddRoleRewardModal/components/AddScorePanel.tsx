@@ -31,18 +31,24 @@ import {
   useWatch,
 } from "react-hook-form"
 import Star from "static/icons/star.svg"
+import { PlatformType } from "types"
 
 type Props = {
   onSuccess: () => void
 }
 
 const AddScorePanel = ({ onSuccess }: Props) => {
-  const { id } = useGuild()
+  const { id, guildPlatforms } = useGuild()
   const methods = useForm({
     mode: "all",
   })
+
+  const isFirstScoreReward = !guildPlatforms.some(
+    (gp) => gp.platformId === PlatformType.SCORE
+  )
+
   const { isOpen: isAppearanceOpen, onToggle: onAppearanceToggle } = useDisclosure({
-    defaultIsOpen: true,
+    defaultIsOpen: isFirstScoreReward,
   })
 
   const {
