@@ -42,7 +42,7 @@ export type PlatformHookType = ({
 }
 
 const createGuildPlatformComponents: Record<
-  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL">,
+  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL" | "SCORE">,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,

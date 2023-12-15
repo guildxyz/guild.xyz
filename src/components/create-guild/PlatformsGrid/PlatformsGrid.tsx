@@ -46,6 +46,9 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
     TEXT: {
       description: "Gate special content, links, etc",
     },
+    SCORE: {
+      description: "Gamification utility",
+    },
   }
 
   return (

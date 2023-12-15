@@ -14,6 +14,7 @@ import { ComponentType, ForwardRefExoticComponent, PropsWithChildren } from "rea
 import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
+import Star from "static/icons/star.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
@@ -374,6 +375,28 @@ const platforms: Record<PlatformName, PlatformData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
+      ssr: false,
+    }),
+  },
+  SCORE: {
+    icon: Star,
+    name: "Score",
+    colorScheme: "gray",
+    gatedEntity: "",
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: false,
+    PlatformPreview: dynamic(() => import("platforms/components/ScorePreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddScorePanel"
+        ),
+      { ssr: false }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/ScoreReward"), {
       ssr: false,
     }),
   },
