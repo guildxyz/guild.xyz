@@ -16,7 +16,7 @@ const ScoreReward = ({ platform, withMotionImg }: RewardProps) => {
           withMotionImg={withMotionImg}
         />
       }
-      label={`Get ${platform.platformRoleData.amount} ${
+      label={`Get ${platform.platformRoleData?.amount} ${
         platformGuildData?.name || "points"
       }`}
     />
