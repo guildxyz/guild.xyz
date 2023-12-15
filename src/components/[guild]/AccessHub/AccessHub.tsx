@@ -132,6 +132,8 @@ const AccessHub = (): JSX.Element => {
                   cardButton: PlatformCardButton,
                 } = platforms[PlatformType[platform.platformId] as PlatformName]
 
+                if (!useCardProps) return null
+
                 return (
                   <PlatformCard
                     usePlatformProps={useCardProps}
