@@ -38,6 +38,14 @@ const App = ({
   Component,
   pageProps,
 }: AppProps<{ cookies: string }>): JSX.Element => {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/serviceWorker.js')
+        .then(registration => console.log('Service worker registered'))
+        .catch(error => console.error('Error registering service worker', error));
+    });
+  }
+  
   const router = useRouter()
   const setRecaptcha = useSetAtom(recaptchaAtom)
 
