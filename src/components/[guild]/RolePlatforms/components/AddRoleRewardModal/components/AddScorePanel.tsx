@@ -63,7 +63,7 @@ const AddScorePanel = ({ onSuccess }: Props) => {
     append({
       guildPlatform: {
         platformName: "SCORE",
-        platformGuildId: `score-${id}-${data.name}`,
+        platformGuildId: `score-${id}-${data.name || "points"}`,
         platformGuildData: {
           name: data.name,
           imageUrl: data.imageUrl,
