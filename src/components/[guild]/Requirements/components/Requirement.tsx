@@ -69,6 +69,7 @@ const Requirement = ({
             : requirement?.data?.customName || children}
           {!fieldRoot ? (
             <Visibility
+              visibilityRoleId={requirement?.visibilityRoleId}
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />

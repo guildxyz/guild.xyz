@@ -308,6 +308,7 @@ type Requirement = {
   decimals?: number
   isNegated: boolean
   visibility?: Visibility
+  visibilityRoleId?: number | null
 
   // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
   poapId?: number
@@ -330,6 +331,7 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   visibility?: Visibility
+  visibilityRoleId?: number | null
   capacity?: number
   claimedCount?: number
   startTime?: string
@@ -350,6 +352,7 @@ type SimpleRole = {
   logic: Logic
   memberCount: number
   visibility: Visibility
+  visibilityRoleId?: number | null
   position?: number
   anyOfNum?: number
   groupId?: number
@@ -448,6 +451,7 @@ type Guild = {
   guildPin?: GuildPinConfig
   isFallback?: boolean
   isDetailed?: boolean
+  parentRoles: number[]
 }
 
 type RoleFormType = Partial<
