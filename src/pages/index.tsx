@@ -22,6 +22,7 @@ const Page = (): JSX.Element => (
         content="Automated membership management for the platforms your community already uses."
       />
       <link rel="shortcut icon" href="/guild-icon.png" />
+      <link rel="manifest" href="%PUBLIC_URL%/manifest.json"></link>
     </Head>
 
     <DarkMode>
