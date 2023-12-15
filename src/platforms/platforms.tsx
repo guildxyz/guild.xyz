@@ -29,6 +29,7 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import useScoreCardProps from "./Score/useScoreCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
@@ -385,6 +386,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: false,
+    cardPropsHook: useScoreCardProps,
     PlatformPreview: dynamic(() => import("platforms/components/ScorePreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
