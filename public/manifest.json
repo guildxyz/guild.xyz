@@ -1,5 +1,16 @@
 {
   "name": "Guild.xyz",
   "description": "Automated membership management for the platforms your community already uses.",
-  "iconPath": "guild-icon.png"
+  "iconPath": "guild-icon.png",
+  "icons": [
+    {
+      "src": "guild-logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#212121",
+  "background_color": "#212121"
 }
