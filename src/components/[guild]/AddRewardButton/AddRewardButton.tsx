@@ -125,6 +125,11 @@ const AddRewardButton = (): JSX.Element => {
           .map((roleId) => ({
             // We'll be able to send additional params here, like capacity & time
             roleId: +roleId,
+            /**
+             * Temporary for SCORE rewards, because they can be added to multiple
+             * roles and this field has a unique constraint in the DB
+             */
+            platformRoleId: +roleId,
             ...data.rolePlatforms[0],
             visibility:
               saveAs === "DRAFT"
