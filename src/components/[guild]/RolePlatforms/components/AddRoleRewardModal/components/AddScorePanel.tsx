@@ -85,110 +85,115 @@ const AddScorePanel = ({ onSuccess }: Props) => {
           your custom branded score, and compete on a leaderboard. You’ll also be
           able to set score based requirements for satisfying higher level roles!
         </Text>
-
-        <Collapse in={isAppearanceOpen} startingHeight={"24px"}>
-          <Stack
-            direction={{ base: "column", sm: "row" }}
-            pos="relative"
-            onClick={!isAppearanceOpen ? onAppearanceToggle : null}
-            cursor={!isAppearanceOpen && "pointer"}
-            alignItems={{ sm: "flex-end" }}
-            gap={4}
-            mb="1"
-          >
-            <IconButton
-              pos="absolute"
-              right="0"
-              top="-1"
-              size="sm"
-              variant={"ghost"}
-              borderRadius={"full"}
-              _hover={{ bg: "transparent" }}
-              icon={<CaretDown />}
-              onClick={isAppearanceOpen ? onAppearanceToggle : null}
-              transform={isAppearanceOpen && "rotate(-180deg)"}
-              transition="transform .3s"
-              aria-label="Toggle appearance"
-              zIndex={1}
-            />
-            <FormControl isInvalid={!!errors?.rolePlatforms?.[0]?.name} flex="1">
-              <Text fontWeight={"medium"} mb="2">
-                {`Appearance `}
+        <Box>
+          <Collapse in={isAppearanceOpen} startingHeight={"24px"}>
+            <Stack
+              direction={{ base: "column", sm: "row" }}
+              pos="relative"
+              onClick={!isAppearanceOpen ? onAppearanceToggle : null}
+              cursor={!isAppearanceOpen && "pointer"}
+              alignItems={{ sm: "flex-end" }}
+              gap={4}
+              mb="1"
+            >
+              <IconButton
+                pos="absolute"
+                right="0"
+                top="-1"
+                size="sm"
+                variant={"ghost"}
+                borderRadius={"full"}
+                _hover={{ bg: "transparent" }}
+                icon={<CaretDown />}
+                onClick={isAppearanceOpen ? onAppearanceToggle : null}
+                transform={isAppearanceOpen && "rotate(-180deg)"}
+                transition="transform .3s"
+                aria-label="Toggle appearance"
+                zIndex={1}
+              />
+              <FormControl isInvalid={!!errors?.rolePlatforms?.[0]?.name} flex="1">
+                <Text fontWeight={"medium"} mb="2">
+                  {`Appearance `}
+                  <Text
+                    as="span"
+                    colorScheme={"gray"}
+                    opacity={isAppearanceOpen ? "1" : "0"}
+                    transition={"opacity .2s"}
+                  >
+                    (optional)
+                  </Text>
+                </Text>
+                <HStack>
+                  <RewardImagePicker defaultIcon={Star} />
+                  <Input {...register("name")} placeholder="Points" />
+                </HStack>
+                <FormErrorMessage>
+                  {errors?.name?.message as string}
+                </FormErrorMessage>
+              </FormControl>
+              <Box flex="1">
                 <Text
-                  as="span"
-                  colorScheme={"gray"}
+                  fontSize="xs"
+                  fontWeight="bold"
+                  color="gray"
+                  textTransform="uppercase"
+                  mb="2"
                   opacity={isAppearanceOpen ? "1" : "0"}
                   transition={"opacity .2s"}
                 >
-                  (optional)
+                  Preview
                 </Text>
-              </Text>
-              <HStack>
-                <RewardImagePicker defaultIcon={Star} />
-                <Input {...register("name")} placeholder="Points" />
-              </HStack>
-              <FormErrorMessage>{errors?.name?.message as string}</FormErrorMessage>
-            </FormControl>
-            <Box flex="1">
-              <Text
-                fontSize="xs"
-                fontWeight="bold"
-                color="gray"
-                textTransform="uppercase"
-                mb="2"
-                opacity={isAppearanceOpen ? "1" : "0"}
-                transition={"opacity .2s"}
-              >
-                Preview
-              </Text>
-              <HStack
-                h="40px"
-                px="4"
-                w="full"
-                borderWidth={1}
-                borderStyle={"dashed"}
-                borderRadius={"lg"}
-              >
-                {imageUrl ? <Img src={imageUrl} boxSize="5" /> : <Star />}
-                <Text>
-                  Get{" "}
-                  <Text as="span" fontWeight={"semibold"}>
-                    {`50 ${name || "points"}`}
+                <HStack
+                  h="40px"
+                  px="4"
+                  w="full"
+                  borderWidth={1}
+                  borderStyle={"dashed"}
+                  borderRadius={"lg"}
+                >
+                  {imageUrl ? <Img src={imageUrl} boxSize="5" /> : <Star />}
+                  <Text>
+                    Get{" "}
+                    <Text as="span" fontWeight={"semibold"}>
+                      {`50 ${name || "points"}`}
+                    </Text>
                   </Text>
-                </Text>
-              </HStack>
-            </Box>
-          </Stack>
-        </Collapse>
-
-        <Divider />
-
-        <HStack>
-          <FormControl isInvalid={!!errors?.amount}>
-            <FormLabel>{`How many ${name || "points"} to get?`}</FormLabel>
-            <Stack direction={{ base: "column", md: "row" }}>
-              <NumberInput
-                value={amount}
-                onChange={(newValue) => {
-                  setValue("amount", newValue)
-                }}
-              >
-                <NumberInputField placeholder="0" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-              <ButtonGroup flex="1" size={{ base: "sm", md: "md" }}>
-                <ShortcutButton amount={5} />
-                <ShortcutButton amount={10} />
-                <ShortcutButton amount={50} />
-                <ShortcutButton amount={100} />
-              </ButtonGroup>
+                </HStack>
+              </Box>
             </Stack>
-            <FormErrorMessage>{errors?.amount?.message as string}</FormErrorMessage>
-          </FormControl>
-        </HStack>
+          </Collapse>
+
+          <Divider my={isAppearanceOpen ? 8 : 6} transition={"margin .2s"} />
+
+          <HStack>
+            <FormControl isInvalid={!!errors?.amount}>
+              <FormLabel>{`How many ${name || "points"} to get?`}</FormLabel>
+              <Stack direction={{ base: "column", md: "row" }}>
+                <NumberInput
+                  value={amount}
+                  onChange={(newValue) => {
+                    setValue("amount", newValue)
+                  }}
+                >
+                  <NumberInputField placeholder="0" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+                <ButtonGroup flex="1" size={{ base: "sm", md: "md" }}>
+                  <ShortcutButton amount={5} />
+                  <ShortcutButton amount={10} />
+                  <ShortcutButton amount={50} />
+                  <ShortcutButton amount={100} />
+                </ButtonGroup>
+              </Stack>
+              <FormErrorMessage>
+                {errors?.amount?.message as string}
+              </FormErrorMessage>
+            </FormControl>
+          </HStack>
+        </Box>
         <Button
           colorScheme="indigo"
           w="max-content"
