@@ -62,7 +62,7 @@ const getTrophyColor = (position: number) => {
   }
 }
 
-const LeaderboardUserCard = ({
+const PinLeaderboardUserCard = ({
   address: addressParam,
   score,
   position,
@@ -356,5 +356,5 @@ const PinsListSkeleton = () => {
   )
 }
 
-export default LeaderboardUserCard
+export default PinLeaderboardUserCard
 export { LeaderboardUserCardSkeleton }

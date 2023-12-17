@@ -1,14 +1,14 @@
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAccount } from "wagmi"
-import LeaderboardUserCard, {
+import PinLeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
-} from "./LeaderboardUserCard"
-import useUsersLeaderboardPosition from "./hooks/useUsersLeaderboardPosition"
+} from "./PinLeaderboardUserCard"
+import usePinLeaderboardUsersPosition from "./hooks/usePinLeaderboardUsersPosition"
 
-const UsersLeaderboardPositionCard = () => {
+const PinLeaderboardUsersPositionCard = () => {
   const { address } = useAccount()
-  const { data, isLoading } = useUsersLeaderboardPosition()
+  const { data, isLoading } = usePinLeaderboardUsersPosition()
 
   const { data: usersGuildPins } = useUsersGuildPins()
 
@@ -16,7 +16,7 @@ const UsersLeaderboardPositionCard = () => {
     <LeaderboardUserCardSkeleton />
   ) : data ? (
     <CardMotionWrapper>
-      <LeaderboardUserCard
+      <PinLeaderboardUserCard
         address={address}
         score={data.score}
         position={data.position}
@@ -26,4 +26,4 @@ const UsersLeaderboardPositionCard = () => {
   ) : null
 }
 
-export default UsersLeaderboardPositionCard
+export default PinLeaderboardUsersPositionCard

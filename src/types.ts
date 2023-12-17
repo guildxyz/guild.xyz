@@ -712,7 +712,7 @@ type LeaderboardPinData = {
   tokenUri: string
 }
 
-type DetailedUserLeaderboardData = {
+type DetailedPinLeaderboardUserData = {
   address: string
   score: number
   pins: LeaderboardPinData[]
@@ -726,7 +726,7 @@ export type {
   CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,
-  DetailedUserLeaderboardData,
+  DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
   DiscordServerData,
   EventSources,
