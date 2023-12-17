@@ -129,7 +129,7 @@ const AddRewardButton = (): JSX.Element => {
              * Temporary for SCORE rewards, because they can be added to multiple
              * roles and this field has a unique constraint in the DB
              */
-            platformRoleId: +roleId,
+            platformRoleId: roleId,
             ...data.rolePlatforms[0],
             visibility:
               saveAs === "DRAFT"
