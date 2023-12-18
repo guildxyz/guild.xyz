@@ -1,18 +1,30 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Tabs, { TabsProps } from "./Tabs"
 import TabButton from "./components/TabButton"
 
 type Props = {
-  activeTab: "HOME" | "EVENTS" | "MEMBERS" | "ACTIVITY" | "ANALYTICS" | "MESSAGES"
+  activeTab:
+    | "HOME"
+    | "EVENTS"
+    | "LEADERBOARD"
+    | "MEMBERS"
+    | "ACTIVITY"
+    | "ANALYTICS"
+    | "MESSAGES"
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
-  const { urlName, featureFlags } = useGuild()
+  const { urlName, featureFlags, guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const { captureEvent } = usePostHogContext()
+
+  const hasScoreReward = guildPlatforms?.some(
+    (gp) => gp.platformId === PlatformType.SCORE
+  )
 
   return (
     <Tabs {...rest}>
@@ -20,6 +32,20 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
         Home
       </TabButton>
 
+      {hasScoreReward && (
+        <TabButton
+          href={`/${urlName}/leaderboard`}
+          isActive={activeTab === "LEADERBOARD"}
+          onClick={() => {
+            captureEvent("Click on leaderboard tab", {
+              from: "home",
+              guild: urlName,
+            })
+          }}
+        >
+          Leaderboard
+        </TabButton>
+      )}
       <TabButton
         href={`/${urlName}/events`}
         isActive={activeTab === "EVENTS"}
