@@ -131,7 +131,7 @@ const AddScorePanel = ({ onSuccess }: Props) => {
                 </Text>
                 <HStack>
                   <RewardImagePicker defaultIcon={Star} />
-                  <Input {...register("name")} placeholder="Points" />
+                  <Input {...register("name")} placeholder="points" />
                 </HStack>
                 <FormErrorMessage>
                   {errors?.name?.message as string}
