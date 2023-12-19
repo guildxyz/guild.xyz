@@ -16,8 +16,8 @@ const ScorePreview = (): JSX.Element => {
   })
 
   const { name, imageUrl } = guildPlatformId
-    ? guildPlatforms.find((gp) => gp.id === guildPlatformId).platformGuildData
-    : platformGuildData
+    ? guildPlatforms.find((gp) => gp.id === guildPlatformId).platformGuildData ?? {}
+    : platformGuildData ?? {}
 
   return (
     <PlatformPreview
