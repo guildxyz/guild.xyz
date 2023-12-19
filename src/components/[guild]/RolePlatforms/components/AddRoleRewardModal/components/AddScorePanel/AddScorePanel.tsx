@@ -183,7 +183,7 @@ const ShortcutButton = ({ amount, imageUrl }) => {
       }
       h={{ md: "10" }}
       onClick={() => {
-        setValue("amount", amount)
+        setValue("amount", amount, { shouldValidate: true })
       }}
     >
       {amount}
