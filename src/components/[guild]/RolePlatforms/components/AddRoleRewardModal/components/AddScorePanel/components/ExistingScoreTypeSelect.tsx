@@ -40,7 +40,7 @@ const ExistingScoreTypeSelect = ({ existingScoreRewards, selectedExistingId }) =
   return (
     <FormControl isInvalid={!!errors?.guildPlatformId} mb="5">
       <FormLabel>Score type</FormLabel>
-      <InputGroup w={{ md: "230px" }}>
+      <InputGroup>
         {selectedScoreImage && (
           <InputLeftElement>
             {typeof selectedScoreImage === "string" ? (

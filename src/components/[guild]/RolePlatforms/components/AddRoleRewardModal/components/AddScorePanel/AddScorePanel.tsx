@@ -1,11 +1,10 @@
 import {
-  Box,
   ButtonGroup,
   Collapse,
   Divider,
+  Flex,
   FormControl,
   FormLabel,
-  HStack,
   Img,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -103,73 +102,60 @@ const AddScorePanel = ({ onSuccess }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <Stack spacing={8}>
-        <Text colorScheme="gray" fontWeight="semibold">
-          Gamify your guild with a score system, so users can collect points / XP /
-          your custom branded score, and compete on a leaderboard. You’ll also be
-          able to set score based requirements for satisfying higher level roles!
-        </Text>
-        <Box>
-          <Box>
-            {!!existingScoreRewards.length && (
-              <ExistingScoreTypeSelect
-                existingScoreRewards={existingScoreRewards}
-                selectedExistingId={selectedExistingId}
-              />
-            )}
-            <Collapse
-              in={!existingScoreRewards.length || selectedExistingId === null}
-            >
-              <AddNewScoreType
-                name={name}
-                imageUrl={imageUrl}
-                isOptional={!existingScoreRewards.length}
-              />
-              <Divider mt={8} mb={7} />
-            </Collapse>
-          </Box>
-
-          <HStack mt={1}>
-            <FormControl isInvalid={!!errors?.amount}>
-              <FormLabel>{`How many ${name || "points"} to get?`}</FormLabel>
-              <Stack direction={{ base: "column", md: "row" }}>
-                <NumberInput
-                  value={amount}
-                  {...(methods.register("amount", {
-                    required: "This field is required",
-                  }) as any)}
-                  onChange={(newValue) => {
-                    setValue("amount", newValue)
-                  }}
-                >
-                  <NumberInputField placeholder="0" />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-                <ButtonGroup flex="1" size={{ base: "sm", md: "md" }}>
-                  <ShortcutButton amount={5} imageUrl={imageUrl} />
-                  <ShortcutButton amount={10} imageUrl={imageUrl} />
-                  <ShortcutButton amount={50} imageUrl={imageUrl} />
-                  <ShortcutButton amount={100} imageUrl={imageUrl} />
-                </ButtonGroup>
-              </Stack>
-              <FormErrorMessage>
-                {errors?.amount?.message as string}
-              </FormErrorMessage>
-            </FormControl>
-          </HStack>
-        </Box>
-        <Button
-          colorScheme="indigo"
-          w="max-content"
-          ml="auto"
-          onClick={methods.handleSubmit(onSubmit)}
-        >
+      <Text colorScheme="gray" fontWeight="semibold" mb="8">
+        Gamify your guild with a score system, so users can collect points / XP /
+        your custom branded score, and compete on a leaderboard. You’ll also be able
+        to set score based requirements for satisfying higher level roles!
+      </Text>
+      {!!existingScoreRewards.length && (
+        <ExistingScoreTypeSelect
+          existingScoreRewards={existingScoreRewards}
+          selectedExistingId={selectedExistingId}
+        />
+      )}
+      <Collapse
+        in={!existingScoreRewards.length || selectedExistingId === null}
+        style={{ flexShrink: 0 }}
+      >
+        <AddNewScoreType
+          name={name}
+          imageUrl={imageUrl}
+          isOptional={!existingScoreRewards.length}
+        />
+        <Divider mt={8} mb={7} />
+      </Collapse>
+      <FormControl isInvalid={!!errors?.amount} pt={{ md: 0.5 }}>
+        <FormLabel>{`How many ${name || "points"} to get?`}</FormLabel>
+        <Stack direction={{ base: "column", md: "row" }}>
+          <NumberInput
+            value={amount}
+            {...(methods.register("amount", {
+              required: "This field is required",
+            }) as any)}
+            onChange={(newValue) => {
+              setValue("amount", newValue)
+            }}
+          >
+            <NumberInputField placeholder="0" />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <ButtonGroup flex="1" size={{ base: "sm", md: "md" }}>
+            <ShortcutButton amount={5} imageUrl={imageUrl} />
+            <ShortcutButton amount={10} imageUrl={imageUrl} />
+            <ShortcutButton amount={50} imageUrl={imageUrl} />
+            <ShortcutButton amount={100} imageUrl={imageUrl} />
+          </ButtonGroup>
+        </Stack>
+        <FormErrorMessage>{errors?.amount?.message as string}</FormErrorMessage>
+      </FormControl>
+      <Flex justifyContent={"flex-end"} mt="auto" pt="10">
+        <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
           Continue
         </Button>
-      </Stack>
+      </Flex>
     </FormProvider>
   )
 }

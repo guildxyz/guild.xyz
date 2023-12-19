@@ -229,7 +229,12 @@ const AddRewardButton = (): JSX.Element => {
                 </Stack>
               </ModalHeader>
 
-              <ModalBody ref={modalRef} className="custom-scrollbar">
+              <ModalBody
+                ref={modalRef}
+                className="custom-scrollbar"
+                display="flex"
+                flexDir="column"
+              >
                 {selection === "POAP" ? (
                   <DynamicAddPoapPanel />
                 ) : selection && step === "SELECT_ROLE" ? (
