@@ -81,7 +81,15 @@ const AddScorePanel = ({ onSuccess }: Props) => {
   const onSubmit = (data) => {
     append({
       ...(selectedExistingId
-        ? { guildPlatformId: selectedExistingId }
+        ? {
+            guildPlatformId: selectedExistingId,
+            // have to send these in this case too so the validator doesn't throw an error
+            guildPlatform: {
+              platformName: "SCORE",
+              platformGuildId: "",
+              platformGuildData: {},
+            },
+          }
         : {
             guildPlatform: {
               platformName: "SCORE",
