@@ -1,7 +1,13 @@
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
 const ScorePreview = (): JSX.Element => {
+  const { guildPlatforms } = useGuild()
+
+  const guildPlatformId = useWatch({
+    name: "rolePlatforms.0.guildPlatformId",
+  })
   const platformGuildData = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData",
   })
@@ -9,11 +15,15 @@ const ScorePreview = (): JSX.Element => {
     name: "rolePlatforms.0.platformRoleData.score",
   })
 
+  const { name, imageUrl } = guildPlatformId
+    ? guildPlatforms.find((gp) => gp.id === guildPlatformId).platformGuildData
+    : platformGuildData
+
   return (
     <PlatformPreview
       type="SCORE"
-      name={`Get ${amount} ${platformGuildData?.name || "points"}`}
-      image={platformGuildData?.imageUrl}
+      name={`Get ${amount} ${name || "points"}`}
+      image={imageUrl}
     />
   )
 }
