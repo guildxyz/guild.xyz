@@ -77,7 +77,7 @@ const AddScorePanel = ({ onSuccess }: Props) => {
       ?.platformGuildData ?? {}
 
   const name = selectedName ?? localName
-  const imageUrl = selectedImageUrl ?? localImageUrl
+  const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
   const onSubmit = (data) => {
     append({
@@ -146,10 +146,10 @@ const AddScorePanel = ({ onSuccess }: Props) => {
                   </NumberInputStepper>
                 </NumberInput>
                 <ButtonGroup flex="1" size={{ base: "sm", md: "md" }}>
-                  <ShortcutButton amount={5} />
-                  <ShortcutButton amount={10} />
-                  <ShortcutButton amount={50} />
-                  <ShortcutButton amount={100} />
+                  <ShortcutButton amount={5} imageUrl={imageUrl} />
+                  <ShortcutButton amount={10} imageUrl={imageUrl} />
+                  <ShortcutButton amount={50} imageUrl={imageUrl} />
+                  <ShortcutButton amount={100} imageUrl={imageUrl} />
                 </ButtonGroup>
               </Stack>
               <FormErrorMessage>
@@ -171,9 +171,8 @@ const AddScorePanel = ({ onSuccess }: Props) => {
   )
 }
 
-const ShortcutButton = ({ amount }) => {
-  const { setValue, control } = useFormContext()
-  const imageUrl = useWatch({ control, name: "imageUrl" })
+const ShortcutButton = ({ amount, imageUrl }) => {
+  const { setValue } = useFormContext()
 
   return (
     <Button
