@@ -135,6 +135,9 @@ const AddScorePanel = ({ onSuccess }: Props) => {
               <Stack direction={{ base: "column", md: "row" }}>
                 <NumberInput
                   value={amount}
+                  {...(methods.register("amount", {
+                    required: "This field is required",
+                  }) as any)}
                   onChange={(newValue) => {
                     setValue("amount", newValue)
                   }}
