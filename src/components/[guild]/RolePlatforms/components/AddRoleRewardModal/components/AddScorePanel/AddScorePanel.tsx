@@ -178,7 +178,13 @@ const ShortcutButton = ({ amount }) => {
   return (
     <Button
       w="full"
-      leftIcon={imageUrl ? <Img src={imageUrl} boxSize="4" /> : <Star />}
+      leftIcon={
+        imageUrl ? (
+          <Img src={imageUrl} boxSize="4" borderRadius={"full"} />
+        ) : (
+          <Star />
+        )
+      }
       h={{ md: "10" }}
       onClick={() => {
         setValue("amount", amount)

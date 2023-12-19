@@ -56,7 +56,11 @@ const AddNewScoreType = ({ name, imageUrl, isOptional }) => {
           borderStyle={"dashed"}
           borderRadius={"lg"}
         >
-          {imageUrl ? <Img src={imageUrl} boxSize="5" /> : <Star />}
+          {imageUrl ? (
+            <Img src={imageUrl} boxSize="5" borderRadius={"full"} />
+          ) : (
+            <Star />
+          )}
           <Text>
             Get{" "}
             <Text as="span" fontWeight={"semibold"}>

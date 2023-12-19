@@ -1,4 +1,5 @@
 import {
+  Center,
   FormControl,
   FormLabel,
   InputGroup,
@@ -21,7 +22,11 @@ const ExistingScoreTypeSelect = ({ existingScoreRewards, selectedExistingId }) =
     .map((gp) => ({
       label: gp.platformGuildData.name || "points",
       value: gp.id,
-      img: gp.platformGuildData.imageUrl ?? <Star />,
+      img: gp.platformGuildData.imageUrl ?? (
+        <Center boxSize={5}>
+          <Star />
+        </Center>
+      ),
     }))
     .concat({
       label: "Create new",
