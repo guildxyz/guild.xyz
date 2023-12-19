@@ -102,7 +102,7 @@ const AddScorePanel = ({ onSuccess }: Props) => {
           }),
       isNew: true,
       platformRoleData: {
-        score: data.amount.toString(),
+        score: data.amount,
       },
     })
     onSuccess()
