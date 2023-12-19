@@ -154,7 +154,7 @@ const LeaderboardUserCardSkeleton = () => {
         >
           <Skeleton boxSize={{ base: 6, sm: 8 }} />
         </Center>
-        <HStack spacing={4} px={{ base: 5, md: 6 }} py={{ base: 6, md: 7 }}>
+        <HStack spacing={4} px={{ base: 5, md: 6 }} py={{ base: 5, md: 7 }}>
           <SkeletonCircle boxSize={10} />
 
           <VStack alignItems="start" spacing={0}>

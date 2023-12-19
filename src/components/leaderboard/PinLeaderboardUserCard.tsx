@@ -292,7 +292,7 @@ const PinLeaderboardUserCard = ({
   )
 }
 
-const LeaderboardUserCardSkeleton = () => {
+const PinLeaderboardUserCardSkeleton = () => {
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
 
@@ -357,4 +357,4 @@ const PinsListSkeleton = () => {
 }
 
 export default PinLeaderboardUserCard
-export { LeaderboardUserCardSkeleton }
+export { PinLeaderboardUserCardSkeleton }

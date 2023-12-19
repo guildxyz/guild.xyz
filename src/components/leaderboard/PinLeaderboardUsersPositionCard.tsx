@@ -2,7 +2,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useAccount } from "wagmi"
 import PinLeaderboardUserCard, {
-  LeaderboardUserCardSkeleton,
+  PinLeaderboardUserCardSkeleton,
 } from "./PinLeaderboardUserCard"
 import usePinLeaderboardUsersPosition from "./hooks/usePinLeaderboardUsersPosition"
 
@@ -13,7 +13,7 @@ const PinLeaderboardUsersPositionCard = () => {
   const { data: usersGuildPins } = useUsersGuildPins()
 
   return isLoading ? (
-    <LeaderboardUserCardSkeleton />
+    <PinLeaderboardUserCardSkeleton />
   ) : data ? (
     <CardMotionWrapper>
       <PinLeaderboardUserCard

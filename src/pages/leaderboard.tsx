@@ -7,7 +7,7 @@ import Layout from "components/common/Layout"
 import Section from "components/common/Section"
 import MysteryBoxCard from "components/leaderboard/MysteryBoxCard"
 import PinLeaderboardUserCard, {
-  LeaderboardUserCardSkeleton,
+  PinLeaderboardUserCardSkeleton,
 } from "components/leaderboard/PinLeaderboardUserCard"
 import PinLeaderboardUsersPositionCard from "components/leaderboard/PinLeaderboardUsersPositionCard"
 import useHasAlreadyClaimedMysteryBox from "components/leaderboard/hooks/useHasAlreadyClaimedMysteryBox"
@@ -145,7 +145,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
                 ))}
               {isLeaderboardValidating &&
                 [...Array(25)].map((_, index) => (
-                  <LeaderboardUserCardSkeleton key={index} />
+                  <PinLeaderboardUserCardSkeleton key={index} />
                 ))}
             </>
           </MotionSection>
