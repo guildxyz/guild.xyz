@@ -7,14 +7,17 @@ import {
   SkeletonCircle,
   Tag,
   Text,
+  Tooltip,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
+import { useRouter } from "next/router"
 import { Trophy } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
+import useGuild from "../hooks/useGuild"
 
 type Props = {
   address: string
@@ -40,10 +43,17 @@ const LeaderboardUserCard = ({
   position,
   isCurrentUser,
 }: Props) => {
+  const { guildPlatforms } = useGuild()
+  const router = useRouter()
+
   const resolvedAddress = useResolveAddress(addressParam)
   const positionBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
+
+  const scoreName =
+    guildPlatforms.find((gp) => gp.id.toString() === router.query.scoreId)
+      ?.platformGuildData?.name || "points"
 
   const TrophyIcon =
     position <= 3 ? (
@@ -101,14 +111,13 @@ const LeaderboardUserCard = ({
             <GuildAvatar size={5} address={addressParam} />
           </Circle>
 
-          <HStack justifyContent={"space-between"} w="full" overflow={"hidden"}>
-            <Text
-              // fontFamily="display"
-              // letterSpacing="wide"
-              fontWeight="bold"
-              maxW="full"
-              noOfLines={1}
-            >
+          <HStack
+            justifyContent={"space-between"}
+            w="full"
+            overflow={"hidden"}
+            spacing={4}
+          >
+            <Text fontWeight="bold" maxW="full" noOfLines={1}>
               {resolvedAddress ?? shortenHex(addressParam)}
               {isCurrentUser && (
                 <Tag ml="2" colorScheme={"primary"}>
@@ -117,19 +126,17 @@ const LeaderboardUserCard = ({
               )}
             </Text>
 
-            <HStack spacing={1}>
-              <Text
-                as="span"
-                colorScheme="gray"
-                textTransform="uppercase"
-                fontWeight="bold"
-                fontSize="xs"
-              >{`Score: `}</Text>
-
-              <Text as="span" fontWeight="bold" /* fontSize={"lg"} */>
-                {score}
-              </Text>
-            </HStack>
+            <Tooltip
+              label="If multiple members have the same score, rank is calculated based on join date"
+              hasArrow
+            >
+              <HStack spacing={{ base: "3px", md: 1 }}>
+                <Text fontWeight="bold">{score}</Text>
+                <Text as="span" fontWeight="medium" fontSize="sm">
+                  {scoreName}
+                </Text>
+              </HStack>
+            </Tooltip>
           </HStack>
         </HStack>
       </HStack>
