@@ -118,7 +118,8 @@ const Layout = ({
             h={bgHeight}
             background={"gray.900"}
             // temporary for holiday theme
-            zIndex={"0 !important"}
+            id="background"
+            overflow="hidden"
           >
             {backgroundImage ? (
               <Image
