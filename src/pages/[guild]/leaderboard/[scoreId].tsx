@@ -42,7 +42,7 @@ const Leaderboard = () => {
     <Layout
       title={name}
       textColor={textColor}
-      ogTitle={`Events${name ? ` - ${name}` : ""}`}
+      ogTitle={`Leaderboard${name ? ` - ${name}` : ""}`}
       ogDescription={description}
       description={
         <>
