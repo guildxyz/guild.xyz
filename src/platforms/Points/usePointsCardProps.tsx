@@ -9,7 +9,7 @@ const usePointsCardProps = (guildPlatform: GuildPlatform) => {
   return {
     type: "POINTS" as PlatformName,
     image: imageUrl || <Star />,
-    name: `Get ${rolePlatform?.platformRoleData?.points} ${name || "points"}`,
+    name: `Get ${rolePlatform?.platformRoleData?.score} ${name || "points"}`,
   }
 }
 

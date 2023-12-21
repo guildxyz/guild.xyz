@@ -102,7 +102,7 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
           }),
       isNew: true,
       platformRoleData: {
-        points: parseInt(data.amount),
+        score: parseInt(data.amount),
       },
     })
     onSuccess()

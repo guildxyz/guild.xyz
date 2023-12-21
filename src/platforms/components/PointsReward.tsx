@@ -44,7 +44,7 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
             <Link
               href={`/${urlName}/leaderboard/${platform.guildPlatform.id}`}
               fontWeight={"semibold"}
-            >{`${platform.platformRoleData?.points} ${name}`}</Link>
+            >{`${platform.platformRoleData?.score} ${name}`}</Link>
             {hasAccess && <Icon as={Check} color={iconColor} ml="1.5" mb="-0.5" />}
           </Tooltip>
         </>
