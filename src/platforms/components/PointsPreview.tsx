@@ -2,7 +2,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
-const ScorePreview = (): JSX.Element => {
+const PointsPreview = (): JSX.Element => {
   const { guildPlatforms } = useGuild()
 
   const guildPlatformId = useWatch({
@@ -21,11 +21,11 @@ const ScorePreview = (): JSX.Element => {
 
   return (
     <PlatformPreview
-      type="SCORE"
+      type="POINTS"
       name={`Get ${amount} ${name || "points"}`}
       image={imageUrl}
     />
   )
 }
 
-export default ScorePreview
+export default PointsPreview

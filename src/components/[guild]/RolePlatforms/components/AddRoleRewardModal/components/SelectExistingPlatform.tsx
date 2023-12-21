@@ -24,7 +24,7 @@ const SelectExistingPlatform = ({ onClose }) => {
     (guildPlatform) =>
       !fields.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
-      ) && guildPlatform.platformId !== PlatformType.SCORE
+      ) && guildPlatform.platformId !== PlatformType.POINTS
   )
 
   if (!filteredPlatforms.length) return null

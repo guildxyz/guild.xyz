@@ -9,7 +9,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Link from "components/common/Link"
 import { ArrowRight, Check } from "phosphor-react"
 
-const ScoreReward = ({ platform, withMotionImg }: RewardProps) => {
+const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
   const { platformGuildData } = platform.guildPlatform
   const name = platformGuildData?.name || "points"
@@ -52,4 +52,4 @@ const ScoreReward = ({ platform, withMotionImg }: RewardProps) => {
     />
   )
 }
-export default ScoreReward
+export default PointsReward

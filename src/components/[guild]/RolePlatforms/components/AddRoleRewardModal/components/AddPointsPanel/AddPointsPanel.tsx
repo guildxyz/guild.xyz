@@ -26,31 +26,31 @@ import {
 } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
-import AddNewScoreType from "./components/AddNewScoreType"
-import ExistingScoreTypeSelect from "./components/ExistingScoreTypeSelect"
+import AddNewPointsType from "./components/AddNewPointsType"
+import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
 
 type Props = {
   onSuccess: () => void
 }
 
-type AddScoreFormType = {
+type AddPointsFormType = {
   guildPlatformId: number
   amount: string
   name: string
   imageUrl: string
 }
 
-const AddScorePanel = ({ onSuccess }: Props) => {
+const AddPointsPanel = ({ onSuccess }: Props) => {
   const { id, guildPlatforms } = useGuild()
 
-  const existingScoreRewards = guildPlatforms.filter(
-    (gp) => gp.platformId === PlatformType.SCORE
+  const existingPointsRewards = guildPlatforms.filter(
+    (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const methods = useForm<AddScoreFormType>({
+  const methods = useForm<AddPointsFormType>({
     mode: "all",
     defaultValues: {
-      guildPlatformId: existingScoreRewards?.[0]?.id,
+      guildPlatformId: existingPointsRewards?.[0]?.id,
     },
   })
   const {
@@ -72,7 +72,7 @@ const AddScorePanel = ({ onSuccess }: Props) => {
   const localImageUrl = useWatch({ control, name: "imageUrl" })
 
   const { name: selectedName, imageUrl: selectedImageUrl } =
-    existingScoreRewards?.find((gp) => gp.id === selectedExistingId)
+    existingPointsRewards?.find((gp) => gp.id === selectedExistingId)
       ?.platformGuildData ?? {}
 
   const name = selectedName ?? localName
@@ -85,15 +85,15 @@ const AddScorePanel = ({ onSuccess }: Props) => {
             guildPlatformId: selectedExistingId,
             // have to send these in this case too so the validator doesn't throw an error
             guildPlatform: {
-              platformName: "SCORE",
+              platformName: "POINTS",
               platformGuildId: "",
               platformGuildData: {},
             },
           }
         : {
             guildPlatform: {
-              platformName: "SCORE",
-              platformGuildId: `score-${id}-${data.name.toLowerCase() || "points"}`,
+              platformName: "POINTS",
+              platformGuildId: `points-${id}-${data.name.toLowerCase() || "points"}`,
               platformGuildData: {
                 name: data.name,
                 imageUrl: data.imageUrl,
@@ -113,22 +113,22 @@ const AddScorePanel = ({ onSuccess }: Props) => {
       <Text colorScheme="gray" fontWeight="semibold" mb="8">
         Gamify your guild with a score system, so users can collect points / XP /
         your custom branded score, and compete on a leaderboard. You’ll also be able
-        to set score based requirements for satisfying higher level roles!
+        to set points based requirements for satisfying higher level roles!
       </Text>
-      {!!existingScoreRewards.length && (
-        <ExistingScoreTypeSelect
-          existingScoreRewards={existingScoreRewards}
+      {!!existingPointsRewards.length && (
+        <ExistingPointsTypeSelect
+          existingPointsRewards={existingPointsRewards}
           selectedExistingId={selectedExistingId}
         />
       )}
       <Collapse
-        in={!existingScoreRewards.length || selectedExistingId === null}
+        in={!existingPointsRewards.length || selectedExistingId === null}
         style={{ flexShrink: 0 }}
       >
-        <AddNewScoreType
+        <AddNewPointsType
           name={name}
           imageUrl={imageUrl}
-          isOptional={!existingScoreRewards.length}
+          isOptional={!existingPointsRewards.length}
         />
         <Divider mt={8} mb={7} />
       </Collapse>
@@ -191,4 +191,4 @@ const ShortcutButton = ({ amount, imageUrl }) => {
   )
 }
 
-export default AddScorePanel
+export default AddPointsPanel

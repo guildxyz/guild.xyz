@@ -86,7 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
-  | "SCORE"
+  | "POINTS"
 
 type PlatformUserData = {
   acessToken?: string
@@ -564,7 +564,7 @@ export enum PlatformType {
   "TWITTER_V1" = 8,
   "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
-  "SCORE" = 13,
+  "POINTS" = 13,
 }
 
 type WalletConnectConnectionData = {

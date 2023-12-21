@@ -11,14 +11,14 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import { useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
 
-const ExistingScoreTypeSelect = ({ existingScoreRewards, selectedExistingId }) => {
+const ExistingPointsTypeSelect = ({ existingPointsRewards, selectedExistingId }) => {
   const {
     control,
     setValue,
     formState: { errors },
   } = useFormContext()
 
-  const options = existingScoreRewards
+  const options = existingPointsRewards
     .map((gp) => ({
       label: gp.platformGuildData.name || "points",
       value: gp.id,
@@ -33,20 +33,20 @@ const ExistingScoreTypeSelect = ({ existingScoreRewards, selectedExistingId }) =
       value: null,
     })
 
-  const selectedScoreImage = options.find(
+  const selectedPointsImage = options.find(
     (option) => option.value === selectedExistingId
   )?.img
 
   return (
     <FormControl isInvalid={!!errors?.guildPlatformId} mb="5">
-      <FormLabel>Score type</FormLabel>
+      <FormLabel>Points type</FormLabel>
       <InputGroup>
-        {selectedScoreImage && (
+        {selectedPointsImage && (
           <InputLeftElement>
-            {typeof selectedScoreImage === "string" ? (
-              <OptionImage img={selectedScoreImage} alt="Score icon" />
+            {typeof selectedPointsImage === "string" ? (
+              <OptionImage img={selectedPointsImage} alt="Points icon" />
             ) : (
-              selectedScoreImage
+              selectedPointsImage
             )}
           </InputLeftElement>
         )}
@@ -68,4 +68,4 @@ const ExistingScoreTypeSelect = ({ existingScoreRewards, selectedExistingId }) =
   )
 }
 
-export default ExistingScoreTypeSelect
+export default ExistingPointsTypeSelect

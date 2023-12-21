@@ -40,7 +40,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatforms = guildPlatforms.filter(
     (gp) =>
       relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.SCORE
+      gp.platformId !== PlatformType.POINTS
   )
 
   const { isAdmin } = useGuildPermission()

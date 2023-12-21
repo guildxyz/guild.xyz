@@ -4,7 +4,7 @@ import RewardImagePicker from "platforms/SecretText/SecretTextDataForm/component
 import { useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
 
-const AddNewScoreType = ({ name, imageUrl, isOptional }) => {
+const AddNewPointsType = ({ name, imageUrl, isOptional }) => {
   const {
     register,
     formState: { errors },
@@ -73,4 +73,4 @@ const AddNewScoreType = ({ name, imageUrl, isOptional }) => {
   )
 }
 
-export default AddNewScoreType
+export default AddNewPointsType

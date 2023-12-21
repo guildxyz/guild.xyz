@@ -51,8 +51,8 @@ const LeaderboardUserCard = ({
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
 
-  const scoreName =
-    guildPlatforms.find((gp) => gp.id.toString() === router.query.scoreId)
+  const pointsName =
+    guildPlatforms.find((gp) => gp.id.toString() === router.query.pointsId)
       ?.platformGuildData?.name || "points"
 
   const TrophyIcon =
@@ -133,7 +133,7 @@ const LeaderboardUserCard = ({
               <HStack spacing={{ base: "3px", md: 1 }}>
                 <Text fontWeight="bold">{score}</Text>
                 <Text as="span" fontWeight="medium" fontSize="sm">
-                  {scoreName}
+                  {pointsName}
                 </Text>
               </HStack>
             </Tooltip>

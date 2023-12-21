@@ -4,7 +4,7 @@ import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import LeaderboardScoreSelector from "components/[guild]/leaderboard/LeaderboardScoreSelector"
+import LeaderboardPointsSelector from "components/[guild]/leaderboard/LeaderboardPointsSelector"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/[guild]/leaderboard/LeaderboardUserCard"
@@ -29,7 +29,7 @@ const Leaderboard = () => {
 
   const { isLoading, data, error } = useSWRWithOptionalAuth(
     guildId
-      ? `/v2/guilds/${guildId}/scores/${router.query.scoreId}/leaderboard`
+      ? `/v2/guilds/${guildId}/points/${router.query.pointsId}/leaderboard`
       : null,
     null,
     false,
@@ -93,13 +93,13 @@ const Leaderboard = () => {
     >
       <GuildTabs
         activeTab="LEADERBOARD"
-        rightElement={<LeaderboardScoreSelector />}
+        rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
         {userData && (
           <LeaderboardUserCard
             address={userData.address}
-            score={userData.totalScore}
+            score={userData.totalPoints}
             position={userData.rank}
             isCurrentUser
           />
@@ -118,7 +118,7 @@ const Leaderboard = () => {
                   description={
                     "Please see the console for more details, and contact support if this is unexpected!"
                   }
-                  pos="static" // so it doesn't overlay the LeaderboardScoreSelector
+                  pos="static" // so it doesn't overlay the LeaderboardPointsSelector
                   mb={0}
                 />
               </Card>
@@ -129,7 +129,7 @@ const Leaderboard = () => {
                   <LeaderboardUserCard
                     key={index}
                     address={userLeaderboardData?.address}
-                    score={userLeaderboardData?.totalScore}
+                    score={userLeaderboardData?.totalPoints}
                     position={index + 1}
                     isCurrentUser={userLeaderboardData?.userId === userId}
                   />
@@ -145,11 +145,11 @@ const Leaderboard = () => {
 const LeaderboardWrapper = (): JSX.Element => {
   const { guildPlatforms, error } = useGuild()
 
-  const hasScoreReward = guildPlatforms?.some(
-    (gp) => gp.platformId === PlatformType.SCORE
+  const hasPointsReward = guildPlatforms?.some(
+    (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  if (error || (guildPlatforms && !hasScoreReward))
+  if (error || (guildPlatforms && !hasPointsReward))
     return <ErrorPage statusCode={404} />
 
   return (

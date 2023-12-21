@@ -22,8 +22,8 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   const { captureEvent } = usePostHogContext()
 
-  const existingScoreReward = guildPlatforms?.find(
-    (gp) => gp.platformId === PlatformType.SCORE
+  const existingPointsReward = guildPlatforms?.find(
+    (gp) => gp.platformId === PlatformType.POINTS
   )
 
   return (
@@ -32,9 +32,9 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
         Home
       </TabButton>
 
-      {existingScoreReward && (
+      {existingPointsReward && (
         <TabButton
-          href={`/${urlName}/leaderboard/${existingScoreReward.id}`}
+          href={`/${urlName}/leaderboard/${existingPointsReward.id}`}
           isActive={activeTab === "LEADERBOARD"}
           onClick={() => {
             captureEvent("Click on leaderboard tab", {

@@ -29,7 +29,7 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
-import useScoreCardProps from "./Score/useScoreCardProps"
+import usePointsCardProps from "./Points/usePointsCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
@@ -379,26 +379,26 @@ const platforms: Record<PlatformName, PlatformData> = {
       ssr: false,
     }),
   },
-  SCORE: {
+  POINTS: {
     icon: Star,
-    name: "Score",
+    name: "Points",
     colorScheme: "gray",
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: false,
-    cardPropsHook: useScoreCardProps,
-    PlatformPreview: dynamic(() => import("platforms/components/ScorePreview"), {
+    cardPropsHook: usePointsCardProps,
+    PlatformPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
     }),
     AddPlatformPanel: dynamic(
       () =>
         import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddScorePanel"
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel"
         ),
       { ssr: false }
     ),
-    RoleCardComponent: dynamic(() => import("platforms/components/ScoreReward"), {
+    RoleCardComponent: dynamic(() => import("platforms/components/PointsReward"), {
       ssr: false,
     }),
   },

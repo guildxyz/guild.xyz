@@ -8,27 +8,23 @@ import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 
-const LeaderboardScoreSelector = () => {
+const LeaderboardPointsSelector = () => {
   const { urlName, guildPlatforms } = useGuild()
   const router = useRouter()
 
   if (!guildPlatforms) return null
 
-  const scoreRewards = guildPlatforms.filter(
-    (gp) => gp.platformId === PlatformType.SCORE
+  const pointsRewards = guildPlatforms.filter(
+    (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  if (scoreRewards.length < 2) return null
+  if (pointsRewards.length < 2) return null
 
-  const scoreRewardsData = scoreRewards.map((score) => ({
-    id: score.id.toString(),
-    name: score.platformGuildData.name || "points",
-    image: score.platformGuildData.imageUrl ? (
-      <Img
-        src={score.platformGuildData.imageUrl}
-        boxSize={5}
-        borderRadius={"full"}
-      />
+  const pointsRewardsData = pointsRewards.map((gp) => ({
+    id: gp.id.toString(),
+    name: gp.platformGuildData.name || "points",
+    image: gp.platformGuildData.imageUrl ? (
+      <Img src={gp.platformGuildData.imageUrl} boxSize={5} borderRadius={"full"} />
     ) : (
       <Center boxSize={5}>
         <Star />
@@ -36,8 +32,8 @@ const LeaderboardScoreSelector = () => {
     ),
   }))
 
-  const currentScore = scoreRewardsData.find(
-    (score) => score.id === router.query.scoreId
+  const currentPoints = pointsRewardsData.find(
+    (points) => points.id === router.query.pointsId
   )
 
   return (
@@ -48,19 +44,19 @@ const LeaderboardScoreSelector = () => {
           size="sm"
           variant="ghost"
           rightIcon={<CaretDown />}
-          leftIcon={currentScore.image}
+          leftIcon={currentPoints.image}
         >
-          {currentScore.name}
+          {currentPoints.name}
         </MenuButton>
         <MenuList>
-          {scoreRewardsData.map((score) => (
+          {pointsRewardsData.map((points) => (
             <Link
-              key={score.id}
+              key={points.id}
               passHref
-              href={`/${urlName}/leaderboard/${score.id}`}
+              href={`/${urlName}/leaderboard/${points.id}`}
             >
-              <MenuItem as="a" icon={score.image}>
-                {score.name}
+              <MenuItem as="a" icon={points.image}>
+                {points.name}
               </MenuItem>
             </Link>
           ))}
@@ -70,4 +66,4 @@ const LeaderboardScoreSelector = () => {
   )
 }
 
-export default LeaderboardScoreSelector
+export default LeaderboardPointsSelector
