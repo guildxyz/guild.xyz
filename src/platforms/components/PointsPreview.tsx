@@ -12,7 +12,7 @@ const PointsPreview = (): JSX.Element => {
     name: "rolePlatforms.0.guildPlatform.platformGuildData",
   })
   const amount = useWatch({
-    name: "rolePlatforms.0.platformRoleData.score",
+    name: "rolePlatforms.0.platformRoleData.points",
   })
 
   const { name, imageUrl } = guildPlatformId
