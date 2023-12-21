@@ -107,7 +107,7 @@ const Leaderboard = () => {
 
         <Section title={userData ? "Leaderboard" : undefined} spacing={3}>
           <>
-            {isLoading ? (
+            {isLoading || !guildId ? (
               [...Array(25)].map((_, index) => (
                 <LeaderboardUserCardSkeleton key={index} />
               ))
