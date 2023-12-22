@@ -1,4 +1,4 @@
-import { HStack, Link, Stack, Wrap } from "@chakra-ui/react"
+import { Center, HStack, Link, Spinner, Stack, Wrap } from "@chakra-ui/react"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -16,16 +16,22 @@ import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
+import { useRef, useState } from "react"
 import { PlatformType, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
+
+const BATCH_SIZE = 25
 
 const Leaderboard = () => {
   const router = useRouter()
   const { id: userId } = useUser()
   const { id: guildId, name, imageUrl, description, socialLinks, tags } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
+  const wrapperRef = useRef(null)
 
   const { isLoading, data, error } = useSWRWithOptionalAuth(
     guildId
@@ -35,6 +41,17 @@ const Leaderboard = () => {
     false,
     false
   )
+
+  useScrollEffect(() => {
+    if (
+      !wrapperRef.current ||
+      wrapperRef.current.getBoundingClientRect().bottom > window.innerHeight ||
+      data?.leaderboard?.length <= renderedUsersCount
+    )
+      return
+
+    setRenderedUsersCount((prevValue) => prevValue + BATCH_SIZE)
+  }, [data, renderedUsersCount])
 
   const userData = data?.aroundUser?.find((user) => user.userId === userId)
 
@@ -105,7 +122,11 @@ const Leaderboard = () => {
           />
         )}
 
-        <Section title={userData ? "Leaderboard" : undefined} spacing={3}>
+        <Section
+          ref={wrapperRef}
+          title={userData ? "Leaderboard" : undefined}
+          spacing={3}
+        >
           <>
             {isLoading || !guildId ? (
               [...Array(25)].map((_, index) => (
@@ -124,7 +145,7 @@ const Leaderboard = () => {
               </Card>
             ) : (
               data?.leaderboard
-                ?.filter(Boolean)
+                ?.slice(0, renderedUsersCount)
                 .map((userLeaderboardData, index) => (
                   <LeaderboardUserCard
                     key={index}
@@ -134,6 +155,11 @@ const Leaderboard = () => {
                     isCurrentUser={userLeaderboardData?.userId === userId}
                   />
                 ))
+            )}
+            {data?.leaderboard?.length > renderedUsersCount && (
+              <Center pt={6}>
+                <Spinner />
+              </Center>
             )}
           </>
         </Section>
