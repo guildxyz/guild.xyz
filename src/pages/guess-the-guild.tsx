@@ -79,6 +79,18 @@ const GuessTheGuild = (): JSX.Element => {
     gameLogic.action.setDifficulty(diff)
   }
 
+  // temporary for holiday theme
+  useEffect(() => {
+    const startEvent = new Event("snow")
+    const stopEvent = new Event("stopSnow")
+
+    window.dispatchEvent(startEvent)
+
+    return () => {
+      window.dispatchEvent(stopEvent)
+    }
+  }, [])
+
   return (
     <>
       <Layout
