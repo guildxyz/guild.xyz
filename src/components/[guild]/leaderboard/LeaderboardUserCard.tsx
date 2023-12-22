@@ -24,6 +24,7 @@ type Props = {
   score: number
   position: number
   isCurrentUser: boolean
+  tooltipLabel: string
 }
 
 const getTrophyColor = (position: number) => {
@@ -42,6 +43,7 @@ const LeaderboardUserCard = ({
   score,
   position,
   isCurrentUser,
+  tooltipLabel,
 }: Props) => {
   const { guildPlatforms } = useGuild()
   const router = useRouter()
@@ -126,10 +128,7 @@ const LeaderboardUserCard = ({
               )}
             </Text>
 
-            <Tooltip
-              label="If multiple members have the same score, rank is calculated based on join date"
-              hasArrow
-            >
+            <Tooltip label={tooltipLabel} hasArrow>
               <HStack spacing={{ base: "3px", md: 1 }}>
                 <Text fontWeight="bold">{score}</Text>
                 <Text as="span" fontWeight="medium" fontSize="sm">

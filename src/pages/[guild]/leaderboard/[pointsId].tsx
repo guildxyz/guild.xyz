@@ -130,6 +130,7 @@ const Leaderboard = () => {
             score={userData.totalPoints}
             position={userData.rank}
             isCurrentUser
+            tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
           />
         )}
 
@@ -179,6 +180,7 @@ const Leaderboard = () => {
                     score={userLeaderboardData?.totalPoints}
                     position={index + 1}
                     isCurrentUser={userLeaderboardData?.userId === userId}
+                    tooltipLabel="If multiple members have the same score, rank is calculated based on join date"
                   />
                 ))
             ) : (
