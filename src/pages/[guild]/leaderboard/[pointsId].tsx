@@ -38,7 +38,7 @@ const BATCH_SIZE = 25
 
 const Leaderboard = () => {
   const router = useRouter()
-  const { id: userId } = useUser()
+  const { id: userId, addresses } = useUser()
   const { id: guildId, name, imageUrl, description, socialLinks, tags } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
@@ -126,7 +126,10 @@ const Leaderboard = () => {
       <Stack spacing={10}>
         {userData && (
           <LeaderboardUserCard
-            address={userData.address}
+            address={
+              userData.address ??
+              addresses?.find((address) => address.isPrimary).address
+            }
             score={userData.totalPoints}
             position={userData.rank}
             isCurrentUser
