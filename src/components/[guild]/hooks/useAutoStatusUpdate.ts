@@ -8,7 +8,7 @@ import { useUserPublic } from "./useUser"
 
 const useAutoStatusUpdate = () => {
   const { isWeb3Connected, address } = useWeb3ConnectionManager()
-  const { id } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const { keyPair } = useUserPublic()
 
   const { data: accesses, mutate: mutateAccess } = useAccess()
@@ -56,7 +56,9 @@ const useAutoStatusUpdate = () => {
           method: "GET",
           body: {},
         },
-      ]).then(() => Promise.all([mutateAccess(), mutateMemberships()]))
+      ]).then(() =>
+        Promise.all([mutateAccess(), mutateMemberships(), mutateGuild()])
+      )
     }
   }, [accesses, roleMemberships, address, id])
 }

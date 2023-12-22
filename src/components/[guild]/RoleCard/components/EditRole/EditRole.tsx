@@ -15,6 +15,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import RolePlatforms from "components/[guild]/RolePlatforms"
 import SetVisibility from "components/[guild]/SetVisibility"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -65,6 +66,7 @@ const FOOTER_OFFSET = 76
 const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
+  const { captureEvent } = usePostHogContext()
 
   const { roles } = useGuild()
   const {
@@ -187,7 +189,13 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker step={3} onClick={handleOpen}>
+      <OnboardingMarker
+        step={3}
+        onClick={() => {
+          captureEvent("guild creation flow > pulse marker: Edit role clicked")
+          handleOpen()
+        }}
+      >
         <IconButton
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}

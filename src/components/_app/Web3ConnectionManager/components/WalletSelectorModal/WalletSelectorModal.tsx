@@ -76,7 +76,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
-  const { keyPair, id } = useUserPublic()
+  const { keyPair, id, error: publicUserError } = useUserPublic()
   const set = useSetKeyPair()
 
   useEffect(() => {
@@ -87,8 +87,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   useEffect(() => {
     if (
-      !!id &&
-      !keyPair &&
+      ((!!id && !keyPair) || !!publicUserError) &&
       router.isReady &&
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
@@ -98,7 +97,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, router])
+  }, [keyPair, router, id, publicUserError])
 
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
@@ -109,6 +108,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const recaptchaRef = useRef<ReCAPTCHA>()
 
   const linkAddress = useLinkAddress()
+
+  const shouldShowVerify =
+    isWeb3Connected && (!!publicUserError || (!!id && !keyPair))
 
   return (
     <Modal
@@ -188,7 +190,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 }
               : { error, processError: processConnectionError })}
           />
-          {isConnectedAndKeyPairReady && !keyPair && (
+          {shouldShowVerify && (
             <Text mb="6" animation={"fadeIn .3s .1s both"}>
               Sign message to verify that you're the owner of this address.
             </Text>
@@ -226,7 +228,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
           )}
 
-          {isConnectedAndKeyPairReady && !keyPair && (
+          {shouldShowVerify && (
             <>
               <ReCAPTCHA
                 ref={recaptchaRef}
@@ -245,8 +247,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     }
                     return set.onSubmit()
                   }}
-                  isLoading={linkAddress.isLoading || set.isLoading || !id}
-                  isDisabled={!id}
+                  isLoading={
+                    linkAddress.isLoading ||
+                    set.isLoading ||
+                    (!id && !publicUserError)
+                  }
+                  isDisabled={!id && !publicUserError}
                   loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
                 >
                   {isAddressLink ? "Link address" : "Verify address"}

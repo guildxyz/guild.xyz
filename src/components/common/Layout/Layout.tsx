@@ -4,6 +4,7 @@ import {
   Container,
   Heading,
   HStack,
+  Img,
   useColorMode,
   VStack,
 } from "@chakra-ui/react"
@@ -32,6 +33,7 @@ type Props = {
   backButton?: JSX.Element
   maxWidth?: string
   showFooter?: boolean
+  showHat?: boolean
 }
 
 const Layout = ({
@@ -51,6 +53,7 @@ const Layout = ({
   backButton,
   maxWidth = "container.lg",
   showFooter = true,
+  showHat,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
@@ -103,6 +106,8 @@ const Layout = ({
         display="flex"
         flexDir={"column"}
         color="var(--chakra-colors-chakra-body-text)"
+        // temporary for holiday theme
+        sx={{ "> *": { zIndex: 1 } }}
       >
         {(background || backgroundImage) && (
           <Box
@@ -112,6 +117,9 @@ const Layout = ({
             w="full"
             h={bgHeight}
             background={"gray.900"}
+            // temporary for holiday theme
+            id="background"
+            overflow="hidden"
           >
             {backgroundImage ? (
               <Image
@@ -156,6 +164,17 @@ const Layout = ({
                       color={textColor}
                       wordBreak={"break-word"}
                     >
+                      {/* temporary for holiday theme */}
+                      {showHat && (
+                        <Img
+                          src="/img/hat.png"
+                          w={{ base: "30px", md: "40px", lg: "55px" }}
+                          position="absolute"
+                          left={{ base: "6px", sm: "14px", md: "18px", lg: "5" }}
+                          top={{ base: "18px", md: "6", lg: "5" }}
+                          transform="rotate(-30deg)"
+                        />
+                      )}
                       {title}
                     </Heading>
                     {titlePostfix}

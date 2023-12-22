@@ -124,6 +124,9 @@ const useJoin = (
     // mutate user in case they connected new platforms during the join flow
     user?.mutate?.()
 
+    // Mutate guild in case the user seed more entities after join due to visibilities
+    guild.mutateGuild()
+
     onSuccess?.(response)
 
     if (!response.success) return

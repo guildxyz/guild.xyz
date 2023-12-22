@@ -5,6 +5,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
@@ -24,6 +25,7 @@ const SendDiscordJoinButtonAlert = ({
   onContinue,
 }: Props): JSX.Element => {
   const cancelRef = useRef()
+  const { captureEvent } = usePostHogContext()
 
   return (
     <Alert
@@ -40,7 +42,16 @@ const SendDiscordJoinButtonAlert = ({
             your Guild and unlock new roles.
           </AlertDialogBody>
           <AlertDialogFooter flexDirection="column">
-            <Button colorScheme="DISCORD" onClick={onSendEmbed} w="full">
+            <Button
+              colorScheme="DISCORD"
+              onClick={() => {
+                captureEvent(
+                  "guild creation flow > onboarding finished WITH Discord embed"
+                )
+                onSendEmbed()
+              }}
+              w="full"
+            >
               Send join button
             </Button>
 
@@ -51,7 +62,12 @@ const SendDiscordJoinButtonAlert = ({
               fontWeight="normal"
               maxW="max-content"
               mt={4}
-              onClick={onContinue}
+              onClick={() => {
+                captureEvent(
+                  "guild creation flow > onboarding finished WITHOUT Discord embed"
+                )
+                onContinue()
+              }}
             >
               Or continue without sending it
             </Button>

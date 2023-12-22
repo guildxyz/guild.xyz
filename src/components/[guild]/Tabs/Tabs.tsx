@@ -1,6 +1,6 @@
 import { Box, HStack, useColorModeValue } from "@chakra-ui/react"
 import useIsStuck from "hooks/useIsStuck"
-import { createContext, PropsWithChildren, useContext } from "react"
+import { PropsWithChildren, createContext, useContext } from "react"
 
 export type TabsProps = {
   isSticky?: boolean
@@ -16,7 +16,7 @@ export const TABS_HEIGHT_SM =
   "calc(var(--chakra-space-8) + (2 * var(--chakra-space-2-5)))"
 
 export const TABS_SM_BUTTONS_STYLES =
-  "#tabs .chakra-button {height: var(--chakra-space-8); font-size: var(--chakra-fontSizes-sm); border-radius: var(--chakra-radii-lg); padding: 0 var(--chakra-space-3)}"
+  "#tabs .chakra-button:not(.chakra-menu__menu-button) {height: var(--chakra-space-8); font-size: var(--chakra-fontSizes-sm); border-radius: var(--chakra-radii-lg); padding: 0 var(--chakra-space-3)}"
 
 const TabsContext = createContext<{
   isStuck: boolean

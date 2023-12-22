@@ -5,6 +5,7 @@ import {
   kava,
   lukso,
   neonEVM,
+  ontology,
   palm,
   pgn,
   scrollAlpha,
@@ -469,6 +470,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/walletLogos/okx.png",
     },
   },
+  ONTOLOGY: {
+    ...ontology,
+    iconUrl: "/networkLogos/ontology.svg",
+    coinIconUrl: "/networkLogos/ontology.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/ontology.svg",
+      dark: "/networkLogos/ontology.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -514,6 +524,7 @@ enum Chains {
   KAVA = kava.id,
   BITFINITY_TESTNET = bitfinityTestnet.id,
   X1_TESTNET = x1Testnet.id,
+  ONTOLOGY = ontology.id,
 }
 
 export type Chain = keyof typeof Chains

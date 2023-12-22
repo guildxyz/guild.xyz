@@ -53,7 +53,7 @@ const CreateGuildUniqueText = ({ isOpen, onClose }: Props) => {
             nextStep()
           }}
         >
-          Add{/*nextStepText*/}
+          Add
         </Button>
       </ModalContent>
     </Modal>

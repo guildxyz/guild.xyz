@@ -142,6 +142,10 @@ const styles = {
     ".chakra-ui-light .lexical-content-editable": {
       backgroundColor: "var(--chakra-colors-white)",
     },
+
+    ".noPointerEvents": {
+      pointerEvents: "none",
+    },
   }),
 }
 
