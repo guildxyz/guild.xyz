@@ -139,11 +139,7 @@ const Leaderboard = () => {
           spacing={3}
         >
           <>
-            {isLoading || !guildId ? (
-              [...Array(25)].map((_, index) => (
-                <LeaderboardUserCardSkeleton key={index} />
-              ))
-            ) : error ? (
+            {error ? (
               <Card>
                 <ErrorAlert
                   label={"Couldn't get leaderboard data"}
@@ -173,9 +169,9 @@ const Leaderboard = () => {
                   </Stack>
                 </Alert>
               </Card>
-            ) : (
-              data?.leaderboard
-                ?.slice(0, renderedUsersCount)
+            ) : data?.leaderboard?.length ? (
+              data.leaderboard
+                .slice(0, renderedUsersCount)
                 .map((userLeaderboardData, index) => (
                   <LeaderboardUserCard
                     key={index}
@@ -185,6 +181,10 @@ const Leaderboard = () => {
                     isCurrentUser={userLeaderboardData?.userId === userId}
                   />
                 ))
+            ) : (
+              [...Array(25)].map((_, index) => (
+                <LeaderboardUserCardSkeleton key={index} />
+              ))
             )}
             {data?.leaderboard?.length > renderedUsersCount && (
               <Center pt={6}>
