@@ -149,6 +149,6 @@ describe("game screen order", () => {
     cy.getByDataTest("submit").click()
     cy.getByDataTest("end-game").click()
     cy.contains("Try Again!").click()
-    cy.contains("GuildGesser").should("be.visible")
+    cy.contains("Guess the Guild").should("be.visible")
   })
 })

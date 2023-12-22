@@ -25,7 +25,7 @@ const StartGame = ({
       textAlign="center"
       fontFamily="display"
     >
-      GuildGesser 1.0
+      Guess the Guild
     </Heading>
     <Text textAlign="center">
       Are you an expert on Guilds? <br /> Test your knowledge in our guild guesser
