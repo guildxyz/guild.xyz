@@ -1,4 +1,15 @@
-import { Center, HStack, Link, Spinner, Stack, Wrap } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Center,
+  HStack,
+  Link,
+  Spinner,
+  Stack,
+  Wrap,
+} from "@chakra-ui/react"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -142,6 +153,25 @@ const Leaderboard = () => {
                   pos="static" // so it doesn't overlay the LeaderboardPointsSelector
                   mb={0}
                 />
+              </Card>
+            ) : data?.leaderboard?.length === 0 ? (
+              <Card>
+                <Alert status="info" pb="5" pos="static">
+                  <AlertIcon />
+                  <Stack>
+                    <AlertTitle
+                      position="relative"
+                      top={"4px"}
+                      fontWeight="semibold"
+                    >
+                      No members with this point type
+                    </AlertTitle>
+                    <AlertDescription>
+                      The selected point type exists in the guild, but none of the
+                      members have a score greated than 0
+                    </AlertDescription>
+                  </Stack>
+                </Alert>
               </Card>
             ) : (
               data?.leaderboard
