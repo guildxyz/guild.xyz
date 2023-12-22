@@ -156,31 +156,17 @@ const Page = ({ leaderboard: initialData }: Props) => {
 }
 
 const getStaticProps: GetStaticProps = async () => {
-  let leaderboardTopAddresses: string[] = []
-  let leaderboard: DetailedUserLeaderboardData[] = []
-
-  try {
-    leaderboardTopAddresses = await kv.zrange(
-      "guildPinsLeaderboard",
-      0,
-      PAGE_SIZE - 1,
-      { rev: true }
-    )
-  } catch (error) {
-    console.error("Error fetching leaderboard top addresses:", error)
-    // Optionally handle the error or rethrow it
-  }
-
-  try {
-    if (leaderboardTopAddresses.length > 0) {
-      leaderboard = await kv.mget(
-        ...leaderboardTopAddresses.map((address) => `guildPins:${address}`)
-      )
+  const leaderboardTopAddresses: string[] = await kv.zrange(
+    "guildPinsLeaderboard",
+    0,
+    PAGE_SIZE - 1,
+    {
+      rev: true,
     }
-  } catch (error) {
-    console.error("Error fetching leaderboard data:", error)
-    // Optionally handle the error or rethrow it
-  }
+  )
+  const leaderboard: DetailedUserLeaderboardData[] = await kv.mget(
+    ...leaderboardTopAddresses.map((address) => `guildPins:${address}`)
+  )
 
   return {
     props: {

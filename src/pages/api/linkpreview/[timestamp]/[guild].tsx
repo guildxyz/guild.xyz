@@ -2,14 +2,14 @@ import { ImageResponse } from "@vercel/og"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 
-// export const config = {
-//   runtime: "experimental-edge",
-//   unstable_allowDynamic: [
-//     "/src/hooks/useLocalStorage.ts",
-//     "/src/hooks/useTimeInaccuracy.ts",
-//     "/src/utils/fetcher.ts",
-//   ],
-// }
+export const config = {
+  runtime: "experimental-edge",
+  unstable_allowDynamic: [
+    "/src/hooks/useLocalStorage.ts",
+    "/src/hooks/useTimeInaccuracy.ts",
+    "/src/utils/fetcher.ts",
+  ],
+}
 
 const interFont = fetch(
   new URL("../../../../../public/fonts/Inter-Regular.woff", import.meta.url)
