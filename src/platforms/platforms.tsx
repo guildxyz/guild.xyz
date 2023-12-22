@@ -14,6 +14,7 @@ import { ComponentType, ForwardRefExoticComponent, PropsWithChildren } from "rea
 import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
+import Star from "static/icons/star.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
@@ -28,6 +29,7 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import usePointsCardProps from "./Points/usePointsCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
@@ -374,6 +376,29 @@ const platforms: Record<PlatformName, PlatformData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
+      ssr: false,
+    }),
+  },
+  POINTS: {
+    icon: Star,
+    name: "Points",
+    colorScheme: "gray",
+    gatedEntity: "",
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: false,
+    cardPropsHook: usePointsCardProps,
+    PlatformPreview: dynamic(() => import("platforms/components/PointsPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel"
+        ),
+      { ssr: false }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/PointsReward"), {
       ssr: false,
     }),
   },

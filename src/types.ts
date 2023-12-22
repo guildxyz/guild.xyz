@@ -86,6 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
+  | "POINTS"
 
 type PlatformUserData = {
   acessToken?: string
@@ -567,6 +568,7 @@ export enum PlatformType {
   "TWITTER_V1" = 8,
   "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
+  "POINTS" = 13,
 }
 
 type WalletConnectConnectionData = {
@@ -714,7 +716,7 @@ type LeaderboardPinData = {
   tokenUri: string
 }
 
-type DetailedUserLeaderboardData = {
+type DetailedPinLeaderboardUserData = {
   address: string
   score: number
   pins: LeaderboardPinData[]
@@ -728,7 +730,7 @@ export type {
   CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,
-  DetailedUserLeaderboardData,
+  DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
   DiscordServerData,
   EventSources,
