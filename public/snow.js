@@ -13,7 +13,7 @@
 var snowStorm = (function (window, document) {
   // --- common properties ---
 
-  this.autoStart = window.location.pathname === "/explorer" // Whether the snow should start automatically or not.
+  this.autoStart = ["/explorer", "/guess-the-guild"].includes(window.location.pathname) // Whether the snow should start automatically or not.
   this.excludeMobile = false // Snow is likely to be bad news for mobile phones' CPUs (and batteries.) Enable at your own risk.
   this.flakesMax = 80 // Limit total amount of snow made (falling + sticking)
   this.flakesMaxActive = 40 // Limit amount of snow falling at once (less = lower CPU use)
