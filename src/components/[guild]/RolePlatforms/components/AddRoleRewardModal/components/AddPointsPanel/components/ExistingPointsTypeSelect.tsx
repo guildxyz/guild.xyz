@@ -10,13 +10,14 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useFormContext } from "react-hook-form"
 import Star from "static/icons/star.svg"
+import { AddPointsFormType } from "../AddPointsPanel"
 
 const ExistingPointsTypeSelect = ({ existingPointsRewards, selectedExistingId }) => {
   const {
     control,
     setValue,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<AddPointsFormType>()
 
   const options = existingPointsRewards
     .map((gp) => ({
@@ -38,7 +39,7 @@ const ExistingPointsTypeSelect = ({ existingPointsRewards, selectedExistingId })
   )?.img
 
   return (
-    <FormControl isInvalid={!!errors?.guildPlatformId} mb="5">
+    <FormControl isInvalid={!!errors?.data?.guildPlatformId} mb="5">
       <FormLabel>Points type</FormLabel>
       <InputGroup>
         {selectedPointsImage && (
@@ -51,18 +52,18 @@ const ExistingPointsTypeSelect = ({ existingPointsRewards, selectedExistingId })
           </InputLeftElement>
         )}
         <ControlledSelect
-          name={`guildPlatformId`}
-          control={control}
+          name={`data.guildPlatformId`}
+          control={control as any}
           options={options}
           beforeOnChange={(newValue) => {
-            setValue("guildPlatformId", newValue?.label, {
+            setValue("data.guildPlatformId", newValue?.id as any, {
               shouldDirty: false,
             })
           }}
         />
       </InputGroup>
       <FormErrorMessage>
-        {errors?.guildPlatformId?.message as string}
+        {errors?.data?.guildPlatformId?.message as string}
       </FormErrorMessage>
     </FormControl>
   )
