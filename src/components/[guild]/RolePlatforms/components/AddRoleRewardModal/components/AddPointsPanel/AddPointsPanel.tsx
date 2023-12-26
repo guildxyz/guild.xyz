@@ -120,6 +120,8 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
         <ExistingPointsTypeSelect
           existingPointsRewards={existingPointsRewards}
           selectedExistingId={selectedExistingId}
+          showCreateNew
+          mb="5"
         />
       )}
       <Collapse
