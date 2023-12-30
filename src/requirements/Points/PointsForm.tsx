@@ -28,7 +28,7 @@ const pointRequirementTypes = [
   },
 ]
 
-const PointsForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const { id } = useGuild()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
@@ -63,7 +63,7 @@ const PointsForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       {selected?.PointsRequirement && (
         <>
           <Divider />
-          <selected.PointsRequirement baseFieldPath={baseFieldPath} />
+          <selected.PointsRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}
     </Stack>

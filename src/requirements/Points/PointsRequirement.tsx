@@ -22,7 +22,9 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
       image={pointsReward.platformGuildData.imageUrl ?? <Star />}
       {...props}
     >
-      {`Be in the top ${minAmount} members on the `}
+      {maxAmount
+        ? `Have a rank between ${minAmount} - ${maxAmount} on the `
+        : `Be in the top ${minAmount} members on the `}
       <Link
         colorScheme={"blue"}
         href={`/${urlName}/leaderboard/${pointsReward.id}`}
@@ -48,7 +50,9 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image={<Star />} {...props}>
-      {`Have a total score of at least ${minAmount} of all point types`}
+      {maxAmount
+        ? `Have a total score between ${minAmount} - ${maxAmount} of all point types`
+        : `Have a total score of at least ${minAmount} of all point types`}
       {guildId !== id && (
         <>
           {`in the `}
@@ -69,15 +73,16 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
   if (!guildPlatforms) return <RequirementSkeleton />
 
   const pointsReward = guildPlatforms.find((gp) => gp.id === guildPlatformId)
+  const pointsName = pointsReward.platformGuildData.name || "points"
 
   return (
     <Requirement
       image={pointsReward.platformGuildData.imageUrl ?? <Star />}
       {...props}
     >
-      {`Have at least ${minAmount} ${
-        pointsReward.platformGuildData.name || "points"
-      }`}
+      {maxAmount
+        ? `Have between ${minAmount} - ${maxAmount} ${pointsName}`
+        : `Have at least ${minAmount} ${pointsName}`}
       {guildId !== id && (
         <>
           {`in the `}

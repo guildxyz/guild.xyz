@@ -3,13 +3,14 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useWatch } from "react-hook-form"
 import GuildSelect from "requirements/common/GuildSelect"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
-import { PlatformType } from "types"
+import { PlatformType, Requirement } from "types"
 
 type Props = {
   baseFieldPath: string
+  field?: Requirement
 }
 
-const PointsRank = ({ baseFieldPath }: Props): JSX.Element => {
+const PointsRank = ({ baseFieldPath, field }: Props): JSX.Element => {
   const guildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
   const guildPlatformId = useWatch({ name: `${baseFieldPath}.data.guildPlatformId` })
 
@@ -29,7 +30,7 @@ const PointsRank = ({ baseFieldPath }: Props): JSX.Element => {
         isLoading={isLoading}
       />
 
-      <MinMaxAmount baseFieldPath={baseFieldPath} field={null} label="rank" />
+      <MinMaxAmount baseFieldPath={baseFieldPath} field={field} label="rank" />
     </>
   )
 }
