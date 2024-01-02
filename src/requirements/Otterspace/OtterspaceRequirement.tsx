@@ -1,10 +1,10 @@
 import { Text } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
 import useOtterspaceBadges from "./hooks/useOtterspaceBadges"
 
 const OtterspaceRequirement = (props: RequirementProps) => {

@@ -1,9 +1,9 @@
 import { Img, Tag, TagLabel, Text, useColorModeValue } from "@chakra-ui/react"
-import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import shortenHex from "utils/shortenHex"
 
 const NULL_FUEL_ADDRESS =

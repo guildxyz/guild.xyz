@@ -14,13 +14,13 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useAccess from "components/[guild]/hooks/useAccess"
+import DataBlock from "components/common/DataBlock"
 import { CaretDown } from "phosphor-react"
 import { scorers } from "./components/Score"
 import SetupPassport from "./components/SetupPassport"
