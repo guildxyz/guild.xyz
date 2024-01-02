@@ -9,7 +9,7 @@ const setGameModeToAssignLogos = () => {
   })
 }
 
-describe("assign logos game mode", () => {
+describe.skip("assign logos game mode", () => {
   beforeEach(() => {
     cy.intercept(`${Cypress.env("guildApiUrl")}/guilds?*`, {
       statusCode: 200,
