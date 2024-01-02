@@ -122,7 +122,6 @@ const CreateGuildStepper = ({
         right: 0,
         bg: cardBgColor,
       }}
-      onClick={onToggle}
       borderWidth="2px"
       borderColor={color}
       {...rest}
@@ -143,6 +142,7 @@ const CreateGuildStepper = ({
                   style: {
                     width: "100%",
                   },
+                  onClick: activeStep === index ? onToggle : undefined,
                 }
               : undefined)}
           >
