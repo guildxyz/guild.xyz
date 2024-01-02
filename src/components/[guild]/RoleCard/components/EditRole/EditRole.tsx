@@ -265,7 +265,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
           </DrawerBody>
 
           <AnimatePresence>
-            {isDirty && (
+            {(isDirty || iconUploader.isUploading) && (
               <MotionDrawerFooter
                 initial={{ y: FOOTER_OFFSET, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

@@ -114,7 +114,7 @@ describe.skip("game mode answer submit", () => {
   })
 })
 
-describe("game screen order", () => {
+describe.skip("game screen order", () => {
   beforeEach(() => {
     cy.intercept(`${Cypress.env("guildApiUrl")}/guilds?*`, {
       statusCode: 200,

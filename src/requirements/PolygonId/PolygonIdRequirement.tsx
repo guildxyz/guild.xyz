@@ -11,11 +11,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
 import { CaretDown } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import ConnectPolygonID from "./components/ConnectPolygonID"
