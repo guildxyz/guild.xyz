@@ -11,7 +11,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildPlatformId, guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName, guildPlatforms } = useGuild(guildId)
-  const { id } = useGuild()
+  const { id: currentGuildId } = useGuild()
 
   if (!guildPlatforms) return <RequirementSkeleton />
 
@@ -29,7 +29,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
         colorScheme={"blue"}
         href={`/${urlName}/leaderboard/${pointsReward.id}`}
       >{`${pointsReward.platformGuildData.name} leaderboard`}</Link>
-      {guildId !== id && (
+      {guildId !== currentGuildId && (
         <>
           {`in the `}
           <Link colorScheme={"blue"} href={urlName}>
@@ -46,17 +46,19 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName } = useGuild(guildId)
-  const { id } = useGuild()
+  const { id: currentGuildId } = useGuild()
 
   return (
     <Requirement image={<Star />} {...props}>
       {maxAmount
         ? `Have a total score between ${minAmount} - ${maxAmount} of all point types`
         : `Have a total score of at least ${minAmount} of all point types`}
-      {guildId !== id && (
+      {guildId !== currentGuildId && (
         <>
           {`in the `}
-          <Link href={urlName}>{name}</Link>
+          <Link colorScheme={"blue"} href={urlName}>
+            {name}
+          </Link>
           {` guild`}
         </>
       )}
@@ -68,7 +70,7 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildPlatformId, guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName, guildPlatforms } = useGuild(guildId)
-  const { id } = useGuild()
+  const { id: currentGuildId } = useGuild()
 
   if (!guildPlatforms) return <RequirementSkeleton />
 
@@ -83,10 +85,12 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
       {maxAmount
         ? `Have between ${minAmount} - ${maxAmount} ${pointsName}`
         : `Have at least ${minAmount} ${pointsName}`}
-      {guildId !== id && (
+      {guildId !== currentGuildId && (
         <>
           {`in the `}
-          <Link href={urlName}>{name}</Link>
+          <Link colorScheme={"blue"} href={urlName}>
+            {name}
+          </Link>
           {` guild`}
         </>
       )}
