@@ -22,9 +22,9 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
       image={pointsReward.platformGuildData.imageUrl ?? <Star />}
       {...props}
     >
-      {maxAmount
+      {minAmount
         ? `Have a rank between ${minAmount} - ${maxAmount} on the `
-        : `Be in the top ${minAmount} members on the `}
+        : `Be in the top ${maxAmount} members on the `}
       <Link
         colorScheme={"blue"}
         href={`/${urlName}/leaderboard/${pointsReward.id}`}

@@ -2,8 +2,8 @@ import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/component
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useWatch } from "react-hook-form"
 import GuildSelect from "requirements/common/GuildSelect"
-import MinMaxAmount from "requirements/common/MinMaxAmount"
 import { PlatformType, Requirement } from "types"
+import MaxMinAmount from "./MaxMinAmount"
 
 type Props = {
   baseFieldPath: string
@@ -30,7 +30,7 @@ const PointsRank = ({ baseFieldPath, field }: Props): JSX.Element => {
         isLoading={isLoading}
       />
 
-      <MinMaxAmount baseFieldPath={baseFieldPath} field={field} label="rank" />
+      <MaxMinAmount baseFieldPath={baseFieldPath} field={field} label="rank" />
     </>
   )
 }
