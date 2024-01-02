@@ -77,16 +77,14 @@ const ExistingPointsTypeSelect = ({
           control={control as any}
           options={options}
           beforeOnChange={(newValue) => {
-            setValue("data.guildPlatformId", newValue?.id as any, {
+            setValue("data.guildPlatformId", newValue?.id, {
               shouldDirty: false,
             })
           }}
           isLoading={isLoading}
         />
       </InputGroup>
-      <FormErrorMessage>
-        {errors?.data?.guildPlatformId?.message as string}
-      </FormErrorMessage>
+      <FormErrorMessage>{errors?.data?.guildPlatformId?.message}</FormErrorMessage>
     </FormControl>
   )
 }

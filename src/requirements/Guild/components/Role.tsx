@@ -18,7 +18,6 @@ type Props = {
 
 const Role = ({ baseFieldPath }: Props): JSX.Element => {
   const {
-    resetField,
     formState: { errors },
   } = useFormContext()
 
