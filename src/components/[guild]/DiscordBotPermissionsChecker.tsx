@@ -26,16 +26,16 @@ const GUILD_BOT_ROLE_NAME = "Guild.xyz bot"
  * Mapping permission names which we get from our backend to actual permission names
  * which the user will be able to find on Discord
  */
-const PRETTY_PERMISSION_NAMES: Record<string, string> = {
-  VIEW_CHANNELS: "View Channels",
-  MANAGE_ROLES: "Manage Roles",
-  "Create Instant Invite": "Create Invite",
-  SEND_MESSAGES: "Send Messages",
-  EMBED_LINKS: "Embed Links",
-  ADD_REACTIONS: "Add Reactions",
-  USE_EXTERNAL_EMOJIS: "Use External Emoji",
-  "Read Message History": "Read Message History",
-}
+const REQUIRED_PERMISSIONS = [
+  "View Channels",
+  "Manage Roles",
+  "Create Invite",
+  "Send Messages",
+  "Embed Links",
+  "Add Reactions",
+  "Use External Emoji",
+  "Read Message History",
+]
 
 type DiscordPermissions = {
   permissions: Record<
@@ -66,7 +66,7 @@ const MODAL_CONTENT: Record<
     body: (
       <>
         <Text>
-          {`Our bot requires the ${Object.values(PRETTY_PERMISSION_NAMES).join(
+          {`Our bot requires the ${REQUIRED_PERMISSIONS.join(
             ", "
           )} permissions in order to funcion properly`}
         </Text>
@@ -154,7 +154,7 @@ const DiscordBotPermissionsChecker = () => {
         toastIdRef.current = toastWithButton({
           title: "Missing permissions",
           description: `We've noticed that the Guild.xyz bot is missing the following permissions on the ${serverName} Discord server: ${permissionsNotGranted
-            .map((perm) => PRETTY_PERMISSION_NAMES[perm.name] ?? perm.name)
+            .map((perm) => perm.name)
             .join(", ")}`,
           ...toastOptions,
         })
