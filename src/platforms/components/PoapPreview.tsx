@@ -1,15 +1,20 @@
-import { useCreatePoapContext } from "components/[guild]/CreatePoap/components/CreatePoapContext"
+import platforms from "platforms/platforms"
+import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
 const PoapPreview = (): JSX.Element => {
-  const { poapData } = useCreatePoapContext()
+  const name = useWatch({
+    name: "rolePlatforms.0.guildPlatform.platformGuildData.name",
+  })
+  const imageUrl = useWatch({
+    name: "rolePlatforms.0.guildPlatform.platformGuildData.imageUrl",
+  })
 
   return (
     <PlatformPreview
       type="POAP"
-      isLoading={!poapData}
-      name={poapData?.name}
-      image={poapData?.image_url ? `${poapData.image_url}?size=small` : undefined}
+      name={name}
+      image={imageUrl ? `${imageUrl}?size=small` : platforms.POAP.imageUrl}
     />
   )
 }

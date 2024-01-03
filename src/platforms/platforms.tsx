@@ -1,4 +1,4 @@
-import { ChakraProps } from "@chakra-ui/react"
+import { ThemingProps } from "@chakra-ui/react"
 import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import dynamic from "next/dynamic"
 import {
@@ -63,7 +63,7 @@ type PlatformData<
   icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
-  colorScheme: ChakraProps["color"]
+  colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
   cardPropsHook?: (guildPlatform: GuildPlatform) => {
     type: PlatformName
@@ -294,6 +294,15 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "POAP",
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPoapPanel"
+        ),
+      {
+        ssr: false,
+      }
+    ),
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
