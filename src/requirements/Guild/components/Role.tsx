@@ -5,10 +5,10 @@ import {
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -59,17 +59,21 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   }, [fetchedGuild])
 
   const mergedGuildOptions = useMemo(() => {
-    if (!guildOptions) return []
+    if (!guildOptions && !foundGuild) return []
 
-    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.id))
-      return [
-        ...guildOptions,
-        {
+    const foundGuildOption = foundGuild
+      ? {
           img: foundGuild.imageUrl,
           label: foundGuild.name,
           value: foundGuild.id,
-        },
-      ]
+          details: foundGuild.urlName,
+        }
+      : null
+
+    if (foundGuild && !guildOptions) return [foundGuildOption]
+
+    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.id))
+      return [...guildOptions, foundGuildOption]
 
     return guildOptions
   }, [guildOptions, foundGuild])

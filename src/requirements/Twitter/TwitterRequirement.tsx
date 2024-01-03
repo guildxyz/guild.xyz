@@ -1,12 +1,12 @@
 import { Icon, Text } from "@chakra-ui/react"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"

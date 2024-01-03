@@ -1,10 +1,10 @@
 import { Text } from "@chakra-ui/react"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
 import shortenHex from "utils/shortenHex"
 import useMirrorEdition from "./hooks/useMirrorEdition"
 

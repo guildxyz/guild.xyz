@@ -1,11 +1,11 @@
 import { Icon } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import DataBlock from "components/common/DataBlock"
 import { SpeakerHigh, SpeakerSimpleHigh } from "phosphor-react"
 import { GuildPoap, PlatformType, RequirementType } from "types"
 import ManageEvent from "./components/ManageEvent"

@@ -15,7 +15,8 @@ const Header = (): JSX.Element => {
       justifyContent="space-between"
       alignItems="center"
       p="2"
-      zIndex="overlay"
+      // temporary for holiday theme, should normally be 'overlay'
+      zIndex="banner"
       // temporary
       sx={{
         "[aria-label]": {

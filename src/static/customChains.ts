@@ -368,7 +368,7 @@ export const x1Testnet = /*#__PURE__*/ defineChain({
 
 export const ontology = /*#__PURE__*/ defineChain({
   id: 58,
-  name: "Ontology",
+  name: "Ontology EVM",
   network: "ontology",
   nativeCurrency: {
     decimals: 18,

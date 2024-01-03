@@ -17,97 +17,14 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
-import { Option } from "components/common/RadioSelect/RadioSelect"
-import { Detective, EyeSlash, GlobeHemisphereEast, IconProps } from "phosphor-react"
 import { useRef } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { Visibility } from "types"
-
-export const VISIBILITY_DATA: Record<
-  Visibility,
-  Partial<Option> & {
-    Icon: React.ForwardRefExoticComponent<
-      IconProps & React.RefAttributes<SVGSVGElement>
-    >
-  }
-> = {
-  [Visibility.PUBLIC]: {
-    title: "Public",
-    Icon: GlobeHemisphereEast,
-    description: "Visible to everyone",
-  },
-  [Visibility.PRIVATE]: {
-    title: "Secret",
-    Icon: Detective,
-    description: "Only visible to role holders",
-  },
-  [Visibility.HIDDEN]: {
-    title: "Hidden",
-    Icon: EyeSlash,
-    description: "Only visible to admins",
-  },
-}
-
-const VisibilityTag = ({ visibility }: { visibility: Visibility }) => {
-  const { Icon, title } = VISIBILITY_DATA[visibility]
-
-  return (
-    <Button
-      size={"xs"}
-      colorScheme="blackAlpha"
-      bgColor="blackAlpha.300"
-      variant="solid"
-      leftIcon={<Icon />}
-      isDisabled
-      opacity={"1 !important"}
-    >
-      {title}
-    </Button>
-  )
-}
-
-const VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY: Record<
-  Exclude<Visibility, "HIDDEN">,
-  Partial<Record<Exclude<Visibility, "PUBLIC">, Partial<Option>>>
-> = {
-  [Visibility.PUBLIC]: {
-    [Visibility.PRIVATE]: {
-      tooltipLabel: (
-        <>
-          Make the role <VisibilityTag visibility={Visibility.PUBLIC} /> first.{" "}
-          Requirements and rewards can't be{" "}
-          <VisibilityTag visibility={Visibility.PUBLIC} /> in a{" "}
-          <VisibilityTag visibility={Visibility.PRIVATE} /> role
-        </>
-      ),
-      disabled: true,
-    },
-    [Visibility.HIDDEN]: {
-      tooltipLabel: (
-        <>
-          Make the role <VisibilityTag visibility={Visibility.PUBLIC} /> first.{" "}
-          Requirements and rewards can't be{" "}
-          <VisibilityTag visibility={Visibility.PUBLIC} /> in a{" "}
-          <VisibilityTag visibility={Visibility.HIDDEN} /> role
-        </>
-      ),
-      disabled: true,
-    },
-  },
-  [Visibility.PRIVATE]: {
-    [Visibility.HIDDEN]: {
-      tooltipLabel: (
-        <>
-          Make the role <VisibilityTag visibility={Visibility.PRIVATE} /> first.
-          Requirements and rewards can't be{" "}
-          <VisibilityTag visibility={Visibility.PRIVATE} /> in a{" "}
-          <VisibilityTag visibility={Visibility.HIDDEN} /> role
-        </>
-      ),
-      disabled: true,
-    },
-  },
-}
+import useVisibilityTooltipLabel from "./hooks/useVisibilityTooltipLabel"
+import {
+  VISIBILITY_DATA,
+  VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY,
+} from "./visibilityData"
 
 type FilterableEntity = "role" | "requirement" | "reward"
 
@@ -127,6 +44,15 @@ const SetVisibility = ({
   const currentVisibility: Visibility = useWatch({
     name: `${parentField}.visibility`,
   })
+
+  const currentVisibilityRoleId: number = useWatch({
+    name: `${parentField}.visibilityRoleId`,
+  })
+
+  const tooltipLabel = useVisibilityTooltipLabel(
+    currentVisibility,
+    currentVisibilityRoleId
+  )
 
   if (!currentVisibility) {
     return null
@@ -148,11 +74,7 @@ const SetVisibility = ({
           {VISIBILITY_DATA[currentVisibility].title}
         </Button>
       ) : (
-        <Tooltip
-          label={`${VISIBILITY_DATA[currentVisibility].title}: ${VISIBILITY_DATA[currentVisibility].description}`}
-          placement="top"
-          hasArrow
-        >
+        <Tooltip label={tooltipLabel} placement="top" hasArrow>
           <IconButton
             size={"xs"}
             variant="ghost"
@@ -236,7 +158,7 @@ const SetVisibilityModal = ({
   }
 
   const options = Object.entries(VISIBILITY_DATA).map(
-    ([key, { Icon, ...rest }]) => ({
+    ([key, { Icon, Child, ...rest }]) => ({
       value: key,
       leftComponent: (
         <Circle bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"} p={3}>
@@ -247,6 +169,7 @@ const SetVisibilityModal = ({
       ...(entityType === "role"
         ? {}
         : VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY[key]?.[roleVisibility] ?? {}),
+      children: Child && <Child fieldBase={fieldBase} />,
     })
   )
 

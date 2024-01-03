@@ -2,9 +2,9 @@ import type { AccessCheckJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { useEffect } from "react"
-import { SWRConfiguration } from "swr"
-import useSWRImmutable from "swr/immutable"
+import useSWR, { SWRConfiguration } from "swr"
 import createAndAwaitJob from "utils/createAndAwaitJob"
 import { useFetcherWithSign } from "utils/fetcher"
 import { QUEUE_FEATURE_FLAG } from "../JoinModal/hooks/useJoin"
@@ -12,14 +12,28 @@ import { useUserPublic } from "./useUser"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
   const { isWeb3Connected, address } = useWeb3ConnectionManager()
-  const { id, featureFlags, roles } = useGuild()
+  const { id, featureFlags, roles, parentRoles } = useGuild()
   const { keyPair } = useUserPublic()
+  const { memberships } = useMemberships()
+  const guildMembership = memberships?.find(({ guildId }) => guildId === id)
+
+  // If there is a role, which:
+  //   - we see
+  //   - we aren't a member in
+  //   - is used as visibility input for some other role (only works for roles)
+  const revalidateOnFocus =
+    !!parentRoles &&
+    !!guildMembership &&
+    parentRoles.length > 0 &&
+    parentRoles.some(
+      (parentRoleId) => !guildMembership.roleIds.includes(parentRoleId)
+    )
 
   const shouldFetch = isWeb3Connected && id && roleId !== 0 && !!keyPair
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const { data, error, isLoading, isValidating, mutate } = useSWRImmutable(
+  const { data, error, isLoading, isValidating, mutate } = useSWR(
     shouldFetch ? `/guild/access/${id}/${address}` : null,
     async (key) => {
       if (featureFlags.includes(QUEUE_FEATURE_FLAG)) {
@@ -60,7 +74,14 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
 
       return fetcherWithSign([key, { method: "GET" }])
     },
-    { shouldRetryOnError: false, ...swrOptions }
+    {
+      shouldRetryOnError: false,
+      ...swrOptions,
+      revalidateIfStale: false,
+      revalidateOnFocus,
+      revalidateOnReconnect: false,
+      // dedupingInterval: 10000
+    }
   )
 
   const roleData = roleId && data?.find?.((role) => role.roleId === roleId)
