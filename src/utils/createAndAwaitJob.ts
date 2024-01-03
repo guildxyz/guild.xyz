@@ -1,5 +1,5 @@
 export default async function createAndAwaitJob<
-  Job extends { done?: boolean; error?: any; errorMsg?: any }
+  Job extends { done?: boolean; failed?: any; failedErrorMsg?: any }
 >(
   fetcherWithSign: ([string, any]) => Promise<any>,
   url: string,
@@ -20,22 +20,21 @@ export default async function createAndAwaitJob<
     await fetcherWithSign([url, { method: "POST", body }])
   }
 
-  let interval: ReturnType<typeof setInterval>
+  while (true) {
+    const [job] = await poll()
 
-  return new Promise<Job | null>((resolve, reject) => {
-    interval = setInterval(() => {
-      poll().then(([job = null]) => {
-        if (!job) {
-          reject(job)
-          return // Return is needed, so TS knows, that after this point job is not null
-        }
-        if (!job.done) return
+    if (!job) {
+      throw new Error("Job not found")
+    }
 
-        if (job.error ?? job.errorMsg) reject(job)
-        else resolve(job)
-      })
-    }, 3000)
-  }).finally(() => {
-    clearInterval(interval)
-  })
+    if (job.failed) {
+      throw new Error(job.failedErrorMsg)
+    }
+
+    if (job.done) {
+      return job
+    }
+
+    await new Promise((res) => setTimeout(res, 3000))
+  }
 }
