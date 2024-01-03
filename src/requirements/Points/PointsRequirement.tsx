@@ -1,3 +1,4 @@
+import { Skeleton } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
   RequirementSkeleton,
@@ -6,6 +7,18 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useGuild from "components/[guild]/hooks/useGuild"
 import Link from "components/common/Link"
 import Star from "static/icons/star.svg"
+
+const ExternalGuildLink = ({ name, urlName }) => (
+  <>
+    {` in the `}
+    <Skeleton display="inline-block" isLoaded={!!name}>
+      <Link colorScheme={"blue"} href={urlName}>
+        {name ?? "Loading..."}
+      </Link>
+    </Skeleton>
+    {` guild`}
+  </>
+)
 
 const PointsRank = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -29,15 +42,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
         colorScheme={"blue"}
         href={`/${urlName}/leaderboard/${pointsReward.id}`}
       >{`${pointsReward.platformGuildData.name} leaderboard`}</Link>
-      {guildId !== currentGuildId && (
-        <>
-          {`in the `}
-          <Link colorScheme={"blue"} href={urlName}>
-            {name}
-          </Link>
-          {` guild`}
-        </>
-      )}
+      {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
 }
@@ -53,15 +58,7 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
       {maxAmount
         ? `Have a total score between ${minAmount} - ${maxAmount} of all point types`
         : `Have a total score of at least ${minAmount} of all point types`}
-      {guildId !== currentGuildId && (
-        <>
-          {`in the `}
-          <Link colorScheme={"blue"} href={urlName}>
-            {name}
-          </Link>
-          {` guild`}
-        </>
-      )}
+      {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
 }
@@ -85,15 +82,7 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
       {maxAmount
         ? `Have between ${minAmount} - ${maxAmount} ${pointsName}`
         : `Have at least ${minAmount} ${pointsName}`}
-      {guildId !== currentGuildId && (
-        <>
-          {`in the `}
-          <Link colorScheme={"blue"} href={urlName}>
-            {name}
-          </Link>
-          {` guild`}
-        </>
-      )}
+      {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
 }
