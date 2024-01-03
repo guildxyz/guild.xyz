@@ -13,7 +13,7 @@ import Button from "components/common/Button"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
-import { Check, Wrench } from "phosphor-react"
+import { Info } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
@@ -131,7 +131,7 @@ const DiscordBotPermissionsChecker = () => {
     isClosable: false,
     buttonProps: {
       children: "Fix problem",
-      rightIcon: <Wrench />,
+      leftIcon: <Info />,
       onClick: onOpen,
     },
     secondButtonProps: {
@@ -210,13 +210,7 @@ const DiscordBotPermissionsChecker = () => {
         </ModalBody>
 
         <ModalFooter>
-          <Button
-            size="lg"
-            w="full"
-            colorScheme="green"
-            leftIcon={<Check />}
-            onClick={onClose}
-          >
+          <Button size="lg" w="full" colorScheme="green" onClick={onClose}>
             Done
           </Button>
         </ModalFooter>
