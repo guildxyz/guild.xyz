@@ -36,6 +36,7 @@ module.exports = {
 
     return config
   },
+  swcMinify: true,
   productionBrowserSourceMaps: true,
   images: {
     dangerouslyAllowSVG: true,
