@@ -58,6 +58,8 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
   }
 
   async connect(config?: { chainId?: number; backup?: string }) {
+    this.emit("message", { type: "connecting" })
+
     await this.getProvider()
     this.throwIfNoWallet()
 
@@ -123,23 +125,23 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
 
   async switchChain(chainId: number): Promise<Chain> {
     this._chainId = chainId
+    await this.getWalletClient({ chainId })
     const chain = this.chains.find(({ id }) => id === chainId)
     this.onChainChanged(chainId)
     return chain
   }
 
-  // These don't seem to be important, as changing accounts / chains / disconnecting is not possible within the wallet like in MetaMask for example
-
   protected onAccountsChanged(accounts: `0x${string}`[]): void {
-    console.log("ACCOUNTS CHANGED", accounts)
+    if (accounts.length === 0) this.emit("disconnect")
+    else this.emit("change", { account: this._currentAddress.address })
   }
 
   protected onChainChanged(chainId: string | number): void {
-    console.log("CHAIN CHANGED", chainId)
+    this.emit("change", { chain: { id: +chainId, unsupported: false } })
   }
 
   protected onDisconnect(error: Error): void {
-    console.log("DISCONNECT", error)
+    this.emit("disconnect")
   }
 
   // Some utils
