@@ -25,15 +25,19 @@ type Props = {
   field: Requirement
   label?: string
   format?: "INT" | "FLOAT"
-  hideSetMaxButton?: boolean
+  hideSetMinButton?: boolean
 }
 
-const MinMaxAmount = ({
+/**
+ * This is a reversed copy of MinMaxAmount, because the logic is different for rank:
+ * lower means better here
+ */
+const MaxMinAmount = ({
   baseFieldPath,
   field,
   label = "amount",
   format = "INT",
-  hideSetMaxButton = false,
+  hideSetMinButton = false,
 }: Props): JSX.Element => {
   const {
     control,
@@ -41,14 +45,14 @@ const MinMaxAmount = ({
     formState: { errors },
   } = useFormContext()
 
-  const [showMax, setShowMax] = useState(!isNaN(field?.data?.maxAmount))
+  const [showMin, setShowMin] = useState(!isNaN(field?.data?.minAmount))
 
-  const toggleShowMax = () => setShowMax(!showMax)
+  const toggleShowMin = () => setShowMin(!showMin)
 
   useEffect(() => {
-    if (showMax) return
-    unregister(`${baseFieldPath}.data.maxAmount`)
-  }, [showMax])
+    if (showMin) return
+    unregister(`${baseFieldPath}.data.minAmount`)
+  }, [showMin])
 
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
@@ -61,77 +65,39 @@ const MinMaxAmount = ({
       <Flex justifyContent={"space-between"} w="full">
         <HStack mb={2} spacing={0}>
           <FormLabel mb={0}>
-            {showMax ? `${capitalize(label)}:` : `Minimum ${label}:`}
+            {showMin ? `${capitalize(label)}:` : `Maximum ${label}:`}
           </FormLabel>
 
-          {showMax && (
+          {showMin && (
             <Tooltip
-              label={`min <= ${label} to hold ${format === "INT" ? "<=" : "<"} max`}
+              label={`min <= ${label} to have ${format === "INT" ? "<=" : "<"} max`}
             >
               <Question color="gray" />
             </Tooltip>
           )}
         </HStack>
-        {!hideSetMaxButton && (
+        {!hideSetMinButton && (
           <Button
             size="xs"
             variant="ghost"
             borderRadius={"lg"}
-            onClick={toggleShowMax}
+            onClick={toggleShowMin}
           >
             <Text colorScheme={"gray"}>
-              {showMax ? `remove max ${label}` : `+ set max ${label}`}
+              {showMin ? `remove min ${label}` : `+ set min ${label}`}
             </Text>
           </Button>
         )}
       </Flex>
 
       <HStack w="full" spacing={2} alignItems="start">
-        <FormControl
-          isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
-        >
-          <Controller
-            name={`${baseFieldPath}.data.minAmount` as const}
-            control={control}
-            rules={{
-              min: {
-                value: 0,
-                message: `${capitalize(label)} must be positive`,
-              },
-            }}
-            render={({ field: { onChange, onBlur, value, ref } }) => (
-              <NumberInput
-                ref={ref}
-                value={value ?? ""}
-                onChange={(newValue) => handleChange(newValue, onChange)}
-                onBlur={onBlur}
-                min={0}
-              >
-                <NumberInputField placeholder="Min" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-
-          <FormErrorMessage>
-            {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
-          </FormErrorMessage>
-        </FormControl>
-
-        {showMax && (
+        {showMin && (
           <>
-            <Text as="span" h={10} lineHeight={10}>
-              -
-            </Text>
-
             <FormControl
-              isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
+              isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
             >
               <Controller
-                name={`${baseFieldPath}.data.maxAmount` as const}
+                name={`${baseFieldPath}.data.minAmount` as const}
                 control={control}
                 rules={{
                   required: "This field is required.",
@@ -148,7 +114,7 @@ const MinMaxAmount = ({
                     onBlur={onBlur}
                     min={0}
                   >
-                    <NumberInputField placeholder="Max" />
+                    <NumberInputField placeholder="Min" />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
                       <NumberDecrementStepper />
@@ -158,14 +124,52 @@ const MinMaxAmount = ({
               />
 
               <FormErrorMessage>
-                {parseFromObject(errors, baseFieldPath)?.data?.maxAmount?.message}
+                {parseFromObject(errors, baseFieldPath)?.data?.minAmount?.message}
               </FormErrorMessage>
             </FormControl>
+
+            <Text as="span" h={10} lineHeight={10}>
+              -
+            </Text>
           </>
         )}
+
+        <FormControl
+          isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
+        >
+          <Controller
+            name={`${baseFieldPath}.data.maxAmount` as const}
+            control={control}
+            rules={{
+              min: {
+                value: 0,
+                message: `${capitalize(label)} must be positive`,
+              },
+            }}
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <NumberInput
+                ref={ref}
+                value={value ?? ""}
+                onChange={(newValue) => handleChange(newValue, onChange)}
+                onBlur={onBlur}
+                min={0}
+              >
+                <NumberInputField placeholder="Max" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+
+          <FormErrorMessage>
+            {parseFromObject(errors, baseFieldPath)?.data?.maxAmount?.message}
+          </FormErrorMessage>
+        </FormControl>
       </HStack>
     </FormControl>
   )
 }
 
-export default MinMaxAmount
+export default MaxMinAmount

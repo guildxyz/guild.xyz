@@ -33,8 +33,8 @@ type Props = {
   onSuccess: () => void
 }
 
-type AddPointsFormType = {
-  guildPlatformId: number
+export type AddPointsFormType = {
+  data: { guildPlatformId: number }
   amount: string
   name: string
   imageUrl: string
@@ -50,9 +50,10 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
   const methods = useForm<AddPointsFormType>({
     mode: "all",
     defaultValues: {
-      guildPlatformId: existingPointsRewards?.[0]?.id,
+      data: { guildPlatformId: existingPointsRewards?.[0]?.id },
     },
   })
+
   const {
     control,
     setValue,
@@ -66,7 +67,7 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
   const amount = useWatch({ control, name: "amount" })
   const selectedExistingId = useWatch({
     control,
-    name: "guildPlatformId",
+    name: "data.guildPlatformId",
   })
   const localName = useWatch({ control, name: "name" })
   const localImageUrl = useWatch({ control, name: "imageUrl" })
@@ -119,6 +120,8 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
         <ExistingPointsTypeSelect
           existingPointsRewards={existingPointsRewards}
           selectedExistingId={selectedExistingId}
+          showCreateNew
+          mb="5"
         />
       )}
       <Collapse
