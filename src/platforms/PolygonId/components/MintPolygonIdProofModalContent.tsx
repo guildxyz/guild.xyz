@@ -51,7 +51,13 @@ const MintPolygonIdProofModalContent = () => {
   const checkDID = useSWR<string>(
     userId
       ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id`
-      : null
+      : null,
+    null,
+    {
+      onErrorRetry: (error) => {
+        if (error.status === 500) return
+      },
+    }
   )
   const claimedRoles = useSWR(
     `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
@@ -76,6 +82,7 @@ const MintPolygonIdProofModalContent = () => {
             role={role}
             onMint={setMint}
             isClaimed={
+              claimedRoles.data.length &&
               !!claimedRoles.data[0].roleIds.find(
                 (claimedRoleId) => claimedRoleId === role.id
               )

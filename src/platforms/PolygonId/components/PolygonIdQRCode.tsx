@@ -13,9 +13,10 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
-import { useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { ArrowLeft, ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
+import { useEffect } from "react"
 import useSWR, { mutate } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
@@ -30,19 +31,27 @@ const PolygonIdQRCode = ({ role, goBack }: Props) => {
   const { id: guildId } = useGuild()
   const QR_URL = `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
 
-  const claim = useSubmitWithSign(() =>
+  const claim = useSubmitWithSign((signedValidation: SignedValdation) =>
     fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
       method: "POST",
-      body: {
-        userId: userId,
-        guildId: guildId,
-        roleId: role.id,
-      },
+      ...signedValidation,
     })
   )
   const qr = useSWR(QR_URL)
 
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
+
+  useEffect(() => {
+    if (userId && guildId) {
+      claim.onSubmit({
+        userId: userId,
+        data: {
+          guildId: guildId,
+          roleId: role.id,
+        },
+      })
+    }
+  }, [])
 
   return (
     <>

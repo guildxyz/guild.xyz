@@ -21,9 +21,10 @@ import fetcher from "utils/fetcher"
 const NoDID = () => {
   const { id } = useUser()
   const { isLoading, onSubmit, error } = useSubmitWithSign(
-    () =>
+    (signedValidation) =>
       fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/connect`, {
         method: "POST",
+        ...signedValidation,
       }),
     {
       onSuccess: () => {
@@ -76,7 +77,7 @@ const NoDID = () => {
           ml="auto"
           isLoading={isLoading}
           loadingText={"Connecting..."}
-          onClick={handleSubmit(({ did }) => onSubmit({ did, userId: id }))}
+          onClick={handleSubmit(({ did }) => onSubmit({ data: did, userId: id }))}
         >
           Connect
         </Button>
