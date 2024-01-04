@@ -20,6 +20,7 @@ import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
 import { Clock, Hash } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -38,7 +39,8 @@ type Props = {
   onDone: (data: RolePlatformAvailibiltyForm) => void
 }
 
-const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT"]
+const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT", "POAP"]
+const AUTO_TIMEFRAME_PLATFORMS: PlatformName[] = ["POAP"]
 
 export const DAY_IN_MS = 1000 * 60 * 60 * 24
 
@@ -156,75 +158,86 @@ const EditRewardAvailibiltyModal = ({
                 </CheckboxColorCard>
               </Tooltip>
 
-              <CheckboxColorCard
-                colorScheme="purple"
-                icon={Clock}
-                title="Limit claiming time"
-                description="Set a time frame the reward will be only claimable within"
-                defaultChecked={
-                  !!defaultValues?.startTime || !!defaultValues?.endTime
-                }
-                onChange={(e) => {
-                  if (e.target.checked) return
-                  setValue("startTime", null)
-                  setValue("endTime", null)
-                }}
+              <Tooltip
+                label={`Automatic by ${platforms[platformType].name} data`}
+                isDisabled={!AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
+                shouldWrapChildren
+                hasArrow
               >
-                <Stack
-                  direction={{ base: "column", md: "row" }}
-                  mx="px"
-                  pb="px"
-                  w="calc(100% - 2px)"
-                  spacing={{ base: 4, md: 2 }}
+                <CheckboxColorCard
+                  colorScheme="purple"
+                  icon={Clock}
+                  title="Limit claiming time"
+                  description="Set a time frame the reward will be only claimable within"
+                  defaultChecked={
+                    AUTO_TIMEFRAME_PLATFORMS.includes(platformType) ||
+                    !!defaultValues?.startTime ||
+                    !!defaultValues?.endTime
+                  }
+                  onChange={(e) => {
+                    if (e.target.checked) return
+                    setValue("startTime", null)
+                    setValue("endTime", null)
+                  }}
                 >
-                  <FormControl>
-                    <FormLabel>
-                      From{" "}
-                      <Text as="span" colorScheme="gray">
-                        (UTC)
-                      </Text>
-                    </FormLabel>
-                    <Input
-                      type="datetime-local"
-                      {...register("startTime")}
-                      max={
-                        endTimeValue
-                          ? getShortDate(
-                              new Date(
-                                new Date(endTimeValue).getTime() - DAY_IN_MS
-                              ).toISOString()
-                            )
-                          : undefined
-                      }
-                    />
-                  </FormControl>
+                  <Stack
+                    direction={{ base: "column", md: "row" }}
+                    mx="px"
+                    pb="px"
+                    w="calc(100% - 2px)"
+                    spacing={{ base: 4, md: 2 }}
+                  >
+                    <FormControl>
+                      <FormLabel>
+                        From{" "}
+                        <Text as="span" colorScheme="gray">
+                          (UTC)
+                        </Text>
+                      </FormLabel>
+                      <Input
+                        type="datetime-local"
+                        {...register("startTime")}
+                        max={
+                          endTimeValue
+                            ? getShortDate(
+                                new Date(
+                                  new Date(endTimeValue).getTime() - DAY_IN_MS
+                                ).toISOString()
+                              )
+                            : undefined
+                        }
+                        isDisabled={AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
+                      />
+                    </FormControl>
 
-                  <FormControl>
-                    <FormLabel>
-                      Available until{" "}
-                      <Text as="span" colorScheme="gray">
-                        (UTC)
-                      </Text>
-                    </FormLabel>
-                    <Input
-                      type="datetime-local"
-                      {...register("endTime")}
-                      min={
-                        startTimeValue &&
-                        new Date(startTimeValue).getTime() > Date.now()
-                          ? getShortDate(
-                              new Date(
-                                new Date(startTimeValue).getTime() + DAY_IN_MS
-                              ).toISOString()
-                            )
-                          : getShortDate(
-                              new Date(Date.now() + DAY_IN_MS).toISOString()
-                            )
-                      }
-                    />
-                  </FormControl>
-                </Stack>
-              </CheckboxColorCard>
+                    <FormControl>
+                      <FormLabel>
+                        Available until{" "}
+                        <Text as="span" colorScheme="gray">
+                          (UTC)
+                        </Text>
+                      </FormLabel>
+                      <Input
+                        type="datetime-local"
+                        {...register("endTime")}
+                        min={
+                          startTimeValue &&
+                          new Date(startTimeValue).getTime() > Date.now()
+                            ? getShortDate(
+                                new Date(
+                                  new Date(startTimeValue).getTime() + DAY_IN_MS
+                                ).toISOString()
+                              )
+                            : getShortDate(
+                                new Date(Date.now() + DAY_IN_MS).toISOString()
+                              )
+                        }
+                        isDisabled={AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
+                      />
+                    </FormControl>
+                  </Stack>
+                </CheckboxColorCard>
+              </Tooltip>
             </Stack>
 
             <Button

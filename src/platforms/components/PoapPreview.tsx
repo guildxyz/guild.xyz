@@ -2,7 +2,7 @@ import platforms from "platforms/platforms"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
-const PoapPreview = (): JSX.Element => {
+const PoapPreview = ({ children }): JSX.Element => {
   const name = useWatch({
     name: "rolePlatforms.0.guildPlatform.platformGuildData.name",
   })
@@ -15,7 +15,9 @@ const PoapPreview = (): JSX.Element => {
       type="POAP"
       name={name}
       image={imageUrl ? `${imageUrl}?size=small` : platforms.POAP.imageUrl}
-    />
+    >
+      {children}
+    </PlatformPreview>
   )
 }
 

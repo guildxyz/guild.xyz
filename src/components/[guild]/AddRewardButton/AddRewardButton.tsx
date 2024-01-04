@@ -205,9 +205,18 @@ const AddRewardButton = (): JSX.Element => {
                       platformType={rolePlatform?.guildPlatform?.platformName}
                       rolePlatform={rolePlatform}
                       defaultValues={{
+                        /**
+                         * If the user doesn't upload mint links for a POAP, we
+                         * should fallback to undefined, since 0 is not a valid value
+                         * here
+                         */
+
                         capacity:
                           rolePlatform?.guildPlatform?.platformGuildData?.texts
-                            ?.length,
+                            ?.length || undefined,
+                        /** POAPs will have default startTime and endTime */
+                        startTime: rolePlatform?.startTime,
+                        endTime: rolePlatform?.endTime,
                       }}
                       onDone={({ capacity, startTime, endTime }) => {
                         methods.setValue(`rolePlatforms.0.capacity`, capacity)

@@ -49,6 +49,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "CONTRACT_CALL",
   "TEXT",
   "UNIQUE_TEXT",
+  "POAP",
 ]
 
 type PlatformData<
