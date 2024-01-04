@@ -40,7 +40,6 @@ const UploadTxt = () => {
         return
       }
 
-      console.log(lines)
       setValue("texts", lines)
     }
 
@@ -48,7 +47,13 @@ const UploadTxt = () => {
   }
 
   return (
-    <Button {...getRootProps()} as="label" leftIcon={<File />} h={10}>
+    <Button
+      {...getRootProps()}
+      as="label"
+      leftIcon={<File />}
+      h={10}
+      maxW="max-content"
+    >
       <input {...getInputProps()} hidden />
       {isDragActive ? "Drop the file here" : "Upload .txt"}
     </Button>

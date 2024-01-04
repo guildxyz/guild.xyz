@@ -106,7 +106,7 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
     setValue("name", poap.name)
     setValue("fancyId", poap.fancy_id)
     setValue("imageUrl", poap.image_url)
-    // TODO: not sure, if this conversion is correct
+    // TODO: not sure if we should use ISO date here actually...
     setValue("startTime", new Date(poap.start_date).toISOString())
     setValue("endTime", new Date(poap.expiry_date).toISOString())
   }, [poap])
@@ -202,29 +202,31 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
             </Text>
           </FormLabel>
 
-          <UploadTxt />
+          <Stack>
+            <UploadTxt />
 
-          <Textarea
-            value={texts?.join("\n")}
-            onChange={(e) => {
-              clearErrors()
+            <Textarea
+              value={texts?.join("\n")}
+              onChange={(e) => {
+                clearErrors()
 
-              if (!e.target.value) {
-                setValue("texts", [])
-                return
-              }
+                if (!e.target.value) {
+                  setValue("texts", [])
+                  return
+                }
 
-              const linksArray = e.target.value.split("\n")
-              setValue("texts", linksArray)
+                const linksArray = e.target.value.split("\n")
+                setValue("texts", linksArray)
 
-              if (!validatePoapLinks(linksArray)) {
-                setError("texts", INVALID_LINKS_ERROR)
-              }
-            }}
-            minH={48}
-            placeholder="... or paste links here, each one in a new line"
-          />
-          <FormErrorMessage>{errors?.texts?.message}</FormErrorMessage>
+                if (!validatePoapLinks(linksArray)) {
+                  setError("texts", INVALID_LINKS_ERROR)
+                }
+              }}
+              minH={48}
+              placeholder="... or paste links here, each one in a new line"
+            />
+            <FormErrorMessage>{errors?.texts?.message}</FormErrorMessage>
+          </Stack>
         </FormControl>
 
         <Button
