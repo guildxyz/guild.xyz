@@ -56,8 +56,8 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
   return (
     <Requirement image={<Star />} {...props}>
       {maxAmount
-        ? `Have a total score between ${minAmount} - ${maxAmount} of all point types`
-        : `Have a total score of at least ${minAmount} of all point types`}
+        ? `Have a total score between ${minAmount} - ${maxAmount} summing all point types`
+        : `Have a total score of at least ${minAmount} summing all point types`}
       {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
