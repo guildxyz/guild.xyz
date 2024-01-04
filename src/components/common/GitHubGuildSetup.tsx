@@ -57,7 +57,7 @@ const GitHubGuildSetup = ({
         </Box>
 
         <SimpleGrid columns={{ base: 1, md: 2 }} spacing={{ base: 4, md: 5 }}>
-          {[...Array(9)].map((i) => (
+          {[...Array(9)].map((_, i) => (
             <GridItem key={i}>
               <RepoSkeletonCard />
             </GridItem>
@@ -111,8 +111,8 @@ const GitHubGuildSetup = ({
           <Link passHref href="https://github.com/new">
             <Button as="a" target={"_blank"} variant="link">
               create one
-          </Button>
-        </Link>
+            </Button>
+          </Link>
           , then return here to gate access to it!
         </AlertDescription>
       </VStack>
