@@ -8,11 +8,12 @@ import {
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import RepoCard, { RepoSkeletonCard } from "components/create-guild/github/RepoCard"
 import SearchBar from "components/explorer/SearchBar"
 import useGateables from "hooks/useGateables"
+import useSubmit from "hooks/useSubmit"
 import Link from "next/link"
-import { ArrowSquareOut } from "phosphor-react"
 import { useState } from "react"
 import { PlatformType } from "types"
 import Button from "./Button"
@@ -23,9 +24,17 @@ const GitHubGuildSetup = ({
 }: {
   onSelection?: (platformGuildId: string) => void
 }) => {
-  const { gateables, isLoading, error } = useGateables(PlatformType.GITHUB, {
+  const { gateables, isLoading, error, mutate } = useGateables(PlatformType.GITHUB, {
     refreshInterval: 10_000,
   })
+
+  /**
+   * To have a clean loading state between a reauth and a gatealbes list, it is
+   * needed to know the state of that specific mutation. If we used the gateables
+   * SWR's isValidating, we would have skeletons on refocus
+   */
+  const mutateGateables = useSubmit(() => mutate())
+
   const [search, setSearch] = useState<string>("")
   const filteredRepos = gateables?.filter?.((repo) =>
     [repo.platformGuildId, repo.repositoryName, repo.description].some((prop) =>
@@ -33,7 +42,14 @@ const GitHubGuildSetup = ({
     )
   )
 
-  if (isLoading) {
+  const { onConnect, isLoading: isConnecting } = useConnectPlatform(
+    "GITHUB",
+    () => mutateGateables.onSubmit(),
+    null,
+    "creation"
+  )
+
+  if (isLoading || mutateGateables.isLoading) {
     return (
       <>
         <Box maxW="lg" mb={8}>
@@ -81,14 +97,24 @@ const GitHubGuildSetup = ({
       <VStack alignItems={"start"}>
         <AlertTitle>No repositories</AlertTitle>
         <AlertDescription>
-          It looks like you don't have any repositories yet. Create one and return
-          here to gate access to it!
-        </AlertDescription>
-        <Link passHref href="https://github.com/new">
-          <Button as="a" target={"_blank"} size="sm" rightIcon={<ArrowSquareOut />}>
-            Create a repository
+          We couldn't find your repos, please{" "}
+          <Button
+            variant="link"
+            onClick={onConnect}
+            isLoading={isConnecting}
+            loadingText={"authenticating"}
+            spinnerPlacement="end"
+          >
+            reauthenticate
+          </Button>
+          , or if you don't have a repo yet, you can{" "}
+          <Link passHref href="https://github.com/new">
+            <Button as="a" target={"_blank"} variant="link">
+              create one
           </Button>
         </Link>
+          , then return here to gate access to it!
+        </AlertDescription>
       </VStack>
     </Alert>
   )
