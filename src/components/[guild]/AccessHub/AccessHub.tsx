@@ -37,8 +37,10 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
   )
-  const relevantGuildPlatforms = guildPlatforms.filter((gp) =>
-    relevantGuildPlatformIds.includes(gp.id)
+  const relevantGuildPlatforms = guildPlatforms.filter(
+    (gp) =>
+      relevantGuildPlatformIds.includes(gp.id) &&
+      gp.platformId !== PlatformType.POINTS
   )
 
   const { isAdmin } = useGuildPermission()

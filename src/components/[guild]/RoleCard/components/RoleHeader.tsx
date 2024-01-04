@@ -19,7 +19,11 @@ const RoleHeader = ({ role, isOpen = true, children }: PropsWithChildren<any>) =
         >
           {role.name}
         </Heading>
-        <Visibility entityVisibility={role.visibility} showTagLabel />
+        <Visibility
+          visibilityRoleId={role.visibilityRoleId}
+          entityVisibility={role.visibility}
+          showTagLabel
+        />
       </Wrap>
     </HStack>
     {children}

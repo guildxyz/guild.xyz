@@ -124,7 +124,10 @@ const Reward = ({
       }
       rightElement={
         <>
-          <Visibility entityVisibility={platform.visibility} />
+          <Visibility
+            visibilityRoleId={platform.visibilityRoleId}
+            entityVisibility={platform.visibility}
+          />
 
           {platform.guildPlatform?.platformId === PlatformType.GOOGLE && (
             <GoogleCardWarning

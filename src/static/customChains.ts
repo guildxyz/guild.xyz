@@ -360,8 +360,49 @@ export const x1Testnet = /*#__PURE__*/ defineChain({
   },
   contracts: {
     multicall3: {
-      address: "0x",
-      blockCreated: 0,
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 624344,
+    },
+  },
+})
+
+export const ontology = /*#__PURE__*/ defineChain({
+  id: 58,
+  name: "Ontology EVM",
+  network: "ontology",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ONG",
+    symbol: "ONG",
+  },
+  rpcUrls: {
+    default: {
+      http: [
+        "https://dappnode1.ont.io:10339",
+        "https://dappnode2.ont.io:10339",
+        "https://dappnode3.ont.io:10339",
+        "https://dappnode4.ont.io:10339",
+      ],
+    },
+    public: {
+      http: [
+        "https://dappnode1.ont.io:10339",
+        "https://dappnode2.ont.io:10339",
+        "https://dappnode3.ont.io:10339",
+        "https://dappnode4.ont.io:10339",
+      ],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Ontology",
+      url: "https://explorer.ont.io/",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xce6292279bf688173b269df080e14407470a9e60",
+      blockCreated: 14244158,
     },
   },
 })

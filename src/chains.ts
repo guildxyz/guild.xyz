@@ -5,10 +5,12 @@ import {
   kava,
   lukso,
   neonEVM,
+  ontology,
   palm,
   pgn,
   scrollAlpha,
   shimmer,
+  x1Testnet,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
 import {
@@ -459,15 +461,24 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/bitfinity.svg",
     },
   },
-  // X1_TESTNET: {
-  //   ...x1Testnet,
-  //   iconUrl: "/walletLogos/okx.png",
-  //   coinIconUrl: "/walletLogos/okx.png",
-  //   blockExplorerIconUrl: {
-  //     light: "/walletLogos/okx.png",
-  //     dark: "/walletLogos/okx.png",
-  //   },
-  // },
+  X1_TESTNET: {
+    ...x1Testnet,
+    iconUrl: "/walletLogos/okx.png",
+    coinIconUrl: "/walletLogos/okx.png",
+    blockExplorerIconUrl: {
+      light: "/walletLogos/okx.png",
+      dark: "/walletLogos/okx.png",
+    },
+  },
+  ONTOLOGY: {
+    ...ontology,
+    iconUrl: "/networkLogos/ontology.svg",
+    coinIconUrl: "/networkLogos/ontology.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/ontology.svg",
+      dark: "/networkLogos/ontology.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -512,7 +523,8 @@ enum Chains {
   SHIMMER = shimmer.id,
   KAVA = kava.id,
   BITFINITY_TESTNET = bitfinityTestnet.id,
-  // X1_TESTNET = x1Testnet.id,
+  X1_TESTNET = x1Testnet.id,
+  ONTOLOGY = ontology.id,
 }
 
 export type Chain = keyof typeof Chains

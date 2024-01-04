@@ -86,6 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
+  | "POINTS"
 
 type PlatformUserData = {
   acessToken?: string
@@ -156,6 +157,11 @@ type GuildBase = {
   tags: Array<GuildTags>
 }
 
+type GuildPinConfig = {
+  chain: Chain | "FUEL"
+  isActive: boolean
+}
+
 type SimpleGuild = {
   id: number
   name: string
@@ -168,10 +174,7 @@ type SimpleGuild = {
   eventSources: EventSources
   onboardingComplete: boolean
   memberCount: number
-  guildPin?: {
-    chain: Chain
-    isActive: boolean
-  }
+  guildPin?: GuildPinConfig
   theme: Theme
 }
 
@@ -306,6 +309,7 @@ type Requirement = {
   decimals?: number
   isNegated: boolean
   visibility?: Visibility
+  visibilityRoleId?: number | null
 
   // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
   poapId?: number
@@ -328,6 +332,7 @@ type RolePlatform = {
   isNew?: boolean
   roleId?: number
   visibility?: Visibility
+  visibilityRoleId?: number | null
   capacity?: number
   claimedCount?: number
   startTime?: string
@@ -348,6 +353,7 @@ type SimpleRole = {
   logic: Logic
   memberCount: number
   visibility: Visibility
+  visibilityRoleId?: number | null
   position?: number
   anyOfNum?: number
   groupId?: number
@@ -443,12 +449,10 @@ type Guild = {
   requiredPlatforms?: PlatformName[]
   tags: GuildTags[]
   eventSources: Record<EventSourcesKey, string>
-  guildPin?: {
-    chain: Chain
-    isActive: boolean
-  }
+  guildPin?: GuildPinConfig
   isFallback?: boolean
   isDetailed?: boolean
+  parentRoles: number[]
 }
 
 type RoleFormType = Partial<
@@ -564,6 +568,7 @@ export enum PlatformType {
   "TWITTER_V1" = 8,
   "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
+  "POINTS" = 13,
 }
 
 type WalletConnectConnectionData = {
@@ -712,7 +717,7 @@ type LeaderboardPinData = {
   tokenUri: string
 }
 
-type DetailedUserLeaderboardData = {
+type DetailedPinLeaderboardUserData = {
   address: string
   score: number
   pins: LeaderboardPinData[]
@@ -726,7 +731,7 @@ export type {
   CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,
-  DetailedUserLeaderboardData,
+  DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
   DiscordServerData,
   EventSources,

@@ -1,8 +1,8 @@
 import { Heading, HStack, Icon, Spacer } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import GuildLogo from "components/common/GuildLogo"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import Visibility from "components/[guild]/Visibility"
+import Card from "components/common/Card"
+import GuildLogo from "components/common/GuildLogo"
 import { DotsSixVertical } from "phosphor-react"
 import { Role } from "types"
 
@@ -30,7 +30,12 @@ const DraggableRoleCard = ({ role }: Props) => {
           </Heading>
 
           <MemberCount memberCount={role.members?.length ?? role.memberCount} />
-          <Visibility ml={-2} mt={0.5} entityVisibility={role.visibility} />
+          <Visibility
+            ml={-2}
+            mt={0.5}
+            entityVisibility={role.visibility}
+            visibilityRoleId={role.visibilityRoleId}
+          />
         </HStack>
 
         <Spacer />

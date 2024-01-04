@@ -120,9 +120,8 @@ const useSetKeyPair = () => {
           method: "POST",
           body,
           signOptions: {
-            forcePropmt: true,
-            message:
-              "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+            forcePrompt: true,
+            msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
             ...signProps,
           },
         },

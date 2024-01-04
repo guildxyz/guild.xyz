@@ -19,20 +19,30 @@ import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useChainId } from "wagmi"
 
+const FUEL_ICON = "/walletLogos/fuel.svg"
+
 type Props = {
   controlName: string
-  supportedChains?: Array<Chain>
+  supportedChains?: Array<Chain | "FUEL">
   onChange?: () => void
   isDisabled?: boolean
   showDivider?: boolean
 }
 
-const mappedChains: Array<{ img: string; label: string; value: Chain }> =
-  defaultSupportedChains.map((chainName: Chain) => ({
-    img: CHAIN_CONFIG[chainName].iconUrl,
-    label: CHAIN_CONFIG[chainName].name,
-    value: chainName,
-  }))
+const mappedChains: Array<{ img: string; label: string; value: Chain | "FUEL" }> =
+  defaultSupportedChains
+    .map((chainName: Chain) => ({
+      img: CHAIN_CONFIG[chainName].iconUrl,
+      label: CHAIN_CONFIG[chainName].name,
+      value: chainName,
+    }))
+    .concat([
+      {
+        img: FUEL_ICON,
+        label: "Fuel",
+        value: "FUEL" as any,
+      },
+    ])
 
 const ChainPicker = ({
   controlName,
@@ -80,9 +90,12 @@ const ChainPicker = ({
       <FormControl>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
-          {CHAIN_CONFIG[chain]?.iconUrl && (
+          {(CHAIN_CONFIG[chain]?.iconUrl || chain === "FUEL") && (
             <InputLeftElement>
-              <OptionImage img={CHAIN_CONFIG[chain].iconUrl} alt={chain} />
+              <OptionImage
+                img={chain === "FUEL" ? FUEL_ICON : CHAIN_CONFIG[chain]?.iconUrl}
+                alt={chain}
+              />
             </InputLeftElement>
           )}
 

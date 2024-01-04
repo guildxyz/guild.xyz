@@ -60,9 +60,14 @@ const AccountConnections = () => {
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(platforms).filter(
       (platform) =>
-        !["POAP", "CONTRACT_CALL", "EMAIL", "UNIQUE_TEXT", "TEXT"].includes(
-          platform
-        ) && !connectedPlatforms?.includes(platform)
+        ![
+          "POAP",
+          "CONTRACT_CALL",
+          "EMAIL",
+          "UNIQUE_TEXT",
+          "TEXT",
+          "POINTS",
+        ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [
       ...connectedPlatforms,

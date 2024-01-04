@@ -36,6 +36,8 @@ const useCreateGuild = () => {
     onSuccess: (response_) => {
       triggerConfetti()
 
+      captureEvent("guild creation flow > guild successfully created")
+
       yourGuilds.mutate(
         (prev) => [
           ...(prev ?? []),

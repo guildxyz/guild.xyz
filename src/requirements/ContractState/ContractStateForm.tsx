@@ -14,12 +14,18 @@ import {
   NumberInput,
   NumberInputField,
   NumberInputStepper,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Stack,
   Text,
-  Tooltip,
+  TextProps,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Info, Plus, X } from "phosphor-react"
 import { useEffect, useMemo } from "react"
@@ -30,8 +36,6 @@ import ChainPicker from "../common/ChainPicker"
 import useAbi from "./hooks/useAbi"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
-const USER_ADDRESS_HELPER_TEXT =
-  "'USER_ADDRESS' autofills the actual user's address when checking access"
 
 const getParamTypes = (params) => params.map((param) => param.type).join(",")
 
@@ -198,9 +202,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
         <>
           <Stack spacing={1}>
             <Text fontWeight="medium">Params:</Text>
-            <Text fontSize="sm" colorScheme="gray">
-              {`Tip: ${USER_ADDRESS_HELPER_TEXT}`}
-            </Text>
+            <UserAddressHelperText fontSize="sm" colorScheme="gray" />
           </Stack>
 
           {paramsFields.map((field, i) => (
@@ -245,9 +247,17 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
                   input.name
                 }`}</FormLabel>
                 {input.type === "address" && (
-                  <Tooltip label={USER_ADDRESS_HELPER_TEXT}>
-                    <Info />
-                  </Tooltip>
+                  <Popover trigger="hover">
+                    <PopoverTrigger>
+                      <Info />
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverBody>
+                        <UserAddressHelperText />
+                      </PopoverBody>
+                    </PopoverContent>
+                  </Popover>
                 )}
               </HStack>
 
@@ -372,5 +382,14 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
     </Stack>
   )
 }
+
+const UserAddressHelperText = (props: TextProps) => (
+  <Text display="inline" {...props}>
+    <DataBlockWithCopy text="USER_ADDRESS">USER_ADDRESS</DataBlockWithCopy>
+    <Text as="span" ml={1}>
+      autofills the actual user's address when checking access
+    </Text>
+  </Text>
+)
 
 export default ContractStateForm

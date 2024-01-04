@@ -11,6 +11,12 @@ const DynamicMintGuildPin = dynamic(
   () =>
     import("components/[guild]/Requirements/components/GuildCheckout/MintGuildPin")
 )
+const DynamicMintFuelGuildPin = dynamic(
+  () =>
+    import(
+      "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/MintFuelGuildPin"
+    )
+)
 
 const GuildPinRewardCard = () => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-100)", "#343439")
@@ -58,9 +64,12 @@ const GuildPinRewardCard = () => {
           opacity: "0.07",
         }}
       >
-        {(!(isInvalidImage || isTooSmallImage) || isAdmin) && (
-          <DynamicMintGuildPin />
-        )}
+        {(!(isInvalidImage || isTooSmallImage) || isAdmin) &&
+          (guildPin?.chain !== "FUEL" ? (
+            <DynamicMintGuildPin />
+          ) : (
+            <DynamicMintFuelGuildPin />
+          ))}
       </RewardCard>
     </CardMotionWrapper>
   )
