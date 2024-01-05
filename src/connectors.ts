@@ -73,7 +73,10 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
           provideAuthToken: async () => {
             try {
               const response = await fetch(
-                `http://localhost:8989/v2/third-party/coinbase/token`
+                `${process.env.NEXT_PUBLIC_API.replace(
+                  "/v1",
+                  "/v2"
+                )}/third-party/coinbase/token`
               )
               const token = await response.json()
               return token
