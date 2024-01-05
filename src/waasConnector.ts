@@ -79,7 +79,7 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
   }
 
   async disconnect(): Promise<void> {
-    console.log("DISCONNECT")
+    this.emit("disconnect")
   }
 
   async getAccount(): Promise<`0x${string}`> {
@@ -110,6 +110,7 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
 
   async isAuthorized(): Promise<boolean> {
     try {
+      await this.getProvider()
       this.throwIfNoWallet()
       const { ProtocolFamily } = await cwaasImport()
 
