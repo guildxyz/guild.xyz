@@ -600,7 +600,6 @@ enum ValidationMethod {
   KEYPAIR = 2,
   EIP1271 = 3,
   FUEL = 4,
-  EMAIL = 5,
 }
 
 type MonetizePoapForm = {

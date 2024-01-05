@@ -79,7 +79,6 @@ const Hero = (): JSX.Element => {
             autoplay
             keepLastFrame
             speed={1}
-            className="lottie-bw"
             src="/logo_lottie.json"
             style={{
               marginBottom: 24,
