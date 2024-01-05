@@ -142,7 +142,7 @@ const useSetKeyPair = () => {
         }
       )
       await mutate(
-        `/v2/users/${address}/profile`,
+        `/v2/users/${address?.toLowerCase()}/profile`,
         {
           id: userProfile?.id,
           publicKey: userProfile?.publicKey,
