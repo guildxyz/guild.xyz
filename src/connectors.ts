@@ -1,4 +1,5 @@
 import { CHAIN_CONFIG } from "chains"
+import fetcher from "utils/fetcher"
 import { createWalletClient, http } from "viem"
 import { mnemonicToAccount } from "viem/accounts"
 import { CWaaSConnector } from "waasConnector"
@@ -71,19 +72,8 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
         chains,
         options: {
           provideAuthToken: async () => {
-            try {
-              const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API.replace(
-                  "/v1",
-                  "/v2"
-                )}/third-party/coinbase/token`
-              )
-              const token = await response.json()
-              return token
-            } catch (error) {
-              console.error("[provideAuthToken] failed", error)
-              throw error
-            }
+            const token = await fetcher("/v2/third-party/coinbase/token")
+            return token
           },
           collectAndReportMetrics: true,
         },
