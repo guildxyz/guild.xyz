@@ -1,4 +1,4 @@
-import { Center, Icon, Img } from "@chakra-ui/react"
+import { ButtonProps, Center, Icon, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
@@ -16,7 +16,20 @@ type Props = {
   error?: Error
 }
 
-// TODO: Move some common props to an exported const here, and use it for Google & Delegate buttons
+const connectorButtonProps: ButtonProps = {
+  spinnerPlacement: "end",
+  w: "full",
+  size: "xl",
+  iconSpacing: 4,
+  justifyContent: "start",
+  // Yeah.. This is not a pretty solution, but the simplest extra-markup-free one, I could find, as the spinner is conviniently already wrapped in a flex container
+  sx: {
+    "> div.chakra-button__spinner": {
+      flexGrow: 1,
+      justifyContent: "end",
+    },
+  },
+}
 
 const ConnectorButton = ({
   connector,
@@ -70,16 +83,13 @@ const ConnectorButton = ({
           (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
         !error
       }
-      spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
-      w="full"
-      size="xl"
-      gap={3}
-      justifyContent="start"
+      {...connectorButtonProps}
     >
       {connectorName}
     </Button>
   )
 }
 
+export { connectorButtonProps }
 export default ConnectorButton

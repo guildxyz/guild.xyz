@@ -15,6 +15,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 import { useAccount } from "wagmi"
+import { connectorButtonProps } from "./ConnectorButton"
 
 const DelegateCashButton = (): JSX.Element => {
   const { isConnected } = useAccount()
@@ -42,13 +43,10 @@ const DelegateCashButton = (): JSX.Element => {
                 />
               </Center>
             }
-            w="full"
-            size="xl"
-            justifyContent="start"
-            gap={3}
             onClick={() => {
               setIsDelegateConnection(true)
             }}
+            {...connectorButtonProps}
           >
             {connectorName}
           </Button>

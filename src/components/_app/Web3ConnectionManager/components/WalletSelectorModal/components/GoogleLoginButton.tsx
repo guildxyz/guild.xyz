@@ -43,6 +43,7 @@ import {
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
 import useCountdownSeconds from "../hooks/useCountdownSeconds"
+import { connectorButtonProps } from "./ConnectorButton"
 import GoogleTerms from "./GoogleTerms"
 
 type LottieInstance = Parameters<IPlayerProps["lottieRef"]>[0]
@@ -247,7 +248,6 @@ const GoogleLoginButton = () => {
     <>
       <Button
         mt="4"
-        size="xl"
         isLoading={logInWithGoogle.isLoading}
         onClick={logInWithGoogle.onSubmit}
         colorScheme="white"
@@ -261,9 +261,8 @@ const GoogleLoginButton = () => {
             />
           </Center>
         }
-        justifyContent="start"
-        gap={3}
         loadingText={googleAuth.isAuthenticating ? "Confirm in popup..." : "Loading"}
+        {...connectorButtonProps}
       >
         Sign in with Google
       </Button>
