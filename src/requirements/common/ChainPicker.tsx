@@ -2,6 +2,7 @@ import {
   Divider,
   FormControl,
   FormLabel,
+  Icon,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
@@ -15,6 +16,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import { useRouter } from "next/router"
+import { Question } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useChainId } from "wagmi"
@@ -29,20 +31,23 @@ type Props = {
   showDivider?: boolean
 }
 
-const mappedChains: Array<{ img: string; label: string; value: Chain | "FUEL" }> =
-  defaultSupportedChains
-    .map((chainName: Chain) => ({
-      img: CHAIN_CONFIG[chainName].iconUrl,
-      label: CHAIN_CONFIG[chainName].name,
-      value: chainName,
-    }))
-    .concat([
-      {
-        img: FUEL_ICON,
-        label: "Fuel",
-        value: "FUEL" as any,
-      },
-    ])
+const mappedChains: Array<{
+  img: string | JSX.Element
+  label: string
+  value: Chain | "FUEL"
+}> = defaultSupportedChains
+  .map((chainName: Chain) => ({
+    img: CHAIN_CONFIG[chainName].iconUrl || <Icon as={Question} boxSize={5} />,
+    label: CHAIN_CONFIG[chainName].name,
+    value: chainName,
+  }))
+  .concat([
+    {
+      img: FUEL_ICON,
+      label: "Fuel",
+      value: "FUEL" as any,
+    },
+  ])
 
 const ChainPicker = ({
   controlName,

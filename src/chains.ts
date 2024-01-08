@@ -482,7 +482,8 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   },
   BERA_TESTNET: {
     ...beraTestnet,
-    iconUrl: "/networkLogos/berachain.png",
+    // iconUrl: "/networkLogos/berachain.png",
+    iconUrl: "",
     coinIconUrl: "/networkLogos/berachain.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/berachain.png",
