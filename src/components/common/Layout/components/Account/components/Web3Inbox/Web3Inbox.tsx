@@ -176,7 +176,7 @@ const SubscribeToMessages = () => {
                 Web3Inbox
                 <Icon as={ArrowSquareOut} ml={1} />
               </Link>
-              . Sign a message to start recieving them!
+              . Sign a message to start receiving them!
             </Text>
             <Button
               variant="solid"
