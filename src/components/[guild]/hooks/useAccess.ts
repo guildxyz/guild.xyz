@@ -1,4 +1,4 @@
-import type { AccessCheckJob } from "@guildxyz/types"
+import { AccessCheckJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -12,7 +12,7 @@ import { useUserPublic } from "./useUser"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
   const { isWeb3Connected, address } = useWeb3ConnectionManager()
-  const { id, featureFlags, roles, parentRoles } = useGuild()
+  const { id, featureFlags, parentRoles } = useGuild()
   const { keyPair } = useUserPublic()
   const { memberships } = useMemberships()
   const guildMembership = memberships?.find(({ guildId }) => guildId === id)
@@ -37,12 +37,6 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
     shouldFetch ? `/guild/access/${id}/${address}` : null,
     async (key) => {
       if (featureFlags.includes(QUEUE_FEATURE_FLAG)) {
-        const requirementIdToRoleId = Object.fromEntries(
-          roles?.flatMap((role) =>
-            role.requirements?.map((req) => [req.id, role.id] as [number, number])
-          )
-        )
-
         const { roleAccesses, "children:access-check:jobs": requirementResults } =
           await createAndAwaitJob<AccessCheckJob>(
             fetcherWithSign,
@@ -52,22 +46,33 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
           )
 
         return roleAccesses.map((roleAccess) => {
-          const errors = requirementResults
-            ?.filter(
-              (reqAcc) =>
-                requirementIdToRoleId[reqAcc.requirementId] === roleAccess?.roleId
-            )
-            .map((reqAccess) => (reqAccess as any)?.error)
-            ?.filter(Boolean)
+          const requirementResultsOfRole = requirementResults?.filter(
+            (reqAcc) => reqAcc.roleId === roleAccess.roleId
+          )
 
           return {
             roleId: roleAccess?.roleId,
             access: roleAccess?.access,
-            requirements: requirementResults?.filter(
-              (reqAcc) =>
-                requirementIdToRoleId[reqAcc.requirementId] === roleAccess?.roleId
+            requirements: requirementResultsOfRole.map(
+              ({ requirementId, access, amount }) => ({
+                requirementId,
+                access,
+                amount,
+              })
             ),
-            ...(errors?.length > 0 ? { errors } : {}),
+            errors:
+              requirementResultsOfRole.flatMap(
+                ({ requirementError, userLevelErrors }) => {
+                  const errors = []
+                  if (requirementError) {
+                    errors.push(requirementError)
+                  }
+                  if (userLevelErrors) {
+                    errors.push(...userLevelErrors)
+                  }
+                  return errors
+                }
+              ) ?? [],
           }
         })
       }
