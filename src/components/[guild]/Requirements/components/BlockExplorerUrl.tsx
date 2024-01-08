@@ -28,7 +28,10 @@ const BlockExplorerUrl = ({
 
   // explorer.zksync.io doesn't support the /token path
   const path =
-    pathProp ?? ((chainProp ?? chain) === "ZKSYNC_ERA" ? "address" : "token")
+    pathProp ??
+    (["ZKSYNC_ERA", "BERA_TESTNET"].includes(chainProp ?? chain)
+      ? "address"
+      : "token")
 
   const url =
     (type === "ERC1155" || type === "ERC721") && data?.id
