@@ -107,9 +107,9 @@ type PlatformData<
   }
 >
 
-const AddPlatformPanelLoadingSpinner = () => (
+export const AddPlatformPanelLoadingSpinner = () => (
   <Center w="full" h="51vh">
-    <Spinner />
+    <Spinner size="xl" />
   </Center>
 )
 
