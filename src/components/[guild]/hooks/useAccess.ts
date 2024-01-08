@@ -1,4 +1,4 @@
-import { AccessCheckJob } from "@guildxyz/types"
+import type { AccessCheckJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
