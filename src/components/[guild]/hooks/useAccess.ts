@@ -53,15 +53,14 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
           return {
             roleId: roleAccess?.roleId,
             access: roleAccess?.access,
-            requirements: requirementResultsOfRole.map(
-              ({ requirementId, access, amount }) => ({
+            requirements:
+              requirementResultsOfRole?.map(({ requirementId, access, amount }) => ({
                 requirementId,
                 access,
                 amount,
-              })
-            ),
+              })) ?? [],
             errors:
-              requirementResultsOfRole.flatMap(
+              requirementResultsOfRole?.flatMap(
                 ({ requirementError, userLevelErrors }) => {
                   const errors = []
                   if (requirementError) {
