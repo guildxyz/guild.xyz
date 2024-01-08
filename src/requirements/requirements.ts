@@ -13,6 +13,7 @@ import {
 import platforms from "platforms/platforms"
 import { RequirementFormProps } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
+import Star from "static/icons/star.svg"
 import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
@@ -145,6 +146,18 @@ export const REQUIREMENTS_DATA = [
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
     ],
+    isNegatable: true,
+  },
+  {
+    icon: Star,
+    name: "Points",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Points/PointsRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Points/PointsForm")
+    ),
+    types: ["POINTS_AMOUNT", "POINTS_TOTAL_AMOUNT", "POINTS_RANK"],
     isNegatable: true,
   },
   {

@@ -1,4 +1,5 @@
 import {
+  beraTestnet,
   bitfinityTestnet,
   bobaAvax,
   exosama,
@@ -479,6 +480,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/ontology.svg",
     },
   },
+  BERA_TESTNET: {
+    ...beraTestnet,
+    iconUrl: "/networkLogos/berachain.png",
+    coinIconUrl: "/networkLogos/berachain.png",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/berachain.png",
+      dark: "/networkLogos/berachain.png",
+    },
+  },
 }
 
 enum Chains {
@@ -525,6 +535,7 @@ enum Chains {
   BITFINITY_TESTNET = bitfinityTestnet.id,
   X1_TESTNET = x1Testnet.id,
   ONTOLOGY = ontology.id,
+  BERA_TESTNET = beraTestnet.id,
 }
 
 export type Chain = keyof typeof Chains

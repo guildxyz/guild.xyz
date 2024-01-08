@@ -84,7 +84,10 @@ const MultiPlatformSelectButton = ({
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
-    () => onSelection(platform),
+    () => {
+      onOpen()
+      onSelection(platform)
+    },
     false,
     "creation"
   )
