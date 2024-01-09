@@ -11,7 +11,7 @@ import { useState } from "react"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
-type TwitterIntentType = "follow" | "like" | "retweet"
+export type TwitterIntentType = "follow" | "like" | "retweet"
 
 type Props = {
   type: TwitterIntentType

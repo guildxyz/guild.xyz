@@ -10,10 +10,16 @@ import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import TwitterIntent from "./components/TwitterIntent"
+import TwitterIntent, { TwitterIntentType } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
+
+const requirementIntentType: Record<string, TwitterIntentType> = {
+  TWITTER_FOLLOW_V2: "follow",
+  TWITTER_LIKE_V2: "like",
+  TWITTER_RETWEET_V2: "retweet",
+}
 
 // https://help.twitter.com/en/managing-your-account/twitter-username-rules
 export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
@@ -34,10 +40,8 @@ const TwitterRequirement = (props: RequirementProps) => {
           twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
       }
       footer={
-        requirement.type === "TWITTER_FOLLOW_V2" ? (
-          <TwitterIntent type="follow" />
-        ) : requirement.type === "TWITTER_LIKE_V2" ? (
-          <TwitterIntent type="like" />
+        requirementIntentType[requirement.type] ? (
+          <TwitterIntent type={requirementIntentType[requirement.type]} />
         ) : (
           <ConnectRequirementPlatformButton />
         )
