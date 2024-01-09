@@ -24,7 +24,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const twitterRequirementTypes = [
     // Temporarily disabled, because the new Twitter API doesn't provide endpoints for these requirement types
     // {
-    //   label: "Follow user",
+    //   label: "Follow user (legacy)",
     //   value: "TWITTER_FOLLOW",
     //   TwitterRequirement: TwitterUserInput,
     // },
@@ -32,6 +32,16 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       label: "Follow user",
       value: "TWITTER_FOLLOW_V2",
       TwitterRequirement: TwitterUserInput,
+    },
+    {
+      label: "Like tweet",
+      value: "TWITTER_LIKE_V2",
+      TwitterRequirement: TwitterTweetInput,
+    },
+    {
+      label: "Retweet tweet",
+      value: "TWITTER_RETWEET_V2",
+      TwitterRequirement: TwitterTweetInput,
     },
     // {
     //   label: "Be followed by user",
@@ -87,16 +97,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           },
         ]
       : []),
-    {
-      label: "Like tweet",
-      value: "TWITTER_LIKE_V2",
-      TwitterRequirement: TwitterTweetInput,
-    },
-    {
-      label: "Retweet tweet",
-      value: "TWITTER_RETWEET_V2",
-      TwitterRequirement: TwitterTweetInput,
-    },
   ]
 
   const { errors } = useFormState()
