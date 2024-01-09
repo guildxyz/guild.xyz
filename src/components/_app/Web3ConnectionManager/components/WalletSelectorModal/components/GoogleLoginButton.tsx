@@ -100,7 +100,7 @@ const GoogleLoginButton = () => {
     },
     {
       onError: (error) => {
-        captureEvent("Wallet creation / restoration failed", { error })
+        captureEvent("[WaaS] Wallet creation / restoration failed", { error })
         genericErrorToastCallback(toast)(error)
       },
     }
@@ -111,17 +111,17 @@ const GoogleLoginButton = () => {
 
   const logInWithGoogle = useSubmit(
     async () => {
-      captureEvent("Log in with Google clicked")
+      captureEvent("[WaaS] Log in with Google clicked")
 
       // 1) Google OAuth
       const { authData, error } = await googleAuth.onOpen()
 
       if (!authData || !!error) {
-        captureEvent("Google OAuth failed", { error })
+        captureEvent("[WaaS] Google OAuth failed", { error })
         return
       }
 
-      captureEvent("Successful Google OAuth")
+      captureEvent("[WaaS] Successful Google OAuth")
 
       // 2) Create or Restore wallet
       const isNew = await createOrRestoreWallet.onSubmit(
@@ -129,22 +129,29 @@ const GoogleLoginButton = () => {
         true
       )
 
-      captureEvent("Wallet successfully initialized", { isNew })
+      captureEvent("[WaaS] Wallet successfully initialized", { isNew })
 
       // 3) Verify a keypair
 
       const walletClient = await cwaasConnector.getWalletClient()
-      const { keyPair, user } = await set.onSubmit(
-        {
-          signProps: {
-            walletClient,
-            address: walletClient.account.address,
+      const { keyPair, user } = await set
+        .onSubmit(
+          {
+            signProps: {
+              walletClient,
+              address: walletClient.account.address,
+            },
           },
-        },
-        true
-      )
-
-      captureEvent("Keypair verified")
+          true
+        )
+        .then((result) => {
+          captureEvent("[WaaS] Keypair verified")
+          return result
+        })
+        .catch((err) => {
+          captureEvent("[WaaS] Failed to verify keypair", { error: err })
+          throw err
+        })
 
       // 4) Try to connect Google account
 
@@ -163,15 +170,15 @@ const GoogleLoginButton = () => {
           true
         )
         .then(() => {
-          captureEvent("Google platform connected")
+          captureEvent("[WaaS] Google platform connected")
         })
-        .catch(() => {
-          captureEvent("Google platform connection failed")
+        .catch((err) => {
+          captureEvent("[WaaS] Google platform connection failed", { error: err })
         })
 
       if (!isNew) {
         await connectAsync({ connector: cwaasConnector })
-        captureEvent("Wallet is connected")
+        captureEvent("[WaaS] Wallet is connected")
         onboardingModal.onClose()
       }
 
@@ -317,7 +324,9 @@ const GoogleLoginButton = () => {
                     <AccordionButton
                       px={1}
                       onClick={() => {
-                        captureEvent("Click onboarding accordion", { index: 0 })
+                        captureEvent("[WaaS] Click onboarding accordion", {
+                          index: 0,
+                        })
                         setAccordionIndex(0)
                       }}
                     >
@@ -339,7 +348,9 @@ const GoogleLoginButton = () => {
                     <AccordionButton
                       px={1}
                       onClick={() => {
-                        captureEvent("Click onboarding accordion", { index: 1 })
+                        captureEvent("[WaaS] Click onboarding accordion", {
+                          index: 1,
+                        })
                         setAccordionIndex(1)
                       }}
                     >
@@ -369,7 +380,7 @@ const GoogleLoginButton = () => {
                 onClick={() => {
                   connect({ connector: cwaasConnector })
                   onboardingModal.onClose()
-                  captureEvent("Wallet is connected")
+                  captureEvent("[WaaS] Wallet is connected")
                 }}
               >
                 {seconds > 0 ? `Wait ${seconds} sec...` : "Got it"}
