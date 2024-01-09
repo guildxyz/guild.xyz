@@ -76,12 +76,12 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     ...(featureFlags?.includes("TWITTER_EXTRA_REQUIREMENT")
       ? [
           {
-            label: "Like tweet",
+            label: "Like tweet (legacy)",
             value: "TWITTER_LIKE",
             TwitterRequirement: TwitterTweetInput,
           },
           {
-            label: "Retweet tweet",
+            label: "Retweet tweet (legacy)",
             value: "TWITTER_RETWEET",
             TwitterRequirement: TwitterTweetInput,
           },
