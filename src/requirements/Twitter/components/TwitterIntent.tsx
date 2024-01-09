@@ -99,7 +99,7 @@ const TwitterIntent = ({
 
   const onClick = () => {
     setHasClicked(true)
-    onOpen(url)
+    if (type === "button") onOpen(url)
   }
 
   if (type === "link")
