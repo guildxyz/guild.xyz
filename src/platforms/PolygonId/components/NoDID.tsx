@@ -8,12 +8,12 @@ import {
   ModalBody,
   ModalHeader,
   Spacer,
+  Stack,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useSubmitWithSign } from "hooks/useSubmit"
-import { Stack } from "phosphor-react"
 import { useForm, useWatch } from "react-hook-form"
 import { mutate } from "swr"
 import fetcher from "utils/fetcher"
@@ -71,7 +71,7 @@ const NoDID = () => {
           <FormErrorMessage>{errors?.did?.message}</FormErrorMessage>
         </FormControl>
         <Button
-          isDisabled={DID === ""}
+          isDisabled={!DID}
           colorScheme="green"
           mt={8}
           ml="auto"
