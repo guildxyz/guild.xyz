@@ -82,7 +82,9 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`Follow `}
-                <TwitterIntent type="link" action="follow" />
+                <TwitterIntent type="link" action="follow">
+                  @{requirement.data.id}
+                </TwitterIntent>
                 {` on Twitter`}
               </>
             )
