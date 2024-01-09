@@ -6,7 +6,8 @@ import Button from "components/common/Button"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, useState } from "react"
+import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
 export type TwitterIntentAction = "follow" | "like" | "retweet"
@@ -69,20 +70,36 @@ const TwitterIntent = ({
     })
 
   const { onSubmit } = useSubmitWithSign(completeAction, {
-    onSuccess: () => mutateAccess(),
+    onSuccess: () => {
+      mutateAccess()
+      setHasClicked(false)
+    },
   })
 
+  const [hasClicked, setHasClicked] = useState(false)
+  // Calling the callback endpoint only on refocus
+  useSWR(
+    hasClicked ? ["twitterRequirement", requirementId] : null,
+    () => {
+      if (hasAccess) return
+      onSubmit({
+        requirementId,
+        id,
+        userId,
+      })
+    },
+    {
+      revalidateOnMount: false,
+      revalidateIfStale: false,
+      revalidateOnReconnect: false,
+      revalidateOnFocus: true,
+      refreshInterval: 0,
+    }
+  )
+
   const onClick = () => {
+    setHasClicked(true)
     onOpen(url)
-    setTimeout(
-      () =>
-        onSubmit({
-          requirementId,
-          id,
-          userId,
-        }),
-      3000
-    )
   }
 
   if (type === "link")
