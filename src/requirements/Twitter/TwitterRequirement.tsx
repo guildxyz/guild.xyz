@@ -7,7 +7,7 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { TwitterLogo } from "phosphor-react"
+import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
@@ -71,11 +71,18 @@ const TwitterRequirement = (props: RequirementProps) => {
               requirement.data.minAmount
             )} followers on Twitter`
           case "TWITTER_FOLLOW":
-          case "TWITTER_FOLLOW_V2":
             return (
               <>
                 {`Follow `}
                 <TwitterUserLink requirement={requirement} />
+                {` on Twitter`}
+              </>
+            )
+          case "TWITTER_FOLLOW_V2":
+            return (
+              <>
+                {`Follow `}
+                <TwitterIntent type="link" action="follow" />
                 {` on Twitter`}
               </>
             )
@@ -88,11 +95,20 @@ const TwitterRequirement = (props: RequirementProps) => {
               </>
             )
           case "TWITTER_LIKE":
-          case "TWITTER_LIKE_V2":
             return (
               <>
                 {`Like `}
                 <TwitterTweetLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_LIKE_V2":
+            return (
+              <>
+                {`Like `}
+                <TwitterIntent type="link" action="like">
+                  this tweet
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </TwitterIntent>
               </>
             )
           case "TWITTER_RETWEET":
@@ -100,6 +116,16 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 {`Retweet `}
                 <TwitterTweetLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_RETWEET_V2":
+            return (
+              <>
+                {`Like `}
+                <TwitterIntent type="link" action="retweet">
+                  this tweet
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </TwitterIntent>
               </>
             )
           case "TWITTER_LIST_MEMBER":

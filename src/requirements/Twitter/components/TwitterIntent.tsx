@@ -1,4 +1,4 @@
-import { Icon } from "@chakra-ui/react"
+import { Icon, Link } from "@chakra-ui/react"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
@@ -7,17 +7,18 @@ import usePopupWindow from "hooks/usePopupWindow"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign, type SignedValdation } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
-import { useState } from "react"
+import { PropsWithChildren, useState } from "react"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
 export type TwitterIntentAction = "follow" | "like" | "retweet"
 
 type Props = {
+  type?: "button" | "link"
   action: TwitterIntentAction
 }
 
-const buttonLabel: Record<TwitterIntentAction, string> = {
+const label: Record<TwitterIntentAction, string> = {
   follow: "Follow",
   like: "Like tweet",
   retweet: "Retweet",
@@ -46,7 +47,11 @@ const completeAction = (signedValidation: SignedValdation) =>
     method: "POST",
   })
 
-const TwitterIntent = ({ action }: Props) => {
+const TwitterIntent = ({
+  type = "button",
+  action,
+  children,
+}: PropsWithChildren<Props>) => {
   const { id: userId } = useUser()
   const {
     id: requirementId,
@@ -93,6 +98,24 @@ const TwitterIntent = ({ action }: Props) => {
     }
   )
 
+  const onClick = () => {
+    onOpen(url)
+    setHasClicked(true)
+  }
+
+  if (type === "link")
+    return (
+      <Link
+        href={url}
+        onClick={onClick}
+        isExternal
+        colorScheme="blue"
+        fontWeight="medium"
+      >
+        {children}
+      </Link>
+    )
+
   if (hasAccess) return null
 
   return (
@@ -102,12 +125,9 @@ const TwitterIntent = ({ action }: Props) => {
       iconSpacing={1}
       size="xs"
       isLoading={!url || hasClicked}
-      onClick={() => {
-        onOpen(url)
-        setHasClicked(true)
-      }}
+      onClick={onClick}
     >
-      {buttonLabel[action]}
+      {label[action]}
     </Button>
   )
 }
