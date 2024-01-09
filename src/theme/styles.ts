@@ -48,7 +48,7 @@ const styles = {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
-    "#lottie path": {
+    "#lottie path not(.keep-colors)": {
       fill: mode("currentColor", "white")(props),
       stroke: mode("currentColor", "white")(props),
       strokeWidth: "2px",

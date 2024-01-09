@@ -106,7 +106,6 @@ const GoogleLoginButton = () => {
     }
   )
 
-  // TODO This does seem to work, LOTTIE ANIM IS NOW WHITE
   const connectGoogle = usePlatformConnect()
 
   const logInWithGoogle = useSubmit(
@@ -296,6 +295,7 @@ const GoogleLoginButton = () => {
                       lottieRef={(player) => {
                         setSuccessPlayer(player)
                       }}
+                      className="keep-colors"
                     />
                   </Collapse>
 
