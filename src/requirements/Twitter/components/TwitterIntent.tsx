@@ -11,20 +11,20 @@ import { useState } from "react"
 import useSWR from "swr"
 import fetcher from "utils/fetcher"
 
-export type TwitterIntentType = "follow" | "like" | "retweet"
+export type TwitterIntentAction = "follow" | "like" | "retweet"
 
 type Props = {
-  type: TwitterIntentType
+  action: TwitterIntentAction
 }
 
-const buttonLabel: Record<TwitterIntentType, string> = {
+const buttonLabel: Record<TwitterIntentAction, string> = {
   follow: "Follow",
   like: "Like tweet",
   retweet: "Retweet",
 }
 
 const buttonIcon: Record<
-  TwitterIntentType,
+  TwitterIntentAction,
   React.ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
 > = {
   follow: UserPlus,
@@ -32,7 +32,7 @@ const buttonIcon: Record<
   retweet: Share,
 }
 
-const intentQueryParam: Record<TwitterIntentType, string> = {
+const intentQueryParam: Record<TwitterIntentAction, string> = {
   like: "tweet_id",
   retweet: "tweet_id",
   follow: "screen_name",
@@ -46,7 +46,7 @@ const completeAction = (signedValidation: SignedValdation) =>
     method: "POST",
   })
 
-const TwitterIntent = ({ type }: Props) => {
+const TwitterIntent = ({ action }: Props) => {
   const { id: userId } = useUser()
   const {
     id: requirementId,
@@ -54,8 +54,8 @@ const TwitterIntent = ({ type }: Props) => {
   } = useRequirementContext()
   const { onOpen } = usePopupWindow()
   const url =
-    !!type && !!id
-      ? `${TWITTER_INTENT_BASE_URL}/${type}?${intentQueryParam[type]}=${id}`
+    !!action && !!id
+      ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
       : undefined
 
   const { data: accesses, mutate: mutateAccess } = useAccess()
@@ -98,7 +98,7 @@ const TwitterIntent = ({ type }: Props) => {
   return (
     <Button
       colorScheme="twitter"
-      leftIcon={<Icon as={buttonIcon[type]} />}
+      leftIcon={<Icon as={buttonIcon[action]} />}
       iconSpacing={1}
       size="xs"
       isLoading={!url || hasClicked}
@@ -107,7 +107,7 @@ const TwitterIntent = ({ type }: Props) => {
         setHasClicked(true)
       }}
     >
-      {buttonLabel[type]}
+      {buttonLabel[action]}
     </Button>
   )
 }

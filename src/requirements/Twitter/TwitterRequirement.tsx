@@ -10,12 +10,12 @@ import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import TwitterIntent, { TwitterIntentType } from "./components/TwitterIntent"
+import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
-const requirementIntentType: Record<string, TwitterIntentType> = {
+const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
   TWITTER_LIKE_V2: "like",
   TWITTER_RETWEET_V2: "retweet",
@@ -40,8 +40,8 @@ const TwitterRequirement = (props: RequirementProps) => {
           twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
       }
       footer={
-        requirementIntentType[requirement.type] ? (
-          <TwitterIntent type={requirementIntentType[requirement.type]} />
+        requirementIntentAction[requirement.type] ? (
+          <TwitterIntent action={requirementIntentAction[requirement.type]} />
         ) : (
           <ConnectRequirementPlatformButton />
         )
