@@ -141,8 +141,9 @@ const useSetKeyPair = () => {
           revalidate: false,
         }
       )
+
       await mutate(
-        `/v2/users/${address?.toLowerCase()}/profile`,
+        `/v2/users/${(signProps?.address ?? address)?.toLowerCase()}/profile`,
         {
           id: userProfile?.id,
           publicKey: userProfile?.publicKey,
