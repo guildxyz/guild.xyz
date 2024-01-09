@@ -5,8 +5,8 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -16,6 +16,7 @@ import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
+import TwitterUserInput from "./components/TwitterUserInput"
 
 const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { featureFlags } = useGuild()
@@ -27,6 +28,11 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     //   value: "TWITTER_FOLLOW",
     //   TwitterRequirement: TwitterUserInput,
     // },
+    {
+      label: "Follow user",
+      value: "TWITTER_FOLLOW_V2",
+      TwitterRequirement: TwitterUserInput,
+    },
     // {
     //   label: "Be followed by user",
     //   value: "TWITTER_FOLLOWED_BY",
@@ -81,6 +87,16 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           },
         ]
       : []),
+    {
+      label: "Like tweet",
+      value: "TWITTER_LIKE_V2",
+      TwitterRequirement: TwitterTweetInput,
+    },
+    {
+      label: "Retweet tweet",
+      value: "TWITTER_RETWEET_V2",
+      TwitterRequirement: TwitterTweetInput,
+    },
   ]
 
   const { errors } = useFormState()

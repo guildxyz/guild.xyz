@@ -10,6 +10,7 @@ import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import TwitterIntent from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
@@ -32,7 +33,15 @@ const TwitterRequirement = (props: RequirementProps) => {
         (["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
           twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
       }
-      footer={<ConnectRequirementPlatformButton />}
+      footer={
+        requirement.type === "TWITTER_FOLLOW_V2" ? (
+          <TwitterIntent type="follow" />
+        ) : requirement.type === "TWITTER_LIKE_V2" ? (
+          <TwitterIntent type="like" />
+        ) : (
+          <ConnectRequirementPlatformButton />
+        )
+      }
       {...props}
     >
       {(() => {
@@ -58,6 +67,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               requirement.data.minAmount
             )} followers on Twitter`
           case "TWITTER_FOLLOW":
+          case "TWITTER_FOLLOW_V2":
             return (
               <>
                 {`Follow `}
@@ -74,6 +84,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               </>
             )
           case "TWITTER_LIKE":
+          case "TWITTER_LIKE_V2":
             return (
               <>
                 {`Like `}
