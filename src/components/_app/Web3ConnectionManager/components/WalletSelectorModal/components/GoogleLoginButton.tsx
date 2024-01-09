@@ -20,6 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { IPlayerProps, Player } from "@lottiefiles/react-lottie-player"
+import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
@@ -33,8 +34,6 @@ import useToast from "hooks/useToast"
 import { LockSimple, Question, Wallet } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
-import { mutate } from "swr"
-import { fetcherWithSign } from "utils/fetcher"
 import {
   getDriveFileAppProperties,
   listWalletsOnDrive,
@@ -107,64 +106,8 @@ const GoogleLoginButton = () => {
     }
   )
 
-  // TODO: use useSetKeyPair
-  const verify = useSubmit(
-    async () => {
-      const walletClient = await cwaasConnector.getWalletClient()
-
-      const verifyResult = await set.onSubmit(
-        {
-          signProps: {
-            walletClient,
-            address: walletClient.account.address,
-          },
-        },
-        true
-      )
-
-      return verifyResult
-    },
-    {
-      onError: (error) => {
-        captureEvent("Failed to verify", { error })
-        genericErrorToastCallback(toast)(error)
-      },
-    }
-  )
-  // TODO use this, need to pass sign props
-  // const connectGoogle = usePlatformConnect()
-  const connectGoogle = useSubmit(async ({ authData, userId, keyPair }) => {
-    const walletClient = await cwaasConnector.getWalletClient()
-
-    const result = await fetcherWithSign(
-      {
-        keyPair,
-        walletClient,
-        address: walletClient.account.address,
-        publicClient: publicClient({}),
-      },
-      `/v2/users/${walletClient.account.address}/platform-users`,
-      {
-        method: "POST",
-        body: {
-          platformName: "GOOGLE",
-          authData,
-        },
-      }
-    )
-
-    if (userId) {
-      await mutate(
-        [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
-        (prev) => ({
-          ...prev,
-          platformUsers: [...(prev?.platformUsers ?? []), result],
-        })
-      )
-    }
-
-    return result
-  })
+  // TODO This does seem to work, LOTTIE ANIM IS NOW WHITE
+  const connectGoogle = usePlatformConnect()
 
   const logInWithGoogle = useSubmit(
     async () => {
@@ -188,12 +131,37 @@ const GoogleLoginButton = () => {
 
       captureEvent("Wallet successfully initialized", { isNew })
 
-      const { keyPair, user } = await verify.onSubmit(null, true)
+      // 3) Verify a keypair
+
+      const walletClient = await cwaasConnector.getWalletClient()
+      const { keyPair, user } = await set.onSubmit(
+        {
+          signProps: {
+            walletClient,
+            address: walletClient.account.address,
+          },
+        },
+        true
+      )
 
       captureEvent("Keypair verified")
 
+      // 4) Try to connect Google account
+
       await connectGoogle
-        .onSubmit({ authData, userId: user?.id, keyPair: keyPair?.keyPair }, true)
+        .onSubmit(
+          {
+            signOptions: {
+              keyPair: keyPair.keyPair,
+              walletClient,
+              address: walletClient.account.address,
+              publicClient: publicClient({}),
+            },
+            platformName: "GOOGLE",
+            authData,
+          },
+          true
+        )
         .then(() => {
           captureEvent("Google platform connected")
         })

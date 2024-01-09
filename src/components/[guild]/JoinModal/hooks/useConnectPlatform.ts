@@ -3,10 +3,10 @@ import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import useSubmit, { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName, User } from "types"
-import fetcher from "utils/fetcher"
+import { PlatformName } from "types"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
@@ -88,15 +88,24 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
   const { mutate: mutateUser, id } = useUser()
 
-  const submit = (signedValidation: SignedValdation) => {
-    const platformName =
-      JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
-      "UNKNOWN_PLATFORM"
+  const fetcherWithSign = useFetcherWithSign()
 
-    return fetcher(`/v2/users/${id}/platform-users`, {
-      method: "POST",
-      ...signedValidation,
-    })
+  const submit = ({ signOptions = undefined, ...payload }) => {
+    const platformName = payload?.platformName ?? "UNKNOWN_PLATFORM"
+
+    const userId =
+      id ??
+      signOptions?.address?.toLowerCase() ??
+      signOptions?.walletClient?.account?.address?.toLowerCase()
+
+    return fetcherWithSign([
+      `/v2/users/${userId}/platform-users`,
+      {
+        signOptions,
+        method: "POST",
+        body: payload,
+      },
+    ])
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -116,7 +125,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
+  return useSubmit(submit, {
     onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
       mutateUser(
