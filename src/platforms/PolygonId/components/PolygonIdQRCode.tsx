@@ -16,33 +16,38 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { ArrowLeft, ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import useSWR, { mutate } from "swr"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 
 type Props = {
   role: Role
+  isClaimed: boolean
   goBack: () => void
 }
 
-const PolygonIdQRCode = ({ role, goBack }: Props) => {
+const PolygonIdQRCode = ({ role, goBack, isClaimed }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
+  const [shouldFetchQR, setShouldFetchQR] = useState(null)
   const QR_URL = `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
 
-  const claim = useSubmitWithSign((signedValidation: SignedValdation) =>
+  const submit = async (signedValidation: SignedValdation) =>
     fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
       method: "POST",
       ...signedValidation,
     })
-  )
-  const qr = useSWR(QR_URL)
+
+  const claim = useSubmitWithSign(submit, {
+    onSuccess: () => setShouldFetchQR(QR_URL),
+  })
+  const qr = useSWR(shouldFetchQR)
 
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
 
   useEffect(() => {
-    if (userId && guildId) {
+    if (userId && guildId && !isClaimed) {
       claim.onSubmit({
         userId: userId,
         data: {
@@ -50,6 +55,8 @@ const PolygonIdQRCode = ({ role, goBack }: Props) => {
           roleId: role.id,
         },
       })
+    } else {
+      setShouldFetchQR(QR_URL)
     }
   }, [])
 

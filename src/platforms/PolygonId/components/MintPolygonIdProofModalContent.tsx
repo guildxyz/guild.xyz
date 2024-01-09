@@ -13,7 +13,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { useState } from "react"
 import useSWR from "swr"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import MintableRole from "./MintableRole"
 import NoDID from "./NoDID"
 import PolygonIdQRCode from "./PolygonIdQRCode"
@@ -46,7 +46,7 @@ const ErrorState = () => (
 
 const MintPolygonIdProofModalContent = () => {
   const { id: userId } = useUser()
-  const { id: guildId, roles } = useGuild()
+  const { id: guildId, roles, guildPlatforms } = useGuild()
 
   const checkDID = useSWR<string>(
     userId
@@ -69,24 +69,37 @@ const MintPolygonIdProofModalContent = () => {
 
   if (checkDID.error) return <NoDID />
 
+  const onlyWithPolygonIdReward = (role: Role) => {
+    const guildPlatformId = guildPlatforms.find(
+      (platform) => platform.platformId === PlatformType.POLYGON_ID
+    )
+
+    return !!role.rolePlatforms.find(
+      (rolePlatform) => rolePlatform.guildPlatformId === guildPlatformId.id
+    )
+  }
+
+  const isClaimed = (role: Role) =>
+    claimedRoles.data.length &&
+    !!claimedRoles.data[0].roleIds.find((claimedRoleId) => claimedRoleId === role.id)
+
   return mint ? (
-    <PolygonIdQRCode role={mint} goBack={() => setMint(null)} />
+    <PolygonIdQRCode
+      role={mint}
+      isClaimed={isClaimed(mint)}
+      goBack={() => setMint(null)}
+    />
   ) : (
     <>
       <ModalHeader pb={0}>Mint PolygonID proofs</ModalHeader>
       <ModalBody pt={8}>
         {claimedRoles.error && <ErrorState />}
-        {roles.map((role) => (
+        {roles.filter(onlyWithPolygonIdReward).map((role) => (
           <MintableRole
             key={role.id}
             role={role}
             onMint={setMint}
-            isClaimed={
-              claimedRoles.data.length &&
-              !!claimedRoles.data[0].roleIds.find(
-                (claimedRoleId) => claimedRoleId === role.id
-              )
-            }
+            isClaimed={isClaimed(role)}
             isLoading={claimedRoles.isLoading}
             isDisabled={!!claimedRoles.error}
           />
