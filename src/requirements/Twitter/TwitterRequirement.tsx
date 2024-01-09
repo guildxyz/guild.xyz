@@ -123,7 +123,7 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_RETWEET_V2":
             return (
               <>
-                {`Like `}
+                {`Retweet `}
                 <TwitterIntent type="link" action="retweet">
                   this tweet
                   <Icon as={ArrowSquareOut} mx="1" />
