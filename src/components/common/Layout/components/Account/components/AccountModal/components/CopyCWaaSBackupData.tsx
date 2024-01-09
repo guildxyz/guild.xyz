@@ -1,5 +1,6 @@
-import { Icon, IconButton, Tooltip } from "@chakra-ui/react"
+import { Icon, IconButton, Text, Tooltip, VStack } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Button from "components/common/Button"
 import useDriveOAuth from "hooks/useDriveOAuth"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -13,32 +14,42 @@ const CopyCWaaSBackupData = () => {
   const toast = useToast()
   const [backup, setBackup] = useState<string>()
 
-  const copyBackup = useSubmit(
-    async () => {
-      captureEvent("Clicked copy backup data")
-
-      if (!!backup) {
-        const success = await navigator.clipboard
-          .writeText(backup)
-          .then(() => true)
-          .catch((err) => {
-            console.error(err)
-            return false
-          })
-
+  const tryToCopyBackup = (backupStr: string) => {
+    setBackup(backupStr)
+    return navigator.clipboard
+      .writeText(backupStr)
+      .then(() => true)
+      .catch(() => false)
+      .then((success) => {
         if (!success) {
           throw new Error(
             "Failed to copy to clipboard. If you see a browser popup, allow the website to access the clipboard"
           )
+        } else {
+          captureEvent("[WaaS Backup] Backup data copied")
+          toast({
+            status: "success",
+            title: "Copied",
+            description: "Backup data copied to clipboard",
+          })
         }
+      })
+  }
 
+  const copyBackup = useSubmit(
+    async () => {
+      captureEvent("[WaaS Backup] Clicked copy backup data")
+
+      if (!!backup) {
+        await tryToCopyBackup(backup)
         return
       }
 
       const { authData, error } = await driveOAuth.onOpen()
-      if (error) {
+      if (error || !authData) {
         throw new Error("Google authentication failed")
       }
+      captureEvent("[WaaS Backup] Drive OAuth successful")
 
       const {
         files: [wallet = null],
@@ -47,6 +58,7 @@ const CopyCWaaSBackupData = () => {
       if (!wallet) {
         throw new Error("No wallet found on Drive")
       }
+      captureEvent("[WaaS Backup] Wallet file found")
 
       const {
         appProperties: { backupData = null },
@@ -55,35 +67,36 @@ const CopyCWaaSBackupData = () => {
       if (!backupData) {
         throw new Error("No backup data found on wallet file")
       }
+      captureEvent("[WaaS Backup] Backup data found")
 
-      setBackup(backupData)
-
-      const success = await navigator.clipboard
-        .writeText(backupData)
-        .then(() => true)
-        .catch((err) => {
-          console.error(err)
-          return false
-        })
-
-      if (!success) {
-        throw new Error(
-          "Failed to copy to clipboard. If you see a browser popup, allow the website to access the clipboard"
-        )
-      }
+      toast({
+        status: "info",
+        title: "Backup downloaded",
+        description: (
+          <VStack alignItems={"start"}>
+            <Text>Click the button below to copy it to the clipboard</Text>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                tryToCopyBackup(backupData).catch((err) => {
+                  toast({
+                    status: "error",
+                    title: "Failed",
+                    description: err?.message ?? "Unknown error",
+                  })
+                })
+              }}
+            >
+              Copy
+            </Button>
+          </VStack>
+        ),
+      })
     },
     {
-      onSuccess: () => {
-        captureEvent("Successfully copied backup data")
-
-        toast({
-          status: "success",
-          title: "Copied",
-          description: "Backup data copied to clipboard",
-        })
-      },
       onError: (error) => {
-        captureEvent("Failed to copy backup data", {
+        captureEvent("[WaaS Backup] Failed to copy backup data", {
           error,
           message: error?.message,
         })
