@@ -3,13 +3,10 @@ import {
   Divider,
   Heading,
   HStack,
-  Icon,
-  IconButton,
   SimpleGrid,
   Spacer,
   Stack,
   useBreakpointValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
@@ -49,8 +46,12 @@ import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
-import { PencilSimple } from "phosphor-react"
-import { EditNFTDescriptionModal } from "components/[guild]/RoleCard/components/EditNFTDescriptionModal"
+import dynamic from "next/dynamic"
+
+const EditNFTDescriptionModalButton = dynamic(
+  () =>
+    import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton")
+)
 
 type Props = {
   chain: Chain
@@ -61,11 +62,6 @@ const Page = ({
   chain: chainFromProps,
   address: addressFromProps,
 }: Omit<Props, "fallback">) => {
-  const {
-    isOpen: isEditRewardDescriptionModalOpen,
-    onClose,
-    onOpen,
-  } = useDisclosure()
   const router = useRouter()
   const { chain: chainFromQuery, address: addressFromQuery } = router.query
 
@@ -203,20 +199,9 @@ const Page = ({
                         />
                         <Spacer m="0" />
                         {isAdmin && (
-                          <>
-                            <IconButton
-                              icon={<Icon as={PencilSimple} />}
-                              size="sm"
-                              rounded="full"
-                              aria-label="Edit description"
-                              onClick={onOpen}
-                            />
-                            <EditNFTDescriptionModal
-                              guildPlatform={guildPlatform}
-                              onClose={onClose}
-                              isOpen={isEditRewardDescriptionModalOpen}
-                            />
-                          </>
+                          <EditNFTDescriptionModalButton
+                            guildPlatform={guildPlatform}
+                          />
                         )}
                       </HStack>
                     </Box>

@@ -24,7 +24,7 @@ type ContentProps = {
   onClose: () => void
 }
 
-export const EditNFTModalContent: React.FC<ContentProps> = ({
+const EditNFTModalContent: React.FC<ContentProps> = ({
   guildPlatform: { id, platformGuildData },
   onClose,
 }) => {
@@ -88,7 +88,7 @@ type Props = {
 } & Omit<ModalProps, "children">
 
 // Modal was separated for not load the forms logic
-export const EditNFTDescriptionModal: React.FC<Props> = ({
+const EditNFTDescriptionModal: React.FC<Props> = ({
   guildPlatform,
   isOpen,
   onClose,
@@ -100,3 +100,5 @@ export const EditNFTDescriptionModal: React.FC<Props> = ({
     </ModalContent>
   </Modal>
 )
+
+export default EditNFTDescriptionModal
