@@ -46,9 +46,10 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
 
   const publicReqIds = role.requirements.map((req) => req.id)
 
-  const hiddenReqsAccessData = accessData?.requirements?.filter(
-    (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
-  )
+  const hiddenReqsAccessData =
+    accessData?.requirements?.filter(
+      (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
+    ) ?? []
 
   const hiddenReqsErrorMessages = [
     ...new Set<string>(

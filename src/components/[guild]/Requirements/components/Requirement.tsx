@@ -69,11 +69,12 @@ const Requirement = ({
             : requirement?.data?.customName || children}
           {!fieldRoot ? (
             <Visibility
+              visibilityRoleId={requirement?.visibilityRoleId}
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
           ) : !childrenWrapper ? (
-            <SetVisibility entityType="requirement" />
+            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
           ) : null}
         </ChildrenWrapper>
 

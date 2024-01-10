@@ -1,13 +1,13 @@
 import { Icon } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import DataBlockWithRelativeDate from "components/[guild]/Requirements/components/DataBlockWithRelativeDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
+import Link from "components/common/Link"
 import { GithubLogo } from "phosphor-react"
 import pluralize from "utils/pluralize"
 

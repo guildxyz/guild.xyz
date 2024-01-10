@@ -1,8 +1,8 @@
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
 import { useJuiceboxProject } from "./hooks/useJuicebox"
 
 const JuiceboxRequirement = (props: RequirementProps) => {

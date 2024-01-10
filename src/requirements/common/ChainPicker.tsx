@@ -2,6 +2,7 @@ import {
   Divider,
   FormControl,
   FormLabel,
+  Icon,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
@@ -15,24 +16,38 @@ import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
 import { useRouter } from "next/router"
+import { Question } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useChainId } from "wagmi"
 
+const FUEL_ICON = "/walletLogos/fuel.svg"
+
 type Props = {
   controlName: string
-  supportedChains?: Array<Chain>
+  supportedChains?: Array<Chain | "FUEL">
   onChange?: () => void
   isDisabled?: boolean
   showDivider?: boolean
 }
 
-const mappedChains: Array<{ img: string; label: string; value: Chain }> =
-  defaultSupportedChains.map((chainName: Chain) => ({
-    img: CHAIN_CONFIG[chainName].iconUrl,
+const mappedChains: Array<{
+  img: string | JSX.Element
+  label: string
+  value: Chain | "FUEL"
+}> = defaultSupportedChains
+  .map((chainName: Chain) => ({
+    img: CHAIN_CONFIG[chainName].iconUrl || <Icon as={Question} boxSize={5} />,
     label: CHAIN_CONFIG[chainName].name,
     value: chainName,
   }))
+  .concat([
+    {
+      img: FUEL_ICON,
+      label: "Fuel",
+      value: "FUEL" as any,
+    },
+  ])
 
 const ChainPicker = ({
   controlName,
@@ -80,9 +95,12 @@ const ChainPicker = ({
       <FormControl>
         <FormLabel>Chain</FormLabel>
         <InputGroup>
-          {CHAIN_CONFIG[chain]?.iconUrl && (
+          {(CHAIN_CONFIG[chain]?.iconUrl || chain === "FUEL") && (
             <InputLeftElement>
-              <OptionImage img={CHAIN_CONFIG[chain].iconUrl} alt={chain} />
+              <OptionImage
+                img={chain === "FUEL" ? FUEL_ICON : CHAIN_CONFIG[chain]?.iconUrl}
+                alt={chain}
+              />
             </InputLeftElement>
           )}
 

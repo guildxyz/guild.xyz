@@ -58,6 +58,9 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
           },
         }
       : {}),
+    POINTS: {
+      description: "Gamification utility",
+    },
   }
 
   return (

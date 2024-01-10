@@ -1,7 +1,7 @@
 import useSWRImmutable from "swr/immutable"
 import { useAccount } from "wagmi"
 
-const useUsersLeaderboardPosition = () => {
+const usePinLeaderboardUsersPosition = () => {
   const { address } = useAccount()
 
   return useSWRImmutable<{
@@ -10,4 +10,4 @@ const useUsersLeaderboardPosition = () => {
   }>(address ? `/api/leaderboard/${address}` : null)
 }
 
-export default useUsersLeaderboardPosition
+export default usePinLeaderboardUsersPosition

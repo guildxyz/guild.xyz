@@ -1,4 +1,4 @@
-import { ChakraProps } from "@chakra-ui/react"
+import { Center, ChakraProps, Spinner } from "@chakra-ui/react"
 import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import dynamic from "next/dynamic"
 import {
@@ -10,10 +10,15 @@ import {
   TelegramLogo,
   TwitterLogo,
 } from "phosphor-react"
-import { ComponentType, ForwardRefExoticComponent, PropsWithChildren } from "react"
+import React, {
+  ComponentType,
+  ForwardRefExoticComponent,
+  PropsWithChildren,
+} from "react"
 import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
+import Star from "static/icons/star.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
@@ -28,6 +33,7 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIdCardButton from "./PolygonId/PolygonIdCardButton"
 import PolygonIdCardMenu from "./PolygonId/PolygonIdCardMenu"
 import usePolygonIdCardProps from "./PolygonId/usePolygonIdCardProps"
@@ -106,6 +112,12 @@ type PlatformData<
   }
 >
 
+const AddPlatformPanelLoadingSpinner = () => (
+  <Center w="full" h="51vh">
+    <Spinner size="xl" thickness="4px" />
+  </Center>
+)
+
 const platforms: Record<PlatformName, PlatformData> = {
   EMAIL: {
     icon: EnvelopeSimple,
@@ -129,7 +141,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
       ssr: false,
@@ -168,7 +183,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
       ssr: false,
@@ -198,7 +216,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
       ssr: false,
@@ -274,7 +295,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
       ssr: false,
@@ -317,7 +341,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(
       () => import("platforms/components/ContractCallPreview"),
@@ -348,7 +375,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddSecretTextPanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(
       () => import("platforms/components/SecretTextPreview"),
@@ -411,6 +441,32 @@ const platforms: Record<PlatformName, PlatformData> = {
         ssr: false,
       }
     ),
+  },
+  POINTS: {
+    icon: Star,
+    name: "Points",
+    colorScheme: "gray",
+    gatedEntity: "",
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: false,
+    cardPropsHook: usePointsCardProps,
+    PlatformPreview: dynamic(() => import("platforms/components/PointsPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/PointsReward"), {
+      ssr: false,
+    }),
   },
 }
 

@@ -1,5 +1,5 @@
+import DataBlock from "components/common/DataBlock"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import DataBlock from "./DataBlock"
 
 type Props = {
   timestamp: number

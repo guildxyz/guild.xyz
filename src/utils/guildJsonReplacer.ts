@@ -1,5 +1,5 @@
 const replacer = (key, value) => {
-  if (value === null) return undefined
+  if (value === null && key !== "visibilityRoleId") return undefined
   if (key === "discord_invite") return undefined
   if (key === "balancyDecimals") return undefined
   if (key === "description" || key === "name") return value?.trim()

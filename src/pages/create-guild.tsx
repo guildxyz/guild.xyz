@@ -1,5 +1,6 @@
 import { Stack } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import CreateGuildButton from "components/create-guild/CreateGuildButton"
@@ -12,6 +13,7 @@ import CreateGuildStepper, {
 } from "components/create-guild/CreateGuildStepper"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
@@ -29,10 +31,27 @@ const CreateGuildPage = (): JSX.Element => {
 
   const name = useWatch({ name: "name" })
   const imageUrl = useWatch({ name: "imageUrl" })
+  const contacts = useWatch({ name: "contacts" })
+  const { captureEvent } = usePostHogContext()
 
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
   const isLastSubStep = STEPS[activeStep].progress.length === stepPart + 1
+
+  const nextWithPostHog = () => {
+    // +2 because, index starts with 0 and we jump to the step after the active one
+    captureEvent("guild creation flow > continue", { to: activeStep + 2 })
+
+    // email can be added in step 2
+    if (activeStep === 1 && contacts[0].contact)
+      captureEvent("guild creation flow > contacts added")
+
+    nextStep()
+  }
+
+  useEffect(() => {
+    captureEvent("guild creation flow > start guild creation")
+  }, [])
 
   return (
     <>
@@ -62,7 +81,7 @@ const CreateGuildPage = (): JSX.Element => {
           {STEPS[activeStep].content}
         </Stack>
         <GuildCreationProgress
-          next={isLastSubStep ? nextStep : () => setPart(stepPart + 1)}
+          next={isLastSubStep ? nextWithPostHog : () => setPart(stepPart + 1)}
           progress={STEPS[activeStep].progress[stepPart]}
           isDisabled={nextStepIsDisabled}
         >

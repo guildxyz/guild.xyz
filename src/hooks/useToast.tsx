@@ -24,7 +24,7 @@ const useToast = (toastOptions?: UseToastOptions) => {
   return useToastWithDefaults
 }
 
-type ActionToastOptions = UseToastOptions & {
+export type ActionToastOptions = UseToastOptions & {
   buttonProps: ButtonProps & LinkProps
   secondButtonProps?: ButtonProps & LinkProps
 }

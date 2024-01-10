@@ -11,13 +11,13 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import Card from "components/common/Card"
+import DataBlock from "components/common/DataBlock"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { Warning } from "phosphor-react"

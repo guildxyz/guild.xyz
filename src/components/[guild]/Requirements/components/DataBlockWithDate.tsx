@@ -1,4 +1,4 @@
-import DataBlock from "./DataBlock"
+import DataBlock from "components/common/DataBlock"
 
 type Props = {
   timestamp: number
