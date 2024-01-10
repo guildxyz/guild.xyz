@@ -197,11 +197,7 @@ const Page = ({
                     {isMobile && <RequirementsCard role={role} />}
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
-                      <HStack
-                        alignItems="start"
-                        justifyContent="flex-end"
-                        animation="slideFadeIn .2s"
-                      >
+                      <HStack alignItems="start" justifyContent="flex-end">
                         <RichTextDescription
                           text={guildPlatform?.platformGuildData?.description}
                         />
