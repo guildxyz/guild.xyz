@@ -194,7 +194,6 @@ const Page = ({
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
                       <HStack
-                        flex="1 0 auto"
                         alignItems="start"
                         justifyContent="flex-end"
                         animation="slideFadeIn .2s"
