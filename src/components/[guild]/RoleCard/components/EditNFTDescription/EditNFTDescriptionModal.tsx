@@ -87,6 +87,7 @@ type Props = {
   guildPlatform: GuildPlatform
 } & Omit<ModalProps, "children">
 
+// Modal was separated for not load the forms logic
 export const EditNFTDescriptionModal: React.FC<Props> = ({
   guildPlatform,
   isOpen,
