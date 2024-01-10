@@ -37,7 +37,7 @@ const MintableRole = ({ role, onMint, isClaimed, isLoading, isDisabled }: Props)
         isLoading={isLoading}
         isDisabled={isDisabled}
       >
-        {isClaimed ? "show QR" : "Mint proof"}
+        {isClaimed ? "Show QR code" : "Mint proof"}
       </Button>
     </HStack>
   </Card>
