@@ -10,14 +10,14 @@ import {
   ModalOverlay,
   ModalProps,
 } from "@chakra-ui/react"
-import { Modal } from "../../../../common/Modal"
+import { Modal } from "../../../common/Modal"
 import React from "react"
 import { GuildPlatform } from "types"
 import { Controller, useForm } from "react-hook-form"
 import useToast from "hooks/useToast"
-import useEditGuildPlatform from "../../../AccessHub/hooks/useEditGuildPlatform"
-import RichTextDescriptionEditor from "../../../RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
-import Button from "../../../../common/Button"
+import useEditGuildPlatform from "../../AccessHub/hooks/useEditGuildPlatform"
+import RichTextDescriptionEditor from "../../RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
+import Button from "../../../common/Button"
 
 type ContentProps = {
   guildPlatform: GuildPlatform
