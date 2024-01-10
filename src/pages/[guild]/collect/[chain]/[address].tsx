@@ -182,43 +182,44 @@ const Page = ({
                   <CollectibleImage src={image} isLoading={isLoading} />
 
                   <Stack spacing={6}>
-                    <HStack
-                      flex="1 0 auto"
-                      justifyContent="flex-end"
-                      animation="slideFadeIn .2s"
+                    <Heading
+                      as="h2"
+                      fontFamily="display"
+                      fontSize={{ base: "3xl", lg: "4xl" }}
                     >
-                      <Heading
-                        as="h2"
-                        fontFamily="display"
-                        fontSize={{ base: "3xl", lg: "4xl" }}
-                      >
-                        {name}
-                      </Heading>
-                      <Spacer m="0" />
-                      {isAdmin && (
-                        <>
-                          <IconButton
-                            icon={<Icon as={PencilSimple} />}
-                            size="sm"
-                            rounded="full"
-                            aria-label="Edit role"
-                            onClick={onOpen}
-                          />
-                          <EditRewardDescriptionModal
-                            guildPlatform={guildPlatform}
-                            onClose={onClose}
-                            isOpen={isOpen}
-                          />
-                        </>
-                      )}
-                    </HStack>
+                      {name}
+                    </Heading>
 
                     {isMobile && <RequirementsCard role={role} />}
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
-                      <RichTextDescription
-                        text={guildPlatform?.platformGuildData?.description}
-                      />
+                      <HStack
+                        flex="1 0 auto"
+                        alignItems="start"
+                        justifyContent="flex-end"
+                        animation="slideFadeIn .2s"
+                      >
+                        <RichTextDescription
+                          text={guildPlatform?.platformGuildData?.description}
+                        />
+                        <Spacer m="0" />
+                        {isAdmin && (
+                          <>
+                            <IconButton
+                              icon={<Icon as={PencilSimple} />}
+                              size="sm"
+                              rounded="full"
+                              aria-label="Edit role"
+                              onClick={onOpen}
+                            />
+                            <EditRewardDescriptionModal
+                              guildPlatform={guildPlatform}
+                              onClose={onClose}
+                              isOpen={isOpen}
+                            />
+                          </>
+                        )}
+                      </HStack>
                     </Box>
                   </Stack>
                   <Divider />
