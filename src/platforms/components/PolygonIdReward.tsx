@@ -11,7 +11,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import { MintPolygonIdProofModal } from "platforms/PolygonId/components/MintPolygonIdProofModal"
+import { MintPolygonIdProof } from "platforms/PolygonId/components/MintPolygonIdProof"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
@@ -83,7 +83,7 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
         <AvailibiltyTags rolePlatform={platform} />
       </RewardDisplay>
 
-      <MintPolygonIdProofModal isOpen={isOpen} onClose={onClose} />
+      <MintPolygonIdProof isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

@@ -5,8 +5,12 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Modal,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
+  ModalOverlay,
   Spacer,
   Stack,
 } from "@chakra-ui/react"
@@ -18,7 +22,12 @@ import { useForm, useWatch } from "react-hook-form"
 import { mutate } from "swr"
 import fetcher from "utils/fetcher"
 
-const NoDID = () => {
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+}
+
+const NoDID = ({ isOpen, onClose }: Props) => {
   const { id } = useUser()
   const { isLoading, onSubmit, error } = useSubmitWithSign(
     (signedValidation) =>
@@ -42,47 +51,51 @@ const NoDID = () => {
   const DID = useWatch({ name: "did", control })
 
   return (
-    <>
-      <ModalHeader pb={0}>Connect PolygonID</ModalHeader>
-      <ModalBody pt={8}>
-        {error && (
-          <Alert status="error" pb={5} alignItems={"center"} mb={5}>
-            <AlertIcon />
-            <Stack>
-              <AlertDescription
-                position="relative"
-                top={0.5}
-                fontWeight="semibold"
-                pr="4"
-              >
-                Connecting your DID with the Guild has failed.
-              </AlertDescription>
-            </Stack>
-            <Spacer />
-          </Alert>
-        )}
-        <FormControl isRequired isInvalid={!!errors?.did}>
-          <FormLabel>Paste your DID</FormLabel>
-          <Input
-            {...register("did", {
-              required: "This field is required",
-            })}
-          />
-          <FormErrorMessage>{errors?.did?.message}</FormErrorMessage>
-        </FormControl>
-        <Button
-          isDisabled={!DID}
-          colorScheme="green"
-          mt={8}
-          ml="auto"
-          isLoading={isLoading}
-          loadingText={"Connecting..."}
-          onClick={handleSubmit(({ did }) => onSubmit({ data: did, userId: id }))}
-        >
-          Connect
-        </Button>
-      </ModalBody>
-    </>
+    <Modal isOpen={isOpen} onClose={onClose} size={"xl"} colorScheme={"dark"}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader pb={0}>Connect PolygonID</ModalHeader>
+        <ModalBody pt={8}>
+          {error && (
+            <Alert status="error" pb={5} alignItems={"center"} mb={5}>
+              <AlertIcon />
+              <Stack>
+                <AlertDescription
+                  position="relative"
+                  top={0.5}
+                  fontWeight="semibold"
+                  pr="4"
+                >
+                  Connecting your DID with the Guild has failed.
+                </AlertDescription>
+              </Stack>
+              <Spacer />
+            </Alert>
+          )}
+          <FormControl isRequired isInvalid={!!errors?.did}>
+            <FormLabel>Paste your DID</FormLabel>
+            <Input
+              {...register("did", {
+                required: "This field is required",
+              })}
+            />
+            <FormErrorMessage>{errors?.did?.message}</FormErrorMessage>
+          </FormControl>
+          <Button
+            isDisabled={!DID}
+            colorScheme="green"
+            mt={8}
+            ml="auto"
+            isLoading={isLoading}
+            loadingText={"Connecting..."}
+            onClick={handleSubmit(({ did }) => onSubmit({ data: did, userId: id }))}
+          >
+            Connect
+          </Button>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 
