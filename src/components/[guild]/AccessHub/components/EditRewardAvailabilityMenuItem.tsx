@@ -10,7 +10,7 @@ type Props = {
   platformGuildId: string
 }
 
-const EditRewardAvailibilityMenuItem = ({ platformGuildId }: Props) => {
+const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
   const { guildPlatforms, roles } = useGuild()
 
   const guildPlatform = guildPlatforms.find(
@@ -56,4 +56,4 @@ const EditRewardAvailibilityMenuItem = ({ platformGuildId }: Props) => {
     </>
   )
 }
-export default EditRewardAvailibilityMenuItem
+export default EditRewardAvailabilityMenuItem
