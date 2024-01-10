@@ -5,7 +5,6 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -79,10 +78,7 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
             </Button>
           </Tooltip>
         }
-      >
-        <AvailibiltyTags rolePlatform={platform} />
-      </RewardDisplay>
-
+      />
       <MintPolygonIdProofModal isOpen={isOpen} onClose={onClose} />
     </>
   )
