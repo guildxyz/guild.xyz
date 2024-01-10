@@ -1,6 +1,6 @@
 import React from "react"
 import useToast from "../../../../../hooks/useToast"
-import { Controller, FormProvider, useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import useEditGuildPlatform from "../../../AccessHub/hooks/useEditGuildPlatform"
 import {
   FormControl,
@@ -24,8 +24,9 @@ export const EditRewardModalContent: React.FC<Props> = ({
   guildPlatform: { id, platformGuildData },
   onClose,
 }) => {
-  const methods = useForm({ defaultValues: { ...platformGuildData } })
-  const { formState, control, handleSubmit } = methods
+  const { formState, control, handleSubmit } = useForm({
+    defaultValues: { ...platformGuildData },
+  })
 
   const toast = useToast()
 
@@ -41,7 +42,7 @@ export const EditRewardModalContent: React.FC<Props> = ({
   })
 
   return (
-    <FormProvider {...methods}>
+    <>
       <ModalCloseButton />
       <ModalHeader>{platformGuildData.name}</ModalHeader>
       <ModalBody>
@@ -74,6 +75,6 @@ export const EditRewardModalContent: React.FC<Props> = ({
           Save
         </Button>
       </ModalFooter>
-    </FormProvider>
+    </>
   )
 }
