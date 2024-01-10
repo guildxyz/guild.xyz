@@ -5,7 +5,6 @@ import EditRewardDescriptionModal from "../../components/[guild]/RoleCard/compon
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
 import useGuild from "../../components/[guild]/hooks/useGuild"
 import { PencilSimple } from "phosphor-react"
-import useGuildPermission from "../../components/[guild]/hooks/useGuildPermission"
 
 type Props = {
   platformGuildId: string
@@ -13,7 +12,6 @@ type Props = {
 
 const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const { guildPlatforms } = useGuild()
-  const { isAdmin } = useGuildPermission()
   const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
@@ -23,22 +21,18 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   return (
     <>
       <PlatformCardMenu>
-        {isAdmin && (
-          <MenuItem icon={<PencilSimple />} onClick={onOpen}>
-            Edit reward description
-          </MenuItem>
-        )}
+        <MenuItem icon={<PencilSimple />} onClick={onOpen}>
+          Edit reward description
+        </MenuItem>
         <EditRewardAvailabilityMenuItem platformGuildId={platformGuildId} />
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
-      {isAdmin && (
-        <EditRewardDescriptionModal
-          isOpen={isOpen}
-          onClose={onClose}
-          guildPlatform={guildPlatform}
-        />
-      )}
+      <EditRewardDescriptionModal
+        isOpen={isOpen}
+        onClose={onClose}
+        guildPlatform={guildPlatform}
+      />
     </>
   )
 }
