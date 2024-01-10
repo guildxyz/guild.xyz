@@ -79,7 +79,7 @@ const TwitterIntent = ({
   const [hasClicked, setHasClicked] = useState(false)
   // Calling the callback endpoint only on refocus
   useSWR(
-    hasClicked ? ["twitterRequirement", requirementId] : null,
+    hasClicked ? ["twitterRequirement", requirementId, userId] : null,
     () => {
       if (hasAccess) return
       onSubmit({
