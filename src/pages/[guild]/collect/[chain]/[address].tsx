@@ -3,9 +3,13 @@ import {
   Divider,
   Heading,
   HStack,
+  Icon,
+  IconButton,
   SimpleGrid,
+  Spacer,
   Stack,
   useBreakpointValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
@@ -45,6 +49,8 @@ import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+import { PencilSimple } from "phosphor-react"
+import EditRewardDescriptionModal from "../../../../components/[guild]/RoleCard/components/EditRewardDescription"
 
 type Props = {
   chain: Chain
@@ -55,6 +61,7 @@ const Page = ({
   chain: chainFromProps,
   address: addressFromProps,
 }: Omit<Props, "fallback">) => {
+  const { isOpen, onClose, onOpen } = useDisclosure() // for EditRewardDescriptionModal
   const router = useRouter()
   const { chain: chainFromQuery, address: addressFromQuery } = router.query
 
@@ -175,13 +182,37 @@ const Page = ({
                   <CollectibleImage src={image} isLoading={isLoading} />
 
                   <Stack spacing={6}>
-                    <Heading
-                      as="h2"
-                      fontFamily="display"
-                      fontSize={{ base: "3xl", lg: "4xl" }}
+                    <HStack
+                      flex="1 0 auto"
+                      justifyContent="flex-end"
+                      animation="slideFadeIn .2s"
                     >
-                      {name}
-                    </Heading>
+                      <Heading
+                        as="h2"
+                        fontFamily="display"
+                        fontSize={{ base: "3xl", lg: "4xl" }}
+                      >
+                        {name}
+                      </Heading>
+                      <Spacer m="0" />
+                      {isAdmin && (
+                        <>
+                          <IconButton
+                            icon={<Icon as={PencilSimple} />}
+                            size="sm"
+                            rounded="full"
+                            aria-label="Edit role"
+                            onClick={onOpen}
+                          />
+                          <EditRewardDescriptionModal
+                            guildPlatform={guildPlatform}
+                            onClose={onClose}
+                            isOpen={isOpen}
+                          />
+                        </>
+                      )}
+                    </HStack>
+
                     {isMobile && <RequirementsCard role={role} />}
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
