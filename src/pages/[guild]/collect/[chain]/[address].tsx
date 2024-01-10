@@ -208,7 +208,7 @@ const Page = ({
                               icon={<Icon as={PencilSimple} />}
                               size="sm"
                               rounded="full"
-                              aria-label="Edit role"
+                              aria-label="Edit description"
                               onClick={onOpen}
                             />
                             <EditRewardDescriptionModal
