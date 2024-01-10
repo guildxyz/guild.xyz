@@ -7,7 +7,6 @@ export type TabsProps = {
   rightElement?: JSX.Element
 }
 
-// TODO: should be 2.5 instead of 3?
 // button height + padding
 export const TABS_HEIGHT =
   "calc(var(--chakra-space-11) + (2 * var(--chakra-space-2-5)))"
