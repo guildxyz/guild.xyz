@@ -61,7 +61,11 @@ const Page = ({
   chain: chainFromProps,
   address: addressFromProps,
 }: Omit<Props, "fallback">) => {
-  const { isOpen, onClose, onOpen } = useDisclosure() // for EditRewardDescriptionModal
+  const {
+    isOpen: isEditRewardDescriptionModalOpen,
+    onClose,
+    onOpen,
+  } = useDisclosure()
   const router = useRouter()
   const { chain: chainFromQuery, address: addressFromQuery } = router.query
 
@@ -214,7 +218,7 @@ const Page = ({
                             <EditRewardDescriptionModal
                               guildPlatform={guildPlatform}
                               onClose={onClose}
-                              isOpen={isOpen}
+                              isOpen={isEditRewardDescriptionModalOpen}
                             />
                           </>
                         )}
