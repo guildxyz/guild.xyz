@@ -429,7 +429,10 @@ const platforms: Record<PlatformName, PlatformData> = {
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIdPanel"
         ),
-      { ssr: false }
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
       ssr: false,
