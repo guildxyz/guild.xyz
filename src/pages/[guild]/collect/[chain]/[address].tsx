@@ -25,6 +25,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import ReportGuildButton from "components/[guild]/ReportGuildButton"
+import EditNFTDescriptionModal from "components/[guild]/RoleCard/components/EditNFTDescription"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -50,7 +51,6 @@ import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import { PencilSimple } from "phosphor-react"
-import EditRewardDescriptionModal from "../../../../components/[guild]/RoleCard/components/EditRewardDescription"
 
 type Props = {
   chain: Chain
@@ -211,7 +211,7 @@ const Page = ({
                               aria-label="Edit description"
                               onClick={onOpen}
                             />
-                            <EditRewardDescriptionModal
+                            <EditNFTDescriptionModal
                               guildPlatform={guildPlatform}
                               onClose={onClose}
                               isOpen={isEditRewardDescriptionModalOpen}

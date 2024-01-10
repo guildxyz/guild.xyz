@@ -1,26 +1,30 @@
-import React from "react"
-import useToast from "../../../../../hooks/useToast"
-import { Controller, useForm } from "react-hook-form"
-import useEditGuildPlatform from "../../../AccessHub/hooks/useEditGuildPlatform"
 import {
   FormControl,
   FormErrorMessage,
   FormLabel,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
   ModalFooter,
   ModalHeader,
+  ModalOverlay,
+  ModalProps,
 } from "@chakra-ui/react"
+import { Modal } from "../../../../common/Modal"
+import React from "react"
+import { GuildPlatform } from "types"
+import { Controller, useForm } from "react-hook-form"
+import useToast from "hooks/useToast"
+import useEditGuildPlatform from "../../../AccessHub/hooks/useEditGuildPlatform"
 import RichTextDescriptionEditor from "../../../RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
 import Button from "../../../../common/Button"
-import { GuildPlatform } from "../../../../../types"
 
-type Props = {
+type ContentProps = {
   guildPlatform: GuildPlatform
   onClose: () => void
 }
 
-export const EditRewardModalContent: React.FC<Props> = ({
+export const EditNFTModalContent: React.FC<ContentProps> = ({
   guildPlatform: { id, platformGuildData },
   onClose,
 }) => {
@@ -35,7 +39,7 @@ export const EditRewardModalContent: React.FC<Props> = ({
     onSuccess: () => {
       toast({
         status: "success",
-        title: "Successfully updated reward description",
+        title: "Successfully updated NFT description",
       })
       onClose()
     },
@@ -44,10 +48,10 @@ export const EditRewardModalContent: React.FC<Props> = ({
   return (
     <>
       <ModalCloseButton />
-      <ModalHeader>{platformGuildData.name}</ModalHeader>
-      <ModalBody>
+      <ModalHeader>{platformGuildData.name} NFT</ModalHeader>
+      <ModalBody pt={0}>
         <FormControl isInvalid={!!formState.errors?.description}>
-          <FormLabel>Reward description</FormLabel>
+          <FormLabel>NFT description</FormLabel>
           <Controller
             name={"description"}
             control={control}
@@ -65,7 +69,7 @@ export const EditRewardModalContent: React.FC<Props> = ({
           </FormErrorMessage>
         </FormControl>
       </ModalBody>
-      <ModalFooter>
+      <ModalFooter pt={0}>
         <Button
           colorScheme={"green"}
           isDisabled={!formState.isDirty || !formState.isValid}
@@ -78,3 +82,20 @@ export const EditRewardModalContent: React.FC<Props> = ({
     </>
   )
 }
+
+type Props = {
+  guildPlatform: GuildPlatform
+} & Omit<ModalProps, "children">
+
+export const EditNFTDescriptionModal: React.FC<Props> = ({
+  guildPlatform,
+  isOpen,
+  onClose,
+}: Props) => (
+  <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+    <ModalOverlay />
+    <ModalContent>
+      <EditNFTModalContent guildPlatform={guildPlatform} onClose={onClose} />
+    </ModalContent>
+  </Modal>
+)
