@@ -2,6 +2,7 @@ import { HStack, Text, useClipboard, useDisclosure, Wrap } from "@chakra-ui/reac
 import { Player } from "@lottiefiles/react-lottie-player"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import PulseMarker from "components/common/PulseMarker"
 import { useRouter } from "next/router"
@@ -22,6 +23,7 @@ export type SummonMembersForm = {
 const SummonMembers = () => {
   const [player, setPlayer] = useState<any>()
   const { asPath } = useRouter()
+  const { captureEvent } = usePostHogContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
@@ -54,7 +56,14 @@ const SummonMembers = () => {
         join!
       </Text>
       <Wrap overflow="visible">
-        <Button h="10" onClick={onCopy} leftIcon={hasCopied ? <Check /> : <Copy />}>
+        <Button
+          h="10"
+          onClick={() => {
+            captureEvent("guild creation flow > copy guild link")
+            onCopy()
+          }}
+          leftIcon={hasCopied ? <Check /> : <Copy />}
+        >
           {hasCopied ? "Copied" : "Copy link"}
         </Button>
         {discordPlatform &&
@@ -66,7 +75,10 @@ const SummonMembers = () => {
             <PulseMarker colorScheme="red" placement="top">
               <Button
                 h="10"
-                onClick={onOpen}
+                onClick={() => {
+                  captureEvent("guild creation flow > Discord embed sent")
+                  onOpen()
+                }}
                 colorScheme="DISCORD"
                 leftIcon={<DiscordLogo />}
               >
@@ -83,6 +95,9 @@ const SummonMembers = () => {
           target="_blank"
           leftIcon={<TwitterLogo />}
           colorScheme="TWITTER"
+          onClick={() => {
+            captureEvent("guild creation flow > click on 'Share' (Twitter - X)")
+          }}
         >
           Share
         </Button>
@@ -109,7 +124,10 @@ const SummonMembers = () => {
         </HStack>
         <Button
           size="sm"
-          onClick={handleFinish}
+          onClick={() => {
+            captureEvent("guild creation flow > onboarding close clicked")
+            handleFinish()
+          }}
           isLoading={isLoading || !!response}
           colorScheme="green"
         >

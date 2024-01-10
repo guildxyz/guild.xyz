@@ -368,7 +368,7 @@ export const x1Testnet = /*#__PURE__*/ defineChain({
 
 export const ontology = /*#__PURE__*/ defineChain({
   id: 58,
-  name: "Ontology",
+  name: "Ontology EVM",
   network: "ontology",
   nativeCurrency: {
     decimals: 18,
@@ -403,6 +403,42 @@ export const ontology = /*#__PURE__*/ defineChain({
     multicall3: {
       address: "0xce6292279bf688173b269df080e14407470a9e60",
       blockCreated: 14244158,
+    },
+  },
+})
+
+export const beraTestnet = /*#__PURE__*/ defineChain({
+  // TODO: uncomment the lines below once it's live
+  id: 2061,
+  // name: "Berachain Testnet",
+  name: "BT",
+  // network: "beratestnet",
+  network: "bt",
+  nativeCurrency: {
+    decimals: 18,
+    name: "BERA",
+    symbol: "BERA",
+  },
+  rpcUrls: {
+    default: {
+      // http: ["https://rpc.berachain-internal.com"],
+      http: [],
+    },
+    public: {
+      // http: ["https://rpc.berachain-internal.com"],
+      http: [],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BeraScan",
+      url: "https://scan.berachain-internal.com",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x9d1dB8253105b007DDDE65Ce262f701814B91125",
+      blockCreated: 587071,
     },
   },
 })

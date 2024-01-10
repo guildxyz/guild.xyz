@@ -69,15 +69,15 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
       </FormControl>
 
       <FormControl
-        isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.addresses}
       >
         <Controller
           control={control}
           name={`${baseFieldPath}.data.addresses` as const}
           rules={{
-            required: "This field is required",
             validate: (value_) => {
+              if (!value_) return
+
               const validAddresses = value_.filter(
                 (address) => address !== "" && isValidAddress(address)
               )

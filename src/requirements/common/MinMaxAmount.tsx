@@ -17,11 +17,13 @@ import { Question } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { Requirement } from "types"
+import capitalize from "utils/capitalize"
 import parseFromObject from "utils/parseFromObject"
 
 type Props = {
   baseFieldPath: string
   field: Requirement
+  label?: string
   format?: "INT" | "FLOAT"
   hideSetMaxButton?: boolean
 }
@@ -29,6 +31,7 @@ type Props = {
 const MinMaxAmount = ({
   baseFieldPath,
   field,
+  label = "amount",
   format = "INT",
   hideSetMaxButton = false,
 }: Props): JSX.Element => {
@@ -57,11 +60,13 @@ const MinMaxAmount = ({
     <FormControl>
       <Flex justifyContent={"space-between"} w="full">
         <HStack mb={2} spacing={0}>
-          <FormLabel mb={0}>{showMax ? "Amount:" : "Minimum amount:"}</FormLabel>
+          <FormLabel mb={0}>
+            {showMax ? `${capitalize(label)}:` : `Minimum ${label}:`}
+          </FormLabel>
 
           {showMax && (
             <Tooltip
-              label={`min <= amount to hold ${format === "INT" ? "<=" : "<"} max`}
+              label={`min <= ${label} to hold ${format === "INT" ? "<=" : "<"} max`}
             >
               <Question color="gray" />
             </Tooltip>
@@ -75,7 +80,7 @@ const MinMaxAmount = ({
             onClick={toggleShowMax}
           >
             <Text colorScheme={"gray"}>
-              {showMax ? "remove max amount" : "+ set max amount"}
+              {showMax ? `remove max ${label}` : `+ set max ${label}`}
             </Text>
           </Button>
         )}
@@ -91,7 +96,7 @@ const MinMaxAmount = ({
             rules={{
               min: {
                 value: 0,
-                message: "Amount must be positive",
+                message: `${capitalize(label)} must be positive`,
               },
             }}
             render={({ field: { onChange, onBlur, value, ref } }) => (
@@ -132,7 +137,7 @@ const MinMaxAmount = ({
                   required: "This field is required.",
                   min: {
                     value: 0,
-                    message: "Amount must be positive",
+                    message: `${capitalize(label)} must be positive`,
                   },
                 }}
                 render={({ field: { onChange, onBlur, value, ref } }) => (

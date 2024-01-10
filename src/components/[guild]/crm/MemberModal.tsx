@@ -32,7 +32,7 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
     row.original
 
   const rolesColumn = row
-    .getVisibleCells()
+    .getAllCells()
     .find((cell) => cell.column.id === "publicRoles").column.parent
 
   const primaryAddress = addresses?.[0]

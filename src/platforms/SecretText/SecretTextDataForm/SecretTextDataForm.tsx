@@ -1,7 +1,7 @@
 import { Box, FormControl, FormLabel, Stack, Text } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import BoxIcon from "static/icons/box.svg"
 import PublicRewardDataForm from "./components/PublicRewardDataForm"
@@ -14,9 +14,17 @@ export type SecretTextRewardForm = {
 
 const SecretTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
   const {
+    register,
     setValue,
     formState: { errors },
   } = useFormContext<SecretTextRewardForm>()
+
+  useEffect(() => {
+    register("text", {
+      maxLength: { value: 10000, message: "Max text length is 10000 characters" },
+      required: "This field is required",
+    })
+  }, [register])
 
   const text = useWatch({ name: "text" })
 
@@ -34,7 +42,9 @@ const SecretTextDataForm = ({ children }: PropsWithChildren<unknown>) => {
         <FormControl isRequired isInvalid={!!errors?.text}>
           <RichTextDescriptionEditor
             defaultValue={text}
-            onChange={(newValue) => setValue("text", newValue)}
+            onChange={(newValue) =>
+              setValue("text", newValue, { shouldValidate: true })
+            }
             minHeight="var(--chakra-space-64)"
             placeholder="Type or paste here the contents of your secret. You can format it and attach images too!"
           />

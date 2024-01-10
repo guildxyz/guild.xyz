@@ -1,4 +1,5 @@
 import { Collapse } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import CreateGuildStepper from "components/create-guild/CreateGuildStepper"
 import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
 import { atom, useAtom } from "jotai"
@@ -12,6 +13,7 @@ const Onboarding = (): JSX.Element => {
   const { onboardingComplete } = useGuild()
   const { localThemeColor, textColor } = useThemeContext()
   const [activeStep, setActiveStep] = useAtom(onboardingStepAtom)
+  const { captureEvent } = usePostHogContext()
 
   useEffect(() => {
     setActiveStep(3)
@@ -32,6 +34,7 @@ const Onboarding = (): JSX.Element => {
         <GuildCreationProgress
           progress={75}
           next={() => {
+            captureEvent("guild creation flow > continue", { to: 5 })
             setActiveStep(4)
           }}
         />

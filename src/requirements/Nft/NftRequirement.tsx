@@ -1,15 +1,15 @@
 import { HStack, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
-import useGuild from "components/[guild]/hooks/useGuild"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
-import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import DataBlock from "components/common/DataBlock"
 import { Fragment } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"

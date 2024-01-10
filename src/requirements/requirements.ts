@@ -13,6 +13,7 @@ import {
 import platforms from "platforms/platforms"
 import { RequirementFormProps } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
+import Star from "static/icons/star.svg"
 import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
@@ -148,6 +149,18 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: Star,
+    name: "Points",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Points/PointsRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Points/PointsForm")
+    ),
+    types: ["POINTS_AMOUNT", "POINTS_TOTAL_AMOUNT", "POINTS_RANK"],
+    isNegatable: true,
+  },
+  {
     icon: Link,
     name: "Visit link",
     displayComponent: dynamic<RequirementProps>(
@@ -191,10 +204,13 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_NAME",
       "TWITTER_BIO",
       "TWITTER_FOLLOW",
+      "TWITTER_FOLLOW_V2",
       "TWITTER_FOLLOWED_BY",
       "TWITTER_FOLLOWER_COUNT",
       "TWITTER_LIKE",
+      "TWITTER_LIKE_V2",
       "TWITTER_RETWEET",
+      "TWITTER_RETWEET_V2",
       "TWITTER_LIST_MEMBER",
       "TWITTER_LIST_FOLLOW",
       "TWITTER_ACCOUNT_AGE",

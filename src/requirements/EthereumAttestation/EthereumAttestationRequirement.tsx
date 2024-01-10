@@ -1,10 +1,10 @@
 import { Img } from "@chakra-ui/react"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import useResolveAddress from "hooks/useResolveAddress"
 import shortenHex from "utils/shortenHex"
 import EthereumAttestationRequirementFooter from "./components/EthereumAttestationRequirementFooter"

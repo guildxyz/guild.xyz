@@ -5,13 +5,13 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
 import Section from "components/common/Section"
-import LeaderboardUserCard, {
-  LeaderboardUserCardSkeleton,
-} from "components/leaderboard/LeaderboardUserCard"
 import MysteryBoxCard from "components/leaderboard/MysteryBoxCard"
-import UsersLeaderboardPositionCard from "components/leaderboard/UsersLeaderboardPositionCard"
+import PinLeaderboardUserCard, {
+  PinLeaderboardUserCardSkeleton,
+} from "components/leaderboard/PinLeaderboardUserCard"
+import PinLeaderboardUsersPositionCard from "components/leaderboard/PinLeaderboardUsersPositionCard"
 import useHasAlreadyClaimedMysteryBox from "components/leaderboard/hooks/useHasAlreadyClaimedMysteryBox"
-import useUsersLeaderboardPosition from "components/leaderboard/hooks/useUsersLeaderboardPosition"
+import usePinLeaderboardUsersPosition from "components/leaderboard/hooks/usePinLeaderboardUsersPosition"
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion"
 import useNftBalance from "hooks/useNftBalance"
 import useScrollEffect from "hooks/useScrollEffect"
@@ -50,7 +50,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
     data: { alreadyClaimed },
   } = useHasAlreadyClaimedMysteryBox()
   const [initialAlreadyClaimed, setInitialAlreadyClaimed] = useState<boolean>()
-  const { data } = useUsersLeaderboardPosition()
+  const { data } = usePinLeaderboardUsersPosition()
 
   useEffect(() => {
     if (
@@ -123,7 +123,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
         <Stack spacing={10}>
           <ClientOnly>
             <AnimatePresence>
-              {address && <UsersLeaderboardPositionCard />}
+              {address && <PinLeaderboardUsersPositionCard />}
             </AnimatePresence>
           </ClientOnly>
 
@@ -133,7 +133,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
                 ?.flat()
                 .filter(Boolean)
                 .map((userLeaderboardData, index) => (
-                  <LeaderboardUserCard
+                  <PinLeaderboardUserCard
                     key={index}
                     address={userLeaderboardData?.address}
                     score={userLeaderboardData?.score}
@@ -145,7 +145,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
                 ))}
               {isLeaderboardValidating &&
                 [...Array(25)].map((_, index) => (
-                  <LeaderboardUserCardSkeleton key={index} />
+                  <PinLeaderboardUserCardSkeleton key={index} />
                 ))}
             </>
           </MotionSection>

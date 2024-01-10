@@ -77,6 +77,12 @@ const DynamicActiveStatusUpdates = dynamic(
 const DynamicResendRewardButton = dynamic(
   () => import("components/[guild]/ResendRewardButton")
 )
+const DynamicDiscordBotPermissionsChecker = dynamic(
+  () => import("components/[guild]/DiscordBotPermissionsChecker"),
+  {
+    ssr: false,
+  }
+)
 
 const GuildPage = (): JSX.Element => {
   const {
@@ -371,6 +377,8 @@ const GuildPage = (): JSX.Element => {
           </>
         )}
       </Layout>
+
+      {isAdmin && <DynamicDiscordBotPermissionsChecker />}
     </>
   )
 }

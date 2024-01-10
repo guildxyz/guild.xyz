@@ -1,5 +1,5 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { Chains, supportedChains } from "chains"
+import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import NetworkButton from "./NetworkButton"
 
@@ -7,6 +7,10 @@ type Props = {
   listedChainIDs?: number[]
   networkChangeCallback?: () => void
 }
+
+const shownSupportedChains = supportedChains.filter(
+  (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0
+)
 
 const NetworkButtonsList = ({
   listedChainIDs,
@@ -16,8 +20,12 @@ const NetworkButtonsList = ({
 
   const listedChains =
     listedChainIDs?.length > 0
-      ? supportedChains?.filter((chain) => listedChainIDs?.includes(Chains[chain]))
-      : supportedChains
+      ? shownSupportedChains.filter((chain) =>
+          listedChainIDs?.includes(Chains[chain])
+        )
+      : shownSupportedChains.filter(
+          (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0
+        )
 
   return (
     <SimpleGrid

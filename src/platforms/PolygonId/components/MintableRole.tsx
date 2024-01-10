@@ -42,7 +42,7 @@ const MintableRole = ({ role }: Props) => {
 
   return (
     <>
-      <Card p={4} cursor="grab" mb="3" borderRadius={"2xl"}>
+      <Card p={4} mb="3" borderRadius={"2xl"}>
         <HStack spacing={4}>
           <GuildLogo imageUrl={role.imageUrl} size={"36px"} />
           <HStack spacing={1}>
@@ -74,7 +74,7 @@ const MintableRole = ({ role }: Props) => {
                     })
             }
           >
-            {isClaimed ? "show QR" : "Mint proof"}
+            {isClaimed ? "Show QR code" : "Mint proof"}
           </Button>
         </HStack>
       </Card>

@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import CreateGuildContractCall from "components/create-guild/MultiPlatformGrid/components/CreateGuildContractCall"
@@ -42,7 +43,7 @@ export type PlatformHookType = ({
 }
 
 const createGuildPlatformComponents: Record<
-  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL" | "POLYGON_ID">,
+  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL" | "POLYGON_ID" | "POINTS">,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,
@@ -79,10 +80,14 @@ const MultiPlatformSelectButton = ({
   const { setValue } = useFormContext<GuildFormType>()
   const { isOpen, onClose, onOpen } = useDisclosure()
   const user = useUser()
+  const { captureEvent } = usePostHogContext()
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
-    () => onSelection(platform),
+    () => {
+      onOpen()
+      onSelection(platform)
+    },
     false,
     "creation"
   )
@@ -136,6 +141,9 @@ const MultiPlatformSelectButton = ({
                       setValue("socialLinks.TWITTER", "")
                     } else {
                       removePlatform(platform)
+                      captureEvent("guild creation flow > platform removed", {
+                        platform,
+                      })
                     }
                   }
                 : () => {
@@ -195,7 +203,13 @@ const MultiPlatformSelectButton = ({
         </DisplayCard>
       </Tooltip>
 
-      <PlatformModal isOpen={isOpen} onClose={onClose} />
+      <PlatformModal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          captureEvent("guild creation flow > platform added", { platform })
+        }}
+      />
     </>
   )
 }

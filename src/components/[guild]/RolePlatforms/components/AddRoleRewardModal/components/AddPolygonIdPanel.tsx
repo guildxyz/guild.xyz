@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useEffect } from "react"
 import { useFieldArray, useWatch } from "react-hook-form"
-import { PlatformType, Visibility } from "types"
+import { Visibility } from "types"
 
 type Props = {
   onSuccess: () => void
@@ -19,7 +19,7 @@ const AddPolygonIDPanel = ({ onSuccess }: Props) => {
     append({
       guildPlatform: {
         platformName: "POLYGON_ID",
-        platformGuildId: `${PlatformType.POLYGON_ID}-${guildId}`,
+        platformGuildId: `polygonid-${guildId}`,
       },
       isNew: true,
       platformGuildData: {},

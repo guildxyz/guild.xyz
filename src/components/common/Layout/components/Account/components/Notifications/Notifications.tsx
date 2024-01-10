@@ -17,10 +17,14 @@ import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
 import { Bell } from "phosphor-react"
 import AccountButton from "../AccountButton"
+import WebInboxSkeleton from "../Web3Inbox/WebInboxSkeleton"
 import NotificationsActivityLog from "./components/NotificationsActivityLog"
 import NotificationsSection from "./components/NotificationsSection"
 
-const DynamicWeb3Inbox = dynamic(() => import("../Web3Inbox"))
+const DynamicWeb3Inbox = dynamic(() => import("../Web3Inbox"), {
+  ssr: false,
+  loading: WebInboxSkeleton,
+})
 const VIEWPORT_GAP_PX = 8
 
 const Notifications = () => {

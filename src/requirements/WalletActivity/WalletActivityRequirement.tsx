@@ -1,14 +1,14 @@
 import { Icon } from "@chakra-ui/react"
 import { CHAIN_CONFIG } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
-import DataBlockWithCopy from "components/[guild]/Requirements/components/DataBlockWithCopy"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import DataBlock from "components/common/DataBlock"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { ArrowsLeftRight, Coins, FileText, IconProps, Wallet } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"

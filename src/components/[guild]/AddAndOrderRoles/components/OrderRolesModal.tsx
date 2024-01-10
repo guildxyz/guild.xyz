@@ -108,7 +108,11 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
             >
               {relevantRoles?.length ? (
                 roleIdsOrder?.map((roleId) => (
-                  <Reorder.Item key={roleId} value={roleId}>
+                  <Reorder.Item
+                    key={roleId}
+                    value={roleId}
+                    style={{ position: "relative" }} // needed for the auto-applied zIndex to work
+                  >
                     <DraggableRoleCard
                       role={relevantRoles?.find((role) => role.id === roleId)}
                     />

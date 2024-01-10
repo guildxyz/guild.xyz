@@ -43,7 +43,7 @@ const usePopupWindow = (
     setWindowInstance(
       window.open(
         typeof url === "string" ? url : uri,
-        isMobile ? "_self" : "_blank",
+        isMobile && !url?.includes("tgauth") ? "_self" : "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })
           .map(([key, value]) =>
             typeof value === "number" ? `${key}=${value}` : key

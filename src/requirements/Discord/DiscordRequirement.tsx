@@ -1,12 +1,12 @@
 import { Icon, Text } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import ConnectRequirementPlatformButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
-import DataBlock from "components/[guild]/Requirements/components/DataBlock"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
