@@ -79,7 +79,7 @@ type PlatformData<
     info?: string | JSX.Element
     link?: string
   }
-  // this flag shows that the AddPlatformPanel has no user interaction and just does automated setups.
+  // true when the AddPlatformPanel just automatically adds the platform without any user input
   autoPlatformSetup?: boolean
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
