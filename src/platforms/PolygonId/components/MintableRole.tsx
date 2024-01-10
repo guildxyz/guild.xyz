@@ -12,7 +12,7 @@ type Props = {
 }
 
 const MintableRole = ({ role, onMint, isClaimed, isLoading, isDisabled }: Props) => (
-  <Card p={4} cursor="grab" mb="3" borderRadius={"2xl"}>
+  <Card p={4} mb="3" borderRadius={"2xl"}>
     <HStack spacing={4}>
       <GuildLogo imageUrl={role.imageUrl} size={"36px"} />
 
