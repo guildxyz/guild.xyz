@@ -141,7 +141,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors || error)
+  if (data?.errors?.length > 0 || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"
