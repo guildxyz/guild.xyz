@@ -1,7 +1,4 @@
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   FormControl,
   FormLabel,
   Input,
@@ -9,38 +6,26 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spacer,
-  Stack,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { useForm, useWatch } from "react-hook-form"
-import { mutate } from "swr"
 import fetcher from "utils/fetcher"
+import useConnectedDID from "../hooks/useConnectedDID"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
 }
 
-const NoDID = ({ isOpen, onClose }: Props) => {
+const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
   const { id } = useUser()
-  const { isLoading, onSubmit, error } = useSubmitWithSign(
-    (signedValidation) =>
-      fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/connect`, {
-        method: "POST",
-        ...signedValidation,
-      }),
-    {
-      onSuccess: () => {
-        mutate(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${id}/polygon-id`)
-      },
-    }
-  )
   const {
     register,
     formState: { errors },
@@ -50,29 +35,29 @@ const NoDID = ({ isOpen, onClose }: Props) => {
 
   const DID = useWatch({ name: "did", control })
 
+  const showErrorToast = useShowErrorToast()
+  const { mutate } = useConnectedDID()
+  const { isLoading, onSubmit } = useSubmitWithSign(
+    (signedValidation) =>
+      fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/connect`, {
+        method: "POST",
+        ...signedValidation,
+      }),
+    {
+      onSuccess: () => {
+        mutate(() => DID)
+      },
+      onError: () => showErrorToast("Couldn't connect your DID"),
+    }
+  )
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"xl"} colorScheme={"dark"}>
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
-        <ModalHeader pb={0}>Connect PolygonID</ModalHeader>
-        <ModalBody pt={8}>
-          {error && (
-            <Alert status="error" pb={5} alignItems={"center"} mb={5}>
-              <AlertIcon />
-              <Stack>
-                <AlertDescription
-                  position="relative"
-                  top={0.5}
-                  fontWeight="semibold"
-                  pr="4"
-                >
-                  Connecting your DID with the Guild has failed.
-                </AlertDescription>
-              </Stack>
-              <Spacer />
-            </Alert>
-          )}
+        <ModalHeader>Connect PolygonID</ModalHeader>
+        <ModalBody pb={4}>
           <FormControl isRequired isInvalid={!!errors?.did}>
             <FormLabel>Paste your DID</FormLabel>
             <Input
@@ -82,10 +67,12 @@ const NoDID = ({ isOpen, onClose }: Props) => {
             />
             <FormErrorMessage>{errors?.did?.message}</FormErrorMessage>
           </FormControl>
+        </ModalBody>
+
+        <ModalFooter pt={0}>
           <Button
             isDisabled={!DID}
             colorScheme="green"
-            mt={8}
             ml="auto"
             isLoading={isLoading}
             loadingText={"Connecting..."}
@@ -93,10 +80,10 @@ const NoDID = ({ isOpen, onClose }: Props) => {
           >
             Connect
           </Button>
-        </ModalBody>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )
 }
 
-export default NoDID
+export default ConnectDIDModal

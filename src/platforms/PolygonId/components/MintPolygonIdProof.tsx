@@ -1,6 +1,6 @@
 import useConnectedDID from "../hooks/useConnectedDID"
+import ConnectDIDModal from "./ConnectDIDModal"
 import MintPolygonIDProofModal from "./MintPolygonIDProofModal"
-import NoDID from "./NoDID"
 
 type Props = {
   isOpen: boolean
@@ -8,10 +8,9 @@ type Props = {
 }
 
 const MintPolygonIDProof = ({ isOpen, onClose }: Props) => {
-  const { error } = useConnectedDID()
+  const { data } = useConnectedDID()
 
-  if (error) return <NoDID isOpen={isOpen} onClose={onClose} />
-
+  if (!data) return <ConnectDIDModal isOpen={isOpen} onClose={onClose} />
   return <MintPolygonIDProofModal isOpen={isOpen} onClose={onClose} />
 }
 
