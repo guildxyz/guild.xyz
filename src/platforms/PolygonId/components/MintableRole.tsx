@@ -48,7 +48,7 @@ const MintableRole = ({ role }: Props) => {
   const joinFetcher = (signedValidation: SignedValdation) =>
     fetcher(`/user/join`, signedValidation)
 
-  const { response, error, isLoading, onSubmit } = useSubmitWithSign(submit)
+  const { response, isLoading, onSubmit } = useSubmitWithSign(submit)
 
   useEffect(() => {
     if (response) setClaimed(true)
@@ -71,50 +71,42 @@ const MintableRole = ({ role }: Props) => {
   })
 
   return (
-    <>
-      <Card p={4} mb="3" borderRadius={"2xl"}>
-        <HStack spacing={4}>
-          <GuildLogo imageUrl={role.imageUrl} size={"36px"} />
-          <HStack spacing={1}>
-            <Heading
-              as="h3"
-              fontSize="md"
-              fontFamily="display"
-              wordBreak="break-all"
-              noOfLines={1}
-            >
-              {role.name}
-            </Heading>
-          </HStack>
-          <Spacer />
-          <Tooltip
-            label="You don't satisfy the requirements to this role"
-            isDisabled={hasAccess}
-            placement="top"
-            hasArrow
+    <Card p={4} mb="3" borderRadius={"2xl"}>
+      <HStack spacing={4}>
+        <GuildLogo imageUrl={role.imageUrl} size={12} />
+        <Heading
+          as="h3"
+          fontSize="lg"
+          fontFamily="display"
+          wordBreak="break-all"
+          noOfLines={1}
+        >
+          {role.name}
+        </Heading>
+        <Spacer />
+        <Tooltip
+          label="You don't satisfy the requirements to this role"
+          isDisabled={hasAccess}
+          placement="top"
+          hasArrow
+        >
+          <Button
+            colorScheme={isClaimed ? "gray" : "purple"}
+            h={10}
+            isLoading={isLoading || join.isLoading}
+            isDisabled={!hasAccess}
+            onClick={() => {
+              onOpen()
+              if (!isClaimed) join.onSubmit({ guildId })
+            }}
           >
-            <Button
-              colorScheme={isClaimed ? "gray" : "purple"}
-              size={"sm"}
-              isLoading={isLoading || join.isLoading}
-              isDisabled={!hasAccess}
-              onClick={() => {
-                onOpen()
-                if (!isClaimed) join.onSubmit({ guildId })
-              }}
-            >
-              {isClaimed ? "Show QR code" : "Mint proof"}
-            </Button>
-          </Tooltip>
-        </HStack>
-      </Card>
-      <PolygonIDQRCode
-        isOpen={isOpen}
-        onClose={onClose}
-        role={role}
-        claimIsLoading={isLoading || join.isLoading}
-      />
-    </>
+            {isClaimed ? "Show QR code" : "Mint proof"}
+          </Button>
+        </Tooltip>
+      </HStack>
+
+      <PolygonIDQRCode isOpen={isOpen} onClose={onClose} role={role} />
+    </Card>
   )
 }
 

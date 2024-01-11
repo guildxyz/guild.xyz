@@ -9,7 +9,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
-  Stack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
@@ -19,13 +18,11 @@ import { LoadingModal } from "./LoadingModal"
 import MintableRole from "./MintableRole"
 
 const ErrorState = () => (
-  <Alert status="error" pb={5} alignItems={"center"} mb={5}>
+  <Alert status="error" pb={5} alignItems="center" mb={5}>
     <AlertIcon />
-    <Stack>
-      <AlertDescription position="relative" top={0.5} fontWeight="semibold" pr="4">
-        Server not available
-      </AlertDescription>
-    </Stack>
+    <AlertDescription position="relative" top={0.5} fontWeight="semibold" pr="4">
+      PolygonID issuer error
+    </AlertDescription>
     <Spacer />
   </Alert>
 )
