@@ -76,6 +76,10 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
             return token
           },
           collectAndReportMetrics: true,
+          prod:
+            (typeof window !== "undefined" &&
+              window.origin === "https://guild.xyz") ||
+            undefined,
         },
       }),
     ]
