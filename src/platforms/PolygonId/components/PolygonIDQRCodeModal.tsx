@@ -20,6 +20,7 @@ import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
+import useClaimedRoles from "../hooks/useClaimedRoles"
 
 type Props = {
   role: Role
@@ -31,7 +32,11 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
 
-  const hasClaimed = false // TODO: create a hook to fetch this data
+  const { data: claimedRoles } = useClaimedRoles()
+  const hasClaimed = claimedRoles
+    ?.find((guild) => guild.guildId === guildId)
+    ?.roleIds.find((roleId) => roleId === role.id)
+
   const { data, error, mutate } = useSWRImmutable(
     hasClaimed
       ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
@@ -41,7 +46,7 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"}>
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"} size="lg">
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
@@ -66,7 +71,7 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
               <ErrorAlert label={"Couldn't generate QR code"} />
             ) : (
               <>
-                <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
+                <Box borderRadius="md" borderWidth={3} overflow="hidden">
                   <QRCodeSVG
                     value={JSON.stringify(data)}
                     size={qrSize}

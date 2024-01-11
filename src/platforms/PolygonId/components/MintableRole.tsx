@@ -13,50 +13,55 @@ import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { useEffect, useState } from "react"
-import useSWRImmutable from "swr/immutable"
+import useToast from "hooks/useToast"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
+import useClaimedRoles from "../hooks/useClaimedRoles"
 import PolygonIDQRCodeModal from "./PolygonIDQRCodeModal"
 
 type Props = {
   role: Role
 }
 
+const join = (signedValidation: SignedValdation) =>
+  fetcher(`/user/join`, signedValidation)
+
 const MintableRole = ({ role }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
   const showErrorToast = useShowErrorToast()
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const { id: userId } = useUser()
   const { hasAccess } = useAccess(role.id)
   const { id: guildId } = useGuild()
-  const claimedRoles = useSWRImmutable(
-    `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
-  )
-  const [isClaimed, setClaimed] = useState(
-    claimedRoles.data?.length &&
-      !!claimedRoles.data[0].roleIds.find(
-        (claimedRoleId) => claimedRoleId === role.id
-      )
-  )
+  const { data: claimedRoles, isValidating } = useClaimedRoles()
 
-  const submit = async (signedValidation: SignedValdation) =>
+  const hasClaimed = claimedRoles
+    ?.find((guild) => guild.guildId === guildId)
+    ?.roleIds.find((roleId) => roleId === role.id)
+
+  const claim = async (signedValidation: SignedValdation) =>
     fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
       method: "POST",
       ...signedValidation,
     })
 
-  const joinFetcher = (signedValidation: SignedValdation) =>
-    fetcher(`/user/join`, signedValidation)
+  const { isLoading: isClaimLoading, onSubmit: onClaimSubmit } = useSubmitWithSign(
+    claim,
+    {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          title: "Successfully claimed proof",
+        })
+      },
+      onError: () => showErrorToast("Couldn't claim proof"),
+    }
+  )
 
-  const { response, isLoading, onSubmit } = useSubmitWithSign(submit)
-
-  useEffect(() => {
-    if (response) setClaimed(true)
-  }, [response])
-
-  const join = useSubmitWithSign(joinFetcher, {
+  const { isLoading: isJoinLoading, onSubmit } = useSubmitWithSign(join, {
     onSuccess: () =>
-      onSubmit({
+      onClaimSubmit({
         userId: userId,
         data: {
           guildId: guildId,
@@ -69,6 +74,8 @@ const MintableRole = ({ role }: Props) => {
         correlationId: err.correlationId,
       }),
   })
+
+  const isLoading = isJoinLoading || isClaimLoading
 
   return (
     <Card p={4} mb="3" borderRadius={"2xl"}>
@@ -91,16 +98,16 @@ const MintableRole = ({ role }: Props) => {
           hasArrow
         >
           <Button
-            colorScheme={isClaimed ? "gray" : "purple"}
+            colorScheme={"purple"}
             h={10}
-            isLoading={isLoading || join.isLoading}
+            isLoading={isValidating || isLoading}
             isDisabled={!hasAccess}
             onClick={() => {
               onOpen()
-              if (!isClaimed) join.onSubmit({ guildId })
+              if (!hasClaimed) onSubmit({ guildId })
             }}
           >
-            {isClaimed ? "Show QR code" : "Mint proof"}
+            {hasClaimed ? "Show QR code" : "Mint proof"}
           </Button>
         </Tooltip>
       </HStack>
