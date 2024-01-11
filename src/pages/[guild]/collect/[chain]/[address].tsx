@@ -50,7 +50,8 @@ import dynamic from "next/dynamic"
 
 const EditNFTDescriptionModalButton = dynamic(
   () =>
-    import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton")
+    import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton"),
+  { ssr: false }
 )
 
 type Props = {
