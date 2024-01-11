@@ -7,7 +7,7 @@ import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
-import AvailibiltySetup from "../AddRewardButton/components/AvailibiltySetup"
+import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
@@ -114,7 +114,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                   actionRow={PlatformCardSettings && <PlatformCardSettings />}
                   contentRow={
                     CAPACITY_TIME_PLATFORMS.includes(type) && (
-                      <AvailibiltySetup
+                      <AvailabilitySetup
                         platformType={
                           PlatformType[guildPlatform.platformId] as PlatformName
                         }
