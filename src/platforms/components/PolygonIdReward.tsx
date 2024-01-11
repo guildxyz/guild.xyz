@@ -12,6 +12,7 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { MintPolygonIdProof } from "platforms/PolygonId/components/MintPolygonIdProof"
+import { useDIDcheck } from "platforms/PolygonId/hooks/useDIDcheck"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
@@ -27,15 +28,16 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
   )
 
   const isMember = useIsMember()
-  const { hasAccess } = useAccess(role.id)
+  const { hasAccess, isValidating } = useAccess(role.id)
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
+  const { isLoading } = useDIDcheck()
 
   const state = useMemo(() => {
     if (isMember && hasAccess) {
       return {
         tooltipLabel: "Mint",
-        buttonProps: {},
+        buttonProps: { isDisabled: isLoading || isValidating },
       }
     }
 
@@ -70,10 +72,17 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
             {`Mint: `}
             <Button
               variant="link"
-              rightIcon={false ? <Spinner boxSize="1em" /> : <ArrowSquareOut />}
+              rightIcon={
+                isLoading || isValidating ? (
+                  <Spinner boxSize="1em" />
+                ) : (
+                  <ArrowSquareOut />
+                )
+              }
               iconSpacing="1"
               maxW="full"
               onClick={onOpen}
+              {...state.buttonProps}
             >
               {platforms[PlatformType[platformId]].name} proofs
             </Button>

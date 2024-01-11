@@ -25,15 +25,16 @@ import { Role } from "types"
 type Props = {
   role: Role
   isOpen: boolean
+  claimIsLoading: boolean
   onClose: () => void
 }
 
-const PolygonIdQRCode = ({ role, isOpen, onClose }: Props) => {
+const PolygonIdQRCode = ({ role, isOpen, onClose, claimIsLoading }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
   const QR_URL = `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
 
-  const qr = useSWRImmutable(QR_URL)
+  const qr = useSWRImmutable(claimIsLoading ? null : QR_URL)
 
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
 
@@ -52,15 +53,15 @@ const PolygonIdQRCode = ({ role, isOpen, onClose }: Props) => {
         </ModalHeader>
         <ModalBody pt={8}>
           <Center flexDirection={"column"}>
-            {qr.error ? (
-              <ErrorAlert label={"Couldn't generate QR code"} />
-            ) : qr.isLoading ? (
+            {qr.isLoading || claimIsLoading ? (
               <>
                 <Spinner size="xl" mt="8" />
                 <Text mt="4" mb="8">
                   Generating QR code
                 </Text>
               </>
+            ) : qr.error ? (
+              <ErrorAlert label={"Couldn't generate QR code"} />
             ) : (
               <>
                 <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>

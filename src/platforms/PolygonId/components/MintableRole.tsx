@@ -1,8 +1,17 @@
-import { Card, HStack, Heading, Spacer, useDisclosure } from "@chakra-ui/react"
+import {
+  Card,
+  HStack,
+  Heading,
+  Spacer,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react"
+import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect, useState } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -16,7 +25,9 @@ type Props = {
 
 const MintableRole = ({ role }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const showErrorToast = useShowErrorToast()
   const { id: userId } = useUser()
+  const { hasAccess } = useAccess(role.id)
   const { id: guildId } = useGuild()
   const claimedRoles = useSWRImmutable(
     `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
@@ -34,11 +45,30 @@ const MintableRole = ({ role }: Props) => {
       ...signedValidation,
     })
 
+  const joinFetcher = (signedValidation: SignedValdation) =>
+    fetcher(`/user/join`, signedValidation)
+
   const { response, error, isLoading, onSubmit } = useSubmitWithSign(submit)
 
   useEffect(() => {
     if (response) setClaimed(true)
   }, [response])
+
+  const join = useSubmitWithSign(joinFetcher, {
+    onSuccess: () =>
+      onSubmit({
+        userId: userId,
+        data: {
+          guildId: guildId,
+          roleId: role.id,
+        },
+      }),
+    onError: (err) =>
+      showErrorToast({
+        error: "Couldn't check eligibility",
+        correlationId: err.correlationId,
+      }),
+  })
 
   return (
     <>
@@ -57,28 +87,33 @@ const MintableRole = ({ role }: Props) => {
             </Heading>
           </HStack>
           <Spacer />
-          <Button
-            colorScheme={isClaimed ? "gray" : "purple"}
-            size={"sm"}
-            isLoading={isLoading}
-            onClick={
-              isClaimed
-                ? onOpen
-                : () =>
-                    onSubmit({
-                      userId: userId,
-                      data: {
-                        guildId: guildId,
-                        roleId: role.id,
-                      },
-                    })
-            }
+          <Tooltip
+            label="You don't satisfy the requirements to this role"
+            isDisabled={hasAccess}
+            placement="top"
+            hasArrow
           >
-            {isClaimed ? "Show QR code" : "Mint proof"}
-          </Button>
+            <Button
+              colorScheme={isClaimed ? "gray" : "purple"}
+              size={"sm"}
+              isLoading={isLoading || join.isLoading}
+              isDisabled={!hasAccess}
+              onClick={() => {
+                onOpen()
+                if (!isClaimed) join.onSubmit({ guildId })
+              }}
+            >
+              {isClaimed ? "Show QR code" : "Mint proof"}
+            </Button>
+          </Tooltip>
         </HStack>
       </Card>
-      <PolygonIdQRCode isOpen={isOpen} onClose={onClose} role={role} />
+      <PolygonIdQRCode
+        isOpen={isOpen}
+        onClose={onClose}
+        role={role}
+        claimIsLoading={isLoading || join.isLoading}
+      />
     </>
   )
 }
