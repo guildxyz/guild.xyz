@@ -1,129 +1,94 @@
 import {
   Box,
   Center,
-  HStack,
-  IconButton,
+  Modal,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalHeader,
+  ModalOverlay,
   Spinner,
   Text,
+  VStack,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
-import { ArrowLeft, ArrowsClockwise } from "phosphor-react"
+import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
-import { useEffect, useState } from "react"
-import useSWR, { mutate } from "swr"
+import { mutate } from "swr"
+import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
-import fetcher from "utils/fetcher"
 
 type Props = {
   role: Role
-  isClaimed: boolean
-  goBack: () => void
+  isOpen: boolean
+  claimIsLoading: boolean
+  onClose: () => void
 }
 
-const PolygonIdQRCode = ({ role, goBack, isClaimed }: Props) => {
+const PolygonIdQRCode = ({ role, isOpen, onClose, claimIsLoading }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
-  const [shouldFetchQR, setShouldFetchQR] = useState(null)
   const QR_URL = `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
 
-  const submit = async (signedValidation: SignedValdation) =>
-    fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
-      method: "POST",
-      ...signedValidation,
-    })
-
-  const claim = useSubmitWithSign(submit, {
-    onSuccess: () => setShouldFetchQR(QR_URL),
-  })
-  const qr = useSWR(shouldFetchQR)
+  const qr = useSWRImmutable(claimIsLoading ? null : QR_URL)
 
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
 
-  useEffect(() => {
-    if (userId && guildId && !isClaimed) {
-      claim.onSubmit({
-        userId: userId,
-        data: {
-          guildId: guildId,
-          roleId: role.id,
-        },
-      })
-    } else {
-      setShouldFetchQR(QR_URL)
-    }
-  }, [])
-
   return (
-    <>
-      <ModalHeader pb={0}>
-        <HStack>
-          <IconButton
-            rounded="full"
-            aria-label="Back"
-            size="sm"
-            mb="-3px"
-            icon={<ArrowLeft size={20} />}
-            variant="ghost"
-            onClick={goBack}
-          />
-          <Box>
+    <Modal isOpen={isOpen} onClose={onClose} size={"xl"} colorScheme={"dark"}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader pb={0}>
+          <VStack alignItems={"flex-start"}>
             <Text>PolygonID proof</Text>
             <Text fontSize={"md"} colorScheme={"gray"} fontFamily={"body"}>
               {role.name}
             </Text>
-          </Box>
-        </HStack>
-      </ModalHeader>
-      <ModalBody pt={8}>
-        <Center flexDirection={"column"}>
-          {claim.error || qr.error ? (
-            <ErrorAlert
-              label={
-                qr.error
-                  ? "Couldn't generate QR code"
-                  : "Couldn't mint PolygonID proof"
-              }
-            />
-          ) : claim.isLoading || qr.isLoading ? (
-            <>
-              <Spinner size="xl" mt="8" />
-              <Text mt="4" mb="8">
-                Generating QR code
-              </Text>
-            </>
-          ) : (
-            <>
-              <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
-                <QRCodeSVG value={JSON.stringify(qr.data)} size={qrSize} />
-              </Box>
-              <Button
-                size="xs"
-                borderRadius="lg"
-                mt="2"
-                variant="ghost"
-                leftIcon={<ArrowsClockwise />}
-                isLoading={qr.isLoading}
-                loadingText={"Generating QR code"}
-                color="gray"
-                onClick={() => mutate(QR_URL)}
-              >
-                Generate new QR code
-              </Button>
-              <Text mt="10" textAlign="center">
-                Scan with your Polygon ID app!
-              </Text>
-            </>
-          )}
-        </Center>
-      </ModalBody>
-    </>
+          </VStack>
+        </ModalHeader>
+        <ModalBody pt={8}>
+          <Center flexDirection={"column"}>
+            {qr.isLoading || claimIsLoading ? (
+              <>
+                <Spinner size="xl" mt="8" />
+                <Text mt="4" mb="8">
+                  Generating QR code
+                </Text>
+              </>
+            ) : qr.error ? (
+              <ErrorAlert label={"Couldn't generate QR code"} />
+            ) : (
+              <>
+                <Box borderRadius={"md"} borderWidth={3} overflow={"hidden"}>
+                  <QRCodeSVG value={JSON.stringify(qr.data)} size={qrSize} />
+                </Box>
+                <Button
+                  size="xs"
+                  borderRadius="lg"
+                  mt="2"
+                  variant="ghost"
+                  leftIcon={<ArrowsClockwise />}
+                  isLoading={qr.isLoading}
+                  loadingText={"Generating QR code"}
+                  color="gray"
+                  onClick={() => mutate(QR_URL)}
+                >
+                  Generate new QR code
+                </Button>
+                <Text mt="10" textAlign="center">
+                  Scan with your Polygon ID app!
+                </Text>
+              </>
+            )}
+          </Center>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 

@@ -1,46 +1,121 @@
-import { Card, HStack, Heading, Spacer } from "@chakra-ui/react"
+import {
+  Card,
+  HStack,
+  Heading,
+  Spacer,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
+import useShowErrorToast from "hooks/useShowErrorToast"
+import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { useEffect, useState } from "react"
+import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
+import fetcher from "utils/fetcher"
+import PolygonIdQRCode from "./PolygonIdQRCode"
 
 type Props = {
   role: Role
-  isClaimed: boolean
-  isLoading: boolean
-  isDisabled: boolean
-  onMint: (role: Role) => void
 }
 
-const MintableRole = ({ role, onMint, isClaimed, isLoading, isDisabled }: Props) => (
-  <Card p={4} mb="3" borderRadius={"2xl"}>
-    <HStack spacing={4}>
-      <GuildLogo imageUrl={role.imageUrl} size={"36px"} />
+const MintableRole = ({ role }: Props) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const showErrorToast = useShowErrorToast()
+  const { id: userId } = useUser()
+  const { hasAccess } = useAccess(role.id)
+  const { id: guildId } = useGuild()
+  const claimedRoles = useSWRImmutable(
+    `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
+  )
+  const [isClaimed, setClaimed] = useState(
+    claimedRoles.data?.length &&
+      !!claimedRoles.data[0].roleIds.find(
+        (claimedRoleId) => claimedRoleId === role.id
+      )
+  )
 
-      <HStack spacing={1}>
-        <Heading
-          as="h3"
-          fontSize="md"
-          fontFamily="display"
-          wordBreak="break-all"
-          noOfLines={1}
-        >
-          {role.name}
-        </Heading>
-      </HStack>
+  const submit = async (signedValidation: SignedValdation) =>
+    fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
+      method: "POST",
+      ...signedValidation,
+    })
 
-      <Spacer />
+  const joinFetcher = (signedValidation: SignedValdation) =>
+    fetcher(`/user/join`, signedValidation)
 
-      <Button
-        colorScheme={isClaimed ? "gray" : "purple"}
-        size={"sm"}
-        onClick={() => onMint(role)}
-        isLoading={isLoading}
-        isDisabled={isDisabled}
-      >
-        {isClaimed ? "Show QR code" : "Mint proof"}
-      </Button>
-    </HStack>
-  </Card>
-)
+  const { response, error, isLoading, onSubmit } = useSubmitWithSign(submit)
+
+  useEffect(() => {
+    if (response) setClaimed(true)
+  }, [response])
+
+  const join = useSubmitWithSign(joinFetcher, {
+    onSuccess: () =>
+      onSubmit({
+        userId: userId,
+        data: {
+          guildId: guildId,
+          roleId: role.id,
+        },
+      }),
+    onError: (err) =>
+      showErrorToast({
+        error: "Couldn't check eligibility",
+        correlationId: err.correlationId,
+      }),
+  })
+
+  return (
+    <>
+      <Card p={4} mb="3" borderRadius={"2xl"}>
+        <HStack spacing={4}>
+          <GuildLogo imageUrl={role.imageUrl} size={"36px"} />
+          <HStack spacing={1}>
+            <Heading
+              as="h3"
+              fontSize="md"
+              fontFamily="display"
+              wordBreak="break-all"
+              noOfLines={1}
+            >
+              {role.name}
+            </Heading>
+          </HStack>
+          <Spacer />
+          <Tooltip
+            label="You don't satisfy the requirements to this role"
+            isDisabled={hasAccess}
+            placement="top"
+            hasArrow
+          >
+            <Button
+              colorScheme={isClaimed ? "gray" : "purple"}
+              size={"sm"}
+              isLoading={isLoading || join.isLoading}
+              isDisabled={!hasAccess}
+              onClick={() => {
+                onOpen()
+                if (!isClaimed) join.onSubmit({ guildId })
+              }}
+            >
+              {isClaimed ? "Show QR code" : "Mint proof"}
+            </Button>
+          </Tooltip>
+        </HStack>
+      </Card>
+      <PolygonIdQRCode
+        isOpen={isOpen}
+        onClose={onClose}
+        role={role}
+        claimIsLoading={isLoading || join.isLoading}
+      />
+    </>
+  )
+}
 
 export default MintableRole
