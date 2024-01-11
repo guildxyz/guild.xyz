@@ -35,7 +35,7 @@ type Props = {
   onClose: () => void
 }
 
-const MintPolygonIdProofModal = ({ isOpen, onClose }: Props) => {
+const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId, roles, guildPlatforms } = useGuild()
   const { isLoading, error } = useSWRImmutable(
@@ -48,7 +48,7 @@ const MintPolygonIdProofModal = ({ isOpen, onClose }: Props) => {
     (platform) => platform.platformId === PlatformType.POLYGON_ID
   )
 
-  const onlyWithPolygonIdReward = (role: Role) =>
+  const onlyWithPolygonIDReward = (role: Role) =>
     !!role.rolePlatforms.find(
       (rolePlatform) => rolePlatform.guildPlatformId === guildPlatformId.id
     )
@@ -64,7 +64,7 @@ const MintPolygonIdProofModal = ({ isOpen, onClose }: Props) => {
             <ErrorState />
           ) : (
             roles
-              .filter(onlyWithPolygonIdReward)
+              .filter(onlyWithPolygonIDReward)
               .map((role) => <MintableRole key={role.id} role={role} />)
           )}
         </ModalBody>
@@ -73,4 +73,4 @@ const MintPolygonIdProofModal = ({ isOpen, onClose }: Props) => {
   )
 }
 
-export default MintPolygonIdProofModal
+export default MintPolygonIDProofModal

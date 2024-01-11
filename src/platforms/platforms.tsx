@@ -34,9 +34,9 @@ import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
 import usePointsCardProps from "./Points/usePointsCardProps"
-import PolygonIdCardButton from "./PolygonId/PolygonIdCardButton"
-import PolygonIdCardMenu from "./PolygonId/PolygonIdCardMenu"
-import usePolygonIdCardProps from "./PolygonId/usePolygonIdCardProps"
+import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
+import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
+import usePolygonIDCardProps from "./PolygonID/usePolygonIDCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
@@ -418,16 +418,16 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "PolygonID",
     colorScheme: "purple",
     gatedEntity: "",
-    cardPropsHook: usePolygonIdCardProps,
-    cardButton: PolygonIdCardButton,
-    cardMenuComponent: PolygonIdCardMenu,
+    cardPropsHook: usePolygonIDCardProps,
+    cardButton: PolygonIDCardButton,
+    cardMenuComponent: PolygonIDCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: false,
     autoPlatformSetup: true,
     AddPlatformPanel: dynamic(
       () =>
         import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIdPanel"
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIDPanel"
         ),
       {
         ssr: false,
@@ -439,7 +439,7 @@ const platforms: Record<PlatformName, PlatformData> = {
       loading: () => <PlatformPreview isLoading={true} />,
     }),
     RoleCardComponent: dynamic(
-      () => import("platforms/components/PolygonIdReward"),
+      () => import("platforms/components/PolygonIDReward"),
       {
         ssr: false,
       }

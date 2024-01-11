@@ -5,10 +5,10 @@ type Props = {
   platformGuildId: string
 }
 
-const PolygonIdCardMenu = ({ platformGuildId }: Props): JSX.Element => (
+const PolygonIDCardMenu = ({ platformGuildId }: Props): JSX.Element => (
   <PlatformCardMenu>
     <RemovePlatformMenuItem platformGuildId={platformGuildId} />
   </PlatformCardMenu>
 )
 
-export default PolygonIdCardMenu
+export default PolygonIDCardMenu

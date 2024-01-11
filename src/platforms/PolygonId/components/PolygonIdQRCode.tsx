@@ -29,7 +29,7 @@ type Props = {
   onClose: () => void
 }
 
-const PolygonIdQRCode = ({ role, isOpen, onClose, claimIsLoading }: Props) => {
+const PolygonIDQRCode = ({ role, isOpen, onClose, claimIsLoading }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
   const QR_URL = `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claim/${guildId}:${role.id}/qrcode`
@@ -92,4 +92,4 @@ const PolygonIdQRCode = ({ role, isOpen, onClose, claimIsLoading }: Props) => {
   )
 }
 
-export default PolygonIdQRCode
+export default PolygonIDQRCode

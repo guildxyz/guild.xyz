@@ -10,14 +10,14 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
-import { MintPolygonIdProof } from "platforms/PolygonId/components/MintPolygonIdProof"
-import useConnectedDID from "platforms/PolygonId/hooks/useConnectedDID"
+import MintPolygonIDProof from "platforms/PolygonID/components/MintPolygonIDProof"
+import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import { useAccount } from "wagmi"
 
-const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
+const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId } = platform.guildPlatform
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -89,8 +89,8 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
         }
       />
 
-      <MintPolygonIdProof isOpen={isOpen} onClose={onClose} />
+      <MintPolygonIDProof isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
-export default PolygonIdReward
+export default PolygonIDReward

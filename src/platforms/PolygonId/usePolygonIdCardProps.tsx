@@ -2,7 +2,7 @@ import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 
-const usePolygonIdCardProps = () => {
+const usePolygonIDCardProps = () => {
   const bgColor = useColorModeValue("gray.700", "gray.600")
 
   return {
@@ -17,4 +17,4 @@ const usePolygonIdCardProps = () => {
   }
 }
 
-export default usePolygonIdCardProps
+export default usePolygonIDCardProps

@@ -1,8 +1,8 @@
 import { RequirementFormProps } from "requirements"
-import PolygonIdProofAge from "./PolygonIdProofAge"
+import PolygonIDProofAge from "./PolygonIDProofAge"
 
-const PolygonIdBasic = ({ baseFieldPath }: RequirementFormProps) => (
-  <PolygonIdProofAge baseFieldPath={baseFieldPath} />
+const PolygonIDBasic = ({ baseFieldPath }: RequirementFormProps) => (
+  <PolygonIDProofAge baseFieldPath={baseFieldPath} />
 )
 
-export default PolygonIdBasic
+export default PolygonIDBasic

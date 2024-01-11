@@ -13,9 +13,9 @@ import { ArrowSquareOut } from "phosphor-react"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import PolygonIdProofAge from "./PolygonIdProofAge"
+import PolygonIdProofAge from "./PolygonIDProofAge"
 
-const PolygonIdQuery = ({ baseFieldPath }: RequirementFormProps) => {
+const PolygonIDQuery = ({ baseFieldPath }: RequirementFormProps) => {
   const {
     control,
     formState: { errors },
@@ -108,4 +108,4 @@ function tryStringifyJSON(jsonObject) {
   return ""
 }
 
-export default PolygonIdQuery
+export default PolygonIDQuery

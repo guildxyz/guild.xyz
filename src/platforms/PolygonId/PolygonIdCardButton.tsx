@@ -1,9 +1,9 @@
 import { useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { MintPolygonIdProof } from "./components/MintPolygonIdProof"
+import MintPolygonIDProof from "./components/MintPolygonIDProof"
 import useConnectedDID from "./hooks/useConnectedDID"
 
-const PolygonIdCardButton = () => {
+const PolygonIDCardButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isLoading } = useConnectedDID()
 
@@ -18,9 +18,9 @@ const PolygonIdCardButton = () => {
       >
         Mint PolygonID Proofs
       </Button>
-      <MintPolygonIdProof isOpen={isOpen} onClose={onClose} />
+      <MintPolygonIDProof isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
 
-export default PolygonIdCardButton
+export default PolygonIDCardButton
