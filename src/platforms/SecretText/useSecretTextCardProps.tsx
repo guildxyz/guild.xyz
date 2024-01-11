@@ -1,5 +1,5 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
-import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
 import { GuildPlatform, PlatformName } from "types"
@@ -22,7 +22,7 @@ const useSecretTextCardProps = (guildPlatform: GuildPlatform) => {
         <Icon as={platforms.TEXT.icon} boxSize={5} color="white" />
       </Circle>
     ),
-    info: rolePlatform && <AvailibiltyTags rolePlatform={rolePlatform} mt={1} />,
+    info: rolePlatform && <AvailabilityTags rolePlatform={rolePlatform} mt={1} />,
   }
 }
 
