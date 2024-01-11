@@ -15,9 +15,11 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
+import useToast from "hooks/useToast"
 import { useForm, useWatch } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import useConnectedDID from "../hooks/useConnectedDID"
+import { useMintPolygonIDProofContext } from "./MintPolygonIDProofProvider"
 
 type Props = {
   isOpen: boolean
@@ -35,6 +37,9 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
 
   const DID = useWatch({ name: "did", control })
 
+  const { onConnectDIDModalClose, onMintPolygonIDProofModalOpen } =
+    useMintPolygonIDProofContext()
+  const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { mutate } = useConnectedDID()
   const { isLoading, onSubmit } = useSubmitWithSign(
@@ -44,7 +49,15 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
         ...signedValidation,
       }),
     {
-      onSuccess: (connectedDID) => mutate(() => connectedDID),
+      onSuccess: (connectedDID) => {
+        toast({
+          status: "success",
+          title: "Successfully connected DID",
+        })
+        mutate(() => connectedDID)
+        onConnectDIDModalClose()
+        onMintPolygonIDProofModalOpen()
+      },
       onError: () => showErrorToast("Couldn't connect your DID"),
     }
   )

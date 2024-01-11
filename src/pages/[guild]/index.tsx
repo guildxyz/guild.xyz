@@ -48,6 +48,7 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
+import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
@@ -419,11 +420,13 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <MintGuildPinProvider>
-            <JoinModalProvider>
-              <EditGuildDrawerProvider>
-                <GuildPage />
-              </EditGuildDrawerProvider>
-            </JoinModalProvider>
+            <MintPolygonIDProofProvider>
+              <JoinModalProvider>
+                <EditGuildDrawerProvider>
+                  <GuildPage />
+                </EditGuildDrawerProvider>
+              </JoinModalProvider>
+            </MintPolygonIDProofProvider>
           </MintGuildPinProvider>
         </ThemeProvider>
       </SWRConfig>

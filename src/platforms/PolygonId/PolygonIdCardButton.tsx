@@ -1,25 +1,22 @@
-import { useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import MintPolygonIDProof from "./components/MintPolygonIDProof"
+import { useMintPolygonIDProofContext } from "./components/MintPolygonIDProofProvider"
 import useConnectedDID from "./hooks/useConnectedDID"
 
 const PolygonIDCardButton = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isLoading } = useConnectedDID()
+  const { onConnectDIDModalOpen, onMintPolygonIDProofModalOpen } =
+    useMintPolygonIDProofContext()
+  const { isLoading, data } = useConnectedDID()
 
   return (
-    <>
-      <Button
-        onClick={onOpen}
-        w="full"
-        colorScheme="purple"
-        isLoading={isLoading}
-        loadingText={"Checking your DID"}
-      >
-        Mint PolygonID Proofs
-      </Button>
-      <MintPolygonIDProof isOpen={isOpen} onClose={onClose} />
-    </>
+    <Button
+      onClick={data ? onMintPolygonIDProofModalOpen : onConnectDIDModalOpen}
+      w="full"
+      colorScheme="purple"
+      isLoading={isLoading}
+      loadingText="Checking your DID"
+    >
+      {data ? "Mint PolygonID Proofs" : "Connect DID"}
+    </Button>
   )
 }
 
