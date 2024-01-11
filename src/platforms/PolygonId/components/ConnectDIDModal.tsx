@@ -44,9 +44,7 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
         ...signedValidation,
       }),
     {
-      onSuccess: () => {
-        mutate(() => DID)
-      },
+      onSuccess: (connectedDID) => mutate(() => connectedDID),
       onError: () => showErrorToast("Couldn't connect your DID"),
     }
   )
