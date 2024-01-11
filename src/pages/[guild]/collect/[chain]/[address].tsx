@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   SimpleGrid,
+  Spacer,
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
@@ -45,6 +46,13 @@ import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+import dynamic from "next/dynamic"
+
+const EditNFTDescriptionModalButton = dynamic(
+  () =>
+    import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton"),
+  { ssr: false }
+)
 
 type Props = {
   chain: Chain
@@ -182,12 +190,21 @@ const Page = ({
                     >
                       {name}
                     </Heading>
+
                     {isMobile && <RequirementsCard role={role} />}
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
-                      <RichTextDescription
-                        text={guildPlatform?.platformGuildData?.description}
-                      />
+                      <HStack alignItems="start" justifyContent="flex-end">
+                        <RichTextDescription
+                          text={guildPlatform?.platformGuildData?.description}
+                        />
+                        <Spacer m="0" />
+                        {isAdmin && (
+                          <EditNFTDescriptionModalButton
+                            guildPlatform={guildPlatform}
+                          />
+                        )}
+                      </HStack>
                     </Box>
                   </Stack>
                   <Divider />
