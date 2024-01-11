@@ -11,7 +11,7 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { MintPolygonIdProof } from "platforms/PolygonId/components/MintPolygonIdProof"
-import { useDIDcheck } from "platforms/PolygonId/hooks/useDIDcheck"
+import useConnectedDID from "platforms/PolygonId/hooks/useConnectedDID"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
@@ -30,7 +30,7 @@ const PolygonIdReward = ({ platform, withMotionImg }: RewardProps) => {
   const { hasAccess, isValidating } = useAccess(role.id)
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
-  const { isLoading } = useDIDcheck()
+  const { isLoading } = useConnectedDID()
 
   const state = useMemo(() => {
     if (isMember && hasAccess) {

@@ -2,7 +2,7 @@ import { useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { GuildPlatform } from "types"
 import { MintPolygonIdProof } from "./components/MintPolygonIdProof"
-import { useDIDcheck } from "./hooks/useDIDcheck"
+import useConnectedDID from "./hooks/useConnectedDID"
 
 type Props = {
   platform: GuildPlatform
@@ -10,7 +10,7 @@ type Props = {
 
 const PolygonIdCardButton = ({ platform }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { isLoading } = useDIDcheck()
+  const { isLoading } = useConnectedDID()
 
   return (
     <>

@@ -1,7 +1,7 @@
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 
-export const useDIDcheck = () => {
+const useConnectedDID = () => {
   const { id: userId } = useUser()
   const did = useSWRImmutable<string>(
     userId
@@ -17,3 +17,5 @@ export const useDIDcheck = () => {
 
   return did
 }
+
+export default useConnectedDID

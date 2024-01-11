@@ -1,4 +1,4 @@
-import { useDIDcheck } from "../hooks/useDIDcheck"
+import useConnectedDID from "../hooks/useConnectedDID"
 import MintPolygonID from "./MintPolygonIdProofModal"
 import NoDID from "./NoDID"
 
@@ -8,7 +8,7 @@ type Props = {
 }
 
 const MintPolygonIdProof = ({ isOpen, onClose }: Props) => {
-  const { error } = useDIDcheck()
+  const { error } = useConnectedDID()
 
   if (error) return <NoDID isOpen={isOpen} onClose={onClose} />
 
