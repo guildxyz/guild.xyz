@@ -21,7 +21,7 @@ const polygonIDRequirementTypes = [
   },
 ]
 
-const PolygonIdForm = ({
+const PolygonIDForm = ({
   baseFieldPath,
   field,
 }: RequirementFormProps): JSX.Element => {
@@ -82,4 +82,4 @@ const PolygonIdForm = ({
   )
 }
 
-export default PolygonIdForm
+export default PolygonIDForm

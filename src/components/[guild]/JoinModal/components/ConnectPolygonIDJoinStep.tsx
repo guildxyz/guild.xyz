@@ -1,7 +1,7 @@
 import { Img, useDisclosure } from "@chakra-ui/react"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { ConnectPolygonIDModal } from "requirements/PolygonID/components/ConnectPolygonID"
+import { ConnectPolygonIDModal } from "requirements/pid/components/ConnectPolygonID"
 import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
 

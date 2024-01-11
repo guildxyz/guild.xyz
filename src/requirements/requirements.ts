@@ -274,10 +274,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/PolygonID/PolygonIDRequirement")
+      () => import("requirements/pid/PolygonIDRequirement")
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/PolygonID/PolygonIDForm")
+      () => import("requirements/pid/PolygonIDForm")
     ),
     types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
     isCustomizable: true,
