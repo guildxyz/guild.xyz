@@ -27,7 +27,7 @@ type Props = {
   onClose: () => void
 }
 
-const PolygonIDQRCode = ({ role, isOpen, onClose }: Props) => {
+const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
 
@@ -97,4 +97,4 @@ const PolygonIDQRCode = ({ role, isOpen, onClose }: Props) => {
   )
 }
 
-export default PolygonIDQRCode
+export default PolygonIDQRCodeModal

@@ -17,7 +17,7 @@ import { useEffect, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
-import PolygonIDQRCode from "./PolygonIDQRCode"
+import PolygonIDQRCodeModal from "./PolygonIDQRCodeModal"
 
 type Props = {
   role: Role
@@ -105,7 +105,7 @@ const MintableRole = ({ role }: Props) => {
         </Tooltip>
       </HStack>
 
-      <PolygonIDQRCode isOpen={isOpen} onClose={onClose} role={role} />
+      <PolygonIDQRCodeModal isOpen={isOpen} onClose={onClose} role={role} />
     </Card>
   )
 }
