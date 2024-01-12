@@ -5,10 +5,12 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useUser from "components/[guild]/hooks/useUser"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
+import { PlatformType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
@@ -26,6 +28,10 @@ export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
 
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
+  const { id: userId, platformUsers } = useUser()
+  const isTwitterConnected = platformUsers?.find(
+    (pu) => pu.platformId === PlatformType.TWITTER
+  )
 
   const { data: twitterAvatar } = useSWRImmutable(
     requirement.data.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
@@ -40,8 +46,12 @@ const TwitterRequirement = (props: RequirementProps) => {
           twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
       }
       footer={
-        requirementIntentAction[requirement.type] ? (
-          <TwitterIntent action={requirementIntentAction[requirement.type]} />
+        requirementIntentAction[requirement.type] && !!userId ? (
+          !isTwitterConnected ? (
+            <ConnectRequirementPlatformButton />
+          ) : (
+            <TwitterIntent action={requirementIntentAction[requirement.type]} />
+          )
         ) : (
           <ConnectRequirementPlatformButton />
         )

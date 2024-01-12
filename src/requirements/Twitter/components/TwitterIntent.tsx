@@ -8,6 +8,7 @@ import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import useSWR from "swr"
+import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 export type TwitterIntentAction = "follow" | "like" | "retweet"
@@ -45,7 +46,10 @@ const TwitterIntent = ({
   action,
   children,
 }: PropsWithChildren<Props>) => {
-  const { id: userId } = useUser()
+  const { id: userId, platformUsers } = useUser()
+  const isTwitterConnected = platformUsers?.find(
+    (pu) => pu.platformId === PlatformType.TWITTER
+  )
   const {
     type: requirementType,
     id: requirementId,
@@ -53,15 +57,19 @@ const TwitterIntent = ({
   } = useRequirementContext()
   const { onOpen } = usePopupWindow()
 
-  const url =
-    !!action && !!id
-      ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
-      : undefined
-
   const { data: accesses, mutate: mutateAccess } = useAccess()
   const hasAccess = accesses
     ?.flatMap((role) => role.requirements)
     .find((req) => req.requirementId === requirementId)?.access
+
+  const url =
+    !!action && !!id
+      ? isTwitterConnected && !hasAccess
+        ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
+        : requirementType === "TWITTER_FOLLOW_V2"
+        ? `https://twitter.com/${id}`
+        : `https://twitter.com/twitter/status/${id}`
+      : undefined
 
   const completeAction = (signedValidation: SignedValdation) =>
     fetcher(`/v2/util/gate-callbacks?requirementType=${requirementType}`, {
@@ -81,7 +89,7 @@ const TwitterIntent = ({
   useSWR(
     hasClicked ? ["twitterRequirement", requirementId, userId] : null,
     () => {
-      if (hasAccess) return
+      if (hasAccess || !isTwitterConnected) return
       onSubmit({
         requirementId,
         id,
