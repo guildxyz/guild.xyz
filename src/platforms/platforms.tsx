@@ -427,7 +427,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     AddPlatformPanel: dynamic(
       () =>
         import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPIDPanel"
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIDPanel"
         ),
       {
         ssr: false,
