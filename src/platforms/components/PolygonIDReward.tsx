@@ -45,12 +45,6 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!connectedDID)
-      return {
-        tooltipLabel: "Connect DID",
-        buttonProps: { onClick: onConnectDIDModalOpen },
-      }
-
     if (!isConnected || (!isMember && hasAccess))
       return {
         tooltipLabel: (
@@ -61,6 +55,13 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
         ),
         buttonProps: { onClick: openJoinModal },
       }
+
+    if (!connectedDID)
+      return {
+        tooltipLabel: "Connect DID",
+        buttonProps: { onClick: onConnectDIDModalOpen },
+      }
+
     return {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },

@@ -30,7 +30,7 @@ import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
-  const { address, type } = useWeb3ConnectionManager()
+  const { address } = useWeb3ConnectionManager()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
@@ -45,6 +45,7 @@ const AccountConnections = () => {
           "UNIQUE_TEXT",
           "TEXT",
           "POINTS",
+          "POLYGON_ID",
         ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [

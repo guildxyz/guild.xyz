@@ -53,7 +53,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { handleSubmit } = methods
 
   const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
-    if (!platforms[platform] || platform === "POINTS") return null
+    if (!platforms[platform] || platform === "POINTS" || platform === "POLYGON_ID")
+      return null
 
     if (platform in customJoinStep) {
       const ConnectComponent = customJoinStep[platform]
@@ -64,7 +65,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   })
 
   const {
-    progress,
     isLoading,
     onSubmit,
     error: joinError,
