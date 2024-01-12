@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   Spinner,
   Text,
-  VStack,
   useBreakpointValue,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -50,13 +49,8 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
-        <ModalHeader pb={0}>
-          <VStack alignItems={"flex-start"}>
-            <Text>PolygonID proof</Text>
-            <Text fontSize={"md"} colorScheme={"gray"} fontFamily={"body"}>
-              {role.name}
-            </Text>
-          </VStack>
+        <ModalHeader pb={0} pr={16}>
+          PolygonID proof: {role.name}
         </ModalHeader>
         <ModalBody pt={8}>
           <Center flexDirection={"column"}>
