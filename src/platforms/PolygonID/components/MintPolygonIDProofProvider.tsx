@@ -1,7 +1,13 @@
 import { useDisclosure } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
+import dynamic from "next/dynamic"
 import { PropsWithChildren, createContext, useContext } from "react"
-import ConnectDIDModal from "./ConnectDIDModal"
-import MintPolygonIDProofModal from "./MintPolygonIDProofModal"
+import { PlatformType } from "types"
+
+const DynamicConnectDIDModal = dynamic(() => import("./ConnectDIDModal"))
+const DynamicMintPolygonIDProofModal = dynamic(
+  () => import("./MintPolygonIDProofModal")
+)
 
 const MintPolygonIDProofContext = createContext<{
   isConnectDIDModalOpen: boolean
@@ -13,6 +19,7 @@ const MintPolygonIDProofContext = createContext<{
 }>(undefined)
 
 const MintPolygonIDProofProvider = ({ children }: PropsWithChildren<unknown>) => {
+  const { guildPlatforms } = useGuild()
   const {
     isOpen: isConnectDIDModalOpen,
     onOpen: onConnectDIDModalOpen,
@@ -37,14 +44,18 @@ const MintPolygonIDProofProvider = ({ children }: PropsWithChildren<unknown>) =>
     >
       {children}
 
-      <ConnectDIDModal
-        isOpen={isConnectDIDModalOpen}
-        onClose={onConnectDIDModalClose}
-      />
-      <MintPolygonIDProofModal
-        isOpen={isMintPolygonIDProofModalOpen}
-        onClose={onMintPolygonIDProofModalClose}
-      />
+      {guildPlatforms.find((gp) => gp.platformId === PlatformType.POLYGON_ID) && (
+        <>
+          <DynamicConnectDIDModal
+            isOpen={isConnectDIDModalOpen}
+            onClose={onConnectDIDModalClose}
+          />
+          <DynamicMintPolygonIDProofModal
+            isOpen={isMintPolygonIDProofModalOpen}
+            onClose={onMintPolygonIDProofModalClose}
+          />
+        </>
+      )}
     </MintPolygonIDProofContext.Provider>
   )
 }
