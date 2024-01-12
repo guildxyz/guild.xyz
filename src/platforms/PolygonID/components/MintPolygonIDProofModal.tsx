@@ -44,7 +44,7 @@ const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
         <ModalCloseButton />
         <ModalHeader pb={0}>Mint PolygonID proofs</ModalHeader>
         <ModalBody pt={8}>
-          {isLoading || true ? (
+          {isLoading ? (
             [...Array(3)].map((_, i) => <MintableRoleSkeleton key={i} />)
           ) : error ? (
             <Alert status="error" pb={5} alignItems="center" mb={5}>
