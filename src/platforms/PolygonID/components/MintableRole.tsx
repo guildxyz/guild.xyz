@@ -60,6 +60,7 @@ const MintableRole = ({ role }: Props) => {
           status: "success",
           title: "Successfully claimed proof",
         })
+        onOpen()
         mutateClaimedRoles(
           (prevClaimedRoles) => {
             if (!prevClaimedRoles.find((crData) => crData.guildId === guildId)) {
@@ -89,21 +90,24 @@ const MintableRole = ({ role }: Props) => {
     }
   )
 
-  const { isLoading: isJoinLoading, onSubmit } = useSubmitWithSign(join, {
-    onSuccess: () =>
-      onClaimSubmit({
-        userId: userId,
-        data: {
-          guildId: guildId,
-          roleId: role.id,
-        },
-      }),
-    onError: (err) =>
-      showErrorToast({
-        error: "Couldn't check eligibility",
-        correlationId: err.correlationId,
-      }),
-  })
+  const { isLoading: isJoinLoading, onSubmit: onJoinAndClaim } = useSubmitWithSign(
+    join,
+    {
+      onSuccess: () =>
+        onClaimSubmit({
+          userId: userId,
+          data: {
+            guildId: guildId,
+            roleId: role.id,
+          },
+        }),
+      onError: (err) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: err.correlationId,
+        }),
+    }
+  )
 
   const isLoading = isJoinLoading || isClaimLoading
 
@@ -133,8 +137,12 @@ const MintableRole = ({ role }: Props) => {
             isLoading={isValidating || isLoading}
             isDisabled={!hasAccess}
             onClick={() => {
-              onOpen()
-              if (!hasClaimed) onSubmit({ guildId })
+              if (hasClaimed) {
+                onOpen()
+                return
+              }
+
+              onJoinAndClaim({ guildId })
             }}
           >
             {hasClaimed ? "Show QR code" : "Mint proof"}
