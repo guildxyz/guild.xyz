@@ -42,19 +42,19 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { mutate } = useConnectedDID()
-  const { isLoading, onSubmit } = useSubmitWithSign(
+  const { isLoading, onSubmit } = useSubmitWithSign<{ did: string }>(
     (signedValidation) =>
       fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/connect`, {
         method: "POST",
         ...signedValidation,
       }),
     {
-      onSuccess: (connectedDID) => {
+      onSuccess: ({ did: newDID }) => {
         toast({
           status: "success",
           title: "Successfully connected DID",
         })
-        mutate(() => connectedDID, {
+        mutate(() => newDID, {
           revalidate: false,
         })
         onConnectDIDModalClose()
