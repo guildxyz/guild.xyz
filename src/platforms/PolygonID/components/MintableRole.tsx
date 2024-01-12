@@ -36,7 +36,11 @@ const MintableRole = ({ role }: Props) => {
   const { id: userId } = useUser()
   const { hasAccess } = useAccess(role.id)
   const { id: guildId } = useGuild()
-  const { data: claimedRoles, isValidating } = useClaimedRoles()
+  const {
+    data: claimedRoles,
+    isValidating,
+    mutate: mutateClaimedRoles,
+  } = useClaimedRoles()
 
   const hasClaimed = claimedRoles
     ?.find((guild) => guild.guildId === guildId)
@@ -56,6 +60,19 @@ const MintableRole = ({ role }: Props) => {
           status: "success",
           title: "Successfully claimed proof",
         })
+        mutateClaimedRoles(
+          (prevClaimedRoles) =>
+            prevClaimedRoles.map((crData) => {
+              if (crData.guildId !== guildId) return crData
+              return {
+                guildId,
+                roleIds: [...crData.roleIds, role.id],
+              }
+            }),
+          {
+            revalidate: false,
+          }
+        )
       },
       onError: () => showErrorToast("Couldn't claim proof"),
     }
