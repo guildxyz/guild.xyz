@@ -54,15 +54,15 @@ const PolygonIDQRCodeModal = ({ role, isOpen, onClose }: Props) => {
         </ModalHeader>
         <ModalBody pt={8}>
           <Center flexDirection={"column"}>
-            {!data ? (
+            {error ? (
+              <ErrorAlert label={"Couldn't generate QR code"} />
+            ) : !data ? (
               <>
                 <Spinner size="xl" mt="8" />
                 <Text mt="4" mb="8">
                   Generating QR code
                 </Text>
               </>
-            ) : error ? (
-              <ErrorAlert label={"Couldn't generate QR code"} />
             ) : (
               <>
                 <Box borderRadius="md" borderWidth={3} overflow="hidden">
