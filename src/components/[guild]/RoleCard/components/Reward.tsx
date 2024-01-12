@@ -211,7 +211,7 @@ const RewardIcon = ({
       return (
         <MotionCircle {...motionElementProps} {...circleProps}>
           <Icon
-            as={platforms[PlatformType[guildPlatform?.platformId]].icon}
+            as={platforms[PlatformType[guildPlatform?.platformId]]?.icon}
             color="white"
             boxSize={3}
           />
@@ -221,7 +221,7 @@ const RewardIcon = ({
     return (
       <Circle {...circleProps}>
         <Icon
-          as={platforms[PlatformType[guildPlatform?.platformId]].icon}
+          as={platforms[PlatformType[guildPlatform?.platformId]]?.icon}
           color="white"
           boxSize={3}
         />
