@@ -61,14 +61,25 @@ const MintableRole = ({ role }: Props) => {
           title: "Successfully claimed proof",
         })
         mutateClaimedRoles(
-          (prevClaimedRoles) =>
-            prevClaimedRoles.map((crData) => {
+          (prevClaimedRoles) => {
+            if (!prevClaimedRoles.find((crData) => crData.guildId === guildId)) {
+              return [
+                ...prevClaimedRoles,
+                {
+                  guildId,
+                  roleIds: [role.id],
+                },
+              ]
+            }
+
+            return prevClaimedRoles.map((crData) => {
               if (crData.guildId !== guildId) return crData
               return {
                 guildId,
                 roleIds: [...crData.roleIds, role.id],
               }
-            }),
+            })
+          },
           {
             revalidate: false,
           }
