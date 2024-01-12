@@ -54,7 +54,9 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
           status: "success",
           title: "Successfully connected DID",
         })
-        mutate(() => connectedDID)
+        mutate(() => connectedDID, {
+          revalidate: false,
+        })
         onConnectDIDModalClose()
         onMintPolygonIDProofModalOpen()
       },
