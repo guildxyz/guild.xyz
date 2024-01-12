@@ -14,18 +14,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType, Role } from "types"
-import { LoadingModal } from "./LoadingModal"
-import MintableRole from "./MintableRole"
-
-const ErrorState = () => (
-  <Alert status="error" pb={5} alignItems="center" mb={5}>
-    <AlertIcon />
-    <AlertDescription position="relative" top={0.5} fontWeight="semibold" pr="4">
-      PolygonID issuer error
-    </AlertDescription>
-    <Spacer />
-  </Alert>
-)
+import MintableRole, { MintableRoleSkeleton } from "./MintableRole"
 
 type Props = {
   isOpen: boolean
@@ -38,8 +27,6 @@ const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
   const { isLoading, error } = useSWRImmutable(
     `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
   )
-
-  if (isLoading) return <LoadingModal isOpen={isOpen} onClose={onClose} />
 
   const guildPlatformId = guildPlatforms.find(
     (platform) => platform.platformId === PlatformType.POLYGON_ID
@@ -57,8 +44,21 @@ const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
         <ModalCloseButton />
         <ModalHeader pb={0}>Mint PolygonID proofs</ModalHeader>
         <ModalBody pt={8}>
-          {error ? (
-            <ErrorState />
+          {isLoading || true ? (
+            [...Array(3)].map((_, i) => <MintableRoleSkeleton key={i} />)
+          ) : error ? (
+            <Alert status="error" pb={5} alignItems="center" mb={5}>
+              <AlertIcon />
+              <AlertDescription
+                position="relative"
+                top={0.5}
+                fontWeight="semibold"
+                pr="4"
+              >
+                PolygonID issuer error
+              </AlertDescription>
+              <Spacer />
+            </Alert>
           ) : (
             roles
               .filter(onlyWithPolygonIDReward)

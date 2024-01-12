@@ -2,6 +2,8 @@ import {
   Card,
   HStack,
   Heading,
+  Skeleton,
+  SkeletonCircle,
   Spacer,
   Tooltip,
   useDisclosure,
@@ -78,7 +80,7 @@ const MintableRole = ({ role }: Props) => {
   const isLoading = isJoinLoading || isClaimLoading
 
   return (
-    <Card p={4} mb="3" borderRadius={"2xl"}>
+    <Card p={4} mb="3" borderRadius="2xl">
       <HStack spacing={4}>
         <GuildLogo imageUrl={role.imageUrl} size={12} />
         <Heading
@@ -117,4 +119,16 @@ const MintableRole = ({ role }: Props) => {
   )
 }
 
+const MintableRoleSkeleton = () => (
+  <Card p={4} mb="3" borderRadius="2xl">
+    <HStack spacing={4}>
+      <SkeletonCircle boxSize={12} />
+      <Skeleton h={6} w="50%" />
+      <Spacer />
+      <Skeleton h={10} w={24} borderRadius="xl" />
+    </HStack>
+  </Card>
+)
+
 export default MintableRole
+export { MintableRoleSkeleton }
