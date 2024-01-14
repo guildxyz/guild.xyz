@@ -1,6 +1,5 @@
 import {
   HStack,
-  Icon,
   Popover,
   PopoverArrow,
   PopoverBody,
@@ -13,8 +12,7 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import Link from "components/common/Link"
-import { ArrowRight, Copy, DownloadSimple, Question, Warning } from "phosphor-react"
+import { Copy, DownloadSimple, Question, Warning } from "phosphor-react"
 import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
@@ -60,7 +58,7 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                   Number of addresses meeting the requirements for your guild.
                 </Text>
 
-                <Wrap spacing={1} mt={3} mb={4}>
+                <Wrap spacing={1} mt={3}>
                   <Button
                     size="xs"
                     pt="1px"
@@ -82,27 +80,6 @@ const BalancyCounterWithPopover = ({ ...rest }) => {
                     Export addresses
                   </Button>
                 </Wrap>
-
-                <Text
-                  mt="2"
-                  colorScheme={"gray"}
-                  fontSize="sm"
-                  fontWeight={"medium"}
-                >
-                  {/* Powered by{" "}
-                  <Link
-                    href="https://twitter.com/balancy_io"
-                    fontWeight="semibold"
-                    isExternal
-                  >
-                    Balancy
-                    <Icon as={ArrowSquareOut} mx="1" />
-                  </Link>*/}
-                  <Link href="/balancy" fontWeight="semibold" colorScheme={"blue"}>
-                    Go to Balancy playground
-                    <Icon as={ArrowRight} mx="1" />
-                  </Link>
-                </Text>
               </PopoverBody>
             </PopoverContent>
           </Popover>

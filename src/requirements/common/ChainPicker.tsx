@@ -14,8 +14,6 @@ import {
 } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { BALANCY_SUPPORTED_CHAINS } from "components/create-guild/Requirements/hooks/useBalancy"
-import { useRouter } from "next/router"
 import { Question } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -56,19 +54,12 @@ const ChainPicker = ({
   isDisabled,
   showDivider = true,
 }: Props): JSX.Element => {
-  const router = useRouter()
-  const isBalancyPlayground = router.asPath === "/balancy"
-
   const { setValue } = useFormContext()
 
   const chainId = useChainId()
   const chain = useWatch({ name: controlName })
 
-  const mappedSupportedChains = isBalancyPlayground
-    ? mappedChains.filter((c) =>
-        Object.keys(BALANCY_SUPPORTED_CHAINS).includes(c.value)
-      )
-    : supportedChains
+  const mappedSupportedChains = supportedChains
     ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
     : mappedChains
 
