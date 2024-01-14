@@ -13,12 +13,12 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
+import { ComponentType } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
-import CompleteCaptchaJoinStep from "./components/CompleteCaptchaJoinStep"
 import ConnectPlatform from "./components/ConnectPlatform"
-import ConnectPolygonIDJoinStep from "./components/ConnectPolygonIDJoinStep"
 import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
@@ -34,9 +34,9 @@ type Props = {
 type ExtractPrefix<T> = T extends `${infer Prefix}_${string}` ? Prefix : T
 type Joinable = PlatformName | ExtractPrefix<RequirementType>
 
-const customJoinStep: Partial<Record<Joinable, () => JSX.Element>> = {
-  POLYGON: ConnectPolygonIDJoinStep,
-  CAPTCHA: CompleteCaptchaJoinStep,
+const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
+  POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
+  CAPTCHA: dynamic(() => import("./components/CompleteCaptchaJoinStep")),
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
@@ -64,7 +64,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   })
 
   const {
-    progress,
     isLoading,
     onSubmit,
     error: joinError,
