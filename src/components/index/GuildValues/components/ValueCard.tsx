@@ -10,7 +10,13 @@ type Props = {
 }
 
 const ValueCard = ({ link, title, content, image }: Props): JSX.Element => (
-  <Link href={link} isExternal w="full" _hover={{ textDecoration: "none" }}>
+  <Link
+    href={link}
+    isExternal
+    w="full"
+    _hover={{ textDecoration: "none" }}
+    prefetch={false}
+  >
     <Card
       position="relative"
       px={{ base: 5, sm: 6 }}

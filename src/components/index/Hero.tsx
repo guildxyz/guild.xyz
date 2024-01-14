@@ -117,7 +117,7 @@ const Hero = (): JSX.Element => {
           w={{ base: "full", sm: "unset" }}
           mb={3}
         >
-          <Link passHref href="/create-guild">
+          <Link passHref href="/create-guild" prefetch={false}>
             <LandingButton
               as="a"
               w={{ base: "full", sm: "unset" }}
