@@ -8,14 +8,24 @@ import {
 import useAccess from "components/[guild]/hooks/useAccess"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import dynamic from "next/dynamic"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
-import CompleteCaptcha from "requirements/Captcha/components/CompleteCaptcha"
-import SetupPassport from "requirements/GitcoinPassport/components/SetupPassport"
-import ConnectPolygonID from "requirements/PolygonId/components/ConnectPolygonID"
-import ConnectRequirementPlatformButton from "./ConnectRequirementPlatformButton"
 import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
+
+const DymaicConnectPolygonID = dynamic(
+  () => import("requirements/PolygonId/components/ConnectPolygonID")
+)
+const DynamicCompleteCaptcha = dynamic(
+  () => import("requirements/Captcha/components/CompleteCaptcha")
+)
+const DynamicSetupPassport = dynamic(
+  () => import("requirements/GitcoinPassport/components/SetupPassport")
+)
+const DynamicConnectRequirementPlatformButton = dynamic(
+  () => import("./ConnectRequirementPlatformButton")
+)
 
 const RequiementAccessIndicator = () => {
   const { openAccountModal } = useWeb3ConnectionManager()
@@ -63,13 +73,13 @@ const RequiementAccessIndicator = () => {
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
           {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (
-            <ConnectPolygonID size="sm" iconSpacing={2} />
+            <DymaicConnectPolygonID size="sm" iconSpacing={2} />
           ) : type === "CAPTCHA" ? (
-            <CompleteCaptcha size="sm" iconSpacing={2} />
+            <DynamicCompleteCaptcha size="sm" iconSpacing={2} />
           ) : type.startsWith("GITCOIN_") ? (
-            <SetupPassport size="sm" />
+            <DynamicSetupPassport size="sm" />
           ) : (
-            <ConnectRequirementPlatformButton size="sm" iconSpacing={2} />
+            <DynamicConnectRequirementPlatformButton size="sm" iconSpacing={2} />
           )}
         </PopoverFooter>
       </RequiementAccessIndicatorUI>
