@@ -61,7 +61,7 @@ const App = ({
 
   return (
     <>
-      <Script src="/intercom.js" />
+      <Script src="/intercom.js" strategy="worker" />
       <ReCAPTCHA
         ref={(recaptcha) => {
           setRecaptcha(recaptcha)

@@ -1,4 +1,5 @@
 import Document, { Head, Html, Main, NextScript } from "next/document"
+import Script from "next/script"
 
 class MyDocument extends Document {
   render(): JSX.Element {
@@ -13,14 +14,13 @@ class MyDocument extends Document {
           />
           {process.env.NODE_ENV === "production" && (
             <>
-              <script
-                async
-                defer
+              <Script
                 src="/js/script.js"
                 data-api="/api/event"
                 data-domain="guild.xyz"
                 integrity="sha512-HVRUd9pld7dyE4GD9bua0YojsAokMtFExYGvwJhJ5zq37EEX7yEOeYEsh0yh/CypC832F1VkewDepCdoDlPwEw=="
                 data-exclude="/oauth**"
+                strategy="worker"
               />
             </>
           )}
