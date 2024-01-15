@@ -28,7 +28,12 @@ const Web3InboxRequirement = (props: RequirementProps) => {
               textDecoration: "none",
             }}
           >
-            <Button size="xs" colorScheme="WEB3INBOX" rightIcon={<ArrowSquareOut />}>
+            <Button
+              size="xs"
+              colorScheme="WEB3INBOX"
+              rightIcon={<ArrowSquareOut />}
+              iconSpacing={1}
+            >
               Subscribe
             </Button>
           </Link>
