@@ -44,8 +44,6 @@ const useCoinbasePay = () => {
     setIsLoading(true)
     setError(undefined)
 
-    console.log("partnerUserId", `${id}`)
-
     const options: InitOnRampParams = {
       appId: process.env.NEXT_PUBLIC_COINBASE_PAY_APPID,
       target: "#cbpay-container",
@@ -60,7 +58,6 @@ const useCoinbasePay = () => {
         ],
       },
       onSuccess: () => {
-        console.log("CB SUCCESS")
         onDone()
         toast({
           status: "success",
@@ -69,7 +66,6 @@ const useCoinbasePay = () => {
         })
       },
       onExit: (err) => {
-        console.log("CB ERROR", err)
         onDone()
         if (err) {
           setError(err)
