@@ -57,7 +57,6 @@ module.exports = {
   },
   experimental: {
     scrollRestoration: true,
-    nextScriptWorkers: true,
   },
   async rewrites() {
     return {
