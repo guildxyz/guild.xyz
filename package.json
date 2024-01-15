@@ -18,6 +18,7 @@
     "snyk-protect": "snyk-protect"
   },
   "dependencies": {
+    "@guildxyz/types": "^1.1.5",
     "@chakra-ui/anatomy": "^2.1.2",
     "@chakra-ui/react": "^2.6.1",
     "@chakra-ui/theme-tools": "^2.0.17",
@@ -79,7 +80,6 @@
     "wicg-inert": "^3.1.2"
   },
   "devDependencies": {
-    "@guildxyz/types": "^1.1.5",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@types/color": "^3.0.3",
