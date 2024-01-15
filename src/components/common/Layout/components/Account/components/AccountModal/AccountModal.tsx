@@ -27,14 +27,20 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useCoinbasePay from "hooks/useCoinbasePay"
+import useCoinbasePayStatus from "hooks/useCoinbasePayStatus"
 import useResolveAddress from "hooks/useResolveAddress"
-import { LinkBreak, SignOut, UploadSimple } from "phosphor-react"
+import { Check, LinkBreak, SignOut, UploadSimple } from "phosphor-react"
 import { useSWRConfig } from "swr"
 import { useAccount, useChainId } from "wagmi"
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
+
+const isRecent = (date: Date, differenceMs = 1000 * 60 * 15) => {
+  const diff = Date.now() - +date
+  return diff < differenceMs
+}
 
 const AccountModal = () => {
   const {
@@ -85,6 +91,12 @@ const AccountModal = () => {
   const { connectorName } = useConnectorNameAndIcon()
 
   const { onOpen, isLoading } = useCoinbasePay()
+  const payTx = useCoinbasePayStatus()
+
+  const isTxRecent =
+    !!payTx.data?.createdAt && isRecent(new Date(payTx.data.createdAt))
+
+  const recentPayTx = isTxRecent ? payTx : null
 
   return (
     <Modal
@@ -163,16 +175,40 @@ const AccountModal = () => {
                   label={
                     type !== "EVM"
                       ? "Please switch to an EVM wallet"
+                      : recentPayTx?.data?.status === "IN_PROGRESS"
+                      ? "Transaction in progress"
+                      : recentPayTx?.data?.status === "SUCCESS"
+                      ? "Transaction successful"
                       : "Top up wallet"
                   }
                 >
                   <IconButton
-                    isDisabled={type !== "EVM"}
+                    isDisabled={
+                      type !== "EVM" || recentPayTx?.data?.status === "SUCCESS"
+                    }
                     size="sm"
+                    colorScheme={
+                      {
+                        IN_PROGRESS: "orange",
+                        SUCCESS: "green",
+                        _: undefined,
+                      }[recentPayTx?.data?.status ?? "_"]
+                    }
                     variant="outline"
-                    isLoading={isLoading}
+                    isLoading={
+                      isLoading || recentPayTx?.data?.status === "IN_PROGRESS"
+                    }
                     onClick={() => onOpen(address)}
-                    icon={<Icon as={UploadSimple} p="1px" />}
+                    icon={
+                      <Icon
+                        as={
+                          recentPayTx?.data?.status === "SUCCESS"
+                            ? Check
+                            : UploadSimple
+                        }
+                        p="1px"
+                      />
+                    }
                     aria-label="Top up wallet"
                   />
                 </Tooltip>
