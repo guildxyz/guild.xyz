@@ -52,22 +52,21 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       const endTimeDiff = getTimeDiff(platform?.endTime)
 
       if (
-        startTimeDiff > 0 ||
-        endTimeDiff < 0 ||
-        (typeof platform?.capacity === "number" &&
-          platform?.capacity === platform?.claimedCount)
+        (startTimeDiff > 0 ||
+          endTimeDiff < 0 ||
+          (typeof platform?.capacity === "number" &&
+            platform?.capacity === platform?.claimedCount)) &&
+        !claimed
       )
         return {
           tooltipLabel:
             platform?.capacity === platform?.claimedCount
               ? "All available rewards have already been claimed"
-              : claimed
-              ? ""
               : startTimeDiff > 0
               ? "Claim hasn't started yet"
               : "Claim already ended",
           buttonProps: {
-            isDisabled: !claimed,
+            isDisabled: true,
           },
         }
 
