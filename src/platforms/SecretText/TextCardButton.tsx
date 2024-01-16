@@ -29,17 +29,16 @@ const TextCardButton = ({ platform }: Props) => {
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
 
   const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
+    (startTimeDiff > 0 ||
+      endTimeDiff < 0 ||
+      (typeof rolePlatform?.capacity === "number" &&
+        rolePlatform?.capacity === rolePlatform?.claimedCount)) &&
+    !claimed
 
   const tooltipLabel =
     typeof rolePlatform?.capacity === "number" &&
     rolePlatform?.capacity === rolePlatform?.claimedCount
       ? "All available rewards have already been claimed"
-      : claimed
-      ? ""
       : startTimeDiff > 0
       ? "Claim hasn't started yet"
       : "Claim already ended"
@@ -59,7 +58,7 @@ const TextCardButton = ({ platform }: Props) => {
           }}
           isLoading={isLoading}
           loadingText="Claiming secret..."
-          isDisabled={isButtonDisabled && !claimed}
+          isDisabled={isButtonDisabled}
           w="full"
         >
           {platform.platformId === PlatformType.UNIQUE_TEXT
