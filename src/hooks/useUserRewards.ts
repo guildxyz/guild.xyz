@@ -3,7 +3,7 @@ import useSWR from "swr"
 import useGuild from "../components/[guild]/hooks/useGuild"
 import useUser from "../components/[guild]/hooks/useUser"
 
-export const useGetUserRewards = () => {
+export const useUserRewards = () => {
   const { id: guildId } = useGuild()
   const { id: userId } = useUser()
 

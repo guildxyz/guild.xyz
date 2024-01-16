@@ -1,8 +1,8 @@
 import { RolePlatform } from "../types"
-import { useGetUserRewards } from "./useGetUserRewards"
+import { useUserRewards } from "./useUserRewards"
 
 export const useIsRewardClaimed = (platformId: RolePlatform["id"]) => {
-  const { isLoading, data: userRewards } = useGetUserRewards()
+  const { isLoading, data: userRewards } = useUserRewards()
 
   const claimed = !isLoading
     ? userRewards?.find((reward) => reward.id === platformId)?.claimed
