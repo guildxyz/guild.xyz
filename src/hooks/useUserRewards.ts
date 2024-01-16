@@ -8,7 +8,7 @@ export const useUserRewards = () => {
   const { id: userId } = useUser()
 
   const fetcherWithSign = useFetcherWithSign()
-  const fetcher = (key: string) =>
+  const fetchUsersRewards = (key: string) =>
     fetcherWithSign([
       key,
       {
@@ -19,6 +19,6 @@ export const useUserRewards = () => {
 
   return useSWR<any[]>(
     userId && guildId ? `/v2/users/${userId}/rewards?guildId=${guildId}` : null,
-    fetcher
+    fetchUsersRewards
   )
 }
