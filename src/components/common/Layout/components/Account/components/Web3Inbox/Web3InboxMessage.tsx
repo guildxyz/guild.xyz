@@ -1,4 +1,5 @@
 import {
+  Circle,
   HStack,
   Img,
   ModalBody,
@@ -33,6 +34,7 @@ const Web3InboxMessage = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const hoverBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.200")
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   const prettyDate = new Date(publishedAt).toLocaleDateString("en-US", {
@@ -62,7 +64,13 @@ const Web3InboxMessage = ({
         transition="background 0.2s ease"
         onClick={onOpen}
       >
-        <Img src={icon} alt={title} boxSize={10} borderRadius="full" />
+        {icon?.startsWith("/guildLogos") ? (
+          <Circle bgColor={circleBgColor} size={10}>
+            <Img src={icon} alt={title} boxSize={6} />
+          </Circle>
+        ) : (
+          <Img src={icon} alt={title} boxSize={10} borderRadius="full" />
+        )}
 
         <Stack spacing={0} w="full">
           <HStack justifyContent="space-between">
