@@ -4,12 +4,15 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { GuildPlatform, PlatformType } from "types"
 import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
+import { useIsRewardClaimed } from "../../hooks/useIsRewardClaimed"
 
 type Props = {
   platform: GuildPlatform
 }
 
 const TextCardButton = ({ platform }: Props) => {
+  const { claimed } = useIsRewardClaimed(platform.id)
+
   const { roles } = useGuild()
   const rolePlatform = roles
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
@@ -35,6 +38,8 @@ const TextCardButton = ({ platform }: Props) => {
     typeof rolePlatform?.capacity === "number" &&
     rolePlatform?.capacity === rolePlatform?.claimedCount
       ? "All available rewards have already been claimed"
+      : claimed
+      ? "You can reveal the secret"
       : startTimeDiff > 0
       ? "Claim hasn't started yet"
       : "Claim already ended"
@@ -54,7 +59,7 @@ const TextCardButton = ({ platform }: Props) => {
           }}
           isLoading={isLoading}
           loadingText="Claiming secret..."
-          isDisabled={isButtonDisabled}
+          isDisabled={isButtonDisabled && !claimed}
           w="full"
         >
           {platform.platformId === PlatformType.UNIQUE_TEXT

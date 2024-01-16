@@ -20,9 +20,12 @@ import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import { useAccount } from "wagmi"
+import { useIsRewardClaimed } from "../../hooks/useIsRewardClaimed"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
+
+  const { claimed } = useIsRewardClaimed(platform.id)
 
   const {
     onSubmit,
@@ -58,11 +61,13 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
           tooltipLabel:
             platform?.capacity === platform?.claimedCount
               ? "All available rewards have already been claimed"
+              : claimed
+              ? "You can reveal the secret"
               : startTimeDiff > 0
               ? "Claim hasn't started yet"
               : "Claim already ended",
           buttonProps: {
-            isDisabled: true,
+            isDisabled: !claimed,
           },
         }
 
