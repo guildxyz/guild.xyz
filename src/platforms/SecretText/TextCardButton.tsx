@@ -39,7 +39,7 @@ const TextCardButton = ({ platform }: Props) => {
     rolePlatform?.capacity === rolePlatform?.claimedCount
       ? "All available rewards have already been claimed"
       : claimed
-      ? "You can reveal the secret"
+      ? ""
       : startTimeDiff > 0
       ? "Claim hasn't started yet"
       : "Claim already ended"
