@@ -4,14 +4,14 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { GuildPlatform, PlatformType } from "types"
 import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
-import { useIsRewardClaimed } from "../../hooks/useIsRewardClaimed"
+import { useClaimedReward } from "../../hooks/useClaimedReward"
 
 type Props = {
   platform: GuildPlatform
 }
 
 const TextCardButton = ({ platform }: Props) => {
-  const { claimed } = useIsRewardClaimed(platform.id)
+  const { claimed } = useClaimedReward(platform.id)
 
   const { roles } = useGuild()
   const rolePlatform = roles

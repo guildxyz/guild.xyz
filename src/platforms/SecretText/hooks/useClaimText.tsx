@@ -20,7 +20,7 @@ import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
-import { useIsRewardClaimed } from "../../../hooks/useIsRewardClaimed"
+import { useClaimedReward } from "../../../hooks/useClaimedReward"
 
 type ClaimResponse = {
   uniqueValue: string
@@ -31,7 +31,7 @@ const joinFetcher = (signedValidation: SignedValdation) =>
 
 const useClaimText = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
-  const { uniqueValue } = useIsRewardClaimed(rolePlatformId)
+  const { uniqueValue } = useClaimedReward(rolePlatformId)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 

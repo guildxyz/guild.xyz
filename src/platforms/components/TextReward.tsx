@@ -20,12 +20,12 @@ import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import { useAccount } from "wagmi"
-import { useIsRewardClaimed } from "../../hooks/useIsRewardClaimed"
+import { useClaimedReward } from "../../hooks/useClaimedReward"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
 
-  const { claimed } = useIsRewardClaimed(platform.id)
+  const { claimed } = useClaimedReward(platform.id)
 
   const {
     onSubmit,
