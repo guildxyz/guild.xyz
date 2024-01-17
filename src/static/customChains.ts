@@ -432,8 +432,8 @@ export const beraTestnet = /*#__PURE__*/ defineChain({
   },
   contracts: {
     multicall3: {
-      address: "0x",
-      blockCreated: 0,
+      address: "0x5406b58D03A99c7E7Ac3d59957A2822CffB8Bb34",
+      blockCreated: 114673,
     },
   },
 })
