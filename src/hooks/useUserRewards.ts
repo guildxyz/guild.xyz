@@ -1,8 +1,8 @@
 import { useFetcherWithSign } from "../utils/fetcher"
-import useSWR from "swr"
 import useGuild from "../components/[guild]/hooks/useGuild"
 import useUser from "../components/[guild]/hooks/useUser"
 import { RolePlatform } from "../types"
+import useSWRImmutable from "swr/immutable"
 
 export type UserReward = {
   claimed: boolean
@@ -25,7 +25,7 @@ export const useUserRewards = () => {
       },
     ])
 
-  return useSWR<UserReward[]>(
+  return useSWRImmutable<UserReward[]>(
     userId && guildId ? `/v2/users/${userId}/rewards?guildId=${guildId}` : null,
     fetchUsersRewards
   )
