@@ -212,6 +212,8 @@ type PlatformGuildData = {
     text?: never
     texts?: never
     imageUrl?: never
+    fancyId?: never
+    eventId?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -231,6 +233,8 @@ type PlatformGuildData = {
     text?: never
     texts?: never
     imageUrl?: never
+    fancyId?: never
+    eventId?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -249,6 +253,8 @@ type PlatformGuildData = {
     iconLink?: never
     text?: never
     texts?: never
+    fancyId?: never
+    eventId?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -267,6 +273,8 @@ type PlatformGuildData = {
     role?: never
     mimeType?: never
     iconLink?: never
+    fancyId?: never
+    eventId?: never
   }
   TEXT: {
     text: string
@@ -285,6 +293,28 @@ type PlatformGuildData = {
     role?: never
     mimeType?: never
     iconLink?: never
+    fancyId?: never
+    eventId?: never
+  }
+  POAP: {
+    text?: never
+    texts?: never
+    name: string
+    imageUrl: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId: string
+    eventId: number
   }
 }
 
@@ -568,9 +598,11 @@ export enum PlatformType {
   "TWITTER_V1" = 8,
   "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
+  "GUILD_PIN" = 11,
+  "POLYGON_ID" = 12,
   "POINTS" = 13,
+  "POAP" = 14,
 }
-
 type WalletConnectConnectionData = {
   connected: boolean
   accounts: string[]

@@ -159,7 +159,9 @@ const EditRewardAvailibiltyModal = ({
               </Tooltip>
 
               <Tooltip
-                label={`Automatic by ${platforms[platformType].name} data`}
+                label={`Automatic by ${
+                  platforms[platformType]?.name ?? "reward"
+                } data`}
                 isDisabled={!AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
                 shouldWrapChildren
                 hasArrow

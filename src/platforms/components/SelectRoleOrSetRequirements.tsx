@@ -37,6 +37,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     setActiveTab(value)
   }
 
+  const { asRewardRestriction } = platforms[selection]
+
   return (
     <Tabs
       isLazy
@@ -52,8 +54,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
           {...TAB_STYLE_PROPS}
           isDisabled={isRoleSelectorDisabled}
         >{`Add to existing role${
-          platforms[selection].asRewardRestriction ===
-          PlatformAsRewardRestrictions.MULTIPLE_ROLES
+          asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
             ? "s"
             : ""
         }`}</Tab>
@@ -63,8 +64,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
         <TabPanel>
           <RoleSelector
             allowMultiple={
-              platforms[selection].asRewardRestriction ===
-              PlatformAsRewardRestrictions.MULTIPLE_ROLES
+              asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
             }
             roles={relevantRoles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}
