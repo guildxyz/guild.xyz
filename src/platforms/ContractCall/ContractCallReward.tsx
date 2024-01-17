@@ -10,7 +10,7 @@ import {
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/Reward"
 
-import AvailibiltyTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { forwardRef } from "react"
 
@@ -59,7 +59,7 @@ const ContractCallReward = ({
         </>
       }
     >
-      <AvailibiltyTags rolePlatform={platform} />
+      <AvailabilityTags rolePlatform={platform} />
     </RewardDisplay>
   )
 }

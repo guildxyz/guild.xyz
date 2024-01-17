@@ -19,7 +19,7 @@ import {
   EndTimeTag,
   StartTimeTag,
   getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"

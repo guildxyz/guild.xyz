@@ -5,8 +5,8 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
+import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -16,6 +16,7 @@ import TwitterFollowerCount from "./components/TwitterFollowerCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
+import TwitterUserInput from "./components/TwitterUserInput"
 
 const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { featureFlags } = useGuild()
@@ -23,10 +24,25 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const twitterRequirementTypes = [
     // Temporarily disabled, because the new Twitter API doesn't provide endpoints for these requirement types
     // {
-    //   label: "Follow user",
+    //   label: "Follow user (legacy)",
     //   value: "TWITTER_FOLLOW",
     //   TwitterRequirement: TwitterUserInput,
     // },
+    {
+      label: "Follow user",
+      value: "TWITTER_FOLLOW_V2",
+      TwitterRequirement: TwitterUserInput,
+    },
+    {
+      label: "Like tweet",
+      value: "TWITTER_LIKE_V2",
+      TwitterRequirement: TwitterTweetInput,
+    },
+    {
+      label: "Retweet tweet",
+      value: "TWITTER_RETWEET_V2",
+      TwitterRequirement: TwitterTweetInput,
+    },
     // {
     //   label: "Be followed by user",
     //   value: "TWITTER_FOLLOWED_BY",
@@ -70,12 +86,12 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     ...(featureFlags?.includes("TWITTER_EXTRA_REQUIREMENT")
       ? [
           {
-            label: "Like tweet",
+            label: "Like tweet (legacy)",
             value: "TWITTER_LIKE",
             TwitterRequirement: TwitterTweetInput,
           },
           {
-            label: "Retweet tweet",
+            label: "Retweet tweet (legacy)",
             value: "TWITTER_RETWEET",
             TwitterRequirement: TwitterTweetInput,
           },

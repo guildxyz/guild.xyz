@@ -32,7 +32,7 @@ import {
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
-import AvailibiltySetup from "./components/AvailibiltySetup"
+import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 
 const defaultValues = {
@@ -201,7 +201,7 @@ const AddRewardButton = (): JSX.Element => {
 
                 {step === "SELECT_ROLE" && (
                   <PlatformPreview>
-                    <AvailibiltySetup
+                    <AvailabilitySetup
                       platformType={rolePlatform?.guildPlatform?.platformName}
                       rolePlatform={rolePlatform}
                       defaultValues={{
@@ -210,7 +210,6 @@ const AddRewardButton = (): JSX.Element => {
                          * should fallback to undefined, since 0 is not a valid value
                          * here
                          */
-
                         capacity:
                           rolePlatform?.guildPlatform?.platformGuildData?.texts
                             ?.length || undefined,

@@ -62,7 +62,6 @@ const App = ({
   return (
     <>
       <Script src="/intercom.js" />
-      <Script src="/snow.js" />
       <ReCAPTCHA
         ref={(recaptcha) => {
           setRecaptcha(recaptcha)

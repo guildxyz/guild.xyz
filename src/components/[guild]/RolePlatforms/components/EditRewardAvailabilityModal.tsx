@@ -24,7 +24,7 @@ import platforms from "platforms/platforms"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
-export type RolePlatformAvailibiltyForm = {
+export type RolePlatformAvailabilityForm = {
   capacity?: number
   startTime?: string
   endTime?: string
@@ -34,9 +34,9 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   platformType: PlatformName
-  defaultValues?: RolePlatformAvailibiltyForm
+  defaultValues?: RolePlatformAvailabilityForm
   isLoading?: boolean
-  onDone: (data: RolePlatformAvailibiltyForm) => void
+  onDone: (data: RolePlatformAvailabilityForm) => void
 }
 
 const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT", "POAP"]
@@ -59,7 +59,7 @@ const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => 
   }
 }
 
-const EditRewardAvailibiltyModal = ({
+const EditRewardAvailabilityModal = ({
   isOpen,
   onClose,
   platformType,
@@ -68,7 +68,7 @@ const EditRewardAvailibiltyModal = ({
   onDone,
 }: Props) => {
   const { control, register, setValue, handleSubmit } =
-    useForm<RolePlatformAvailibiltyForm>({
+    useForm<RolePlatformAvailabilityForm>({
       mode: "all",
       defaultValues: {
         capacity: defaultValues?.capacity,
@@ -102,7 +102,7 @@ const EditRewardAvailibiltyModal = ({
     <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
       <ModalOverlay />
       <ModalContent maxW="39rem">
-        <ModalHeader>Limit reward availibility</ModalHeader>
+        <ModalHeader>Limit reward availability</ModalHeader>
         <ModalCloseButton />
 
         <ModalBody>
@@ -264,4 +264,4 @@ const EditRewardAvailibiltyModal = ({
   )
 }
 
-export default EditRewardAvailibiltyModal
+export default EditRewardAvailabilityModal

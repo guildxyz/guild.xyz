@@ -406,3 +406,34 @@ export const ontology = /*#__PURE__*/ defineChain({
     },
   },
 })
+
+export const beraTestnet = /*#__PURE__*/ defineChain({
+  id: 2061,
+  name: "Berachain Testnet",
+  network: "beratestnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "BERA",
+    symbol: "BERA",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://artio.rpc.berachain.com"],
+    },
+    public: {
+      http: ["https://artio.rpc.berachain.com"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Beratrail",
+      url: "https://artio.beratrail.io",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0x5406b58D03A99c7E7Ac3d59957A2822CffB8Bb34",
+      blockCreated: 114673,
+    },
+  },
+})

@@ -26,33 +26,59 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { atom, useAtomValue, useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import { ArrowRight, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { useAccount, useSignMessage } from "wagmi"
+import WebInboxSkeleton from "./WebInboxSkeleton"
 
 const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 
+const WEB3_INBOX_INIT_PARAMS = {
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  domain: "guild.xyz",
+  isLimited: process.env.NODE_ENV === "production",
+}
+
+/**
+ * IsSubscribed from useManageSubscription is not reliable (it won't update until
+ * 2-3s after successful subscription), so we're using a custom state here instead
+ *
+ * TODO: we can remove this custom logic once they solve this issue in the Web3Inbox
+ * package
+ */
+const w3iSubscriptionAtom = atom(false)
+
 const Web3Inbox = () => {
+  const isReady = useInitWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+
   const { address } = useAccount()
-  const { isSubscribed } = useManageSubscription()
-  const { setAccount } = useW3iAccount()
+  const { account, setAccount } = useW3iAccount()
+
+  const customIsSubscribed = useAtomValue(w3iSubscriptionAtom)
+  const { isSubscribed } = useManageSubscription(
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
 
   useEffect(() => {
     if (!address) return
     setAccount(`eip155:1:${address}`)
   }, [address, setAccount])
 
-  const { messages } = useMessages()
+  const { messages } = useMessages(account, WEB3_INBOX_INIT_PARAMS.domain)
 
   const inboxContainerRef = useRef(null)
   const isScrollable = !!inboxContainerRef.current
     ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
     : false
 
+  if (!isReady) return <WebInboxSkeleton />
+
   return (
     <Stack spacing={0}>
-      <Collapse in={!isSubscribed}>
+      <Collapse in={!isSubscribed && !customIsSubscribed}>
         <HStack pt={4} pb={5} pl={1} spacing={4}>
           <Center boxSize="6" flexShrink={0}>
             <Img src="/img/message.svg" boxSize={5} alt="Messages" mt={0.5} />
@@ -71,7 +97,7 @@ const Web3Inbox = () => {
       </Collapse>
 
       <Collapse
-        in={isSubscribed}
+        in={isSubscribed || customIsSubscribed}
         style={{ marginInline: "calc(-1 * var(--chakra-space-4))" }}
       >
         <Box
@@ -117,18 +143,18 @@ const Web3Inbox = () => {
 const SubscribeToMessages = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { address } = useAccount()
-  const { subscribe, isSubscribing } = useManageSubscription()
+
+  const { register, isRegistering, account } = useW3iAccount()
+  const setCustomIsSubscribed = useSetAtom(w3iSubscriptionAtom)
+  const { subscribe, isSubscribing } = useManageSubscription(
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
+
   const { signMessageAsync } = useSignMessage()
-  const { register, isRegistering } = useW3iAccount()
 
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
-
-  const isReady = useInitWeb3InboxClient({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-    domain: "guild.xyz",
-    isLimited: process.env.NODE_ENV === "production",
-  })
 
   const performSubscribe = async () => {
     if (!address) return
@@ -147,6 +173,7 @@ const SubscribeToMessages = () => {
         title: "Success",
         description: "Successfully subscribed to Guild messages via Web3Inbox",
       })
+      setCustomIsSubscribed(true)
       onClose()
     } catch {
       showErrorToast("Couldn't subscribe to Guild messages")
@@ -176,15 +203,14 @@ const SubscribeToMessages = () => {
                 Web3Inbox
                 <Icon as={ArrowSquareOut} ml={1} />
               </Link>
-              . Sign a message to start recieving them!
+              . Sign a message to start receiving them!
             </Text>
             <Button
               variant="solid"
               colorScheme="blue"
               onClick={performSubscribe}
-              isDisabled={!isReady}
-              isLoading={!isReady || isRegistering || isSubscribing}
-              loadingText={isReady && "Check your wallet"}
+              isLoading={isRegistering || isSubscribing}
+              loadingText="Check your wallet"
               w="full"
             >
               Sign to subscribe

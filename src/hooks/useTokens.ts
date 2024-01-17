@@ -59,6 +59,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   BITFINITY_TESTNET: [],
   X1_TESTNET: [],
   ONTOLOGY: [],
+  BERA_TESTNET: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

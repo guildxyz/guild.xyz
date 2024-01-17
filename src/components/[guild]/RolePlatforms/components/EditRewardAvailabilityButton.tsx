@@ -7,7 +7,7 @@ type Props = {
   isCompact?: boolean
 }
 
-const EditRewardAvailibiltyButton = ({ onClick, isCompact }: Props) => {
+const EditRewardAvailabilityButton = ({ onClick, isCompact }: Props) => {
   const buttonProps = {
     variant: "outline",
     size: "xs",
@@ -19,14 +19,14 @@ const EditRewardAvailibiltyButton = ({ onClick, isCompact }: Props) => {
   return isCompact ? (
     <IconButton
       {...buttonProps}
-      aria-label="Limit availibility"
+      aria-label="Limit availability"
       px={1.5}
       icon={<GearSix />}
     />
   ) : (
     <Button {...buttonProps} leftIcon={<Clock />}>
-      Limit availibility
+      Limit availability
     </Button>
   )
 }
-export default EditRewardAvailibiltyButton
+export default EditRewardAvailabilityButton

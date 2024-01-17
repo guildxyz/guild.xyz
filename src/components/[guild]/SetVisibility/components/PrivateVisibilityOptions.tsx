@@ -89,7 +89,11 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
         )}
 
         {/* unmountOnExit is used, so autoFocus triggers focus every time, the "Another role" option is selected */}
-        <Collapse in={!shouldSatisfyThisRole} unmountOnExit>
+        <Collapse
+          in={!shouldSatisfyThisRole}
+          unmountOnExit
+          style={{ padding: "1px", margin: "-1px" }}
+        >
           <ControlledSelect
             noResultText="No other roles found"
             autoFocus

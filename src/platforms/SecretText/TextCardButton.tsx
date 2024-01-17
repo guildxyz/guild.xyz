@@ -1,5 +1,5 @@
 import { Tooltip } from "@chakra-ui/react"
-import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { GuildPlatform, PlatformType } from "types"

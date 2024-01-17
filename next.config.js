@@ -48,8 +48,6 @@ module.exports = {
       "abs.twimg.com",
       "localhost",
       "guild.xyz",
-      "s3.us-west-2.amazonaws.com",
-      "www.notion.so",
       "discord.com",
       "img.evbuc.com",
       "images.lumacdn.com",
@@ -63,16 +61,6 @@ module.exports = {
   async rewrites() {
     return {
       beforeFiles: [
-        {
-          source: "/",
-          has: [
-            {
-              type: "host",
-              value: "balancy.guild.xyz",
-            },
-          ],
-          destination: "/balancy/",
-        },
         {
           source: "/",
           has: [

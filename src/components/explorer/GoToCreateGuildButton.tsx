@@ -1,6 +1,6 @@
 import { useBreakpointValue } from "@chakra-ui/react"
-import LinkButton from "components/common/LinkButton"
 import { useIsTabsStuck } from "components/[guild]/Tabs"
+import LinkButton from "components/common/LinkButton"
 import { Plus } from "phosphor-react"
 
 const GoToCreateGuildButton = () => {
@@ -15,6 +15,7 @@ const GoToCreateGuildButton = () => {
       colorScheme={isStuck ? "gray" : "whiteAlpha"}
       href="/create-guild"
       flexShrink={0}
+      prefetch={false}
     >
       {label}
     </LinkButton>

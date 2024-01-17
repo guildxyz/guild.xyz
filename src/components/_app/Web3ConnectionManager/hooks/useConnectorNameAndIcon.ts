@@ -12,21 +12,16 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
 
   const { colorMode } = useColorMode()
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const _window = typeof window === "undefined" ? ({} as any) : window
   // wrapping with useMemo to make sure it updates on window.ethereum change
   const isBraveWallet = useMemo(
-    () => typeof window !== "undefined" && window.ethereum?.isBraveWallet,
-    [window?.ethereum]
+    () => _window.ethereum?.isBraveWallet,
+    [_window.ethereum]
   )
+  const isOKXWallet = useMemo(() => !!_window.okxwallet, [_window.okxwallet])
 
-  const isOKXWallet = useMemo(
-    () => typeof window !== "undefined" && !!window.okxwallet,
-    [window?.okxwallet]
-  )
-
-  const isFueletWallet = useMemo(
-    () => typeof window !== "undefined" && !!window.fuelet,
-    [window?.fuelet]
-  )
+  const isFueletWallet = useMemo(() => !!_window.fuelet, [_window.fuelet])
   const fueletLogo = useColorModeValue("fuelet-black.svg", "fuelet-white.svg")
 
   const connectorIcon =

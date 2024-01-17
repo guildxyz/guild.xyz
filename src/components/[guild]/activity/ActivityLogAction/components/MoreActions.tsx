@@ -21,6 +21,7 @@ import { ActivityLogAction } from "../../constants"
 import { ActivityLogActionProvider } from "../ActivityLogActionContext"
 import ActionIcon from "./ActionIcon"
 import ActionLabel from "./ActionLabel"
+import ActivityLogChildAction from "./ActivityLogChildAction"
 
 type Props = {
   actions: ActivityLogAction[]
@@ -52,15 +53,25 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
     return (
       <ListItem style={style}>
         <ActivityLogActionProvider key={action.id} action={action}>
-          <HStack ref={rowRef} spacing={4}>
-            <ActionIcon size={6} />
-            <Stack spacing={0.5}>
-              <ActionLabel />
-              <Text as="span" colorScheme="gray" fontSize="sm">
-                {new Date(Number(action.timestamp)).toLocaleString()}
-              </Text>
+          <Stack ref={rowRef} spacing={0} py={1}>
+            <HStack spacing={4}>
+              <ActionIcon size={6} />
+              <Stack spacing={0.5}>
+                <ActionLabel />
+                <Text as="span" colorScheme="gray" fontSize="sm">
+                  {new Date(Number(action.timestamp)).toLocaleString()}
+                </Text>
+              </Stack>
+            </HStack>
+
+            <Stack pl={10}>
+              {action.children?.map((childAction) => (
+                <ActivityLogActionProvider key={childAction.id} action={childAction}>
+                  <ActivityLogChildAction />
+                </ActivityLogActionProvider>
+              ))}
             </Stack>
-          </HStack>
+          </Stack>
         </ActivityLogActionProvider>
       </ListItem>
     )

@@ -63,6 +63,7 @@ const AddSecretTextPanel = ({ onSuccess }: Props) => {
   const handleChange = (newTabIndex: number) => {
     methods.setValue("text", "")
     methods.setValue("texts", [])
+    methods.clearErrors(["text", "texts"])
     setTabIndex(newTabIndex)
   }
 
@@ -83,7 +84,9 @@ const AddSecretTextPanel = ({ onSuccess }: Props) => {
 
         <TabPanels>
           <TabPanel>
-            <SecretTextDataForm>
+            <SecretTextDataForm
+              shouldValidate={TextPlatformName[tabIndex] === "TEXT"}
+            >
               <Button
                 colorScheme="indigo"
                 isDisabled={!name?.length || !text?.length}
@@ -97,7 +100,9 @@ const AddSecretTextPanel = ({ onSuccess }: Props) => {
           </TabPanel>
 
           <TabPanel>
-            <UniqueTextDataForm>
+            <UniqueTextDataForm
+              shouldValidate={TextPlatformName[tabIndex] === "UNIQUE_TEXT"}
+            >
               <Button
                 colorScheme="indigo"
                 isDisabled={!name?.length}

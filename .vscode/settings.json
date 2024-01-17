@@ -1,13 +1,8 @@
 {
-  "[typescript]": {
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "[typescript][typescriptreact]": {
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     }
-  },
-  "[typescriptreact]": {
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true
-    }
-  },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  }
 }
