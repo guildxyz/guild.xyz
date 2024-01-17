@@ -263,7 +263,7 @@ export const activityLogActionIcons: Record<
   },
   [ACTION.OptOut]: {
     as: Shield,
-    color: "red.500",
+    color: "gray.500",
   },
 
   // Custom actions
