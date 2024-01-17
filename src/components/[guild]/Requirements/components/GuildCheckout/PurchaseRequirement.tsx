@@ -20,7 +20,6 @@ import { ShoppingCartSimple } from "phosphor-react"
 import { useAccount, useChainId } from "wagmi"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import { useRequirementContext } from "../RequirementContext"
-import AlphaTag from "./components/AlphaTag"
 import ErrorCollapse from "./components/ErrorCollapse"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
 import PaymentCurrencyPicker from "./components/PaymentCurrencyPicker"
@@ -74,12 +73,7 @@ const PurchaseRequirement = (): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
-            <Text as="span" mr={2}>
-              Buy requirement
-            </Text>
-            <AlphaTag />
-          </ModalHeader>
+          <ModalHeader>Buy requirement</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody>
