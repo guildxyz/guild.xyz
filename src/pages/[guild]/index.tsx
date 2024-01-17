@@ -53,6 +53,7 @@ import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
+import { addIntercomSettings } from "../../components/_app/IntercomProvider"
 
 const BATCH_SIZE = 10
 
@@ -389,6 +390,15 @@ type Props = {
 
 const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   const guild = useGuild()
+
+  useEffect(() => {
+    if (!guild.isLoading && guild.id) {
+      addIntercomSettings({
+        guildId: guild.id,
+        featureFlags: guild.featureFlags?.toString(),
+      })
+    }
+  }, [guild, guild.isLoading])
 
   if (!fallback) {
     if (guild.isLoading)
