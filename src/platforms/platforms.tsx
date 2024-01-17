@@ -29,6 +29,9 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import PoapCardButton from "./Poap/PoapCardButton"
+import PoapCardMenu from "./Poap/PoapCardMenu"
+import usePoapCardProps from "./Poap/usePoapCardProps"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
@@ -293,6 +296,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
+    cardPropsHook: usePoapCardProps,
+    cardButton: PoapCardButton,
+    cardMenuComponent: PoapCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
     AddPlatformPanel: dynamic(
@@ -307,6 +313,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    RoleCardComponent: dynamic(() => import("platforms/components/PoapReward"), {
+      ssr: false,
     }),
   },
   CONTRACT_CALL: {

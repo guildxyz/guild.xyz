@@ -11,7 +11,6 @@ import {
   Spinner,
   Stack,
   Text,
-  Textarea,
   Tooltip,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -23,26 +22,10 @@ import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import { Visibility } from "types"
-import UploadTxt from "./components/UploadTxt"
+import UploadMintLinks from "./components/UploadMintLinks"
 
 type Props = {
   onSuccess: () => void
-}
-
-export const validatePoapLinks = (links: string[]) =>
-  links
-    .filter(Boolean)
-    .every(
-      (link) =>
-        link.toLowerCase().startsWith("http://poap.xyz/claim/") &&
-        /^[A-Za-z0-9]*$/i.test(
-          link.toLowerCase().replace("http://poap.xyz/claim/", "")
-        )
-    )
-
-export const INVALID_LINKS_ERROR = {
-  type: "validate",
-  message: "Your list includes invalid mint links!",
 }
 
 export type ImportPoapForm = {
@@ -194,40 +177,7 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
           </Collapse>
         </FormControl>
 
-        <FormControl isInvalid={!!errors?.texts}>
-          <FormLabel>
-            <Text as="span">{"Minting links "}</Text>
-            <Text as="span" colorScheme="gray">
-              (optional - you can upload them later)
-            </Text>
-          </FormLabel>
-
-          <Stack>
-            <UploadTxt />
-
-            <Textarea
-              value={texts?.join("\n")}
-              onChange={(e) => {
-                clearErrors()
-
-                if (!e.target.value) {
-                  setValue("texts", [])
-                  return
-                }
-
-                const linksArray = e.target.value.split("\n")
-                setValue("texts", linksArray)
-
-                if (!validatePoapLinks(linksArray)) {
-                  setError("texts", INVALID_LINKS_ERROR)
-                }
-              }}
-              minH={48}
-              placeholder="... or paste links here, each one in a new line"
-            />
-            <FormErrorMessage>{errors?.texts?.message}</FormErrorMessage>
-          </Stack>
-        </FormControl>
+        <UploadMintLinks isOptional />
 
         <Button
           colorScheme="indigo"

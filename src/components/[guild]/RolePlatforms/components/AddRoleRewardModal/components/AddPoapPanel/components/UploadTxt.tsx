@@ -2,11 +2,8 @@ import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
 import { File } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
-import {
-  INVALID_LINKS_ERROR,
-  ImportPoapForm,
-  validatePoapLinks,
-} from "../AddPoapPanel"
+import { ImportPoapForm } from "../AddPoapPanel"
+import { INVALID_LINKS_ERROR, validatePoapLinks } from "./UploadMintLinks"
 
 const UploadTxt = () => {
   const { setValue, setError, clearErrors } = useFormContext<ImportPoapForm>()
