@@ -392,13 +392,14 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   const guild = useGuild()
 
   useEffect(() => {
-    if (!guild.isLoading && guild.id) {
-      addIntercomSettings({
-        guildId: guild.id,
-        featureFlags: guild.featureFlags?.toString(),
-      })
-    }
-  }, [guild, guild.isLoading])
+    if (!guild?.id) return
+
+    addIntercomSettings({
+      guildId: guild.id,
+      featureFlags: guild.featureFlags?.toString(),
+      memberCount: guild.memberCount,
+    })
+  }, [guild])
 
   if (!fallback) {
     if (guild.isLoading)
