@@ -76,11 +76,19 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Analytics
         </TabButton>
       )}
-      {isAdmin && featureFlags.includes("MESSAGING") && (
-        <TabButton href={`/${urlName}/messages`} isActive={activeTab === "MESSAGES"}>
-          Messages
-        </TabButton>
-      )}
+      {isAdmin &&
+        (featureFlags.includes("MESSAGING") ? (
+          <TabButton
+            href={`/${urlName}/messages`}
+            isActive={activeTab === "MESSAGES"}
+          >
+            Messages
+          </TabButton>
+        ) : (
+          <TabButton data-intercom-selector="messages-tab-button">
+            Messages
+          </TabButton>
+        ))}
     </Tabs>
   )
 }
