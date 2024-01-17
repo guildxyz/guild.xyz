@@ -19,6 +19,8 @@ import { Modal } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
+const FALLBACK_ICON = "/requirementLogos/guild.png"
+
 const Web3InboxMessage = ({
   publishedAt,
   title,
@@ -64,7 +66,9 @@ const Web3InboxMessage = ({
         transition="background 0.2s ease"
         onClick={onOpen}
       >
-        {icon?.startsWith("/guildLogos") ? (
+        {!icon ? (
+          <Img src={FALLBACK_ICON} alt={title} boxSize={10} borderRadius="full" />
+        ) : icon?.startsWith("/guildLogos") ? (
           <Circle bgColor={circleBgColor} size={10}>
             <Img src={icon} alt={title} boxSize={6} />
           </Circle>
@@ -92,7 +96,12 @@ const Web3InboxMessage = ({
         <ModalContent>
           <ModalHeader pb="6">
             <HStack spacing={3}>
-              <Img src={icon} alt={title} boxSize={8} borderRadius="full" />
+              <Img
+                src={icon || FALLBACK_ICON}
+                alt={title}
+                boxSize={8}
+                borderRadius="full"
+              />
               <Text mt="-1">{title}</Text>
             </HStack>
           </ModalHeader>
