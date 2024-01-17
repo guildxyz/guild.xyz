@@ -1,7 +1,7 @@
 import { useState } from "react"
 import tryToParseJSON from "utils/tryToParseJSON"
 
-const getDataFromLocalstorage = <T>(
+export const getDataFromLocalstorage = <T>(
   key: string,
   initialValue: T,
   shouldSaveInitial = false

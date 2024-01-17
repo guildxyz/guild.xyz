@@ -42,9 +42,7 @@ const useAutoStatusUpdate = () => {
     )
 
     const shouldSendStatusUpdate =
-      accesses.every(
-        (roleAccess) => !!roleAccess || !roleAccess.roleAccess.errors
-      ) &&
+      accesses.every((roleAccess) => !!roleAccess || !roleAccess.errors) &&
       (accessedRoleIds.some(
         (accessedRoleId) => !roleMembershipsSet.has(accessedRoleId)
       ) ||

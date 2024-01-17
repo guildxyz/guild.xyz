@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useIntercom } from "components/_app/IntercomProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useMemberships from "components/explorer/hooks/useMemberships"
+import { getDataFromLocalstorage } from "hooks/useLocalStorage"
 import { useEffect } from "react"
 import useSWR, { SWRConfiguration } from "swr"
 import createAndAwaitJob from "utils/createAndAwaitJob"
@@ -10,9 +11,29 @@ import { useFetcherWithSign } from "utils/fetcher"
 import { QUEUE_FEATURE_FLAG } from "../JoinModal/hooks/useJoin"
 import { useUserPublic } from "./useUser"
 
+type AccessCheckResult = {
+  roleId: number
+  access: boolean | null
+  requirements: {
+    access: boolean | null
+    requirementId: number
+  }[]
+  errors: {
+    errorType: string
+    msg: string
+    requirementId: number
+    subType: string
+  }[]
+}[]
+
+type AccessCheckResultInLocalstorage = { data: AccessCheckResult; savedAt: number }
+
+const CACHE_EXPIRY_TIME_MS = 1000 * 60 * 30
+
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
   const { isWeb3Connected, address } = useWeb3ConnectionManager()
-  const { id, featureFlags, parentRoles } = useGuild()
+  const { id, featureFlags, parentRoles, roles } = useGuild()
+  const roleIds = roles?.map((role) => role.id) ?? []
   const { keyPair } = useUserPublic()
   const { memberships } = useMemberships()
   const guildMembership = memberships?.find(({ guildId }) => guildId === id)
@@ -33,9 +54,26 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const { data, error, isLoading, isValidating, mutate } = useSWR(
+  const cacheKey = `accessCheckResult:${id}:${address.toLowerCase()}`
+
+  const { data, error, isLoading, isValidating, mutate } = useSWR<AccessCheckResult>(
     shouldFetch ? `/guild/access/${id}/${address}` : null,
     async (key) => {
+      const dataFromLocalstorage: AccessCheckResultInLocalstorage =
+        getDataFromLocalstorage(cacheKey, undefined)
+
+      // TODO: we should later validate this data with Zod...
+      if (
+        Array.isArray(dataFromLocalstorage?.data) &&
+        dataFromLocalstorage.savedAt + CACHE_EXPIRY_TIME_MS > Date.now() &&
+        dataFromLocalstorage.data.every(
+          (roleAccess) => roleAccess.access && roleIds.includes(roleAccess.roleId)
+        ) &&
+        dataFromLocalstorage.data.length === roleIds.length
+      ) {
+        return dataFromLocalstorage.data
+      }
+
       if (featureFlags.includes(QUEUE_FEATURE_FLAG)) {
         const { roleAccesses, "children:access-check:jobs": requirementResults } =
           await createAndAwaitJob<AccessCheckJob>(
@@ -44,7 +82,6 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
             { guildId: id },
             { guildId: `${id}` }
           )
-
         return roleAccesses.map((roleAccess) => {
           const requirementResultsOfRole = requirementResults?.filter(
             (reqAcc) => reqAcc.roleId === roleAccess.roleId
@@ -76,7 +113,17 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
         })
       }
 
-      return fetcherWithSign([key, { method: "GET" }])
+      const res: AccessCheckResult = await fetcherWithSign([key, { method: "GET" }])
+
+      if (Array.isArray(res)) {
+        const dataToSave: AccessCheckResultInLocalstorage = {
+          data: res,
+          savedAt: Date.now(),
+        }
+        window.localStorage.setItem(cacheKey, JSON.stringify(dataToSave))
+      }
+
+      return res
     },
     {
       shouldRetryOnError: false,
@@ -115,6 +162,7 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
     hasAccess,
     isLoading,
     isValidating,
+    // TODO: invalidate cache on mutate
     mutate,
   }
 }
