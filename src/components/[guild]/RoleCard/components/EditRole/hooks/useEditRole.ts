@@ -27,8 +27,20 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const fetcherWithSign = useFetcherWithSign()
 
   const submit = async (data: RoleEditFormData) => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { requirements, rolePlatforms, id: _id, ...baseRoleData } = data
+    const {
+      requirements: unfilteredRequirements,
+      rolePlatforms,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      id: _id,
+      ...baseRoleData
+    } = data
+
+    // Only submit the requirements that have any fields besides id and type
+    const requirements = (unfilteredRequirements ?? []).filter((req) => {
+      const { id: reqId, type: reqType, ...rest } = req
+      if (!!reqId && !!reqType) return Object.keys(rest).length > 0
+      return true
+    })
 
     const roleUpdate: Promise<
       OneOf<
