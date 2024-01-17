@@ -174,6 +174,8 @@ const ActionLabel = (): JSX.Element => {
               </>
             )
           case ACTION.UserStatusUpdate:
+          case ACTION.OptOut:
+          case ACTION.OptIn:
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
