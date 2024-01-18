@@ -1,7 +1,8 @@
-import { Tooltip } from "@chakra-ui/react"
+import { ButtonProps, Tooltip } from "@chakra-ui/react"
 import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
@@ -35,6 +36,15 @@ const PoapCardButton = ({ platform }: Props) => {
       ? "Claim hasn't started yet"
       : "Claim already ended"
 
+  const buttonLabel =
+    !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
+
+  const buttonProps: Omit<ButtonProps, "as"> = {
+    isDisabled: isButtonDisabled,
+    w: "full",
+    colorScheme: platforms.POAP.colorScheme,
+  }
+
   return (
     <>
       <Tooltip
@@ -43,14 +53,16 @@ const PoapCardButton = ({ platform }: Props) => {
         hasArrow
         shouldWrapChildren
       >
-        <LinkButton
-          href={`/${urlName}/collect-poap/${platform.platformGuildData.fancyId}`}
-          isDisabled={isButtonDisabled}
-          w="full"
-          colorScheme={platforms.POAP.colorScheme}
-        >
-          {!rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"}
-        </LinkButton>
+        {isButtonDisabled ? (
+          <Button {...buttonProps}>{buttonLabel}</Button>
+        ) : (
+          <LinkButton
+            href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
+            {...buttonProps}
+          >
+            {buttonLabel}
+          </LinkButton>
+        )}
       </Tooltip>
     </>
   )
