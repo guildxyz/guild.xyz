@@ -13,14 +13,21 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { GuildPlatform } from "types"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
   guildPlatformId: number
+  platformGuildData: GuildPlatform["platformGuildData"]
 }
 
-const UploadMintLinksModal = ({ isOpen, onClose, guildPlatformId }: Props) => {
+const UploadMintLinksModal = ({
+  isOpen,
+  onClose,
+  guildPlatformId,
+  platformGuildData,
+}: Props) => {
   const methods = useForm<ImportPoapForm>()
   const texts = useWatch({ name: "texts", control: methods.control })
 
@@ -37,7 +44,12 @@ const UploadMintLinksModal = ({ isOpen, onClose, guildPlatformId }: Props) => {
   })
 
   const onEditPoapRewardSubmit = (data: ImportPoapForm) =>
-    onSubmit({ platformGuildData: { ...data, texts: data.texts?.filter(Boolean) } })
+    onSubmit({
+      platformGuildData: {
+        ...platformGuildData,
+        texts: data.texts?.filter(Boolean),
+      },
+    })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">

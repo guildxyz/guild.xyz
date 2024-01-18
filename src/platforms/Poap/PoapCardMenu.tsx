@@ -31,6 +31,7 @@ const PoapCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         isOpen={isOpen}
         onClose={onClose}
         guildPlatformId={guildPlatform?.id}
+        platformGuildData={guildPlatform?.platformGuildData}
       />
     </>
   )
