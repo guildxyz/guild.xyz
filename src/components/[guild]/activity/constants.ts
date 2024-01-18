@@ -84,6 +84,11 @@ export enum ACTION {
   UpdateTheme = "UpdateTheme",
 }
 
+export enum ActivityLogActionGroup {
+  UserAction = "UserAction",
+  AdminAction = "AdminAction",
+}
+
 export type ActivityLogActionType = keyof typeof ACTION
 
 export type ActivityLogAction = {
@@ -288,3 +293,13 @@ export const activityLogActionIcons: Record<
     color: "blue.400",
   },
 }
+
+export const HIDDEN_ACTIONS: ACTION[] = [
+  ACTION.UpdateUrlName,
+  ACTION.UpdateLogoOrTitle,
+  ACTION.UpdateDescription,
+  ACTION.UpdateLogic,
+  ACTION.UpdateTheme,
+]
+
+export const ADMIN_ACTIONS: ACTION[] = [ACTION.CreateGuild, ACTION.UpdateGuild]

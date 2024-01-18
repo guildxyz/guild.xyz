@@ -86,7 +86,7 @@ const ActivityLogWrapper = (): JSX.Element => {
 
   return (
     <ThemeProvider>
-      <ActivityLogProvider guildId={id}>
+      <ActivityLogProvider guildId={id} withActionGroups={true}>
         <ActivityLog />
       </ActivityLogProvider>
     </ThemeProvider>
