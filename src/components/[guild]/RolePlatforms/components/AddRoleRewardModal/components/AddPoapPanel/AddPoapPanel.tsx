@@ -89,7 +89,6 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
     setValue("name", poap.name)
     setValue("fancyId", poap.fancy_id)
     setValue("imageUrl", poap.image_url)
-    // TODO: not sure if we should use ISO date here actually...
     setValue("startTime", new Date(poap.start_date).toISOString())
     setValue("endTime", new Date(poap.expiry_date).toISOString())
   }, [poap])
