@@ -21,7 +21,7 @@ const PoapCardMenu = ({ platformGuildId }: Props): JSX.Element => {
     <>
       <PlatformCardMenu>
         <MenuItem icon={<UploadSimple />} onClick={onOpen}>
-          Upload more mint links
+          Upload mint links
         </MenuItem>
 
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
