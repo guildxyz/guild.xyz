@@ -1,6 +1,10 @@
 import {
+  Box,
   ButtonProps,
+  Center,
   HStack,
+  Icon,
+  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -15,7 +19,9 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
+import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
+import { useAccount } from "wagmi"
 
 type Props = {
   rolePlatformId: number
@@ -25,6 +31,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
   const { captureEvent } = usePostHogContext()
 
   const { urlName, roles } = useGuild()
+  const { address } = useAccount()
 
   const roleId = roles?.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
@@ -44,6 +51,8 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
 
   const isLoading = isAccessLoading || isClaimLoading
   const isDisabled = !hasAccess || !!alreadyClaimed
+
+  const httpsLink = response?.uniqueValue?.replace("http://", "https://")
 
   return (
     <>
@@ -86,13 +95,38 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
           <ModalBody pt={8}>
             {isLoading ? (
               <HStack spacing="6">
-                <Spinner />
+                <Center boxSize="16">
+                  <Spinner />
+                </Center>
                 <Text>Getting your mint link...</Text>
               </HStack>
+            ) : httpsLink ? (
+              <HStack spacing={0}>
+                <Icon
+                  as={CheckCircle}
+                  color="green.500"
+                  boxSize="16"
+                  weight="light"
+                />
+                <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
+                  <Text>You can mint your POAP on the link below:</Text>
+                  <Link
+                    mt={2}
+                    maxW="full"
+                    href={`${httpsLink}?address=${address}`}
+                    colorScheme="blue"
+                    isExternal
+                    fontWeight="semibold"
+                  >
+                    <Text as="span" noOfLines={1}>
+                      {httpsLink}
+                    </Text>
+                    <Icon as={ArrowSquareOut} />
+                  </Link>
+                </Box>
+              </HStack>
             ) : (
-              response?.uniqueValue ?? (
-                <ErrorAlert label={error?.error ?? "Something went wrong"} />
-              )
+              <ErrorAlert label={error?.error ?? "Something went wrong"} />
             )}
           </ModalBody>
         </ModalContent>
