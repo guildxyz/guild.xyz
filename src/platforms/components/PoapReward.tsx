@@ -30,8 +30,6 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
-  const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
-
   const state = useMemo(() => {
     if (isMember && hasAccess) {
       const startTimeDiff = getTimeDiff(platform?.startTime)
@@ -56,7 +54,7 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
         }
 
       return {
-        tooltipLabel: label,
+        tooltipLabel: "Claim",
         buttonProps: {},
       }
     }
@@ -88,7 +86,7 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
       }
       label={
         <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
-          {`${label}: `}
+          {"Claim: "}
           <LinkButton
             href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
             variant="link"
