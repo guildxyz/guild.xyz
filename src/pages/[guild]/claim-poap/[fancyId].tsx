@@ -83,8 +83,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
           <HStack justifyContent="space-between">
             <GuildImageAndName />
             <ShareAndReportButtons
-              // TODO: total collectors
-              // isPulseMarkerHidden={totalCollectors > 0}
+              isPulseMarkerHidden={rolePlatform?.claimedCount > 0}
               shareButtonLocalStorageKey={`poap_${fancyId}_hasClickedShareButton`}
               shareText={`Check out and claim the ${`${name} `}POAP on Guild!`}
             />
