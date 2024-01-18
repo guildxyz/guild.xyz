@@ -5,6 +5,7 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -13,6 +14,7 @@ import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { usePoap } from "requirements/Poap/hooks/usePoaps"
+import { PlatformType } from "types"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../common/ChainInfo"
 import useGuildsPoaps from "./hooks/useGuildsPoaps"
@@ -26,6 +28,8 @@ const customFilterOption = (candidate, input) =>
   candidate.data?.details?.includes(input)
 
 const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+  const { guildPlatforms } = useGuild()
+
   const {
     formState: { errors },
   } = useFormContext()
@@ -35,11 +39,10 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const dataId = useWatch({ name: `${baseFieldPath}.data.id` })
   const { poap: poapDetails } = usePoap(dataId)
 
-  // TODO: fetch guild's POAPs from rewards
-  const guildsPoapsList = []
-  const { guildsPoaps, isGuildsPoapsLoading } = useGuildsPoaps(
-    guildsPoapsList?.map((p) => p.fancyId)
-  )
+  const guildsPoapsFancyIDs = guildPlatforms
+    .filter((gp) => gp.platformId === PlatformType.POAP)
+    .map((gp) => gp.platformGuildData.fancyId)
+  const { guildsPoaps, isGuildsPoapsLoading } = useGuildsPoaps(guildsPoapsFancyIDs)
 
   const [searchText, setSearchText] = useState("")
   const debouncedSearchText = useDebouncedState(searchText)
