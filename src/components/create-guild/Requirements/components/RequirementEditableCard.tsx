@@ -24,7 +24,6 @@ import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
-import useDeletePoapRequirement from "../hooks/useDeletePoapRequirement"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
@@ -70,15 +69,6 @@ const RequirementEditableCard = ({
   } = useDeleteRequirement(roleId, requirementId)
 
   const {
-    onSubmit: onDeletePoapRequirement,
-    isLoading: isPoapRequirementDeleteLoading,
-    isSigning: isPoapRequirementDeleteSigning,
-  } = useDeletePoapRequirement(poapId, requirementId, () => {
-    removeRequirement(index)
-    onRequirementDeleteClose()
-  })
-
-  const {
     isOpen: isAlertOpen,
     onOpen: onAlertOpen,
     onClose: onAlertClose,
@@ -112,26 +102,13 @@ const RequirementEditableCard = ({
     }
   }
 
-  const onConfirmDelete = () => {
-    if (isPoap) {
-      onDeletePoapRequirement()
-    } else {
-      onDeleteRequirement()
-    }
-  }
-
   const requirementDeleteConfitmationAlert = (
     <ConfirmationAlert
       finalFocusRef={closeButtonRef}
-      isLoading={
-        isPoapRequirementDeleteLoading ||
-        isPoapRequirementDeleteSigning ||
-        isRequirementDeleteLoading ||
-        isRequirementDeleteSigning
-      }
+      isLoading={isRequirementDeleteLoading || isRequirementDeleteSigning}
       isOpen={isRequirementDeleteOpen}
       onClose={onRequirementDeleteClose}
-      onConfirm={() => onConfirmDelete()}
+      onConfirm={() => onDeleteRequirement()}
       title="Delete requirement"
       description="Are you sure you want to delete this requirement?"
       confirmationText="Delete requirement"

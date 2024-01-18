@@ -1,10 +1,9 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
+import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
@@ -29,16 +28,14 @@ const mapTwitterV1 = (
 
 const RequirementConnectButton = (props: ButtonProps) => {
   const { platformUsers, emails } = useUser()
-  const { type, roleId, poapId, id } = useRequirementContext()
+  const { type, roleId, id } = useRequirementContext()
   const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
 
   const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
-  // temporary until POAP is not a real reward
-  const { mutate: mutatePoapAccesses, data: poapAccess } =
-    useUserPoapEligibility(poapId)
+
   const toast = useToast()
 
-  const isReconnection = (roleAccess || poapAccess)?.errors?.some(
+  const isReconnection = roleAccess?.errors?.some(
     (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
@@ -55,9 +52,6 @@ const RequirementConnectButton = (props: ButtonProps) => {
 
   const onSuccess = () => {
     mutateAccesses()
-    if (poapId) {
-      mutatePoapAccesses()
-    }
     toast({
       title: `Successfully connected ${platforms[platform].name}`,
       description: `Your access is being re-checked...`,

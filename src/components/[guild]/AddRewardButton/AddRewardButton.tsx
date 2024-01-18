@@ -213,7 +213,7 @@ const AddRewardButton = (): JSX.Element => {
                         capacity:
                           rolePlatform?.guildPlatform?.platformGuildData?.texts
                             ?.length || undefined,
-                        /** POAPs will have default startTime and endTime */
+                        /** POAPs have default startTime and endTime */
                         startTime: rolePlatform?.startTime,
                         endTime: rolePlatform?.endTime,
                       }}

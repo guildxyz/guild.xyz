@@ -16,7 +16,6 @@ import {
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
@@ -86,7 +85,6 @@ const DynamicDiscordBotPermissionsChecker = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
-    id: guildId,
     name,
     description,
     imageUrl,
@@ -97,7 +95,6 @@ const GuildPage = (): JSX.Element => {
     isLoading,
     onboardingComplete,
     socialLinks,
-    poaps,
     tags,
     featureFlags,
     isDetailed,
@@ -170,22 +167,6 @@ const GuildPage = (): JSX.Element => {
   }, [])
 
   const showOnboarding = isAdmin && !onboardingComplete
-
-  const currentTime = Date.now() / 1000
-  const { activePoaps, expiredPoaps } =
-    poaps
-      ?.sort((poapA, poapB) => poapB.expiryDate - poapA.expiryDate)
-      .reduce(
-        (acc, currPoap) => {
-          if (!currPoap.activated && !isAdmin) return acc
-
-          if (currPoap.expiryDate > currentTime) acc.activePoaps.push(currPoap)
-          else acc.expiredPoaps.push(currPoap)
-
-          return acc
-        },
-        { activePoaps: [], expiredPoaps: [] }
-      ) ?? {}
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
@@ -293,11 +274,6 @@ const GuildPage = (): JSX.Element => {
           {renderedRoles.length ? (
             <RequirementErrorConfigProvider>
               <Stack ref={rolesEl} spacing={4}>
-                {/* Custom logic for Chainlink */}
-                {(isAdmin || guildId !== 16389) &&
-                  activePoaps.map((poap) => (
-                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
-                  ))}
                 {renderedRoles.map((role) => (
                   <RoleCard key={role.id} role={role} />
                 ))}
@@ -322,17 +298,6 @@ const GuildPage = (): JSX.Element => {
             >
               {hiddenRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
-              ))}
-            </CollapsibleRoleSection>
-          )}
-          {!!expiredPoaps?.length && (
-            <CollapsibleRoleSection
-              roleCount={expiredPoaps.length}
-              label="expired"
-              unmountOnExit
-            >
-              {expiredPoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} guildPoap={poap} />
               ))}
             </CollapsibleRoleSection>
           )}

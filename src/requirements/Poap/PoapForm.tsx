@@ -8,7 +8,6 @@ import {
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -36,7 +35,8 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const dataId = useWatch({ name: `${baseFieldPath}.data.id` })
   const { poap: poapDetails } = usePoap(dataId)
 
-  const { poaps: guildsPoapsList } = useGuild()
+  // TODO: fetch guild's POAPs from rewards
+  const guildsPoapsList = []
   const { guildsPoaps, isGuildsPoapsLoading } = useGuildsPoaps(
     guildsPoapsList?.map((p) => p.fancyId)
   )

@@ -333,9 +333,6 @@ type Requirement = {
   visibility?: Visibility
   visibilityRoleId?: number | null
 
-  // temporary until POAP is not a real reward (for PoapRequirements instead of roleId)
-  poapId?: number
-
   // Props used inside the forms on the UI
   formFieldId?: number
   nftRequirementType?: string
@@ -401,23 +398,6 @@ type GuildPlatform = {
   permission?: string
 }
 
-type PoapContract = {
-  id: number
-  poapId: number
-  chainId: number
-  vaultId: number
-  contract: `0x${string}`
-}
-
-type GuildPoap = {
-  id: number
-  poapIdentifier: number
-  fancyId: string
-  activated: boolean
-  expiryDate: number
-  poapRequirements?: Requirement[]
-}
-
 const supportedSocialLinks = [
   "TWITTER",
   "LENS",
@@ -464,7 +444,6 @@ type Guild = {
   roles: Role[]
   groups: Group[]
   members: Array<string>
-  poaps: Array<GuildPoap>
   onboardingComplete: boolean
   featureFlags: FeatureFlag[]
   hiddenRoles?: boolean
@@ -540,44 +519,6 @@ type DiscordServerData = {
   permissions_new: string
 }
 
-type CreatePoapForm = {
-  name: string
-  description: string
-  city: string
-  country: string
-  start_date: string
-  end_date: string
-  expiry_date: string
-  year: number
-  event_url: string
-  virtual_event: boolean
-  image: File
-  secret_code: number
-  event_template_id: number
-  email: string
-  requested_codes: number
-  private_event: boolean
-}
-
-type CreatedPoapData = {
-  id?: number
-  fancy_id?: string
-  name: string
-  description: string
-  city: string
-  country: string
-  start_date: string
-  end_date: string
-  expiry_date: string
-  year: number
-  event_url: string
-  virtual_event: boolean
-  image_url?: string
-  event_template_id: number
-  private_event: boolean
-  event_host_id?: number
-}
-
 export enum PlatformType {
   "UNSET" = -1,
   "DISCORD" = 1,
@@ -626,13 +567,6 @@ enum ValidationMethod {
   FUEL = 4,
 }
 
-type MonetizePoapForm = {
-  chain: Chain
-  token: string
-  fee: number
-  owner: string
-}
-
 type RequestMintLinksForm = {
   event_id: number
   requested_codes: number
@@ -646,48 +580,6 @@ type GoogleFile = {
   webViewLink: string
   iconLink: string
   platformGuildId: string
-}
-
-type VoiceParticipationForm = {
-  poapId: number
-  serverId: string
-  voiceChannelId: string
-  voiceRequirement: {
-    type: "PERCENT" | "MINUTE"
-    percentOrMinute: number
-  }
-}
-
-type VoiceRequirement =
-  | {
-      percent: number
-      minute?: never
-    }
-  | {
-      percent?: never
-      minute: number
-    }
-
-type PoapEventDetails = {
-  id: number
-  poapIdentifier: number
-  fancyId: string
-  guildId: number
-  activated: boolean
-  createdAt: string
-  expiryDate: number
-  voiceChannelId?: string
-  voiceRequirement?: VoiceRequirement
-  voiceEventStartedAt: number
-  voiceEventEndedAt: number
-  contracts: PoapContract[]
-}
-
-type VoiceRequirementParams = {
-  poapId: number
-  voiceChannelId: string
-  voiceRequirement: VoiceRequirement
-  voiceEventStartedAt?: number
 }
 
 type Without<First, Second> = {
@@ -751,8 +643,6 @@ export type {
   AddressConnectionProvider,
   BaseUser,
   CoingeckoToken,
-  CreatePoapForm,
-  CreatedPoapData,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
   DiscordError,
   DiscordServerData,
@@ -767,19 +657,15 @@ export type {
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
-  GuildPoap,
   GuildTags,
   LeaderboardPinData,
   Logic,
-  MonetizePoapForm,
   NFT,
   OneOf,
   PlatformAccountDetails,
   PlatformGuildData,
   PlatformName,
   Poap,
-  PoapContract,
-  PoapEventDetails,
   RequestMintLinksForm,
   Requirement,
   RequirementType,
@@ -795,9 +681,6 @@ export type {
   Token,
   Trait,
   User,
-  VoiceParticipationForm,
-  VoiceRequirement,
-  VoiceRequirementParams,
   WalletConnectConnectionData,
   WalletError,
 }
