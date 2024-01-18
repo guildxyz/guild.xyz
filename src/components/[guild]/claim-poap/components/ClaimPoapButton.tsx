@@ -66,12 +66,6 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
           captureEvent("Click: ClaimPoapButton", {
             guild: urlName,
           })
-          /**
-           * We're always sending a join request here, because if the user joined the
-           * role before the admins added the reward to it, they won't have the
-           * UserReward in our backend and then they wouldn't be able to claim the
-           * NFT. This way, we can make sure that this won't happen
-           */
           onOpen()
           if (!response) onSubmit()
         }}
