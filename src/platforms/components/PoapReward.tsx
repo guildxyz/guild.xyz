@@ -90,7 +90,7 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
         <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
           {`${label}: `}
           <LinkButton
-            href={`/${urlName}/collect-poap/${platformGuildData.fancyId}`}
+            href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
             variant="link"
             rightIcon={
               isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
