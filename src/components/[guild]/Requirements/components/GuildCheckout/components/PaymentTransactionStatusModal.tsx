@@ -7,26 +7,16 @@ import useGuild from "components/[guild]/hooks/useGuild"
 
 const PaymentTransactionStatusModal = () => {
   const { name, roleId } = useRequirementContext()
-  const { roles } = useGuild()
-  const role = roles?.find((r) => r.id === roleId)
 
   return (
     <TransactionStatusModal
       title={`Buy ${name} pass`}
       progressComponent={
         <>
-          <Text fontWeight={"bold"} mb="2">
+          <Text fontWeight="bold" mb="2">
             Unlocking rewards...
           </Text>
-          {role?.rolePlatforms?.map((platform) => (
-            // TODO: handle rewards with custom XReward components (e.g. NFT, POAP, TEXT)
-            <Reward
-              key={platform.guildPlatformId}
-              platform={platform}
-              role={role}
-              withLink
-            />
-          )) || <NoReward />}
+          <UnlockingRewards roleId={roleId} />
         </>
       }
       successComponent={
@@ -34,21 +24,34 @@ const PaymentTransactionStatusModal = () => {
           <Text fontWeight={"bold"} mb="2">
             Unlocked rewards:
           </Text>
-          {role?.rolePlatforms?.map((platform) => (
-            // TODO: handle rewards with custom XReward components (e.g. NFT, POAP, TEXT)
-            <Reward
-              key={platform.guildPlatformId}
-              platform={platform}
-              role={role}
-              withLink
-              isLinkColorful
-            />
-          )) || <NoReward />}
+          <UnlockingRewards roleId={roleId} />
         </>
       }
       errorComponent={<Text mb={4}>{`Couldn't buy pass`}</Text>}
     />
   )
+}
+
+export const UnlockingRewards = ({ roleId }: { roleId: number }) => {
+  const { roles, guildPlatforms } = useGuild()
+  const role = roles.find((r) => r.id === roleId)
+
+  if (!role.rolePlatforms?.length) return <NoReward />
+
+  return role.rolePlatforms.map((rp) => {
+    const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
+
+    return (
+      <Reward
+        key={rp.guildPlatformId}
+        platform={{ ...rp, guildPlatform }}
+        role={role}
+        withMotionImg={false}
+        withLink
+        isLinkColorful
+      />
+    )
+  })
 }
 
 export default PaymentTransactionStatusModal

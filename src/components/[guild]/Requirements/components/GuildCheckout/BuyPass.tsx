@@ -13,7 +13,6 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
-import Reward from "components/[guild]/RoleCard/components/Reward"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -26,9 +25,10 @@ import { useChainId } from "wagmi"
 import { useRequirementContext } from "../RequirementContext"
 import BuyTotal from "./components/BuyTotal"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
-import NoReward from "./components/NoReward"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
+import { UnlockingRewards } from "./components/PaymentTransactionStatusModal"
+import TOSCheckbox from "./components/TOSCheckbox"
 import BuyAllowanceButton from "./components/buttons/BuyAllowanceButton"
 import BuyButton from "./components/buttons/BuyButton"
 import DisconnectFuelButton from "./components/buttons/DisconnectFuelButton"
@@ -108,18 +108,7 @@ const BuyPass = () => {
               </Alert>
             )}
 
-            {role?.rolePlatforms?.length ? (
-              role.rolePlatforms.map((platform) => (
-                // TODO: handle rewards with custom XReward components (e.g. NFT, POAP, TEXT)
-                <Reward
-                  key={platform.guildPlatformId}
-                  platform={platform}
-                  role={role}
-                />
-              ))
-            ) : (
-              <NoReward />
-            )}
+            <UnlockingRewards roleId={role.id} />
           </ModalBody>
 
           <ModalFooter pt={10} flexDir="column">
@@ -144,6 +133,10 @@ const BuyPass = () => {
                     <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
                     <Collapse in={chainId === Chains[requirement.chain]}>
+                      <TOSCheckbox>
+                        I understand that if the owner changes the requirements, I
+                        could lose access.
+                      </TOSCheckbox>
                       <BuyAllowanceButton />
                     </Collapse>
 
