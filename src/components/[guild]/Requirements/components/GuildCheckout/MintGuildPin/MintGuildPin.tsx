@@ -19,7 +19,6 @@ import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
 import { useState } from "react"
 import { useMintGuildPinContext } from "../MintGuildPinContext"
-import AlphaTag from "../components/AlphaTag"
 import GuildPinFees from "../components/GuildPinFees"
 import GuildPinImage from "../components/GuildPinImage"
 import GuildPinReward from "../components/GuildPinReward"
@@ -92,12 +91,7 @@ const MintGuildPin = (): JSX.Element => {
       <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader pb={4} pr={16}>
-            <Text as="span" mr={2}>
-              Mint Guild Pin
-            </Text>
-            <AlphaTag />
-          </ModalHeader>
+          <ModalHeader pb={4}>Mint Guild Pin</ModalHeader>
           <ModalCloseButton />
 
           <ModalBody pb="6">

@@ -78,7 +78,12 @@ const YourGuilds = forwardRef((_, ref: any) => {
                 or create your own!
               </Text>
             </HStack>
-            <LinkButton leftIcon={<Plus />} href="/create-guild" colorScheme="gray">
+            <LinkButton
+              leftIcon={<Plus />}
+              href="/create-guild"
+              colorScheme="gray"
+              prefetch={false}
+            >
               Create guild
             </LinkButton>
           </Stack>

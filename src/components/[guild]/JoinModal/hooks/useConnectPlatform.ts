@@ -131,7 +131,12 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       mutateUser(
         (prev) => ({
           ...prev,
-          platformUsers: [...(prev?.platformUsers ?? []), newPlatformUser],
+          platformUsers: [
+            ...(prev?.platformUsers ?? []).filter(
+              ({ platformId }) => platformId !== newPlatformUser.platformId
+            ),
+            newPlatformUser,
+          ],
         }),
         { revalidate: false }
       )

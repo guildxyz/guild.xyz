@@ -178,14 +178,6 @@ type SimpleGuild = {
   theme: Theme
 }
 
-type BrainCardData = {
-  id: string
-  title: string
-  tags?: Array<string>
-  icon?: string
-  backgroundImage?: string
-}
-
 type GuildAdmin = {
   id: number
   address: string
@@ -726,7 +718,6 @@ export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLin
 export type {
   AddressConnectionProvider,
   BaseUser,
-  BrainCardData,
   CoingeckoToken,
   CreatePoapForm,
   CreatedPoapData,

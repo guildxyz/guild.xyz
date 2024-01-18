@@ -1,4 +1,5 @@
 import {
+  Circle,
   HStack,
   Img,
   ModalBody,
@@ -18,6 +19,8 @@ import { Modal } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
+const FALLBACK_ICON = "/requirementLogos/guild.png"
+
 const Web3InboxMessage = ({
   publishedAt,
   title,
@@ -33,6 +36,7 @@ const Web3InboxMessage = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const hoverBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.200")
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const isMobile = useBreakpointValue({ base: true, sm: false })
 
   const prettyDate = new Date(publishedAt).toLocaleDateString("en-US", {
@@ -62,7 +66,15 @@ const Web3InboxMessage = ({
         transition="background 0.2s ease"
         onClick={onOpen}
       >
-        <Img src={icon} alt={title} boxSize={10} borderRadius="full" />
+        {!icon ? (
+          <Img src={FALLBACK_ICON} alt={title} boxSize={10} borderRadius="full" />
+        ) : icon?.startsWith("/guildLogos") ? (
+          <Circle bgColor={circleBgColor} size={10}>
+            <Img src={icon} alt={title} boxSize={6} />
+          </Circle>
+        ) : (
+          <Img src={icon} alt={title} boxSize={10} borderRadius="full" />
+        )}
 
         <Stack spacing={0} w="full">
           <HStack justifyContent="space-between">
@@ -84,7 +96,12 @@ const Web3InboxMessage = ({
         <ModalContent>
           <ModalHeader pb="6">
             <HStack spacing={3}>
-              <Img src={icon} alt={title} boxSize={8} borderRadius="full" />
+              <Img
+                src={icon || FALLBACK_ICON}
+                alt={title}
+                boxSize={8}
+                borderRadius="full"
+              />
               <Text mt="-1">{title}</Text>
             </HStack>
           </ModalHeader>

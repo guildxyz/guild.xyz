@@ -5,7 +5,7 @@ export default async function createAndAwaitJob<
   url: string,
   body: any,
   queryParams: Record<string, any>
-) {
+): Promise<Job> {
   const poll = (): Promise<Job[]> =>
     fetcherWithSign([
       `${url}?${new URLSearchParams(queryParams).toString()}`,

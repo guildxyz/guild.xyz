@@ -9,9 +9,9 @@ import {
   isSupportedQueryParam,
   SupportedQueryParam,
 } from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
-import { ACTION, ActivityLogAction } from "./constants"
+import { ActivityLogAction } from "./constants"
 
-const LIMIT = 50
+const DEFAULT_LIMIT = 50
 const SCROLL_PADDING = 40
 
 export type ActivityLogActionResponse = {
@@ -51,24 +51,7 @@ const transformActivityLogInfiniteResponse = (
   }
 
   rawResponse.forEach((chunk) => {
-    transformedResponse.entries.push(
-      ...chunk.entries
-        // We should remove this filter once these logs will have hierarchy!
-        .filter(
-          (entry) =>
-            entry.action !== ACTION.SendReward &&
-            entry.action !== ACTION.RevokeReward
-        )
-        .map((entry) => ({
-          ...entry,
-          children:
-            entry.children?.filter(
-              (childAction) =>
-                childAction.action !== ACTION.SendReward &&
-                childAction.action !== ACTION.RevokeReward
-            ) ?? [],
-        }))
-    )
+    transformedResponse.entries.push(...chunk.entries)
 
     Object.keys(chunk.values).forEach((key) =>
       transformedResponse.values[key]?.push(...chunk.values[key])
@@ -86,14 +69,16 @@ const ActivityLogContext = createContext<
   }
 >(undefined)
 
-type Props = { withSearchParams?: boolean; isInfinite?: boolean } & OneOf<
-  { userId: number },
-  { guildId: number }
->
+type Props = {
+  withSearchParams?: boolean
+  isInfinite?: boolean
+  limit?: number
+} & OneOf<{ userId: number }, { guildId: number }>
 
 const ActivityLogProvider = ({
   withSearchParams = true,
   isInfinite = true,
+  limit = DEFAULT_LIMIT,
   userId,
   guildId,
   children,
@@ -114,8 +99,8 @@ const ActivityLogProvider = ({
       return null
 
     const queryWithRelevantParams: Partial<Record<SupportedQueryParam, string>> = {
-      limit: LIMIT.toString(),
-      offset: (pageIndex * LIMIT).toString(),
+      limit: limit.toString(),
+      offset: (pageIndex * limit).toString(),
       tree: "true",
     }
 

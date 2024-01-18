@@ -5,20 +5,33 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useUser from "components/[guild]/hooks/useUser"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { TwitterLogo } from "phosphor-react"
+import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
+import { PlatformType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
+
+const requirementIntentAction: Record<string, TwitterIntentAction> = {
+  TWITTER_FOLLOW_V2: "follow",
+  TWITTER_LIKE_V2: "like",
+  TWITTER_RETWEET_V2: "retweet",
+}
 
 // https://help.twitter.com/en/managing-your-account/twitter-username-rules
 export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
 
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
+  const { id: userId, platformUsers } = useUser()
+  const isTwitterConnected = platformUsers?.find(
+    (pu) => pu.platformId === PlatformType.TWITTER
+  )
 
   const { data: twitterAvatar } = useSWRImmutable(
     requirement.data.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
@@ -32,7 +45,17 @@ const TwitterRequirement = (props: RequirementProps) => {
         (["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
           twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
       }
-      footer={<ConnectRequirementPlatformButton />}
+      footer={
+        requirementIntentAction[requirement.type] && !!userId ? (
+          !isTwitterConnected ? (
+            <ConnectRequirementPlatformButton />
+          ) : (
+            <TwitterIntent action={requirementIntentAction[requirement.type]} />
+          )
+        ) : (
+          <ConnectRequirementPlatformButton />
+        )
+      }
       {...props}
     >
       {(() => {
@@ -65,6 +88,16 @@ const TwitterRequirement = (props: RequirementProps) => {
                 {` on Twitter`}
               </>
             )
+          case "TWITTER_FOLLOW_V2":
+            return (
+              <>
+                {`Follow `}
+                <TwitterIntent type="link" action="follow">
+                  @{requirement.data.id}
+                </TwitterIntent>
+                {` on Twitter`}
+              </>
+            )
           case "TWITTER_FOLLOWED_BY":
             return (
               <>
@@ -80,11 +113,31 @@ const TwitterRequirement = (props: RequirementProps) => {
                 <TwitterTweetLink requirement={requirement} />
               </>
             )
+          case "TWITTER_LIKE_V2":
+            return (
+              <>
+                {`Like `}
+                <TwitterIntent type="link" action="like">
+                  this tweet
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </TwitterIntent>
+              </>
+            )
           case "TWITTER_RETWEET":
             return (
               <>
                 {`Retweet `}
                 <TwitterTweetLink requirement={requirement} />
+              </>
+            )
+          case "TWITTER_RETWEET_V2":
+            return (
+              <>
+                {`Retweet `}
+                <TwitterIntent type="link" action="retweet">
+                  this tweet
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </TwitterIntent>
               </>
             )
           case "TWITTER_LIST_MEMBER":

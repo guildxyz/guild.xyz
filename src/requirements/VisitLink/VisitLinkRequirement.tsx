@@ -1,4 +1,11 @@
-import { Link as ChakraLink, HStack, Icon, Stack, Text } from "@chakra-ui/react"
+import {
+  Link as ChakraLink,
+  ChakraProps,
+  HStack,
+  Icon,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Requirement, {
   RequirementProps,
@@ -53,7 +60,9 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const chakraLinkprops: Pick<
     ComponentProps<typeof ChakraLink>,
     "colorScheme" | "onClick"
-  > = {
+  > &
+    ChakraProps = {
+    display: "inline",
     colorScheme: "blue",
     onClick: () => openJoinModal(),
   }
@@ -72,18 +81,24 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     },
   }
 
-  const Original = () => (
-    <>
-      {"Visit link: "}
-      {isMember || hasAccess ? (
-        <Link {...chakraLinkprops} {...linkProps}>
-          {data.id}
-        </Link>
-      ) : (
-        <ChakraLink {...chakraLinkprops}>{data.id}</ChakraLink>
-      )}
-    </>
-  )
+  const Original = () => {
+    const wordBreak = data.id?.startsWith("http") ? "break-all" : "break-word"
+
+    return (
+      <>
+        {"Visit link: "}
+        {isMember || hasAccess ? (
+          <Link {...chakraLinkprops} {...linkProps} wordBreak={wordBreak}>
+            {data.id}
+          </Link>
+        ) : (
+          <ChakraLink {...chakraLinkprops} wordBreak={wordBreak}>
+            {data.id}
+          </ChakraLink>
+        )}
+      </>
+    )
+  }
 
   return (
     <Requirement

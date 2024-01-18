@@ -110,6 +110,7 @@ const RichTextDescriptionEditor = ({
             <Text
               color="chakra-placeholder-color"
               position="absolute"
+              pointerEvents="none"
               top="calc(var(--chakra-space-10) + 2px)"
               left={3}
             >

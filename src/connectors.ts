@@ -11,9 +11,14 @@ import { SafeConnector } from "wagmi/connectors/safe"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { publicProvider } from "wagmi/providers/public"
 
-const { chains, publicClient } = configureChains(Object.values(CHAIN_CONFIG), [
-  publicProvider(),
-])
+const { chains: allChains, publicClient } = configureChains(
+  Object.values(CHAIN_CONFIG).filter(
+    (chain) => chain.rpcUrls.default.http.length > 0
+  ),
+  [publicProvider()]
+)
+
+const chains = allChains.filter((chain) => chain.rpcUrls.default.http.length > 0)
 
 const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
   ? [

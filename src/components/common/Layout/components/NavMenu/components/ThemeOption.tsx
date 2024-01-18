@@ -2,6 +2,8 @@ import { Icon, useColorMode, useRadio } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
 
+const DISABLED_ROUTES = ["/"]
+
 const LogicOption = (props) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
   const router = useRouter()
@@ -26,9 +28,7 @@ const LogicOption = (props) => {
       cursor="pointer"
       size="xs"
       borderRadius="lg"
-      isDisabled={["/", "/guildverse", "/brain/[pageSlug]"].includes(
-        router.pathname
-      )}
+      isDisabled={DISABLED_ROUTES.includes(router.pathname)}
     >
       <input {...input} />
       {label}

@@ -7,7 +7,7 @@ import ExplorerTabs from "components/explorer/ExplorerTabs"
 import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
 import YourGuilds, { useYourGuilds } from "components/explorer/YourGuilds"
 import { GetStaticProps } from "next"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -24,18 +24,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
-
-  // temporary for holiday theme
-  useEffect(() => {
-    const startEvent = new Event("snow")
-    const stopEvent = new Event("stopSnow")
-
-    window.dispatchEvent(startEvent)
-
-    return () => {
-      window.dispatchEvent(stopEvent)
-    }
-  }, [])
 
   return (
     <>
@@ -62,7 +50,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
         }}
         backgroundOffset={usersGuilds?.length ? 135 : 120}
         textColor="white"
-        showHat
       >
         <ClientOnly>
           <ExplorerTabs

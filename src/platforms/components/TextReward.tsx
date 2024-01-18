@@ -5,9 +5,9 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailibiltyTags, {
+import AvailabilityTags, {
   getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailibiltyTags"
+} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -127,7 +127,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
           )
         }
       >
-        <AvailibiltyTags rolePlatform={platform} />
+        <AvailabilityTags rolePlatform={platform} />
       </RewardDisplay>
 
       <ClaimTextModal

@@ -11,7 +11,7 @@ import { Clock } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import { DAY_IN_MS } from "../../EditRewardAvailibiltyModal"
+import { DAY_IN_MS } from "../../EditRewardAvailabilityModal"
 
 type Props = { rolePlatform: RolePlatform } & WrapProps
 
@@ -20,17 +20,17 @@ export const getTimeDiff = (dateString: string) => {
   return new Date(dateString).getTime() - Date.now()
 }
 
-export const shouldShowAvailibiltyTags = (rolePlatform?: RolePlatform): boolean =>
+export const shouldShowAvailabilityTags = (rolePlatform?: RolePlatform): boolean =>
   typeof rolePlatform?.capacity === "number" ||
   !!rolePlatform?.startTime ||
   !!rolePlatform?.endTime
 
-const AvailibiltyTags = ({
+const AvailabilityTags = ({
   rolePlatform,
   children,
   ...wrapProps
 }: PropsWithChildren<Props>) => {
-  if (!children && !shouldShowAvailibiltyTags(rolePlatform)) return null
+  if (!children && !shouldShowAvailabilityTags(rolePlatform)) return null
 
   return (
     <Wrap spacing={1} {...wrapProps}>
@@ -133,5 +133,5 @@ const EndTimeTag = ({ endTime, ...rest }: { endTime: string } & TagProps) => {
   )
 }
 
-export default AvailibiltyTags
+export default AvailabilityTags
 export { CapacityTag, EndTimeTag, StartTimeTag }

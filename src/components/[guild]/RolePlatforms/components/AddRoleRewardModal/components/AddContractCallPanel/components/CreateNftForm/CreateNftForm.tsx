@@ -25,7 +25,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
+import { Chain, CHAIN_CONFIG, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
