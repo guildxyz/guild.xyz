@@ -8,7 +8,7 @@ type Props = {
   role: Role
 }
 
-const NftByRole = ({ role }: Props) => {
+const CollectibleByRole = ({ role }: Props) => {
   const { urlName } = useGuild()
 
   if (!role) return null
@@ -29,4 +29,4 @@ const NftByRole = ({ role }: Props) => {
   )
 }
 
-export default NftByRole
+export default CollectibleByRole
