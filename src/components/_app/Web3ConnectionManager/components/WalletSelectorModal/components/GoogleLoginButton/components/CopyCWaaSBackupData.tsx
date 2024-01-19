@@ -36,6 +36,7 @@ const CopyCWaaSBackupData = () => {
     })
   }, [hasCopied])
 
+  // This toast is needed, because we can't copy to clipboard immediately after the submit, due to browser limitations
   useEffect(() => {
     toast({
       status: "info",
