@@ -18,8 +18,8 @@ const ActivityLogFiltersBar = (): JSX.Element => {
   const { clearFilters } = useActivityLogFilters()
 
   const btnActiveColor = useColorModeValue(
-    "var(--chakra-colors-blue-200)",
-    "var(--chakra-colors-blue-500)"
+    "var(--chakra-colors-indigo-100)",
+    "var(--chakra-colors-indigo-500)"
   )
 
   const changeActionGroup = (value: ActivityLogActionGroup) => {
