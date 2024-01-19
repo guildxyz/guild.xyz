@@ -112,7 +112,6 @@ const CopyCWaaSBackupData = () => {
       <IconButton
         size="sm"
         variant="outline"
-        isLoading={copyBackup.isLoading}
         onClick={copyBackup.onSubmit}
         isLoading={copyBackup.isLoading}
         icon={<Icon as={Copy} p="1px" />}
