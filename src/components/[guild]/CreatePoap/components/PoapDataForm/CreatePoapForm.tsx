@@ -1,8 +1,8 @@
 import { Stack } from "@chakra-ui/react"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { CreatePoapForm as CreatePoapFormType } from "types"
@@ -71,7 +71,7 @@ const CreatePoapForm = (): JSX.Element => {
       >
         <Button
           colorScheme="green"
-          onClick={handleSubmit((data) => onCreatePoapSubmit(data))}
+          onClick={handleSubmit(onCreatePoapSubmit)}
           isDisabled={isCreatePoapLoading || isSavePoapLoading}
           isLoading={isCreatePoapLoading || isSavePoapLoading}
           loadingText={`Creating POAP`}

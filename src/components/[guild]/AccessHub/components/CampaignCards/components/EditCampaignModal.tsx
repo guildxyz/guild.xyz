@@ -49,10 +49,7 @@ const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
   const { onSubmit, isLoading } = useEditRoleGroup(groupId, onSuccess)
 
   const { handleSubmit: handleSubmitWithUpload, isUploadingShown } =
-    useSubmitWithUpload(
-      handleSubmit((data) => onSubmit(data)),
-      iconUploader.isUploading
-    )
+    useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
 
   return (
     <FormProvider {...methods}>

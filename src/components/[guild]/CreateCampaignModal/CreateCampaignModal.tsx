@@ -32,10 +32,7 @@ const CreateCampaignModal = (props: Props) => {
   const { onSubmit, isLoading } = useCreateRoleGroup()
 
   const { handleSubmit: handleSubmitWithUpload, isUploadingShown } =
-    useSubmitWithUpload(
-      handleSubmit((data) => onSubmit(data)),
-      iconUploader.isUploading
-    )
+    useSubmitWithUpload(handleSubmit(onSubmit), iconUploader.isUploading)
 
   return (
     <FormProvider {...methods}>

@@ -119,7 +119,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
         <ModalFooter>
           <Button
             colorScheme="green"
-            onClick={methods.handleSubmit((data) => onSubmit(data))}
+            onClick={methods.handleSubmit(onSubmit)}
             isLoading={isLoading}
           >
             Save

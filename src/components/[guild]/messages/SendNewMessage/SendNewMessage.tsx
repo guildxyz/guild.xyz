@@ -166,7 +166,7 @@ const SendNewMessage = (props: ButtonProps) => {
               h={10}
               colorScheme="green"
               rightIcon={<PaperPlaneRight />}
-              onClick={handleSubmit((data) => onSubmit(data))}
+              onClick={handleSubmit(onSubmit)}
               isLoading={isLoading}
               loadingText="Sending"
             >

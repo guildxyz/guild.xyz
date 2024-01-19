@@ -417,7 +417,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               onClick={(e) => {
                 setShouldShowCloseAlert?.(true)
                 setIsBackButtonDisabled?.(true)
-                return handleSubmit((data) => onSubmit(data))(e)
+                return handleSubmit(onSubmit)(e)
               }}
             >
               Create NFT & continue setup
