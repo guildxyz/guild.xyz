@@ -59,7 +59,7 @@ const useUserPublic = (
 
   const idToUseRaw = userIdOrAddress ?? address
   const idToUse =
-    typeof idToUseRaw === "string" ? idToUseRaw?.toLowerCase() : idToUseRaw
+    typeof idToUseRaw === "string" ? idToUseRaw.toLowerCase() : idToUseRaw
 
   const { data, mutate, isLoading, error } = useSWRImmutable<PublicUser>(
     idToUse ? `/v2/users/${idToUse}/profile` : null,
