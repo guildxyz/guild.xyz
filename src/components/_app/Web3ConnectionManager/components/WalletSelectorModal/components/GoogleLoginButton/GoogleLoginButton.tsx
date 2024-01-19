@@ -28,22 +28,22 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import { publicClient } from "connectors"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
-import useDriveOAuth from "hooks/useDriveOAuth"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { LockSimple, Question, Wallet } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
+import type { CWaaSConnector } from "waasConnector"
+import { useConnect } from "wagmi"
+import { connectorButtonProps } from "../ConnectorButton"
+import GoogleTerms from "../GoogleTerms"
+import useDriveOAuth from "./hooks/useDriveOAuth"
 import {
   getDriveFileAppProperties,
   listWalletsOnDrive,
   uploadBackupDataToDrive,
-} from "utils/googleDrive"
-import type { CWaaSConnector } from "waasConnector"
-import { useConnect } from "wagmi"
-import { connectorButtonProps } from "./ConnectorButton"
-import GoogleTerms from "./GoogleTerms"
+} from "./utils/googleDrive"
 
 type LottieInstance = Parameters<IPlayerProps["lottieRef"]>[0]
 

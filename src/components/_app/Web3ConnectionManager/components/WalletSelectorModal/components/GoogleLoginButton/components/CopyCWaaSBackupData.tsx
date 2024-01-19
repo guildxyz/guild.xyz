@@ -1,12 +1,12 @@
 import { Icon, IconButton, Text, Tooltip, VStack } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useDriveOAuth from "hooks/useDriveOAuth"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Copy } from "phosphor-react"
 import { useState } from "react"
-import { getDriveFileAppProperties, listWalletsOnDrive } from "utils/googleDrive"
+import useDriveOAuth from "../hooks/useDriveOAuth"
+import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
 const CopyCWaaSBackupData = () => {
   const { captureEvent } = usePostHogContext()
