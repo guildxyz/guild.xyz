@@ -14,28 +14,31 @@ const ActivityLogFiltersBar = (): JSX.Element => {
 
   const shouldShowDateRangeInput = isUserActivityLog || featureFlags?.includes("CRM")
 
+  const ActionGroupButtons = (): JSX.Element => (
+    <GridItem colSpan={{ base: 3, md: 2 }}>
+      <HStack gap={2}>
+        <Button
+          isActive={actionGroup === ActivityLogActionGroup.UserAction}
+          onClick={() => setActionGroup(ActivityLogActionGroup.UserAction)}
+        >
+          User actions
+        </Button>
+        <Button
+          isActive={actionGroup === ActivityLogActionGroup.AdminAction}
+          onClick={() => setActionGroup(ActivityLogActionGroup.AdminAction)}
+        >
+          Admin actions
+        </Button>
+      </HStack>
+    </GridItem>
+  )
+
   return (
     <StickyBar>
       <SimpleGrid columns={3} gap={4}>
-        {!!withActionGroups && (
+        {withActionGroups ? (
           <>
-            <GridItem colSpan={{ base: 3, md: 2 }}>
-              <HStack gap={2}>
-                <Button
-                  isActive={actionGroup === ActivityLogActionGroup.UserAction}
-                  onClick={() => setActionGroup(ActivityLogActionGroup.UserAction)}
-                >
-                  User actions
-                </Button>
-                <Button
-                  isActive={actionGroup === ActivityLogActionGroup.AdminAction}
-                  onClick={() => setActionGroup(ActivityLogActionGroup.AdminAction)}
-                >
-                  Admin actions
-                </Button>
-              </HStack>
-            </GridItem>
-
+            <ActionGroupButtons />
             {shouldShowDateRangeInput && (
               <GridItem colSpan={{ base: 3, md: 1 }}>
                 <DateRangeInput />
@@ -46,9 +49,7 @@ const ActivityLogFiltersBar = (): JSX.Element => {
               <FiltersInput />
             </GridItem>
           </>
-        )}
-
-        {!withActionGroups && (
+        ) : (
           <>
             <GridItem colSpan={shouldShowDateRangeInput ? { base: 3, md: 2 } : 3}>
               <FiltersInput />

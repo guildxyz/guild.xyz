@@ -148,7 +148,7 @@ const ActivityLogProvider = ({
       })
     }
 
-    if (!query["action"]) searchParams = addActionGroupFilterParams(searchParams)
+    if (!query.action) searchParams = addActionGroupFilterParams(searchParams)
 
     return `/auditLog?${searchParams.toString()}`
   }

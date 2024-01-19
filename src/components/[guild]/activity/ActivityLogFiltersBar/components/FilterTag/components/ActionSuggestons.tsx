@@ -24,7 +24,7 @@ const ACTIVITY_LOG_ACTIONS = Object.entries(ACTION)
 
 // TODO: Only filter if needed, doesnt need to filter for admin actions on user activity page
 const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element => {
-  const { actionGroup } = useActivityLog()
+  const { actionGroup, withActionGroups } = useActivityLog()
 
   const actionSuggestions = useMemo(
     () =>
@@ -32,6 +32,8 @@ const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element =>
         const lowerCaseInputValue = inputValue.toLowerCase()
 
         const isInputMatch = action.toLowerCase().includes(lowerCaseInputValue)
+        if (!withActionGroups) return isInputMatch
+
         const isInGroup =
           actionGroup === ActivityLogActionGroup.AdminAction
             ? ADMIN_ACTIONS.includes(action)
