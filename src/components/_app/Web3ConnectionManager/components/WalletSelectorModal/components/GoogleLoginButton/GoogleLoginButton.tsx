@@ -84,7 +84,7 @@ const GoogleLoginButton = () => {
         const { wallet, account } = await cwaasConnector.createWallet()
         await uploadBackupDataToDrive(wallet.backup, account.address, accessToken)
         return true
-      } /* if (files.length == 1) */ else {
+      } else {
         const {
           appProperties: { backupData },
         } = await getDriveFileAppProperties(files[0].id, accessToken)
@@ -93,8 +93,6 @@ const GoogleLoginButton = () => {
         await cwaasConnector.restoreWallet(backupData)
         return false
       }
-
-      // TODO: Prompt user to choose from the backed up wallets
     },
     {
       onError: (error) => {
