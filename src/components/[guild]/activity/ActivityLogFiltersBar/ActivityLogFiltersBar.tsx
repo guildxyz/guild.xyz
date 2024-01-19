@@ -4,6 +4,7 @@ import Button from "components/common/Button"
 import StickyBar from "components/common/Layout/StickyBar"
 import { useActivityLog } from "../ActivityLogContext"
 import { ActivityLogActionGroup } from "../constants"
+import { useActivityLogFilters } from "./components/ActivityLogFiltersContext"
 import DateRangeInput from "./components/DateRangeInput"
 import FiltersInput from "./components/FiltersInput"
 
@@ -14,18 +15,25 @@ const ActivityLogFiltersBar = (): JSX.Element => {
 
   const shouldShowDateRangeInput = isUserActivityLog || featureFlags?.includes("CRM")
 
+  const { clearFilters } = useActivityLogFilters()
+
+  const changeActionGroup = (value: ActivityLogActionGroup) => {
+    setActionGroup(value)
+    clearFilters(["action"])
+  }
+
   const ActionGroupButtons = (): JSX.Element => (
     <GridItem colSpan={{ base: 3, md: 2 }}>
       <HStack gap={2}>
         <Button
           isActive={actionGroup === ActivityLogActionGroup.UserAction}
-          onClick={() => setActionGroup(ActivityLogActionGroup.UserAction)}
+          onClick={() => changeActionGroup(ActivityLogActionGroup.UserAction)}
         >
           User actions
         </Button>
         <Button
           isActive={actionGroup === ActivityLogActionGroup.AdminAction}
-          onClick={() => setActionGroup(ActivityLogActionGroup.AdminAction)}
+          onClick={() => changeActionGroup(ActivityLogActionGroup.AdminAction)}
         >
           Admin actions
         </Button>
