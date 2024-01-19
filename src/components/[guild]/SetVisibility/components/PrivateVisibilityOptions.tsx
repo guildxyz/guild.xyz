@@ -79,7 +79,7 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
       {/* FormControl shouldn't be needed when only the Text is shown, but this is the only way I could get a smooth Collapse */}
       <FormControl>
         {shouldSatisfyThisRole ? (
-          <Text fontSize={"sm"} color={"whiteAlpha.600"} fontWeight={500}>
+          <Text fontSize={"sm"} colorScheme="gray" fontWeight={500}>
             Users will only see the role if they qualify for it.
           </Text>
         ) : (
@@ -89,7 +89,11 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
         )}
 
         {/* unmountOnExit is used, so autoFocus triggers focus every time, the "Another role" option is selected */}
-        <Collapse in={!shouldSatisfyThisRole} unmountOnExit>
+        <Collapse
+          in={!shouldSatisfyThisRole}
+          unmountOnExit
+          style={{ padding: "1px", margin: "-1px" }}
+        >
           <ControlledSelect
             noResultText="No other roles found"
             autoFocus

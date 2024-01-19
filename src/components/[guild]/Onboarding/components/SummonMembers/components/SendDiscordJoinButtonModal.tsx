@@ -95,9 +95,7 @@ const SendDiscordJoinButtonModal = ({
           <Button
             colorScheme="green"
             onClick={() => {
-              captureEvent(
-                "guild creation flow > Send Discord join button was sended"
-              )
+              captureEvent("guild creation flow > Send Discord join button was sent")
               methods.handleSubmit(onSubmit)()
             }}
             isLoading={isLoading}

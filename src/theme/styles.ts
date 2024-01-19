@@ -1,5 +1,4 @@
 import { mode } from "@chakra-ui/theme-tools"
-import "react-notion-x/src/styles.css"
 
 const styles = {
   global: (props) => ({
@@ -62,30 +61,6 @@ const styles = {
       "100%": { opacity: 1, transform: "translateY(0px)" },
     },
 
-    ".notion-page": {
-      width: "var(--chakra-sizes-full) !important",
-      "@media (min-width : 1080px)": {
-        borderRadius: "15px",
-        background: "var(--chakra-colors-whiteAlpha-50)",
-        paddingX: "6 !important",
-        paddingY: "20px !important",
-      },
-      display: "inline-block !important",
-      ".notion-simple-table": {
-        fontFamily: "var(--chakra-fonts-body)",
-        lineHeight: "var(--chakra-lineHeights-base)",
-        "tr:last-child td": {
-          border: "1px solid var(--chakra-colors-gray-600)",
-        },
-        "tr td": {
-          border: "1px solid var(--chakra-colors-gray-600)",
-        },
-      },
-    },
-    ".notion": {
-      fontFamily: "var(--chakra-fonts-body)",
-      lineHeight: "var(--chakra-lineHeights-base)",
-    },
     "#walletconnect-wrapper": {
       color: "black",
     },

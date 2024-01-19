@@ -3,7 +3,7 @@ import { DotsThree } from "phosphor-react"
 import { PropsWithChildren } from "react"
 
 const PlatformCardMenu = ({ children }: PropsWithChildren<unknown>) => (
-  <Menu placement="bottom-end" closeOnSelect={false} isLazy>
+  <Menu placement="bottom-end" closeOnSelect={false}>
     <MenuButton
       as={IconButton}
       icon={<DotsThree />}

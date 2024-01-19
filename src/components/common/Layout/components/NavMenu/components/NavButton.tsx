@@ -13,7 +13,7 @@ const NavButton = forwardRef(
     const router = useRouter()
 
     return (
-      <NextLink passHref href={href}>
+      <NextLink passHref href={href} prefetch={false}>
         <Button
           as="a"
           ref={ref}

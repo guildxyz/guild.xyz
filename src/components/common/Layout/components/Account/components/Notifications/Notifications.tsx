@@ -102,6 +102,7 @@ const Notifications = () => {
                   userId={id}
                   withSearchParams={false}
                   isInfinite={false}
+                  limit={3}
                 >
                   <NotificationsSection title="Recent activity">
                     <NotificationsActivityLog />

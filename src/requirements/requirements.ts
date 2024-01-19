@@ -374,6 +374,17 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: "/requirementLogos/web3inbox.png",
+    name: "Web3Inbox",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Web3Inbox/Web3InboxRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Web3Inbox/Web3InboxForm")
+    ),
+    types: ["WEB3INBOX_SUBSCRIBERS"],
+  },
+  {
     icon: "/requirementLogos/galaxy.svg",
     name: "Galxe",
     displayComponent: dynamic<RequirementProps>(

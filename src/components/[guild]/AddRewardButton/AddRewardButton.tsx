@@ -31,10 +31,10 @@ import {
   useAddRewardContext,
 } from "../AddRewardContext"
 import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
-import { useIsTabsStuck } from "../Tabs/Tabs"
+import { useIsTabsStuck } from "../Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
-import AvailibiltySetup from "./components/AvailibiltySetup"
+import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 
 // temporary until POAPs are real rewards
@@ -210,7 +210,7 @@ const AddRewardButton = (): JSX.Element => {
 
                   {step === "SELECT_ROLE" && (
                     <PlatformPreview>
-                      <AvailibiltySetup
+                      <AvailabilitySetup
                         platformType={rolePlatform?.guildPlatform?.platformName}
                         rolePlatform={rolePlatform}
                         defaultValues={{

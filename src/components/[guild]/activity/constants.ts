@@ -13,6 +13,8 @@ import {
   PaintBrushBroad,
   PlusMinus,
   Question,
+  Shield,
+  ShieldCheck,
   SignIn,
   SignOut,
   Star,
@@ -71,6 +73,8 @@ export enum ACTION {
   LoseReward = "lose reward",
   ConnectIdentity = "connect identity",
   DisconnectIdentity = "disconnect identity",
+  OptIn = "user opt-in",
+  OptOut = "user opt-out",
 
   // These actions are only used on the frontend
   UpdateUrlName = "UpdateUrlName",
@@ -252,6 +256,14 @@ export const activityLogActionIcons: Record<
   [ACTION.DisconnectIdentity]: {
     as: UserFocus,
     color: "red.500",
+  },
+  [ACTION.OptIn]: {
+    as: ShieldCheck,
+    color: "green.500",
+  },
+  [ACTION.OptOut]: {
+    as: Shield,
+    color: "gray.500",
   },
 
   // Custom actions

@@ -11,8 +11,8 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
 import { File } from "phosphor-react"
 import PublicRewardDataForm from "platforms/SecretText/SecretTextDataForm/components/PublicRewardDataForm"
-import { PropsWithChildren, useEffect, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { PropsWithChildren, useState } from "react"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import Key from "static/icons/key.svg"
 
 export type UniqueTextRewardForm = {
@@ -22,19 +22,25 @@ export type UniqueTextRewardForm = {
 }
 
 type Props = {
+  shouldValidate?: boolean
   isEditForm?: boolean
 }
 
-const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) => {
+const UniqueTextDataForm = ({
+  shouldValidate = true,
+  isEditForm,
+  children,
+}: PropsWithChildren<Props>) => {
   const {
-    register,
     setValue,
     formState: { errors },
   } = useFormContext<UniqueTextRewardForm>()
 
-  useEffect(() => {
-    register("texts", {
+  useController({
+    name: "texts",
+    rules: {
       validate: (value) => {
+        if (!shouldValidate) return
         if (1000 < value.length) return "You can upload up to 1000 lines."
 
         const wrongIndex = value.findIndex((line) => 100 < line.length)
@@ -43,8 +49,8 @@ const UniqueTextDataForm = ({ isEditForm, children }: PropsWithChildren<Props>) 
             wrongIndex + 1
           }.`
       },
-    })
-  }, [register])
+    },
+  })
 
   const texts = useWatch({ name: "texts" })
 
