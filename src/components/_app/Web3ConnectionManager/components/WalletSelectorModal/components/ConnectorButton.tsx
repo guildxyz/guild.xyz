@@ -22,6 +22,7 @@ const connectorButtonProps: ButtonProps = {
   size: "xl",
   iconSpacing: 4,
   justifyContent: "start",
+  mb: 4,
   // Yeah.. This is not a pretty solution, but the simplest extra-markup-free one, I could find, as the spinner is conviniently already wrapped in a flex container
   sx: {
     "> div.chakra-button__spinner": {
@@ -47,7 +48,7 @@ const ConnectorButton = ({
 
   const { isConnected, connector: activeConnector } = useAccount()
 
-  const { keyPair, id } = useUserPublic()
+  const { keyPair } = useUserPublic()
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
@@ -57,7 +58,6 @@ const ConnectorButton = ({
 
   return (
     <Button
-      mb="4"
       onClick={
         connector.id === "injected" && !isMetaMaskInstalled
           ? handleOnboarding
