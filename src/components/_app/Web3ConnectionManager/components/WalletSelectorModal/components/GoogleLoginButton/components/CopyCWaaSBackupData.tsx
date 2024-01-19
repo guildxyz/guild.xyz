@@ -113,7 +113,7 @@ const CopyCWaaSBackupData = () => {
         variant="outline"
         onClick={copyBackup.onSubmit}
         icon={<Icon as={Copy} p="1px" />}
-        aria-label="Disconnect"
+        aria-label="Copy wallet backup data"
       />
     </Tooltip>
   )
