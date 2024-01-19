@@ -190,10 +190,9 @@ const GoogleLoginButton = () => {
 
     successPlayer.addEventListener("complete", animDone)
 
-    // TODO Check if we need this
-    // return () => {
-    //   successPlayer.removeEventListener("complete", animDone)
-    // }
+    return () => {
+      successPlayer.removeEventListener("complete", animDone)
+    }
   }, [isSuccess])
 
   return (
