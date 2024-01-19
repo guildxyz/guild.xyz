@@ -32,8 +32,7 @@ import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { LockSimple, Question, Wallet } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
+import { useEffect, useState } from "react"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
 import { connectorButtonProps } from "../ConnectorButton"
@@ -59,7 +58,6 @@ const genericErrorToastCallback =
 const GoogleLoginButton = () => {
   const { captureEvent } = usePostHogContext()
   const onboardingModal = useDisclosure()
-  const recaptchaRef = useRef<ReCAPTCHA>()
   const { connectors, connectAsync, connect } = useConnect()
   const cwaasConnector = connectors.find(
     ({ id }) => id === "cwaasWallet"
@@ -240,12 +238,6 @@ const GoogleLoginButton = () => {
       >
         Sign in with Google
       </Button>
-      {/* Maybe move ReCAPTCHA to _app to avoid duplication */}
-      <ReCAPTCHA
-        ref={recaptchaRef}
-        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        size="invisible"
-      />
 
       <Modal isOpen={onboardingModal.isOpen} onClose={onboardingModal.onClose}>
         <ModalOverlay />
