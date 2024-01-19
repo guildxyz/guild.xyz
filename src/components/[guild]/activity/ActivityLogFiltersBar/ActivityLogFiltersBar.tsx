@@ -1,4 +1,4 @@
-import { GridItem, HStack, SimpleGrid } from "@chakra-ui/react"
+import { GridItem, HStack, SimpleGrid, useColorModeValue } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import StickyBar from "components/common/Layout/StickyBar"
@@ -17,6 +17,11 @@ const ActivityLogFiltersBar = (): JSX.Element => {
 
   const { clearFilters } = useActivityLogFilters()
 
+  const btnActiveColor = useColorModeValue(
+    "var(--chakra-colors-blue-200)",
+    "var(--chakra-colors-blue-500)"
+  )
+
   const changeActionGroup = (value: ActivityLogActionGroup) => {
     setActionGroup(value)
     clearFilters(["action"])
@@ -26,12 +31,18 @@ const ActivityLogFiltersBar = (): JSX.Element => {
     <GridItem colSpan={{ base: 3, md: 2 }}>
       <HStack gap={2}>
         <Button
+          _active={{
+            bg: btnActiveColor,
+          }}
           isActive={actionGroup === ActivityLogActionGroup.UserAction}
           onClick={() => changeActionGroup(ActivityLogActionGroup.UserAction)}
         >
           User actions
         </Button>
         <Button
+          _active={{
+            bg: btnActiveColor,
+          }}
           isActive={actionGroup === ActivityLogActionGroup.AdminAction}
           onClick={() => changeActionGroup(ActivityLogActionGroup.AdminAction)}
         >
