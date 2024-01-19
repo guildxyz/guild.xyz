@@ -22,7 +22,6 @@ const ACTIVITY_LOG_ACTIONS = Object.entries(ACTION)
   .filter(([actionType]) => !HIDDEN_ACTIONS.includes(ACTION[actionType]))
   .map(([, actionName]) => actionName)
 
-// TODO: Only filter if needed, doesnt need to filter for admin actions on user activity page
 const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element => {
   const { actionGroup, withActionGroups } = useActivityLog()
 
