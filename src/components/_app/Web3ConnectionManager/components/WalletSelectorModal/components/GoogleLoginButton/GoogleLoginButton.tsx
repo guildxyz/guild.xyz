@@ -228,7 +228,7 @@ const GoogleLoginButton = () => {
         leftIcon={
           <Center boxSize={6}>
             <Img
-              src={`/walletLogos/google.png`}
+              src={`/walletLogos/google.svg`}
               maxW={6}
               maxH={6}
               alt={`Google logo`}
