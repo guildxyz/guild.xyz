@@ -302,4 +302,18 @@ export const HIDDEN_ACTIONS: ACTION[] = [
   ACTION.UpdateTheme,
 ]
 
-export const ADMIN_ACTIONS: ACTION[] = [ACTION.CreateGuild, ACTION.UpdateGuild]
+export const USER_ACTIONS: ACTION[] = [
+  ACTION.ClickJoinOnWeb,
+  ACTION.ClickJoinOnPlatform,
+  ACTION.JoinGuild,
+  ACTION.LeaveGuild,
+  ACTION.UserStatusUpdate,
+  ACTION.GetRole,
+  ACTION.LoseRole,
+  ACTION.GetReward,
+  ACTION.LoseReward,
+  ACTION.ConnectIdentity,
+  ACTION.DisconnectIdentity,
+  ACTION.OptIn,
+  ACTION.OptOut,
+]

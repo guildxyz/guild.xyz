@@ -14,8 +14,8 @@ import {
   ACTION,
   ActivityLogAction,
   ActivityLogActionGroup,
-  ADMIN_ACTIONS,
   HIDDEN_ACTIONS,
+  USER_ACTIONS,
 } from "./constants"
 
 const DEFAULT_LIMIT = 50
@@ -89,9 +89,9 @@ type Props = {
   withActionGroups?: boolean
 } & OneOf<{ userId: number }, { guildId: number }>
 
-const getUserActions = () => {
+const getAdminActions = () => {
   return Object.values(ACTION).filter(
-    (action) => !ADMIN_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action)
+    (action) => !USER_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action)
   )
 }
 
@@ -156,9 +156,9 @@ const ActivityLogProvider = ({
   const addActionGroupFilterParams = (searchParams: URLSearchParams) => {
     const actions =
       actionGroup === ActivityLogActionGroup.AdminAction
-        ? ADMIN_ACTIONS
+        ? getAdminActions()
         : actionGroup === ActivityLogActionGroup.UserAction
-        ? getUserActions()
+        ? USER_ACTIONS
         : []
 
     actions.forEach((action) => {

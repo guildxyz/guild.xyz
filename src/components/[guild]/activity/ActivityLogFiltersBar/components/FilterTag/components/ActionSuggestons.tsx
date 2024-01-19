@@ -4,9 +4,9 @@ import ActionIcon from "components/[guild]/activity/ActivityLogAction/components
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import {
   ACTION,
-  ADMIN_ACTIONS,
   ActivityLogActionGroup,
   HIDDEN_ACTIONS,
+  USER_ACTIONS,
 } from "components/[guild]/activity/constants"
 import { HTMLAttributes, useMemo } from "react"
 import capitalize from "utils/capitalize"
@@ -34,9 +34,9 @@ const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element =>
         if (!withActionGroups) return isInputMatch
 
         const isInGroup =
-          actionGroup === ActivityLogActionGroup.AdminAction
-            ? ADMIN_ACTIONS.includes(action)
-            : !ADMIN_ACTIONS.includes(action)
+          actionGroup === ActivityLogActionGroup.UserAction
+            ? USER_ACTIONS.includes(action)
+            : !USER_ACTIONS.includes(action)
 
         return isInputMatch && isInGroup
       }),
