@@ -91,13 +91,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     let finalOauthParams = params
 
-    if (paramOverrides) {
-      finalOauthParams = {
-        ...finalOauthParams,
-        ...paramOverrides,
-      }
-    }
-
     if (oauthOptionsInitializer) {
       try {
         finalOauthParams = await oauthOptionsInitializer(redirectUri)
@@ -114,6 +107,13 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
         setOauthState(result)
         return
+      }
+    }
+
+    if (paramOverrides) {
+      finalOauthParams = {
+        ...finalOauthParams,
+        ...paramOverrides,
       }
     }
 
