@@ -1,9 +1,11 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/GoogleLoginButton"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
@@ -55,8 +57,10 @@ const useConnectPlatform = (
 
   const prevAuthData = usePrevious(authData)
 
-  const { onSubmit, isLoading, response } = useConnect(() => {
-    onSuccess?.()
+  const { onSubmit, isLoading, response } = useConnect({
+    onSuccess: () => {
+      onSuccess?.()
+    },
   })
 
   useEffect(() => {
@@ -81,7 +85,7 @@ const useConnectPlatform = (
   }
 }
 
-const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
+const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
@@ -141,9 +145,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         { revalidate: false }
       )
 
-      onSuccess?.()
+      useSubmitOptions?.onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
+      try {
+        useSubmitOptions?.onError?.([platformName, rawError])
+      } catch (err) {
+        if (err instanceof StopExecution) {
+          return
+        }
+      }
+
       const errorObject = {
         error: undefined,
         isAutoConnect: undefined,

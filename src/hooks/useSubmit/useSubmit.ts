@@ -21,6 +21,9 @@ import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
+
+  // Use catefully! If this is set to true, a .onSubmit() call can reject!
+  allowThrow?: boolean
 }
 
 type FetcherFunction<ResponseType> = ({
@@ -33,14 +36,14 @@ type FetcherFunction<ResponseType> = ({
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
-  { onSuccess, onError }: UseSubmitOptions<ResponseType> = {}
+  { onSuccess, onError, allowThrow }: UseSubmitOptions<ResponseType> = {}
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
   const [response, setResponse] = useState<ResponseType>(undefined)
 
   return {
-    onSubmit: (data?: DataType, allowThrow = false): Promise<ResponseType> => {
+    onSubmit: (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
       return fetch(data)

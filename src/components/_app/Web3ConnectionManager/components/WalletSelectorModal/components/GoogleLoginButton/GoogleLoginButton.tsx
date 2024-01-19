@@ -46,15 +46,6 @@ import {
 
 type LottieInstance = Parameters<IPlayerProps["lottieRef"]>[0]
 
-const genericErrorToastCallback =
-  (toast: ReturnType<typeof useToast>) => (error: any) => {
-    toast({
-      status: "error",
-      title: "Error",
-      description: error instanceof Error ? error.message : "Unknown error",
-    })
-  }
-
 const GoogleLoginButton = () => {
   const { captureEvent } = usePostHogContext()
   const onboardingModal = useDisclosure()
@@ -65,44 +56,52 @@ const GoogleLoginButton = () => {
 
   const googleAuth = useDriveOAuth()
 
-  const set = useSetKeyPair()
+  const set = useSetKeyPair({
+    onSuccess: () => captureEvent("[WaaS] Keypair verified"),
+    onError: (err) => {
+      captureEvent("[WaaS] Failed to verify keypair", { error: err })
+      throw err
+    },
+    allowThrow: true,
+  })
   const toast = useToast()
 
   const [isNewWallet, setIsNewWallet] = useState(false)
 
-  const createOrRestoreWallet = useSubmit(
-    async (accessToken: string) => {
-      const { files } = await listWalletsOnDrive(accessToken)
+  const createOrRestoreWallet = async (accessToken: string) => {
+    const { files } = await listWalletsOnDrive(accessToken)
 
-      if (files.length <= 0) {
-        setIsNewWallet(true)
-      }
-
-      onboardingModal.onOpen()
-
-      if (files.length <= 0) {
-        const { wallet, account } = await cwaasConnector.createWallet()
-        await uploadBackupDataToDrive(wallet.backup, account.address, accessToken)
-        return true
-      } else {
-        const {
-          appProperties: { backupData },
-        } = await getDriveFileAppProperties(files[0].id, accessToken)
-
-        // TODO: Check if the current wallet (if there is one) is the same. If so, don't call restore
-        await cwaasConnector.restoreWallet(backupData)
-        return false
-      }
-    },
-    {
-      onError: (error) => {
-        captureEvent("[WaaS] Wallet creation / restoration failed", { error })
-        genericErrorToastCallback(toast)(error)
-      },
+    if (files.length <= 0) {
+      setIsNewWallet(true)
     }
-  )
 
-  const connectGoogle = usePlatformConnect()
+    onboardingModal.onOpen()
+
+    if (files.length <= 0) {
+      const { wallet, account } = await cwaasConnector.createWallet()
+      await uploadBackupDataToDrive(wallet.backup, account.address, accessToken)
+      return true
+    } else {
+      const {
+        appProperties: { backupData },
+      } = await getDriveFileAppProperties(files[0].id, accessToken)
+
+      // TODO: Check if the current wallet (if there is one) is the same. If so, don't call restore
+      await cwaasConnector.restoreWallet(backupData)
+      return false
+    }
+  }
+
+  const connectGoogle = usePlatformConnect({
+    allowThrow: true,
+    onSuccess: () => {
+      captureEvent("[WaaS] Google platform connected")
+    },
+    onError: (err) => {
+      captureEvent("[WaaS] Google platform connection failed", { error: err })
+      throw new StopExecution()
+    },
+  })
 
   const logInWithGoogle = useSubmit(
     async () => {
@@ -119,57 +118,39 @@ const GoogleLoginButton = () => {
       captureEvent("[WaaS] Successful Google OAuth")
 
       // 2) Create or Restore wallet
-      const isNew = await createOrRestoreWallet.onSubmit(
-        (authData as any)?.access_token,
-        true
-      )
+      const isNew = await createOrRestoreWallet(
+        (authData as any)?.access_token
+      ).catch((err) => {
+        captureEvent("[WaaS] Wallet creation / restoration failed", { error: err })
+        toast({
+          status: "error",
+          title: "Error",
+          description: err instanceof Error ? err.message : "Unknown error",
+        })
+      })
 
       captureEvent("[WaaS] Wallet successfully initialized", { isNew })
 
       // 3) Verify a keypair
-
       const walletClient = await cwaasConnector.getWalletClient()
-      const { keyPair, user } = await set
-        .onSubmit(
-          {
-            signProps: {
-              walletClient,
-              address: walletClient.account.address,
-            },
-          },
-          true
-        )
-        .then((result) => {
-          captureEvent("[WaaS] Keypair verified")
-          return result
-        })
-        .catch((err) => {
-          captureEvent("[WaaS] Failed to verify keypair", { error: err })
-          throw err
-        })
+      const { keyPair, user } = await set.onSubmit({
+        signProps: {
+          walletClient,
+          address: walletClient.account.address,
+        },
+      })
 
       // 4) Try to connect Google account
-
-      await connectGoogle
-        .onSubmit(
-          {
-            signOptions: {
-              keyPair: keyPair.keyPair,
-              walletClient,
-              address: walletClient.account.address,
-              publicClient: publicClient({}),
-            },
-            platformName: "GOOGLE",
-            authData,
-          },
-          true
-        )
-        .then(() => {
-          captureEvent("[WaaS] Google platform connected")
-        })
-        .catch((err) => {
-          captureEvent("[WaaS] Google platform connection failed", { error: err })
-        })
+      await connectGoogle.onSubmit({
+        signOptions: {
+          keyPair: keyPair.keyPair,
+          walletClient,
+          address: walletClient.account.address,
+          publicClient: publicClient({}),
+        },
+        platformName: "GOOGLE",
+        authData,
+      })
 
       if (!isNew) {
         await connectAsync({ connector: cwaasConnector })
@@ -209,6 +190,7 @@ const GoogleLoginButton = () => {
 
     successPlayer.addEventListener("complete", animDone)
 
+    // TODO Check if we need this
     // return () => {
     //   successPlayer.removeEventListener("complete", animDone)
     // }
@@ -384,5 +366,7 @@ const GoogleLoginButton = () => {
     </>
   )
 }
+
+export class StopExecution extends Error {}
 
 export default GoogleLoginButton

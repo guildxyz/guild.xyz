@@ -8,7 +8,7 @@ import { AddressConnectionProvider } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { recaptchaAtom } from "utils/recaptcha"
 import useSubmit from "./useSubmit"
-import { SignProps } from "./useSubmit/useSubmit"
+import { SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
 
 /**
  * This is a generic RPC internal error code, but we are only using it for testing
@@ -65,7 +65,7 @@ const generateKeyPair = async () => {
   }
 }
 
-const useSetKeyPair = () => {
+const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const { captureEvent } = usePostHogContext()
   const { address, isDelegateConnection, setIsDelegateConnection } =
     useWeb3ConnectionManager()
@@ -159,6 +159,7 @@ const useSetKeyPair = () => {
     },
 
     {
+      ...submitOptions,
       onError: (error) => {
         console.error("setKeyPair error", error)
         if (
@@ -168,6 +169,8 @@ const useSetKeyPair = () => {
           const trace = error?.stack || new Error().stack
           captureEvent(`Failed to set keypair`, { error, trace })
         }
+
+        submitOptions?.onError?.(error)
       },
       onSuccess: () => {
         mutate(["delegateCashVaults", id]).then(() => {
@@ -175,6 +178,8 @@ const useSetKeyPair = () => {
         })
 
         setIsDelegateConnection(false)
+
+        submitOptions?.onSuccess?.()
       },
     }
   )
