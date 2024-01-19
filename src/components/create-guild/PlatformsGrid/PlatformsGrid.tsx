@@ -68,6 +68,11 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
               icon={platforms[platform].icon}
               imageUrl={platforms[platform].imageUrl}
               onSelection={onSelection}
+              disabledText={
+                platform === "POAP"
+                  ? "Under rework, please check back later!"
+                  : undefined
+              }
             />
           )
         )}
