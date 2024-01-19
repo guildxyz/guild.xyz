@@ -79,7 +79,7 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
       {/* FormControl shouldn't be needed when only the Text is shown, but this is the only way I could get a smooth Collapse */}
       <FormControl>
         {shouldSatisfyThisRole ? (
-          <Text fontSize={"sm"} color={"whiteAlpha.600"} fontWeight={500}>
+          <Text fontSize={"sm"} colorScheme="gray" fontWeight={500}>
             Users will only see the role if they qualify for it.
           </Text>
         ) : (
