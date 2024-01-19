@@ -1,12 +1,23 @@
-import { GridItem, HStack, SimpleGrid, useColorModeValue } from "@chakra-ui/react"
+import { GridItem, SimpleGrid, useColorModeValue } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import StickyBar from "components/common/Layout/StickyBar"
+import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useActivityLog } from "../ActivityLogContext"
 import { ActivityLogActionGroup } from "../constants"
 import { useActivityLogFilters } from "./components/ActivityLogFiltersContext"
 import DateRangeInput from "./components/DateRangeInput"
 import FiltersInput from "./components/FiltersInput"
+
+const options = [
+  {
+    label: ActivityLogActionGroup.UserAction,
+    value: ActivityLogActionGroup.UserAction.toString(),
+  },
+  {
+    label: ActivityLogActionGroup.AdminAction,
+    value: ActivityLogActionGroup.AdminAction,
+  },
+]
 
 const ActivityLogFiltersBar = (): JSX.Element => {
   const { isUserActivityLog, withActionGroups, actionGroup, setActionGroup } =
@@ -29,26 +40,16 @@ const ActivityLogFiltersBar = (): JSX.Element => {
 
   const ActionGroupButtons = (): JSX.Element => (
     <GridItem colSpan={{ base: 3, md: 2 }}>
-      <HStack gap={2}>
-        <Button
-          _active={{
-            bg: btnActiveColor,
-          }}
-          isActive={actionGroup === ActivityLogActionGroup.UserAction}
-          onClick={() => changeActionGroup(ActivityLogActionGroup.UserAction)}
-        >
-          User actions
-        </Button>
-        <Button
-          _active={{
-            bg: btnActiveColor,
-          }}
-          isActive={actionGroup === ActivityLogActionGroup.AdminAction}
-          onClick={() => changeActionGroup(ActivityLogActionGroup.AdminAction)}
-        >
-          Admin actions
-        </Button>
-      </HStack>
+      <RadioButtonGroup
+        options={options}
+        radioGroupProps={{
+          onChange: (newValue) =>
+            changeActionGroup(newValue as ActivityLogActionGroup),
+          value: actionGroup,
+          defaultValue: ActivityLogActionGroup.UserAction,
+        }}
+        buttonGroupStyleProps={{ w: { base: "full", md: "auto" }, spacing: 1.5 }}
+      ></RadioButtonGroup>
     </GridItem>
   )
 

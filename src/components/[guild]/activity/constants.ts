@@ -85,8 +85,8 @@ export enum ACTION {
 }
 
 export enum ActivityLogActionGroup {
-  UserAction = "UserAction",
-  AdminAction = "AdminAction",
+  UserAction = "User actions",
+  AdminAction = "Admin actions",
 }
 
 export type ActivityLogActionType = keyof typeof ACTION
