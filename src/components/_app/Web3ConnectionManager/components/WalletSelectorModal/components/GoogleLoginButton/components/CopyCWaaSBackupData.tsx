@@ -1,10 +1,17 @@
-import { Icon, IconButton, Text, Tooltip, VStack } from "@chakra-ui/react"
+import {
+  Icon,
+  IconButton,
+  Text,
+  Tooltip,
+  VStack,
+  useClipboard,
+} from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Copy } from "phosphor-react"
-import { useState } from "react"
+import { useEffect } from "react"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
@@ -12,36 +19,49 @@ const CopyCWaaSBackupData = () => {
   const { captureEvent } = usePostHogContext()
   const driveOAuth = useDriveOAuth()
   const toast = useToast()
-  const [backup, setBackup] = useState<string>()
+  const {
+    onCopy,
+    setValue: setBackup,
+    value: backup,
+    hasCopied,
+  } = useClipboard("", 5000)
 
-  const tryToCopyBackup = (backupStr: string) => {
-    setBackup(backupStr)
-    return navigator.clipboard
-      .writeText(backupStr)
-      .then(() => true)
-      .catch(() => false)
-      .then((success) => {
-        if (!success) {
-          throw new Error(
-            "Failed to copy to clipboard. If you see a browser popup, allow the website to access the clipboard"
-          )
-        } else {
-          captureEvent("[WaaS Backup] Backup data copied")
-          toast({
-            status: "success",
-            title: "Copied",
-            description: "Backup data copied to clipboard",
-          })
-        }
-      })
-  }
+  useEffect(() => {
+    if (!hasCopied) return
+
+    toast({
+      status: "success",
+      title: "Copied!",
+      description: "Backup data successfully copied to the clipboard",
+    })
+  }, [hasCopied])
+
+  useEffect(() => {
+    toast({
+      status: "info",
+      title: "Backup downloaded",
+      description: (
+        <VStack alignItems={"start"}>
+          <Text>Click the button below to copy it to the clipboard</Text>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={onCopy}
+            isDisabled={hasCopied}
+          >
+            Copy
+          </Button>
+        </VStack>
+      ),
+    })
+  }, [backup])
 
   const copyBackup = useSubmit(
     async () => {
       captureEvent("[WaaS Backup] Clicked copy backup data")
 
       if (!!backup) {
-        await tryToCopyBackup(backup)
+        onCopy()
         return
       }
 
@@ -68,31 +88,7 @@ const CopyCWaaSBackupData = () => {
         throw new Error("No backup data found on wallet file")
       }
       captureEvent("[WaaS Backup] Backup data found")
-
-      toast({
-        status: "info",
-        title: "Backup downloaded",
-        description: (
-          <VStack alignItems={"start"}>
-            <Text>Click the button below to copy it to the clipboard</Text>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                tryToCopyBackup(backupData).catch((err) => {
-                  toast({
-                    status: "error",
-                    title: "Failed",
-                    description: err?.message ?? "Unknown error",
-                  })
-                })
-              }}
-            >
-              Copy
-            </Button>
-          </VStack>
-        ),
-      })
+      setBackup(backupData)
     },
     {
       onError: (error) => {
