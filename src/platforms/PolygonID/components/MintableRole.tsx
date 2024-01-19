@@ -58,7 +58,7 @@ const MintableRole = ({ role }: Props) => {
       onSuccess: () => {
         toast({
           status: "success",
-          title: "Successfully claimed proof",
+          title: "Successfully minted proof",
         })
         onOpen()
         mutateClaimedRoles(
