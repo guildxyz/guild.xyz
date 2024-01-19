@@ -112,6 +112,7 @@ const CopyCWaaSBackupData = () => {
         size="sm"
         variant="outline"
         onClick={copyBackup.onSubmit}
+        isLoading={copyBackup.isLoading}
         icon={<Icon as={Copy} p="1px" />}
         aria-label="Copy wallet backup data"
       />
