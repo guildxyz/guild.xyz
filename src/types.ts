@@ -86,6 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
+  | "POLYGON_ID"
   | "POINTS"
 
 type PlatformUserData = {
@@ -560,6 +561,7 @@ export enum PlatformType {
   "TWITTER_V1" = 8,
   "UNIQUE_TEXT" = 9,
   "TEXT" = 10,
+  "POLYGON_ID" = 12,
   "POINTS" = 13,
 }
 

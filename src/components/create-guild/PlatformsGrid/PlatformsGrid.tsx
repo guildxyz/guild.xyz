@@ -1,6 +1,7 @@
 import { SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import platforms from "platforms/platforms"
-import { PlatformName } from "types"
+import { PlatformName, PlatformType } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
 
 type Props = {
@@ -13,11 +14,13 @@ type PlatformsGridData = {
 }
 
 const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
+  const { guildPlatforms } = useGuild()
+
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: Record<
     Exclude<
       PlatformName,
-      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT"
+      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT" | "POLYGON_ID"
     >,
     PlatformsGridData
   > = {
@@ -46,6 +49,15 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
     TEXT: {
       description: "Gate special content, links, etc",
     },
+    ...(!guildPlatforms.find(
+      (platform) => platform.platformId === PlatformType.POLYGON_ID
+    )
+      ? {
+          POLYGON_ID: {
+            description: "Prove role membership",
+          },
+        }
+      : {}),
     POINTS: {
       description: "Gamification utility",
     },
