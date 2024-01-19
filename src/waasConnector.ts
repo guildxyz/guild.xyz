@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { toViem } from "@coinbase/waas-sdk-viem"
 import type {
   Address,
@@ -13,6 +14,7 @@ import { Chain, Connector, WalletClient } from "wagmi"
 let cwaasModule: typeof import("@coinbase/waas-sdk-web")
 const cwaasImport = async () => {
   if (cwaasModule) return cwaasModule
+  // eslint-disable-next-line import/no-extraneous-dependencies
   const mod = await import("@coinbase/waas-sdk-web")
   cwaasModule = mod
   return mod
