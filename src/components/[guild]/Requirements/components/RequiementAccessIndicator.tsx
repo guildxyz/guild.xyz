@@ -15,7 +15,7 @@ import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
 const DymaicConnectPolygonID = dynamic(
-  () => import("requirements/PolygonId/components/ConnectPolygonID")
+  () => import("requirements/PolygonID/components/ConnectPolygonID")
 )
 const DynamicCompleteCaptcha = dynamic(
   () => import("requirements/Captcha/components/CompleteCaptcha")

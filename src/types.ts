@@ -86,6 +86,7 @@ type PlatformName =
   | "EMAIL"
   | "UNIQUE_TEXT"
   | "TEXT"
+  | "POLYGON_ID"
   | "POINTS"
 
 type PlatformUserData = {

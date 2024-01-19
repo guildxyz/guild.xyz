@@ -37,6 +37,9 @@ import PoapCardButton from "./Poap/PoapCardButton"
 import PoapCardMenu from "./Poap/PoapCardMenu"
 import usePoapCardProps from "./Poap/usePoapCardProps"
 import usePointsCardProps from "./Points/usePointsCardProps"
+import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
+import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
+import usePolygonIDCardProps from "./PolygonID/usePolygonIDCardProps"
 import SecretTextCardMenu from "./SecretText/SecretTextCardMenu"
 import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
@@ -80,6 +83,8 @@ type PlatformData<
     info?: string | JSX.Element
     link?: string
   }
+  // true when the AddPlatformPanel just automatically adds the platform without any user input
+  autoPlatformSetup?: boolean
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
@@ -425,6 +430,39 @@ const platforms: Record<PlatformName, PlatformData> = {
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
       ssr: false,
     }),
+  },
+  POLYGON_ID: {
+    icon: Key,
+    imageUrl: "/requirementLogos/polygonId.svg",
+    name: "PolygonID",
+    colorScheme: "purple",
+    gatedEntity: "",
+    cardPropsHook: usePolygonIDCardProps,
+    cardButton: PolygonIDCardButton,
+    cardMenuComponent: PolygonIDCardMenu,
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: false,
+    autoPlatformSetup: true,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIDPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
+    ),
+    PlatformPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    RoleCardComponent: dynamic(
+      () => import("platforms/components/PolygonIDReward"),
+      {
+        ssr: false,
+      }
+    ),
   },
   POINTS: {
     icon: Star,
