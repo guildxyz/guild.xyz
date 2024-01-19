@@ -83,13 +83,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const router = useRouter()
 
-  /**
-   * Note: We might be able to get rid of this useEffect, if we move this logic in
-   * useUserPublic's fetcher. The only thing I think, we would need to care about
-   * there is ignoredRoutes, we can either just have the if condition, or not fetch
-   * on those routes at all with SWR's shouldFetch (not sure if we need the data
-   * there, would need to check this)
-   */
   useEffect(() => {
     if (
       ((!!id && !keyPair) || !!publicUserError) &&

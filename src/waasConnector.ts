@@ -181,7 +181,6 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
       // }
 
       if (waas.wallets.wallet) {
-        // Not sure if this is right
         await Logout()
       }
 
@@ -201,7 +200,6 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
       const { Logout, ProtocolFamily } = await cwaasImport()
 
       if (waas.wallets.wallet) {
-        // Not sure if this is right
         await Logout()
       }
 
