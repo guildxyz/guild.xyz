@@ -19,7 +19,11 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { IPlayerProps, Player } from "@lottiefiles/react-lottie-player"
+import {
+  DotLottieCommonPlayer,
+  DotLottiePlayer,
+  PlayerEvents,
+} from "@dotlottie/react-player"
 import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
@@ -32,7 +36,7 @@ import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { LockSimple, Question, Wallet } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
 import { connectorButtonProps } from "../ConnectorButton"
@@ -43,8 +47,6 @@ import {
   listWalletsOnDrive,
   uploadBackupDataToDrive,
 } from "./utils/googleDrive"
-
-type LottieInstance = Parameters<IPlayerProps["lottieRef"]>[0]
 
 const GoogleLoginButton = () => {
   const { captureEvent } = usePostHogContext()
@@ -168,7 +170,7 @@ const GoogleLoginButton = () => {
     }
   )
 
-  const [successPlayer, setSuccessPlayer] = useState<LottieInstance>()
+  const successPlayer = useRef<DotLottieCommonPlayer>()
   const [isSuccessAnimDone, setIsSuccessAnimDone] = useState(false)
   const [accordionIndex, setAccordionIndex] = useState(0)
 
@@ -180,19 +182,7 @@ const GoogleLoginButton = () => {
   // Play the success animation if everything was successful, and the player is ready
   useEffect(() => {
     if (!isSuccess) return
-    successPlayer.play()
-
-    const animDone = () => {
-      setIsSuccessAnimDone(true)
-      setAccordionIndex(1)
-      start()
-    }
-
-    successPlayer.addEventListener("complete", animDone)
-
-    return () => {
-      successPlayer.removeEventListener("complete", animDone)
-    }
+    successPlayer.current?.play()
   }, [isSuccess])
 
   return (
@@ -252,8 +242,7 @@ const GoogleLoginButton = () => {
                   )}
 
                   <Collapse in={!isSuccessAnimDone}>
-                    <Player
-                      // keepLastFrame
+                    <DotLottiePlayer
                       style={{
                         position: "absolute",
                         top: "50%",
@@ -263,8 +252,13 @@ const GoogleLoginButton = () => {
                         height: "var(--chakra-sizes-24)",
                       }}
                       src="/success_lottie.json"
-                      lottieRef={(player) => {
-                        setSuccessPlayer(player)
+                      ref={successPlayer}
+                      onEvent={(event) => {
+                        if (event !== PlayerEvents.Complete) return
+
+                        setIsSuccessAnimDone(true)
+                        setAccordionIndex(1)
+                        start()
                       }}
                       className="keep-colors"
                     />
