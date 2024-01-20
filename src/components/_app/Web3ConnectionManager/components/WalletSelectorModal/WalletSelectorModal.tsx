@@ -61,8 +61,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
 
-  const { captchaVerifiedSince } = useUserPublic()
-
   // initialize metamask onboarding
   const onboarding = useRef<MetaMaskOnboarding>()
   if (typeof window !== "undefined") {
