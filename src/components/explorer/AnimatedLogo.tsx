@@ -1,14 +1,13 @@
-import { Player } from "@lottiefiles/react-lottie-player"
+import { DotLottiePlayer } from "@dotlottie/react-player"
 
 const AnimatedLogo = () => {
   const logoSize = 16
 
   return (
-    <Player
+    <DotLottiePlayer
       autoplay
-      keepLastFrame
       speed={2}
-      src="/logo_lottie.json"
+      src="/logo.lottie"
       style={{
         height: logoSize,
         width: logoSize,
