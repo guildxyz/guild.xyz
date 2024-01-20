@@ -8,7 +8,7 @@ import {
   Text,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { Player } from "@lottiefiles/react-lottie-player"
+import { DotLottiePlayer, type DotLottieCommonPlayer } from "@dotlottie/react-player"
 import useScrollEffect from "hooks/useScrollEffect"
 import Link from "next/link"
 import { ArrowRight, CaretDown } from "phosphor-react"
@@ -16,7 +16,7 @@ import { useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 
 const Hero = (): JSX.Element => {
-  const lottiePlayer = useRef(null)
+  const lottiePlayer = useRef<DotLottieCommonPlayer>(null)
   const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
   const [showScrollIcon, setShowScrollIcon] = useState(true)
   useScrollEffect(
@@ -66,20 +66,19 @@ const Hero = (): JSX.Element => {
       >
         <Box
           onMouseEnter={() => {
-            lottiePlayer.current?.setPlayerDirection(-1)
+            lottiePlayer.current?.setDirection(-1)
             lottiePlayer.current?.play()
           }}
           onMouseLeave={() => {
-            lottiePlayer.current?.setPlayerDirection(1)
+            lottiePlayer.current?.setDirection(1)
             lottiePlayer.current?.play()
           }}
         >
-          <Player
+          <DotLottiePlayer
             ref={lottiePlayer}
             autoplay
-            keepLastFrame
             speed={1}
-            src="/logo_lottie.json"
+            src="/logo.lottie"
             style={{
               marginBottom: 24,
               height: logoSize,

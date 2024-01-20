@@ -5,23 +5,23 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
-import PolygonIdBasic from "./components/PolygonIdBasic"
-import PolygonIdQuery from "./components/PolygonIdQuery"
+import PolygonIDBasic from "./components/PolygonIDBasic"
+import PolygonIDQuery from "./components/PolygonIDQuery"
 
-const polygonIdRequirementTypes = [
+const polygonIDRequirementTypes = [
   {
     label: "Authenticate with PolygonID",
     value: "POLYGON_ID_BASIC",
-    PolygonIdRequirement: PolygonIdBasic,
+    PolygonIDRequirement: PolygonIDBasic,
   },
   {
     label: "Satisfy query",
     value: "POLYGON_ID_QUERY",
-    PolygonIdRequirement: PolygonIdQuery,
+    PolygonIDRequirement: PolygonIDQuery,
   },
 ]
 
-const PolygonIdForm = ({
+const PolygonIDForm = ({
   baseFieldPath,
   field,
 }: RequirementFormProps): JSX.Element => {
@@ -32,7 +32,7 @@ const PolygonIdForm = ({
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const selected = polygonIdRequirementTypes.find(
+  const selected = polygonIDRequirementTypes.find(
     (reqType) => reqType.value === type
   )
 
@@ -60,7 +60,7 @@ const PolygonIdForm = ({
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={polygonIdRequirementTypes}
+          options={polygonIDRequirementTypes}
           beforeOnChange={resetFields}
         />
 
@@ -69,10 +69,10 @@ const PolygonIdForm = ({
         </FormErrorMessage>
       </FormControl>
 
-      {selected?.PolygonIdRequirement && (
+      {selected?.PolygonIDRequirement && (
         <>
           <Divider />
-          <selected.PolygonIdRequirement
+          <selected.PolygonIDRequirement
             baseFieldPath={baseFieldPath}
             field={field}
           />
@@ -82,4 +82,4 @@ const PolygonIdForm = ({
   )
 }
 
-export default PolygonIdForm
+export default PolygonIDForm

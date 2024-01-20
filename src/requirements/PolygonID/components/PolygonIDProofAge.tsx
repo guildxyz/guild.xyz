@@ -5,7 +5,7 @@ import { useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-const PolygonIdProofAge = ({ baseFieldPath }: RequirementFormProps) => {
+const PolygonIDProofAge = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
 
   return (
@@ -21,4 +21,4 @@ const PolygonIdProofAge = ({ baseFieldPath }: RequirementFormProps) => {
   )
 }
 
-export default PolygonIdProofAge
+export default PolygonIDProofAge
