@@ -36,6 +36,8 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import PoapCardButton from "./Poap/PoapCardButton"
 import PoapCardMenu from "./Poap/PoapCardMenu"
 import usePoapCardProps from "./Poap/usePoapCardProps"
+import PointsCardMenu from "./Points/PointsCardMenu"
+import PointsCardButton from "./Points/TextCardButton"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
@@ -472,6 +474,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: false,
     cardPropsHook: usePointsCardProps,
+    cardButton: PointsCardButton,
+    cardMenuComponent: PointsCardMenu,
     PlatformPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,

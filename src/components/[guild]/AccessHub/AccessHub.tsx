@@ -35,10 +35,8 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
   )
-  const relevantGuildPlatforms = guildPlatforms.filter(
-    (gp) =>
-      relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.POINTS
+  const relevantGuildPlatforms = guildPlatforms.filter((gp) =>
+    relevantGuildPlatformIds.includes(gp.id)
   )
 
   const { isAdmin } = useGuildPermission()
@@ -88,6 +86,8 @@ const AccessHub = (): JSX.Element => {
   const group = useRoleGroup()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
+  console.log(accessedGuildPlatforms)
+
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
