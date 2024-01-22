@@ -15,11 +15,22 @@ import {
 import CreateCampaignModal from "components/[guild]/CreateCampaignModal"
 import { CaretDown, Plus } from "phosphor-react"
 import AddRewardButton from "./AddRewardButton"
+import CreateFormModal from "./CreateFormModal"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"
 
 const AddRewardAndCampaign = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isCreateCampaignModalOpen,
+    onOpen: onCreateCampaignModalOpen,
+    onClose: onCreateCampaignModalClose,
+  } = useDisclosure()
+  const {
+    isOpen: isCreateFormModalOpen,
+    onOpen: onCreateFormModalOpen,
+    onClose: onCreateFormModalClose,
+  } = useDisclosure()
+
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
 
@@ -49,7 +60,7 @@ const AddRewardAndCampaign = () => {
               overflow="hidden"
             >
               <MenuItem
-                onClick={onOpen}
+                onClick={onCreateCampaignModalOpen}
                 icon={<Icon as={Plus} mt="1" />}
                 alignItems="start"
                 py={4}
@@ -64,11 +75,34 @@ const AddRewardAndCampaign = () => {
                   </Text>
                 </Stack>
               </MenuItem>
+
+              <MenuItem
+                onClick={onCreateFormModalOpen}
+                icon={<Icon as={Plus} mt="1" />}
+                alignItems="start"
+                py={4}
+              >
+                <Stack spacing={0.5}>
+                  <Text as="span" fontWeight="semibold" fontSize="sm">
+                    Create form
+                  </Text>
+                  <Text colorScheme="gray" fontSize="sm">
+                    Create a form which you can use either as requirement or reward
+                  </Text>
+                </Stack>
+              </MenuItem>
             </MenuList>
           </Portal>
         </Menu>
       </ButtonGroup>
-      <CreateCampaignModal isOpen={isOpen} onClose={onClose} />
+      <CreateCampaignModal
+        isOpen={isCreateCampaignModalOpen}
+        onClose={onCreateCampaignModalClose}
+      />
+      <CreateFormModal
+        isOpen={isCreateFormModalOpen}
+        onClose={onCreateFormModalClose}
+      />
     </>
   )
 }
