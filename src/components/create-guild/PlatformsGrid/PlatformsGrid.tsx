@@ -1,5 +1,6 @@
 import { SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Section from "components/common/Section"
 import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
@@ -10,87 +11,104 @@ type Props = {
 } & StackProps
 
 type PlatformsGridData = {
+  platform: PlatformName
   description?: string
+  isGeneral?: boolean
 }
 
 const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
   const { guildPlatforms } = useGuild()
 
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
-  const platformsData: Record<
-    Exclude<
-      PlatformName,
-      "" | "TWITTER" | "TWITTER_V1" | "POAP" | "EMAIL" | "UNIQUE_TEXT" | "POLYGON_ID"
-    >,
-    PlatformsGridData
-  > = {
-    DISCORD: {
+  const platformsData: PlatformsGridData[] = [
+    {
+      platform: "DISCORD",
       description: "Manage roles",
     },
-    TELEGRAM: {
+    {
+      platform: "TELEGRAM",
       description: "Manage groups",
     },
-    GOOGLE: {
+    {
+      platform: "GOOGLE",
       description: "Manage documents",
     },
-    GITHUB: {
+    {
+      platform: "GITHUB",
       description: "Manage repositories",
     },
     ...(showPoap
-      ? {
-          POAP: {
+      ? [
+          {
+            platform: "POAP",
             description: "Mint POAP",
-          },
-        }
-      : {}),
-    CONTRACT_CALL: {
-      description: "Create a gated NFT",
-    },
-    TEXT: {
-      description: "Gate special content, links, etc",
-    },
+          } as PlatformsGridData,
+        ]
+      : []),
     ...(!guildPlatforms.find(
       (platform) => platform.platformId === PlatformType.POLYGON_ID
     )
-      ? {
-          POLYGON_ID: {
+      ? [
+          {
+            platform: "POLYGON_ID",
             description: "Prove role membership",
-          },
-        }
-      : {}),
-    POINTS: {
-      description: "Gamification utility",
+          } as PlatformsGridData,
+        ]
+      : []),
+    {
+      platform: "TEXT",
+      description: "Gate special content, links, etc",
+      isGeneral: true,
     },
-  }
+    {
+      platform: "CONTRACT_CALL",
+      description: "Create a gated NFT",
+      isGeneral: true,
+    },
+    {
+      platform: "POINTS",
+      description: "Gamification utility",
+      isGeneral: true,
+    },
+  ]
 
   return (
     <Stack spacing={8} {...rest}>
-      <SimpleGrid
-        data-test="platforms-grid"
-        columns={{ base: 1, md: 2 }}
-        gap={{ base: 4, md: 5 }}
-      >
-        {Object.entries(platformsData).map(
-          ([platform, { description }]: [PlatformName, { description: string }]) => (
-            <PlatformSelectButton
-              key={platform}
-              platform={platform}
-              title={platforms[platform].name}
-              description={description}
-              icon={platforms[platform].icon}
-              imageUrl={platforms[platform].imageUrl}
-              onSelection={onSelection}
-              disabledText={
-                platform === "POAP"
-                  ? "Under rework, please check back later!"
-                  : undefined
-              }
-            />
-          )
-        )}
-      </SimpleGrid>
+      <PlatformSelectButtons
+        platformsData={platformsData.filter((p) => !p.isGeneral)}
+        onSelection={onSelection}
+      />
+
+      <Section title="General">
+        <PlatformSelectButtons
+          platformsData={platformsData.filter((p) => p.isGeneral)}
+          onSelection={onSelection}
+        />
+      </Section>
     </Stack>
   )
 }
+
+const PlatformSelectButtons = ({
+  platformsData,
+  onSelection,
+}: {
+  platformsData: PlatformsGridData[]
+  onSelection: Props["onSelection"]
+}) => (
+  <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
+    {platformsData.map(({ platform, description }) => (
+      <PlatformSelectButton
+        key={platform}
+        platform={platform}
+        title={platforms[platform].name}
+        description={description}
+        icon={platforms[platform].icon}
+        imageUrl={platforms[platform].imageUrl}
+        onSelection={onSelection}
+      />
+    ))}
+  </SimpleGrid>
+)
 
 export default PlatformsGrid
