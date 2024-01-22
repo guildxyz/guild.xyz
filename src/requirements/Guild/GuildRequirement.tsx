@@ -117,11 +117,30 @@ const Admin = (props: RequirementProps): JSX.Element => {
   )
 }
 
+const GuildMember = (props: RequirementProps): JSX.Element => {
+  const requirement = useRequirementContext()
+  const { name, urlName, imageUrl, isLoading } = useSimpleGuild(
+    requirement.data.guildId
+  )
+
+  return (
+    <Requirement image={imageUrl} isImageLoading={isLoading} {...props}>
+      <Text as="span">{"Be a member of the "}</Text>
+      <Skeleton display="inline-block" isLoaded={!isLoading}>
+        <Link href={`/${urlName ?? requirement.data.guildId}`} colorScheme="blue">
+          {` ${name ?? `#${requirement.data.guildId}`} guild`}
+        </Link>
+      </Skeleton>
+    </Requirement>
+  )
+}
+
 const types = {
   GUILD_ROLE: HaveRole,
   GUILD_ADMIN: Admin,
   GUILD_MINGUILDS: MinGuilds,
   GUILD_USER_SINCE: UserSince,
+  GUILD_MEMBER: GuildMember,
 }
 
 const GuildRequirement = (props: RequirementProps) => {

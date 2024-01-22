@@ -36,9 +36,13 @@ const handler = async (req, _) => {
   const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
     fetcher(`/v2/guilds/${urlName}`),
     fetcher(`/v2/guilds/${urlName}/roles`),
-  ])
+  ]).catch(() => [null, null])
 
-  if (!guild?.id) return new ImageResponse(<></>, { status: 404 })
+  if (!guild?.id)
+    return new Response(undefined, {
+      status: 404,
+      statusText: "Guild not found",
+    })
 
   try {
     const [interFontData, interBoldFontData, dystopianFontData] = await Promise.all([
