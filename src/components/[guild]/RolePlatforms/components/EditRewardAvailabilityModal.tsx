@@ -39,7 +39,10 @@ type Props = {
   onDone: (data: RolePlatformAvailabilityForm) => void
 }
 
-const AUTO_SUPPLY_PLATFORMS: PlatformName[] = ["UNIQUE_TEXT", "POAP"]
+const AUTO_SUPPLY_PLATFORMS: Partial<Record<PlatformName, string>> = {
+  UNIQUE_TEXT: "secrets",
+  POAP: "minting links",
+}
 const AUTO_TIMEFRAME_PLATFORMS: PlatformName[] = ["POAP"]
 
 export const DAY_IN_MS = 1000 * 60 * 60 * 24
@@ -114,15 +117,15 @@ const EditRewardAvailabilityModal = ({
 
             <Stack spacing={4}>
               <Tooltip
-                label="Automatic by the number of secrets"
-                isDisabled={!AUTO_SUPPLY_PLATFORMS.includes(platformType)}
+                label={`Automatic by the number of ${AUTO_SUPPLY_PLATFORMS[platformType]}`}
+                isDisabled={!AUTO_SUPPLY_PLATFORMS[platformType]}
                 shouldWrapChildren
                 hasArrow
               >
                 <CheckboxColorCard
-                  isDisabled={AUTO_SUPPLY_PLATFORMS.includes(platformType)}
+                  isDisabled={!!AUTO_SUPPLY_PLATFORMS[platformType]}
                   defaultChecked={
-                    AUTO_SUPPLY_PLATFORMS.includes(platformType) ||
+                    !!AUTO_SUPPLY_PLATFORMS[platformType] ||
                     !!defaultValues?.capacity
                   }
                   colorScheme="purple"
@@ -139,7 +142,7 @@ const EditRewardAvailabilityModal = ({
                     mx="px"
                     pb="px"
                     w="calc(100% - 2px)"
-                    isDisabled={AUTO_SUPPLY_PLATFORMS.includes(platformType)}
+                    isDisabled={!!AUTO_SUPPLY_PLATFORMS[platformType]}
                     ref={capacityFieldRef}
                     value={capacityFieldValue ?? ""}
                     onBlur={capacityFieldOnBlur}
