@@ -28,11 +28,7 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   return (
     <Tabs {...rest}>
-      <TabButton
-        href={`/${urlName}`}
-        isActive={activeTab === "HOME"}
-        isLoading={!urlName}
-      >
+      <TabButton href={`/${urlName}`} isActive={activeTab === "HOME"}>
         Home
       </TabButton>
 
