@@ -36,7 +36,8 @@ type Props = {
 }
 
 const Page = ({ fancyId }: Omit<Props, "fallback">) => {
-  const { theme, urlName, roles, guildPlatforms, isFallback } = useGuild()
+  const { theme, urlName, roles, guildPlatforms, isFallback, socialLinks } =
+    useGuild()
 
   const { captureEvent } = usePostHogContext()
 
@@ -118,8 +119,13 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
                   {poap?.description}
                 </Box>
               </Stack>
-              <Divider />
-              <SocialLinks />
+
+              {!!Object.keys(socialLinks ?? {}).length && (
+                <>
+                  <Divider />
+                  <SocialLinks socialLinks={socialLinks} />
+                </>
+              )}
             </Stack>
 
             {!isMobile && (
