@@ -499,6 +499,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Fuel/FuelForm")
     ),
     types: ["FUEL", "FUEL_BALANCE"],
+    isCustomizable: true,
     isNegatable: true,
   },
   {
