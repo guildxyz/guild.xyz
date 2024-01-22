@@ -1,23 +1,79 @@
 import {
   Center,
-  Circle,
   Collapse,
   HStack,
   Icon,
-  Spinner,
   Stack,
+  StackProps,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { ArrowRight, LockSimple, X } from "phosphor-react"
+import { ArrowRight, LockSimple } from "phosphor-react"
+import { JoinState } from "../hooks/useJoin"
+import { JoinStepIndicator } from "./JoinStep"
+
+export const JOIN_LOADING_TESTS: Record<
+  Exclude<JoinState["state"], "FINISHED">,
+  [string, string]
+> = {
+  INITIAL: ["Preparing access check", null],
+  PREPARING: [
+    "Preparing access check",
+    "There are a lot of users joining right now, so you have to wait a bit. There're POSITION users before you",
+  ],
+  CHECKING: [null, "Waiting for the next one, there're POSITION users before you"],
+  MANAGING_ROLES: [
+    "Evaluating which roles you have access to",
+    "There are a lot of users joining right now, so you have to wait a bit. There're POSITION users before you",
+  ],
+  MANAGING_REWARDS: [
+    "Evaluating which rewards you will get",
+    "There are a lot of users joining right now, so you have to wait a bit. There're POSITION users before you",
+  ],
+}
+
+const getRequirementIndicatorProps = (
+  joinState: JoinState,
+  hasNoAccessResponse: boolean
+): Parameters<typeof JoinStepIndicator>[number] => {
+  console.log(joinState)
+
+  return !joinState
+    ? { status: "INACTIVE" }
+    : joinState.state === "INITIAL"
+    ? { status: "LOADING" }
+    : joinState.state === "CHECKING" && !!joinState.requirements
+    ? {
+        status: "PROGRESS",
+        progress:
+          (joinState.requirements.satisfied / joinState.requirements.all) * 100,
+      }
+    : {
+        status:
+          joinState.state === "MANAGING_ROLES" ||
+          joinState.state === "MANAGING_REWARDS" ||
+          joinState.state === "FINISHED"
+            ? "DONE"
+            : hasNoAccessResponse
+            ? "ERROR"
+            : "LOADING",
+      }
+}
 
 const SatisfyRequirementsJoinStep = ({
   isLoading,
   hasNoAccessResponse,
   onClose,
-}) => {
+  joinState,
+  ...stackProps
+}: {
+  joinState: JoinState
+  onClose: () => void
+  hasNoAccessResponse: boolean
+  isLoading: boolean
+} & StackProps) => {
   const { roles } = useGuild()
 
   const onClick = () => {
@@ -26,26 +82,38 @@ const SatisfyRequirementsJoinStep = ({
   }
 
   return (
-    <HStack py="3" alignItems={"flex-start"}>
-      {isLoading ? (
-        <Circle border={"1px transparent"}>
-          <Spinner boxSize="5" opacity=".6" />
-        </Circle>
-      ) : (
-        <Circle
-          size="5"
-          border={"1px"}
-          {...(hasNoAccessResponse
-            ? { bg: "gray.500", borderColor: "gray.500" }
-            : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
-        >
-          {hasNoAccessResponse && (
-            <Icon as={X} weight="bold" color={"white"} boxSize="0.7em" />
-          )}
-        </Circle>
-      )}
+    <HStack py="3" {...stackProps}>
+      <JoinStepIndicator
+        {...getRequirementIndicatorProps(joinState, hasNoAccessResponse)}
+      />
+
       <Stack w="full" spacing={0} mt="-1.5px !important">
         <Text fontWeight={"bold"}>Satisfy the requirements</Text>
+
+        {!!joinState?.requirements && (
+          <Text>
+            {joinState.requirements.satisfied}/{joinState.requirements.all}{" "}
+            requirements checked
+          </Text>
+        )}
+
+        {(joinState?.state === "PREPARING" ||
+          joinState?.state === "CHECKING" ||
+          joinState?.state === "INITIAL") &&
+          JOIN_LOADING_TESTS?.[joinState.state]?.[
+            +(joinState.waitingPosition || false)
+          ] && (
+            <Text
+              color={joinState.state === "CHECKING" ? "whiteAlpha.500" : undefined}
+            >
+              {
+                JOIN_LOADING_TESTS[joinState.state][
+                  +(joinState.waitingPosition ?? false)
+                ]
+              }
+            </Text>
+          )}
+
         <Collapse in={hasNoAccessResponse && !isLoading}>
           <Text pt="2">
             {`You're not eligible with your connected accounts. `}
