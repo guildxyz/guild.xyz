@@ -1,5 +1,4 @@
-import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { Tooltip } from "@chakra-ui/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -8,72 +7,44 @@ import {
 import AvailabilityTags, {
   getTimeDiff,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import LinkButton from "components/common/LinkButton"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
-import { useAccount } from "wagmi"
 
 const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
-  const { urlName, roles } = useGuild()
-  const role = roles.find((r) =>
-    r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
-  )
-
-  const isMember = useIsMember()
-  const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
-  const { isConnected } = useAccount()
-  const openJoinModal = useOpenJoinModal()
+  const { urlName } = useGuild()
 
   const state = useMemo(() => {
-    if (isMember && hasAccess) {
-      const startTimeDiff = getTimeDiff(platform?.startTime)
-      const endTimeDiff = getTimeDiff(platform?.endTime)
+    const startTimeDiff = getTimeDiff(platform?.startTime)
+    const endTimeDiff = getTimeDiff(platform?.endTime)
 
-      if (
-        startTimeDiff > 0 ||
-        endTimeDiff < 0 ||
-        (typeof platform?.capacity === "number" &&
-          platform?.capacity === platform?.claimedCount)
-      )
-        return {
-          tooltipLabel:
-            platform?.capacity === platform?.claimedCount
-              ? "All available POAPs have already been claimed"
-              : startTimeDiff > 0
-              ? "Claim hasn't started yet"
-              : "Claim already ended",
-          buttonProps: {
-            isDisabled: true,
-          },
-        }
-
+    if (
+      startTimeDiff > 0 ||
+      endTimeDiff < 0 ||
+      (typeof platform?.capacity === "number" &&
+        platform?.capacity === platform?.claimedCount)
+    )
       return {
-        tooltipLabel: "Claim",
-        buttonProps: {},
+        tooltipLabel:
+          platform?.capacity === platform?.claimedCount
+            ? "All available POAPs have already been claimed"
+            : startTimeDiff > 0
+            ? "Claim hasn't started yet"
+            : "Claim already ended",
+        buttonProps: {
+          isDisabled: true,
+        },
       }
-    }
 
-    if (!isConnected || (!isMember && hasAccess))
-      return {
-        tooltipLabel: (
-          <>
-            <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
-            Join guild to get access
-          </>
-        ),
-        buttonProps: { onClick: openJoinModal },
-      }
     return {
-      tooltipLabel: "You don't satisfy the requirements to this role",
-      buttonProps: { isDisabled: true },
+      tooltipLabel: "View POAP",
+      buttonProps: {},
     }
-  }, [isMember, hasAccess, isConnected, platform])
+  }, [platform])
 
   return (
     <RewardDisplay
@@ -90,9 +61,7 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
           <LinkButton
             href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
             variant="link"
-            rightIcon={
-              isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
-            }
+            rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
             {...state.buttonProps}
