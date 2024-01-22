@@ -145,6 +145,7 @@ export const REQUIREMENTS_DATA = [
       "GUILD_MINGUILDS",
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
+      "GUILD_MEMBER",
     ],
     isNegatable: true,
   },
