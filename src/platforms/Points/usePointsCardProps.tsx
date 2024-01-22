@@ -3,6 +3,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import Star from "static/icons/star.svg"
 import useSWR from "swr"
 import { GuildPlatform, PlatformName } from "types"
+import numberToOrdinal from "utils/numberToOrdinal"
 
 const usePointsCardProps = (guildPlatform: GuildPlatform) => {
   const { id: userId } = useUser()
@@ -17,16 +18,21 @@ const usePointsCardProps = (guildPlatform: GuildPlatform) => {
   )
 
   const totalPoints = data?.totalPoints
+  const rank = data?.rank
 
   const text =
     totalPoints !== undefined
       ? `You have ${totalPoints} ${name || "points"}`
       : `Failed to load your score`
 
+  const info =
+    rank !== undefined ? `${numberToOrdinal(rank)} on the Leaderboard` : ``
+
   return {
     type: "POINTS" as PlatformName,
     image: imageUrl || <Star />,
     name: text,
+    info: info,
   }
 }
 
