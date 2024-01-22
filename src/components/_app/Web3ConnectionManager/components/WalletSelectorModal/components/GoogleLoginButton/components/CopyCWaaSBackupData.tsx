@@ -1,15 +1,7 @@
-import {
-  Icon,
-  IconButton,
-  Text,
-  Tooltip,
-  VStack,
-  useClipboard,
-} from "@chakra-ui/react"
+import { Icon, IconButton, Tooltip, useClipboard } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Button from "components/common/Button"
 import useSubmit from "hooks/useSubmit"
-import useToast from "hooks/useToast"
+import useToast, { useToastWithButton } from "hooks/useToast"
 import { Copy } from "phosphor-react"
 import { useEffect } from "react"
 import useDriveOAuth from "../hooks/useDriveOAuth"
@@ -19,6 +11,7 @@ const CopyCWaaSBackupData = () => {
   const { captureEvent } = usePostHogContext()
   const driveOAuth = useDriveOAuth()
   const toast = useToast()
+  const toastWithButton = useToastWithButton()
   const {
     onCopy,
     setValue: setBackup,
@@ -38,22 +31,15 @@ const CopyCWaaSBackupData = () => {
 
   // This toast is needed, because we can't copy to clipboard immediately after the submit, due to browser limitations
   useEffect(() => {
-    toast({
+    toastWithButton({
       status: "info",
       title: "Backup downloaded",
-      description: (
-        <VStack alignItems={"start"}>
-          <Text>Click the button below to copy it to the clipboard</Text>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={onCopy}
-            isDisabled={hasCopied}
-          >
-            Copy
-          </Button>
-        </VStack>
-      ),
+      buttonProps: {
+        size: "sm",
+        variant: "outline",
+        onClick: onCopy,
+        isDisabled: hasCopied,
+      },
     })
   }, [backup])
 
