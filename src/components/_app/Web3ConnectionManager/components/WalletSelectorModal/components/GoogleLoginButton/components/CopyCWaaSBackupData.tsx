@@ -31,14 +31,18 @@ const CopyCWaaSBackupData = () => {
 
   // This toast is needed, because we can't copy to clipboard immediately after the submit, due to browser limitations
   useEffect(() => {
+    if (!backup) return
+
     toastWithButton({
       status: "info",
       title: "Backup downloaded",
+      description: "Click the button below to copy it to the clipboard",
       buttonProps: {
         size: "sm",
         variant: "outline",
         onClick: onCopy,
         isDisabled: hasCopied,
+        children: "Copy",
       },
     })
   }, [backup])
