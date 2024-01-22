@@ -170,6 +170,7 @@ const EditRewardAvailabilityModal = ({
                 hasArrow
               >
                 <CheckboxColorCard
+                  isDisabled={AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
                   colorScheme="purple"
                   icon={Clock}
                   title="Limit claiming time"
