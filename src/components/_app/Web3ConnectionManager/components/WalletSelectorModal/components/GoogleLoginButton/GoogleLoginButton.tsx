@@ -50,7 +50,7 @@ import {
 
 const GoogleLoginButton = () => {
   const { captureEvent } = usePostHogContext()
-  const onboardingModal = useDisclosure()
+  const { onOpen, onClose, isOpen } = useDisclosure()
   const { connectors, connectAsync, connect } = useConnect()
   const cwaasConnector = connectors.find(
     ({ id }) => id === "cwaasWallet"
@@ -58,7 +58,7 @@ const GoogleLoginButton = () => {
 
   const googleAuth = useDriveOAuth()
 
-  const set = useSetKeyPair({
+  const { onSubmit: onSetKeypairSubmit } = useSetKeyPair({
     onSuccess: () => captureEvent("[WaaS] Keypair verified"),
     onError: (err) => {
       captureEvent("[WaaS] Failed to verify keypair", { error: err })
@@ -77,7 +77,7 @@ const GoogleLoginButton = () => {
       setIsNewWallet(true)
     }
 
-    onboardingModal.onOpen()
+    onOpen()
 
     if (files.length <= 0) {
       const { wallet, account } = await cwaasConnector.createWallet()
@@ -94,7 +94,7 @@ const GoogleLoginButton = () => {
     }
   }
 
-  const connectGoogle = usePlatformConnect({
+  const { onSubmit: onConnectGoogleSubmit } = usePlatformConnect({
     allowThrow: true,
     onSuccess: () => {
       captureEvent("[WaaS] Google platform connected")
@@ -135,7 +135,7 @@ const GoogleLoginButton = () => {
 
       // 3) Verify a keypair
       const walletClient = await cwaasConnector.getWalletClient()
-      const { keyPair, user } = await set.onSubmit({
+      const { keyPair, user } = await onSetKeypairSubmit({
         signProps: {
           walletClient,
           address: walletClient.account.address,
@@ -143,7 +143,7 @@ const GoogleLoginButton = () => {
       })
 
       // 4) Try to connect Google account
-      await connectGoogle.onSubmit({
+      await onConnectGoogleSubmit({
         signOptions: {
           keyPair: keyPair.keyPair,
           walletClient,
@@ -157,7 +157,7 @@ const GoogleLoginButton = () => {
       if (!isNew) {
         await connectAsync({ connector: cwaasConnector })
         captureEvent("[WaaS] Wallet is connected")
-        onboardingModal.onClose()
+        onClose()
       }
 
       // TODO We could load the Player dynamically here
@@ -165,7 +165,7 @@ const GoogleLoginButton = () => {
     },
     {
       onError: () => {
-        onboardingModal.onClose()
+        onClose()
       },
     }
   )
@@ -208,7 +208,7 @@ const GoogleLoginButton = () => {
         Sign in with Google
       </Button>
 
-      <Modal isOpen={onboardingModal.isOpen} onClose={onboardingModal.onClose}>
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -344,7 +344,7 @@ const GoogleLoginButton = () => {
                 isDisabled={seconds > 0}
                 onClick={() => {
                   connect({ connector: cwaasConnector })
-                  onboardingModal.onClose()
+                  onClose()
                   captureEvent("[WaaS] Wallet is connected")
                 }}
               >
