@@ -15,8 +15,11 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import dynamic from "next/dynamic"
 import { NoteBlank } from "phosphor-react"
-import { SocialLinkKey } from "types"
+import { Guild, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
+import { GetStaticPaths, GetStaticProps } from "next"
+import fetcher from "../../utils/fetcher"
+import { SWRConfig } from "swr"
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 
@@ -130,12 +133,40 @@ const GuildEvents = (): JSX.Element => {
   )
 }
 
-const GuildEventsWrapper = (): JSX.Element => (
-  <ThemeProvider>
-    <EditGuildDrawerProvider>
-      <GuildEvents />
-    </EditGuildDrawerProvider>
-  </ThemeProvider>
+const GuildEventsWrapper = ({ fallback }): JSX.Element => (
+  <SWRConfig value={fallback && { fallback }}>
+    <ThemeProvider>
+      <EditGuildDrawerProvider>
+        <GuildEvents />
+      </EditGuildDrawerProvider>
+    </ThemeProvider>
+  </SWRConfig>
 )
 
+const getStaticProps: GetStaticProps = async ({ params }) => {
+  const endpoint = `/v2/guilds/guild-page/${params.guild}`
+  const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
+
+  if (!guild.id)
+    return {
+      notFound: true,
+    }
+
+  guild.isFallback = true
+
+  return {
+    props: {
+      fallback: {
+        [endpoint]: guild,
+      },
+    },
+  }
+}
+
+const getStaticPaths: GetStaticPaths = () => ({
+  paths: [],
+  fallback: "blocking",
+})
+
 export default GuildEventsWrapper
+export { getStaticPaths, getStaticProps }
