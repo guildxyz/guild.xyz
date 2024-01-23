@@ -12,6 +12,7 @@ import ClientOnly from "components/common/ClientOnly"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
+import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
@@ -85,8 +86,14 @@ const AccessHub = (): JSX.Element => {
 
   const group = useRoleGroup()
 
-  const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
-  console.log(accessedGuildPlatforms)
+  const allAccessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
+
+  const accessedGuildPlatforms = allAccessedGuildPlatforms.filter(
+    (gp) => gp.platformId !== PlatformType.POINTS
+  )
+  const accessedGuildPoints = allAccessedGuildPlatforms.filter(
+    (gp) => gp.platformId === PlatformType.POINTS
+  )
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
@@ -114,7 +121,7 @@ const AccessHub = (): JSX.Element => {
         >
           {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-          {accessedGuildPlatforms?.length > 0 && (
+          {allAccessedGuildPlatforms?.length > 0 && (
             <>
               {accessedGuildPlatforms.map((platform) => {
                 if (!platforms[PlatformType[platform.platformId]]) return null
@@ -149,6 +156,13 @@ const AccessHub = (): JSX.Element => {
                   </PlatformCard>
                 )
               })}
+
+              {accessedGuildPoints.map((pointPlatform) => (
+                <PointsRewardCard
+                  key={pointPlatform.id}
+                  guildPlatform={pointPlatform}
+                />
+              ))}
             </>
           )}
 

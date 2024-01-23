@@ -33,7 +33,7 @@ const AddNewPointsType = ({ name, imageUrl, isOptional }) => {
         </Text>
         <HStack>
           <RewardImagePicker defaultIcon={Star} />
-          <Input {...register("name")} placeholder="points" defaultValue={name} />
+          <Input {...register("name")} placeholder="points" />
         </HStack>
         <FormErrorMessage>{errors?.name?.message as string}</FormErrorMessage>
       </FormControl>

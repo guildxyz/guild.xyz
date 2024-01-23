@@ -9,10 +9,10 @@ import {
 import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import { AddPointsFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/AddPointsPanel"
 import AddNewPointsType from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/AddNewPointsType"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
+import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 
@@ -29,8 +29,7 @@ const EditPointsModal = ({
   guildPlatformId,
   platformGuildData,
 }: Props) => {
-  const { isDetailed } = useGuild()
-  const { name: currentName, imageUrl: currentImage, text } = platformGuildData
+  const { name: currentName, imageUrl: currentImage } = platformGuildData
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditGuildPlatform({
@@ -59,6 +58,10 @@ const EditPointsModal = ({
   const { control } = methods
   const localName = useWatch({ control, name: "name" })
   const localImage = useWatch({ control, name: "imageUrl" })
+
+  useEffect(() => {
+    isOpen && methods.reset({ name: currentName, imageUrl: imageUrl })
+  }, [isOpen])
 
   const name = localName ?? currentName
   const imageUrl = localImage ?? currentImage
