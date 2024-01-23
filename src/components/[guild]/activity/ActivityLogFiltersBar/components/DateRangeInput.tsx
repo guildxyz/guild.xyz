@@ -1,4 +1,5 @@
 import {
+  Center,
   HStack,
   Icon,
   Input,
@@ -9,10 +10,11 @@ import {
   PopoverTrigger,
   Stack,
   Text,
+  useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { CaretDown, TrashSimple } from "phosphor-react"
+import { CalendarBlank, CalendarCheck, CaretDown, TrashSimple } from "phosphor-react"
 import { ChangeEvent } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import {
@@ -31,6 +33,7 @@ const CURRENT_DATE = timestampToDateString(CURRENT_TIMESTAMP)
 
 const DateRangeInput = ({ ...chakraStyles }) => {
   const buttonBgColor = useColorModeValue("white", "blackAlpha.300")
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   const { isUserActivityLog } = useActivityLog()
   const { activeFilters, addFilter, updateFilter, removeFilter } =
@@ -83,19 +86,22 @@ const DateRangeInput = ({ ...chakraStyles }) => {
       : "Last 24 hours"
 
   return (
-    <Popover matchWidth>
+    <Popover placement="bottom-end">
       <PopoverTrigger>
         <Button
+          flexShrink={0}
           variant="unstyled"
           bgColor={buttonBgColor}
-          h={10}
+          size="sm"
           boxSizing="border-box"
           px={3}
           fontWeight="normal"
-          w="full"
           display="flex"
           justifyContent="space-between"
           borderWidth={1}
+          borderColor={
+            beforeInputValue || afterInputValue ? "indigo.500" : undefined
+          }
           borderRadius="lg"
           rightIcon={<Icon as={CaretDown} boxSize={3.5} />}
           _focusVisible={{
@@ -103,7 +109,17 @@ const DateRangeInput = ({ ...chakraStyles }) => {
           }}
           {...chakraStyles}
         >
-          {buttonLabel}
+          {!isMobile ? (
+            buttonLabel
+          ) : (
+            <Center>
+              {beforeInputValue || afterInputValue ? (
+                <CalendarCheck color={"var(--chakra-colors-indigo-500)"} />
+              ) : (
+                <CalendarBlank />
+              )}
+            </Center>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent minW="none" w="none">

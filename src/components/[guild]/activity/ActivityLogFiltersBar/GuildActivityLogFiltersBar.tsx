@@ -1,4 +1,4 @@
-import { GridItem, SimpleGrid } from "@chakra-ui/react"
+import { HStack, Stack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import StickyBar from "components/common/Layout/StickyBar"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
@@ -38,34 +38,28 @@ const GuildActivityLogFiltersBar = (): JSX.Element => {
     clearFilters(["action"])
   }
 
-  const ActionGroupButtons = (): JSX.Element => (
-    <GridItem colSpan={{ base: 3, md: 2 }}>
-      <RadioButtonGroup
-        options={options}
-        onChange={(newValue) =>
-          changeActionGroup(newValue as ActivityLogActionGroup)
-        }
-        value={actionGroup}
-        defaultValue={ActivityLogActionGroup.UserAction}
-        chakraStyles={{ w: { base: "full", md: "auto" }, spacing: 1.5, size: "sm" }}
-      ></RadioButtonGroup>
-    </GridItem>
-  )
-
   return (
     <StickyBar>
-      <SimpleGrid columns={3} gap={3}>
-        <ActionGroupButtons />
-        {shouldShowDateRangeInput && (
-          <GridItem colSpan={{ base: 3, md: 1 }}>
-            <DateRangeInput h={8} fontSize={"sm"} />
-          </GridItem>
-        )}
+      <Stack spacing="3">
+        <HStack justifyContent={"space-between"}>
+          <RadioButtonGroup
+            options={options}
+            onChange={(newValue) =>
+              changeActionGroup(newValue as ActivityLogActionGroup)
+            }
+            value={actionGroup}
+            defaultValue={ActivityLogActionGroup.UserAction}
+            chakraStyles={{
+              spacing: 1.5,
+              size: "sm",
+            }}
+          ></RadioButtonGroup>
 
-        <GridItem colSpan={3}>
-          <FiltersInput />
-        </GridItem>
-      </SimpleGrid>
+          {shouldShowDateRangeInput && <DateRangeInput />}
+        </HStack>
+
+        <FiltersInput />
+      </Stack>
     </StickyBar>
   )
 }
