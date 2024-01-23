@@ -22,7 +22,6 @@ type Props = {
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
   const {
-    control,
     getValues,
     watch,
     setValue,
@@ -34,7 +33,6 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
   const { fields, append, replace, update } = useFieldArray({
     name: "requirements",
-    control,
     keyName: "formFieldId",
     rules: {
       required: "Set some requirements, or make the role free",
@@ -134,7 +132,6 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                 </CardMotionWrapper>
               )
             })}
-
             <AddRequirement onAdd={append} />
           </AnimatePresence>
         </Stack>

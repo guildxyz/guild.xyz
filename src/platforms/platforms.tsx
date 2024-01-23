@@ -1,4 +1,4 @@
-import { Center, ChakraProps, Spinner } from "@chakra-ui/react"
+import { Center, Spinner, ThemingProps } from "@chakra-ui/react"
 import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import dynamic from "next/dynamic"
 import {
@@ -33,6 +33,9 @@ import GoogleCardMenu from "./Google/GoogleCardMenu"
 import GoogleCardSettings from "./Google/GoogleCardSettings"
 import GoogleCardWarning from "./Google/GoogleCardWarning"
 import useGoogleCardProps from "./Google/useGoogleCardProps"
+import PoapCardButton from "./Poap/PoapCardButton"
+import PoapCardMenu from "./Poap/PoapCardMenu"
+import usePoapCardProps from "./Poap/usePoapCardProps"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
@@ -56,6 +59,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "CONTRACT_CALL",
   "TEXT",
   "UNIQUE_TEXT",
+  "POAP",
 ]
 
 type PlatformData<
@@ -70,7 +74,7 @@ type PlatformData<
   icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
-  colorScheme: ChakraProps["color"]
+  colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
   cardPropsHook?: (guildPlatform: GuildPlatform) => {
     type: PlatformName
@@ -319,11 +323,26 @@ const platforms: Record<PlatformName, PlatformData> = {
     name: "POAP",
     colorScheme: "purple",
     gatedEntity: "POAP",
+    cardPropsHook: usePoapCardProps,
+    cardButton: PoapCardButton,
+    cardMenuComponent: PoapCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPoapPanel"
+        ),
+      {
+        ssr: false,
+      }
+    ),
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    RoleCardComponent: dynamic(() => import("platforms/components/PoapReward"), {
+      ssr: false,
     }),
   },
   CONTRACT_CALL: {
