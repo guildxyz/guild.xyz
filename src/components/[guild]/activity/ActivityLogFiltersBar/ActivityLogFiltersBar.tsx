@@ -1,4 +1,4 @@
-import { GridItem, SimpleGrid, useColorModeValue } from "@chakra-ui/react"
+import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import StickyBar from "components/common/Layout/StickyBar"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
@@ -11,7 +11,7 @@ import FiltersInput from "./components/FiltersInput"
 const options = [
   {
     label: ActivityLogActionGroup.UserAction,
-    value: ActivityLogActionGroup.UserAction.toString(),
+    value: ActivityLogActionGroup.UserAction,
   },
   {
     label: ActivityLogActionGroup.AdminAction,
@@ -27,11 +27,6 @@ const ActivityLogFiltersBar = (): JSX.Element => {
   const shouldShowDateRangeInput = isUserActivityLog || featureFlags?.includes("CRM")
 
   const { clearFilters } = useActivityLogFilters()
-
-  const btnActiveColor = useColorModeValue(
-    "var(--chakra-colors-indigo-100)",
-    "var(--chakra-colors-indigo-500)"
-  )
 
   const changeActionGroup = (value: ActivityLogActionGroup) => {
     setActionGroup(value)

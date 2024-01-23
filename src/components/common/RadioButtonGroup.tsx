@@ -1,6 +1,7 @@
 import {
   Button,
   ButtonGroup,
+  ButtonGroupProps,
   Icon,
   UseRadioGroupProps,
   useRadio,
@@ -16,9 +17,9 @@ interface RadioButtonProps {
 
 interface RadioButtonGroupProps {
   radioGroupProps: UseRadioGroupProps
-  options: Array<{ value: string; label?: string; icon?: React.ElementType }>
+  options: RadioButtonProps[]
   renderOption?: (option: RadioButtonProps, radioProps: any) => JSX.Element
-  buttonGroupStyleProps?: any
+  buttonGroupStyleProps?: ButtonGroupProps
 }
 
 const RadioButtonGroup = (props: RadioButtonGroupProps) => {

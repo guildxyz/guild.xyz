@@ -1,6 +1,13 @@
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
-import { createContext, PropsWithChildren, useContext, useState } from "react"
+import {
+  createContext,
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
 import { OneOf, PlatformName, Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -11,10 +18,9 @@ import {
 } from "./ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 
 import {
-  ACTION,
   ActivityLogAction,
   ActivityLogActionGroup,
-  HIDDEN_ACTIONS,
+  ADMIN_ACTIONS,
   USER_ACTIONS,
 } from "./constants"
 
@@ -76,7 +82,7 @@ type ActivityLogContextType = Omit<
   mutate: () => void
   isUserActivityLog: boolean
   actionGroup: ActivityLogActionGroup
-  setActionGroup: (value: ActivityLogActionGroup) => void
+  setActionGroup: Dispatch<SetStateAction<ActivityLogActionGroup>>
   withActionGroups: boolean
 }
 
@@ -88,12 +94,6 @@ type Props = {
   limit?: number
   withActionGroups?: boolean
 } & OneOf<{ userId: number }, { guildId: number }>
-
-const getAdminActions = () => {
-  return Object.values(ACTION).filter(
-    (action) => !USER_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action)
-  )
-}
 
 const ActivityLogProvider = ({
   withSearchParams = true,
@@ -132,7 +132,7 @@ const ActivityLogProvider = ({
     if (guildId) queryWithRelevantParams.guildId = guildId.toString()
     if (userId) queryWithRelevantParams.userId = userId.toString()
 
-    let searchParams = new URLSearchParams(queryWithRelevantParams)
+    const searchParams = new URLSearchParams(queryWithRelevantParams)
 
     if (withSearchParams) {
       Object.entries(query).forEach(([key, value]) => {
@@ -148,7 +148,7 @@ const ActivityLogProvider = ({
       })
     }
 
-    if (!query.action) searchParams = addActionGroupFilterParams(searchParams)
+    if (!query.action) addActionGroupFilterParams(searchParams)
 
     return `/auditLog?${searchParams.toString()}`
   }
@@ -156,7 +156,7 @@ const ActivityLogProvider = ({
   const addActionGroupFilterParams = (searchParams: URLSearchParams) => {
     const actions =
       actionGroup === ActivityLogActionGroup.AdminAction
-        ? getAdminActions()
+        ? ADMIN_ACTIONS
         : actionGroup === ActivityLogActionGroup.UserAction
         ? USER_ACTIONS
         : []
@@ -164,8 +164,6 @@ const ActivityLogProvider = ({
     actions.forEach((action) => {
       searchParams.append("action", action.toString())
     })
-
-    return searchParams
   }
   const fetcherWithSign = useFetcherWithSign()
   const fetchActivityLogPage = (url: string) =>
@@ -193,9 +191,9 @@ const ActivityLogProvider = ({
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
     mutate: () => ogSWRInfiniteResponse.mutate(),
     isUserActivityLog: !!userId,
-    withActionGroups: withActionGroups,
-    actionGroup: actionGroup,
-    setActionGroup: setActionGroup,
+    withActionGroups,
+    actionGroup,
+    setActionGroup,
   }
 
   useScrollEffect(() => {

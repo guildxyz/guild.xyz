@@ -316,4 +316,11 @@ export const USER_ACTIONS: ACTION[] = [
   ACTION.DisconnectIdentity,
   ACTION.OptIn,
   ACTION.OptOut,
+  ACTION.KickFromGuild,
+  ACTION.SendReward,
+  ACTION.RevokeReward,
 ]
+
+export const ADMIN_ACTIONS = Object.values(ACTION).filter(
+  (action) => !USER_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action)
+)
