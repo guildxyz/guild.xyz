@@ -131,8 +131,7 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
           >
             POAP.xyz
           </Link>
-          , then come back and fill out this form in order to add your POAP as a
-          reward to your guild.
+          , then import it below to distribute it with Guild!
         </Text>
 
         <FormControl isInvalid={!!errors?.eventId}>
