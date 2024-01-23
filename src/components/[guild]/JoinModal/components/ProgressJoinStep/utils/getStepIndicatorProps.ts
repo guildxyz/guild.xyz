@@ -1,12 +1,12 @@
-import { JoinStepIndicator } from "../components/JoinStep"
-import { JoinState } from "./mapAccessJobState"
+import { JoinState } from "components/[guild]/JoinModal/utils/mapAccessJobState"
+import { JoinStepIndicatorProps } from "../../../components/JoinStepIndicator"
 
 // Q: Maybe only transition to a PROGRESS state, if at least 1 entity is "checked" / "granted"?
 // If so, that should be handled in mapAccessJobState by not defining the counts until the smaller one is at least 1
 export const getJoinStepIndicatorProps = (
   entity: "role" | "reward" | "requirement",
   joinState: JoinState
-): Parameters<typeof JoinStepIndicator>[number] => {
+): JoinStepIndicatorProps => {
   if (!joinState) {
     return { status: "INACTIVE" }
   }
