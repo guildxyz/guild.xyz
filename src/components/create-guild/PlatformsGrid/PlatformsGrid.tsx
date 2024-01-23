@@ -1,6 +1,5 @@
-import { SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
+import { Box, Heading, SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Section from "components/common/Section"
 import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
@@ -73,18 +72,21 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
   ]
 
   return (
-    <Stack spacing={8} {...rest}>
+    <Stack spacing={7} {...rest}>
       <PlatformSelectButtons
         platformsData={platformsData.filter((p) => !p.isGeneral)}
         onSelection={onSelection}
       />
 
-      <Section title="General">
+      <Box>
+        <Heading as="h3" fontSize={"md"} mb="3">
+          General
+        </Heading>
         <PlatformSelectButtons
           platformsData={platformsData.filter((p) => p.isGeneral)}
           onSelection={onSelection}
         />
-      </Section>
+      </Box>
     </Stack>
   )
 }
