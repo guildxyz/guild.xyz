@@ -83,7 +83,6 @@ type ActivityLogContextType = Omit<
   isUserActivityLog: boolean
   actionGroup: ActivityLogActionGroup
   setActionGroup: Dispatch<SetStateAction<ActivityLogActionGroup>>
-  withActionGroups: boolean
 }
 
 const ActivityLogContext = createContext<ActivityLogContextType>(undefined)
@@ -92,14 +91,12 @@ type Props = {
   withSearchParams?: boolean
   isInfinite?: boolean
   limit?: number
-  withActionGroups?: boolean
 } & OneOf<{ userId: number }, { guildId: number }>
 
 const ActivityLogProvider = ({
   withSearchParams = true,
   isInfinite = true,
   limit = DEFAULT_LIMIT,
-  withActionGroups = false,
   userId,
   guildId,
   children,
@@ -108,9 +105,7 @@ const ActivityLogProvider = ({
 
   const { keyPair } = useUserPublic()
 
-  const [actionGroup, setActionGroup] = useState(
-    withActionGroups ? ActivityLogActionGroup.UserAction : null
-  )
+  const [actionGroup, setActionGroup] = useState(null)
 
   const getKey = (
     pageIndex: number,
@@ -191,7 +186,6 @@ const ActivityLogProvider = ({
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
     mutate: () => ogSWRInfiniteResponse.mutate(),
     isUserActivityLog: !!userId,
-    withActionGroups,
     actionGroup,
     setActionGroup,
   }

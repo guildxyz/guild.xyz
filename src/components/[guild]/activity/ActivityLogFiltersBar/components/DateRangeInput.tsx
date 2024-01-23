@@ -29,7 +29,7 @@ const timestampToDateString = (ts?: number): string =>
 
 const CURRENT_DATE = timestampToDateString(CURRENT_TIMESTAMP)
 
-const DateRangeInput = () => {
+const DateRangeInput = ({ ...chakraStyles }) => {
   const buttonBgColor = useColorModeValue("white", "blackAlpha.300")
 
   const { isUserActivityLog } = useActivityLog()
@@ -88,6 +88,7 @@ const DateRangeInput = () => {
         <Button
           variant="unstyled"
           bgColor={buttonBgColor}
+          h={10}
           boxSizing="border-box"
           px={3}
           fontWeight="normal"
@@ -100,6 +101,7 @@ const DateRangeInput = () => {
           _focusVisible={{
             boxShadow: "0 0 0 1px var(--chakra-colors-gray-500)",
           }}
+          {...chakraStyles}
         >
           {buttonLabel}
         </Button>

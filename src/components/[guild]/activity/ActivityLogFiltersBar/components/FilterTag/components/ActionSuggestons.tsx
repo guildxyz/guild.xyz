@@ -23,7 +23,7 @@ const ACTIVITY_LOG_ACTIONS = Object.entries(ACTION)
   .map(([, actionName]) => actionName)
 
 const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element => {
-  const { actionGroup, withActionGroups } = useActivityLog()
+  const { actionGroup } = useActivityLog()
 
   const actionSuggestions = useMemo(
     () =>
@@ -31,7 +31,7 @@ const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element =>
         const lowerCaseInputValue = inputValue.toLowerCase()
 
         const isInputMatch = action.toLowerCase().includes(lowerCaseInputValue)
-        if (!withActionGroups) return isInputMatch
+        if (!actionGroup) return isInputMatch
 
         const isInGroup =
           actionGroup === ActivityLogActionGroup.UserAction
