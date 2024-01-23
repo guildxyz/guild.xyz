@@ -30,7 +30,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
       : `Failed to load your score`
 
   const info =
-    rank !== undefined ? `${numberToOrdinal(rank)} on the Leaderboard` : ``
+    rank !== undefined ? `${numberToOrdinal(rank)} on the leaderboard` : ``
 
   return (
     <>
