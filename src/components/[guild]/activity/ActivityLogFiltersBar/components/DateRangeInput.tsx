@@ -88,8 +88,6 @@ const DateRangeInput = () => {
         <Button
           variant="unstyled"
           bgColor={buttonBgColor}
-          h={8}
-          fontSize={"sm"}
           boxSizing="border-box"
           px={3}
           fontWeight="normal"
