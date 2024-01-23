@@ -1,15 +1,12 @@
 import {
   Collapse,
   Divider,
-  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Stack,
   StackProps,
-  Text,
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -25,10 +22,8 @@ import { ComponentType, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
-import { JoinStatusStep } from "./components/JoinStep"
 import SatisfyRequirementsJoinStep, {
-  JOIN_LOADING_TESTS,
-  JoinStateCount,
+  ProgressJoinStep,
 } from "./components/SatisfyRequirementsJoinStep"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
@@ -141,52 +136,20 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             <Collapse in={isManagingRolesOrRewards}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
-                <HStack py="3">
-                  <JoinStatusStep entity="role" joinState={joinProgress} />
+                <ProgressJoinStep
+                  entity="role"
+                  joinState={joinProgress}
+                  shouldShowSubtitle={joinProgress?.state === "MANAGING_ROLES"}
+                />
 
-                  <Stack w="full" spacing={0} mt="-1.5px !important">
-                    <Text fontWeight={"bold"}>Get roles</Text>
-
-                    <JoinStateCount joinState={joinProgress} entity="role" />
-
-                    {joinProgress?.state === "MANAGING_ROLES" &&
-                      JOIN_LOADING_TESTS[joinProgress?.state]?.[
-                        +!!joinProgress?.waitingPosition
-                      ] && (
-                        <Text>
-                          {
-                            JOIN_LOADING_TESTS[joinProgress?.state][
-                              +!!joinProgress?.waitingPosition
-                            ]
-                          }
-                        </Text>
-                      )}
-                  </Stack>
-                </HStack>
-
-                <HStack py="3">
-                  <JoinStatusStep entity="reward" joinState={joinProgress} />
-
-                  <Stack w="full" spacing={0} mt="-1.5px !important">
-                    <Text fontWeight={"bold"}>Get rewards</Text>
-
-                    <JoinStateCount joinState={joinProgress} entity="reward" />
-
-                    {!joinProgress?.rewards &&
-                      joinProgress?.state === "MANAGING_REWARDS" &&
-                      JOIN_LOADING_TESTS[joinProgress?.state]?.[
-                        +!!joinProgress?.waitingPosition
-                      ] && (
-                        <Text>
-                          {
-                            JOIN_LOADING_TESTS[joinProgress?.state][
-                              +!!joinProgress?.waitingPosition
-                            ]
-                          }
-                        </Text>
-                      )}
-                  </Stack>
-                </HStack>
+                <ProgressJoinStep
+                  entity="reward"
+                  joinState={joinProgress}
+                  shouldShowSubtitle={
+                    !joinProgress?.rewards &&
+                    joinProgress?.state === "MANAGING_REWARDS"
+                  }
+                />
               </VStack>
             </Collapse>
 

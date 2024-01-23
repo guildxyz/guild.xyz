@@ -11,8 +11,9 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { ArrowRight, LockSimple } from "phosphor-react"
+import { PropsWithChildren, ReactNode } from "react"
 import { JoinState } from "../utils/mapAccessJobState"
-import { JoinStatusStep, JoinStepIndicator } from "./JoinStep"
+import { JoinStatusStep } from "./JoinStep"
 
 export const JOIN_LOADING_TESTS: Record<
   Exclude<JoinState["state"], "FINISHED">,
@@ -82,6 +83,47 @@ const JoinStateCount = ({
   return null
 }
 
+const progressTitle = {
+  role: "Get roles",
+  reward: "Get rewards",
+  requirement: "Satisfy the requirements",
+}
+
+const ProgressJoinStep = ({
+  joinState,
+  entity,
+  shouldShowSubtitle,
+  children,
+  RightComponent,
+  ...stackProps
+}: PropsWithChildren<{
+  joinState: JoinState
+  entity: "role" | "reward" | "requirement"
+  shouldShowSubtitle: boolean
+  RightComponent?: ReactNode
+}> &
+  StackProps) => (
+  <HStack py="3" {...stackProps}>
+    <JoinStatusStep entity={entity} joinState={joinState} />
+
+    <Stack w="full" spacing={0} mt="-1.5px !important">
+      <Text fontWeight={"bold"}>{progressTitle[entity]}</Text>
+
+      <JoinStateCount joinState={joinState} entity={entity} />
+
+      {shouldShowSubtitle &&
+        JOIN_LOADING_TESTS[joinState?.state]?.[+!!joinState?.waitingPosition] && (
+          <Text>
+            {JOIN_LOADING_TESTS[joinState?.state][+!!joinState?.waitingPosition]}
+          </Text>
+        )}
+
+      {children}
+    </Stack>
+    {RightComponent}
+  </HStack>
+)
+
 const SatisfyRequirementsJoinStep = ({
   isLoading,
   hasNoAccessResponse,
@@ -102,62 +144,44 @@ const SatisfyRequirementsJoinStep = ({
   }
 
   return (
-    <HStack py="3" {...stackProps}>
-      {hasNoAccessResponse ? (
-        <JoinStepIndicator status="ERROR" />
-      ) : (
-        <JoinStatusStep entity="requirement" joinState={joinState} />
-      )}
-
-      <Stack w="full" spacing={0} mt="-1.5px !important">
-        <Text fontWeight={"bold"}>Satisfy the requirements</Text>
-
-        <JoinStateCount joinState={joinState} entity="requirement" />
-
-        {(joinState?.state === "PREPARING" ||
-          joinState?.state === "CHECKING" ||
-          joinState?.state === "INITIAL") &&
-          JOIN_LOADING_TESTS?.[joinState.state]?.[
-            +(joinState.waitingPosition || false)
-          ] && (
-            <Text
-              color={joinState.state === "CHECKING" ? "whiteAlpha.500" : undefined}
-            >
-              {
-                JOIN_LOADING_TESTS[joinState.state][
-                  +(joinState.waitingPosition ?? false)
-                ]
-              }
-            </Text>
-          )}
-
-        <Collapse in={hasNoAccessResponse && !isLoading}>
-          <Text pt="2">
-            {`You're not eligible with your connected accounts. `}
-            <Button
-              variant="link"
-              rightIcon={<ArrowRight />}
-              onClick={onClick}
-              iconSpacing={1.5}
-            >
-              See requirements
-            </Button>
-          </Text>
-        </Collapse>
-      </Stack>
-      {!hasNoAccessResponse && (
-        <Tooltip
-          hasArrow
-          label="Connect your accounts and check access below to see if you meet the requirements the guild owner has set"
-        >
-          <Center boxSize={5}>
-            <Icon as={LockSimple} weight="bold" />
-          </Center>
-        </Tooltip>
-      )}
-    </HStack>
+    <ProgressJoinStep
+      entity="requirement"
+      joinState={joinState}
+      shouldShowSubtitle={
+        joinState?.state === "PREPARING" ||
+        joinState?.state === "CHECKING" ||
+        joinState?.state === "INITIAL"
+      }
+      RightComponent={
+        !hasNoAccessResponse ? (
+          <Tooltip
+            hasArrow
+            label="Connect your accounts and check access below to see if you meet the requirements the guild owner has set"
+          >
+            <Center boxSize={5}>
+              <Icon as={LockSimple} weight="bold" />
+            </Center>
+          </Tooltip>
+        ) : null
+      }
+      {...stackProps}
+    >
+      <Collapse in={hasNoAccessResponse && !isLoading}>
+        <Text pt="2">
+          {`You're not eligible with your connected accounts. `}
+          <Button
+            variant="link"
+            rightIcon={<ArrowRight />}
+            onClick={onClick}
+            iconSpacing={1.5}
+          >
+            See requirements
+          </Button>
+        </Text>
+      </Collapse>
+    </ProgressJoinStep>
   )
 }
 
-export { JoinStateCount }
+export { ProgressJoinStep }
 export default SatisfyRequirementsJoinStep
