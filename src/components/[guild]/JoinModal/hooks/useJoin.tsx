@@ -206,8 +206,11 @@ const useJoin = (
     {
       onSuccess: (res) => {
         if (res?.done) {
-          useSubmitResponse?.reset()
-          onJoinSuccess(getResponseByProgress(res))
+          // With the timeout the UI is a bit cleaner, when we transition multiple states during one poll
+          setTimeout(() => {
+            useSubmitResponse?.reset()
+            onJoinSuccess(getResponseByProgress(res))
+          }, 2000)
         }
       },
       /**
