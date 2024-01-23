@@ -18,6 +18,7 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
 import { ComponentType, useEffect } from "react"
@@ -107,16 +108,25 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
 
+  const errorToast = useShowErrorToast()
+
   const {
     isLoading,
     onSubmit,
     error: joinError,
     response,
     joinProgress,
-  } = useJoin((res) => {
-    methods.setValue("platforms", {})
-    if (res.success) onClose()
-  })
+    reset,
+  } = useJoin(
+    (res) => {
+      methods.setValue("platforms", {})
+      if (res.success) onClose()
+    },
+    (err) => {
+      errorToast(err)
+      reset()
+    }
+  )
 
   useEffect(() => {
     console.log("PROGRESS", joinProgress)

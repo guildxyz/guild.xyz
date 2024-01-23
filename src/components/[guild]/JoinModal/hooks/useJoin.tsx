@@ -333,6 +333,10 @@ const useJoin = (
               ...value,
             })),
       }),
+    reset: () => {
+      useSubmitResponse.reset()
+      progress.mutate(undefined, { revalidate: false })
+    },
   }
 }
 
