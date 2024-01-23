@@ -55,6 +55,7 @@ const RadioButtonGroup = ({
         const radioProps = getRadioProps({ value: option.value })
         return (
           <RadioButton
+            key={option.label}
             {...option}
             {...radioProps}
             colorScheme={chakraStyles?.colorScheme}
