@@ -1,4 +1,4 @@
-import RadioButtonGroup, { RadioButton } from "components/common/RadioButtonGroup"
+import RadioButtonGroup from "components/common/RadioButtonGroup"
 
 const options = [
   {
@@ -14,22 +14,17 @@ const options = [
 const FilterByRolesLogicSelector = ({ column }) => (
   <RadioButtonGroup
     options={options}
-    renderOption={(option, radioProps) => (
-      <RadioButton {...option} {...radioProps} borderRadius="md" w="full" />
-    )}
-    radioGroupProps={{
-      onChange: (newValue) => {
-        {
-          column.setFilterValue((prevValue) => ({
-            ...prevValue,
-            logic: newValue,
-          }))
-        }
-      },
-      value: (column.getFilterValue() as any)?.logic,
-      defaultValue: "some",
+    onChange={(newValue) => {
+      {
+        column.setFilterValue((prevValue) => ({
+          ...prevValue,
+          logic: newValue,
+        }))
+      }
     }}
-    buttonGroupStyleProps={{ size: "xs", mb: "3", w: "full", spacing: 1.5 }}
+    value={(column.getFilterValue() as any)?.logic}
+    defaultValue={"some"}
+    chakraStyles={{ size: "xs", mb: "3", w: "full", spacing: 1.5 }}
   />
 )
 

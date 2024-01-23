@@ -37,20 +37,19 @@ const ActivityLogFiltersBar = (): JSX.Element => {
     <GridItem colSpan={{ base: 3, md: 2 }}>
       <RadioButtonGroup
         options={options}
-        radioGroupProps={{
-          onChange: (newValue) =>
-            changeActionGroup(newValue as ActivityLogActionGroup),
-          value: actionGroup,
-          defaultValue: ActivityLogActionGroup.UserAction,
-        }}
-        buttonGroupStyleProps={{ w: { base: "full", md: "auto" }, spacing: 1.5 }}
+        onChange={(newValue) =>
+          changeActionGroup(newValue as ActivityLogActionGroup)
+        }
+        value={actionGroup}
+        defaultValue={ActivityLogActionGroup.UserAction}
+        chakraStyles={{ w: { base: "full", md: "auto" }, spacing: 1.5, size: "sm" }}
       ></RadioButtonGroup>
     </GridItem>
   )
 
   return (
     <StickyBar>
-      <SimpleGrid columns={3} gap={4}>
+      <SimpleGrid columns={3} gap={3}>
         {withActionGroups ? (
           <>
             <ActionGroupButtons />

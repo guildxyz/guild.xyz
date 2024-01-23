@@ -2,53 +2,83 @@ import {
   Button,
   ButtonGroup,
   ButtonGroupProps,
+  ButtonProps,
   Icon,
   UseRadioGroupProps,
+  UseRadioProps,
   useRadio,
   useRadioGroup,
 } from "@chakra-ui/react"
 
-interface RadioButtonProps {
+interface RadioButtonOptionProps {
   label?: string
   icon?: React.ElementType
   isChecked?: boolean
   value: string
 }
 
-interface RadioButtonGroupProps {
-  radioGroupProps: UseRadioGroupProps
-  options: RadioButtonProps[]
-  renderOption?: (option: RadioButtonProps, radioProps: any) => JSX.Element
-  buttonGroupStyleProps?: ButtonGroupProps
-}
+type RadioButtonGroupProps = {
+  options: RadioButtonOptionProps[]
+  chakraStyles?: ButtonGroupProps & ButtonProps
+} & UseRadioGroupProps
 
-const RadioButtonGroup = (props: RadioButtonGroupProps) => {
-  const { getRootProps, getRadioProps } = useRadioGroup(props.radioGroupProps)
+const RadioButtonGroup = ({
+  options,
+  chakraStyles,
+  ...useRadioGroupProps
+}: RadioButtonGroupProps) => {
+  const { getRootProps, getRadioProps } = useRadioGroup(useRadioGroupProps)
 
   const group = getRootProps()
 
-  const renderButton = (option, radioProps) => {
-    if (props.renderOption) return props.renderOption(option, radioProps)
-    return <RadioButton {...option} {...radioProps}></RadioButton>
-  }
+  let buttonBorderRadius =
+    chakraStyles?.borderRadius ??
+    (() => {
+      switch (chakraStyles?.size) {
+        case "xs":
+          return "md"
+        case "sm":
+        case "md":
+          return "lg"
+        case "lg":
+        case "xl":
+        case "2xl":
+          return "xl"
+        default:
+          return "md"
+      }
+    })()
 
   return (
-    <ButtonGroup {...props.buttonGroupStyleProps} {...group}>
-      {props.options.map((option) => {
+    <ButtonGroup {...chakraStyles} {...group}>
+      {options.map((option) => {
         const radioProps = getRadioProps({ value: option.value })
-        return renderButton(option, radioProps)
+        return (
+          <RadioButton
+            {...option}
+            {...radioProps}
+            colorScheme={chakraStyles?.colorScheme}
+            borderRadius={buttonBorderRadius}
+          />
+        )
       })}
     </ButtonGroup>
   )
 }
 
-export const RadioButton = (props) => {
+type RadioButtonProps = {
+  colorScheme?: string
+  borderRadius?: any
+} & RadioButtonOptionProps &
+  UseRadioProps
+export const RadioButton = (props: RadioButtonProps) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const { label, icon, isChecked, ...rest } = props
+  const { label, icon, isChecked, ...chakraStyles } = props
+  const colorScheme = chakraStyles.colorScheme || "indigo"
 
   return (
     <Button
@@ -56,9 +86,11 @@ export const RadioButton = (props) => {
       as="label"
       {...checkbox}
       boxShadow="none !important"
-      colorScheme={isChecked ? "indigo" : "gray"}
       cursor="pointer"
-      {...rest}
+      borderRadius="lg"
+      w="full"
+      {...chakraStyles}
+      colorScheme={isChecked ? colorScheme : "gray"}
     >
       <input {...input} />
       {label}
