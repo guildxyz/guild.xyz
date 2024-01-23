@@ -67,6 +67,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const methods = useForm({
     mode: "all",
+    defaultValues,
   })
 
   /**
