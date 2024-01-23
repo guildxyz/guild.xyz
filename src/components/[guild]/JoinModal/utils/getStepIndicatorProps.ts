@@ -1,6 +1,7 @@
 import { JoinStepIndicator } from "../components/JoinStep"
 import { JoinState } from "./mapAccessJobState"
 
+// Q: Maybe only transition to a PROGRESS state, if at least 1 entity is "checked" / "granted"?
 export const getJoinStepIndicatorProps = (
   entity: "role" | "reward" | "requirement",
   joinState: JoinState
@@ -35,19 +36,26 @@ export const getJoinStepIndicatorProps = (
   }
 
   if (entity === "reward") {
-    if (joinState.state === "MANAGING_REWARDS" && joinState.rewards) {
+    const hasAllRewards =
+      !!joinState.rewards && joinState.rewards.granted === joinState.rewards.all
+
+    if (
+      joinState.state === "MANAGING_REWARDS" &&
+      joinState.rewards &&
+      !hasAllRewards
+    ) {
       return {
         status: "PROGRESS",
         progress: (joinState.rewards.granted / joinState.rewards.all) * 100,
       }
     }
 
-    if (joinState.state === "MANAGING_REWARDS") {
-      return { status: "LOADING" }
+    if (joinState.state === "FINISHED" || hasAllRewards) {
+      return { status: "DONE" }
     }
 
-    if (joinState.state === "FINISHED") {
-      return { status: "DONE" }
+    if (joinState.state === "MANAGING_REWARDS") {
+      return { status: "LOADING" }
     }
 
     return { status: "INACTIVE" }
