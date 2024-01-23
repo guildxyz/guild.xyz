@@ -21,7 +21,7 @@ const options = [
 ]
 
 const GuildActivityLogFiltersBar = (): JSX.Element => {
-  const { isUserActivityLog, actionGroup, setActionGroup } = useActivityLog()
+  const { actionGroup, setActionGroup } = useActivityLog()
 
   useEffect(() => {
     setActionGroup(ActivityLogActionGroup.UserAction)
@@ -29,7 +29,7 @@ const GuildActivityLogFiltersBar = (): JSX.Element => {
 
   const { featureFlags } = useGuild()
 
-  const shouldShowDateRangeInput = isUserActivityLog || featureFlags?.includes("CRM")
+  const shouldShowDateRangeInput = featureFlags?.includes("CRM")
 
   const { clearFilters } = useActivityLogFilters()
 

@@ -1,15 +1,13 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import StickyBar from "components/common/Layout/StickyBar"
-import { useActivityLog } from "../ActivityLogContext"
 import DateRangeInput from "./components/DateRangeInput"
 import FiltersInput from "./components/FiltersInput"
 
 const UserActivityLogFiltersBar = (): JSX.Element => {
-  const { isUserActivityLog } = useActivityLog()
   const { featureFlags } = useGuild()
 
-  const shouldShowDateRangeInput = isUserActivityLog || featureFlags?.includes("CRM")
+  const shouldShowDateRangeInput = featureFlags?.includes("CRM")
 
   return (
     <StickyBar>
