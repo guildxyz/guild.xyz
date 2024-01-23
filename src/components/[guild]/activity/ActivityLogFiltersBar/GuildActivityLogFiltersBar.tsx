@@ -25,7 +25,7 @@ const GuildActivityLogFiltersBar = (): JSX.Element => {
 
   useEffect(() => {
     setActionGroup(ActivityLogActionGroup.UserAction)
-  }, [])
+  }, [setActionGroup])
 
   const { featureFlags } = useGuild()
 

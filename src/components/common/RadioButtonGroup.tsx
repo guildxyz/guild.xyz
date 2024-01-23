@@ -31,7 +31,7 @@ const RadioButtonGroup = ({
 
   const group = getRootProps()
 
-  let buttonBorderRadius =
+  const buttonBorderRadius =
     chakraStyles?.borderRadius ??
     (() => {
       switch (chakraStyles?.size) {
