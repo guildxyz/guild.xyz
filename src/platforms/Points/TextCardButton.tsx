@@ -10,7 +10,6 @@ type Props = {
 }
 
 const PointsCardButton = ({ platform }: Props) => {
-  const { roles } = useGuild()
   const { urlName } = useGuild()
   const id = platform.id
 

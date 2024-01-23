@@ -60,8 +60,8 @@ const EditPointsModal = ({
   const localImage = useWatch({ control, name: "imageUrl" })
 
   useEffect(() => {
-    isOpen && methods.reset({ name: currentName, imageUrl: imageUrl })
-  }, [isOpen])
+    if (isOpen) methods.reset({ name: currentName, imageUrl: currentImage })
+  }, [isOpen, currentName, methods, currentImage])
 
   const name = localName ?? currentName
   const imageUrl = localImage ?? currentImage

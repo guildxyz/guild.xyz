@@ -17,7 +17,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
 
   const { name, imageUrl } = guildPlatform.platformGuildData
 
-  const { data, isLoading, error } = useSWR(
+  const { data, isLoading } = useSWR(
     `/v2/guilds/${guildId}/points/${pointsId}/users/${userId}`
   )
 
