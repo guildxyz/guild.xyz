@@ -8,6 +8,7 @@ import {
   Spinner,
   Text,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Check, X } from "phosphor-react"
@@ -32,6 +33,8 @@ const JoinStepIndicator = (
     | { status: "INACTIVE" | "DONE" | "ERROR" | "LOADING" }
     | { status: "PROGRESS"; progress: number }
 ) => {
+  const color = useColorModeValue("black", "white")
+
   switch (props.status) {
     case "DONE":
     case "ERROR":
@@ -77,7 +80,7 @@ const JoinStepIndicator = (
         <CircularProgress
           value={props.progress}
           size="5"
-          color={"white"}
+          color={color}
           sx={{
             "> svg > .chakra-progress__track": {
               stroke: "var(--chakra-colors-blackAlpha-200)",
