@@ -17,9 +17,7 @@ import DrawerHeader from "components/common/DrawerHeader"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import useCreateRole, {
-  RoleToCreate,
-} from "components/create-guild/hooks/useCreateRole"
+import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
@@ -29,7 +27,7 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType, Visibility } from "types"
+import { PlatformType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
@@ -53,32 +51,8 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
       },
     })
 
-  const defaultValues: RoleToCreate = {
-    guildId: id,
-    name: "",
-    description: "",
-    logic: "AND",
-    requirements: [],
-    roleType: "NEW",
-    imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-    visibility: Visibility.PUBLIC,
-    rolePlatforms: discordPlatform
-      ? [
-          {
-            id: undefined,
-            guildPlatformId: discordPlatform.id,
-            platformRoleId: null,
-            platformRoleData: {},
-            isNew: true,
-            visibility: Visibility.PUBLIC,
-          },
-        ]
-      : [],
-  }
-
   const methods = useForm({
     mode: "all",
-    defaultValues,
   })
 
   /**
@@ -96,7 +70,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    methods.reset(defaultValues)
+    methods.reset()
     onAlertClose()
     onClose()
   }
@@ -105,7 +79,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     if (!response) return
 
     onClose()
-    methods.reset(defaultValues)
+    methods.reset()
   }, [response])
 
   const iconUploader = usePinata({
