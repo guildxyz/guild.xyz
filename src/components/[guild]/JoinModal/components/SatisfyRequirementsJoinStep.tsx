@@ -27,7 +27,7 @@ const SatisfyRequirementsJoinStep = ({
   return (
     <ProgressJoinStep
       entity="requirement"
-      joinState={joinState}
+      joinState={joinState || (isLoading ? { state: "INITIAL" } : undefined)}
       shouldShowSubtitle={
         joinState?.state === "PREPARING" ||
         joinState?.state === "CHECKING" ||
