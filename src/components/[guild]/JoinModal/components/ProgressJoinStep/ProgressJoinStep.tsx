@@ -2,7 +2,7 @@ import { HStack, Stack, StackProps, Text } from "@chakra-ui/react"
 import { PropsWithChildren, ReactNode } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
 import JoinStateCount from "./components/JoinStateCount"
-import JoinStatusStep from "./components/JoinStatusStep"
+import JoinStatusStepIndicator from "./components/JoinStatusStepIndicator"
 import { JOIN_LOADING_TESTS, progressTitle } from "./static"
 
 const ProgressJoinStep = ({
@@ -20,7 +20,7 @@ const ProgressJoinStep = ({
 }> &
   StackProps) => (
   <HStack py="3" {...stackProps}>
-    <JoinStatusStep entity={entity} joinState={joinState} />
+    <JoinStatusStepIndicator entity={entity} joinState={joinState} />
 
     <Stack w="full" spacing={0} mt="-1.5px !important">
       <Text fontWeight={"bold"}>{progressTitle[entity]}</Text>

@@ -2,7 +2,7 @@ import { JoinState } from "components/[guild]/JoinModal/utils/mapAccessJobState"
 import JoinStepIndicator from "../../JoinStepIndicator"
 import { getJoinStepIndicatorProps } from "../utils/getStepIndicatorProps"
 
-const JoinStatusStep = ({
+const JoinStatusStepIndicator = ({
   joinState,
   entity,
 }: {
@@ -13,4 +13,4 @@ const JoinStatusStep = ({
   return <JoinStepIndicator {...props} />
 }
 
-export default JoinStatusStep
+export default JoinStatusStepIndicator
