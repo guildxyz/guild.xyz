@@ -5,7 +5,7 @@ import { useActivityLog } from "../ActivityLogContext"
 import DateRangeInput from "./components/DateRangeInput"
 import FiltersInput from "./components/FiltersInput"
 
-const ActivityLogFiltersBar = (): JSX.Element => {
+const UserActivityLogFiltersBar = (): JSX.Element => {
   const { isUserActivityLog } = useActivityLog()
   const { featureFlags } = useGuild()
 
@@ -28,4 +28,4 @@ const ActivityLogFiltersBar = (): JSX.Element => {
   )
 }
 
-export default ActivityLogFiltersBar
+export default UserActivityLogFiltersBar
