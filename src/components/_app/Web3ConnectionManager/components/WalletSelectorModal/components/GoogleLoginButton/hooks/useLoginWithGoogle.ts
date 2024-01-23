@@ -126,7 +126,6 @@ const useLoginWithGoogle = () => {
         onClose()
       }
 
-      // TODO We could load the Player dynamically here
       return true
     },
     {

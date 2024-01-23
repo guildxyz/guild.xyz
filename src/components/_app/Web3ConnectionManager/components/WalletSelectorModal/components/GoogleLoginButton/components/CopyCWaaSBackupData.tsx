@@ -38,7 +38,6 @@ const CopyCWaaSBackupData = () => {
       title: "Backup downloaded",
       description: "Click the button below to copy it to the clipboard",
       buttonProps: {
-        size: "sm",
         variant: "outline",
         onClick: onCopy,
         isDisabled: hasCopied,
