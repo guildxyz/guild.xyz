@@ -32,7 +32,8 @@ import SatisfyRequirementsJoinStep, {
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
-import useJoin, { JoinState } from "./hooks/useJoin"
+import useJoin from "./hooks/useJoin"
+import { JoinState } from "./utils/mapAccessJobState"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {

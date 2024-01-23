@@ -14,6 +14,7 @@ import { CircleWavyCheck } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+import mapAccessJobState from "../utils/mapAccessJobState"
 
 export const QUEUE_FEATURE_FLAG = "GUILD_QUEUES"
 
@@ -44,83 +45,6 @@ export type JoinData = {
  * Discord reward card after join until we implement queues generally
  */
 export const isAfterJoinAtom = atom(false)
-
-const groupBy = <Entity, By extends keyof Entity>(entities: Entity[], by: By) =>
-  entities.reduce<Record<string, Entity[]>>((grouped, entity) => {
-    const key = `${entity[by]}`
-    // eslint-disable-next-line no-param-reassign
-    grouped[key] ||= []
-    grouped[key].push(entity)
-    return grouped
-  }, {})
-
-const mapState = (progress: JoinJob) => {
-  if (!progress) {
-    return {
-      state: "INITIAL",
-    } as const
-  }
-
-  if (progress.done) {
-    return {
-      state: "FINISHED",
-    } as const
-  }
-
-  const state =
-    (
-      {
-        none: "PREPARING",
-        "access-preparation": "CHECKING",
-        "access-check": "MANAGING_ROLES",
-        "access-logic": "MANAGING_ROLES",
-      } as const
-    )[progress["completed-queue"] ?? "none"] ?? "MANAGING_REWARDS"
-
-  const waitingPosition =
-    (progress as any).currentQueueState === "waiting"
-      ? (progress as any).position
-      : null
-
-  const requirements = progress["children:access-check:jobs"]
-    ? {
-        all: progress["children:access-check:jobs"]?.length,
-        satisfied: progress["children:access-check:jobs"]?.filter((req) => req?.done)
-          ?.length,
-      }
-    : null
-
-  const roles =
-    progress.roleIds && progress.updateMembershipResult
-      ? {
-          all: progress.roleIds?.length,
-          granted: progress.updateMembershipResult?.membershipRoleIds?.length,
-        }
-      : null
-
-  const rewardsGroupedByPlatforms = progress["children:manage-reward:jobs"]
-    ? groupBy(progress["children:manage-reward:jobs"], "flowName")
-    : null
-
-  const rewards = rewardsGroupedByPlatforms
-    ? {
-        all: Object.keys(rewardsGroupedByPlatforms).length,
-        granted: Object.values(rewardsGroupedByPlatforms).filter((rewardResults) =>
-          rewardResults.every((rewardResult) => rewardResult.success)
-        ).length,
-      }
-    : null
-
-  return {
-    state,
-    waitingPosition,
-    requirements,
-    roles,
-    rewards,
-  } as const
-}
-
-export type JoinState = ReturnType<typeof mapState>
 
 const useJoin = (
   onSuccess?: (response: Response) => void,
@@ -312,7 +236,7 @@ const useJoin = (
     : useSubmitResponse?.error
 
   const joinProgress =
-    hasFeatureFlag && isLoading ? mapState(progress?.data) : undefined
+    hasFeatureFlag && isLoading ? mapAccessJobState(progress?.data) : undefined
 
   return {
     response,

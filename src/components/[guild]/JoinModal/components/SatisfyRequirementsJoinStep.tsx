@@ -11,7 +11,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { ArrowRight, LockSimple } from "phosphor-react"
-import { JoinState } from "../hooks/useJoin"
+import { JoinState } from "../utils/mapAccessJobState"
 import { JoinStepIndicator } from "./JoinStep"
 
 export const JOIN_LOADING_TESTS: Record<
@@ -37,10 +37,8 @@ export const JOIN_LOADING_TESTS: Record<
 const getRequirementIndicatorProps = (
   joinState: JoinState,
   hasNoAccessResponse: boolean
-): Parameters<typeof JoinStepIndicator>[number] => {
-  console.log(joinState)
-
-  return !joinState
+): Parameters<typeof JoinStepIndicator>[number] =>
+  !joinState
     ? { status: "INACTIVE" }
     : joinState.state === "INITIAL"
     ? { status: "LOADING" }
@@ -60,7 +58,6 @@ const getRequirementIndicatorProps = (
             ? "ERROR"
             : "LOADING",
       }
-}
 
 const SatisfyRequirementsJoinStep = ({
   isLoading,
