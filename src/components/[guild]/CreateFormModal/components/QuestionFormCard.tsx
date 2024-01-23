@@ -123,7 +123,7 @@ const QuestionFormCard = ({ index, onRemove }: Props) => {
           <FormControl display="flex" alignItems="center">
             <FormLabel
               mb="0"
-              color={!isRequiredValue && "GrayText"}
+              color="GrayText"
               fontSize="sm"
               fontWeight="bold"
               textTransform="uppercase"
@@ -131,6 +131,7 @@ const QuestionFormCard = ({ index, onRemove }: Props) => {
               Required
             </FormLabel>
             <Switch
+              colorScheme="indigo"
               {...isRequiredControl}
               isChecked={isRequiredValue}
               onChange={(e) => onIsRequiredChange(e.target.checked)}

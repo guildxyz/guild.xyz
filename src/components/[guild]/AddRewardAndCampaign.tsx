@@ -5,6 +5,7 @@ import {
   IconButton,
   Menu,
   MenuButton,
+  MenuDivider,
   MenuItem,
   MenuList,
   Portal,
@@ -18,8 +19,11 @@ import AddRewardButton from "./AddRewardButton"
 import CreateFormModal from "./CreateFormModal"
 import { useIsTabsStuck } from "./Tabs"
 import { useThemeContext } from "./ThemeContext"
+import useGuild from "./hooks/useGuild"
 
 const AddRewardAndCampaign = () => {
+  const { featureFlags } = useGuild()
+
   const {
     isOpen: isCreateCampaignModalOpen,
     onOpen: onCreateCampaignModalOpen,
@@ -59,22 +63,27 @@ const AddRewardAndCampaign = () => {
               zIndex="popover"
               overflow="hidden"
             >
-              <MenuItem
-                onClick={onCreateCampaignModalOpen}
-                icon={<Icon as={Plus} mt="1" />}
-                alignItems="start"
-                py={4}
-              >
-                <Stack spacing={0.5}>
-                  <Text as="span" fontWeight="semibold" fontSize="sm">
-                    Create new page
-                  </Text>
-                  <Text colorScheme="gray" fontSize="sm">
-                    Add a separate page with it’s own roles and rewards, highlighted
-                    at the top of your guild for everyone
-                  </Text>
-                </Stack>
-              </MenuItem>
+              {featureFlags.includes("ROLE_GROUPS") && (
+                <>
+                  <MenuItem
+                    onClick={onCreateCampaignModalOpen}
+                    icon={<Icon as={Plus} mt="1" />}
+                    alignItems="start"
+                    py={4}
+                  >
+                    <Stack spacing={0.5}>
+                      <Text as="span" fontWeight="semibold" fontSize="sm">
+                        Create new page
+                      </Text>
+                      <Text colorScheme="gray" fontSize="sm">
+                        Add a separate page with it’s own roles and rewards,
+                        highlighted at the top of your guild for everyone
+                      </Text>
+                    </Stack>
+                  </MenuItem>
+                  <MenuDivider my={0} />
+                </>
+              )}
 
               <MenuItem
                 onClick={onCreateFormModalOpen}
@@ -95,6 +104,7 @@ const AddRewardAndCampaign = () => {
           </Portal>
         </Menu>
       </ButtonGroup>
+
       <CreateCampaignModal
         isOpen={isCreateCampaignModalOpen}
         onClose={onCreateCampaignModalClose}

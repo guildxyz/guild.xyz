@@ -12,14 +12,30 @@ import { Modal } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import CreateFormForm from "./components/CreateFormForm"
+import useCreateForm from "./hooks/useCreateForm"
 import { CreateFormParams, FormSchema } from "./schemas"
 
 type Props = { isOpen: boolean; onClose: () => void }
+
+const defaultValues = {
+  name: "",
+  description: "",
+  active: false,
+  fields: [],
+}
 
 const CreateFormModal = (props: Props) => {
   const methods = useForm<CreateFormParams>({
     mode: "all",
     resolver: zodResolver(FormSchema),
+    defaultValues,
+  })
+
+  const { onSubmit, isLoading } = useCreateForm({
+    onSuccess: () => {
+      methods.reset(defaultValues)
+      props.onClose()
+    },
   })
 
   return (
@@ -38,8 +54,9 @@ const CreateFormModal = (props: Props) => {
             <Button
               colorScheme="green"
               rightIcon={<ArrowRight />}
-              onClick={methods.handleSubmit(console.log, console.error)}
+              onClick={methods.handleSubmit(onSubmit, console.error)}
               loadingText="Creating form"
+              isLoading={isLoading}
             >
               Create
             </Button>
