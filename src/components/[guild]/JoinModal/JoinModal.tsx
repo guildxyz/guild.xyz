@@ -18,7 +18,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
-import { ComponentType, useEffect } from "react"
+import { ComponentType } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -95,10 +95,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       reset()
     }
   )
-
-  useEffect(() => {
-    console.log("PROGRESS", joinProgress)
-  }, [joinProgress])
 
   const isManagingRolesOrRewards =
     joinProgress?.state === "MANAGING_ROLES" ||
