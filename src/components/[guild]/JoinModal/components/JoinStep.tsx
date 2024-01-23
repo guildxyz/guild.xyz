@@ -12,6 +12,8 @@ import {
 import Button from "components/common/Button"
 import { Check, X } from "phosphor-react"
 import React, { PropsWithChildren } from "react"
+import { getJoinStepIndicatorProps } from "../utils/getStepIndicatorProps"
+import { JoinState } from "../utils/mapAccessJobState"
 
 type Props = {
   title: string
@@ -87,6 +89,17 @@ const JoinStepIndicator = (
   }
 }
 
+const JoinStatusStep = ({
+  joinState,
+  entity,
+}: {
+  joinState: JoinState
+  entity: "role" | "requirement" | "reward"
+}) => {
+  const props = getJoinStepIndicatorProps(entity, joinState)
+  return <JoinStepIndicator {...props} />
+}
+
 const JoinStep = ({
   title,
   titleRightElement,
@@ -144,5 +157,5 @@ const JoinStep = ({
   )
 }
 
-export { JoinStepIndicator }
+export { JoinStatusStep, JoinStepIndicator }
 export default JoinStep

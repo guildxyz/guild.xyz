@@ -12,7 +12,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { ArrowRight, LockSimple } from "phosphor-react"
 import { JoinState } from "../utils/mapAccessJobState"
-import { JoinStepIndicator } from "./JoinStep"
+import { JoinStatusStep, JoinStepIndicator } from "./JoinStep"
 
 export const JOIN_LOADING_TESTS: Record<
   Exclude<JoinState["state"], "FINISHED">,
@@ -34,30 +34,53 @@ export const JOIN_LOADING_TESTS: Record<
   ],
 }
 
-const getRequirementIndicatorProps = (
-  joinState: JoinState,
-  hasNoAccessResponse: boolean
-): Parameters<typeof JoinStepIndicator>[number] =>
-  !joinState
-    ? { status: "INACTIVE" }
-    : joinState.state === "INITIAL"
-    ? { status: "LOADING" }
-    : joinState.state === "CHECKING" && !!joinState.requirements
-    ? {
-        status: "PROGRESS",
-        progress:
-          (joinState.requirements.satisfied / joinState.requirements.all) * 100,
-      }
-    : {
-        status:
-          joinState.state === "MANAGING_ROLES" ||
-          joinState.state === "MANAGING_REWARDS" ||
-          joinState.state === "FINISHED"
-            ? "DONE"
-            : hasNoAccessResponse
-            ? "ERROR"
-            : "LOADING",
-      }
+const JoinStateCount = ({
+  joinState,
+  entity,
+}: {
+  joinState: JoinState
+  entity: "role" | "reward" | "requirement"
+}) => {
+  if (!joinState) {
+    return null
+  }
+
+  if (entity === "requirement" && joinState.requirements) {
+    if (joinState.state === "CHECKING") {
+      return (
+        <Text>
+          {joinState.requirements.checked}/{joinState.requirements.all} requirements
+          checked
+        </Text>
+      )
+    }
+
+    return (
+      <Text>
+        {joinState.requirements.satisfied}/{joinState.requirements.all} requirements
+        satisfied
+      </Text>
+    )
+  }
+
+  if (entity === "reward" && joinState.rewards) {
+    return (
+      <Text>
+        {joinState.rewards.granted}/{joinState.rewards.all} rewards granted
+      </Text>
+    )
+  }
+
+  if (entity === "role" && joinState.roles) {
+    return (
+      <Text>
+        {joinState.roles.granted}/{joinState.roles.all} roles granted
+      </Text>
+    )
+  }
+
+  return null
+}
 
 const SatisfyRequirementsJoinStep = ({
   isLoading,
@@ -80,19 +103,16 @@ const SatisfyRequirementsJoinStep = ({
 
   return (
     <HStack py="3" {...stackProps}>
-      <JoinStepIndicator
-        {...getRequirementIndicatorProps(joinState, hasNoAccessResponse)}
-      />
+      {hasNoAccessResponse ? (
+        <JoinStepIndicator status="ERROR" />
+      ) : (
+        <JoinStatusStep entity="requirement" joinState={joinState} />
+      )}
 
       <Stack w="full" spacing={0} mt="-1.5px !important">
         <Text fontWeight={"bold"}>Satisfy the requirements</Text>
 
-        {!!joinState?.requirements && (
-          <Text>
-            {joinState.requirements.satisfied}/{joinState.requirements.all}{" "}
-            requirements checked
-          </Text>
-        )}
+        <JoinStateCount joinState={joinState} entity="requirement" />
 
         {(joinState?.state === "PREPARING" ||
           joinState?.state === "CHECKING" ||
@@ -139,4 +159,5 @@ const SatisfyRequirementsJoinStep = ({
   )
 }
 
+export { JoinStateCount }
 export default SatisfyRequirementsJoinStep

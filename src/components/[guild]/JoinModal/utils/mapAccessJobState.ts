@@ -40,7 +40,10 @@ const mapAccessJobState = (progress: JoinJob) => {
   const requirements = progress["children:access-check:jobs"]
     ? {
         all: progress["children:access-check:jobs"]?.length,
-        satisfied: progress["children:access-check:jobs"]?.filter((req) => req?.done)
+        satisfied: progress["children:access-check:jobs"]?.filter(
+          (req) => req?.access
+        )?.length,
+        checked: progress["children:access-check:jobs"]?.filter((req) => req?.done)
           ?.length,
       }
     : null

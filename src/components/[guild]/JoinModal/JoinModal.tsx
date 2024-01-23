@@ -25,15 +25,15 @@ import { ComponentType, useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
-import { JoinStepIndicator } from "./components/JoinStep"
+import { JoinStatusStep } from "./components/JoinStep"
 import SatisfyRequirementsJoinStep, {
   JOIN_LOADING_TESTS,
+  JoinStateCount,
 } from "./components/SatisfyRequirementsJoinStep"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
-import { JoinState } from "./utils/mapAccessJobState"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
@@ -56,34 +56,6 @@ const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
   CAPTCHA: dynamic(() => import("./components/CompleteCaptchaJoinStep")),
 }
-
-export const getRoleIndicatorProps = (
-  joinState: JoinState
-): Parameters<typeof JoinStepIndicator>[number] =>
-  !joinState || joinState.state === "INITIAL"
-    ? { status: "INACTIVE" }
-    : {
-        status: joinState.state === "MANAGING_ROLES" ? "LOADING" : "DONE",
-      }
-
-export const getRewardIndicatorProps = (
-  joinState: JoinState
-): Parameters<typeof JoinStepIndicator>[number] =>
-  !joinState || joinState.state === "INITIAL"
-    ? { status: "INACTIVE" }
-    : joinState.state === "MANAGING_REWARDS" && joinState.rewards
-    ? {
-        status: "PROGRESS",
-        progress: (joinState.rewards.granted / joinState.rewards.all) * 100,
-      }
-    : {
-        status:
-          joinState.state === "MANAGING_REWARDS"
-            ? "LOADING"
-            : joinState.state === "FINISHED"
-            ? "DONE"
-            : "INACTIVE",
-      }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -170,15 +142,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Collapse in={isManagingRolesOrRewards}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
                 <HStack py="3">
-                  <JoinStepIndicator {...getRoleIndicatorProps(joinProgress)} />
+                  <JoinStatusStep entity="role" joinState={joinProgress} />
+
                   <Stack w="full" spacing={0} mt="-1.5px !important">
                     <Text fontWeight={"bold"}>Get roles</Text>
-                    {!!joinProgress?.roles && (
-                      <Text>
-                        {joinProgress.roles.granted}/{joinProgress.roles.all} roles
-                        granted
-                      </Text>
-                    )}
+
+                    <JoinStateCount joinState={joinProgress} entity="role" />
+
                     {joinProgress?.state === "MANAGING_ROLES" &&
                       JOIN_LOADING_TESTS[joinProgress?.state]?.[
                         +!!joinProgress?.waitingPosition
@@ -195,15 +165,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 </HStack>
 
                 <HStack py="3">
-                  <JoinStepIndicator {...getRewardIndicatorProps(joinProgress)} />
+                  <JoinStatusStep entity="reward" joinState={joinProgress} />
+
                   <Stack w="full" spacing={0} mt="-1.5px !important">
                     <Text fontWeight={"bold"}>Get rewards</Text>
-                    {!!joinProgress?.rewards && (
-                      <Text>
-                        {joinProgress.rewards.granted}/{joinProgress.rewards.all}{" "}
-                        roles granted
-                      </Text>
-                    )}
+
+                    <JoinStateCount joinState={joinProgress} entity="reward" />
+
                     {!joinProgress?.rewards &&
                       joinProgress?.state === "MANAGING_REWARDS" &&
                       JOIN_LOADING_TESTS[joinProgress?.state]?.[
