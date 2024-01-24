@@ -20,6 +20,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wallet,
     name: "Free",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Free/FreeRequirement")
     ),
@@ -28,6 +29,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ImageSquare,
     name: "NFT",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Nft/NftRequirement")
     ),
@@ -41,6 +43,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: CurrencyCircleDollar,
     name: "Token",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Token/TokenRequirement")
     ),
@@ -54,6 +57,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: ListChecks,
     name: "Allowlist",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Allowlist/AllowlistRequirement")
     ),
@@ -67,6 +71,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Coins,
     name: "Payment",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Payment/PaymentRequirement")
     ),
@@ -78,6 +83,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wrench,
     name: "Contract query",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/ContractState/ContractStateRequirement")
     ),
@@ -91,6 +97,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Wallet,
     name: "Wallet activity",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/WalletActivity/WalletActivityRequirement")
     ),
@@ -121,6 +128,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Robot,
     name: "Captcha",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Captcha/CaptchaRequirement")
     ),
@@ -133,6 +141,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: GuildLogo,
     name: "Guild",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Guild/GuildRequirement")
     ),
@@ -152,6 +161,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Star,
     name: "Points",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Points/PointsRequirement")
     ),
@@ -164,6 +174,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: Link,
     name: "Visit link",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/VisitLink/VisitLinkRequirement")
     ),
@@ -182,6 +193,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: platforms.EMAIL.icon,
     name: platforms.EMAIL.name,
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Email/EmailRequirement")
     ),
@@ -194,6 +206,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/twitter.svg",
     name: "Twitter",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Twitter/TwitterRequirement")
     ),
@@ -204,18 +217,23 @@ export const REQUIREMENTS_DATA = [
       "TWITTER",
       "TWITTER_ACCOUNT_AGE",
       "TWITTER_ACCOUNT_AGE_RELATIVE",
+      "TWITTER_ACCOUNT_PROTECTED",
+      "TWITTER_ACCOUNT_VERIFIED",
       "TWITTER_BIO",
       "TWITTER_FOLLOW",
       "TWITTER_FOLLOWED_BY",
       "TWITTER_FOLLOWER_COUNT",
+      "TWITTER_FOLLOWING_COUNT",
       "TWITTER_FOLLOW_V2",
       "TWITTER_LIKE",
+      "TWITTER_LIKE_COUNT",
       "TWITTER_LIKE_V2",
       "TWITTER_LIST_FOLLOW",
       "TWITTER_LIST_MEMBER",
       "TWITTER_NAME",
       "TWITTER_RETWEET",
       "TWITTER_RETWEET_V2",
+      "TWITTER_TWEET_COUNT",
     ],
     isPlatform: true,
     isNegatable: true,
@@ -223,6 +241,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/platforms/github.png",
     name: "GitHub",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Github/GithubRequirement")
     ),
@@ -243,6 +262,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/platforms/discord.png",
     name: "Discord",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Discord/DiscordRequirement")
     ),
@@ -262,6 +282,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/coinbase.png",
     name: "Coinbase",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
     ),
@@ -274,6 +295,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/PolygonID/PolygonIDRequirement")
     ),
@@ -287,6 +309,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/gitcoin-passport.svg",
     name: "Gitcoin Passport",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
     ),
@@ -299,6 +322,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/poap.svg",
     name: "Poap",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Poap/PoapRequirement")
     ),
@@ -311,6 +335,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/gitpoap.svg",
     name: "GitPOAP",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/GitPoap/GitPoapRequirement")
     ),
@@ -323,6 +348,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/eas.png",
     name: "EAS",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
     ),
@@ -336,6 +362,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/farcaster.png",
     name: "Farcaster",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Farcaster/FarcasterRequirement")
     ),
@@ -356,6 +383,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/lens.png",
     name: "Lens",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Lens/LensRequirement")
     ),
@@ -377,6 +405,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/web3inbox.png",
     name: "Web3Inbox",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Web3Inbox/Web3InboxRequirement")
     ),
@@ -388,6 +417,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/galaxy.svg",
     name: "Galxe",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Galaxy/GalaxyRequirement")
     ),
@@ -400,6 +430,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/snapshot.png",
     name: "Snapshot",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Snapshot/SnapshotRequirement")
     ),
@@ -423,6 +454,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Mirror/MirrorRequirement")
     ),
@@ -436,6 +468,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/sound.png",
     name: "Sound",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Sound/SoundRequirement")
     ),
@@ -455,6 +488,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/disco.png",
     name: "Disco",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Disco/DiscoRequirement")
     ),
@@ -468,6 +502,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Unlock/UnlockRequirement")
     ),
@@ -480,6 +515,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/juicebox.png",
     name: "Juicebox",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Juicebox/JuiceboxRequirement")
     ),
@@ -492,6 +528,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/walletLogos/fuel.svg",
     name: "Fuel",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Fuel/FuelRequirement")
     ),
@@ -505,6 +542,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/sismo.svg",
     name: "Sismo",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Sismo/SismoRequirement")
     ),
@@ -517,6 +555,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Noox/NooxRequirement")
     ),
@@ -529,6 +568,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Yup/YupRequirement")
     ),
@@ -542,6 +582,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rabbithole/RabbitholeRequirement")
     ),
@@ -554,6 +595,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/networkLogos/optimism.svg",
     name: "OP Attestation",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Optimism/OptimismRequirement")
     ),
@@ -567,6 +609,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Rep3/Rep3Requirement")
     ),
@@ -580,6 +623,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/shield.png",
     name: "Shield",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Shield/ShieldRequirement")
     ),
@@ -598,6 +642,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Parallel/ParallelRequirement")
     ),
@@ -610,6 +655,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/kycdao.svg",
     name: "kycDAO",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/KycDAO/KycDAORequirement")
     ),
@@ -622,6 +668,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/otterspace.png",
     name: "Otterspace",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Otterspace/OtterspaceRequirement")
     ),
@@ -634,6 +681,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/orange.png",
     name: "Orange",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Orange/OrangeRequirement")
     ),
@@ -647,6 +695,7 @@ export const REQUIREMENTS_DATA = [
   {
     icon: "/requirementLogos/cask.png",
     name: "Cask",
+    disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Cask/CaskRequirement")
     ),
