@@ -98,7 +98,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const isManagingRolesOrRewards =
     joinProgress?.state === "MANAGING_ROLES" ||
-    joinProgress?.state === "MANAGING_REWARDS"
+    joinProgress?.state === "MANAGING_REWARDS" ||
+    joinProgress?.state === "FINISHED"
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
