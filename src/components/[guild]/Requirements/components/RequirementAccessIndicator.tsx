@@ -27,7 +27,7 @@ const DynamicConnectRequirementPlatformButton = dynamic(
   () => import("./ConnectRequirementPlatformButton")
 )
 
-const RequiementAccessIndicator = () => {
+const RequirementAccessIndicator = () => {
   const { openAccountModal } = useWeb3ConnectionManager()
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
@@ -155,4 +155,4 @@ export const POPOVER_FOOTER_STYLES = {
   pt: "2",
 }
 
-export default RequiementAccessIndicator
+export default RequirementAccessIndicator
