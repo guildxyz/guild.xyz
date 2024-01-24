@@ -17,6 +17,7 @@ import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
 import TwitterUserInput from "./components/TwitterUserInput"
+import TwitterVerificationSelect from "./components/TwitterVerificationSelect"
 
 const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { featureFlags } = useGuild()
@@ -30,6 +31,11 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     {
       label: "Account is protected",
       value: "TWITTER_ACCOUNT_PROTECTED",
+    },
+    {
+      value: "TWITTER_ACCOUNT_VERIFIED",
+      label: "Have account verification type",
+      TwitterRequirement: TwitterVerificationSelect,
     },
     {
       label: "Like tweet",
@@ -98,7 +104,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   ]
 
   const { errors } = useFormState()
-  const { resetField, setValue, getValues } = useFormContext()
+  const { resetField } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -121,12 +127,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={twitterRequirementTypes}
           beforeOnChange={resetFields}
-          afterOnChange={({ TwitterRequirement }) => {
-            if (!TwitterRequirement) {
-              setValue(`${baseFieldPath}.data.key`, undefined)
-              setValue(`${baseFieldPath}.data.val`, undefined)
-            }
-          }}
         />
 
         <FormErrorMessage>

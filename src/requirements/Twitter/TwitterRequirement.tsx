@@ -34,7 +34,7 @@ const TwitterRequirement = (props: RequirementProps) => {
   )
 
   const { data: twitterAvatar } = useSWRImmutable(
-    requirement.data.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
+    requirement.data?.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
       ? `/v2/third-party/twitter/users/${requirement.data.id}/avatar`
       : null
   )
@@ -82,6 +82,16 @@ const TwitterRequirement = (props: RequirementProps) => {
             return `Have at least ${Math.floor(
               requirement.data.minAmount
             )} followers on Twitter`
+          case "TWITTER_ACCOUNT_VERIFIED":
+            return requirement.data?.id ? (
+              <Text as="span">
+                {"Have "}
+                <DataBlockWithCopy text={requirement.data.id} />
+                {" Twitter account verification"}
+              </Text>
+            ) : (
+              <Text as="span">{"Have validated Twitter account"}</Text>
+            )
           case "TWITTER_FOLLOW":
             return (
               <>
