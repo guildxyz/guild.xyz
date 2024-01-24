@@ -32,6 +32,8 @@ jobs:
           NEXT_PUBLIC_E2E_WALLET_MNEMONIC: ${{ secrets.NEXT_PUBLIC_E2E_WALLET_MNEMONIC }}
           CYPRESS_DC_BOT_TOKEN: ${{ secrets.CYPRESS_DC_BOT_TOKEN }}
           KV_URL: ${{ secrets.KV_URL }}
+          WAAS_WEB_URL: ${{ secrets.WAAS_WEB_URL }}
+          WAAS_VIEM_URL: ${{ secrets.WAAS_VIEM_URL }}
           KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
           KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
           CYPRESS_RUN_ID: ${{github.run_id}}
