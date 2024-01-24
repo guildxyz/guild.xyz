@@ -13,7 +13,6 @@ import {
 interface RadioButtonOptionProps {
   label?: string
   icon?: React.ElementType
-  isChecked?: boolean
   value: string
 }
 
@@ -72,14 +71,14 @@ type RadioButtonProps = {
   borderRadius?: any
 } & RadioButtonOptionProps &
   UseRadioProps
+
 export const RadioButton = (props: RadioButtonProps) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const { label, icon, isChecked, ...chakraStyles } = props
-  const colorScheme = chakraStyles.colorScheme || "indigo"
+  const { label, icon, isChecked, colorScheme = "indigo", borderRadius } = props
 
   return (
     <Button
@@ -88,9 +87,8 @@ export const RadioButton = (props: RadioButtonProps) => {
       {...checkbox}
       boxShadow="none !important"
       cursor="pointer"
-      borderRadius="lg"
+      borderRadius={borderRadius}
       w="full"
-      {...chakraStyles}
       colorScheme={isChecked ? colorScheme : "gray"}
     >
       <input {...input} />
