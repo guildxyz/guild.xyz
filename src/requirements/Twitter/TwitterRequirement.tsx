@@ -68,6 +68,8 @@ const TwitterRequirement = (props: RequirementProps) => {
                 <Text as="span">{`" in your Twitter username`}</Text>
               </>
             )
+          case "TWITTER_ACCOUNT_PROTECTED":
+            return <Text as="span">{`Have protected Twitter account`}</Text>
           case "TWITTER_BIO":
             return (
               <>

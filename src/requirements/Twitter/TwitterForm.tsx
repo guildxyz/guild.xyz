@@ -22,16 +22,14 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { featureFlags } = useGuild()
 
   const twitterRequirementTypes = [
-    // Temporarily disabled, because the new Twitter API doesn't provide endpoints for these requirement types
-    // {
-    //   label: "Follow user (legacy)",
-    //   value: "TWITTER_FOLLOW",
-    //   TwitterRequirement: TwitterUserInput,
-    // },
     {
       label: "Follow user",
-      value: "TWITTER_FOLLOW_V2",
+      value: "TWITTER_FOLLOW",
       TwitterRequirement: TwitterUserInput,
+    },
+    {
+      label: "Account is protected",
+      value: "TWITTER_ACCOUNT_PROTECTED",
     },
     {
       label: "Like tweet",
@@ -100,7 +98,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   ]
 
   const { errors } = useFormState()
-  const { resetField } = useFormContext()
+  const { resetField, setValue, getValues } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -123,6 +121,12 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={twitterRequirementTypes}
           beforeOnChange={resetFields}
+          afterOnChange={({ TwitterRequirement }) => {
+            if (!TwitterRequirement) {
+              setValue(`${baseFieldPath}.data.key`, undefined)
+              setValue(`${baseFieldPath}.data.val`, undefined)
+            }
+          }}
         />
 
         <FormErrorMessage>
