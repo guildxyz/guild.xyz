@@ -159,7 +159,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isLoading}
-              loadingText={"Checking access"}
+              loadingText={
+                joinProgress?.state === "FINISHED"
+                  ? "Finalizing results"
+                  : !!joinProgress
+                  ? "See status above"
+                  : "Checking access"
+              }
               isDisabled={!isWeb3Connected}
             >
               Check access to join
