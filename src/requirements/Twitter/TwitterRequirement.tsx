@@ -90,7 +90,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 <Text as="span">{"Have at least "}</Text>
-                <DataBlockWithCopy text={minCount.toString()} />
+                <DataBlock>{minCount}</DataBlock>
                 <Text as="span">{pluralize(minCount, " Tweet")}</Text>
               </>
             )
@@ -98,7 +98,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 <Text as="span">{"Have at least "}</Text>
-                <DataBlockWithCopy text={minCount.toString()} />
+                <DataBlock>{minCount}</DataBlock>
                 <Text as="span">
                   {` given ${pluralize(minCount, "like")} on Twitter`}
                 </Text>
