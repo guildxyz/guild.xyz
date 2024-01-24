@@ -15,12 +15,10 @@ const FilterByRolesLogicSelector = ({ column }) => (
   <RadioButtonGroup
     options={options}
     onChange={(newValue) => {
-      {
-        column.setFilterValue((prevValue) => ({
-          ...prevValue,
-          logic: newValue,
-        }))
-      }
+      column.setFilterValue((prevValue) => ({
+        ...prevValue,
+        logic: newValue,
+      }))
     }}
     value={(column.getFilterValue() as any)?.logic}
     defaultValue={"some"}
