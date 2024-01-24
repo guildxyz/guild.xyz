@@ -12,7 +12,7 @@ import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import TwitterAccountAge from "./components/TwitterAccountAge"
 import TwitterAccountAgeRelative from "./components/TwitterAccountAgeRelative"
-import TwitterFollowerCount from "./components/TwitterFollowerCount"
+import TwitterMinimumCount from "./components/TwitterMinimumCount"
 import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
@@ -36,6 +36,11 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       value: "TWITTER_ACCOUNT_VERIFIED",
       label: "Have account verification type",
       TwitterRequirement: TwitterVerificationSelect,
+    },
+    {
+      label: "Have at least x tweets",
+      value: "TWITTER_TWEET_COUNT",
+      TwitterRequirement: TwitterMinimumCount,
     },
     {
       label: "Like tweet",
@@ -65,7 +70,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     {
       label: "Have at least x followers",
       value: "TWITTER_FOLLOWER_COUNT",
-      TwitterRequirement: TwitterFollowerCount,
+      TwitterRequirement: TwitterMinimumCount,
     },
     {
       label: "Have specific text in username",

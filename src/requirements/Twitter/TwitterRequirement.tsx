@@ -16,6 +16,7 @@ import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
+import pluralize from "../../utils/pluralize"
 
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
@@ -68,8 +69,6 @@ const TwitterRequirement = (props: RequirementProps) => {
                 <Text as="span">{`" in your Twitter username`}</Text>
               </>
             )
-          case "TWITTER_ACCOUNT_PROTECTED":
-            return <Text as="span">{`Have protected Twitter account`}</Text>
           case "TWITTER_BIO":
             return (
               <>
@@ -79,9 +78,22 @@ const TwitterRequirement = (props: RequirementProps) => {
               </>
             )
           case "TWITTER_FOLLOWER_COUNT":
-            return `Have at least ${Math.floor(
-              requirement.data.minAmount
-            )} followers on Twitter`
+            const followers = Math.floor(requirement.data.minAmount)
+            return `Have at least ${followers} ${pluralize(
+              followers,
+              "follower"
+            )} on Twitter`
+          case "TWITTER_TWEET_COUNT":
+            const tweets = Math.floor(requirement.data.minAmount)
+            return (
+              <>
+                <Text as="span">{"Have at least "}</Text>
+                <DataBlockWithCopy text={tweets.toString()} />
+                <Text as="span">{pluralize(tweets, " Tweet")}</Text>
+              </>
+            )
+          case "TWITTER_ACCOUNT_PROTECTED":
+            return <Text as="span">{`Have protected Twitter account`}</Text>
           case "TWITTER_ACCOUNT_VERIFIED":
             return requirement.data?.id ? (
               <Text as="span">
