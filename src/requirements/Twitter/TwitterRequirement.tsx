@@ -38,7 +38,7 @@ const TwitterRequirement = (props: RequirementProps) => {
       ? `/v2/third-party/twitter/users/${requirement.data.id}/avatar`
       : null
   )
-
+  console.log("%c props", "color: black; font-size: 20px", props)
   return (
     <Requirement
       image={
@@ -90,7 +90,7 @@ const TwitterRequirement = (props: RequirementProps) => {
                 {" Twitter account verification"}
               </Text>
             ) : (
-              <Text as="span">{"Have validated Twitter account"}</Text>
+              <Text as="span">{"Have verified Twitter account"}</Text>
             )
           case "TWITTER_FOLLOW":
             return (

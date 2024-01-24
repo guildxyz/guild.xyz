@@ -104,7 +104,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   ]
 
   const { errors } = useFormState()
-  const { resetField } = useFormContext()
+  const { resetField, setValue } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -127,6 +127,9 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={twitterRequirementTypes}
           beforeOnChange={resetFields}
+          afterOnChange={() => {
+            setValue(`${baseFieldPath}.data.minAmount`, "")
+          }}
         />
 
         <FormErrorMessage>
