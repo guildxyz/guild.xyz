@@ -29,13 +29,19 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       TwitterRequirement: TwitterUserInput,
     },
     {
-      label: "Account is protected",
-      value: "TWITTER_ACCOUNT_PROTECTED",
+      label: "Be followed by user",
+      value: "TWITTER_FOLLOWED_BY",
+      TwitterRequirement: TwitterUserInput,
     },
     {
-      value: "TWITTER_ACCOUNT_VERIFIED",
-      label: "Have account verification type",
-      TwitterRequirement: TwitterVerificationSelect,
+      label: "Have at least x follower",
+      value: "TWITTER_FOLLOWER_COUNT",
+      TwitterRequirement: TwitterMinimumCount,
+    },
+    {
+      label: "Have at least x following",
+      value: "TWITTER_FOLLOWING_COUNT",
+      TwitterRequirement: TwitterMinimumCount,
     },
     {
       label: "Have at least x given likes",
@@ -57,11 +63,15 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       value: "TWITTER_RETWEET_V2",
       TwitterRequirement: TwitterTweetInput,
     },
-    // {
-    //   label: "Be followed by user",
-    //   value: "TWITTER_FOLLOWED_BY",
-    //   TwitterRequirement: TwitterUserInput,
-    // },
+    {
+      label: "Account is protected",
+      value: "TWITTER_ACCOUNT_PROTECTED",
+    },
+    {
+      value: "TWITTER_ACCOUNT_VERIFIED",
+      label: "Have account verification type",
+      TwitterRequirement: TwitterVerificationSelect,
+    },
     // {
     //   label: "Follow list",
     //   value: "TWITTER_LIST_FOLLOW",
@@ -71,11 +81,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       label: "Be a member of list",
       value: "TWITTER_LIST_MEMBER",
       TwitterRequirement: TwitterListInput,
-    },
-    {
-      label: "Have at least x followers",
-      value: "TWITTER_FOLLOWER_COUNT",
-      TwitterRequirement: TwitterMinimumCount,
     },
     {
       label: "Have specific text in username",

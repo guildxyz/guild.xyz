@@ -17,7 +17,9 @@ import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
-const pluralize = (count: number, noun: string) => `${noun}${count !== 1 ? "s" : ""}`
+// todo if it's possible I should change the original pluralize function
+const pluralize = (count: number, noun: string, plural: string = null) =>
+  `${count ?? 0} ${count !== 1 ? (plural ? plural : `${noun}s`) : noun}`
 
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
@@ -82,30 +84,38 @@ const TwitterRequirement = (props: RequirementProps) => {
             )
           case "TWITTER_FOLLOWER_COUNT":
             return (
-              `Have at least ${minCount} ` +
-              pluralize(minCount, "follower") +
-              " on Twitter"
+              <Text as="span">
+                {"Have at least "}
+                <DataBlock>{pluralize(minCount, "follower")}</DataBlock>
+                {" on Twitter"}
+              </Text>
             )
+          case "TWITTER_FOLLOWING_COUNT":
+            return (
+              <Text as="span">
+                {"Have at least "}
+                <DataBlock>{pluralize(minCount, "person", "people")}</DataBlock>
+                {" on Twitter"}
+              </Text>
+            )
+
           case "TWITTER_TWEET_COUNT":
             return (
-              <>
-                <Text as="span">{"Have at least "}</Text>
-                <DataBlock>{minCount}</DataBlock>
-                <Text as="span">{pluralize(minCount, " Tweet")}</Text>
-              </>
+              <Text as="span">
+                {"Have at least "}
+                <DataBlock>{pluralize(minCount, " Tweet")}</DataBlock>
+              </Text>
             )
           case "TWITTER_LIKE_COUNT":
             return (
-              <>
-                <Text as="span">{"Have at least "}</Text>
-                <DataBlock>{minCount}</DataBlock>
-                <Text as="span">
-                  {` given ${pluralize(minCount, "like")} on Twitter`}
-                </Text>
-              </>
+              <Text as="span">
+                {"Have given at least "}
+                <DataBlock>{pluralize(minCount, "like")}</DataBlock>
+                {` on Twitter`}
+              </Text>
             )
           case "TWITTER_ACCOUNT_PROTECTED":
-            return <Text as="span">{`Have protected Twitter account`}</Text>
+            return <Text as="span">Have protected Twitter account</Text>
           case "TWITTER_ACCOUNT_VERIFIED":
             return requirement.data?.id ? (
               <Text as="span">
