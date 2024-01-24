@@ -230,8 +230,7 @@ const useJoin = (
     : (useSubmitResponse?.response as Response)
 
   const isLoading = hasFeatureFlag
-    ? useSubmitResponse?.isLoading ||
-      (!!useSubmitResponse?.response && !progress?.data?.done)
+    ? useSubmitResponse?.isLoading || !!useSubmitResponse?.response
     : useSubmitResponse?.isLoading
 
   const error = hasFeatureFlag
