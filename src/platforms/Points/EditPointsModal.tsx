@@ -12,7 +12,6 @@ import AddNewPointsType from "components/[guild]/RolePlatforms/components/AddRol
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
-import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 
@@ -59,15 +58,16 @@ const EditPointsModal = ({
   const localName = useWatch({ control, name: "name" })
   const localImage = useWatch({ control, name: "imageUrl" })
 
-  useEffect(() => {
-    if (isOpen) methods.reset({ name: currentName, imageUrl: currentImage })
-  }, [isOpen, currentName, methods, currentImage])
+  const handleClose = () => {
+    onClose()
+    methods.reset({ name: currentName, imageUrl: currentImage })
+  }
 
   const name = localName ?? currentName
   const imageUrl = localImage ?? currentImage
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="4xl">
+    <Modal isOpen={isOpen} onClose={handleClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Edit points</ModalHeader>

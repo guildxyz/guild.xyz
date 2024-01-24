@@ -1,13 +1,18 @@
+import { Circle, useColorModeValue } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import RewardCard from "components/common/RewardCard"
+import dynamic from "next/dynamic"
 import { Star } from "phosphor-react"
 import platforms from "platforms/platforms"
 import useSWR from "swr"
 import numberToOrdinal from "utils/numberToOrdinal"
-import PointsCardMenu from "./PointsCardMenu"
 import PointsCardButton from "./TextCardButton"
+
+const DynamicPointsCardMenu = dynamic(() => import("./PointsCardMenu"), {
+  ssr: false,
+})
 
 const PointsRewardCard = ({ guildPlatform }) => {
   const { isAdmin } = useGuildPermission()
@@ -32,18 +37,26 @@ const PointsRewardCard = ({ guildPlatform }) => {
   const info =
     rank !== undefined ? `${numberToOrdinal(rank)} on the leaderboard` : ``
 
+  const bgColor = useColorModeValue("gray.700", "gray.600")
+
   return (
     <>
       <RewardCard
         label={platforms.POINTS.name}
         title={isLoading ? null : text}
-        image={imageUrl || <Star />}
+        image={
+          imageUrl || (
+            <Circle size={10} bgColor={bgColor}>
+              <Star color="white" />
+            </Circle>
+          )
+        }
         colorScheme={platforms.POINTS.colorScheme}
         cornerButton={
           isAdmin && (
-            <PointsCardMenu
+            <DynamicPointsCardMenu
               platformGuildId={guildPlatform.platformGuildId}
-            ></PointsCardMenu>
+            ></DynamicPointsCardMenu>
           )
         }
         description={info}
