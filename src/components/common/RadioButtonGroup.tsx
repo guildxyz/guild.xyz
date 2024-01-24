@@ -67,8 +67,8 @@ const RadioButtonGroup = ({
 }
 
 type RadioButtonProps = {
-  colorScheme?: string
-  borderRadius?: any
+  colorScheme?: ButtonProps["colorScheme"]
+  borderRadius?: ButtonProps["borderRadius"]
 } & RadioButtonOptionProps &
   UseRadioProps
 
