@@ -1,5 +1,4 @@
 import {
-  Button,
   ButtonGroup,
   ButtonGroupProps,
   ButtonProps,
@@ -9,6 +8,7 @@ import {
   useRadio,
   useRadioGroup,
 } from "@chakra-ui/react"
+import Button from "./Button"
 
 interface RadioButtonOptionProps {
   label?: string
