@@ -33,6 +33,7 @@ const icons: Record<
   SNAPSHOT: "/requirementLogos/snapshot.png",
   SOUND: "/requirementLogos/sound.png",
   WEBSITE: GlobeHemisphereEast,
+  GITHUB: "/platforms/github.png",
 }
 
 const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
@@ -46,6 +47,7 @@ const colors: Record<SocialLinkKey, { bg: string; icon: string }> = {
   SNAPSHOT: { bg: "white", icon: "#F3B04E" },
   SOUND: { bg: "black", icon: "white" },
   WEBSITE: { bg: "gray.900", icon: "white" },
+  GITHUB: { bg: "#202328", icon: "white" },
 }
 const sizes: Record<Size, { bg: number; icon: number }> = {
   sm: {

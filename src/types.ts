@@ -410,6 +410,7 @@ const supportedSocialLinks = [
   "SNAPSHOT",
   "SOUND",
   "WEBSITE",
+  "GITHUB",
 ] as const
 type SocialLinkKey = (typeof supportedSocialLinks)[number]
 type SocialLinks = Partial<Record<SocialLinkKey, string>>
