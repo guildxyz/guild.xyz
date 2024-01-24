@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
 import JoinStateCount from "./components/JoinStateCount"
 import JoinStatusStepIndicator from "./components/JoinStatusStepIndicator"
-import { JOIN_LOADING_TESTS, progressTitle } from "./static"
+import { JOIN_LOADING_TEXTS, progressTitle } from "./static"
 
 const ProgressJoinStep = ({
   joinState,
@@ -28,9 +28,9 @@ const ProgressJoinStep = ({
       <JoinStateCount joinState={joinState} entity={entity} />
 
       {shouldShowSubtitle &&
-        JOIN_LOADING_TESTS[joinState?.state]?.[+!!joinState?.waitingPosition] && (
+        JOIN_LOADING_TEXTS[joinState?.state]?.[+!!joinState?.waitingPosition] && (
           <Text>
-            {JOIN_LOADING_TESTS[joinState?.state][+!!joinState?.waitingPosition]}
+            {JOIN_LOADING_TEXTS[joinState?.state][+!!joinState?.waitingPosition]}
           </Text>
         )}
 

@@ -6,7 +6,7 @@ export const progressTitle = {
   requirement: "Satisfy the requirements",
 }
 
-export const JOIN_LOADING_TESTS: Record<
+export const JOIN_LOADING_TEXTS: Record<
   Exclude<JoinState["state"], "FINISHED">,
   [string, string]
 > = {
