@@ -16,7 +16,8 @@ import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
-import pluralize from "../../utils/pluralize"
+
+const pluralize = (count: number, noun: string) => `${noun}${count !== 1 ? "s" : ""}`
 
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
@@ -39,7 +40,7 @@ const TwitterRequirement = (props: RequirementProps) => {
       ? `/v2/third-party/twitter/users/${requirement.data.id}/avatar`
       : null
   )
-  console.log("%c props", "color: black; font-size: 20px", props)
+
   return (
     <Requirement
       image={
@@ -60,6 +61,8 @@ const TwitterRequirement = (props: RequirementProps) => {
       {...props}
     >
       {(() => {
+        const minCount = Math.floor(requirement.data.minAmount)
+
         switch (requirement.type) {
           case "TWITTER_NAME":
             return (
@@ -78,18 +81,27 @@ const TwitterRequirement = (props: RequirementProps) => {
               </>
             )
           case "TWITTER_FOLLOWER_COUNT":
-            const followers = Math.floor(requirement.data.minAmount)
-            return `Have at least ${followers} ${pluralize(
-              followers,
-              "follower"
-            )} on Twitter`
+            return (
+              `Have at least ${minCount} ` +
+              pluralize(minCount, "follower") +
+              " on Twitter"
+            )
           case "TWITTER_TWEET_COUNT":
-            const tweets = Math.floor(requirement.data.minAmount)
             return (
               <>
                 <Text as="span">{"Have at least "}</Text>
-                <DataBlockWithCopy text={tweets.toString()} />
-                <Text as="span">{pluralize(tweets, " Tweet")}</Text>
+                <DataBlockWithCopy text={minCount.toString()} />
+                <Text as="span">{pluralize(minCount, " Tweet")}</Text>
+              </>
+            )
+          case "TWITTER_LIKE_COUNT":
+            return (
+              <>
+                <Text as="span">{"Have at least "}</Text>
+                <DataBlockWithCopy text={minCount.toString()} />
+                <Text as="span">
+                  {` given ${pluralize(minCount, "like")} on Twitter`}
+                </Text>
               </>
             )
           case "TWITTER_ACCOUNT_PROTECTED":

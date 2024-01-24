@@ -38,6 +38,11 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       TwitterRequirement: TwitterVerificationSelect,
     },
     {
+      label: "Have at least x given likes",
+      value: "TWITTER_LIKE_COUNT",
+      TwitterRequirement: TwitterMinimumCount,
+    },
+    {
       label: "Have at least x tweets",
       value: "TWITTER_TWEET_COUNT",
       TwitterRequirement: TwitterMinimumCount,
