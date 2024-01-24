@@ -1,5 +1,5 @@
 import { HStack, Text, useClipboard, useDisclosure, Wrap } from "@chakra-ui/react"
-import { Player } from "@lottiefiles/react-lottie-player"
+import { DotLottiePlayer, type DotLottieCommonPlayer } from "@dotlottie/react-player"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -21,7 +21,7 @@ export type SummonMembersForm = {
 }
 
 const SummonMembers = () => {
-  const [player, setPlayer] = useState<any>()
+  const [, setPlayer] = useState<DotLottieCommonPlayer>()
   const { asPath } = useRouter()
   const { captureEvent } = usePostHogContext()
 
@@ -104,17 +104,16 @@ const SummonMembers = () => {
       </Wrap>
       <HStack justifyContent={"space-between"} mt={8}>
         <HStack>
-          <Player
+          <DotLottiePlayer
             autoplay
-            keepLastFrame
             speed={0.5}
-            src="/logo_lottie.json"
+            src="/logo.lottie"
             style={{
               height: 17,
               width: 17,
               opacity: 0.5,
             }}
-            lottieRef={(instance) => {
+            ref={(instance) => {
               setPlayer(instance)
             }}
           />

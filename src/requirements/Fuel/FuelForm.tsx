@@ -9,7 +9,7 @@ import FuelBalance from "./components/FuelBalance"
 
 const fuelRequirementTypes = [
   {
-    label: "Token balance",
+    label: "Token or NFT balance",
     value: "FUEL_BALANCE",
     FuelRequirement: FuelBalance,
   },

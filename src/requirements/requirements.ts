@@ -145,6 +145,7 @@ export const REQUIREMENTS_DATA = [
       "GUILD_MINGUILDS",
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
+      "GUILD_MEMBER",
     ],
     isNegatable: true,
   },
@@ -498,6 +499,7 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Fuel/FuelForm")
     ),
     types: ["FUEL", "FUEL_BALANCE"],
+    isCustomizable: true,
     isNegatable: true,
   },
   {

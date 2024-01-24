@@ -23,7 +23,7 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
   POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
   BASE_MAINNET: `https://base-mainnet.g.alchemy.com/nft/v3/${process.env.BASE_ALCHEMY_KEY}/getOwnersForContract`,
-  ETHEREUM: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
+  ETHEREUM: `https://eth-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${process.env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
   BSC: "",
   CRONOS: "",

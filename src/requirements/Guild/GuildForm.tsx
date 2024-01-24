@@ -4,6 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import GuildSelect from "requirements/common/GuildSelect"
 import parseFromObject from "utils/parseFromObject"
 import GuildAdmin from "./components/GuildAdmin"
 import MinGuilds from "./components/MinGuilds"
@@ -30,6 +31,11 @@ const guildRequirementTypes = [
     label: "Admin status",
     value: "GUILD_ADMIN",
     GuildRequirement: GuildAdmin,
+  },
+  {
+    label: "Be a guild member",
+    value: "GUILD_MEMBER",
+    GuildRequirement: GuildSelect,
   },
 ]
 
