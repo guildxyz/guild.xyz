@@ -14,11 +14,13 @@ import {
 import { ActivityLogFiltersProvider } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import FiltersInput from "components/[guild]/activity/ActivityLogFiltersBar/components/FiltersInput"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
+import useUser from "components/[guild]/hooks/useUser"
 import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import StickyBar from "components/common/Layout/StickyBar"
 import BackButton from "components/common/Layout/components/BackButton"
 import { SectionTitle } from "components/common/Section"
+import ErrorPage from "pages/_error"
 
 const ActivityLog = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
@@ -84,6 +86,10 @@ const ActivityLog = (): JSX.Element => {
 }
 
 const ActivityLogWrapper = (): JSX.Element => {
+  const { isSuperAdmin } = useUser()
+
+  if (!isSuperAdmin) return <ErrorPage statusCode={404} />
+
   return (
     <ThemeProvider>
       <ActivityLogProvider>
