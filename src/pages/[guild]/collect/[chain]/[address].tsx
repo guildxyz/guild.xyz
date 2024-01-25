@@ -10,43 +10,39 @@ import {
 } from "@chakra-ui/react"
 import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
+import CollectNft from "components/[guild]/collect/components/CollectNft"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import Details from "components/[guild]/collect/components/Details"
+import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import Links from "components/[guild]/collect/components/Links"
-import NftByRole from "components/[guild]/collect/components/NftByRole"
 import RequirementsCard from "components/[guild]/collect/components/RequirementsCard"
 import RichTextDescription from "components/[guild]/collect/components/RichTextDescription"
-import ShareButton from "components/[guild]/collect/components/ShareButton"
+import ShareAndReportButtons from "components/[guild]/collect/components/ShareAndReportButtons"
+import SmallImageAndRoleName from "components/[guild]/collect/components/SmallImageAndRoleName"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
+import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import ReportGuildButton from "components/[guild]/ReportGuildButton"
-import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ClientOnly from "components/common/ClientOnly"
-import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
-import PulseMarker from "components/common/PulseMarker"
-import { AnimatePresence, motion } from "framer-motion"
-import useLocalStorage from "hooks/useLocalStorage"
-import useScrollEffect from "hooks/useScrollEffect"
+import { AnimatePresence } from "framer-motion"
 import { GetStaticPaths, GetStaticProps } from "next"
+import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 import {
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
-import { useRef, useState } from "react"
+import { useRef } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
-import dynamic from "next/dynamic"
 
 const EditNFTDescriptionModalButton = dynamic(
   () =>
@@ -69,17 +65,8 @@ const Page = ({
   const chain = chainFromProps ?? validateNftChain(chainFromQuery)
   const address = addressFromProps ?? validateNftAddress(addressFromQuery)
 
-  const {
-    theme,
-    imageUrl,
-    name: guildName,
-    urlName,
-    roles,
-    guildPlatforms,
-    isFallback,
-  } = useGuild()
+  const { theme, urlName, roles, guildPlatforms, isFallback } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const { textColor, buttonColorScheme } = useThemeContext()
 
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
@@ -97,18 +84,9 @@ const Page = ({
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
-  const [shouldShowSmallImage, setShouldShowSmallImage] = useState(false)
-  useScrollEffect(() => {
-    const nftDescription = nftDescriptionRef.current
-    setShouldShowSmallImage(nftDescription?.getBoundingClientRect().top < 100)
-  }, [])
+  const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
   const { name, image, totalCollectors, isLoading } = useNftDetails(chain, address)
-
-  const [hasClickedShareButton, setHasClickedShareButton] = useLocalStorage(
-    `${chain}_${address}_hasClickedShareButton`,
-    false
-  )
 
   const { captureEvent } = usePostHogContext()
 
@@ -143,33 +121,14 @@ const Page = ({
           >
             <Stack spacing={4}>
               <HStack justifyContent="space-between">
-                <HStack>
-                  <GuildLogo imageUrl={imageUrl} size={8} />
-                  <Link
-                    href={`/${urlName}`}
-                    fontFamily="display"
-                    fontWeight="bold"
-                    color={textColor}
-                  >
-                    {guildName}
-                  </Link>
-                </HStack>
-
-                <HStack>
-                  <PulseMarker
-                    placement="top"
-                    hidden={!isAdmin || hasClickedShareButton || totalCollectors > 0}
-                  >
-                    <ShareButton onClick={() => setHasClickedShareButton(true)} />
-                  </PulseMarker>
-                  {!isAdmin && (
-                    <ReportGuildButton
-                      layout="ICON"
-                      colorScheme={buttonColorScheme}
-                      color={textColor}
-                    />
-                  )}
-                </HStack>
+                <GuildImageAndName />
+                <ShareAndReportButtons
+                  isPulseMarkerHidden={totalCollectors > 0}
+                  shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
+                  shareText={`Check out and collect this awesome ${
+                    name ? `${name} ` : " "
+                  }NFT on Guild!`}
+                />
               </HStack>
 
               <SimpleGrid
@@ -191,7 +150,11 @@ const Page = ({
                       {name}
                     </Heading>
 
-                    {isMobile && <RequirementsCard role={role} />}
+                    {isMobile && (
+                      <RequirementsCard role={role}>
+                        <CollectNft />
+                      </RequirementsCard>
+                    )}
 
                     <Box ref={nftDescriptionRef} lineHeight={1.75}>
                       <HStack alignItems="start" justifyContent="flex-end">
@@ -224,27 +187,18 @@ const Page = ({
                       h="max-content"
                     >
                       {shouldShowSmallImage && (
-                        <CardMotionWrapper animateOnMount>
-                          <SimpleGrid
-                            gridTemplateColumns="var(--chakra-sizes-24) auto"
-                            gap={4}
-                          >
+                        <SmallImageAndRoleName
+                          imageElement={
                             <CollectibleImage src={image} isLoading={isLoading} />
-
-                            <Stack spacing={3} justifyContent={"center"}>
-                              <Heading as="h2" fontFamily="display" fontSize="2xl">
-                                {name}
-                              </Heading>
-
-                              <NftByRole role={role} />
-                            </Stack>
-                          </SimpleGrid>
-                        </CardMotionWrapper>
+                          }
+                          name={name}
+                          role={role}
+                        />
                       )}
 
-                      <motion.div layout="position">
-                        <RequirementsCard role={role} />
-                      </motion.div>
+                      <RequirementsCard role={role}>
+                        <CollectNft />
+                      </RequirementsCard>
                     </Stack>
                   </AnimatePresence>
                 )}

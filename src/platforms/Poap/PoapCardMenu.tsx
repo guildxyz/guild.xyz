@@ -1,76 +1,38 @@
-import {
-  MenuItem,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { Modal } from "components/common/Modal"
-import EditPoapModal from "components/[guild]/CreatePoap/components/PoapDataForm/EditPoapModal"
-import UploadMintLinks from "components/[guild]/CreatePoap/components/UploadMintLinks"
-import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
+import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
-import { PencilSimple, UploadSimple } from "phosphor-react"
-import { usePoap } from "requirements/Poap/hooks/usePoaps"
-import { GuildPoap } from "types"
-import DeactivatePoapMenuItem from "./DeactivatePoapMenuItem"
+import useGuild from "components/[guild]/hooks/useGuild"
+import { UploadSimple } from "phosphor-react"
+import UploadMintLinksModal from "./UploadMintLinksModal"
 
 type Props = {
-  guildPoap: GuildPoap
+  platformGuildId: string
 }
 
-const PoapCardMenu = ({ guildPoap }: Props): JSX.Element => {
-  const {
-    isOpen: isEditOpen,
-    onOpen: onEditOpen,
-    onClose: onEditClose,
-  } = useDisclosure()
-  const {
-    isOpen: isLinkModalOpen,
-    onOpen: onLinkModalOpen,
-    onClose: onLinkModalClose,
-  } = useDisclosure()
-  const { poap } = usePoap(guildPoap?.fancyId)
-  const { poapLinks } = usePoapLinks(guildPoap?.poapIdentifier)
+const PoapCardMenu = ({ platformGuildId }: Props): JSX.Element => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
-  if (!poap || !guildPoap) return null
+  const { guildPlatforms } = useGuild()
+  const guildPlatform = guildPlatforms?.find(
+    (gp) => gp.platformGuildId === platformGuildId
+  )
 
   return (
     <>
       <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={onEditOpen}>
-          Edit POAP
+        <MenuItem icon={<UploadSimple />} onClick={onOpen}>
+          Upload mint links
         </MenuItem>
-        {!!poapLinks?.total && (
-          <MenuItem icon={<UploadSimple />} onClick={onLinkModalOpen}>
-            Upload more mint links
-          </MenuItem>
-        )}
-        {guildPoap.activated && <DeactivatePoapMenuItem guildPoap={guildPoap} />}
+
+        <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
-      <EditPoapModal
-        isOpen={isEditOpen}
-        onClose={onEditClose}
-        {...{ guildPoap, poap }}
+      <UploadMintLinksModal
+        isOpen={isOpen}
+        onClose={onClose}
+        guildPlatformId={guildPlatform?.id}
+        platformGuildData={guildPlatform?.platformGuildData}
       />
-      {!!poapLinks?.total && (
-        <Modal isOpen={isLinkModalOpen} onClose={onLinkModalClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalHeader>Upload POAP minting links</ModalHeader>
-            <ModalBody>
-              <UploadMintLinks
-                poapId={poap?.id}
-                onSuccess={onLinkModalClose}
-              ></UploadMintLinks>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      )}
     </>
   )
 }

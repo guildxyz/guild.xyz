@@ -7,7 +7,7 @@ import {
   ActivityLogProvider,
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
-import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
+import GuildActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar/GuildActivityLogFiltersBar"
 import { ActivityLogFiltersProvider } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -47,7 +47,7 @@ const ActivityLog = (): JSX.Element => {
 
       <NoPermissionToPageFallback>
         <ActivityLogFiltersProvider>
-          <ActivityLogFiltersBar />
+          <GuildActivityLogFiltersBar />
           <SectionTitle title="Actions" mt={8} mb="4" />
           <Stack spacing={2.5}>
             {isLoading ? (

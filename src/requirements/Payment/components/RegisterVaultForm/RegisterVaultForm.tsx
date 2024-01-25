@@ -16,7 +16,7 @@ import {
 import { Chain } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext, useWatch } from "react-hook-form"
-import useFeeInUSD from "requirements/PoapPayment/hooks/useFeeInUSD"
+import useFeeInUSD from "requirements/Payment/components/RegisterVaultForm/hooks/useFeeInUSD"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
 import {
