@@ -59,7 +59,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
   const poapDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(poapDescriptionRef)
 
-  if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
+  // if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
     <ErrorBoundary
