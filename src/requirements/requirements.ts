@@ -204,7 +204,7 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/X.svg",
+    icon: "/platforms/x.png",
     name: "X",
     disabled: false,
     displayComponent: dynamic<RequirementProps>(
