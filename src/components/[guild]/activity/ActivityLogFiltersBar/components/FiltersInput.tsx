@@ -155,7 +155,13 @@ const FiltersInput = (): JSX.Element => {
               borderRadius="full"
               variant="ghost"
               onClick={() => {
-                clearFilters(["userId", "roleId", "rolePlatformId", "action"])
+                clearFilters([
+                  "userId",
+                  "roleId",
+                  "rolePlatformId",
+                  "action",
+                  "guildId",
+                ])
                 setInputValue("")
               }}
             />
