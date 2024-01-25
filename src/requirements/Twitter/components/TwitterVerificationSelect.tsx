@@ -5,10 +5,12 @@ import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
-const options: SelectOption[] = [
+type ValueType = "any" | "blue" | "business" | "government"
+
+const options: SelectOption<ValueType>[] = [
   {
     label: "One of them",
-    value: "all",
+    value: "any",
   },
   {
     label: "Blue",
@@ -31,21 +33,19 @@ const TwitterVerificationSelect = ({
     setValue,
     formState: { errors },
   } = useFormContext()
+  const defaultValue: ValueType = "any"
 
   return (
     <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}>
       <FormLabel>Verification type</FormLabel>
 
       <ControlledSelect
-        defaultValue="all"
+        defaultValue={defaultValue}
         name="SelectedTwitterVerification"
         options={options}
-        onChange={({ value }) => {
+        onChange={({ value }: { value: ValueType }) => {
           setValue("SelectedTwitterVerification", value)
-          setValue(
-            `${baseFieldPath}.data.id`,
-            value === "NotVerified" ? undefined : value
-          )
+          setValue(`${baseFieldPath}.data.id`, value === "any" ? undefined : value)
         }}
       />
     </FormControl>
