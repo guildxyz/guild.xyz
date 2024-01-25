@@ -2,7 +2,7 @@ import { Icon, IconButton, Tooltip, useClipboard } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useSubmit from "hooks/useSubmit"
 import useToast, { useToastWithButton } from "hooks/useToast"
-import { Copy } from "phosphor-react"
+import { Check, CloudArrowDown, Copy } from "phosphor-react"
 import { useEffect } from "react"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
@@ -17,7 +17,7 @@ const CopyCWaaSBackupData = () => {
     setValue: setBackup,
     value: backup,
     hasCopied,
-  } = useClipboard("", 5000)
+  } = useClipboard("", 4000)
 
   useEffect(() => {
     if (!hasCopied) return
@@ -36,10 +36,10 @@ const CopyCWaaSBackupData = () => {
     toastWithButton({
       status: "info",
       title: "Backup downloaded",
-      description: "Click the button below to copy it to the clipboard",
+      description: "Click the button below to copy it to the clipboard!",
       buttonProps: {
-        variant: "outline",
         onClick: onCopy,
+        leftIcon: <Copy />,
         isDisabled: hasCopied,
         children: "Copy",
       },
@@ -103,7 +103,7 @@ const CopyCWaaSBackupData = () => {
         variant="outline"
         onClick={copyBackup.onSubmit}
         isLoading={copyBackup.isLoading}
-        icon={<Icon as={Copy} p="1px" />}
+        icon={<Icon as={hasCopied ? Check : CloudArrowDown} />}
         aria-label="Copy wallet backup data"
       />
     </Tooltip>

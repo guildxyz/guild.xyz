@@ -155,16 +155,18 @@ const AccountModal = () => {
                     onClose={closeNetworkModal}
                   />
                 </Stack>
-                {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
-                <Tooltip label="Disconnect">
-                  <IconButton
-                    size="sm"
-                    variant="outline"
-                    onClick={handleLogout}
-                    icon={<Icon as={SignOut} p="1px" />}
-                    aria-label="Disconnect"
-                  />
-                </Tooltip>
+                <HStack spacing={1}>
+                  {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
+                  <Tooltip label="Disconnect">
+                    <IconButton
+                      size="sm"
+                      variant="outline"
+                      onClick={handleLogout}
+                      icon={<Icon as={SignOut} p="1px" />}
+                      aria-label="Disconnect"
+                    />
+                  </Tooltip>
+                </HStack>
               </HStack>
 
               <AccountConnections />
