@@ -64,12 +64,12 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       TwitterRequirement: TwitterTweetInput,
     },
     {
-      label: "Account is protected",
+      label: "Have protected Account",
       value: "TWITTER_ACCOUNT_PROTECTED",
     },
     {
+      label: "Have verified account",
       value: "TWITTER_ACCOUNT_VERIFIED",
-      label: "Have account verification type",
       TwitterRequirement: TwitterVerificationSelect,
     },
     // {
