@@ -204,8 +204,8 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/twitter.svg",
-    name: "Twitter",
+    icon: "/requirementLogos/X.svg",
+    name: "X",
     disabled: false,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Twitter/TwitterRequirement")
