@@ -17,7 +17,7 @@ import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
 
-// todo if it's possible I should change the original pluralize function
+// todo if it's working well I can change the original pluralize function
 const pluralize = (count: number, noun: string, plural: string = null) =>
   `${count ?? 0} ${count !== 1 ? (plural ? plural : `${noun}s`) : noun}`
 
@@ -63,7 +63,7 @@ const TwitterRequirement = (props: RequirementProps) => {
       {...props}
     >
       {(() => {
-        const minCount = Math.floor(requirement.data.minAmount)
+        const minCount = Math.floor(requirement.data?.minAmount)
 
         switch (requirement.type) {
           case "TWITTER_NAME":
