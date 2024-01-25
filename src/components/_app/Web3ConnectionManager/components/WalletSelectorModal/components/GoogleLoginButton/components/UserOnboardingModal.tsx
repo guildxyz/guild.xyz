@@ -147,17 +147,18 @@ const UserOnboardingModal = ({
             </Stack>
 
             {isNewWallet && (
-              <Accordion index={accordionIndex}>
+              <Accordion
+                index={accordionIndex}
+                onChange={(index: number) => {
+                  captureEvent("[WaaS] Click onboarding accordion", {
+                    index,
+                  })
+                  setAccordionIndex(index)
+                }}
+                w="full"
+              >
                 <AccordionItem borderTop={"none"} pb={2}>
-                  <AccordionButton
-                    px={1}
-                    onClick={() => {
-                      captureEvent("[WaaS] Click onboarding accordion", {
-                        index: 0,
-                      })
-                      setAccordionIndex(0)
-                    }}
-                  >
+                  <AccordionButton px={0} _hover={{ bg: null }}>
                     <Question size={18} />
                     <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
                       What's a wallet?
@@ -165,33 +166,29 @@ const UserOnboardingModal = ({
 
                     <AccordionIcon />
                   </AccordionButton>
-                  <AccordionPanel pb={4} pl={8} pt={0} color={"whiteAlpha.600"}>
-                    A wallet lets you store your digital assets like Guild Pins, NFTs
-                    and other tokens. It's essential to have one to explore Guild and
-                    all things web3!
+                  <AccordionPanel pb={4} pl={"26px"} pr={0} pt={0}>
+                    <Text colorScheme={"gray"}>
+                      A wallet lets you store your digital assets like Guild Pins,
+                      NFTs and other tokens. It's essential to have one to explore
+                      Guild and all things web3!
+                    </Text>
                   </AccordionPanel>
                 </AccordionItem>
 
                 <AccordionItem borderBottom={"none"} pt={2}>
-                  <AccordionButton
-                    px={1}
-                    onClick={() => {
-                      captureEvent("[WaaS] Click onboarding accordion", {
-                        index: 1,
-                      })
-                      setAccordionIndex(1)
-                    }}
-                  >
+                  <AccordionButton px={0} _hover={{ bg: null }}>
                     <LockSimple size={18} />
                     <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
                       How can I access my wallet?
                     </Text>
                     <AccordionIcon />
                   </AccordionButton>
-                  <AccordionPanel pb={4} pl={8} pt={0} color={"whiteAlpha.600"}>
-                    {isLoginLoading
-                      ? "Your wallet has a private key that we'll save to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"
-                      : "Your wallet has a private key that we've saved to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"}
+                  <AccordionPanel pb={0} pl={"26px"} pr={0} pt={0}>
+                    <Text colorScheme={"gray"}>
+                      {isLoginLoading
+                        ? "Your wallet has a private key that we'll save to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"
+                        : "Your wallet has a private key that we've saved to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"}
+                    </Text>
                   </AccordionPanel>
                 </AccordionItem>
               </Accordion>

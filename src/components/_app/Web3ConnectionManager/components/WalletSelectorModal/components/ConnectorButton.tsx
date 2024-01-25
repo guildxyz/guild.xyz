@@ -17,16 +17,15 @@ type Props = {
 }
 
 const connectorButtonProps: ButtonProps = {
-  spinnerPlacement: "end",
   w: "full",
   size: "xl",
   iconSpacing: 4,
   justifyContent: "start",
-  mb: 4,
+  mb: 2.5,
   sx: {
     "> div.chakra-button__spinner": {
-      flexGrow: 1,
-      justifyContent: "end",
+      boxSize: 6,
+      justifyContent: "center",
     },
   },
 }

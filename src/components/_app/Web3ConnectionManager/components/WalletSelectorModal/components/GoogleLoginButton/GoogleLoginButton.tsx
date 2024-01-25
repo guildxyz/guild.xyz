@@ -18,10 +18,10 @@ const GoogleLoginButton = () => {
   return (
     <>
       <Button
-        mt="4"
         isLoading={isLoading}
         onClick={onSubmit}
         colorScheme="white"
+        borderWidth="2px"
         leftIcon={
           <Center boxSize={6}>
             <Img
