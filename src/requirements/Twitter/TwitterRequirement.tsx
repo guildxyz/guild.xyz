@@ -71,7 +71,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 <Text as="span">{`Have "`}</Text>
                 <DataBlockWithCopy text={requirement.data.id} />
-                <Text as="span">{`" in your Twitter username`}</Text>
+                <Text as="span">{`" in your X username`}</Text>
               </>
             )
           case "TWITTER_BIO":
@@ -79,7 +79,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 <Text as="span">{`Have "`}</Text>
                 <DataBlockWithCopy text={requirement.data.id} />
-                <Text as="span">{`" in your Twitter bio`}</Text>
+                <Text as="span">{`" in your X bio`}</Text>
               </>
             )
           case "TWITTER_FOLLOWER_COUNT":
@@ -87,15 +87,15 @@ const TwitterRequirement = (props: RequirementProps) => {
               <Text as="span">
                 {"Have at least "}
                 <DataBlock>{pluralize(minCount, "follower")}</DataBlock>
-                {" on Twitter"}
+                {" on X"}
               </Text>
             )
           case "TWITTER_FOLLOWING_COUNT":
             return (
               <Text as="span">
-                {"Have at least "}
-                <DataBlock>{pluralize(minCount, "person", "people")}</DataBlock>
-                {" on Twitter"}
+                {"Follow at least "}
+                <DataBlock>{pluralize(minCount, "account")}</DataBlock>
+                {" on X"}
               </Text>
             )
 
@@ -103,7 +103,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <Text as="span">
                 {"Have at least "}
-                <DataBlock>{pluralize(minCount, " Tweet")}</DataBlock>
+                <DataBlock>{pluralize(minCount, " post")}</DataBlock>
               </Text>
             )
           case "TWITTER_LIKE_COUNT":
@@ -111,27 +111,29 @@ const TwitterRequirement = (props: RequirementProps) => {
               <Text as="span">
                 {"Have given at least "}
                 <DataBlock>{pluralize(minCount, "like")}</DataBlock>
-                {` on Twitter`}
+                {` on X`}
               </Text>
             )
           case "TWITTER_ACCOUNT_PROTECTED":
-            return <Text as="span">Have protected Twitter account</Text>
+            return <Text as="span">Have a protected X account</Text>
           case "TWITTER_ACCOUNT_VERIFIED":
-            return requirement.data?.id ? (
+            return (
               <Text as="span">
-                {"Have "}
-                <DataBlockWithCopy text={requirement.data.id} />
-                {" Twitter account verification"}
+                Have a verified X account
+                {requirement.data?.id && (
+                  <>
+                    {" ("}
+                    <DataBlockWithCopy text={requirement.data.id} />)
+                  </>
+                )}
               </Text>
-            ) : (
-              <Text as="span">{"Have verified Twitter account"}</Text>
             )
           case "TWITTER_FOLLOW":
             return (
               <>
                 {`Follow `}
                 <TwitterUserLink requirement={requirement} />
-                {` on Twitter`}
+                {` on X`}
               </>
             )
           case "TWITTER_FOLLOW_V2":
@@ -141,7 +143,7 @@ const TwitterRequirement = (props: RequirementProps) => {
                 <TwitterIntent type="link" action="follow">
                   @{requirement.data.id}
                 </TwitterIntent>
-                {` on Twitter`}
+                {` on X`}
               </>
             )
           case "TWITTER_FOLLOWED_BY":
@@ -149,7 +151,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 {`Be followed by `}
                 <TwitterUserLink requirement={requirement} />
-                {` on Twitter`}
+                {` on X`}
               </>
             )
           case "TWITTER_LIKE":
@@ -164,7 +166,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 {`Like `}
                 <TwitterIntent type="link" action="like">
-                  this tweet
+                  this post
                   <Icon as={ArrowSquareOut} mx="1" />
                 </TwitterIntent>
               </>
@@ -172,18 +174,18 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_RETWEET":
             return (
               <>
-                {`Retweet `}
+                {`Repost `}
                 <TwitterTweetLink requirement={requirement} />
+                {" on X"}
               </>
             )
           case "TWITTER_RETWEET_V2":
             return (
               <>
-                {`Retweet `}
                 <TwitterIntent type="link" action="retweet">
-                  this tweet
-                  <Icon as={ArrowSquareOut} mx="1" />
+                  Repost
                 </TwitterIntent>
+                {" on X"}
               </>
             )
           case "TWITTER_LIST_MEMBER":
@@ -206,14 +208,14 @@ const TwitterRequirement = (props: RequirementProps) => {
             )
             return (
               <>
-                <Text as="span">{`Have a Twitter account older than `}</Text>
+                <Text as="span">{`Have an X account older than `}</Text>
                 <DataBlock>{formattedAccountAge}</DataBlock>
               </>
             )
           case "TWITTER_ACCOUNT_AGE":
             return (
               <>
-                <Text as="span">{`Have a Twitter account since at least `}</Text>
+                <Text as="span">{`Have an X account since at least `}</Text>
                 <DataBlockWithDate timestamp={requirement.data.minAmount} />
               </>
             )
