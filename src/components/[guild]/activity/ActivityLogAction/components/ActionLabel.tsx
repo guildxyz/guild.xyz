@@ -12,7 +12,8 @@ import { ClickableRewardTag } from "./RewardTag"
 import { ClickableUserTag } from "./UserTag"
 
 const ActionLabel = (): JSX.Element => {
-  const { data: activityLog, isUserActivityLog } = useActivityLog()
+  const { data: activityLog, activityLogType } = useActivityLog()
+  const isUserActivityLog = activityLogType === "user"
 
   const { action, ids, data, parentId } = useActivityLogActionContext()
 

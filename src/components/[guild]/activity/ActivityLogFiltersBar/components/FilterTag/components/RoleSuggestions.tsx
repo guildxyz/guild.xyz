@@ -6,12 +6,17 @@ import Suggestion from "../../Suggestion"
 import NoResults from "./NoResults"
 
 type Props = {
+  guildId?: string | number
   inputValue?: string
   getOptionProps: (props: combobox.OptionProps) => HTMLAttributes<HTMLElement>
 }
 
-const RoleSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => {
-  const { id: guildId, roles } = useGuild()
+const RoleSuggestions = ({
+  guildId,
+  inputValue,
+  getOptionProps,
+}: Props): JSX.Element => {
+  const { roles } = useGuild(guildId)
 
   const roleSuggestions = useMemo(
     () =>
@@ -42,7 +47,10 @@ const RoleSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => 
                 value: roleSuggestion.id.toString(),
               })}
             >
-              <ActivityLogRoleTag roleId={roleSuggestion.id} guildId={guildId} />
+              <ActivityLogRoleTag
+                roleId={roleSuggestion.id}
+                guildId={guildId as number}
+              />
             </Suggestion>
           )
         })
