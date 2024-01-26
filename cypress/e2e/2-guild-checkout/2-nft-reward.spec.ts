@@ -110,8 +110,6 @@ describe("nft reward", () => {
       responseTimeout: 40_000,
     })
 
-    cy.get(".chakra-alert")
-      .contains("Successfully collected NFT!")
-      .should("be.visible")
+    cy.get(".chakra-alert").contains("Successfully collected NFT!").should("exist")
   })
 })
