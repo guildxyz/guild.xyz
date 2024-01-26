@@ -6,6 +6,7 @@ import Button from "components/common/Button"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
+import { traitsSupportedChains } from "requirements/Nft/NftForm"
 import ChainPicker from "requirements/common/ChainPicker"
 import { Visibility } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
@@ -108,7 +109,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
 
         <Checkbox
           {...onShouldCreatePinHolderRoleControllerProps}
-          isDisabled={chain === "FUEL"}
+          isDisabled={!traitsSupportedChains.includes(chain as Chain)}
           alignItems="start"
           sx={{
             "> .chakra-checkbox__control": {
