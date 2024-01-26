@@ -17,7 +17,7 @@ const getUsersGuildPinIdsOnChain = async (
   address: `0x${string}`,
   client: PublicClient
 ) => {
-  let contracts = []
+  const contracts = []
 
   for (let i = 0; i < balance; i++) {
     contracts.push({
