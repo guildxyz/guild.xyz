@@ -107,30 +107,28 @@ const ActivateGuildPinForm = (): JSX.Element => {
           showDivider={false}
         />
 
-        {traitsSupportedChains.includes(chain as Chain) && (
-          <Checkbox
-            {...onShouldCreatePinHolderRoleControllerProps}
-            isDisabled={chain === "FUEL"}
-            alignItems="start"
-            sx={{
-              "> .chakra-checkbox__control": {
-                marginTop: 1,
-                checkboxBorderColor,
-              },
-            }}
-            _checked={{
-              "> .chakra-checkbox__control[data-checked]": {
-                bgColor: "green.500",
-                borderColor: "green.500",
-                color: "white",
-              },
-            }}
-            isChecked={shouldCreatePinHolderRole}
-            onChange={(e) => onShouldCreatePinHolderRoleChange(e.target.checked)}
-          >
-            Create a role for pin holders
-          </Checkbox>
-        )}
+        <Checkbox
+          {...onShouldCreatePinHolderRoleControllerProps}
+          isDisabled={!traitsSupportedChains.includes(chain as Chain)}
+          alignItems="start"
+          sx={{
+            "> .chakra-checkbox__control": {
+              marginTop: 1,
+              checkboxBorderColor,
+            },
+          }}
+          _checked={{
+            "> .chakra-checkbox__control[data-checked]": {
+              bgColor: "green.500",
+              borderColor: "green.500",
+              color: "white",
+            },
+          }}
+          isChecked={shouldCreatePinHolderRole}
+          onChange={(e) => onShouldCreatePinHolderRoleChange(e.target.checked)}
+        >
+          Create a role for pin holders
+        </Checkbox>
 
         <Button
           size="lg"
