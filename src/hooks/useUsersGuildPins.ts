@@ -87,9 +87,14 @@ const fetchGuildPinsOnChain = async (
   return usersPinsMetadataJSONs
 }
 
-const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
-  const guildPinChains = Object.keys(
-    GUILD_PIN_CONTRACTS
+const fetchGuildPins = async ([_, addresses, includeTestnets]: [
+  string,
+  User["addresses"],
+  boolean
+]) => {
+  const TESTNET_KEYS: GuildPinsSupportedChain[] = ["POLYGON_MUMBAI"]
+  const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>
+    includeTestnets ? true : !TESTNET_KEYS.includes(key as GuildPinsSupportedChain)
   ) as GuildPinsSupportedChain[]
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
@@ -102,7 +107,7 @@ const fetchGuildPins = async ([_, addresses]: [string, User["addresses"]]) => {
   return responseArray.flat()
 }
 
-const useUsersGuildPins = (disabled = false) => {
+const useUsersGuildPins = (disabled = false, includeTestnets = false) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const { addresses } = useUser()
 
@@ -112,7 +117,10 @@ const useUsersGuildPins = (disabled = false) => {
 
   return useSWRImmutable<
     ({ chainId: number; tokenId: number } & GuildPinMetadata)[]
-  >(shouldFetch ? ["guildPins", evmAddresses] : null, fetchGuildPins)
+  >(
+    shouldFetch ? ["guildPins", evmAddresses, includeTestnets] : null,
+    fetchGuildPins
+  )
 }
 
 export default useUsersGuildPins
