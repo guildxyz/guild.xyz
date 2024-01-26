@@ -142,6 +142,7 @@ export const REQUIREMENTS_DATA = [
     types: [
       "GUILD",
       "GUILD_ROLE",
+      "GUILD_ROLE_RELATIVE",
       "GUILD_MINGUILDS",
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
