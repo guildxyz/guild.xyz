@@ -11,7 +11,7 @@ import {
 import { createPublicClient, http } from "viem"
 import { PublicClient } from "wagmi"
 
-const _getUsersGuildPinIdsOnChain = async (
+const getUsersGuildPinIdsOnChain = async (
   balance: bigint,
   chain: GuildPinsSupportedChain,
   address: `0x${string}`,
@@ -44,7 +44,7 @@ const _getUsersGuildPinIdsOnChain = async (
   return { pinIds, errors }
 }
 
-const _getPinTokenURIsForPinIds = async (
+const getPinTokenURIsForPinIds = async (
   pinIds: bigint[],
   chain: GuildPinsSupportedChain,
   client: PublicClient
@@ -109,13 +109,13 @@ const fetchGuildPinsOnChain = async (
     args: [address],
   })
 
-  const { pinIds, errors: pinIdFetchErrors } = await _getUsersGuildPinIdsOnChain(
+  const { pinIds, errors: pinIdFetchErrors } = await getUsersGuildPinIdsOnChain(
     balance,
     chain,
     address,
     publicClient
   )
-  const { tokenURIs, errors: tokenURIFetchErrors } = await _getPinTokenURIsForPinIds(
+  const { tokenURIs, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
     pinIds,
     chain,
     publicClient
@@ -146,8 +146,8 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
     )
   )
 
-  let allUsersPins = []
-  let allErrors = []
+  const allUsersPins = []
+  const allErrors = []
   for (const response of responseArray) {
     if (response.usersPinsMetadataJSONs) {
       allUsersPins.push(...response.usersPinsMetadataJSONs)
