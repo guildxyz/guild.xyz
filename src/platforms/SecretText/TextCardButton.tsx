@@ -11,9 +11,8 @@ type Props = {
 }
 
 const TextCardButton = ({ platform }: Props) => {
-  const { claimed } = useClaimedReward(platform.id)
-
   const { roles } = useGuild()
+
   const rolePlatform = roles
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
@@ -24,6 +23,7 @@ const TextCardButton = ({ platform }: Props) => {
     response,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatform?.id)
+  const { claimed } = useClaimedReward(rolePlatform.id)
 
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
