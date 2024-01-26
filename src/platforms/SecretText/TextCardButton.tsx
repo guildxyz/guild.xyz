@@ -4,12 +4,15 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { GuildPlatform, PlatformType } from "types"
 import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
+import { useClaimedReward } from "../../hooks/useClaimedReward"
 
 type Props = {
   platform: GuildPlatform
 }
 
 const TextCardButton = ({ platform }: Props) => {
+  const { claimed } = useClaimedReward(platform.id)
+
   const { roles } = useGuild()
   const rolePlatform = roles
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
@@ -26,10 +29,11 @@ const TextCardButton = ({ platform }: Props) => {
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
 
   const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
+    (startTimeDiff > 0 ||
+      endTimeDiff < 0 ||
+      (typeof rolePlatform?.capacity === "number" &&
+        rolePlatform?.capacity === rolePlatform?.claimedCount)) &&
+    !claimed
 
   const tooltipLabel =
     typeof rolePlatform?.capacity === "number" &&
