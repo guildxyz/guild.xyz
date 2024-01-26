@@ -13,6 +13,7 @@ export default defineConfig({
     defaultCommandTimeout: 15_000,
     requestTimeout: 15_000,
     env: {
+      guildApiV1Url: "https://api.guild.xyz/v1",
       guildApiUrl: "https://api.guild.xyz/v2",
       userAddress: "0x304Def656Babc745c53782639D3CaB00aCe8C843",
       platformlessGuildName: "Platformless Cypress Gang",

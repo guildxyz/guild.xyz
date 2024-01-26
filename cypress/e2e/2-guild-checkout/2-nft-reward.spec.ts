@@ -83,7 +83,7 @@ describe("nft reward", () => {
   })
 
   it("can collect an nft if requirements are satisfied", () => {
-    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/user/join`).as("join")
+    cy.intercept("POST", `${Cypress.env("guildApiV1Url")}/user/join`).as("join")
     cy.intercept(
       "POST",
       `${Cypress.env("guildApiUrl")}/guilds/*/roles/*/role-platforms/*/claim`
