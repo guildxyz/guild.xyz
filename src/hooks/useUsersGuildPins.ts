@@ -8,8 +8,7 @@ import {
   GUILD_PIN_CONTRACTS,
   GuildPinsSupportedChain,
 } from "utils/guildCheckout/constants"
-import { createPublicClient, http } from "viem"
-import { PublicClient } from "wagmi"
+import { PublicClient, createPublicClient, http } from "viem"
 
 const getUsersGuildPinIdsOnChain = async (
   balance: bigint,
@@ -74,7 +73,7 @@ const getPinTokenURIsForPinIds = async (
   return { tokenURIs, errors }
 }
 
-const _tokenURItoMetadataJSON = (tokenURI: {
+const tokenURItoMetadataJSON = (tokenURI: {
   chainId: Chains
   tokenId: number
   tokenUri: unknown
@@ -121,7 +120,7 @@ const fetchGuildPinsOnChain = async (
     publicClient
   )
   const usersPinsMetadataJSONs = tokenURIs.map((tokenURI) =>
-    _tokenURItoMetadataJSON(tokenURI)
+    tokenURItoMetadataJSON(tokenURI)
   )
 
   const errors = [...pinIdFetchErrors, ...tokenURIFetchErrors]
