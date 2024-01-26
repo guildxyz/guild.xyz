@@ -84,6 +84,11 @@ export enum ACTION {
   UpdateTheme = "UpdateTheme",
 }
 
+export enum ActivityLogActionGroup {
+  UserAction = "User actions",
+  AdminAction = "Admin actions",
+}
+
 export type ActivityLogActionType = keyof typeof ACTION
 
 export type ActivityLogAction = {
@@ -288,3 +293,34 @@ export const activityLogActionIcons: Record<
     color: "blue.400",
   },
 }
+
+export const HIDDEN_ACTIONS: ACTION[] = [
+  ACTION.UpdateUrlName,
+  ACTION.UpdateLogoOrTitle,
+  ACTION.UpdateDescription,
+  ACTION.UpdateLogic,
+  ACTION.UpdateTheme,
+]
+
+export const USER_ACTIONS: ACTION[] = [
+  ACTION.ClickJoinOnWeb,
+  ACTION.ClickJoinOnPlatform,
+  ACTION.JoinGuild,
+  ACTION.LeaveGuild,
+  ACTION.UserStatusUpdate,
+  ACTION.GetRole,
+  ACTION.LoseRole,
+  ACTION.GetReward,
+  ACTION.LoseReward,
+  ACTION.ConnectIdentity,
+  ACTION.DisconnectIdentity,
+  ACTION.OptIn,
+  ACTION.OptOut,
+  ACTION.KickFromGuild,
+  ACTION.SendReward,
+  ACTION.RevokeReward,
+]
+
+export const ADMIN_ACTIONS = Object.values(ACTION).filter(
+  (action) => !USER_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action)
+)

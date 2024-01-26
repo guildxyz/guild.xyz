@@ -66,7 +66,7 @@ const useClaimText = (rolePlatformId: number) => {
         mutateCachedResponse(response)
         mutateGuild((prevGuild) => ({
           ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
+          roles: prevGuild?.roles.map((role) => {
             if (!role.rolePlatforms?.some((rp) => rp.id === rolePlatformId))
               return role
 

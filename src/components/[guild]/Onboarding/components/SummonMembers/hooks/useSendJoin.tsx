@@ -1,6 +1,5 @@
-import { PoapDiscordEmbedForm } from "components/[guild]/CreatePoap/components/Distribution/components/SendPoapDiscordEmbed/SendPoapDiscordEmbed"
-import useGuild from "components/[guild]/hooks/useGuild"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -14,10 +13,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const fetcerWithSign = useFetcherWithSign()
 
-  const sendJoin = ({
-    serverId,
-    ...body
-  }: SummonMembersForm | PoapDiscordEmbedForm) =>
+  const sendJoin = ({ serverId, ...body }: SummonMembersForm) =>
     fetcerWithSign([
       `/v2/discord/servers/${serverId}/button`,
       {

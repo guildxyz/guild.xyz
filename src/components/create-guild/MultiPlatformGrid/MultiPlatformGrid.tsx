@@ -6,7 +6,6 @@ import MultiPlatformSelectButton from "./components/MultiPlatformSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
-  showPoap?: boolean
 }
 
 const MultiPlatformsGrid = ({ onSelection }: Props) => {

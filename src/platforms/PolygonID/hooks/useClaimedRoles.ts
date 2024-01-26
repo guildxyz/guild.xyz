@@ -12,7 +12,9 @@ const useClaimedRoles = () => {
       roleIds: number[]
     }[]
   >(
-    `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
+    !!userId && !!guildId
+      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
+      : null
   )
 }
 

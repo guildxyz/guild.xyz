@@ -17,7 +17,6 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
-import dynamic from "next/dynamic"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import platforms from "platforms/platforms"
@@ -30,17 +29,11 @@ import {
   RoleTypeToAddTo,
   useAddRewardContext,
 } from "../AddRewardContext"
-import { CreatePoapProvider } from "../CreatePoap/components/CreatePoapContext"
-import { useIsTabsStuck } from "../Tabs"
+import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
-
-// temporary until POAPs are real rewards
-const DynamicAddPoapPanel = dynamic(() => import("components/[guild]/CreatePoap"), {
-  ssr: false,
-})
 
 const defaultValues = {
   rolePlatforms: [],
@@ -174,119 +167,122 @@ const AddRewardButton = (): JSX.Element => {
           colorScheme="dark"
         >
           <ModalOverlay />
-          {/* TODO: this is a temporary solution, we should remove this from here when POAPs become real rewards */}
-          <CreatePoapProvider>
-            <ModalContent minH="550px">
-              <ModalCloseButton />
-              <ModalHeader
-                {...(step === "SELECT_ROLE"
-                  ? {
-                      bgColor: lightModalBgColor,
-                      boxShadow: "sm",
-                      zIndex: 1,
-                    }
-                  : {})}
-              >
-                <Stack spacing={8}>
-                  <HStack>
-                    {selection && (
-                      <IconButton
-                        isDisabled={isBackButtonDisabled}
-                        rounded="full"
-                        aria-label="Back"
-                        size="sm"
-                        mb="-3px"
-                        icon={<ArrowLeft size={20} />}
-                        variant="ghost"
-                        onClick={goBack}
-                      />
-                    )}
-                    <Text>
-                      {selection
-                        ? `Add ${platforms[selection].name} reward`
-                        : "Add reward"}
-                    </Text>
-                  </HStack>
-
-                  {step === "SELECT_ROLE" && (
-                    <PlatformPreview>
-                      <AvailabilitySetup
-                        platformType={rolePlatform?.guildPlatform?.platformName}
-                        rolePlatform={rolePlatform}
-                        defaultValues={{
-                          capacity:
-                            rolePlatform?.guildPlatform?.platformGuildData?.texts
-                              ?.length,
-                        }}
-                        onDone={({ capacity, startTime, endTime }) => {
-                          methods.setValue(`rolePlatforms.0.capacity`, capacity)
-                          methods.setValue(`rolePlatforms.0.startTime`, startTime)
-                          methods.setValue(`rolePlatforms.0.endTime`, endTime)
-                        }}
-                      />
-                    </PlatformPreview>
+          <ModalContent minH="550px">
+            <ModalCloseButton />
+            <ModalHeader
+              {...(step === "SELECT_ROLE"
+                ? {
+                    bgColor: lightModalBgColor,
+                    boxShadow: "sm",
+                    zIndex: 1,
+                  }
+                : {})}
+            >
+              <Stack spacing={8}>
+                <HStack>
+                  {selection && (
+                    <IconButton
+                      isDisabled={isBackButtonDisabled}
+                      rounded="full"
+                      aria-label="Back"
+                      size="sm"
+                      mb="-3px"
+                      icon={<ArrowLeft size={20} />}
+                      variant="ghost"
+                      onClick={goBack}
+                    />
                   )}
-                </Stack>
-              </ModalHeader>
+                  <Text>
+                    {selection
+                      ? `Add ${platforms[selection].name} reward`
+                      : "Add reward"}
+                  </Text>
+                </HStack>
 
-              <ModalBody
-                ref={modalRef}
-                className="custom-scrollbar"
-                display="flex"
-                flexDir="column"
-              >
-                {selection === "POAP" ? (
-                  <DynamicAddPoapPanel />
-                ) : selection && step === "SELECT_ROLE" ? (
-                  <SelectRoleOrSetRequirements selectedPlatform={selection} />
-                ) : AddPlatformPanel ? (
-                  <AddPlatformPanel
-                    onSuccess={() => setStep("SELECT_ROLE")}
-                    skipSettings
-                  />
-                ) : (
-                  <PlatformsGrid onSelection={setSelection} showPoap pb="4" />
+                {step === "SELECT_ROLE" && (
+                  <PlatformPreview>
+                    <AvailabilitySetup
+                      platformType={rolePlatform?.guildPlatform?.platformName}
+                      rolePlatform={rolePlatform}
+                      defaultValues={{
+                        /**
+                         * If the user doesn't upload mint links for a POAP, we
+                         * should fallback to undefined, since 0 is not a valid value
+                         * here
+                         */
+                        capacity:
+                          rolePlatform?.guildPlatform?.platformGuildData?.texts
+                            ?.length || undefined,
+                        /** POAPs have default startTime and endTime */
+                        startTime: rolePlatform?.startTime,
+                        endTime: rolePlatform?.endTime,
+                      }}
+                      onDone={({ capacity, startTime, endTime }) => {
+                        methods.setValue(`rolePlatforms.0.capacity`, capacity)
+                        methods.setValue(`rolePlatforms.0.startTime`, startTime)
+                        methods.setValue(`rolePlatforms.0.endTime`, endTime)
+                      }}
+                    />
+                  </PlatformPreview>
                 )}
-              </ModalBody>
+              </Stack>
+            </ModalHeader>
 
-              {selection !== "POAP" && step === "SELECT_ROLE" && (
-                <ModalFooter pt="6" pb="8" gap={2}>
-                  <Button
-                    isDisabled={isAddRewardButtonDisabled}
-                    onClick={methods.handleSubmit((data) => {
-                      setSaveAsDraft(true)
-                      onSubmit(data, "DRAFT")
-                    })}
-                    isLoading={saveAsDraft && isLoading}
-                    rightIcon={
-                      <Tooltip
-                        label={
-                          activeTab === RoleTypeToAddTo.EXISTING_ROLE
-                            ? "The reward will be added to the role you select with hidden visibility, so users won't see it yet. You can edit & activate it later"
-                            : "The role will be created with hidden visibility, so user's won't see it yet. You can edit & activate it later"
-                        }
-                      >
-                        <Info />
-                      </Tooltip>
-                    }
-                  >
-                    Save as draft
-                  </Button>
-                  <Button
-                    isDisabled={isAddRewardButtonDisabled}
-                    colorScheme="green"
-                    onClick={methods.handleSubmit((data) => {
-                      setSaveAsDraft(false)
-                      onSubmit(data)
-                    })}
-                    isLoading={!saveAsDraft && isLoading}
-                  >
-                    Save
-                  </Button>
-                </ModalFooter>
+            <ModalBody
+              ref={modalRef}
+              className="custom-scrollbar"
+              display="flex"
+              flexDir="column"
+            >
+              {selection && step === "SELECT_ROLE" ? (
+                <SelectRoleOrSetRequirements selectedPlatform={selection} />
+              ) : AddPlatformPanel ? (
+                <AddPlatformPanel
+                  onSuccess={() => setStep("SELECT_ROLE")}
+                  skipSettings
+                />
+              ) : (
+                <PlatformsGrid onSelection={setSelection} showPoap pb="4" />
               )}
-            </ModalContent>
-          </CreatePoapProvider>
+            </ModalBody>
+
+            {step === "SELECT_ROLE" && (
+              <ModalFooter pt="6" pb="8" gap={2}>
+                <Button
+                  isDisabled={isAddRewardButtonDisabled}
+                  onClick={methods.handleSubmit((data) => {
+                    setSaveAsDraft(true)
+                    onSubmit(data, "DRAFT")
+                  })}
+                  isLoading={saveAsDraft && isLoading}
+                  rightIcon={
+                    <Tooltip
+                      label={
+                        activeTab === RoleTypeToAddTo.EXISTING_ROLE
+                          ? "The reward will be added to the role you select with hidden visibility, so users won't see it yet. You can edit & activate it later"
+                          : "The role will be created with hidden visibility, so user's won't see it yet. You can edit & activate it later"
+                      }
+                    >
+                      <Info />
+                    </Tooltip>
+                  }
+                >
+                  Save as draft
+                </Button>
+                <Button
+                  isDisabled={isAddRewardButtonDisabled}
+                  colorScheme="green"
+                  onClick={methods.handleSubmit((data) => {
+                    setSaveAsDraft(false)
+                    onSubmit(data)
+                  })}
+                  isLoading={!saveAsDraft && isLoading}
+                >
+                  Save
+                </Button>
+              </ModalFooter>
+            )}
+          </ModalContent>
         </Modal>
       </FormProvider>
     </>

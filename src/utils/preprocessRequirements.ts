@@ -142,7 +142,7 @@ const preprocessRequirements = (
           )
         }
 
-        // needed for POAP requirements, temporary
+        // temp, we'll need to remove some of these fields once we validate reqs with zod
         delete (processedRequirement as any).requirementId
         delete (processedRequirement as any).logic
         delete (processedRequirement as any).balancyDecimals

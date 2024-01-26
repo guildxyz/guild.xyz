@@ -61,10 +61,6 @@ const DiscordCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
         <MenuDivider />
         <DiscordCaptchaSwitch serverId={platformGuildId} />
-        <MenuDivider />
-        <MenuItem isDisabled fontSize="sm">
-          POAPs have moved into Add reward
-        </MenuItem>
       </PlatformCardMenu>
 
       <SendDiscordJoinButtonModal

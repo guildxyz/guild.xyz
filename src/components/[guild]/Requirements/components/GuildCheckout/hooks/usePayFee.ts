@@ -108,13 +108,7 @@ const usePayFee = () => {
         onClose()
 
         refetchVault()
-
-        // temporary until POAPs are real roles
-        if (requirement?.poapId)
-          mutate(
-            `/v2/guilds/:guildId/poaps/${requirement.poapId}/users/${address}/eligibility`
-          )
-        else mutate(`/guild/access/${id}/${address}`)
+        mutate(`/guild/access/${id}/${address}`)
       },
     })
 
