@@ -28,41 +28,49 @@ const fetchGuildPinsOnChain = async (
     args: [address],
   })
 
+  let contracts = []
+
   for (let i = 0; i < balance; i++) {
-    const newTokenId = await publicClient.readContract({
+    contracts.push({
       abi: GUILD_PIN_CONTRACTS[chain].abi,
       address: GUILD_PIN_CONTRACTS[chain].address,
       functionName: "tokenOfOwnerByIndex",
       args: [address, BigInt(i)],
     })
-
-    if (newTokenId) usersGuildPinIdsOnChain.push(newTokenId)
   }
 
-  const usersGuildPinTokenURIsOnChain = await Promise.all<{
-    chainId: number
-    tokenId: number
-    tokenUri: string
-  }>(
-    usersGuildPinIdsOnChain.map(async (tokenId) => {
-      const tokenUri = await publicClient.readContract({
-        abi: GUILD_PIN_CONTRACTS[chain].abi,
-        address: GUILD_PIN_CONTRACTS[chain].address,
-        functionName: "tokenURI",
-        args: [tokenId],
-      })
+  const results = await publicClient.multicall({
+    contracts: contracts,
+  })
 
-      return {
-        chainId: Chains[chain],
-        tokenId: Number(tokenId),
-        tokenUri,
-      }
-    })
-  )
+  results.forEach((result) => {
+    if (result.status === "success") {
+      usersGuildPinIdsOnChain.push(result.result as bigint)
+    }
+  })
 
-  const usersPinsMetadataJSONs = await Promise.all(
-    usersGuildPinTokenURIsOnChain.map(async ({ chainId, tokenId, tokenUri }) => {
-      const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenUri)
+  let contractCalls = usersGuildPinIdsOnChain.map((tokenId) => ({
+    abi: GUILD_PIN_CONTRACTS[chain].abi,
+    address: GUILD_PIN_CONTRACTS[chain].address,
+    functionName: "tokenURI",
+    args: [tokenId],
+  }))
+
+  const multicallResults = await publicClient.multicall({
+    contracts: contractCalls,
+  })
+
+  const usersGuildPinTokenURIsOnChain = multicallResults.map((result, index) => ({
+    chainId: Chains[chain],
+    tokenId: Number(usersGuildPinIdsOnChain[index]),
+    tokenUri: result.status === "success" ? result.result : null,
+  }))
+
+  const usersPinsMetadataJSONs = usersGuildPinTokenURIsOnChain.map(
+    ({ chainId, tokenId, tokenUri }) => {
+      const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(
+        tokenUri as string
+      )
 
       return {
         ...metadata,
@@ -73,7 +81,7 @@ const fetchGuildPinsOnChain = async (
           process.env.NEXT_PUBLIC_IPFS_GATEWAY
         ),
       }
-    })
+    }
   )
 
   return usersPinsMetadataJSONs
