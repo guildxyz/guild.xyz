@@ -83,6 +83,7 @@ describe("nft reward", () => {
   })
 
   it("can collect an nft if requirements are satisfied", () => {
+    cy.intercept("POST", `${Cypress.env("guildApiUrl")}/user/join`).as("join")
     cy.intercept(
       "POST",
       `${Cypress.env("guildApiUrl")}/guilds/*/roles/*/role-platforms/*/claim`
@@ -102,6 +103,9 @@ describe("nft reward", () => {
     cy.getByDataTest("collect-nft-button").should("be.enabled")
     cy.getByDataTest("collect-nft-button").click()
 
+    cy.wait("@join", {
+      responseTimeout: 40_000,
+    })
     cy.wait("@claim", {
       responseTimeout: 40_000,
     })
