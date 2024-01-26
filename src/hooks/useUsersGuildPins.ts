@@ -9,25 +9,14 @@ import {
   GuildPinsSupportedChain,
 } from "utils/guildCheckout/constants"
 import { createPublicClient, http } from "viem"
+import { PublicClient } from "wagmi"
 
-const fetchGuildPinsOnChain = async (
+const _getUsersGuildPinIdsOnChain = async (
+  balance: bigint,
+  chain: GuildPinsSupportedChain,
   address: `0x${string}`,
-  chain: GuildPinsSupportedChain
+  client: PublicClient
 ) => {
-  const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[chain],
-    transport: http(),
-  })
-
-  const usersGuildPinIdsOnChain: bigint[] = []
-
-  const balance = await publicClient.readContract({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
-    functionName: "balanceOf",
-    args: [address],
-  })
-
   let contracts = []
 
   for (let i = 0; i < balance; i++) {
@@ -39,52 +28,104 @@ const fetchGuildPinsOnChain = async (
     })
   }
 
-  const results = await publicClient.multicall({
-    contracts: contracts,
-  })
+  const results =
+    contracts.length === 0
+      ? []
+      : await client.multicall({
+          contracts: contracts,
+        })
 
-  results.forEach((result) => {
-    if (result.status === "success") {
-      usersGuildPinIdsOnChain.push(result.result as bigint)
-    }
-  })
+  const errors = results.filter((result) => result.status != "success")
 
-  let contractCalls = usersGuildPinIdsOnChain.map((tokenId) => ({
+  const pinIds = results
+    .filter((result) => result.status === "success")
+    .map((result) => result.result as bigint)
+
+  return { pinIds, errors }
+}
+
+const _getPinTokenURIsForPinIds = async (
+  pinIds: bigint[],
+  chain: GuildPinsSupportedChain,
+  client: PublicClient
+) => {
+  const contractCalls = pinIds.map((tokenId) => ({
     abi: GUILD_PIN_CONTRACTS[chain].abi,
     address: GUILD_PIN_CONTRACTS[chain].address,
     functionName: "tokenURI",
     args: [tokenId],
   }))
 
-  const multicallResults = await publicClient.multicall({
-    contracts: contractCalls,
-  })
+  const results =
+    contractCalls.length === 0
+      ? []
+      : await client.multicall({
+          contracts: contractCalls,
+        })
 
-  const usersGuildPinTokenURIsOnChain = multicallResults.map((result, index) => ({
+  const tokenURIs = results.map((result, index) => ({
     chainId: Chains[chain],
-    tokenId: Number(usersGuildPinIdsOnChain[index]),
+    tokenId: Number(pinIds[index]),
     tokenUri: result.status === "success" ? result.result : null,
   }))
 
-  const usersPinsMetadataJSONs = usersGuildPinTokenURIsOnChain.map(
-    ({ chainId, tokenId, tokenUri }) => {
-      const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(
-        tokenUri as string
-      )
+  const errors = results.filter((res) => res.status != "success")
 
-      return {
-        ...metadata,
-        chainId,
-        tokenId,
-        image: metadata.image.replace(
-          "ipfs://",
-          process.env.NEXT_PUBLIC_IPFS_GATEWAY
-        ),
-      }
-    }
+  return { tokenURIs, errors }
+}
+
+const _tokenURItoMetadataJSON = (tokenURI: {
+  chainId: Chains
+  tokenId: number
+  tokenUri: unknown
+}) => {
+  const { chainId, tokenId, tokenUri } = tokenURI
+
+  const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(
+    tokenUri as string
   )
 
-  return usersPinsMetadataJSONs
+  return {
+    ...metadata,
+    chainId,
+    tokenId,
+    image: metadata.image.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY),
+  }
+}
+
+const fetchGuildPinsOnChain = async (
+  address: `0x${string}`,
+  chain: GuildPinsSupportedChain
+) => {
+  const publicClient = createPublicClient({
+    chain: CHAIN_CONFIG[chain],
+    transport: http(),
+  })
+
+  const balance = await publicClient.readContract({
+    abi: GUILD_PIN_CONTRACTS[chain].abi,
+    address: GUILD_PIN_CONTRACTS[chain].address,
+    functionName: "balanceOf",
+    args: [address],
+  })
+
+  const { pinIds, errors: pinIdFetchErrors } = await _getUsersGuildPinIdsOnChain(
+    balance,
+    chain,
+    address,
+    publicClient
+  )
+  const { tokenURIs, errors: tokenURIFetchErrors } = await _getPinTokenURIsForPinIds(
+    pinIds,
+    chain,
+    publicClient
+  )
+  const usersPinsMetadataJSONs = tokenURIs.map((tokenURI) =>
+    _tokenURItoMetadataJSON(tokenURI)
+  )
+
+  const errors = [...pinIdFetchErrors, ...tokenURIFetchErrors]
+  return { usersPinsMetadataJSONs, errors }
 }
 
 const fetchGuildPins = async ([_, addresses, includeTestnets]: [
@@ -96,6 +137,7 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
   const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>
     includeTestnets ? true : !TESTNET_KEYS.includes(key as GuildPinsSupportedChain)
   ) as GuildPinsSupportedChain[]
+
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
       addresses.flatMap((addressData) =>
@@ -104,7 +146,18 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
     )
   )
 
-  return responseArray.flat()
+  let allUsersPins = []
+  let allErrors = []
+  for (const response of responseArray) {
+    if (response.usersPinsMetadataJSONs) {
+      allUsersPins.push(...response.usersPinsMetadataJSONs)
+    }
+    if (response.errors && response.errors.length > 0) {
+      allErrors.push(...response.errors)
+    }
+  }
+
+  return { usersPins: allUsersPins, errors: allErrors }
 }
 
 const useUsersGuildPins = (disabled = false, includeTestnets = false) => {
@@ -115,12 +168,16 @@ const useUsersGuildPins = (disabled = false, includeTestnets = false) => {
 
   const shouldFetch = Boolean(!disabled && isWeb3Connected && evmAddresses?.length)
 
-  return useSWRImmutable<
-    ({ chainId: number; tokenId: number } & GuildPinMetadata)[]
-  >(
-    shouldFetch ? ["guildPins", evmAddresses, includeTestnets] : null,
+  const swrData = useSWRImmutable(
+    shouldFetch ? ["guildPins", addresses, includeTestnets] : null,
     fetchGuildPins
   )
+
+  return {
+    ...swrData,
+    data: swrData.data?.usersPins,
+    pinFetchErrors: swrData.data?.errors,
+  }
 }
 
 export default useUsersGuildPins
