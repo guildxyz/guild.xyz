@@ -26,7 +26,7 @@ const options: SelectOption<ValueType>[] = [
   },
 ]
 
-const TwitterVerificationSelect = ({
+const TwitterAccountVerified = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => {
   const {
@@ -51,4 +51,4 @@ const TwitterVerificationSelect = ({
     </FormControl>
   )
 }
-export default TwitterVerificationSelect
+export default TwitterAccountVerified

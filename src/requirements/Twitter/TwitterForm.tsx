@@ -17,7 +17,7 @@ import TwitterListInput from "./components/TwitterListInput"
 import TwitterTextToInclude from "./components/TwitterTextToInclude"
 import TwitterTweetInput from "./components/TwitterTweetInput"
 import TwitterUserInput from "./components/TwitterUserInput"
-import TwitterVerificationSelect from "./components/TwitterVerificationSelect"
+import TwitterAccountVerified from "./components/TwitterAccountVerified"
 
 const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { featureFlags } = useGuild()
@@ -26,7 +26,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     {
       label: "Have verified account",
       value: "TWITTER_ACCOUNT_VERIFIED",
-      TwitterRequirement: TwitterVerificationSelect,
+      TwitterRequirement: TwitterAccountVerified,
     },
     {
       label: "Have at least x followers",
