@@ -61,7 +61,7 @@ const nftRequirementTypeOptions: Array<NftRequirementTypeOption> = [
   },
 ]
 
-const traitsSupportedChains: Chain[] = [
+export const traitsSupportedChains: Chain[] = [
   "ETHEREUM",
   "POLYGON",
   "OPTIMISM",

@@ -6,6 +6,7 @@ import Button from "components/common/Button"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
+import { traitsSupportedChains } from "requirements/Nft/NftForm"
 import ChainPicker from "requirements/common/ChainPicker"
 import { Visibility } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
@@ -106,28 +107,30 @@ const ActivateGuildPinForm = (): JSX.Element => {
           showDivider={false}
         />
 
-        <Checkbox
-          {...onShouldCreatePinHolderRoleControllerProps}
-          isDisabled={chain === "FUEL"}
-          alignItems="start"
-          sx={{
-            "> .chakra-checkbox__control": {
-              marginTop: 1,
-              checkboxBorderColor,
-            },
-          }}
-          _checked={{
-            "> .chakra-checkbox__control[data-checked]": {
-              bgColor: "green.500",
-              borderColor: "green.500",
-              color: "white",
-            },
-          }}
-          isChecked={shouldCreatePinHolderRole}
-          onChange={(e) => onShouldCreatePinHolderRoleChange(e.target.checked)}
-        >
-          Create a role for pin holders
-        </Checkbox>
+        {traitsSupportedChains.includes(chain as Chain) && (
+          <Checkbox
+            {...onShouldCreatePinHolderRoleControllerProps}
+            isDisabled={chain === "FUEL"}
+            alignItems="start"
+            sx={{
+              "> .chakra-checkbox__control": {
+                marginTop: 1,
+                checkboxBorderColor,
+              },
+            }}
+            _checked={{
+              "> .chakra-checkbox__control[data-checked]": {
+                bgColor: "green.500",
+                borderColor: "green.500",
+                color: "white",
+              },
+            }}
+            isChecked={shouldCreatePinHolderRole}
+            onChange={(e) => onShouldCreatePinHolderRoleChange(e.target.checked)}
+          >
+            Create a role for pin holders
+          </Checkbox>
+        )}
 
         <Button
           size="lg"
