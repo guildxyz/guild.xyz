@@ -5,9 +5,7 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailabilityTags, {
-  getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
@@ -19,6 +17,10 @@ import useClaimText, {
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
+import {
+  getRolePlatformStatus,
+  isRolePlatformInActiveTimeframe,
+} from "utils/rolePlatformHelpers"
 import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
 
@@ -48,23 +50,13 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const state = useMemo(() => {
     if (isMember && hasAccess) {
-      const startTimeDiff = getTimeDiff(platform?.startTime)
-      const endTimeDiff = getTimeDiff(platform?.endTime)
-
-      if (
-        (startTimeDiff > 0 ||
-          endTimeDiff < 0 ||
-          (typeof platform?.capacity === "number" &&
-            platform?.capacity === platform?.claimedCount)) &&
-        !claimed
-      )
+      if (isRolePlatformInActiveTimeframe(platform, !claimed))
         return {
-          tooltipLabel:
-            platform?.capacity === platform?.claimedCount
-              ? "All available rewards have already been claimed"
-              : startTimeDiff > 0
-              ? "Claim hasn't started yet"
-              : "Claim already ended",
+          tooltipLabel: {
+            ALL_CLAIMED: "All available rewards have already been claimed",
+            NOT_STARTED: "Claim hasn't started yet",
+            ENDED: "Claim already ended",
+          }[getRolePlatformStatus(platform)],
           buttonProps: {
             isDisabled: true,
           },

@@ -13,12 +13,12 @@ import {
   CapacityTag,
   EndTimeTag,
   StartTimeTag,
-  getTimeDiff,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
+import { isRolePlatformInActiveTimeframe } from "utils/rolePlatformHelpers"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
@@ -44,13 +44,8 @@ const CollectNft = () => {
     nftAddress
   )
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-  const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
+  const { inActiveTimeframe: isButtonDisabled, startTimeDiff } =
+    isRolePlatformInActiveTimeframe(rolePlatform)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
