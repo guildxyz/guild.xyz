@@ -1,10 +1,13 @@
 import { Circle, Icon, Text } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
 import useToast from "hooks/useToast"
+import { atom, useAtom } from "jotai"
 import { Upload, X } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
+
+export const showEditableImageAtom = atom("")
 
 type Props = {
   baseFieldPath: string
@@ -47,6 +50,8 @@ const RequirementImageEditor = ({
     onError: (error) => toast({ status: "error", title: error.message }),
   })
 
+  const [reqId] = useAtom(showEditableImageAtom)
+
   if (customImage)
     return (
       <>
@@ -57,7 +62,7 @@ const RequirementImageEditor = ({
               shouldDirty: true,
             })
           }}
-          opacity={0}
+          opacity={reqId === baseFieldPath ? 1 : 0}
           _hover={{
             opacity: 1,
           }}
@@ -81,14 +86,16 @@ const RequirementImageEditor = ({
   return (
     <>
       <Circle
+        id="role-image-edit-circle"
         position="absolute"
-        opacity={0}
+        opacity={reqId === baseFieldPath ? 1 : 0}
         _hover={{
           opacity: 1,
         }}
         p={3.5}
         background={"blackAlpha.700"}
         cursor={"pointer"}
+        onMouseOver={() => console.log(baseFieldPath)}
         {...getRootProps()}
       >
         <input {...getInputProps()} hidden />
