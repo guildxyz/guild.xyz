@@ -16,23 +16,19 @@ const getUsersGuildPinIdsOnChain = async (
   address: `0x${string}`,
   client: PublicClient
 ) => {
-  const contracts = []
-
-  for (let i = 0; i < balance; i++) {
-    contracts.push({
-      abi: GUILD_PIN_CONTRACTS[chain].abi,
-      address: GUILD_PIN_CONTRACTS[chain].address,
-      functionName: "tokenOfOwnerByIndex",
-      args: [address, BigInt(i)],
-    })
-  }
+  const contracts = Array.from({ length: Number(balance) }, (_, i) => ({
+    abi: GUILD_PIN_CONTRACTS[chain].abi,
+    address: GUILD_PIN_CONTRACTS[chain].address,
+    functionName: "tokenOfOwnerByIndex",
+    args: [address, BigInt(i)],
+  }))
 
   const results =
-    contracts.length === 0
-      ? []
-      : await client.multicall({
+    contracts.length > 0
+      ? await client.multicall({
           contracts: contracts,
         })
+      : []
 
   const errors: Error[] = results
     .filter((result) => result.status === "failure")
@@ -58,11 +54,11 @@ const getPinTokenURIsForPinIds = async (
   }))
 
   const results =
-    contractCalls.length === 0
-      ? []
-      : await client.multicall({
+    contractCalls.length > 0
+      ? await client.multicall({
           contracts: contractCalls,
         })
+      : []
 
   const tokenURIs = results.map((result, index) => ({
     chainId: Chains[chain],
