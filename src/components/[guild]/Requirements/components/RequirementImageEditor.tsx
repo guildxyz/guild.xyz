@@ -1,13 +1,11 @@
 import { Circle, Icon, Text } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
 import useToast from "hooks/useToast"
-import { atom, useAtom } from "jotai"
 import { Upload, X } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
-
-export const showEditableImageAtom = atom("")
+import slugify from "utils/slugify"
 
 type Props = {
   baseFieldPath: string
@@ -50,19 +48,18 @@ const RequirementImageEditor = ({
     onError: (error) => toast({ status: "error", title: error.message }),
   })
 
-  const [reqId] = useAtom(showEditableImageAtom)
-
   if (customImage)
     return (
       <>
         <Circle
+          id={slugify(baseFieldPath)}
           position="absolute"
           onClick={() => {
             setValue(`${baseFieldPath}.data.customImage`, "", {
               shouldDirty: true,
             })
           }}
-          opacity={reqId === baseFieldPath ? 1 : 0}
+          opacity={0}
           _hover={{
             opacity: 1,
           }}
@@ -86,8 +83,9 @@ const RequirementImageEditor = ({
   return (
     <>
       <Circle
+        id={slugify(baseFieldPath)}
         position="absolute"
-        opacity={reqId === baseFieldPath ? 1 : 0}
+        opacity={0}
         _hover={{
           opacity: 1,
         }}
