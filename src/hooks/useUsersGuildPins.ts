@@ -34,9 +34,11 @@ const getUsersGuildPinIdsOnChain = async (
           contracts: contracts,
         })
 
-  const errors = results.filter((result) => result.status != "success")
+  const errors: Error[] = results
+    .filter((result) => result.status === "failure")
+    .map((result) => result.error)
 
-  const pinIds = results
+  const pinIds: bigint[] = results
     .filter((result) => result.status === "success")
     .map((result) => result.result as bigint)
 
@@ -68,7 +70,9 @@ const getPinTokenURIsForPinIds = async (
     tokenUri: result.status === "success" ? result.result : null,
   }))
 
-  const errors = results.filter((res) => res.status != "success")
+  const errors: Error[] = results
+    .filter((res) => res.status === "failure")
+    .map((res) => res.error)
 
   return { tokenURIs, errors }
 }
@@ -101,12 +105,17 @@ const fetchGuildPinsOnChain = async (
     transport: http(),
   })
 
-  const balance = await publicClient.readContract({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
-    functionName: "balanceOf",
-    args: [address],
-  })
+  let balance = null
+  try {
+    balance = await publicClient.readContract({
+      abi: GUILD_PIN_CONTRACTS[chain].abi,
+      address: GUILD_PIN_CONTRACTS[chain].address,
+      functionName: "balanceOf",
+      args: [address],
+    })
+  } catch (e) {
+    return { usersPinsMetadataJSONs: [], errors: [{ error: e, status: "failure" }] }
+  }
 
   const { pinIds, errors: pinIdFetchErrors } = await getUsersGuildPinIdsOnChain(
     balance,
@@ -114,6 +123,7 @@ const fetchGuildPinsOnChain = async (
     address,
     publicClient
   )
+
   const { tokenURIs, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
     pinIds,
     chain,
@@ -145,16 +155,18 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
     )
   )
 
-  const allUsersPins = []
-  const allErrors = []
-  for (const response of responseArray) {
-    if (response.usersPinsMetadataJSONs) {
-      allUsersPins.push(...response.usersPinsMetadataJSONs)
-    }
-    if (response.errors && response.errors.length > 0) {
-      allErrors.push(...response.errors)
-    }
-  }
+  const { allUsersPins, allErrors } = responseArray.reduce(
+    (acc, response) => {
+      if (response.usersPinsMetadataJSONs) {
+        acc.allUsersPins.push(...response.usersPinsMetadataJSONs)
+      }
+      if (response?.errors.length > 0) {
+        acc.allErrors.push(...response.errors)
+      }
+      return acc
+    },
+    { allUsersPins: [], allErrors: [] }
+  )
 
   return { usersPins: allUsersPins, errors: allErrors }
 }
