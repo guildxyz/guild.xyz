@@ -1,11 +1,14 @@
 import { ButtonProps, Tooltip } from "@chakra-ui/react"
-import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
+import {
+  getRolePlatformStatus,
+  isRolePlatformInActiveTimeframe,
+} from "utils/rolePlatformHelpers"
 
 type Props = {
   platform: GuildPlatform
@@ -19,22 +22,13 @@ const PoapCardButton = ({ platform }: Props) => {
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-
-  const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
-
-  const tooltipLabel =
-    typeof rolePlatform?.capacity === "number" &&
-    rolePlatform?.capacity === rolePlatform?.claimedCount
-      ? "All available POAPs have already been claimed"
-      : startTimeDiff > 0
-      ? "Claim hasn't started yet"
-      : "Claim already ended"
+  const { inActiveTimeframe: isButtonDisabled } =
+    isRolePlatformInActiveTimeframe(rolePlatform)
+  const tooltipLabel = {
+    ALL_CLAIMED: "All available rewards have already been claimed",
+    NOT_STARTED: "Claim hasn't started yet",
+    ENDED: "Claim already ended",
+  }[getRolePlatformStatus(rolePlatform)]
 
   const buttonLabel =
     !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"

@@ -4,10 +4,10 @@ import {
   CapacityTag,
   EndTimeTag,
   StartTimeTag,
-  getTimeDiff,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
+import { isRolePlatformInActiveTimeframe } from "utils/rolePlatformHelpers"
 import ClaimPoapButton from "./ClaimPoapButton"
 
 type Props = {
@@ -30,13 +30,8 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-  const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
+  const { inActiveTimeframe: isButtonDisabled, startTimeDiff } =
+    isRolePlatformInActiveTimeframe(rolePlatform)
 
   return (
     <Stack p={padding} w="full" spacing={2}>
