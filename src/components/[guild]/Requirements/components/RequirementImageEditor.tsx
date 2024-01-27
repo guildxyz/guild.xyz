@@ -86,7 +86,6 @@ const RequirementImageEditor = ({
   return (
     <>
       <Circle
-        id="role-image-edit-circle"
         position="absolute"
         opacity={reqId === baseFieldPath ? 1 : 0}
         _hover={{
@@ -95,7 +94,6 @@ const RequirementImageEditor = ({
         p={3.5}
         background={"blackAlpha.700"}
         cursor={"pointer"}
-        onMouseOver={() => console.log(baseFieldPath)}
         {...getRootProps()}
       >
         <input {...getInputProps()} hidden />
