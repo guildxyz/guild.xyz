@@ -498,7 +498,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Fuel/FuelForm")
     ),
-    types: ["FUEL", "FUEL_BALANCE"],
+    types: ["FUEL", "FUEL_BALANCE", "FUEL_TRANSACTIONS"],
     isCustomizable: true,
     isNegatable: true,
   },

@@ -6,12 +6,18 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FuelBalance from "./components/FuelBalance"
+import FuelTransactions from "./components/FuelTransactions"
 
 const fuelRequirementTypes = [
   {
     label: "Token or NFT balance",
     value: "FUEL_BALANCE",
     FuelRequirement: FuelBalance,
+  },
+  {
+    label: "Wallet activity",
+    value: "FUEL_TRANSACTIONS",
+    FuelRequirement: FuelTransactions,
   },
 ]
 
