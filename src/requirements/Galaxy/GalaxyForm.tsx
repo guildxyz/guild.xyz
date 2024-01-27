@@ -47,6 +47,8 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     name: `${baseFieldPath}.data.galaxyId`,
   })
 
+  const isEditMode = !!field?.id
+
   const [searchText, setSearchText] = useState("")
   const debouncedSearchText = useDebouncedState(searchText)
   const { campaigns, isLoading } = useGalaxyCampaigns(debouncedSearchText)
@@ -96,6 +98,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={galaxyRequirementTypes}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

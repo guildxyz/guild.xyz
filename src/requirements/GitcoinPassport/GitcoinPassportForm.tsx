@@ -28,13 +28,14 @@ const gitcoinPassportRequirementTypes = [
   },
 ]
 
-const GitcoinPassportForm = ({ baseFieldPath }: RequirementFormProps) => {
+const GitcoinPassportForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
     resetField,
     formState: { errors },
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const selected = gitcoinPassportRequirementTypes.find(
     (reqType) => reqType.value === type
@@ -60,6 +61,7 @@ const GitcoinPassportForm = ({ baseFieldPath }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={gitcoinPassportRequirementTypes}
           afterOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

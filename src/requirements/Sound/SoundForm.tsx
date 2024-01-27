@@ -48,6 +48,7 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const selected = soundRequirementTypes.find((reqType) => reqType.value === type)
+  const isEditMode = !!field?.id
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -63,6 +64,7 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           beforeOnChange={() =>
             resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
           }
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

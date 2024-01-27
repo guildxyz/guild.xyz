@@ -32,7 +32,10 @@ const options: SelectOption[] = [
   },
 ]
 
-const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const CoinbaseEASForm = ({
+  baseFieldPath,
+  field,
+}: RequirementFormProps): JSX.Element => {
   const selectOptionImgBgColor = useColorModeValue(
     "blackAlpha.100",
     "blackAlpha.300"
@@ -50,6 +53,7 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
   }, [setValue])
 
   const schemaId = useWatch({ name: `${baseFieldPath}.data.schemaId` })
+  const isEditMode = !!field?.id
 
   const countryOptions: SelectOption[] = countryCodes.map(({ name, alpha2 }) => ({
     label: name,
@@ -86,6 +90,7 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
 
             setValue(`${baseFieldPath}.data.val`, undefined)
           }}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

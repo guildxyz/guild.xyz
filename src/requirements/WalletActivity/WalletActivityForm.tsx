@@ -91,6 +91,7 @@ const walletActivityRequirementTypes: SelectOption[] = [
 
 const WalletActivityForm = ({
   baseFieldPath,
+  field,
 }: RequirementFormProps): JSX.Element => {
   const {
     resetField,
@@ -99,6 +100,7 @@ const WalletActivityForm = ({
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const isEditMode = !!field?.id
 
   const supportedRequirementTypes = COVALENT_CHAINS.has(chain)
     ? walletActivityRequirementTypes
@@ -175,6 +177,7 @@ const WalletActivityForm = ({
               rules={{ required: "It's required to select a type" }}
               options={supportedRequirementTypes}
               beforeOnChange={resetFields}
+              isDisabled={isEditMode}
             />
 
             <FormErrorMessage>

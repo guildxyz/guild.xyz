@@ -33,7 +33,7 @@ const typeOptions = [
   },
 ]
 
-const FarcasterForm = ({ baseFieldPath }: RequirementFormProps) => {
+const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { resetField } = useFormContext()
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -42,6 +42,8 @@ const FarcasterForm = ({ baseFieldPath }: RequirementFormProps) => {
     resetField(`${baseFieldPath}.data.id`)
     resetField(`${baseFieldPath}.data.hash`)
   }
+
+  const isEditMode = !!field?.id
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -56,6 +58,7 @@ const FarcasterForm = ({ baseFieldPath }: RequirementFormProps) => {
           options={typeOptions}
           placeholder="Choose type"
           afterOnChange={resetForm}
+          isDisabled={isEditMode}
         />
       </FormControl>
 
