@@ -8,6 +8,7 @@ import {
   useEditableControls,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
+import { useSetAtom } from "jotai"
 import { Check, PencilSimple } from "phosphor-react"
 import {
   MutableRefObject,
@@ -19,8 +20,8 @@ import {
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import slugify from "utils/slugify"
 import { useRequirementContext } from "./RequirementContext"
+import { showEditableImageAtom } from "./RequirementImageEditor"
 
 const RequirementNameEditor = ({
   baseFieldPath,
@@ -39,57 +40,53 @@ const RequirementNameEditor = ({
 
   const customName = useWatch({ name: `${baseFieldPath}.data.customName` })
 
-  const highlightImageEditor = `
-  #${slugify(baseFieldPath)} {
-    opacity: 1 !important;
-  }
-  `
+  const setReqId = useSetAtom(showEditableImageAtom)
+
+  useEffect(() => {
+    setReqId(isEditing ? baseFieldPath : "")
+  }, [isEditing])
 
   if (isEditing)
     return (
-      <>
-        <style>{highlightImageEditor}</style>
-        <Box
-          borderWidth={1}
-          borderRadius="lg"
-          display={"flex"}
-          pl={2}
-          overflow={"hidden"}
-        >
-          <EditableInput
-            _focus={{
-              boxShadow: "none",
-            }}
-            p={0}
-            borderRadius={0}
-          />
+      <Box
+        borderWidth={1}
+        borderRadius="lg"
+        display={"flex"}
+        pl={2}
+        overflow={"hidden"}
+      >
+        <EditableInput
+          _focus={{
+            boxShadow: "none",
+          }}
+          p={0}
+          borderRadius={0}
+        />
 
-          <Tooltip
-            label={
-              parseFromObject(errors, `${baseFieldPath}.data.customName`)?.message
-            }
+        <Tooltip
+          label={
+            parseFromObject(errors, `${baseFieldPath}.data.customName`)?.message
+          }
+          isDisabled={
+            isEditing && !parseFromObject(errors, `${baseFieldPath}.data.customName`)
+          }
+          hasArrow
+        >
+          <IconButton
+            size="xs"
+            variant="ghost"
+            borderRadius={0}
+            aria-label="Edit"
+            icon={<Check />}
+            colorScheme={"green"}
+            {...getSubmitButtonProps()}
             isDisabled={
               isEditing &&
-              !parseFromObject(errors, `${baseFieldPath}.data.customName`)
+              !!parseFromObject(errors, `${baseFieldPath}.data.customName`)
             }
-            hasArrow
-          >
-            <IconButton
-              size="xs"
-              variant="ghost"
-              borderRadius={0}
-              aria-label="Edit"
-              icon={<Check />}
-              colorScheme={"green"}
-              {...getSubmitButtonProps()}
-              isDisabled={
-                isEditing &&
-                !!parseFromObject(errors, `${baseFieldPath}.data.customName`)
-              }
-            />
-          </Tooltip>
-        </Box>
-      </>
+          />
+        </Tooltip>
+      </Box>
     )
 
   return (
