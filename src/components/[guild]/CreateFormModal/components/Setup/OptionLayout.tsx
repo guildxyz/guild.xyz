@@ -14,7 +14,7 @@ import { Rest } from "types"
 
 type Props = {
   action: ReactNode
-  type?: "radio" | "checkbox"
+  type: "SINGLE_CHOICE" | "MULTIPLE_CHOICE"
   draggable?: boolean
 } & Rest
 
@@ -44,7 +44,7 @@ const draggableIconProps: ChakraProps = {
 const OptionLayout = ({
   children,
   action,
-  type = "radio",
+  type,
   draggable,
   ..._props
 }: PropsWithChildren<Props>) => {
@@ -61,7 +61,9 @@ const OptionLayout = ({
             bgColor={circleBgColor}
             width={5}
             height={5}
-            borderRadius={type === "checkbox" ? "sm" : "var(--chakra-sizes-2-5)"}
+            borderRadius={
+              type === "MULTIPLE_CHOICE" ? "sm" : "var(--chakra-sizes-2-5)"
+            }
             flexShrink={0}
             {...(draggable ? draggableCenterProps : undefined)}
           >

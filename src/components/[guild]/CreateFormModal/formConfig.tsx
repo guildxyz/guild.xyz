@@ -8,13 +8,11 @@ import {
 } from "phosphor-react"
 import { ComponentType } from "react"
 import { SelectOption } from "types"
+import Choice from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
-import MultipleChoice from "./components/Display/MultipleChoice"
 import Number from "./components/Display/Number"
 import ShortText from "./components/Display/ShortText"
-import SingleChoice from "./components/Display/SingleChoice"
-import MultipleChoiceSetup from "./components/Setup/MultipleChoiceSetup"
-import SingleChoiceSetup from "./components/Setup/SingleChoiceSetup"
+import ChoiceSetup from "./components/Setup/ChoiceSetup"
 import { CreateFieldParams, Field } from "./schemas"
 
 const fieldTypes: (SelectOption<Field["type"]> & {
@@ -48,15 +46,15 @@ const fieldTypes: (SelectOption<Field["type"]> & {
     label: "Single choice",
     value: "SINGLE_CHOICE",
     img: <OptionIcon as={RadioButton} />,
-    SetupComponent: SingleChoiceSetup,
-    DisplayComponent: SingleChoice,
+    SetupComponent: ChoiceSetup,
+    DisplayComponent: Choice,
   },
   {
     label: "Multiple choice",
     value: "MULTIPLE_CHOICE",
     img: <OptionIcon as={CheckSquare} />,
-    SetupComponent: MultipleChoiceSetup,
-    DisplayComponent: MultipleChoice,
+    SetupComponent: ChoiceSetup,
+    DisplayComponent: Choice,
   },
   {
     label: "Rate",

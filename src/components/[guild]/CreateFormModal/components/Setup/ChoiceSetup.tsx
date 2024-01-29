@@ -1,38 +1,26 @@
-import {
-  Center,
-  ChakraProps,
-  Flex,
-  FormControl,
-  Grid,
-  HStack,
-  Icon,
-  Input,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { FormControl, HStack, Input, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import MotionWrapper from "components/common/CardMotionWrapper"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { AnimatePresence, AnimateSharedLayout, Reorder } from "framer-motion"
-import { DotsSixVertical } from "phosphor-react"
-import { PropsWithChildren, ReactNode, useEffect, useRef } from "react"
+import { useEffect, useRef } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
-import { Rest } from "types"
 import { CreateFormParams } from "../../schemas"
+import OptionLayout from "./OptionLayout"
 import RemoveButton from "./RemoveButton"
 
 type Props = {
   index: number
 }
 
-const SingleChoiceSetup = ({ index }: Props) => {
+const ChoiceSetup = ({ index }: Props) => {
   const {
     control,
     register,
     setValue,
     formState: { errors },
   } = useFormContext<CreateFormParams>()
+  const type = useWatch({ name: `fields.${index}.type` })
   const { fields, append, remove, swap } = useFieldArray({
     control,
     name: `fields.${index}.options`,
@@ -84,6 +72,7 @@ const SingleChoiceSetup = ({ index }: Props) => {
             >
               <OptionLayout
                 key={field.id}
+                type={type}
                 action={
                   fields.length > 0 && (
                     <RemoveButton onClick={() => remove(optionIndex)} />
@@ -115,6 +104,7 @@ const SingleChoiceSetup = ({ index }: Props) => {
           <AnimatePresence>
             <OptionLayout
               key="addOption"
+              type={type}
               action={
                 !allowOther && (
                   <HStack spacing={1} pl={1}>
@@ -155,6 +145,7 @@ const SingleChoiceSetup = ({ index }: Props) => {
             {allowOther && (
               <OptionLayout
                 key="otherOption"
+                type={type}
                 action={
                   <RemoveButton
                     onClick={() => setValue(`fields.${index}.allowOther`, false)}
@@ -171,71 +162,4 @@ const SingleChoiceSetup = ({ index }: Props) => {
   )
 }
 
-type OptionLayoutProps = {
-  action: ReactNode
-  draggable?: boolean
-} & Rest
-
-const draggableCenterProps: ChakraProps = {
-  cursor: "grab",
-  _groupHover: {
-    height: 6,
-    borderRadius: "md",
-  },
-  _groupFocusWithin: {
-    height: 6,
-    borderRadius: "md",
-  },
-  transition: "height 0.24s ease, border-radius 0.24s ease",
-}
-
-const draggableIconProps: ChakraProps = {
-  transition: "opacity 0.24s ease",
-  _groupHover: {
-    opacity: 1,
-  },
-  _groupFocusWithin: {
-    opacity: 1,
-  },
-}
-
-const OptionLayout = ({
-  children,
-  action,
-  draggable,
-  ..._props
-}: PropsWithChildren<OptionLayoutProps>) => {
-  const circleBgColor = useColorModeValue("white", "blackAlpha.300")
-
-  const { key, ...props } = _props
-
-  return (
-    <MotionWrapper key={key}>
-      <Grid templateColumns="2fr 1fr" gap={2} {...props}>
-        <HStack w="full" role="group">
-          <Center
-            borderWidth={2}
-            bgColor={circleBgColor}
-            width={5}
-            height={5}
-            borderRadius="var(--chakra-sizes-2-5)"
-            flexShrink={0}
-            {...(draggable ? draggableCenterProps : undefined)}
-          >
-            <Icon
-              as={DotsSixVertical}
-              boxSize={3}
-              opacity={0}
-              {...(draggable ? draggableIconProps : undefined)}
-            />
-          </Center>
-          {children}
-        </HStack>
-
-        <Flex alignItems="center">{action}</Flex>
-      </Grid>
-    </MotionWrapper>
-  )
-}
-
-export default SingleChoiceSetup
+export default ChoiceSetup
