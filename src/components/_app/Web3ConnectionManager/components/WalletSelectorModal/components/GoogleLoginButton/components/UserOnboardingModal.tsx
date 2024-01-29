@@ -29,7 +29,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
 import { LockSimple, Question, Wallet } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
 import GoogleTerms from "../../GoogleTerms"
@@ -63,6 +63,11 @@ const UserOnboardingModal = ({
   const successPlayer = useRef<DotLottieCommonPlayer>()
 
   const isSuccess = !!isLoginSuccess && !!successPlayer
+
+  const avatar = useMemo(
+    () => <GuildAvatar address={cwaasConnector?._currentAddress?.address} />,
+    [cwaasConnector?._currentAddress?.address]
+  )
 
   // Play the success animation if everything was successful, and the player is ready
   useEffect(() => {
@@ -127,13 +132,7 @@ const UserOnboardingModal = ({
                   />
                 </Collapse>
 
-                {isSuccessAnimDone && (
-                  <Center h="full">
-                    <GuildAvatar
-                      address={cwaasConnector?._currentAddress?.address}
-                    />
-                  </Center>
-                )}
+                {isSuccessAnimDone && <Center h="full">{avatar}</Center>}
               </Box>
 
               {isSuccessAnimDone ? (
