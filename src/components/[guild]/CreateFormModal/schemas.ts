@@ -3,26 +3,41 @@ import { z } from "zod"
 /**
  * TODO: we should delete this file and use the types/schemas from our types package
  * instead
+ *
+ * TODO: we could also define custom error messages instead the generic ones, like
+ * "String must contain at least 1 character(s)"
  */
 
 const FieldBaseSchema = z.object({
   question: z.string().min(1),
-  isRequired: z.boolean().optional(),
+  isRequired: z.boolean().optional().default(false),
 })
 
 const TextAndNumberFieldSchema = FieldBaseSchema.extend({
   type: z.enum(["SHORT_TEXT", "LONG_TEXT", "NUMBER"]),
 })
 
-const SingleAndMultipleChoiceFieldSchema = FieldBaseSchema.extend({
-  type: z.enum(["SINGLE_CHOICE", "MULTIPLE_CHOICE"]),
-  options: z.array(z.string().or(z.number())),
-  allowOther: z.boolean().optional(),
+const OptionsSchema = z.object({
+  options: z.array(
+    z
+      .object({
+        value: z.string().or(z.number()),
+      })
+      .transform((item) =>
+        typeof item === "string" || typeof item === "number" ? item : item.value
+      )
+  ),
 })
 
-const RateFieldSchema = FieldBaseSchema.extend({
+const SingleAndMultipleChoiceFieldSchema = FieldBaseSchema.merge(
+  OptionsSchema
+).extend({
+  type: z.enum(["SINGLE_CHOICE", "MULTIPLE_CHOICE"]),
+  allowOther: z.boolean().optional().default(false),
+})
+
+const RateFieldSchema = FieldBaseSchema.merge(OptionsSchema).extend({
   type: z.enum(["RATE"]),
-  options: z.array(z.string().or(z.number())),
   worstLabel: z.string().optional(),
   bestLabel: z.string().optional(),
 })
@@ -54,8 +69,8 @@ const FormFromDBSchema = FormSchema.extend({
 })
 
 // Frontend formokban ezeket lehet használni
-export type CreateFieldParams = z.infer<typeof FieldSchema>
-export type CreateFormParams = z.infer<typeof FormSchema>
+export type CreateFieldParams = z.input<typeof FieldSchema>
+export type CreateFormParams = z.input<typeof FormSchema>
 // Core így adja vissza DB-ből kiolvasott dolgokat (a DB query-k eredményét át lehet tolni a megfelelő sémákon és onnantól jók lesznek a typeok is mindenhol)
 export type Field = z.infer<typeof FieldFromDBSchema>
 export type Form = z.infer<typeof FormFromDBSchema>

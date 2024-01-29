@@ -10,7 +10,7 @@ import AddCard from "components/common/AddCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { CreateFormParams } from "../schemas"
-import QuestionFormCard from "./QuestionFormCard"
+import FormCardEditable from "./FormCardEditable"
 
 const CreateFormForm = () => {
   const {
@@ -45,7 +45,7 @@ const CreateFormForm = () => {
         <Text as="span">Add questions</Text>
 
         {fields.map((field, index) => (
-          <QuestionFormCard
+          <FormCardEditable
             key={field.id}
             index={index}
             onRemove={() => remove(index)}
