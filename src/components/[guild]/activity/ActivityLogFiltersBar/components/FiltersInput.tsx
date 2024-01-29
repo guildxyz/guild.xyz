@@ -181,11 +181,7 @@ const FiltersInput = (): JSX.Element => {
         </HStack>
       </Box>
       <Dropdown ref={positionerRef} {...positionerProps}>
-        <Suggestions
-          contentProps={contentProps}
-          activeFilters={activeFilters}
-          getOptionProps={getOptionProps}
-        />
+        <Suggestions contentProps={contentProps} getOptionProps={getOptionProps} />
       </Dropdown>
     </>
   )

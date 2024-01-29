@@ -2,6 +2,7 @@ import * as combobox from "@zag-js/combobox"
 import ActivityLogRoleTag from "components/[guild]/activity/ActivityLogAction/components/ActivityLogRoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { HTMLAttributes, useMemo } from "react"
+import { useActivityLogFilters } from "../../ActivityLogFiltersContext"
 import Suggestion from "../../Suggestion"
 import NoResults from "./NoResults"
 
@@ -11,11 +12,10 @@ type Props = {
   getOptionProps: (props: combobox.OptionProps) => HTMLAttributes<HTMLElement>
 }
 
-const RoleSuggestions = ({
-  guildId,
-  inputValue,
-  getOptionProps,
-}: Props): JSX.Element => {
+const RoleSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => {
+  const { activeFilters } = useActivityLogFilters()
+  const guildId = activeFilters?.find((af) => af.filter === "guildId")?.value
+
   const { roles } = useGuild(guildId)
 
   const roleSuggestions = useMemo(
@@ -49,7 +49,7 @@ const RoleSuggestions = ({
             >
               <ActivityLogRoleTag
                 roleId={roleSuggestion.id}
-                guildId={guildId as number}
+                guildId={Number(guildId)}
               />
             </Suggestion>
           )

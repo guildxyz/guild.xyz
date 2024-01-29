@@ -2,17 +2,21 @@ import { Stack, Text } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import { HTMLAttributes, useMemo } from "react"
 import { ActivityLogType, useActivityLog } from "../../ActivityLogContext"
-import { Filter, SupportedQueryParam } from "./ActivityLogFiltersContext"
+import {
+  SupportedQueryParam,
+  useActivityLogFilters,
+} from "./ActivityLogFiltersContext"
 import Suggestion from "./Suggestion"
 
-interface Props {
+type Props = {
   contentProps: HTMLAttributes<HTMLElement>
   activityLogType: ActivityLogType
-  activeFilters: Filter[]
   getOptionProps: (props: combobox.OptionProps) => HTMLAttributes<HTMLElement>
 }
-const Suggestions = ({ contentProps, activeFilters, getOptionProps }) => {
+const Suggestions = ({ contentProps, getOptionProps }) => {
   const { activityLogType } = useActivityLog()
+  const { activeFilters } = useActivityLogFilters()
+
   const isActiveFilter = (filter: SupportedQueryParam) =>
     activeFilters?.some((af) => af.filter === filter)
 
