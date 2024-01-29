@@ -28,7 +28,6 @@ export type RequirementData = {
   readonly types: string[]
   disabled?: boolean
   isPlatform?: boolean
-  isCustomizable?: boolean
   customNameRules?: UseControllerProps["rules"]
   isNegatable?: boolean
   displayComponent: ComponentType<RequirementProps>
