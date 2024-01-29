@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import MotionWrapper from "components/common/CardMotionWrapper"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Trash } from "phosphor-react"
@@ -50,96 +51,98 @@ const FormCardEditable = ({ index, onRemove }: Props) => {
   const [isEditing, setIsEditing] = useState(true)
 
   return (
-    <Card
-      px={{ base: 5, md: 6 }}
-      py={{ base: 6, md: 7 }}
-      onClick={isEditing ? undefined : () => setIsEditing(true)}
-    >
-      <Stack spacing={2}>
-        {isEditing ? (
-          <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={2}>
-            <FormControl isInvalid={!!errors.fields?.[index]?.question}>
-              <Input
-                {...register(`fields.${index}.question`)}
-                placeholder="Question"
-              />
-              <FormErrorMessage>
-                {errors.fields?.[index]?.question?.message}
-              </FormErrorMessage>
-            </FormControl>
-
-            <FormControl>
-              <InputGroup>
-                <InputLeftElement>{selectedFieldType?.img}</InputLeftElement>
-                <ControlledSelect
-                  name={`fields.${index}.type`}
-                  options={fieldTypes}
+    <MotionWrapper>
+      <Card
+        px={{ base: 5, md: 6 }}
+        py={{ base: 6, md: 7 }}
+        onClick={isEditing ? undefined : () => setIsEditing(true)}
+      >
+        <Stack spacing={2}>
+          {isEditing ? (
+            <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={2}>
+              <FormControl isInvalid={!!errors.fields?.[index]?.question}>
+                <Input
+                  {...register(`fields.${index}.question`)}
+                  placeholder="Question"
                 />
-              </InputGroup>
-            </FormControl>
-          </Grid>
-        ) : (
-          <Text as="span" fontWeight="semibold">
-            {field?.question}
-            {isRequiredValue && (
-              <Text as="sup" color="red.400" ml={1}>
-                *
-              </Text>
-            )}
-          </Text>
-        )}
+                <FormErrorMessage>
+                  {errors.fields?.[index]?.question?.message}
+                </FormErrorMessage>
+              </FormControl>
 
-        {selectedFieldType?.SetupComponent && isEditing ? (
-          <selectedFieldType.SetupComponent index={index} />
-        ) : (
-          <selectedFieldType.DisplayComponent field={field} isDisabled />
-        )}
+              <FormControl>
+                <InputGroup>
+                  <InputLeftElement>{selectedFieldType?.img}</InputLeftElement>
+                  <ControlledSelect
+                    name={`fields.${index}.type`}
+                    options={fieldTypes}
+                  />
+                </InputGroup>
+              </FormControl>
+            </Grid>
+          ) : (
+            <Text as="span" fontWeight="semibold">
+              {field?.question}
+              {isRequiredValue && (
+                <Text as="sup" color="red.400" ml={1}>
+                  *
+                </Text>
+              )}
+            </Text>
+          )}
 
-        {isEditing && (
-          <HStack ml="auto" mt={2}>
-            <FormControl display="flex" alignItems="center">
-              <FormLabel
-                mb="0"
-                color="GrayText"
-                fontSize="sm"
-                fontWeight="bold"
-                textTransform="uppercase"
-              >
-                Required
-              </FormLabel>
-              <Switch
-                colorScheme="indigo"
-                {...isRequiredControl}
-                isChecked={isRequiredValue}
-                onChange={(e) => onIsRequiredChange(e.target.checked)}
+          {selectedFieldType?.SetupComponent && isEditing ? (
+            <selectedFieldType.SetupComponent index={index} />
+          ) : (
+            <selectedFieldType.DisplayComponent field={field} isDisabled />
+          )}
+
+          {isEditing && (
+            <HStack ml="auto" mt={2}>
+              <FormControl display="flex" alignItems="center">
+                <FormLabel
+                  mb="0"
+                  color="GrayText"
+                  fontSize="sm"
+                  fontWeight="bold"
+                  textTransform="uppercase"
+                >
+                  Required
+                </FormLabel>
+                <Switch
+                  colorScheme="indigo"
+                  {...isRequiredControl}
+                  isChecked={isRequiredValue}
+                  onChange={(e) => onIsRequiredChange(e.target.checked)}
+                />
+              </FormControl>
+              <IconButton
+                aria-label="Remove"
+                icon={<Trash />}
+                rounded="full"
+                boxSize={6}
+                minW={6}
+                minH={6}
+                variant="unstyled"
+                onClick={onRemove}
               />
-            </FormControl>
-            <IconButton
-              aria-label="Remove"
-              icon={<Trash />}
-              rounded="full"
-              boxSize={6}
-              minW={6}
-              minH={6}
-              variant="unstyled"
-              onClick={onRemove}
-            />
 
-            <Divider orientation="vertical" h={8} />
-            <Button
-              size="sm"
-              colorScheme="green"
-              minW="max-content"
-              rounded="lg"
-              isDisabled={!!errors.fields?.[index] || !field?.question}
-              onClick={() => setIsEditing(false)}
-            >
-              Done
-            </Button>
-          </HStack>
-        )}
-      </Stack>
-    </Card>
+              <Divider orientation="vertical" h={8} />
+              <Button
+                size="sm"
+                colorScheme="green"
+                minW="max-content"
+                rounded="lg"
+                isDisabled={!!errors.fields?.[index] || !field?.question}
+                onClick={() => setIsEditing(false)}
+              >
+                Done
+              </Button>
+            </HStack>
+          )}
+        </Stack>
+      </Card>
+    </MotionWrapper>
   )
 }
 

@@ -14,8 +14,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import MotionWrapper from "components/common/CardMotionWrapper"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Reorder } from "framer-motion"
+import { AnimatePresence, AnimateSharedLayout, Reorder } from "framer-motion"
 import { DotsSixVertical, X } from "phosphor-react"
 import { PropsWithChildren, ReactNode, useEffect, useRef } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
@@ -67,94 +68,103 @@ const SingleChoiceSetup = ({ index }: Props) => {
   }
 
   return (
-    <>
+    <AnimateSharedLayout>
       <Reorder.Group
         axis="y"
         values={fields.map((field) => field.id)}
         onReorder={onReorder}
       >
-        {fields.map((field, optionIndex) => (
-          <Reorder.Item
-            key={field.id}
-            value={field.id}
-            style={{
-              marginBottom: "var(--chakra-sizes-2)",
-            }}
-          >
-            <OptionLayout
-              action={<RemoveButton onClick={() => remove(optionIndex)} />}
-              draggable
+        <AnimatePresence>
+          {fields.map((field, optionIndex) => (
+            <Reorder.Item
+              key={field.id}
+              value={field.id}
+              style={{
+                marginBottom: "var(--chakra-sizes-2)",
+              }}
             >
-              <FormControl>
-                <Input
-                  {...register(`fields.${index}.options.${optionIndex}.value`)}
-                  placeholder="Add option"
-                />
-                <FormErrorMessage>
-                  {/* TODO: proper types */}
-                  {
-                    (errors.fields?.[index] as any)?.options?.[optionIndex]?.value
-                      ?.message
-                  }
-                </FormErrorMessage>
-              </FormControl>
-            </OptionLayout>
-          </Reorder.Item>
-        ))}
+              <OptionLayout
+                key={field.id}
+                action={<RemoveButton onClick={() => remove(optionIndex)} />}
+                draggable
+              >
+                <FormControl>
+                  <Input
+                    {...register(`fields.${index}.options.${optionIndex}.value`)}
+                    placeholder={"Add option" + field.id}
+                  />
+                  <FormErrorMessage>
+                    {/* TODO: proper types */}
+                    {
+                      (errors.fields?.[index] as any)?.options?.[optionIndex]?.value
+                        ?.message
+                    }
+                  </FormErrorMessage>
+                </FormControl>
+              </OptionLayout>
+            </Reorder.Item>
+          ))}
+        </AnimatePresence>
       </Reorder.Group>
 
-      <Stack mt={-2}>
-        <OptionLayout
-          action={
-            !allowOther && (
-              <HStack spacing={1} pl={1}>
-                <Text
-                  as="span"
-                  fontWeight="bold"
-                  fontSize="xs"
-                  textTransform="uppercase"
-                  colorScheme="gray"
-                >
-                  OR
-                </Text>
+      <MotionWrapper>
+        <Stack mt={-2}>
+          <AnimatePresence>
+            <OptionLayout
+              key="addOption"
+              action={
+                !allowOther && (
+                  <HStack spacing={1} pl={1}>
+                    <Text
+                      as="span"
+                      fontWeight="bold"
+                      fontSize="xs"
+                      textTransform="uppercase"
+                      colorScheme="gray"
+                    >
+                      OR
+                    </Text>
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setValue(`fields.${index}.allowOther`, true)}
-                >
-                  Add "Other"...
-                </Button>
-              </HStack>
-            )
-          }
-        >
-          <Input
-            ref={addOptionRef}
-            placeholder="Add option"
-            onChange={(e) => {
-              if (!fields.every((field) => !!field.value)) return
-              append({
-                value: e.target.value,
-              })
-              addOptionRef.current.value = ""
-            }}
-          />
-        </OptionLayout>
-
-        {allowOther && (
-          <OptionLayout
-            action={
-              <RemoveButton
-                onClick={() => setValue(`fields.${index}.allowOther`, false)}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setValue(`fields.${index}.allowOther`, true)}
+                    >
+                      Add "Other"...
+                    </Button>
+                  </HStack>
+                )
+              }
+            >
+              <Input
+                ref={addOptionRef}
+                placeholder="Add option"
+                onChange={(e) => {
+                  if (!fields.every((field) => !!field.value)) return
+                  append({
+                    value: e.target.value,
+                  })
+                  addOptionRef.current.value = ""
+                }}
               />
-            }
-          >
-            <Input placeholder="Other..." isDisabled />
-          </OptionLayout>
-        )}
-      </Stack>
-    </>
+            </OptionLayout>
+
+            {allowOther && (
+              <OptionLayout
+                key="otherOption"
+                action={
+                  <RemoveButton
+                    onClick={() => setValue(`fields.${index}.allowOther`, false)}
+                  />
+                }
+              >
+                <Input placeholder="Other..." isDisabled />
+              </OptionLayout>
+            )}
+          </AnimatePresence>
+        </Stack>
+      </MotionWrapper>
+    </AnimateSharedLayout>
   )
 }
 
@@ -190,34 +200,38 @@ const OptionLayout = ({
   children,
   action,
   draggable,
-  ...props
+  ..._props
 }: PropsWithChildren<OptionLayoutProps>) => {
   const circleBgColor = useColorModeValue("white", "blackAlpha.300")
 
-  return (
-    <Grid templateColumns="2fr 1fr" gap={2} {...props}>
-      <HStack w="full" role="group">
-        <Center
-          borderWidth={2}
-          bgColor={circleBgColor}
-          width={5}
-          height={5}
-          borderRadius="var(--chakra-sizes-2-5)"
-          flexShrink={0}
-          {...(draggable ? draggableCenterProps : undefined)}
-        >
-          <Icon
-            as={DotsSixVertical}
-            boxSize={3}
-            opacity={0}
-            {...(draggable ? draggableIconProps : undefined)}
-          />
-        </Center>
-        {children}
-      </HStack>
+  const { key, ...props } = _props
 
-      <Flex alignItems="center">{action}</Flex>
-    </Grid>
+  return (
+    <MotionWrapper key={key}>
+      <Grid templateColumns="2fr 1fr" gap={2} {...props}>
+        <HStack w="full" role="group">
+          <Center
+            borderWidth={2}
+            bgColor={circleBgColor}
+            width={5}
+            height={5}
+            borderRadius="var(--chakra-sizes-2-5)"
+            flexShrink={0}
+            {...(draggable ? draggableCenterProps : undefined)}
+          >
+            <Icon
+              as={DotsSixVertical}
+              boxSize={3}
+              opacity={0}
+              {...(draggable ? draggableIconProps : undefined)}
+            />
+          </Center>
+          {children}
+        </HStack>
+
+        <Flex alignItems="center">{action}</Flex>
+      </Grid>
+    </MotionWrapper>
   )
 }
 

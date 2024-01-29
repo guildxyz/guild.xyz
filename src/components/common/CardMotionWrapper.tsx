@@ -1,5 +1,5 @@
 import { Box, EASINGS } from "@chakra-ui/react"
-import { domMax, LazyMotion, m } from "framer-motion"
+import { LazyMotion, domMax, m } from "framer-motion"
 import { PropsWithChildren } from "react"
 
 const MotionBox = m(Box)
@@ -9,7 +9,7 @@ type Props = {
   delay?: number
 }
 
-const CardMotionWrapper = ({
+const MotionWrapper = ({
   animateOnMount = true,
   delay = 0,
   children,
@@ -38,4 +38,4 @@ const CardMotionWrapper = ({
   </LazyMotion>
 )
 
-export default CardMotionWrapper
+export default MotionWrapper

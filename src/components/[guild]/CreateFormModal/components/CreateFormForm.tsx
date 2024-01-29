@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import AddCard from "components/common/AddCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { AnimateSharedLayout } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { CreateFormParams } from "../schemas"
 import FormCardEditable from "./FormCardEditable"
@@ -44,21 +45,23 @@ const CreateFormForm = () => {
       <Stack spacing={2}>
         <Text as="span">Add questions</Text>
 
-        {fields.map((field, index) => (
-          <FormCardEditable
-            key={field.id}
-            index={index}
-            onRemove={() => remove(index)}
+        <AnimateSharedLayout>
+          {fields.map((field, index) => (
+            <FormCardEditable
+              key={field.id}
+              index={index}
+              onRemove={() => remove(index)}
+            />
+          ))}
+          <AddCard
+            title="Add question"
+            onClick={() =>
+              append({
+                type: "SHORT_TEXT",
+              })
+            }
           />
-        ))}
-        <AddCard
-          title="Add question"
-          onClick={() =>
-            append({
-              type: "SHORT_TEXT",
-            })
-          }
-        />
+        </AnimateSharedLayout>
         <FormErrorMessage>{errors.fields?.message}</FormErrorMessage>
       </Stack>
     </Stack>
