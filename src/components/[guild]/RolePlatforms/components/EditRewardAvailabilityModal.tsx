@@ -53,12 +53,12 @@ const getShortDate = (isoDate: string): string | undefined => {
 }
 
 const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => {
-  if (!datetimeLocal) return undefined
+  if (!datetimeLocal) return null
 
   try {
     return new Date(datetimeLocal).toISOString()
   } catch {
-    return undefined
+    return null
   }
 }
 
