@@ -52,7 +52,7 @@ const getShortDate = (isoDate: string): string | undefined => {
   return isoDate.split(/:\d{2}\.\d{3}Z/)[0]
 }
 
-const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => {
+const datetimeLocalToIsoString = (datetimeLocal: string): string | null => {
   if (!datetimeLocal) return null
 
   try {
