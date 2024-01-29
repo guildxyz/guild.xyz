@@ -54,12 +54,11 @@ const CreateFormModal = (props: Props) => {
             <Button
               colorScheme="green"
               rightIcon={<ArrowRight />}
-              // onClick={methods.handleSubmit(onSubmit, console.error)}
-              onClick={methods.handleSubmit(console.log, console.log)}
+              onClick={methods.handleSubmit(onSubmit, console.error)}
               loadingText="Creating form"
               isLoading={isLoading}
             >
-              Create
+              Create form & continue
             </Button>
           </ModalFooter>
         </ModalContent>
