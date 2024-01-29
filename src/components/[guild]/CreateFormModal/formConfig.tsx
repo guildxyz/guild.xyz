@@ -9,9 +9,11 @@ import {
 import { ComponentType } from "react"
 import { SelectOption } from "types"
 import LongText from "./components/Display/LongText"
+import MultipleChoice from "./components/Display/MultipleChoice"
 import Number from "./components/Display/Number"
 import ShortText from "./components/Display/ShortText"
 import SingleChoice from "./components/Display/SingleChoice"
+import MultipleChoiceSetup from "./components/Setup/MultipleChoiceSetup"
 import SingleChoiceSetup from "./components/Setup/SingleChoiceSetup"
 import { CreateFieldParams, Field } from "./schemas"
 
@@ -53,8 +55,8 @@ const fieldTypes: (SelectOption<Field["type"]> & {
     label: "Multiple choice",
     value: "MULTIPLE_CHOICE",
     img: <OptionIcon as={CheckSquare} />,
-    SetupComponent: () => <>TODO</>,
-    DisplayComponent: () => <>TODO</>,
+    SetupComponent: MultipleChoiceSetup,
+    DisplayComponent: MultipleChoice,
   },
   {
     label: "Rate",
