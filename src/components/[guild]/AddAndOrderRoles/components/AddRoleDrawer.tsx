@@ -62,18 +62,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     visibility: Visibility.PUBLIC,
-    rolePlatforms: discordPlatform
-      ? [
-          {
-            id: undefined,
-            guildPlatformId: discordPlatform.id,
-            platformRoleId: null,
-            platformRoleData: {},
-            isNew: true,
-            visibility: Visibility.PUBLIC,
-          },
-        ]
-      : [],
+    rolePlatforms: [],
   }
 
   const methods = useForm({

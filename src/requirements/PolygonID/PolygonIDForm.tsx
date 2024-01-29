@@ -31,6 +31,7 @@ const PolygonIDForm = ({
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const selected = polygonIDRequirementTypes.find(
     (reqType) => reqType.value === type
@@ -62,6 +63,7 @@ const PolygonIDForm = ({
           rules={{ required: "It's required to select a type" }}
           options={polygonIDRequirementTypes}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

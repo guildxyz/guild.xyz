@@ -40,6 +40,7 @@ const NavMenu = (): JSX.Element => {
     <Popover placement="bottom-start">
       <PopoverTrigger>
         <Button
+          className="navMenu"
           aria-label="Navigation menu"
           rightIcon={<Icon as={List} mt="1px" />}
           iconSpacing="3"

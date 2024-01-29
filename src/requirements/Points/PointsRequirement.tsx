@@ -26,9 +26,9 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
   const { name, urlName, guildPlatforms } = useGuild(guildId)
   const { id: currentGuildId } = useGuild()
 
-  if (!guildPlatforms) return <RequirementSkeleton />
+  const pointsReward = guildPlatforms?.find((gp) => gp.id === guildPlatformId)
 
-  const pointsReward = guildPlatforms.find((gp) => gp.id === guildPlatformId)
+  if (!pointsReward) return <RequirementSkeleton />
 
   return (
     <Requirement
@@ -69,9 +69,10 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
   const { name, urlName, guildPlatforms } = useGuild(guildId)
   const { id: currentGuildId } = useGuild()
 
-  if (!guildPlatforms) return <RequirementSkeleton />
+  const pointsReward = guildPlatforms?.find((gp) => gp.id === guildPlatformId)
 
-  const pointsReward = guildPlatforms.find((gp) => gp.id === guildPlatformId)
+  if (!pointsReward) return <RequirementSkeleton />
+
   const pointsName = pointsReward.platformGuildData.name || "points"
 
   return (

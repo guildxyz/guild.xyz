@@ -11,9 +11,8 @@ import {
   Spacer,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
-import useSWRImmutable from "swr/immutable"
 import { PlatformType, Role } from "types"
+import useClaimedRoles from "../hooks/useClaimedRoles"
 import MintableRole, { MintableRoleSkeleton } from "./MintableRole"
 
 type Props = {
@@ -22,11 +21,8 @@ type Props = {
 }
 
 const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
-  const { id: userId } = useUser()
-  const { id: guildId, roles, guildPlatforms } = useGuild()
-  const { isLoading, error } = useSWRImmutable(
-    `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
-  )
+  const { roles, guildPlatforms } = useGuild()
+  const { isLoading, error } = useClaimedRoles()
 
   const guildPlatformId = guildPlatforms.find(
     (platform) => platform.platformId === PlatformType.POLYGON_ID

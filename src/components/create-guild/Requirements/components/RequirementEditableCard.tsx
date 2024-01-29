@@ -24,7 +24,6 @@ import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
-import useDeletePoapRequirement from "../hooks/useDeletePoapRequirement"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
@@ -57,9 +56,6 @@ const RequirementEditableCard = ({
   const roleId = formState?.defaultValues?.id
 
   const isPoap = !!formState?.defaultValues?.poapId
-  const poapId = formState?.defaultValues?.poapId
-
-  const isCustomizable = REQUIREMENTS[type]?.isCustomizable
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
 
@@ -68,15 +64,6 @@ const RequirementEditableCard = ({
     isLoading: isRequirementDeleteLoading,
     isSigning: isRequirementDeleteSigning,
   } = useDeleteRequirement(roleId, requirementId)
-
-  const {
-    onSubmit: onDeletePoapRequirement,
-    isLoading: isPoapRequirementDeleteLoading,
-    isSigning: isPoapRequirementDeleteSigning,
-  } = useDeletePoapRequirement(poapId, requirementId, () => {
-    removeRequirement(index)
-    onRequirementDeleteClose()
-  })
 
   const {
     isOpen: isAlertOpen,
@@ -112,26 +99,13 @@ const RequirementEditableCard = ({
     }
   }
 
-  const onConfirmDelete = () => {
-    if (isPoap) {
-      onDeletePoapRequirement()
-    } else {
-      onDeleteRequirement()
-    }
-  }
-
   const requirementDeleteConfitmationAlert = (
     <ConfirmationAlert
       finalFocusRef={closeButtonRef}
-      isLoading={
-        isPoapRequirementDeleteLoading ||
-        isPoapRequirementDeleteSigning ||
-        isRequirementDeleteLoading ||
-        isRequirementDeleteSigning
-      }
+      isLoading={isRequirementDeleteLoading || isRequirementDeleteSigning}
       isOpen={isRequirementDeleteOpen}
       onClose={onRequirementDeleteClose}
-      onConfirm={() => onConfirmDelete()}
+      onConfirm={() => onDeleteRequirement()}
       title="Delete requirement"
       description="Are you sure you want to delete this requirement?"
       confirmationText="Delete requirement"
@@ -179,8 +153,8 @@ const RequirementEditableCard = ({
               setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
-              imageWrapper={isCustomizable ? RequirementImageEditor : undefined}
-              childrenWrapper={isCustomizable ? RequirementNameEditor : undefined}
+              imageWrapper={RequirementImageEditor}
+              childrenWrapper={RequirementNameEditor}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>

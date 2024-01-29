@@ -1,6 +1,5 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
-import usePoapLinks from "components/[guild]/CreatePoap/hooks/usePoapLinks"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
@@ -8,7 +7,6 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useUserPoapEligibility from "components/[guild]/claim-poap/hooks/useUserPoapEligibility"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
@@ -26,7 +24,6 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const {
     id,
     roleId,
-    poapId,
     chain,
     address,
     data: requirementData,
@@ -64,11 +61,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     : tokenData?.symbol
 
   const { data: accessData } = useAccess(roleId ?? 0)
-  // temporary until POAPs are real roles
-  const { data: poapAccessData } = useUserPoapEligibility(poapId)
-  const { poapLinks } = usePoapLinks(poapId)
 
-  const satisfiesRequirement = (accessData || poapAccessData)?.requirements?.find(
+  const satisfiesRequirement = accessData?.requirements?.find(
     (req) => req.requirementId === id
   )?.access
 
@@ -79,8 +73,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
       rightElement={
         props?.rightElement ? (
           <GuildCheckoutProvider>
-            {(satisfiesRequirement && !multiplePayments) ||
-            (poapLinks && poapLinks?.claimed === poapLinks?.total) ? (
+            {satisfiesRequirement && !multiplePayments ? (
               props?.rightElement
             ) : (
               <BuyPass />

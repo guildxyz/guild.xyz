@@ -23,6 +23,7 @@ import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
+import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import { useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, Visibility } from "types"
@@ -255,9 +256,11 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
       </Head>
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
-          <JoinModalProvider>
-            <GroupPage />
-          </JoinModalProvider>
+          <MintPolygonIDProofProvider>
+            <JoinModalProvider>
+              <GroupPage />
+            </JoinModalProvider>
+          </MintPolygonIDProofProvider>
         </ThemeProvider>
       </SWRConfig>
     </>
