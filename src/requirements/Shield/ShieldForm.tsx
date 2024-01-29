@@ -43,6 +43,8 @@ const ShieldForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
+  const isEditMode = !!field?.id
+
   const { errors } = useFormState()
 
   const selected = shieldRequirementTypes.find((reqType) => reqType.value === type)
@@ -58,6 +60,7 @@ const ShieldForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={shieldRequirementTypes}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

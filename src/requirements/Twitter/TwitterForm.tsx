@@ -103,6 +103,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { resetField } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const selected = twitterRequirementTypes.find((reqType) => reqType.value === type)
 
@@ -123,6 +124,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={twitterRequirementTypes}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

@@ -31,6 +31,8 @@ const FuelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   const selected = fuelRequirementTypes.find((reqType) => reqType.value === type)
 
+  const isEditMode = !!field?.id
+
   const resetFields = () => {
     setValue(`${baseFieldPath}.address`, undefined)
     setValue(`${baseFieldPath}.data.minAmount`, undefined)
@@ -57,6 +59,7 @@ const FuelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={fuelRequirementTypes}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>
