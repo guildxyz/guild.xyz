@@ -81,9 +81,7 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_FOLLOWER_COUNT":
             return (
               <Text as="span">
-                {"Have at least "}
-                <DataBlock>{pluralize(minAmount, "follower")}</DataBlock>
-                {" on X"}
+                {`Have at least ${pluralize(minAmount, "follower")} on X`}
               </Text>
             )
           case "TWITTER_FOLLOWING_COUNT":
