@@ -28,6 +28,7 @@ import { KeyboardEvent } from "react"
 import { useWatch } from "react-hook-form"
 import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
 import capitalize from "utils/capitalize"
+import slugify from "utils/slugify"
 import TemplateRequriements from "./TemplateRequriements"
 
 type Template = {
@@ -78,6 +79,7 @@ const TemplateCard = ({
 
   return (
     <Box
+      data-test={`role-${slugify(role.name)}`}
       shadow={part === 0 ? "sm" : "md"}
       tabIndex={0}
       onClick={() => onClick(name)}
@@ -241,6 +243,8 @@ const TemplateCard = ({
         >
           {selected ? (
             <Circle
+              id={`role-checkbox`}
+              data-test={`selected-role-${slugify(role.name)}`}
               bgColor="green.500"
               color="white"
               size={6}
@@ -251,6 +255,7 @@ const TemplateCard = ({
             </Circle>
           ) : (
             <Circle
+              id={`role-checkbox`}
               borderColor={"gray"}
               borderStyle={"solid"}
               borderWidth={2}
