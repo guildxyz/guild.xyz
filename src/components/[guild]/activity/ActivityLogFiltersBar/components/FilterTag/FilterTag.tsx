@@ -307,53 +307,53 @@ const FilterTag = ({
         )}
       </Tag>
 
-      {["guildId", "roleId", "rolePlatformId", "action"].includes(filter) && (
-        <Dropdown
-          {...{
-            ...positionerProps,
-            style: { ...positionerProps.style, ...positionerStyle },
-          }}
-        >
-          <Stack spacing={0} {...contentProps}>
-            {(() => {
-              switch (filter) {
-                case "guildId":
-                  if (isSuperadminActivityLog) return <></>
-                  return (
-                    <GuildSuggestions
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                case "roleId":
-                  return (
-                    <RoleSuggestions
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                case "rolePlatformId":
-                  return (
-                    <RewardSuggestions
-                      guildId={guildId}
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                case "action":
-                  return (
-                    <ActionSuggestons
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                default:
-                  return null
-              }
-            })()}
-          </Stack>
-        </Dropdown>
-      )}
+      {["guildId", "roleId", "rolePlatformId", "action"].includes(filter) &&
+        !(isSuperadminActivityLog && filter == "guildId") && (
+          <Dropdown
+            {...{
+              ...positionerProps,
+              style: { ...positionerProps.style, ...positionerStyle },
+            }}
+          >
+            <Stack spacing={0} {...contentProps}>
+              {(() => {
+                switch (filter) {
+                  case "guildId":
+                    return (
+                      <GuildSuggestions
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  case "roleId":
+                    return (
+                      <RoleSuggestions
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  case "rolePlatformId":
+                    return (
+                      <RewardSuggestions
+                        guildId={guildId}
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  case "action":
+                    return (
+                      <ActionSuggestons
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  default:
+                    return null
+                }
+              })()}
+            </Stack>
+          </Dropdown>
+        )}
     </>
   )
 }
