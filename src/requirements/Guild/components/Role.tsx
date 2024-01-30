@@ -37,7 +37,7 @@ const Role = ({ baseFieldPath, isRelative = false }: Props): JSX.Element => {
       roles
         ?.filter((role) => {
           const createdAt = role.createdAt ? new Date(role.createdAt) : null
-          return !isRelative && createdAt ? maxAmount < createdAt : true
+          return !isRelative && maxAmount && createdAt ? maxAmount < createdAt : true
         })
         .map((role) => ({
           img: role.imageUrl,
