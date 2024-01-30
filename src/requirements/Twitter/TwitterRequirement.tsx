@@ -13,11 +13,11 @@ import XLogo from "static/icons/x.svg"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import pluralize from "../../utils/pluralize"
 import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
-import pluralize from "../../utils/pluralize"
 
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
@@ -95,7 +95,7 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_TWEET_COUNT":
             return (
               <Text as="span">
-                {`Have at least ${pluralize(minAmount, " post")}`}
+                {`Have at least ${pluralize(minAmount, "post")}`}
               </Text>
             )
           case "TWITTER_LIKE_COUNT":
