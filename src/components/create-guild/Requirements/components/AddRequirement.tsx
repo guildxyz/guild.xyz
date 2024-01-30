@@ -284,7 +284,7 @@ const AddRequirementHome = forwardRef(
                 filteredIntegrations.map((requirementButton) => (
                   <CardMotionWrapper key={requirementButton.types[0]}>
                     <Tooltip
-                      isDisabled={!requirementButton.isDisabled}
+                      isDisabled={!(requirementButton as any).isDisabled}
                       label="Temporarily unavailable"
                       hasArrow
                     >
@@ -302,7 +302,7 @@ const AddRequirementHome = forwardRef(
                         rightIcon={<Icon as={CaretRight} />}
                         iconSpacing={4}
                         onClick={() => setSelectedType(requirementButton.types[0])}
-                        isDisabled={requirementButton.isDisabled}
+                        isDisabled={(requirementButton as any).isDisabled}
                         sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
                       >
                         {requirementButton.name}
