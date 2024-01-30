@@ -16,10 +16,7 @@ import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
 import TwitterListLink from "./components/TwitterListLink"
 import TwitterTweetLink from "./components/TwitterTweetLink"
 import TwitterUserLink from "./components/TwitterUserLink"
-
-// todo if it's working well I can change the original pluralize function
-const pluralize = (count: number, noun: string, plural: string = null) =>
-  `${count ?? 0} ${count !== 1 ? (plural ? plural : `${noun}s`) : noun}`
+import pluralize from "../../utils/pluralize"
 
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
@@ -62,7 +59,7 @@ const TwitterRequirement = (props: RequirementProps) => {
       {...props}
     >
       {(() => {
-        const minCount = Math.floor(requirement.data?.minAmount)
+        const minAmount = Math.floor(requirement.data?.minAmount)
 
         switch (requirement.type) {
           case "TWITTER_NAME":
@@ -85,7 +82,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <Text as="span">
                 {"Have at least "}
-                <DataBlock>{pluralize(minCount, "follower")}</DataBlock>
+                <DataBlock>{pluralize(minAmount, "follower")}</DataBlock>
                 {" on X"}
               </Text>
             )
@@ -93,7 +90,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <Text as="span">
                 {"Follow at least "}
-                <DataBlock>{pluralize(minCount, "account")}</DataBlock>
+                <DataBlock>{pluralize(minAmount, "account")}</DataBlock>
                 {" on X"}
               </Text>
             )
@@ -102,14 +99,14 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <Text as="span">
                 {"Have at least "}
-                <DataBlock>{pluralize(minCount, " post")}</DataBlock>
+                <DataBlock>{pluralize(minAmount, " post")}</DataBlock>
               </Text>
             )
           case "TWITTER_LIKE_COUNT":
             return (
               <Text as="span">
                 {"Have given at least "}
-                <DataBlock>{pluralize(minCount, "like")}</DataBlock>
+                <DataBlock>{pluralize(minAmount, "like")}</DataBlock>
                 {` on X`}
               </Text>
             )
