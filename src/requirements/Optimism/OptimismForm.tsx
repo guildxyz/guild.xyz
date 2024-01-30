@@ -19,7 +19,10 @@ const typeOptions = [
   },
 ]
 
-const OptimismForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const OptimismForm = ({
+  baseFieldPath,
+  field,
+}: RequirementFormProps): JSX.Element => {
   const {
     register,
     resetField,
@@ -34,6 +37,8 @@ const OptimismForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   }, [register])
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+
+  const isEditMode = !!field?.id
 
   const selected = typeOptions.find((reqType) => reqType.value === type)
 
@@ -56,6 +61,7 @@ const OptimismForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           rules={{ required: "It's required to select a type" }}
           options={typeOptions}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

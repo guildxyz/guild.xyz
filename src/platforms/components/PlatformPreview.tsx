@@ -32,7 +32,7 @@ const PlatformPreview = ({
 
   return (
     <HStack spacing={4}>
-      <SkeletonCircle boxSize={12} isLoaded={!isLoading}>
+      <SkeletonCircle boxSize={12} isLoaded={!isLoading} flexShrink={0}>
         {image ? (
           typeof image === "string" ? (
             <Img boxSize={12} src={image} alt="Reward image" borderRadius="full" />
@@ -53,7 +53,7 @@ const PlatformPreview = ({
 
       <Stack spacing={0.5} fontFamily="body">
         <Skeleton isLoaded={!isLoading}>
-          <Text as="span" fontSize="lg">
+          <Text as="span" fontSize="lg" noOfLines={1}>
             {name ?? `${platforms[type]?.name ?? "Unknown"} reward`}
           </Text>
         </Skeleton>

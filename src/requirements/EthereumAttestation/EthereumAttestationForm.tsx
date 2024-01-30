@@ -19,6 +19,7 @@ const typeOptions = [
 
 const EthereumAttestationForm = ({
   baseFieldPath,
+  field,
 }: RequirementFormProps): JSX.Element => {
   const {
     resetField,
@@ -26,6 +27,7 @@ const EthereumAttestationForm = ({
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.data.schemaId`)
@@ -48,6 +50,7 @@ const EthereumAttestationForm = ({
           rules={{ required: "It's required to select a type" }}
           options={typeOptions}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

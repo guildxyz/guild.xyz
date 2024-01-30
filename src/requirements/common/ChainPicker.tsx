@@ -101,6 +101,7 @@ const ChainPicker = ({
             afterOnChange={onChangeHandler}
             isDisabled={isDisabled}
             data-test="chain-picker-input"
+            menuPlacement="top"
           />
         </InputGroup>
       </FormControl>

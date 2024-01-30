@@ -18,7 +18,7 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
   )
   const rolePlatform = roles
     .flatMap((role) => role.rolePlatforms)
-    .find((rp) => rp.guildPlatformId === guildPlatform.id)
+    .find((rp) => rp.guildPlatformId === guildPlatform?.id)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 

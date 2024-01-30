@@ -85,11 +85,7 @@ const CollectNftButton = ({
       : "Checking your balance"
 
   const isDisabled =
-    shouldSwitchNetwork ||
-    !hasAccess ||
-    alreadyCollected ||
-    !isSufficientBalance ||
-    isLoading
+    shouldSwitchNetwork || !hasAccess || alreadyCollected || !isSufficientBalance
 
   return (
     <Button

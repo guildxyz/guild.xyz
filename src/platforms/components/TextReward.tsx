@@ -20,9 +20,12 @@ import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import { useAccount } from "wagmi"
+import { useClaimedReward } from "../../hooks/useClaimedReward"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
+
+  const { claimed } = useClaimedReward(platform.id)
 
   const {
     onSubmit,
@@ -49,10 +52,11 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       const endTimeDiff = getTimeDiff(platform?.endTime)
 
       if (
-        startTimeDiff > 0 ||
-        endTimeDiff < 0 ||
-        (typeof platform?.capacity === "number" &&
-          platform?.capacity === platform?.claimedCount)
+        (startTimeDiff > 0 ||
+          endTimeDiff < 0 ||
+          (typeof platform?.capacity === "number" &&
+            platform?.capacity === platform?.claimedCount)) &&
+        !claimed
       )
         return {
           tooltipLabel:
@@ -86,7 +90,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected, platform])
+  }, [claimed, isMember, hasAccess, isConnected, platform])
 
   return (
     <>

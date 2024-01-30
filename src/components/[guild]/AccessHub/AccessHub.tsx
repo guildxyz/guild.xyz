@@ -12,10 +12,9 @@ import ClientOnly from "components/common/ClientOnly"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import PoapCardMenu from "platforms/Poap/PoapCardMenu"
+import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
-import PoapRewardCard from "../CreatePoap/components/PoapRewardCard"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -37,10 +36,8 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
   )
-  const relevantGuildPlatforms = guildPlatforms.filter(
-    (gp) =>
-      relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.POINTS
+  const relevantGuildPlatforms = guildPlatforms.filter((gp) =>
+    relevantGuildPlatformIds.includes(gp.id)
   )
 
   const { isAdmin } = useGuildPermission()
@@ -81,7 +78,6 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 const AccessHub = (): JSX.Element => {
   const {
     id: guildId,
-    poaps,
     featureFlags,
     guildPin,
     groups,
@@ -90,14 +86,17 @@ const AccessHub = (): JSX.Element => {
 
   const group = useRoleGroup()
 
-  const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
+  const allAccessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
+
+  const accessedGuildPlatforms = allAccessedGuildPlatforms.filter(
+    (gp) => gp.platformId !== PlatformType.POINTS
+  )
+  const accessedGuildPoints = allAccessedGuildPlatforms.filter(
+    (gp) => gp.platformId === PlatformType.POINTS
+  )
+
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
-
-  const futurePoaps = poaps?.filter((poap) => {
-    const currentTime = Date.now() / 1000
-    return poap.expiryDate > currentTime
-  })
 
   const shouldShowGuildPin =
     !group &&
@@ -122,7 +121,7 @@ const AccessHub = (): JSX.Element => {
         >
           {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-          {(accessedGuildPlatforms?.length > 0 || futurePoaps?.length > 0) && (
+          {allAccessedGuildPlatforms?.length > 0 && (
             <>
               {accessedGuildPlatforms.map((platform) => {
                 if (!platforms[PlatformType[platform.platformId]]) return null
@@ -158,23 +157,19 @@ const AccessHub = (): JSX.Element => {
                 )
               })}
 
-              {/* Custom logic for Chainlink */}
-              {(isAdmin || guildId !== 16389) &&
-                futurePoaps.map((poap) => (
-                  <PoapRewardCard
-                    key={poap?.id}
-                    guildPoap={poap}
-                    cornerButton={isAdmin && <PoapCardMenu guildPoap={poap} />}
-                  />
-                ))}
+              {accessedGuildPoints.map((pointPlatform) => (
+                <PointsRewardCard
+                  key={pointPlatform.id}
+                  guildPlatform={pointPlatform}
+                />
+              ))}
             </>
           )}
 
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
             !shouldShowGuildPin &&
-            !accessedGuildPlatforms?.length &&
-            !futurePoaps?.length && (
+            !accessedGuildPlatforms?.length && (
               <Card>
                 <Alert status="info" h="full">
                   <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
