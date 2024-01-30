@@ -114,7 +114,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <Text as="span">
                 Have a verified X account
-                {requirement.data?.id && (
+                {requirement.data?.id !== "any" && (
                   <>
                     {" ("}
                     <DataBlockWithCopy text={requirement.data.id} />)
