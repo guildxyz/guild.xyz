@@ -95,7 +95,7 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_TWEET_COUNT":
             return (
               <Text as="span">
-                {`Have at least ${pluralize(minAmount, "post")}`}
+                {`Have at least ${pluralize(minAmount, "post")} on X`}
               </Text>
             )
           case "TWITTER_LIKE_COUNT":
@@ -109,10 +109,9 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_ACCOUNT_VERIFIED":
             return (
               <Text as="span">
-                Have a verified X account
-                {requirement.data?.id !== "any" && (
-                  <>{` (${requirement.data.id})`}</>
-                )}
+                {`Have a verified ${
+                  requirement.data?.id !== "any" ? requirement.data.id : ""
+                } X account`}
               </Text>
             )
           case "TWITTER_FOLLOW":
@@ -169,10 +168,11 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_RETWEET_V2":
             return (
               <>
+                {"Repost "}
                 <TwitterIntent type="link" action="repost">
-                  Repost
+                  this post
+                  <Icon as={ArrowSquareOut} mx="1" />
                 </TwitterIntent>
-                {" on X"}
               </>
             )
           case "TWITTER_LIST_MEMBER":
