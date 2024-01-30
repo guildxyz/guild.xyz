@@ -86,9 +86,9 @@ const ActivityLog = (): JSX.Element => {
 }
 
 const ActivityLogWrapper = (): JSX.Element => {
-  const { isSuperAdmin } = useUser()
+  const { id, isSuperAdmin } = useUser()
 
-  if (!isSuperAdmin) return <ErrorPage statusCode={404} />
+  if (id && !isSuperAdmin) return <ErrorPage statusCode={404} />
 
   return (
     <ThemeProvider>
