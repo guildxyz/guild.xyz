@@ -7,7 +7,7 @@ type ValueType = "any" | "blue" | "business" | "government"
 
 const options: SelectOption<ValueType>[] = [
   {
-    label: "One of them",
+    label: "Any",
     value: "any",
   },
   {

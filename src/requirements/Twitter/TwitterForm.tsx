@@ -44,16 +44,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       TwitterRequirement: TwitterUserInput,
     },
     {
-      label: "Follow at least x users",
-      value: "TWITTER_FOLLOWING_COUNT",
-      TwitterRequirement: TwitterMinimumCount,
-    },
-    {
-      label: "Have at least x posts",
-      value: "TWITTER_TWEET_COUNT",
-      TwitterRequirement: TwitterMinimumCount,
-    },
-    {
       label: "Like post",
       value: "TWITTER_LIKE_V2",
       TwitterRequirement: TwitterTweetInput,
@@ -75,9 +65,14 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     },
     { label: "Have protected account", value: "TWITTER_ACCOUNT_PROTECTED" },
     {
-      label: "Be a member of list",
-      value: "TWITTER_LIST_MEMBER",
-      TwitterRequirement: TwitterListInput,
+      label: "Follow at least x users",
+      value: "TWITTER_FOLLOWING_COUNT",
+      TwitterRequirement: TwitterMinimumCount,
+    },
+    {
+      label: "Have at least x posts",
+      value: "TWITTER_TWEET_COUNT",
+      TwitterRequirement: TwitterMinimumCount,
     },
     {
       label: "Give at least x total likes",
@@ -99,15 +94,20 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     //   value: "TWITTER_LIST_FOLLOW",
     //   TwitterRequirement: TwitterListInput,
     // },
+    {
+      label: "Be a member of list",
+      value: "TWITTER_LIST_MEMBER",
+      TwitterRequirement: TwitterListInput,
+    },
     ...(featureFlags?.includes("TWITTER_EXTRA_REQUIREMENT")
       ? [
           {
-            label: "Like tweet (legacy)",
+            label: "Like post (legacy)",
             value: "TWITTER_LIKE",
             TwitterRequirement: TwitterTweetInput,
           },
           {
-            label: "Retweet tweet (legacy)",
+            label: "Repost (legacy)",
             value: "TWITTER_RETWEET",
             TwitterRequirement: TwitterTweetInput,
           },

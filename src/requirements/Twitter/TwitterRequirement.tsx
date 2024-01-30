@@ -22,7 +22,7 @@ import pluralize from "../../utils/pluralize"
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
   TWITTER_LIKE_V2: "like",
-  TWITTER_RETWEET_V2: "retweet",
+  TWITTER_RETWEET_V2: "repost",
 }
 
 // https://help.twitter.com/en/managing-your-account/twitter-username-rules
@@ -169,7 +169,7 @@ const TwitterRequirement = (props: RequirementProps) => {
           case "TWITTER_RETWEET_V2":
             return (
               <>
-                <TwitterIntent type="link" action="retweet">
+                <TwitterIntent type="link" action="repost">
                   Repost
                 </TwitterIntent>
                 {" on X"}
