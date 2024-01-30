@@ -4,6 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import GuildSelect from "requirements/common/GuildSelect"
 import parseFromObject from "utils/parseFromObject"
 import GuildAdmin from "./components/GuildAdmin"
 import MinGuilds from "./components/MinGuilds"
@@ -31,15 +32,21 @@ const guildRequirementTypes = [
     value: "GUILD_ADMIN",
     GuildRequirement: GuildAdmin,
   },
+  {
+    label: "Be a guild member",
+    value: "GUILD_MEMBER",
+    GuildRequirement: GuildSelect,
+  },
 ]
 
-const GuildForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const { errors, touchedFields } = useFormState()
   const { resetField } = useFormContext()
 
   const selected = guildRequirementTypes.find((reqType) => reqType.value === type)
+  const isEditMode = !!field?.id
 
   useEffect(() => {
     if (!touchedFields?.data) return
@@ -60,6 +67,7 @@ const GuildForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={guildRequirementTypes}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

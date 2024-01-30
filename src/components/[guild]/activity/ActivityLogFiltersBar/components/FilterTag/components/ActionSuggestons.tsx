@@ -1,7 +1,13 @@
 import { Text } from "@chakra-ui/react"
 import * as combobox from "@zag-js/combobox"
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
-import { ACTION } from "components/[guild]/activity/constants"
+import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
+import {
+  ACTION,
+  ActivityLogActionGroup,
+  HIDDEN_ACTIONS,
+  USER_ACTIONS,
+} from "components/[guild]/activity/constants"
 import { HTMLAttributes, useMemo } from "react"
 import capitalize from "utils/capitalize"
 import Suggestion from "../../Suggestion"
@@ -12,29 +18,29 @@ type Props = {
   getOptionProps: (props: combobox.OptionProps) => HTMLAttributes<HTMLElement>
 }
 
-const HIDDEN_ACTIONS: (keyof typeof ACTION)[] = [
-  "UpdateUrlName",
-  "UpdateLogoOrTitle",
-  "UpdateDescription",
-  "UpdateLogic",
-  "UpdateTheme",
-]
-
 const ACTIVITY_LOG_ACTIONS = Object.entries(ACTION)
   .filter(([actionType]) => !HIDDEN_ACTIONS.includes(ACTION[actionType]))
   .map(([, actionName]) => actionName)
 
 const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element => {
+  const { actionGroup } = useActivityLog()
+
   const actionSuggestions = useMemo(
     () =>
       ACTIVITY_LOG_ACTIONS.filter((action) => {
         const lowerCaseInputValue = inputValue.toLowerCase()
-        return (
-          action.includes(lowerCaseInputValue) ||
-          "action".includes(lowerCaseInputValue)
-        )
+
+        const isInputMatch = action.toLowerCase().includes(lowerCaseInputValue)
+        if (!actionGroup) return isInputMatch
+
+        const isInGroup =
+          actionGroup === ActivityLogActionGroup.UserAction
+            ? USER_ACTIONS.includes(action)
+            : !USER_ACTIONS.includes(action)
+
+        return isInputMatch && isInGroup
       }),
-    [inputValue]
+    [inputValue, actionGroup]
   )
 
   return (

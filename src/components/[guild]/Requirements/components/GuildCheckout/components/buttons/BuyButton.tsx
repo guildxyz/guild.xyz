@@ -2,10 +2,8 @@ import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
-import fetcher from "utils/fetcher"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
@@ -15,8 +13,7 @@ import { useGuildCheckoutContext } from "../GuildCheckoutContex"
 
 const BuyButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
-  const { urlName, id: guildId } = useGuild()
-  const toast = useToast()
+  const { urlName } = useGuild()
 
   const { address } = useAccount()
   const chainId = useChainId()
@@ -50,18 +47,7 @@ const BuyButton = (): JSX.Element => {
     isLoading,
   } = usePayFee()
 
-  // temporary (in it's current form) until POAPs are real roles and there's a capacity attribute
   const handleSubmit = async () => {
-    if (requirement?.poapId) {
-      const poapLinks = await fetcher(
-        `/v2/guilds/${guildId}/poaps/${requirement.poapId}/links`
-      )
-      if (poapLinks?.claimed === poapLinks?.total)
-        return toast({
-          status: "error",
-          title: "All available POAPs have already been claimed",
-        })
-    }
     payFee()
     captureEvent("Click: BuyButton (GuildCheckout)", {
       guild: urlName,

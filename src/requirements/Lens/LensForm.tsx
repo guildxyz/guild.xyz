@@ -56,6 +56,7 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -74,6 +75,7 @@ const LensForm = ({ baseFieldPath, field }: RequirementFormProps) => {
             setValue(`${baseFieldPath}.data.id`, "")
             setValue(`${baseFieldPath}.data.min`, "")
           }}
+          isDisabled={isEditMode}
         />
       </FormControl>
 

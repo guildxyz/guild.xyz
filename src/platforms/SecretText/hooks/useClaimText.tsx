@@ -20,6 +20,7 @@ import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { useClaimedReward } from "../../../hooks/useClaimedReward"
 
 type ClaimResponse = {
   uniqueValue: string
@@ -30,6 +31,7 @@ const joinFetcher = (signedValidation: SignedValdation) =>
 
 const useClaimText = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
+  const { uniqueValue } = useClaimedReward(rolePlatformId)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -66,7 +68,7 @@ const useClaimText = (rolePlatformId: number) => {
         mutateCachedResponse(response)
         mutateGuild((prevGuild) => ({
           ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
+          roles: prevGuild?.roles.map((role) => {
             if (!role.rolePlatforms?.some((rp) => rp.id === rolePlatformId))
               return role
 
@@ -99,7 +101,7 @@ const useClaimText = (rolePlatformId: number) => {
 
   return {
     error: claim.error ?? join.error,
-    response: responseFromCache ?? claim.response,
+    response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
     isLoading: claim.isLoading || join.isLoading,
     onSubmit: () => join.onSubmit({ guildId }),
     modalProps: {

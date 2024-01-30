@@ -8,21 +8,21 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import ErrorAlert from "components/common/ErrorAlert"
-import Layout from "components/common/Layout"
-import BackButton from "components/common/Layout/components/BackButton"
-import { SectionTitle } from "components/common/Section"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 import ActivityLogAction from "components/[guild]/activity/ActivityLogAction"
 import {
   ActivityLogProvider,
   useActivityLog,
 } from "components/[guild]/activity/ActivityLogContext"
-import ActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar"
+import UserActivityLogFiltersBar from "components/[guild]/activity/ActivityLogFiltersBar/UserActivityLogFiltersBar"
 import { ActivityLogFiltersProvider } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useUser from "components/[guild]/hooks/useUser"
-import { ThemeProvider } from "components/[guild]/ThemeContext"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
+import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
+import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
@@ -58,7 +58,7 @@ const ActivityLog = (): JSX.Element => {
     >
       {id ? (
         <ActivityLogFiltersProvider>
-          <ActivityLogFiltersBar />
+          <UserActivityLogFiltersBar />
 
           <SectionTitle title="Actions" mt={8} mb="4" />
           <Stack spacing={2.5}>

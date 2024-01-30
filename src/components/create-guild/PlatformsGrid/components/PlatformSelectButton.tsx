@@ -5,6 +5,7 @@ import {
   Icon,
   Spinner,
   Text,
+  Tooltip,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
@@ -40,6 +41,7 @@ type Props = {
   imageUrl?: string
   icon?: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
   onSelection: (platform: PlatformName) => void
+  disabledText?: string
 } & Rest
 
 const PlatformSelectButton = ({
@@ -49,6 +51,7 @@ const PlatformSelectButton = ({
   imageUrl,
   icon,
   onSelection,
+  disabledText,
   ...rest
 }: Props) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -78,57 +81,67 @@ const PlatformSelectButton = ({
   )
 
   return (
-    <DisplayCard
-      cursor="pointer"
-      onClick={
-        !isWeb3Connected
-          ? openWalletSelectorModal
-          : isPlatformConnected
-          ? selectPlatform
-          : onConnect
-      }
-      h="auto"
-      {...rest}
-      data-test={`${platform}-select-button${
-        isPlatformConnected ? "-connected" : ""
-      }`}
-    >
-      <HStack spacing={4}>
-        {imageUrl ? (
-          <Circle size="12" pos="relative" overflow="hidden">
-            <Image src={imageUrl} alt="Guild logo" layout="fill" />
-          </Circle>
-        ) : (
-          <Circle bgColor={circleBgColor} size="12" pos="relative" overflow="hidden">
-            <Icon as={icon} boxSize={5} weight="regular" color="white" />
-          </Circle>
-        )}
-        <VStack
-          spacing={{ base: 0.5, lg: 1 }}
-          alignItems="start"
-          w="full"
-          maxW="full"
-        >
-          <Heading
-            fontSize="md"
-            fontWeight="bold"
-            letterSpacing="wide"
-            maxW="full"
-            noOfLines={1}
-          >
-            {title}
-          </Heading>
-          {description && (
-            <Text letterSpacing="wide" colorScheme="gray">
-              {(isLoading && `${loadingText}...`) || description}
-            </Text>
+    <Tooltip isDisabled={!disabledText} label={disabledText} hasArrow>
+      <DisplayCard
+        cursor={!!disabledText ? "default" : "pointer"}
+        onClick={
+          !!disabledText
+            ? undefined
+            : !isWeb3Connected
+            ? openWalletSelectorModal
+            : isPlatformConnected
+            ? selectPlatform
+            : onConnect
+        }
+        h="auto"
+        {...rest}
+        data-test={`${platform}-select-button${
+          isPlatformConnected ? "-connected" : ""
+        }`}
+        opacity={!!disabledText ? 0.5 : 1}
+      >
+        <HStack spacing={4}>
+          {imageUrl ? (
+            <Circle size="12" pos="relative" overflow="hidden">
+              <Image src={imageUrl} alt="Guild logo" layout="fill" />
+            </Circle>
+          ) : (
+            <Circle
+              bgColor={circleBgColor}
+              size="12"
+              pos="relative"
+              overflow="hidden"
+            >
+              <Icon as={icon} boxSize={5} weight="regular" color="white" />
+            </Circle>
           )}
-        </VStack>
-        <Icon
-          as={isLoading ? Spinner : isWeb3Connected ? DynamicCtaIcon : CaretRight}
-        />
-      </HStack>
-    </DisplayCard>
+          <VStack
+            spacing={{ base: 0.5, lg: 1 }}
+            alignItems="start"
+            w="full"
+            maxW="full"
+          >
+            <Heading
+              fontSize="md"
+              fontWeight="bold"
+              letterSpacing="wide"
+              maxW="full"
+              noOfLines={1}
+            >
+              {title}
+            </Heading>
+            {description && (
+              <Text letterSpacing="wide" colorScheme="gray">
+                {(isLoading && `${loadingText}...`) || description}
+              </Text>
+            )}
+          </VStack>
+          <Icon
+            as={isLoading ? Spinner : isWeb3Connected ? DynamicCtaIcon : CaretRight}
+          />
+        </HStack>
+      </DisplayCard>
+    </Tooltip>
   )
 }
 

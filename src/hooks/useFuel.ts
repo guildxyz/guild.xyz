@@ -34,7 +34,7 @@ const useFuel = () => {
     setProvider(_provider)
   }
 
-  const windowFuel = typeof window !== "undefined" && window.fuel
+  const windowFuel = typeof window !== "undefined" && (window.fuel ?? window.fuelet)
 
   const _setupState = async () => {
     const [account] = await windowFuel.accounts()

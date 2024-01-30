@@ -396,7 +396,7 @@ export const ontology = /*#__PURE__*/ defineChain({
   blockExplorers: {
     default: {
       name: "Ontology",
-      url: "https://explorer.ont.io/",
+      url: "https://explorer.ont.io",
     },
   },
   contracts: {

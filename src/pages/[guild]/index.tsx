@@ -16,7 +16,6 @@ import {
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import PoapRoleCard from "components/[guild]/CreatePoap/components/PoapRoleCard"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
@@ -48,11 +47,13 @@ import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
+import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
+import { addIntercomSettings } from "../../components/_app/IntercomProvider"
 
 const BATCH_SIZE = 10
 
@@ -86,7 +87,6 @@ const DynamicDiscordBotPermissionsChecker = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
-    id: guildId,
     name,
     description,
     imageUrl,
@@ -97,7 +97,6 @@ const GuildPage = (): JSX.Element => {
     isLoading,
     onboardingComplete,
     socialLinks,
-    poaps,
     tags,
     featureFlags,
     isDetailed,
@@ -170,22 +169,6 @@ const GuildPage = (): JSX.Element => {
   }, [])
 
   const showOnboarding = isAdmin && !onboardingComplete
-
-  const currentTime = Date.now() / 1000
-  const { activePoaps, expiredPoaps } =
-    poaps
-      ?.sort((poapA, poapB) => poapB.expiryDate - poapA.expiryDate)
-      .reduce(
-        (acc, currPoap) => {
-          if (!currPoap.activated && !isAdmin) return acc
-
-          if (currPoap.expiryDate > currentTime) acc.activePoaps.push(currPoap)
-          else acc.expiredPoaps.push(currPoap)
-
-          return acc
-        },
-        { activePoaps: [], expiredPoaps: [] }
-      ) ?? {}
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
 
@@ -293,11 +276,6 @@ const GuildPage = (): JSX.Element => {
           {renderedRoles.length ? (
             <RequirementErrorConfigProvider>
               <Stack ref={rolesEl} spacing={4}>
-                {/* Custom logic for Chainlink */}
-                {(isAdmin || guildId !== 16389) &&
-                  activePoaps.map((poap) => (
-                    <PoapRoleCard key={poap?.id} guildPoap={poap} />
-                  ))}
                 {renderedRoles.map((role) => (
                   <RoleCard key={role.id} role={role} />
                 ))}
@@ -322,17 +300,6 @@ const GuildPage = (): JSX.Element => {
             >
               {hiddenRoles.map((role) => (
                 <RoleCard key={role.id} role={role} />
-              ))}
-            </CollapsibleRoleSection>
-          )}
-          {!!expiredPoaps?.length && (
-            <CollapsibleRoleSection
-              roleCount={expiredPoaps.length}
-              label="expired"
-              unmountOnExit
-            >
-              {expiredPoaps.map((poap) => (
-                <PoapRoleCard key={poap?.id} guildPoap={poap} />
               ))}
             </CollapsibleRoleSection>
           )}
@@ -390,6 +357,16 @@ type Props = {
 const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   const guild = useGuild()
 
+  useEffect(() => {
+    if (!guild?.id) return
+
+    addIntercomSettings({
+      guildId: guild.id,
+      featureFlags: guild.featureFlags?.toString(),
+      memberCount: guild.memberCount,
+    })
+  }, [guild])
+
   if (!fallback) {
     if (guild.isLoading)
       return (
@@ -419,11 +396,13 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
       <SWRConfig value={fallback && { fallback }}>
         <ThemeProvider>
           <MintGuildPinProvider>
-            <JoinModalProvider>
-              <EditGuildDrawerProvider>
-                <GuildPage />
-              </EditGuildDrawerProvider>
-            </JoinModalProvider>
+            <MintPolygonIDProofProvider>
+              <JoinModalProvider>
+                <EditGuildDrawerProvider>
+                  <GuildPage />
+                </EditGuildDrawerProvider>
+              </JoinModalProvider>
+            </MintPolygonIDProofProvider>
           </MintGuildPinProvider>
         </ThemeProvider>
       </SWRConfig>

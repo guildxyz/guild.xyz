@@ -29,13 +29,15 @@ const typeOptions = [
   },
 ]
 
-const ParallelForm = ({ baseFieldPath }: RequirementFormProps) => {
+const ParallelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+
+  const isEditMode = !!field?.id
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -52,6 +54,7 @@ const ParallelForm = ({ baseFieldPath }: RequirementFormProps) => {
           }}
           options={typeOptions}
           placeholder="Choose type"
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

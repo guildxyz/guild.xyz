@@ -37,11 +37,12 @@ const discordRequirementTypes = [
   },
 ]
 
-const DiscordForm = ({ baseFieldPath }: RequirementFormProps) => {
+const DiscordForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { resetField } = useFormContext()
   const { errors } = useFormState()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const selected = discordRequirementTypes.find((reqType) => reqType.value === type)
 
@@ -65,6 +66,7 @@ const DiscordForm = ({ baseFieldPath }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={discordRequirementTypes}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

@@ -18,7 +18,7 @@ const Header = (): JSX.Element => {
       zIndex="overlay"
       // temporary
       sx={{
-        "[aria-label]": {
+        ".navMenu": {
           color:
             colorMode === "light"
               ? colorContext?.textColor === "whiteAlpha.900" || !colorContext

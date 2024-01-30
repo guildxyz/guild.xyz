@@ -1,55 +1,57 @@
 import { Box } from "@chakra-ui/react"
-import { Player } from "@lottiefiles/react-lottie-player"
+import {
+  DotLottiePlayer,
+  PlayerEvents,
+  type DotLottieCommonPlayer,
+} from "@dotlottie/react-player"
 import { memo, useEffect, useRef, useState } from "react"
 
 type Props = {
   progress: number
 }
 
+const progressToLottieState = (stepsProgress: number) => {
+  if (!stepsProgress) return 0
+  if (stepsProgress <= 20) return 10
+  if (stepsProgress <= 40) return 14
+  if (stepsProgress <= 50) return 18
+  if (stepsProgress <= 75) return 20
+  else return 35
+}
+
 const GuildLottieProgress = memo(({ progress }: Props) => {
-  const lottiePlayerBg = useRef(null)
-  const [seekBg, setSeekBG] = useState(0)
-  const [player, setPlayer] = useState<any>()
+  const lottiePlayerBg = useRef<DotLottieCommonPlayer>(null)
+  const [isLottiePlayerReady, setIsLottiePlayerReady] = useState(false)
+  const [player, setPlayer] = useState<DotLottieCommonPlayer>()
   const prevProgress = useRef(null)
 
-  function progressToLottieState(stepsProgress: number): number {
-    if (stepsProgress === null) return 0
-    if (stepsProgress <= 20) return 10
-    if (stepsProgress <= 40) return 14
-    if (stepsProgress <= 50) return 18
-    if (stepsProgress <= 75) return 20
-    else return 80
-  }
   const logoSize = 24
 
   useEffect(() => {
-    lottiePlayerBg.current?.setSeeker(seekBg, false)
-  }, [seekBg])
+    if (!isLottiePlayerReady || !progress) return
 
-  useEffect(() => {
-    if (player) {
-      player.playSegments(
-        [
-          progressToLottieState(prevProgress.current),
-          progressToLottieState(progress),
-        ],
-        true
-      )
-      prevProgress.current = progress
-    }
-  }, [player, progress])
+    player.playSegments(
+      [
+        progressToLottieState(prevProgress.current ?? 0),
+        progressToLottieState(progress),
+      ],
+      true
+    )
+    prevProgress.current = progress
+  }, [isLottiePlayerReady, progress])
 
   return (
     <Box position={"relative"} w={`${logoSize}px`} h={`${logoSize}px`}>
       <Box opacity={0.1} position={"absolute"} top={0} left={0} zIndex={0}>
-        <Player
+        <DotLottiePlayer
           ref={lottiePlayerBg}
           onEvent={(event) => {
-            if (event === "load") {
-              setSeekBG(50)
+            if (event === PlayerEvents.Ready) {
+              lottiePlayerBg.current.seek(52)
+              setIsLottiePlayerReady(true)
             }
           }}
-          src="/logo_lottie.json"
+          src="/logo.lottie"
           style={{
             marginBottom: 24,
             height: logoSize,
@@ -58,16 +60,15 @@ const GuildLottieProgress = memo(({ progress }: Props) => {
         />
       </Box>
       <Box position={"absolute"} top={0} left={0} zIndex={1}>
-        <Player
-          src="/logo_lottie.json"
+        <DotLottiePlayer
+          src="/logo.lottie"
           style={{
             marginBottom: 24,
             height: logoSize,
             width: logoSize,
           }}
           speed={0.5}
-          keepLastFrame
-          lottieRef={(instance) => {
+          ref={(instance) => {
             setPlayer(instance)
           }}
         />
