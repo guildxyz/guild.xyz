@@ -1,4 +1,4 @@
-import { FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
@@ -30,15 +30,14 @@ const TwitterAccountVerified = ({
   const defaultValue: ValueType = "any"
 
   return (
-    <>
+    <FormControl isRequired>
       <FormLabel>Verification type</FormLabel>
-
       <ControlledSelect
         defaultValue={defaultValue}
         name={`${baseFieldPath}.data.id`}
         options={options}
       />
-    </>
+    </FormControl>
   )
 }
 export default TwitterAccountVerified
