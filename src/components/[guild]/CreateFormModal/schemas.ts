@@ -62,6 +62,7 @@ export const FormSchema = z.object({
 })
 
 const FormFromDBSchema = FormSchema.extend({
+  id: z.number(),
   creatorUserId: z.number(),
   guildId: z.number(),
   createdAt: z.string().datetime(),
