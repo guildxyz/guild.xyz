@@ -8,7 +8,8 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUser from "components/[guild]/hooks/useUser"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { ArrowSquareOut, TwitterLogo } from "phosphor-react"
+import { ArrowSquareOut } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
@@ -43,7 +44,7 @@ const TwitterRequirement = (props: RequirementProps) => {
     <Requirement
       image={
         (["TWITTER_FOLLOW", "TWITTER_FOLLOWED_BY"].includes(requirement.type) &&
-          twitterAvatar) || <Icon as={TwitterLogo} boxSize={6} />
+          twitterAvatar) || <Icon as={XLogo} boxSize={6} />
       }
       footer={
         requirementIntentAction[requirement.type] && !!userId ? (

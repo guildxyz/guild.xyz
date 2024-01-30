@@ -1,12 +1,13 @@
 import { HStack, Text, useClipboard, useDisclosure, Wrap } from "@chakra-ui/react"
-import { DotLottiePlayer, type DotLottieCommonPlayer } from "@dotlottie/react-player"
+import { type DotLottieCommonPlayer, DotLottiePlayer } from "@dotlottie/react-player"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import PulseMarker from "components/common/PulseMarker"
 import { useRouter } from "next/router"
-import { Check, Copy, DiscordLogo, TwitterLogo } from "phosphor-react"
+import { Check, Copy, DiscordLogo } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 import { useState } from "react"
 import { PlatformType } from "types"
 import SendDiscordJoinButtonAlert from "./components/SendDiscordJoinButtonAlert"
@@ -93,7 +94,7 @@ const SummonMembers = () => {
             `Just summoned my guild on Guild.xyz! Join me on my noble quest: guild.xyz/${urlName}`
           )}`}
           target="_blank"
-          leftIcon={<TwitterLogo />}
+          leftIcon={<XLogo />}
           colorScheme="TWITTER"
           onClick={() => {
             captureEvent("guild creation flow > click on 'Share' (Twitter - X)")
