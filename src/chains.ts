@@ -12,6 +12,7 @@ import {
   scrollAlpha,
   shimmer,
   x1Testnet,
+  blastSepolia,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
 import {
@@ -489,6 +490,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/berachain.png",
     },
   },
+  BLAST_SEPOLIA: {
+    ...blastSepolia,
+    iconUrl: "/networkLogos/blast.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/blast.png",
+      dark: "/networkLogos/blast.png",
+    },
+  },
 }
 
 enum Chains {
@@ -536,6 +546,7 @@ enum Chains {
   X1_TESTNET = x1Testnet.id,
   ONTOLOGY = ontology.id,
   BERA_TESTNET = beraTestnet.id,
+  BLAST_SEPOLIA = blastSepolia.id,
 }
 
 export type Chain = keyof typeof Chains
