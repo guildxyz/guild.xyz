@@ -1,9 +1,28 @@
-import { Checkbox, CheckboxProps, Radio, RadioProps, Stack } from "@chakra-ui/react"
+import {
+  Checkbox,
+  CheckboxGroup,
+  CheckboxGroupProps,
+  CheckboxProps,
+  Radio,
+  RadioGroup,
+  RadioGroupProps,
+  RadioProps,
+  Stack,
+} from "@chakra-ui/react"
 import { ComponentType } from "react"
 import { CreateFieldParams } from "../../schemas"
 
 type Props = {
   field: CreateFieldParams
+  isDisabled?: boolean
+}
+
+const GroupComponents: Record<
+  "SINGLE_CHOICE" | "MULTIPLE_CHOICE",
+  ComponentType<RadioGroupProps | CheckboxGroupProps>
+> = {
+  SINGLE_CHOICE: RadioGroup,
+  MULTIPLE_CHOICE: CheckboxGroup,
 }
 
 const FieldComponents: Record<
@@ -14,7 +33,7 @@ const FieldComponents: Record<
   MULTIPLE_CHOICE: Checkbox,
 }
 
-const Choice = ({ field }: Props) => {
+const Choice = ({ field, isDisabled }: Props) => {
   // We probably won't run into this case, but needed to add this line to get valid intellisense
   if (field.type !== "SINGLE_CHOICE" && field.type !== "MULTIPLE_CHOICE") return null
 
@@ -22,19 +41,22 @@ const Choice = ({ field }: Props) => {
     typeof option === "number" || typeof option === "string" ? option : option.value
   )
 
+  const GroupComponent = GroupComponents[field.type]
   const FieldComponent = FieldComponents[field.type]
 
   return (
-    <Stack spacing={1}>
-      {options.map((option) => (
-        <FieldComponent key={option} value={option.toString()}>
-          {option}
-        </FieldComponent>
-      ))}
-      {field.allowOther && (
-        <FieldComponent value="Other...">Other...</FieldComponent>
-      )}
-    </Stack>
+    <GroupComponent isDisabled={isDisabled}>
+      <Stack spacing={1}>
+        {options.map((option) => (
+          <FieldComponent key={option} value={option.toString()}>
+            {option}
+          </FieldComponent>
+        ))}
+        {field.allowOther && (
+          <FieldComponent value="Other...">Other...</FieldComponent>
+        )}
+      </Stack>
+    </GroupComponent>
   )
 }
 export default Choice

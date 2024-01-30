@@ -6,16 +6,20 @@ import {
   RadioButton,
   Textbox,
 } from "phosphor-react"
-import { ComponentType } from "react"
-import { SelectOption } from "types"
+import { ComponentType, ReactNode } from "react"
 import Choice from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
 import Number from "./components/Display/Number"
+import Rate from "./components/Display/Rate"
 import ShortText from "./components/Display/ShortText"
 import ChoiceSetup from "./components/Setup/ChoiceSetup"
+import RateSetup from "./components/Setup/RateSetup"
 import { CreateFieldParams, Field } from "./schemas"
 
-const fieldTypes: (SelectOption<Field["type"]> & {
+const fieldTypes: {
+  label: string
+  value: Field["type"]
+  img: ReactNode
   SetupComponent?: ComponentType<{
     index: number
   }>
@@ -23,7 +27,7 @@ const fieldTypes: (SelectOption<Field["type"]> & {
     field: CreateFieldParams
     isDisabled?: boolean
   }>
-})[] = [
+}[] = [
   {
     label: "Short text",
     value: "SHORT_TEXT",
@@ -60,8 +64,8 @@ const fieldTypes: (SelectOption<Field["type"]> & {
     label: "Rate",
     value: "RATE",
     img: <OptionIcon as={NumberCircleFive} />,
-    EditableComponent: () => <>TODO</>,
-    DisplayComponent: () => <>TODO</>,
+    SetupComponent: RateSetup,
+    DisplayComponent: Rate,
   },
 ]
 

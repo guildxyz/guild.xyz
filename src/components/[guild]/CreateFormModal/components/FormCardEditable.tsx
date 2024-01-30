@@ -11,7 +11,6 @@ import {
   Stack,
   Switch,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -51,23 +50,12 @@ const FormCardEditable = ({ index, onRemove }: Props) => {
 
   const [isEditing, setIsEditing] = useState(true)
 
-  /**
-   * Dark color is from blackAlpha.300, but without opacity so it looks great when we
-   * reorder the choice inputs
-   */
-  const inputBgColor = useColorModeValue("white", "#2E2E33")
-
   return (
     <MotionWrapper>
       <Card
         px={{ base: 5, md: 6 }}
         py={{ base: 6, md: 7 }}
         onClick={isEditing ? undefined : () => setIsEditing(true)}
-        sx={{
-          "input, textarea": {
-            background: inputBgColor,
-          },
-        }}
       >
         <Stack spacing={2}>
           {isEditing ? (

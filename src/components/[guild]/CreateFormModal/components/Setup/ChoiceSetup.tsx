@@ -67,6 +67,7 @@ const ChoiceSetup = ({ index }: Props) => {
               key={field.id}
               value={field.id}
               style={{
+                position: "relative", // needed for the auto-applied zIndex to work
                 marginBottom: "var(--chakra-sizes-2)",
               }}
             >

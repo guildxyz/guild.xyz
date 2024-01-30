@@ -1,5 +1,11 @@
 import { Textarea } from "@chakra-ui/react"
 
-const LongText = () => <Textarea isDisabled placeholder="Long text" resize="none" />
+type Props = {
+  isDisabled?: boolean
+}
+
+const LongText = ({ isDisabled }: Props) => (
+  <Textarea isDisabled={isDisabled} placeholder="Long text" resize="none" />
+)
 
 export default LongText

@@ -48,17 +48,29 @@ const OptionLayout = ({
   draggable,
   ..._props
 }: PropsWithChildren<Props>) => {
-  const circleBgColor = useColorModeValue("white", "blackAlpha.300")
+  /**
+   * Dark color is from blackAlpha.300, but without opacity so it looks great when we
+   * reorder the choice inputs
+   */
+  const inputBgColor = useColorModeValue("white", "#35353A")
 
   const { key, ...props } = _props
 
   return (
     <MotionWrapper key={key}>
       <Grid templateColumns="2fr 1fr" gap={2} {...props}>
-        <HStack w="full" role="group">
+        <HStack
+          w="full"
+          role="group"
+          sx={{
+            input: {
+              bg: inputBgColor,
+            },
+          }}
+        >
           <Center
             borderWidth={2}
-            bgColor={circleBgColor}
+            bgColor={inputBgColor}
             width={5}
             height={5}
             borderRadius={

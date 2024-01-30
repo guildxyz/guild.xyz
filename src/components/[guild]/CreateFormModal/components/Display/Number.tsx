@@ -6,8 +6,12 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react"
 
-const Number = () => (
-  <NumberInput isDisabled>
+type Props = {
+  isDisabled?: boolean
+}
+
+const Number = ({ isDisabled }: Props) => (
+  <NumberInput isDisabled={isDisabled}>
     <NumberInputField />
     <NumberInputStepper>
       <NumberIncrementStepper />
