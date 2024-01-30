@@ -119,7 +119,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 {"Follow "}
-                <TwitterUserLink requirement={requirement} />
+                <TwitterUserLink requirement={requirement} withIntent />
                 {" on X"}
               </>
             )
