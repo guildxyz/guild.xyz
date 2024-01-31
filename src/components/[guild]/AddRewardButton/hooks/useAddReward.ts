@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { GuildPlatform, PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -15,8 +15,8 @@ const useAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const fetchData = async (signedValdation: SignedValdation) =>
-    fetcher(`/v2/guilds/${id}/guild-platforms`, signedValdation)
+  const fetchData = async (signedValidation: SignedValidation) =>
+    fetcher(`/v2/guilds/${id}/guild-platforms`, signedValidation)
 
   return useSubmitWithSign<GuildPlatform & { roleIds?: number[] }>(fetchData, {
     onError: (error) => {

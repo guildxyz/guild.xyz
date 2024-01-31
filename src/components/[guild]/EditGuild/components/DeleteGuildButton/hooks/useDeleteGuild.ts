@@ -1,7 +1,7 @@
-import { useYourGuilds } from "components/explorer/YourGuilds"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useFormContext } from "react-hook-form"
@@ -20,7 +20,7 @@ const useDeleteGuild = () => {
 
   const guild = useGuild()
 
-  const submit = async (signedValidation: SignedValdation) =>
+  const submit = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${guild.id}`, {
       method: "DELETE",
       ...signedValidation,

@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutate } from "swr"
 import fetcher from "utils/fetcher"
 
@@ -8,7 +8,7 @@ const useSyncMembersFromDiscord = () => {
   const showErrorToast = useShowErrorToast()
   const { id } = useGuild()
 
-  const syncMembersFromDiscord = async (signedValidation: SignedValdation) =>
+  const syncMembersFromDiscord = async (signedValidation: SignedValidation) =>
     fetcher(`/statusUpdate/guildify/${id}`, signedValidation)
 
   const { onSubmit, ...rest } = useSubmitWithSign(syncMembersFromDiscord, {

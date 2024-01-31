@@ -8,13 +8,13 @@ import Button from "components/common/Button"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
 
-const join = (signedValidation: SignedValdation) =>
+const join = (signedValidation: SignedValidation) =>
   fetcher(`/user/join`, signedValidation)
 
 type Props = {

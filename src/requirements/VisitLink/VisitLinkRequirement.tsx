@@ -22,14 +22,14 @@ import useIsMember from "components/[guild]/hooks/useIsMember"
 import useUser from "components/[guild]/hooks/useUser"
 import Link from "components/common/Link"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"
 import { ComponentProps } from "react"
 import fetcher from "utils/fetcher"
 
 export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
 
-const visitLink = (signedValidation: SignedValdation) =>
+const visitLink = (signedValidation: SignedValidation) =>
   fetcher("/v2/util/gate-callbacks?requirementType=LINK_VISIT", {
     ...signedValidation,
     method: "POST",

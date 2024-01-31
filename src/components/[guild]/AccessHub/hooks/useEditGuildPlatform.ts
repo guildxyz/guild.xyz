@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -16,7 +16,7 @@ const useEditGuildPlatform = ({
 
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (signedValidation: SignedValdation) =>
+  const submit = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatformId}`, {
       method: "PUT",
       ...signedValidation,

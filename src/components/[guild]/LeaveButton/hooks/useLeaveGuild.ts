@@ -1,8 +1,8 @@
-import useMemberships from "components/explorer/hooks/useMemberships"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
@@ -15,7 +15,7 @@ const useLeaveGuild = () => {
   const { mutate } = useMemberships()
   const { id } = useGuild()
 
-  const submit = (signedValidation: SignedValdation): Promise<Response> =>
+  const submit = (signedValidation: SignedValidation): Promise<Response> =>
     fetcher(`/user/leaveGuild`, signedValidation)
 
   return useSubmitWithSign<Response>(submit, {
