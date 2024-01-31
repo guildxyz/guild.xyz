@@ -70,7 +70,7 @@ const useSetKeyPair = () => {
     useWeb3ConnectionManager()
   const fetcherWithSign = useFetcherWithSign()
 
-  const { id, captchaVerifiedSince, setKeys } = useUserPublic()
+  const { id, captchaVerifiedSince } = useUserPublic()
 
   const recaptcha = useAtomValue(recaptchaAtom)
 

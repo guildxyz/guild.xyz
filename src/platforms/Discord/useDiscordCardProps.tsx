@@ -1,6 +1,5 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useServerData from "hooks/useServerData"
 import { useAtom } from "jotai"
 import { Info } from "phosphor-react"
@@ -9,7 +8,6 @@ import { GuildPlatform, PlatformName } from "types"
 import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
-  const { urlName } = useGuild()
   const rolePlatform = useRolePlatform()
   const { data } = useServerData(guildPlatform.platformGuildId, {
     swrOptions: {

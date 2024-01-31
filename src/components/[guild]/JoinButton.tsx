@@ -9,7 +9,7 @@ import useAccess from "./hooks/useAccess"
 
 const JoinButton = (): JSX.Element => {
   const openJoinModal = useOpenJoinModal()
-  const { hasAccess, isLoading } = useAccess()
+  const { isLoading } = useAccess()
   // const { requiredPlatforms } = useGuild()
   // const { platformUsers } = useUser()
   // const platformsToReconnect = usePlatformsToReconnect()

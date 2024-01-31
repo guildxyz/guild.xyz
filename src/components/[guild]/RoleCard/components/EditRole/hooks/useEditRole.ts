@@ -30,7 +30,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     const {
       requirements: unfilteredRequirements,
       rolePlatforms,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+      // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
       id: _id,
       ...baseRoleData
     } = data

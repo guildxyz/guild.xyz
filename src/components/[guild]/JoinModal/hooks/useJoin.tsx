@@ -8,7 +8,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
-import { atom, useAtom } from "jotai"
+import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
@@ -68,7 +68,7 @@ const useJoin = (
   const toastWithButton = useToastWithButton()
 
   const { mutate } = useMemberships()
-  const [isAfterJoin, setIsAfterJoin] = useAtom(isAfterJoinAtom)
+  const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
 
   const fetcherWithSign = useFetcherWithSign()
 

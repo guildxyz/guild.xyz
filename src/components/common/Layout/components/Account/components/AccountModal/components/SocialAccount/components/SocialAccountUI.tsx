@@ -25,7 +25,7 @@ const SocialAccountUI = ({
   username?: string
   isConnected?: boolean
 }>) => {
-  const { icon, name, colorScheme } = platforms[type]
+  const { icon, colorScheme } = platforms[type]
   const circleBorderColor = useColorModeValue("gray.100", "gray.700")
 
   return (

@@ -4,10 +4,6 @@ import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
-type Data = {
-  removePlatformAccess?: boolean
-}
-
 const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
   const { mutateGuild, id } = useGuild()
   const toast = useToast()

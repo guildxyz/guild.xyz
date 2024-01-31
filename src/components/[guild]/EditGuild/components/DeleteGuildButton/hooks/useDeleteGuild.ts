@@ -7,10 +7,6 @@ import { useRouter } from "next/router"
 import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
-type Data = {
-  removePlatformAccess?: boolean
-}
-
 const useDeleteGuild = () => {
   const { reset } = useFormContext()
   const toast = useToast()

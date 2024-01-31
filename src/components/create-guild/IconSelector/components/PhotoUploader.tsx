@@ -5,7 +5,6 @@ import GuildLogo from "components/common/GuildLogo"
 import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
 import { File } from "phosphor-react"
-import { useState } from "react"
 import { FileError } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 
@@ -65,8 +64,6 @@ const PhotoUploader = ({
   const { setValue } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
 
-  const [progress, setProgress] = useState<number>(0)
-
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     // We need to use any here unfortunately, but this is the correct usage according to the react-dropzone source code
@@ -108,7 +105,7 @@ const PhotoUploader = ({
       if (accepted.length > 0) {
         setValue("imageUrl", URL.createObjectURL(accepted[0]))
         closeModal?.()
-        onUpload({ data: [accepted[0]], onProgress: setProgress })
+        onUpload({ data: [accepted[0]] })
       }
     },
   })

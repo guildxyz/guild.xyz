@@ -13,13 +13,10 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Copy, DownloadSimple, Question, Warning } from "phosphor-react"
-import { useWatch } from "react-hook-form"
 import useBalancy from "../hooks/useBalancy"
 
 const BalancyCounterWithPopover = ({ ...rest }) => {
   const { holders, addresses, isLoading, inaccuracy, usedLogic } = useBalancy()
-
-  const logic = useWatch({ name: "logic" })
 
   const { hasCopied, onCopy } = useClipboard(addresses ? addresses?.join("\n") : "")
 
