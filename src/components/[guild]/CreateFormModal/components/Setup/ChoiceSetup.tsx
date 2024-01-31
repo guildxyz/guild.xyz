@@ -89,6 +89,7 @@ const ChoiceSetup = ({ index }: Props) => {
         <Stack mt={-2}>
           <AnimatePresence>
             <OptionLayout
+              key="addOption"
               type={type}
               action={
                 !allowOther && (
@@ -129,6 +130,7 @@ const ChoiceSetup = ({ index }: Props) => {
 
             {allowOther && (
               <OptionLayout
+                key="addOther"
                 type={type}
                 action={
                   <RemoveButton
