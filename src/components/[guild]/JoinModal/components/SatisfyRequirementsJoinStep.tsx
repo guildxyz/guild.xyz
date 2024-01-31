@@ -42,7 +42,7 @@ const SatisfyRequirementsJoinStep = ({
             hasArrow
             label="Connect your accounts and check access below to see if you meet the requirements the guild owner has set"
           >
-            <Center boxSize={5}>
+            <Center w={5} h={joinState ? 12 : 6}>
               <Icon as={LockSimple} weight="bold" />
             </Center>
           </Tooltip>
