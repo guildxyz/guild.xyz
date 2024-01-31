@@ -7,7 +7,7 @@ export const progressTitle = {
 }
 
 export const JOIN_LOADING_TEXTS: Record<
-  Exclude<JoinState["state"], "FINISHED">,
+  Exclude<JoinState["state"], "FINISHED" | "NO_ACCESS">,
   [string, string]
 > = {
   INITIAL: ["Preparing access check", null],

@@ -11,12 +11,14 @@ const ProgressJoinStep = ({
   shouldShowSubtitle,
   children,
   RightComponent,
+  hideCount,
   ...stackProps
 }: PropsWithChildren<{
   joinState: JoinState
   entity: "role" | "reward" | "requirement"
   shouldShowSubtitle: boolean
   RightComponent?: ReactNode
+  hideCount?: boolean
 }> &
   StackProps) => (
   <HStack py="2.5" alignItems={"flex-start"} spacing={2.5} {...stackProps}>
@@ -27,7 +29,7 @@ const ProgressJoinStep = ({
     <Stack w="full" spacing={0}>
       <Text fontWeight={"bold"}>{progressTitle[entity]}</Text>
 
-      <JoinStateCount joinState={joinState} entity={entity} />
+      {!hideCount && <JoinStateCount joinState={joinState} entity={entity} />}
 
       {shouldShowSubtitle &&
         JOIN_LOADING_TEXTS[joinState?.state]?.[+!!joinState?.waitingPosition] && (

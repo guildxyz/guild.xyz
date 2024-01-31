@@ -16,16 +16,19 @@ const mapAccessJobState = (progress: JoinJob) => {
     } as const
   }
 
-  const state = progress.done
-    ? "FINISHED"
-    : (
-        {
-          none: "PREPARING",
-          "access-preparation": "CHECKING",
-          "access-check": "MANAGING_ROLES",
-          "access-logic": "MANAGING_ROLES",
-        } as const
-      )[progress["completed-queue"] ?? "none"] ?? "MANAGING_REWARDS"
+  const state =
+    progress?.roleAccesses && progress?.roleAccesses?.every((role) => !role.access)
+      ? "NO_ACCESS"
+      : progress.done
+      ? "FINISHED"
+      : (
+          {
+            none: "PREPARING",
+            "access-preparation": "CHECKING",
+            "access-check": "MANAGING_ROLES",
+            "access-logic": "MANAGING_ROLES",
+          } as const
+        )[progress["completed-queue"] ?? "none"] ?? "MANAGING_REWARDS"
 
   const waitingPosition =
     (progress as any).currentQueueState === "waiting"

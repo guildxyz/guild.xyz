@@ -11,6 +11,10 @@ export const getJoinStepIndicatorProps = (
     return { status: "INACTIVE" }
   }
 
+  if (joinState.state === "NO_ACCESS") {
+    return { status: "ERROR" }
+  }
+
   if (joinState.state === "INITIAL") {
     // Could be INACITVE for role & reward, but those are not shown in INITIAL state
     return { status: "LOADING" }
