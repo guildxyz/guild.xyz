@@ -169,15 +169,16 @@ const AccessHub = (): JSX.Element => {
                   guildPlatform={pointPlatform}
                 />
               ))}
-
-              {forms?.map((form) => (
-                <FormsRewardCard key={form.id} form={form} />
-              ))}
             </>
           )}
 
+          {forms?.map((form) => (
+            <FormsRewardCard key={form.id} form={form} />
+          ))}
+
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
+            !forms?.length &&
             !shouldShowGuildPin &&
             !accessedGuildPlatforms?.length && (
               <Card>
