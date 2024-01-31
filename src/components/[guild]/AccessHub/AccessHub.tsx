@@ -29,6 +29,9 @@ const DynamicGuildPinRewardCard = dynamic(
 
 export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { id, guildPlatforms, roles } = useGuild()
+  const { isAdmin } = useGuildPermission()
+  const { memberships } = useMemberships()
+
   const relevantRoles = groupId
     ? roles.filter((role) => role.groupId === groupId)
     : roles.filter((role) => !role.groupId)
@@ -39,9 +42,6 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatforms = guildPlatforms.filter((gp) =>
     relevantGuildPlatformIds.includes(gp.id)
   )
-
-  const { isAdmin } = useGuildPermission()
-  const { memberships } = useMemberships()
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
   const contractCallGuildPlatforms =
@@ -82,21 +82,27 @@ const AccessHub = (): JSX.Element => {
     guildPin,
     groups,
     onboardingComplete,
+    roles,
   } = useGuild()
 
   const group = useRoleGroup()
+
+  const { isAdmin } = useGuildPermission()
+  const isMember = useIsMember()
 
   const allAccessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
 
   const accessedGuildPlatforms = allAccessedGuildPlatforms.filter(
     (gp) => gp.platformId !== PlatformType.POINTS
   )
-  const accessedGuildPoints = allAccessedGuildPlatforms.filter(
-    (gp) => gp.platformId === PlatformType.POINTS
-  )
-
-  const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
+  const accessedGuildPoints = allAccessedGuildPlatforms.filter((gp) => {
+    const isVisibleOnAnyRole =
+      roles
+        .flatMap((role) => role.rolePlatforms)
+        .filter((rp) => rp.guildPlatformId === gp.id)
+        .some((r) => r.visibility != "HIDDEN") || isAdmin
+    return isVisibleOnAnyRole && gp.platformId === PlatformType.POINTS
+  })
 
   const shouldShowGuildPin =
     !group &&

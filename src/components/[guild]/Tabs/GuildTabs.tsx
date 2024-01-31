@@ -1,4 +1,5 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useMemberships from "components/explorer/hooks/useMemberships"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -17,14 +18,27 @@ type Props = {
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
-  const { urlName, featureFlags, guildPlatforms } = useGuild()
+  const { id, urlName, featureFlags, guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
+
+  const { memberships } = useMemberships()
+
+  const accessedRoleIds =
+    memberships?.find((membership) => membership.guildId === id)?.roleIds || []
 
   const { captureEvent } = usePostHogContext()
 
-  const existingPointsReward = guildPlatforms?.find(
-    (gp) => gp.platformId === PlatformType.POINTS
-  )
+  const existingPointsReward = guildPlatforms?.find((gp) => {
+    const isVisibleOnAnyRole =
+      roles
+        .flatMap((role) => role.rolePlatforms)
+        .filter((rp) => rp.guildPlatformId === gp.id)
+        .filter((rl) =>
+          rl.visibility === "PRIVATE" ? accessedRoleIds?.includes(rl.roleId) : true
+        )
+        .some((rl) => rl.visibility != "HIDDEN") || isAdmin
+    return gp.platformId === PlatformType.POINTS && isVisibleOnAnyRole
+  })
 
   return (
     <Tabs {...rest}>
