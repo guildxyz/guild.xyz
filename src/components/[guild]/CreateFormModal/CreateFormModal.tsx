@@ -11,6 +11,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
+import { v4 as uuidv4 } from "uuid"
 import CreateFormForm from "./components/CreateFormForm"
 import useCreateForm from "./hooks/useCreateForm"
 import { CreateFormParams, FormSchema } from "./schemas"
@@ -31,12 +32,21 @@ const CreateFormModal = (props: Props) => {
     defaultValues,
   })
 
-  const { onSubmit, isLoading } = useCreateForm({
+  const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm({
     onSuccess: () => {
       methods.reset(defaultValues)
       props.onClose()
     },
   })
+
+  const onSubmit = (data: CreateFormParams) =>
+    onCreateFormSubmit({
+      ...data,
+      fields: data.fields.map((field) => ({
+        ...field,
+        id: uuidv4(),
+      })),
+    })
 
   return (
     <FormProvider {...methods}>
