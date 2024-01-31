@@ -104,7 +104,9 @@ const LabelSetup = ({ fieldIndex, type }: LabelSetupProps) => {
         }}
       />
       <Input
-        {...register(`fields.${fieldIndex}${labelSetupConfig[type].labelFieldName}`)}
+        {...register(
+          `fields.${fieldIndex}.${labelSetupConfig[type].labelFieldName}`
+        )}
         placeholder="Label (optional)"
       />
     </>

@@ -4,6 +4,7 @@ import {
   FormLabel,
   Grid,
   HStack,
+  Icon,
   IconButton,
   Input,
   InputGroup,
@@ -14,10 +15,10 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import MotionWrapper from "components/common/CardMotionWrapper"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { Trash } from "phosphor-react"
+import { Reorder, useDragControls } from "framer-motion"
+import { DotsSixVertical, PencilSimple, Trash } from "phosphor-react"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { fieldTypes } from "../formConfig"
@@ -25,10 +26,11 @@ import { CreateFormParams } from "../schemas"
 
 type Props = {
   index: number
+  fieldId: string
   onRemove: () => void
 }
 
-const FormCardEditable = ({ index, onRemove }: Props) => {
+const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
   const {
     control,
     register,
@@ -50,13 +52,19 @@ const FormCardEditable = ({ index, onRemove }: Props) => {
 
   const [isEditing, setIsEditing] = useState(true)
 
+  const dragControls = useDragControls()
+
   return (
-    <MotionWrapper>
-      <Card
-        px={{ base: 5, md: 6 }}
-        py={{ base: 6, md: 7 }}
-        onClick={isEditing ? undefined : () => setIsEditing(true)}
-      >
+    <Reorder.Item
+      dragListener={false}
+      dragControls={dragControls}
+      value={fieldId}
+      style={{
+        position: "relative",
+        marginBottom: "var(--chakra-sizes-2)",
+      }}
+    >
+      <Card p={{ base: 5, md: 6 }} userSelect="none">
         <Stack spacing={2}>
           {isEditing ? (
             <Grid templateColumns={{ base: "1fr", md: "2fr 1fr" }} gap={2}>
@@ -87,14 +95,39 @@ const FormCardEditable = ({ index, onRemove }: Props) => {
               </FormControl>
             </Grid>
           ) : (
-            <Text as="span" fontWeight="semibold">
-              {field?.question}
-              {isRequiredValue && (
-                <Text as="sup" color="red.400" ml={1}>
-                  *
+            <HStack justifyContent="space-between">
+              <HStack>
+                <Text as="span" fontWeight="semibold">
+                  {field?.question}
+                  {isRequiredValue && (
+                    <Text as="sup" color="red.400" ml={1}>
+                      *
+                    </Text>
+                  )}
                 </Text>
-              )}
-            </Text>
+                <IconButton
+                  aria-label="Edit field"
+                  size="sm"
+                  variant="unstyled"
+                  color="GrayText"
+                  _hover={{
+                    color: "var(--chakra-colors-chakra-body-text)",
+                  }}
+                  _focusVisible={{
+                    color: "var(--chakra-colors-chakra-body-text)",
+                  }}
+                  icon={<PencilSimple />}
+                  onClick={() => setIsEditing(true)}
+                />
+              </HStack>
+
+              <Icon
+                as={DotsSixVertical}
+                boxSize={5}
+                cursor="grab"
+                onPointerDown={(e) => dragControls.start(e)}
+              />
+            </HStack>
           )}
 
           {selectedFieldType?.SetupComponent && isEditing ? (
@@ -148,7 +181,7 @@ const FormCardEditable = ({ index, onRemove }: Props) => {
           )}
         </Stack>
       </Card>
-    </MotionWrapper>
+    </Reorder.Item>
   )
 }
 

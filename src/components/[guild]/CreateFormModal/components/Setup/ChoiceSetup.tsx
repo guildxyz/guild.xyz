@@ -5,6 +5,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { AnimatePresence, AnimateSharedLayout, Reorder } from "framer-motion"
 import { useEffect, useRef } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import getFieldIndexesToSwap from "utils/getFieldsToSwap"
 import { CreateFormParams } from "../../schemas"
 import OptionLayout from "./OptionLayout"
 import RemoveButton from "./RemoveButton"
@@ -42,15 +43,7 @@ const ChoiceSetup = ({ index }: Props) => {
 
   const onReorder = (newOrder: string[]) => {
     const originalOrder = fields.map((field) => field.id)
-
-    const indexesToSwap: number[] = []
-
-    for (const [i, field] of originalOrder.entries()) {
-      const fieldIndexInNewOrder = newOrder.findIndex((f) => f === field)
-      if (fieldIndexInNewOrder !== i) indexesToSwap.push(i)
-    }
-
-    const [indexA, indexB] = indexesToSwap
+    const [indexA, indexB] = getFieldIndexesToSwap(originalOrder, newOrder)
     swap(indexA, indexB)
   }
 
@@ -63,39 +56,31 @@ const ChoiceSetup = ({ index }: Props) => {
       >
         <AnimatePresence>
           {fields.map((field, optionIndex) => (
-            <Reorder.Item
+            <OptionLayout
               key={field.id}
-              value={field.id}
-              style={{
-                position: "relative", // needed for the auto-applied zIndex to work
-                marginBottom: "var(--chakra-sizes-2)",
-              }}
+              fieldId={field.id}
+              type={type}
+              action={
+                fields.length > 0 && (
+                  <RemoveButton onClick={() => remove(optionIndex)} />
+                )
+              }
+              draggable
             >
-              <OptionLayout
-                key={field.id}
-                type={type}
-                action={
-                  fields.length > 0 && (
-                    <RemoveButton onClick={() => remove(optionIndex)} />
-                  )
-                }
-                draggable
-              >
-                <FormControl>
-                  <Input
-                    {...register(`fields.${index}.options.${optionIndex}.value`)}
-                    placeholder={"Add option" + field.id}
-                  />
-                  <FormErrorMessage>
-                    {/* TODO: proper types */}
-                    {
-                      (errors.fields?.[index] as any)?.options?.[optionIndex]?.value
-                        ?.message
-                    }
-                  </FormErrorMessage>
-                </FormControl>
-              </OptionLayout>
-            </Reorder.Item>
+              <FormControl>
+                <Input
+                  {...register(`fields.${index}.options.${optionIndex}.value`)}
+                  placeholder={"Add option" + field.id}
+                />
+                <FormErrorMessage>
+                  {/* TODO: proper types */}
+                  {
+                    (errors.fields?.[index] as any)?.options?.[optionIndex]?.value
+                      ?.message
+                  }
+                </FormErrorMessage>
+              </FormControl>
+            </OptionLayout>
           ))}
         </AnimatePresence>
       </Reorder.Group>
@@ -104,7 +89,6 @@ const ChoiceSetup = ({ index }: Props) => {
         <Stack mt={-2}>
           <AnimatePresence>
             <OptionLayout
-              key="addOption"
               type={type}
               action={
                 !allowOther && (
@@ -145,13 +129,13 @@ const ChoiceSetup = ({ index }: Props) => {
 
             {allowOther && (
               <OptionLayout
-                key="otherOption"
                 type={type}
                 action={
                   <RemoveButton
                     onClick={() => setValue(`fields.${index}.allowOther`, false)}
                   />
                 }
+                mt={-2}
               >
                 <Input placeholder="Other..." isDisabled />
               </OptionLayout>

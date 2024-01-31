@@ -7,7 +7,7 @@ import {
   Icon,
   useColorModeValue,
 } from "@chakra-ui/react"
-import MotionWrapper from "components/common/CardMotionWrapper"
+import { Reorder, useDragControls } from "framer-motion"
 import { DotsSixVertical } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
 import { Rest } from "types"
@@ -16,6 +16,7 @@ type Props = {
   action: ReactNode
   type: "SINGLE_CHOICE" | "MULTIPLE_CHOICE"
   draggable?: boolean
+  fieldId?: string
 } & Rest
 
 const draggableCenterProps: ChakraProps = {
@@ -46,7 +47,8 @@ const OptionLayout = ({
   action,
   type,
   draggable,
-  ..._props
+  fieldId,
+  ...props
 }: PropsWithChildren<Props>) => {
   /**
    * Dark color is from blackAlpha.300, but without opacity so it looks great when we
@@ -54,10 +56,18 @@ const OptionLayout = ({
    */
   const inputBgColor = useColorModeValue("white", "#35353A")
 
-  const { key, ...props } = _props
+  const dragControls = useDragControls()
 
   return (
-    <MotionWrapper key={key}>
+    <Reorder.Item
+      dragListener={false}
+      dragControls={dragControls}
+      value={fieldId}
+      style={{
+        position: "relative",
+        marginBottom: "var(--chakra-sizes-2)",
+      }}
+    >
       <Grid templateColumns="2fr 1fr" gap={2} {...props}>
         <HStack
           w="full"
@@ -78,6 +88,7 @@ const OptionLayout = ({
             }
             flexShrink={0}
             {...(draggable ? draggableCenterProps : undefined)}
+            onPointerDown={draggable ? (e) => dragControls.start(e) : undefined}
           >
             <Icon
               as={DotsSixVertical}
@@ -91,7 +102,7 @@ const OptionLayout = ({
 
         <Flex alignItems="center">{action}</Flex>
       </Grid>
-    </MotionWrapper>
+    </Reorder.Item>
   )
 }
 

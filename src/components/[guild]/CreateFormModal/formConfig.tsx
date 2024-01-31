@@ -24,7 +24,7 @@ const fieldTypes: {
     index: number
   }>
   DisplayComponent: ComponentType<{
-    field: CreateFieldParams
+    field: CreateFieldParams | Field
     isDisabled?: boolean
   }>
 }[] = [
