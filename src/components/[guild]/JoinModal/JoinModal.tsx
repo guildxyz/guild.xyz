@@ -124,6 +124,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <SatisfyRequirementsJoinStep
               mt={"3"}
               mb={isManagingRolesOrRewards ? "3" : "8"}
+              spacing={isManagingRolesOrRewards ? "2.5" : "2"}
               isLoading={isLoading}
               hasNoAccessResponse={response?.success === false}
               onClose={onClose}

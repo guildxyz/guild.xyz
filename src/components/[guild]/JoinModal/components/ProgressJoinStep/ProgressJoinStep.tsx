@@ -1,4 +1,4 @@
-import { HStack, Stack, StackProps, Text } from "@chakra-ui/react"
+import { Center, HStack, Stack, StackProps, Text } from "@chakra-ui/react"
 import { PropsWithChildren, ReactNode } from "react"
 import { JoinState } from "../../utils/mapAccessJobState"
 import JoinStateCount from "./components/JoinStateCount"
@@ -19,10 +19,12 @@ const ProgressJoinStep = ({
   RightComponent?: ReactNode
 }> &
   StackProps) => (
-  <HStack py="3" {...stackProps}>
-    <JoinStatusStepIndicator entity={entity} joinState={joinState} />
+  <HStack py="2.5" alignItems={"flex-start"} spacing={2.5} {...stackProps}>
+    <Center h={joinState || shouldShowSubtitle ? 12 : 6}>
+      <JoinStatusStepIndicator entity={entity} joinState={joinState} />
+    </Center>
 
-    <Stack w="full" spacing={0} mt="-1.5px !important">
+    <Stack w="full" spacing={0}>
       <Text fontWeight={"bold"}>{progressTitle[entity]}</Text>
 
       <JoinStateCount joinState={joinState} entity={entity} />
