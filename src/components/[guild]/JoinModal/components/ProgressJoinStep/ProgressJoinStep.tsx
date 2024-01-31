@@ -24,9 +24,9 @@ const ProgressJoinStep = ({
   <HStack py="2.5" alignItems={"flex-start"} spacing={2.5} {...stackProps}>
     <Center
       h={
-        joinState.requirements ||
-        joinState.rewards ||
-        joinState.roles ||
+        joinState?.requirements ||
+        joinState?.rewards ||
+        joinState?.roles ||
         shouldShowSubtitle
           ? 12
           : 6
