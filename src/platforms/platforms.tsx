@@ -8,8 +8,8 @@ import {
   GoogleLogo,
   IconProps,
   TelegramLogo,
-  TwitterLogo,
 } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 import React, {
   ComponentType,
   ForwardRefExoticComponent,
@@ -242,9 +242,9 @@ const platforms: Record<PlatformName, PlatformData> = {
     },
   },
   TWITTER: {
-    icon: TwitterLogo,
-    imageUrl: "/platforms/twitter.png",
-    name: "Twitter",
+    icon: XLogo,
+    imageUrl: "/platforms/x.png",
+    name: "X",
     colorScheme: "TWITTER",
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
@@ -261,8 +261,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     },
   },
   TWITTER_V1: {
-    icon: TwitterLogo,
-    name: "Twitter",
+    icon: XLogo,
+    name: "X",
     colorScheme: "TWITTER",
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,

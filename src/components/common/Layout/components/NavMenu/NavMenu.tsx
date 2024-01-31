@@ -22,8 +22,8 @@ import {
   List,
   MagnifyingGlass,
   Plus,
-  TwitterLogo,
 } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
 import NavGroup from "./components/NavGroup"
 import ThemeSwitcher from "./components/ThemeSwitcher"
@@ -94,7 +94,7 @@ const NavMenu = (): JSX.Element => {
                 target="_blank"
                 href="https://twitter.com/guildxyz"
                 rel="noopener"
-                leftIcon={<TwitterLogo />}
+                leftIcon={<XLogo />}
               >
                 Twitter
               </NavButton>

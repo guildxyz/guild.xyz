@@ -9,7 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { TwitterLogo } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 import { useRef } from "react"
 
 const useToast = (toastOptions?: UseToastOptions) => {
@@ -94,7 +94,7 @@ const useToastWithTweetButton = () => {
       title,
       description: "Let others know as well by sharing it on Twitter",
       buttonProps: {
-        leftIcon: <TwitterLogo weight="fill" />,
+        leftIcon: <XLogo weight="fill" />,
         children: "Tweet",
         as: "a",
         href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
