@@ -39,15 +39,12 @@ const SatisfyRequirementsJoinStep = ({
         joinState?.state === "INITIAL"
       }
       RightComponent={
-        !hasNoAccessResponse &&
-        joinState?.state !== "MANAGING_REWARDS" &&
-        joinState?.state !== "MANAGING_ROLES" &&
-        joinState?.state !== "FINISHED" ? (
+        !isLoading && !hasNoAccessResponse ? (
           <Tooltip
             hasArrow
             label="Connect your accounts and check access below to see if you meet the requirements the guild owner has set"
           >
-            <Center w={5} h={joinState ? 12 : 6}>
+            <Center w={5} h={6}>
               <Icon as={LockSimple} weight="bold" />
             </Center>
           </Tooltip>
