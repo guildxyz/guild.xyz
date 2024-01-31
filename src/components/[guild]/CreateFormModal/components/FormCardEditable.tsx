@@ -34,6 +34,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
   const {
     control,
     register,
+    resetField,
     formState: { errors },
   } = useFormContext<CreateFormParams>()
   const field = useWatch({ control, name: `fields.${index}` })
@@ -90,6 +91,9 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                   <ControlledSelect
                     name={`fields.${index}.type`}
                     options={fieldTypes}
+                    beforeOnChange={() => {
+                      resetField(`fields.${index}`)
+                    }}
                   />
                 </InputGroup>
               </FormControl>
