@@ -59,7 +59,7 @@ export const TwitterV1Tooltip = () => (
   <Tooltip
     hasArrow
     placement="top"
-    label="Some of our Twitter requirements can only be checked if your Twitter account is connected this way as well"
+    label="Some of our X requirements can only be checked if your X account is connected this way as well"
   >
     <Icon color="gray" as={Question} />
   </Tooltip>

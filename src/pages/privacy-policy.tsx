@@ -383,7 +383,7 @@ const Page = (): JSX.Element => (
           <ListItem>Telegram</ListItem>
           <ListItem>GitHub</ListItem>
           <ListItem>Google</ListItem>
-          <ListItem>Twitter</ListItem>
+          <ListItem>X</ListItem>
         </OrderedList>
         <Text>
           (2) Connecting Social accounts is based on OAuth authorization protocol,

@@ -172,7 +172,7 @@ const VirtualRequirements = memo(
           listRef.current.resetAfterIndex(0)
           rowHeights.current = {
             ...rowHeights.current,
-            [index]: rowRef.current.clientHeight,
+            [index]: rowRef.current?.clientHeight,
           }
         })
 

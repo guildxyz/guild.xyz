@@ -92,10 +92,10 @@ const useToastWithTweetButton = () => {
     toastWithButton({
       status: "success",
       title,
-      description: "Let others know as well by sharing it on Twitter",
+      description: "Let others know as well by sharing it on X",
       buttonProps: {
         leftIcon: <XLogo weight="fill" />,
-        children: "Tweet",
+        children: "Post",
         as: "a",
         href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           tweetText

@@ -22,7 +22,7 @@ const TwitterRequirementsVerificationIssuesAlert = () => {
       <AlertIcon />
 
       <AlertDescription>
-        Access verification may be limited due to Twitter API issues.
+        Access verification may be limited due to X API issues.
       </AlertDescription>
     </Alert>
   )
