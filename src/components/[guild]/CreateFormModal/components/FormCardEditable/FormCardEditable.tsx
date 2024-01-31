@@ -11,7 +11,6 @@ import {
   InputLeftElement,
   Stack,
   Switch,
-  Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -21,8 +20,9 @@ import { Reorder, useDragControls } from "framer-motion"
 import { DotsSixVertical, PencilSimple, Trash } from "phosphor-react"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
-import { fieldTypes } from "../formConfig"
-import { CreateFormParams } from "../schemas"
+import { fieldTypes } from "../../formConfig"
+import { CreateFormParams } from "../../schemas"
+import FormFieldTitle from "./components/FormFieldTitle"
 
 type Props = {
   index: number
@@ -101,14 +101,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
           ) : (
             <HStack justifyContent="space-between">
               <HStack>
-                <Text as="span" fontWeight="semibold">
-                  {field?.question}
-                  {isRequiredValue && (
-                    <Text as="sup" color="red.400" ml={1}>
-                      *
-                    </Text>
-                  )}
-                </Text>
+                <FormFieldTitle field={field} />
                 <IconButton
                   aria-label="Edit field"
                   size="sm"
