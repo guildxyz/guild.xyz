@@ -26,8 +26,14 @@ const Rate = ({ field, isDisabled }: Props) => {
         isDisabled={isDisabled}
         // TODO: we'll need to use option for display, but option.value for setup...
         options={field.options?.map((option) => ({
-          value: option.value,
-          label: option.value,
+          value:
+            typeof option === "string" || typeof option === "number"
+              ? option
+              : option.value,
+          label:
+            typeof option === "string" || typeof option === "number"
+              ? option
+              : option.value,
         }))}
       />
 
@@ -64,7 +70,7 @@ const RateRadioGroup = ({
   const { getInputProps, getRadioProps } = useRadio(props)
 
   return (
-    <Box as="label">
+    <>
       <input {...getInputProps()} />
       <ButtonGroup w="full">
         {options?.map(({ label, value }) => (
@@ -79,7 +85,7 @@ const RateRadioGroup = ({
           </Button>
         ))}
       </ButtonGroup>
-    </Box>
+    </>
   )
 }
 
