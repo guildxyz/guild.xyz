@@ -56,7 +56,7 @@ const SatisfyRequirementsJoinStep = ({
       {...stackProps}
     >
       <Collapse in={hasNoAccessResponse && !isLoading}>
-        <Text pt="2">
+        <Text>
           {`You're not eligible with your connected accounts. `}
           <Button
             variant="link"
