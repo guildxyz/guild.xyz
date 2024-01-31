@@ -9,7 +9,7 @@ type Props = {
   delay?: number
 }
 
-const MotionWrapper = ({
+const CardMotionWrapper = ({
   animateOnMount = true,
   delay = 0,
   children,
@@ -38,4 +38,4 @@ const MotionWrapper = ({
   </LazyMotion>
 )
 
-export default MotionWrapper
+export default CardMotionWrapper

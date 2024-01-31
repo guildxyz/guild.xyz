@@ -1,6 +1,5 @@
 import { FormControl, HStack, Input, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import MotionWrapper from "components/common/CardMotionWrapper"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { AnimatePresence, AnimateSharedLayout, Reorder } from "framer-motion"
 import { useEffect, useRef } from "react"
@@ -85,66 +84,64 @@ const ChoiceSetup = ({ index }: Props) => {
         </AnimatePresence>
       </Reorder.Group>
 
-      <MotionWrapper>
-        <Stack mt={-2}>
-          <AnimatePresence>
+      <Stack mt={-2}>
+        <AnimatePresence>
+          <OptionLayout
+            key="addOption"
+            type={type}
+            action={
+              !allowOther && (
+                <HStack spacing={1} pl={1}>
+                  <Text
+                    as="span"
+                    fontWeight="bold"
+                    fontSize="xs"
+                    textTransform="uppercase"
+                    colorScheme="gray"
+                  >
+                    OR
+                  </Text>
+
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setValue(`fields.${index}.allowOther`, true)}
+                  >
+                    Add "Other"...
+                  </Button>
+                </HStack>
+              )
+            }
+          >
+            <Input
+              ref={addOptionRef}
+              placeholder="Add option"
+              onChange={(e) => {
+                if (!fields.every((field) => !!field.value)) return
+                append({
+                  value: e.target.value,
+                })
+                addOptionRef.current.value = ""
+              }}
+            />
+          </OptionLayout>
+
+          {allowOther && (
             <OptionLayout
-              key="addOption"
+              key="addOther"
               type={type}
               action={
-                !allowOther && (
-                  <HStack spacing={1} pl={1}>
-                    <Text
-                      as="span"
-                      fontWeight="bold"
-                      fontSize="xs"
-                      textTransform="uppercase"
-                      colorScheme="gray"
-                    >
-                      OR
-                    </Text>
-
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setValue(`fields.${index}.allowOther`, true)}
-                    >
-                      Add "Other"...
-                    </Button>
-                  </HStack>
-                )
+                <RemoveButton
+                  onClick={() => setValue(`fields.${index}.allowOther`, false)}
+                />
               }
+              mt={-2}
             >
-              <Input
-                ref={addOptionRef}
-                placeholder="Add option"
-                onChange={(e) => {
-                  if (!fields.every((field) => !!field.value)) return
-                  append({
-                    value: e.target.value,
-                  })
-                  addOptionRef.current.value = ""
-                }}
-              />
+              <Input placeholder="Other..." isDisabled />
             </OptionLayout>
-
-            {allowOther && (
-              <OptionLayout
-                key="addOther"
-                type={type}
-                action={
-                  <RemoveButton
-                    onClick={() => setValue(`fields.${index}.allowOther`, false)}
-                  />
-                }
-                mt={-2}
-              >
-                <Input placeholder="Other..." isDisabled />
-              </OptionLayout>
-            )}
-          </AnimatePresence>
-        </Stack>
-      </MotionWrapper>
+          )}
+        </AnimatePresence>
+      </Stack>
     </AnimateSharedLayout>
   )
 }
