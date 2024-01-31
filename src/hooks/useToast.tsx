@@ -4,24 +4,22 @@ import {
   LinkProps,
   Text,
   ToastId,
-  UseToastOptions,
-  useToast as chakraUseToast,
   useColorModeValue,
+  useToast as chakraUseToast,
+  UseToastOptions,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import XLogo from "static/icons/x.svg"
 import { useRef } from "react"
 
 const useToast = (toastOptions?: UseToastOptions) => {
-  const useToastWithDefaults = chakraUseToast({
+  return chakraUseToast({
     position: "top-right",
     variant: "toastSubtle",
     isClosable: true,
     duration: 4000,
     ...toastOptions,
   })
-
-  return useToastWithDefaults
 }
 
 export type ActionToastOptions = UseToastOptions & {
