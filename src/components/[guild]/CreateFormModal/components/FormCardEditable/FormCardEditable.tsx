@@ -92,7 +92,17 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                     name={`fields.${index}.type`}
                     options={fieldTypes}
                     beforeOnChange={() => {
-                      resetField(`fields.${index}`)
+                      resetField(`fields.${index}`, {
+                        defaultValue: {
+                          type: field.type,
+                          question: field.question,
+                          allowOther: false,
+                          bestLabel: "",
+                          worstLabel: "",
+                          isRequired: false,
+                          options: [],
+                        },
+                      })
                     }}
                   />
                 </InputGroup>

@@ -9,7 +9,7 @@ import { z } from "zod"
  */
 
 const FieldBaseSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid().optional(),
   question: z.string().min(1),
   isRequired: z.boolean().optional().default(false),
 })
@@ -49,6 +49,12 @@ const FieldSchema = z.discriminatedUnion("type", [
   RateFieldSchema,
 ])
 
+const FieldFromDBSchema = FieldSchema.and(
+  z.object({
+    id: z.string().uuid().optional(),
+  })
+)
+
 export const FormSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
@@ -69,5 +75,5 @@ const FormFromDBSchema = FormSchema.extend({
 export type CreateFieldParams = z.input<typeof FieldSchema>
 export type CreateFormParams = z.input<typeof FormSchema>
 // Core így adja vissza DB-ből kiolvasott dolgokat (a DB query-k eredményét át lehet tolni a megfelelő sémákon és onnantól jók lesznek a typeok is mindenhol)
-export type Field = z.infer<typeof FieldSchema>
+export type Field = z.infer<typeof FieldFromDBSchema>
 export type Form = z.infer<typeof FormFromDBSchema>
