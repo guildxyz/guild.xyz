@@ -7,7 +7,7 @@ import {
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
-import { isRolePlatformInActiveTimeframe } from "utils/rolePlatformHelpers"
+import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import ClaimPoapButton from "./ClaimPoapButton"
 
 type Props = {
@@ -31,7 +31,7 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
     .find((rp) => rp.id === rolePlatformId)
 
   const { inActiveTimeframe: isButtonDisabled, startTimeDiff } =
-    isRolePlatformInActiveTimeframe(rolePlatform)
+    getRolePlatformTimeframeInfo(rolePlatform)
 
   return (
     <Stack p={padding} w="full" spacing={2}>

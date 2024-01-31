@@ -21,7 +21,7 @@ export const getRolePlatformStatus = (
   }
 }
 
-export const isRolePlatformInActiveTimeframe = (
+export const getRolePlatformTimeframeInfo = (
   rolePlatform: RolePlatform,
   additionalCondition = true
 ) => {
@@ -38,4 +38,4 @@ export const isRolePlatformInActiveTimeframe = (
   return { inActiveTimeframe, startTimeDiff, endTimeDiff }
 }
 
-export default { getRolePlatformStatus, isRolePlatformInActiveTimeframe }
+export default { getRolePlatformStatus, getRolePlatformTimeframeInfo }

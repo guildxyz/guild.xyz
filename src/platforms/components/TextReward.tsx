@@ -11,6 +11,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import useClaimText, {
   ClaimTextModal,
 } from "platforms/SecretText/hooks/useClaimText"
@@ -19,7 +20,7 @@ import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
   getRolePlatformStatus,
-  isRolePlatformInActiveTimeframe,
+  getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
@@ -50,13 +51,9 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const state = useMemo(() => {
     if (isMember && hasAccess) {
-      if (isRolePlatformInActiveTimeframe(platform, !claimed))
+      if (getRolePlatformTimeframeInfo(platform, !claimed))
         return {
-          tooltipLabel: {
-            ALL_CLAIMED: "All available rewards have already been claimed",
-            NOT_STARTED: "Claim hasn't started yet",
-            ENDED: "Claim already ended",
-          }[getRolePlatformStatus(platform)],
+          tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
           buttonProps: {
             isDisabled: true,
           },

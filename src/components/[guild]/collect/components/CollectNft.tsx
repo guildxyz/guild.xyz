@@ -18,7 +18,7 @@ import CollectNftButton from "components/[guild]/collect/components/CollectNftBu
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
-import { isRolePlatformInActiveTimeframe } from "utils/rolePlatformHelpers"
+import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
@@ -45,7 +45,7 @@ const CollectNft = () => {
   )
 
   const { inActiveTimeframe: isButtonDisabled, startTimeDiff } =
-    isRolePlatformInActiveTimeframe(rolePlatform)
+    getRolePlatformTimeframeInfo(rolePlatform)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 

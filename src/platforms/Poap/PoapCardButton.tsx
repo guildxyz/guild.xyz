@@ -3,11 +3,12 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
 import LinkButton from "components/common/LinkButton"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
 import {
   getRolePlatformStatus,
-  isRolePlatformInActiveTimeframe,
+  getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 
 type Props = {
@@ -23,12 +24,7 @@ const PoapCardButton = ({ platform }: Props) => {
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
   const { inActiveTimeframe: isButtonDisabled } =
-    isRolePlatformInActiveTimeframe(rolePlatform)
-  const tooltipLabel = {
-    ALL_CLAIMED: "All available rewards have already been claimed",
-    NOT_STARTED: "Claim hasn't started yet",
-    ENDED: "Claim already ended",
-  }[getRolePlatformStatus(rolePlatform)]
+    getRolePlatformTimeframeInfo(rolePlatform)
 
   const buttonLabel =
     !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
@@ -43,7 +39,7 @@ const PoapCardButton = ({ platform }: Props) => {
     <>
       <Tooltip
         isDisabled={!isButtonDisabled}
-        label={tooltipLabel}
+        label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >

@@ -8,12 +8,13 @@ import AvailabilityTags from "components/[guild]/RolePlatforms/components/Platfo
 import useGuild from "components/[guild]/hooks/useGuild"
 import LinkButton from "components/common/LinkButton"
 import { ArrowRight } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
   getRolePlatformStatus,
-  isRolePlatformInActiveTimeframe,
+  getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 
 const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
@@ -21,13 +22,9 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
 
   const state = useMemo(() => {
-    if (isRolePlatformInActiveTimeframe(platform))
+    if (getRolePlatformTimeframeInfo(platform))
       return {
-        tooltipLabel: {
-          ALL_CLAIMED: "All available POAPs have already been claimed",
-          NOT_STARTED: "Claim hasn't started yet",
-          ENDED: "Claim already ended",
-        }[getRolePlatformStatus(platform)],
+        tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
         buttonProps: {
           isDisabled: true,
         },

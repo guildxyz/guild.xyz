@@ -1,16 +1,26 @@
 import { Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatform, PlatformType, RolePlatformStatus } from "types"
 import {
   getRolePlatformStatus,
-  isRolePlatformInActiveTimeframe,
+  getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
 import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
 
 type Props = {
   platform: GuildPlatform
+}
+
+export const claimTextButtonTooltipLabel: Record<
+  RolePlatformStatus,
+  string | undefined
+> = {
+  ALL_CLAIMED: "All available rewards have already been claimed",
+  NOT_STARTED: "Claim hasn't started yet",
+  ENDED: "Claim already ended",
+  ACTIVE: undefined,
 }
 
 const TextCardButton = ({ platform }: Props) => {
@@ -28,21 +38,16 @@ const TextCardButton = ({ platform }: Props) => {
   } = useClaimText(rolePlatform?.id)
   const { claimed } = useClaimedReward(rolePlatform.id)
 
-  const { inActiveTimeframe: isButtonDisabled } = isRolePlatformInActiveTimeframe(
+  const { inActiveTimeframe: isButtonDisabled } = getRolePlatformTimeframeInfo(
     rolePlatform,
     !claimed
   )
-  const tooltipLabel = {
-    ALL_CLAIMED: "All available rewards have already been claimed",
-    NOT_STARTED: "Claim hasn't started yet",
-    ENDED: "Claim already ended",
-  }[getRolePlatformStatus(rolePlatform)]
 
   return (
     <>
       <Tooltip
         isDisabled={!isButtonDisabled}
-        label={tooltipLabel}
+        label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >
