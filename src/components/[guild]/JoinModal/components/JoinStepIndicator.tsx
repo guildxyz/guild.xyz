@@ -15,34 +15,30 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
   const color = useColorModeValue("black", "white")
 
   switch (props.status) {
-    case "DONE":
-    case "ERROR":
+    case "DONE": {
+      return (
+        <Circle size="5" bg="green.500">
+          <Icon weight="bold" color="white" as={Check} boxSize="0.8em" />
+        </Circle>
+      )
+    }
+
+    case "ERROR": {
+      return (
+        <Circle size="5" bg="gray.500">
+          <Icon weight="bold" color="white" as={X} boxSize="0.7em" />
+        </Circle>
+      )
+    }
+
     case "INACTIVE": {
       return (
         <Circle
           size="5"
-          border={"1px"}
-          {...(props.status === "DONE"
-            ? {
-                bg: "green.500",
-                borderColor: "green.500",
-              }
-            : props.status === "ERROR"
-            ? { bg: "gray.500", borderColor: "gray.500" }
-            : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
-        >
-          {(props.status === "DONE" || props.status === "ERROR") && (
-            <Icon
-              as={props.status === "ERROR" ? Check : X}
-              weight="bold"
-              color={"white"}
-              boxSize={"0.8em"}
-              {...(props.status === "DONE"
-                ? { as: Check, boxSize: "0.8em" }
-                : { as: X, boxSize: "0.7em" })}
-            />
-          )}
-        </Circle>
+          bg="blackAlpha.100"
+          borderWidth={"1px"}
+          borderColor="whiteAlpha.100"
+        />
       )
     }
 
