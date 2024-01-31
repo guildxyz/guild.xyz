@@ -31,8 +31,10 @@ const ProgressJoinStep = ({
 
       {shouldShowSubtitle &&
         JOIN_LOADING_TEXTS[joinState?.state]?.[+!!joinState?.waitingPosition] && (
-          <Text>
-            {JOIN_LOADING_TEXTS[joinState?.state][+!!joinState?.waitingPosition]}
+          <Text colorScheme={"gray"}>
+            {JOIN_LOADING_TEXTS[joinState?.state][
+              +!!joinState?.waitingPosition
+            ].replace("POSITION", joinState?.waitingPosition)}
           </Text>
         )}
 
