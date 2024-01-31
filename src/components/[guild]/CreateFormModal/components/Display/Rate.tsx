@@ -1,18 +1,19 @@
 import {
   Box,
-  ButtonGroup,
   Collapse,
   HStack,
+  RadioProps,
   Stack,
   Text,
-  UseRadioProps,
+  UseRadioGroupProps,
   useRadio,
+  useRadioGroup,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { CreateFieldParams } from "../../schemas"
+import { CreateFieldParams, Field } from "../../schemas"
 
 type Props = {
-  field: CreateFieldParams
+  field: CreateFieldParams | Field
   isDisabled?: boolean
 }
 
@@ -21,19 +22,20 @@ const Rate = ({ field, isDisabled }: Props) => {
   if (field.type !== "RATE") return null
 
   return (
-    <Stack spacing={0}>
+    <Stack spacing={1}>
       <RateRadioGroup
+        onChange={console.log}
         isDisabled={isDisabled}
-        // TODO: we'll need to use option for display, but option.value for setup...
+        // TODO: we'll need to use option for display, but option.value for setup... we should find a better solution for this
         options={field.options?.map((option) => ({
           value:
             typeof option === "string" || typeof option === "number"
-              ? option
-              : option.value,
+              ? option.toString()
+              : option.value.toString(),
           label:
             typeof option === "string" || typeof option === "number"
-              ? option
-              : option.value,
+              ? option.toString()
+              : option.value.toString(),
         }))}
       />
 
@@ -65,27 +67,51 @@ const RateRadioGroup = ({
   options,
   ...props
 }: {
-  options: { label: string | number; value: string | number }[]
-} & UseRadioProps) => {
-  const { getInputProps, getRadioProps } = useRadio(props)
+  options: { label: string; value: string }[]
+} & UseRadioGroupProps) => {
+  const { getRootProps, getRadioProps } = useRadioGroup(props)
+
+  const group = getRootProps()
 
   return (
-    <>
-      <input {...getInputProps()} />
-      <ButtonGroup w="full">
-        {options?.map(({ label, value }) => (
-          <Button
-            key={value}
-            {...getRadioProps()}
-            size="sm"
-            w="full"
-            borderRadius="lg"
-          >
+    <HStack w="full" {...group}>
+      {options?.map(({ label, value }) => {
+        const radio = getRadioProps({ value })
+        return (
+          <RateRadioButton key={value} {...radio} isDisabled={props.isDisabled}>
             {label}
-          </Button>
-        ))}
-      </ButtonGroup>
-    </>
+          </RateRadioButton>
+        )
+      })}
+    </HStack>
+  )
+}
+
+const RateRadioButton = (props: RadioProps) => {
+  const { getInputProps, getRadioProps } = useRadio(props)
+
+  const input = getInputProps()
+  const checkbox = getRadioProps()
+
+  return (
+    <Box as="label" w="full">
+      <input {...input} />
+      <Button
+        as="div"
+        {...checkbox}
+        cursor="pointer"
+        w="full"
+        size="sm"
+        alignItems="center"
+        justifyContent="center"
+        borderRadius="md"
+        _checked={{
+          bg: "primary.500",
+        }}
+      >
+        {props.children}
+      </Button>
+    </Box>
   )
 }
 
