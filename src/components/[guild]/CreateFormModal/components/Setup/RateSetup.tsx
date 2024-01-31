@@ -40,13 +40,10 @@ type LabelSetupProps = {
   fieldIndex: number
 }
 
-const baseOptionsArray = [...Array(10)].map((_, i) => {
-  const value = i + 1
-  return {
-    label: value.toString(),
-    value,
-  }
-})
+const baseOptionsArray = [...Array(11)].map((_, i) => ({
+  label: i.toString(),
+  value: i,
+}))
 
 const labelSetupConfig: Record<
   LabelSetupProps["type"],
