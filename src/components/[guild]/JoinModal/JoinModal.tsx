@@ -113,18 +113,17 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
 
-            <Collapse in={!isManagingRolesOrRewards} style={{ overflow: "visible" }}>
+            <Collapse in={!isManagingRolesOrRewards}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
                 <WalletAuthButton />
                 {renderedSteps}
               </VStack>
             </Collapse>
 
-            {!isManagingRolesOrRewards && <Divider />}
+            {!isManagingRolesOrRewards && <Divider mb={3} />}
 
             <SatisfyRequirementsJoinStep
-              mt={"3"}
-              mb={isManagingRolesOrRewards ? "3" : "8"}
+              mb={isManagingRolesOrRewards ? "2.5" : "8"}
               spacing={isManagingRolesOrRewards ? "2.5" : "2"}
               isLoading={isLoading}
               hasNoAccessResponse={response?.success === false}
@@ -132,10 +131,10 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               joinState={joinProgress}
             />
 
-            {isManagingRolesOrRewards && <Divider my={3} />}
+            {isManagingRolesOrRewards && <Divider my={2.5} />}
 
             <Collapse in={isManagingRolesOrRewards}>
-              <VStack {...JOIN_STEP_VSTACK_PROPS}>
+              <VStack {...JOIN_STEP_VSTACK_PROPS} spacing={2.5} mb={6}>
                 <ProgressJoinStep
                   entity="role"
                   joinState={joinProgress}
