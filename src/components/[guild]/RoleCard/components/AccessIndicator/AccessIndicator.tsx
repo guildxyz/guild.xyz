@@ -122,9 +122,9 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
-        colorScheme="orange"
+        colorScheme="blue"
         label="Reconnect needed to check access"
-        icon={Warning}
+        icon={LockSimple}
         onClick={() => openAccountModal()}
         cursor="pointer"
       />
