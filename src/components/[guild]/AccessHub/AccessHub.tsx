@@ -22,6 +22,7 @@ import useIsMember from "../hooks/useIsMember"
 import useRoleGroup from "../hooks/useRoleGroup"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
+import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -39,8 +40,10 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
   )
-  const relevantGuildPlatforms = guildPlatforms.filter((gp) =>
-    relevantGuildPlatformIds.includes(gp.id)
+  const relevantGuildPlatforms = guildPlatforms.filter(
+    (gp) =>
+      relevantGuildPlatformIds.includes(gp.id) &&
+      gp.platformId !== PlatformType.POINTS
   )
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
@@ -82,27 +85,14 @@ const AccessHub = (): JSX.Element => {
     guildPin,
     groups,
     onboardingComplete,
-    roles,
   } = useGuild()
 
   const group = useRoleGroup()
-
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
 
-  const allAccessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
-
-  const accessedGuildPlatforms = allAccessedGuildPlatforms.filter(
-    (gp) => gp.platformId !== PlatformType.POINTS
-  )
-  const accessedGuildPoints = allAccessedGuildPlatforms.filter((gp) => {
-    const isVisibleOnAnyRole =
-      roles
-        .flatMap((role) => role.rolePlatforms)
-        .filter((rp) => rp.guildPlatformId === gp.id)
-        .some((r) => r.visibility != "HIDDEN") || isAdmin
-    return isVisibleOnAnyRole && gp.platformId === PlatformType.POINTS
-  })
+  const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
+  const accessedGuildPoints = useAccessedGuildPoints()
 
   const shouldShowGuildPin =
     !group &&
@@ -127,50 +117,42 @@ const AccessHub = (): JSX.Element => {
         >
           {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
-          {allAccessedGuildPlatforms?.length > 0 && (
-            <>
-              {accessedGuildPlatforms.map((platform) => {
-                if (!platforms[PlatformType[platform.platformId]]) return null
 
-                const {
-                  cardPropsHook: useCardProps,
-                  cardMenuComponent: PlatformCardMenu,
-                  cardWarningComponent: PlatformCardWarning,
-                  cardButton: PlatformCardButton,
-                } = platforms[PlatformType[platform.platformId] as PlatformName]
+          {accessedGuildPlatforms.map((platform) => {
+            if (!platforms[PlatformType[platform.platformId]]) return null
 
-                return (
-                  <PlatformCard
-                    usePlatformProps={useCardProps}
-                    guildPlatform={platform}
-                    key={platform.id}
-                    cornerButton={
-                      isAdmin && PlatformCardMenu ? (
-                        <PlatformCardMenu
-                          platformGuildId={platform.platformGuildId}
-                        />
-                      ) : PlatformCardWarning ? (
-                        <PlatformCardWarning guildPlatform={platform} />
-                      ) : null
-                    }
-                  >
-                    {PlatformCardButton ? (
-                      <PlatformCardButton platform={platform} />
-                    ) : (
-                      <PlatformAccessButton platform={platform} />
-                    )}
-                  </PlatformCard>
-                )
-              })}
+            const {
+              cardPropsHook: useCardProps,
+              cardMenuComponent: PlatformCardMenu,
+              cardWarningComponent: PlatformCardWarning,
+              cardButton: PlatformCardButton,
+            } = platforms[PlatformType[platform.platformId] as PlatformName]
 
-              {accessedGuildPoints.map((pointPlatform) => (
-                <PointsRewardCard
-                  key={pointPlatform.id}
-                  guildPlatform={pointPlatform}
-                />
-              ))}
-            </>
-          )}
+            return (
+              <PlatformCard
+                usePlatformProps={useCardProps}
+                guildPlatform={platform}
+                key={platform.id}
+                cornerButton={
+                  isAdmin && PlatformCardMenu ? (
+                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
+                  ) : PlatformCardWarning ? (
+                    <PlatformCardWarning guildPlatform={platform} />
+                  ) : null
+                }
+              >
+                {PlatformCardButton ? (
+                  <PlatformCardButton platform={platform} />
+                ) : (
+                  <PlatformAccessButton platform={platform} />
+                )}
+              </PlatformCard>
+            )
+          })}
+
+          {accessedGuildPoints.map((pointPlatform) => (
+            <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
+          ))}
 
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&

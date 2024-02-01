@@ -1,41 +1,18 @@
 import { Center, Img, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { CaretDown } from "phosphor-react"
 import Star from "static/icons/star.svg"
-import { PlatformType } from "types"
+import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
-import useGuildPermission from "../hooks/useGuildPermission"
 
 const LeaderboardPointsSelector = () => {
-  const { id, urlName, guildPlatforms, roles } = useGuild()
-
+  const { urlName } = useGuild()
   const router = useRouter()
-  const { isAdmin } = useGuildPermission()
 
-  const { memberships } = useMemberships()
-
-  const accessedRoleIds = memberships?.find(
-    (membership) => membership.guildId === id
-  )?.roleIds
-
-  if (!guildPlatforms) return null
-
-  const pointsRewards = guildPlatforms.filter((gp) => {
-    const isVisibleOnAnyRole =
-      roles
-        .flatMap((role) => role.rolePlatforms)
-        .filter((rp) => rp.guildPlatformId === gp.id)
-        .filter((rl) =>
-          rl.visibility === "PRIVATE" ? accessedRoleIds?.includes(rl.roleId) : true
-        )
-        .some((rl) => rl.visibility != "HIDDEN") || isAdmin
-    return gp.platformId === PlatformType.POINTS && isVisibleOnAnyRole
-  })
-
+  const pointsRewards = useAccessedGuildPoints(true)
   if (pointsRewards.length < 2) return null
 
   const pointsRewardsData = pointsRewards.map((gp) => ({

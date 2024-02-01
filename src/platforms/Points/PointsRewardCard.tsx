@@ -28,14 +28,14 @@ const PointsRewardCard = ({ guildPlatform }) => {
 
   const bgColor = useColorModeValue("gray.700", "gray.600")
 
-  if (error) return null
+  if (error && !isAdmin) return null
 
   return (
     <>
       <RewardCard
         label={platforms.POINTS.name}
         title={
-          isLoading ? null : `You have ${data?.totalPoints} ${name || "points"}`
+          isLoading ? null : `You have ${data?.totalPoints ?? 0} ${name || "points"}`
         }
         image={
           imageUrl || (
