@@ -38,10 +38,8 @@ const TextCardButton = ({ platform }: Props) => {
   } = useClaimText(rolePlatform?.id)
   const { claimed } = useClaimedReward(rolePlatform.id)
 
-  const { inActiveTimeframe: isButtonDisabled } = getRolePlatformTimeframeInfo(
-    rolePlatform,
-    !claimed
-  )
+  const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
+  const isButtonDisabled = !isAvailable && !claimed
 
   return (
     <>

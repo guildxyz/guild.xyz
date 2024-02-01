@@ -23,14 +23,13 @@ const PoapCardButton = ({ platform }: Props) => {
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
-  const { inActiveTimeframe: isButtonDisabled } =
-    getRolePlatformTimeframeInfo(rolePlatform)
+  const { isAvailable: isButtonEnabled } = getRolePlatformTimeframeInfo(rolePlatform)
 
   const buttonLabel =
     !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
 
   const buttonProps: Omit<ButtonProps, "as"> = {
-    isDisabled: isButtonDisabled,
+    isDisabled: !isButtonEnabled,
     w: "full",
     colorScheme: platforms.POAP.colorScheme,
   }
@@ -38,12 +37,12 @@ const PoapCardButton = ({ platform }: Props) => {
   return (
     <>
       <Tooltip
-        isDisabled={!isButtonDisabled}
+        isDisabled={isButtonEnabled}
         label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >
-        {isButtonDisabled ? (
+        {!isButtonEnabled ? (
           <Button {...buttonProps}>{buttonLabel}</Button>
         ) : (
           <LinkButton

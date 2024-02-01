@@ -51,13 +51,14 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const state = useMemo(() => {
     if (isMember && hasAccess) {
-      if (getRolePlatformTimeframeInfo(platform, !claimed))
+      if (!getRolePlatformTimeframeInfo(platform).isAvailable && !claimed) {
         return {
           tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
           buttonProps: {
             isDisabled: true,
           },
         }
+      }
 
       return {
         tooltipLabel: label,

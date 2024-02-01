@@ -22,7 +22,7 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
 
   const state = useMemo(() => {
-    if (getRolePlatformTimeframeInfo(platform))
+    if (!getRolePlatformTimeframeInfo(platform).isAvailable)
       return {
         tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
         buttonProps: {

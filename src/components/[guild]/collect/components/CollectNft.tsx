@@ -44,7 +44,7 @@ const CollectNft = () => {
     nftAddress
   )
 
-  const { inActiveTimeframe: isButtonDisabled, startTimeDiff } =
+  const { isAvailable: isButtonEnabled, startTimeDiff } =
     getRolePlatformTimeframeInfo(rolePlatform)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
@@ -60,7 +60,7 @@ const CollectNft = () => {
           hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
         />
         <Tooltip
-          isDisabled={!isButtonDisabled}
+          isDisabled={isButtonEnabled}
           label={
             startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
           }
@@ -68,7 +68,7 @@ const CollectNft = () => {
           shouldWrapChildren
         >
           <CollectNftButton
-            isDisabled={isButtonDisabled}
+            isDisabled={!isButtonEnabled}
             label="Collect now"
             colorScheme="green"
           />

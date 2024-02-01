@@ -30,14 +30,14 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
 
-  const { inActiveTimeframe: isButtonDisabled, startTimeDiff } =
+  const { isAvailable: isButtonEnabled, startTimeDiff } =
     getRolePlatformTimeframeInfo(rolePlatform)
 
   return (
     <Stack p={padding} w="full" spacing={2}>
       <ConnectWalletButton />
       <Tooltip
-        isDisabled={!isButtonDisabled}
+        isDisabled={isButtonEnabled}
         label={
           startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
         }
@@ -46,7 +46,7 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
       >
         <ClaimPoapButton
           rolePlatformId={rolePlatformId}
-          isDisabled={isButtonDisabled}
+          isDisabled={!isButtonEnabled}
         />
       </Tooltip>
 

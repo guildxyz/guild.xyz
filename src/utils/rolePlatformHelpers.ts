@@ -21,21 +21,17 @@ export const getRolePlatformStatus = (
   }
 }
 
-export const getRolePlatformTimeframeInfo = (
-  rolePlatform: RolePlatform,
-  additionalCondition = true
-) => {
+export const getRolePlatformTimeframeInfo = (rolePlatform: RolePlatform) => {
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
 
-  const inActiveTimeframe =
-    (startTimeDiff > 0 ||
-      endTimeDiff < 0 ||
-      (typeof rolePlatform?.capacity === "number" &&
-        rolePlatform?.capacity === rolePlatform?.claimedCount)) &&
-    additionalCondition
+  const isAvailable =
+    startTimeDiff <= 0 && // Start time is now or in the past
+    endTimeDiff >= 0 && // End time is in the future
+    (typeof rolePlatform?.capacity !== "number" ||
+      rolePlatform?.capacity !== rolePlatform?.claimedCount) // Capacity not reached
 
-  return { inActiveTimeframe, startTimeDiff, endTimeDiff }
+  return { isAvailable, startTimeDiff, endTimeDiff }
 }
 
 export default { getRolePlatformStatus, getRolePlatformTimeframeInfo }
