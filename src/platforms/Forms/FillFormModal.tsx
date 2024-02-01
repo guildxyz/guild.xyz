@@ -1,4 +1,5 @@
 import {
+  FormControl,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,6 +14,7 @@ import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
 import { Form } from "components/[guild]/CreateFormModal/schemas"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -30,7 +32,11 @@ type Props = {
 
 const FillFormModal = ({ form, isOpen, onClose }: Props) => {
   const { id } = useGuild()
-  const { control, handleSubmit } = useForm()
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -67,9 +73,9 @@ const FillFormModal = ({ form, isOpen, onClose }: Props) => {
               )
 
               return (
-                <Stack key={field.id} spacing={2}>
+                <FormControl key={field.id} isInvalid={!!errors[field.id]}>
                   {/* TODO: should this be a simple FormLabel instead? */}
-                  <FormFieldTitle field={field} />
+                  <FormFieldTitle field={field} mb={2} />
                   <Controller
                     control={control}
                     name={field.id}
@@ -80,7 +86,11 @@ const FillFormModal = ({ form, isOpen, onClose }: Props) => {
                       <DisplayComponent field={field} {...controlledField} />
                     )}
                   />
-                </Stack>
+
+                  <FormErrorMessage>
+                    {errors[field.id]?.message?.toString()}
+                  </FormErrorMessage>
+                </FormControl>
               )
             })}
           </Stack>
