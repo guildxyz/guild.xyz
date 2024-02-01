@@ -57,6 +57,7 @@ const GuildForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     resetField(`${baseFieldPath}.data.guildId`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.maxAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
   }, [type])
 
