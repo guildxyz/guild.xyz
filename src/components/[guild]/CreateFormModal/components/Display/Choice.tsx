@@ -8,14 +8,14 @@ import {
   RadioGroupProps,
   RadioProps,
   Stack,
+  forwardRef,
 } from "@chakra-ui/react"
 import { ComponentType } from "react"
 import { CreateFieldParams } from "../../schemas"
 
 type Props = {
   field: CreateFieldParams
-  isDisabled?: boolean
-}
+} & (RadioGroupProps | CheckboxGroupProps)
 
 const GroupComponents: Record<
   "SINGLE_CHOICE" | "MULTIPLE_CHOICE",
@@ -33,7 +33,8 @@ const FieldComponents: Record<
   MULTIPLE_CHOICE: Checkbox,
 }
 
-const Choice = ({ field, isDisabled }: Props) => {
+// TODO: should we pass that ref down? (probably for focus management?)
+const Choice = forwardRef<Props, "div">(({ field, ...props }, _ref) => {
   // We probably won't run into this case, but needed to add this line to get valid intellisense
   if (field.type !== "SINGLE_CHOICE" && field.type !== "MULTIPLE_CHOICE") return null
 
@@ -45,7 +46,7 @@ const Choice = ({ field, isDisabled }: Props) => {
   const FieldComponent = FieldComponents[field.type]
 
   return (
-    <GroupComponent isDisabled={isDisabled}>
+    <GroupComponent {...props}>
       <Stack spacing={1}>
         {options.map((option) => (
           <FieldComponent key={option} value={option.toString()}>
@@ -58,5 +59,6 @@ const Choice = ({ field, isDisabled }: Props) => {
       </Stack>
     </GroupComponent>
   )
-}
+})
+
 export default Choice
