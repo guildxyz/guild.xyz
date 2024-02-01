@@ -179,7 +179,7 @@ const GuildPage = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    if (isAdmin && contacts) showAddContactInfoToast()
+    if (isAdmin && !contacts) showAddContactInfoToast()
   }, [isAdmin, contacts])
 
   const showAddContactInfoToast = () => {
