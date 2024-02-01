@@ -328,6 +328,7 @@ const FilterTag = ({
                   case "roleId":
                     return (
                       <RoleSuggestions
+                        guildId={guildId}
                         inputValue={inputValue}
                         getOptionProps={getOptionProps}
                       />

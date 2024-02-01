@@ -3,7 +3,6 @@ import RewardTag from "components/[guild]/activity/ActivityLogAction/components/
 import useGuild from "components/[guild]/hooks/useGuild"
 import { HTMLAttributes, useMemo } from "react"
 import { PlatformName, PlatformType } from "types"
-import { useActivityLogFilters } from "../../ActivityLogFiltersContext"
 import Suggestion from "../../Suggestion"
 import NoResults from "./NoResults"
 
@@ -13,9 +12,11 @@ type Props = {
   getOptionProps: (props: combobox.OptionProps) => HTMLAttributes<HTMLElement>
 }
 
-const RewardSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => {
-  const { activeFilters } = useActivityLogFilters()
-  const guildId = activeFilters?.find((af) => af.filter === "guildId")?.value
+const RewardSuggestions = ({
+  guildId,
+  inputValue,
+  getOptionProps,
+}: Props): JSX.Element => {
   const { roles, guildPlatforms } = useGuild(guildId)
 
   const allRewardSuggestions = useMemo(
