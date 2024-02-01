@@ -20,21 +20,21 @@ export const useAccessedGuildPoints = (filterPrivateOnly = false) => {
     (membership) => membership.guildId === guildId
   )?.roleIds
 
-  const accessedGuildPoints = guildPlatforms.filter((gp) => {
+  const accessedGuildPoints = guildPlatforms?.filter((gp) => {
     if (gp.platformId != PlatformType.POINTS) return false
     if (isAdmin) return true
 
     const isVisibleOnAccessedRole = roles
-      .flatMap((role) => role.rolePlatforms)
-      .filter((rp) => rp.guildPlatformId === gp.id)
-      .filter((rp) =>
+      ?.flatMap((role) => role.rolePlatforms)
+      ?.filter((rp) => rp.guildPlatformId === gp.id)
+      ?.filter((rp) =>
         filterPrivateOnly
           ? rp.visibility === "PRIVATE"
             ? accessedRoleIds?.includes(rp.roleId)
             : true
           : accessedRoleIds?.includes(rp.roleId)
       )
-      .some((rp) => rp.visibility != "HIDDEN")
+      ?.some((rp) => rp.visibility != "HIDDEN")
     return isVisibleOnAccessedRole
   })
 
