@@ -2,10 +2,12 @@ import {
   Box,
   Collapse,
   HStack,
+  RadioGroupProps,
   RadioProps,
   Stack,
   Text,
   UseRadioGroupProps,
+  forwardRef,
   useRadio,
   useRadioGroup,
 } from "@chakra-ui/react"
@@ -14,18 +16,16 @@ import { CreateFieldParams, Field } from "../../schemas"
 
 type Props = {
   field: CreateFieldParams | Field
-  isDisabled?: boolean
-}
+} & Omit<RadioGroupProps, "children">
 
-const Rate = ({ field, isDisabled }: Props) => {
+// TODO: should we pass that ref down? (probably for focus management?)
+const Rate = forwardRef<Props, "input">(({ field, ...props }, _ref) => {
   // We probably won't run into this case, but needed to add this line to get valid intellisense
   if (field.type !== "RATE") return null
 
   return (
     <Stack spacing={1}>
       <RateRadioGroup
-        onChange={console.log}
-        isDisabled={isDisabled}
         // TODO: we'll need to use option for display, but option.value for setup... we should find a better solution for this
         options={field.options?.map((option) => ({
           value:
@@ -37,6 +37,7 @@ const Rate = ({ field, isDisabled }: Props) => {
               ? option.toString()
               : option.value.toString(),
         }))}
+        {...props}
       />
 
       <Collapse in={!!field.worstLabel || !!field.bestLabel} animateOpacity>
@@ -56,7 +57,7 @@ const Rate = ({ field, isDisabled }: Props) => {
       </Collapse>
     </Stack>
   )
-}
+})
 
 /**
  * The general RadioButtonGroup component doesn't work properly (it can't handle
