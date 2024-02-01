@@ -117,43 +117,54 @@ const AccessHub = (): JSX.Element => {
         >
           {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
+          {accessedGuildPlatforms?.length > 0 && (
+            <>
+              {accessedGuildPlatforms.map((platform) => {
+                if (!platforms[PlatformType[platform.platformId]]) return null
 
-          {accessedGuildPlatforms.map((platform) => {
-            if (!platforms[PlatformType[platform.platformId]]) return null
+                const {
+                  cardPropsHook: useCardProps,
+                  cardMenuComponent: PlatformCardMenu,
+                  cardWarningComponent: PlatformCardWarning,
+                  cardButton: PlatformCardButton,
+                } = platforms[PlatformType[platform.platformId] as PlatformName]
 
-            const {
-              cardPropsHook: useCardProps,
-              cardMenuComponent: PlatformCardMenu,
-              cardWarningComponent: PlatformCardWarning,
-              cardButton: PlatformCardButton,
-            } = platforms[PlatformType[platform.platformId] as PlatformName]
+                return (
+                  <PlatformCard
+                    usePlatformProps={useCardProps}
+                    guildPlatform={platform}
+                    key={platform.id}
+                    cornerButton={
+                      isAdmin && PlatformCardMenu ? (
+                        <PlatformCardMenu
+                          platformGuildId={platform.platformGuildId}
+                        />
+                      ) : PlatformCardWarning ? (
+                        <PlatformCardWarning guildPlatform={platform} />
+                      ) : null
+                    }
+                  >
+                    {PlatformCardButton ? (
+                      <PlatformCardButton platform={platform} />
+                    ) : (
+                      <PlatformAccessButton platform={platform} />
+                    )}
+                  </PlatformCard>
+                )
+              })}
+            </>
+          )}
 
-            return (
-              <PlatformCard
-                usePlatformProps={useCardProps}
-                guildPlatform={platform}
-                key={platform.id}
-                cornerButton={
-                  isAdmin && PlatformCardMenu ? (
-                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-                  ) : PlatformCardWarning ? (
-                    <PlatformCardWarning guildPlatform={platform} />
-                  ) : null
-                }
-              >
-                {PlatformCardButton ? (
-                  <PlatformCardButton platform={platform} />
-                ) : (
-                  <PlatformAccessButton platform={platform} />
-                )}
-              </PlatformCard>
-            )
-          })}
-
-          {accessedGuildPoints.map((pointPlatform) => (
-            <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
-          ))}
-
+          {accessedGuildPoints.length > 0 && (
+            <>
+              {accessedGuildPoints.map((pointPlatform) => (
+                <PointsRewardCard
+                  key={pointPlatform.id}
+                  guildPlatform={pointPlatform}
+                />
+              ))}
+            </>
+          )}
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
             !shouldShowGuildPin &&
