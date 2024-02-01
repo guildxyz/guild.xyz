@@ -3,21 +3,19 @@ import {
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
+  NumberInputProps,
   NumberInputStepper,
+  forwardRef,
 } from "@chakra-ui/react"
 
-type Props = {
-  isDisabled?: boolean
-}
-
-const Number = ({ isDisabled }: Props) => (
-  <NumberInput isDisabled={isDisabled}>
+const Number = forwardRef<NumberInputProps, "input">((props, ref) => (
+  <NumberInput ref={ref} {...props} value={props.value ?? ""}>
     <NumberInputField />
     <NumberInputStepper>
       <NumberIncrementStepper />
       <NumberDecrementStepper />
     </NumberInputStepper>
   </NumberInput>
-)
+))
 
 export default Number
