@@ -1,32 +1,38 @@
 import {
+  Center,
   Collapse,
   Divider,
+  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
   StackProps,
+  Text,
+  Tooltip,
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
+import { ArrowRight, LockSimple } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
-import SatisfyRequirementsJoinStep, {
-  ProgressJoinStep,
-} from "./components/SatisfyRequirementsJoinStep"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import WalletAuthButton from "./components/WalletAuthButton"
+import GetRewardsJoinStep from "./components/progress/GetRewardsJoinStep"
+import GetRolesJoinStep from "./components/progress/GetRolesJoinStep"
+import SatisfyRequirementsJoinStep from "./components/progress/SatisfyRequirementsJoinStep"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
 
@@ -96,11 +102,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     }
   )
 
-  const isManagingRolesOrRewards =
+  const isInDetailedProgressState =
     response?.success !== false &&
     (joinProgress?.state === "MANAGING_ROLES" ||
       joinProgress?.state === "MANAGING_REWARDS" ||
       joinProgress?.state === "FINISHED")
+
+  // temporary for v1 (for guilds without the queues feature flag)
+  const hasNoAccess = response?.success === false && !isLoading
+
+  const { roles } = useGuild()
+
+  const onClick = () => {
+    onClose()
+    window.location.hash = `role-${roles[0]?.id}`
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -112,42 +128,63 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
 
-            <Collapse in={!isManagingRolesOrRewards}>
+            <Collapse in={!isInDetailedProgressState}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
                 <WalletAuthButton />
                 {renderedSteps}
               </VStack>
             </Collapse>
 
-            {!isManagingRolesOrRewards && <Divider mb={3} />}
+            {!isInDetailedProgressState && <Divider mb={3} />}
 
             <SatisfyRequirementsJoinStep
-              mb={isManagingRolesOrRewards ? "2.5" : "8"}
-              spacing={isManagingRolesOrRewards ? "2.5" : "2"}
-              isLoading={isLoading}
-              hasNoAccessResponse={response?.success === false}
-              onClose={onClose}
-              joinState={joinProgress}
+              joinState={
+                joinProgress ??
+                // temporary for v1 (for guilds without the queues feature flag)
+                (isLoading
+                  ? { state: "CHECKING" }
+                  : hasNoAccess
+                  ? { state: "NO_ACCESS" }
+                  : ({} as any))
+              }
+              mb={isInDetailedProgressState ? "2.5" : "8"}
+              spacing={isLoading || hasNoAccess ? "2.5" : "2"}
+              fallbackText={
+                hasNoAccess && (
+                  <Text color="initial">
+                    {`You're not eligible with your connected accounts. `}
+                    <Button
+                      variant="link"
+                      rightIcon={<ArrowRight />}
+                      onClick={onClick}
+                      iconSpacing={1.5}
+                    >
+                      See requirements
+                    </Button>
+                  </Text>
+                )
+              }
+              RightComponent={
+                !isLoading && !hasNoAccess ? (
+                  <Tooltip
+                    hasArrow
+                    label="Connect your accounts and check access below to see if you meet the requirements the guild owner has set"
+                  >
+                    <Center w={5} h={6}>
+                      <Icon as={LockSimple} weight="bold" />
+                    </Center>
+                  </Tooltip>
+                ) : null
+              }
             />
 
-            {isManagingRolesOrRewards && <Divider my={2.5} />}
+            {isInDetailedProgressState && <Divider my={2.5} />}
 
-            <Collapse in={isManagingRolesOrRewards}>
+            <Collapse in={isInDetailedProgressState}>
               <VStack {...JOIN_STEP_VSTACK_PROPS} spacing={2.5} mb={6}>
-                <ProgressJoinStep
-                  entity="role"
-                  joinState={joinProgress}
-                  shouldShowSubtitle={joinProgress?.state === "MANAGING_ROLES"}
-                />
+                <GetRolesJoinStep joinState={joinProgress} />
 
-                <ProgressJoinStep
-                  entity="reward"
-                  joinState={joinProgress}
-                  shouldShowSubtitle={
-                    !joinProgress?.rewards &&
-                    joinProgress?.state === "MANAGING_REWARDS"
-                  }
-                />
+                <GetRewardsJoinStep joinState={joinProgress} />
               </VStack>
             </Collapse>
 
