@@ -1,11 +1,7 @@
-import { Input } from "@chakra-ui/react"
+import { Input, InputProps, forwardRef } from "@chakra-ui/react"
 
-type Props = {
-  isDisabled?: boolean
-}
-
-const ShortText = ({ isDisabled }: Props) => (
-  <Input isDisabled={isDisabled} placeholder="Short text" />
-)
+const ShortText = forwardRef<InputProps, "input">((props, ref) => (
+  <Input ref={ref} {...props} value={props.value ?? ""} placeholder="Short text" />
+))
 
 export default ShortText
