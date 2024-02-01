@@ -26,7 +26,6 @@ import SatisfyRequirementsJoinStep, {
   ProgressJoinStep,
 } from "./components/SatisfyRequirementsJoinStep"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
-import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -154,7 +153,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             <Collapse in={!isLoading}>
               {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
-              <TwitterRequirementsVerificationIssuesAlert />
             </Collapse>
 
             <ModalButton
