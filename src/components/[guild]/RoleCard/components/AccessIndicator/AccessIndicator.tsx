@@ -32,7 +32,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     (r) => r.access
   )?.length
 
-  const { openAccountModal, isWeb3Connected } = useWeb3ConnectionManager()
+  const { openAccountModal } = useWeb3ConnectionManager()
   const isMember = useIsMember()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -52,7 +52,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
-  if (!isWeb3Connected || (hasAccess && !isMember))
+  if (!isMember)
     return (
       <Button
         leftIcon={!isMobile && <LockSimple width={"0.9em"} height="0.9em" />}
@@ -62,7 +62,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         onClick={openJoinModal}
         {...ACCESS_INDICATOR_STYLES}
       >
-        {`Join Guild to ${hasAccess ? "get" : "check"} access`}
+        {`Join Guild to check access`}
       </Button>
     )
 
