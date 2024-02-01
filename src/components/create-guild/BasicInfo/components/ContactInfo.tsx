@@ -1,6 +1,8 @@
 import {
   Box,
+  Divider,
   FormControl,
+  FormLabel,
   HStack,
   Icon,
   IconButton,
@@ -30,6 +32,7 @@ type Props = {
 const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
   const {
     control,
+    trigger,
     register,
     getValues,
     resetField,
@@ -49,77 +52,108 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
         initiatives if needed.
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
-        {fields.map((contactField, index) => (
-          <FormControl
-            key={contactField.formId}
-            isInvalid={!!errors?.contacts?.[index]}
-          >
-            <HStack alignItems="start">
-              <Box maxW="64">
-                <Controller
-                  control={control}
-                  name={`contacts.${index}.type`}
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
-                    <StyledSelect
-                      ref={ref}
-                      options={contactTypeOptions}
-                      value={contactTypeOptions.find((ct) => ct.value === value)}
-                      onBlur={onBlur}
-                      onChange={(newValue: SelectOption) => {
-                        onChange(newValue.value)
-                        resetField(`contacts.${index}.contact`)
-                      }}
-                      size="lg"
-                    />
-                  )}
-                />
-              </Box>
+        <FormControl isInvalid={!!errors?.contacts?.[0]}>
+          <FormLabel whiteSpace={"nowrap"}>E-mail</FormLabel>
+          <Stack spacing={0}>
+            <Input
+              id="contact-email-required"
+              isInvalid={!!errors?.contacts?.[0]}
+              placeholder="E-mail address"
+              {...register(`contacts.0.contact`, {
+                required: "E-mail is required",
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Invalid e-mail format",
+                },
+              })}
+              size={"lg"}
+            />
+            <FormErrorMessage>
+              {errors?.contacts?.[0]?.contact?.message}
+            </FormErrorMessage>
+          </Stack>
+        </FormControl>
 
-              <Stack spacing={0}>
-                <InputGroup size="lg">
-                  <Input
-                    isInvalid={!!errors?.contacts?.[index]}
-                    placeholder={
-                      getValues(`contacts.${index}.type`) === "EMAIL"
-                        ? `E-mail address`
-                        : "Phone / Telegram username"
-                    }
-                    {...register(`contacts.${index}.contact`, {
-                      required:
-                        getValues("contacts")?.length > 1 &&
-                        index >= getValues("contacts")?.length - 1
-                          ? "This field is required"
-                          : false,
-                      pattern:
-                        getValues(`contacts.${index}.type`) === "EMAIL"
-                          ? {
-                              value: /\S+@\S+\.\S+/,
-                              message: "Invalid e-mail format",
-                            }
-                          : undefined,
-                    })}
-                  />
-                  {fields?.length > 1 && (
-                    <InputRightElement>
-                      <IconButton
-                        variant="ghost"
-                        icon={<Icon as={TrashSimple} />}
-                        size="xs"
-                        rounded="full"
-                        aria-label="Remove contact"
-                        onClick={() => remove(index)}
+        {fields.length > 1 && <Divider />}
+
+        {fields.slice(1).map((contactField, index) => {
+          index += 1
+          return (
+            <FormControl
+              key={contactField.formId}
+              isInvalid={!!errors?.contacts?.[index]}
+            >
+              <HStack alignItems="start">
+                <Box maxW="64">
+                  <Controller
+                    control={control}
+                    name={`contacts.${index}.type`}
+                    render={({ field: { onChange, onBlur, value, ref } }) => (
+                      <StyledSelect
+                        ref={ref}
+                        options={contactTypeOptions}
+                        value={contactTypeOptions.find((ct) => ct.value === value)}
+                        onBlur={() => {
+                          trigger()
+                          onBlur()
+                        }}
+                        onChange={(newValue: SelectOption) => {
+                          onChange(newValue.value)
+                          resetField(`contacts.${index}.contact`)
+                        }}
+                        size="lg"
+                        chakraStyles={{
+                          container: {
+                            minWidth: "max-content",
+                          } as any,
+                        }}
                       />
-                    </InputRightElement>
-                  )}
-                </InputGroup>
+                    )}
+                  />
+                </Box>
 
-                <FormErrorMessage>
-                  {errors?.contacts?.[index]?.contact?.message}
-                </FormErrorMessage>
-              </Stack>
-            </HStack>
-          </FormControl>
-        ))}
+                <Stack spacing={0} w="100%">
+                  <InputGroup size="lg">
+                    <Input
+                      isInvalid={!!errors?.contacts?.[index]}
+                      placeholder={
+                        getValues(`contacts.${index}.type`) === "EMAIL"
+                          ? `E-mail address`
+                          : "Phone / Telegram username"
+                      }
+                      {...register(`contacts.${index}.contact`, {
+                        required: "This field is required",
+                        pattern:
+                          getValues(`contacts.${index}.type`) === "EMAIL"
+                            ? {
+                                value: /\S+@\S+\.\S+/,
+                                message: "Invalid e-mail format",
+                              }
+                            : undefined,
+                      })}
+                    />
+                    {fields?.length > 1 && (
+                      <InputRightElement>
+                        <IconButton
+                          variant="ghost"
+                          icon={<Icon as={TrashSimple} />}
+                          size="xs"
+                          rounded="full"
+                          aria-label="Remove contact"
+                          onClick={() => remove(index)}
+                        />
+                      </InputRightElement>
+                    )}
+                  </InputGroup>
+
+                  <FormErrorMessage>
+                    {errors?.contacts?.[index]?.contact?.message}
+                  </FormErrorMessage>
+                </Stack>
+              </HStack>
+            </FormControl>
+          )
+        })}
 
         {showAddButton && (
           <Button
