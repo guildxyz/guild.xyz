@@ -1,7 +1,7 @@
 import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { Form } from "../schemas"
@@ -14,7 +14,7 @@ const useCreateForm = (params?: { onSuccess?: () => void }) => {
   const showErrorToast = useShowErrorToast()
 
   return useSubmitWithSign<Form>(
-    (signedValidation: SignedValdation) =>
+    (signedValidation: SignedValidation) =>
       fetcher(`/v2/guilds/${id}/forms`, signedValidation),
     {
       onSuccess: (createdForm) => {
