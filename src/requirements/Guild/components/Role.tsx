@@ -21,7 +21,7 @@ type Props = {
   isRelative?: boolean
 }
 
-const Role = ({ baseFieldPath, isRelative = false }: Props): JSX.Element => {
+const RoleBase = ({ baseFieldPath, isRelative = false }: Props): JSX.Element => {
   const {
     formState: { errors },
   } = useFormContext()
@@ -92,9 +92,9 @@ const Role = ({ baseFieldPath, isRelative = false }: Props): JSX.Element => {
   )
 }
 
-export const RoleWithRangeFilter = ({ baseFieldPath }) => (
+export const Role = ({ baseFieldPath }) => (
   <>
-    <Role baseFieldPath={baseFieldPath} />
+    <RoleBase baseFieldPath={baseFieldPath} />
     <Stack w="full" gap={0}>
       <FormLabel>Have a role since</FormLabel>
       <ControlledTimestampInput fieldName={`${baseFieldPath}.data.maxAmount`} />
@@ -102,14 +102,14 @@ export const RoleWithRangeFilter = ({ baseFieldPath }) => (
   </>
 )
 
-export const RoleWithRelativeRangeFilter = ({ baseFieldPath }) => {
+export const RoleRelative = ({ baseFieldPath }) => {
   const {
     formState: { errors },
   } = useFormContext()
 
   return (
     <>
-      <Role baseFieldPath={baseFieldPath} isRelative />
+      <RoleBase baseFieldPath={baseFieldPath} isRelative />
       <FormControl
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}

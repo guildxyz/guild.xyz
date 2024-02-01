@@ -8,19 +8,19 @@ import GuildSelect from "requirements/common/GuildSelect"
 import parseFromObject from "utils/parseFromObject"
 import GuildAdmin from "./components/GuildAdmin"
 import MinGuilds from "./components/MinGuilds"
-import { RoleWithRangeFilter, RoleWithRelativeRangeFilter } from "./components/Role"
+import { Role, RoleRelative } from "./components/Role"
 import UserSince from "./components/UserSince"
 
 const guildRequirementTypes = [
   {
     label: "Have a role",
     value: "GUILD_ROLE",
-    GuildRequirement: RoleWithRangeFilter,
+    GuildRequirement: Role,
   },
   {
     label: "Have a role (relative)",
     value: "GUILD_ROLE_RELATIVE",
-    GuildRequirement: RoleWithRelativeRangeFilter,
+    GuildRequirement: RoleRelative,
   },
   {
     label: "Account age",
