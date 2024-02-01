@@ -1,5 +1,6 @@
 import {
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
@@ -13,6 +14,7 @@ import { Form } from "components/[guild]/CreateFormModal/schemas"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -53,6 +55,7 @@ const FillFormModal = ({ form, isOpen, onClose }: Props) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{form.name}</ModalHeader>
+        <ModalCloseButton />
 
         <ModalBody pt={0}>
           <Stack spacing={8}>
@@ -81,6 +84,8 @@ const FillFormModal = ({ form, isOpen, onClose }: Props) => {
               )
             })}
           </Stack>
+
+          <DynamicDevTool control={control} />
         </ModalBody>
 
         <ModalFooter>
