@@ -179,8 +179,8 @@ const GuildPage = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    if (isAdmin && !contacts) showAddContactInfoToast()
-  }, [isAdmin, contacts])
+    if (isAdmin && !contacts && !isLoading) showAddContactInfoToast()
+  }, [isAdmin, contacts, isLoading])
 
   const showAddContactInfoToast = () => {
     toastIdRef.current = toastWithButton({
