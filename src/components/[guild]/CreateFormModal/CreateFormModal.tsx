@@ -11,7 +11,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ArrowRight } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
-import { v4 as uuidv4 } from "uuid"
+import { uuidv7 } from "uuidv7"
 import CreateFormForm from "./components/CreateFormForm"
 import useCreateForm from "./hooks/useCreateForm"
 import { CreateFormParams, FormSchema } from "./schemas"
@@ -44,7 +44,7 @@ const CreateFormModal = (props: Props) => {
       ...data,
       fields: data.fields.map((field) => ({
         ...field,
-        id: uuidv4(),
+        id: uuidv7(),
       })),
     })
 
