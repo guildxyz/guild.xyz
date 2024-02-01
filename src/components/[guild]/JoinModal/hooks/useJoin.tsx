@@ -8,12 +8,13 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
-import { atom, useAtom } from "jotai"
+import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+import mapAccessJobState from "../utils/mapAccessJobState"
 
 export const QUEUE_FEATURE_FLAG = "GUILD_QUEUES"
 
@@ -67,7 +68,7 @@ const useJoin = (
   const toastWithButton = useToastWithButton()
 
   const { mutate } = useMemberships()
-  const [isAfterJoin, setIsAfterJoin] = useAtom(isAfterJoinAtom)
+  const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
 
   const fetcherWithSign = useFetcherWithSign()
 
@@ -182,7 +183,9 @@ const useJoin = (
   })
 
   const getResponseByProgress = (progressRes) => ({
-    success: progressRes.roleAccesses?.some((role) => role.access === true),
+    success: progressRes.roleAccesses
+      ? !!progressRes.roleAccesses?.some((role) => role.access === true)
+      : undefined,
     accessedRoleIds: (progressRes.roleAccesses ?? [])
       .filter((roleAccess) => !!roleAccess?.access)
       .map(({ roleId }) => roleId),
@@ -204,9 +207,17 @@ const useJoin = (
       ),
     {
       onSuccess: (res) => {
-        if (res?.done) {
+        if (!!res?.roleAccesses && res.roleAccesses.every((role) => !role.access)) {
           useSubmitResponse?.reset()
-          onJoinSuccess(getResponseByProgress(res))
+          return
+        }
+
+        if (res?.done) {
+          // With the timeout the UI is a bit cleaner, when we transition multiple states during one poll
+          setTimeout(() => {
+            useSubmitResponse?.reset()
+            onJoinSuccess(getResponseByProgress(res))
+          }, 2000)
         }
       },
       /**
@@ -219,27 +230,36 @@ const useJoin = (
     }
   )
 
+  const noAccess = hasFeatureFlag
+    ? progress?.data?.roleAccesses &&
+      progress?.data?.roleAccesses?.every((role) => !role.access)
+    : undefined
+
   const response = hasFeatureFlag
-    ? progress?.data?.done && !(progress?.data as any)?.failed
+    ? (progress?.data?.done && !(progress?.data as any)?.failed) || noAccess
       ? getResponseByProgress(progress?.data)
       : undefined
     : (useSubmitResponse?.response as Response)
 
   const isLoading = hasFeatureFlag
-    ? useSubmitResponse?.isLoading ||
-      progress?.isValidating ||
-      (!!progress?.data && !progress?.data?.done)
+    ? useSubmitResponse?.isLoading || !!useSubmitResponse?.response
     : useSubmitResponse?.isLoading
 
   const error = hasFeatureFlag
     ? (progress?.data as any)?.failedErrorMsg
     : useSubmitResponse?.error
 
+  const joinProgress =
+    hasFeatureFlag && (isLoading || noAccess)
+      ? mapAccessJobState(progress?.data)
+      : undefined
+
   return {
     response,
     isLoading,
     error,
     progress: hasFeatureFlag ? progress?.data : undefined,
+    joinProgress,
     onSubmit: (data?) =>
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
@@ -253,6 +273,10 @@ const useJoin = (
               ...value,
             })),
       }),
+    reset: () => {
+      useSubmitResponse.reset()
+      progress.mutate(undefined, { revalidate: false })
+    },
   }
 }
 

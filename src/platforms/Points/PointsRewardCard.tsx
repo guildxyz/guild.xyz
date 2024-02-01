@@ -8,7 +8,7 @@ import platforms from "platforms/platforms"
 import Star from "static/icons/star.svg"
 import useSWR from "swr"
 import numberToOrdinal from "utils/numberToOrdinal"
-import PointsCardButton from "./TextCardButton"
+import PointsCardButton from "./PointsCardButton"
 
 const DynamicPointsCardMenu = dynamic(() => import("./PointsCardMenu"), {
   ssr: false,
@@ -56,7 +56,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
           data?.rank && `${numberToOrdinal(data?.rank)} on the leaderboard`
         }
       >
-        <PointsCardButton platform={guildPlatform}></PointsCardButton>
+        <PointsCardButton platform={guildPlatform} />
       </RewardCard>
     </>
   )

@@ -4,7 +4,7 @@ import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { Guild, PlatformType } from "types"
@@ -24,7 +24,7 @@ const useCreateGuild = () => {
 
   const fetcherWithSign = useFetcherWithSign()
 
-  const fetchData = async (signedValidation: SignedValdation): Promise<Guild> =>
+  const fetchData = async (signedValidation: SignedValidation): Promise<Guild> =>
     fetcher("/v2/guilds", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {

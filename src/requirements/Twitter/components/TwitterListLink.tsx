@@ -14,7 +14,7 @@ export default function TwitterListLink({ requirement }: Props) {
       colorScheme={"blue"}
       fontWeight="medium"
     >
-      this Twitter list
+      this X list
       <Icon as={ArrowSquareOut} mx="1" />
     </Link>
   )

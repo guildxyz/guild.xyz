@@ -18,7 +18,7 @@ import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromP
 import ContactInfo from "./components/ContactInfo"
 
 const BasicInfo = (): JSX.Element => {
-  const { nextStep, setDisabled } = useCreateGuildContext()
+  const { setDisabled } = useCreateGuildContext()
   const { setLocalBackgroundImage } = useThemeContext()
 
   const {

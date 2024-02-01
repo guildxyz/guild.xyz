@@ -36,8 +36,7 @@ type Props = {
 }
 
 const Page = ({ fancyId }: Omit<Props, "fallback">) => {
-  const { theme, urlName, roles, guildPlatforms, isFallback, socialLinks } =
-    useGuild()
+  const { theme, urlName, roles, guildPlatforms, socialLinks } = useGuild()
 
   const { captureEvent } = usePostHogContext()
 

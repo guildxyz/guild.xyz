@@ -32,7 +32,7 @@ const ConnectorButton = ({
 
   const { isConnected, connector: activeConnector } = useAccount()
 
-  const { keyPair, id } = useUserPublic()
+  const { keyPair } = useUserPublic()
 
   const isMetaMaskInstalled = typeof window !== "undefined" && !!window.ethereum
 
@@ -44,7 +44,7 @@ const ConnectorButton = ({
     <Button
       mb="4"
       onClick={
-        connector.id === "injected" && !isMetaMaskInstalled
+        connectorName === "MetaMask" && !isMetaMaskInstalled
           ? handleOnboarding
           : () => connect({ connector })
       }

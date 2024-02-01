@@ -65,7 +65,7 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-export type SignedValdation = { signedPayload: string; validation: Validation }
+export type SignedValidation = { signedPayload: string; validation: Validation }
 
 export type Validation = {
   params: MessageParams

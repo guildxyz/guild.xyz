@@ -14,7 +14,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
@@ -25,7 +25,7 @@ type Props = {
   role: Role
 }
 
-const join = (signedValidation: SignedValdation) =>
+const join = (signedValidation: SignedValidation) =>
   fetcher(`/user/join`, signedValidation)
 
 const MintableRole = ({ role }: Props) => {
@@ -46,7 +46,7 @@ const MintableRole = ({ role }: Props) => {
     ?.find((guild) => guild.guildId === guildId)
     ?.roleIds.find((roleId) => roleId === role.id)
 
-  const claim = async (signedValidation: SignedValdation) =>
+  const claim = async (signedValidation: SignedValidation) =>
     fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
       method: "POST",
       ...signedValidation,

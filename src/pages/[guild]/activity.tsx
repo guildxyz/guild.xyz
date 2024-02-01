@@ -11,8 +11,6 @@ import GuildActivityLogFiltersBar from "components/[guild]/activity/ActivityLogF
 import { ActivityLogFiltersProvider } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useUser from "components/[guild]/hooks/useUser"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -20,8 +18,6 @@ import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
   const { name, imageUrl } = useGuild()
-  const { id: userId } = useUser()
-  const { isAdmin } = useGuildPermission()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { data, isValidating, isLoading, error } = useActivityLog()

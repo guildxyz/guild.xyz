@@ -4,7 +4,7 @@ import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-const OrangeForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const OrangeForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
     control,
     formState: { errors },

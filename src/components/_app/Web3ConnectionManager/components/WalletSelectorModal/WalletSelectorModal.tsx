@@ -11,7 +11,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import MetaMaskOnboarding from "@metamask/onboarding"
 
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -60,14 +59,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
-
-  const { captchaVerifiedSince } = useUserPublic()
-
-  // initialize metamask onboarding
-  const onboarding = useRef<MetaMaskOnboarding>()
-  if (typeof window !== "undefined") {
-    onboarding.current = new MetaMaskOnboarding()
-  }
 
   const closeModalAndSendAction = () => {
     onClose()

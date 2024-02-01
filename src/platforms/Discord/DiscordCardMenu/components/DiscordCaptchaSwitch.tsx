@@ -2,7 +2,7 @@ import { Box, HStack, Icon, Spinner, Text, Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Switch from "components/common/Switch"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Question, Shield } from "phosphor-react"
 import { useState } from "react"
@@ -22,7 +22,7 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
     (platform) => platform.platformGuildId === serverId
   )
 
-  const submit = (signedValidation: SignedValdation) =>
+  const submit = (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatform.id}`, {
       method: "PUT",
       ...signedValidation,

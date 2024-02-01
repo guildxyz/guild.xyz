@@ -4,14 +4,14 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import usePopupWindow from "hooks/usePopupWindow"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import useSWR from "swr"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
-export type TwitterIntentAction = "follow" | "like" | "retweet"
+export type TwitterIntentAction = "follow" | "like" | "repost"
 
 type Props = {
   type?: "button" | "link"
@@ -20,8 +20,8 @@ type Props = {
 
 const label: Record<TwitterIntentAction, string> = {
   follow: "Follow",
-  like: "Like tweet",
-  retweet: "Retweet",
+  like: "Like post",
+  repost: "Repost",
 }
 
 const buttonIcon: Record<
@@ -30,12 +30,12 @@ const buttonIcon: Record<
 > = {
   follow: UserPlus,
   like: Heart,
-  retweet: Share,
+  repost: Share,
 }
 
 const intentQueryParam: Record<TwitterIntentAction, string> = {
   like: "tweet_id",
-  retweet: "tweet_id",
+  repost: "tweet_id",
   follow: "screen_name",
 }
 
@@ -71,7 +71,7 @@ const TwitterIntent = ({
         : `https://twitter.com/twitter/status/${id}`
       : undefined
 
-  const completeAction = (signedValidation: SignedValdation) =>
+  const completeAction = (signedValidation: SignedValidation) =>
     fetcher(`/v2/util/gate-callbacks?requirementType=${requirementType}`, {
       method: "POST",
       ...signedValidation,

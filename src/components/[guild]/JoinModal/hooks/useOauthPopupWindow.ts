@@ -11,14 +11,6 @@ type OAuthData<Data> = {
   scope?: string
 } & Data
 
-type OAuthOptions = {
-  client_id: string
-  scope: string
-  response_type?: "code" | "token"
-  code_challenge?: "challenge"
-  code_challenge_method?: "plain"
-}
-
 type OAuthError = { error: string; errorDescription: string }
 
 export type Message = OneOf<
@@ -35,8 +27,6 @@ type OAuthState<OAuthResponse> = {
 export type AuthLevel<
   T = (typeof platforms)[PlatformName]["oauth"]["params"]["scope"]
 > = T extends string ? never : keyof T
-
-const TG_OAUTH_ORIGIN = "https://oauth.telegram.org"
 
 type TGAuthResult = {
   event: "auth_result"

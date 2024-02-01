@@ -1,7 +1,7 @@
 import { RequirementFormProps } from "requirements"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
 
-const TwitterFollowerCount = ({ baseFieldPath, field }: RequirementFormProps) => (
+const TwitterMinimumCount = ({ baseFieldPath, field }: RequirementFormProps) => (
   <MinMaxAmount
     field={field}
     baseFieldPath={baseFieldPath}
@@ -10,4 +10,4 @@ const TwitterFollowerCount = ({ baseFieldPath, field }: RequirementFormProps) =>
   />
 )
 
-export default TwitterFollowerCount
+export default TwitterMinimumCount

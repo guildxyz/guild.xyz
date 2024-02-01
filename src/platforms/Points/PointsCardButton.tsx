@@ -17,7 +17,6 @@ const PointsCardButton = ({ platform }: Props) => {
       <LinkButton
         colorScheme={"gray"}
         href={`/${urlName}/leaderboard/${id}`}
-        onClick={() => {}}
         w="full"
       >
         View leaderboard <Icon as={ArrowRight} mb="-0.5" />
