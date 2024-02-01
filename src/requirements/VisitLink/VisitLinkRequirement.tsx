@@ -1,12 +1,4 @@
-import {
-  Link as ChakraLink,
-  ChakraProps,
-  HStack,
-  Icon,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
-import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import { HStack, Icon, Link, LinkProps, Stack, Text } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -18,13 +10,10 @@ import {
 import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useAccess from "components/[guild]/hooks/useAccess"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useUser from "components/[guild]/hooks/useUser"
-import Link from "components/common/Link"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"
-import { ComponentProps } from "react"
 import fetcher from "utils/fetcher"
 
 export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
@@ -44,9 +33,6 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     ?.flatMap((role) => role.requirements)
     .find((req) => req.requirementId === requirementId)?.access
 
-  const isMember = useIsMember()
-  const openJoinModal = useOpenJoinModal()
-
   const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
     onSuccess: () => mutateAccess(),
@@ -57,17 +43,9 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     ? VISIT_LINK_REGEX.exec(data.customName) ?? []
     : []
 
-  const chakraLinkprops: Pick<
-    ComponentProps<typeof ChakraLink>,
-    "colorScheme" | "onClick"
-  > &
-    ChakraProps = {
+  const linkProps: LinkProps = {
     display: "inline",
     colorScheme: "blue",
-    onClick: () => openJoinModal(),
-  }
-
-  const linkProps: ComponentProps<typeof Link> = {
     href: data.id,
     isExternal: true,
     onClick: () => {
@@ -87,15 +65,9 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     return (
       <>
         {"Visit link: "}
-        {isMember || hasAccess ? (
-          <Link {...chakraLinkprops} {...linkProps} wordBreak={wordBreak}>
-            {data.id}
-          </Link>
-        ) : (
-          <ChakraLink {...chakraLinkprops} wordBreak={wordBreak}>
-            {data.id}
-          </ChakraLink>
-        )}
+        <Link {...linkProps} wordBreak={wordBreak}>
+          {data.id}
+        </Link>
       </>
     )
   }
@@ -130,13 +102,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       {!!link ? (
         <Text as="span">
           {first}
-          {isMember || hasAccess ? (
-            <Link {...chakraLinkprops} {...linkProps}>
-              {link}
-            </Link>
-          ) : (
-            <ChakraLink {...chakraLinkprops}>{link}</ChakraLink>
-          )}
+          <Link {...linkProps}>{link}</Link>
+
           {second}
         </Text>
       ) : (
