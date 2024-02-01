@@ -37,6 +37,7 @@ const TabButton = ({
       variant="ghost"
       isActive={isActive}
       mx={isActive && 2}
+      prefetch={false}
       sx={{
         /**
          * This equals to :first-child, just changed it so we don't get the annoying
