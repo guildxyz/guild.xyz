@@ -11,12 +11,9 @@ import { Detective } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { Group } from "types"
 import pluralize from "utils/pluralize"
-import { useMemo } from "react"
 import formatRelativeTimeFromNow from "../../utils/formatRelativeTimeFromNow"
 
-type HaveRoleProps = RequirementProps & { isRelative?: boolean }
-
-const HaveRole = ({ isRelative, ...props }: HaveRoleProps): JSX.Element => {
+const HaveRole = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   const { id } = useSimpleGuild()
@@ -37,20 +34,17 @@ const HaveRole = ({ isRelative, ...props }: HaveRoleProps): JSX.Element => {
     groupId ? `/v2/guilds/${id}/groups/${groupId}` : null
   )
   const maxAmount = new Date(requirement.data.maxAmount)
-  const filterLabel = useMemo(
-    () =>
-      isRelative
-        ? ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
-        : requirement.data.maxAmount &&
-          ` since ${maxAmount.toLocaleDateString("en-US", {
-            ...(maxAmount.getFullYear() !== new Date().getFullYear() && {
-              year: "numeric",
-            }),
-            month: "short",
-            day: "numeric",
-          })}`,
-    [requirement.data.maxAmount, maxAmount]
-  )
+  const filterLabel =
+    requirement.type === "GUILD_ROLE_RELATIVE"
+      ? ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
+      : requirement.data.maxAmount &&
+        ` since ${maxAmount.toLocaleDateString("en-US", {
+          ...(maxAmount.getFullYear() !== new Date().getFullYear() && {
+            year: "numeric",
+          }),
+          month: "short",
+          day: "numeric",
+        })}`
 
   return (
     <Requirement
@@ -155,13 +149,9 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
   )
 }
 
-const HaveRoleRelative = (props: RequirementProps) => (
-  <HaveRole {...props} isRelative />
-)
-
 const types = {
   GUILD_ROLE: HaveRole,
-  GUILD_ROLE_RELATIVE: HaveRoleRelative,
+  GUILD_ROLE_RELATIVE: HaveRole,
   GUILD_ADMIN: Admin,
   GUILD_MINGUILDS: MinGuilds,
   GUILD_USER_SINCE: UserSince,
