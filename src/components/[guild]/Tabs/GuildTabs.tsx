@@ -22,7 +22,7 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   const { captureEvent } = usePostHogContext()
 
-  const existingPointsReward = useAccessedGuildPoints(true)[0]
+  const existingPointsReward = useAccessedGuildPoints(true)?.[0]
 
   return (
     <Tabs {...rest}>
