@@ -10,26 +10,10 @@ import REQUIREMENTS from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
-export const TWITTER_V1_REQUIREMENTS = new Set<string>([
-  "TWITTER_FOLLOW",
-  "TWITTER_FOLLOWED_BY",
-  "TWITTER_LIST_FOLLOW",
-])
-
-const mapTwitterV1 = (
-  requirementType: string,
-  platformName: PlatformName
-): PlatformName => {
-  if (TWITTER_V1_REQUIREMENTS.has(requirementType)) {
-    return "TWITTER_V1"
-  }
-  return platformName
-}
-
 const RequirementConnectButton = (props: ButtonProps) => {
   const { platformUsers, emails } = useUser()
   const { type, roleId, id } = useRequirementContext()
-  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = REQUIREMENTS[type].types[0] as PlatformName
 
   const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
 
@@ -82,7 +66,7 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
   const { type } = useRequirementContext()
 
-  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = REQUIREMENTS[type].types[0] as PlatformName
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,

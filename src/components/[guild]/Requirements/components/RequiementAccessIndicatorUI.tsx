@@ -66,7 +66,7 @@ const RequiementAccessIndicatorUI = ({
         height={"full"}
       >
         <Popover placement="left" trigger="hover" closeDelay={100} onOpen={onOpen}>
-          {({ isOpen, onClose }) => (
+          {({ isOpen }) => (
             <>
               <PopoverTrigger>
                 <Center

@@ -1,10 +1,12 @@
 import {
+  Collapse,
   Divider,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  StackProps,
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -13,15 +15,17 @@ import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
 import { ComponentType } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
-import SatisfyRequirementsJoinStep from "./components/SatisfyRequirementsJoinStep"
+import SatisfyRequirementsJoinStep, {
+  ProgressJoinStep,
+} from "./components/SatisfyRequirementsJoinStep"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
-import TwitterRequirementsVerificationIssuesAlert from "./components/TwitterRequirementsVerificationIssuesAlert"
 import WalletAuthButton from "./components/WalletAuthButton"
 import useJoin from "./hooks/useJoin"
 import processJoinPlatformError from "./utils/processJoinPlatformError"
@@ -33,6 +37,14 @@ type Props = {
 
 type ExtractPrefix<T> = T extends `${infer Prefix}_${string}` ? Prefix : T
 type Joinable = PlatformName | ExtractPrefix<RequirementType>
+
+const JOIN_STEP_VSTACK_PROPS: StackProps = {
+  spacing: "3",
+  alignItems: "stretch",
+  w: "full",
+  divider: <Divider />,
+  mb: "3",
+}
 
 const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
@@ -64,15 +76,31 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
 
+  const errorToast = useShowErrorToast()
+
   const {
     isLoading,
     onSubmit,
     error: joinError,
     response,
-  } = useJoin((res) => {
-    methods.setValue("platforms", {})
-    if (res.success) onClose()
-  })
+    joinProgress,
+    reset,
+  } = useJoin(
+    (res) => {
+      methods.setValue("platforms", {})
+      if (res.success) onClose()
+    },
+    (err) => {
+      errorToast(err)
+      reset()
+    }
+  )
+
+  const isManagingRolesOrRewards =
+    response?.success !== false &&
+    (joinProgress?.state === "MANAGING_ROLES" ||
+      joinProgress?.state === "MANAGING_REWARDS" ||
+      joinProgress?.state === "FINISHED")
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -83,32 +111,62 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalCloseButton />
           <ModalBody>
             <Error error={joinError} processError={processJoinPlatformError} />
-            <VStack
-              spacing="3"
-              alignItems="stretch"
-              w="full"
-              divider={<Divider />}
-              mb="8"
-            >
-              <WalletAuthButton />
-              {renderedSteps}
-              <SatisfyRequirementsJoinStep
-                isLoading={isLoading}
-                hasNoAccessResponse={response?.success === false}
-                onClose={onClose}
-              />
-            </VStack>
 
-            {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
+            <Collapse in={!isManagingRolesOrRewards}>
+              <VStack {...JOIN_STEP_VSTACK_PROPS}>
+                <WalletAuthButton />
+                {renderedSteps}
+              </VStack>
+            </Collapse>
 
-            <TwitterRequirementsVerificationIssuesAlert />
+            {!isManagingRolesOrRewards && <Divider mb={3} />}
+
+            <SatisfyRequirementsJoinStep
+              mb={isManagingRolesOrRewards ? "2.5" : "8"}
+              spacing={isManagingRolesOrRewards ? "2.5" : "2"}
+              isLoading={isLoading}
+              hasNoAccessResponse={response?.success === false}
+              onClose={onClose}
+              joinState={joinProgress}
+            />
+
+            {isManagingRolesOrRewards && <Divider my={2.5} />}
+
+            <Collapse in={isManagingRolesOrRewards}>
+              <VStack {...JOIN_STEP_VSTACK_PROPS} spacing={2.5} mb={6}>
+                <ProgressJoinStep
+                  entity="role"
+                  joinState={joinProgress}
+                  shouldShowSubtitle={joinProgress?.state === "MANAGING_ROLES"}
+                />
+
+                <ProgressJoinStep
+                  entity="reward"
+                  joinState={joinProgress}
+                  shouldShowSubtitle={
+                    !joinProgress?.rewards &&
+                    joinProgress?.state === "MANAGING_REWARDS"
+                  }
+                />
+              </VStack>
+            </Collapse>
+
+            <Collapse in={!isLoading}>
+              {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
+            </Collapse>
 
             <ModalButton
               mt="2"
               onClick={handleSubmit(onSubmit)}
               colorScheme="green"
               isLoading={isLoading}
-              loadingText={"Checking access"}
+              loadingText={
+                joinProgress?.state === "FINISHED"
+                  ? "Finalizing results"
+                  : !!joinProgress
+                  ? "See status above"
+                  : "Checking access"
+              }
               isDisabled={!isWeb3Connected}
             >
               Check access to join

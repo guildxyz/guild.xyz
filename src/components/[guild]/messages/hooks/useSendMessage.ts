@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import useGuildMessages, { Message } from "./useGuildMessages"
@@ -8,7 +8,7 @@ import useGuildMessages, { Message } from "./useGuildMessages"
 const useSendMessage = (onSuccess?: () => void) => {
   const { id } = useGuild()
 
-  const sendMessage = (signedValidation: SignedValdation) =>
+  const sendMessage = (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${id}/messages`, {
       ...signedValidation,
       method: "POST",

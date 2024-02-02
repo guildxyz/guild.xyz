@@ -121,7 +121,9 @@ const OAuth = () => {
         },
       }
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { error, error_description, csrfToken, platformName, ...data } = params
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { csrfToken: _csrfToken, from, ...infoRest } = localStorageInfo
       response = { type: "OAUTH_SUCCESS", data: { ...data, ...infoRest } }
     }

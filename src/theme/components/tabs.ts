@@ -13,7 +13,7 @@ const baseStyleTabpanel = defineStyle({
   p: 0,
 })
 
-const baseStyle = definePartsStyle((props) => ({
+const baseStyle = definePartsStyle(() => ({
   tabpanel: baseStyleTabpanel,
 }))
 

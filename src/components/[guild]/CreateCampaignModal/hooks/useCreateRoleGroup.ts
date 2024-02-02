@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { Group } from "types"
@@ -17,7 +17,7 @@ const useCreateRoleGroup = () => {
 
   const triggerConfetti = useJsConfetti()
 
-  const createRoleGroup = (signedValidation: SignedValdation): Promise<Group> =>
+  const createRoleGroup = (signedValidation: SignedValidation): Promise<Group> =>
     fetcher(`/v2/guilds/${id}/groups`, signedValidation)
 
   return useSubmitWithSign<Group>(createRoleGroup, {

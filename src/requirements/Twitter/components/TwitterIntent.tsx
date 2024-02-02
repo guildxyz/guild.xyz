@@ -4,7 +4,7 @@ import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import usePopupWindow from "hooks/usePopupWindow"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import useSWR from "swr"
@@ -71,7 +71,7 @@ const TwitterIntent = ({
         : `https://twitter.com/twitter/status/${id}`
       : undefined
 
-  const completeAction = (signedValidation: SignedValdation) =>
+  const completeAction = (signedValidation: SignedValidation) =>
     fetcher(`/v2/util/gate-callbacks?requirementType=${requirementType}`, {
       method: "POST",
       ...signedValidation,

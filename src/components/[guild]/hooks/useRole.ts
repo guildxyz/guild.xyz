@@ -1,21 +1,30 @@
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import useSWRImmutable from "swr/immutable"
 import { SimpleRole } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
 
 const useRole = (guildId: number | string, roleId: number) => {
-  const { data, mutate, isLoading, error, isSigned } =
-    useSWRWithOptionalAuth<SimpleRole>(
-      guildId && roleId ? `/v2/guilds/${guildId}/roles/${roleId}` : null,
-      undefined,
-      undefined,
-      false
+  const url = `/v2/guilds/${guildId}/roles/${roleId}`
+
+  const { data: unauthenticatedData, isLoading: isUnauthenticatedRequestLoading } =
+    useSWRImmutable<SimpleRole>(guildId && roleId ? url : null, {
+      shouldRetryOnError: false,
+    })
+
+  const fetcherWithSign = useFetcherWithSign()
+  const { data: authenticatedData, isLoading: isAuthenticatedRequestLoading } =
+    useSWRImmutable<SimpleRole>(
+      guildId && roleId && !isUnauthenticatedRequestLoading && !unauthenticatedData
+        ? [url, { method: "GET", body: {} }]
+        : null,
+      fetcherWithSign,
+      {
+        shouldRetryOnError: false,
+      }
     )
 
   return {
-    ...data,
-    isDetailed: isSigned,
-    isLoading,
-    error,
-    mutate,
+    ...(unauthenticatedData || authenticatedData),
+    isLoading: isUnauthenticatedRequestLoading || isAuthenticatedRequestLoading,
   }
 }
 

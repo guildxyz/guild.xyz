@@ -15,7 +15,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
@@ -26,7 +26,7 @@ type ClaimResponse = {
   uniqueValue: string
 }
 
-const joinFetcher = (signedValidation: SignedValdation) =>
+const joinFetcher = (signedValidation: SignedValidation) =>
   fetcher(`/user/join`, signedValidation)
 
 const useClaimText = (rolePlatformId: number) => {
@@ -49,7 +49,7 @@ const useClaimText = (rolePlatformId: number) => {
     () => cache.get(endpoint)?.data
   )
 
-  const claimFetcher = (signedValidation: SignedValdation) =>
+  const claimFetcher = (signedValidation: SignedValidation) =>
     fetcher(endpoint, {
       method: "POST",
       ...signedValidation,

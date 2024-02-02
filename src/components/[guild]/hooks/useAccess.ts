@@ -8,12 +8,10 @@ import useSWR, { SWRConfiguration } from "swr"
 import createAndAwaitJob from "utils/createAndAwaitJob"
 import { useFetcherWithSign } from "utils/fetcher"
 import { QUEUE_FEATURE_FLAG } from "../JoinModal/hooks/useJoin"
-import { useUserPublic } from "./useUser"
 
 const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
-  const { isWeb3Connected, address } = useWeb3ConnectionManager()
+  const { address } = useWeb3ConnectionManager()
   const { id, featureFlags, parentRoles } = useGuild()
-  const { keyPair } = useUserPublic()
   const { memberships } = useMemberships()
   const guildMembership = memberships?.find(({ guildId }) => guildId === id)
 
@@ -29,12 +27,10 @@ const useAccess = (roleId?: number, swrOptions?: SWRConfiguration) => {
       (parentRoleId) => !guildMembership.roleIds.includes(parentRoleId)
     )
 
-  const shouldFetch = isWeb3Connected && id && roleId !== 0 && !!keyPair
-
   const fetcherWithSign = useFetcherWithSign()
 
   const { data, error, isLoading, isValidating, mutate } = useSWR(
-    shouldFetch ? `/guild/access/${id}/${address}` : null,
+    !!guildMembership ? `/guild/access/${id}/${address}` : null,
     async (key) => {
       if (featureFlags.includes(QUEUE_FEATURE_FLAG)) {
         const { roleAccesses, "children:access-check:jobs": requirementResults } =
