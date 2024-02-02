@@ -1,11 +1,12 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { Chains } from "chains"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMemberships"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -31,12 +32,12 @@ const CollectNftButton = ({
   const { chain, nftAddress, alreadyCollected, roleId } = useCollectNftContext()
   const { id: guildId, urlName } = useGuild()
 
-  const { isLoading: isAccessLoading, hasAccess } = useAccess(roleId)
+  const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
   const chainId = useChainId()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
-  const { mutate: mutateMemberships } = useMemberships()
+  const { mutate: mutateMemberships } = useMembership()
 
   const {
     onSubmit: onMintSubmit,
@@ -85,7 +86,7 @@ const CollectNftButton = ({
       : "Checking your balance"
 
   const isDisabled =
-    shouldSwitchNetwork || !hasAccess || alreadyCollected || !isSufficientBalance
+    shouldSwitchNetwork || !hasRoleAccess || alreadyCollected || !isSufficientBalance
 
   return (
     <Button

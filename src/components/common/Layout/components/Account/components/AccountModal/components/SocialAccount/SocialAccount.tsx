@@ -1,12 +1,13 @@
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useAccess from "components/[guild]/hooks/useAccess"
 import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 
 import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
+import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import useUser from "components/[guild]/hooks/useUser"
+import useMembership from "components/explorer/hooks/useMemberships"
 import { Question } from "phosphor-react"
 import { memo } from "react"
 import useDisconnect from "../../hooks/useDisconnect"
@@ -19,7 +20,7 @@ type Props = {
 
 const SocialAccount = memo(({ type }: Props): JSX.Element => {
   const { platformUsers } = useUser()
-  const accesses = useAccess()
+  const { membership } = useMembership()
   const platformUser = platformUsers?.find(
     (platform) => platform.platformName.toString() === type
   )
@@ -27,9 +28,9 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
   const isConnected = !!platformUser
 
   const isReconnect =
-    !!accesses &&
-    accesses?.data?.some(({ errors }) =>
-      errors?.some(
+    !!membership &&
+    membership?.roles?.some(({ requirements }) =>
+      requirements?.some(
         ({ errorType, subType }) =>
           errorType === "PLATFORM_CONNECT_INVALID" && subType?.toUpperCase() === type
       )
@@ -67,14 +68,14 @@ export const TwitterV1Tooltip = () => (
 
 const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const toast = useToast()
-  const { mutate: mutateAccesses } = useAccess()
+  const { onSubmit: onJoin } = useJoin()
 
   const onSuccess = () => {
     toast({
       title: `Account successfully connected`,
       status: "success",
     })
-    mutateAccesses()
+    onJoin()
   }
 
   const { onConnect, isLoading, response } = useConnectPlatform(

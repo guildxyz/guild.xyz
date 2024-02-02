@@ -7,9 +7,9 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import { Coins } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
@@ -60,9 +60,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     ? CHAIN_CONFIG[chain].nativeCurrency.symbol
     : tokenData?.symbol
 
-  const { data: accessData } = useAccess(roleId ?? 0)
+  const { roleMembership } = useRoleMembership(roleId ?? 0)
 
-  const satisfiesRequirement = accessData?.requirements?.find(
+  const satisfiesRequirement = roleMembership?.requirements?.find(
     (req) => req.requirementId === id
   )?.access
 

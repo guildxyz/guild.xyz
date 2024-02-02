@@ -8,11 +8,11 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -34,7 +34,7 @@ const MintableRole = ({ role }: Props) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { id: userId } = useUser()
-  const { hasAccess } = useAccess(role.id)
+  const { hasRoleAccess } = useRoleMembership(role.id)
   const { id: guildId } = useGuild()
   const {
     data: claimedRoles,
@@ -127,7 +127,7 @@ const MintableRole = ({ role }: Props) => {
         <Spacer />
         <Tooltip
           label="You don't satisfy the requirements to this role"
-          isDisabled={hasAccess}
+          isDisabled={hasRoleAccess}
           placement="top"
           hasArrow
         >
@@ -135,7 +135,7 @@ const MintableRole = ({ role }: Props) => {
             colorScheme={"purple"}
             h={10}
             isLoading={isValidating || isLoading}
-            isDisabled={!hasAccess}
+            isDisabled={!hasRoleAccess}
             onClick={() => {
               if (hasClaimed) {
                 onOpen()

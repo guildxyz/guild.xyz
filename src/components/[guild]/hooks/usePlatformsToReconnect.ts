@@ -1,24 +1,24 @@
+import useMembership from "components/explorer/hooks/useMemberships"
 import { useMemo } from "react"
 import { PlatformName } from "types"
-import useAccess from "./useAccess"
 
 const usePlatformsToReconnect = () => {
-  const { data: accesses } = useAccess()
+  const { membership } = useMembership()
 
   const platformsToReconnect = useMemo(() => {
-    if (!accesses) {
+    if (!membership) {
       return []
     }
 
     return [
       ...new Set<PlatformName>(
-        (accesses ?? [])
-          ?.flatMap(({ errors }) => errors ?? [])
+        (membership?.roles ?? [])
+          ?.flatMap(({ requirements }) => requirements ?? [])
           .filter(({ errorType }) => errorType === "PLATFORM_CONNECT_INVALID")
-          .map(({ subType }) => subType?.toUpperCase())
+          .map(({ subType }) => subType?.toUpperCase() as PlatformName)
       ),
     ]
-  }, [accesses])
+  }, [membership])
 
   return platformsToReconnect
 }

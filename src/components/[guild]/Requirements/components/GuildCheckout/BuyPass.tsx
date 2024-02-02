@@ -13,12 +13,12 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
@@ -44,11 +44,11 @@ const BuyPass = () => {
   const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 
-  const { data: accessData, isValidating: isAccessValidating } = useAccess(
-    requirement?.roleId
+  const { isValidating: isAccessValidating, roleMembership } = useRoleMembership(
+    role?.id
   )
 
-  const userSatisfiesOtherRequirements = accessData?.requirements
+  const userSatisfiesOtherRequirements = roleMembership?.requirements
     ?.filter((r) => r.requirementId !== requirement?.id)
     ?.every((r) => r.access)
 
@@ -61,7 +61,7 @@ const BuyPass = () => {
 
   if (
     !isWeb3Connected ||
-    (!accessData && isAccessValidating) ||
+    (!roleMembership && isAccessValidating) ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)
   )

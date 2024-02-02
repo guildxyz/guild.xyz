@@ -17,7 +17,6 @@ import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -39,6 +38,7 @@ import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
+import useMembership from "components/explorer/hooks/useMemberships"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useAtom } from "jotai"
@@ -148,7 +148,7 @@ const GuildPage = (): JSX.Element => {
 
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
-  const { hasAccess } = useAccess()
+  const { hasAccess } = useMembership()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(

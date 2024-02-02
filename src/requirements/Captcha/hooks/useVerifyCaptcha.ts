@@ -1,4 +1,4 @@
-import useAccess from "components/[guild]/hooks/useAccess"
+import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -15,7 +15,7 @@ const useVerifyCaptcha = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { mutate } = useAccess()
+  const { onSubmit: onJoin } = useJoin()
 
   return useSubmit(verifyCaptcha, {
     onError: (error) => {
@@ -24,7 +24,7 @@ const useVerifyCaptcha = () => {
       showErrorToast(correlationId ? { error: errorMsg, correlationId } : errorMsg)
     },
     onSuccess: () => {
-      mutate()
+      onJoin()
       toast({
         status: "success",
         title: "Successful verification",

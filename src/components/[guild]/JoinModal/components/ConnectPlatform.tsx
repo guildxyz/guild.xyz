@@ -1,5 +1,4 @@
 import { Icon } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
 import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/SocialAccount"
@@ -10,6 +9,7 @@ import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 import { useAccount } from "wagmi"
 import useConnectPlatform from "../hooks/useConnectPlatform"
+import useJoin from "../hooks/useJoin"
 import ConnectAccount from "./ConnectAccount"
 
 type Props = {
@@ -24,8 +24,8 @@ const ConnectPlatform = ({ platform }: Props) => {
   const isReconnect = platformsToReconnect.includes(platform)
 
   // we have the reconnect data from the /access endoint, so we have to mutate that on reconnect success
-  const { mutate: mutateAccess } = useAccess()
-  const onSuccess = () => isReconnect && mutateAccess()
+  const { onSubmit: onJoin } = useJoin()
+  const onSuccess = () => isReconnect && onJoin()
 
   const { onConnect, isLoading, loadingText, authData, response } =
     useConnectPlatform(platform, onSuccess, isReconnect)

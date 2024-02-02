@@ -3,15 +3,15 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import { ArrowSquareOut } from "phosphor-react"
 import { APP_DETAILS } from "./Web3InboxForm"
 
 const Web3InboxRequirement = (props: RequirementProps) => {
   const { id, roleId, data } = useRequirementContext()
-  const { data: roleAccess, isValidating } = useAccess(roleId)
-  const hasAccess = roleAccess?.requirements?.find(
+  const { roleMembership, isValidating } = useRoleMembership(roleId)
+  const hasAccess = roleMembership?.requirements?.find(
     (req) => req.requirementId === id
   )?.access
 

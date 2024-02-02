@@ -1,6 +1,6 @@
 import { Img, useDisclosure } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useMembership from "components/explorer/hooks/useMemberships"
 import { ConnectPolygonIDModal } from "requirements/PolygonID/components/ConnectPolygonID"
 import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
@@ -14,8 +14,10 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
     ?.filter((req) => req.type === "POLYGON_ID_BASIC")
     .map((req) => req.id)
 
-  const { data: accesses } = useAccess()
-  const requirementAccesses = accesses?.flatMap((access) => access.requirements)
+  const { membership } = useMembership()
+  const requirementAccesses = membership?.roles?.flatMap((role) =>
+    role.requirements?.filter((req) => req.access)
+  )
 
   const isPIDConnected = requirementAccesses?.some(
     (reqAccess) =>

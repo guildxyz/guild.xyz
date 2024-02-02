@@ -1,13 +1,11 @@
-import useMemberships from "components/explorer/hooks/useMemberships"
-import useGuild from "components/[guild]/hooks/useGuild"
+import useMembership from "components/explorer/hooks/useMemberships"
 
 const useIsMember = (): boolean => {
-  const { memberships } = useMemberships()
-  const { id } = useGuild()
+  const { membership, roleIds } = useMembership()
 
-  if (id === undefined || memberships === undefined) return undefined
+  if (membership === undefined) return undefined
 
-  return memberships.some((_) => _.guildId === id && _.roleIds?.length)
+  return roleIds?.length > 0
 }
 
 export default useIsMember

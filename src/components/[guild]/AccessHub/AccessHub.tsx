@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
@@ -41,7 +41,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   )
 
   const { isAdmin } = useGuildPermission()
-  const { memberships } = useMemberships()
+  const { roleIds } = useMembership()
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
   const contractCallGuildPlatforms =
@@ -51,12 +51,9 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 
   if (isAdmin) return relevantGuildPlatforms
 
-  const accessedRoleIds = memberships?.find(
-    (membership) => membership.guildId === id
-  )?.roleIds
-  if (!accessedRoleIds) return contractCallGuildPlatforms
+  if (!roleIds) return contractCallGuildPlatforms
 
-  const accessedRoles = roles.filter((role) => accessedRoleIds.includes(role.id))
+  const accessedRoles = roles.filter((role) => roleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles
     .map((role) => role.rolePlatforms)
     .flat()

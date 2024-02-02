@@ -1,4 +1,5 @@
 import { HStack, Icon, Link, LinkProps, Stack, Text } from "@chakra-ui/react"
+import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -9,8 +10,8 @@ import {
 } from "components/[guild]/Requirements/components/RequirementImage"
 import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
+import useMembership from "components/explorer/hooks/useMemberships"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"
@@ -28,14 +29,15 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const { id: requirementId, data } = useRequirementContext()
   const { id: userId } = useUser()
 
-  const { data: accesses, mutate: mutateAccess } = useAccess()
-  const hasAccess = accesses
+  const { onSubmit: onJoin } = useJoin()
+  const { membership } = useMembership()
+  const hasAccess = membership?.roles
     ?.flatMap((role) => role.requirements)
     .find((req) => req.requirementId === requirementId)?.access
 
   const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
-    onSuccess: () => mutateAccess(),
+    onSuccess: () => onJoin(),
     onError: () => showErrorToast("Something went wrong"),
   })
 

@@ -8,10 +8,10 @@ import {
 import AvailabilityTags, {
   getTimeDiff,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import useClaimText, {
   ClaimTextModal,
@@ -40,14 +40,16 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   )
 
   const isMember = useIsMember()
-  const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
+  const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
+    role.id
+  )
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
   const state = useMemo(() => {
-    if (isMember && hasAccess) {
+    if (isMember && hasRoleAccess) {
       const startTimeDiff = getTimeDiff(platform?.startTime)
       const endTimeDiff = getTimeDiff(platform?.endTime)
 
@@ -76,7 +78,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasRoleAccess))
       return {
         tooltipLabel: (
           <>
@@ -90,7 +92,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [claimed, isMember, hasAccess, isConnected, platform])
+  }, [claimed, isMember, hasRoleAccess, isConnected, platform])
 
   return (
     <>

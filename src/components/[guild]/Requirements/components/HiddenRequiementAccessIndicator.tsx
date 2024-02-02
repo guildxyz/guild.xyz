@@ -13,10 +13,10 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import {
   ArrowSquareIn,
   CaretDown,
@@ -41,27 +41,28 @@ type Props = {
 const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const { data: accessData } = useAccess(roleId)
-  if (!accessData) return null
+  const { roleMembership } = useRoleMembership(roleId)
+  if (!roleMembership) return null
 
   const publicReqIds = role.requirements.map((req) => req.id)
 
   const hiddenReqsAccessData =
-    accessData?.requirements?.filter(
+    roleMembership?.requirements?.filter(
       (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
     ) ?? []
 
   const hiddenReqsErrorMessages = [
     ...new Set<string>(
-      accessData?.errors
+      roleMembership?.requirements
         ?.filter(
-          (error) =>
-            !publicReqIds.includes(error.requirementId) &&
+          (req) =>
+            !!req.access === null &&
+            !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
-              error.errorType
+              req.errorType
             )
         )
-        ?.map((error) => error.msg)
+        ?.map((req) => req.errorMsg)
     ),
   ]
 
@@ -72,8 +73,8 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
         return acc
       }
 
-      const reqError = accessData?.errors?.find(
-        (obj) => obj.requirementId === curr.requirementId
+      const reqError = roleMembership?.requirements?.find(
+        (obj) => obj.requirementId === curr.requirementId && obj.access === null
       )
       if (!reqError) {
         acc.notAccessed += 1
@@ -126,7 +127,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!roleMembership?.access}
       >
         <HiddenRequiementAccessIndicatorPopover
           count={count}
@@ -141,7 +142,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!roleMembership?.access}
       >
         <HiddenRequiementAccessIndicatorPopover
           count={count}
@@ -155,7 +156,7 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={count.notAccessed === hiddenReqsAccessData?.length ? X : DotsThree}
-      isAlwaysOpen={!accessData?.access}
+      isAlwaysOpen={!roleMembership?.access}
     >
       <HiddenRequiementAccessIndicatorPopover
         count={count}

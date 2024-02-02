@@ -1,6 +1,6 @@
 import { Chains } from "chains"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useNonPurchasableAssets from "components/[guild]/hooks/useNonPurchasableAssets"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
@@ -24,17 +24,17 @@ const DynamicPurchaseRequirement = () => {
   const { isOpen } = useGuildCheckoutContext()
   const { isTxModalOpen } = useTransactionStatusContext()
 
-  const { data: accessData, isValidating: isAccessValidating } = useAccess(
+  const { roleMembership, isValidating: isAccessValidating } = useRoleMembership(
     requirement?.roleId
   )
-  const satisfiesRequirement = accessData?.requirements?.find(
+  const satisfiesRequirement = roleMembership?.requirements?.find(
     (req) => req.requirementId === requirement.id
   )?.access
 
   const shouldNotRenderComponent =
     !isOpen &&
     !isTxModalOpen &&
-    ((!accessData && isAccessValidating) ||
+    ((!roleMembership && isAccessValidating) ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
       !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))

@@ -5,9 +5,9 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
@@ -31,10 +31,10 @@ const RequiementAccessIndicator = () => {
   const { openAccountModal } = useWeb3ConnectionManager()
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
-  const { data: accessData } = useAccess(roleId)
-  if (!accessData) return null
+  const { roleMembership } = useRoleMembership(roleId)
+  if (!roleMembership) return null
 
-  const reqAccessData = accessData?.requirements?.find(
+  const reqAccessData = roleMembership?.requirements?.find(
     (obj) => obj.requirementId === id
   )
 
@@ -54,7 +54,9 @@ const RequiementAccessIndicator = () => {
       </RequiementAccessIndicatorUI>
     )
 
-  const reqErrorData = accessData?.errors?.find((obj) => obj.requirementId === id)
+  const reqErrorData = roleMembership?.requirements?.find(
+    (obj) => obj.access === null && obj.requirementId === id
+  )
 
   if (reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED")
     return (
@@ -62,7 +64,7 @@ const RequiementAccessIndicator = () => {
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!roleMembership?.access}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
           {type === "CAPTCHA"
@@ -91,11 +93,11 @@ const RequiementAccessIndicator = () => {
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!roleMembership?.access}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {reqErrorData?.msg
-            ? `Error: ${reqErrorData.msg}`
+          {reqErrorData?.errorMsg
+            ? `Error: ${reqErrorData.errorMsg}`
             : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
@@ -109,7 +111,7 @@ const RequiementAccessIndicator = () => {
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={X}
-      isAlwaysOpen={!accessData?.access}
+      isAlwaysOpen={!roleMembership?.access}
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
         {`Requirement not satisfied with your connected ${

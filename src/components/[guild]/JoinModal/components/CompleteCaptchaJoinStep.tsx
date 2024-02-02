@@ -1,6 +1,6 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useMembership from "components/explorer/hooks/useMemberships"
 import { Robot } from "phosphor-react"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
 import { useAccount } from "wagmi"
@@ -15,8 +15,10 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
     ?.filter((req) => req.type === "CAPTCHA")
     .map((req) => req.id)
 
-  const { data: accesses } = useAccess()
-  const requirementAccesses = accesses?.flatMap((access) => access.requirements)
+  const { membership } = useMembership()
+  const requirementAccesses = membership?.roles?.flatMap((role) =>
+    role.requirements?.filter((req) => req.access)
+  )
 
   const isDone = requirementAccesses?.some(
     (reqAccess) =>

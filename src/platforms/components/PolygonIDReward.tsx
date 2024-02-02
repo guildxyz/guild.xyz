@@ -5,10 +5,10 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMintPolygonIDProofContext } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
@@ -26,7 +26,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
   )
 
   const isMember = useIsMember()
-  const { hasAccess, isValidating } = useAccess(role.id)
+  const { hasRoleAccess, isValidating } = useRoleMembership(role.id)
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
@@ -35,7 +35,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
   const { isLoading, data: connectedDID } = useConnectedDID()
 
   const state = useMemo(() => {
-    if (isMember && hasAccess && connectedDID) {
+    if (isMember && hasRoleAccess && connectedDID) {
       return {
         tooltipLabel: "Mint proof",
         buttonProps: {
@@ -45,7 +45,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasRoleAccess))
       return {
         tooltipLabel: (
           <>
@@ -66,7 +66,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected, platform])
+  }, [isMember, hasRoleAccess, isConnected, platform])
 
   return (
     <RewardDisplay

@@ -1,11 +1,10 @@
 import type { JoinJob } from "@guildxyz/types"
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useSetAtom } from "jotai"
@@ -53,7 +52,6 @@ const useJoin = (
 ) => {
   const { captureEvent } = usePostHogContext()
 
-  const access = useAccess()
   const guild = useGuild()
   const user = useUser()
 
@@ -67,7 +65,7 @@ const useJoin = (
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
 
-  const { mutate } = useMemberships()
+  const { mutate } = useMembership()
   const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
 
   const fetcherWithSign = useFetcherWithSign()
@@ -121,7 +119,6 @@ const useJoin = (
   const { pathname } = useRouter()
 
   const onJoinSuccess = (response: Response) => {
-    access?.mutate?.()
     // mutate user in case they connected new platforms during the join flow
     user?.mutate?.()
 
@@ -134,18 +131,7 @@ const useJoin = (
 
     setIsAfterJoin(true)
 
-    mutate(
-      (prev) => [
-        ...(prev ?? []),
-        {
-          guildId: guild.id,
-          isAdmin: false,
-          roleIds: response.accessedRoleIds,
-          joinedAt: new Date().toISOString(),
-        },
-      ],
-      { revalidate: false }
-    )
+    mutate()
 
     if (shouldShowSuccessToast) {
       if (
