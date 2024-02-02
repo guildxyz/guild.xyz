@@ -3,6 +3,7 @@ import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
+import MaintenanceBanner from "components/_app/MaintenanceBanner"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
@@ -89,6 +90,12 @@ const App = ({
             </Box>
           </Slide>
         ) : null}
+
+        <MaintenanceBanner
+          maintenanceFrom="2024-02-03T06:00"
+          maintenanceTo="2024-02-03T10:00"
+        />
+
         <IconContext.Provider
           value={{
             color: "currentColor",
