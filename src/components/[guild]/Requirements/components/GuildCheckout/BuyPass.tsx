@@ -44,11 +44,9 @@ const BuyPass = () => {
   const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 
-  const { isValidating: isAccessValidating, roleMembership } = useRoleMembership(
-    role?.id
-  )
+  const { isLoading: isMembershipLoading, reqAccesses } = useRoleMembership(role?.id)
 
-  const userSatisfiesOtherRequirements = roleMembership?.requirements
+  const userSatisfiesOtherRequirements = reqAccesses
     ?.filter((r) => r.requirementId !== requirement?.id)
     ?.every((r) => r.access)
 
@@ -61,7 +59,7 @@ const BuyPass = () => {
 
   if (
     !isWeb3Connected ||
-    (!roleMembership && isAccessValidating) ||
+    isMembershipLoading ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)
   )

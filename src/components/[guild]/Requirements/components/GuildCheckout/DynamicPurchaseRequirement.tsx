@@ -24,17 +24,17 @@ const DynamicPurchaseRequirement = () => {
   const { isOpen } = useGuildCheckoutContext()
   const { isTxModalOpen } = useTransactionStatusContext()
 
-  const { roleMembership, isValidating: isAccessValidating } = useRoleMembership(
+  const { reqAccesses, isLoading: isMembershipLoading } = useRoleMembership(
     requirement?.roleId
   )
-  const satisfiesRequirement = roleMembership?.requirements?.find(
+  const satisfiesRequirement = reqAccesses?.find(
     (req) => req.requirementId === requirement.id
   )?.access
 
   const shouldNotRenderComponent =
     !isOpen &&
     !isTxModalOpen &&
-    ((!roleMembership && isAccessValidating) ||
+    (isMembershipLoading ||
       satisfiesRequirement ||
       !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
       !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))

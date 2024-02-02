@@ -60,9 +60,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     ? CHAIN_CONFIG[chain].nativeCurrency.symbol
     : tokenData?.symbol
 
-  const { roleMembership } = useRoleMembership(roleId ?? 0)
+  const { reqAccesses } = useRoleMembership(roleId ?? 0)
 
-  const satisfiesRequirement = roleMembership?.requirements?.find(
+  const satisfiesRequirement = reqAccesses?.find(
     (req) => req.requirementId === id
   )?.access
 

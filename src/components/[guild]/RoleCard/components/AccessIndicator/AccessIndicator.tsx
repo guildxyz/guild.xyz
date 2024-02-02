@@ -28,11 +28,9 @@ type Props = {
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const { roleMembership, error, isValidating, reqAccessErrors, hasRoleAccess } =
+  const { error, isValidating, reqAccesses, hasRoleAccess } =
     useRoleMembership(roleId)
-  const accessedRequirementCount = roleMembership?.requirements?.filter(
-    (r) => r.access
-  )?.length
+  const accessedRequirementCount = reqAccesses?.filter((r) => r.access)?.length
 
   const { openAccountModal } = useWeb3ConnectionManager()
   const { isMember } = useMembership()
@@ -40,10 +38,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const requirementIdsWithErrors = reqAccessErrors?.map((r) => r.requirementId) ?? []
-  const requirementsWithErrors = requirements.filter((req) =>
-    requirementIdsWithErrors.includes(req.id)
+  const requirementsWithErrors = role?.requirements?.filter(
+    (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null
   )
   const errors = useRequirementErrorConfig()
   const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
@@ -120,7 +116,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (reqAccessErrors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
+  if (reqAccesses?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -131,7 +127,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (reqAccessErrors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
+  if (reqAccesses?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -142,7 +138,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (reqAccessErrors?.length > 0 || error)
+  if (requirementsWithErrors?.length > 0 || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"

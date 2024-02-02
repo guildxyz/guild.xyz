@@ -10,10 +10,8 @@ import { APP_DETAILS } from "./Web3InboxForm"
 
 const Web3InboxRequirement = (props: RequirementProps) => {
   const { id, roleId, data } = useRequirementContext()
-  const { roleMembership, isValidating } = useRoleMembership(roleId)
-  const hasAccess = roleMembership?.requirements?.find(
-    (req) => req.requirementId === id
-  )?.access
+  const { reqAccesses, isValidating } = useRoleMembership(roleId)
+  const hasAccess = reqAccesses?.find((req) => req.requirementId === id)?.access
 
   return (
     <Requirement

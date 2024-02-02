@@ -31,12 +31,10 @@ const RequiementAccessIndicator = () => {
   const { openAccountModal } = useWeb3ConnectionManager()
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
-  const { roleMembership } = useRoleMembership(roleId)
-  if (!roleMembership) return null
+  const { reqAccesses, hasRoleAccess } = useRoleMembership(roleId)
+  if (!reqAccesses) return null
 
-  const reqAccessData = roleMembership?.requirements?.find(
-    (obj) => obj.requirementId === id
-  )
+  const reqAccessData = reqAccesses?.find((obj) => obj.requirementId === id)
 
   if (reqAccessData?.access)
     return (
@@ -54,17 +52,13 @@ const RequiementAccessIndicator = () => {
       </RequiementAccessIndicatorUI>
     )
 
-  const reqErrorData = roleMembership?.requirements?.find(
-    (obj) => obj.access === null && obj.requirementId === id
-  )
-
-  if (reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED")
+  if (reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED")
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
-        isAlwaysOpen={!roleMembership?.access}
+        isAlwaysOpen={!hasRoleAccess}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
           {type === "CAPTCHA"
@@ -87,17 +81,17 @@ const RequiementAccessIndicator = () => {
       </RequiementAccessIndicatorUI>
     )
 
-  if (reqAccessData?.access === null || reqErrorData) {
+  if (reqAccessData?.access === null) {
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
-        isAlwaysOpen={!roleMembership?.access}
+        isAlwaysOpen={!hasRoleAccess}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {reqErrorData?.errorMsg
-            ? `Error: ${reqErrorData.errorMsg}`
+          {reqAccessData?.errorMsg
+            ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
@@ -111,7 +105,7 @@ const RequiementAccessIndicator = () => {
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={X}
-      isAlwaysOpen={!roleMembership?.access}
+      isAlwaysOpen={!hasRoleAccess}
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
         {`Requirement not satisfied with your connected ${

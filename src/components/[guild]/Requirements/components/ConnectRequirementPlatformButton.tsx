@@ -16,12 +16,12 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const { type, roleId, id } = useRequirementContext()
   const platform = REQUIREMENTS[type].types[0] as PlatformName
 
-  const { roleMembership } = useRoleMembership(roleId)
+  const { reqAccesses } = useRoleMembership(roleId)
   const { onSubmit: onJoin } = useJoin()
 
   const toast = useToast()
 
-  const isReconnection = roleMembership?.requirements?.some(
+  const isReconnection = reqAccesses?.some(
     (req) => req.requirementId === id && req.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
