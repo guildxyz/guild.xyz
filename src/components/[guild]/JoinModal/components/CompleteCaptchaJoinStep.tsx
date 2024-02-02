@@ -16,9 +16,7 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
     .map((req) => req.id)
 
   const { membership } = useMembership()
-  const requirementAccesses = membership?.roles?.flatMap((role) =>
-    role.requirements?.filter((req) => req.access)
-  )
+  const requirementAccesses = membership?.roles?.flatMap((role) => role.requirements)
 
   const isDone = requirementAccesses?.some(
     (reqAccess) =>
