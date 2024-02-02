@@ -3,7 +3,7 @@ import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import useMembership from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
@@ -55,14 +55,15 @@ const TwitterIntent = ({
     type: requirementType,
     id: requirementId,
     data: { id },
+    roleId,
   } = useRequirementContext()
   const { onOpen } = usePopupWindow()
 
   const { onSubmit: onJoin } = useJoin()
-  const { membership } = useMembership()
-  const hasAccess = membership?.roles
-    ?.flatMap((role) => role.requirements)
-    .find((req) => req.requirementId === requirementId)?.access
+  const { reqAccesses } = useRoleMembership(roleId)
+  const hasAccess = reqAccesses.find(
+    (req) => req.requirementId === requirementId
+  )?.access
 
   const url =
     !!action && !!id

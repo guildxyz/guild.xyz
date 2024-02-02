@@ -11,7 +11,7 @@ import {
 import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useUser from "components/[guild]/hooks/useUser"
-import useMembership from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"
@@ -26,14 +26,14 @@ const visitLink = (signedValidation: SignedValidation) =>
   })
 
 const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
-  const { id: requirementId, data } = useRequirementContext()
+  const { id: requirementId, data, roleId } = useRequirementContext()
   const { id: userId } = useUser()
 
   const { onSubmit: onJoin } = useJoin()
-  const { membership } = useMembership()
-  const hasAccess = membership?.roles
-    ?.flatMap((role) => role.requirements)
-    .find((req) => req.requirementId === requirementId)?.access
+  const { reqAccesses } = useRoleMembership(roleId)
+  const hasAccess = reqAccesses.find(
+    (req) => req.requirementId === requirementId
+  )?.access
 
   const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
