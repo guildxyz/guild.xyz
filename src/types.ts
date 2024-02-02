@@ -342,6 +342,8 @@ type Requirement = {
   updatedAt?: string
 }
 
+type RolePlatformStatus = "ALL_CLAIMED" | "NOT_STARTED" | "ENDED" | "ACTIVE"
+
 type RolePlatform = {
   id: number
   platformRoleId?: string
@@ -675,6 +677,7 @@ export type {
   Role,
   RoleFormType,
   RolePlatform,
+  RolePlatformStatus,
   SelectOption,
   SimpleGuild,
   SimpleRole,

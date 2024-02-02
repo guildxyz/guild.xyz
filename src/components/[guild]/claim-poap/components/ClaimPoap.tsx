@@ -4,10 +4,10 @@ import {
   CapacityTag,
   EndTimeTag,
   StartTimeTag,
-  getTimeDiff,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
+import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import ClaimPoapButton from "./ClaimPoapButton"
 
 type Props = {
@@ -30,19 +30,14 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-  const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
+  const { isAvailable: isButtonEnabled, startTimeDiff } =
+    getRolePlatformTimeframeInfo(rolePlatform)
 
   return (
     <Stack p={padding} w="full" spacing={2}>
       <ConnectWalletButton />
       <Tooltip
-        isDisabled={!isButtonDisabled}
+        isDisabled={isButtonEnabled}
         label={
           startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
         }
@@ -51,7 +46,7 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
       >
         <ClaimPoapButton
           rolePlatformId={rolePlatformId}
-          isDisabled={isButtonDisabled}
+          isDisabled={!isButtonEnabled}
         />
       </Tooltip>
 
