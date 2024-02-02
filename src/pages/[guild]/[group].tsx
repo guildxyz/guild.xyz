@@ -2,7 +2,6 @@ import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/r
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
@@ -55,8 +54,6 @@ const GroupPage = (): JSX.Element => {
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
   } = useGuild()
-
-  useAutoStatusUpdate()
 
   const group = useRoleGroup()
   const groupRoles = roles?.filter((role) => role.groupId === group.id)

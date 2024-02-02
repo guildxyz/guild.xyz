@@ -17,7 +17,6 @@ import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
@@ -100,7 +99,6 @@ const GuildPage = (): JSX.Element => {
     featureFlags,
     isDetailed,
   } = useGuild()
-  useAutoStatusUpdate()
 
   const roles = allRoles.filter((role) => !role.groupId)
 
