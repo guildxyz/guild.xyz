@@ -9,6 +9,7 @@ const groupBy = <Entity, By extends keyof Entity>(entities: Entity[], by: By) =>
     return grouped
   }, {})
 
+// explanation of the response statuses: https://discord.com/channels/697041998728659035/1100897398454222982/1197523089441955900
 const mapAccessJobState = (progress: JoinJob) => {
   if (!progress) {
     return {
