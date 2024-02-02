@@ -7,9 +7,10 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMemberships"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import useClaimText, {
@@ -42,7 +43,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
     role.id
   )

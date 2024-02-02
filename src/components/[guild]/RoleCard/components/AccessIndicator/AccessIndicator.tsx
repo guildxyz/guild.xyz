@@ -9,10 +9,11 @@ import {
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMemberships"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -39,7 +40,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   )?.length
 
   const { openAccountModal } = useWeb3ConnectionManager()
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")

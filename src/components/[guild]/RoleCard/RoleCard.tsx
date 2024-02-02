@@ -11,7 +11,9 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
 import { memo, useEffect, useRef } from "react"
@@ -19,7 +21,6 @@ import { PlatformType, Role, Visibility as VisibilityType } from "types"
 import RoleRequirements from "../Requirements"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import useIsMember from "../hooks/useIsMember"
 import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
 import MemberCount from "./components/MemberCount"
@@ -39,7 +40,7 @@ const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const { hasRoleAccess } = useRoleMembership(role.id)
   /**
    * If using defaultIsOpen: !hasAccess, the RewardIcons doesn't show initially in

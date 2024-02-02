@@ -14,9 +14,10 @@ import usePlatformAccessButton from "components/[guild]/AccessHub/components/use
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Visibility from "components/[guild]/Visibility"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMemberships"
 import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
@@ -54,7 +55,7 @@ const Reward = ({
   withMotionImg = false,
   isLinkColorful,
 }: RewardProps) => {
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 

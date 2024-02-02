@@ -20,7 +20,6 @@ import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildD
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import JoinButton from "components/[guild]/JoinButton"
 import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
@@ -147,8 +146,7 @@ const GuildPage = (): JSX.Element => {
   const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-  const { hasAccess } = useMembership()
+  const { isMember } = useMembership()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
@@ -242,7 +240,7 @@ const GuildPage = (): JSX.Element => {
             rightElement={
               <HStack>
                 {isMember && !isAdmin && <DynamicResendRewardButton />}
-                {!isMember && (isAdmin ? hasAccess : true) ? (
+                {!isMember ? (
                   <JoinButton />
                 ) : !isAdmin ? (
                   <LeaveButton />

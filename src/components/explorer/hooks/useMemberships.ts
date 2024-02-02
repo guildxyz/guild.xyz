@@ -33,13 +33,13 @@ const useMembership = () => {
     isWeb3Connected ? `/v2/users/${address}/memberships?guildId=${id}` : null
   )
 
-  const hasAccess = !!membership?.roles?.some((role) => role.access)
+  const isMember = !!membership?.roles?.some((role) => role.access)
 
   const roleIds = membership?.roles
     ?.filter((role) => role?.access)
     ?.map((role) => role.roleId)
 
-  return { ...rest, membership, hasAccess, roleIds }
+  return { ...rest, membership, isMember, roleIds }
 }
 
 const useRoleMembership = (roleId: number) => {

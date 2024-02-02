@@ -5,7 +5,6 @@ import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
@@ -104,8 +103,7 @@ const GroupPage = (): JSX.Element => {
   const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-  const { hasAccess } = useMembership()
+  const { isMember } = useMembership()
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
@@ -160,7 +158,7 @@ const GroupPage = (): JSX.Element => {
         <Flex justifyContent="end" mb={3}>
           <HStack>
             {isMember && !isAdmin && <DynamicResendRewardButton />}
-            {!isMember && (isAdmin ? hasAccess : true) ? (
+            {!isMember ? (
               <JoinButton />
             ) : !isAdmin ? (
               <LeaveButton />

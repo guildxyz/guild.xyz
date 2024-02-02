@@ -18,7 +18,6 @@ import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import useIsMember from "../hooks/useIsMember"
 import useRoleGroup from "../hooks/useRoleGroup"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
@@ -93,7 +92,7 @@ const AccessHub = (): JSX.Element => {
   )
 
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
 
   const shouldShowGuildPin =
     !group &&
