@@ -28,13 +28,8 @@ type Props = {
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const {
-    roleMembership,
-    error,
-    isValidating,
-    errors: accessErrors,
-    hasRoleAccess,
-  } = useRoleMembership(roleId)
+  const { roleMembership, error, isValidating, reqAccessErrors, hasRoleAccess } =
+    useRoleMembership(roleId)
   const accessedRequirementCount = roleMembership?.requirements?.filter(
     (r) => r.access
   )?.length
@@ -46,7 +41,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
   const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const requirementIdsWithErrors = accessErrors?.map((r) => r.requirementId) ?? []
+  const requirementIdsWithErrors = reqAccessErrors?.map((r) => r.requirementId) ?? []
   const requirementsWithErrors = requirements.filter((req) =>
     requirementIdsWithErrors.includes(req.id)
   )
@@ -125,7 +120,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (accessErrors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
+  if (reqAccessErrors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -136,7 +131,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (accessErrors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
+  if (reqAccessErrors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -147,7 +142,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (accessErrors?.length > 0 || error)
+  if (reqAccessErrors?.length > 0 || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"

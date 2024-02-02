@@ -54,13 +54,9 @@ const useRoleMembership = (roleId: number) => {
   return {
     ...guildMemberships,
     roleMembership,
-    errors: roleMembership?.requirements
-      ?.filter((req) => req.access === null)
-      ?.map((req) => ({
-        msg: req.errorMsg,
-        errorType: req.errorType,
-        requirementId: req.requirementId,
-      })),
+    reqAccessErrors: roleMembership?.requirements?.filter(
+      (req) => req.access === null
+    ),
     hasRoleAccess,
   }
 }

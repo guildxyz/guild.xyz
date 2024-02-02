@@ -28,9 +28,11 @@ const ConnectPolygonID = (props: ButtonProps) => {
   const { id, roleId, type, data, chain } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
-  const { errors } = useRoleMembership(roleId)
+  const { reqAccessErrors } = useRoleMembership(roleId)
 
-  const errorType = errors?.find((err) => err.requirementId === id)?.errorType
+  const errorType = reqAccessErrors?.find(
+    (err) => err.requirementId === id
+  )?.errorType
 
   // close modal (and stop revalidating access) on successful connect
   useEffect(() => {
