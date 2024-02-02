@@ -41,10 +41,11 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
 
   const shouldFetch = Boolean(chain && address)
 
-  const { data: firstBlockNumberToday } = useSWRImmutable(
-    shouldFetch ? ["firstBlockNumberToday", chain, noonUnixTimestamp] : null,
-    getBlockByTime
-  )
+  const { data: firstBlockNumberToday, error: unsupportedChainError } =
+    useSWRImmutable(
+      shouldFetch ? ["firstBlockNumberToday", chain, noonUnixTimestamp] : null,
+      getBlockByTime
+    )
 
   const contract = {
     address,
@@ -131,7 +132,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     description: metadata?.description as string,
     fee: fee as bigint,
     isLoading: isFirstTotalSupplyTodayLoadings || isMulticallLoading,
-    error: multicallError || error,
+    error: unsupportedChainError || multicallError || error,
     refetch,
   }
 }
