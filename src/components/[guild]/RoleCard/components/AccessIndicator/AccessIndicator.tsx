@@ -31,7 +31,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     roleMembership,
     error,
     isValidating,
-    errors: membershipErrors,
+    errors: accessErrors,
     hasRoleAccess,
   } = useRoleMembership(roleId)
   const accessedRequirementCount = roleMembership?.requirements?.filter(
@@ -45,8 +45,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
   const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const requirementIdsWithErrors =
-    membershipErrors?.map((r) => r.requirementId) ?? []
+  const requirementIdsWithErrors = accessErrors?.map((r) => r.requirementId) ?? []
   const requirementsWithErrors = requirements.filter((req) =>
     requirementIdsWithErrors.includes(req.id)
   )
@@ -125,7 +124,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (membershipErrors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
+  if (accessErrors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -136,7 +135,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (membershipErrors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
+  if (accessErrors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -147,7 +146,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (membershipErrors?.length > 0 || error)
+  if (accessErrors?.length > 0 || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"
