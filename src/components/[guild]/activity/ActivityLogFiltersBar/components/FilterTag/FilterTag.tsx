@@ -16,9 +16,11 @@ import { normalizeProps, useMachine } from "@zag-js/react"
 import ActivityLogRoleTag from "../../../ActivityLogAction/components/ActivityLogRoleTag"
 
 import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
+import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { Warning, X } from "phosphor-react"
 import { PropsWithChildren, useEffect, useState } from "react"
+import { PlatformName, PlatformType } from "types"
 import capitalize from "utils/capitalize"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
@@ -50,10 +52,19 @@ const FilterTag = ({
   const tagFontColor = useColorModeValue("black", undefined)
   const closeBtnFocusBgColor = useColorModeValue("blackAlpha.300", "whiteAlpha.500")
 
-  const { getFilter, updateFilter, removeFilter } = useActivityLogFilters()
+  const { activeFilters, getFilter, updateFilter, removeFilter } =
+    useActivityLogFilters()
+
+  const { activityLogType } = useActivityLog()
+  const isSuperadminActivityLog = activityLogType === "all"
+
+  const filterGuildId = isSuperadminActivityLog
+    ? activeFilters?.find((af) => af.filter === "guildId")?.value
+    : undefined
+
   const { id, filter, value } = getFilter(filterId)
 
-  const { id: guildId, roles } = useGuild()
+  const { id: guildId, roles, guildPlatforms } = useGuild(filterGuildId)
 
   const [isLoading, setIsLoading] = useState(false)
   const [shouldRemove, setShouldRemove] = useState(value.length === 0)
@@ -130,6 +141,29 @@ const FilterTag = ({
     }
   }
 
+  const getRewardTagProps = () => {
+    const role = roles?.find((r) =>
+      r.rolePlatforms.some((rp) => rp.id === Number(value))
+    )
+    const rolePlatform = role?.rolePlatforms.find((rp) => rp.id === Number(value))
+    const guildPlatform = guildPlatforms?.find(
+      (gp) => gp.id === rolePlatform.guildPlatformId
+    )
+
+    const name =
+      guildPlatform?.platformGuildName ?? guildPlatform?.platformGuildData?.name
+
+    return {
+      rolePlatformId: Number(value),
+      platformType: PlatformType[guildPlatform?.platformId] as PlatformName,
+      label:
+        guildPlatform?.platformId === PlatformType.DISCORD
+          ? `${role.name} - ${name}`
+          : name,
+      roleId: role?.id,
+    }
+  }
+
   return (
     <>
       <Tag
@@ -189,14 +223,9 @@ const FilterTag = ({
                     )
                   }
                   case "rolePlatformId": {
-                    const role = roles?.find((r) =>
-                      r.rolePlatforms.some((rp) => rp.id === Number(value))
-                    )
-
                     return (
                       <RewardTag
-                        roleId={role?.id}
-                        rolePlatformId={Number(value)}
+                        {...getRewardTagProps()}
                         pr={7}
                         borderLeftRadius={0}
                       />
@@ -278,51 +307,54 @@ const FilterTag = ({
         )}
       </Tag>
 
-      {["guildId", "roleId", "rolePlatformId", "action"].includes(filter) && (
-        <Dropdown
-          {...{
-            ...positionerProps,
-            style: { ...positionerProps.style, ...positionerStyle },
-          }}
-        >
-          <Stack spacing={0} {...contentProps}>
-            {(() => {
-              switch (filter) {
-                case "guildId":
-                  return (
-                    <GuildSuggestions
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                case "roleId":
-                  return (
-                    <RoleSuggestions
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                case "rolePlatformId":
-                  return (
-                    <RewardSuggestions
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                case "action":
-                  return (
-                    <ActionSuggestons
-                      inputValue={inputValue}
-                      getOptionProps={getOptionProps}
-                    />
-                  )
-                default:
-                  return null
-              }
-            })()}
-          </Stack>
-        </Dropdown>
-      )}
+      {["guildId", "roleId", "rolePlatformId", "action"].includes(filter) &&
+        !(isSuperadminActivityLog && filter == "guildId") && (
+          <Dropdown
+            {...{
+              ...positionerProps,
+              style: { ...positionerProps.style, ...positionerStyle },
+            }}
+          >
+            <Stack spacing={0} {...contentProps}>
+              {(() => {
+                switch (filter) {
+                  case "guildId":
+                    return (
+                      <GuildSuggestions
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  case "roleId":
+                    return (
+                      <RoleSuggestions
+                        guildId={guildId}
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  case "rolePlatformId":
+                    return (
+                      <RewardSuggestions
+                        guildId={guildId}
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  case "action":
+                    return (
+                      <ActionSuggestons
+                        inputValue={inputValue}
+                        getOptionProps={getOptionProps}
+                      />
+                    )
+                  default:
+                    return null
+                }
+              })()}
+            </Stack>
+          </Dropdown>
+        )}
     </>
   )
 }
