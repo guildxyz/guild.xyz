@@ -12,15 +12,14 @@ import Button from "components/common/Button"
 import XLogo from "static/icons/x.svg"
 import { useRef } from "react"
 
-const useToast = (toastOptions?: UseToastOptions) => {
-  return chakraUseToast({
+const useToast = (toastOptions?: UseToastOptions) =>
+  chakraUseToast({
     position: "top-right",
     variant: "toastSubtle",
     isClosable: true,
     duration: 4000,
     ...toastOptions,
   })
-}
 
 export type ActionToastOptions = UseToastOptions & {
   buttonProps: ButtonProps & LinkProps
@@ -93,7 +92,7 @@ const useToastWithTweetButton = () => {
       description: "Let others know as well by sharing it on X",
       buttonProps: {
         leftIcon: <XLogo weight="fill" />,
-        children: "Post",
+        children: "Share",
         as: "a",
         href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           tweetText

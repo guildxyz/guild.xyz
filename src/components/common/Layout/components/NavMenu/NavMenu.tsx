@@ -96,7 +96,7 @@ const NavMenu = (): JSX.Element => {
                 rel="noopener"
                 leftIcon={<XLogo />}
               >
-                X
+                Twitter
               </NavButton>
               <NavButton
                 target="_blank"
