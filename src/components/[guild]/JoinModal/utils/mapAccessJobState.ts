@@ -78,4 +78,5 @@ const mapAccessJobState = (progress: JoinJob) => {
 
 export type JoinState = ReturnType<typeof mapAccessJobState>
 
+export { groupBy }
 export default mapAccessJobState

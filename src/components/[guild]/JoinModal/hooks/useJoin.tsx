@@ -13,7 +13,7 @@ import { CircleWavyCheck } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
-import mapAccessJobState from "../utils/mapAccessJobState"
+import mapAccessJobState, { groupBy } from "../utils/mapAccessJobState"
 
 export const QUEUE_FEATURE_FLAG = "GUILD_QUEUES"
 
@@ -131,7 +131,9 @@ const useJoin = (
 
     setIsAfterJoin(true)
 
-    mutate()
+    if (!hasFeatureFlag) {
+      mutate()
+    }
 
     if (shouldShowSuccessToast) {
       if (
@@ -193,6 +195,36 @@ const useJoin = (
       ),
     {
       onSuccess: (res) => {
+        const byRoleId = groupBy(res?.["children:access-check:jobs"] ?? [], "roleId")
+
+        // Mutate membership data according to join status
+        mutate(
+          (prev) => ({
+            guildId: prev?.guildId,
+            isAdmin: prev?.isAdmin,
+            joinedAt: prev?.joinedAt || res?.done ? new Date().toISOString() : null,
+            roles: Object.entries(byRoleId).map(([roleIdStr, reqJobs]) => {
+              const roleId = +roleIdStr
+              return {
+                access: res?.roleAccesses?.find(
+                  (roleAccess) => roleAccess.roleId === +roleId
+                )?.access,
+                roleId,
+                requirements: reqJobs?.map((reqJob) => ({
+                  requirementId: reqJob.requirementId,
+                  access: reqJob.access,
+                  amount: reqJob.amount,
+                  errorMsg: reqJob.userLevelErrors?.[0]?.msg,
+                  errorType: reqJob.userLevelErrors?.[0]?.errorType,
+                  subType: reqJob.userLevelErrors?.[0]?.subType,
+                  lastCheckedAt: reqJob.done ? new Date() : null,
+                })),
+              }
+            }),
+          }),
+          { revalidate: false }
+        )
+
         if (!!res?.roleAccesses && res.roleAccesses.every((role) => !role.access)) {
           useSubmitResponse?.reset()
           return
