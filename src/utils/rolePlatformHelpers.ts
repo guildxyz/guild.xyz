@@ -22,8 +22,8 @@ export const getRolePlatformStatus = (
 }
 
 export const getRolePlatformTimeframeInfo = (rolePlatform: RolePlatform) => {
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
+  const startTimeDiff = getTimeDiff(rolePlatform?.startTime) ?? 0
+  const endTimeDiff = getTimeDiff(rolePlatform?.endTime) ?? 0
 
   const isAvailable =
     startTimeDiff <= 0 && // Start time is now or in the past
