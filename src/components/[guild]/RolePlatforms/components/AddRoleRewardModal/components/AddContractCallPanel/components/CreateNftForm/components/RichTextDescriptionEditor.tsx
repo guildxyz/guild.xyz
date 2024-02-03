@@ -26,6 +26,7 @@ import {
 import AutoLinkPlugin from "components/lexical/plugins/AutoLinkPlugin"
 import ImagesPlugin from "components/lexical/plugins/ImagesPlugin"
 import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugin"
+import ResetHeadingOnEnterPlugin from "./ResetHeadingOnEnterPlugin"
 
 type Props = {
   onChange?: (value: string) => void
@@ -120,6 +121,7 @@ const RichTextDescriptionEditor = ({
           ErrorBoundary={LexicalErrorBoundary}
         />
         <ImagesPlugin />
+        <ResetHeadingOnEnterPlugin />
       </Stack>
 
       <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />
