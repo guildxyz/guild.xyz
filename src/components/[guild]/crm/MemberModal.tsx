@@ -29,30 +29,6 @@ type Props = {
   onClose: () => void
 }
 
-export const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
-  const { username, platformUserId: userId, platformId } = platformAccount
-
-  const platformUrls: Partial<Record<PlatformType, string | null>> = {
-    [PlatformType.TWITTER]: username ? `https://x.com/${username}` : null,
-    [PlatformType.TWITTER_V1]: username ? `https://x.com/${username}` : null,
-    [PlatformType.GITHUB]: username ? `https://github.com/${username}` : null,
-    [PlatformType.TELEGRAM]: username ? `https://t.me/${username}` : null,
-    [PlatformType.DISCORD]: userId ? `https://discord.com/users/${userId}` : null,
-    [PlatformType.GOOGLE]: username ? `mailto:${username}` : null,
-  }
-
-  return platformUrls[platformId]
-}
-
-export const LinkWrappedTag = ({ url, children }) =>
-  !!url ? (
-    <Link variant="unstyled" isExternal href={url} _hover={{ opacity: 0.8 }}>
-      {children}
-    </Link>
-  ) : (
-    <>{children}</>
-  )
-
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
     row.original
@@ -147,5 +123,29 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
     </Modal>
   )
 }
+
+const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
+  const { username, platformUserId: userId, platformId } = platformAccount
+
+  const platformUrls: Partial<Record<PlatformType, string | null>> = {
+    [PlatformType.TWITTER]: username ? `https://x.com/${username}` : null,
+    [PlatformType.TWITTER_V1]: username ? `https://x.com/${username}` : null,
+    [PlatformType.GITHUB]: username ? `https://github.com/${username}` : null,
+    [PlatformType.TELEGRAM]: username ? `https://t.me/${username}` : null,
+    [PlatformType.DISCORD]: userId ? `https://discord.com/users/${userId}` : null,
+    [PlatformType.GOOGLE]: username ? `mailto:${username}` : null,
+  }
+
+  return platformUrls[platformId]
+}
+
+const LinkWrappedTag = ({ url, children }) =>
+  !!url ? (
+    <Link variant="unstyled" isExternal href={url} _hover={{ opacity: 0.8 }}>
+      {children}
+    </Link>
+  ) : (
+    <>{children}</>
+  )
 
 export default MemberModal
