@@ -29,7 +29,7 @@ const Identities = ({ member }: Props) => {
         const platformUrl = getPlatformUrl(platformAccount)
 
         return (
-          <LinkWrappedTag url={platformUrl}>
+          <LinkWrappedTag key={platformAccount.platformId} url={platformUrl}>
             <IdentityTag
               key={platformAccount.platformId}
               platformAccount={platformAccount}

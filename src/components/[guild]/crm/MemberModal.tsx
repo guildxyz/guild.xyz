@@ -45,7 +45,7 @@ export const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
 
 export const LinkWrappedTag = ({ url, children }) =>
   !!url ? (
-    <a target="_blank" href={url}>
+    <a target="_blank" rel="noreferrer noopener" href={url}>
       {children}
     </a>
   ) : (
