@@ -116,15 +116,13 @@ export const RoleRelative = ({ baseFieldPath }) => {
       >
         <FormLabel>Have a role for</FormLabel>
 
-        <InputGroup>
-          <ControlledRelativeTimeInput
-            isRequired
-            fieldName={`${baseFieldPath}.data.maxAmount`}
-          />
-        </InputGroup>
+        <ControlledRelativeTimeInput
+          isRequired
+          fieldName={`${baseFieldPath}.data.maxAmount`}
+        />
 
         <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
+          {parseFromObject(errors, baseFieldPath)?.data?.maxAmount?.message}
         </FormErrorMessage>
       </FormControl>
     </>
