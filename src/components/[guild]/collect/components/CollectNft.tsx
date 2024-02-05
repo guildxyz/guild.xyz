@@ -39,7 +39,7 @@ const CollectNft = () => {
   const rolePlatform = roles
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
-  const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
+  const { totalCollectors, totalCollectorsToday, isLoading, error } = useNftDetails(
     chain,
     nftAddress
   )
@@ -78,9 +78,10 @@ const CollectNft = () => {
       <Skeleton
         maxW="max-content"
         isLoaded={
-          !isLoading &&
-          typeof totalCollectors !== "undefined" &&
-          typeof totalCollectorsToday !== "undefined"
+          !!error ||
+          (!isLoading &&
+            typeof totalCollectors !== "undefined" &&
+            typeof totalCollectorsToday !== "undefined")
         }
       >
         {isLoading ? (
@@ -127,17 +128,19 @@ const CollectNft = () => {
                     }).format(totalCollectors) ?? 0
                   } collected`}
                 </Tag>
-                <CircleDivider />
+                {typeof totalCollectorsToday === "number" && <CircleDivider />}
               </>
             )}
 
-            <Tag {...availibiltyTagStyleProps} colorScheme="gray">
-              {`${
-                new Intl.NumberFormat("en", {
-                  notation: "standard",
-                }).format(totalCollectorsToday) ?? 0
-              } collected today`}
-            </Tag>
+            {typeof totalCollectorsToday === "number" && (
+              <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+                {`${
+                  new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(totalCollectorsToday) ?? 0
+                } collected today`}
+              </Tag>
+            )}
           </Flex>
         )}
       </Skeleton>

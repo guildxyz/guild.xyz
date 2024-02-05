@@ -84,7 +84,9 @@ const ConnectRequirementPlatformButton = ({
       colorScheme={platforms[platform]?.colorScheme}
       {...props}
     >
-      {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform]?.name}`}
+      {`${isReconnection ? "Reconnect" : "Connect"} ${
+        platforms[platform]?.name === "X" ? "" : platforms[platform]?.name
+      }`}
     </Button>
   )
 }

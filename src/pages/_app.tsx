@@ -89,6 +89,7 @@ const App = ({
             </Box>
           </Slide>
         ) : null}
+
         <IconContext.Provider
           value={{
             color: "currentColor",

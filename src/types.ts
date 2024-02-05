@@ -388,6 +388,8 @@ type Role = SimpleRole & {
   rolePlatforms: RolePlatform[]
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 type GuildPlatform = {

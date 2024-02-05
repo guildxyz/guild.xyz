@@ -187,7 +187,8 @@ const GuildPage = (): JSX.Element => {
                   {Object.entries(socialLinks).map(([type, link]) => {
                     const prettyLink = link
                       .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
-                      .replace(/\/+$/, "")
+                      .replace(/\?.*/, "") // trim query params
+                      .replace(/\/+$/, "") // trim ending slash
 
                     return (
                       <HStack key={type} spacing={1.5} maxW="full">

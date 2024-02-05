@@ -8,7 +8,7 @@ import GuildSelect from "requirements/common/GuildSelect"
 import parseFromObject from "utils/parseFromObject"
 import GuildAdmin from "./components/GuildAdmin"
 import MinGuilds from "./components/MinGuilds"
-import Role from "./components/Role"
+import { Role, RoleRelative } from "./components/Role"
 import UserSince from "./components/UserSince"
 
 const guildRequirementTypes = [
@@ -16,6 +16,11 @@ const guildRequirementTypes = [
     label: "Have a role",
     value: "GUILD_ROLE",
     GuildRequirement: Role,
+  },
+  {
+    label: "Have a role (relative)",
+    value: "GUILD_ROLE_RELATIVE",
+    GuildRequirement: RoleRelative,
   },
   {
     label: "Account age",
@@ -53,6 +58,7 @@ const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
     resetField(`${baseFieldPath}.data.guildId`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.maxAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
   }, [type])
 

@@ -202,7 +202,7 @@ const Page = (): JSX.Element => (
               <ListItem>Telegram</ListItem>
               <ListItem>GitHub</ListItem>
               <ListItem>Google</ListItem>
-              <ListItem>Twitter</ListItem>
+              <ListItem>X</ListItem>
             </OrderedList>
           </ListItem>
 
