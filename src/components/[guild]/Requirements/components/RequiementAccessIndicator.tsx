@@ -56,7 +56,10 @@ const RequiementAccessIndicator = () => {
 
   const reqErrorData = accessData?.errors?.find((obj) => obj.requirementId === id)
 
-  if (reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED")
+  if (
+    reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED" ||
+    reqErrorData?.errorType === "PLATFORM_CONNECT_INVALID"
+  )
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"blue"}
