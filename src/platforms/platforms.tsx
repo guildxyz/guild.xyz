@@ -7,9 +7,9 @@ import {
   GithubLogo,
   GoogleLogo,
   IconProps,
+  PencilSimpleLine,
   TelegramLogo,
 } from "phosphor-react"
-import XLogo from "static/icons/x.svg"
 import React, {
   ComponentType,
   ForwardRefExoticComponent,
@@ -19,6 +19,7 @@ import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
+import XLogo from "static/icons/x.svg"
 import { GuildPlatform, OneOf, PlatformName } from "types"
 import fetcher from "utils/fetcher"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
@@ -27,6 +28,9 @@ import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
 import DiscordCardMenu from "./Discord/DiscordCardMenu"
 import DiscordCardSettings from "./Discord/DiscordCardSettings"
 import useDiscordCardProps from "./Discord/useDiscordCardProps"
+import FormCardLinkButton from "./Forms/FormCardLinkButton"
+import FormCardMenu from "./Forms/FormCardMenu"
+import useFormCardProps from "./Forms/useFormCardProps"
 import GithubCardMenu from "./Github/GithubCardMenu"
 import useGithubCardProps from "./Github/useGithubCardProps"
 import GoogleCardMenu from "./Google/GoogleCardMenu"
@@ -487,6 +491,34 @@ const platforms: Record<PlatformName, PlatformData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/PointsReward"), {
+      ssr: false,
+    }),
+  },
+  FORM: {
+    icon: PencilSimpleLine,
+    name: "Form",
+    colorScheme: "GUILD",
+    gatedEntity: "",
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    shouldShowKeepAccessesModal: false,
+    cardPropsHook: useFormCardProps,
+    cardButton: FormCardLinkButton,
+    cardMenuComponent: FormCardMenu,
+    PlatformPreview: dynamic(() => import("platforms/components/FormPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading={true} />,
+    }),
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/FormReward"), {
       ssr: false,
     }),
   },

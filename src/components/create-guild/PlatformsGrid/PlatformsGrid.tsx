@@ -69,6 +69,11 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
+    {
+      platform: "FORM",
+      description: "Gather responses",
+      isGeneral: true,
+    },
   ]
 
   return (

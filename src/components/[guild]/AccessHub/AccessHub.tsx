@@ -12,12 +12,10 @@ import ClientOnly from "components/common/ClientOnly"
 import useMemberships from "components/explorer/hooks/useMemberships"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import FormsRewardCard from "platforms/Forms/FormsRewardCard"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import platforms from "platforms/platforms"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
-import useForms from "../hooks/useForms"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useIsMember from "../hooks/useIsMember"
@@ -31,7 +29,6 @@ const DynamicGuildPinRewardCard = dynamic(
 
 export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { id, guildPlatforms, roles } = useGuild()
-
   const relevantRoles = groupId
     ? roles.filter((role) => role.groupId === groupId)
     : roles.filter((role) => !role.groupId)
@@ -106,13 +103,10 @@ const AccessHub = (): JSX.Element => {
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
-  const { data: forms } = useForms()
-
   const showAccessHub =
     (isAdmin ? !!onboardingComplete : isMember) ||
     (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
-    (!!groups?.length && !group) ||
-    forms?.length > 0
+    (!!groups?.length && !group)
 
   return (
     <ClientOnly>
@@ -172,13 +166,8 @@ const AccessHub = (): JSX.Element => {
             </>
           )}
 
-          {forms?.map((form) => (
-            <FormsRewardCard key={form.id} form={form} />
-          ))}
-
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
-            !forms?.length &&
             !shouldShowGuildPin &&
             !accessedGuildPlatforms?.length && (
               <Card>

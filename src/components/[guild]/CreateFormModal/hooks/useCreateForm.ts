@@ -6,7 +6,7 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 import { Form } from "../schemas"
 
-const useCreateForm = (params?: { onSuccess?: () => void }) => {
+const useCreateForm = (params?: { onSuccess?: (createdForm: Form) => void }) => {
   const { id } = useGuild()
   const { mutate: mutateForms } = useForms()
 
@@ -23,7 +23,7 @@ const useCreateForm = (params?: { onSuccess?: () => void }) => {
           title: "Successfully created form",
         })
 
-        params?.onSuccess?.()
+        params?.onSuccess?.(createdForm)
 
         mutateForms((prevValue) => [...(prevValue ?? []), createdForm])
       },
