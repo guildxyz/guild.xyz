@@ -1,8 +1,6 @@
 import {
   Box,
-  Divider,
   FormControl,
-  FormLabel,
   HStack,
   Icon,
   IconButton,
@@ -52,111 +50,83 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
         initiatives if needed.
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
-        <FormControl isInvalid={!!errors?.contacts?.[0]}>
-          <FormLabel whiteSpace={"nowrap"}>E-mail</FormLabel>
-          <Stack spacing={0}>
-            <Input
-              id="contact-email-required"
-              isInvalid={!!errors?.contacts?.[0]}
-              placeholder="E-mail address"
-              {...register(`contacts.0.contact`, {
-                required: "E-mail is required",
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: "Invalid e-mail format",
-                },
-              })}
-              size={"lg"}
-            />
-            <FormErrorMessage>
-              {errors?.contacts?.[0]?.contact?.message}
-            </FormErrorMessage>
-          </Stack>
-        </FormControl>
-
-        {fields.length > 1 && <Divider />}
-
-        {fields.slice(1).map((contactField, index) => {
-          index += 1
-          return (
-            <FormControl
-              key={contactField.formId}
-              isInvalid={!!errors?.contacts?.[index]}
-            >
-              <HStack alignItems="start">
-                <Box maxW="64">
-                  <Controller
-                    control={control}
-                    name={`contacts.${index}.type`}
-                    render={({ field: { onChange, onBlur, value, ref } }) => (
-                      <StyledSelect
-                        ref={ref}
-                        options={contactTypeOptions}
-                        value={contactTypeOptions.find((ct) => ct.value === value)}
-                        onBlur={() => {
-                          trigger()
-                          onBlur()
-                        }}
-                        onChange={(newValue: SelectOption) => {
-                          onChange(newValue.value)
-                          resetField(`contacts.${index}.contact`)
-                        }}
-                        size="lg"
-                        chakraStyles={{
-                          container: {
-                            minWidth: "max-content",
-                          } as any,
-                        }}
-                      />
-                    )}
+        {fields.map((contactField, index) => (
+          <HStack key={contactField.formId} alignItems="start">
+            <Box maxW="64">
+              <Controller
+                control={control}
+                name={`contacts.${index}.type`}
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <StyledSelect
+                    isDisabled={index === 0}
+                    ref={ref}
+                    options={contactTypeOptions}
+                    value={contactTypeOptions.find((ct) => ct.value === value)}
+                    onBlur={() => {
+                      trigger()
+                      onBlur()
+                    }}
+                    onChange={(newValue: SelectOption) => {
+                      onChange(newValue.value)
+                      resetField(`contacts.${index}.contact`)
+                    }}
+                    size="lg"
+                    chakraStyles={{
+                      container: {
+                        minWidth: "max-content",
+                      } as any,
+                    }}
                   />
-                </Box>
+                )}
+              />
+            </Box>
 
-                <Stack spacing={0} w="100%">
-                  <InputGroup size="lg">
-                    <Input
-                      isInvalid={!!errors?.contacts?.[index]}
-                      placeholder={
+            <FormControl isInvalid={!!errors?.contacts?.[index]?.contact}>
+              <Stack spacing={0} w="100%">
+                <InputGroup size="lg">
+                  <Input
+                    isInvalid={!!errors?.contacts?.[index]?.contact}
+                    placeholder={
+                      getValues(`contacts.${index}.type`) === "EMAIL"
+                        ? `E-mail address`
+                        : "Phone / Telegram username"
+                    }
+                    {...register(`contacts.${index}.contact`, {
+                      required: index > 0 ? false : "This field is required",
+                      pattern:
                         getValues(`contacts.${index}.type`) === "EMAIL"
-                          ? `E-mail address`
-                          : "Phone / Telegram username"
-                      }
-                      {...register(`contacts.${index}.contact`, {
-                        required: "This field is required",
-                        pattern:
-                          getValues(`contacts.${index}.type`) === "EMAIL"
-                            ? {
-                                value: /\S+@\S+\.\S+/,
-                                message: "Invalid e-mail format",
-                              }
-                            : undefined,
-                      })}
-                    />
-                    {fields?.length > 1 && (
-                      <InputRightElement>
-                        <IconButton
-                          variant="ghost"
-                          icon={<Icon as={TrashSimple} />}
-                          size="xs"
-                          rounded="full"
-                          aria-label="Remove contact"
-                          onClick={() => remove(index)}
-                        />
-                      </InputRightElement>
-                    )}
-                  </InputGroup>
+                          ? {
+                              value: /\S+@\S+\.\S+/,
+                              message: "Invalid e-mail format",
+                            }
+                          : undefined,
+                    })}
+                  />
+                  {fields?.length > 1 && (
+                    <InputRightElement>
+                      <IconButton
+                        variant="ghost"
+                        icon={<Icon as={TrashSimple} />}
+                        size="xs"
+                        rounded="full"
+                        aria-label="Remove contact"
+                        onClick={() => remove(index)}
+                      />
+                    </InputRightElement>
+                  )}
+                </InputGroup>
 
-                  <FormErrorMessage>
-                    {errors?.contacts?.[index]?.contact?.message}
-                  </FormErrorMessage>
-                </Stack>
-              </HStack>
+                <FormErrorMessage>
+                  {errors?.contacts?.[index]?.contact?.message}
+                </FormErrorMessage>
+              </Stack>
             </FormControl>
-          )
-        })}
+          </HStack>
+        ))}
 
         {showAddButton && (
           <Button
+            id="add-contact-btn"
             leftIcon={<Icon as={Plus} />}
             onClick={() =>
               append({

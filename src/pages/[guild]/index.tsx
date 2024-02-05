@@ -179,7 +179,7 @@ const GuildPage = (): JSX.Element => {
   }, [])
 
   useEffect(() => {
-    if (isAdmin && !contacts && !isLoading) showAddContactInfoToast()
+    if (isAdmin && !contacts?.length && !isLoading) showAddContactInfoToast()
   }, [isAdmin, contacts, isLoading])
 
   const showAddContactInfoToast = () => {
@@ -193,9 +193,9 @@ const GuildPage = (): JSX.Element => {
         onClick: () => {
           onOpen()
           setTimeout(() => {
-            const inputElement = document.getElementById("contact-email-required")
-            if (inputElement) {
-              inputElement.focus()
+            const addContactBtn = document.getElementById("add-contact-btn")
+            if (addContactBtn) {
+              addContactBtn.focus()
             }
           }, 200)
         },
