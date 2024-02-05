@@ -2,6 +2,7 @@ import {
   Circle,
   Divider,
   HStack,
+  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -45,9 +46,9 @@ export const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
 
 export const LinkWrappedTag = ({ url, children }) =>
   !!url ? (
-    <a target="_blank" rel="noreferrer noopener" href={url}>
+    <Link variant="unstyled" isExternal href={url} _hover={{ opacity: 0.8 }}>
       {children}
-    </a>
+    </Link>
   ) : (
     <>{children}</>
   )
@@ -103,7 +104,6 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
                     <IdentityTag
                       platformAccount={platformAccount}
                       fontWeight="semibold"
-                      _hover={!!platformUrl && { cursor: "pointer", opacity: 0.8 }}
                       isOpen
                     />
                   </LinkWrappedTag>
