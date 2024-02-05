@@ -70,7 +70,7 @@ const MaintenanceBanner = ({
           <AlertIcon position="relative" top={0.5} m={0} boxSize={4} />
           <Text as="span">
             {`Guild.xyz will be temporarily unavailable on ${maintenanceDate}
-          between ${maintenanceStart} and ${maintenanceEnd} due to scheduled
+          between ${maintenanceStart} and ${maintenanceEnd} (CET) due to scheduled
           maintenance.`}
           </Text>
         </HStack>

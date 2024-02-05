@@ -247,7 +247,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
   TWITTER: {
     icon: XLogo,
-    imageUrl: "/platforms/x.png",
+    imageUrl: "/platforms/x.svg",
     name: "X",
     colorScheme: "TWITTER",
     gatedEntity: "account",

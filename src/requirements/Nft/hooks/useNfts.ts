@@ -11,8 +11,6 @@ const useNfts = (chain: Chain): { nfts: Array<NFT>; isLoading: boolean } => {
     }
   )
 
-  console.log(isLoading)
-
   return { nfts: data, isLoading }
 }
 

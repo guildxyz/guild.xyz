@@ -8,7 +8,7 @@ const OAUTH_VERSION = "1.0"
 const DEFAULT_CALLBACK_URL = "https://guild.xyz/oauth"
 const BASE_URL = "https://api.twitter.com/oauth/request_token"
 const KEY = `${encodeURIComponent(CONSUMER_SECRET)}&`
-const PARSE_FAIL_ERROR_MSG = "Unexpected data received from Twitter"
+const PARSE_FAIL_ERROR_MSG = "Unexpected data received from X"
 
 const parseV1Response = (response: string) => {
   try {
@@ -76,7 +76,7 @@ const handler: NextApiHandler = async (req, res) => {
   })
 
   if (!response.ok) {
-    res.status(400).json({ message: "Failed to generate Twitter request token" })
+    res.status(400).json({ message: "Failed to generate X request token" })
     return
   }
 

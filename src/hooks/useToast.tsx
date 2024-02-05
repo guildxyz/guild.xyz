@@ -4,25 +4,22 @@ import {
   LinkProps,
   Text,
   ToastId,
-  UseToastOptions,
-  useToast as chakraUseToast,
   useColorModeValue,
+  useToast as chakraUseToast,
+  UseToastOptions,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import XLogo from "static/icons/x.svg"
 import { useRef } from "react"
 
-const useToast = (toastOptions?: UseToastOptions) => {
-  const useToastWithDefaults = chakraUseToast({
+const useToast = (toastOptions?: UseToastOptions) =>
+  chakraUseToast({
     position: "top-right",
     variant: "toastSubtle",
     isClosable: true,
     duration: 4000,
     ...toastOptions,
   })
-
-  return useToastWithDefaults
-}
 
 export type ActionToastOptions = UseToastOptions & {
   buttonProps: ButtonProps & LinkProps
@@ -92,10 +89,10 @@ const useToastWithTweetButton = () => {
     toastWithButton({
       status: "success",
       title,
-      description: "Let others know as well by sharing it on Twitter",
+      description: "Let others know as well by sharing it on X",
       buttonProps: {
         leftIcon: <XLogo weight="fill" />,
-        children: "Tweet",
+        children: "Share",
         as: "a",
         href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
           tweetText

@@ -7,12 +7,17 @@ import Suggestion from "../../Suggestion"
 import NoResults from "./NoResults"
 
 type Props = {
+  guildId?: string | number
   inputValue?: string
   getOptionProps: (props: combobox.OptionProps) => HTMLAttributes<HTMLElement>
 }
 
-const RewardSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element => {
-  const { roles, guildPlatforms } = useGuild()
+const RewardSuggestions = ({
+  guildId,
+  inputValue,
+  getOptionProps,
+}: Props): JSX.Element => {
+  const { roles, guildPlatforms } = useGuild(guildId)
 
   const allRewardSuggestions = useMemo(
     () =>

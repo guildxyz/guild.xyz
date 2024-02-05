@@ -4,37 +4,27 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailabilityTags, {
-  getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LinkButton from "components/common/LinkButton"
 import { ArrowRight } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 
 const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
 
   const state = useMemo(() => {
-    const startTimeDiff = getTimeDiff(platform?.startTime)
-    const endTimeDiff = getTimeDiff(platform?.endTime)
-
-    if (
-      startTimeDiff > 0 ||
-      endTimeDiff < 0 ||
-      (typeof platform?.capacity === "number" &&
-        platform?.capacity === platform?.claimedCount)
-    )
+    if (!getRolePlatformTimeframeInfo(platform).isAvailable)
       return {
-        tooltipLabel:
-          platform?.capacity === platform?.claimedCount
-            ? "All available POAPs have already been claimed"
-            : startTimeDiff > 0
-            ? "Claim hasn't started yet"
-            : "Claim already ended",
+        tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
         buttonProps: {
           isDisabled: true,
         },

@@ -35,7 +35,8 @@ const DateRangeInput = ({ ...chakraStyles }) => {
   const buttonBgColor = useColorModeValue("white", "blackAlpha.300")
   const isMobile = useBreakpointValue({ base: true, md: false })
 
-  const { isUserActivityLog } = useActivityLog()
+  const { activityLogType } = useActivityLog()
+
   const { activeFilters, addFilter, updateFilter, removeFilter } =
     useActivityLogFilters()
   const beforeFilter = activeFilters?.find(({ filter }) => filter === "before")
@@ -81,7 +82,7 @@ const DateRangeInput = ({ ...chakraStyles }) => {
       : afterInputValue
       ? `After ${afterInputValue}`
       : // TODO: if CRM is enabled, we should display "Last 30 days"
-      isUserActivityLog
+      activityLogType === "user"
       ? "Last 30 days"
       : "Last 24 hours"
 
