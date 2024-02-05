@@ -158,7 +158,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               ? "Link address"
               : isDelegateConnection
               ? "Connect hot wallet"
-              : "Connect wallet"}
+              : "Connect to Guild"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
