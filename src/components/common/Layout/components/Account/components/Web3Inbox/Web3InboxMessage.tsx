@@ -74,7 +74,7 @@ const Web3InboxMessage = ({
             <Text as="span" fontWeight="bold" noOfLines={1}>
               {title}
             </Text>
-            <Text as="span" colorScheme="gray" fontSize="xs">
+            <Text as="span" colorScheme="gray" fontSize="xs" minW="max-content">
               {formatRelativeTimeFromNow(Date.now() - sentAt)}
             </Text>
           </HStack>
