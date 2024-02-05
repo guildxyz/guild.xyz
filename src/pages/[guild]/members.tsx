@@ -150,8 +150,25 @@ const GuildPage = (): JSX.Element => {
      * but I'm not sure the performance cost would worth handling this edge case, so
      * left it this way for now
      */
-    window.history.pushState("", "", `?${queryString}`)
+    //window.history.pushState("", "", `?${queryString}`)
   }, [queryString])
+
+  useEffect(() => {
+    if (!router.isReady) return
+
+    const pathname = router.pathname
+    const asPath = router.asPath.split("?")[0]
+
+    router.replace(
+      {
+        pathname,
+        query: Object.fromEntries(new URLSearchParams(queryString)),
+      },
+      `${asPath}?${queryString}`,
+      { shallow: true }
+    )
+  }, [queryString, router.pathname, router.asPath])
+
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
   // TODO: keep row selection when the data changes. Right now we just reset the selection
