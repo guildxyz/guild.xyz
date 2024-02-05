@@ -93,7 +93,7 @@ const useJoin = (
 
       const { jobId } = await fetcherWithSign([
         `/v2/actions/join`,
-        { method: "POST", body: { guildId: guild?.id } },
+        { method: "POST", body: data },
       ])
       return jobId
     }
