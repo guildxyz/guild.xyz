@@ -32,7 +32,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
     name: fieldName,
     rules: props.isRequired && {
       validate: (newValue) => {
-        if (!newValue || !isNaN(newValue)) return "Invalid value."
+        if (!newValue || isNaN(newValue)) return "Invalid value."
 
         return true
       },
