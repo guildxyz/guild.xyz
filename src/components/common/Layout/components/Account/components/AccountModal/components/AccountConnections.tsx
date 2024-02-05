@@ -40,6 +40,7 @@ const AccountConnections = () => {
       (platform) =>
         ![
           "POAP",
+          "TWITTER_V1",
           "CONTRACT_CALL",
           "EMAIL",
           "UNIQUE_TEXT",

@@ -31,7 +31,11 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
   } = useController({
     name: fieldName,
     rules: props.isRequired && {
-      validate: (newValue) => !newValue || !isNaN(newValue) || "Invalid value.",
+      validate: (newValue) => {
+        if (!newValue || isNaN(newValue)) return "Invalid value."
+
+        return true
+      },
     },
   })
 
@@ -40,7 +44,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
       ref={ref}
       name={name}
       value={value}
-      onChange={(_, newValue) => onChange(newValue)}
+      onChange={(_, newValue) => onChange(isNaN(newValue) ? null : newValue)}
       onBlur={onBlur}
       {...props}
     />

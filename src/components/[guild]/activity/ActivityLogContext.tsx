@@ -9,7 +9,7 @@ import {
   useState,
 } from "react"
 import useSWRInfinite, { SWRInfiniteResponse } from "swr/infinite"
-import { OneOf, PlatformName, Requirement } from "types"
+import { PlatformName, Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useUserPublic } from "../hooks/useUser"
 import {
@@ -74,13 +74,15 @@ const transformActivityLogInfiniteResponse = (
   return transformedResponse
 }
 
+export type ActivityLogType = "user" | "guild" | "all"
+
 type ActivityLogContextType = Omit<
   SWRInfiniteResponse<ActivityLogActionResponse>,
   "mutate" | "data"
 > & {
   data: ActivityLogActionResponse
   mutate: () => void
-  isUserActivityLog: boolean
+  activityLogType: ActivityLogType
   actionGroup: ActivityLogActionGroup
   setActionGroup: Dispatch<SetStateAction<ActivityLogActionGroup>>
 }
@@ -91,7 +93,9 @@ type Props = {
   withSearchParams?: boolean
   isInfinite?: boolean
   limit?: number
-} & OneOf<{ userId: number }, { guildId: number }>
+  userId?: number
+  guildId?: number
+}
 
 const ActivityLogProvider = ({
   withSearchParams = true,
@@ -101,9 +105,11 @@ const ActivityLogProvider = ({
   guildId,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  const { query } = useRouter()
+  const { query, pathname } = useRouter()
 
   const { keyPair } = useUserPublic()
+
+  const isSuperadminActivityLog = pathname.includes("/superadmin")
 
   const [actionGroup, setActionGroup] = useState(null)
 
@@ -112,7 +118,7 @@ const ActivityLogProvider = ({
     previousPageData: ActivityLogActionResponse
   ) => {
     if (
-      (!guildId && !userId) ||
+      (!guildId && !userId && !isSuperadminActivityLog) ||
       !keyPair ||
       (previousPageData?.entries && !previousPageData.entries.length)
     )
@@ -181,11 +187,17 @@ const ActivityLogProvider = ({
     }
   )
 
+  const activityLogType: ActivityLogType = isSuperadminActivityLog
+    ? "all"
+    : !!userId
+    ? "user"
+    : "guild"
+
   const value = {
     ...ogSWRInfiniteResponse,
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
     mutate: () => ogSWRInfiniteResponse.mutate(),
-    isUserActivityLog: !!userId,
+    activityLogType,
     actionGroup,
     setActionGroup,
   }

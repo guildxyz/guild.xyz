@@ -176,6 +176,7 @@ const ActivityLogFiltersProvider = ({
 
   useEffect(() => {
     if (
+      !router.pathname.includes("/superadmin") &&
       !router.pathname.includes("/profile") &&
       (!query.guild || !Object.keys(prevQuery ?? {}).length)
     )

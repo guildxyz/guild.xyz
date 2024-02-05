@@ -13,12 +13,12 @@ import {
   CapacityTag,
   EndTimeTag,
   StartTimeTag,
-  getTimeDiff,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
+import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
@@ -39,18 +39,13 @@ const CollectNft = () => {
   const rolePlatform = roles
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
-  const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
+  const { totalCollectors, totalCollectorsToday, isLoading, error } = useNftDetails(
     chain,
     nftAddress
   )
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-  const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
+  const { isAvailable: isButtonEnabled, startTimeDiff } =
+    getRolePlatformTimeframeInfo(rolePlatform)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
@@ -65,7 +60,7 @@ const CollectNft = () => {
           hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
         />
         <Tooltip
-          isDisabled={!isButtonDisabled}
+          isDisabled={isButtonEnabled}
           label={
             startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
           }
@@ -73,7 +68,7 @@ const CollectNft = () => {
           shouldWrapChildren
         >
           <CollectNftButton
-            isDisabled={isButtonDisabled}
+            isDisabled={!isButtonEnabled}
             label="Collect now"
             colorScheme="green"
           />
@@ -83,9 +78,10 @@ const CollectNft = () => {
       <Skeleton
         maxW="max-content"
         isLoaded={
-          !isLoading &&
-          typeof totalCollectors !== "undefined" &&
-          typeof totalCollectorsToday !== "undefined"
+          !!error ||
+          (!isLoading &&
+            typeof totalCollectors !== "undefined" &&
+            typeof totalCollectorsToday !== "undefined")
         }
       >
         {isLoading ? (
@@ -132,17 +128,19 @@ const CollectNft = () => {
                     }).format(totalCollectors) ?? 0
                   } collected`}
                 </Tag>
-                <CircleDivider />
+                {typeof totalCollectorsToday === "number" && <CircleDivider />}
               </>
             )}
 
-            <Tag {...availibiltyTagStyleProps} colorScheme="gray">
-              {`${
-                new Intl.NumberFormat("en", {
-                  notation: "standard",
-                }).format(totalCollectorsToday) ?? 0
-              } collected today`}
-            </Tag>
+            {typeof totalCollectorsToday === "number" && (
+              <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+                {`${
+                  new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(totalCollectorsToday) ?? 0
+                } collected today`}
+              </Tag>
+            )}
           </Flex>
         )}
       </Skeleton>

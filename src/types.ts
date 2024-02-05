@@ -342,6 +342,8 @@ type Requirement = {
   updatedAt?: string
 }
 
+type RolePlatformStatus = "ALL_CLAIMED" | "NOT_STARTED" | "ENDED" | "ACTIVE"
+
 type RolePlatform = {
   id: number
   platformRoleId?: string
@@ -386,6 +388,8 @@ type Role = SimpleRole & {
   rolePlatforms: RolePlatform[]
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 type GuildPlatform = {
@@ -675,6 +679,7 @@ export type {
   Role,
   RoleFormType,
   RolePlatform,
+  RolePlatformStatus,
   SelectOption,
   SimpleGuild,
   SimpleRole,

@@ -59,7 +59,7 @@ describe.skip("create guild page (with wallet)", () => {
     cy.get("input[name='socialLinks.TWITTER']")
       .parent()
       .siblings(".chakra-collapse")
-      .contains("Invalid Twitter URL")
+      .contains("Invalid X URL")
     cy.getByDataTest("create-guild-button").should("be.disabled")
     cy.get("input[name='socialLinks.TWITTER']").clear().type("twitter.com/guildxyz")
     cy.getByDataTest("create-guild-button").should("be.enabled")
