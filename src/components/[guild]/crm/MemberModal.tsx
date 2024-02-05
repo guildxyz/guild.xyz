@@ -17,6 +17,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
+import { PlatformAccountDetails, PlatformType } from "types"
 import { IdentityTag, PrivateSocialsTag, WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
@@ -26,6 +27,30 @@ type Props = {
   isOpen: boolean
   onClose: () => void
 }
+
+export const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
+  const { username, platformUserId: userId, platformId } = platformAccount
+
+  const platformUrls: Partial<Record<PlatformType, string | null>> = {
+    [PlatformType.TWITTER]: username ? `https://x.com/${username}` : null,
+    [PlatformType.TWITTER_V1]: username ? `https://x.com/${username}` : null,
+    [PlatformType.GITHUB]: username ? `https://github.com/${username}` : null,
+    [PlatformType.TELEGRAM]: username ? `https://t.me/${username}` : null,
+    [PlatformType.DISCORD]: userId ? `https://discord.com/users/${userId}` : null,
+    [PlatformType.GOOGLE]: username ? `mailto:${username}` : null,
+  }
+
+  return platformUrls[platformId]
+}
+
+export const LinkWrappedTag = ({ url, children }) =>
+  !!url ? (
+    <a target="_blank" href={url}>
+      {children}
+    </a>
+  ) : (
+    <>{children}</>
+  )
 
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
@@ -70,14 +95,20 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
             {areSocialsPrivate ? (
               <PrivateSocialsTag isOpen />
             ) : platformUsers.length ? (
-              platformUsers.map((platformAccount) => (
-                <IdentityTag
-                  key={platformAccount.platformId}
-                  platformAccount={platformAccount}
-                  fontWeight="semibold"
-                  isOpen
-                />
-              ))
+              platformUsers.map((platformAccount) => {
+                const platformUrl = getPlatformUrl(platformAccount)
+
+                return (
+                  <LinkWrappedTag url={platformUrl} key={platformAccount.platformId}>
+                    <IdentityTag
+                      platformAccount={platformAccount}
+                      fontWeight="semibold"
+                      _hover={!!platformUrl && { cursor: "pointer", opacity: 0.8 }}
+                      isOpen
+                    />
+                  </LinkWrappedTag>
+                )
+              })
             ) : (
               <Tag>No connected socials</Tag>
             )}

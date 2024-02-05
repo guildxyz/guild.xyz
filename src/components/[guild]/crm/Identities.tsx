@@ -4,6 +4,7 @@ import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"
+import { LinkWrappedTag, getPlatformUrl } from "./MemberModal"
 import { Member } from "./useMembers"
 
 type Props = {
@@ -24,15 +25,22 @@ const Identities = ({ member }: Props) => {
 
   return (
     <HStack spacing={1}>
-      {platformUsers?.map((platformAccount, i) => (
-        <IdentityTag
-          key={platformAccount.platformId}
-          platformAccount={platformAccount}
-          order={i}
-          zIndex={-1 * i}
-          isOpen={i === 0}
-        />
-      ))}
+      {platformUsers?.map((platformAccount, i) => {
+        const platformUrl = getPlatformUrl(platformAccount)
+
+        return (
+          <LinkWrappedTag url={platformUrl}>
+            <IdentityTag
+              key={platformAccount.platformId}
+              platformAccount={platformAccount}
+              order={i}
+              zIndex={-1 * i}
+              isOpen={i === 0}
+              _hover={!!platformUrl && { cursor: "pointer", opacity: 0.8 }}
+            />
+          </LinkWrappedTag>
+        )
+      })}
       <WalletTag zIndex={areSocialsPrivate && 1}>
         {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
       </WalletTag>
