@@ -63,7 +63,7 @@ import parseDescription from "utils/parseDescription"
 import { addIntercomSettings } from "../../components/_app/IntercomProvider"
 
 const BATCH_SIZE = 10
-export const contactToastId = "requireGuildContactToast"
+const CONTACT_TOAST_ID = "requireGuildContactToast"
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
@@ -192,7 +192,7 @@ const GuildPage = (): JSX.Element => {
   useEffect(() => {
     const handleRouteChange = (url) => {
       if (url == `/${urlName}` || url == `/${id}`) return
-      toast.close(contactToastId)
+      toast.close(CONTACT_TOAST_ID)
     }
 
     router.events.on("routeChangeStart", handleRouteChange)
@@ -202,9 +202,9 @@ const GuildPage = (): JSX.Element => {
   }, [router.events])
 
   const showAddContactInfoToast = () => {
-    if (toast.isActive(contactToastId)) return
+    if (toast.isActive(CONTACT_TOAST_ID)) return
     toastIdRef.current = toastWithButton({
-      id: contactToastId,
+      id: CONTACT_TOAST_ID,
       status: "info",
       title: "Stay connected with us",
       description:
