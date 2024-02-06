@@ -1,6 +1,8 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
+import { $createHeadingNode, HeadingNode } from "@lexical/rich-text"
 import {
   $createParagraphNode,
+  $createTextNode,
   $getSelection,
   $isRangeSelection,
   COMMAND_PRIORITY_LOW,
@@ -13,10 +15,28 @@ function ResetHeadingOnEnterPlugin() {
 
   useEffect(() => {
     const enterListener = (event) => {
+      if (!event.shiftKey) return false
       editor.update(() => {
         const selection = $getSelection()
+
         if ($isRangeSelection(selection)) {
           const node = selection.anchor.getNode()
+          let parent = node.getParent()
+
+          if (node.__type === "text" && parent.__type === "heading") {
+            const headingParent = node.getParent() as HeadingNode
+            if (parent.getChildren().length >= 2) {
+              parent.getLastChild().remove() // Remove the new text node after the new line break
+              parent.getLastChild().remove() // Remove the new line break
+            }
+
+            const headingNode = $createHeadingNode(headingParent.__tag)
+            const textNode = $createTextNode(node.getTextContent())
+            headingNode.append(textNode)
+            parent.insertAfter(headingNode)
+
+            headingNode.selectStart()
+          }
           if (node.__type === "heading") {
             const paragraphNode = $createParagraphNode()
             selection.insertNodes([paragraphNode])
