@@ -92,7 +92,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                         : "Phone / Telegram username"
                     }
                     {...register(`contacts.${index}.contact`, {
-                      required: index > 0 ? false : "This field is required",
+                      required: "This field is required",
                       pattern:
                         getValues(`contacts.${index}.type`) === "EMAIL"
                           ? {
