@@ -5,10 +5,10 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useState } from "react"
-import useGuild from "./hooks/useGuild"
-import useJoin from "./JoinModal/hooks/useJoin"
+import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
 import { useIsTabsStuck } from "./Tabs/Tabs"
 import { useThemeContext } from "./ThemeContext"
+import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
 
@@ -27,7 +27,7 @@ const ResendRewardButton = (): JSX.Element => {
   const [dateNow, setDateNow] = useState(Date.now())
   const canResend = dateNow - latestResendDate > TIMEOUT
 
-  const { onSubmit, isLoading, response } = useJoin(
+  const { triggerMembershipUpdate, isLoading, response } = useMembershipUpdate(
     () => {
       toast({
         status: "success",
@@ -46,8 +46,7 @@ const ResendRewardButton = (): JSX.Element => {
             }
           : errorMsg
       )
-    },
-    false
+    }
   )
 
   useEffect(() => {
@@ -56,7 +55,7 @@ const ResendRewardButton = (): JSX.Element => {
   }, [])
 
   const onClick = () => {
-    onSubmit({ guildId: id })
+    triggerMembershipUpdate()
     captureEvent("Click: ResendRewardButton", {
       guild: urlName,
     })

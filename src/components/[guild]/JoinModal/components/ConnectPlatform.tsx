@@ -9,7 +9,7 @@ import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 import { useAccount } from "wagmi"
 import useConnectPlatform from "../hooks/useConnectPlatform"
-import useJoin from "../hooks/useJoin"
+import useMembershipUpdate from "../hooks/useMembershipUpdate"
 import ConnectAccount from "./ConnectAccount"
 
 type Props = {
@@ -24,8 +24,8 @@ const ConnectPlatform = ({ platform }: Props) => {
   const isReconnect = platformsToReconnect.includes(platform)
 
   // we have the reconnect data from the /access endoint, so we have to mutate that on reconnect success
-  const { onSubmit: onJoin } = useJoin()
-  const onSuccess = () => isReconnect && onJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
+  const onSuccess = () => isReconnect && triggerMembershipUpdate()
 
   const { onConnect, isLoading, loadingText, authData, response } =
     useConnectPlatform(platform, onSuccess, isReconnect)

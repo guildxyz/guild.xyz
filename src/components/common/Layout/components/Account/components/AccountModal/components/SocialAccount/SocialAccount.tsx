@@ -5,7 +5,7 @@ import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 
 import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMemberships"
 import { Question } from "phosphor-react"
@@ -68,14 +68,14 @@ export const TwitterV1Tooltip = () => (
 
 const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const toast = useToast()
-  const { onSubmit: onJoin } = useJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const onSuccess = () => {
     toast({
       title: `Account successfully connected`,
       status: "success",
     })
-    onJoin()
+    triggerMembershipUpdate()
   }
 
   const { onConnect, isLoading, response } = useConnectPlatform(

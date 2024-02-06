@@ -1,4 +1,4 @@
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -20,7 +20,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const postHogOptions = { guild: urlName, memberCount }
 
   const { mutate } = useSWRConfig()
-  const { onSubmit: onJoin } = useJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
@@ -279,7 +279,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         { revalidate: false }
       )
 
-      onJoin()
+      triggerMembershipUpdate()
       mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),

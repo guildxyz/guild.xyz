@@ -1,6 +1,6 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
@@ -17,7 +17,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const platform = REQUIREMENTS[type].types[0] as PlatformName
 
   const { reqAccesses } = useRoleMembership(roleId)
-  const { onSubmit: onJoin } = useJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const toast = useToast()
 
@@ -37,7 +37,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
     return null
 
   const onSuccess = () => {
-    onJoin()
+    triggerMembershipUpdate()
     toast({
       title: `Successfully connected ${platforms[platform].name}`,
       description: `Your access is being re-checked...`,

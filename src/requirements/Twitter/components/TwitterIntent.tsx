@@ -1,5 +1,5 @@
 import { Icon, Link } from "@chakra-ui/react"
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
@@ -59,7 +59,7 @@ const TwitterIntent = ({
   } = useRequirementContext()
   const { onOpen } = usePopupWindow()
 
-  const { onSubmit: onJoin } = useJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
   const { reqAccesses } = useRoleMembership(roleId)
   const hasAccess = reqAccesses.find(
     (req) => req.requirementId === requirementId
@@ -82,7 +82,7 @@ const TwitterIntent = ({
 
   const { onSubmit } = useSubmitWithSign(completeAction, {
     onSuccess: () => {
-      onJoin()
+      triggerMembershipUpdate()
       setHasClicked(false)
     },
   })

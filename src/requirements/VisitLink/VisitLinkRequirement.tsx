@@ -1,5 +1,5 @@
 import { HStack, Icon, Link, LinkProps, Stack, Text } from "@chakra-ui/react"
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -29,7 +29,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const { id: requirementId, data, roleId } = useRequirementContext()
   const { id: userId } = useUser()
 
-  const { onSubmit: onJoin } = useJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
   const { reqAccesses } = useRoleMembership(roleId)
   const hasAccess = reqAccesses.find(
     (req) => req.requirementId === requirementId
@@ -37,7 +37,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
   const showErrorToast = useShowErrorToast()
   const { onSubmit } = useSubmitWithSign(visitLink, {
-    onSuccess: () => onJoin(),
+    onSuccess: () => triggerMembershipUpdate(),
     onError: () => showErrorToast("Something went wrong"),
   })
 

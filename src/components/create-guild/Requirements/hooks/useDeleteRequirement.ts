@@ -1,4 +1,4 @@
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -11,7 +11,7 @@ const useDeleteRequirement = (
   onSuccess?: () => void
 ) => {
   const { mutateGuild, id } = useGuild()
-  const { onSubmit: onJoin } = useJoin()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -50,7 +50,7 @@ const useDeleteRequirement = (
         { revalidate: false }
       )
 
-      onJoin()
+      triggerMembershipUpdate()
     },
     onError: (error) => showErrorToast(error),
   })
