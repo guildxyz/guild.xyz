@@ -21,7 +21,7 @@ function ResetHeadingOnEnterPlugin() {
 
         if ($isRangeSelection(selection)) {
           const node = selection.anchor.getNode()
-          let parent = node.getParent()
+          const parent = node.getParent()
 
           if (node.__type === "text" && parent.__type === "heading") {
             const headingParent = node.getParent() as HeadingNode
