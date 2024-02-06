@@ -1,9 +1,9 @@
 import Button from "components/common/Button"
-import useSetKeyPair from "hooks/useSetKeyPair"
 import Image from "next/image"
+import useLinkVaults from "../hooks/useLinkVaults"
 
 const LinkDelegateVaultButton = ({ vaults }) => {
-  const set = useSetKeyPair()
+  const linkDelegations = useLinkVaults()
 
   return (
     <Button
@@ -17,9 +17,9 @@ const LinkDelegateVaultButton = ({ vaults }) => {
       }
       size="sm"
       onClick={() => {
-        set.onSubmit({ provider: "DELEGATE" })
+        linkDelegations.onSubmit()
       }}
-      isLoading={set.isLoading}
+      isLoading={linkDelegations.isLoading}
       loadingText="Check your wallet"
     >
       Link {vaults.length > 1 ? vaults.length : ""} unlinked vault
