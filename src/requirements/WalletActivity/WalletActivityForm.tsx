@@ -36,7 +36,6 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "MANTLE",
   "RONIN",
   "ARBITRUM",
-  "X1_TESTNET",
   "METIS",
 ])
 
@@ -136,10 +135,7 @@ const WalletActivityForm = ({
     "LINEA",
     "MANTLE",
     "RONIN",
-    "X1_TESTNET",
     "METIS",
-    "GOERLI",
-    "POLYGON_MUMBAI",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {
