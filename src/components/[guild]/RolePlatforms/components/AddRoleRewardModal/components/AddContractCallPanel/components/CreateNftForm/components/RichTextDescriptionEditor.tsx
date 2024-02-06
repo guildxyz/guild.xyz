@@ -25,8 +25,8 @@ import {
 } from "components/lexical/nodes/ImageNode"
 import AutoLinkPlugin from "components/lexical/plugins/AutoLinkPlugin"
 import ImagesPlugin from "components/lexical/plugins/ImagesPlugin"
+import ResetHeadingOnEnterPlugin from "components/lexical/plugins/ResetHeadingOnEnterPlugin"
 import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugin"
-import ResetHeadingOnEnterPlugin from "./ResetHeadingOnEnterPlugin"
 
 type Props = {
   onChange?: (value: string) => void
