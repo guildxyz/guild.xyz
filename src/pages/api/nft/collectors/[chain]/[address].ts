@@ -28,6 +28,7 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   BSC: "",
   CRONOS: "",
   MANTLE: "",
+  ZKSYNC_ERA: ""
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
