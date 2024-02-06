@@ -1,4 +1,4 @@
-import { Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { Box, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import RoleRequirements from "components/[guild]/Requirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
@@ -30,7 +30,9 @@ const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
         >
           <RoleRequirementsSectionHeader />
           {!role ? (
-            <RoleRequirementsSkeleton />
+            <Box w="full" px={5} pb={5}>
+              <RoleRequirementsSkeleton />
+            </Box>
           ) : (
             <RoleRequirements
               {...{
