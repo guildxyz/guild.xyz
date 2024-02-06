@@ -11,12 +11,16 @@ import {
   Tag,
   TagLeftIcon,
   Text,
+  ToastId,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import {
+  EditGuildDrawerProvider,
+  useEditGuildDrawer,
+} from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
@@ -38,13 +42,14 @@ import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import useMembership from "components/explorer/hooks/useMemberships"
 import useScrollEffect from "hooks/useScrollEffect"
+import { useToastWithButton } from "hooks/useToast"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useAtom } from "jotai"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { Info, Users } from "phosphor-react"
+import { ArrowRight, Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
@@ -98,7 +103,11 @@ const GuildPage = (): JSX.Element => {
     tags,
     featureFlags,
     isDetailed,
+    contacts,
   } = useGuild()
+
+  const toastWithButton = useToastWithButton()
+  const toastIdRef = useRef<ToastId>()
 
   const roles = allRoles.filter((role) => !role.groupId)
 
@@ -145,6 +154,7 @@ const GuildPage = (): JSX.Element => {
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
+  const { onOpen } = useEditGuildDrawer()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
@@ -163,6 +173,34 @@ const GuildPage = (): JSX.Element => {
   useEffect(() => {
     setIsAfterJoin(false)
   }, [])
+
+  useEffect(() => {
+    if (isAdmin && !contacts?.length && !isLoading) showAddContactInfoToast()
+  }, [isAdmin, contacts, isLoading])
+
+  const showAddContactInfoToast = () => {
+    toastIdRef.current = toastWithButton({
+      status: "info",
+      title: "Stay connected with us",
+      description:
+        "To keep our services smooth, we occasionally need to reach out. Please add your contact info for timely updates and support.",
+      buttonProps: {
+        children: "Open guild settings",
+        onClick: () => {
+          onOpen()
+          setTimeout(() => {
+            const addContactBtn = document.getElementById("add-contact-btn")
+            if (addContactBtn) {
+              addContactBtn.focus()
+            }
+          }, 200)
+        },
+        rightIcon: <ArrowRight />,
+      },
+      duration: null,
+      isClosable: false,
+    })
+  }
 
   const showOnboarding = isAdmin && !onboardingComplete
 

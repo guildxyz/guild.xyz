@@ -191,7 +191,8 @@ const useMembershipUpdate = (
     error,
     progress: progress?.data,
     joinProgress,
-    triggerMembershipUpdate: (data?) =>
+    triggerMembershipUpdate: (data?) => {
+      progress.mutate(undefined, { revalidate: false })
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
         shareSocials: data?.shareSocials,
@@ -203,7 +204,8 @@ const useMembershipUpdate = (
               name: key,
               ...value,
             })),
-      }),
+      })
+    },
     reset: () => {
       useSubmitResponse.reset()
       progress.mutate(undefined, { revalidate: false })

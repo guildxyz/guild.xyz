@@ -23,6 +23,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "POLYGON_ZKEVM",
   "BASE_MAINNET",
   "BASE_GOERLI",
+  "BSC",
   "SCROLL",
   "SCROLL_SEPOLIA",
   "ZORA",
@@ -36,7 +37,6 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "MANTLE",
   "RONIN",
   "ARBITRUM",
-  "X1_TESTNET",
   "METIS",
 ])
 
@@ -128,6 +128,7 @@ const WalletActivityForm = ({
     "SCROLL_SEPOLIA",
     "BASE_MAINNET",
     "BASE_GOERLI",
+    "BSC",
     "ZORA",
     "ZKSYNC_ERA",
     "CRONOS",
@@ -136,10 +137,7 @@ const WalletActivityForm = ({
     "LINEA",
     "MANTLE",
     "RONIN",
-    "X1_TESTNET",
     "METIS",
-    "GOERLI",
-    "POLYGON_MUMBAI",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {
