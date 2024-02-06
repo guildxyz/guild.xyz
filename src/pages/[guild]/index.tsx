@@ -11,7 +11,6 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  ToastId,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -35,6 +34,7 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
@@ -44,14 +44,13 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import useScrollEffect from "hooks/useScrollEffect"
-import { useToastWithButton } from "hooks/useToast"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useAtom } from "jotai"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { ArrowRight, Info, Users } from "phosphor-react"
+import { Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
@@ -105,12 +104,8 @@ const GuildPage = (): JSX.Element => {
     tags,
     featureFlags,
     isDetailed,
-    contacts,
   } = useGuild()
   useAutoStatusUpdate()
-
-  const toastWithButton = useToastWithButton()
-  const toastIdRef = useRef<ToastId>()
 
   const roles = allRoles.filter((role) => !role.groupId)
 
@@ -178,37 +173,15 @@ const GuildPage = (): JSX.Element => {
     setIsAfterJoin(false)
   }, [])
 
-  useEffect(() => {
-    if (isAdmin && !contacts?.length && !isLoading) showAddContactInfoToast()
-  }, [isAdmin, contacts, isLoading])
-
-  const showAddContactInfoToast = () => {
-    toastIdRef.current = toastWithButton({
-      status: "info",
-      title: "Stay connected with us",
-      description:
-        "To keep our services smooth, we occasionally need to reach out. Please add your contact info for timely updates and support.",
-      buttonProps: {
-        children: "Open guild settings",
-        onClick: () => {
-          onOpen()
-          setTimeout(() => {
-            const addContactBtn = document.getElementById("add-contact-btn")
-            if (addContactBtn) {
-              addContactBtn.focus()
-            }
-          }, 200)
-        },
-        rightIcon: <ArrowRight />,
-      },
-      duration: null,
-      isClosable: false,
-    })
-  }
-
   const showOnboarding = isAdmin && !onboardingComplete
-
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
+  const stayConnectedToast = useStayConnectedToast(() => {
+    onOpen()
+    setTimeout(() => {
+      const addContactBtn = document.getElementById("add-contact-btn")
+      if (addContactBtn) addContactBtn.focus()
+    }, 200)
+  })
 
   return (
     <>
