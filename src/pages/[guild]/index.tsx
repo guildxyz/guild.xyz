@@ -12,6 +12,7 @@ import {
   TagLeftIcon,
   Text,
   ToastId,
+  useToast,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -50,6 +51,7 @@ import { useAtom } from "jotai"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
+import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 import { ArrowRight, Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
@@ -61,6 +63,7 @@ import parseDescription from "utils/parseDescription"
 import { addIntercomSettings } from "../../components/_app/IntercomProvider"
 
 const BATCH_SIZE = 10
+export const contactToastId = "requireGuildContactToast"
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
@@ -92,6 +95,8 @@ const DynamicDiscordBotPermissionsChecker = dynamic(
 
 const GuildPage = (): JSX.Element => {
   const {
+    id,
+    urlName,
     name,
     description,
     imageUrl,
@@ -111,6 +116,8 @@ const GuildPage = (): JSX.Element => {
 
   const toastWithButton = useToastWithButton()
   const toastIdRef = useRef<ToastId>()
+  const router = useRouter()
+  const toast = useToast()
 
   const roles = allRoles.filter((role) => !role.groupId)
 
@@ -182,8 +189,22 @@ const GuildPage = (): JSX.Element => {
     if (isAdmin && !contacts?.length && !isLoading) showAddContactInfoToast()
   }, [isAdmin, contacts, isLoading])
 
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (url == `/${urlName}` || url == `/${id}`) return
+      toast.close(contactToastId)
+    }
+
+    router.events.on("routeChangeStart", handleRouteChange)
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange)
+    }
+  }, [router.events])
+
   const showAddContactInfoToast = () => {
+    if (toast.isActive(contactToastId)) return
     toastIdRef.current = toastWithButton({
+      id: contactToastId,
       status: "info",
       title: "Stay connected with us",
       description:
@@ -202,7 +223,7 @@ const GuildPage = (): JSX.Element => {
         rightIcon: <ArrowRight />,
       },
       duration: null,
-      isClosable: false,
+      isClosable: true,
     })
   }
 
