@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from "@chakra-ui/react"
+import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useLocalStorage from "hooks/useLocalStorage"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -12,7 +12,14 @@ import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
 
-const ResendRewardButton = (): JSX.Element => {
+type Props = {
+  tooltipLabel?: string
+} & ButtonProps
+
+const ResendRewardButton = ({
+  tooltipLabel = "Re-check accesses & send rewards",
+  ...rest
+}: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
   const toast = useToast()
@@ -72,7 +79,7 @@ const ResendRewardButton = (): JSX.Element => {
           : isLoading
           ? "Sending rewards..."
           : canResend
-          ? "Re-check accesses & send rewards"
+          ? tooltipLabel
           : "You can use this function once per minute"
       }
       sx={{
@@ -107,6 +114,7 @@ const ResendRewardButton = (): JSX.Element => {
           color: textColor,
           colorScheme: buttonColorScheme,
         })}
+        {...rest}
       />
     </Tooltip>
   )
