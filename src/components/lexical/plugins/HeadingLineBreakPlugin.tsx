@@ -10,7 +10,14 @@ import {
 } from "lexical"
 import { useEffect } from "react"
 
-function ResetHeadingOnEnterPlugin() {
+/**
+ * Modifies line break functionality in headings.
+ *
+ * Markdown does not support line breaks in headings. This plugin makes the editor's
+ * behavior consistent with markdown, a line break inside a heading creates a new
+ * heading line, a line break at the end of a heading creates a new paragraph line.
+ */
+function HeadingLineBreakPlugin() {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
@@ -57,4 +64,4 @@ function ResetHeadingOnEnterPlugin() {
   return null
 }
 
-export default ResetHeadingOnEnterPlugin
+export default HeadingLineBreakPlugin
