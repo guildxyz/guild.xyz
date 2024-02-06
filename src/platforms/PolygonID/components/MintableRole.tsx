@@ -8,6 +8,7 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
@@ -24,9 +25,6 @@ import PolygonIDQRCodeModal from "./PolygonIDQRCodeModal"
 type Props = {
   role: Role
 }
-
-const join = (signedValidation: SignedValidation) =>
-  fetcher(`/user/join`, signedValidation)
 
 const MintableRole = ({ role }: Props) => {
   const toast = useToast()
@@ -90,10 +88,9 @@ const MintableRole = ({ role }: Props) => {
     }
   )
 
-  const { isLoading: isJoinLoading, onSubmit: onJoinAndClaim } = useSubmitWithSign(
-    join,
-    {
-      onSuccess: () =>
+  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
+    useMembershipUpdate(
+      () =>
         onClaimSubmit({
           userId: userId,
           data: {
@@ -101,15 +98,14 @@ const MintableRole = ({ role }: Props) => {
             roleId: role.id,
           },
         }),
-      onError: (err) =>
+      (err) =>
         showErrorToast({
           error: "Couldn't check eligibility",
           correlationId: err.correlationId,
-        }),
-    }
-  )
+        })
+    )
 
-  const isLoading = isJoinLoading || isClaimLoading
+  const isLoading = isMembershipUpdateLoading || isClaimLoading
 
   return (
     <Card p={4} mb="3" borderRadius="2xl">
@@ -142,7 +138,7 @@ const MintableRole = ({ role }: Props) => {
                 return
               }
 
-              onJoinAndClaim({ guildId })
+              triggerMembershipUpdate()
             }}
           >
             {hasClaimed ? "Show QR code" : "Mint proof"}

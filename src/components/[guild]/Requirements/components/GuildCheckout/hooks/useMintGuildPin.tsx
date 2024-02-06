@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
@@ -61,6 +62,8 @@ const useMintGuildPin = () => {
   const { guildPinFee } = useGuildPinFee()
 
   const fetcherWithSign = useFetcherWithSign()
+
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const mintGuildPin = async () => {
     setTxError?.(false)
@@ -193,7 +196,7 @@ const useMintGuildPin = () => {
       )
 
     if (hasGuildPinRequirement) {
-      fetcherWithSign([`/user/join`, { method: "POST", body: { guildId: id } }])
+      triggerMembershipUpdate()
     }
 
     toastWithTweetButton({

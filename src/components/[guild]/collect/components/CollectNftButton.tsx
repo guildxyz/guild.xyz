@@ -1,5 +1,6 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { Chains } from "chains"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -7,14 +8,9 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMemberships"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import fetcher from "utils/fetcher"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
-
-const join = (signedValidation: SignedValidation) =>
-  fetcher(`/user/join`, signedValidation)
 
 type Props = {
   label?: string
@@ -30,11 +26,7 @@ const CollectNftButton = ({
   const { chain, nftAddress, alreadyCollected, roleId } = useCollectNftContext()
   const { id: guildId, urlName } = useGuild()
 
-  const {
-    isLoading: isAccessLoading,
-    hasRoleAccess,
-    mutate: mutateMemberships,
-  } = useRoleMembership(roleId)
+  const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
   const chainId = useChainId()
   const shouldSwitchNetwork = chainId !== Chains[chain]
@@ -45,15 +37,13 @@ const CollectNftButton = ({
     loadingText: mintLoadingText,
   } = useCollectNft()
 
-  const { onSubmit: onJoinAndMintSubmit, isLoading: isJoinLoading } =
-    useSubmitWithSign((params) => join(params).then(() => mutateMemberships()), {
-      onSuccess: onMintSubmit,
-      onError: (error) =>
-        showErrorToast({
-          error: "Couldn't check eligibility",
-          correlationId: error.correlationId,
-        }),
-    })
+  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
+    useMembershipUpdate(onMintSubmit, (error) =>
+      showErrorToast({
+        error: "Couldn't check eligibility",
+        correlationId: error.correlationId,
+      })
+    )
 
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
@@ -74,12 +64,12 @@ const CollectNftButton = ({
 
   const isLoading =
     isAccessLoading ||
-    isJoinLoading ||
+    isMembershipUpdateLoading ||
     isMinting ||
     isNftDetailsLoading ||
     isBalanceLoading
   const loadingText =
-    isNftBalanceLoading || isJoinLoading
+    isNftBalanceLoading || isMembershipUpdateLoading
       ? "Checking eligibility"
       : isMinting
       ? mintLoadingText
@@ -106,9 +96,7 @@ const CollectNftButton = ({
          * UserReward in our backend and then they wouldn't be able to claim the NFT.
          * This way, we can make sure that this won't happen
          */
-        onJoinAndMintSubmit({
-          guildId,
-        })
+        triggerMembershipUpdate()
       }}
       {...rest}
       isDisabled={isDisabled || rest?.isDisabled}

@@ -9,6 +9,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { reactMarkdownComponents } from "components/[guild]/collect/components/RichTextDescription"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
@@ -25,9 +26,6 @@ import { useClaimedReward } from "../../../hooks/useClaimedReward"
 type ClaimResponse = {
   uniqueValue: string
 }
-
-const joinFetcher = (signedValidation: SignedValidation) =>
-  fetcher(`/user/join`, signedValidation)
 
 const useClaimText = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
@@ -90,20 +88,24 @@ const useClaimText = (rolePlatformId: number) => {
     }
   )
 
-  const join = useSubmitWithSign(joinFetcher, {
-    onSuccess: () => onClaimTextSubmit(),
-    onError: (error) =>
+  const {
+    error: membershipUpdateError,
+    isLoading: isMembershipUpdateLoading,
+    triggerMembershipUpdate,
+  } = useMembershipUpdate(
+    () => onClaimTextSubmit(),
+    (error) =>
       showErrorToast({
         error: "Couldn't check eligibility",
         correlationId: error.correlationId,
-      }),
-  })
+      })
+  )
 
   return {
-    error: claim.error ?? join.error,
+    error: claim.error ?? membershipUpdateError,
     response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
-    isLoading: claim.isLoading || join.isLoading,
-    onSubmit: () => join.onSubmit({ guildId }),
+    isLoading: claim.isLoading || isMembershipUpdateLoading,
+    onSubmit: () => triggerMembershipUpdate(),
     modalProps: {
       isOpen,
       onOpen,
