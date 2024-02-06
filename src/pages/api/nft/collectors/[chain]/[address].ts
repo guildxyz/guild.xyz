@@ -19,7 +19,7 @@ export type TopCollectorsResponse = OneOf<
   { error: string }
 >
 
-const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
+export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
   POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
   BASE_MAINNET: `https://base-mainnet.g.alchemy.com/nft/v3/${process.env.BASE_ALCHEMY_KEY}/getOwnersForContract`,
@@ -28,7 +28,7 @@ const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   BSC: "",
   CRONOS: "",
   MANTLE: "",
-  ZKSYNC_ERA: ""
+  ZKSYNC_ERA: "",
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
