@@ -8,7 +8,7 @@ import useGuildPermission from "./hooks/useGuildPermission"
 
 const CONTACT_TOAST_ID = "requireGuildContactToast"
 
-const useStayConnectedToast = (onClick: Function) => {
+const useStayConnectedToast = (onClick: () => void) => {
   const toastWithButton = useToastWithButton()
   const toastIdRef = useRef<ToastId>()
   const router = useRouter()
