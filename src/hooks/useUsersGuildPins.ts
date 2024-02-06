@@ -34,11 +34,17 @@ const getUsersGuildPinIdsOnChain = async (
     .filter((result) => result.status === "failure")
     .map((result) => result.error)
 
-  const pinIds: bigint[] = results
+  const pinIds = results
     .filter((result) => result.status === "success")
     .map((result) => result.result as bigint)
 
   return { pinIds, errors }
+}
+
+type TokenInfo = {
+  chainId: Chains
+  tokenId: number
+  tokenUri: string
 }
 
 const getPinTokenURIsForPinIds = async (
@@ -60,29 +66,35 @@ const getPinTokenURIsForPinIds = async (
         })
       : []
 
-  const tokenURIs = results.map((result, index) => ({
+  const tokenInfo: TokenInfo[] = results.map((result, index) => ({
     chainId: Chains[chain],
     tokenId: Number(pinIds[index]),
-    tokenUri: result.status === "success" ? result.result : null,
+    tokenUri: result.status === "success" ? (result.result as string) : null,
   }))
 
   const errors: Error[] = results
     .filter((res) => res.status === "failure")
     .map((res) => res.error)
 
-  return { tokenURIs, errors }
+  return { tokenInfo, errors }
 }
 
-const tokenURItoMetadataJSON = (tokenURI: {
+type TokenWithMetadata = {
   chainId: Chains
   tokenId: number
-  tokenUri: unknown
-}) => {
-  const { chainId, tokenId, tokenUri } = tokenURI
+  image: string
+} & GuildPinMetadata
 
-  const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(
-    tokenUri as string
-  )
+const getTokenWithMetadata = (tokenInfo: {
+  chainId: Chains
+  tokenId: number
+  tokenUri: string
+}): TokenWithMetadata => {
+  const { chainId, tokenId, tokenUri } = tokenInfo
+
+  const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenUri)
+
+  if (!metadata) return null
 
   return {
     ...metadata,
@@ -110,7 +122,7 @@ const fetchGuildPinsOnChain = async (
       args: [address],
     })
   } catch (e) {
-    return { usersPinsMetadataJSONs: [], errors: [{ error: e, status: "failure" }] }
+    return { jsonMetadata: [], errors: [e] as Error[] }
   }
 
   const { pinIds, errors: pinIdFetchErrors } = await getUsersGuildPinIdsOnChain(
@@ -120,17 +132,35 @@ const fetchGuildPinsOnChain = async (
     publicClient
   )
 
-  const { tokenURIs, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
+  const { tokenInfo, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
     pinIds,
     chain,
     publicClient
   )
-  const usersPinsMetadataJSONs = tokenURIs.map((tokenURI) =>
-    tokenURItoMetadataJSON(tokenURI)
+
+  const { tokenMetadata, errors: metadataTransformationErrors } = tokenInfo.reduce(
+    (acc, token) => {
+      const metadata = getTokenWithMetadata(token)
+      if (!metadata) {
+        const error: Error = {
+          message: `Failed to transform tokenURI: ${token}`,
+          name: "tokenMetadataTransformError",
+        }
+        acc.errors.push(error)
+      } else {
+        acc.tokenMetadata.push(metadata)
+      }
+      return acc
+    },
+    { tokenMetadata: [] as TokenWithMetadata[], errors: [] as Error[] }
   )
 
-  const errors = [...pinIdFetchErrors, ...tokenURIFetchErrors]
-  return { usersPinsMetadataJSONs, errors }
+  const errors = [
+    ...pinIdFetchErrors,
+    ...tokenURIFetchErrors,
+    ...metadataTransformationErrors,
+  ]
+  return { tokenMetadata, errors }
 }
 
 const fetchGuildPins = async ([_, addresses, includeTestnets]: [
@@ -153,15 +183,15 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
 
   const { allUsersPins, allErrors } = responseArray.reduce(
     (acc, response) => {
-      if (response.usersPinsMetadataJSONs) {
-        acc.allUsersPins.push(...response.usersPinsMetadataJSONs)
+      if (response.tokenMetadata) {
+        acc.allUsersPins.push(...response.tokenMetadata)
       }
       if (response?.errors.length > 0) {
         acc.allErrors.push(...response.errors)
       }
       return acc
     },
-    { allUsersPins: [], allErrors: [] }
+    { allUsersPins: [] as TokenWithMetadata[], allErrors: [] as Error[] }
   )
 
   return { usersPins: allUsersPins, errors: allErrors }
