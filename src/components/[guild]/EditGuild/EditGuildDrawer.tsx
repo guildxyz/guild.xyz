@@ -330,6 +330,7 @@ const EditGuildDrawer = ({
               </Button>
               <Button
                 // isDisabled={!isDirty}
+                isDisabled={Object.keys(methods.formState?.errors ?? {}).length > 0}
                 data-test="save-guild-button"
                 isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
