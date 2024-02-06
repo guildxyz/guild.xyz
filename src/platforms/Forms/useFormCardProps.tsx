@@ -1,9 +1,13 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
+import useForms from "components/[guild]/hooks/useForms"
 import platforms from "platforms/platforms"
-import { PlatformName } from "types"
+import { GuildPlatform, PlatformName } from "types"
 
-const useFormCardProps = () => {
+const useFormCardProps = (guildPlatform: GuildPlatform) => {
   const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+
+  const { data } = useForms()
+  const form = data?.find((f) => f.id === guildPlatform.platformGuildData.formId)
 
   return {
     type: "FORM" as PlatformName,
@@ -12,7 +16,7 @@ const useFormCardProps = () => {
         <Icon as={platforms.FORM.icon} color="white" />
       </Circle>
     ),
-    name: platforms.FORM.name,
+    name: form?.name ?? platforms.FORM.name,
   }
 }
 

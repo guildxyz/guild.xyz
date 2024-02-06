@@ -83,7 +83,7 @@ const LabelSetup = ({ fieldIndex, type }: LabelSetupProps) => {
         </Text>
       </Flex>
       <StyledSelect
-        placeholder=""
+        defaultValue={labelSetupConfig[type].options.at(-1)}
         options={labelSetupConfig[type].options}
         onChange={({ value }) => {
           const currentRateOptions = getValues(optionsFieldName)

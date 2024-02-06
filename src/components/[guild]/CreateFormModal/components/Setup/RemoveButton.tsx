@@ -15,6 +15,8 @@ const RemoveButton = (
     minW={6}
     minH={6}
     variant="unstyled"
+    display="flex"
+    alignItems="center"
     {...props}
   />
 )

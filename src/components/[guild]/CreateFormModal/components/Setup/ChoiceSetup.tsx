@@ -1,7 +1,7 @@
 import { FormControl, HStack, Input, Stack, Text } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { AnimatePresence, AnimateSharedLayout, Reorder } from "framer-motion"
+import { AnimatePresence, LayoutGroup, Reorder } from "framer-motion"
 import { useEffect, useRef } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
@@ -47,7 +47,7 @@ const ChoiceSetup = ({ index }: Props) => {
   }
 
   return (
-    <AnimateSharedLayout>
+    <LayoutGroup>
       <Reorder.Group
         axis="y"
         values={fields.map((field) => field.id)}
@@ -69,7 +69,7 @@ const ChoiceSetup = ({ index }: Props) => {
               <FormControl>
                 <Input
                   {...register(`fields.${index}.options.${optionIndex}.value`)}
-                  placeholder={"Add option" + field.id}
+                  placeholder="Add option"
                 />
                 <FormErrorMessage>
                   {/* TODO: proper types */}
@@ -84,7 +84,7 @@ const ChoiceSetup = ({ index }: Props) => {
         </AnimatePresence>
       </Reorder.Group>
 
-      <Stack mt={-2}>
+      <Stack as="ul" mt={-2}>
         <AnimatePresence>
           <OptionLayout
             key="addOption"
@@ -142,7 +142,7 @@ const ChoiceSetup = ({ index }: Props) => {
           )}
         </AnimatePresence>
       </Stack>
-    </AnimateSharedLayout>
+    </LayoutGroup>
   )
 }
 
