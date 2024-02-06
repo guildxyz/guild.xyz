@@ -38,7 +38,7 @@ const useStayConnectedToast = (onClick: () => void) => {
       status: "info",
       title: "Stay connected with us",
       description:
-        "To keep our services smooth, we occasionally need to reach out. Please add your contact info for timely updates and support.",
+        "To keep our services smooth, we occasionally need to reach out. Please add your contact info for timely updates and support!",
       buttonProps: {
         children: "Open guild settings",
         onClick: () => onClick(),
