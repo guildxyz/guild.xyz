@@ -22,7 +22,7 @@ const useStayConnectedToast = (onClick: Function) => {
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      if (url == `/${urlName}` || url == `/${id}`) return
+      if (url === `/${urlName}` || url === `/${id}`) return
       toast.close(CONTACT_TOAST_ID)
     }
 
