@@ -35,6 +35,7 @@ import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 import {
+  alchemyApiUrl,
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
@@ -174,8 +175,12 @@ const Page = ({
                   <Links />
                   <Divider />
                   <Details />
-                  <Divider />
-                  <TopCollectors />
+                  {!!alchemyApiUrl[chain] && (
+                    <>
+                      <Divider />
+                      <TopCollectors />
+                    </>
+                  )}
                 </Stack>
 
                 {!isMobile && (
