@@ -66,7 +66,7 @@ const Page = ({
   const chain = chainFromProps ?? validateNftChain(chainFromQuery)
   const address = addressFromProps ?? validateNftAddress(addressFromQuery)
 
-  const { theme, urlName, roles, guildPlatforms, isFallback } = useGuild()
+  const { theme, urlName, roles, guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const guildPlatform = guildPlatforms?.find(
@@ -91,7 +91,8 @@ const Page = ({
 
   const { captureEvent } = usePostHogContext()
 
-  if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
+  // We probably shouldn't display a 404 here?
+  // if (isDetailed && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
     <ErrorBoundary
