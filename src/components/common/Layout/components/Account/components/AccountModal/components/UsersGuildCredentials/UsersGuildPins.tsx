@@ -7,15 +7,13 @@ import GuildPinSkeleton from "./GuildPinSkeleton"
 
 const UsersGuildPins = () => {
   const { isAccountModalOpen } = useWeb3ConnectionManager()
-  const { data, pinFetchErrors, isValidating } = useUsersGuildPins(
-    !isAccountModalOpen
-  )
+  const { data, error, isValidating } = useUsersGuildPins(!isAccountModalOpen)
 
   return (
     <>
       <AccountSectionTitle title="Guild Pins" />
 
-      {pinFetchErrors?.length > 0 && (
+      {error && (
         <>
           <Alert status="warning" mb={3}>
             <AlertIcon /> There was an error while fetching your pins, some may not

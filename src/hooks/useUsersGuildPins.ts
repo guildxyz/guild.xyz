@@ -82,7 +82,6 @@ const getPinTokenURIsForPinIds = async (
 type TokenWithMetadata = {
   chainId: Chains
   tokenId: number
-  image: string
 } & GuildPinMetadata
 
 const getTokenWithMetadata = (tokenInfo: {
@@ -206,14 +205,14 @@ const useUsersGuildPins = (disabled = false, includeTestnets = false) => {
   const shouldFetch = Boolean(!disabled && isWeb3Connected && evmAddresses?.length)
 
   const swrData = useSWRImmutable(
-    shouldFetch ? ["guildPins", addresses, includeTestnets] : null,
+    shouldFetch ? ["guildPins", evmAddresses, includeTestnets] : null,
     fetchGuildPins
   )
 
   return {
     ...swrData,
     data: swrData.data?.usersPins,
-    pinFetchErrors: swrData.data?.errors,
+    error: swrData.data?.errors?.length > 0,
   }
 }
 
