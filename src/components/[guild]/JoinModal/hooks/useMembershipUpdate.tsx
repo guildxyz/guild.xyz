@@ -128,29 +128,37 @@ const useMembershipUpdate = (
 
         // Mutate membership data according to join status
         mutate(
-          (prev) => ({
-            guildId: prev?.guildId,
-            isAdmin: prev?.isAdmin,
-            joinedAt: prev?.joinedAt || res?.done ? new Date().toISOString() : null,
-            roles: Object.entries(byRoleId).map(([roleIdStr, reqJobs]) => {
-              const roleId = +roleIdStr
-              return {
-                access: res?.roleAccesses?.find(
-                  (roleAccess) => roleAccess.roleId === +roleId
-                )?.access,
-                roleId,
-                requirements: reqJobs?.map((reqJob) => ({
-                  requirementId: reqJob.requirementId,
-                  access: reqJob.access,
-                  amount: reqJob.amount,
-                  errorMsg: reqJob.userLevelErrors?.[0]?.msg,
-                  errorType: reqJob.userLevelErrors?.[0]?.errorType,
-                  subType: reqJob.userLevelErrors?.[0]?.subType,
-                  lastCheckedAt: reqJob.done ? new Date() : null,
-                })),
-              }
-            }),
-          }),
+          (prev) => {
+            // In case the user is already joined, and we just do an update, we only mutate, when we have the whole data
+            if (!!prev?.joinedAt && !res?.done) {
+              return prev
+            }
+
+            return {
+              guildId: prev?.guildId,
+              isAdmin: prev?.isAdmin,
+              joinedAt:
+                prev?.joinedAt || res?.done ? new Date().toISOString() : null,
+              roles: Object.entries(byRoleId).map(([roleIdStr, reqJobs]) => {
+                const roleId = +roleIdStr
+                return {
+                  access: res?.roleAccesses?.find(
+                    (roleAccess) => roleAccess.roleId === +roleId
+                  )?.access,
+                  roleId,
+                  requirements: reqJobs?.map((reqJob) => ({
+                    requirementId: reqJob.requirementId,
+                    access: reqJob.access,
+                    amount: reqJob.amount,
+                    errorMsg: reqJob.userLevelErrors?.[0]?.msg,
+                    errorType: reqJob.userLevelErrors?.[0]?.errorType,
+                    subType: reqJob.userLevelErrors?.[0]?.subType,
+                    lastCheckedAt: reqJob.done ? new Date() : null,
+                  })),
+                }
+              }),
+            }
+          },
           { revalidate: false }
         )
 
