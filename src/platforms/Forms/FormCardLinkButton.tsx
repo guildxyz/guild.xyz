@@ -11,7 +11,9 @@ const FormCardLinkButton = ({ platform }: Props) => {
   const { urlName } = useGuild()
   const { data } = useForms()
 
-  const formId = data?.find((form) => form.id === platform.platformGuildData?.formId)
+  const formId = data?.find(
+    (form) => form.id === platform.platformGuildData?.formId
+  )?.id
 
   return (
     <LinkButton
