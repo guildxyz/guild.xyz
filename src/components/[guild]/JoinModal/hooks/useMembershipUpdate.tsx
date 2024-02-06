@@ -1,10 +1,8 @@
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMemberships"
 import useSubmit from "hooks/useSubmit"
-import { atom, useSetAtom } from "jotai"
 import useSWRImmutable from "swr/immutable"
 import { PlatformName } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -32,12 +30,6 @@ export type JoinData = {
   oauthData: any
 }
 
-/**
- * Temporary to show "You might need to wait a few minutes to get your roles" on the
- * Discord reward card after join until we implement queues generally
- */
-export const isAfterJoinAtom = atom(false)
-
 const useMembershipUpdate = (
   onSuccess?: (response: Response) => void,
   onError?: (error?: any) => void
@@ -45,14 +37,12 @@ const useMembershipUpdate = (
   const { captureEvent } = usePostHogContext()
 
   const guild = useGuild()
-  const user = useUser()
 
   const posthogOptions = {
     guild: guild.urlName,
   }
 
   const { mutate } = useMembership()
-  const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
 
   const fetcherWithSign = useFetcherWithSign()
 
@@ -78,18 +68,12 @@ const useMembershipUpdate = (
   }
 
   const onJoinSuccess = (response: Response) => {
-    // mutate user in case they connected new platforms during the join flow
-    user?.mutate?.()
-
     // Mutate guild in case the user seed more entities after join due to visibilities
     guild.mutateGuild()
 
     onSuccess?.(response)
 
     if (!response.success) return
-
-    // Not sure about this one, should we move this in useJoin's onSuccess?
-    setIsAfterJoin(true)
   }
 
   const useSubmitResponse = useSubmit(submit, {

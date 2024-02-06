@@ -20,7 +20,7 @@ import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildD
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
-import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"

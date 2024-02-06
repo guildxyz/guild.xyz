@@ -1,18 +1,28 @@
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
+import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
 import useMembershipUpdate from "./useMembershipUpdate"
+
+/**
+ * Temporary to show "You might need to wait a few minutes to get your roles" on the
+ * Discord reward card after join until we implement queues generally
+ */
+export const isAfterJoinAtom = atom(false)
 
 const useJoin = (
   onSuccess?: Parameters<typeof useMembershipUpdate>[0],
   onError?: Parameters<typeof useMembershipUpdate>[1]
 ) => {
   const guild = useGuild()
+  const user = useUser()
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
+  const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
 
   const mintGuildPinContext = useMintGuildPinContext()
   // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page
@@ -46,6 +56,10 @@ const useJoin = (
       })
     }
 
+    // mutate user in case they connected new platforms during the join flow
+    user?.mutate?.()
+
+    setIsAfterJoin(true)
     onSuccess?.(response)
   }
 
