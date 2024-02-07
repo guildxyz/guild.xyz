@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import { createPublicClient, http, trim } from "viem"
 import { useAccount, useChainId } from "wagmi"
 
-const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
+export const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
   Promise.all(
     supportedChains.map(async (chain) => {
       const publicClient = createPublicClient({
@@ -18,7 +18,7 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         })
         .catch(() => null)
 
-      return [chain, bytecode && trim(bytecode) !== "0x"]
+      return [chain, bytecode && trim(bytecode) !== "0x"] as const
     })
   ).then(
     (results) =>

@@ -1,6 +1,8 @@
 import type { WalletUnlocked } from "@fuel-ts/wallet"
+import { Chains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { chainsOfAddressWithDeployedContract } from "hooks/useContractWalletInfoToast"
 import useFuel from "hooks/useFuel"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
@@ -8,7 +10,7 @@ import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { keccak256, stringToBytes, trim } from "viem"
+import { keccak256, stringToBytes } from "viem"
 import {
   PublicClient,
   WalletClient,
@@ -318,16 +320,22 @@ export const sign = async ({
     params.method = ValidationMethod.KEYPAIR
     sig = await signWithKeyPair(keyPair, params)
   } else {
-    const bytecode = await publicClient.getBytecode({ address }).catch(() => null)
-    const isSmartContract = bytecode && trim(bytecode) !== "0x"
+    const walletChains = await chainsOfAddressWithDeployedContract(address).then(
+      (set) => [...set]
+    )
+    const walletChainId =
+      walletChains.length > 0 ? Chains[walletChains[0]] : undefined
+
+    if (walletChainId) {
+      await walletClient.switchChain({ id: walletChainId })
+      params.chainId = `${walletChainId}`
+    }
+
+    const isSmartContract = walletChains.length > 0
 
     params.method = isSmartContract
       ? ValidationMethod.EIP1271
       : ValidationMethod.STANDARD
-
-    if (isSmartContract) {
-      params.chainId = chainId
-    }
 
     sig = await walletClient.signMessage({
       account: walletClient.account,
