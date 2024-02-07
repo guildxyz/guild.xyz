@@ -20,7 +20,7 @@ import Requirement, {
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { CaretDown } from "phosphor-react"
 import { scorers } from "./components/Score"
 import SetupPassport from "./components/SetupPassport"

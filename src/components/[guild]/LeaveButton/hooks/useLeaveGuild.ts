@@ -1,4 +1,4 @@
-import useMembership from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMembership"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"

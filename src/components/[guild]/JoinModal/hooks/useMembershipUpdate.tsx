@@ -1,7 +1,7 @@
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useMembership from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"

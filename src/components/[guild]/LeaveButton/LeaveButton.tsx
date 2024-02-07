@@ -11,7 +11,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
-import useMembership from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMembership"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { useIsTabsStuck } from "../Tabs/Tabs"

@@ -13,7 +13,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
-} from "components/explorer/hooks/useMemberships"
+} from "components/explorer/hooks/useMembership"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,

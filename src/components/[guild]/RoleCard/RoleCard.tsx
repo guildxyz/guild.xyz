@@ -13,7 +13,7 @@ import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
 import useMembership, {
   useRoleMembership,
-} from "components/explorer/hooks/useMemberships"
+} from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
 import { memo, useEffect, useRef } from "react"

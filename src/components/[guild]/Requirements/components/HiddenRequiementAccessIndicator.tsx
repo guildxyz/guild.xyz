@@ -16,7 +16,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import {
   ArrowSquareIn,
   CaretDown,

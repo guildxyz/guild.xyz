@@ -4,7 +4,7 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"

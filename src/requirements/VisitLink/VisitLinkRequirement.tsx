@@ -11,7 +11,7 @@ import {
 import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useUser from "components/[guild]/hooks/useUser"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"

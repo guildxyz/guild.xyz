@@ -17,7 +17,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"

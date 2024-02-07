@@ -1,6 +1,6 @@
 import { Chains } from "chains"
 import useNonPurchasableAssets from "components/[guild]/hooks/useNonPurchasableAssets"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,

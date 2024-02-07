@@ -2,7 +2,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 
-export type Memberships = Array<{
+export type Membership = {
   guildId: number
   // roleIds is still returned for backwards compatibility, but we don't use it on the FE
   // roleIds: number[]
@@ -22,14 +22,14 @@ export type Memberships = Array<{
       lastCheckedAt: Date
     }>
   }>
-}>
+}
 
 const useMembership = () => {
   const { id } = useGuild()
 
   const { address, isWeb3Connected } = useWeb3ConnectionManager()
 
-  const { data: membership, ...rest } = useSWRWithOptionalAuth<Memberships[number]>(
+  const { data: membership, ...rest } = useSWRWithOptionalAuth<Membership>(
     isWeb3Connected ? `/v2/users/${address}/memberships?guildId=${id}` : null
   )
 
@@ -43,16 +43,16 @@ const useMembership = () => {
 }
 
 const useRoleMembership = (roleId: number) => {
-  const guildMemberships = useMembership()
+  const guildMembership = useMembership()
 
-  const roleMembership = guildMemberships?.membership?.roles?.find(
+  const roleMembership = guildMembership?.membership?.roles?.find(
     (role) => role?.roleId === roleId
   )
 
   const hasRoleAccess = !!roleMembership?.access
 
   return {
-    ...guildMemberships,
+    ...guildMembership,
     reqAccesses: roleMembership?.requirements,
     hasRoleAccess,
   }

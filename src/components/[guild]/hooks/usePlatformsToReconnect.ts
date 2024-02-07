@@ -1,4 +1,4 @@
-import useMembership from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMembership"
 import { useMemo } from "react"
 import { PlatformName } from "types"
 

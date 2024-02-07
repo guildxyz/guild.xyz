@@ -3,7 +3,7 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"

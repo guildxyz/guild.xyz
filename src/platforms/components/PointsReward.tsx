@@ -6,7 +6,7 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Link from "components/common/Link"
-import { useRoleMembership } from "components/explorer/hooks/useMemberships"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowRight, Check } from "phosphor-react"
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {

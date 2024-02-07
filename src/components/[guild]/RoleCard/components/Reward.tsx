@@ -17,7 +17,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
-} from "components/explorer/hooks/useMemberships"
+} from "components/explorer/hooks/useMembership"
 import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
