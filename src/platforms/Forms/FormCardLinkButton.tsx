@@ -1,7 +1,9 @@
 import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import LinkButton from "components/common/LinkButton"
+import { Check } from "phosphor-react"
 import { GuildPlatform } from "types"
+import useUserSubmission from "./hooks/useUserSubmission"
 
 type Props = {
   platform: GuildPlatform
@@ -9,21 +11,24 @@ type Props = {
 
 const FormCardLinkButton = ({ platform }: Props) => {
   const { urlName } = useGuild()
-  const { data } = useForms()
+  const { data, isValidating: isFormsValidating } = useForms()
 
-  const formId = data?.find(
-    (form) => form.id === platform.platformGuildData?.formId
-  )?.id
+  const form = data?.find((f) => f.id === platform.platformGuildData?.formId)
+
+  const { data: userSubmission, isValidating } = useUserSubmission(form)
 
   return (
     <LinkButton
-      isLoading={!formId}
-      href={`/${urlName}/forms/${formId}`}
+      isDisabled={!!userSubmission}
+      isLoading={isFormsValidating || isValidating}
+      prefetch={false}
+      href={!userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
       size="lg"
       w="full"
       colorScheme="GUILD"
+      leftIcon={userSubmission && <Check />}
     >
-      Fill form
+      {userSubmission ? "Response already submitted" : "Fill form"}
     </LinkButton>
   )
 }

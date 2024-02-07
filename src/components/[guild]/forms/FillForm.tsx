@@ -9,6 +9,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
@@ -27,27 +28,33 @@ const FillForm = ({ form }: Props) => {
     formState: { errors },
   } = methods
 
+  const { data: userSubmission, mutate: mutateSubmission } = useUserSubmission(form)
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-  const { onSubmit, isLoading, response } = useSubmitWithSign(
+  const { onSubmit, isLoading } = useSubmitWithSign(
     (signedValidation) =>
       fetcher(`/v2/guilds/${guildId}/forms/${form.id}/user-submissions`, {
         ...signedValidation,
         method: "POST",
       }),
     {
-      onSuccess: () =>
+      onSuccess: (res) => {
         toast({
           status: "success",
           title: "Successfully submitted form",
-        }),
+        })
+        mutateSubmission(res, {
+          revalidate: false,
+        })
+      },
       onError: (error) => showErrorToast(error),
     }
   )
 
   if (!form) return <FillFormSkeleton />
 
-  if (!!response) return <SuccessfullySubmittedForm />
+  if (!!userSubmission) return <SuccessfullySubmittedForm />
 
   return (
     <FormProvider {...methods}>
