@@ -93,7 +93,7 @@ const useJoin = (
 
       const { jobId } = await fetcherWithSign([
         `/v2/actions/join`,
-        { method: "POST", body: { guildId: guild?.id } },
+        { method: "POST", body: data },
       ])
       return jobId
     }
@@ -260,7 +260,8 @@ const useJoin = (
     error,
     progress: hasFeatureFlag ? progress?.data : undefined,
     joinProgress,
-    onSubmit: (data?) =>
+    onSubmit: (data?) => {
+      progress.mutate(undefined, { revalidate: false })
       useSubmitResponse.onSubmit({
         guildId: guild?.id,
         shareSocials: data?.shareSocials,
@@ -272,7 +273,8 @@ const useJoin = (
               name: key,
               ...value,
             })),
-      }),
+      })
+    },
     reset: () => {
       useSubmitResponse.reset()
       progress.mutate(undefined, { revalidate: false })

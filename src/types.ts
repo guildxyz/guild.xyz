@@ -113,15 +113,13 @@ type SharedSocial = {
   isShared: boolean
 }
 
-type AddressConnectionProvider = "DELEGATE"
-
 type User = {
   id: number
   addresses: Array<{
     address: `0x${string}`
     userId: number
     isPrimary: boolean
-    provider: AddressConnectionProvider
+    isDelegated: boolean
     createdAt: string
     walletType: "EVM" | "FUEL"
   }>
@@ -131,9 +129,6 @@ type User = {
   isSuperAdmin: boolean
 
   captchaVerifiedSince: Date
-
-  // Should be removed once we use only v2 API
-  addressProviders?: Record<string, AddressConnectionProvider>
 
   emails: {
     emailAddress: string
@@ -675,7 +670,6 @@ type DetailedPinLeaderboardUserData = {
 
 export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
 export type {
-  AddressConnectionProvider,
   BaseUser,
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,

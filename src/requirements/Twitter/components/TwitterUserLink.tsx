@@ -6,17 +6,17 @@ type Props = {
   withIntent?: boolean
 }
 
-export default function TwitterUserLink({ requirement, withIntent }: Props) {
-  return (
-    <Link
-      href={`https://twitter.com/${withIntent ? "intent/follow?id=" : ""}${
-        requirement.data.id
-      }`}
-      isExternal
-      colorScheme="blue"
-      fontWeight="medium"
-    >
-      @{requirement.data.id}
-    </Link>
-  )
-}
+const TwitterUserLink = ({ requirement, withIntent }: Props) => (
+  <Link
+    href={`https://twitter.com/${withIntent ? "intent/follow?screen_name=" : ""}${
+      requirement.data.id
+    }`}
+    isExternal
+    colorScheme="blue"
+    fontWeight="medium"
+  >
+    @{requirement.data.id}
+  </Link>
+)
+
+export default TwitterUserLink

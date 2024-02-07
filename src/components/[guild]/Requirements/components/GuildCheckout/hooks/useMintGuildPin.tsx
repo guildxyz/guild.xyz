@@ -169,9 +169,8 @@ const useMintGuildPin = () => {
     try {
       const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenURI)
 
-      mutate((prevData) => [
-        ...(prevData ?? []),
-        {
+      mutate((prevData) => {
+        const newPin = {
           chainId,
           tokenId,
           ...metadata,
@@ -179,8 +178,14 @@ const useMintGuildPin = () => {
             "ipfs://",
             process.env.NEXT_PUBLIC_IPFS_GATEWAY
           ),
-        },
-      ])
+        }
+
+        const updatedPins = prevData?.usersPins
+          ? [...prevData.usersPins, newPin]
+          : [newPin]
+
+        return { ...prevData, usersPins: updatedPins }
+      })
     } catch {}
 
     const hasGuildPinRequirement = roles

@@ -16,7 +16,10 @@ import {
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import {
+  EditGuildDrawerProvider,
+  useEditGuildDrawer,
+} from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import useAccess from "components/[guild]/hooks/useAccess"
 import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -31,6 +34,7 @@ import { MintGuildPinProvider } from "components/[guild]/Requirements/components
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import SocialIcon from "components/[guild]/SocialIcon"
+import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
@@ -149,6 +153,7 @@ const GuildPage = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const isMember = useIsMember()
   const { hasAccess } = useAccess()
+  const { onOpen } = useEditGuildDrawer()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
@@ -169,8 +174,14 @@ const GuildPage = (): JSX.Element => {
   }, [])
 
   const showOnboarding = isAdmin && !onboardingComplete
-
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
+  const stayConnectedToast = useStayConnectedToast(() => {
+    onOpen()
+    setTimeout(() => {
+      const addContactBtn = document.getElementById("add-contact-btn")
+      if (addContactBtn) addContactBtn.focus()
+    }, 200)
+  })
 
   return (
     <>
@@ -191,7 +202,8 @@ const GuildPage = (): JSX.Element => {
                   {Object.entries(socialLinks).map(([type, link]) => {
                     const prettyLink = link
                       .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
-                      .replace(/\/+$/, "")
+                      .replace(/\?.*/, "") // trim query params
+                      .replace(/\/+$/, "") // trim ending slash
 
                     return (
                       <HStack key={type} spacing={1.5} maxW="full">

@@ -30,6 +30,7 @@ type Props = {
 const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
   const {
     control,
+    trigger,
     register,
     getValues,
     resetField,
@@ -50,46 +51,48 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
         {fields.map((contactField, index) => (
-          <FormControl
-            key={contactField.formId}
-            isInvalid={!!errors?.contacts?.[index]}
-          >
-            <HStack alignItems="start">
-              <Box maxW="64">
-                <Controller
-                  control={control}
-                  name={`contacts.${index}.type`}
-                  render={({ field: { onChange, onBlur, value, ref } }) => (
-                    <StyledSelect
-                      ref={ref}
-                      options={contactTypeOptions}
-                      value={contactTypeOptions.find((ct) => ct.value === value)}
-                      onBlur={onBlur}
-                      onChange={(newValue: SelectOption) => {
-                        onChange(newValue.value)
-                        resetField(`contacts.${index}.contact`)
-                      }}
-                      size="lg"
-                    />
-                  )}
-                />
-              </Box>
+          <HStack key={contactField.formId} alignItems="start">
+            <Box maxW="64">
+              <Controller
+                control={control}
+                name={`contacts.${index}.type`}
+                render={({ field: { onChange, onBlur, value, ref } }) => (
+                  <StyledSelect
+                    isDisabled={index === 0}
+                    ref={ref}
+                    options={contactTypeOptions}
+                    value={contactTypeOptions.find((ct) => ct.value === value)}
+                    onBlur={() => {
+                      trigger()
+                      onBlur()
+                    }}
+                    onChange={(newValue: SelectOption) => {
+                      onChange(newValue.value)
+                      resetField(`contacts.${index}.contact`)
+                    }}
+                    size="lg"
+                    chakraStyles={{
+                      container: {
+                        minWidth: "max-content",
+                      } as any,
+                    }}
+                  />
+                )}
+              />
+            </Box>
 
-              <Stack spacing={0}>
+            <FormControl isInvalid={!!errors?.contacts?.[index]?.contact}>
+              <Stack spacing={0} w="100%">
                 <InputGroup size="lg">
                   <Input
-                    isInvalid={!!errors?.contacts?.[index]}
+                    isInvalid={!!errors?.contacts?.[index]?.contact}
                     placeholder={
                       getValues(`contacts.${index}.type`) === "EMAIL"
                         ? `E-mail address`
                         : "Phone / Telegram username"
                     }
                     {...register(`contacts.${index}.contact`, {
-                      required:
-                        getValues("contacts")?.length > 1 &&
-                        index >= getValues("contacts")?.length - 1
-                          ? "This field is required"
-                          : false,
+                      required: "This field is required",
                       pattern:
                         getValues(`contacts.${index}.type`) === "EMAIL"
                           ? {
@@ -117,12 +120,13 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                   {errors?.contacts?.[index]?.contact?.message}
                 </FormErrorMessage>
               </Stack>
-            </HStack>
-          </FormControl>
+            </FormControl>
+          </HStack>
         ))}
 
         {showAddButton && (
           <Button
+            id="add-contact-btn"
             leftIcon={<Icon as={Plus} />}
             onClick={() =>
               append({

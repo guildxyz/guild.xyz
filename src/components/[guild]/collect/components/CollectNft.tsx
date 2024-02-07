@@ -78,9 +78,8 @@ const CollectNft = () => {
       <Skeleton
         maxW="max-content"
         isLoaded={
-          !!error ||
-          (!isLoading &&
-            typeof totalCollectors !== "undefined" &&
+          !isLoading &&
+          (typeof totalCollectors !== "undefined" ||
             typeof totalCollectorsToday !== "undefined")
         }
       >
