@@ -156,7 +156,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
 
     oauth: {
@@ -198,7 +198,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
 
     oauth: {
@@ -231,7 +231,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
 
     oauth: {
@@ -310,7 +310,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
 
     oauth: {
@@ -343,7 +343,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
     RoleCardComponent: dynamic(() => import("platforms/components/PoapReward"), {
       ssr: false,
@@ -373,7 +373,7 @@ const platforms: Record<PlatformName, PlatformData> = {
       () => import("platforms/components/ContractCallPreview"),
       {
         ssr: false,
-        loading: () => <PlatformPreview isLoading={true} />,
+        loading: () => <PlatformPreview isLoading />,
       }
     ),
     RoleCardComponent: dynamic(
@@ -407,7 +407,7 @@ const platforms: Record<PlatformName, PlatformData> = {
       () => import("platforms/components/SecretTextPreview"),
       {
         ssr: false,
-        loading: () => <PlatformPreview isLoading={true} />,
+        loading: () => <PlatformPreview isLoading />,
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
@@ -428,7 +428,7 @@ const platforms: Record<PlatformName, PlatformData> = {
       () => import("platforms/components/UniqueTextPreview"),
       {
         ssr: false,
-        loading: () => <PlatformPreview isLoading={true} />,
+        loading: () => <PlatformPreview isLoading />,
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
@@ -459,7 +459,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     ),
     PlatformPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
     RoleCardComponent: dynamic(
       () => import("platforms/components/PolygonIDReward"),
@@ -478,7 +478,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardPropsHook: usePointsCardProps,
     PlatformPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
     AddPlatformPanel: dynamic(
       () =>
@@ -506,7 +506,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     cardMenuComponent: FormCardMenu,
     PlatformPreview: dynamic(() => import("platforms/components/FormPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading={true} />,
+      loading: () => <PlatformPreview isLoading />,
     }),
     AddPlatformPanel: dynamic(
       () =>
