@@ -67,7 +67,6 @@ const FillForm = ({ form }: Props) => {
           return (
             <Card p={5} key={field.id}>
               <FormControl isInvalid={!!errors[field.id]}>
-                {/* TODO: should this be a simple FormLabel instead? */}
                 <FormFieldTitle field={field} mb={2} />
                 <Controller
                   control={control}
