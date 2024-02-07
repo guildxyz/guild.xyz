@@ -101,6 +101,19 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     }
   )
 
+  const onJoin = (data) =>
+    onSubmit({
+      shareSocials: data?.shareSocials,
+      platforms:
+        data &&
+        Object.entries(data.platforms ?? {})
+          .filter(([_, value]) => !!value)
+          .map(([key, value]: any) => ({
+            name: key,
+            ...value,
+          })),
+    })
+
   const isInDetailedProgressState =
     joinProgress?.state === "MANAGING_ROLES" ||
     joinProgress?.state === "MANAGING_REWARDS" ||
@@ -183,7 +196,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             <ModalButton
               mt="2"
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(onJoin)}
               colorScheme="green"
               isLoading={isLoading}
               loadingText={

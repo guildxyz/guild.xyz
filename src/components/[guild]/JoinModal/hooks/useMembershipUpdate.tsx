@@ -27,7 +27,7 @@ const useMembershipUpdate = (
     guild: guild.urlName,
   }
 
-  const submit = async (): Promise<string> => {
+  const submit = async (data): Promise<string> => {
     const initialPollResult: JoinJob[] = await fetcherWithSign([
       `/v2/actions/join?${new URLSearchParams({
         guildId: `${guild?.id}`,
@@ -43,7 +43,7 @@ const useMembershipUpdate = (
 
     const { jobId } = await fetcherWithSign([
       `/v2/actions/join`,
-      { method: "POST", body: { guildId: guild?.id } },
+      { method: "POST", body: { guildId: guild?.id, ...(data ?? {}) } },
     ])
     return jobId
   }
@@ -150,18 +150,7 @@ const useMembershipUpdate = (
       mapAccessJobState(progress.data, isLoading),
     triggerMembershipUpdate: (data?) => {
       progress.mutate(undefined, { revalidate: false })
-      useSubmitResponse.onSubmit({
-        guildId: guild?.id,
-        shareSocials: data?.shareSocials,
-        platforms:
-          data &&
-          Object.entries(data.platforms ?? {})
-            .filter(([_, value]) => !!value)
-            .map(([key, value]: any) => ({
-              name: key,
-              ...value,
-            })),
-      })
+      useSubmitResponse.onSubmit(data)
     },
     reset: () => {
       useSubmitResponse.reset()
