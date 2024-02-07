@@ -88,13 +88,12 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     isLoading,
     onSubmit,
     error: joinError,
-    response,
     joinProgress,
     reset,
   } = useJoin(
     (res) => {
       methods.setValue("platforms", {})
-      if (res.success) onClose()
+      onClose()
     },
     (err) => {
       errorToast(err)
@@ -103,13 +102,11 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   )
 
   const isInDetailedProgressState =
-    response?.success !== false &&
-    (joinProgress?.state === "MANAGING_ROLES" ||
-      joinProgress?.state === "MANAGING_REWARDS" ||
-      joinProgress?.state === "FINISHED")
+    joinProgress?.state === "MANAGING_ROLES" ||
+    joinProgress?.state === "MANAGING_REWARDS" ||
+    joinProgress?.state === "FINISHED"
 
-  // temporary for v1 (for guilds without the queues feature flag)
-  const hasNoAccess = response?.success === false && !isLoading
+  const hasNoAccess = joinProgress?.state === "NO_ACCESS"
 
   const { roles } = useGuild()
 
@@ -138,15 +135,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             {!isInDetailedProgressState && <Divider mb={3} />}
 
             <SatisfyRequirementsJoinStep
-              joinState={
-                joinProgress ??
-                // temporary for v1 (for guilds without the queues feature flag)
-                (isLoading
-                  ? { state: "CHECKING" }
-                  : hasNoAccess
-                  ? { state: "NO_ACCESS" }
-                  : ({} as any))
-              }
+              joinState={joinProgress}
               mb={isInDetailedProgressState ? "2.5" : "8"}
               spacing={isLoading || hasNoAccess ? "2.5" : "2"}
               fallbackText={

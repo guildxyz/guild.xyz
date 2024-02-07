@@ -30,8 +30,6 @@ const useJoin = (
   const { pathname } = useRouter()
 
   const onJoinSuccess: Parameters<typeof useMembershipUpdate>[0] = (response) => {
-    if (!response?.success) return
-
     if (
       pathname === "/[guild]" &&
       guild.featureFlags.includes("GUILD_CREDENTIAL") &&

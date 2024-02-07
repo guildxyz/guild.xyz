@@ -34,7 +34,7 @@ const ResendRewardButton = ({
   const [dateNow, setDateNow] = useState(Date.now())
   const canResend = dateNow - latestResendDate > TIMEOUT
 
-  const { triggerMembershipUpdate, isLoading, response } = useMembershipUpdate(
+  const { triggerMembershipUpdate, isLoading, isFinished } = useMembershipUpdate(
     () => {
       toast({
         status: "success",
@@ -74,7 +74,7 @@ const ResendRewardButton = ({
   return (
     <Tooltip
       label={
-        response
+        isFinished
           ? "Successfully sent rewards"
           : isLoading
           ? "Sending rewards..."
@@ -103,13 +103,13 @@ const ResendRewardButton = ({
     >
       <IconButton
         aria-label="Re-check accesses & send rewards"
-        icon={response ? <Check /> : <ArrowsClockwise />}
+        icon={isFinished ? <Check /> : <ArrowsClockwise />}
         minW="44px"
         variant="ghost"
         rounded="full"
-        onClick={!response && canResend ? onClick : undefined}
+        onClick={!isFinished && canResend ? onClick : undefined}
         animation={isLoading ? "rotate 1s infinite linear" : undefined}
-        isDisabled={isLoading || !!response || !canResend}
+        isDisabled={isLoading || !!isFinished || !canResend}
         {...(!isStuck && {
           color: textColor,
           colorScheme: buttonColorScheme,
