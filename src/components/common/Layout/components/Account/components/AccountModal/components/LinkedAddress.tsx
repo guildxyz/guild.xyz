@@ -22,7 +22,7 @@ import { Alert } from "components/common/Modal"
 import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
-import { AddressConnectionProvider, User } from "types"
+import { User } from "types"
 import shortenHex from "utils/shortenHex"
 import { useDisconnectAddress } from "../hooks/useDisconnect"
 import AddressTypeTag from "./AddressTypeTag"
@@ -32,12 +32,8 @@ type Props = {
   addressData: User["addresses"][number]
 }
 
-const providerIcons: Record<AddressConnectionProvider, string> = {
-  DELEGATE: "delegatecash.png",
-}
-
 const LinkedAddress = ({ addressData }: Props) => {
-  const { address, provider, isPrimary, walletType } = addressData ?? {}
+  const { address, isDelegated, isPrimary, walletType } = addressData ?? {}
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { onSubmit, isLoading, signLoadingText } = useDisconnectAddress(onClose)
@@ -57,13 +53,13 @@ const LinkedAddress = ({ addressData }: Props) => {
           fontSize="sm"
           fontWeight="bold"
         />
-        {provider && providerIcons[provider] && (
+        {isDelegated && (
           <Tooltip label="Delegate.cash" placement="top">
             <Tag>
               <Image
                 width={15}
                 height={15}
-                src={`/walletLogos/${providerIcons[provider]}`}
+                src={`/walletLogos/delegatecash.png`}
                 alt="Delegate cash logo"
               />
             </Tag>

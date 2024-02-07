@@ -4,7 +4,6 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtomValue } from "jotai"
 import { mutate } from "swr"
-import { AddressConnectionProvider } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { recaptchaAtom } from "utils/recaptcha"
 import useSubmit from "./useSubmit"
@@ -24,7 +23,6 @@ type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & {
   verificationParams?: {
     reCaptcha: string
   }
-  addressConnectionProvider?: AddressConnectionProvider
 }
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
