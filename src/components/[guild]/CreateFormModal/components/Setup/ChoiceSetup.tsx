@@ -72,7 +72,7 @@ const ChoiceSetup = ({ index }: Props) => {
                   placeholder="Add option"
                 />
                 <FormErrorMessage>
-                  {/* TODO: proper types */}
+                  {/* Unfortunately react-hook-form couldn't detect types properly here, so we needed an any cast */}
                   {
                     (errors.fields?.[index] as any)?.options?.[optionIndex]?.value
                       ?.message
