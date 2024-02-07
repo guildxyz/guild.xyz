@@ -13,12 +13,13 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import RecheckConnectionButton from "components/[guild]/RecheckConnectionButton"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
@@ -148,13 +149,41 @@ const ConnectPolygonIDModal = ({
                   Scan with your Polygon ID app, then re-check access below! The
                   modal will automatically close on successful connect
                 </Text>
-                <RecheckConnectionButton>Check connection</RecheckConnectionButton>
+                <RecheckConnectionButton />
               </>
             )}
           </Center>
         </ModalBody>
       </ModalContent>
     </Modal>
+  )
+}
+
+const RecheckConnectionButton = (): JSX.Element => {
+  const showErrorToast = useShowErrorToast()
+
+  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate((error) => {
+    const errorMsg = "Couldn't check access"
+    const correlationId = error.correlationId
+    showErrorToast(
+      correlationId
+        ? {
+            error: errorMsg,
+            correlationId,
+          }
+        : errorMsg
+    )
+  })
+
+  return (
+    <Button
+      onClick={triggerMembershipUpdate}
+      colorScheme="green"
+      isLoading={isLoading}
+      w="full"
+    >
+      Check connection
+    </Button>
   )
 }
 
