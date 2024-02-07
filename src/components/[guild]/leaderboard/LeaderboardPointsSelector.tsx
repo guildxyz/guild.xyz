@@ -12,7 +12,7 @@ const LeaderboardPointsSelector = () => {
   const { urlName } = useGuild()
   const router = useRouter()
 
-  const pointsRewards = useAccessedGuildPoints(true)
+  const pointsRewards = useAccessedGuildPoints("ALL")
   if (pointsRewards.length < 2) return null
 
   const pointsRewardsData = pointsRewards.map((gp) => ({

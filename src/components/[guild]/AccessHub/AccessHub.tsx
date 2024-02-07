@@ -92,7 +92,7 @@ const AccessHub = (): JSX.Element => {
   const isMember = useIsMember()
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
-  const accessedGuildPoints = useAccessedGuildPoints()
+  const accessedGuildPoints = useAccessedGuildPoints("ACCESSED_ONLY")
 
   const shouldShowGuildPin =
     !group &&
@@ -150,14 +150,15 @@ const AccessHub = (): JSX.Element => {
             )
           })}
 
-          {accessedGuildPoints.map((pointPlatform) => (
+          {accessedGuildPoints?.map((pointPlatform) => (
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
           ))}
 
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
             !shouldShowGuildPin &&
-            !accessedGuildPlatforms?.length && (
+            !accessedGuildPlatforms?.length &&
+            !accessedGuildPoints?.length && (
               <Card>
                 <Alert status="info" h="full">
                   <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />

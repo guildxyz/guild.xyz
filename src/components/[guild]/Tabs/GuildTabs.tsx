@@ -22,7 +22,8 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
 
   const { captureEvent } = usePostHogContext()
 
-  const existingPointsReward = useAccessedGuildPoints(true)?.[0]
+  const existingPointsRewards = useAccessedGuildPoints("ALL")
+  const firstExistingPointsReward = existingPointsRewards?.[0]
 
   return (
     <Tabs {...rest}>
@@ -30,9 +31,9 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
         Home
       </TabButton>
 
-      {existingPointsReward && (
+      {firstExistingPointsReward && (
         <TabButton
-          href={`/${urlName}/leaderboard/${existingPointsReward.id}`}
+          href={`/${urlName}/leaderboard/${firstExistingPointsReward.id}`}
           isActive={activeTab === "LEADERBOARD"}
           onClick={() => {
             captureEvent("Click on leaderboard tab", {
