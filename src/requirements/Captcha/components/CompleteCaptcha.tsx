@@ -14,6 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
+import RecheckConnectionButton from "components/[guild]/RecheckConnectionButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
@@ -117,10 +118,11 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
                     />
                   )}
                 </Box>
-                <Text mt="10" textAlign="center">
-                  Please complete the CAPTCHA above! The modal will automatically
-                  close on success
+                <Text my="8" textAlign="center">
+                  Please complete the CAPTCHA, then re-check access below! The modal
+                  will automatically close on success
                 </Text>
+                <RecheckConnectionButton>Check access</RecheckConnectionButton>
               </>
             )}
           </Center>

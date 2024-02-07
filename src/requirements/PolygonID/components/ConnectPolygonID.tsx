@@ -13,6 +13,7 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import RecheckConnectionButton from "components/[guild]/RecheckConnectionButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
@@ -143,10 +144,11 @@ const ConnectPolygonIDModal = ({
                 >
                   Generate new QR code
                 </Button>
-                <Text mt="10" textAlign="center">
-                  Scan with your Polygon ID app! The modal will automatically close
-                  on successful connect
+                <Text my="8" textAlign="center">
+                  Scan with your Polygon ID app, then re-check access below! The
+                  modal will automatically close on successful connect
                 </Text>
+                <RecheckConnectionButton>Check connection</RecheckConnectionButton>
               </>
             )}
           </Center>
