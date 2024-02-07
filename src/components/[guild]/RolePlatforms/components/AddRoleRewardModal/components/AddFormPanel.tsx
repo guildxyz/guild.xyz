@@ -16,7 +16,7 @@ type Props = {
   onSuccess: () => void
 }
 
-const defaultValues = {
+const defaultValues: CreateFormParams = {
   name: "",
   description: "",
   active: false,
