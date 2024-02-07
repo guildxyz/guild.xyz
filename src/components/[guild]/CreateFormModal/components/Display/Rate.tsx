@@ -26,7 +26,6 @@ const Rate = forwardRef<Props, "input">(({ field, ...props }, _ref) => {
   return (
     <Stack spacing={1}>
       <RateRadioGroup
-        // TODO: we'll need to use option for display, but option.value for setup... we should find a better solution for this
         options={field.options?.map((option) => ({
           value:
             typeof option === "string" || typeof option === "number"
