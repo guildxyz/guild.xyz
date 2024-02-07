@@ -14,11 +14,12 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useAccess from "components/[guild]/hooks/useAccess"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useAccess from "components/[guild]/hooks/useAccess"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { Robot } from "phosphor-react"
 import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -28,6 +29,7 @@ import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
 const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const { id, roleId } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
+  const { id: userId } = useUser()
 
   const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
 
@@ -35,7 +37,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
     (req) => req.requirementId === id
   )?.access
 
-  if (!roleAccess || hasAccess) return null
+  if (!userId || hasAccess) return null
 
   return (
     <>
