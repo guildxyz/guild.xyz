@@ -1,8 +1,7 @@
 import type { WalletUnlocked } from "@fuel-ts/wallet"
-import { Chains } from "chains"
+import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { chainsOfAddressWithDeployedContract } from "hooks/useContractWalletInfoToast"
 import useFuel from "hooks/useFuel"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
@@ -10,7 +9,7 @@ import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { keccak256, stringToBytes } from "viem"
+import { createPublicClient, http, keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
   WalletClient,
@@ -301,6 +300,29 @@ export const fuelSign = async ({
 
   return [payload, { params, sig }]
 }
+
+const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
+  Promise.all(
+    supportedChains.map(async (chain) => {
+      const publicClient = createPublicClient({
+        chain: CHAIN_CONFIG[chain],
+        transport: http(),
+      })
+
+      const bytecode = await publicClient
+        .getBytecode({
+          address,
+        })
+        .catch(() => null)
+
+      return [chain, bytecode && trim(bytecode) !== "0x"] as const
+    })
+  ).then(
+    (results) =>
+      new Set(
+        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain)
+      )
+  )
 
 export const sign = async ({
   publicClient,
