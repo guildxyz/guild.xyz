@@ -87,7 +87,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                     },
                   }}
                 >
-                  <InputLeftElement>{selectedFieldType?.img}</InputLeftElement>
+                  <InputLeftElement>{selectedFieldType.img}</InputLeftElement>
                   <ControlledSelect
                     name={`fields.${index}.type`}
                     options={fieldTypes}
@@ -137,7 +137,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
             </HStack>
           )}
 
-          {selectedFieldType?.SetupComponent && isEditing ? (
+          {selectedFieldType.SetupComponent && isEditing ? (
             <selectedFieldType.SetupComponent index={index} />
           ) : (
             <selectedFieldType.DisplayComponent field={field} isDisabled />
