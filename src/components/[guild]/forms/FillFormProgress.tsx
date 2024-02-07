@@ -12,7 +12,7 @@ const FillFormProgress = ({ children }: PropsWithChildren<unknown>) => {
   ).length
 
   const progress = Number(((formValuesCount * 100) / formFieldsCount).toFixed(0))
-  const progressText = `${progress}%`
+  const progressText = `${isNaN(progress) ? 0 : progress}%`
 
   return (
     <FloatingFooter maxWidth="container.md">
@@ -28,7 +28,7 @@ const FillFormProgress = ({ children }: PropsWithChildren<unknown>) => {
         borderRadius="none"
         h={1}
         w="100%"
-        value={progress}
+        value={isNaN(progress) ? 0 : progress}
         colorScheme="primary"
         sx={{
           "> div": {
