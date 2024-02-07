@@ -23,41 +23,37 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
     useUserSubmission(form)
 
   return (
-    <Tooltip
-      label={!!userSubmission ? "Response already submitted" : "Fill form"}
-      hasArrow
-      shouldWrapChildren
-    >
-      <RewardDisplay
-        icon={
-          <RewardIcon
-            rolePlatformId={platform.id}
-            guildPlatform={platform?.guildPlatform}
-            withMotionImg={withMotionImg}
-          />
-        }
-        label={
-          <>
-            {"Fill form: "}
-            <LinkButton
-              isLoading={isFormsValidating || isUserSubmissionValidating}
-              isDisabled={!!userSubmission}
-              href={
-                !userSubmission
-                  ? `/${urlName}/forms/${platformGuildData.formId}`
-                  : "#"
-              }
-              variant="link"
-              rightIcon={<ArrowSquareOut />}
-              iconSpacing="1"
-              maxW="full"
-            >
-              {form?.name ?? platforms[PlatformType[platformId]].name}
-            </LinkButton>
-          </>
-        }
-      />
-    </Tooltip>
+    <RewardDisplay
+      icon={
+        <RewardIcon
+          rolePlatformId={platform.id}
+          guildPlatform={platform?.guildPlatform}
+          withMotionImg={withMotionImg}
+        />
+      }
+      label={
+        <Tooltip
+          label={!!userSubmission ? "Response already submitted" : "Fill form"}
+          hasArrow
+          shouldWrapChildren
+        >
+          {"Fill form: "}
+          <LinkButton
+            isLoading={isFormsValidating || isUserSubmissionValidating}
+            isDisabled={!!userSubmission}
+            href={
+              !userSubmission ? `/${urlName}/forms/${platformGuildData.formId}` : "#"
+            }
+            variant="link"
+            rightIcon={<ArrowSquareOut />}
+            iconSpacing="1"
+            maxW="full"
+          >
+            {form?.name ?? platforms[PlatformType[platformId]].name}
+          </LinkButton>
+        </Tooltip>
+      }
+    />
   )
 }
 export default FormReward
