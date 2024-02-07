@@ -12,18 +12,24 @@ enum DelegationType {
 
 // https://docs.delegate.cash/delegatecash/technical-documentation/delegation-registry/contract-addresses
 const delegateAddresses = {
-  [Chains.ETHEREUM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.POLYGON]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.CELO]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.OPTIMISM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.AVALANCHE]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.GOERLI]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.ARBITRUM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.NOVA]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.BASE_MAINNET]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.BSC]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.FANTOM]: "0x00000000000076a84fef008cdabe6409d2fe638b",
-  [Chains.GNOSIS]: "0x00000000000076a84fef008cdabe6409d2fe638b",
+  [Chains.ETHEREUM]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.ARBITRUM]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.NOVA]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.AVALANCHE]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.BASE_MAINNET]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.BSC]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.CELO]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.FANTOM]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.GNOSIS]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.LINEA]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.MOONBEAM]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.MOONRIVER]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.OPTIMISM]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.POLYGON]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.POLYGON_ZKEVM]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.ZORA]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.GOERLI]: "0x00000000000000447e69651d841bd8d104bed493",
+  [Chains.SEPOLIA]: "0x00000000000000447e69651d841bd8d104bed493",
 } as const
 
 // address for testing: 0xaaf3a70b7bcd9d0c20213981d91042683bd215f0 (should return "0x82407168ca396e800e55c8667af2a7516c5140dd" vault on Goerli)
@@ -37,7 +43,7 @@ const useDelegateVaults = () => {
       abi: delegateRegistryAbi,
       address: contractAddress,
       chainId: Number(chainId),
-      functionName: "getDelegationsByDelegate",
+      functionName: "getIncomingDelegations",
     })
   )
 
@@ -56,10 +62,10 @@ const useDelegateVaults = () => {
     ?.filter((res) => res.status === "success")
     .flatMap((res) => res.result) as {
     contract_: `0x${string}`
-    delegate: `0x${string}`
+    from: `0x${string}`
     type_: DelegationType
     tokenId: bigint
-    vault: `0x${string}`
+    to: `0x${string}`
   }[]
 
   const alreadyLinkedAddresses = new Set(delegates ?? [])
@@ -68,9 +74,9 @@ const useDelegateVaults = () => {
     ?.filter(
       (res) =>
         res.type_ === DelegationType.ALL &&
-        !alreadyLinkedAddresses.has(res.vault.toLowerCase() as `0x${string}`)
+        !alreadyLinkedAddresses.has(res.from.toLowerCase() as `0x${string}`)
     )
-    .map((res) => res.vault)
+    .map((res) => res.from)
     .filter(Boolean)
 
   return unlinked

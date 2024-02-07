@@ -12,9 +12,9 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import useSetKeyPair from "hooks/useSetKeyPair"
 import Image from "next/image"
 import { PropsWithChildren, useEffect, useState } from "react"
+import useLinkVaults from "../AccountModal/hooks/useLinkVaults"
 
 const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
   const { id } = useUser()
@@ -27,7 +27,7 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
   }, [id])
 
   const vaults = useDelegateVaults()
-  const set = useSetKeyPair()
+  const linkVaults = useLinkVaults()
 
   return (
     <Popover isOpen={!isDismissed && vaults && vaults.length > 0}>
@@ -65,11 +65,11 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
                 Dismiss
               </Button>
               <Button
-                isLoading={set.isLoading}
+                isLoading={linkVaults.isLoading}
                 loadingText={"Loading"}
                 size="sm"
                 onClick={() => {
-                  set.onSubmit({ provider: "DELEGATE" })
+                  linkVaults.onSubmit()
                 }}
               >
                 Link vault{vaults?.length === 1 ? "" : "s"}
