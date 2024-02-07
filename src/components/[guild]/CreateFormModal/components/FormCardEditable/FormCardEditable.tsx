@@ -80,13 +80,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
               </FormControl>
 
               <FormControl>
-                <InputGroup
-                  sx={{
-                    input: {
-                      background: "transparent",
-                    },
-                  }}
-                >
+                <InputGroup>
                   <InputLeftElement>{selectedFieldType.img}</InputLeftElement>
                   <ControlledSelect
                     name={`fields.${index}.type`}
