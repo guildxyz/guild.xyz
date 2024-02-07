@@ -35,8 +35,8 @@ const AddFormPanel = ({ onSuccess }: Props) => {
     defaultValues,
   })
 
-  const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm({
-    onSuccess: (createdForm) => {
+  const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm(
+    (createdForm) => {
       methods.reset(defaultValues)
       append({
         guildPlatform: {
@@ -49,8 +49,8 @@ const AddFormPanel = ({ onSuccess }: Props) => {
         visibility: roleVisibility,
       })
       onSuccess()
-    },
-  })
+    }
+  )
 
   const onSubmit = (data: CreateFormParams) =>
     onCreateFormSubmit({
