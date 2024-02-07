@@ -11,7 +11,7 @@ import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
@@ -60,8 +60,6 @@ const useMintGuildPin = () => {
   const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]?.address
 
   const { guildPinFee } = useGuildPinFee()
-
-  const fetcherWithSign = useFetcherWithSign()
 
   const { triggerMembershipUpdate } = useMembershipUpdate()
 

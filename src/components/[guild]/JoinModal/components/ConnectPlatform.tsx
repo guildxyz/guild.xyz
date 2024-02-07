@@ -23,7 +23,7 @@ const ConnectPlatform = ({ platform }: Props) => {
   const platformsToReconnect = usePlatformsToReconnect()
   const isReconnect = platformsToReconnect.includes(platform)
 
-  // we have the reconnect data from the /access endoint, so we have to mutate that on reconnect success
+  // we have the reconnect data from the membership endoint, so we have to mutate that on reconnect success
   const { triggerMembershipUpdate } = useMembershipUpdate()
   const onSuccess = () => isReconnect && triggerMembershipUpdate()
 
