@@ -260,7 +260,7 @@ const AddRewardButton = (): JSX.Element => {
                       label={
                         activeTab === RoleTypeToAddTo.EXISTING_ROLE
                           ? "The reward will be added to the role you select with hidden visibility, so users won't see it yet. You can edit & activate it later"
-                          : "The role will be created with hidden visibility, so user's won't see it yet. You can edit & activate it later"
+                          : "The role will be created with hidden visibility, so users won't see it yet. You can edit & activate it later"
                       }
                     >
                       <Info />
