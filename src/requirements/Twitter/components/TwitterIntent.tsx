@@ -61,7 +61,7 @@ const TwitterIntent = ({
 
   const { triggerMembershipUpdate } = useMembershipUpdate()
   const { reqAccesses } = useRoleMembership(roleId)
-  const hasAccess = reqAccesses.find(
+  const hasAccess = reqAccesses?.find(
     (req) => req.requirementId === requirementId
   )?.access
 
