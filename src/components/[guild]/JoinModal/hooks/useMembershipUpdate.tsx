@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
+import { useUserRewards } from "hooks/useUserRewards"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -17,7 +18,8 @@ const useMembershipUpdate = (
   onError?: (error?: any) => void
 ) => {
   const guild = useGuild()
-  const { mutate } = useMembership()
+  const { mutate: mutateMembership } = useMembership()
+  const { mutate: mutateUserRewards } = useUserRewards()
   const fetcherWithSign = useFetcherWithSign()
   const [pollState, setPollState] = useState<"INITIAL" | "POLL" | "FINISHED">(
     "INITIAL"
@@ -62,6 +64,8 @@ const useMembershipUpdate = (
     // Mutate guild in case the user sees more entities due to visibilities
     guild.mutateGuild()
 
+    mutateUserRewards()
+
     onSuccess?.(response)
 
     setTimeout(() => {
@@ -85,7 +89,7 @@ const useMembershipUpdate = (
         const byRoleId = groupBy(res?.["children:access-check:jobs"] ?? [], "roleId")
 
         // Mutate membership data according to join status
-        mutate(
+        mutateMembership(
           (prev) => {
             // In case the user is already a member, we only mutate when we have the whole data
             if (!!prev?.joinedAt && !res?.done) {

@@ -8,6 +8,7 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import { useUserRewards } from "hooks/useUserRewards"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
@@ -23,13 +24,19 @@ const CollectNftButton = ({
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
 
-  const { chain, nftAddress, alreadyCollected, roleId } = useCollectNftContext()
-  const { id: guildId, urlName } = useGuild()
+  const { chain, nftAddress, alreadyCollected, roleId, rolePlatformId } =
+    useCollectNftContext()
+  const { urlName } = useGuild()
 
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
   const chainId = useChainId()
   const shouldSwitchNetwork = chainId !== Chains[chain]
+
+  const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
+  const hasUserReward = !!userRewards?.find(
+    (reward) => reward.rolePlatformId === rolePlatformId
+  )
 
   const {
     onSubmit: onMintSubmit,
@@ -64,12 +71,13 @@ const CollectNftButton = ({
 
   const isLoading =
     isAccessLoading ||
+    isUserRewardsLoading ||
     isMembershipUpdateLoading ||
     isMinting ||
     isNftDetailsLoading ||
     isBalanceLoading
   const loadingText =
-    isNftBalanceLoading || isMembershipUpdateLoading
+    isNftBalanceLoading || isMembershipUpdateLoading || isUserRewardsLoading
       ? "Checking eligibility"
       : isMinting
       ? mintLoadingText
@@ -90,13 +98,11 @@ const CollectNftButton = ({
         captureEvent("Click: CollectNftButton (GuildCheckout)", {
           guild: urlName,
         })
-        /**
-         * We're always sending a join request here, because if the user joined the
-         * role before the admins added the reward to it, they won't have the
-         * UserReward in our backend and then they wouldn't be able to claim the NFT.
-         * This way, we can make sure that this won't happen
-         */
-        triggerMembershipUpdate()
+        if (hasUserReward) {
+          onMintSubmit()
+        } else {
+          triggerMembershipUpdate()
+        }
       }}
       {...rest}
       isDisabled={isDisabled || rest?.isDisabled}

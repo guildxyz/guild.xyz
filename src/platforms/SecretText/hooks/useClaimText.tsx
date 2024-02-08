@@ -17,6 +17,7 @@ import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { useUserRewards } from "hooks/useUserRewards"
 import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
@@ -37,6 +38,11 @@ const useClaimText = (rolePlatformId: number) => {
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
+
+  const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
+  const hasUserReward = !!userRewards?.find(
+    (reward) => reward.rolePlatformId === rolePlatformId
+  )
 
   const triggerConfetti = useJsConfetti()
   const showErrorToast = useShowErrorToast()
@@ -104,8 +110,11 @@ const useClaimText = (rolePlatformId: number) => {
   return {
     error: claim.error ?? membershipUpdateError,
     response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
+    isPreparing: isUserRewardsLoading,
     isLoading: claim.isLoading || isMembershipUpdateLoading,
-    onSubmit: () => triggerMembershipUpdate(),
+    onSubmit: hasUserReward
+      ? () => onClaimTextSubmit()
+      : () => triggerMembershipUpdate(),
     modalProps: {
       isOpen,
       onOpen,
