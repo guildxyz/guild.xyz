@@ -17,7 +17,7 @@ const Web3InboxRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={APP_DETAILS[data.app].image}
+      image={APP_DETAILS[data.app]?.image}
       footer={
         !isValidating &&
         !hasAccess && (
@@ -42,7 +42,7 @@ const Web3InboxRequirement = (props: RequirementProps) => {
       {...props}
     >
       <Text as="span">
-        {`Subscribe to the ${APP_DETAILS[data.app].name} app on Web3Inbox`}
+        {`Subscribe to the ${APP_DETAILS[data.app]?.name} app on Web3Inbox`}
       </Text>
     </Requirement>
   )
