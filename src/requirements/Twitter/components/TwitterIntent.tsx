@@ -1,8 +1,9 @@
 import { Icon, Link } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
@@ -11,7 +12,7 @@ import useSWR from "swr"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
-export type TwitterIntentAction = "follow" | "like" | "repost"
+export type TwitterIntentAction = "follow" | "like" | "retweet"
 
 type Props = {
   type?: "button" | "link"
@@ -21,7 +22,7 @@ type Props = {
 const label: Record<TwitterIntentAction, string> = {
   follow: "Follow",
   like: "Like post",
-  repost: "Repost",
+  retweet: "Repost",
 }
 
 const buttonIcon: Record<
@@ -30,12 +31,12 @@ const buttonIcon: Record<
 > = {
   follow: UserPlus,
   like: Heart,
-  repost: Share,
+  retweet: Share,
 }
 
 const intentQueryParam: Record<TwitterIntentAction, string> = {
   like: "tweet_id",
-  repost: "tweet_id",
+  retweet: "tweet_id",
   follow: "screen_name",
 }
 
@@ -54,13 +55,15 @@ const TwitterIntent = ({
     type: requirementType,
     id: requirementId,
     data: { id },
+    roleId,
   } = useRequirementContext()
   const { onOpen } = usePopupWindow()
 
-  const { data: accesses, mutate: mutateAccess } = useAccess()
-  const hasAccess = accesses
-    ?.flatMap((role) => role.requirements)
-    .find((req) => req.requirementId === requirementId)?.access
+  const { triggerMembershipUpdate } = useMembershipUpdate()
+  const { reqAccesses } = useRoleMembership(roleId)
+  const hasAccess = reqAccesses?.find(
+    (req) => req.requirementId === requirementId
+  )?.access
 
   const url =
     !!action && !!id
@@ -79,7 +82,7 @@ const TwitterIntent = ({
 
   const { onSubmit } = useSubmitWithSign(completeAction, {
     onSuccess: () => {
-      mutateAccess()
+      triggerMembershipUpdate()
       setHasClicked(false)
     },
   })

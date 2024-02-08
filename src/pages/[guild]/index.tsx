@@ -20,11 +20,8 @@ import {
   EditGuildDrawerProvider,
   useEditGuildDrawer,
 } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import JoinButton from "components/[guild]/JoinButton"
 import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
@@ -43,6 +40,7 @@ import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
+import useMembership from "components/explorer/hooks/useMembership"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useAtom } from "jotai"
@@ -105,7 +103,6 @@ const GuildPage = (): JSX.Element => {
     featureFlags,
     isDetailed,
   } = useGuild()
-  useAutoStatusUpdate()
 
   const roles = allRoles.filter((role) => !role.groupId)
 
@@ -151,8 +148,7 @@ const GuildPage = (): JSX.Element => {
   const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-  const { hasAccess } = useAccess()
+  const { isMember } = useMembership()
   const { onOpen } = useEditGuildDrawer()
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
@@ -254,7 +250,7 @@ const GuildPage = (): JSX.Element => {
             rightElement={
               <HStack>
                 {isMember && !isAdmin && <DynamicResendRewardButton />}
-                {!isMember && (isAdmin ? hasAccess : true) ? (
+                {!isMember ? (
                   <JoinButton />
                 ) : !isAdmin ? (
                   <LeaveButton />

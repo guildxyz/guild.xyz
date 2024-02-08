@@ -15,11 +15,10 @@ import {
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { Robot } from "phosphor-react"
 import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -29,15 +28,12 @@ import useVerifyCaptcha from "../hooks/useVerifyCaptcha"
 const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const { id, roleId } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
-  const { id: userId } = useUser()
 
-  const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
+  const { reqAccesses } = useRoleMembership(roleId)
 
-  const hasAccess = roleAccess?.requirements?.find(
-    (req) => req.requirementId === id
-  )?.access
+  const hasAccess = reqAccesses?.find((req) => req.requirementId === id)?.access
 
-  if (!userId || hasAccess) return null
+  if (!reqAccesses || hasAccess) return null
 
   return (
     <>

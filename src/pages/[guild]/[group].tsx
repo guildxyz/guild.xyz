@@ -2,11 +2,8 @@ import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/r
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
@@ -19,6 +16,7 @@ import Layout from "components/common/Layout"
 import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import useMembership from "components/explorer/hooks/useMembership"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -56,8 +54,6 @@ const GroupPage = (): JSX.Element => {
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
   } = useGuild()
-
-  useAutoStatusUpdate()
 
   const group = useRoleGroup()
   const groupRoles = roles?.filter((role) => role.groupId === group.id)
@@ -104,8 +100,7 @@ const GroupPage = (): JSX.Element => {
   const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-  const { hasAccess } = useAccess()
+  const { isMember } = useMembership()
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
@@ -160,7 +155,7 @@ const GroupPage = (): JSX.Element => {
         <Flex justifyContent="end" mb={3}>
           <HStack>
             {isMember && !isAdmin && <DynamicResendRewardButton />}
-            {!isMember && (isAdmin ? hasAccess : true) ? (
+            {!isMember ? (
               <JoinButton />
             ) : !isAdmin ? (
               <LeaveButton />
