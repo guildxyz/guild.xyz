@@ -74,7 +74,7 @@ const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "POLYGON",
   "POLYGON_MUMBAI",
   "MANTLE",
-  "ZKSYNC_ERA"
+  "ZKSYNC_ERA",
 ] as const
 
 export type ContractCallSupportedChain =
