@@ -22,7 +22,6 @@ const SatisfyRequirementsJoinStep = ({
       case "FINISHED":
         return "DONE"
 
-      case "INITIAL":
       case "PREPARING":
       case "CHECKING":
         return "LOADING"

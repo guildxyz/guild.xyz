@@ -1,9 +1,10 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
@@ -15,12 +16,13 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const { type, roleId, id } = useRequirementContext()
   const platform = REQUIREMENTS[type].types[0] as PlatformName
 
-  const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
+  const { reqAccesses } = useRoleMembership(roleId)
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const toast = useToast()
 
-  const isReconnection = roleAccess?.errors?.some(
-    (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
+  const isReconnection = reqAccesses?.some(
+    (req) => req.requirementId === id && req.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
   const platformFromDb = platformUsers?.some(
@@ -35,7 +37,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
     return null
 
   const onSuccess = () => {
-    mutateAccesses()
+    triggerMembershipUpdate()
     toast({
       title: `Successfully connected ${platforms[platform].name}`,
       description: `Your access is being re-checked...`,

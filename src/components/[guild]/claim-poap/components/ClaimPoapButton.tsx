@@ -13,12 +13,12 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useAccount } from "wagmi"
@@ -36,21 +36,22 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
   const roleId = roles?.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
-  const { isLoading: isAccessLoading, hasAccess } = useAccess(roleId)
+  const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
   // TODO: we'll be able to fetch this from our API once PR#1011 is merged
   const alreadyClaimed = false
 
   const {
     onSubmit,
+    isPreparing,
     isLoading: isClaimLoading,
     error,
     response,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatformId)
 
-  const isLoading = isAccessLoading || isClaimLoading
-  const isDisabled = !hasAccess || !!alreadyClaimed
+  const isLoading = isAccessLoading || isPreparing || isClaimLoading
+  const isDisabled = !hasRoleAccess || !!alreadyClaimed
 
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
 
@@ -60,7 +61,9 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         size="lg"
         w="full"
         isLoading={isLoading}
-        loadingText={isAccessLoading ? "Checking access" : "Claiming POAP"}
+        loadingText={
+          isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
+        }
         colorScheme={!isDisabled ? "green" : "gray"}
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
@@ -74,7 +77,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
       >
         {alreadyClaimed
           ? "Already claimed"
-          : !hasAccess
+          : !hasRoleAccess
           ? "Satisfy requirements"
           : "Claim now"}
       </Button>

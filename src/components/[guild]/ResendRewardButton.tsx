@@ -1,18 +1,25 @@
-import { IconButton, Tooltip } from "@chakra-ui/react"
+import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useLocalStorage from "hooks/useLocalStorage"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useState } from "react"
-import useGuild from "./hooks/useGuild"
-import useJoin from "./JoinModal/hooks/useJoin"
+import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
 import { useIsTabsStuck } from "./Tabs/Tabs"
 import { useThemeContext } from "./ThemeContext"
+import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
 
-const ResendRewardButton = (): JSX.Element => {
+type Props = {
+  tooltipLabel?: string
+} & ButtonProps
+
+const ResendRewardButton = ({
+  tooltipLabel = "Re-check accesses & send rewards",
+  ...rest
+}: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
   const toast = useToast()
@@ -27,7 +34,7 @@ const ResendRewardButton = (): JSX.Element => {
   const [dateNow, setDateNow] = useState(Date.now())
   const canResend = dateNow - latestResendDate > TIMEOUT
 
-  const { onSubmit, isLoading, response } = useJoin(
+  const { triggerMembershipUpdate, isLoading, isFinished } = useMembershipUpdate(
     () => {
       toast({
         status: "success",
@@ -46,8 +53,7 @@ const ResendRewardButton = (): JSX.Element => {
             }
           : errorMsg
       )
-    },
-    false
+    }
   )
 
   useEffect(() => {
@@ -56,7 +62,7 @@ const ResendRewardButton = (): JSX.Element => {
   }, [])
 
   const onClick = () => {
-    onSubmit({ guildId: id })
+    triggerMembershipUpdate()
     captureEvent("Click: ResendRewardButton", {
       guild: urlName,
     })
@@ -68,12 +74,12 @@ const ResendRewardButton = (): JSX.Element => {
   return (
     <Tooltip
       label={
-        response
+        isFinished
           ? "Successfully sent rewards"
           : isLoading
           ? "Sending rewards..."
           : canResend
-          ? "Re-check accesses & send rewards"
+          ? tooltipLabel
           : "You can use this function once per minute"
       }
       sx={{
@@ -97,17 +103,18 @@ const ResendRewardButton = (): JSX.Element => {
     >
       <IconButton
         aria-label="Re-check accesses & send rewards"
-        icon={response ? <Check /> : <ArrowsClockwise />}
+        icon={isFinished ? <Check /> : <ArrowsClockwise />}
         minW="44px"
         variant="ghost"
         rounded="full"
-        onClick={!response && canResend ? onClick : undefined}
+        onClick={!isFinished && canResend ? onClick : undefined}
         animation={isLoading ? "rotate 1s infinite linear" : undefined}
-        isDisabled={isLoading || !!response || !canResend}
+        isDisabled={isLoading || !!isFinished || !canResend}
         {...(!isStuck && {
           color: textColor,
           colorScheme: buttonColorScheme,
         })}
+        {...rest}
       />
     </Tooltip>
   )
