@@ -51,7 +51,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
   } = useClaimText(rolePlatformId)
 
   const isLoading = isAccessLoading || isPreparing || isClaimLoading
-  const isDisabled = !hasRoleAccess || !!alreadyClaimed
+  const isDisabled = !!alreadyClaimed
 
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
 
@@ -78,7 +78,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         {alreadyClaimed
           ? "Already claimed"
           : !hasRoleAccess
-          ? "Satisfy requirements"
+          ? "Check access & claim"
           : "Claim now"}
       </Button>
 
