@@ -4,6 +4,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
 import { useUserRewards } from "hooks/useUserRewards"
+import useUsersPoints from "platforms/Points/useUsersPoints"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -20,6 +21,7 @@ const useMembershipUpdate = (
   const guild = useGuild()
   const { mutate: mutateMembership } = useMembership()
   const { mutate: mutateUserRewards } = useUserRewards()
+  const { mutate: mutateUserPoints } = useUsersPoints()
   const fetcherWithSign = useFetcherWithSign()
   const [pollState, setPollState] = useState<"INITIAL" | "POLL" | "FINISHED">(
     "INITIAL"
@@ -61,10 +63,11 @@ const useMembershipUpdate = (
   const onFinish = (response: JoinJob) => {
     if (!response.roleAccesses?.some((role) => role.access === true)) return
 
-    // Mutate guild in case the user sees more entities due to visibilities
+    // mutate guild in case the user sees more entities due to visibilities
     guild.mutateGuild()
 
     mutateUserRewards()
+    mutateUserPoints()
 
     onSuccess?.(response)
 
