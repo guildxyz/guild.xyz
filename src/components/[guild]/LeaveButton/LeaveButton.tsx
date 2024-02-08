@@ -37,7 +37,7 @@ const LeaveButton = ({ disableColoring = false }) => {
 
   return (
     <>
-      <Tooltip label="Leave guild">
+      <Tooltip label="Leave guild" hasArrow>
         <IconButton
           aria-label="Leave guild"
           icon={<SignOut />}

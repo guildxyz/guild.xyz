@@ -1,10 +1,12 @@
 import {
+  ButtonGroup,
   Icon,
   PopoverBody,
   PopoverFooter,
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
+import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
@@ -111,9 +113,7 @@ const RequiementAccessIndicator = () => {
       isAlwaysOpen={!hasRoleAccess}
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
-        {`Requirement not satisfied with your connected ${
-          reqObj?.isPlatform ? "account" : "addresses"
-        }`}
+        {`Requirement not satisfied with your connected accounts`}
       </PopoverHeader>
       {reqAccessData?.amount !== null && !!data?.minAmount && (
         <PopoverBody pt="0">
@@ -129,13 +129,16 @@ const RequiementAccessIndicator = () => {
         </PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-        <Button
-          size="sm"
-          rightIcon={<Icon as={ArrowSquareIn} />}
-          onClick={openAccountModal}
-        >
-          {`View connected ${reqObj?.isPlatform ? "account" : "addresses"}`}
-        </Button>
+        <ButtonGroup size="sm">
+          <Button
+            rightIcon={<Icon as={ArrowSquareIn} />}
+            onClick={openAccountModal}
+            variant="outline"
+          >
+            {`View connections`}
+          </Button>
+          <RecheckAccessesButton />
+        </ButtonGroup>
       </PopoverFooter>
     </RequiementAccessIndicatorUI>
   )

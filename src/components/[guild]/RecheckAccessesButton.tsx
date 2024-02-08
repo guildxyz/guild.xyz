@@ -1,4 +1,4 @@
-import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
+import { ButtonProps, Icon, IconButton, Tooltip } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useLocalStorage from "hooks/useLocalStorage"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -16,8 +16,8 @@ type Props = {
   tooltipLabel?: string
 } & ButtonProps
 
-const ResendRewardButton = ({
-  tooltipLabel = "Re-check accesses & send rewards",
+const RecheckAccessesButton = ({
+  tooltipLabel = "Re-check accesses",
   ...rest
 }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
@@ -25,7 +25,7 @@ const ResendRewardButton = ({
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const { id, urlName } = useGuild()
+  const { urlName } = useGuild()
 
   const [latestResendDate, setLatestResendDate] = useLocalStorage(
     "latestResendDate",
@@ -38,12 +38,12 @@ const ResendRewardButton = ({
     () => {
       toast({
         status: "success",
-        title: "Successfully sent rewards",
+        title: "Successfully updated accesses",
       })
       setLatestResendDate(Date.now())
     },
     (error) => {
-      const errorMsg = "Couldn't re-send rewards"
+      const errorMsg = "Couldn't update accesses"
       const correlationId = error.correlationId
       showErrorToast(
         correlationId
@@ -68,16 +68,13 @@ const ResendRewardButton = ({
     })
   }
 
-  const { isStuck } = useIsTabsStuck()
-  const { textColor, buttonColorScheme } = useThemeContext()
-
   return (
     <Tooltip
       label={
         isFinished
-          ? "Successfully sent rewards"
+          ? "Successfully updated accesses"
           : isLoading
-          ? "Sending rewards..."
+          ? "Checking accesses..."
           : canResend
           ? tooltipLabel
           : "You can use this function once per minute"
@@ -100,24 +97,45 @@ const ResendRewardButton = ({
           },
         },
       }}
+      hasArrow
     >
       <IconButton
-        aria-label="Re-check accesses & send rewards"
-        icon={isFinished ? <Check /> : <ArrowsClockwise />}
-        minW="44px"
-        variant="ghost"
-        rounded="full"
+        aria-label="Re-check accesses"
+        icon={
+          isFinished ? (
+            <Check />
+          ) : (
+            <Icon
+              as={ArrowsClockwise}
+              animation={isLoading ? "rotate 1s infinite linear" : undefined}
+            />
+          )
+        }
         onClick={!isFinished && canResend ? onClick : undefined}
-        animation={isLoading ? "rotate 1s infinite linear" : undefined}
         isDisabled={isLoading || !!isFinished || !canResend}
-        {...(!isStuck && {
-          color: textColor,
-          colorScheme: buttonColorScheme,
-        })}
         {...rest}
       />
     </Tooltip>
   )
 }
 
-export default ResendRewardButton
+const TopRecheckAccessesButton = () => {
+  const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext()
+
+  return (
+    <RecheckAccessesButton
+      minW="44px"
+      variant="ghost"
+      rounded="full"
+      tooltipLabel="Re-check accesses & send rewards"
+      {...(!isStuck && {
+        color: textColor,
+        colorScheme: buttonColorScheme,
+      })}
+    />
+  )
+}
+
+export default RecheckAccessesButton
+export { TopRecheckAccessesButton }

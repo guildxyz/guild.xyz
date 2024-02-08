@@ -39,8 +39,10 @@ const DynamicAddAndOrderRoles = dynamic(
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
 )
-const DynamicResendRewardButton = dynamic(
-  () => import("components/[guild]/ResendRewardButton")
+const DynamicRecheckAccessesButton = dynamic(() =>
+  import("components/[guild]/RecheckAccessesButton").then(
+    (module) => module.TopRecheckAccessesButton
+  )
 )
 const DynamicAddRoleCard = dynamic(
   () => import("components/[guild]/[group]/AddRoleCard")
@@ -154,7 +156,7 @@ const GroupPage = (): JSX.Element => {
       >
         <Flex justifyContent="end" mb={3}>
           <HStack>
-            {isMember && !isAdmin && <DynamicResendRewardButton />}
+            {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
             {!isMember ? (
               <JoinButton />
             ) : !isAdmin ? (
