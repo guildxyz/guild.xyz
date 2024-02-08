@@ -22,7 +22,7 @@ import TwitterUserLink from "./components/TwitterUserLink"
 const requirementIntentAction: Record<string, TwitterIntentAction> = {
   TWITTER_FOLLOW_V2: "follow",
   TWITTER_LIKE_V2: "like",
-  TWITTER_RETWEET_V2: "repost",
+  TWITTER_RETWEET_V2: "retweet",
 }
 
 // https://help.twitter.com/en/managing-your-account/twitter-username-rules
@@ -169,7 +169,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 {"Repost "}
-                <TwitterIntent type="link" action="repost">
+                <TwitterIntent type="link" action="retweet">
                   this post
                   <Icon as={ArrowSquareOut} mx="1" />
                 </TwitterIntent>

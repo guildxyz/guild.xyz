@@ -11,7 +11,7 @@ import useSWR from "swr"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
-export type TwitterIntentAction = "follow" | "like" | "repost"
+export type TwitterIntentAction = "follow" | "like" | "retweet"
 
 type Props = {
   type?: "button" | "link"
@@ -21,7 +21,7 @@ type Props = {
 const label: Record<TwitterIntentAction, string> = {
   follow: "Follow",
   like: "Like post",
-  repost: "Repost",
+  retweet: "Repost",
 }
 
 const buttonIcon: Record<
@@ -30,12 +30,12 @@ const buttonIcon: Record<
 > = {
   follow: UserPlus,
   like: Heart,
-  repost: Share,
+  retweet: Share,
 }
 
 const intentQueryParam: Record<TwitterIntentAction, string> = {
   like: "tweet_id",
-  repost: "tweet_id",
+  retweet: "tweet_id",
   follow: "screen_name",
 }
 
