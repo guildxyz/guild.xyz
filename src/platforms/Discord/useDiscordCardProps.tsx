@@ -1,21 +1,16 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useServerData from "hooks/useServerData"
 import { useAtom } from "jotai"
 import { Info } from "phosphor-react"
-import { useMemo } from "react"
 import { GuildPlatform, PlatformName } from "types"
-import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
-  const { urlName } = useGuild()
-  const rolePlatform = useRolePlatform()
-  const { data } = useServerData(guildPlatform.platformGuildId, {
-    swrOptions: {
-      revalidateOnFocus: false,
-    },
-  })
+  // const rolePlatform = useRolePlatform()
+  // const { data } = useServerData(guildPlatform.platformGuildId, {
+  //   swrOptions: {
+  //     revalidateOnFocus: false,
+  //   },
+  // })
 
   /**
    * Temporary to show "You might need to wait a few minutes to get your roles" on
@@ -23,20 +18,23 @@ const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
    */
   const [isAfterJoin] = useAtom(isAfterJoinAtom)
 
-  const roleName = useMemo(() => {
-    if (!rolePlatform) return null
-    if (!rolePlatform.platformRoleId) return "Create a new Discord role"
-    const discordRole = data?.roles?.find(
-      (role) => role.id === rolePlatform.platformRoleId
-    )
-    if (!discordRole) return "Deleted role"
-    return `${discordRole.name} role`
-  }, [rolePlatform, data])
+  const roleName = undefined
+  // const roleName = useMemo(() => {
+  //   if (!rolePlatform) return null
+  //   if (!rolePlatform.platformRoleId) return "Create a new Discord role"
+  //   const discordRole = data?.roles?.find(
+  //     (role) => role.id === rolePlatform.platformRoleId
+  //   )
+  //   if (!discordRole) return "Deleted role"
+  //   return `${discordRole.name} role`
+  // }, [rolePlatform, data])
 
   return {
     type: "DISCORD" as PlatformName,
-    image: data?.serverIcon || "/default_discord_icon.png",
-    name: data?.serverName || "",
+    // image: data?.serverIcon || "/default_discord_icon.png",
+    // name: data?.serverName || "",
+    image: "/default_discord_icon.png",
+    name: guildPlatform.platformGuildName,
     info:
       roleName ??
       (isAfterJoin && (

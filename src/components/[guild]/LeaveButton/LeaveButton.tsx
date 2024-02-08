@@ -11,11 +11,11 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
+import useMembership from "components/explorer/hooks/useMembership"
 import { SignOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
-import useIsMember from "../hooks/useIsMember"
 import useLeaveGuild from "./hooks/useLeaveGuild"
 
 const LeaveButton = ({ disableColoring = false }) => {
@@ -23,7 +23,7 @@ const LeaveButton = ({ disableColoring = false }) => {
   const cancelRef = useRef()
 
   const { id: guildId } = useGuild()
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const { onSubmit, isLoading, response } = useLeaveGuild()
 
   useEffect(() => {

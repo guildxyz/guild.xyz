@@ -5,20 +5,24 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailabilityTags, {
-  getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
-import useAccess from "components/[guild]/hooks/useAccess"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import useClaimText, {
   ClaimTextModal,
 } from "platforms/SecretText/hooks/useClaimText"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
 
@@ -29,6 +33,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const {
     onSubmit,
+    isPreparing,
     isLoading,
     error,
     response,
@@ -39,36 +44,25 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
-  const isMember = useIsMember()
-  const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
+  const { isMember } = useMembership()
+  const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
+    role.id
+  )
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
   const state = useMemo(() => {
-    if (isMember && hasAccess) {
-      const startTimeDiff = getTimeDiff(platform?.startTime)
-      const endTimeDiff = getTimeDiff(platform?.endTime)
-
-      if (
-        (startTimeDiff > 0 ||
-          endTimeDiff < 0 ||
-          (typeof platform?.capacity === "number" &&
-            platform?.capacity === platform?.claimedCount)) &&
-        !claimed
-      )
+    if (isMember && hasRoleAccess) {
+      if (!getRolePlatformTimeframeInfo(platform).isAvailable && !claimed) {
         return {
-          tooltipLabel:
-            platform?.capacity === platform?.claimedCount
-              ? "All available rewards have already been claimed"
-              : startTimeDiff > 0
-              ? "Claim hasn't started yet"
-              : "Claim already ended",
+          tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
           buttonProps: {
             isDisabled: true,
           },
         }
+      }
 
       return {
         tooltipLabel: label,
@@ -76,7 +70,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasRoleAccess))
       return {
         tooltipLabel: (
           <>
@@ -90,13 +84,13 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [claimed, isMember, hasAccess, isConnected, platform])
+  }, [claimed, isMember, hasRoleAccess, isConnected, platform])
 
   return (
     <>
       <RewardDisplay
         icon={
-          isLoading ? (
+          isLoading || isPreparing ? (
             <Spinner boxSize={6} />
           ) : (
             <RewardIcon
@@ -115,7 +109,11 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
               <Button
                 variant="link"
                 rightIcon={
-                  isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isAccessValidating || isPreparing ? (
+                    <Spinner boxSize="1em" />
+                  ) : (
+                    <ArrowSquareOut />
+                  )
                 }
                 iconSpacing="1"
                 maxW="full"

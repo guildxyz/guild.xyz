@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useMemberships from "components/explorer/hooks/useMemberships"
+import useMembership from "components/explorer/hooks/useMembership"
 import { PlatformType } from "types"
 
 type GuildPointsAccessFilter = "ALL" | "ACCESSED_ONLY"
@@ -21,12 +21,8 @@ export const useAccessedGuildPoints = (
   filter: GuildPointsAccessFilter = "ACCESSED_ONLY"
 ) => {
   const { id: guildId, guildPlatforms, roles } = useGuild()
-  const { memberships } = useMemberships()
+  const { roleIds } = useMembership()
   const { isAdmin } = useGuildPermission()
-
-  const accessedRoleIds = memberships?.find(
-    (membership) => membership.guildId === guildId
-  )?.roleIds
 
   const accessedGuildPoints =
     guildPlatforms?.filter((gp) => {
@@ -39,9 +35,9 @@ export const useAccessedGuildPoints = (
         ?.filter((rp) =>
           filter === "ALL"
             ? rp.visibility === "PRIVATE"
-              ? accessedRoleIds?.includes(rp.roleId)
+              ? roleIds?.includes(rp.roleId)
               : true
-            : accessedRoleIds?.includes(rp.roleId)
+            : roleIds?.includes(rp.roleId)
         )
         ?.some((rp) => rp.visibility != "HIDDEN")
       return isVisibleOnAccessedRole

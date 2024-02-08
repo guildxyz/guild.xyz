@@ -1,19 +1,15 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
-
-type Data = {
-  removePlatformAccess?: boolean
-}
 
 const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
   const { mutateGuild, id } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (signedValidation: SignedValdation) =>
+  const submit = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${id}/roles/${roleId}`, {
       method: "DELETE",
       ...signedValidation,

@@ -44,7 +44,7 @@ const Leaderboard = () => {
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
 
-  const { isLoading, data, error } = useSWRWithOptionalAuth(
+  const { data, error } = useSWRWithOptionalAuth(
     guildId
       ? `/v2/guilds/${guildId}/points/${router.query.pointsId}/leaderboard`
       : null,

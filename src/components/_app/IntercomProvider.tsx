@@ -1,5 +1,4 @@
 import useUser from "components/[guild]/hooks/useUser"
-import useMemberships from "components/explorer/hooks/useMemberships"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -59,8 +58,6 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
   const { connectorName } = useConnectorNameAndIcon()
   const user = useUser()
 
-  const { memberships } = useMemberships()
-
   useEffect(() => {
     if (!isWeb3Connected) return
 
@@ -73,23 +70,17 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       managedGuilds: null,
     })
 
-    if (!user || !memberships) return
+    if (!user) return
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
       .join(", ")
 
-    const managedGuilds = memberships
-      .filter((ms) => ms.isAdmin)
-      .map((ms) => ms.guildId)
-      .join(", ")
-
     addIntercomSettings({
       userId: user.id,
       connectedPlatforms,
-      managedGuilds,
     })
-  }, [address, isWeb3Connected, user, memberships])
+  }, [address, isWeb3Connected, user])
 
   return (
     <IntercomContext.Provider

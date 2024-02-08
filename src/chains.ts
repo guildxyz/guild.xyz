@@ -11,6 +11,7 @@ import {
   pgn,
   scrollAlpha,
   shimmer,
+  taikoKatlaTestnet,
   x1Testnet,
 } from "static/customChains"
 import { Chain as ViemChain } from "viem"
@@ -31,6 +32,7 @@ import {
   harmonyOne,
   linea,
   mainnet,
+  manta,
   mantle,
   metis,
   moonbeam,
@@ -489,6 +491,24 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/berachain.png",
     },
   },
+  MANTA: {
+    ...manta,
+    iconUrl: "/networkLogos/manta.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/manta.png",
+      dark: "/networkLogos/manta.png",
+    },
+  },
+  TAIKO_KATLA: {
+    ...taikoKatlaTestnet,
+    iconUrl: "/networkLogos/taiko-katla.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/taiko-katla.svg",
+      dark: "/networkLogos/taiko-katla.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -536,6 +556,8 @@ enum Chains {
   X1_TESTNET = x1Testnet.id,
   ONTOLOGY = ontology.id,
   BERA_TESTNET = beraTestnet.id,
+  MANTA = manta.id,
+  TAIKO_KATLA = taikoKatlaTestnet.id,
 }
 
 export type Chain = keyof typeof Chains

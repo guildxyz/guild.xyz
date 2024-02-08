@@ -4,9 +4,9 @@ import {
   IconProps,
   MediumLogo,
   SpotifyLogo,
-  TwitterLogo,
   YoutubeLogo,
 } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import MirrorLogo from "static/socialIcons/mirror.svg"
 import SubstackLogo from "static/socialIcons/substack.svg"
@@ -23,7 +23,7 @@ const icons: Record<
   SocialLinkKey,
   ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>> | string
 > = {
-  TWITTER: TwitterLogo,
+  TWITTER: XLogo,
   LENS: "/requirementLogos/lens.png",
   YOUTUBE: YoutubeLogo,
   SPOTIFY: SpotifyLogo,

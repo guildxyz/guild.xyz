@@ -54,10 +54,12 @@ const AvailabilityTags = ({
 
 const CapacityTag = ({
   capacity,
-  claimedCount,
+  claimedCount = 0,
   ...rest
 }: { capacity: number; claimedCount?: number } & TagProps) => {
   const [showClaimed, setShowClaimed] = useState(false)
+
+  const available = capacity - claimedCount < 0 ? 0 : capacity - claimedCount
 
   return (
     <Tooltip label={showClaimed ? "Show available" : "Show claimed"} hasArrow>
@@ -67,8 +69,8 @@ const CapacityTag = ({
         {...rest}
       >
         {showClaimed
-          ? `${claimedCount ?? 0} / ${capacity} claimed`
-          : `${capacity - (claimedCount ?? 0)} / ${capacity} available`}
+          ? `${claimedCount} / ${capacity} claimed`
+          : `${available} / ${capacity} available`}
       </Tag>
     </Tooltip>
   )

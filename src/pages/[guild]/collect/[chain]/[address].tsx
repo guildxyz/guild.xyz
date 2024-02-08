@@ -35,6 +35,7 @@ import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 import {
+  alchemyApiUrl,
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
@@ -65,7 +66,7 @@ const Page = ({
   const chain = chainFromProps ?? validateNftChain(chainFromQuery)
   const address = addressFromProps ?? validateNftAddress(addressFromQuery)
 
-  const { theme, urlName, roles, guildPlatforms, isFallback } = useGuild()
+  const { theme, urlName, roles, guildPlatforms } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const guildPlatform = guildPlatforms?.find(
@@ -90,7 +91,8 @@ const Page = ({
 
   const { captureEvent } = usePostHogContext()
 
-  if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
+  // We probably shouldn't display a 404 here?
+  // if (isDetailed && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
     <ErrorBoundary
@@ -174,8 +176,12 @@ const Page = ({
                   <Links />
                   <Divider />
                   <Details />
-                  <Divider />
-                  <TopCollectors />
+                  {!!alchemyApiUrl[chain] && (
+                    <>
+                      <Divider />
+                      <TopCollectors />
+                    </>
+                  )}
                 </Stack>
 
                 {!isMobile && (

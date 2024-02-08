@@ -24,7 +24,7 @@ import { useConnectEmail } from "components/[guild]/JoinModal/hooks/useConnectPl
 import Button from "components/common/Button"
 import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
 import platforms from "platforms/platforms"
@@ -82,7 +82,7 @@ const ConnectEmailButton = ({
   const [emailSentAt, setEmailSentAt] = useState<number>(null)
 
   const submitVerificationRequest = (
-    signedPayload: SignedValdation
+    signedPayload: SignedValidation
   ): Promise<{ remainingAttempts: number; success: boolean }> =>
     fetcher(`/v2/users/${userId}/emails`, signedPayload).then((data) => {
       setEmailSentAt(Date.now())

@@ -43,7 +43,7 @@ import { Requirement, Visibility } from "types"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-const GENERAL_REQUIREMENTS_COUNT = 9
+const GENERAL_REQUIREMENTS_COUNT = 11
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
@@ -51,7 +51,7 @@ const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload?.())
 
 const TRANSITION_DURATION_MS = 200
-const HOME_MAXHEIGHT = "550px"
+const HOME_MAX_HEIGHT = "550px"
 
 type AddRequirementProps = { onAdd: (req: Requirement) => void }
 
@@ -92,7 +92,7 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
       // 10ms setTimeout to ensure these happen after the setHeight above has completed
       setTimeout(() => {
         if (homeRef.current) homeRef.current.style.height = "auto"
-        setHeight(HOME_MAXHEIGHT)
+        setHeight(HOME_MAX_HEIGHT)
       }, 10)
     }
   }, [selectedType, homeRef, formRef])
@@ -249,8 +249,8 @@ const AddRequirementHome = forwardRef(
     return (
       <ModalBody
         ref={ref}
-        minHeight={!debouncedSelectedValue ? HOME_MAXHEIGHT : undefined}
-        maxHeight={HOME_MAXHEIGHT}
+        minHeight={!debouncedSelectedValue ? HOME_MAX_HEIGHT : undefined}
+        maxHeight={HOME_MAX_HEIGHT}
         className="custom-scrollbar"
       >
         <Heading size="sm" mb="3">
@@ -284,7 +284,7 @@ const AddRequirementHome = forwardRef(
                 filteredIntegrations.map((requirementButton) => (
                   <CardMotionWrapper key={requirementButton.types[0]}>
                     <Tooltip
-                      isDisabled={!(requirementButton as any).disabled}
+                      isDisabled={!(requirementButton as any).isDisabled}
                       label="Temporarily unavailable"
                       hasArrow
                     >
@@ -302,7 +302,7 @@ const AddRequirementHome = forwardRef(
                         rightIcon={<Icon as={CaretRight} />}
                         iconSpacing={4}
                         onClick={() => setSelectedType(requirementButton.types[0])}
-                        isDisabled={(requirementButton as any).disabled}
+                        isDisabled={(requirementButton as any).isDisabled}
                         sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
                       >
                         {requirementButton.name}

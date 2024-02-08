@@ -29,16 +29,13 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType, Visibility } from "types"
+import { Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
-  const { id, urlName, guildPlatforms } = useGuild()
-  const discordPlatform = guildPlatforms?.find(
-    (p) => p.platformId === PlatformType.DISCORD
-  )
+  const { id, urlName } = useGuild()
 
   const toastWithTweetButton = useToastWithTweetButton()
 

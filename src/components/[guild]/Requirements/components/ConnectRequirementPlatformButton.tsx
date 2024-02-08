@@ -1,42 +1,28 @@
 import { ButtonProps, Icon } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
 import REQUIREMENTS from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
-export const TWITTER_V1_REQUIREMENTS = new Set<string>([
-  "TWITTER_FOLLOW",
-  "TWITTER_FOLLOWED_BY",
-  "TWITTER_LIST_FOLLOW",
-])
-
-const mapTwitterV1 = (
-  requirementType: string,
-  platformName: PlatformName
-): PlatformName => {
-  if (TWITTER_V1_REQUIREMENTS.has(requirementType)) {
-    return "TWITTER_V1"
-  }
-  return platformName
-}
-
 const RequirementConnectButton = (props: ButtonProps) => {
   const { platformUsers, emails } = useUser()
   const { type, roleId, id } = useRequirementContext()
-  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = REQUIREMENTS[type].types[0] as PlatformName
 
-  const { mutate: mutateAccesses, data: roleAccess } = useAccess(roleId ?? 0)
+  const { reqAccesses } = useRoleMembership(roleId)
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const toast = useToast()
 
-  const isReconnection = roleAccess?.errors?.some(
-    (err) => err.requirementId === id && err.errorType === "PLATFORM_CONNECT_INVALID"
+  const isReconnection = reqAccesses?.some(
+    (req) => req.requirementId === id && req.errorType === "PLATFORM_CONNECT_INVALID"
   )
 
   const platformFromDb = platformUsers?.some(
@@ -51,7 +37,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
     return null
 
   const onSuccess = () => {
-    mutateAccesses()
+    triggerMembershipUpdate()
     toast({
       title: `Successfully connected ${platforms[platform].name}`,
       description: `Your access is being re-checked...`,
@@ -82,7 +68,7 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
   const { type } = useRequirementContext()
 
-  const platform = mapTwitterV1(type, REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = REQUIREMENTS[type].types[0] as PlatformName
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
@@ -98,7 +84,9 @@ const ConnectRequirementPlatformButton = ({
       colorScheme={platforms[platform]?.colorScheme}
       {...props}
     >
-      {`${isReconnection ? "Reconnect" : "Connect"} ${platforms[platform]?.name}`}
+      {`${isReconnection ? "Reconnect" : "Connect"} ${
+        platforms[platform]?.name === "X" ? "" : platforms[platform]?.name
+      }`}
     </Button>
   )
 }

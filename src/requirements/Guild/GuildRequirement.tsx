@@ -11,6 +11,7 @@ import { Detective } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { Group } from "types"
 import pluralize from "utils/pluralize"
+import formatRelativeTimeFromNow from "../../utils/formatRelativeTimeFromNow"
 
 const HaveRole = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
@@ -32,6 +33,18 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
   const { data: group, isLoading: isGroupLoading } = useSWRImmutable<Group>(
     groupId ? `/v2/guilds/${id}/groups/${groupId}` : null
   )
+  const maxAmount = new Date(requirement.data.maxAmount)
+  const filterLabel =
+    requirement.type === "GUILD_ROLE_RELATIVE"
+      ? ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
+      : requirement.data.maxAmount &&
+        ` since ${maxAmount.toLocaleDateString("en-US", {
+          ...(maxAmount.getFullYear() !== new Date().getFullYear() && {
+            year: "numeric",
+          }),
+          month: "short",
+          day: "numeric",
+        })}`
 
   return (
     <Requirement
@@ -75,6 +88,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
               {id !== requirement.data.guildId &&
                 ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
             </Link>
+            {filterLabel}
           </Skeleton>
         </>
       )}
@@ -137,6 +151,7 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
 
 const types = {
   GUILD_ROLE: HaveRole,
+  GUILD_ROLE_RELATIVE: HaveRole,
   GUILD_ADMIN: Admin,
   GUILD_MINGUILDS: MinGuilds,
   GUILD_USER_SINCE: UserSince,
