@@ -37,7 +37,7 @@ const useUser = (
   }
 }
 
-type PublicUser = {
+export type PublicUser = {
   id: number
   publicKey?: string
   captchaVerifiedSince?: string
