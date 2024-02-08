@@ -28,7 +28,7 @@ const DynamicGuildPinRewardCard = dynamic(
 )
 
 export const useAccessedGuildPlatforms = (groupId?: number) => {
-  const { id, guildPlatforms, roles } = useGuild()
+  const { guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { roleIds } = useMembership()
 
@@ -114,7 +114,7 @@ const AccessHub = (): JSX.Element => {
           {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
 
-          {accessedGuildPlatforms.map((platform) => {
+          {accessedGuildPlatforms?.map((platform) => {
             if (!platforms[PlatformType[platform.platformId]]) return null
 
             const {
