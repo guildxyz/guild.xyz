@@ -25,6 +25,8 @@ type Props = {
   label: string
   isRequired?: boolean
   formHelperText?: string
+  isInvalid?: boolean
+  invalidText?: string
 }
 
 const currentDate = Date.now()
@@ -36,6 +38,8 @@ const BlockNumberFormControl = ({
   label,
   isRequired,
   formHelperText,
+  isInvalid,
+  invalidText,
 }: Props): JSX.Element => {
   const {
     register,
@@ -75,6 +79,7 @@ const BlockNumberFormControl = ({
     register(`${baseFieldPath}.data.${dataFieldName}`, {
       required:
         !!isRequired && !!shouldFetchBlockNumber && "This field is required.",
+      validate: () => (isInvalid ? invalidText : undefined),
     })
   }, [])
 
@@ -89,14 +94,18 @@ const BlockNumberFormControl = ({
   )
 
   useEffect(() => {
-    if (!error) {
+    if (isInvalid) {
+      setError(`${baseFieldPath}.data.${dataFieldName}`, {
+        message: invalidText,
+      })
+    } else if (!error) {
       clearErrors(`${baseFieldPath}.data.${dataFieldName}`)
-      return
+    } else {
+      setError(`${baseFieldPath}.data.${dataFieldName}`, {
+        message: error.message ?? "An unknown error occurred",
+      })
     }
-    setError(`${baseFieldPath}.data.${dataFieldName}`, {
-      message: error.message ?? "An unknown error occurred",
-    })
-  }, [error])
+  }, [error, isInvalid])
 
   useEffect(() => {
     const newValue =
@@ -112,7 +121,9 @@ const BlockNumberFormControl = ({
   return (
     <FormControl
       isRequired={isRequired}
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.[dataFieldName]}
+      isInvalid={
+        !!parseFromObject(errors, baseFieldPath)?.data?.[dataFieldName] || isInvalid
+      }
       isDisabled={isBlockNumberLoading}
     >
       <FormLabel>{label}</FormLabel>
