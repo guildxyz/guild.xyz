@@ -32,9 +32,9 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import dynamic from "next/dynamic"
 import { ArrowRight, ArrowSquareOut } from "phosphor-react"
-import { useRef, useState } from "react"
+import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
-import WebInboxSkeleton from "./WebInboxSkeleton"
+import SubscriptionPrompt from "../MessageSkeleton/SubscriptionPromptSkeleton"
 
 const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 
@@ -42,6 +42,64 @@ const WEB3_INBOX_INIT_PARAMS = {
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   domain: "guild.xyz",
   allApps: process.env.NODE_ENV !== "production",
+}
+
+type Props = PropsWithChildren<{
+  hasSubscription: boolean
+  infoText: string
+  SubscribeButton: ReactNode
+}>
+
+const MessagingRegistration: React.FC<Props> = ({
+  hasSubscription,
+  infoText,
+  children,
+  SubscribeButton,
+}) => {
+  const inboxContainerRef = useRef(null)
+  const isScrollable = !!inboxContainerRef.current
+    ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
+    : false
+
+  return (
+    <Stack spacing={0}>
+      <Collapse in={!hasSubscription}>
+        <HStack pt={4} pb={5} pl={1} spacing={4}>
+          <Center boxSize="6" flexShrink={0}>
+            <Img src="/img/message.svg" boxSize={5} alt="Messages" mt={0.5} />
+          </Center>
+          <Stack spacing={0.5} w="full">
+            <Text as="span" fontWeight="semibold">
+              Subscribe to messages
+            </Text>
+            <Text as="span" fontSize="sm" colorScheme="gray" lineHeight={1.25}>
+              {infoText}
+            </Text>
+          </Stack>
+          {SubscribeButton}
+        </HStack>
+      </Collapse>
+      <Collapse
+        in={hasSubscription}
+        style={{ marginInline: "calc(-1 * var(--chakra-space-4))" }}
+      >
+        <Box
+          ref={inboxContainerRef}
+          maxH="30vh"
+          overflowY="auto"
+          className="custom-scrollbar"
+          pb="4"
+          sx={{
+            WebkitMaskImage:
+              isScrollable &&
+              "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
+          }}
+        >
+          {children}
+        </Box>
+      </Collapse>
+    </Stack>
+  )
 }
 
 const Web3Inbox = () => {
@@ -66,73 +124,38 @@ const Web3Inbox = () => {
     WEB3_INBOX_INIT_PARAMS.domain
   )
 
-  const inboxContainerRef = useRef(null)
-  const isScrollable = !!inboxContainerRef.current
-    ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
-    : false
-
-  if (!isReady) return <WebInboxSkeleton />
+  if (!isReady) return <SubscriptionPrompt />
 
   return (
-    <Stack spacing={0}>
-      <Collapse in={!subscription}>
-        <HStack pt={4} pb={5} pl={1} spacing={4}>
-          <Center boxSize="6" flexShrink={0}>
-            <Img src="/img/message.svg" boxSize={5} alt="Messages" mt={0.5} />
-          </Center>
-          <Stack spacing={0.5} w="full">
-            <Text as="span" fontWeight="semibold">
-              Subscribe to messages
-            </Text>
-            <Text as="span" fontSize="sm" colorScheme="gray" lineHeight={1.25}>
-              Receive messages from guild admins
-            </Text>
-          </Stack>
-
-          <SubscribeToMessages />
-        </HStack>
-      </Collapse>
-
-      <Collapse
-        in={!!subscription}
-        style={{ marginInline: "calc(-1 * var(--chakra-space-4))" }}
+    <>
+      <MessagingRegistration
+        infoText="Receive messages from guild admins via Web3Inbox"
+        SubscribeButton={<SubscribeToMessages />}
+        hasSubscription={!!subscription}
       >
-        <Box
-          ref={inboxContainerRef}
-          maxH="30vh"
-          overflowY="auto"
-          className="custom-scrollbar"
-          pb="4"
-          sx={{
-            WebkitMaskImage:
-              isScrollable &&
-              "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
-          }}
-        >
-          {messages?.length > 0 ? (
-            <Stack pt={2} spacing={0}>
-              {messages
-                .sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
-                .map(({ sentAt, id, title, body, url }) => (
-                  <DynamicWeb3InboxMessage
-                    key={id}
-                    sentAt={sentAt}
-                    title={title}
-                    body={body}
-                    url={url}
-                  />
-                ))}
-            </Stack>
-          ) : (
-            <HStack pt={3} px={4}>
-              <Text colorScheme="gray">
-                Your messages from guilds will appear here
-              </Text>
-            </HStack>
-          )}
-        </Box>
-      </Collapse>
-    </Stack>
+        {messages?.length > 0 ? (
+          <Stack pt={2} spacing={0}>
+            {messages
+              .sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
+              .map(({ sentAt, id, title, body, url }) => (
+                <DynamicWeb3InboxMessage
+                  key={id}
+                  sentAt={sentAt}
+                  title={title}
+                  body={body}
+                  url={url}
+                />
+              ))}
+          </Stack>
+        ) : (
+          <HStack pt={3} px={4}>
+            <Text colorScheme="gray">
+              Your messages from guilds will appear here
+            </Text>
+          </HStack>
+        )}
+      </MessagingRegistration>
+    </>
   )
 }
 
