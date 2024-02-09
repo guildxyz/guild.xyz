@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
@@ -27,19 +28,21 @@ import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
 const ConnectPolygonID = (props: ButtonProps) => {
+  const { id: userId } = useUser()
   const { id, roleId, type, data, chain } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
   const { reqAccesses } = useRoleMembership(roleId)
 
-  const errorType = reqAccesses?.find((err) => err.requirementId === id)?.errorType
+  const reqAccess = reqAccesses?.find((err) => err.requirementId === id)
+  const errorType = reqAccess?.errorType
 
   // close modal (and stop revalidating access) on successful connect
   useEffect(() => {
     if (!errorType) onClose()
   }, [errorType])
 
-  if (!errorType) return null
+  if (!userId || (!!reqAccess && !errorType)) return null
 
   return (
     <>
