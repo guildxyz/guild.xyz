@@ -71,13 +71,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { handleSubmit } = methods
 
   const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
-    if (!platforms[platform] || platform === "POINTS" || platform === "POLYGON_ID")
-      return null
-
     if (platform in customJoinStep) {
       const ConnectComponent = customJoinStep[platform]
       return <ConnectComponent key={platform} />
     }
+
+    if (!platforms[platform] || platform === "POINTS" || platform === "POLYGON_ID")
+      return null
 
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
@@ -88,13 +88,12 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     isLoading,
     onSubmit,
     error: joinError,
-    response,
     joinProgress,
     reset,
   } = useJoin(
     (res) => {
       methods.setValue("platforms", {})
-      if (res.success) onClose()
+      onClose()
     },
     (err) => {
       errorToast(err)
@@ -102,14 +101,25 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     }
   )
 
-  const isInDetailedProgressState =
-    response?.success !== false &&
-    (joinProgress?.state === "MANAGING_ROLES" ||
-      joinProgress?.state === "MANAGING_REWARDS" ||
-      joinProgress?.state === "FINISHED")
+  const onJoin = (data) =>
+    onSubmit({
+      shareSocials: data?.shareSocials,
+      platforms:
+        data &&
+        Object.entries(data.platforms ?? {})
+          .filter(([_, value]) => !!value)
+          .map(([key, value]: any) => ({
+            name: key,
+            ...value,
+          })),
+    })
 
-  // temporary for v1 (for guilds without the queues feature flag)
-  const hasNoAccess = response?.success === false && !isLoading
+  const isInDetailedProgressState =
+    joinProgress?.state === "MANAGING_ROLES" ||
+    joinProgress?.state === "MANAGING_REWARDS" ||
+    joinProgress?.state === "FINISHED"
+
+  const hasNoAccess = joinProgress?.state === "NO_ACCESS"
 
   const { roles } = useGuild()
 
@@ -138,15 +148,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             {!isInDetailedProgressState && <Divider mb={3} />}
 
             <SatisfyRequirementsJoinStep
-              joinState={
-                joinProgress ??
-                // temporary for v1 (for guilds without the queues feature flag)
-                (isLoading
-                  ? { state: "CHECKING" }
-                  : hasNoAccess
-                  ? { state: "NO_ACCESS" }
-                  : ({} as any))
-              }
+              joinState={joinProgress}
               mb={isInDetailedProgressState ? "2.5" : "8"}
               spacing={isLoading || hasNoAccess ? "2.5" : "2"}
               fallbackText={
@@ -194,7 +196,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             <ModalButton
               mt="2"
-              onClick={handleSubmit(onSubmit)}
+              onClick={handleSubmit(onJoin)}
               colorScheme="green"
               isLoading={isLoading}
               loadingText={

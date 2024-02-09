@@ -8,11 +8,12 @@ import {
 } from "@chakra-ui/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -27,22 +28,18 @@ type Props = {
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
-  const { hasAccess, data, error, isValidating } = useAccess(roleId)
-  const accessedRequirementCount = data?.requirements?.filter(
-    (r) => r.access
-  )?.length
+  const { error, isValidating, reqAccesses, hasRoleAccess } =
+    useRoleMembership(roleId)
+  const accessedRequirementCount = reqAccesses?.filter((r) => r.access)?.length
 
   const { openAccountModal } = useWeb3ConnectionManager()
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
   const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
 
-  const requirements = roles.find((r) => r.id === roleId)?.requirements ?? []
-  const requirementIdsWithErrors =
-    data?.requirements?.filter((r) => r.access === null) ?? []
-  const requirementsWithErrors = requirements.filter((req) =>
-    requirementIdsWithErrors.includes(req.id)
+  const requirementsWithErrors = role?.requirements?.filter(
+    (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null
   )
   const errors = useRequirementErrorConfig()
   const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
@@ -66,7 +63,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       </Button>
     )
 
-  if (hasAccess)
+  if (hasRoleAccess)
     return (
       <HStack spacing="0" flexShrink={0}>
         <AccessIndicatorUI
@@ -119,7 +116,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
+  if (reqAccesses?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -130,7 +127,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
+  if (reqAccesses?.some((err) => err.errorType === "PLATFORM_NOT_CONNECTED"))
     return (
       <AccessIndicatorUI
         colorScheme="blue"
@@ -141,7 +138,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (data?.errors?.length > 0 || error)
+  if (requirementsWithErrors?.length > 0 || error)
     return (
       <AccessIndicatorUI
         colorScheme="orange"
