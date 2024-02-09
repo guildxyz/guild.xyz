@@ -48,7 +48,7 @@ const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
             <BlockNumberFormControl
               baseFieldPath={baseFieldPath}
               dataFieldName="minAmount"
-              label="Wallet created later than (date)"
+              label="Wallet created after (date)"
               formHelperText="The date of the wallet's first transaction"
               isInvalid={minAmount >= maxAmount}
               invalidText="You cannot set the start time to be after the end time!"
@@ -56,7 +56,7 @@ const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
             <BlockNumberFormControl
               baseFieldPath={baseFieldPath}
               dataFieldName="maxAmount"
-              label="Wallet created earlier than (date)"
+              label="Wallet created before (date)"
               formHelperText="The date of the wallet's first transaction"
               isInvalid={minAmount >= maxAmount}
               invalidText="You cannot set the end time to be before the start time!"

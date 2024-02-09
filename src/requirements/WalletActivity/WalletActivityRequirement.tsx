@@ -39,6 +39,39 @@ const requirementIcons: Record<
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
+  const maxAmount = requirement.data.timestamps.maxAmount
+  const minAmount = requirement.data.timestamps.minAmount
+
+  const getFirstTxContent = () => {
+    if (maxAmount && minAmount === undefined)
+      return (
+        <>
+          Have a wallet created before
+          <DataBlockWithDate timestamp={requirement.data.timestamps.maxAmount} />
+        </>
+      )
+
+    if (maxAmount === undefined && minAmount)
+      return (
+        <>
+          Have a wallet created after
+          <DataBlockWithDate timestamp={requirement.data.timestamps.minAmount} />
+        </>
+      )
+
+    if (maxAmount && minAmount)
+      return (
+        <>
+          Have a wallet created between
+          <DataBlockWithDate timestamp={requirement.data.timestamps.minAmount} />
+          and
+          <DataBlockWithDate timestamp={requirement.data.timestamps.maxAmount} />
+        </>
+      )
+
+    return <>Have a wallet with at least one transaction</>
+  }
+
   return (
     <Requirement
       image={<Icon as={requirementIcons[requirement.type]} boxSize={6} />}
@@ -57,14 +90,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
         switch (requirement.type) {
           case "ALCHEMY_FIRST_TX":
           case "COVALENT_FIRST_TX":
-            return (
-              <>
-                {"Have a wallet since at least "}
-                <DataBlockWithDate
-                  timestamp={requirement.data.timestamps.maxAmount}
-                />
-              </>
-            )
+            return getFirstTxContent()
           case "ALCHEMY_FIRST_TX_RELATIVE":
           case "COVALENT_FIRST_TX_RELATIVE": {
             const formattedWalletAge = formatRelativeTimeFromNow(
