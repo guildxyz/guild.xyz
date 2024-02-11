@@ -24,6 +24,7 @@ const Link = ({
     scroll={scroll}
     shallow={shallow}
     prefetch={prefetch}
+    legacyBehavior
   >
     <ChakraLink {...chakraProps}>{children}</ChakraLink>
   </NextLink>

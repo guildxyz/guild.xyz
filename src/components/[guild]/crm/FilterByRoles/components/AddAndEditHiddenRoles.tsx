@@ -32,18 +32,17 @@ const AddAndEditHiddenRoles = () => {
           variant="ghost"
         ></MenuButton>
         <MenuList>
-          <Link passHref href={`/${urlName}#hiddenRoles`}>
-            <MenuItem
-              onClick={() => setHasClickedEdit(true)}
-              as="a"
-              icon={hasClickedEdit ? <Spinner size="xs" /> : <PencilSimple />}
-              command={(<ArrowRight />) as any}
-              isDisabled={hasClickedEdit}
-              closeOnSelect={false}
-            >
-              {hasClickedEdit ? "Redirecting" : "Edit hidden roles"}
-            </MenuItem>
-          </Link>
+          <MenuItem
+            onClick={() => setHasClickedEdit(true)}
+            as={Link}
+            href={`/${urlName}#hiddenRoles`}
+            icon={hasClickedEdit ? <Spinner size="xs" /> : <PencilSimple />}
+            command={(<ArrowRight />) as any}
+            isDisabled={hasClickedEdit}
+            closeOnSelect={false}
+          >
+            {hasClickedEdit ? "Redirecting" : "Edit hidden roles"}
+          </MenuItem>
         </MenuList>
       </Menu>
     </ButtonGroup>
