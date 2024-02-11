@@ -3,7 +3,7 @@ import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
   unstable_allowDynamic: [
     "/src/hooks/useLocalStorage.ts",
     "/src/hooks/useTimeInaccuracy.ts",
