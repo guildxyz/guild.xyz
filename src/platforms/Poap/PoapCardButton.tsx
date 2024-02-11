@@ -1,4 +1,4 @@
-import { ButtonProps, Tooltip } from "@chakra-ui/react"
+import { Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
@@ -28,7 +28,7 @@ const PoapCardButton = ({ platform }: Props) => {
   const buttonLabel =
     !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
 
-  const buttonProps: Omit<ButtonProps, "as"> = {
+  const buttonProps = {
     isDisabled: !isButtonEnabled,
     w: "full",
     colorScheme: platforms.POAP.colorScheme,
