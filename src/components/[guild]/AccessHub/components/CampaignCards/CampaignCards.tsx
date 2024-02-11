@@ -12,7 +12,7 @@ import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import LinkButton from "components/common/LinkButton"
 import dynamic from "next/dynamic"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import { useRouter } from "next/router"
 import { ArrowRight, Plus } from "phosphor-react"
 

@@ -1,5 +1,5 @@
 import { Circle, Img, ResponsiveValue, useColorMode } from "@chakra-ui/react"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import { memo } from "react"
 import { Rest } from "types"
 

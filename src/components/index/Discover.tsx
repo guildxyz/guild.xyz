@@ -10,7 +10,7 @@ import {
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { motion } from "framer-motion"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import { CaretDown } from "phosphor-react"
 import { useState } from "react"
 import LandingButton from "./LandingButton"

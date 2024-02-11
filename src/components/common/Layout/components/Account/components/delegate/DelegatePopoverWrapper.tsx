@@ -12,7 +12,7 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import { PropsWithChildren, useEffect, useState } from "react"
 import useLinkVaults from "../AccountModal/hooks/useLinkVaults"
 

@@ -6,7 +6,7 @@ import {
   Img,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import GuildGhost from "static/avatars/ghost.svg"
 
 type Props = {

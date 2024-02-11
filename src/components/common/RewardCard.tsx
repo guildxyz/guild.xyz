@@ -13,7 +13,7 @@ import { useRolePlatform } from "components/[guild]/RolePlatforms/components/Rol
 import SetVisibility from "components/[guild]/SetVisibility"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 

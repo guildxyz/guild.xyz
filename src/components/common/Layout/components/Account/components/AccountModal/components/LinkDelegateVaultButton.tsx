@@ -1,5 +1,5 @@
 import Button from "components/common/Button"
-import Image from "next/image"
+import Image from "next/legacy/image"
 import useLinkVaults from "../hooks/useLinkVaults"
 
 const LinkDelegateVaultButton = ({ vaults }) => {
