@@ -37,7 +37,7 @@ const YourGuilds = forwardRef((_, ref: any) => {
             spacing="5"
           >
             <HStack spacing="4">
-              <Img src="landing/robot.svg" boxSize={"2em"} />
+              <Img src="landing/robot.svg" boxSize={"2em"} alt="Guild Robot" />
               <Text fontWeight={"semibold"}>
                 Connect your wallet to view your guilds / create new ones
               </Text>
