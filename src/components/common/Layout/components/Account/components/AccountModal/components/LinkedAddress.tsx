@@ -61,10 +61,6 @@ const LinkedAddress = ({ addressData }: Props) => {
                 height={15}
                 src={`/walletLogos/delegatecash.png`}
                 alt="Delegate cash logo"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                }}
               />
             </Tag>
           </Tooltip>

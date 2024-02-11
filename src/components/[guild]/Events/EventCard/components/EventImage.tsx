@@ -23,7 +23,12 @@ const EventImage = ({
 }: Props): JSX.Element => {
   const bg = useColorModeValue("gray.200", "whiteAlpha.200")
   const ghostColor = useColorModeValue("white", "whiteAlpha.300")
-  const allowedDomiansRegExp = [/img.evbuc.com/, /images.lumacdn.com/, /og.link3.to/]
+  const allowedDomiansRegExp = [
+    /img.evbuc.com/,
+    /images.lumacdn.com/,
+    /og.link3.to/,
+    /cdn.discordapp.com/,
+  ]
 
   if (!url && !showFallback) return null
 
@@ -45,7 +50,7 @@ const EventImage = ({
             src={url}
             alt={altText}
             fill
-            sizes="100vw"
+            sizes="400px"
             style={{
               objectFit: "cover",
             }}

@@ -13,10 +13,6 @@ const LinkDelegateVaultButton = ({ vaults }) => {
           height={15}
           alt={"Delegate.cash logo"}
           src={`/walletLogos/delegatecash.png`}
-          style={{
-            maxWidth: "100%",
-            height: "auto",
-          }}
         />
       }
       size="sm"

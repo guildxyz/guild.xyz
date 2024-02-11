@@ -163,7 +163,7 @@ const MultiPlatformSelectButton = ({
           <HStack spacing={4}>
             {imageUrl ? (
               <Circle size="12" pos="relative" overflow="hidden">
-                <Image src={imageUrl} alt="Guild logo" fill sizes="100vw" />
+                <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
               </Circle>
             ) : (
               <Circle

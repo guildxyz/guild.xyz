@@ -116,7 +116,7 @@ const Discover = (): JSX.Element => {
                       src={link.image}
                       alt={link.title}
                       fill
-                      sizes="100vw"
+                      sizes="500px"
                       style={{
                         objectFit: "cover",
                       }}

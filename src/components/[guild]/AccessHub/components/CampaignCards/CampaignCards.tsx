@@ -73,7 +73,7 @@ const CampaignCards = () => {
                         src={imageUrl || guildImageUrl}
                         alt={name}
                         fill
-                        sizes="100vw"
+                        sizes="2.5rem"
                       />
                     )}
                   </Circle>

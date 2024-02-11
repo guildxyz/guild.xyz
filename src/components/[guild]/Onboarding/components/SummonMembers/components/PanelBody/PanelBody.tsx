@@ -40,10 +40,6 @@ const PanelBody = () => {
                 height={guildImageDimension}
                 src={(shouldShowGuildImage && imageUrl) || GUILD_LOGO_DC_URL}
                 alt="Guild Icon"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                }}
               />
             </Center>
 

@@ -41,10 +41,6 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
               height={20}
               alt="Delegate.cash logo"
               src="/walletLogos/delegatecash.png"
-              style={{
-                maxWidth: "100%",
-                height: "auto",
-              }}
             />
             <Text>Delegate.cash</Text>
           </HStack>
