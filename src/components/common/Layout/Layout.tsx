@@ -10,7 +10,7 @@ import {
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
 import Head from "next/head"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { PropsWithChildren, ReactNode, useRef, useState } from "react"
 import Footer from "./components/Footer"
 import Header from "./components/Header"
@@ -117,10 +117,13 @@ const Layout = ({
               <Image
                 src={backgroundImage}
                 alt="Guild background image"
-                layout="fill"
-                objectFit="cover"
                 priority
-                style={{ filter: "brightness(30%)" }}
+                fill
+                sizes="100vw"
+                style={{
+                  filter: "brightness(30%)",
+                  objectFit: "cover",
+                }}
               />
             ) : (
               <Box

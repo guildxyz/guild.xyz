@@ -14,7 +14,7 @@ import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPla
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import dynamic from "next/dynamic"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes, useMemo } from "react"
@@ -103,7 +103,7 @@ const PlatformSelectButton = ({
         <HStack spacing={4}>
           {imageUrl ? (
             <Circle size="12" pos="relative" overflow="hidden">
-              <Image src={imageUrl} alt="Guild logo" layout="fill" />
+              <Image src={imageUrl} alt="Guild logo" fill sizes="100vw" />
             </Circle>
           ) : (
             <Circle

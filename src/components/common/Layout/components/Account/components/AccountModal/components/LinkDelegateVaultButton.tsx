@@ -1,5 +1,5 @@
 import Button from "components/common/Button"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import useLinkVaults from "../hooks/useLinkVaults"
 
 const LinkDelegateVaultButton = ({ vaults }) => {
@@ -13,6 +13,10 @@ const LinkDelegateVaultButton = ({ vaults }) => {
           height={15}
           alt={"Delegate.cash logo"}
           src={`/walletLogos/delegatecash.png`}
+          style={{
+            maxWidth: "100%",
+            height: "auto",
+          }}
         />
       }
       size="sm"

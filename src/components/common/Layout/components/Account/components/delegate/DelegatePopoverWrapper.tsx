@@ -12,7 +12,7 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import useDelegateVaults from "components/common/Layout/components/Account/components/delegate/useDelegateVaults"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { PropsWithChildren, useEffect, useState } from "react"
 import useLinkVaults from "../AccountModal/hooks/useLinkVaults"
 
@@ -41,6 +41,10 @@ const DelegatePopoverWrapper = ({ children }: PropsWithChildren<unknown>) => {
               height={20}
               alt="Delegate.cash logo"
               src="/walletLogos/delegatecash.png"
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+              }}
             />
             <Text>Delegate.cash</Text>
           </HStack>

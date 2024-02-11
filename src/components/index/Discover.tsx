@@ -10,7 +10,7 @@ import {
 import Card from "components/common/Card"
 import Link from "components/common/Link"
 import { motion } from "framer-motion"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { CaretDown } from "phosphor-react"
 import { useState } from "react"
 import LandingButton from "./LandingButton"
@@ -113,10 +113,13 @@ const Discover = (): JSX.Element => {
                 {link.image && (
                   <AspectRatio ratio={2} _groupHover={{ opacity: 0.8 }}>
                     <Image
-                      layout="fill"
-                      objectFit="cover"
                       src={link.image}
                       alt={link.title}
+                      fill
+                      sizes="100vw"
+                      style={{
+                        objectFit: "cover",
+                      }}
                     />
                   </AspectRatio>
                 )}

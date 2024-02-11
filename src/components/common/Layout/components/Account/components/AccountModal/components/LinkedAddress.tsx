@@ -19,7 +19,7 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { LinkBreak } from "phosphor-react"
 import { useRef } from "react"
 import { User } from "types"
@@ -61,6 +61,10 @@ const LinkedAddress = ({ addressData }: Props) => {
                 height={15}
                 src={`/walletLogos/delegatecash.png`}
                 alt="Delegate cash logo"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                }}
               />
             </Tag>
           </Tooltip>

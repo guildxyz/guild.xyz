@@ -8,7 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import PanelDescription from "./components/PanelDescription"
 import PanelTitle from "./components/PanelTitle"
 
@@ -40,6 +40,10 @@ const PanelBody = () => {
                 height={guildImageDimension}
                 src={(shouldShowGuildImage && imageUrl) || GUILD_LOGO_DC_URL}
                 alt="Guild Icon"
+                style={{
+                  maxWidth: "100%",
+                  height: "auto",
+                }}
               />
             </Center>
 
@@ -57,6 +61,10 @@ const PanelBody = () => {
             alt="Guild Logo"
             width={GUILD_CASTLE_SIZE}
             height={GUILD_CASTLE_SIZE}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+            }}
           />
         </Box>
       </Grid>

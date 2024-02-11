@@ -6,7 +6,7 @@ import {
   Img,
   useColorModeValue,
 } from "@chakra-ui/react"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import GuildGhost from "static/avatars/ghost.svg"
 
 type Props = {
@@ -41,7 +41,15 @@ const EventImage = ({
         {...rest}
       >
         {isMatch ? (
-          <Image src={url} alt={altText} layout="fill" objectFit="cover" />
+          <Image
+            src={url}
+            alt={altText}
+            fill
+            sizes="100vw"
+            style={{
+              objectFit: "cover",
+            }}
+          />
         ) : (
           <Img src={url} alt={altText} objectFit="cover" />
         )}

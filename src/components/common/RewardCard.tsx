@@ -13,7 +13,7 @@ import { useRolePlatform } from "components/[guild]/RolePlatforms/components/Rol
 import SetVisibility from "components/[guild]/SetVisibility"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
@@ -70,7 +70,7 @@ const RewardCard = ({
                   flexShrink={0}
                   position="relative"
                 >
-                  <Image src={image} alt={title} layout="fill" />
+                  <Image src={image} alt={title} fill sizes="100vw" />
                 </Box>
               ) : (
                 <SkeletonCircle size="10" />

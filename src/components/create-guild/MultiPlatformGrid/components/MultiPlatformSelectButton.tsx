@@ -22,7 +22,7 @@ import CreateGuildSecretText from "components/create-guild/MultiPlatformGrid/com
 import CreateGuildTelegram from "components/create-guild/MultiPlatformGrid/components/CreateGuildTelegram"
 import CreateGuildTwitter from "components/create-guild/MultiPlatformGrid/components/CreateGuildTwitter"
 import CreateGuildUniqueText from "components/create-guild/MultiPlatformGrid/components/CreateGuildUniqueText"
-import Image from "next/legacy/image"
+import Image from "next/image"
 import { CheckCircle, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes } from "react"
@@ -163,7 +163,7 @@ const MultiPlatformSelectButton = ({
           <HStack spacing={4}>
             {imageUrl ? (
               <Circle size="12" pos="relative" overflow="hidden">
-                <Image src={imageUrl} alt="Guild logo" layout="fill" />
+                <Image src={imageUrl} alt="Guild logo" fill sizes="100vw" />
               </Circle>
             ) : (
               <Circle
