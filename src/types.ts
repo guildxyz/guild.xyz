@@ -181,6 +181,10 @@ type GuildAdmin = {
   isOwner: boolean
 }
 
+/**
+ * This is really verbose with the huge amount of repeated nevers, it'll be solved by
+ * adding it to @guildxyz/types, so leaving it like this for now
+ */
 type PlatformGuildData = {
   DISCORD: {
     role?: never
