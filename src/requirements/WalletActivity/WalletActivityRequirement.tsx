@@ -47,7 +47,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       return (
         <>
           {`Have a wallet created before `}
-          <DataBlockWithDate timestamp={requirement.data.timestamps.maxAmount} />
+          <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
 
@@ -55,7 +55,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       return (
         <>
           {`Have a wallet created after `}
-          <DataBlockWithDate timestamp={requirement.data.timestamps.minAmount} />
+          <DataBlockWithDate timestamp={minAmount} />
         </>
       )
 
@@ -63,9 +63,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
       return (
         <>
           {`Have a wallet created between `}
-          <DataBlockWithDate timestamp={requirement.data.timestamps.minAmount} />
+          <DataBlockWithDate timestamp={minAmount} />
           {` and `}
-          <DataBlockWithDate timestamp={requirement.data.timestamps.maxAmount} />
+          <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
 
@@ -73,12 +73,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
   }
 
   const getFirstTxRelativeContent = () => {
-    const formattedMin = formatRelativeTimeFromNow(
-      requirement.data.timestamps.minAmount
-    )
-    const formattedMax = formatRelativeTimeFromNow(
-      requirement.data.timestamps.maxAmount
-    )
+    const formattedMin = formatRelativeTimeFromNow(minAmount)
+    const formattedMax = formatRelativeTimeFromNow(maxAmount)
 
     if (maxAmount && !minAmount)
       return (
