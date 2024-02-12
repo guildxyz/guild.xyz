@@ -1,4 +1,6 @@
 import {
+  Divider,
+  HStack,
   Icon,
   Link,
   ModalBody,
@@ -7,113 +9,24 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useToast,
 } from "@chakra-ui/react"
-import {
-  usePrepareRegistration,
-  useRegister,
-  useSubscribe,
-  useWeb3InboxAccount,
-} from "@web3inbox/react"
-import { Client, useClient } from "@xmtp/react-sdk"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import { ArrowSquareOut } from "phosphor-react"
-import { useCallback, useState } from "react"
-import { useFetcherWithSign } from "utils/fetcher"
-import { useAccount, useSignMessage, useWalletClient } from "wagmi"
+import { useMessagingContext } from "./components/MessagingContext"
 
-export const WEB3_INBOX_INIT_PARAMS = {
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
-  domain: "guild.xyz",
-  allApps: process.env.NODE_ENV !== "production",
-}
+export const SubscriptionModalContent = ({ onClose }) => {
+  const {
+    isRegisteringWeb3Inbox,
+    isSigningWeb3Inbox,
+    isSubscribingWeb3Inbox,
+    subscribeWeb3Inbox: performSubscribeWeb3Inbox,
+    xmtpSubscription,
+    web3InboxSubscription,
+    subscribeXmtp,
+    isSubscribingXmtp,
+  } = useMessagingContext()
 
-export const useSubscribeWeb3Inbox = () => {
-  const [isSigning, setIsSigning] = useState(false)
-
-  const { address } = useAccount()
-  const { data: account } = useWeb3InboxAccount(
-    address ? `eip155:1:${address}` : undefined
-  )
-  const { register, isLoading: isRegistering } = useRegister()
-  const { subscribe, isLoading: isSubscribing } = useSubscribe(
-    account,
-    WEB3_INBOX_INIT_PARAMS.domain
-  )
-  const { prepareRegistration } = usePrepareRegistration()
-  const { signMessageAsync } = useSignMessage()
-  const showErrorToast = useShowErrorToast()
-  const toast = useToast()
-
-  const performSubscribe = async () => {
-    if (!address) return
-
-    try {
-      const { message, registerParams } = await prepareRegistration()
-      setIsSigning(true)
-      const signature = await signMessageAsync({ message: message }).finally(() =>
-        setIsSigning(false)
-      )
-      await register({ registerParams, signature })
-    } catch (web3InboxRegisterError) {
-      console.error("web3InboxRegisterError", web3InboxRegisterError)
-      showErrorToast("Web3Inbox registration error")
-      return
-    }
-
-    try {
-      await subscribe()
-      toast({
-        status: "success",
-        title: "Success",
-        description: "Successfully subscribed to Guild messages via Web3Inbox",
-      })
-    } catch (web3InboxSubscribeError) {
-      console.error("web3InboxSubscribeError", web3InboxSubscribeError)
-      showErrorToast("Couldn't subscribe to Guild messages")
-    }
-  }
-  return { performSubscribe, isRegistering, isSubscribing, isSigning }
-}
-
-export const useSubscribeXMTP = () => {
-  const fetcherWithSign = useFetcherWithSign()
-  const { error, isLoading, initialize } = useClient()
-  const { id } = useUser()
-
-  const { data: signer } = useWalletClient()
-
-  const handleConnect = useCallback(async () => {
-    console.log("%c handleConnect", "color: blue; font-size: 70px")
-    await initialize({
-      options: {
-        persistConversations: false,
-        env: "dev",
-      },
-      signer,
-    }).then(() => {
-      Client.getKeys(signer).then((key) => {
-        fetcherWithSign([
-          `/v2/users/${id}/keys`,
-          {
-            body: {
-              key: Buffer.from(key).toString("binary"),
-              service: "XMTP",
-            },
-          },
-        ])
-      })
-    })
-    return handleConnect
-  }, [initialize, signer, id])
-}
-
-export const SubscribeModalContent = ({ onClose }) => {
-  const subscribeWeb3Inbox = useSubscribeWeb3Inbox()
-  const subscribeXMTP = useSubscribeXMTP()
-
+  console.log(xmtpSubscription, web3InboxSubscription)
   return (
     <>
       <ModalOverlay />
@@ -126,25 +39,53 @@ export const SubscribeModalContent = ({ onClose }) => {
             <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
               Web3Inbox
               <Icon as={ArrowSquareOut} ml={1} />
+            </Link>{" "}
+            and/or{" "}
+            <Link href="https://xmtp.com" colorScheme="blue" isExternal>
+              XMTP
+              <Icon as={ArrowSquareOut} ml={1} />
             </Link>
             . Sign a message to start receiving them!
           </Text>
-          <Button
-            variant="solid"
-            colorScheme="blue"
-            onClick={subscribeWeb3Inbox.performSubscribe}
-            isLoading={
-              subscribeWeb3Inbox.isSigning ||
-              subscribeWeb3Inbox.isRegistering ||
-              subscribeWeb3Inbox.isSubscribing
-            }
-            loadingText={
-              subscribeWeb3Inbox.isSigning ? "Check your wallet" : "Subscribing"
-            }
-            w="full"
-          >
-            Sign to subscribe
-          </Button>
+          <HStack justifyContent={"space-between"} w={"full"} mb={"3"}>
+            <Text as="span" fontWeight="semibold">
+              {web3InboxSubscription
+                ? "Already subscribed to Web3Inbox"
+                : "Web3Inbox"}
+            </Text>
+            <Button
+              isDisabled={Boolean(web3InboxSubscription)}
+              variant="solid"
+              colorScheme="blue"
+              onClick={performSubscribeWeb3Inbox}
+              isLoading={
+                isSigningWeb3Inbox ||
+                isRegisteringWeb3Inbox ||
+                isSubscribingWeb3Inbox
+              }
+              loadingText={isSigningWeb3Inbox ? "Check your wallet" : "Subscribing"}
+            >
+              Sign
+            </Button>
+          </HStack>
+          <Divider mb={3} />
+          <HStack justifyContent={"space-between"} w={"full"} mb={"3"}>
+            <Text as="span" fontWeight="semibold">
+              {Boolean(xmtpSubscription?.keys.length)
+                ? "Already subscribed to XMTP"
+                : "XMTP"}
+            </Text>
+            <Button
+              isDisabled={Boolean(xmtpSubscription?.keys.length)}
+              variant="solid"
+              colorScheme="blue"
+              onClick={subscribeXmtp}
+              isLoading={isSubscribingXmtp}
+              loadingText={isSubscribingXmtp ? "Check your wallet" : "Subscribing"}
+            >
+              Sign
+            </Button>
+          </HStack>
         </ModalBody>
       </ModalContent>
     </>

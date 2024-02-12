@@ -21,7 +21,7 @@ export const SubscriptionPrompt: React.FC<Props> = ({ onClick }) => {
           Subscribe to messages
         </Text>
         <Text as="span" fontSize="sm" colorScheme="gray" lineHeight={1.25}>
-          ceive messages from guild admins
+          Receive messages from guild admins
         </Text>
       </Stack>
       <IconButton
