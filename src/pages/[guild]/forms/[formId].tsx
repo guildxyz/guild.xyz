@@ -1,18 +1,18 @@
 import { Box, HStack, Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import useJoin from "components/[guild]/JoinModal/hooks/useJoin"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import RoleRequirements from "components/[guild]/Requirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import FillForm from "components/[guild]/forms/FillForm"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
 import { Lock, LockSimple, Wallet } from "phosphor-react"
 import { SWRConfig } from "swr"
@@ -25,7 +25,7 @@ type Props = {
 }
 
 const FormPage = ({ formId }: Props) => {
-  const { id: guildId, roles, imageUrl, guildPlatforms } = useGuild()
+  const { roles, imageUrl, guildPlatforms } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const bgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
@@ -41,9 +41,8 @@ const FormPage = ({ formId }: Props) => {
 
   const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
 
-  // TODO: use the v2 hook here
-  const { onSubmit, isLoading } = useJoin()
-  const { hasAccess } = useAccess(role?.id)
+  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate()
+  const { hasRoleAccess } = useRoleMembership(role?.id)
 
   return (
     <Layout
@@ -59,7 +58,7 @@ const FormPage = ({ formId }: Props) => {
       backButton={<GuildImageAndName />}
       maxWidth="container.md"
     >
-      {hasAccess ? (
+      {hasRoleAccess ? (
         <FillForm form={form} />
       ) : (
         <Card>
@@ -86,10 +85,7 @@ const FormPage = ({ formId }: Props) => {
                 loadingText="Checking access"
                 onClick={
                   isWeb3Connected
-                    ? () =>
-                        onSubmit({
-                          guildId,
-                        })
+                    ? () => triggerMembershipUpdate()
                     : () => openWalletSelectorModal()
                 }
               >
