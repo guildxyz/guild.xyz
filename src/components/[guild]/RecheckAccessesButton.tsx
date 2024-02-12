@@ -1,8 +1,9 @@
 import { ButtonProps, Icon, IconButton, Tooltip } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useLocalStorage from "hooks/useLocalStorage"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { useAtom } from "jotai"
+import { atomWithStorage } from "jotai/utils"
 import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useState } from "react"
 import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
@@ -16,6 +17,8 @@ type Props = {
   tooltipLabel?: string
 } & ButtonProps
 
+const latestResendDateAtom = atomWithStorage("latestResendDate", -Infinity)
+
 const RecheckAccessesButton = ({
   tooltipLabel = "Re-check accesses",
   ...rest
@@ -27,10 +30,7 @@ const RecheckAccessesButton = ({
 
   const { urlName } = useGuild()
 
-  const [latestResendDate, setLatestResendDate] = useLocalStorage(
-    "latestResendDate",
-    -Infinity
-  )
+  const [latestResendDate, setLatestResendDate] = useAtom(latestResendDateAtom)
   const [dateNow, setDateNow] = useState(Date.now())
   const canResend = dateNow - latestResendDate > TIMEOUT
 
@@ -77,7 +77,7 @@ const RecheckAccessesButton = ({
           ? "Checking accesses..."
           : canResend
           ? tooltipLabel
-          : "You can use this function once per minute"
+          : "You can only use this function once per minute"
       }
       sx={{
         "@-webkit-keyframes rotate": {
