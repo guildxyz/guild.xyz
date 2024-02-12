@@ -1,4 +1,5 @@
 import {
+  ButtonGroup,
   Collapse,
   HStack,
   Icon,
@@ -13,6 +14,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -218,13 +220,16 @@ const HiddenRequiementAccessIndicatorPopover = ({
         </Stack>
       </PopoverBody>
       <PopoverFooter {...POPOVER_FOOTER_STYLES} pt="3">
-        <Button
-          size="sm"
-          rightIcon={<Icon as={ArrowSquareIn} />}
-          onClick={openAccountModal}
-        >
-          {`View connected accounts`}
-        </Button>
+        <ButtonGroup size="sm">
+          <Button
+            variant="outline"
+            rightIcon={<Icon as={ArrowSquareIn} />}
+            onClick={openAccountModal}
+          >
+            View connections
+          </Button>
+          <RecheckAccessesButton />
+        </ButtonGroup>
       </PopoverFooter>
     </>
   )

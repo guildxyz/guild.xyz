@@ -135,7 +135,7 @@ const RequiementAccessIndicator = () => {
             onClick={openAccountModal}
             variant="outline"
           >
-            {`View connections`}
+            View connections
           </Button>
           <RecheckAccessesButton />
         </ButtonGroup>
