@@ -75,7 +75,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
     <Modal isOpen={isOpen} onClose={onClose} size="4xl" colorScheme="dark">
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit points</ModalHeader>
+        <ModalHeader>Edit form</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormProvider {...methods}>
