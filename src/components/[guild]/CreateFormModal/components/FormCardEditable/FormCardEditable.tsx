@@ -106,12 +106,13 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                 </FormControl>
               </Grid>
             ) : (
-              <HStack justifyContent="space-between">
+              <HStack justifyContent="space-between" mt="-0.5">
                 <HStack>
                   <FormFieldTitle field={field} />
                   <IconButton
                     aria-label="Edit field"
                     size="sm"
+                    my="-2"
                     variant="unstyled"
                     color="GrayText"
                     _hover={{
@@ -126,7 +127,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                 </HStack>
                 <Icon
                   as={DotsSixVertical}
-                  boxSize={5}
+                  boxSize={"18px"}
                   cursor="grab"
                   onPointerDown={(e) => dragControls.start(e)}
                 />
@@ -138,12 +139,13 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
               <selectedFieldType.DisplayComponent field={field} isDisabled />
             )}
             {isEditing && (
-              <HStack ml="auto" mt={2}>
+              <HStack ml="auto" mt={4} spacing={3}>
                 <FormControl display="flex" alignItems="center">
                   <FormLabel
                     mb="0"
+                    mr="2"
                     color="GrayText"
-                    fontSize="sm"
+                    fontSize="xs"
                     fontWeight="bold"
                     textTransform="uppercase"
                   >
@@ -158,19 +160,17 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                 </FormControl>
                 <IconButton
                   aria-label="Remove"
-                  icon={<Trash />}
+                  icon={<Icon as={Trash} boxSize="4" />}
                   rounded="full"
-                  boxSize={6}
-                  minW={6}
-                  minH={6}
-                  variant="unstyled"
+                  size="sm"
+                  variant="ghost"
                   onClick={onRemove}
                 />
                 <Divider orientation="vertical" h={8} />
                 <Button
                   size="sm"
                   colorScheme="green"
-                  minW="max-content"
+                  flexShrink={0}
                   rounded="lg"
                   isDisabled={!!errors.fields?.[index] || !field?.question}
                   onClick={() => setIsEditing(false)}
