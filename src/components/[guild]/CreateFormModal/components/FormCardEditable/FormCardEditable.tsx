@@ -38,6 +38,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
     formState: { errors },
   } = useFormContext<CreateFormParams>()
   const field = useWatch({ control, name: `fields.${index}` })
+  const isEditForm = !!field?.id
   const selectedFieldType = fieldTypes.find((ft) => ft.value === field?.type)
 
   const {
@@ -51,7 +52,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
     name: `fields.${index}.isRequired`,
   })
 
-  const [isEditing, setIsEditing] = useState(true)
+  const [isEditing, setIsEditing] = useState(!isEditForm)
 
   const dragControls = useDragControls()
 
@@ -83,6 +84,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                 <InputGroup>
                   <InputLeftElement>{selectedFieldType.img}</InputLeftElement>
                   <ControlledSelect
+                    isDisabled={isEditForm}
                     name={`fields.${index}.type`}
                     options={fieldTypes}
                     beforeOnChange={() => {

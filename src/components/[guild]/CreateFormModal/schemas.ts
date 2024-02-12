@@ -24,6 +24,8 @@ const OptionsSchema = z.object({
       .object({
         value: z.string().or(z.number()),
       })
+      .or(z.string())
+      .or(z.number())
       .transform((item) =>
         typeof item === "string" || typeof item === "number" ? item : item.value
       )
@@ -43,13 +45,13 @@ const RateFieldSchema = FieldBaseSchema.merge(OptionsSchema).extend({
   bestLabel: z.string().optional(),
 })
 
-const FieldSchema = z.discriminatedUnion("type", [
+export const FieldSchema = z.discriminatedUnion("type", [
   TextAndNumberFieldSchema,
   SingleAndMultipleChoiceFieldSchema,
   RateFieldSchema,
 ])
 
-const FieldFromDBSchema = FieldSchema.and(
+export const FieldFromDBSchema = FieldSchema.and(
   z.object({
     id: z.string().uuid().optional(),
   })
