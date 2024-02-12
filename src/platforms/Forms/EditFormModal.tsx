@@ -33,13 +33,6 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
       ...form,
       fields: form.fields.map((field) => {
         if (
-          field.type === "LONG_TEXT" ||
-          field.type === "SHORT_TEXT" ||
-          field.type === "NUMBER"
-        )
-          return field
-
-        if (
           field.type === "SINGLE_CHOICE" ||
           field.type === "MULTIPLE_CHOICE" ||
           field.type === "RATE"
@@ -51,6 +44,8 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
             })),
           }
         }
+
+        return field
       }),
     },
   })
