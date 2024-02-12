@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormLabel,
   Input,
@@ -14,7 +15,6 @@ import { useFieldArray, useFormContext } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
 import FormCardEditable from "./FormCardEditable"
 
-const MotionText = motion(Text)
 const MotionAddCard = motion(AddCard)
 
 const CreateFormForm = () => {
@@ -52,12 +52,11 @@ const CreateFormForm = () => {
         <Textarea {...register("description")} placeholder="Optional" />
       </FormControl>
 
-      <Stack spacing={2}>
+      <Box>
+        <Text fontWeight={"medium"} mb="2">
+          Add questions
+        </Text>
         <LayoutGroup>
-          <MotionText layout as="span">
-            Add questions
-          </MotionText>
-
           <Reorder.Group
             axis="y"
             values={fields.map((field) => field.id)}
@@ -84,7 +83,7 @@ const CreateFormForm = () => {
           />
         </LayoutGroup>
         <FormErrorMessage>{errors.fields?.message}</FormErrorMessage>
-      </Stack>
+      </Box>
     </Stack>
   )
 }
