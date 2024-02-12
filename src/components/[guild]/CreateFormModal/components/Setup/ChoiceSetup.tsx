@@ -1,11 +1,11 @@
 import { FormControl, HStack, Input, Stack, Text } from "@chakra-ui/react"
+import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { AnimatePresence, LayoutGroup, Reorder } from "framer-motion"
 import { useEffect, useRef } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
-import { CreateFormParams } from "../../schemas"
 import OptionLayout from "./OptionLayout"
 import RemoveButton from "./RemoveButton"
 
@@ -19,7 +19,7 @@ const ChoiceSetup = ({ index }: Props) => {
     register,
     setValue,
     formState: { errors },
-  } = useFormContext<CreateFormParams>()
+  } = useFormContext<CreateForm>()
   const type = useWatch({ name: `fields.${index}.type` })
   const { fields, append, remove, swap } = useFieldArray({
     control,

@@ -12,6 +12,7 @@ import {
   Stack,
   Switch,
 } from "@chakra-ui/react"
+import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import ControlledSelect from "components/common/ControlledSelect"
@@ -21,7 +22,6 @@ import { DotsSixVertical, PencilSimple, Trash } from "phosphor-react"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { fieldTypes } from "../../formConfig"
-import { CreateFormParams } from "../../schemas"
 import FormFieldTitle from "./components/FormFieldTitle"
 
 type Props = {
@@ -36,7 +36,7 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
     register,
     resetField,
     formState: { errors },
-  } = useFormContext<CreateFormParams>()
+  } = useFormContext<CreateForm>()
   const field = useWatch({ control, name: `fields.${index}` })
   const isEditForm = !!field?.id
   const selectedFieldType = fieldTypes.find((ft) => ft.value === field?.type)

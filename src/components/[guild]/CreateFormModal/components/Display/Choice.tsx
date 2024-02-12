@@ -12,12 +12,13 @@ import {
   Stack,
   forwardRef,
 } from "@chakra-ui/react"
+import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import { ComponentType, useState } from "react"
 import { useFormContext } from "react-hook-form"
-import { CreateFieldParams } from "../../schemas"
+import { Field } from "../../schemas"
 
 type Props = {
-  field: CreateFieldParams
+  field: Field | CreateForm["fields"][number]
 } & (RadioGroupProps | CheckboxGroupProps)
 
 const GroupComponents: Record<

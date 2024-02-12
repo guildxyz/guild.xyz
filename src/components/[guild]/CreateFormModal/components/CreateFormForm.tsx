@@ -6,12 +6,12 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
+import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import AddCard from "components/common/AddCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { LayoutGroup, Reorder, motion } from "framer-motion"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
-import { CreateFormParams } from "../schemas"
 import FormCardEditable from "./FormCardEditable"
 
 const MotionText = motion(Text)
@@ -22,7 +22,7 @@ const CreateFormForm = () => {
     control,
     register,
     formState: { errors },
-  } = useFormContext<CreateFormParams>()
+  } = useFormContext<CreateForm>()
 
   const { fields, append, remove, swap } = useFieldArray({
     control,

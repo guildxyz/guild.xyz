@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateForm"
 import {
-  CreateFormParams,
+  FormCreationPayload,
   FormSchema,
 } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
@@ -16,10 +16,25 @@ type Props = {
   onSuccess: () => void
 }
 
-const defaultValues: CreateFormParams = {
+type MapOptions<Variant> = Variant extends {
+  options?: (
+    | string
+    | number
+    | {
+        value?: string | number
+      }
+  )[]
+}
+  ? Omit<Variant, "options"> & { options: { value: string | number }[] }
+  : Variant
+
+export type CreateForm = Omit<FormCreationPayload, "fields"> & {
+  fields: MapOptions<FormCreationPayload["fields"][number]>[]
+}
+
+const defaultValues: CreateForm = {
   name: "",
   description: "",
-  active: false,
   fields: [],
 }
 
@@ -29,7 +44,7 @@ const AddFormPanel = ({ onSuccess }: Props) => {
     name: "rolePlatforms",
   })
 
-  const methods = useForm<CreateFormParams>({
+  const methods = useForm<CreateForm>({
     mode: "all",
     resolver: zodResolver(FormSchema),
     defaultValues,
@@ -52,7 +67,7 @@ const AddFormPanel = ({ onSuccess }: Props) => {
     }
   )
 
-  const onSubmit = (data: CreateFormParams) =>
+  const onSubmit = (data: CreateForm) =>
     onCreateFormSubmit({
       ...data,
       fields: data.fields.map((field) => ({

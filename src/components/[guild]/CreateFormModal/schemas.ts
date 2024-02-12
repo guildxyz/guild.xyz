@@ -19,17 +19,7 @@ const TextAndNumberFieldSchema = FieldBaseSchema.extend({
 })
 
 const OptionsSchema = z.object({
-  options: z.array(
-    z
-      .object({
-        value: z.string().or(z.number()),
-      })
-      .or(z.string())
-      .or(z.number())
-      .transform((item) =>
-        typeof item === "string" || typeof item === "number" ? item : item.value
-      )
-  ),
+  options: z.array(z.string().or(z.number())),
 })
 
 const SingleAndMultipleChoiceFieldSchema = FieldBaseSchema.merge(
@@ -45,37 +35,53 @@ const RateFieldSchema = FieldBaseSchema.merge(OptionsSchema).extend({
   bestLabel: z.string().optional(),
 })
 
-export const FieldSchema = z.discriminatedUnion("type", [
+export const FieldCreationPayloadSchema = z.discriminatedUnion("type", [
   TextAndNumberFieldSchema,
   SingleAndMultipleChoiceFieldSchema,
   RateFieldSchema,
 ])
 
-export const FieldFromDBSchema = FieldSchema.and(
+export const FieldSchema = FieldCreationPayloadSchema.and(
   z.object({
     id: z.string().uuid().optional(),
   })
 )
 
-export const FormSchema = z.object({
+export const FormCreationPayloadSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
-  fields: z.array(FieldSchema),
-  active: z.boolean().optional(),
+  fields: z.array(FieldCreationPayloadSchema),
 })
 
-const FormFromDBSchema = FormSchema.extend({
+export const FormSchema = FormCreationPayloadSchema.extend({
   id: z.number(),
   creatorUserId: z.number(),
   guildId: z.number(),
-  fields: z.array(FieldSchema),
+  fields: z.array(FieldCreationPayloadSchema),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
 })
 
-// Frontend formokban ezeket lehet használni
-export type CreateFieldParams = z.input<typeof FieldSchema>
-export type CreateFormParams = z.input<typeof FormSchema>
-// Core így adja vissza DB-ből kiolvasott dolgokat (a DB query-k eredményét át lehet tolni a megfelelő sémákon és onnantól jók lesznek a typeok is mindenhol)
-export type Field = z.infer<typeof FieldFromDBSchema>
-export type Form = z.infer<typeof FormFromDBSchema>
+// Frontend-specific
+export const FormCreationFormSchema = z
+  .any()
+  .transform((value) => {
+    if (Array.isArray(value.fields)) {
+      value.fields = value.fields.map((field) => {
+        if (!Array.isArray(field.options)) return field
+        return {
+          ...field,
+          options: field.options.map((option) => {
+            if (typeof option === "string" || typeof option === "number")
+              return option
+            return option.value
+          }),
+        }
+      })
+    }
+  })
+  .pipe(FormCreationPayloadSchema)
+
+export type FormCreationPayload = z.input<typeof FormCreationPayloadSchema>
+export type Field = z.input<typeof FieldSchema>
+export type Form = z.input<typeof FormSchema>

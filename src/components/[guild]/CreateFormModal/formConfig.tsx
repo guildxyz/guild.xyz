@@ -7,6 +7,7 @@ import {
   Textbox,
 } from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
+import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Choice from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
 import Number from "./components/Display/Number"
@@ -14,7 +15,7 @@ import Rate from "./components/Display/Rate"
 import ShortText from "./components/Display/ShortText"
 import ChoiceSetup from "./components/Setup/ChoiceSetup"
 import RateSetup from "./components/Setup/RateSetup"
-import { CreateFieldParams, Field } from "./schemas"
+import { Field } from "./schemas"
 
 const fieldTypes: {
   label: string
@@ -24,7 +25,7 @@ const fieldTypes: {
     index: number
   }>
   DisplayComponent: ComponentType<{
-    field: CreateFieldParams | Field
+    field: Field | CreateForm["fields"][number]
     isDisabled?: boolean
   }>
 }[] = [

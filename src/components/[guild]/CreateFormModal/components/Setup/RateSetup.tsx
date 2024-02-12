@@ -1,9 +1,9 @@
 import { Flex, Grid, Input, Stack, Text } from "@chakra-ui/react"
+import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import StyledSelect from "components/common/StyledSelect"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
-import { CreateFormParams } from "../../schemas"
 import Rate from "../Display/Rate"
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 const optionsDefaultValue = [...Array(10)].map((_, i) => ({ value: i + 1 }))
 
 const RateSetup = ({ index }: Props) => {
-  const { setValue } = useFormContext<CreateFormParams>()
+  const { setValue } = useFormContext<CreateForm>()
   const field = useWatch({ name: `fields.${index}` })
 
   useEffect(() => {
