@@ -46,7 +46,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount === undefined)
       return (
         <>
-          Have a wallet created before
+          {`Have a wallet created before `}
           <DataBlockWithDate timestamp={requirement.data.timestamps.maxAmount} />
         </>
       )
@@ -54,7 +54,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount === undefined && minAmount)
       return (
         <>
-          Have a wallet created after
+          {`Have a wallet created after `}
           <DataBlockWithDate timestamp={requirement.data.timestamps.minAmount} />
         </>
       )
@@ -62,10 +62,47 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount)
       return (
         <>
-          Have a wallet created between
+          {`Have a wallet created between `}
           <DataBlockWithDate timestamp={requirement.data.timestamps.minAmount} />
-          and
+          {` and `}
           <DataBlockWithDate timestamp={requirement.data.timestamps.maxAmount} />
+        </>
+      )
+
+    return <>Have a wallet with at least one transaction</>
+  }
+
+  const getFirstTxRelativeContent = () => {
+    const formattedMin = formatRelativeTimeFromNow(
+      requirement.data.timestamps.minAmount
+    )
+    const formattedMax = formatRelativeTimeFromNow(
+      requirement.data.timestamps.maxAmount
+    )
+
+    if (maxAmount && !minAmount)
+      return (
+        <>
+          {`Have a wallet older than `}
+          <DataBlock>{formattedMax}</DataBlock>
+        </>
+      )
+
+    if (!maxAmount && minAmount)
+      return (
+        <>
+          {`Have a wallet younger than `}
+          <DataBlock>{formattedMin}</DataBlock>
+        </>
+      )
+
+    if (maxAmount && minAmount)
+      return (
+        <>
+          {`Have a wallet older than `}
+          <DataBlock>{formattedMax}</DataBlock>
+          {` and younger than `}
+          <DataBlock>{formattedMin}</DataBlock>
         </>
       )
 
@@ -92,19 +129,8 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
           case "COVALENT_FIRST_TX":
             return getFirstTxContent()
           case "ALCHEMY_FIRST_TX_RELATIVE":
-          case "COVALENT_FIRST_TX_RELATIVE": {
-            const formattedWalletAge = formatRelativeTimeFromNow(
-              requirement.data.timestamps.maxAmount
-            )
-
-            return (
-              <>
-                {"Have a wallet older than "}
-                <DataBlock>{formattedWalletAge}</DataBlock>
-              </>
-            )
-          }
-
+          case "COVALENT_FIRST_TX_RELATIVE":
+            return getFirstTxRelativeContent()
           case "ALCHEMY_CONTRACT_DEPLOY":
           case "COVALENT_CONTRACT_DEPLOY":
             return (
