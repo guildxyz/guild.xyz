@@ -20,6 +20,7 @@ const handler = async (request: NextApiRequest, response: NextApiResponse) => {
       .catch(() => [])
   }
 
+  response.setHeader("Cache-Control", "s-maxage=30")
   response.status(200).json(nonPurchasableAssets)
 }
 
