@@ -58,6 +58,7 @@ const FormPage = ({ formId }: Props) => {
       backgroundOffset={46}
       backButton={<GuildImageAndName />}
       maxWidth="container.md"
+      mt={{ md: "-4" }}
     >
       {hasRoleAccess ? (
         <FillForm form={form} />

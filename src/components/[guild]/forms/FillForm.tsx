@@ -58,7 +58,7 @@ const FillForm = ({ form }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <Stack mt={{ md: "-4" }}>
+      <Stack>
         {form.fields.map((field) => {
           const { DisplayComponent } = fieldTypes.find(
             (ft) => ft.value === field.type
