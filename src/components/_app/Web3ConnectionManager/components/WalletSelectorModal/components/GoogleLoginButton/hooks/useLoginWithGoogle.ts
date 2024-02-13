@@ -1,13 +1,16 @@
 import { useDisclosure } from "@chakra-ui/react"
 import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { publicClient } from "connectors"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useAtomValue } from "jotai"
 import { useState } from "react"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
+import useLinkAddress from "../../../hooks/useLinkAddress"
 import {
   getDriveFileAppProperties,
   listWalletsOnDrive,
@@ -16,6 +19,7 @@ import {
 import useDriveOAuth from "./useDriveOAuth"
 
 const useLoginWithGoogle = () => {
+  const addressLinkParams = useAtomValue(addressLinkParamsAtom)
   const { onOpen, onClose, isOpen } = useDisclosure()
   const toast = useToast()
   const { captureEvent } = usePostHogContext()
@@ -46,6 +50,8 @@ const useLoginWithGoogle = () => {
     },
     allowThrow: true,
   })
+
+  const { onSubmit: onLinkAddress } = useLinkAddress()
 
   const createOrRestoreWallet = async (accessToken: string) => {
     const { files } = await listWalletsOnDrive(accessToken)
@@ -99,22 +105,28 @@ const useLoginWithGoogle = () => {
 
       captureEvent("[WaaS] Wallet successfully initialized", { isNew })
 
-      // 3) Verify a keypair
+      // 3) Verify a keypair, or link address to main user
       const walletClient = await cwaasConnector.getWalletClient()
-      const { keyPair, user } = await onSetKeypairSubmit({
-        signProps: {
-          walletClient,
-          address: walletClient.account.address,
-        },
-      })
+
+      const signProps = {
+        walletClient,
+        address: walletClient.account.address,
+      }
+
+      const keyPair = !!addressLinkParams
+        ? await onLinkAddress({ ...addressLinkParams, signProps }).then(
+            (result) => result?.keyPair
+          )
+        : await onSetKeypairSubmit({
+            signProps,
+          }).then((result) => result?.keyPair)
 
       // 4) Try to connect Google account
       await onConnectGoogleSubmit({
         signOptions: {
           keyPair: keyPair.keyPair,
-          walletClient,
-          address: walletClient.account.address,
           publicClient: publicClient({}),
+          ...signProps,
         },
         platformName: "GOOGLE",
         authData,

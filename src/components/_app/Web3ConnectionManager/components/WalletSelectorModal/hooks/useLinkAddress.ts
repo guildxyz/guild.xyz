@@ -6,21 +6,31 @@ import {
 } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
+import { SignProps } from "hooks/useSubmit/useSubmit"
 import { useAtom } from "jotai"
 import randomBytes from "randombytes"
 import { useEffect } from "react"
 import { mutate } from "swr"
 import { fetcherWithSign } from "utils/fetcher"
+import { WalletClient } from "viem"
 
 const getAddressLinkProof = async (
   address: `0x${string}`,
-  signMessage: (message: string) => Promise<string>
+  signMessage: (message: string) => Promise<string>,
+  walletClient?: WalletClient
 ) => {
   const addr = address.toLowerCase()
   const timestamp = Date.now()
   const nonce = randomBytes(32).toString("hex")
   const message = `Address: ${addr}\nNonce: ${nonce}\n Timestamp: ${timestamp}`
-  const signature = await signMessage(message)
+  const signature = walletClient
+    ? walletClient?.account?.type === "local"
+      ? await walletClient.account.signMessage({ message })
+      : await walletClient.signMessage({
+          message,
+          account: walletClient.account,
+        })
+    : await signMessage(message)
 
   return { address: addr, nonce, timestamp, signature }
 }
@@ -47,53 +57,69 @@ const useLinkAddress = () => {
     checkAndDeleteKeys(currentUserId).then(() => deleteKeys())
   }, [addressLinkParams, currentUserId])
 
-  return useSubmit(async ({ userId, address }: AddressLinkParams) => {
-    const keys = await getKeyPairFromIdb(userId)
-    if (!keys || !keys.keyPair) {
-      throw new Error(
-        "Failed to link address, please refresh the page and try again"
+  return useSubmit(
+    async ({
+      userId,
+      address,
+      signProps = {},
+    }: AddressLinkParams & { signProps?: Partial<SignProps> }) => {
+      const keys = await getKeyPairFromIdb(userId)
+      if (!keys || !keys.keyPair) {
+        throw new Error(
+          "Failed to link address, please refresh the page and try again"
+        )
+      }
+
+      const body = await getAddressLinkProof(
+        (signProps?.walletClient?.account?.address?.toLowerCase() as `0x${string}`) ??
+          addressToLink,
+        signMessage,
+        signProps?.walletClient
       )
-    }
+      const newAddress = await fetcherWithSign(
+        {
+          address,
+          keyPair: keys.keyPair,
 
-    const body = await getAddressLinkProof(addressToLink, signMessage)
+          // TODO: Proper method-based typing would be nice, so we wouldn't have to pass these
+          walletClient: undefined,
+          publicClient: undefined,
+        },
+        `/v2/users/${userId}/addresses`,
+        { method: "POST", body }
+      )
 
-    const newAddress = await fetcherWithSign(
-      {
-        address,
-        keyPair: keys.keyPair,
+      // Update signed profile data with new address
+      await mutate(
+        [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
+        (prev) => ({
+          ...(prev ?? {}),
+          addresses: [...(prev?.addresses ?? []), newAddress],
+        }),
+        { revalidate: false }
+      )
 
-        // TODO: Proper method-based typing would be nice, so we wouldn't have to pass these
-        walletClient: undefined,
-        publicClient: undefined,
-      },
-      `/v2/users/${userId}/addresses`,
-      { method: "POST", body }
-    )
-
-    // Update signed profile data with new address
-    await mutate(
-      [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
-      (prev) => ({
-        ...(prev ?? {}),
-        addresses: [...(prev?.addresses ?? []), newAddress],
-      }),
-      { revalidate: false }
-    )
-
-    // The address is now associated with the other user
-    await mutate(
-      `/v2/users/${addressToLink}/profile`,
-      {
+      const newPublicProfile = {
         id: userId,
         publicKey: keys.pubKey,
         captchaVerifiedSince: new Date().toISOString(), // We don't necessarily know this, but the user has to be verified because of the main user. So we are just setting this to the current date, so the app knows the user is verified
         keyPair: keys,
-      },
-      { revalidate: false }
-    )
+      }
 
-    setAddressLinkParams({ userId: undefined, address: undefined })
-  })
+      // The address is now associated with the other user
+      await mutate(
+        `/v2/users/${addressToLink?.toLowerCase()}/profile`,
+        newPublicProfile,
+        {
+          revalidate: false,
+        }
+      )
+
+      setAddressLinkParams({ userId: undefined, address: undefined })
+
+      return newPublicProfile
+    }
+  )
 }
 
 export default useLinkAddress
