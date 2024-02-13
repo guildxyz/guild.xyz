@@ -19,12 +19,28 @@ export const sortAccounts = (
   return -1
 }
 
+// temporary until we have TWITTER_V1, so we only show one X account
+export const deduplicateXPlatformUsers = (
+  platformUsers: PlatformAccountDetails[]
+) => {
+  const xV1 = platformUsers?.find((a) => a.platformId === PlatformType.TWITTER_V1)
+  const xV2 = platformUsers?.find((a) => a.platformId === PlatformType.TWITTER)
+
+  if (!xV1 || !xV2) return platformUsers
+
+  return platformUsers.filter(
+    (a) => a.platformId !== PlatformType[xV2.username ? "TWITTER_V1" : "TWITTER"]
+  )
+}
+
 const Identities = ({ member }: Props) => {
   const { addresses, platformUsers, areSocialsPrivate } = member
 
+  const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
+
   return (
     <HStack spacing={1}>
-      {platformUsers?.map((platformAccount, i) => (
+      {filteredPlatformUsers?.map((platformAccount, i) => (
         <IdentityTag
           key={platformAccount.platformId}
           platformAccount={platformAccount}
