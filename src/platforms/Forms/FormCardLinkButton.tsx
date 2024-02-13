@@ -29,7 +29,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
       colorScheme={platforms.FORM.colorScheme}
       leftIcon={userSubmission && <Check />}
     >
-      {userSubmission ? "Response already submitted" : "Fill form"}
+      {userSubmission ? "Already submitted" : "Fill form"}
     </LinkButton>
   )
 }
