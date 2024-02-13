@@ -9,8 +9,8 @@ import { useAccount, useWalletClient } from "wagmi"
 
 export const useSaveXmtpKeys = () => {
   const fetcherWithSign = useFetcherWithSign()
-  const { data: signer, isLoading: isWalletClientLoading } = useWalletClient()
-  const { id, error: userError, isLoading: isUserLoading } = useUser()
+  const { data: signer } = useWalletClient()
+  const { id } = useUser()
 
   const saveXmtpKeys = useCallback(
     async () =>
@@ -98,7 +98,7 @@ export const useSubscribeXmtp = (onAfterSubscription: Function) => {
     try {
       await Client.create(signer, {
         persistConversations: false,
-        env: "dev",
+        env: "production",
       }).then((client) => {
         console.log("%c xmtpClient", "color: green", client)
       })

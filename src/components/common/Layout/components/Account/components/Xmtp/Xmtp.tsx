@@ -30,7 +30,7 @@ const SubscribeXMTPButton: React.FC<{ refresh: KeyedMutator<any> }> = ({
     await initialize({
       options: {
         persistConversations: false,
-        env: "dev",
+        env: "production",
       },
       signer,
     }).then(() => {

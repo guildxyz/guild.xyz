@@ -1,6 +1,7 @@
 import { useToast } from "@chakra-ui/react"
 import {
   initWeb3InboxClient,
+  useNotifications,
   usePrepareRegistration,
   useRegister,
   useSubscribe,
@@ -85,4 +86,20 @@ export const useWeb3InboxSubscription = (): SubscribeWeb3Inbox => {
     isSubscribingWeb3Inbox,
     subscribeWeb3Inbox,
   }
+}
+
+export const useGetWeb3InboxMessages = () => {
+  const { address } = useAccount()
+  const { data: account, isLoading: isAccountLoading } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+
+  const { data: messages, isLoading } = useNotifications(
+    5,
+    false,
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
+
+  return { messages, isLoading: isLoading || isAccountLoading }
 }
