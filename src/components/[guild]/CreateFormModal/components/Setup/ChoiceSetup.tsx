@@ -3,7 +3,7 @@ import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleR
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { AnimatePresence, LayoutGroup, Reorder } from "framer-motion"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import getFieldIndexesToSwap from "utils/getFieldsToSwap"
 import OptionLayout from "./OptionLayout"
@@ -25,14 +25,6 @@ const ChoiceSetup = ({ index }: Props) => {
     control,
     name: `fields.${index}.options`,
   })
-
-  // TODO: try to find a better solution for default value
-  useEffect(() => {
-    if (fields.length > 0) return
-    append({
-      value: "Option 1",
-    })
-  }, [])
 
   const addOptionRef = useRef<HTMLInputElement>(null)
 
@@ -68,7 +60,9 @@ const ChoiceSetup = ({ index }: Props) => {
             >
               <FormControl>
                 <Input
-                  {...register(`fields.${index}.options.${optionIndex}.value`)}
+                  {...register(
+                    `fields.${index}.options.${optionIndex}.value` as const
+                  )}
                   placeholder="Add option"
                 />
                 <FormErrorMessage>

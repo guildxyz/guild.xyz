@@ -22,20 +22,22 @@ import { Reorder, useDragControls } from "framer-motion"
 import { DotsSixVertical, PencilSimple, Trash } from "phosphor-react"
 import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import { SelectOption } from "types"
 import { fieldTypes } from "../../formConfig"
+import { Field } from "../../schemas"
 import FormFieldTitle from "./components/FormFieldTitle"
 
 type Props = {
   index: number
   fieldId: string
+  onUpdate: (newValue: CreateForm["fields"][number]) => void
   onRemove: () => void
 }
 
-const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
+const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
   const {
     control,
     register,
-    resetField,
     formState: { errors },
   } = useFormContext<CreateForm>()
   const field = useWatch({ control, name: `fields.${index}` })
@@ -88,17 +90,29 @@ const FormCardEditable = ({ index, fieldId, onRemove }: Props) => {
                       isDisabled={isEditForm}
                       name={`fields.${index}.type`}
                       options={fieldTypes}
-                      beforeOnChange={() => {
-                        resetField(`fields.${index}`, {
-                          defaultValue: {
-                            type: field.type,
-                            question: field.question,
-                            allowOther: false,
-                            bestLabel: "",
-                            worstLabel: "",
-                            isRequired: false,
-                            options: [],
-                          },
+                      beforeOnChange={(newValue: SelectOption<Field["type"]>) => {
+                        const isChoice =
+                          newValue.value === "SINGLE_CHOICE" ||
+                          newValue.value === "MULTIPLE_CHOICE"
+
+                        const isRate = newValue.value === "RATE"
+
+                        onUpdate({
+                          type: field.type,
+                          question: field.question,
+                          allowOther: false,
+                          bestLabel: "",
+                          worstLabel: "",
+                          isRequired: false,
+                          options: isChoice
+                            ? [
+                                {
+                                  value: "Option 1",
+                                },
+                              ]
+                            : isRate
+                            ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
+                            : [],
                         })
                       }}
                     />

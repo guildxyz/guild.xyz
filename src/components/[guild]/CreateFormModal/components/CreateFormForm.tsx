@@ -24,7 +24,7 @@ const CreateFormForm = () => {
     formState: { errors },
   } = useFormContext<CreateForm>()
 
-  const { fields, append, remove, swap } = useFieldArray({
+  const { fields, append, remove, update, swap } = useFieldArray({
     control,
     name: "fields",
   })
@@ -67,6 +67,7 @@ const CreateFormForm = () => {
                 key={field.id}
                 fieldId={field.id}
                 index={index}
+                onUpdate={(newValue) => update(index, newValue)}
                 onRemove={() => remove(index)}
               />
             ))}
