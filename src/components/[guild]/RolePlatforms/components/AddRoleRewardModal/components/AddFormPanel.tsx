@@ -3,8 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateForm"
 import {
+  FormCreationFormSchema,
   FormCreationPayload,
-  FormSchema,
 } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
 import { ArrowRight } from "phosphor-react"
@@ -46,7 +46,7 @@ const AddFormPanel = ({ onSuccess }: Props) => {
 
   const methods = useForm<CreateForm>({
     mode: "all",
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(FormCreationFormSchema),
     defaultValues,
   })
 

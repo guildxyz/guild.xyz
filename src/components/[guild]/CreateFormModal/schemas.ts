@@ -79,6 +79,8 @@ export const FormCreationFormSchema = z
         }
       })
     }
+
+    return value
   })
   .pipe(FormCreationPayloadSchema)
 
