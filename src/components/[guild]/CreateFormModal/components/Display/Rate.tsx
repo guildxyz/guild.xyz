@@ -27,8 +27,9 @@ const Rate = forwardRef<Props, "input">(({ field, ...props }, _ref) => {
 
   return (
     <Box
+      position="relative"
       sx={{
-        WebkitMaskImage:
+        maskImage:
           "linear-gradient(to right, transparent 0px, black 10px, black calc(100% - 10px), transparent)",
       }}
       mx="-2"
