@@ -59,6 +59,12 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
 
   const dragControls = useDragControls()
 
+  const isDoneDisabled =
+    !!errors.fields?.[index] ||
+    !field?.question ||
+    ((field?.type === "SINGLE_CHOICE" || field?.type === "MULTIPLE_CHOICE") &&
+      !field.options?.length)
+
   return (
     <Reorder.Item
       dragListener={false}
@@ -186,7 +192,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                   colorScheme="green"
                   flexShrink={0}
                   rounded="lg"
-                  isDisabled={!!errors.fields?.[index] || !field?.question}
+                  isDisabled={isDoneDisabled}
                   onClick={() => setIsEditing(false)}
                 >
                   Done
