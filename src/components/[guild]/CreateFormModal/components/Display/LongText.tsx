@@ -6,7 +6,7 @@ const LongText = forwardRef<TextareaProps, "textarea">((props, ref) => (
     {...props}
     value={props.value ?? ""}
     placeholder="Long text"
-    resize="none"
+    resize={props.isDisabled ? "none" : undefined}
   />
 ))
 

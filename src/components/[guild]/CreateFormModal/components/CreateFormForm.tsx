@@ -42,7 +42,7 @@ const CreateFormForm = () => {
         <Input
           {...register("name")}
           placeholder="What's the form about?"
-          maxW="50%"
+          maxW={{ md: "50%" }}
         />
         <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
       </FormControl>
