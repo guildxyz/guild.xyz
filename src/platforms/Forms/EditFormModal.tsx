@@ -6,6 +6,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
+import { zodResolver } from "@hookform/resolvers/zod"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import {
   Form,
@@ -29,6 +30,7 @@ type Props = {
 const EditFormModal = ({ isOpen, onClose, form }: Props) => {
   const methods = useForm<z.input<typeof FormCreationFormSchema>>({
     mode: "all",
+    resolver: zodResolver(FormCreationFormSchema),
     defaultValues: {
       ...form,
       fields: form.fields.map((field) => {
