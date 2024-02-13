@@ -16,26 +16,6 @@ const nextConfig = {
       ],
     })
 
-    /**
-     * Filtering packages which can't be used in the edge runtime, to avoid build
-     * warnings and errors
-     */
-    if (options.isServer && options.nextRuntime === "edge") {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "@chakra-ui/anatomy": false,
-        "@chakra-ui/react": false,
-        "@chakra-ui/theme-tools": false,
-        "chakra-react-select": false,
-        stream: false,
-        "crypto-addr-codec": false,
-        "@ensdomains/address-encoder": false,
-        "decode-named-character-reference": false,
-        isows: false,
-        fuels: false,
-      }
-    }
-
     return config
   },
   productionBrowserSourceMaps: true,

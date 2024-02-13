@@ -1,14 +1,8 @@
 import { ImageResponse } from "next/og"
 import { Guild } from "types"
-import fetcher from "utils/fetcher"
 
 export const config = {
   runtime: "edge",
-  unstable_allowDynamic: [
-    "/src/hooks/useLocalStorage.ts",
-    "/src/hooks/useTimeInaccuracy.ts",
-    "/src/utils/fetcher.ts",
-  ],
 }
 
 const interFont = fetch(
@@ -34,8 +28,8 @@ const handler = async (req, _) => {
   if (!urlName) return new ImageResponse(<></>, { status: 404 })
 
   const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
-    fetcher(`/v2/guilds/${urlName}`),
-    fetcher(`/v2/guilds/${urlName}/roles`),
+    fetch(`/v2/guilds/${urlName}`).then((res) => res.json()),
+    fetch(`/v2/guilds/${urlName}/roles`).then((res) => res.json()),
   ]).catch(() => [null, null])
 
   if (!guild?.id)

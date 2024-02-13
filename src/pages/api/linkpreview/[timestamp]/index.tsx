@@ -1,14 +1,8 @@
 import { ImageResponse } from "next/og"
 import { GuildBase } from "types"
-import fetcher from "utils/fetcher"
 
 export const config = {
   runtime: "edge",
-  unstable_allowDynamic: [
-    "/src/hooks/useLocalStorage.ts",
-    "/src/hooks/useTimeInaccuracy.ts",
-    "/src/utils/fetcher.ts",
-  ],
 }
 
 const interFont = fetch(
@@ -28,7 +22,9 @@ const handler = async (req, _) => {
   try {
     const [guilds, interFontData, interBoldFontData, dystopianFontData] =
       await Promise.all([
-        fetcher(`/v2/guilds`).catch((_) => []),
+        fetch(`/v2/guilds`)
+          .then((res) => res.json())
+          .catch((_) => []),
         interFont,
         interBoldFont,
         dystopianFont,
