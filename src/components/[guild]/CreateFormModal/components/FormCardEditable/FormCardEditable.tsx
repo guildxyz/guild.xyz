@@ -11,6 +11,7 @@ import {
   InputLeftElement,
   Stack,
   Switch,
+  Tooltip,
 } from "@chakra-ui/react"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
@@ -89,40 +90,43 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                     {errors.fields?.[index]?.question?.message}
                   </FormErrorMessage>
                 </FormControl>
-                <FormControl>
-                  <InputGroup>
-                    <InputLeftElement>{selectedFieldType.img}</InputLeftElement>
-                    <ControlledSelect
-                      isDisabled={isEditForm}
-                      name={`fields.${index}.type`}
-                      options={fieldTypes}
-                      beforeOnChange={(newValue: SelectOption<Field["type"]>) => {
-                        const isChoice =
-                          newValue.value === "SINGLE_CHOICE" ||
-                          newValue.value === "MULTIPLE_CHOICE"
-
-                        const isRate = newValue.value === "RATE"
-
-                        onUpdate({
-                          type: field.type,
-                          question: field.question,
-                          allowOther: false,
-                          bestLabel: "",
-                          worstLabel: "",
-                          isRequired: false,
-                          options: isChoice
-                            ? [
-                                {
-                                  value: "Option 1",
-                                },
-                              ]
-                            : isRate
-                            ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
-                            : [],
-                        })
-                      }}
-                    />
-                  </InputGroup>
+                <FormControl isDisabled={isEditForm}>
+                  <Tooltip
+                    isDisabled={!isEditForm}
+                    hasArrow
+                    label="You can't change a question's type after it is created. Consider creating a new question instead!"
+                  >
+                    <InputGroup>
+                      <InputLeftElement>{selectedFieldType.img}</InputLeftElement>
+                      <ControlledSelect
+                        name={`fields.${index}.type`}
+                        options={fieldTypes}
+                        beforeOnChange={(newValue: SelectOption<Field["type"]>) => {
+                          const isChoice =
+                            newValue.value === "SINGLE_CHOICE" ||
+                            newValue.value === "MULTIPLE_CHOICE"
+                          const isRate = newValue.value === "RATE"
+                          onUpdate({
+                            type: field.type,
+                            question: field.question,
+                            allowOther: false,
+                            bestLabel: "",
+                            worstLabel: "",
+                            isRequired: false,
+                            options: isChoice
+                              ? [
+                                  {
+                                    value: "Option 1",
+                                  },
+                                ]
+                              : isRate
+                              ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
+                              : [],
+                          })
+                        }}
+                      />
+                    </InputGroup>
+                  </Tooltip>
                 </FormControl>
               </Grid>
             ) : (
@@ -178,14 +182,20 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                     onChange={(e) => onIsRequiredChange(e.target.checked)}
                   />
                 </FormControl>
-                <IconButton
-                  aria-label="Remove"
-                  icon={<Icon as={Trash} boxSize="4" />}
-                  rounded="full"
-                  size="sm"
-                  variant="ghost"
-                  onClick={onRemove}
-                />
+                <Tooltip
+                  isDisabled={!isEditForm}
+                  hasArrow
+                  label="Removing the question won't delete existing responses data"
+                >
+                  <IconButton
+                    aria-label="Remove"
+                    icon={<Icon as={Trash} boxSize="4" />}
+                    rounded="full"
+                    size="sm"
+                    variant="ghost"
+                    onClick={onRemove}
+                  />
+                </Tooltip>
                 <Divider orientation="vertical" h={8} />
                 <Button
                   size="sm"
