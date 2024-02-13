@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { useConversations } from "@xmtp/react-sdk"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMessagingContext } from "./components/MessagingContext"
@@ -19,14 +20,15 @@ export const SubscriptionModalContent = ({ onClose }) => {
     isRegisteringWeb3Inbox,
     isSigningWeb3Inbox,
     isSubscribingWeb3Inbox,
-    subscribeWeb3Inbox: performSubscribeWeb3Inbox,
-    xmtpSubscription,
+    subscribeWeb3Inbox,
     web3InboxSubscription,
     subscribeXmtp,
     isSubscribingXmtp,
+    hasXmtpAccess,
   } = useMessagingContext()
+  const conversations = useConversations()
+  console.log("modal", hasXmtpAccess, conversations)
 
-  console.log(xmtpSubscription, web3InboxSubscription)
   return (
     <>
       <ModalOverlay />
@@ -40,7 +42,7 @@ export const SubscriptionModalContent = ({ onClose }) => {
               Web3Inbox
               <Icon as={ArrowSquareOut} ml={1} />
             </Link>{" "}
-            and/or{" "}
+            and{" "}
             <Link href="https://xmtp.com" colorScheme="blue" isExternal>
               XMTP
               <Icon as={ArrowSquareOut} ml={1} />
@@ -49,15 +51,13 @@ export const SubscriptionModalContent = ({ onClose }) => {
           </Text>
           <HStack justifyContent={"space-between"} w={"full"} mb={"3"}>
             <Text as="span" fontWeight="semibold">
-              {web3InboxSubscription
-                ? "Already subscribed to Web3Inbox"
-                : "Web3Inbox"}
+              Web3Inbox
             </Text>
             <Button
               isDisabled={Boolean(web3InboxSubscription)}
               variant="solid"
               colorScheme="blue"
-              onClick={performSubscribeWeb3Inbox}
+              onClick={subscribeWeb3Inbox}
               isLoading={
                 isSigningWeb3Inbox ||
                 isRegisteringWeb3Inbox ||
@@ -65,25 +65,23 @@ export const SubscriptionModalContent = ({ onClose }) => {
               }
               loadingText={isSigningWeb3Inbox ? "Check your wallet" : "Subscribing"}
             >
-              Sign
+              {Boolean(web3InboxSubscription) ? "Subscribed" : "Sign"}
             </Button>
           </HStack>
           <Divider mb={3} />
           <HStack justifyContent={"space-between"} w={"full"} mb={"3"}>
             <Text as="span" fontWeight="semibold">
-              {Boolean(xmtpSubscription?.keys.length)
-                ? "Already subscribed to XMTP"
-                : "XMTP"}
+              XMTP
             </Text>
             <Button
-              isDisabled={Boolean(xmtpSubscription?.keys.length)}
+              isDisabled={Boolean(hasXmtpAccess)}
               variant="solid"
               colorScheme="blue"
               onClick={subscribeXmtp}
               isLoading={isSubscribingXmtp}
               loadingText={isSubscribingXmtp ? "Check your wallet" : "Subscribing"}
             >
-              Sign
+              {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}
             </Button>
           </HStack>
         </ModalBody>

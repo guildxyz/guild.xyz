@@ -164,7 +164,7 @@ const SubscribeToMessages = () => {
   const { address } = useAccount()
 
   const { data: account } = useWeb3InboxAccount(
-    address ? `eip155:1:${address}` : undefined
+    address ? `eip155:1:${address}` : null
   )
 
   const [isSigning, setIsSigning] = useState(false)

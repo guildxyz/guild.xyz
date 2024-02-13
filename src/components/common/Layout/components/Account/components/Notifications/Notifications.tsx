@@ -18,7 +18,6 @@ import dynamic from "next/dynamic"
 import { Bell } from "phosphor-react"
 import AccountButton from "../AccountButton"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
-import MessagingSection from "./MessagingSection"
 import NotificationsActivityLog from "./components/NotificationsActivityLog"
 import NotificationsSection from "./components/NotificationsSection"
 

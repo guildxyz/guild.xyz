@@ -10,12 +10,10 @@ import NotificationsSection from "./components/NotificationsSection"
 const MessagingSection = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
-    IsWeb3InboxLoading,
-    web3InboxError,
+    isWeb3InboxLoading: isWeb3InboxLoading,
     web3InboxSubscription,
-    IsXmtpLoading,
-    xmtpError,
-    xmtpSubscription,
+    isXmtpLoading,
+    hasXmtpAccess,
   } = useMessagingContext()
 
   return (
@@ -35,9 +33,8 @@ const MessagingSection = () => {
           </>
         }
       >
-        {(IsWeb3InboxLoading || IsXmtpLoading) && <SubscriptionPromptSkeleton />}
-        {(web3InboxError || xmtpError) && "Error happened" /** Todo */}
-        {!web3InboxSubscription && !xmtpSubscription?.keys.length && (
+        {(isWeb3InboxLoading || isXmtpLoading) && <SubscriptionPromptSkeleton />}
+        {!web3InboxSubscription && !hasXmtpAccess && (
           <SubscriptionPrompt onClick={onOpen} />
         )}
       </NotificationsSection>
