@@ -73,7 +73,7 @@ const OptionLayout = ({
           w="full"
           role="group"
           sx={{
-            input: {
+            "input:not(.addOption:not(:focus))": {
               bg: inputBgColor,
             },
           }}

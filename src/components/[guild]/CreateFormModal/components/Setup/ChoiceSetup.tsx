@@ -116,6 +116,7 @@ const ChoiceSetup = ({ index }: Props) => {
             <Input
               ref={addOptionRef}
               placeholder="Add option"
+              className="addOption"
               onChange={(e) => {
                 if (!fields.every((field) => !!field.value)) return
                 append({
@@ -123,6 +124,9 @@ const ChoiceSetup = ({ index }: Props) => {
                 })
                 addOptionRef.current.value = ""
               }}
+              bg="transparent"
+              borderStyle="dashed"
+              _focus={{ borderStyle: "solid" }}
             />
           </OptionLayout>
 
