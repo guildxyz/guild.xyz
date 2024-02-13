@@ -24,7 +24,6 @@ const FormCardLinkButton = ({ platform }: Props) => {
       isLoading={isFormsValidating || isValidating}
       prefetch={false}
       href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
-      size="lg"
       w="full"
       colorScheme={platforms.FORM.colorScheme}
       leftIcon={userSubmission && <Check />}
