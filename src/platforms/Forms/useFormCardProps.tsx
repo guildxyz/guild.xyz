@@ -4,7 +4,7 @@ import platforms from "platforms/platforms"
 import { GuildPlatform, PlatformName } from "types"
 
 const useFormCardProps = (guildPlatform: GuildPlatform) => {
-  const circleBgColor = useColorModeValue("blackAlpha.100", "blackAlpha.300")
+  const circleBgColor = useColorModeValue("gray.700", "blackAlpha.300")
 
   const { data } = useForms()
   const form = data?.find((f) => f.id === guildPlatform.platformGuildData.formId)
