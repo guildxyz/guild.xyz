@@ -83,9 +83,7 @@ const OptionLayout = ({
             bgColor={inputBgColor}
             width={5}
             height={5}
-            borderRadius={
-              type === "MULTIPLE_CHOICE" ? "sm" : "var(--chakra-sizes-2-5)"
-            }
+            borderRadius={type === "MULTIPLE_CHOICE" ? "4px" : "full"}
             flexShrink={0}
             {...(draggable ? draggableCenterProps : undefined)}
             onPointerDown={draggable ? (e) => dragControls.start(e) : undefined}
