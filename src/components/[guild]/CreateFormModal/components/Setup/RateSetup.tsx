@@ -25,8 +25,14 @@ const RateSetup = ({ index }: Props) => {
     <Stack>
       <Rate field={field} isDisabled />
 
-      <Grid templateColumns="2fr 1fr" gap={2}>
-        <Grid templateColumns="auto var(--chakra-sizes-24) 1fr" gap={2}>
+      <Grid templateColumns={{ md: "2fr 1fr" }} gap={2}>
+        <Grid
+          templateColumns={{
+            base: "auto 85px 1fr",
+            md: "auto var(--chakra-sizes-24) 1fr",
+          }}
+          gap={2}
+        >
           <LabelSetup type="worst" fieldIndex={index} />
           <LabelSetup type="best" fieldIndex={index} />
         </Grid>
@@ -74,10 +80,10 @@ const LabelSetup = ({ fieldIndex, type }: LabelSetupProps) => {
       <Flex alignItems="center">
         <Text
           as="span"
-          fontWeight="semibold"
-          fontSize="small"
+          fontWeight="bold"
+          fontSize="xs"
           textTransform="uppercase"
-          colorScheme="gray"
+          color="GrayText"
         >
           {labelSetupConfig[type].label}
         </Text>

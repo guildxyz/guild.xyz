@@ -1,6 +1,7 @@
 import {
   Box,
   Collapse,
+  Flex,
   HStack,
   RadioGroupProps,
   RadioProps,
@@ -25,41 +26,45 @@ const Rate = forwardRef<Props, "input">(({ field, ...props }, _ref) => {
   if (field.type !== "RATE") return null
 
   return (
-    <Stack spacing={1}>
-      <RateRadioGroup
-        options={field.options?.map((option) => ({
-          value:
-            typeof option === "string" || typeof option === "number"
-              ? option.toString()
-              : option.value.toString(),
-          label:
-            typeof option === "string" || typeof option === "number"
-              ? option.toString()
-              : option.value.toString(),
-        }))}
-        {...props}
-      />
-
-      <Collapse in={!!field.worstLabel || !!field.bestLabel} animateOpacity>
-        <HStack
-          display={{ base: "none", sm: "flex" }}
-          justifyContent="space-between"
-          fontSize="small"
-        >
-          <Box h={6}>
-            <Text as="span" colorScheme="gray">
-              {field.worstLabel}
-            </Text>
-          </Box>
-
-          <Box h={6}>
-            <Text as="span" colorScheme="gray">
-              {field.bestLabel}
-            </Text>
-          </Box>
-        </HStack>
-      </Collapse>
-    </Stack>
+    <Box
+      sx={{
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent 0px, black 10px, black calc(100% - 10px), transparent)",
+      }}
+      mx="-2"
+    >
+      <Flex overflowX={"auto"} px="2">
+        <Stack spacing={1} flex="1 0 auto">
+          <RateRadioGroup
+            options={field.options?.map((option) => ({
+              value:
+                typeof option === "string" || typeof option === "number"
+                  ? option.toString()
+                  : option.value.toString(),
+              label:
+                typeof option === "string" || typeof option === "number"
+                  ? option.toString()
+                  : option.value.toString(),
+            }))}
+            {...props}
+          />
+          <Collapse in={!!field.worstLabel || !!field.bestLabel} animateOpacity>
+            <HStack justifyContent="space-between" fontSize="small">
+              <Box h={6}>
+                <Text as="span" colorScheme="gray">
+                  {field.worstLabel}
+                </Text>
+              </Box>
+              <Box h={6}>
+                <Text as="span" colorScheme="gray">
+                  {field.bestLabel}
+                </Text>
+              </Box>
+            </HStack>
+          </Collapse>
+        </Stack>
+      </Flex>
+    </Box>
   )
 })
 
@@ -79,7 +84,7 @@ const RateRadioGroup = ({
   const group = getRootProps()
 
   return (
-    <Stack direction={{ base: "column", sm: "row" }} w="full" {...group}>
+    <HStack w="full" {...group}>
       {options?.map(({ label, value }) => {
         const radio = getRadioProps({ value })
         return (
@@ -88,7 +93,7 @@ const RateRadioGroup = ({
           </RateRadioButton>
         )
       })}
-    </Stack>
+    </HStack>
   )
 }
 
