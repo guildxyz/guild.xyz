@@ -4,8 +4,8 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
 import { useUserRewards } from "hooks/useUserRewards"
+import { atom, useAtom } from "jotai"
 import useUsersPoints from "platforms/Points/useUsersPoints"
-import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import mapAccessJobState, { groupBy } from "../utils/mapAccessJobState"
@@ -13,6 +13,8 @@ import mapAccessJobState, { groupBy } from "../utils/mapAccessJobState"
 export type JoinData = {
   oauthData: any
 }
+
+const stateAtom = atom<"INITIAL" | "GETTING_JOB" | "POLLING" | "FINISHED">("INITIAL")
 
 const useMembershipUpdate = (
   onSuccess?: (response: JoinJob) => void,
@@ -23,15 +25,15 @@ const useMembershipUpdate = (
   const { mutate: mutateUserRewards } = useUserRewards()
   const { mutate: mutateUserPoints } = useUsersPoints()
   const fetcherWithSign = useFetcherWithSign()
-  const [pollState, setPollState] = useState<"INITIAL" | "POLL" | "FINISHED">(
-    "INITIAL"
-  )
+  const [state, setState] = useAtom(stateAtom)
   const { captureEvent } = usePostHogContext()
   const posthogOptions = {
     guild: guild.urlName,
   }
 
   const submit = async (data): Promise<string> => {
+    setState("GETTING_JOB")
+
     const initialPollResult: JoinJob[] = await fetcherWithSign([
       `/v2/actions/join?${new URLSearchParams({
         guildId: `${guild?.id}`,
@@ -53,8 +55,9 @@ const useMembershipUpdate = (
   }
 
   const useSubmitResponse = useSubmit(submit, {
-    onSuccess: () => setPollState("POLL"),
+    onSuccess: () => setState("POLLING"),
     onError: (error) => {
+      setState("INITIAL")
       captureEvent(`Guild join error`, { ...posthogOptions, error })
       onError?.(error)
     },
@@ -72,12 +75,12 @@ const useMembershipUpdate = (
     onSuccess?.(response)
 
     setTimeout(() => {
-      setPollState("INITIAL")
+      setState("INITIAL")
     }, 3000)
   }
 
   const progress = useSWRImmutable<JoinJob>(
-    pollState === "POLL"
+    state === "POLLING"
       ? `/v2/actions/join?${new URLSearchParams({
           guildId: `${guild?.id}`,
         }).toString()}`
@@ -127,13 +130,19 @@ const useMembershipUpdate = (
           { revalidate: false }
         )
 
+        if (res?.failed) {
+          onError?.(res.failedErrorMsg)
+          setState("FINISHED")
+          return
+        }
+
         if (!!res?.roleAccesses && res.roleAccesses.every((role) => !role.access)) {
-          setPollState("FINISHED")
+          setState("FINISHED")
           return
         }
 
         if (res?.done) {
-          setPollState("FINISHED")
+          setState("FINISHED")
           onFinish(res)
         }
       },
@@ -142,19 +151,17 @@ const useMembershipUpdate = (
        * false because of reseting useSubmitResponse
        */
       keepPreviousData: true,
-      refreshInterval: pollState === "POLL" ? 500 : undefined,
+      refreshInterval: state === "POLLING" ? 500 : undefined,
     }
   )
 
-  const isLoading = useSubmitResponse?.isLoading || pollState === "POLL"
+  const isLoading = state === "GETTING_JOB" || state === "POLLING"
 
   return {
-    isFinished: pollState === "FINISHED",
+    isFinished: state === "FINISHED",
     isLoading,
-    error: pollState === "FINISHED" && progress?.data?.failedErrorMsg,
-    joinProgress:
-      (isLoading || pollState === "FINISHED") &&
-      mapAccessJobState(progress.data, isLoading),
+    error: state === "FINISHED" && progress?.data?.failedErrorMsg,
+    joinProgress: state !== "INITIAL" && mapAccessJobState(progress.data, isLoading),
     triggerMembershipUpdate: (data?) => {
       progress.mutate(undefined, { revalidate: false })
       useSubmitResponse.onSubmit(data)
