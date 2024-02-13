@@ -11,6 +11,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -71,28 +72,30 @@ const FormPage = ({ formId }: Props) => {
                 </Text>
               </HStack>
 
-              <Button
-                leftIcon={
-                  <Icon
-                    as={isWeb3Connected ? LockSimple : Wallet}
-                    width={"0.9em"}
-                    height="0.9em"
-                  />
-                }
-                size="sm"
-                borderRadius="lg"
-                isLoading={isLoading}
-                loadingText="Checking access"
-                onClick={
-                  isWeb3Connected
-                    ? () => triggerMembershipUpdate()
-                    : () => openWalletSelectorModal()
-                }
-              >
-                {isWeb3Connected
-                  ? "Join Guild to check access"
-                  : "Connect to access"}
-              </Button>
+              <ClientOnly>
+                <Button
+                  leftIcon={
+                    <Icon
+                      as={isWeb3Connected ? LockSimple : Wallet}
+                      width={"0.9em"}
+                      height="0.9em"
+                    />
+                  }
+                  size="sm"
+                  borderRadius="lg"
+                  isLoading={isLoading}
+                  loadingText="Checking access"
+                  onClick={
+                    isWeb3Connected
+                      ? () => triggerMembershipUpdate()
+                      : () => openWalletSelectorModal()
+                  }
+                >
+                  {isWeb3Connected
+                    ? "Join Guild to check access"
+                    : "Connect to access"}
+                </Button>
+              </ClientOnly>
             </HStack>
 
             {!!role ? (
