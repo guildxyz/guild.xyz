@@ -1,10 +1,10 @@
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
-const verifycCaptcha = ({ callback, token }: { callback: string; token: string }) =>
+const verifyCaptcha = ({ callback, token }: { callback: string; token: string }) =>
   fetcher(callback, {
     body: {
       token,
@@ -15,16 +15,16 @@ const useVerifyCaptcha = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { mutate } = useAccess()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  return useSubmit(verifycCaptcha, {
+  return useSubmit(verifyCaptcha, {
     onError: (error) => {
       const errorMsg = "Couldn't verify CAPTCHA"
       const correlationId = error.correlationId
       showErrorToast(correlationId ? { error: errorMsg, correlationId } : errorMsg)
     },
     onSuccess: () => {
-      mutate()
+      triggerMembershipUpdate()
       toast({
         status: "success",
         title: "Successful verification",

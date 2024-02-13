@@ -1,13 +1,15 @@
 import {
+  ButtonGroup,
   Icon,
   PopoverBody,
   PopoverFooter,
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
+import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
@@ -31,12 +33,10 @@ const RequiementAccessIndicator = () => {
   const { openAccountModal } = useWeb3ConnectionManager()
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
-  const { data: accessData } = useAccess(roleId)
-  if (!accessData) return null
+  const { reqAccesses, hasRoleAccess } = useRoleMembership(roleId)
+  if (!reqAccesses) return null
 
-  const reqAccessData = accessData?.requirements?.find(
-    (obj) => obj.requirementId === id
-  )
+  const reqAccessData = reqAccesses?.find((obj) => obj.requirementId === id)
 
   if (reqAccessData?.access)
     return (
@@ -54,15 +54,16 @@ const RequiementAccessIndicator = () => {
       </RequiementAccessIndicatorUI>
     )
 
-  const reqErrorData = accessData?.errors?.find((obj) => obj.requirementId === id)
-
-  if (reqErrorData?.errorType === "PLATFORM_NOT_CONNECTED")
+  if (
+    reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED" ||
+    reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID"
+  )
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!hasRoleAccess}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
           {type === "CAPTCHA"
@@ -85,17 +86,17 @@ const RequiementAccessIndicator = () => {
       </RequiementAccessIndicatorUI>
     )
 
-  if (reqAccessData?.access === null || reqErrorData) {
+  if (reqAccessData?.access === null) {
     return (
       <RequiementAccessIndicatorUI
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
-        isAlwaysOpen={!accessData?.access}
+        isAlwaysOpen={!hasRoleAccess}
       >
         <PopoverHeader {...POPOVER_HEADER_STYLES}>
-          {reqErrorData?.msg
-            ? `Error: ${reqErrorData.msg}`
+          {reqAccessData?.errorMsg
+            ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
         </PopoverHeader>
       </RequiementAccessIndicatorUI>
@@ -109,12 +110,10 @@ const RequiementAccessIndicator = () => {
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={X}
-      isAlwaysOpen={!accessData?.access}
+      isAlwaysOpen={!hasRoleAccess}
     >
       <PopoverHeader {...POPOVER_HEADER_STYLES}>
-        {`Requirement not satisfied with your connected ${
-          reqObj?.isPlatform ? "account" : "addresses"
-        }`}
+        {`Requirement not satisfied with your connected accounts`}
       </PopoverHeader>
       {reqAccessData?.amount !== null && !!data?.minAmount && (
         <PopoverBody pt="0">
@@ -130,13 +129,16 @@ const RequiementAccessIndicator = () => {
         </PopoverBody>
       )}
       <PopoverFooter {...POPOVER_FOOTER_STYLES}>
-        <Button
-          size="sm"
-          rightIcon={<Icon as={ArrowSquareIn} />}
-          onClick={openAccountModal}
-        >
-          {`View connected ${reqObj?.isPlatform ? "account" : "addresses"}`}
-        </Button>
+        <ButtonGroup size="sm">
+          <Button
+            rightIcon={<Icon as={ArrowSquareIn} />}
+            onClick={openAccountModal}
+            variant="outline"
+          >
+            View connections
+          </Button>
+          <RecheckAccessesButton />
+        </ButtonGroup>
       </PopoverFooter>
     </RequiementAccessIndicatorUI>
   )

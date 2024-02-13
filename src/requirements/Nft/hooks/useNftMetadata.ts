@@ -44,7 +44,10 @@ const useNftMetadataWithTraits = (
   const { data, isLoading } = useSWRImmutable(
     chain === "ETHEREUM" && shouldFetch
       ? `${baseUrl}/nft/${slug ? slug : `address/${address}`}`
-      : null
+      : null,
+    {
+      shouldRetryOnError: false,
+    }
   )
 
   if (isNounsContract) {

@@ -5,7 +5,6 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useGuild from "components/[guild]/hooks/useGuild"
 import DataBlock from "components/common/DataBlock"
 import useServerData from "hooks/useServerData"
 import { DiscordLogo } from "phosphor-react"
@@ -14,37 +13,38 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 const DiscordRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
-  const { guildPlatforms } = useGuild()
+  // TODO for later: I think we don't even need to call this hook here, serverName/roleName should be always set I think (see DiscordForm for more details)
   const {
     data: { serverName, serverIcon, roles, isAdmin },
-  } = useServerData(requirement.data?.serverId)
-
-  const renderedServerIcon = guildPlatforms?.find(
-    (p) => p.platformGuildId === requirement.data?.serverId
+  } = useServerData(
+    !requirement.data?.serverName ? requirement.data?.serverId : null
   )
-    ? null
-    : serverIcon || null
+
+  const displayedServerName =
+    serverName || requirement.data?.serverName || requirement.data?.serverId
+
+  const role =
+    typeof isAdmin === "boolean"
+      ? roles?.find(({ id }) => id === requirement.data?.roleId)
+      : undefined
+  const displayedRoleName =
+    role?.name || requirement.data?.roleName || requirement.data?.roleId
 
   return (
     <Requirement
-      image={renderedServerIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
+      image={serverIcon ?? <Icon as={DiscordLogo} boxSize={6} />}
       footer={<ConnectRequirementPlatformButton />}
       {...props}
     >
       {(() => {
         switch (requirement.type) {
           case "DISCORD_ROLE":
-            const role =
-              typeof isAdmin === "boolean"
-                ? roles?.find(({ id }) => id === requirement.data?.roleId)
-                : undefined
-
             return (
               <>
                 <Text as="span">{`Have the `}</Text>
-                <DataBlock>{role?.name || requirement.data?.roleName}</DataBlock>
+                <DataBlock>{displayedRoleName}</DataBlock>
                 <Text as="span">{` role in the `}</Text>
-                <DataBlock>{serverName || requirement.data?.serverName}</DataBlock>
+                <DataBlock>{displayedServerName}</DataBlock>
                 <Text as="span">{` server`}</Text>
               </>
             )
@@ -54,7 +54,7 @@ const DiscordRequirement = (props: RequirementProps) => {
             return requirement.type === "DISCORD_MEMBER_SINCE" ? (
               <>
                 <Text as="span">{`Be member of the `}</Text>
-                <DataBlock>{serverName || requirement.data?.serverName}</DataBlock>
+                <DataBlock>{displayedServerName}</DataBlock>
                 <Text as="span">{` server since at least `}</Text>
                 <DataBlockWithDate timestamp={requirement.data?.memberSince} />
               </>

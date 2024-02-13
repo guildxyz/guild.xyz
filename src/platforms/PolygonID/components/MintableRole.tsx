@@ -8,13 +8,14 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
@@ -25,16 +26,13 @@ type Props = {
   role: Role
 }
 
-const join = (signedValidation: SignedValdation) =>
-  fetcher(`/user/join`, signedValidation)
-
 const MintableRole = ({ role }: Props) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { id: userId } = useUser()
-  const { hasAccess } = useAccess(role.id)
+  const { hasRoleAccess } = useRoleMembership(role.id)
   const { id: guildId } = useGuild()
   const {
     data: claimedRoles,
@@ -46,7 +44,7 @@ const MintableRole = ({ role }: Props) => {
     ?.find((guild) => guild.guildId === guildId)
     ?.roleIds.find((roleId) => roleId === role.id)
 
-  const claim = async (signedValidation: SignedValdation) =>
+  const claim = async (signedValidation: SignedValidation) =>
     fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
       method: "POST",
       ...signedValidation,
@@ -90,10 +88,9 @@ const MintableRole = ({ role }: Props) => {
     }
   )
 
-  const { isLoading: isJoinLoading, onSubmit: onJoinAndClaim } = useSubmitWithSign(
-    join,
-    {
-      onSuccess: () =>
+  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
+    useMembershipUpdate(
+      () =>
         onClaimSubmit({
           userId: userId,
           data: {
@@ -101,15 +98,14 @@ const MintableRole = ({ role }: Props) => {
             roleId: role.id,
           },
         }),
-      onError: (err) =>
+      (err) =>
         showErrorToast({
           error: "Couldn't check eligibility",
           correlationId: err.correlationId,
-        }),
-    }
-  )
+        })
+    )
 
-  const isLoading = isJoinLoading || isClaimLoading
+  const isLoading = isMembershipUpdateLoading || isClaimLoading
 
   return (
     <Card p={4} mb="3" borderRadius="2xl">
@@ -127,7 +123,7 @@ const MintableRole = ({ role }: Props) => {
         <Spacer />
         <Tooltip
           label="You don't satisfy the requirements to this role"
-          isDisabled={hasAccess}
+          isDisabled={hasRoleAccess}
           placement="top"
           hasArrow
         >
@@ -135,14 +131,14 @@ const MintableRole = ({ role }: Props) => {
             colorScheme={"purple"}
             h={10}
             isLoading={isValidating || isLoading}
-            isDisabled={!hasAccess}
+            isDisabled={!hasRoleAccess}
             onClick={() => {
               if (hasClaimed) {
                 onOpen()
                 return
               }
 
-              onJoinAndClaim({ guildId })
+              triggerMembershipUpdate()
             }}
           >
             {hasClaimed ? "Show QR code" : "Mint proof"}

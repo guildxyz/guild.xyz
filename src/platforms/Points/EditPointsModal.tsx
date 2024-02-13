@@ -75,11 +75,7 @@ const EditPointsModal = ({
         <ModalBody>
           <FormProvider {...methods}>
             <Stack spacing={8}>
-              <AddNewPointsType
-                name={name}
-                imageUrl={imageUrl}
-                isOptional={false}
-              ></AddNewPointsType>
+              <AddNewPointsType name={name} imageUrl={imageUrl} isOptional={false} />
 
               <Button
                 colorScheme="indigo"

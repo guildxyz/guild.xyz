@@ -1,7 +1,7 @@
 // import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 // import { Contract } from "@ethersproject/contracts"
 import { Chains } from "chains"
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -24,7 +24,7 @@ const usePurchaseAsset = () => {
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const { mutate: mutateAccess } = useAccess(requirement?.roleId)
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const postHogOptions = { guild: urlName, chain: requirement.chain }
 
@@ -102,7 +102,7 @@ const usePurchaseAsset = () => {
     onSuccess: () => {
       captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
 
-      mutateAccess()
+      triggerMembershipUpdate()
 
       toast({
         status: "success",

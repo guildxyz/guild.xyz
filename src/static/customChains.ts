@@ -437,3 +437,34 @@ export const beraTestnet = /*#__PURE__*/ defineChain({
     },
   },
 })
+
+export const taikoKatlaTestnet = /*#__PURE__*/ defineChain({
+  id: 167008,
+  name: "Taiko Katla Testnet",
+  network: "taikoKatlaTestnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ETH",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://taiko-katla.blockpi.network/v1/rpc/public"],
+    },
+    public: {
+      http: ["https://taiko-katla.blockpi.network/v1/rpc/public"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.katla.taiko.xyz",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 77870,
+    },
+  },
+})

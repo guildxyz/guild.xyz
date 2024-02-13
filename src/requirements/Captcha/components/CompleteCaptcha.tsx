@@ -14,11 +14,11 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useAccess from "components/[guild]/hooks/useAccess"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { Robot } from "phosphor-react"
 import { useEffect } from "react"
 import useSWRImmutable from "swr/immutable"
@@ -29,13 +29,11 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const { id, roleId } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
-  const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
+  const { reqAccesses } = useRoleMembership(roleId)
 
-  const hasAccess = roleAccess?.requirements?.find(
-    (req) => req.requirementId === id
-  )?.access
+  const reqAccess = reqAccesses?.find((err) => err.requirementId === id)
 
-  if (!roleAccess || hasAccess) return null
+  if (!reqAccess || reqAccess.access) return null
 
   return (
     <>

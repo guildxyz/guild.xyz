@@ -1,13 +1,26 @@
 import { Tooltip } from "@chakra-ui/react"
-import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { GuildPlatform, PlatformType } from "types"
-import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
+import { GuildPlatform, PlatformType, RolePlatformStatus } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
+import useClaimText, { ClaimTextModal } from "./hooks/useClaimText"
 
 type Props = {
   platform: GuildPlatform
+}
+
+export const claimTextButtonTooltipLabel: Record<
+  RolePlatformStatus,
+  string | undefined
+> = {
+  ALL_CLAIMED: "All available rewards have already been claimed",
+  NOT_STARTED: "Claim hasn't started yet",
+  ENDED: "Claim already ended",
+  ACTIVE: undefined,
 }
 
 const TextCardButton = ({ platform }: Props) => {
@@ -18,6 +31,7 @@ const TextCardButton = ({ platform }: Props) => {
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
   const {
     onSubmit,
+    isPreparing,
     isLoading,
     error,
     response,
@@ -25,29 +39,14 @@ const TextCardButton = ({ platform }: Props) => {
   } = useClaimText(rolePlatform?.id)
   const { claimed } = useClaimedReward(rolePlatform.id)
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-
-  const isButtonDisabled =
-    (startTimeDiff > 0 ||
-      endTimeDiff < 0 ||
-      (typeof rolePlatform?.capacity === "number" &&
-        rolePlatform?.capacity === rolePlatform?.claimedCount)) &&
-    !claimed
-
-  const tooltipLabel =
-    typeof rolePlatform?.capacity === "number" &&
-    rolePlatform?.capacity === rolePlatform?.claimedCount
-      ? "All available rewards have already been claimed"
-      : startTimeDiff > 0
-      ? "Claim hasn't started yet"
-      : "Claim already ended"
+  const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
+  const isButtonDisabled = !isAvailable && !claimed
 
   return (
     <>
       <Tooltip
         isDisabled={!isButtonDisabled}
-        label={tooltipLabel}
+        label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >
@@ -56,8 +55,8 @@ const TextCardButton = ({ platform }: Props) => {
             onOpen()
             if (!response) onSubmit()
           }}
-          isLoading={isLoading}
-          loadingText="Claiming secret..."
+          isLoading={isLoading || isPreparing}
+          loadingText={isPreparing ? "Checking eligibility" : "Claiming secret..."}
           isDisabled={isButtonDisabled}
           w="full"
         >

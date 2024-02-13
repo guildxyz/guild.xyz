@@ -3,7 +3,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
 import { PlatformName, User } from "types"
 import fetcher from "utils/fetcher"
@@ -88,7 +88,7 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
 
   const { mutate: mutateUser, id } = useUser()
 
-  const submit = (signedValidation: SignedValdation) => {
+  const submit = (signedValidation: SignedValidation) => {
     const platformName =
       JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
       "UNKNOWN_PLATFORM"
@@ -193,7 +193,7 @@ const useConnectEmail = ({
   const { captureEvent } = usePostHogContext()
   const { mutate: mutateUser, id } = useUser()
 
-  const submit = (signedValidation: SignedValdation) => {
+  const submit = (signedValidation: SignedValidation) => {
     const { emailAddress } = JSON.parse(signedValidation?.signedPayload ?? "{}")
 
     return fetcher(`/v2/users/${id}/emails/${emailAddress}/verification`, {

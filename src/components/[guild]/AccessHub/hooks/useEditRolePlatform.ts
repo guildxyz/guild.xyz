@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { RolePlatform } from "types"
 import fetcher from "utils/fetcher"
 
@@ -18,7 +18,7 @@ const useEditRolePlatform = ({
 
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (signedValidation: SignedValdation) =>
+  const submit = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatformId}`, {
       method: "PUT",
       ...signedValidation,

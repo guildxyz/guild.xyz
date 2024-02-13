@@ -45,6 +45,7 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         platformType={PlatformType[guildPlatform.platformId] as PlatformName}
+        claimedCount={rolePlatform?.claimedCount}
         defaultValues={{
           capacity: rolePlatform?.capacity,
           startTime: rolePlatform?.startTime,

@@ -7,7 +7,7 @@ import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useSWRConfig } from "swr"
 import { GuildPlatform, PlatformType, Requirement, Role, Visibility } from "types"
 import fetcher from "utils/fetcher"
@@ -41,7 +41,7 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const triggerConfetti = useJsConfetti()
 
   const fetchData = async (
-    signedValidation: SignedValdation
+    signedValidation: SignedValidation
   ): Promise<CreateRoleResponse> =>
     fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 

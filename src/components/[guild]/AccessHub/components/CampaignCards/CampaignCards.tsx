@@ -37,79 +37,82 @@ const CampaignCards = () => {
 
   return (
     <>
-      {groups.map(({ id, imageUrl, name, urlName }) => {
-        const groupHasRoles = roles.some((role) => role.groupId === id)
-        if (!isAdmin && !groupHasRoles) return null
+      {groups
+        // Temporary solution for our office opening event
+        .filter((g) => g.id !== 93)
+        .map(({ id, imageUrl, name, urlName }) => {
+          const groupHasRoles = roles.some((role) => role.groupId === id)
+          if (!isAdmin && !groupHasRoles) return null
 
-        return (
-          <ColorCard
-            key={id}
-            color={groupHasRoles ? "primary.500" : "gray.500"}
-            borderStyle={groupHasRoles ? "solid" : "dashed"}
-            pt={{ base: 10, sm: 11 }}
-            display="flex"
-            flexDir="column"
-            justifyContent="space-between"
-          >
-            {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
+          return (
+            <ColorCard
+              key={id}
+              color={groupHasRoles ? "primary.500" : "gray.500"}
+              borderStyle={groupHasRoles ? "solid" : "dashed"}
+              pt={{ base: 10, sm: 11 }}
+              display="flex"
+              flexDir="column"
+              justifyContent="space-between"
+            >
+              {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
 
-            <HStack spacing={3} minHeight={10} mb={5}>
-              {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
-                <Circle
-                  overflow={"hidden"}
-                  borderRadius="full"
-                  size={10}
-                  flexShrink={0}
-                  position="relative"
-                  bgColor={imageBgColor}
+              <HStack spacing={3} minHeight={10} mb={5}>
+                {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
+                  <Circle
+                    overflow={"hidden"}
+                    borderRadius="full"
+                    size={10}
+                    flexShrink={0}
+                    position="relative"
+                    bgColor={imageBgColor}
+                  >
+                    {imageUrl?.match("guildLogos") ? (
+                      <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
+                    ) : (
+                      <Image
+                        src={imageUrl || guildImageUrl}
+                        alt={name}
+                        layout="fill"
+                      />
+                    )}
+                  </Circle>
+                ) : (
+                  <SkeletonCircle size="10" />
+                )}
+                <Text fontWeight="bold">{name}</Text>
+              </HStack>
+
+              {groupHasRoles ? (
+                <LinkButton
+                  colorScheme={"primary"}
+                  href={`/${guildUrlName}/${urlName}`}
+                  rightIcon={<ArrowRight />}
                 >
-                  {imageUrl?.match("guildLogos") ? (
-                    <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
-                  ) : (
-                    <Image
-                      src={imageUrl || guildImageUrl}
-                      alt={name}
-                      layout="fill"
-                    />
-                  )}
-                </Circle>
+                  View page
+                </LinkButton>
               ) : (
-                <SkeletonCircle size="10" />
+                <LinkButton
+                  colorScheme={"gray"}
+                  variant={"outline"}
+                  href={`/${guildUrlName}/${urlName}`}
+                  leftIcon={<Plus />}
+                >
+                  Add roles
+                </LinkButton>
               )}
-              <Text fontWeight="bold">{name}</Text>
-            </HStack>
 
-            {groupHasRoles ? (
-              <LinkButton
-                colorScheme={"primary"}
-                href={`/${guildUrlName}/${urlName}`}
-                rightIcon={<ArrowRight />}
-              >
-                View page
-              </LinkButton>
-            ) : (
-              <LinkButton
-                colorScheme={"gray"}
-                variant={"outline"}
-                href={`/${guildUrlName}/${urlName}`}
-                leftIcon={<Plus />}
-              >
-                Add roles
-              </LinkButton>
-            )}
-
-            <ColorCardLabel
-              fallbackColor="white"
-              backgroundColor={groupHasRoles ? "primary.500" : "gray.500"}
-              label="Page"
-              top="-2px"
-              left="-2px"
-              borderBottomRightRadius="xl"
-              borderTopLeftRadius="2xl"
-            />
-          </ColorCard>
-        )
-      })}
+              <ColorCardLabel
+                fallbackColor="white"
+                backgroundColor={groupHasRoles ? "primary.500" : "gray.500"}
+                label="Page"
+                top="-2px"
+                left="-2px"
+                borderBottomRightRadius="xl"
+                borderTopLeftRadius="2xl"
+              />
+            </ColorCard>
+          )
+        })}
     </>
   )
 }

@@ -5,11 +5,11 @@ import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
 import { Role } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirements from "utils/preprocessRequirements"
 import { useAccount } from "wagmi"
@@ -20,8 +20,6 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   const toastIdRef = useRef<ToastId>()
   const { address } = useAccount()
 
-  const fetcherWithSign = useFetcherWithSign()
-
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
@@ -30,7 +28,7 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   const { mutate: mutateActiveStatusUpdates } = useActiveStatusUpdates()
 
   const fetchData = async (
-    signedValidation: SignedValdation
+    signedValidation: SignedValidation
   ): Promise<RoleOrGuild> => fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<RoleOrGuild>(fetchData, {

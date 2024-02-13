@@ -2,7 +2,6 @@ import {
   Box,
   Collapse,
   SlideFade,
-  Spinner,
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
@@ -73,7 +72,7 @@ const RoleRequirements = ({
         {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
           {!requirements?.length ? (
-            <Spinner />
+            <RoleRequirementsSkeleton />
           ) : isVirtualList ? (
             <VirtualRequirements
               {...{ isExpanded, requirements, descriptionRef }}
@@ -172,7 +171,7 @@ const VirtualRequirements = memo(
           listRef.current.resetAfterIndex(0)
           rowHeights.current = {
             ...rowHeights.current,
-            [index]: rowRef.current.clientHeight,
+            [index]: rowRef.current?.clientHeight,
           }
         })
 
@@ -217,14 +216,14 @@ const VirtualRequirements = memo(
 )
 
 const RoleRequirementsSkeleton = () => (
-  <VStack spacing={0} w="full" p={5} pt={0}>
+  <>
     {[...Array(3)].map((_, i) => (
       <Fragment key={i}>
         <RequirementSkeleton key={i} />
         {i !== 2 && <LogicDivider logic="ANY_OF" />}
       </Fragment>
     ))}
-  </VStack>
+  </>
 )
 
 export default memo(RoleRequirements)

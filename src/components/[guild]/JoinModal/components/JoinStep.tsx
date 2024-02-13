@@ -1,15 +1,7 @@
-import {
-  ButtonGroup,
-  ButtonProps,
-  Circle,
-  HStack,
-  Icon,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react"
+import { ButtonGroup, ButtonProps, HStack, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import { Check } from "phosphor-react"
 import React, { PropsWithChildren } from "react"
+import JoinStepIndicator from "./JoinStepIndicator"
 
 type Props = {
   title: string
@@ -40,18 +32,8 @@ const JoinStep = ({
 
   return (
     <HStack>
-      <Circle
-        size="5"
-        border={"1px"}
-        {...(isDone
-          ? {
-              bg: "green.500",
-              borderColor: "green.500",
-            }
-          : { bg: "blackAlpha.100", borderColor: "whiteAlpha.100" })}
-      >
-        {isDone && <Icon as={Check} weight="bold" color={"white"} boxSize="0.8em" />}
-      </Circle>
+      <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
+
       <HStack w="full">
         <Text fontWeight="bold" noOfLines={1}>
           {title}

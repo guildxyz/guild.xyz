@@ -13,10 +13,11 @@ import {
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Visibility from "components/[guild]/Visibility"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
 import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
@@ -54,24 +55,24 @@ const Reward = ({
   withMotionImg = false,
   isLinkColorful,
 }: RewardProps) => {
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
-  const { hasAccess, isValidating } = useAccess(role.id)
+  const { hasRoleAccess, isValidating } = useRoleMembership(role.id)
   const { label, ...accessButtonProps } = usePlatformAccessButton(
     platform.guildPlatform
   )
 
   const state = useMemo(() => {
-    if (isMember && hasAccess)
+    if (isMember && hasRoleAccess)
       return {
         tooltipLabel: label,
         buttonProps: isLinkColorful
           ? { ...accessButtonProps, colorScheme: "blue" }
           : accessButtonProps,
       }
-    if (!isConnected || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasRoleAccess))
       return {
         tooltipLabel: (
           <>
@@ -85,7 +86,7 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasAccess, isConnected, accessButtonProps, isLinkColorful])
+  }, [isMember, hasRoleAccess, isConnected, accessButtonProps, isLinkColorful])
 
   return (
     <RewardDisplay

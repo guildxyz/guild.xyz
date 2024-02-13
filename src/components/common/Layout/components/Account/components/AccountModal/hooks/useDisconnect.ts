@@ -2,7 +2,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useToast from "hooks/useToast"
 import { PlatformType } from "types"
@@ -15,7 +15,7 @@ const useDisconnect = (onSuccess?: () => void) => {
   const { id } = useGuild()
   const toast = useToast()
 
-  const submit = async (signedValidation: SignedValdation) => {
+  const submit = async (signedValidation: SignedValidation) => {
     const { platformName } = JSON.parse(signedValidation.signedPayload)
 
     return fetcher(
@@ -58,7 +58,7 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
   const { id } = useGuild()
   const toast = useToast()
 
-  const submit = async (signedValidation: SignedValdation) => {
+  const submit = async (signedValidation: SignedValidation) => {
     const { address: addressFromValidation } = JSON.parse(
       signedValidation.signedPayload
     )
@@ -97,7 +97,7 @@ const useDisconnectEmail = (onSuccess?: () => void) => {
   const { mutate: mutateUser, id: userId } = useUser()
   const toast = useToast()
 
-  const submit = async (signedValidation: SignedValdation) => {
+  const submit = async (signedValidation: SignedValidation) => {
     const { emailAddress } = JSON.parse(signedValidation.signedPayload)
 
     return fetcher(`/v2/users/${userId}/emails/${emailAddress}`, {

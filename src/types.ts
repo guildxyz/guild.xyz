@@ -112,15 +112,13 @@ type SharedSocial = {
   isShared: boolean
 }
 
-type AddressConnectionProvider = "DELEGATE"
-
 type User = {
   id: number
   addresses: Array<{
     address: `0x${string}`
     userId: number
     isPrimary: boolean
-    provider: AddressConnectionProvider
+    isDelegated: boolean
     createdAt: string
     walletType: "EVM" | "FUEL"
   }>
@@ -130,9 +128,6 @@ type User = {
   isSuperAdmin: boolean
 
   captchaVerifiedSince: Date
-
-  // Should be removed once we use only v2 API
-  addressProviders?: Record<string, AddressConnectionProvider>
 
   emails: {
     emailAddress: string
@@ -342,6 +337,8 @@ type Requirement = {
   updatedAt?: string
 }
 
+type RolePlatformStatus = "ALL_CLAIMED" | "NOT_STARTED" | "ENDED" | "ACTIVE"
+
 type RolePlatform = {
   id: number
   platformRoleId?: string
@@ -386,6 +383,8 @@ type Role = SimpleRole & {
   rolePlatforms: RolePlatform[]
   hiddenRequirements?: boolean
   hiddenRewards?: boolean
+  createdAt?: string
+  updatedAt?: string
 }
 
 type GuildPlatform = {
@@ -642,7 +641,6 @@ type DetailedPinLeaderboardUserData = {
 
 export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
 export type {
-  AddressConnectionProvider,
   BaseUser,
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,
@@ -675,6 +673,7 @@ export type {
   Role,
   RoleFormType,
   RolePlatform,
+  RolePlatformStatus,
   SelectOption,
   SimpleGuild,
   SimpleRole,

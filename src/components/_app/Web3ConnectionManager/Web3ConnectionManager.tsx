@@ -1,5 +1,4 @@
 import ClientOnly from "components/common/ClientOnly"
-import useContractWalletInfoToast from "hooks/useContractWalletInfoToast"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
@@ -18,7 +17,6 @@ const Web3ConnectionManager = () => {
     openAccountModal,
   } = useWeb3ConnectionManager()
 
-  useContractWalletInfoToast()
   useConnectFromLocalStorage()
   useNewSharedSocialsToast(openAccountModal)
 
