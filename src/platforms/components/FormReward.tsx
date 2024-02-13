@@ -32,26 +32,30 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
         />
       }
       label={
-        <Tooltip
-          label={!!userSubmission ? "Response already submitted" : "Fill form"}
-          hasArrow
-          shouldWrapChildren
-        >
+        <>
           {"Fill form: "}
-          <LinkButton
-            isLoading={isFormsValidating || isUserSubmissionValidating}
-            isDisabled={!!userSubmission}
-            href={
-              !userSubmission ? `/${urlName}/forms/${platformGuildData.formId}` : "#"
-            }
-            variant="link"
-            rightIcon={<ArrowSquareOut />}
-            iconSpacing="1"
-            maxW="full"
+          <Tooltip
+            label={!!userSubmission ? "Response already submitted" : "Go to form"}
+            hasArrow
+            shouldWrapChildren
           >
-            {form?.name ?? platforms[PlatformType[platformId]].name}
-          </LinkButton>
-        </Tooltip>
+            <LinkButton
+              isLoading={isFormsValidating || isUserSubmissionValidating}
+              isDisabled={!!userSubmission}
+              href={
+                !userSubmission
+                  ? `/${urlName}/forms/${platformGuildData.formId}`
+                  : "#"
+              }
+              variant="link"
+              rightIcon={<ArrowSquareOut />}
+              iconSpacing="1"
+              maxW="full"
+            >
+              {form?.name ?? platforms[PlatformType[platformId]].name}
+            </LinkButton>
+          </Tooltip>
+        </>
       }
     />
   )
