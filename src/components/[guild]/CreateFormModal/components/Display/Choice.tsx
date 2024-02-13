@@ -2,101 +2,150 @@ import {
   Checkbox,
   CheckboxGroup,
   CheckboxGroupProps,
-  CheckboxProps,
   HStack,
   Input,
   Radio,
   RadioGroup,
   RadioGroupProps,
-  RadioProps,
   Stack,
   forwardRef,
 } from "@chakra-ui/react"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
-import { ComponentType, useState } from "react"
-import { useFormContext } from "react-hook-form"
 import { Field } from "../../schemas"
 
 type Props = {
   field: Field | CreateForm["fields"][number]
-} & (RadioGroupProps | CheckboxGroupProps)
-
-const GroupComponents: Record<
-  "SINGLE_CHOICE" | "MULTIPLE_CHOICE",
-  ComponentType<RadioGroupProps | CheckboxGroupProps>
-> = {
-  SINGLE_CHOICE: RadioGroup,
-  MULTIPLE_CHOICE: CheckboxGroup,
 }
 
-const FieldComponents: Record<
-  "SINGLE_CHOICE" | "MULTIPLE_CHOICE",
-  ComponentType<RadioProps | CheckboxProps>
-> = {
-  SINGLE_CHOICE: Radio,
-  MULTIPLE_CHOICE: Checkbox,
-}
+const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
+  ({ field, value, onChange, ...props }, _ref) => {
+    // We probably won't run into this case, but needed to add this line to get valid intellisense
+    if (field.type !== "SINGLE_CHOICE") return null
 
-// TODO: should we pass that ref down? (probably for focus management?)
-const Choice = forwardRef<Props, "div">(({ field, ...props }, _ref) => {
-  const { setValue } = useFormContext()
-  const [isOtherActive, setIsOtherActive] = useState(false)
+    const options = field.options.map((option) =>
+      typeof option === "number" || typeof option === "string"
+        ? option
+        : option.value
+    )
 
-  // We probably won't run into this case, but needed to add this line to get valid intellisense
-  if (field.type !== "SINGLE_CHOICE" && field.type !== "MULTIPLE_CHOICE") return null
+    const isOtherActive = value !== undefined && !options.includes(value)
 
-  const isSingleChoice = field.type === "SINGLE_CHOICE"
+    return (
+      <RadioGroup {...props} value={value} onChange={onChange}>
+        <Stack spacing={2}>
+          {options.map((option) => (
+            <Radio key={option} value={option.toString()} w="max-content">
+              {option}
+            </Radio>
+          ))}
 
-  const options = field.options.map((option) =>
-    typeof option === "number" || typeof option === "string" ? option : option.value
-  )
-
-  const GroupComponent = GroupComponents[field.type]
-  const FieldComponent = FieldComponents[field.type]
-
-  return (
-    <GroupComponent
-      {...props}
-      onChange={(newValue) => {
-        if (newValue !== "Other...") {
-          setIsOtherActive(false)
-        }
-        props.onChange(newValue)
-      }}
-    >
-      <Stack spacing={1}>
-        {options.map((option) => (
-          <FieldComponent key={option} value={option.toString()} w="max-content">
-            {option}
-          </FieldComponent>
-        ))}
-
-        {field.allowOther && (
-          <HStack>
-            <FieldComponent
-              isDisabled={props.isDisabled}
-              isChecked={isOtherActive}
-              onChange={(e) => {
-                setIsOtherActive(e.target.checked)
-                setValue(field.id, isSingleChoice ? "" : [])
-              }}
-            >
-              {isSingleChoice && isOtherActive ? "" : "Other..."}
-            </FieldComponent>
-            {isSingleChoice && isOtherActive && (
+          {field.allowOther && (
+            <HStack>
+              <Radio
+                isDisabled={props.isDisabled}
+                isChecked={isOtherActive}
+                // so clicking the marker will focus the input automatically
+                {...(!props.isDisabled && {
+                  as: "label",
+                  for: `field_${field.id}_other`,
+                  cursor: "pointer",
+                })}
+              ></Radio>
               <Input
-                as="input"
+                id={`field_${field.id}_other`}
+                isDisabled={props.isDisabled}
                 placeholder="Other..."
                 onChange={(e) => {
-                  setValue(field.id, e.target.value)
+                  onChange(e.target.value)
                 }}
+                value={isOtherActive ? value : ""}
+                {...(!isOtherActive
+                  ? {
+                      variant: "unstyled",
+                      height: "1.5em",
+                    }
+                  : {})}
+                onFocus={() => {
+                  if (!isOtherActive) onChange("")
+                }}
+                transition={"padding .15s, height .15s"}
               />
-            )}
-          </HStack>
-        )}
-      </Stack>
-    </GroupComponent>
-  )
-})
+            </HStack>
+          )}
+        </Stack>
+      </RadioGroup>
+    )
+  }
+)
 
-export default Choice
+const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
+  ({ field, value: valuesArray, onChange, ...props }, _ref) => {
+    // We probably won't run into this case, but needed to add this line to get valid intellisense
+    if (field.type !== "MULTIPLE_CHOICE") return null
+
+    const options = field.options.map((option) =>
+      typeof option === "number" || typeof option === "string"
+        ? option
+        : option.value
+    )
+
+    const otherValue = valuesArray?.find((v) => !options.includes(v))
+
+    return (
+      <CheckboxGroup {...props} value={valuesArray} onChange={onChange}>
+        <Stack spacing={2}>
+          {options.map((option) => (
+            <Checkbox key={option} value={option.toString()} w="max-content">
+              {option}
+            </Checkbox>
+          ))}
+
+          {field.allowOther && (
+            <HStack>
+              <Checkbox
+                isDisabled={props.isDisabled}
+                isChecked={otherValue !== undefined}
+                // so clicking the marker will focus the input automatically, or remove the other option as expected
+                {...(!props.isDisabled && !otherValue
+                  ? {
+                      as: "label",
+                      for: `field_${field.id}_other`,
+                      cursor: "pointer",
+                    }
+                  : {})}
+                value={otherValue}
+              ></Checkbox>
+              <Input
+                id={`field_${field.id}_other`}
+                isDisabled={props.isDisabled}
+                placeholder="Other..."
+                onChange={(e) => {
+                  const otherValueIndex = valuesArray.indexOf(otherValue)
+                  valuesArray[otherValueIndex] = e.target.value
+                  onChange(valuesArray)
+                }}
+                onBlur={(e) => {
+                  if (e.target.value === "")
+                    onChange(valuesArray.filter((v) => v !== otherValue))
+                }}
+                value={otherValue || ""}
+                {...(otherValue === undefined
+                  ? {
+                      variant: "unstyled",
+                      height: "1.5em",
+                    }
+                  : {})}
+                onFocus={() => {
+                  if (!otherValue) onChange([...(valuesArray ?? []), ""])
+                }}
+                transition={"padding .15s, height .15s"}
+              />
+            </HStack>
+          )}
+        </Stack>
+      </CheckboxGroup>
+    )
+  }
+)
+
+export { MultipleChoice, SingleChoice }

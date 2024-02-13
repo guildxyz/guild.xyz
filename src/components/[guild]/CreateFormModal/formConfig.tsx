@@ -8,7 +8,7 @@ import {
 } from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
-import Choice from "./components/Display/Choice"
+import { MultipleChoice, SingleChoice } from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
 import Number from "./components/Display/Number"
 import Rate from "./components/Display/Rate"
@@ -52,14 +52,14 @@ const fieldTypes: {
     value: "SINGLE_CHOICE",
     img: <OptionIcon as={RadioButton} />,
     SetupComponent: ChoiceSetup,
-    DisplayComponent: Choice,
+    DisplayComponent: SingleChoice,
   },
   {
     label: "Multiple choice",
     value: "MULTIPLE_CHOICE",
     img: <OptionIcon as={CheckSquare} />,
     SetupComponent: ChoiceSetup,
-    DisplayComponent: Choice,
+    DisplayComponent: MultipleChoice,
   },
   {
     label: "Rate",
