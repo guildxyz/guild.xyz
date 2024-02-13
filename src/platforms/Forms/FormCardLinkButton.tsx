@@ -20,10 +20,10 @@ const FormCardLinkButton = ({ platform }: Props) => {
 
   return (
     <LinkButton
-      isDisabled={!!userSubmission}
+      isDisabled={!form || !!userSubmission}
       isLoading={isFormsValidating || isValidating}
       prefetch={false}
-      href={!userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
+      href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
       size="lg"
       w="full"
       colorScheme={platforms.FORM.colorScheme}
