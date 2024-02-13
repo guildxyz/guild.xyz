@@ -102,7 +102,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                           : undefined,
                     })}
                   />
-                  {fields?.length > 1 && (
+                  {fields?.length > 1 && index !== 0 && (
                     <InputRightElement>
                       <IconButton
                         variant="ghost"
@@ -110,6 +110,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                         size="xs"
                         rounded="full"
                         aria-label="Remove contact"
+                        data-test="removeContactBtn"
                         onClick={() => remove(index)}
                       />
                     </InputRightElement>
