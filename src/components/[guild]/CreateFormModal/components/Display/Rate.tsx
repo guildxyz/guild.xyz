@@ -118,6 +118,7 @@ const RateRadioButton = (props: RadioProps) => {
         borderRadius="md"
         _checked={{
           bg: "primary.500",
+          color: "white",
         }}
       >
         {props.children}

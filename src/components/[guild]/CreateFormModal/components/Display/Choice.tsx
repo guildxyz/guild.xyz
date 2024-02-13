@@ -31,7 +31,12 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
     const isOtherActive = value !== undefined && !options.includes(value)
 
     return (
-      <RadioGroup {...props} value={value} onChange={onChange}>
+      <RadioGroup
+        {...props}
+        value={value}
+        onChange={onChange}
+        colorScheme={"primary"}
+      >
         <Stack spacing={2}>
           {options.map((option) => (
             <Radio key={option} value={option.toString()} w="max-content">
@@ -92,7 +97,12 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
     const otherValue = valuesArray?.find((v) => !options.includes(v))
 
     return (
-      <CheckboxGroup {...props} value={valuesArray} onChange={onChange}>
+      <CheckboxGroup
+        {...props}
+        value={valuesArray}
+        onChange={onChange}
+        colorScheme={"primary"}
+      >
         <Stack spacing={2}>
           {options.map((option) => (
             <Checkbox key={option} value={option.toString()} w="max-content">
