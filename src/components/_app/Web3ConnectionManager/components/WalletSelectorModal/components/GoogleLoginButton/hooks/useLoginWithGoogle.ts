@@ -113,7 +113,7 @@ const useLoginWithGoogle = () => {
         address: walletClient.account.address,
       }
 
-      const keyPair = !!addressLinkParams
+      const keyPair = !!addressLinkParams?.userId
         ? await onLinkAddress({ ...addressLinkParams, signProps }).then(
             (result) => result?.keyPair
           )
