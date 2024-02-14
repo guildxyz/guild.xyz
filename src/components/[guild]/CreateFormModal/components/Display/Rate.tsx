@@ -34,7 +34,7 @@ const Rate = forwardRef<Props, "input">(({ field, ...props }, _ref) => {
       }}
       mx="-2"
     >
-      <Flex overflowX={"auto"} px="2">
+      <Flex overflowX="auto" px="2" position="relative">
         <Stack spacing={1} flex="1 0 auto">
           <RateRadioGroup
             options={field.options?.map((option) => ({
