@@ -15,12 +15,14 @@ const TIMEOUT = 60_000
 
 type Props = {
   tooltipLabel?: string
+  roleIds?: number[]
 } & ButtonProps
 
 const latestResendDateAtom = atomWithStorage("latestResendDate", -Infinity)
 
 const RecheckAccessesButton = ({
   tooltipLabel = "Re-check accesses",
+  roleIds,
   ...rest
 }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
@@ -62,7 +64,7 @@ const RecheckAccessesButton = ({
   }, [])
 
   const onClick = () => {
-    triggerMembershipUpdate()
+    triggerMembershipUpdate({ roleIds })
     captureEvent("Click: ResendRewardButton", {
       guild: urlName,
     })
