@@ -2,9 +2,10 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
@@ -73,30 +74,41 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
       })),
     })
 
+  const boxShadow = useColorModeValue(
+    "0 -4px 6px -1px rgba(0, 0, 0, 0.1),0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
+    "0 -10px 15px -3px rgba(0, 0, 0, 0.1),0 -4px 6px -2px rgba(0, 0, 0, 0.05)"
+  )
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="4xl" colorScheme="dark">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size="4xl"
+      colorScheme="dark"
+      scrollBehavior="inside"
+    >
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent maxH="100vh !important">
         <ModalHeader>Edit form</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
-          <FormProvider {...methods}>
-            <Stack spacing={8}>
-              <CreateFormForm />
-
-              <Button
-                colorScheme="green"
-                w="max-content"
-                ml="auto"
-                onClick={methods.handleSubmit(onEditFormSubmit, console.error)}
-                isLoading={isLoading}
-                loadingText="Saving form"
-              >
-                Save
-              </Button>
-            </Stack>
-          </FormProvider>
-        </ModalBody>
+        <FormProvider {...methods}>
+          <ModalBody>
+            <CreateFormForm />
+          </ModalBody>
+          <ModalFooter py="4" boxShadow={boxShadow} zIndex={1}>
+            <Button
+              colorScheme="green"
+              isDisabled={!methods.formState.isDirty}
+              w="max-content"
+              ml="auto"
+              onClick={methods.handleSubmit(onEditFormSubmit, console.error)}
+              isLoading={isLoading}
+              loadingText="Saving form"
+            >
+              Save
+            </Button>
+          </ModalFooter>
+        </FormProvider>
       </ModalContent>
     </Modal>
   )
