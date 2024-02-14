@@ -120,7 +120,7 @@ const AccountConnections = () => {
             {vaults?.length ? (
               <ButtonGroup w="full">
                 <LinkAddressButton />
-                <LinkDelegateVaultButton vaults={vaults ?? []} />
+                <LinkDelegateVaultButton vaults={vaults} />
               </ButtonGroup>
             ) : (
               <LinkAddressButton />
