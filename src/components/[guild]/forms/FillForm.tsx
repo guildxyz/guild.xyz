@@ -29,7 +29,7 @@ const FillForm = ({ form }: Props) => {
     watch,
   } = methods
   const formValues = watch()
-  const requiredFieldIds = form.fields
+  const requiredFieldIds = form?.fields
     .filter((field) => field.isRequired)
     .map((field) => field.id)
   const isSubmitDisabled = Object.keys(formValues).some(
