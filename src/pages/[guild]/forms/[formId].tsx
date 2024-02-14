@@ -1,21 +1,16 @@
-import { Box, HStack, Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import RoleRequirements from "components/[guild]/Requirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import FillForm from "components/[guild]/forms/FillForm"
+import FormNoAccess from "components/[guild]/forms/FormNoAccess"
 import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import Button from "components/common/Button"
-import Card from "components/common/Card"
-import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
-import { Lock, LockSimple, Wallet } from "phosphor-react"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
@@ -28,7 +23,6 @@ type Props = {
 const FormPage = ({ formId }: Props) => {
   const { roles, imageUrl, guildPlatforms } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const bgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
   const { data: forms } = useForms()
   const form = forms?.find((f) => f.id === formId)
@@ -40,9 +34,6 @@ const FormPage = ({ formId }: Props) => {
     r.rolePlatforms.some((rp) => rp.guildPlatformId === relevantGuildPlatform?.id)
   )
 
-  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
-
-  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate()
   const { hasRoleAccess } = useRoleMembership(role?.id)
 
   return (
@@ -63,56 +54,20 @@ const FormPage = ({ formId }: Props) => {
       {hasRoleAccess ? (
         <FillForm form={form} />
       ) : (
-        <Card>
-          <Stack bgColor={bgColor}>
-            <HStack justifyContent="space-between" p={5}>
-              <HStack display={{ base: "none", md: "flex" }}>
-                <Icon as={Lock} />
-                <Text fontWeight="semibold">
-                  This form is locked. Requirements to access:
-                </Text>
-              </HStack>
-
-              <ClientOnly>
-                <Button
-                  leftIcon={
-                    <Icon
-                      as={isWeb3Connected ? LockSimple : Wallet}
-                      width={"0.9em"}
-                      height="0.9em"
-                    />
-                  }
-                  size="sm"
-                  borderRadius="lg"
-                  isLoading={isLoading}
-                  loadingText="Checking access"
-                  onClick={
-                    isWeb3Connected
-                      ? () => triggerMembershipUpdate()
-                      : () => openWalletSelectorModal()
-                  }
-                >
-                  {isWeb3Connected
-                    ? "Join Guild to check access"
-                    : "Connect to access"}
-                </Button>
-              </ClientOnly>
-            </HStack>
-
-            {!!role ? (
-              <RoleRequirements
-                role={role}
-                isOpen
-                isExpanded
-                onToggleExpanded={() => {}}
-              />
-            ) : (
-              <Box px={5} pb={5}>
-                <RoleRequirementsSkeleton />
-              </Box>
-            )}
-          </Stack>
-        </Card>
+        <FormNoAccess>
+          {!!role ? (
+            <RoleRequirements
+              role={role}
+              isOpen
+              isExpanded
+              onToggleExpanded={() => {}}
+            />
+          ) : (
+            <Box px={5} pb={5}>
+              <RoleRequirementsSkeleton />
+            </Box>
+          )}
+        </FormNoAccess>
       )}
     </Layout>
   )
