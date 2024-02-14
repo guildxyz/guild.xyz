@@ -1,55 +1,55 @@
-import { HStack, Icon, Stack, Text, useColorModeValue } from "@chakra-ui/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import {
+  Box,
+  Divider,
+  HStack,
+  Icon,
+  Text,
+  useBreakpointValue,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
-import { Lock, LockSimple, Wallet } from "phosphor-react"
+import { Lock } from "phosphor-react"
+import { useOpenJoinModal } from "../JoinModal/JoinModalProvider"
+import RecheckAccessesButton from "../RecheckAccessesButton"
 
-const FormNoAccess = ({ children }) => {
-  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
-
-  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate()
+const FormNoAccess = ({ isMember, children }) => {
+  const openJoinModal = useOpenJoinModal()
 
   const bgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const isMobile = useBreakpointValue({ base: true, md: false })
 
   return (
     <Card>
-      <Stack bgColor={bgColor}>
-        <Stack justifyContent="space-between" p={5}>
-          <HStack>
-            <Icon as={Lock} />
-            <Text fontWeight="semibold">
-              This form is locked. Requirements to access:
-            </Text>
-          </HStack>
+      <HStack justifyContent="space-between" p={5} bgColor={bgColor}>
+        <HStack>
+          <Icon as={Lock} />
+          <Text fontWeight="semibold">
+            {`This form is locked${
+              isMember || !isMobile ? ". Requirements to access:" : ""
+            }`}
+          </Text>
+        </HStack>
 
-          <ClientOnly>
+        <ClientOnly>
+          {isMember ? (
+            <RecheckAccessesButton size="sm" />
+          ) : (
             <Button
-              leftIcon={
-                <Icon
-                  as={isWeb3Connected ? LockSimple : Wallet}
-                  width={"0.9em"}
-                  height="0.9em"
-                />
-              }
               size="sm"
+              colorScheme="green"
               borderRadius="lg"
-              isLoading={isLoading}
               loadingText="Checking access"
-              onClick={
-                isWeb3Connected
-                  ? () => triggerMembershipUpdate()
-                  : () => openWalletSelectorModal()
-              }
+              onClick={openJoinModal}
             >
-              {isWeb3Connected ? "Join Guild to check access" : "Connect to access"}
+              Join to check access
             </Button>
-          </ClientOnly>
-        </Stack>
-
-        {children}
-      </Stack>
+          )}
+        </ClientOnly>
+      </HStack>
+      <Divider />
+      <Box pt="5">{children}</Box>
     </Card>
   )
 }

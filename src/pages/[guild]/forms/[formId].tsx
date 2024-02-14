@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import RoleRequirements from "components/[guild]/Requirements"
 import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -34,7 +35,7 @@ const FormPage = ({ formId }: Props) => {
     r.rolePlatforms.some((rp) => rp.guildPlatformId === relevantGuildPlatform?.id)
   )
 
-  const { hasRoleAccess } = useRoleMembership(role?.id)
+  const { hasRoleAccess, isMember } = useRoleMembership(role?.id)
 
   return (
     <Layout
@@ -54,14 +55,9 @@ const FormPage = ({ formId }: Props) => {
       {hasRoleAccess ? (
         <FillForm form={form} />
       ) : (
-        <FormNoAccess>
+        <FormNoAccess isMember={isMember}>
           {!!role ? (
-            <RoleRequirements
-              role={role}
-              isOpen
-              isExpanded
-              onToggleExpanded={() => {}}
-            />
+            <RoleRequirements role={role} isOpen isExpanded />
           ) : (
             <Box px={5} pb={5}>
               <RoleRequirementsSkeleton />
@@ -76,9 +72,11 @@ const FormPage = ({ formId }: Props) => {
 const FormPageWrapper = ({ fallback, formId }): JSX.Element => (
   <SWRConfig value={fallback && { fallback }}>
     <ThemeProvider>
-      <EditGuildDrawerProvider>
-        <FormPage formId={formId} />
-      </EditGuildDrawerProvider>
+      <JoinModalProvider>
+        <EditGuildDrawerProvider>
+          <FormPage formId={formId} />
+        </EditGuildDrawerProvider>
+      </JoinModalProvider>
     </ThemeProvider>
   </SWRConfig>
 )
