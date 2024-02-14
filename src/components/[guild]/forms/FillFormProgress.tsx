@@ -16,7 +16,7 @@ const FillFormProgress = ({ children }: PropsWithChildren<unknown>) => {
 
   return (
     <FloatingFooter maxWidth="container.md">
-      <HStack justify="space-between" py={3} px={{ base: 2, md: 3 }}>
+      <HStack justify="space-between" p={3}>
         <Text colorScheme="gray" fontWeight="semibold" fontSize="sm">
           Form {progressText} completed
         </Text>
