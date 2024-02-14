@@ -26,7 +26,15 @@ const FillForm = ({ form }: Props) => {
   const {
     control,
     formState: { errors },
+    watch,
   } = methods
+  const formValues = watch()
+  const requiredFieldIds = form.fields
+    .filter((field) => field.isRequired)
+    .map((field) => field.id)
+  const isSubmitDisabled = Object.keys(formValues).some(
+    (fieldId) => requiredFieldIds.includes(fieldId) && !formValues[fieldId]
+  )
 
   const { data: userSubmission, mutate: mutateSubmission } = useUserSubmission(form)
 
@@ -91,6 +99,7 @@ const FillForm = ({ form }: Props) => {
       <FillFormProgress>
         <Button
           colorScheme="green"
+          isDisabled={isSubmitDisabled}
           isLoading={isLoading}
           onClick={methods.handleSubmit(
             (data: Record<string, string>) =>
