@@ -64,7 +64,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
     !!errors.fields?.[index] ||
     !field?.question ||
     ((field?.type === "SINGLE_CHOICE" || field?.type === "MULTIPLE_CHOICE") &&
-      !field.options?.length)
+      (!field.options?.length || field.options.some((option) => !option.value)))
 
   return (
     <Reorder.Item
