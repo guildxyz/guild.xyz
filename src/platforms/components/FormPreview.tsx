@@ -4,7 +4,7 @@ import PlatformPreview from "./PlatformPreview"
 
 const FormPreview = (): JSX.Element => {
   const formId = useWatch({
-    name: "rolePlatforms.0.guildPlatform.platformGuildId",
+    name: "rolePlatforms.0.guildPlatform.platformGuildData.formId",
   })
   const { data, isLoading } = useForms()
   const form = data?.find((f) => f.id === formId)

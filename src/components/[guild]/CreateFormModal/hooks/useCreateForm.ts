@@ -25,7 +25,9 @@ const useCreateForm = (onSuccess?: (createdForm: Form) => void) => {
 
         onSuccess?.(createdForm)
 
-        mutateForms((prevValue) => [...(prevValue ?? []), createdForm])
+        mutateForms((prevValue) => [...(prevValue ?? []), createdForm], {
+          revalidate: false,
+        })
       },
       onError: (error) => showErrorToast(error),
     }
