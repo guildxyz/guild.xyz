@@ -497,7 +497,7 @@ const platforms: Record<PlatformName, PlatformData> = {
   FORM: {
     icon: PencilSimpleLine,
     name: "Form",
-    colorScheme: "GUILD",
+    colorScheme: "primary",
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     shouldShowKeepAccessesModal: false,
