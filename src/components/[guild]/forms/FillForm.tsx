@@ -103,12 +103,12 @@ const FillForm = ({ form }: Props) => {
           isLoading={isLoading}
           onClick={methods.handleSubmit(
             (data: Record<string, string>) =>
-              onSubmit(
-                Object.entries(data).map(([fieldId, value]) => ({
+              onSubmit({
+                submissionAnswers: Object.entries(data).map(([fieldId, value]) => ({
                   fieldId,
                   value,
-                }))
-              ),
+                })),
+              }),
             console.error
           )}
         >
