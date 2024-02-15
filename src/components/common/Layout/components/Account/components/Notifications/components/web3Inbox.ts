@@ -11,7 +11,6 @@ import {
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useEffect, useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
-import { SubscribeWeb3Inbox } from "./MessagingContext"
 
 export const WEB3_INBOX_INIT_PARAMS = {
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
@@ -19,7 +18,7 @@ export const WEB3_INBOX_INIT_PARAMS = {
   allApps: process.env.NODE_ENV !== "production",
 }
 
-export const useWeb3InboxSubscription = (): SubscribeWeb3Inbox => {
+export const useWeb3InboxSubscription = () => {
   const [isSigningWeb3Inbox, setIsSigningWeb3Inbox] = useState(false)
 
   useEffect(() => {

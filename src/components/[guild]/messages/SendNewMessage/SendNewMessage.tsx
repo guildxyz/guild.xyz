@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Select,
   Spinner,
   Stack,
   Text,
@@ -19,8 +20,14 @@ import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import {
+  useGetXmtpKeys,
+  useSaveXmtpKeys,
+  useSubscribeXmtp,
+} from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
 import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useReachableUsers from "../hooks/useReachableUsers"
@@ -34,6 +41,7 @@ type SendMessageForm = {
   protocol: MessageProtocol
   destination: MessageDestination
   roleIds: number[]
+  senderType: "USER" | "GUILD"
   message: string
 }
 
@@ -65,11 +73,13 @@ const SendNewMessage = (props: ButtonProps) => {
 type MessageModalContentProps = { onClose: () => void }
 
 const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
+  const showErrorToast = useShowErrorToast()
   const methods = useForm<SendMessageForm>({
     mode: "all",
     defaultValues: {
       protocol: "WEB3INBOX",
       destination: "ROLES",
+      senderType: "USER",
       roleIds: [],
       message: "",
     },
@@ -87,9 +97,15 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
   })
 
   const roleIds = useWatch({ control, name: "roleIds" })
+  const protocol = useWatch({ control, name: "protocol" })
+
   const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
   const { data: reachableUsers, isValidating: isReachableUsersLoading } =
     useReachableUsers("WEB3INBOX", "ROLES", roleIds)
+
+  const { keys: xmtpKeys } = useGetXmtpKeys()
+  const saveXmtpKeys = useSaveXmtpKeys()
+  const { subscribeXmtp } = useSubscribeXmtp()
 
   const greenTextColor = useColorModeValue("green.600", "green.300")
 
@@ -105,10 +121,17 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
             <Stack spacing={6}>
               <Stack>
                 <FormControl isRequired isInvalid={!!errors.roleIds}>
+                  <FormControl isRequired isInvalid={!!errors.protocol}>
+                    <FormLabel>Select protocol</FormLabel>
+                    <Select {...register("protocol")}>
+                      <option value={"WEB3INBOX"}>Web3Inbox</option>
+                      <option value={"XMTP"}>XMTP</option>
+                    </Select>
+                    <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
+                  </FormControl>
                   <FormLabel>Recipient roles</FormLabel>
                   <RoleIdsSelect />
                   <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
-
                   <Text colorScheme="gray" pt={2}>
                     <Text
                       as="span"
@@ -142,14 +165,29 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
                 </FormControl>
 
                 <Text>
-                  {`You can only message users who've subscribed to the Guild.xyz app on `}
-                  <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
-                    Web3Inbox
-                  </Link>
-                  {`. They can do it from the notifications menu easily!`}
+                  {protocol === "WEB3INBOX" ? (
+                    <>
+                      You can only message users who've subscribed to Guild on{" "}
+                      <Link
+                        href="https://web3inbox.com"
+                        colorScheme="blue"
+                        isExternal
+                      >
+                        https://web3inbox.com
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      You can only message users who've already used XMTP. Ask them
+                      to connect their wallet on{" "}
+                      <Link href="https://xmtp.com" colorScheme="blue" isExternal>
+                        https://xmtp.com
+                      </Link>{" "}
+                      to start accepting messages!
+                    </>
+                  )}
                 </Text>
               </Stack>
-
               <FormControl isRequired isInvalid={!!errors.message}>
                 <FormLabel>Message</FormLabel>
                 <Textarea
@@ -174,7 +212,18 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
             h={10}
             colorScheme="green"
             rightIcon={<PaperPlaneRight />}
-            onClick={handleSubmit(onSubmit)}
+            onClick={handleSubmit(async (data) => {
+              if (xmtpKeys.length) {
+                try {
+                  await subscribeXmtp()
+                  await saveXmtpKeys()
+                  onSubmit(data)
+                } catch (error) {
+                  console.error("XMTPSubscribeError", error)
+                  showErrorToast("Couldn't subscribe to Guild messages")
+                }
+              } else onSubmit(data)
+            })}
             isLoading={isLoading}
             loadingText="Sending"
           >

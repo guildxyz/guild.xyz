@@ -10,7 +10,6 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { useConversations } from "@xmtp/react-sdk"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMessagingContext } from "./components/MessagingContext"
@@ -22,12 +21,12 @@ export const SubscriptionModalContent = ({ onClose }) => {
     isSubscribingWeb3Inbox,
     subscribeWeb3Inbox,
     web3InboxSubscription,
-    subscribeXmtp,
-    isSubscribingXmtp,
     hasXmtpAccess,
+    isCheckingXmtpAccess,
+    subscribeXmtp,
+    isLoadingDependencies,
+    isSubscribingXmtp,
   } = useMessagingContext()
-  const conversations = useConversations()
-  console.log("modal", hasXmtpAccess, conversations)
 
   return (
     <>
@@ -78,8 +77,14 @@ export const SubscriptionModalContent = ({ onClose }) => {
               variant="solid"
               colorScheme="blue"
               onClick={subscribeXmtp}
-              isLoading={isSubscribingXmtp}
-              loadingText={isSubscribingXmtp ? "Check your wallet" : "Subscribing"}
+              isLoading={
+                isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+              }
+              loadingText={
+                isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+                  ? "Check your wallet"
+                  : "Subscribing"
+              }
             >
               {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}
             </Button>

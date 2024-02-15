@@ -1,4 +1,5 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
+import { XMTPProvider } from "@xmtp/react-sdk"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -100,21 +101,23 @@ const App = ({
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiConfig config={config}>
-              <PostHogProvider>
-                <IntercomProvider>
-                  <ExplorerProvider>
-                    <AppErrorBoundary>
-                      <Component {...pageProps} />
-                    </AppErrorBoundary>
+              <XMTPProvider>
+                <PostHogProvider>
+                  <IntercomProvider>
+                    <ExplorerProvider>
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
 
-                    <ClientOnly>
-                      <AccountModal />
-                    </ClientOnly>
-                  </ExplorerProvider>
-                </IntercomProvider>
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
+                    </ExplorerProvider>
+                  </IntercomProvider>
 
-                <Web3ConnectionManager />
-              </PostHogProvider>
+                  <Web3ConnectionManager />
+                </PostHogProvider>
+              </XMTPProvider>
             </WagmiConfig>
           </SWRConfig>
         </IconContext.Provider>

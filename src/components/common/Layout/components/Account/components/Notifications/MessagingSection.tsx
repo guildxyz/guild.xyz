@@ -70,10 +70,10 @@ const Messages = () => {
 const MessagingSection = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
-    isWeb3InboxLoading: isWeb3InboxLoading,
-    web3InboxSubscription,
-    isXmtpLoading,
+    isCheckingXmtpAccess,
     hasXmtpAccess,
+    isWeb3InboxLoading,
+    web3InboxSubscription,
   } = useMessagingContext()
 
   return (
@@ -93,8 +93,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {(isWeb3InboxLoading || isXmtpLoading) && <SubscriptionPromptSkeleton />}
-        {!web3InboxSubscription && !hasXmtpAccess ? (
+        {isWeb3InboxLoading || isCheckingXmtpAccess ? (
+          <SubscriptionPromptSkeleton />
+        ) : !web3InboxSubscription && !hasXmtpAccess ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />

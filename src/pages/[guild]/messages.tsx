@@ -11,6 +11,7 @@ import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
+import { useMemo } from "react"
 
 const DynamicSendNewMessage = dynamic(
   () => import("components/[guild]/messages/SendNewMessage")
@@ -26,7 +27,7 @@ const Messages = () => {
   const { name, imageUrl } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const { data, error, isLoading } = useGuildMessages()
+  const { data: messages, error, isLoading } = useGuildMessages()
 
   return (
     <Layout
@@ -49,7 +50,7 @@ const Messages = () => {
         activeTab="MESSAGES"
         rightElement={
           isAdmin &&
-          data?.length > 0 && (
+          messages?.length > 0 && (
             <DynamicSendNewMessage size="sm" variant="ghost" flexShrink={0} />
           )
         }
@@ -70,8 +71,8 @@ const Messages = () => {
                 }
               />
             </Card>
-          ) : data?.length > 0 ? (
-            data.map((message) => (
+          ) : messages?.length > 0 ? (
+            messages.map((message) => (
               <DynamicMessage key={message.id} message={message} />
             ))
           ) : (

@@ -1,64 +1,87 @@
 import { useToast } from "@chakra-ui/react"
-import { Client, useCanMessage } from "@xmtp/react-sdk"
+import { Client, useCanMessage, useClient } from "@xmtp/react-sdk"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useCallback, useEffect, useState } from "react"
-import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useAccount, useWalletClient } from "wagmi"
 
 export const useSaveXmtpKeys = () => {
   const fetcherWithSign = useFetcherWithSign()
   const { data: signer } = useWalletClient()
+
   const { id } = useUser()
 
-  const saveXmtpKeys = useCallback(
+  return useCallback(
     async () =>
-      Client.getKeys(signer).then(async (key) => {
-        await fetcherWithSign([
-          id ? `/v2/users/${id}/keys` : undefined,
-          {
-            body: {
-              key: Buffer.from(key).toString("binary"),
-              service: "XMTP",
+      Client.getKeys(signer, { env: "production" }).then(
+        async (key) =>
+          await fetcherWithSign([
+            id ? `/v2/users/${id}/keys` : undefined,
+            {
+              body: {
+                key: Buffer.from(key).toString("binary"),
+                service: "XMTP",
+              },
             },
-          },
-        ])
-      }),
+          ])
+      ),
     [id, signer]
   )
-  return saveXmtpKeys
+}
+
+export const useDeleteXmtpKeys = () => {
+  const fetcherWithSign = useFetcherWithSign()
+  const { id } = useUser()
+
+  return async () =>
+    await fetcherWithSign([
+      id ? `/v2/users/${id}/keys/1` : undefined,
+      { method: "DELETE" },
+    ])
 }
 
 export const useGetXmtpKeys = () => {
   const fetcherWithSign = useFetcherWithSign()
+  const [data, setData] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   const { id, error: userError, isLoading: isUserLoading } = useUser()
 
-  const {
-    data: keys,
-    error,
-    isLoading,
-  } = useSWRImmutable(
-    [
-      id ? `/v2/users/${id}/keys` : null,
-      {
-        method: "GET",
-        body: {
-          Accept: "application/json",
-          query: { service: "XMTP" },
+  useEffect(() => {
+    if (id) {
+      setIsLoading(true)
+      fetcherWithSign([
+        id ? `/v2/users/${id}/keys` : null,
+        {
+          method: "GET",
+          body: {
+            Accept: "application/json",
+            query: { service: "XMTP" },
+          },
         },
-      },
-    ],
-    fetcherWithSign
-  )
-  return { keys, isLoading: isUserLoading || isLoading, error: userError && error }
+      ])
+        .then((response) => {
+          setData(response)
+        })
+        .catch(setError)
+        .finally(() => {
+          setIsLoading(true)
+        })
+    }
+  }, [id])
+
+  return {
+    keys: data?.keys,
+    isLoading: isUserLoading || isLoading,
+    error: userError && error,
+  }
 }
 
 export const useXmtpAccessChecking = () => {
-  const [hasAccess, setHasAccess] = useState<boolean>(false)
-  const [isCheckingAccess, setIsCheckingAccess] = useState(false)
-  const [timestamp, refresh] = useState(new Date())
-  const { canMessageStatic, error, isLoading } = useCanMessage()
+  const [hasXmtpAccess, setHasAccess] = useState<boolean>(false)
+  const [isCheckingXmtpAccess, setIsCheckingAccess] = useState(false)
+  const { canMessageStatic } = useCanMessage()
   const showErrorToast = useShowErrorToast()
 
   const { address } = useAccount()
@@ -66,9 +89,6 @@ export const useXmtpAccessChecking = () => {
   useEffect(() => {
     if (address) {
       setIsCheckingAccess(true)
-      canMessageStatic(address).then((response) =>
-        console.log("canMessageStatic ", response)
-      )
       canMessageStatic(address)
         .then(setHasAccess)
         .catch((e) => {
@@ -77,43 +97,46 @@ export const useXmtpAccessChecking = () => {
         })
         .finally(() => setIsCheckingAccess(false))
     }
-  }, [address])
+  }, [address, canMessageStatic])
   return {
-    hasAccess,
-    isCheckingAccess,
-    timestamp,
-    refresh: () => refresh(new Date()),
+    hasXmtpAccess,
+    isCheckingXmtpAccess,
   }
 }
 
-export const useSubscribeXmtp = (onAfterSubscription: Function) => {
+export const useSubscribeXmtp = () => {
   const [isSubscribingXmtp, setIsSubscribingXmtp] = useState<boolean>(false)
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+
+  const { initialize } = useClient()
   const { data: signer, isLoading } = useWalletClient()
 
   const subscribeXmtp = useCallback(async () => {
     setIsSubscribingXmtp(true)
-    try {
-      await Client.create(signer, {
+    await initialize({
+      signer,
+      options: {
         persistConversations: false,
         env: "production",
-      }).then((client) => {
-        console.log("%c xmtpClient", "color: green", client)
+      },
+    })
+      .then(() => {
+        toast({
+          status: "success",
+          title: "Success",
+          description: "Successfully subscribed to Guild messages via Web3Inbox",
+        })
       })
-      onAfterSubscription()
-      toast({
-        status: "success",
-        title: "Success",
-        description: "Successfully subscribed to Guild messages via Web3Inbox",
+      .catch((error) => {
+        console.error("web3InboxSubscribeError", error)
+        showErrorToast("Couldn't subscribe to Guild messages")
+        throw error
       })
-    } catch (error) {
-      console.error("web3InboxSubscribeError", error)
-      showErrorToast("Couldn't subscribe to Guild messages")
-    } finally {
-      setIsSubscribingXmtp(false)
-    }
+      .finally(() => {
+        setIsSubscribingXmtp(false)
+      })
   }, [signer])
 
   return {
