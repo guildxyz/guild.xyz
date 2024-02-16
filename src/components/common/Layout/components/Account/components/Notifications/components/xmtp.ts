@@ -35,7 +35,7 @@ export const useDeleteXmtpKeys = () => {
   const { id } = useUser()
 
   return async () =>
-    await fetcherWithSign([
+    fetcherWithSign([
       id ? `/v2/users/${id}/keys/1` : undefined,
       { method: "DELETE" },
     ])
