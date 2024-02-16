@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Box,
   Divider,
@@ -31,7 +32,6 @@ import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {

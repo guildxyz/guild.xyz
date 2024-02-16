@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   AspectRatio,
   Box,
@@ -8,7 +9,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import Link from "components/common/Link"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { CaretDown } from "phosphor-react"

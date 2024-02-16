@@ -1,8 +1,8 @@
+import { Link } from "@chakra-ui/next-js"
 import { HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import Link from "components/common/Link"
 import NextLink from "next/link"
 import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 
