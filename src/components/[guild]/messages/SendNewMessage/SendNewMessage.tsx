@@ -109,7 +109,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
 
   const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
   const { data: reachableUsers, isValidating: isReachableUsersLoading } =
-    useReachableUsers("WEB3INBOX", "ROLES", roleIds)
+    useReachableUsers(protocol, "ROLES", roleIds)
 
   const { keys: xmtpKeys } = useGetXmtpKeys()
   const saveXmtpKeys = useSaveXmtpKeys()
