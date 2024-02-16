@@ -16,9 +16,7 @@ import { Modal } from "components/common/Modal"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMessagingContext } from "./components/MessagingContext"
 
-export const MessagingSubscriptionModal = (
-  modalProps: Omit<ModalProps, "children">
-) => {
+const MessagingSubscriptionModal = (modalProps: Omit<ModalProps, "children">) => {
   const {
     isRegisteringWeb3Inbox,
     isSigningWeb3Inbox,
@@ -98,3 +96,5 @@ export const MessagingSubscriptionModal = (
     </Modal>
   )
 }
+
+export default MessagingSubscriptionModal

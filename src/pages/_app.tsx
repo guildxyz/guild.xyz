@@ -101,23 +101,21 @@ const App = ({
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiConfig config={config}>
-              <XMTPProvider>
-                <PostHogProvider>
-                  <IntercomProvider>
-                    <ExplorerProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+              <PostHogProvider>
+                <IntercomProvider>
+                  <ExplorerProvider>
+                    <AppErrorBoundary>
+                      <Component {...pageProps} />
+                    </AppErrorBoundary>
 
-                      <ClientOnly>
-                        <AccountModal />
-                      </ClientOnly>
-                    </ExplorerProvider>
-                  </IntercomProvider>
+                    <ClientOnly>
+                      <AccountModal />
+                    </ClientOnly>
+                  </ExplorerProvider>
+                </IntercomProvider>
 
-                  <Web3ConnectionManager />
-                </PostHogProvider>
-              </XMTPProvider>
+                <Web3ConnectionManager />
+              </PostHogProvider>
             </WagmiConfig>
           </SWRConfig>
         </IconContext.Provider>
