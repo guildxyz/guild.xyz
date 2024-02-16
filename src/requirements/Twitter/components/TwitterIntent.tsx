@@ -41,7 +41,7 @@ const intentQueryParam: Record<TwitterIntentAction, string> = {
   follow: "screen_name",
 }
 
-const TWITTER_INTENT_BASE_URL = "https://twitter.com/intent"
+const TWITTER_INTENT_BASE_URL = "https://x.com/intent"
 
 const TwitterIntent = ({
   type = "button",
@@ -74,8 +74,8 @@ const TwitterIntent = ({
       ? isTwitterConnected && !hasAccess && !isIOS
         ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
         : requirementType === "TWITTER_FOLLOW_V2"
-        ? `https://twitter.com/${id}`
-        : `https://twitter.com/twitter/status/${id}`
+        ? `https://x.com/${id}`
+        : `https://x.com/twitter/status/${id}`
       : undefined
 
   const completeAction = (signedValidation: SignedValidation) =>
