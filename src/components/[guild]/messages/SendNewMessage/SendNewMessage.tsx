@@ -37,11 +37,18 @@ import RoleIdsSelect from "./components/RoleIdsSelect"
 
 export type MessageProtocol = "XMTP" | "WEB3INBOX"
 export type MessageDestination = "GUILD" | "ADMINS" | "ROLES"
+type SenderType = "USER" | "GUILD"
+
+const SenderTypes: Record<MessageProtocol, SenderType> = {
+  WEB3INBOX: "GUILD",
+  XMTP: "USER",
+}
+
 type SendMessageForm = {
   protocol: MessageProtocol
   destination: MessageDestination
   roleIds: number[]
-  senderType: "USER" | "GUILD"
+  senderType: SenderType
   message: string
 }
 
@@ -79,7 +86,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
     defaultValues: {
       protocol: "WEB3INBOX",
       destination: "ROLES",
-      senderType: "USER",
+      senderType: "GUILD",
       roleIds: [],
       message: "",
     },
@@ -90,6 +97,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
     formState: { errors },
     reset,
     handleSubmit,
+    setValue,
   } = methods
   const { onSubmit, isLoading } = useSendMessage(() => {
     reset()
@@ -123,7 +131,12 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
                 <FormControl isRequired isInvalid={!!errors.roleIds}>
                   <FormControl isRequired isInvalid={!!errors.protocol}>
                     <FormLabel>Select protocol</FormLabel>
-                    <Select {...register("protocol")}>
+                    <Select
+                      {...register("protocol", {
+                        onChange: ({ target }) =>
+                          setValue("senderType", SenderTypes[target.value]),
+                      })}
+                    >
                       <option value={"WEB3INBOX"}>Web3Inbox</option>
                       <option value={"XMTP"}>XMTP</option>
                     </Select>
@@ -213,7 +226,8 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
             colorScheme="green"
             rightIcon={<PaperPlaneRight />}
             onClick={handleSubmit(async (data) => {
-              if (xmtpKeys.length) {
+              if (protocol === "WEB3INBOX" && xmtpKeys.length) onSubmit(data)
+              else {
                 try {
                   await subscribeXmtp()
                   await saveXmtpKeys()
@@ -222,7 +236,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
                   console.error("XMTPSubscribeError", error)
                   showErrorToast("Couldn't subscribe to Guild messages")
                 }
-              } else onSubmit(data)
+              }
             })}
             isLoading={isLoading}
             loadingText="Sending"

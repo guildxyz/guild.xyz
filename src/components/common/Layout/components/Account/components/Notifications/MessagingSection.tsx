@@ -7,12 +7,11 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
 import { Gear } from "phosphor-react"
 import { useRef } from "react"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
-import { SubscriptionModalContent } from "./SubscribeModalContent"
+import { MessagingSubscriptionModal } from "./MessageSubscriptionModal"
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
 import { MessagingWrapper, useMessagingContext } from "./components/MessagingContext"
 import NotificationsSection from "./components/NotificationsSection"
@@ -26,7 +25,6 @@ const Messages = () => {
   const { messages } = useGetWeb3InboxMessages()
 
   const inboxContainerRef = useRef(null)
-
   const isScrollable = !!inboxContainerRef.current
     ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
     : false
@@ -101,9 +99,7 @@ const MessagingSection = () => {
           <Messages />
         )}
       </NotificationsSection>
-      <Modal {...{ isOpen, onClose }}>
-        <SubscriptionModalContent onClose={onclose} />
-      </Modal>
+      <MessagingSubscriptionModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

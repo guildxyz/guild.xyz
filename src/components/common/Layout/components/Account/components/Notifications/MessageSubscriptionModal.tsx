@@ -8,13 +8,17 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  ModalProps,
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMessagingContext } from "./components/MessagingContext"
 
-export const SubscriptionModalContent = ({ onClose }) => {
+export const MessagingSubscriptionModal = (
+  modalProps: Omit<ModalProps, "children">
+) => {
   const {
     isRegisteringWeb3Inbox,
     isSigningWeb3Inbox,
@@ -29,7 +33,7 @@ export const SubscriptionModalContent = ({ onClose }) => {
   } = useMessagingContext()
 
   return (
-    <>
+    <Modal {...modalProps}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pb="4">Subscribe to messages</ModalHeader>
@@ -91,6 +95,6 @@ export const SubscriptionModalContent = ({ onClose }) => {
           </HStack>
         </ModalBody>
       </ModalContent>
-    </>
+    </Modal>
   )
 }
