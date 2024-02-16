@@ -14,17 +14,16 @@ export const useSaveXmtpKeys = () => {
 
   return useCallback(
     async () =>
-      Client.getKeys(signer, { env: "production" }).then(
-        async (key) =>
-          await fetcherWithSign([
-            id ? `/v2/users/${id}/keys` : undefined,
-            {
-              body: {
-                key: Buffer.from(key).toString("binary"),
-                service: "XMTP",
-              },
+      Client.getKeys(signer, { env: "production" }).then(async (key) =>
+        fetcherWithSign([
+          id ? `/v2/users/${id}/keys` : undefined,
+          {
+            body: {
+              key: Buffer.from(key).toString("binary"),
+              service: "XMTP",
             },
-          ])
+          },
+        ])
       ),
     [id, signer]
   )
