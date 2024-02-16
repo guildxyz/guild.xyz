@@ -79,6 +79,7 @@ const CreateFormForm = () => {
             onClick={() =>
               append({
                 type: "SHORT_TEXT",
+                question: "",
               })
             }
           />
