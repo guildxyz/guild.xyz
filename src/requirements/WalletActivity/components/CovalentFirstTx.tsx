@@ -1,9 +1,8 @@
-import { Text } from "@chakra-ui/react"
-import { useWatch } from "react-hook-form"
+import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import BlockNumberFormControl from "./BlockNumberFormControl"
 
-const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const CovalentFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const [minAmount, maxAmount] = useWatch({
     name: [
       `${baseFieldPath}.data.timestamps.minAmount`,
@@ -11,13 +10,32 @@ const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
     ],
   })
 
+  const { register } = useFormContext()
+
   return (
     <>
       <Text colorScheme="gray" fontSize="sm" mt={-2} pl={3}>
         A wallet's age is determined by the time of its first transaction.
       </Text>
 
-      <BlockNumberFormControl
+      <FormControl>
+        <FormLabel>Wallet created after (date)</FormLabel>
+        <Input
+          type="date"
+          {...register(`${baseFieldPath}.data.timestamps.minAmount`)}
+          max={maxAmount}
+          mb={4}
+        />
+
+        <FormLabel className="">Wallet created before (date)</FormLabel>
+        <Input
+          type="date"
+          {...register(`${baseFieldPath}.data.timestamps.maxAmount`)}
+          min={minAmount}
+        />
+      </FormControl>
+
+      {/* <BlockNumberFormControl
         baseFieldPath={baseFieldPath}
         dataFieldName="minAmount"
         label="Wallet created after (date)"
@@ -32,9 +50,9 @@ const AlchemyFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
         formHelperText="The date of the wallet's first transaction"
         isInvalid={minAmount >= maxAmount}
         invalidText="You cannot set the end time to be before the start time!"
-      />
+      /> */}
     </>
   )
 }
 
-export default AlchemyFirstTx
+export default CovalentFirstTx

@@ -9,12 +9,10 @@ import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import AlchemyContractDeploy from "./components/AlchemyContractDeploy"
 import AlchemyContractDeployRelative from "./components/AlchemyContractDeployRelative"
-import AlchemyFirstTx from "./components/AlchemyFirstTx"
 import AlchemyFirstTxRelative from "./components/AlchemyFirstTxRelative"
 import AlchemyTxCount from "./components/AlchemyTxCount"
 import AlchemyTxCountRelative from "./components/AlchemyTxCountRelative"
-import AlchemyTxValue from "./components/AlchemyTxValue"
-import AlchemyTxValueRelative from "./components/AlchemyTxValueRelative"
+import CovalentFirstTx from "./components/CovalentFirstTx"
 
 // These can be extended for additional Covalent support
 export const COVALENT_CHAINS = new Set<Chain>([
@@ -41,52 +39,36 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "TAIKO_KATLA",
 ])
 
-// These requirement types do not have a covalent equivalent, remove them once they do
-const COVALENT_EXCLUDED_TYPES = new Set([
-  "ALCHEMY_TX_VALUE",
-  "ALCHEMY_TX_VALUE_RELATIVE",
-])
-
 const walletActivityRequirementTypes: SelectOption[] = [
   {
     label: "Wallet age",
-    value: "ALCHEMY_FIRST_TX",
-    WalletActivityRequirement: AlchemyFirstTx,
+    value: "COVALENT_FIRST_TX",
+    WalletActivityRequirement: CovalentFirstTx,
   },
   {
     label: "Wallet age (relative)",
-    value: "ALCHEMY_FIRST_TX_RELATIVE",
+    value: "COVALENT_FIRST_TX_RELATIVE",
     WalletActivityRequirement: AlchemyFirstTxRelative,
   },
   {
     label: "Deployed a contract",
-    value: "ALCHEMY_CONTRACT_DEPLOY",
+    value: "COVALENT_CONTRACT_DEPLOY",
     WalletActivityRequirement: AlchemyContractDeploy,
   },
   {
     label: "Deployed a contract (relative)",
-    value: "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+    value: "COVALENT_CONTRACT_DEPLOY_RELATIVE",
     WalletActivityRequirement: AlchemyContractDeployRelative,
   },
   {
     label: "Transaction count",
-    value: "ALCHEMY_TX_COUNT",
+    value: "COVALENT_TX_COUNT",
     WalletActivityRequirement: AlchemyTxCount,
   },
   {
     label: "Transaction count (relative)",
-    value: "ALCHEMY_TX_COUNT_RELATIVE",
+    value: "COVALENT_TX_COUNT_RELATIVE",
     WalletActivityRequirement: AlchemyTxCountRelative,
-  },
-  {
-    label: "Asset movement",
-    value: "ALCHEMY_TX_VALUE",
-    WalletActivityRequirement: AlchemyTxValue,
-  },
-  {
-    label: "Asset movement (relative)",
-    value: "ALCHEMY_TX_VALUE_RELATIVE",
-    WalletActivityRequirement: AlchemyTxValueRelative,
   },
 ]
 
@@ -103,17 +85,7 @@ const WalletActivityForm = ({
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
   const isEditMode = !!field?.id
 
-  const supportedRequirementTypes = COVALENT_CHAINS.has(chain)
-    ? walletActivityRequirementTypes
-        .filter(({ value }) => !COVALENT_EXCLUDED_TYPES.has(value))
-        .map(
-          ({ value, ...rest }) =>
-            ({
-              ...rest,
-              value: value.replace("ALCHEMY_", "COVALENT_"),
-            } as SelectOption)
-        )
-    : walletActivityRequirementTypes
+  const supportedRequirementTypes = walletActivityRequirementTypes
 
   const selected = supportedRequirementTypes.find(
     (reqType) => reqType.value === type
