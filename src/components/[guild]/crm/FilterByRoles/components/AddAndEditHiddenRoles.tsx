@@ -4,19 +4,15 @@ import {
   IconButton,
   Menu,
   MenuButton,
-  MenuItem,
   MenuList,
-  Spinner,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Link from "next/link"
-import { ArrowRight, CaretDown, PencilSimple } from "phosphor-react"
-import { useState } from "react"
+import LinkMenuItem from "components/common/LinkMenuItem"
+import { CaretDown, PencilSimple } from "phosphor-react"
 import AddHiddenRoleButton from "./AddHiddenRoleButton"
 
 const AddAndEditHiddenRoles = () => {
   const { urlName } = useGuild()
-  const [hasClickedEdit, setHasClickedEdit] = useState(false)
 
   return (
     // not setting size and variant here, because the buttons inside AddHiddenRoleModal inherited them too
@@ -32,18 +28,9 @@ const AddAndEditHiddenRoles = () => {
           variant="ghost"
         ></MenuButton>
         <MenuList>
-          <Link passHref href={`/${urlName}#hiddenRoles`}>
-            <MenuItem
-              onClick={() => setHasClickedEdit(true)}
-              as="a"
-              icon={hasClickedEdit ? <Spinner size="xs" /> : <PencilSimple />}
-              command={(<ArrowRight />) as any}
-              isDisabled={hasClickedEdit}
-              closeOnSelect={false}
-            >
-              {hasClickedEdit ? "Redirecting" : "Edit hidden roles"}
-            </MenuItem>
-          </Link>
+          <LinkMenuItem href={`/${urlName}#hiddenRoles`} icon={<PencilSimple />}>
+            Edit hidden roles
+          </LinkMenuItem>
         </MenuList>
       </Menu>
     </ButtonGroup>

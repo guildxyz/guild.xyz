@@ -1,8 +1,9 @@
-import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import { MenuItem, Tag, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import { PencilSimple } from "phosphor-react"
+import LinkMenuItem from "components/common/LinkMenuItem"
+import { PencilSimple, Table } from "phosphor-react"
 import PlatformCardMenu from "../../components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import EditFormModal from "./EditFormModal"
 
@@ -11,12 +12,13 @@ type Props = {
 }
 
 const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
-  const { guildPlatforms } = useGuild()
+  const { urlName, guildPlatforms } = useGuild()
   const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
+  const formId = guildPlatform?.platformGuildData?.formId
 
-  const { form } = useGuildForm(guildPlatform?.platformGuildData?.formId)
+  const { form } = useGuildForm(formId)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -26,6 +28,17 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
           Edit form
         </MenuItem>
+
+        <LinkMenuItem
+          href={`/${urlName}/forms/${formId}/responses`}
+          icon={<Table />}
+          isDisabled
+          command={(<Tag>Soon</Tag>) as any}
+          pointerEvents={"none"}
+        >
+          View responses
+        </LinkMenuItem>
+
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
