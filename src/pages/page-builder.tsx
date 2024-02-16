@@ -1,5 +1,8 @@
-import { Container, Grid } from "@chakra-ui/react"
+import { Box, Container } from "@chakra-ui/react"
+import Card from "components/common/Card"
 import Item from "components/page-builder/Item"
+import { motion } from "framer-motion"
+import { useRef, useState } from "react"
 
 export type ItemType = {
   id: number
@@ -31,7 +34,7 @@ const items: ItemType[] = [
   {
     id: 1,
     desktop: {
-      position: 2,
+      position: 1,
       width: 1,
       height: 1,
     },
@@ -42,7 +45,7 @@ const items: ItemType[] = [
   {
     id: 2,
     desktop: {
-      position: 3,
+      position: 2,
       width: 2,
       height: 1,
     },
@@ -50,7 +53,7 @@ const items: ItemType[] = [
     data: {},
   },
   {
-    id: 2,
+    id: 3,
     desktop: {
       position: 6,
       width: 2,
@@ -61,8 +64,46 @@ const items: ItemType[] = [
   },
 ]
 
+export const BASE_SIZE = 145
+export const PADDING = 14
+
+function calculateNearestGridPosition(x, y) {
+  const itemSizeWithPadding = BASE_SIZE + PADDING // item size + padding
+
+  // Calculate nearest grid index for x and y
+  const nearestGridIndexX = Math.floor(x / itemSizeWithPadding)
+  const nearestGridIndexY = Math.floor(y / itemSizeWithPadding)
+
+  // Calculate actual x and y positions
+  const gridX = nearestGridIndexX * itemSizeWithPadding
+  const gridY = nearestGridIndexY * itemSizeWithPadding
+
+  return [gridX, gridY]
+}
+
+const MotionCard = motion(Card)
+
 const PageBuilder = () => {
   // const {} = usePositionReorder(items)
+
+  const containerRef = useRef(null)
+  const [placeholder, setPlaceholder] = useState(null)
+
+  const handleMouseMove = (event) => {
+    if (containerRef.current) {
+      const { left, top } = containerRef.current.getBoundingClientRect()
+      const x = event.clientX - left
+      const y = event.clientY - top
+      if (x < 0 || y < 0) return
+
+      const placeholderPosition = calculateNearestGridPosition(x, y)
+      if (
+        placeholder?.[0] !== placeholderPosition?.[0] ||
+        placeholder?.[1] !== placeholderPosition?.[1]
+      )
+        setPlaceholder(placeholderPosition)
+    }
+  }
 
   return (
     <Container
@@ -70,11 +111,32 @@ const PageBuilder = () => {
       py={{ base: 6, md: 9 }}
       px={{ base: 4, sm: 6, md: 8, lg: 10 }}
     >
-      <Grid templateColumns="repeat(6, 1fr)" gridAutoRows="145px" gap="14px">
+      <Box position={"relative"} ref={containerRef}>
         {items.map((item) => (
-          <Item key={item.id} item={item} />
+          <Item
+            key={item.id}
+            item={item}
+            drag={handleMouseMove}
+            dragEnd={() => setPlaceholder(null)}
+          />
         ))}
-      </Grid>
+
+        {placeholder && (
+          <MotionCard
+            animate={{ left: placeholder?.[0], top: placeholder?.[1] }}
+            left={placeholder?.[0]}
+            top={placeholder?.[1]}
+            position={"absolute"}
+            height={145}
+            width={145}
+            background={"transparent"}
+            border={"2px"}
+            borderStyle={"dashed"}
+            borderColor="white"
+            opacity={0.2}
+          />
+        )}
+      </Box>
     </Container>
   )
 }
