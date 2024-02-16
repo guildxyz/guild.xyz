@@ -4,6 +4,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useIsIOS from "hooks/useIsIOS"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
@@ -65,9 +66,12 @@ const TwitterIntent = ({
     (req) => req.requirementId === requirementId
   )?.access
 
+  // The intent links won't work properly on iOS deviced, so we just fall back to regular links in that case
+  const isIOS = useIsIOS()
+
   const url =
     !!action && !!id
-      ? isTwitterConnected && !hasAccess
+      ? isTwitterConnected && !hasAccess && !isIOS
         ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
         : requirementType === "TWITTER_FOLLOW_V2"
         ? `https://twitter.com/${id}`
