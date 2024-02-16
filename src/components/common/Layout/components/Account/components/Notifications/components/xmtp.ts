@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react"
-import { Client, useCanMessage, useClient } from "@xmtp/react-sdk"
+import { Client, useCanMessage } from "@xmtp/react-sdk"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useCallback, useEffect, useState } from "react"
@@ -109,17 +109,13 @@ export const useSubscribeXmtp = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const { initialize } = useClient()
   const { data: signer, isLoading } = useWalletClient()
 
   const subscribeXmtp = useCallback(async () => {
     setIsSubscribingXmtp(true)
-    await initialize({
-      signer,
-      options: {
-        persistConversations: false,
-        env: "production",
-      },
+    await Client.create(signer, {
+      persistConversations: false,
+      env: "production",
     })
       .then(() => {
         toast({

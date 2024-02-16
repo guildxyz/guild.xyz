@@ -1,5 +1,4 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { XMTPProvider } from "@xmtp/react-sdk"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"

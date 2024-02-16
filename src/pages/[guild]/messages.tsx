@@ -11,7 +11,6 @@ import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import dynamic from "next/dynamic"
-import { useMemo } from "react"
 
 const DynamicSendNewMessage = dynamic(
   () => import("components/[guild]/messages/SendNewMessage")
