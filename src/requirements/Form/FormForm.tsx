@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
@@ -15,7 +15,7 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
       .map((gp) => gp.platformGuildData.formId) ?? []
-  const { data: forms, isLoading } = useForms()
+  const { data: forms, isLoading } = useGuildForms()
   const {
     setValue,
     formState: { errors },

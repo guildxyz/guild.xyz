@@ -7,8 +7,8 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import FillForm from "components/[guild]/forms/FillForm"
 import FormNoAccess from "components/[guild]/forms/FormNoAccess"
-import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Layout from "components/common/Layout"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -25,8 +25,7 @@ const FormPage = ({ formId }: Props) => {
   const { roles, imageUrl, guildPlatforms } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const { data: forms } = useForms()
-  const form = forms?.find((f) => f.id === formId)
+  const { form } = useGuildForm(formId)
 
   const relevantGuildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildData?.formId === formId

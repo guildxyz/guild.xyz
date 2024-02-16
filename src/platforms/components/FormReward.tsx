@@ -4,8 +4,8 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import LinkButton from "components/common/LinkButton"
 import { ArrowSquareOut } from "phosphor-react"
 import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
@@ -15,9 +15,9 @@ import { PlatformType } from "types"
 const FormReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
   const { platformId, platformGuildData } = platform.guildPlatform
-  const { data: forms, isValidating: isFormsValidating } = useForms()
-
-  const form = forms?.find((f) => f.id === platformGuildData?.formId)
+  const { form, isValidating: isFormsValidating } = useGuildForm(
+    platformGuildData?.formId
+  )
 
   const { data: userSubmission, isValidating: isUserSubmissionValidating } =
     useUserSubmission(form)

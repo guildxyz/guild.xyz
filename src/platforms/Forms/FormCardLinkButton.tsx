@@ -1,5 +1,5 @@
-import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import LinkButton from "components/common/LinkButton"
 import { Check } from "phosphor-react"
 import platforms from "platforms/platforms"
@@ -12,9 +12,9 @@ type Props = {
 
 const FormCardLinkButton = ({ platform }: Props) => {
   const { urlName } = useGuild()
-  const { data, isValidating: isFormsValidating } = useForms()
-
-  const form = data?.find((f) => f.id === platform.platformGuildData?.formId)
+  const { form, isValidating: isFormsValidating } = useGuildForm(
+    platform.platformGuildData?.formId
+  )
 
   const { data: userSubmission, isValidating } = useUserSubmission(form)
 

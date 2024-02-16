@@ -1,6 +1,6 @@
 import { Form } from "components/[guild]/CreateFormModal/schemas"
-import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import fetcher from "utils/fetcher"
@@ -13,7 +13,7 @@ const useEditForm = ({
   onSuccess?: () => void
 }) => {
   const { id } = useGuild()
-  const { mutate } = useForms()
+  const { mutate } = useGuildForms()
 
   const showErrorToast = useShowErrorToast()
 

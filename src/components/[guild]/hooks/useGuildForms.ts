@@ -1,0 +1,20 @@
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { Form } from "../CreateFormModal/schemas"
+import useGuild from "./useGuild"
+
+const useGuildForms = () => {
+  const { id } = useGuild()
+  return useSWRWithOptionalAuth<Form[]>(`/v2/guilds/${id}/forms`)
+}
+
+const useGuildForm = (formId?: number) => {
+  const { data, ...rest } = useGuildForms()
+
+  return {
+    form: data?.find((form) => form.id === formId),
+    ...rest,
+  }
+}
+
+export default useGuildForms
+export { useGuildForm }

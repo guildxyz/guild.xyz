@@ -3,8 +3,8 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useForms from "components/[guild]/hooks/useForms"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Link from "components/common/Link"
 import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
 import platforms from "platforms/platforms"
@@ -12,8 +12,7 @@ import platforms from "platforms/platforms"
 const FormRequirement = (props: RequirementProps) => {
   const { urlName } = useGuild()
   const { data } = useRequirementContext()
-  const { data: forms } = useForms()
-  const form = forms?.find((f) => f.id === data?.id)
+  const { form } = useGuildForm(data?.id)
   const { data: userSubmission } = useUserSubmission(form)
 
   return (
