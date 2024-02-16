@@ -97,7 +97,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                     label="You can't change a question's type after it is created. Consider creating a new question instead!"
                   >
                     <InputGroup>
-                      <InputLeftElement>{selectedFieldType.img}</InputLeftElement>
+                      <InputLeftElement>{selectedFieldType?.img}</InputLeftElement>
                       <ControlledSelect
                         name={`fields.${index}.type`}
                         options={fieldTypes}
