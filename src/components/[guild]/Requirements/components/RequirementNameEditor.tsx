@@ -132,6 +132,7 @@ const RequirementNameEditorWrapper = ({
   const { field } = useController({
     name: `${baseFieldPath}.data.customName`,
     rules: REQUIREMENTS[type].customNameRules,
+    shouldUnregister: true,
   })
 
   useEffect(() => {
