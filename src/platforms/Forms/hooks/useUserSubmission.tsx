@@ -1,9 +1,9 @@
-import { Form } from "components/[guild]/CreateFormModal/schemas"
+import { Schemas } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
-const useUserSubmission = (form: Form) => {
+const useUserSubmission = (form: Schemas["Form"]) => {
   const { id } = useUser()
   const fetcherWithSign = useFetcherWithSign()
 

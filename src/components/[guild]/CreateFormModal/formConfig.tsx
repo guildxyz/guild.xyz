@@ -1,3 +1,4 @@
+import { Schemas } from "@guildxyz/types"
 import OptionIcon from "components/common/StyledSelect/components/CustomSelectOption/components/OptionIcon"
 import {
   CheckSquare,
@@ -15,17 +16,16 @@ import Rate from "./components/Display/Rate"
 import ShortText from "./components/Display/ShortText"
 import ChoiceSetup from "./components/Setup/ChoiceSetup"
 import RateSetup from "./components/Setup/RateSetup"
-import { Field } from "./schemas"
 
 const fieldTypes: {
   label: string
-  value: Field["type"]
+  value: Schemas["Field"]["type"]
   img: ReactNode
   SetupComponent?: ComponentType<{
     index: number
   }>
   DisplayComponent: ComponentType<{
-    field: Field | CreateForm["fields"][number]
+    field: Schemas["Field"] | CreateForm["fields"][number]
     isDisabled?: boolean
   }>
 }[] = [

@@ -13,6 +13,7 @@ import {
   Switch,
   Tooltip,
 } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -25,7 +26,6 @@ import { useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import { SelectOption } from "types"
 import { fieldTypes } from "../../formConfig"
-import { Field } from "../../schemas"
 import FormFieldTitle from "./components/FormFieldTitle"
 
 type Props = {
@@ -101,7 +101,9 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                       <ControlledSelect
                         name={`fields.${index}.type`}
                         options={fieldTypes}
-                        beforeOnChange={(newValue: SelectOption<Field["type"]>) => {
+                        beforeOnChange={(
+                          newValue: SelectOption<Schemas["Field"]["type"]>
+                        ) => {
                           const isChoice =
                             newValue.value === "SINGLE_CHOICE" ||
                             newValue.value === "MULTIPLE_CHOICE"

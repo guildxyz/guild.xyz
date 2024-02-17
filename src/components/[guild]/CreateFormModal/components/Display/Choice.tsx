@@ -10,11 +10,11 @@ import {
   Stack,
   forwardRef,
 } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
-import { Field } from "../../schemas"
 
 type Props = {
-  field: Field | CreateForm["fields"][number]
+  field: Schemas["Field"] | CreateForm["fields"][number]
 }
 
 const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(

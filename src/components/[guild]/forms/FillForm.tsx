@@ -1,7 +1,7 @@
 import { FormControl, Skeleton, Stack } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import FormFieldTitle from "components/[guild]/CreateFormModal/components/FormCardEditable/components/FormFieldTitle"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
-import { Form } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -17,7 +17,7 @@ import FillFormProgress from "./FillFormProgress"
 import SuccessfullySubmittedForm from "./SuccessfullySubmittedForm"
 
 type Props = {
-  form: Form
+  form: Schemas["Form"]
 }
 
 const FillForm = ({ form }: Props) => {

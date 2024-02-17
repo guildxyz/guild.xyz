@@ -1,9 +1,9 @@
 import { Text, TextProps } from "@chakra-ui/react"
-import { Field } from "components/[guild]/CreateFormModal/schemas"
+import { Schemas } from "@guildxyz/types"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 
 type Props = {
-  field: Field | CreateForm["fields"][number]
+  field: Schemas["Field"] | CreateForm["fields"][number]
 } & TextProps
 
 const FormFieldTitle = ({ field, ...textProps }: Props) => (

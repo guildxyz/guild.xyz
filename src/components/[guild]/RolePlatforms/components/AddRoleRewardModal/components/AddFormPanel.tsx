@@ -1,11 +1,9 @@
 import { Stack } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateForm"
-import {
-  FormCreationFormSchema,
-  FormCreationPayload,
-} from "components/[guild]/CreateFormModal/schemas"
+import { FormCreationSchema } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
 import { ArrowRight } from "phosphor-react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
@@ -28,8 +26,8 @@ type MapOptions<Variant> = Variant extends {
   ? Omit<Variant, "options"> & { options: { value: string | number }[] }
   : Variant
 
-export type CreateForm = Omit<FormCreationPayload, "fields"> & {
-  fields: MapOptions<FormCreationPayload["fields"][number]>[]
+export type CreateForm = Omit<Schemas["FormCreationPayload"], "fields"> & {
+  fields: MapOptions<Schemas["FormCreationPayload"]["fields"][number]>[]
 }
 
 const defaultValues: CreateForm = {
@@ -46,7 +44,7 @@ const AddFormPanel = ({ onSuccess }: Props) => {
 
   const methods = useForm<CreateForm>({
     mode: "all",
-    resolver: zodResolver(FormCreationFormSchema),
+    resolver: zodResolver(FormCreationSchema),
     defaultValues,
   })
 

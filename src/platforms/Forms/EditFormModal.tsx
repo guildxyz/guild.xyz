@@ -8,12 +8,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
-import {
-  Form,
-  FormCreationFormSchema,
-} from "components/[guild]/CreateFormModal/schemas"
+import { FormCreationSchema } from "components/[guild]/CreateFormModal/schemas"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -27,13 +25,13 @@ import useEditForm from "./hooks/useEditForm"
 type Props = {
   isOpen: boolean
   onClose: () => void
-  form: Form
+  form: Schemas["Form"]
 }
 
 const EditFormModal = ({ isOpen, onClose, form }: Props) => {
-  const methods = useForm<z.input<typeof FormCreationFormSchema>>({
+  const methods = useForm<z.input<typeof FormCreationSchema>>({
     mode: "all",
-    resolver: zodResolver(FormCreationFormSchema),
+    resolver: zodResolver(FormCreationSchema),
     defaultValues: {
       ...form,
       fields: form.fields.map((field) => {

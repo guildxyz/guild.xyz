@@ -12,12 +12,12 @@ import {
   useRadio,
   useRadioGroup,
 } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import { CreateForm } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import Button from "components/common/Button"
-import { Field } from "../../schemas"
 
 type Props = {
-  field: Field | CreateForm["fields"][number]
+  field: Schemas["Field"] | CreateForm["fields"][number]
 } & Omit<RadioGroupProps, "children">
 
 // TODO: should we pass that ref down? (probably for focus management?)

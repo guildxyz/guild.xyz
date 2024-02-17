@@ -1,4 +1,4 @@
-import { Form } from "components/[guild]/CreateFormModal/schemas"
+import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -23,7 +23,7 @@ const useEditForm = ({
       ...signedValidation,
     })
 
-  return useSubmitWithSign<Form>(editForm, {
+  return useSubmitWithSign<Schemas["Form"]>(editForm, {
     onSuccess: (response) => {
       onSuccess?.()
 
