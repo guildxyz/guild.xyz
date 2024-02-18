@@ -4,6 +4,7 @@ import {
   Icon,
   IconButton,
   Popover,
+  PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverHeader,
@@ -30,6 +31,14 @@ const TIMEOUT = 60_000
 type Props = {
   tooltipLabel?: string
 } & ButtonProps
+
+const POPOVER_HEADER_STYLES = {
+  fontWeight: "medium",
+  border: 0,
+  fontSize: "sm",
+  py: "1.5",
+  px: "3",
+}
 
 const latestResendDateAtom = atomWithStorage("latestResendDate", -Infinity)
 
@@ -83,8 +92,10 @@ const RecheckAccessesButton = ({
     })
   }
 
+  const isDisabled = isLoading || !!isFinished || !canResend
+
   return (
-    <Popover trigger="hover" placement="bottom" isLazy>
+    <Popover trigger="hover" placement="bottom" strategy="fixed" isLazy>
       <PopoverTrigger>
         <IconButton
           aria-label="Re-check accesses"
@@ -98,8 +109,18 @@ const RecheckAccessesButton = ({
               />
             )
           }
-          onClick={!isFinished && canResend ? onClick : undefined}
-          isDisabled={isLoading || !!isFinished || !canResend}
+          // artificial disabled state, so the popover still works
+          {...(isDisabled
+            ? {
+                opacity: 0.5,
+                cursor: "default",
+                _hover: { bg: undefined },
+                _focus: { bg: undefined },
+                _active: { bg: undefined },
+              }
+            : {
+                onClick,
+              })}
           sx={{
             "@-webkit-keyframes rotate": {
               from: {
@@ -122,14 +143,13 @@ const RecheckAccessesButton = ({
         />
       </PopoverTrigger>
       <PopoverContent {...(!isLoading ? { minW: "max-content", w: "unset" } : {})}>
-        {/* causes problems in the RequirementAccessIndicator popover, so just uncommented for now */}
-        {/* <PopoverArrow />  */}
+        <PopoverArrow />
         {isFinished ? (
-          <PopoverHeader fontWeight={"medium"} border={0}>
+          <PopoverHeader {...POPOVER_HEADER_STYLES}>
             Successfully updated accesses
           </PopoverHeader>
         ) : isLoading ? (
-          <PopoverBody>
+          <PopoverBody pb={3} px={4}>
             <VStack spacing={2.5} alignItems={"flex-start"} divider={<Divider />}>
               <SatisfyRequirementsJoinStep joinState={joinProgress} />
 
@@ -139,94 +159,15 @@ const RecheckAccessesButton = ({
             </VStack>
           </PopoverBody>
         ) : canResend ? (
-          <PopoverHeader fontWeight={"medium"} border={0}>
-            {tooltipLabel}
-          </PopoverHeader>
+          <PopoverHeader {...POPOVER_HEADER_STYLES}>{tooltipLabel}</PopoverHeader>
         ) : (
-          <PopoverHeader fontWeight={"medium"} border={0}>
+          <PopoverHeader {...POPOVER_HEADER_STYLES}>
             You can only use this function once per minute
           </PopoverHeader>
         )}
       </PopoverContent>
     </Popover>
   )
-  // return (
-  //   <Popover trigger="hover" /* isOpen={isLoading ? undefined : false} */>
-  //     <Tooltip
-  //       label={
-  //         isFinished
-  //           ? "Successfully updated accesses"
-  //           : canResend
-  //           ? tooltipLabel
-  //           : "You can only use this function once per minute"
-  //       }
-  //       isDisabled={true}
-  //       hasArrow
-  //     >
-  //       <Box>
-  //         <PopoverTrigger>
-  //           <IconButton
-  //             aria-label="Re-check accesses"
-  //             icon={
-  //               isFinished ? (
-  //                 <Check />
-  //               ) : (
-  //                 <Icon
-  //                   as={ArrowsClockwise}
-  //                   animation={isLoading ? "rotate 1s infinite linear" : undefined}
-  //                 />
-  //               )
-  //             }
-  //             onClick={!isFinished && canResend ? onClick : undefined}
-  //             isDisabled={isLoading || !!isFinished || !canResend}
-  //             sx={{
-  //               "@-webkit-keyframes rotate": {
-  //                 from: {
-  //                   transform: "rotate(0)",
-  //                 },
-  //                 to: {
-  //                   transform: "rotate(360deg)",
-  //                 },
-  //               },
-  //               "@keyframes rotate": {
-  //                 from: {
-  //                   transform: "rotate(0)",
-  //                 },
-  //                 to: {
-  //                   transform: "rotate(360deg)",
-  //                 },
-  //               },
-  //             }}
-  //             {...rest}
-  //           />
-  //         </PopoverTrigger>
-  //       </Box>
-  //     </Tooltip>
-  //     <PopoverContent minW="max-content" w="unset">
-  //       <PopoverArrow />
-  //       <PopoverHeader border="0">
-  //         {isFinished
-  //           ? "Successfully updated accesses"
-  //           : isLoading
-  //           ? "Checking accesses"
-  //           : canResend
-  //           ? tooltipLabel
-  //           : "You can only use this function once per minute"}
-  //       </PopoverHeader>
-  //       {isLoading && (
-  //         <PopoverBody>
-  //           <VStack spacing={2.5} alignItems={"flex-start"}>
-  //             <SatisfyRequirementsJoinStep joinState={joinProgress} />
-
-  //             <GetRolesJoinStep joinState={joinProgress} />
-
-  //             <GetRewardsJoinStep joinState={joinProgress} />
-  //           </VStack>
-  //         </PopoverBody>
-  //       )}
-  //     </PopoverContent>
-  //   </Popover>
-  // )
 }
 
 const TopRecheckAccessesButton = () => {
