@@ -428,7 +428,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Mirror/MirrorForm")
     ),
-    types: ["MIRROR", "MIRROR_COLLECT"],
+    types: ["MIRROR_COLLECT", "MIRROR"],
     isNegatable: true,
   },
   {
