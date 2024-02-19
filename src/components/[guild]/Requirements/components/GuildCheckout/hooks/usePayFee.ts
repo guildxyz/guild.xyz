@@ -11,7 +11,7 @@ import { mutate } from "swr"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
-import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
 
 const usePayFee = () => {

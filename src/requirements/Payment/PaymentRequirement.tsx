@@ -2,7 +2,7 @@ import { Icon, Text } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"

@@ -2,7 +2,7 @@ import { HStack, Text } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
 import Requirement, {
   RequirementProps,

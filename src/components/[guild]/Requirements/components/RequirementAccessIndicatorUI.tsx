@@ -31,7 +31,7 @@ const CIRCLE_OPEN_STYLES = {
   },
 }
 
-const RequiementAccessIndicatorUI = ({
+const RequirementAccessIndicatorUI = ({
   colorScheme,
   icon,
   circleBgSwatch,
@@ -117,4 +117,4 @@ const RequiementAccessIndicatorUI = ({
   )
 }
 
-export default RequiementAccessIndicatorUI
+export default RequirementAccessIndicatorUI

@@ -11,7 +11,7 @@ import { useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
-import { useGuildCheckoutContext } from "../GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../GuildCheckoutContext"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
