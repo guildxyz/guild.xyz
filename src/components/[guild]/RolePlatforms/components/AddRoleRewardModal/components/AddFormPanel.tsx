@@ -48,6 +48,8 @@ const AddFormPanel = ({ onSuccess }: Props) => {
     defaultValues,
   })
 
+  const fields = useWatch({ control: methods.control, name: "fields" })
+
   const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm(
     (createdForm) => {
       methods.reset(defaultValues)
@@ -60,6 +62,7 @@ const AddFormPanel = ({ onSuccess }: Props) => {
           },
         },
         visibility: roleVisibility,
+        isNew: true,
       })
       onSuccess()
     }
@@ -86,6 +89,7 @@ const AddFormPanel = ({ onSuccess }: Props) => {
           onClick={methods.handleSubmit(onSubmit, console.error)}
           loadingText="Creating form"
           isLoading={isLoading}
+          isDisabled={!fields?.length}
         >
           Create form & continue
         </Button>
