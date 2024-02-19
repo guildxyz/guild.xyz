@@ -28,11 +28,12 @@ const BasicInfo = (): JSX.Element => {
   } = useFormContext<GuildFormType>()
 
   const name = useWatch({ control, name: "name" })
+  const contacts = useWatch({ control, name: "contacts" })
   const guildPlatforms = useWatch({ control, name: "guildPlatforms" })
 
   useEffect(() => {
-    setDisabled(!name || !!Object.values(errors).length)
-  }, [name, errors])
+    setDisabled(!name || !contacts[0].contact || !!Object.values(errors).length)
+  }, [name, errors, contacts, errors.contacts])
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
@@ -103,7 +104,7 @@ const BasicInfo = (): JSX.Element => {
         <BackgroundImageUploader uploader={backgroundUploader} />
       </Stack>
       <Section title="How could we contact you?" spacing="4">
-        <ContactInfo showAddButton={false} />
+        <ContactInfo />
       </Section>
     </Stack>
   )

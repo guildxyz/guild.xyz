@@ -35,7 +35,14 @@ const AccessIndicatorUI = ({
   const IconComponent = useBreakpointValue({ base: TagRightIcon, md: TagLeftIcon })
 
   return (
-    <Tag title={label} size="lg" colorScheme={colorScheme} {...STYLES} {...rest}>
+    <Tag
+      title={label}
+      size="lg"
+      h="8"
+      colorScheme={colorScheme}
+      {...STYLES}
+      {...rest}
+    >
       <TagLabel fontSize="sm" order={{ md: 1 }}>
         {label}
       </TagLabel>

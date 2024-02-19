@@ -41,11 +41,17 @@ const ScoreFormulaPopover = () => (
               th: {
                 px: 0,
                 py: 1,
+                "&:nth-child(2)": {
+                  pl: 3,
+                },
                 fontSize: "xs",
               },
               td: {
                 px: 0,
                 py: 1,
+                "&:nth-child(2)": {
+                  pl: 3,
+                },
                 fontSize: "xs",
               },
             }}

@@ -15,6 +15,7 @@ import OnboardingMarker from "components/common/OnboardingMarker"
 import useIsStuck from "hooks/useIsStuck"
 import { CaretDown, ListNumbers, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
+import RecheckAccessesButton from "../RecheckAccessesButton"
 import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
 
@@ -64,6 +65,12 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
             Add role
           </Button>
         </OnboardingMarker>
+        <Divider orientation="vertical" h="8" />
+        <RecheckAccessesButton
+          tooltipLabel="Re-check my accesses"
+          borderTopLeftRadius="0"
+          borderBottomLeftRadius="0"
+        />
         <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end">
           <MenuButton

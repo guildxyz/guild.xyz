@@ -1,8 +1,10 @@
 import { Icon, Link } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useIsIOS from "hooks/useIsIOS"
 import usePopupWindow from "hooks/usePopupWindow"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Heart, Share, UserPlus, type IconProps } from "phosphor-react"
@@ -11,7 +13,7 @@ import useSWR from "swr"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
-export type TwitterIntentAction = "follow" | "like" | "repost"
+export type TwitterIntentAction = "follow" | "like" | "retweet"
 
 type Props = {
   type?: "button" | "link"
@@ -21,7 +23,7 @@ type Props = {
 const label: Record<TwitterIntentAction, string> = {
   follow: "Follow",
   like: "Like post",
-  repost: "Repost",
+  retweet: "Repost",
 }
 
 const buttonIcon: Record<
@@ -30,16 +32,16 @@ const buttonIcon: Record<
 > = {
   follow: UserPlus,
   like: Heart,
-  repost: Share,
+  retweet: Share,
 }
 
 const intentQueryParam: Record<TwitterIntentAction, string> = {
   like: "tweet_id",
-  repost: "tweet_id",
+  retweet: "tweet_id",
   follow: "screen_name",
 }
 
-const TWITTER_INTENT_BASE_URL = "https://twitter.com/intent"
+const TWITTER_INTENT_BASE_URL = "https://x.com/intent"
 
 const TwitterIntent = ({
   type = "button",
@@ -54,21 +56,26 @@ const TwitterIntent = ({
     type: requirementType,
     id: requirementId,
     data: { id },
+    roleId,
   } = useRequirementContext()
   const { onOpen } = usePopupWindow()
 
-  const { data: accesses, mutate: mutateAccess } = useAccess()
-  const hasAccess = accesses
-    ?.flatMap((role) => role.requirements)
-    .find((req) => req.requirementId === requirementId)?.access
+  const { triggerMembershipUpdate } = useMembershipUpdate()
+  const { reqAccesses } = useRoleMembership(roleId)
+  const hasAccess = reqAccesses?.find(
+    (req) => req.requirementId === requirementId
+  )?.access
+
+  // The intent links won't work properly on iOS deviced, so we just fall back to regular links in that case
+  const isIOS = useIsIOS()
 
   const url =
     !!action && !!id
-      ? isTwitterConnected && !hasAccess
+      ? isTwitterConnected && !hasAccess && !isIOS
         ? `${TWITTER_INTENT_BASE_URL}/${action}?${intentQueryParam[action]}=${id}`
         : requirementType === "TWITTER_FOLLOW_V2"
-        ? `https://twitter.com/${id}`
-        : `https://twitter.com/twitter/status/${id}`
+        ? `https://x.com/${id}`
+        : `https://x.com/twitter/status/${id}`
       : undefined
 
   const completeAction = (signedValidation: SignedValidation) =>
@@ -79,7 +86,7 @@ const TwitterIntent = ({
 
   const { onSubmit } = useSubmitWithSign(completeAction, {
     onSuccess: () => {
-      mutateAccess()
+      triggerMembershipUpdate()
       setHasClicked(false)
     },
   })

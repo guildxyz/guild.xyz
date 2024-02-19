@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
@@ -10,7 +11,7 @@ import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
@@ -60,7 +61,7 @@ const useMintGuildPin = () => {
 
   const { guildPinFee } = useGuildPinFee()
 
-  const fetcherWithSign = useFetcherWithSign()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const mintGuildPin = async () => {
     setTxError?.(false)
@@ -169,9 +170,8 @@ const useMintGuildPin = () => {
     try {
       const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenURI)
 
-      mutate((prevData) => [
-        ...(prevData ?? []),
-        {
+      mutate((prevData) => {
+        const newPin = {
           chainId,
           tokenId,
           ...metadata,
@@ -179,8 +179,14 @@ const useMintGuildPin = () => {
             "ipfs://",
             process.env.NEXT_PUBLIC_IPFS_GATEWAY
           ),
-        },
-      ])
+        }
+
+        const updatedPins = prevData?.usersPins
+          ? [...prevData.usersPins, newPin]
+          : [newPin]
+
+        return { ...prevData, usersPins: updatedPins }
+      })
     } catch {}
 
     const hasGuildPinRequirement = roles
@@ -193,7 +199,7 @@ const useMintGuildPin = () => {
       )
 
     if (hasGuildPinRequirement) {
-      fetcherWithSign([`/user/join`, { method: "POST", body: { guildId: id } }])
+      triggerMembershipUpdate()
     }
 
     toastWithTweetButton({

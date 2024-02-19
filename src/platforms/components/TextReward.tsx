@@ -6,10 +6,11 @@ import {
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import Button from "components/common/Button"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import useClaimText, {
@@ -32,6 +33,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const {
     onSubmit,
+    isPreparing,
     isLoading,
     error,
     response,
@@ -42,15 +44,17 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
-  const isMember = useIsMember()
-  const { hasAccess, isValidating: isAccessValidating } = useAccess(role.id)
+  const { isMember } = useMembership()
+  const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
+    role.id
+  )
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
   const state = useMemo(() => {
-    if (isMember && hasAccess) {
+    if (isMember && hasRoleAccess) {
       if (!getRolePlatformTimeframeInfo(platform).isAvailable && !claimed) {
         return {
           tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
@@ -66,7 +70,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasAccess))
+    if (!isConnected || (!isMember && hasRoleAccess))
       return {
         tooltipLabel: (
           <>
@@ -80,13 +84,13 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [claimed, isMember, hasAccess, isConnected, platform])
+  }, [claimed, isMember, hasRoleAccess, isConnected, platform])
 
   return (
     <>
       <RewardDisplay
         icon={
-          isLoading ? (
+          isLoading || isPreparing ? (
             <Spinner boxSize={6} />
           ) : (
             <RewardIcon
@@ -105,7 +109,11 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
               <Button
                 variant="link"
                 rightIcon={
-                  isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isAccessValidating || isPreparing ? (
+                    <Spinner boxSize="1em" />
+                  ) : (
+                    <ArrowSquareOut />
+                  )
                 }
                 iconSpacing="1"
                 maxW="full"

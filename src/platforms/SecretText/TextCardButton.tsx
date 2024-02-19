@@ -31,6 +31,7 @@ const TextCardButton = ({ platform }: Props) => {
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
   const {
     onSubmit,
+    isPreparing,
     isLoading,
     error,
     response,
@@ -54,8 +55,8 @@ const TextCardButton = ({ platform }: Props) => {
             onOpen()
             if (!response) onSubmit()
           }}
-          isLoading={isLoading}
-          loadingText="Claiming secret..."
+          isLoading={isLoading || isPreparing}
+          loadingText={isPreparing ? "Checking eligibility" : "Claiming secret..."}
           isDisabled={isButtonDisabled}
           w="full"
         >
