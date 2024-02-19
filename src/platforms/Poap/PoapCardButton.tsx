@@ -2,7 +2,7 @@ import { Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
+import Link from "next/link"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
@@ -45,12 +45,13 @@ const PoapCardButton = ({ platform }: Props) => {
         {!isButtonEnabled ? (
           <Button {...buttonProps}>{buttonLabel}</Button>
         ) : (
-          <LinkButton
+          <Button
+            as={Link}
             href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
             {...buttonProps}
           >
             {buttonLabel}
-          </LinkButton>
+          </Button>
         )}
       </Tooltip>
     </>

@@ -2,10 +2,10 @@ import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import LinkButton from "components/common/LinkButton"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import Link from "next/link"
 import { Plus, Wallet } from "phosphor-react"
 import { forwardRef } from "react"
 
@@ -78,14 +78,14 @@ const YourGuilds = forwardRef((_, ref: any) => {
                 or create your own!
               </Text>
             </HStack>
-            <LinkButton
+            <Button
+              as={Link}
               leftIcon={<Plus />}
               href="/create-guild"
-              colorScheme="gray"
               prefetch={false}
             >
               Create guild
-            </LinkButton>
+            </Button>
           </Stack>
         </Card>
       )}

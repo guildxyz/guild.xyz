@@ -8,11 +8,12 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import Button from "components/common/Button"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
-import LinkButton from "components/common/LinkButton"
 import dynamic from "next/dynamic"
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { ArrowRight, Plus } from "phosphor-react"
 
@@ -84,22 +85,23 @@ const CampaignCards = () => {
               </HStack>
 
               {groupHasRoles ? (
-                <LinkButton
+                <Button
+                  as={Link}
                   colorScheme={"primary"}
                   href={`/${guildUrlName}/${urlName}`}
                   rightIcon={<ArrowRight />}
                 >
                   View page
-                </LinkButton>
+                </Button>
               ) : (
-                <LinkButton
-                  colorScheme={"gray"}
+                <Button
+                  as={Link}
                   variant={"outline"}
                   href={`/${guildUrlName}/${urlName}`}
                   leftIcon={<Plus />}
                 >
                   Add roles
-                </LinkButton>
+                </Button>
               )}
 
               <ColorCardLabel

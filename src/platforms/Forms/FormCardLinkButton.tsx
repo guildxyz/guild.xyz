@@ -1,6 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { Check } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
@@ -19,7 +20,8 @@ const FormCardLinkButton = ({ platform }: Props) => {
   const { data: userSubmission, isValidating } = useUserSubmission(form)
 
   return (
-    <LinkButton
+    <Button
+      as={Link}
       isDisabled={!form || !!userSubmission}
       isLoading={isFormsValidating || isValidating}
       prefetch={false}
@@ -29,7 +31,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
       leftIcon={userSubmission && <Check />}
     >
       {userSubmission ? "Already submitted" : "Fill form"}
-    </LinkButton>
+    </Button>
   )
 }
 export default FormCardLinkButton

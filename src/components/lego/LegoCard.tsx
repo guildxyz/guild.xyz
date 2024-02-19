@@ -1,6 +1,7 @@
 import { Box, Flex, Grid, GridItem, Heading, Icon, Img, Tag } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
-import LinkButton from "components/common/LinkButton"
+import Link from "next/link"
 import { FilePdf } from "phosphor-react"
 
 type Props = {
@@ -33,7 +34,8 @@ const LegoCard = ({ href, img, name, pieces }: Props): JSX.Element => (
             <Tag mb={4} size={{ base: "sm", sm: "md" }}>
               {`${pieces} pieces`}
             </Tag>
-            <LinkButton
+            <Button
+              as={Link}
               href={href}
               size="sm"
               rounded="lg"
@@ -44,7 +46,7 @@ const LegoCard = ({ href, img, name, pieces }: Props): JSX.Element => (
               w="full"
             >
               Instructions
-            </LinkButton>
+            </Button>
           </Flex>
         </GridItem>
       </Grid>
