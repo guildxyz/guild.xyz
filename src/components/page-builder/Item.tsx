@@ -1,48 +1,45 @@
-import { Box } from "@chakra-ui/react"
+import { GridItem } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { motion } from "framer-motion"
-import { BASE_SIZE, ItemType, PADDING } from "pages/page-builder"
-import { DragEventHandler } from "react"
+import { ItemType } from "pages/page-builder"
+import { DragEventHandler, useState } from "react"
 
 type Props = {
   item: ItemType
   drag: DragEventHandler
-  dragEnd: DragEventHandler
+  drop: DragEventHandler
 }
 
 const MotionCard = motion(Card)
 
-const Item = ({ item, drag, dragEnd }: Props) => {
-  const x = item.desktop.position % 6
-  const y = Math.floor(item.desktop.position / 6)
+const Item = ({ item, drag, drop }: Props) => {
+  const x = item.desktop.x
+  const y = item.desktop.y
 
-  const sizeToPx = (unit: number) => {
-    return unit * BASE_SIZE + (unit - 1) * PADDING
-  }
+  const [moving, setMoving] = useState(false)
 
-  const posToPx = (unit: number) => {
-    return unit * (BASE_SIZE + PADDING)
+  const handleDrop = (e) => {
+    setMoving(false)
+    drop(e)
   }
 
   return (
-    <>
-      <Box
-        as={MotionCard}
-        drag
-        alignItems="center"
-        justifyContent="center"
-        height={sizeToPx(Number(item.desktop.height))}
-        width={sizeToPx(Number(item.desktop.width))}
-        position={"absolute"}
-        left={posToPx(x)}
-        top={posToPx(y)}
-        onDrag={drag}
-        onDragEnd={dragEnd}
-      >
-        Card
-      </Box>
-    </>
+    <GridItem
+      as={MotionCard}
+      gridColumnStart={x}
+      gridRowStart={y}
+      colSpan={typeof item.desktop.width === "number" ? item.desktop.width : 6}
+      rowSpan={Number(item.desktop.height)}
+      drag
+      alignItems="center"
+      justifyContent="center"
+      onDragStart={() => setMoving(true)}
+      onDrag={drag}
+      onDragEnd={handleDrop}
+      animate={moving ? {} : { x: 0, y: 0 }}
+    >
+      Card
+    </GridItem>
   )
 }
-
 export default Item
