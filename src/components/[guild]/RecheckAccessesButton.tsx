@@ -9,6 +9,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Portal,
   VStack,
 } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -95,7 +96,7 @@ const RecheckAccessesButton = ({
   const isDisabled = isLoading || !!isFinished || !canResend
 
   return (
-    <Popover trigger="hover" placement="bottom" strategy="fixed" isLazy>
+    <Popover trigger="hover" placement="bottom" isLazy>
       <PopoverTrigger>
         <IconButton
           aria-label="Re-check accesses"
@@ -142,30 +143,30 @@ const RecheckAccessesButton = ({
           {...rest}
         />
       </PopoverTrigger>
-      <PopoverContent {...(!isLoading ? { minW: "max-content", w: "unset" } : {})}>
-        <PopoverArrow />
-        {isFinished ? (
-          <PopoverHeader {...POPOVER_HEADER_STYLES}>
-            Successfully updated accesses
-          </PopoverHeader>
-        ) : isLoading ? (
-          <PopoverBody pb={3} px={4}>
-            <VStack spacing={2.5} alignItems={"flex-start"} divider={<Divider />}>
-              <SatisfyRequirementsJoinStep joinState={joinProgress} />
-
-              <GetRolesJoinStep joinState={joinProgress} />
-
-              <GetRewardsJoinStep joinState={joinProgress} />
-            </VStack>
-          </PopoverBody>
-        ) : canResend ? (
-          <PopoverHeader {...POPOVER_HEADER_STYLES}>{tooltipLabel}</PopoverHeader>
-        ) : (
-          <PopoverHeader {...POPOVER_HEADER_STYLES}>
-            You can only use this function once per minute
-          </PopoverHeader>
-        )}
-      </PopoverContent>
+      <Portal>
+        <PopoverContent {...(!isLoading ? { minW: "max-content", w: "unset" } : {})}>
+          <PopoverArrow />
+          {isFinished ? (
+            <PopoverHeader {...POPOVER_HEADER_STYLES}>
+              Successfully updated accesses
+            </PopoverHeader>
+          ) : isLoading ? (
+            <PopoverBody pb={3} px={4}>
+              <VStack spacing={2.5} alignItems={"flex-start"} divider={<Divider />}>
+                <SatisfyRequirementsJoinStep joinState={joinProgress} />
+                <GetRolesJoinStep joinState={joinProgress} />
+                <GetRewardsJoinStep joinState={joinProgress} />
+              </VStack>
+            </PopoverBody>
+          ) : canResend ? (
+            <PopoverHeader {...POPOVER_HEADER_STYLES}>{tooltipLabel}</PopoverHeader>
+          ) : (
+            <PopoverHeader {...POPOVER_HEADER_STYLES}>
+              You can only use this function once per minute
+            </PopoverHeader>
+          )}
+        </PopoverContent>
+      </Portal>
     </Popover>
   )
 }
