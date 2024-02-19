@@ -9,7 +9,7 @@ import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useChainId, useToken } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
-import { useGuildCheckoutContext } from "../GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../GuildCheckoutContext"
 
 const BuyAllowanceButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()

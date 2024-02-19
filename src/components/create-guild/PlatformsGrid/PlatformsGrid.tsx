@@ -16,7 +16,7 @@ type PlatformsGridData = {
 }
 
 const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
-  const { guildPlatforms } = useGuild()
+  const { guildPlatforms, featureFlags } = useGuild()
 
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: PlatformsGridData[] = [
@@ -69,6 +69,15 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
+    ...(featureFlags.includes("FORMS")
+      ? [
+          {
+            platform: "FORM",
+            description: "Gather responses",
+            isGeneral: true,
+          } as PlatformsGridData,
+        ]
+      : []),
   ]
 
   return (

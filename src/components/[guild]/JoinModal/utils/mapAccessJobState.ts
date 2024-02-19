@@ -1,7 +1,18 @@
 import type { JoinJob } from "@guildxyz/types"
 
-const groupBy = <Entity, By extends keyof Entity>(entities: Entity[], by: By) =>
-  entities.reduce<Record<string, Entity[]>>((grouped, entity) => {
+// TODO: uncomment the properly typed groupBy once we fix our types in the queues package!
+
+// const groupBy = <Entity, By extends keyof Entity>(entities: Entity[], by: By) =>
+//   entities.reduce<Record<string, Entity[]>>((grouped, entity) => {
+//     const key = `${entity[by]}`
+//     // eslint-disable-next-line no-param-reassign
+//     grouped[key] ||= []
+//     grouped[key].push(entity)
+//     return grouped
+//   }, {})
+
+const groupBy = (entities: any[], by: string) =>
+  entities.reduce<Record<string, any[]>>((grouped, entity) => {
     const key = `${entity[by]}`
     // eslint-disable-next-line no-param-reassign
     grouped[key] ||= []

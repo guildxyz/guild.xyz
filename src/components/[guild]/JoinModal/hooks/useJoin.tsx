@@ -63,7 +63,8 @@ const useJoin = (
 
   const { triggerMembershipUpdate: onSubmit, ...rest } = useMembershipUpdate(
     onJoinSuccess,
-    onError
+    onError,
+    true
   )
 
   return { ...rest, onSubmit }

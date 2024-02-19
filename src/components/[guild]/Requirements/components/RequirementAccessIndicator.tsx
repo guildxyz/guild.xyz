@@ -13,10 +13,10 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import REQUIREMENTS from "requirements"
-import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
+import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
-const DymaicConnectPolygonID = dynamic(
+const DynamicConnectPolygonID = dynamic(
   () => import("requirements/PolygonID/components/ConnectPolygonID")
 )
 const DynamicCompleteCaptcha = dynamic(
@@ -29,7 +29,7 @@ const DynamicConnectRequirementPlatformButton = dynamic(
   () => import("./ConnectRequirementPlatformButton")
 )
 
-const RequiementAccessIndicator = () => {
+const RequirementAccessIndicator = () => {
   const { openAccountModal } = useWeb3ConnectionManager()
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
@@ -40,7 +40,7 @@ const RequiementAccessIndicator = () => {
 
   if (reqAccessData?.access)
     return (
-      <RequiementAccessIndicatorUI
+      <RequirementAccessIndicatorUI
         colorScheme={"green"}
         circleBgSwatch={{ light: 400, dark: 300 }}
         icon={Check}
@@ -51,7 +51,7 @@ const RequiementAccessIndicator = () => {
           </Text>
           Requirement satisfied
         </PopoverHeader>
-      </RequiementAccessIndicatorUI>
+      </RequirementAccessIndicatorUI>
     )
 
   if (
@@ -59,7 +59,7 @@ const RequiementAccessIndicator = () => {
     reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID"
   )
     return (
-      <RequiementAccessIndicatorUI
+      <RequirementAccessIndicatorUI
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
@@ -74,7 +74,7 @@ const RequiementAccessIndicator = () => {
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
           {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (
-            <DymaicConnectPolygonID size="sm" iconSpacing={2} />
+            <DynamicConnectPolygonID size="sm" iconSpacing={2} />
           ) : type === "CAPTCHA" ? (
             <DynamicCompleteCaptcha size="sm" iconSpacing={2} />
           ) : type.startsWith("GITCOIN_") ? (
@@ -83,12 +83,12 @@ const RequiementAccessIndicator = () => {
             <DynamicConnectRequirementPlatformButton size="sm" iconSpacing={2} />
           )}
         </PopoverFooter>
-      </RequiementAccessIndicatorUI>
+      </RequirementAccessIndicatorUI>
     )
 
   if (reqAccessData?.access === null) {
     return (
-      <RequiementAccessIndicatorUI
+      <RequirementAccessIndicatorUI
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
@@ -99,14 +99,14 @@ const RequiementAccessIndicator = () => {
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
         </PopoverHeader>
-      </RequiementAccessIndicatorUI>
+      </RequirementAccessIndicatorUI>
     )
   }
 
   const reqObj = REQUIREMENTS[type]
 
   return (
-    <RequiementAccessIndicatorUI
+    <RequirementAccessIndicatorUI
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={X}
@@ -140,7 +140,7 @@ const RequiementAccessIndicator = () => {
           <RecheckAccessesButton />
         </ButtonGroup>
       </PopoverFooter>
-    </RequiementAccessIndicatorUI>
+    </RequirementAccessIndicatorUI>
   )
 }
 
@@ -157,4 +157,4 @@ export const POPOVER_FOOTER_STYLES = {
   pt: "2",
 }
 
-export default RequiementAccessIndicator
+export default RequirementAccessIndicator

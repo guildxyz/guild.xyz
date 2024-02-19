@@ -14,7 +14,7 @@ import {
   GuildCheckoutContextType,
   GuildCheckoutProvider,
   useGuildCheckoutContext,
-} from "./components/GuildCheckoutContex"
+} from "./components/GuildCheckoutContext"
 
 export enum GuildAction {
   JOINED_GUILD,

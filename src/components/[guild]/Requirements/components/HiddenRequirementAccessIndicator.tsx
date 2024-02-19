@@ -33,14 +33,14 @@ import capitalize from "utils/capitalize"
 import {
   POPOVER_FOOTER_STYLES,
   POPOVER_HEADER_STYLES,
-} from "./RequiementAccessIndicator"
-import RequiementAccessIndicatorUI from "./RequiementAccessIndicatorUI"
+} from "./RequirementAccessIndicator"
+import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 
 type Props = {
   roleId: number
 }
 
-const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
+const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
   const { reqAccesses, hasRoleAccess } = useRoleMembership(roleId)
@@ -111,64 +111,64 @@ const HiddenRequiementAccessIndicator = ({ roleId }: Props) => {
       : count.accessed > 0
   )
     return (
-      <RequiementAccessIndicatorUI
+      <RequirementAccessIndicatorUI
         colorScheme={"green"}
         circleBgSwatch={{ light: 400, dark: 300 }}
         icon={Check}
       >
-        <HiddenRequiementAccessIndicatorPopover
+        <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
         />
-      </RequiementAccessIndicatorUI>
+      </RequirementAccessIndicatorUI>
     )
 
   if (count.platformErrored === hiddenReqsAccessData?.length)
     return (
-      <RequiementAccessIndicatorUI
+      <RequirementAccessIndicatorUI
         colorScheme={"blue"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={LockSimple}
         isAlwaysOpen={!hasRoleAccess}
       >
-        <HiddenRequiementAccessIndicatorPopover
+        <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
         />
-      </RequiementAccessIndicatorUI>
+      </RequirementAccessIndicatorUI>
     )
 
   if (count.errored === hiddenReqsAccessData?.length)
     return (
-      <RequiementAccessIndicatorUI
+      <RequirementAccessIndicatorUI
         colorScheme={"orange"}
         circleBgSwatch={{ light: 300, dark: 300 }}
         icon={Warning}
         isAlwaysOpen={!hasRoleAccess}
       >
-        <HiddenRequiementAccessIndicatorPopover
+        <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
         />
-      </RequiementAccessIndicatorUI>
+      </RequirementAccessIndicatorUI>
     )
 
   return (
-    <RequiementAccessIndicatorUI
+    <RequirementAccessIndicatorUI
       colorScheme={"gray"}
       circleBgSwatch={{ light: 300, dark: 500 }}
       icon={count.notAccessed === hiddenReqsAccessData?.length ? X : DotsThree}
       isAlwaysOpen={!hasRoleAccess}
     >
-      <HiddenRequiementAccessIndicatorPopover
+      <HiddenRequirementAccessIndicatorPopover
         count={count}
         errorMessages={hiddenReqsErrorMessages}
       />
-    </RequiementAccessIndicatorUI>
+    </RequirementAccessIndicatorUI>
   )
 }
 
-type HiddenRequiementAccessIndicatorPopoverProps = {
+type HiddenRequirementAccessIndicatorPopoverProps = {
   count: {
     accessed: number
     notAccessed: number
@@ -178,10 +178,10 @@ type HiddenRequiementAccessIndicatorPopoverProps = {
   errorMessages: string[]
 }
 
-const HiddenRequiementAccessIndicatorPopover = ({
+const HiddenRequirementAccessIndicatorPopover = ({
   count,
   errorMessages,
-}: HiddenRequiementAccessIndicatorPopoverProps) => {
+}: HiddenRequirementAccessIndicatorPopoverProps) => {
   const { openAccountModal } = useWeb3ConnectionManager()
 
   return (
@@ -336,4 +336,4 @@ const CountAccessIndicatorUI = ({
   )
 }
 
-export default HiddenRequiementAccessIndicator
+export default HiddenRequirementAccessIndicator

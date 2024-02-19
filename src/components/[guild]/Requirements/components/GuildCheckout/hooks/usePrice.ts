@@ -10,7 +10,7 @@ import {
 } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
-import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 
 const fetchPrice = ([_, guildId, account, requirement, sellAddress]): Promise<
   FetchPriceResponse<bigint>
