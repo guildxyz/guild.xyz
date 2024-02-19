@@ -6,7 +6,8 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
 import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
 import platforms from "platforms/platforms"
@@ -39,7 +40,8 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
             hasArrow
             shouldWrapChildren
           >
-            <LinkButton
+            <Button
+              as={Link}
               isLoading={isFormsValidating || isUserSubmissionValidating}
               isDisabled={!!userSubmission}
               href={
@@ -48,12 +50,13 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
                   : "#"
               }
               variant="link"
+              colorScheme="primary"
               rightIcon={<ArrowSquareOut />}
               iconSpacing="1"
               maxW="full"
             >
               {form?.name ?? platforms[PlatformType[platformId]].name}
-            </LinkButton>
+            </Button>
           </Tooltip>
         </>
       }

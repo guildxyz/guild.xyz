@@ -13,21 +13,21 @@ const NavButton = forwardRef(
     const router = useRouter()
 
     return (
-      <NextLink passHref href={href} prefetch={false}>
-        <Button
-          as="a"
-          ref={ref}
-          variant="ghost"
-          h={10}
-          w="full"
-          justifyContent="left"
-          {...rest}
-          fontWeight={router.route === href ? "semibold" : "normal"}
-          backgroundColor={router.route === href && "whiteAlpha.200"}
-        >
-          {children}
-        </Button>
-      </NextLink>
+      <Button
+        as={NextLink}
+        href={href}
+        prefetch={false}
+        ref={ref}
+        variant="ghost"
+        h={10}
+        w="full"
+        justifyContent="left"
+        {...rest}
+        fontWeight={router.route === href ? "semibold" : "normal"}
+        backgroundColor={router.route === href && "whiteAlpha.200"}
+      >
+        {children}
+      </Button>
     )
   }
 )

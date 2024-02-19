@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import { Skeleton } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
@@ -5,7 +6,6 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Link from "components/common/Link"
 import Star from "static/icons/star.svg"
 
 const ExternalGuildLink = ({ name, urlName }) => (

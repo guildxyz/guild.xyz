@@ -11,19 +11,18 @@ const LinkMenuItem = ({ href, icon, children, ...rest }: Props) => {
   const [hasClicked, setHasClicked] = useState(false)
 
   return (
-    <Link passHref href={href}>
-      <MenuItem
-        onClick={() => setHasClicked(true)}
-        as="a"
-        icon={hasClicked ? <Spinner size="xs" /> : icon}
-        command={(<ArrowRight />) as any}
-        isDisabled={hasClicked}
-        closeOnSelect={false}
-        {...rest}
-      >
-        {hasClicked ? "Redirecting" : children}
-      </MenuItem>
-    </Link>
+    <MenuItem
+      as={Link}
+      href={href}
+      onClick={() => setHasClicked(true)}
+      icon={hasClicked ? <Spinner size="xs" /> : icon}
+      command={(<ArrowRight />) as any}
+      isDisabled={hasClicked}
+      closeOnSelect={false}
+      {...rest}
+    >
+      {hasClicked ? "Redirecting" : children}
+    </MenuItem>
   )
 }
 

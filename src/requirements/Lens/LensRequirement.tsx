@@ -1,8 +1,8 @@
+import { Link } from "@chakra-ui/next-js"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import Link from "components/common/Link"
 
 const LensRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()

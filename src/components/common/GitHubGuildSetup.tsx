@@ -5,6 +5,7 @@ import {
   AlertTitle,
   Box,
   GridItem,
+  Link,
   SimpleGrid,
   VStack,
 } from "@chakra-ui/react"
@@ -13,7 +14,6 @@ import RepoCard, { RepoSkeletonCard } from "components/create-guild/github/RepoC
 import SearchBar from "components/explorer/SearchBar"
 import useGateables from "hooks/useGateables"
 import useSubmit from "hooks/useSubmit"
-import Link from "next/link"
 import { useState } from "react"
 import { PlatformType } from "types"
 import Button from "./Button"
@@ -108,11 +108,9 @@ const GitHubGuildSetup = ({
             reauthenticate
           </Button>
           , or if you don't have a repo yet, you can{" "}
-          <Link passHref href="https://github.com/new">
-            <Button as="a" target={"_blank"} variant="link">
-              create one
-            </Button>
-          </Link>
+          <Button as={Link} href="https://github.com/new" isExternal variant="link">
+            create one
+          </Button>
           , then return here to gate access to it!
         </AlertDescription>
       </VStack>

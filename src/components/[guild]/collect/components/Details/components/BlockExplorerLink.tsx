@@ -1,6 +1,6 @@
+import { Link } from "@chakra-ui/next-js"
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chain } from "chains"
-import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 

@@ -118,10 +118,13 @@ const Layout = ({
               <Image
                 src={backgroundImage}
                 alt="Guild background image"
-                layout="fill"
-                objectFit="cover"
                 priority
-                style={{ filter: "brightness(30%)" }}
+                fill
+                sizes="100vw"
+                style={{
+                  filter: "brightness(30%)",
+                  objectFit: "cover",
+                }}
               />
             ) : (
               <Box

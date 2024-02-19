@@ -1,6 +1,7 @@
 import { Icon, Text, VStack, useColorModeValue } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
-import LinkButton from "components/common/LinkButton"
+import Link from "next/link"
 import { ArrowRight, CheckCircle } from "phosphor-react"
 import useGuild from "../hooks/useGuild"
 
@@ -33,13 +34,14 @@ const SuccessfullySubmittedForm = () => {
           <Icon as={CheckCircle} color="green.500" weight="fill" boxSize={8} />
           <Text fontWeight="semibold">Form successfully submitted</Text>
         </VStack>
-        <LinkButton
+        <Button
+          as={Link}
           href={`/${urlName}`}
           colorScheme="green"
           rightIcon={<ArrowRight />}
         >
           Go back to guild page
-        </LinkButton>
+        </Button>
       </VStack>
     </Card>
   )

@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import { Icon, Skeleton, Text, Tooltip } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
@@ -5,7 +6,6 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import Link from "components/common/Link"
 import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
 import platforms from "platforms/platforms"
 
