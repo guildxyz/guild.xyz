@@ -159,7 +159,8 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                 />
               </HStack>
             )}
-            {selectedFieldType.SetupComponent && isEditing ? (
+            {!selectedFieldType ? null : selectedFieldType.SetupComponent &&
+              isEditing ? (
               <selectedFieldType.SetupComponent index={index} />
             ) : (
               <selectedFieldType.DisplayComponent field={field} isDisabled />
