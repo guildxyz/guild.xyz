@@ -25,7 +25,9 @@
     "@dotlottie/react-player": "^1.6.15",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@guildxyz/types": "1.7.11",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
+    "@hookform/resolvers": "^3.3.4",
     "@lexical/code": "^0.12.0",
     "@lexical/link": "^0.12.0",
     "@lexical/list": "^0.12.0",
@@ -75,12 +77,13 @@
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
+    "uuidv7": "^0.6.3",
     "viem": "^1.19.11",
     "wagmi": "^1.4.8",
-    "wicg-inert": "^3.1.2"
+    "wicg-inert": "^3.1.2",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@guildxyz/types": "1.3.4",
     "@hookform/devtools": "^4.3.0",
     "@svgr/webpack": "^6.5.1",
     "@types/color": "^3.0.3",

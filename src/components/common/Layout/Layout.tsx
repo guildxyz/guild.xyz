@@ -32,7 +32,7 @@ type Props = {
   backButton?: JSX.Element
   maxWidth?: string
   showFooter?: boolean
-}
+} & BoxProps
 
 const Layout = ({
   image,
@@ -52,6 +52,7 @@ const Layout = ({
   maxWidth = "container.lg",
   showFooter = true,
   children,
+  ...wrapperProps
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
@@ -176,7 +177,9 @@ const Layout = ({
               )}
             </VStack>
           )}
-          <Box ref={childrenWrapper}>{children}</Box>
+          <Box ref={childrenWrapper} {...wrapperProps}>
+            {children}
+          </Box>
         </Container>
 
         {showFooter && <Footer />}

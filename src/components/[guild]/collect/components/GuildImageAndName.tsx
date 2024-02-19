@@ -9,13 +9,18 @@ const GuildImageAndName = () => {
   const { textColor } = useThemeContext()
 
   return (
-    <HStack>
-      <GuildLogo imageUrl={imageUrl} size={8} />
+    <HStack mb={3}>
+      <GuildLogo
+        imageUrl={imageUrl}
+        size={6}
+        bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+      />
       <Link
         href={`/${urlName}`}
         fontFamily="display"
         fontWeight="bold"
         color={textColor}
+        opacity="0.7"
       >
         {name}
       </Link>

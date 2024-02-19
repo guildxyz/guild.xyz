@@ -2,6 +2,7 @@ import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/r
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
+import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
@@ -13,7 +14,6 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
@@ -116,24 +116,7 @@ const GroupPage = (): JSX.Element => {
       </Head>
 
       <Layout
-        backButton={
-          <HStack mb={3}>
-            <GuildLogo
-              imageUrl={guildImageUrl}
-              size={6}
-              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-            />
-            <Link
-              href={`/${guildUrlName}`}
-              fontFamily="display"
-              fontWeight="bold"
-              color={textColor}
-              opacity="0.7"
-            >
-              {guildName}
-            </Link>
-          </HStack>
-        }
+        backButton={<GuildImageAndName />}
         action={isAdmin && <DynamicEditCampaignButton />}
         title={group.name}
         textColor={textColor}

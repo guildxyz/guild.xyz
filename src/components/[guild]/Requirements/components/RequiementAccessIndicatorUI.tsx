@@ -10,7 +10,6 @@ import {
   Portal,
   Tag,
   useColorMode,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { FC, PropsWithChildren, useState } from "react"
 
@@ -40,7 +39,7 @@ const RequiementAccessIndicatorUI = ({
   children,
 }: PropsWithChildren<Props>) => {
   // blackAlpha.300 on top of gray.700 => #35353A
-  const cardBg = useColorModeValue("var(--chakra-colors-gray-50)", "#35353A")
+  // const cardBg = useColorModeValue("var(--chakra-colors-gray-50)", "#35353A")
   const { colorMode } = useColorMode()
   const [openCount, setOpenCount] = useState(0)
 
@@ -62,7 +61,14 @@ const RequiementAccessIndicatorUI = ({
     >
       <Center
         pl="6"
-        bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
+        /**
+         * Was used so it overlays the requirement text on hover on small screens
+         * with a nice fade, instead of just growing on top of it. Removed for now
+         * because the requirements are on a lighter background on a non-accessed
+         * form page and couldn't handle it nicely, we'll see what to do with it
+         * later
+         */
+        // bg={`linear-gradient(to right, transparent 0px, ${cardBg} var(--chakra-space-4))`}
         height={"full"}
       >
         <Popover placement="left" trigger="hover" closeDelay={100} onOpen={onOpen}>
