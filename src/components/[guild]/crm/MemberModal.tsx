@@ -19,7 +19,12 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { PlatformAccountDetails, PlatformType } from "types"
-import { IdentityTag, PrivateSocialsTag, WalletTag } from "./Identities"
+import {
+  deduplicateXPlatformUsers,
+  IdentityTag,
+  PrivateSocialsTag,
+  WalletTag,
+} from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
 
@@ -32,6 +37,8 @@ type Props = {
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
     row.original
+
+  const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
 
   const rolesColumn = row
     .getAllCells()
@@ -72,7 +79,7 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
             {areSocialsPrivate ? (
               <PrivateSocialsTag isOpen />
             ) : platformUsers.length ? (
-              platformUsers.map((platformAccount) => {
+              filteredPlatformUsers.map((platformAccount) => {
                 const platformUrl = getPlatformUrl(platformAccount)
 
                 return (

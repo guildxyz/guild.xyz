@@ -7,6 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -36,7 +37,8 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { isMember } = useMembership()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
-  const dividerColor = useColorModeValue("green.400", "whiteAlpha.400")
+  const greenDividerColor = useColorModeValue("green.400", "whiteAlpha.400")
+  const grayDividerColor = useColorModeValue("blackAlpha.400", "whiteAlpha.300")
 
   const requirementsWithErrors = role?.requirements?.filter(
     (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null
@@ -74,7 +76,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
           borderTopRightRadius="0 !important"
           borderBottomRightRadius="0 !important"
         />
-        <Divider orientation="vertical" h="8" borderColor={dividerColor} />
+        <Divider orientation="vertical" h="8" borderColor={greenDividerColor} />
         <Button
           size="sm"
           {...ACCESS_INDICATOR_STYLES}
@@ -148,15 +150,30 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     )
 
   return (
-    <AccessIndicatorUI
-      colorScheme="gray"
-      label={`No access${
-        role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
-          ? ` (${accessedRequirementCount}/${role.anyOfNum})`
-          : ""
-      }`}
-      icon={X}
-    />
+    <HStack spacing="0" flexShrink={0}>
+      <AccessIndicatorUI
+        colorScheme="gray"
+        label={`No access${
+          role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
+            ? ` (${accessedRequirementCount}/${role.anyOfNum})`
+            : ""
+        }`}
+        icon={X}
+        flex="1 0 auto"
+        borderTopRightRadius="0 !important"
+        borderBottomRightRadius="0 !important"
+      />
+      <Divider orientation="vertical" h="8" borderColor={grayDividerColor} />
+      <RecheckAccessesButton
+        size="sm"
+        h="8"
+        {...ACCESS_INDICATOR_STYLES}
+        borderTopLeftRadius="0 !important"
+        borderBottomLeftRadius="0 !important"
+        // Card's `overflow: clip` isn't enough in Safari
+        borderBottomRightRadius={{ base: "2xl", md: "lg" }}
+      />
+    </HStack>
   )
 }
 
