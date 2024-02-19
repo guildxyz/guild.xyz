@@ -84,11 +84,14 @@ const Page = ({ statusCode }): JSX.Element => {
   )
 }
 
-const PageWrapper = (props) => (
-  <IntercomProvider>
-    <Page {...props} />
-  </IntercomProvider>
-)
+const PageWrapper = (props) => {
+  console.error("PageWrapper _error.tsx")
+  return (
+    <IntercomProvider>
+      <Page {...props} />
+    </IntercomProvider>
+  )
+}
 
 Page.getInitialProps = ({ res, err }) => {
   console.error("Page.getInitialProps, debug", res, err)
