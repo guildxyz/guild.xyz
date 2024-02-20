@@ -1,16 +1,19 @@
-import { Container, Grid } from "@chakra-ui/react"
+import { Container, EASINGS, Grid, GridItem, Stack } from "@chakra-ui/react"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Item from "components/page-builder/Item"
-import { motion } from "framer-motion"
-import { useRef, useState } from "react"
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
+import { Plus } from "phosphor-react"
+import { DragEventHandler, useRef, useState } from "react"
+import move from "utils/page-builder"
 
 export type ItemType = {
   id: number
   desktop: {
     x: number
     y: number
-    width: 1 | 2 | 3 | 4 | 5 | 6
-    height: 1 | 2 | 3 | 4 | 5 | 6
+    width: 1 | 2 | 3 | 6
+    height: 1 | 2 | 3 | "AUTO"
   }
   // mobile: {
   //   position: number
@@ -21,7 +24,7 @@ export type ItemType = {
   data: any
 }
 
-const items: ItemType[] = [
+const initialItems: ItemType[] = [
   {
     id: 0,
     desktop: {
@@ -75,104 +78,106 @@ export const BASE_SIZE = 145
 export const PADDING = 14
 
 const MotionCard = motion(Card)
-const MotionGrid = motion(Grid)
 
-function calculateGridPosition(relativeMouseX, relativeMouseY) {
-  const itemSizeWithPadding = BASE_SIZE + PADDING
+const calculateGridPosition = (
+  relativeMouseX: number,
+  relativeMouseY: number,
+  itemPosition: ItemType["desktop"]
+) => {
+  const itemWidthWithPadding = BASE_SIZE * itemPosition.width + PADDING
+  const itemHeightWithPadding =
+    BASE_SIZE * (typeof itemPosition.height === "number" ? itemPosition.height : 1) +
+    PADDING
 
-  const gridX = Math.min(Math.floor(relativeMouseX / itemSizeWithPadding) + 1, 6)
-  const gridY = Math.floor(relativeMouseY / itemSizeWithPadding) + 1
+  const x = Math.min(Math.floor(relativeMouseX / itemWidthWithPadding) + 1, 6)
+  const y = Math.floor(relativeMouseY / itemHeightWithPadding) + 1
 
-  return [gridX, gridY]
-}
-
-const getOverlaps = (widgets: ItemType[], currentWidget: ItemType): ItemType[] => {
-  if (!currentWidget) return []
-
-  const isOverlapping = (widgetA: ItemType, widgetB: ItemType): boolean => {
-    const ax1 = widgetA.desktop.x
-    const ay1 = widgetA.desktop.y
-    const ax2 = ax1 + widgetA.desktop.width
-    const ay2 = ay1 + widgetA.desktop.height
-
-    const bx1 = widgetB.desktop.x
-    const by1 = widgetB.desktop.y
-    const bx2 = bx1 + widgetB.desktop.width
-    const by2 = by1 + widgetB.desktop.height
-
-    return ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1
-  }
-
-  const overlappingWidgets = widgets?.filter((widget) => {
-    if (widget.id === currentWidget.id) return false
-    return isOverlapping(currentWidget, widget)
-  })
-
-  return overlappingWidgets
+  return { x, y }
 }
 
 const PageBuilder = () => {
-  const containerRef = useRef(null)
-  const [placeholder, setPlaceholder] = useState(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  const [widgets, setWidgets] = useState<ItemType[]>(items)
+  // TODO: we should get the item's position instead, and calculate everything relative to the item's center
+  const elementPositionToXY = (
+    element: HTMLDivElement,
+    itemPosition: ItemType["desktop"]
+  ) => {
+    if (!containerRef.current || !element) return
 
-  const handleDrag = (event) => {
-    if (containerRef.current) {
-      const { left, top } = containerRef.current.getBoundingClientRect()
-      const x = event.clientX - left
-      const y = event.clientY - top
-      if (x < 0 || y < 0) return
+    const {
+      left: elLeft,
+      top: elTop,
+      width: elWidth,
+      height: elHeight,
+    } = element.getBoundingClientRect()
+    const elXCenter = elLeft + elWidth / 2
+    const elYCenter = elTop + elHeight / 2
 
-      const placeholderPosition = calculateGridPosition(x, y)
-      if (
-        placeholder?.[0] !== placeholderPosition?.[0] ||
-        placeholder?.[1] !== placeholderPosition?.[1]
-      )
-        setPlaceholder(placeholderPosition)
-    }
-  }
-
-  const mousePositionToXY = (clientX: number, clientY: number) => {
     const { left, top } = containerRef.current.getBoundingClientRect()
-    const x = clientX - left
-    const y = clientY - top
-    if (x < 0 || y < 0) return
+    const x = Math.max(elXCenter - left, 0)
+    const y = Math.max(elYCenter - top, 0)
 
-    return calculateGridPosition(x, y)
+    return calculateGridPosition(x, y, itemPosition)
   }
 
-  const moveDownOverlaps = (overlaps, widgets) => {
-    if (overlaps.length < 1) return widgets
-    overlaps.forEach((w) => {
-      const movedDown = { ...w, desktop: { ...w.desktop, y: w.desktop.y + 1 } }
-      widgets = widgets.map((w) => (w.id === movedDown.id ? movedDown : w))
-      widgets = moveDownOverlaps(getOverlaps(widgets, movedDown), widgets)
+  const [placeholderPosition, setPlaceholderPosition] = useState<
+    ItemType["desktop"] | null
+  >(null)
+
+  const [items, setItems] = useState<ItemType[]>(initialItems)
+
+  const handleDrag: DragEventHandler<HTMLDivElement> = (event) => {
+    if (!containerRef.current) return
+
+    const element = event.target as HTMLDivElement
+    const htmlDataItemId = element.getAttribute("data-item-id")
+
+    const itemsClone = structuredClone(items)
+    const itemToMove = itemsClone.find(
+      (item) => item.id.toString() === htmlDataItemId
+    )
+
+    if (!itemToMove) return
+
+    if (!placeholderPosition) setPlaceholderPosition(itemToMove.desktop)
+
+    const newPosition = elementPositionToXY(element, {
+      ...itemToMove.desktop,
     })
 
-    return widgets
-  }
+    // Early return, so we don't need to calculate anything for the grid & we also don't need to set the placeholder state
+    if (
+      newPosition?.x === itemToMove.desktop.x &&
+      newPosition?.y === itemToMove.desktop.y
+    )
+      return
 
-  const handleDrop = (event: any, item: ItemType) => {
-    const target = mousePositionToXY(event.clientX, event.clientY)
+    move(itemsClone, itemToMove, {
+      ...itemToMove.desktop,
+      ...newPosition,
+    })
 
-    // Move widget to target
-    const widgetMoved = {
-      ...item,
-      desktop: { ...item.desktop, x: target[0], y: target[1] },
+    // We should find a more clever solution for this, because we can pretty easily get a "maximum call stack depth exceeded" because of setState
+    if (
+      items.some((item) => {
+        const updatedItem = itemsClone.find((_item) => _item.id === item.id)
+        const isUpdated = Object.keys(updatedItem?.desktop ?? {})
+          .map((key) => {
+            if (item.desktop[key] !== updatedItem?.desktop[key]) return true
+          })
+          .some(Boolean)
+
+        return isUpdated
+      })
+    ) {
+      setPlaceholderPosition({
+        ...itemToMove.desktop,
+        ...newPosition,
+      })
+
+      setItems(itemsClone)
     }
-    let updatedWidgets = widgets.map((w) => {
-      if (w.id === item.id) {
-        return widgetMoved
-      }
-      return w
-    })
-
-    // Push down overlapped widgets
-    const overlaps = getOverlaps(updatedWidgets, widgetMoved)
-    updatedWidgets = moveDownOverlaps(overlaps, updatedWidgets)
-    setWidgets(updatedWidgets)
-    setPlaceholder(null)
   }
 
   return (
@@ -181,36 +186,94 @@ const PageBuilder = () => {
       py={{ base: 6, md: 9 }}
       px={{ base: 4, sm: 6, md: 8, lg: 10 }}
     >
-      <Grid
-        templateColumns="repeat(6, 1fr)"
-        gridAutoRows="145px"
-        gap="14px"
-        ref={containerRef}
-      >
-        {widgets?.map((item) => (
-          <Item
-            key={item.id}
-            item={item}
-            drag={handleDrag}
-            drop={(e) => handleDrop(e, item)}
-          />
-        ))}
+      <Stack spacing={4}>
+        <Button
+          leftIcon={<Plus />}
+          maxW="max-content"
+          onClick={() =>
+            setItems((prevItems) => {
+              if (!prevItems) return []
+              const prevItemsById = prevItems.sort((a, b) => a.id - b.id)
+              const lastItem = prevItems.at(-1)
 
-        {placeholder && (
-          <MotionGrid
-            layout
-            as={MotionCard}
-            zIndex={10}
-            background={"transparent"}
-            border={2}
-            shadow={"none"}
-            borderColor={"rgba(255,255,255,0.2)"}
-            borderStyle={"dashed"}
-            gridColumnStart={placeholder?.[0]}
-            gridRowStart={placeholder?.[1]}
-          ></MotionGrid>
-        )}
-      </Grid>
+              return [
+                ...prevItems,
+                {
+                  id: (prevItemsById.at(-1)?.id ?? 0) + 1,
+                  desktop: {
+                    width: 1,
+                    height: 1,
+                    x: 1,
+                    y: (lastItem?.desktop.y ?? 0) + 1,
+                  },
+                } as ItemType,
+              ]
+            })
+          }
+        >
+          Add card
+        </Button>
+
+        <Grid
+          templateColumns="repeat(6, 1fr)"
+          gridAutoRows="minmax(145px, auto)"
+          gap="0.875rem"
+          ref={containerRef}
+        >
+          <LayoutGroup>
+            <AnimatePresence>
+              {items?.map((item) => (
+                <Item
+                  key={item.id}
+                  data-item-id={item.id.toString()}
+                  item={item}
+                  drag={handleDrag}
+                  drop={() => setPlaceholderPosition(null)}
+                />
+              ))}
+
+              {placeholderPosition && (
+                <GridItem
+                  as={MotionCard}
+                  initial={{
+                    opacity: 0,
+                    scale: 0.95,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    transition: { duration: 0.1, ease: EASINGS.easeOut },
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 0.95,
+                    transition: { duration: 0.1, ease: EASINGS.easeIn },
+                  }}
+                  layout
+                  zIndex={10}
+                  background="transparent"
+                  border={2}
+                  shadow="none"
+                  borderColor="whiteAlpha.300"
+                  borderStyle="dashed"
+                  gridColumnStart={placeholderPosition.x}
+                  gridRowStart={placeholderPosition.y}
+                  colSpan={
+                    typeof placeholderPosition.width === "number"
+                      ? placeholderPosition.width
+                      : 6
+                  }
+                  rowSpan={
+                    typeof placeholderPosition.height === "number"
+                      ? placeholderPosition.height
+                      : 1
+                  }
+                />
+              )}
+            </AnimatePresence>
+          </LayoutGroup>
+        </Grid>
+      </Stack>
     </Container>
   )
 }
