@@ -34,11 +34,11 @@ const MessagingSection = () => {
     web3InboxError,
     subscribeWeb3Inbox,
     web3InboxSubscription,
-    // hasXmtpAccess,
-    // isCheckingXmtpAccess,
-    // subscribeXmtp,
-    // isLoadingDependencies,
-    // isSubscribingXmtp,
+    hasXmtpAccess,
+    isCheckingXmtpAccess,
+    subscribeXmtp,
+    isLoadingDependencies,
+    isSubscribingXmtp,
   } = useMessagingContext()
 
   return (
@@ -58,9 +58,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {isWeb3InboxLoading ? ( //|| isCheckingXmtpAccess ? (
+        {isWeb3InboxLoading || isCheckingXmtpAccess ? (
           <SubscriptionPromptSkeleton />
-        ) : !web3InboxSubscription ? ( //&& !hasXmtpAccess ? (
+        ) : !web3InboxSubscription && !hasXmtpAccess ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />
@@ -111,22 +111,22 @@ const MessagingSection = () => {
               <Text as="span" fontWeight="semibold">
                 XMTP
               </Text>
-              {/*<Button*/}
-              {/*  isDisabled={Boolean(hasXmtpAccess)}*/}
-              {/*  variant="solid"*/}
-              {/*  colorScheme="blue"*/}
-              {/*  onClick={subscribeXmtp}*/}
-              {/*  isLoading={*/}
-              {/*    isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp*/}
-              {/*  }*/}
-              {/*  loadingText={*/}
-              {/*    isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp*/}
-              {/*      ? "Check your wallet"*/}
-              {/*      : "Subscribing"*/}
-              {/*  }*/}
-              {/*>*/}
-              {/*  {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}*/}
-              {/*</Button>*/}
+              <Button
+                isDisabled={Boolean(hasXmtpAccess)}
+                variant="solid"
+                colorScheme="blue"
+                onClick={subscribeXmtp}
+                isLoading={
+                  isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+                }
+                loadingText={
+                  isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+                    ? "Check your wallet"
+                    : "Subscribing"
+                }
+              >
+                {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}
+              </Button>
             </HStack>
           </ModalBody>
         </ModalContent>
