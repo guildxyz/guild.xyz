@@ -18,7 +18,19 @@ const stateAtom = atom<"INITIAL" | "GETTING_JOB" | "POLLING" | "FINISHED">("INIT
 
 const useMembershipUpdate = (
   onSuccess?: (response: JoinJob) => void,
-  onError?: (error?: any) => void
+  onError?: (error?: any) => void,
+  /**
+   * We're setting keepPreviousData to true in useJoin, so we can display no access
+   * and error states correctly. Would be nice to find a better solution for this
+   * (like not parsing NO_ACCESS state and error in mapAccessJobState but storing
+   * them separately).
+   *
+   * - Now when triggering access check after join, it'll start with a finished state
+   *   (since we're keeping the progress state from join)
+   * - The manual progress.mutate(undefined, { revalidate: false }) doesn't work for
+   *   some reason
+   */
+  keepPreviousData = false
 ) => {
   const guild = useGuild()
   const { mutate: mutateMembership } = useMembership()
@@ -146,11 +158,7 @@ const useMembershipUpdate = (
           onFinish(res)
         }
       },
-      /**
-       * Needed to keep the response, even tough shouldFetchProgress gets set to
-       * false because of reseting useSubmitResponse
-       */
-      keepPreviousData: true,
+      keepPreviousData,
       refreshInterval: state === "POLLING" ? 500 : undefined,
     }
   )

@@ -142,11 +142,26 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
 
   if (requirementsWithErrors?.length > 0 || error)
     return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label="Couldn’t check access"
-        icon={Warning}
-      />
+      <HStack spacing="0" flexShrink={0}>
+        <AccessIndicatorUI
+          colorScheme="orange"
+          label="Couldn’t check access"
+          icon={Warning}
+          flex="1 0 auto"
+          borderTopRightRadius="0 !important"
+          borderBottomRightRadius="0 !important"
+        />
+        <Divider orientation="vertical" h="8" borderColor={grayDividerColor} />
+        <RecheckAccessesButton
+          size="sm"
+          h="8"
+          {...ACCESS_INDICATOR_STYLES}
+          borderTopLeftRadius="0 !important"
+          borderBottomLeftRadius="0 !important"
+          // Card's `overflow: clip` isn't enough in Safari
+          borderBottomRightRadius={{ base: "2xl", md: "lg" }}
+        />
+      </HStack>
     )
 
   return (

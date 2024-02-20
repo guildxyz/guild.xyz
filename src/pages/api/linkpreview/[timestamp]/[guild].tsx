@@ -1,24 +1,15 @@
-import { ImageResponse } from "@vercel/og"
+import loadGoogleFont from "fonts/loadGoogleFont"
+import { ImageResponse } from "next/og"
 import { Guild } from "types"
-import fetcher from "utils/fetcher"
 
 export const config = {
-  runtime: "experimental-edge",
-  unstable_allowDynamic: [
-    "/src/hooks/useLocalStorage.ts",
-    "/src/hooks/useTimeInaccuracy.ts",
-    "/src/utils/fetcher.ts",
-  ],
+  runtime: "edge",
 }
 
-const interFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Regular.woff", import.meta.url)
-).then((res) => res.arrayBuffer())
-const interBoldFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Bold.woff", import.meta.url)
-).then((res) => res.arrayBuffer())
+const interFont = loadGoogleFont("Inter", "400")
+const interBoldFont = loadGoogleFont("Inter", "700")
 const dystopianFont = fetch(
-  new URL("../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
+  new URL("../../../../../src/fonts/Dystopian-Black.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const handler = async (req, _) => {
@@ -34,8 +25,12 @@ const handler = async (req, _) => {
   if (!urlName) return new ImageResponse(<></>, { status: 404 })
 
   const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
-    fetcher(`/v2/guilds/${urlName}`),
-    fetcher(`/v2/guilds/${urlName}/roles`),
+    fetch(
+      `${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`
+    ).then((res) => res.json()),
+    fetch(
+      `${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`
+    ).then((res) => res.json()),
   ]).catch(() => [null, null])
 
   if (!guild?.id)

@@ -103,7 +103,7 @@ const PlatformSelectButton = ({
         <HStack spacing={4}>
           {imageUrl ? (
             <Circle size="12" pos="relative" overflow="hidden">
-              <Image src={imageUrl} alt="Guild logo" layout="fill" />
+              <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
             </Circle>
           ) : (
             <Circle

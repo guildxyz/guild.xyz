@@ -20,7 +20,7 @@ import shortenHex from "utils/shortenHex"
 import { useAccount } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
-import { useGuildCheckoutContext } from "../GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../GuildCheckoutContext"
 import CurrencyListItem from "./components/CurrencyListItem"
 import TokenInfo from "./components/TokenInfo"
 

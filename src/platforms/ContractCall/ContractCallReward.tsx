@@ -1,7 +1,7 @@
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
 import { motion } from "framer-motion"
 import { ArrowSquareOut } from "phosphor-react"
 import {
@@ -12,6 +12,7 @@ import {
 
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import Link from "next/link"
 import { forwardRef } from "react"
 
 const ContractCallReward = ({
@@ -40,7 +41,8 @@ const ContractCallReward = ({
       label={
         <>
           {`Collect: `}
-          <LinkButton
+          <Button
+            as={Link}
             variant="link"
             rightIcon={<ArrowSquareOut />}
             iconSpacing="1"
@@ -55,7 +57,7 @@ const ContractCallReward = ({
             colorScheme={isLinkColorful ? "blue" : "gray"}
           >
             {name ?? "NFT"}
-          </LinkButton>
+          </Button>
         </>
       }
     >

@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Center,
   Circle,
@@ -22,7 +23,6 @@ import {
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildAvatar from "components/common/GuildAvatar"
-import Link from "components/common/Link"
 import useResolveAddress from "hooks/useResolveAddress"
 import dynamic from "next/dynamic"
 import { CaretDown, Trophy } from "phosphor-react"

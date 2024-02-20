@@ -3,8 +3,8 @@ import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
 import useNftBalance from "hooks/useNftBalance"
+import Link from "next/link"
 import { GuildPlatform } from "types"
 import { useAccount } from "wagmi"
 
@@ -41,7 +41,8 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
     )
 
   return (
-    <LinkButton
+    <Button
+      as={Link}
       colorScheme="cyan"
       href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
       onClick={() => {
@@ -52,7 +53,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
       }}
     >
       {alreadyCollected ? "View NFT details" : "Collect NFT"}
-    </LinkButton>
+    </Button>
   )
 }
 
