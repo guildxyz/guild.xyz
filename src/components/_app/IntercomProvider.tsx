@@ -84,7 +84,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       userId: user.id,
       connectedPlatforms,
       isAdmin: managedGuilds.length > 0,
-      managedGuilds: managedGuilds.map((guild) => guild.urlName),
+      managedGuilds: managedGuilds.map((guild) => guild.urlName).join(", "),
       biggestGuild: managedGuilds.sort(
         (guild1, guild2) => guild2.memberCount - guild1.memberCount
       )[0]?.memberCount,
