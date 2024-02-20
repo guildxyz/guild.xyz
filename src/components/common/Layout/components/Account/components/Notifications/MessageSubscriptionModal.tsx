@@ -23,11 +23,11 @@ const MessagingSubscriptionModal = (modalProps: Omit<ModalProps, "children">) =>
     isSubscribingWeb3Inbox,
     subscribeWeb3Inbox,
     web3InboxSubscription,
-    // hasXmtpAccess,
-    // isCheckingXmtpAccess,
-    // subscribeXmtp,
-    // isLoadingDependencies,
-    // isSubscribingXmtp,
+    hasXmtpAccess,
+    isCheckingXmtpAccess,
+    subscribeXmtp,
+    isLoadingDependencies,
+    isSubscribingXmtp,
   } = useMessagingContext()
 
   return (
@@ -74,22 +74,22 @@ const MessagingSubscriptionModal = (modalProps: Omit<ModalProps, "children">) =>
             <Text as="span" fontWeight="semibold">
               XMTP
             </Text>
-            {/*<Button*/}
-            {/*  isDisabled={Boolean(hasXmtpAccess)}*/}
-            {/*  variant="solid"*/}
-            {/*  colorScheme="blue"*/}
-            {/*  onClick={subscribeXmtp}*/}
-            {/*  isLoading={*/}
-            {/*    isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp*/}
-            {/*  }*/}
-            {/*  loadingText={*/}
-            {/*    isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp*/}
-            {/*      ? "Check your wallet"*/}
-            {/*      : "Subscribing"*/}
-            {/*  }*/}
-            {/*>*/}
-            {/*  {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}*/}
-            {/*</Button>*/}
+            <Button
+              isDisabled={Boolean(hasXmtpAccess)}
+              variant="solid"
+              colorScheme="blue"
+              onClick={subscribeXmtp}
+              isLoading={
+                isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+              }
+              loadingText={
+                isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+                  ? "Check your wallet"
+                  : "Subscribing"
+              }
+            >
+              {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}
+            </Button>
           </HStack>
         </ModalBody>
       </ModalContent>
