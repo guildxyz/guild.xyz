@@ -23,6 +23,11 @@ const NoMessages = () => (
               Web3Inbox
               <Icon as={ArrowSquareOut} ml={1} />
             </Link>
+            {" or "}
+            <Link href="https://xmtp.com" colorScheme="blue" isExternal>
+              XMTP
+              <Icon as={ArrowSquareOut} ml={1} />
+            </Link>
           </Text>
         </Stack>
       </HStack>

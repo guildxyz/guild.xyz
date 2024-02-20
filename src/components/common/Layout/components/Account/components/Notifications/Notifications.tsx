@@ -17,14 +17,15 @@ import useLocalStorage from "hooks/useLocalStorage"
 import dynamic from "next/dynamic"
 import { Bell } from "phosphor-react"
 import AccountButton from "../AccountButton"
-import WebInboxSkeleton from "../Web3Inbox/WebInboxSkeleton"
+import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
 import NotificationsActivityLog from "./components/NotificationsActivityLog"
 import NotificationsSection from "./components/NotificationsSection"
 
-const DynamicWeb3Inbox = dynamic(() => import("../Web3Inbox"), {
+const DynamicMessagingSection = dynamic(() => import("./MessagingSection"), {
   ssr: false,
-  loading: WebInboxSkeleton,
+  loading: SubscriptionPromptSkeleton,
 })
+
 const VIEWPORT_GAP_PX = 8
 
 const Notifications = () => {
@@ -90,12 +91,7 @@ const Notifications = () => {
 
             <PopoverBody py={3} px={0}>
               <Stack spacing={0}>
-                {type === "EVM" && (
-                  <NotificationsSection title="Messages">
-                    <DynamicWeb3Inbox />
-                  </NotificationsSection>
-                )}
-
+                {type === "EVM" && <DynamicMessagingSection />}
                 <Divider mb="4" />
 
                 <ActivityLogProvider

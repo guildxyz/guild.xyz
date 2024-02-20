@@ -1,4 +1,5 @@
 import {
+  Box,
   HStack,
   Img,
   ModalBody,
@@ -17,7 +18,9 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
+import { useRef } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import { useGetWeb3InboxMessages } from "./components/web3Inbox"
 
 const GUILD_NOTIFICATION_ICON = "/requirementLogos/guild.png"
 
@@ -128,4 +131,48 @@ const Web3InboxMessage = ({
   )
 }
 
-export default Web3InboxMessage
+const Messages = () => {
+  const { messages } = useGetWeb3InboxMessages()
+
+  const inboxContainerRef = useRef(null)
+  const isScrollable = !!inboxContainerRef.current
+    ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
+    : false
+
+  return (
+    <Box
+      ref={inboxContainerRef}
+      maxH="30vh"
+      overflowY="auto"
+      className="custom-scrollbar"
+      pb="4"
+      sx={{
+        WebkitMaskImage:
+          isScrollable &&
+          "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
+      }}
+    >
+      {messages?.length > 0 ? (
+        <Stack pt={2} spacing={0}>
+          {messages
+            .sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
+            .map(({ sentAt, id, title, body, url }) => (
+              <Web3InboxMessage
+                key={id}
+                sentAt={sentAt}
+                title={title}
+                body={body}
+                url={url}
+              />
+            ))}
+        </Stack>
+      ) : (
+        <HStack pt={3} px={4}>
+          <Text colorScheme="gray">Your messages from guilds will appear here</Text>
+        </HStack>
+      )}
+    </Box>
+  )
+}
+
+export default Messages

@@ -1,6 +1,6 @@
 import { HStack, Skeleton, SkeletonCircle, Stack } from "@chakra-ui/react"
 
-const WebInboxSkeleton = () => (
+const SubscriptionPromptSkeleton = () => (
   <Stack spacing={0}>
     <HStack pt={4} pb={5} pl={1} spacing={4}>
       <SkeletonCircle boxSize={6} />
@@ -13,4 +13,4 @@ const WebInboxSkeleton = () => (
   </Stack>
 )
 
-export default WebInboxSkeleton
+export default SubscriptionPromptSkeleton
