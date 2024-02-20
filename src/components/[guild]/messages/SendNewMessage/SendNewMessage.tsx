@@ -21,11 +21,11 @@ import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-// import {
-//   useGetXmtpKeys,
-//   useSaveXmtpKeys,
-//   useSubscribeXmtp,
-// } from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
+import {
+  useGetXmtpKeys,
+  useSaveXmtpKeys,
+  useSubscribeXmtp,
+} from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { Chat, PaperPlaneRight } from "phosphor-react"
@@ -111,9 +111,9 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
   const { data: reachableUsers, isValidating: isReachableUsersLoading } =
     useReachableUsers(protocol, "ROLES", roleIds)
 
-  const { keys: xmtpKeys } = { keys: "xmtpKeys" } // useGetXmtpKeys()
-  const saveXmtpKeys = () => "saveXmtpKeys" // useSaveXmtpKeys()
-  const { subscribeXmtp } = { subscribeXmtp: () => "" } // useSubscribeXmtp()
+  const { keys: xmtpKeys } = useGetXmtpKeys()
+  const saveXmtpKeys = useSaveXmtpKeys()
+  const { subscribeXmtp } = useSubscribeXmtp()
 
   const greenTextColor = useColorModeValue("green.600", "green.300")
 
