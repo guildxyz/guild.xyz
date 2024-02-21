@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Check } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
-import useUserSubmission from "./hooks/useUserSubmission"
+import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 
 type Props = {
   platform: GuildPlatform
@@ -17,7 +17,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
     platform.platformGuildData?.formId
   )
 
-  const { data: userSubmission, isValidating } = useUserSubmission(form)
+  const { userSubmission, isValidating } = useUserFormSubmission(form)
 
   return (
     <Button

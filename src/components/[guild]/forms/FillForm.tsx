@@ -9,7 +9,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
+import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
@@ -36,7 +36,7 @@ const FillForm = ({ form }: Props) => {
     (fieldId) => requiredFieldIds.includes(fieldId) && !formValues[fieldId]
   )
 
-  const { data: userSubmission, mutate: mutateSubmission } = useUserSubmission(form)
+  const { userSubmission, mutate: mutateSubmission } = useUserFormSubmission(form)
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()

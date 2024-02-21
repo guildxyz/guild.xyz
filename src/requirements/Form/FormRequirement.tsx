@@ -6,14 +6,14 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
+import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import platforms from "platforms/platforms"
 
 const FormRequirement = (props: RequirementProps) => {
   const { urlName } = useGuild()
   const { data } = useRequirementContext()
   const { form } = useGuildForm(data?.id)
-  const { data: userSubmission } = useUserSubmission(form)
+  const { userSubmission } = useUserFormSubmission(form)
 
   return (
     <Requirement image={<Icon as={platforms.FORM.icon} boxSize={6} />} {...props}>
