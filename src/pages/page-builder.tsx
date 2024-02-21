@@ -85,13 +85,14 @@ const calculateGridPosition = (
   relativeMouseY: number,
   itemPosition: ItemType["desktop"]
 ) => {
-  const itemWidthWithPadding = BASE_SIZE * itemPosition.width + PADDING
-  const itemHeightWithPadding =
-    BASE_SIZE * (typeof itemPosition.height === "number" ? itemPosition.height : 1) +
-    PADDING
+  const itemWidthWithPadding =
+    BASE_SIZE * itemPosition.width + (itemPosition.width - 1) * PADDING
+  const itemHeight =
+    typeof itemPosition.height === "number" ? itemPosition.height : 1
+  const itemHeightWithPadding = BASE_SIZE * itemHeight + (itemHeight - 1) * PADDING
 
-  const x = Math.min(Math.floor(relativeMouseX / itemWidthWithPadding) + 1, 6)
-  const y = Math.floor(relativeMouseY / itemHeightWithPadding) + 1
+  const x = Math.min(Math.ceil(relativeMouseX / itemWidthWithPadding) + 1, 6)
+  const y = Math.ceil(relativeMouseY / itemHeightWithPadding) + 1
 
   return { x, y }
 }
@@ -128,7 +129,7 @@ const PageBuilder = () => {
 
   const [items, setItems] = useState<ItemType[]>(initialItems)
 
-  const handleDrag: DragEventHandler<HTMLDivElement> = (event) => {
+  const onDrag: DragEventHandler<HTMLDivElement> = (event) => {
     if (!containerRef.current) return
 
     const element = event.target as HTMLDivElement
@@ -250,8 +251,8 @@ const PageBuilder = () => {
                   key={item.id}
                   data-item-id={item.id.toString()}
                   item={item}
-                  drag={handleDrag}
-                  drop={() => setPlaceholderPosition(null)}
+                  onDrag={onDrag}
+                  onDragEnd={() => setPlaceholderPosition(null)}
                 />
               ))}
 
