@@ -12,7 +12,6 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
-import REQUIREMENTS from "requirements"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -98,12 +97,11 @@ const RequirementAccessIndicator = () => {
           {reqAccessData?.errorMsg
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
+          <RecheckAccessesButton size="sm" ml="2" variant={"outline"} />
         </PopoverHeader>
       </RequirementAccessIndicatorUI>
     )
   }
-
-  const reqObj = REQUIREMENTS[type]
 
   return (
     <RequirementAccessIndicatorUI

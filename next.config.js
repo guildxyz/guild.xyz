@@ -195,6 +195,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/buildonbase/:path*",
+        destination: "/base/:path*",
+        permanent: true,
+      },
+      {
         source: "/protein-community/:path*",
         destination: "/protein/:path*",
         permanent: false,
