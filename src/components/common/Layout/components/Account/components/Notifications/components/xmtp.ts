@@ -6,7 +6,7 @@ import { useCallback, useEffect, useState } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useAccount, useWalletClient } from "wagmi"
 
-export const useGetXmtpKeys = () => {
+export const useUsersXMTPKeys = () => {
   const fetcherWithSign = useFetcherWithSign()
   const [data, setData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)

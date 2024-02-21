@@ -1,7 +1,7 @@
 import { Client } from "@xmtp/react-sdk"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useGetXmtpKeys } from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
+import { useUsersXMTPKeys } from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -11,7 +11,7 @@ import useGuildMessages, { Message } from "./useGuildMessages"
 
 const useSendMessage = (onSuccess?: () => void) => {
   const { id } = useGuild()
-  const { keys: xmtpKeys } = useGetXmtpKeys()
+  const { keys: xmtpKeys } = useUsersXMTPKeys()
   const fetcherWithSign = useFetcherWithSign()
   const { data: signer } = useWalletClient()
 
