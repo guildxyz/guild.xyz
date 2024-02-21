@@ -188,6 +188,18 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: platforms.FORM.icon,
+    name: platforms.FORM.name,
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Form/FormRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Form/FormForm")
+    ),
+    types: ["FORM_SUBMISSION"],
+    isNegatable: true,
+  },
+  {
     icon: "/requirementLogos/x.svg",
     name: "X",
     displayComponent: dynamic<RequirementProps>(
@@ -428,7 +440,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Mirror/MirrorForm")
     ),
-    types: ["MIRROR", "MIRROR_COLLECT"],
+    types: ["MIRROR_COLLECT", "MIRROR"],
     isNegatable: true,
   },
   {

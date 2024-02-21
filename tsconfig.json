@@ -16,7 +16,13 @@
     "jsx": "preserve",
     "baseUrl": "src",
     "incremental": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "strictNullChecks": false
   },
   "include": [
     "next-env.d.ts",
@@ -24,7 +30,8 @@
     "./src/**/*.tsx",
     "api/**/*.ts",
     "cypress.config.ts",
-    "cypress/**/*.ts"
+    "cypress/**/*.ts",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", ".next", "out"]
 }

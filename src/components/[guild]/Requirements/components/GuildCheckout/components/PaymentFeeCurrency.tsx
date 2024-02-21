@@ -6,7 +6,7 @@ import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useToken } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
-import { useGuildCheckoutContext } from "./GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContext"
 import TokenInfo from "./PaymentCurrencyPicker/components/TokenInfo"
 
 const PaymentFeeCurrency = (): JSX.Element => {

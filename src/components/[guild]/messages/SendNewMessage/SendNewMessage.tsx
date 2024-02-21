@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   ButtonProps,
   FormControl,
@@ -26,7 +27,6 @@ import {
   useSaveXmtpKeys,
   useSubscribeXmtp,
 } from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
-import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { Chat, PaperPlaneRight } from "phosphor-react"

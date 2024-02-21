@@ -9,7 +9,7 @@ const SatisfyRequirementsJoinStep = ({
   ...stackProps
 }: {
   joinState: JoinState
-  fallbackText: JSX.Element
+  fallbackText?: JSX.Element
   RightComponent?: ReactNode
 } & StackProps) => {
   const status = useMemo(() => {

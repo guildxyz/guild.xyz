@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   AlertDialogBody,
   AlertDialogContent,
@@ -14,7 +15,6 @@ import {
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
-import Link from "components/common/Link"
 import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { ArrowSquareOut } from "phosphor-react"

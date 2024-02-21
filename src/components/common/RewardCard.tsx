@@ -70,7 +70,7 @@ const RewardCard = ({
                   flexShrink={0}
                   position="relative"
                 >
-                  <Image src={image} alt={title} layout="fill" />
+                  <Image src={image} alt={title} fill sizes="2.5rem" />
                 </Box>
               ) : (
                 <SkeletonCircle size="10" />

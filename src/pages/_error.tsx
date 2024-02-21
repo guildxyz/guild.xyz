@@ -1,8 +1,8 @@
 import { Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react"
 import IntercomProvider, { useIntercom } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
 import Head from "next/head"
+import Link from "next/link"
 import { ChatCircle, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
 
@@ -60,7 +60,8 @@ const Page = ({ statusCode }): JSX.Element => {
           w="full"
           justifyContent={"center"}
         >
-          <LinkButton
+          <Button
+            as={Link}
             href="/explorer"
             leftIcon={<House />}
             colorScheme="indigo"
@@ -68,7 +69,7 @@ const Page = ({ statusCode }): JSX.Element => {
             size="lg"
           >
             Go to home page
-          </LinkButton>
+          </Button>
           <Button
             leftIcon={<ChatCircle />}
             colorScheme="solid-gray"

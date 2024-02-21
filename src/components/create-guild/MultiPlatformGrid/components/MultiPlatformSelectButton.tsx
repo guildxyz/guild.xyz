@@ -43,7 +43,10 @@ export type PlatformHookType = ({
 }
 
 const createGuildPlatformComponents: Record<
-  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL" | "POLYGON_ID" | "POINTS">,
+  Exclude<
+    PlatformName,
+    "POAP" | "TWITTER_V1" | "EMAIL" | "POLYGON_ID" | "POINTS" | "FORM"
+  >,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,
@@ -163,7 +166,7 @@ const MultiPlatformSelectButton = ({
           <HStack spacing={4}>
             {imageUrl ? (
               <Circle size="12" pos="relative" overflow="hidden">
-                <Image src={imageUrl} alt="Guild logo" layout="fill" />
+                <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
               </Circle>
             ) : (
               <Circle

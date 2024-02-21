@@ -7,7 +7,7 @@ import { useToken } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
-import { useGuildCheckoutContext } from "./GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContext"
 import PriceFallback from "./PriceFallback"
 
 const BuyTotal = (): JSX.Element => {
