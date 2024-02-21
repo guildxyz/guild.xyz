@@ -5,13 +5,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
+import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import {
   parseFiltersFromQuery,
   parseSortingFromQuery,
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
 import FormResponsesTbody from "components/[guild]/forms/responses/FormResponsesTbody"
-import FormResponsesThead from "components/[guild]/forms/responses/FormResponsesThead"
 import { useRouter } from "next/router"
 import useFormSubmissions, {
   FormSubmission,
@@ -90,7 +90,7 @@ const FormResponsesTable = ({ form }) => {
           id: `field_${field.id}`,
           header: ({ column }) => (
             <HStack w="full" justifyContent={"space-between"}>
-              <Text>{field.question}</Text>
+              <FormThText>{field.question}</FormThText>
               {field.type !== "MULTIPLE_CHOICE" && (
                 <OrderByColumn label={field.question} column={column} />
               )}
@@ -107,7 +107,7 @@ const FormResponsesTable = ({ form }) => {
         size: 140,
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
-            <Text>Submitted at</Text>
+            <FormThText>Submitted at</FormThText>
             <OrderByColumn label="Submission date" column={column} />
           </HStack>
         ),
@@ -142,10 +142,23 @@ const FormResponsesTable = ({ form }) => {
 
   return (
     <CrmTableWrapper {...{ isValidating, setSize }}>
-      <FormResponsesThead {...{ table, isLoading }} />
+      <CrmThead {...{ table, isLoading }} />
       <FormResponsesTbody {...{ table, data, error, isValidating }} />
     </CrmTableWrapper>
   )
 }
+
+const FormThText = ({ children }) => (
+  <Text
+    textTransform={"none"}
+    letterSpacing={"normal"}
+    fontWeight={"semibold"}
+    fontSize={"sm"}
+    noOfLines={3}
+    title={children}
+  >
+    {children}
+  </Text>
+)
 
 export default FormResponsesTable
