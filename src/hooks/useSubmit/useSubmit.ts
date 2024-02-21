@@ -1,7 +1,7 @@
-import type { WalletUnlocked } from "@fuel-ts/wallet"
 import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import type { WalletUnlocked } from "fuels"
 import useFuel from "hooks/useFuel"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
