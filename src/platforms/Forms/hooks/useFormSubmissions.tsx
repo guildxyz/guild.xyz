@@ -8,7 +8,7 @@ import { useFetcherWithSign } from "utils/fetcher"
 
 type Response = {
   fieldId: string
-  value: string
+  value: string | number | string[]
 }
 
 export type FormSubmission = {

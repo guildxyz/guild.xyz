@@ -57,6 +57,9 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
               const { DisplayComponent } = fieldTypes.find(
                 (ft) => ft.value === field.type
               )
+              const value = submissionAnswers.find(
+                (f) => f.fieldId === field.id
+              ).value
 
               return (
                 <Box key={field.id}>
@@ -64,9 +67,7 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
                   <DisplayComponent
                     field={field}
                     isDisabled
-                    value={
-                      submissionAnswers.find((f) => f.fieldId === field.id).value
-                    }
+                    value={typeof value === "number" ? value.toString() : value}
                   />
                 </Box>
               )
