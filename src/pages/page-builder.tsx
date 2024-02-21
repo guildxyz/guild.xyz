@@ -1,14 +1,14 @@
 import { Container, EASINGS, Grid, GridItem, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import Item from "components/page-builder/Item"
+import ItemWrapper from "components/page-builder/ItemWrapper"
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
 import { Plus } from "phosphor-react"
 import { DragEventHandler, useRef, useState } from "react"
 import move, { handleWrap } from "utils/pageBuilder"
 import { uuidv7 } from "uuidv7"
 
-export type ItemType = {
+export type Item = {
   id: string
   desktop: {
     x: number
@@ -25,7 +25,7 @@ export type ItemType = {
   data: any
 }
 
-const initialItems: ItemType[] = [
+const initialItems: Item[] = [
   {
     id: "0",
     desktop: {
@@ -83,7 +83,7 @@ const MotionCard = motion(Card)
 const calculateGridPosition = (
   relativeMouseX: number,
   relativeMouseY: number,
-  itemPosition: ItemType["desktop"]
+  itemPosition: Item["desktop"]
 ) => {
   const itemWidthWithPadding =
     BASE_SIZE * itemPosition.width + (itemPosition.width - 1) * PADDING
@@ -103,7 +103,7 @@ const PageBuilder = () => {
   // TODO: we should get the item's position instead, and calculate everything relative to the item's center
   const elementPositionToXY = (
     element: HTMLDivElement,
-    itemPosition: ItemType["desktop"]
+    itemPosition: Item["desktop"]
   ) => {
     if (!containerRef.current || !element) return
 
@@ -124,10 +124,10 @@ const PageBuilder = () => {
   }
 
   const [placeholderPosition, setPlaceholderPosition] = useState<
-    ItemType["desktop"] | null
+    Item["desktop"] | null
   >(null)
 
-  const [items, setItems] = useState<ItemType[]>(initialItems)
+  const [items, setItems] = useState<Item[]>(initialItems)
 
   const onDrag: DragEventHandler<HTMLDivElement> = (event) => {
     if (!containerRef.current) return
@@ -212,7 +212,7 @@ const PageBuilder = () => {
                       width: 1,
                       height: 1,
                     },
-                  } satisfies ItemType,
+                  } satisfies Item,
                 ]
 
               // It's safe to select the last item, because the array is sorted properly
@@ -230,7 +230,7 @@ const PageBuilder = () => {
                     x: lastItem.desktop.x + lastItem.desktop.width,
                     y: lastItem.desktop.y,
                   }),
-                } satisfies ItemType,
+                } satisfies Item,
               ]
             })
           }
@@ -247,7 +247,7 @@ const PageBuilder = () => {
           <LayoutGroup>
             <AnimatePresence>
               {items?.map((item) => (
-                <Item
+                <ItemWrapper
                   key={item.id}
                   data-item-id={item.id.toString()}
                   item={item}

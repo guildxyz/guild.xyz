@@ -1,10 +1,10 @@
-import { ItemType } from "pages/page-builder"
+import { Item } from "pages/page-builder"
 import { describe, expect, test } from "vitest"
 import move from "./pageBuilder"
 
 describe("DESKTOP", () => {
   test("Moving a 1x1 card from (1,1) to (2,1) - no colliding items", () => {
-    const GRID: ItemType[] = [
+    const GRID: Item[] = [
       {
         id: "card",
         type: "ROLE",
@@ -18,7 +18,7 @@ describe("DESKTOP", () => {
       },
     ]
 
-    const EXPECTED_OUTPUT: ItemType[] = [
+    const EXPECTED_OUTPUT: Item[] = [
       {
         id: "card",
         type: "ROLE",
@@ -43,7 +43,7 @@ describe("DESKTOP", () => {
   })
 
   test("Moving a 1x1 card from (1,1) to (2,1) - but a 1x1 card is already placed at (2,1)", () => {
-    const GRID: ItemType[] = [
+    const GRID: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -68,7 +68,7 @@ describe("DESKTOP", () => {
       },
     ]
 
-    const EXPECTED_OUTPUT: ItemType[] = [
+    const EXPECTED_OUTPUT: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -104,7 +104,7 @@ describe("DESKTOP", () => {
   })
 
   test("Moving a 1x1 card from (1,1) to (6,1) - but a 1x1 card is already placed at (6,1)", () => {
-    const GRID: ItemType[] = [
+    const GRID: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -129,7 +129,7 @@ describe("DESKTOP", () => {
       },
     ]
 
-    const EXPECTED_OUTPUT: ItemType[] = [
+    const EXPECTED_OUTPUT: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -165,7 +165,7 @@ describe("DESKTOP", () => {
   })
 
   test("Moving a 2x1 card from (1,1) to (2,1) - but a 1x1 card is already placed at (3,1)", () => {
-    const GRID: ItemType[] = [
+    const GRID: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -190,7 +190,7 @@ describe("DESKTOP", () => {
       },
     ]
 
-    const EXPECTED_OUTPUT: ItemType[] = [
+    const EXPECTED_OUTPUT: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -226,7 +226,7 @@ describe("DESKTOP", () => {
   })
 
   test("Moving a 2x1 card from (3,1) to (4,1) - but a 2x1 card is already placed at (5,1)", () => {
-    const GRID: ItemType[] = [
+    const GRID: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -251,7 +251,7 @@ describe("DESKTOP", () => {
       },
     ]
 
-    const EXPECTED_OUTPUT: ItemType[] = [
+    const EXPECTED_OUTPUT: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -287,7 +287,7 @@ describe("DESKTOP", () => {
   })
 
   test("Moving a 1x1 card from (2,1) to (1,1) - a 1x1 card is already placed at (1,1)", () => {
-    const GRID: ItemType[] = [
+    const GRID: Item[] = [
       {
         id: "card1",
         type: "ROLE",
@@ -312,7 +312,7 @@ describe("DESKTOP", () => {
       },
     ]
 
-    const EXPECTED_OUTPUT: ItemType[] = [
+    const EXPECTED_OUTPUT: Item[] = [
       {
         id: "card2",
         type: "ROLE",

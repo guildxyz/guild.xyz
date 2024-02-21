@@ -1,8 +1,8 @@
-import { ItemType } from "pages/page-builder"
+import { Item } from "pages/page-builder"
 
 const GRID_W = 6
 
-const move = (items: ItemType[], item: ItemType, moveTo: ItemType["desktop"]) => {
+const move = (items: Item[], item: Item, moveTo: Item["desktop"]) => {
   item.desktop = moveTo
 
   const itemIndex = items.map((_item) => _item.id).findIndex((id) => id === item.id)
@@ -25,7 +25,7 @@ const move = (items: ItemType[], item: ItemType, moveTo: ItemType["desktop"]) =>
   items = sortItems(items)
 }
 
-const checkCollision = (item1: ItemType, item2: ItemType) => {
+const checkCollision = (item1: Item, item2: Item) => {
   if (item1.id === item2.id) return false
   if (item1.desktop.x + item1.desktop.width <= item2.desktop.x) return false // left
   if (item1.desktop.x >= item2.desktop.x + item2.desktop.width) return false // right
@@ -44,7 +44,7 @@ const checkCollision = (item1: ItemType, item2: ItemType) => {
   return true
 }
 
-export const handleWrap = (position: ItemType["desktop"]) => {
+export const handleWrap = (position: Item["desktop"]) => {
   if (position.x + position.width - 1 <= GRID_W) return position
   return {
     ...position,
@@ -53,7 +53,7 @@ export const handleWrap = (position: ItemType["desktop"]) => {
   }
 }
 
-const sortItems = (items: ItemType[]) =>
+const sortItems = (items: Item[]) =>
   items.sort((item1, item2) =>
     item1.desktop.y === item2.desktop.y
       ? item1.desktop.x - item2.desktop.x
