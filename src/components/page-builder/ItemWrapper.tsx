@@ -62,7 +62,7 @@ const ItemWrapper = forwardRef(
         gridRowStart={y}
         colSpan={typeof item.desktop.width === "number" ? item.desktop.width : 6}
         rowSpan={Number(item.desktop.height)}
-        cursor="pointer"
+        cursor={isDragging ? "grabbing" : "grab"}
         layout
         drag
         onDragStart={() => setDragging(true)}

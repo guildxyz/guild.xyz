@@ -91,8 +91,8 @@ const calculateGridPosition = (
     typeof itemPosition.height === "number" ? itemPosition.height : 1
   const itemHeightWithPadding = BASE_SIZE * itemHeight + (itemHeight - 1) * PADDING
 
-  const x = Math.min(Math.ceil(relativeMouseX / itemWidthWithPadding) + 1, 6)
-  const y = Math.ceil(relativeMouseY / itemHeightWithPadding) + 1
+  const x = Math.min(Math.floor(relativeMouseX / itemWidthWithPadding) + 1, 6)
+  const y = Math.floor(relativeMouseY / itemHeightWithPadding) + 1
 
   return { x, y }
 }
