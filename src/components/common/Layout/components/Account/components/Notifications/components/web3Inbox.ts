@@ -19,7 +19,7 @@ export const WEB3_INBOX_INIT_PARAMS = {
 }
 
 export const useWeb3InboxSubscription = () => {
-  const [isSigningWeb3Inbox, setIsSigningWeb3Inbox] = useState(false)
+  const [isSigning, setIsSigning] = useState(false)
 
   useEffect(() => {
     initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
@@ -30,31 +30,31 @@ export const useWeb3InboxSubscription = () => {
   const { signMessageAsync } = useSignMessage()
 
   const { prepareRegistration, isLoading: isPreparing } = usePrepareRegistration()
-  const { register, isLoading: isRegisteringWeb3Inbox } = useRegister()
-  const { address, isConnecting, isReconnecting, status } = useAccount()
+  const { register, isLoading: isRegistering } = useRegister()
+  const { address } = useAccount()
   const {
-    data: w3IAccount,
-    error: w3IAccountError,
-    isLoading: isW3iAccountLoading,
+    data: account,
+    error: accountError,
+    isLoading: isAccountLoading,
   } = useWeb3InboxAccount(address ? `eip155:1:${address}` : undefined)
   const {
-    data: subscription,
+    data: subscriptionStatus,
     error,
     isLoading,
-  } = useSubscription(w3IAccount, WEB3_INBOX_INIT_PARAMS.domain)
-  const { subscribe, isLoading: isSubscribingWeb3Inbox } = useSubscribe(
-    w3IAccount,
+  } = useSubscription(account, WEB3_INBOX_INIT_PARAMS.domain)
+  const { subscribe, isLoading: isSubscribing } = useSubscribe(
+    account,
     WEB3_INBOX_INIT_PARAMS.domain
   )
 
-  const subscribeWeb3Inbox = async () => {
+  const handleSubscribe = async () => {
     if (!address) return
 
     try {
       const { message, registerParams } = await prepareRegistration()
-      setIsSigningWeb3Inbox(true)
+      setIsSigning(true)
       const signature = await signMessageAsync({ message: message }).finally(() =>
-        setIsSigningWeb3Inbox(false)
+        setIsSigning(false)
       )
       await register({ registerParams, signature })
     } catch (web3InboxRegisterError) {
@@ -70,35 +70,19 @@ export const useWeb3InboxSubscription = () => {
         title: "Success",
         description: "Successfully subscribed to Guild messages via Web3Inbox",
       })
-    } catch (web3InboxSubscribeError) {
-      console.error("web3InboxSubscribeError", web3InboxSubscribeError)
+    } catch (subscribeError) {
+      console.error("web3InboxSubscribeError", subscribeError)
       showErrorToast("Couldn't subscribe to Guild messages")
     }
   }
 
   return {
-    web3InboxSubscription: subscription,
-    isWeb3InboxLoading: isLoading || isPreparing || isW3iAccountLoading,
-    web3InboxError: w3IAccountError ?? error,
-    isRegisteringWeb3Inbox,
-    isSigningWeb3Inbox,
-    isSubscribingWeb3Inbox,
-    subscribeWeb3Inbox,
+    web3InboxSubscription: subscriptionStatus,
+    isWeb3InboxLoading: isLoading || isPreparing || isAccountLoading,
+    web3InboxError: accountError ?? error,
+    isRegisteringWeb3Inbox: isRegistering,
+    isSigningWeb3Inbox: isSigning,
+    isSubscribingWeb3Inbox: isSubscribing,
+    subscribeWeb3Inbox: handleSubscribe,
   }
-}
-
-export const useGetWeb3InboxMessages = () => {
-  const { address } = useAccount()
-  const { data: account, isLoading: isAccountLoading } = useWeb3InboxAccount(
-    address ? `eip155:1:${address}` : undefined
-  )
-
-  const { data: messages, isLoading } = useNotifications(
-    5,
-    false,
-    account,
-    WEB3_INBOX_INIT_PARAMS.domain
-  )
-
-  return { messages, isLoading: isLoading || isAccountLoading }
 }

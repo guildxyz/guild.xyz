@@ -19,9 +19,9 @@ import dynamic from "next/dynamic"
 import { ArrowSquareOut, Gear } from "phosphor-react"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
-import { MessagingWrapper, useMessagingContext } from "./components/MessagingContext"
 import NotificationsSection from "./components/NotificationsSection"
-import { useSubscribeToXMTP } from "./components/xmtp"
+import { useWeb3InboxSubscription } from "./components/web3Inbox"
+import { useSubscribeToXMTP, useXmtpAccessChecking } from "./components/xmtp"
 
 const Messages = dynamic(() => import("./Messages"))
 
@@ -34,9 +34,9 @@ const MessagingSection = () => {
     isWeb3InboxLoading,
     subscribeWeb3Inbox,
     web3InboxSubscription,
-    hasXmtpAccess,
-    isCheckingXmtpAccess,
-  } = useMessagingContext()
+  } = useWeb3InboxSubscription()
+
+  const { isCheckingXmtpAccess, hasXmtpAccess } = useXmtpAccessChecking()
   const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP()
 
   return (
@@ -133,8 +133,6 @@ const MessagingSection = () => {
 
 export default () => (
   <XMTPProvider>
-    <MessagingWrapper>
-      <MessagingSection />
-    </MessagingWrapper>
+    <MessagingSection />
   </XMTPProvider>
 )

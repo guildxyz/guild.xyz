@@ -14,13 +14,15 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useNotifications, useWeb3InboxAccount } from "@web3inbox/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { useRef } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import { useGetWeb3InboxMessages } from "./components/web3Inbox"
+import { useAccount } from "wagmi"
+import { WEB3_INBOX_INIT_PARAMS } from "./components/web3Inbox"
 
 const GUILD_NOTIFICATION_ICON = "/requirementLogos/guild.png"
 
@@ -132,7 +134,17 @@ const Web3InboxMessage = ({
 }
 
 const Messages = () => {
-  const { messages } = useGetWeb3InboxMessages()
+  const { address } = useAccount()
+  const { data: account, isLoading: isAccountLoading } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+
+  const { data: messages, isLoading } = useNotifications(
+    5,
+    false,
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
 
   const inboxContainerRef = useRef(null)
   const isScrollable = !!inboxContainerRef.current
