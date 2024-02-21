@@ -22,13 +22,7 @@ import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import {
-  useGetXmtpKeys,
-  useSaveXmtpKeys,
-  useSubscribeXmtp,
-} from "components/common/Layout/components/Account/components/Notifications/components/xmtp"
 import { Modal } from "components/common/Modal"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useReachableUsers from "../hooks/useReachableUsers"
@@ -81,7 +75,6 @@ const SendNewMessage = (props: ButtonProps) => {
 type MessageModalContentProps = { onClose: () => void }
 
 const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
-  const showErrorToast = useShowErrorToast()
   const methods = useForm<SendMessageForm>({
     mode: "all",
     defaultValues: {
@@ -111,10 +104,6 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
   const { targetedCount, isTargetedCountValidating } = useTargetedCount(roleIds)
   const { data: reachableUsers, isValidating: isReachableUsersLoading } =
     useReachableUsers(protocol, "ROLES", roleIds)
-
-  const { keys: xmtpKeys } = useGetXmtpKeys()
-  const saveXmtpKeys = useSaveXmtpKeys()
-  const { subscribeXmtp } = useSubscribeXmtp()
 
   const greenTextColor = useColorModeValue("green.600", "green.300")
 
@@ -226,19 +215,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
             h={10}
             colorScheme="green"
             rightIcon={<PaperPlaneRight />}
-            onClick={handleSubmit(async (data) => {
-              if (protocol === "WEB3INBOX" && xmtpKeys.length) onSubmit(data)
-              else {
-                try {
-                  await subscribeXmtp()
-                  await saveXmtpKeys()
-                  onSubmit(data)
-                } catch (error) {
-                  console.error("XMTPSubscribeError", error)
-                  showErrorToast("Couldn't subscribe to Guild messages")
-                }
-              }
-            })}
+            onClick={handleSubmit(onSubmit)}
             isLoading={isLoading}
             loadingText="Sending"
           >

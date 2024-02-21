@@ -6,40 +6,6 @@ import { useCallback, useEffect, useState } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useAccount, useWalletClient } from "wagmi"
 
-export const useSaveXmtpKeys = () => {
-  const fetcherWithSign = useFetcherWithSign()
-  const { data: signer } = useWalletClient()
-
-  const { id } = useUser()
-
-  return useCallback(
-    async () =>
-      Client.getKeys(signer, { env: "production" }).then(async (key) =>
-        fetcherWithSign([
-          id ? `/v2/users/${id}/keys` : undefined,
-          {
-            body: {
-              key: Buffer.from(key).toString("binary"),
-              service: "XMTP",
-            },
-          },
-        ])
-      ),
-    [id, signer]
-  )
-}
-
-export const useDeleteXmtpKeys = () => {
-  const fetcherWithSign = useFetcherWithSign()
-  const { id } = useUser()
-
-  return async () =>
-    fetcherWithSign([
-      id ? `/v2/users/${id}/keys/1` : undefined,
-      { method: "DELETE" },
-    ])
-}
-
 export const useGetXmtpKeys = () => {
   const fetcherWithSign = useFetcherWithSign()
   const [data, setData] = useState(null)
@@ -125,7 +91,7 @@ export const useSubscribeXmtp = () => {
         })
       })
       .catch((error) => {
-        console.error("web3InboxSubscribeError", error)
+        console.error("XMTPSubscribeError", error)
         showErrorToast("Couldn't subscribe to Guild messages")
         throw error
       })
