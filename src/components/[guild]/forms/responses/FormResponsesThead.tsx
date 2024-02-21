@@ -7,7 +7,7 @@ type Props = {
   isLoading: boolean
 }
 
-const CrmThead = ({ table, isLoading }: Props) => {
+const FormResponsesThead = ({ table, isLoading }: Props) => {
   const cardBg = useCardBg()
 
   return (
@@ -22,6 +22,10 @@ const CrmThead = ({ table, isLoading }: Props) => {
             bg={cardBg}
             colSpan={header.colSpan}
             width={header.column.getSize()}
+            textTransform={"none"}
+            letterSpacing={"normal"}
+            fontWeight={"semibold"}
+            fontSize={"sm"}
             sx={{
               "&:first-of-type": {
                 borderTopLeftRadius: "xl",
@@ -57,4 +61,4 @@ const CrmThead = ({ table, isLoading }: Props) => {
   )
 }
 
-export default CrmThead
+export default FormResponsesThead

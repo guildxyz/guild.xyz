@@ -27,6 +27,7 @@ const fieldTypes: {
   DisplayComponent: ComponentType<{
     field: Schemas["Field"] | CreateForm["fields"][number]
     isDisabled?: boolean
+    value?: any
   }>
 }[] = [
   {

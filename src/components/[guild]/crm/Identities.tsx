@@ -7,7 +7,7 @@ import shortenHex from "utils/shortenHex"
 import { Member } from "./useMembers"
 
 type Props = {
-  member: Member
+  member: Omit<Member, "roles" | "joinedAt">
 }
 
 export const sortAccounts = (

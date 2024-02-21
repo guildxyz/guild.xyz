@@ -97,7 +97,7 @@ const MemberRow = ({ row }) => {
   )
 }
 
-const CrmSkeletonRow = ({ columns }) => (
+export const CrmSkeletonRow = ({ columns }) => (
   <Tr>
     <CrmTd w="12">
       <Checkbox mt="2px" />
@@ -117,7 +117,7 @@ const CrmSkeletonRow = ({ columns }) => (
   </Tr>
 )
 
-const CrmTd = ({ children, ...rest }) => {
+export const CrmTd = ({ children, ...rest }) => {
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
 
   return (
@@ -127,7 +127,7 @@ const CrmTd = ({ children, ...rest }) => {
   )
 }
 
-const CrmInteractiveTd = ({ children, ...rest }) => {
+export const CrmInteractiveTd = ({ children, ...rest }) => {
   const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
 
   return (
@@ -150,7 +150,7 @@ const CrmInteractiveTd = ({ children, ...rest }) => {
   )
 }
 
-const CrmInfoRow = ({ children, ...rest }) => (
+export const CrmInfoRow = ({ children, ...rest }) => (
   <Tr>
     <CrmTd
       textAlign={"center"}
