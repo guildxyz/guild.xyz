@@ -5,10 +5,11 @@ import Item from "components/page-builder/Item"
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion"
 import { Plus } from "phosphor-react"
 import { DragEventHandler, useRef, useState } from "react"
-import move from "utils/page-builder"
+import move, { handleWrap } from "utils/pageBuilder"
+import { uuidv7 } from "uuidv7"
 
 export type ItemType = {
-  id: number
+  id: string
   desktop: {
     x: number
     y: number
@@ -26,7 +27,7 @@ export type ItemType = {
 
 const initialItems: ItemType[] = [
   {
-    id: 0,
+    id: "0",
     desktop: {
       x: 1,
       y: 1,
@@ -37,7 +38,7 @@ const initialItems: ItemType[] = [
     data: {},
   },
   {
-    id: 1,
+    id: "1",
     desktop: {
       x: 2,
       y: 1,
@@ -49,7 +50,7 @@ const initialItems: ItemType[] = [
     data: {},
   },
   {
-    id: 2,
+    id: "2",
     desktop: {
       x: 1,
       y: 2,
@@ -61,7 +62,7 @@ const initialItems: ItemType[] = [
     data: {},
   },
   {
-    id: 3,
+    id: "3",
     desktop: {
       x: 1,
       y: 3,
@@ -140,7 +141,10 @@ const PageBuilder = () => {
 
     if (!itemToMove) return
 
-    if (!placeholderPosition) setPlaceholderPosition(itemToMove.desktop)
+    if (!placeholderPosition) {
+      console.log("setPlaceholderPosition1 called")
+      setPlaceholderPosition(itemToMove.desktop)
+    }
 
     const newPosition = elementPositionToXY(element, {
       ...itemToMove.desktop,
@@ -171,11 +175,13 @@ const PageBuilder = () => {
         return isUpdated
       })
     ) {
+      console.log("setPlaceholderPosition2 called")
       setPlaceholderPosition({
         ...itemToMove.desktop,
         ...newPosition,
       })
 
+      console.log("setItems called")
       setItems(itemsClone)
     }
   }
@@ -192,21 +198,38 @@ const PageBuilder = () => {
           maxW="max-content"
           onClick={() =>
             setItems((prevItems) => {
-              if (!prevItems) return []
-              const prevItemsById = prevItems.sort((a, b) => a.id - b.id)
+              const id = uuidv7()
+              if (!prevItems?.length)
+                return [
+                  {
+                    id,
+                    type: "ROLE",
+                    data: {},
+                    desktop: {
+                      x: 1,
+                      y: 1,
+                      width: 1,
+                      height: 1,
+                    },
+                  } satisfies ItemType,
+                ]
+
+              // It's safe to select the last item, because the array is sorted properly
               const lastItem = prevItems.at(-1)
 
               return [
                 ...prevItems,
                 {
-                  id: (prevItemsById.at(-1)?.id ?? 0) + 1,
-                  desktop: {
+                  id,
+                  type: "ROLE",
+                  data: {},
+                  desktop: handleWrap({
                     width: 1,
                     height: 1,
-                    x: 1,
-                    y: (lastItem?.desktop.y ?? 0) + 1,
-                  },
-                } as ItemType,
+                    x: lastItem.desktop.x + lastItem.desktop.width,
+                    y: lastItem.desktop.y,
+                  }),
+                } satisfies ItemType,
               ]
             })
           }

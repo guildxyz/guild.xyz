@@ -44,7 +44,7 @@ const checkCollision = (item1: ItemType, item2: ItemType) => {
   return true
 }
 
-const handleWrap = (position: ItemType["desktop"]) => {
+export const handleWrap = (position: ItemType["desktop"]) => {
   if (position.x + position.width - 1 <= GRID_W) return position
   return {
     ...position,
