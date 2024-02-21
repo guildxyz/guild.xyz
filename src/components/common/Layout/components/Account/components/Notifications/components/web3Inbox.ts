@@ -58,7 +58,6 @@ export const useWeb3InboxSubscription = () => {
       )
       await register({ registerParams, signature })
     } catch (web3InboxRegisterError) {
-      console.error("web3InboxRegisterError", web3InboxRegisterError)
       showErrorToast("Web3Inbox registration error")
       return
     }
@@ -71,7 +70,6 @@ export const useWeb3InboxSubscription = () => {
         description: "Successfully subscribed to Guild messages via Web3Inbox",
       })
     } catch (subscribeError) {
-      console.error("web3InboxSubscribeError", subscribeError)
       showErrorToast("Couldn't subscribe to Guild messages")
     }
   }

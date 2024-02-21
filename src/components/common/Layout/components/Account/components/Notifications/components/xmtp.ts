@@ -58,7 +58,6 @@ export const useXmtpAccessChecking = () => {
       canMessageStatic(address)
         .then(setHasAccess)
         .catch((e) => {
-          console.error("XmtpAccessCheckingError", e)
           showErrorToast("Error happened during checking XMTP access")
         })
         .finally(() => setIsCheckingAccess(false))
@@ -85,7 +84,6 @@ export const useSubscribeToXMTP = () => {
 
   const { error, isLoading } = useSubmit(subscribeToXMTP, {
     onError: (error) => {
-      console.error("XMTPSubscribeError", error)
       showErrorToast("Couldn't subscribe to Guild messages")
     },
     onSuccess: () =>
