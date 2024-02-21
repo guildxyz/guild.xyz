@@ -2,7 +2,8 @@ import { useToast } from "@chakra-ui/react"
 import { Client, useCanMessage } from "@xmtp/react-sdk"
 import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useCallback, useEffect, useState } from "react"
+import useSubmit from "hooks/useSubmit"
+import { useEffect, useState } from "react"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useAccount, useWalletClient } from "wagmi"
 
@@ -69,40 +70,30 @@ export const useXmtpAccessChecking = () => {
   }
 }
 
-export const useSubscribeXmtp = () => {
-  const [isSubscribingXmtp, setIsSubscribingXmtp] = useState<boolean>(false)
-
+export const useSubscribeToXMTP = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const { data: signer, isLoading } = useWalletClient()
+  const { data: signer } = useWalletClient()
 
-  const subscribeXmtp = useCallback(async () => {
-    setIsSubscribingXmtp(true)
+  const subscribeToXMTP = async () => {
     await Client.create(signer, {
       persistConversations: false,
       env: "production",
     })
-      .then(() => {
-        toast({
-          status: "success",
-          title: "Success",
-          description: "Successfully subscribed to Guild messages via Web3Inbox",
-        })
-      })
-      .catch((error) => {
-        console.error("XMTPSubscribeError", error)
-        showErrorToast("Couldn't subscribe to Guild messages")
-        throw error
-      })
-      .finally(() => {
-        setIsSubscribingXmtp(false)
-      })
-  }, [signer])
-
-  return {
-    isLoadingDependencies: isLoading,
-    subscribeXmtp,
-    isSubscribingXmtp,
   }
+
+  const { error, isLoading } = useSubmit(subscribeToXMTP, {
+    onError: (error) => {
+      console.error("XMTPSubscribeError", error)
+      showErrorToast("Couldn't subscribe to Guild messages")
+    },
+    onSuccess: () =>
+      toast({
+        status: "success",
+        title: "Success",
+        description: "Successfully subscribed to Guild messages via XMTP",
+      }),
+  })
+  return { subscribeToXmtp: onsubmit, isSubscribing: isLoading, error }
 }

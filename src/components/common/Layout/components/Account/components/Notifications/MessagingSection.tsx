@@ -21,6 +21,7 @@ import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSke
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
 import { MessagingWrapper, useMessagingContext } from "./components/MessagingContext"
 import NotificationsSection from "./components/NotificationsSection"
+import { useSubscribeToXMTP } from "./components/xmtp"
 
 const Messages = dynamic(() => import("./Messages"))
 
@@ -31,15 +32,12 @@ const MessagingSection = () => {
     isSigningWeb3Inbox,
     isSubscribingWeb3Inbox,
     isWeb3InboxLoading,
-    web3InboxError,
     subscribeWeb3Inbox,
     web3InboxSubscription,
     hasXmtpAccess,
     isCheckingXmtpAccess,
-    subscribeXmtp,
-    isLoadingDependencies,
-    isSubscribingXmtp,
   } = useMessagingContext()
+  const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP()
 
   return (
     <>
@@ -115,12 +113,10 @@ const MessagingSection = () => {
                 isDisabled={Boolean(hasXmtpAccess)}
                 variant="solid"
                 colorScheme="blue"
-                onClick={subscribeXmtp}
-                isLoading={
-                  isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
-                }
+                onClick={subscribeToXmtp}
+                isLoading={isCheckingXmtpAccess || isSubscribing}
                 loadingText={
-                  isCheckingXmtpAccess || isLoadingDependencies || isSubscribingXmtp
+                  isCheckingXmtpAccess || isSubscribing
                     ? "Check your wallet"
                     : "Subscribing"
                 }
