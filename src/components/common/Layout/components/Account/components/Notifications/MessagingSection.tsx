@@ -12,7 +12,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { XMTPProvider } from "@xmtp/react-sdk"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
@@ -136,9 +135,9 @@ const MessagingSection = () => {
 }
 
 export default () => (
-  <XMTPProvider>
-    <MessagingWrapper>
-      <MessagingSection />
-    </MessagingWrapper>
-  </XMTPProvider>
+  // <XMTPProvider>
+  <MessagingWrapper>
+    <MessagingSection />
+  </MessagingWrapper>
+  // </XMTPProvider>
 )

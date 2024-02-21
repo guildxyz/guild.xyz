@@ -17,7 +17,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { XMTPProvider } from "@xmtp/react-sdk"
 import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
@@ -119,7 +118,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
   const greenTextColor = useColorModeValue("green.600", "green.300")
 
   return (
-    <XMTPProvider>
+    <>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Send new message</ModalHeader>
@@ -246,7 +245,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
           </Button>
         </ModalFooter>
       </ModalContent>
-    </XMTPProvider>
+    </>
   )
 }
 
