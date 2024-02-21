@@ -1,8 +1,10 @@
 import { Schemas } from "@guildxyz/types"
+import { sortAccounts } from "components/[guild]/crm/Identities"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useCallback, useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
+import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
@@ -16,19 +18,73 @@ export type FormSubmission = {
   formId: number
   addresses: string[]
   platformUsers: PlatformAccountDetails[]
-  createdAt: string
+  submittedAt: string
   areSocialsPrivate: boolean
-  submissionAnswers: Response[]
+  responses: Response[]
 }
 
-const useFormSubmissions = (formId) => {
+const LIMIT = 50
+
+const useFormSubmissions = (formId, queryString) => {
   const { id } = useGuild()
+  const fetcherWithSign = useFetcherWithSign()
 
-  const shouldFetch = id && formId
+  const getKey = useCallback(
+    (pageIndex, previousPageData) => {
+      if (!id || !formId) return null
 
-  return useSWRWithOptionalAuth<FormSubmission[]>(
-    shouldFetch ? `/v2/guilds/${id}/forms/${formId}/user-submissions` : null
+      if (previousPageData && previousPageData.length < LIMIT) return null
+
+      const pagination = `offset=${pageIndex * LIMIT}&limit=${LIMIT}`
+
+      return `/v2/guilds/${id}/forms/${formId}/user-submissions?${[
+        queryString,
+        pagination,
+      ].join("&")}`
+    },
+    [queryString, id, formId]
   )
+
+  const { data, ...rest } = useSWRInfinite<FormSubmission[]>(
+    getKey,
+    (url: string) =>
+      fetcherWithSign([
+        url,
+        {
+          method: "GET",
+          body: {},
+        },
+      ]).then((res) =>
+        res.map((user) => {
+          const areSocialsPrivate = typeof user.addresses === "string"
+
+          return {
+            ...user,
+            areSocialsPrivate,
+            addresses: areSocialsPrivate ? [user.addresses] : user.addresses,
+            platformUsers: user.platformUsers.sort(sortAccounts),
+            responses: user.responses.map((response) => {
+              if (response.value.startsWith("["))
+                return { ...response, value: JSON.parse(response.value) }
+
+              return response
+            }),
+          }
+        })
+      ),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateFirstPage: false,
+      revalidateOnMount: true,
+      keepPreviousData: true,
+    }
+  )
+
+  const flattenedData = useMemo(() => data?.flat(), [data])
+
+  return { data: flattenedData, ...rest }
 }
 
 const useUserFormSubmission = (form: Schemas["Form"]) => {

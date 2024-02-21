@@ -6,8 +6,12 @@ import {
 } from "@tanstack/react-table"
 import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
 import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
+import Identities from "components/[guild]/crm/Identities"
+import IdentitiesExpansionToggle from "components/[guild]/crm/IdentitiesExpansionToggle"
+import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import {
+  buildQueryStringFromState,
   parseFiltersFromQuery,
   parseSortingFromQuery,
 } from "components/[guild]/crm/transformTableStateToAndFromQuery"
@@ -16,10 +20,10 @@ import { useRouter } from "next/router"
 import useFormSubmissions, {
   FormSubmission,
 } from "platforms/Forms/hooks/useFormSubmissions"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 const columnHelper = createColumnHelper<FormSubmission>()
-const getRowId = (row: FormSubmission) => `user_${row.userId}`
+const getRowId = (row: FormSubmission) => `response_${row.userId}`
 
 const FormResponsesTable = ({ form }) => {
   const router = useRouter()
@@ -30,11 +34,27 @@ const FormResponsesTable = ({ form }) => {
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
   const [rowSelection, setRowSelection] = useState({})
 
-  const { data, error, isLoading, isValidating /* setSize */ } = useFormSubmissions(
-    form.id
+  const queryString = useMemo(
+    () => buildQueryStringFromState(columnFilters, sorting),
+    [columnFilters, sorting]
   )
 
-  const setSize = () => {}
+  useEffect(() => {
+    /**
+     * Using native browser api, so it doesn't cause a rerender & trigger the general
+     * loading bar set up in _app.tsx. The downside is, if we filter for something,
+     * navigate to another page then click the back button, it won't work. We could
+     * add some logic to the _app.tsx effect to filter out query-only changes
+     * (https://stackoverflow.com/questions/62368109/update-router-query-without-firing-page-change-event-in-next-js),
+     * but I'm not sure the performance cost would worth handling this edge case, so
+     * left it this way for now
+     */
+    window.history.pushState("", "", `?${queryString}`)
+  }, [queryString])
+  const { data, error, isLoading, isValidating, setSize } = useFormSubmissions(
+    form.id,
+    queryString
+  )
 
   // TODO: keep row selection when the data changes. Right now we just reset the selection
   const handleSetColumnFilters = (props) => {
@@ -74,19 +94,19 @@ const FormResponsesTable = ({ form }) => {
           />
         ),
       },
-      // columnHelper.accessor((row) => row, {
-      //   id: "identity",
-      //   size: 210,
-      //   cell: (info) => <Identities member={info.getValue()} />,
-      //   header: ({ column }) => (
-      //     <HStack spacing="0">
-      //       <IdentitiesSearch column={column} />
-      //       <IdentitiesExpansionToggle />
-      //     </HStack>
-      //   ),
-      // }),
+      columnHelper.accessor((row) => row, {
+        id: "identity",
+        size: 210,
+        cell: (info) => <Identities member={info.getValue()} />,
+        header: ({ column }) => (
+          <HStack spacing="0">
+            <IdentitiesSearch column={column} />
+            <IdentitiesExpansionToggle />
+          </HStack>
+        ),
+      }),
       ...form.fields.map((field) =>
-        columnHelper.accessor("submissionAnswers", {
+        columnHelper.accessor("responses", {
           id: `field_${field.id}`,
           header: ({ column }) => (
             <HStack w="full" justifyContent={"space-between"}>
@@ -103,7 +123,7 @@ const FormResponsesTable = ({ form }) => {
           },
         })
       ),
-      columnHelper.accessor("createdAt", {
+      columnHelper.accessor("submittedAt", {
         size: 140,
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
@@ -154,7 +174,7 @@ const FormThText = ({ children }) => (
     letterSpacing={"normal"}
     fontWeight={"semibold"}
     fontSize={"sm"}
-    noOfLines={3}
+    noOfLines={2}
     title={children}
   >
     {children}
