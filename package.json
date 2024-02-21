@@ -15,6 +15,7 @@
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
     "test": "cypress run",
     "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
+    "test:utils": "vitest '/utils'",
     "snyk-protect": "snyk-protect"
   },
   "dependencies": {
@@ -101,7 +102,8 @@
     "lint-staged": "^13.0.0",
     "prettier": "^2.8.1",
     "prettier-plugin-jsdoc": "^0.4.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^1.3.1"
   },
   "lint-staged": {
     "./**/*.@(js|jsx|ts|tsx|css|md)": "prettier --write"

@@ -7,7 +7,7 @@ const move = (items: ItemType[], item: ItemType, moveTo: ItemType["desktop"]) =>
 
   const itemIndex = items.map((_item) => _item.id).findIndex((id) => id === item.id)
 
-  for (let i = itemIndex + 1; i < items.length; i++) {
+  for (let i = 0; i < items.length; i++) {
     const otherItem = items[i]
 
     if (checkCollision(item, otherItem)) {
