@@ -37,14 +37,8 @@ type Props = {
 }
 
 const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
-  const {
-    addresses,
-    platformUsers,
-    areSocialsPrivate,
-    responses,
-    submittedAt,
-    formId,
-  } = row?.original ?? {}
+  const { addresses, platformUsers, isShared, responses, submittedAt, formId } =
+    row?.original ?? {}
 
   const { form } = useGuildForm(formId)
 
@@ -74,7 +68,7 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
               />
             </Circle>
             <UserPlatformTags
-              {...{ platformUsers, areSocialsPrivate }}
+              {...{ platformUsers, isShared }}
               spacing="1"
               fontFamily="body"
             >

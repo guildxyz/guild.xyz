@@ -9,12 +9,12 @@ import {
 
 type Props = {
   platformUsers: PlatformAccountDetails[]
-  areSocialsPrivate: boolean
+  isShared: boolean
 } & WrapProps
 
 export const UserPlatformTags = ({
   platformUsers,
-  areSocialsPrivate,
+  isShared,
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
@@ -22,7 +22,7 @@ export const UserPlatformTags = ({
 
   return (
     <Wrap {...rest}>
-      {areSocialsPrivate ? (
+      {!isShared ? (
         <PrivateSocialsTag isOpen />
       ) : platformUsers.length ? (
         filteredPlatformUsers.map((platformAccount, i) => {

@@ -34,7 +34,7 @@ export const deduplicateXPlatformUsers = (
 }
 
 const Identities = ({ member }: Props) => {
-  const { addresses, platformUsers, areSocialsPrivate } = member
+  const { addresses, platformUsers, isShared } = member
 
   const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
 
@@ -49,10 +49,10 @@ const Identities = ({ member }: Props) => {
           isOpen={i === 0}
         />
       ))}
-      <WalletTag zIndex={areSocialsPrivate && 1}>
+      <WalletTag zIndex={!isShared && 1}>
         {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
       </WalletTag>
-      {areSocialsPrivate && <PrivateSocialsTag />}
+      {!isShared && <PrivateSocialsTag />}
     </HStack>
   )
 }

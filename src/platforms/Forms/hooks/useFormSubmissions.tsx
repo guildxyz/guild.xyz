@@ -18,8 +18,8 @@ export type FormSubmission = {
   formId: number
   addresses: string[]
   platformUsers: PlatformAccountDetails[]
+  isShared: boolean
   submittedAt: string
-  areSocialsPrivate: boolean
   responses: Response[]
 }
 
@@ -55,22 +55,17 @@ const useFormSubmissions = (formId, queryString) => {
           body: {},
         },
       ]).then((res) =>
-        res.map((user) => {
-          const areSocialsPrivate = typeof user.addresses === "string"
+        res.map((user) => ({
+          ...user,
+          platformUsers: user.platformUsers.sort(sortAccounts),
+          isShared: user.isShared === true || user.isShared === null,
+          responses: user.responses.map((response) => {
+            if (response.value.startsWith("["))
+              return { ...response, value: JSON.parse(response.value) }
 
-          return {
-            ...user,
-            areSocialsPrivate,
-            addresses: areSocialsPrivate ? [user.addresses] : user.addresses,
-            platformUsers: user.platformUsers.sort(sortAccounts),
-            responses: user.responses.map((response) => {
-              if (response.value.startsWith("["))
-                return { ...response, value: JSON.parse(response.value) }
-
-              return response
-            }),
-          }
-        })
+            return response
+          }),
+        }))
       ),
     {
       revalidateIfStale: false,

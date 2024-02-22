@@ -28,8 +28,7 @@ type Props = {
 }
 
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
-  const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
-    row.original
+  const { addresses, platformUsers, roles, joinedAt, isShared } = row.original
 
   const rolesColumn = row
     .getAllCells()
@@ -66,7 +65,7 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
         </ModalHeader>
 
         <ModalBody>
-          <UserPlatformTags {...{ addresses, platformUsers, areSocialsPrivate }}>
+          <UserPlatformTags {...{ addresses, platformUsers, isShared }}>
             {addresses.slice(1).map((address) => (
               <WalletTag key={address}>
                 <CopyableAddress address={address} fontSize="sm" />
