@@ -1,6 +1,7 @@
 import { useCanMessage } from "@xmtp/react-sdk"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
+import { useEffect } from "react"
 import { useAccount } from "wagmi"
 
 export const useXmtpAccessChecking = () => {
@@ -15,6 +16,11 @@ export const useXmtpAccessChecking = () => {
       onError: () => showErrorToast("Error happened during checking XMTP access"),
     }
   )
+
+  useEffect(() => {
+    onSubmit()
+  }, [])
+
   return {
     error,
     isCheckingAccess: isLoading,
