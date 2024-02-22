@@ -45,18 +45,18 @@ const MessagingSection = () => {
   const { address } = useAccount()
 
   const {
-    isLoading: isCheckingXmtpAccess,
-    onSubmit: checkXmtpAccess,
-    response: hasXmtpAccess,
+    isLoading: isCheckingXMTPAccess,
+    onSubmit: checkXMTPAccess,
+    response: hasXMTPAccess,
   } = useSubmit(async () => canMessageStatic(address), {
     onError: () => showErrorToast("Error happened during checking XMTP access"),
   })
 
   useEffect(() => {
-    checkXmtpAccess()
+    checkXMTPAccess()
   }, [])
 
-  const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP(checkXmtpAccess)
+  const { subscribeToXMTP, isSubscribing } = useSubscribeToXMTP(checkXMTPAccess)
 
   return (
     <>
@@ -79,9 +79,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {isWeb3InboxLoading || isCheckingXmtpAccess ? (
+        {isWeb3InboxLoading || isCheckingXMTPAccess ? (
           <SubscriptionPromptSkeleton />
-        ) : !web3InboxSubscription && !hasXmtpAccess ? (
+        ) : !web3InboxSubscription && !hasXMTPAccess ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />
@@ -133,18 +133,18 @@ const MessagingSection = () => {
                 XMTP
               </Text>
               <Button
-                isDisabled={Boolean(hasXmtpAccess)}
+                isDisabled={Boolean(hasXMTPAccess)}
                 variant="solid"
                 colorScheme="blue"
-                onClick={subscribeToXmtp}
-                isLoading={isCheckingXmtpAccess || isSubscribing}
+                onClick={subscribeToXMTP}
+                isLoading={isCheckingXMTPAccess || isSubscribing}
                 loadingText={
-                  isCheckingXmtpAccess || isSubscribing
+                  isCheckingXMTPAccess || isSubscribing
                     ? "Check your wallet"
                     : "Subscribing"
                 }
               >
-                {Boolean(hasXmtpAccess) ? "Subscribed" : "Enable identity"}
+                {Boolean(hasXMTPAccess) ? "Subscribed" : "Enable identity"}
               </Button>
             </HStack>
           </ModalBody>

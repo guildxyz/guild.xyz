@@ -199,7 +199,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
                     required: "This field is required",
                     maxLength: {
                       value: 255,
-                      message: "Maximum Xmtp message length is 255 characters",
+                      message: "Maximum XMTP message length is 255 characters",
                     },
                   })}
                 />
