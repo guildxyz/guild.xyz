@@ -346,4 +346,148 @@ describe("DESKTOP", () => {
 
     expect(GRID).toEqual(EXPECTED_OUTPUT)
   })
+
+  test("Moving a 1x1 card from (3,1) to (4,1) - a 3x2 card is already at (4,1)", () => {
+    const GRID: Item[] = [
+      {
+        id: "card1",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 3,
+          y: 1,
+          width: 1,
+          height: 1,
+        },
+      },
+      {
+        id: "card2",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 4,
+          y: 1,
+          width: 3,
+          height: 2,
+        },
+      },
+    ]
+
+    const EXPECTED_OUTPUT: Item[] = [
+      {
+        id: "card1",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 4,
+          y: 1,
+          width: 1,
+          height: 1,
+        },
+      },
+      {
+        id: "card2",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 1,
+          y: 2,
+          width: 3,
+          height: 2,
+        },
+      },
+    ]
+
+    move(GRID, GRID[0], {
+      width: 1,
+      height: 1,
+      x: 4,
+      y: 1,
+    })
+
+    expect(GRID).toEqual(EXPECTED_OUTPUT)
+  })
+
+  test("Moving a 1x1 card from (3,1) to (4,1) - a 3x2 card is already at (4,1) & a 1x1 card is at (3,3)", () => {
+    const GRID: Item[] = [
+      {
+        id: "card1",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 3,
+          y: 1,
+          width: 1,
+          height: 1,
+        },
+      },
+      {
+        id: "card2",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 4,
+          y: 1,
+          width: 3,
+          height: 2,
+        },
+      },
+      {
+        id: "card3",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 3,
+          y: 3,
+          width: 1,
+          height: 1,
+        },
+      },
+    ]
+
+    const EXPECTED_OUTPUT: Item[] = [
+      {
+        id: "card1",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 4,
+          y: 1,
+          width: 1,
+          height: 1,
+        },
+      },
+      {
+        id: "card2",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 1,
+          y: 2,
+          width: 3,
+          height: 2,
+        },
+      },
+      {
+        id: "card3",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 4,
+          y: 3,
+          width: 1,
+          height: 1,
+        },
+      },
+    ]
+
+    move(GRID, GRID[0], {
+      width: 1,
+      height: 1,
+      x: 4,
+      y: 1,
+    })
+
+    expect(GRID).toEqual(EXPECTED_OUTPUT)
+  })
 })

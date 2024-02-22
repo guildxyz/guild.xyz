@@ -46,6 +46,14 @@ const checkCollision = (item1: Item, item2: Item) => {
 
 export const handleWrap = (position: Item["desktop"]) => {
   if (position.x + position.width - 1 <= GRID_W) return position
+
+  if ((position.x % 6) + position.width > GRID_W)
+    return {
+      ...position,
+      x: 1,
+      y: position.y + 1,
+    }
+
   return {
     ...position,
     x: Math.max(position.x % 6, 1),
