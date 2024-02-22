@@ -28,17 +28,16 @@ const useSendMessage = (onSuccess?: () => void) => {
     } else {
       return Client.getKeys(signer, { env: "production" })
         .then((rawKey) => Buffer.from(rawKey).toString("binary"))
-        .then(
-          async (key) =>
-            await fetcherWithSign([
-              userId ? `/v2/users/${userId}/keys` : undefined,
-              {
-                body: {
-                  key: key,
-                  service: "XMTP",
-                },
+        .then(async (key) =>
+          fetcherWithSign([
+            userId ? `/v2/users/${userId}/keys` : undefined,
+            {
+              body: {
+                key: key,
+                service: "XMTP",
               },
-            ])
+            },
+          ])
         )
         .then(() =>
           fetcher(`/v2/guilds/${id}/messages`, {
