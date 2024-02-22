@@ -262,7 +262,6 @@ const PageBuilder = () => {
                       transition: { duration: 0.1, ease: EASINGS.easeIn },
                     }}
                     layout
-                    zIndex={10}
                     background="transparent"
                     border={2}
                     shadow="none"

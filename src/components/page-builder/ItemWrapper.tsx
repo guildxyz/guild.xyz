@@ -10,6 +10,7 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Portal,
   SimpleGrid,
   usePopper,
 } from "@chakra-ui/react"
@@ -96,7 +97,7 @@ const ItemWrapper = ({
         boxShadow: "var(--chakra-shadows-xl)",
       }}
       dragSnapToOrigin
-      zIndex={isDragging ? "popover" : undefined}
+      zIndex={isDragging ? 3 : 2}
       overflow="visible"
       {...motionMountProps}
       onHoverStart={() => setShouldDisplayMenu(true)}
@@ -115,42 +116,49 @@ const ItemWrapper = ({
       >
         <AnimatePresence>
           {shouldDisplayMenu && !isDragging && (
-            <MotionBox
-              {...getPopperProps()}
-              initial={{
-                opacity: 0,
-              }}
-              animate={{
-                opacity: 1,
-                transition: { duration: 0.1, ease: EASINGS.easeOut },
-              }}
-              exit={{
-                opacity: 0,
-                transition: { duration: 0.1, ease: EASINGS.easeIn },
-              }}
-              py={2}
-              zIndex="popover"
-              isolation="isolate"
-            >
-              <HStack
-                bgColor="gray.900"
-                borderRadius="lg"
-                p={1}
-                boxShadow="md"
-                spacing={0}
-                cursor="default"
+            <Portal>
+              <MotionBox
+                {...getPopperProps()}
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  transition: { duration: 0.1, ease: EASINGS.easeOut },
+                }}
+                exit={{
+                  opacity: 0,
+                  transition: { duration: 0.1, ease: EASINGS.easeIn },
+                }}
+                py={2}
+                zIndex={4}
+                onHoverStart={() => setShouldDisplayMenu(true)}
+                onHoverEnd={() => setShouldDisplayMenu(false)}
               >
-                <SizePopover onResize={onResize} />
-                <IconButton
-                  aria-label="Remove item"
-                  size="sm"
-                  icon={<TrashSimple />}
-                  borderRadius="md"
-                  variant="ghost"
-                  onClick={() => onRemove()}
-                />
-              </HStack>
-            </MotionBox>
+                <HStack
+                  bgColor="gray.900"
+                  borderRadius="lg"
+                  p={1}
+                  boxShadow="md"
+                  spacing={0}
+                >
+                  <SizePopover
+                    onResize={(w, h) => {
+                      setShouldDisplayMenu(false)
+                      onResize(w, h)
+                    }}
+                  />
+                  <IconButton
+                    aria-label="Remove item"
+                    size="sm"
+                    icon={<TrashSimple />}
+                    borderRadius="md"
+                    variant="ghost"
+                    onClick={() => onRemove()}
+                  />
+                </HStack>
+              </MotionBox>
+            </Portal>
           )}
         </AnimatePresence>
       </Box>
@@ -186,7 +194,7 @@ const SizePopover = ({ onResize }: { onResize: Props["onResize"] }) => {
           "--popper-arrow-shadow-color": "transparent!important",
         }}
       >
-        <PopoverArrow borderColor="red" />
+        <PopoverArrow />
         <PopoverHeader
           borderBottom="none"
           textTransform="uppercase"
