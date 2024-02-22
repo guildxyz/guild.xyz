@@ -36,8 +36,8 @@ const MessagingSection = () => {
     web3InboxSubscription,
   } = useWeb3InboxSubscription()
 
-  const { isCheckingXmtpAccess, hasXmtpAccess } = useXmtpAccessChecking()
-  const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP()
+  const { isCheckingAccess, hasAccess, reCheck } = useXmtpAccessChecking()
+  const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP(reCheck)
 
   return (
     <>
@@ -56,9 +56,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {isWeb3InboxLoading || isCheckingXmtpAccess ? (
+        {isWeb3InboxLoading || isCheckingAccess ? (
           <SubscriptionPromptSkeleton />
-        ) : !web3InboxSubscription && !hasXmtpAccess ? (
+        ) : !web3InboxSubscription && !hasAccess ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />
@@ -101,7 +101,7 @@ const MessagingSection = () => {
                   isSigningWeb3Inbox ? "Check your wallet" : "Subscribing"
                 }
               >
-                {Boolean(web3InboxSubscription) ? "Subscribed" : "Sign"}
+                {Boolean(web3InboxSubscription) ? "Subscribed" : "Sign to subscribe"}
               </Button>
             </HStack>
             <Divider mb={3} />
@@ -110,18 +110,18 @@ const MessagingSection = () => {
                 XMTP
               </Text>
               <Button
-                isDisabled={Boolean(hasXmtpAccess)}
+                isDisabled={Boolean(hasAccess)}
                 variant="solid"
                 colorScheme="blue"
                 onClick={subscribeToXmtp}
-                isLoading={isCheckingXmtpAccess || isSubscribing}
+                isLoading={isCheckingAccess || isSubscribing}
                 loadingText={
-                  isCheckingXmtpAccess || isSubscribing
+                  isCheckingAccess || isSubscribing
                     ? "Check your wallet"
                     : "Subscribing"
                 }
               >
-                {Boolean(hasXmtpAccess) ? "Subscribed" : "Sign"}
+                {Boolean(hasAccess) ? "Subscribed" : "Enable identity"}
               </Button>
             </HStack>
           </ModalBody>
