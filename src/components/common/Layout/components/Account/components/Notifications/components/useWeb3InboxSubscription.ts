@@ -74,13 +74,13 @@ const useWeb3InboxSubscription = () => {
   }
 
   return {
-    web3InboxSubscription: subscriptionStatus,
-    isWeb3InboxLoading: isLoading || isPreparing || isAccountLoading,
-    web3InboxError: accountError ?? error,
-    isRegisteringWeb3Inbox: isRegistering,
-    isSigningWeb3Inbox: isSigning,
-    isSubscribingWeb3Inbox: isSubscribing,
-    subscribeWeb3Inbox: handleSubscribe,
+    subscriptionStatus,
+    isLoading: isLoading || isPreparing || isAccountLoading,
+    error: accountError ?? error,
+    isRegistering: isRegistering,
+    isSigning: isSigning,
+    isSubscribing: isSubscribing,
+    subscribe: handleSubscribe,
   }
 }
 

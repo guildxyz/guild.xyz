@@ -27,5 +27,5 @@ export const useSubscribeToXMTP = (onSuccess: () => void) => {
         description: "Successfully subscribed to Guild messages via XMTP",
       }),
   })
-  return { subscribeToXMTP: onsubmit, isSubscribing: isLoading, error }
+  return { subscribe: onsubmit, isSubscribing: isLoading, error }
 }

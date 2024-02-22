@@ -32,12 +32,12 @@ const Messages = dynamic(() => import("./Messages"))
 const MessagingSection = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const {
-    isRegisteringWeb3Inbox,
-    isSigningWeb3Inbox,
-    isSubscribingWeb3Inbox,
-    isWeb3InboxLoading,
-    subscribeWeb3Inbox,
-    web3InboxSubscription,
+    isRegistering,
+    isSigning,
+    isSubscribing,
+    isLoading,
+    subscriptionStatus,
+    subscribe,
   } = useWeb3InboxSubscription()
   const { canMessageStatic } = useCanMessage()
   const showErrorToast = useShowErrorToast()
@@ -56,7 +56,8 @@ const MessagingSection = () => {
     checkXMTPAccess()
   }, [])
 
-  const { subscribeToXMTP, isSubscribing } = useSubscribeToXMTP(checkXMTPAccess)
+  const { subscribe: subscribeToXMTP, isSubscribing: isSubscribingToXMTP } =
+    useSubscribeToXMTP(checkXMTPAccess)
 
   return (
     <>
@@ -79,9 +80,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {isWeb3InboxLoading || isCheckingXMTPAccess ? (
+        {isLoading || isCheckingXMTPAccess ? (
           <SubscriptionPromptSkeleton />
-        ) : !web3InboxSubscription && !hasXMTPAccess ? (
+        ) : !subscriptionStatus && !hasXMTPAccess ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />
@@ -111,20 +112,14 @@ const MessagingSection = () => {
                 Web3Inbox
               </Text>
               <Button
-                isDisabled={Boolean(web3InboxSubscription)}
+                isDisabled={Boolean(subscriptionStatus)}
                 variant="solid"
                 colorScheme="blue"
-                onClick={subscribeWeb3Inbox}
-                isLoading={
-                  isSigningWeb3Inbox ||
-                  isRegisteringWeb3Inbox ||
-                  isSubscribingWeb3Inbox
-                }
-                loadingText={
-                  isSigningWeb3Inbox ? "Check your wallet" : "Subscribing"
-                }
+                onClick={subscribe}
+                isLoading={isSigning || isRegistering || isSubscribing}
+                loadingText={isSigning ? "Check your wallet" : "Subscribing"}
               >
-                {Boolean(web3InboxSubscription) ? "Subscribed" : "Sign to subscribe"}
+                {Boolean(subscriptionStatus) ? "Subscribed" : "Sign to subscribe"}
               </Button>
             </HStack>
             <Divider mb={3} />
@@ -137,9 +132,9 @@ const MessagingSection = () => {
                 variant="solid"
                 colorScheme="blue"
                 onClick={subscribeToXMTP}
-                isLoading={isCheckingXMTPAccess || isSubscribing}
+                isLoading={isCheckingXMTPAccess || isSubscribingToXMTP}
                 loadingText={
-                  isCheckingXMTPAccess || isSubscribing
+                  isCheckingXMTPAccess || isSubscribingToXMTP
                     ? "Check your wallet"
                     : "Subscribing"
                 }
