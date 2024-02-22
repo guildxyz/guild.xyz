@@ -12,17 +12,20 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { XMTPProvider } from "@xmtp/react-sdk"
+import { XMTPProvider, useCanMessage } from "@xmtp/react-sdk"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmit from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareOut, Gear } from "phosphor-react"
+import { useEffect } from "react"
+import { useAccount } from "wagmi"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
 import NotificationsSection from "./components/NotificationsSection"
 import { useWeb3InboxSubscription } from "./components/web3Inbox"
 import { useSubscribeToXMTP } from "./hooks/useSubscribeToXMTP"
-import { useXmtpAccessChecking } from "./hooks/useXmtpAccessChecking"
 
 const Messages = dynamic(() => import("./Messages"))
 
@@ -36,9 +39,24 @@ const MessagingSection = () => {
     subscribeWeb3Inbox,
     web3InboxSubscription,
   } = useWeb3InboxSubscription()
+  const { canMessageStatic } = useCanMessage()
+  const showErrorToast = useShowErrorToast()
 
-  const { isCheckingAccess, hasAccess, reCheck } = useXmtpAccessChecking()
-  const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP(reCheck)
+  const { address } = useAccount()
+
+  const {
+    isLoading: isCheckingXmtpAccess,
+    onSubmit: checkXmtpAccess,
+    response: hasXmtpAccess,
+  } = useSubmit(async () => canMessageStatic(address), {
+    onError: () => showErrorToast("Error happened during checking XMTP access"),
+  })
+
+  useEffect(() => {
+    checkXmtpAccess()
+  }, [])
+
+  const { subscribeToXmtp, isSubscribing } = useSubscribeToXMTP(checkXmtpAccess)
 
   return (
     <>
@@ -61,9 +79,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {isWeb3InboxLoading || isCheckingAccess ? (
+        {isWeb3InboxLoading || isCheckingXmtpAccess ? (
           <SubscriptionPromptSkeleton />
-        ) : !web3InboxSubscription && !hasAccess ? (
+        ) : !web3InboxSubscription && !hasXmtpAccess ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />
@@ -115,18 +133,18 @@ const MessagingSection = () => {
                 XMTP
               </Text>
               <Button
-                isDisabled={Boolean(hasAccess)}
+                isDisabled={Boolean(hasXmtpAccess)}
                 variant="solid"
                 colorScheme="blue"
                 onClick={subscribeToXmtp}
-                isLoading={isCheckingAccess || isSubscribing}
+                isLoading={isCheckingXmtpAccess || isSubscribing}
                 loadingText={
-                  isCheckingAccess || isSubscribing
+                  isCheckingXmtpAccess || isSubscribing
                     ? "Check your wallet"
                     : "Subscribing"
                 }
               >
-                {Boolean(hasAccess) ? "Subscribed" : "Enable identity"}
+                {Boolean(hasXmtpAccess) ? "Subscribed" : "Enable identity"}
               </Button>
             </HStack>
           </ModalBody>
