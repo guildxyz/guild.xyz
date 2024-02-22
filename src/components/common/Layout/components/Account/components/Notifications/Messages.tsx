@@ -22,7 +22,7 @@ import { ArrowRight } from "phosphor-react"
 import { useRef } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { useAccount } from "wagmi"
-import { WEB3_INBOX_INIT_PARAMS } from "./components/web3Inbox"
+import { WEB3_INBOX_INIT_PARAMS } from "./components/useWeb3InboxSubscription"
 
 const GUILD_NOTIFICATION_ICON = "/requirementLogos/guild.png"
 

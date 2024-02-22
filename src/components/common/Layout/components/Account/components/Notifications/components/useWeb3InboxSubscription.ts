@@ -1,7 +1,6 @@
 import { useToast } from "@chakra-ui/react"
 import {
   initWeb3InboxClient,
-  useNotifications,
   usePrepareRegistration,
   useRegister,
   useSubscribe,
@@ -18,7 +17,7 @@ export const WEB3_INBOX_INIT_PARAMS = {
   allApps: process.env.NODE_ENV !== "production",
 }
 
-export const useWeb3InboxSubscription = () => {
+const useWeb3InboxSubscription = () => {
   const [isSigning, setIsSigning] = useState(false)
 
   useEffect(() => {
@@ -84,3 +83,5 @@ export const useWeb3InboxSubscription = () => {
     subscribeWeb3Inbox: handleSubscribe,
   }
 }
+
+export default useWeb3InboxSubscription

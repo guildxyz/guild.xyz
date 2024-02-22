@@ -24,7 +24,7 @@ import { useAccount } from "wagmi"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
 import NotificationsSection from "./components/NotificationsSection"
-import { useWeb3InboxSubscription } from "./components/web3Inbox"
+import useWeb3InboxSubscription from "./components/useWeb3InboxSubscription"
 import { useSubscribeToXMTP } from "./hooks/useSubscribeToXMTP"
 
 const Messages = dynamic(() => import("./Messages"))
