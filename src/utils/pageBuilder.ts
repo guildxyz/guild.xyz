@@ -5,7 +5,7 @@ const GRID_W = 6
 const move = (items: Item[], item: Item, moveTo: Item["desktop"]) => {
   item.desktop = moveTo
 
-  const itemIndex = items.map((_item) => _item.id).findIndex((id) => id === item.id)
+  // const itemIndex = items.map((_item) => _item.id).findIndex((id) => id === item.id)
 
   for (let i = 0; i < items.length; i++) {
     const otherItem = items[i]
@@ -51,7 +51,8 @@ export const handleWrap = (position: Item["desktop"]) => {
     return {
       ...position,
       x: 1,
-      y: position.y + 1,
+      y:
+        position.y + (typeof position.height === "number" ? position.height : 1) - 1,
     }
 
   return {
