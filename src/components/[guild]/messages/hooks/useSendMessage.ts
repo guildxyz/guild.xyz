@@ -1,13 +1,13 @@
 import { Client } from "@xmtp/react-sdk"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import { useUsersXMTPKeys } from "components/common/Layout/components/Account/components/Notifications/components/useUsersXMTPKeys"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import { useWalletClient } from "wagmi"
 import useGuildMessages, { Message } from "./useGuildMessages"
+import { useUsersXMTPKeys } from "./useUsersXMTPKeys"
 
 const useSendMessage = (onSuccess?: () => void) => {
   const { id } = useGuild()

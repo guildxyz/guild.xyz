@@ -20,9 +20,9 @@ import { ArrowSquareOut, Gear } from "phosphor-react"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
 import NotificationsSection from "./components/NotificationsSection"
-import { useSubscribeToXMTP } from "./components/useSubscribeToXMTP"
 import { useWeb3InboxSubscription } from "./components/web3Inbox"
-import { useXmtpAccessChecking } from "./components/useXmtpAccessChecking"
+import { useSubscribeToXMTP } from "./hooks/useSubscribeToXMTP"
+import { useXmtpAccessChecking } from "./hooks/useXmtpAccessChecking"
 
 const Messages = dynamic(() => import("./Messages"))
 
