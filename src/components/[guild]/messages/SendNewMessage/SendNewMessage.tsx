@@ -39,7 +39,7 @@ const SenderTypes: Record<MessageProtocol, SenderType> = {
   XMTP: "USER",
 }
 
-type SendMessageForm = {
+export type SendMessageForm = {
   protocol: MessageProtocol
   destination: MessageDestination
   roleIds: number[]
