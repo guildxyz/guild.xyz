@@ -18,7 +18,7 @@ export const useSubscribeToXMTP = (onSuccess: () => void) => {
   }
 
   const { error, isLoading } = useSubmit(subscribeToXMTP, {
-    onError: (error) => {
+    onError: () => {
       showErrorToast("Couldn't subscribe to Guild messages")
     },
     onSuccess: () =>
