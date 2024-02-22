@@ -86,14 +86,11 @@ const calculateGridPosition = (
   relativeMouseY: number,
   itemPosition: Item["desktop"]
 ) => {
-  const itemWidthWithPadding =
-    BASE_SIZE * itemPosition.width + (itemPosition.width - 1) * PADDING
-  const itemHeight =
-    typeof itemPosition.height === "number" ? itemPosition.height : 1
-  const itemHeightWithPadding = BASE_SIZE * itemHeight + (itemHeight - 1) * PADDING
-
-  const x = Math.min(Math.floor(relativeMouseX / itemWidthWithPadding) + 1, 6)
-  const y = Math.floor(relativeMouseY / itemHeightWithPadding) + 1
+  const x = Math.min(
+    Math.floor(relativeMouseX / BASE_SIZE) + 1,
+    6 - (itemPosition.width - 1)
+  )
+  const y = Math.floor(relativeMouseY / BASE_SIZE) + 1
 
   return { x, y }
 }
@@ -149,9 +146,7 @@ const PageBuilder = () => {
 
     if (!placeholderPosition) setPlaceholderPosition(itemToMove.desktop)
 
-    const newPosition = elementPositionToXY(element, {
-      ...itemToMove.desktop,
-    })
+    const newPosition = elementPositionToXY(element, { ...itemToMove.desktop })
 
     // Early return, so we don't need to calculate anything for the grid & we also don't need to set the placeholder state
     if (
