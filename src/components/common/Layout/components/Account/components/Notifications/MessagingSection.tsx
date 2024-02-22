@@ -46,12 +46,16 @@ const MessagingSection = () => {
           <>
             Messages
             <IconButton
+              onClick={onOpen}
+              icon={<Icon as={Gear} />}
               aria-label="messagingSettings"
-              icon={<Icon as={Gear} boxSize="1.1em" />}
+              color={"whiteAlpha.600"}
               variant={"ghost"}
               borderRadius={"full"}
-              ml={1}
-              onClick={onOpen}
+              minWidth={0}
+              height={"auto"}
+              marginLeft={1}
+              marginTop={"-1px"}
             />
           </>
         }
