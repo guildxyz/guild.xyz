@@ -10,12 +10,11 @@ export const useSubscribeToXMTP = (onSuccess: () => void) => {
 
   const { data: signer } = useWalletClient()
 
-  const subscribeToXMTP = async () => {
-    await Client.create(signer, {
+  const subscribeToXMTP = () =>
+    Client.create(signer, {
       persistConversations: false,
       env: "production",
     }).then(() => onSuccess())
-  }
 
   const { error, isLoading } = useSubmit(subscribeToXMTP, {
     onError: () => {
