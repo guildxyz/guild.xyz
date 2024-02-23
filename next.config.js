@@ -18,8 +18,6 @@ const nextConfig = {
 
     return config
   },
-  // Once we upgrade to a newer next.js version, this probably won't be needed, as SWC is the default minifier in newer versions
-  swcMinify: true,
   productionBrowserSourceMaps: true,
   images: {
     dangerouslyAllowSVG: true,
