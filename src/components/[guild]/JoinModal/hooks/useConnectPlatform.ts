@@ -1,14 +1,12 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useEffect } from "react"
-import { PlatformName } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import { PlatformName, User } from "types"
+import fetcher from "utils/fetcher"
 import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
@@ -57,10 +55,8 @@ const useConnectPlatform = (
 
   const prevAuthData = usePrevious(authData)
 
-  const { onSubmit, isLoading, response } = useConnect({
-    onSuccess: () => {
-      onSuccess?.()
-    },
+  const { onSubmit, isLoading, response } = useConnect(() => {
+    onSuccess?.()
   })
 
   useEffect(() => {
@@ -85,31 +81,22 @@ const useConnectPlatform = (
   }
 }
 
-const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) => {
+const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
   const { showPlatformMergeAlert } = useWeb3ConnectionManager()
 
   const { mutate: mutateUser, id } = useUser()
 
-  const fetcherWithSign = useFetcherWithSign()
+  const submit = (signedValidation: SignedValidation) => {
+    const platformName =
+      JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
+      "UNKNOWN_PLATFORM"
 
-  const submit = ({ signOptions = undefined, ...payload }) => {
-    const platformName = payload?.platformName ?? "UNKNOWN_PLATFORM"
-
-    const userId =
-      id ??
-      signOptions?.address?.toLowerCase() ??
-      signOptions?.walletClient?.account?.address?.toLowerCase()
-
-    return fetcherWithSign([
-      `/v2/users/${userId}/platform-users`,
-      {
-        signOptions,
-        method: "POST",
-        body: payload,
-      },
-    ])
+    return fetcher(`/v2/users/${id}/platform-users`, {
+      method: "POST",
+      ...signedValidation,
+    })
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -129,7 +116,7 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
       })
   }
 
-  return useSubmit(submit, {
+  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
     onSuccess: (newPlatformUser) => {
       // captureEvent("Platform connection", { platformName })
       mutateUser(
@@ -145,17 +132,9 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         { revalidate: false }
       )
 
-      useSubmitOptions?.onSuccess?.()
+      onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
-      try {
-        useSubmitOptions?.onError?.([platformName, rawError])
-      } catch (err) {
-        if (err instanceof StopExecution) {
-          return
-        }
-      }
-
       const errorObject = {
         error: undefined,
         isAutoConnect: undefined,

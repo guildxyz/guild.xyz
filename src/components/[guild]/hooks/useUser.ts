@@ -37,7 +37,7 @@ const useUser = (
   }
 }
 
-export type PublicUser = {
+type PublicUser = {
   id: number
   publicKey?: string
   captchaVerifiedSince?: string
@@ -57,9 +57,7 @@ const useUserPublic = (
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
 
-  const idToUseRaw = userIdOrAddress ?? address
-  const idToUse =
-    typeof idToUseRaw === "string" ? idToUseRaw.toLowerCase() : idToUseRaw
+  const idToUse = userIdOrAddress ?? address
 
   const { data, mutate, isLoading, error } = useSWRImmutable<PublicUser>(
     idToUse ? `/v2/users/${idToUse}/profile` : null,

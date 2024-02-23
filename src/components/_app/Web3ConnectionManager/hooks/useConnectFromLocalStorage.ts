@@ -10,18 +10,9 @@ const useConnectFromLocalStorage = () => {
   const { keyPair } = useUserPublic()
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
-  const { onSubmit } = useConnect(
-    {
-      onSuccess: () => {
-        toast({
-          status: "success",
-          title: "Success",
-          description: "Platform connected",
-        })
-      },
-    },
-    true
-  )
+  const { onSubmit } = useConnect(() => {
+    toast({ status: "success", title: "Success", description: "Platform connected" })
+  }, true)
   const { platformUsers } = useUser()
 
   useEffect(() => {

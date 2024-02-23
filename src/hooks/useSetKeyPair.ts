@@ -7,7 +7,6 @@ import { mutate } from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
 import { recaptchaAtom } from "utils/recaptcha"
 import useSubmit from "./useSubmit"
-import { SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
 
 /**
  * This is a generic RPC internal error code, but we are only using it for testing
@@ -63,7 +62,7 @@ const generateKeyPair = async () => {
   }
 }
 
-const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
+const useSetKeyPair = () => {
   const { captureEvent } = usePostHogContext()
   const { address } = useWeb3ConnectionManager()
   const fetcherWithSign = useFetcherWithSign()
@@ -73,11 +72,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const recaptcha = useAtomValue(recaptchaAtom)
 
   const setSubmitResponse = useSubmit(
-    async ({
-      signProps,
-    }: {
-      signProps?: Partial<SignProps>
-    } = {}) => {
+    async () => {
       const reCaptchaToken =
         !recaptcha || !!captchaVerifiedSince
           ? undefined
@@ -104,14 +99,13 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       }
 
       const userProfile = await fetcherWithSign([
-        `/v2/users/${signProps?.address ?? id ?? address}/public-key`,
+        `/v2/users/${id ?? address}/public-key`,
         {
           method: "POST",
           body,
           signOptions: {
             forcePrompt: true,
             msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
-            ...signProps,
           },
         },
       ])
@@ -130,9 +124,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
           revalidate: false,
         }
       )
-
       await mutate(
-        `/v2/users/${(signProps?.address ?? address)?.toLowerCase()}/profile`,
+        `/v2/users/${address}/profile`,
         {
           id: userProfile?.id,
           publicKey: userProfile?.publicKey,
@@ -143,12 +136,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
           revalidate: false,
         }
       )
-
-      return { keyPair: generatedKeys, user: userProfile }
     },
-
     {
-      ...submitOptions,
       onError: (error) => {
         console.error("setKeyPair error", error)
         if (
@@ -158,11 +147,6 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
           const trace = error?.stack || new Error().stack
           captureEvent(`Failed to set keypair`, { error, trace })
         }
-
-        submitOptions?.onError?.(error)
-      },
-      onSuccess: () => {
-        submitOptions?.onSuccess?.()
       },
     }
   )

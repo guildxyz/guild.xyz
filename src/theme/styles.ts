@@ -47,7 +47,7 @@ const styles = {
       borderTopLeftRadius: 0,
       borderBottomLeftRadius: 0,
     },
-    ".dotlottie-container:not(.keep-colors) path": {
+    ".dotlottie-container path": {
       fill: mode("currentColor", "white")(props),
       stroke: mode("currentColor", "white")(props),
       strokeWidth: "2px",

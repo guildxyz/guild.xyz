@@ -94,7 +94,7 @@ const ActivityLog = (): JSX.Element => {
             <AlertIcon />
             <Stack>
               <AlertDescription position="relative" top={1} fontWeight="semibold">
-                Sign in to see your activity log
+                Connect your wallet in order to see your activity log
               </AlertDescription>
             </Stack>
           </Alert>

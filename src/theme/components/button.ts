@@ -48,7 +48,7 @@ function variantSolid(props: Dict) {
     return {
       bg,
       color: "white",
-      _disabled: { opacity: 0.5 },
+      _disabled: { opacity: 0.8 },
       _hover: {
         bg: mode(`blackAlpha.500`, `whiteAlpha.300`)(props),
         _disabled: {
@@ -90,12 +90,12 @@ function variantSolid(props: Dict) {
   }
 
   if (c === "white") {
-    const bg = "white"
+    const bg = mode("gray.50", "white")(props)
 
     return {
       bg,
       color: "black",
-      _disabled: { opacity: 0.5 },
+      _disabled: { opacity: 0.8 },
       _hover: {
         bg: mode("gray.50", "gray.100")(props),
         _disabled: {
@@ -221,7 +221,7 @@ const styles = {
     xl: {
       fontSize: "lg",
       h: 14,
-      px: 6,
+      px: 8,
     },
   },
   variants: {
