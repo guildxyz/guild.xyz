@@ -7,10 +7,10 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { SignIn } from "@phosphor-icons/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import { SignIn } from "phosphor-react"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useUser from "./hooks/useUser"
 

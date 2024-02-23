@@ -12,6 +12,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { ArrowLeft, Check, PencilSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RolePlatforms from "components/[guild]/RolePlatforms"
 import SetVisibility from "components/[guild]/SetVisibility"
@@ -31,7 +32,6 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Logic, Requirement, RolePlatform, Visibility } from "types"

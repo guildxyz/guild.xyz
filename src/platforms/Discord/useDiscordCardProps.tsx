@@ -1,7 +1,7 @@
 import { Icon, Text } from "@chakra-ui/react"
+import { Info } from "@phosphor-icons/react"
 import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import { useAtom } from "jotai"
-import { Info } from "phosphor-react"
 import { GuildPlatform, PlatformName } from "types"
 
 const useDiscordCardProps = (guildPlatform: GuildPlatform) => {

@@ -1,15 +1,15 @@
 import { Center, Spinner, ThemingProps } from "@chakra-ui/react"
-import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
-import dynamic from "next/dynamic"
 import {
   DiscordLogo,
   EnvelopeSimple,
   GithubLogo,
   GoogleLogo,
-  IconProps,
   PencilSimpleLine,
   TelegramLogo,
-} from "phosphor-react"
+  type IconProps,
+} from "@phosphor-icons/react"
+import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
+import dynamic from "next/dynamic"
 import React, {
   ComponentType,
   ForwardRefExoticComponent,

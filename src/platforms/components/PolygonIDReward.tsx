@@ -1,4 +1,5 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
+import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
@@ -10,7 +11,6 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMintPolygonIDProofContext } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
 import platforms from "platforms/platforms"

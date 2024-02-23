@@ -12,9 +12,9 @@ import {
   Text,
   Tr,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, Question } from "@phosphor-icons/react"
 import { CHAIN_CONFIG } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { ArrowSquareOut, Question } from "phosphor-react"
 import { formatUnits } from "viem"
 import useGuildPinFee from "../hooks/useGuildPinFee"
 import FeesTable from "./FeesTable"
