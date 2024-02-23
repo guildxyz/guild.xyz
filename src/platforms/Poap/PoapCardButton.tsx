@@ -2,6 +2,7 @@ import { Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import Link from "next/link"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
@@ -24,9 +25,14 @@ const PoapCardButton = ({ platform }: Props) => {
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
   const { isAvailable: isButtonEnabled } = getRolePlatformTimeframeInfo(rolePlatform)
+  const { claimed } = useClaimedReward(rolePlatform.id)
 
   const buttonLabel =
-    !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
+    !rolePlatform?.capacity && isAdmin
+      ? "Upload mint links"
+      : claimed
+      ? "View POAP"
+      : "Claim POAP"
 
   const buttonProps = {
     isDisabled: !isButtonEnabled,
