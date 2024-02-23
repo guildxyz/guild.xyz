@@ -39,7 +39,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
   )?.id
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
-  const { claimed } = useClaimedReward(rolePlatformId)
+  const { claimed, isLoading: isClaimedChecking } = useClaimedReward(rolePlatformId)
 
   const {
     onSubmit,
@@ -50,7 +50,8 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatformId)
 
-  const isLoading = isAccessLoading || isPreparing || isClaimLoading
+  const isLoading =
+    isAccessLoading || isPreparing || isClaimLoading || isClaimedChecking
 
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
 
@@ -60,6 +61,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         size="lg"
         w="full"
         isLoading={isLoading}
+        colorScheme={!rest.isDisabled ? "green" : "gray"}
         loadingText={
           isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
         }
