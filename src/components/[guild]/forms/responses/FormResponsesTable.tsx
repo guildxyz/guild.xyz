@@ -7,7 +7,7 @@ import {
 import CrmTableWrapper from "components/[guild]/crm/CRMTable/CrmTableWrapper"
 import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
 import Identities from "components/[guild]/crm/Identities"
-import IdentitiesExpansionToggle from "components/[guild]/crm/IdentitiesExpansionToggle"
+import { IDENTITIES_COLLAPSED_STYLE } from "components/[guild]/crm/IdentitiesExpansionToggle"
 import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
 import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import {
@@ -101,7 +101,7 @@ const FormResponsesTable = ({ form }) => {
         header: ({ column }) => (
           <HStack spacing="0">
             <IdentitiesSearch column={column} />
-            <IdentitiesExpansionToggle />
+            <style>{IDENTITIES_COLLAPSED_STYLE}</style>
           </HStack>
         ),
       }),
