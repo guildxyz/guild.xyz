@@ -8,7 +8,7 @@ import GuildSelect from "requirements/common/GuildSelect"
 import parseFromObject from "utils/parseFromObject"
 import GuildAdmin from "./components/GuildAdmin"
 import MinGuilds from "./components/MinGuilds"
-import Role from "./components/Role"
+import { Role, RoleRelative } from "./components/Role"
 import UserSince from "./components/UserSince"
 
 const guildRequirementTypes = [
@@ -16,6 +16,11 @@ const guildRequirementTypes = [
     label: "Have a role",
     value: "GUILD_ROLE",
     GuildRequirement: Role,
+  },
+  {
+    label: "Have a role (relative)",
+    value: "GUILD_ROLE_RELATIVE",
+    GuildRequirement: RoleRelative,
   },
   {
     label: "Account age",
@@ -39,19 +44,21 @@ const guildRequirementTypes = [
   },
 ]
 
-const GuildForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const { errors, touchedFields } = useFormState()
   const { resetField } = useFormContext()
 
   const selected = guildRequirementTypes.find((reqType) => reqType.value === type)
+  const isEditMode = !!field?.id
 
   useEffect(() => {
     if (!touchedFields?.data) return
     resetField(`${baseFieldPath}.data.guildId`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.minAmount`)
+    resetField(`${baseFieldPath}.data.maxAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
   }, [type])
 
@@ -66,6 +73,7 @@ const GuildForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={guildRequirementTypes}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

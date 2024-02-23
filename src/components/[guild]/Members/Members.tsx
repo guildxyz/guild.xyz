@@ -26,7 +26,12 @@ const Members = ({ members }: Props): JSX.Element => {
         if (b === ownerAddress) return 1
 
         // If an admin is behind anything other than an owner, sort it before "a"
-        if (adminsSet.has(b) && a !== ownerAddress) return 1
+        if (adminsSet.has(b) && a !== ownerAddress) {
+          if (adminsSet.has(a)) {
+            return a > b ? 1 : -1
+          }
+          return 1
+        }
 
         // Otherwise don't sort
         return -1

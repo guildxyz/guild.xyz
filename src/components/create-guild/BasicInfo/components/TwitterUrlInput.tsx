@@ -24,7 +24,7 @@ const TwitterUrlInput = (): JSX.Element => {
               ((v.includes("twitter.com") || v.includes("x.com")) &&
                 v.includes("/") &&
                 !!v.split("/").slice(-1)[0]?.length) ||
-              "Invalid Twitter URL",
+              "Invalid X URL",
             shouldUnregister: true,
           })}
         />

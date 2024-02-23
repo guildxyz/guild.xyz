@@ -2,6 +2,7 @@ import {
   Circle,
   Divider,
   HStack,
+  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -17,7 +18,13 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
-import { IdentityTag, PrivateSocialsTag, WalletTag } from "./Identities"
+import { PlatformAccountDetails, PlatformType } from "types"
+import {
+  deduplicateXPlatformUsers,
+  IdentityTag,
+  PrivateSocialsTag,
+  WalletTag,
+} from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
 
@@ -30,6 +37,8 @@ type Props = {
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
     row.original
+
+  const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
 
   const rolesColumn = row
     .getAllCells()
@@ -70,14 +79,19 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
             {areSocialsPrivate ? (
               <PrivateSocialsTag isOpen />
             ) : platformUsers.length ? (
-              platformUsers.map((platformAccount) => (
-                <IdentityTag
-                  key={platformAccount.platformId}
-                  platformAccount={platformAccount}
-                  fontWeight="semibold"
-                  isOpen
-                />
-              ))
+              filteredPlatformUsers.map((platformAccount) => {
+                const platformUrl = getPlatformUrl(platformAccount)
+
+                return (
+                  <LinkWrappedTag url={platformUrl} key={platformAccount.platformId}>
+                    <IdentityTag
+                      platformAccount={platformAccount}
+                      fontWeight="semibold"
+                      isOpen
+                    />
+                  </LinkWrappedTag>
+                )
+              })
             ) : (
               <Tag>No connected socials</Tag>
             )}
@@ -116,5 +130,29 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
     </Modal>
   )
 }
+
+const getPlatformUrl = (platformAccount: PlatformAccountDetails) => {
+  const { username, platformUserId: userId, platformId } = platformAccount
+
+  const platformUrls: Partial<Record<PlatformType, string | null>> = {
+    [PlatformType.TWITTER]: username ? `https://x.com/${username}` : null,
+    [PlatformType.TWITTER_V1]: username ? `https://x.com/${username}` : null,
+    [PlatformType.GITHUB]: username ? `https://github.com/${username}` : null,
+    [PlatformType.TELEGRAM]: username ? `https://t.me/${username}` : null,
+    [PlatformType.DISCORD]: userId ? `https://discord.com/users/${userId}` : null,
+    [PlatformType.GOOGLE]: username ? `mailto:${username}` : null,
+  }
+
+  return platformUrls[platformId]
+}
+
+const LinkWrappedTag = ({ url, children }) =>
+  !!url ? (
+    <Link variant="unstyled" isExternal href={url} _hover={{ opacity: 0.8 }}>
+      {children}
+    </Link>
+  ) : (
+    <>{children}</>
+  )
 
 export default MemberModal

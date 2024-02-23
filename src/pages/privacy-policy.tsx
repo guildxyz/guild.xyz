@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Heading,
   ListItem,
@@ -7,7 +8,6 @@ import {
   UnorderedList,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import Link from "components/common/Link"
 
 const Page = (): JSX.Element => (
   <Layout

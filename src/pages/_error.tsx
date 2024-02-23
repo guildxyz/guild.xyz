@@ -1,8 +1,8 @@
 import { Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
 import IntercomProvider, { useIntercom } from "components/_app/IntercomProvider"
+import Button from "components/common/Button"
 import Head from "next/head"
+import Link from "next/link"
 import { ChatCircle, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
 
@@ -51,8 +51,8 @@ const Page = ({ statusCode }): JSX.Element => {
         )}
         <Text fontSize="lg" mb={10} fontWeight="medium">
           {statusCode === 404
-            ? "Please contact us on our Discord server if you think you shouldn't see this page!"
-            : "Uh-oh! Something went wrong, please contact us on our Discord server if you think you shouldn't see this page!"}
+            ? "Please contact us on Intercom if you think you shouldn't see this page!"
+            : "Uh-oh! Something went wrong, please contact us on Intercom if you think you shouldn't see this page!"}
         </Text>
         <Stack
           direction={{ base: "column", sm: "row" }}
@@ -60,15 +60,16 @@ const Page = ({ statusCode }): JSX.Element => {
           w="full"
           justifyContent={"center"}
         >
-          <LinkButton
+          <Button
+            as={Link}
             href="/explorer"
             leftIcon={<House />}
-            colorScheme="DISCORD"
+            colorScheme="indigo"
             iconSpacing={3}
             size="lg"
           >
             Go to home page
-          </LinkButton>
+          </Button>
           <Button
             leftIcon={<ChatCircle />}
             colorScheme="solid-gray"

@@ -8,6 +8,7 @@ import {
   useEditableControls,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
+import { useSetAtom } from "jotai"
 import { Check, PencilSimple } from "phosphor-react"
 import {
   MutableRefObject,
@@ -20,6 +21,7 @@ import { useController, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import { useRequirementContext } from "./RequirementContext"
+import { showEditableImageAtom } from "./RequirementImageEditor"
 
 const RequirementNameEditor = ({
   baseFieldPath,
@@ -37,6 +39,12 @@ const RequirementNameEditor = ({
   } = useFormContext()
 
   const customName = useWatch({ name: `${baseFieldPath}.data.customName` })
+
+  const setReqId = useSetAtom(showEditableImageAtom)
+
+  useEffect(() => {
+    setReqId(isEditing ? baseFieldPath : "")
+  }, [isEditing])
 
   if (isEditing)
     return (
@@ -124,6 +132,7 @@ const RequirementNameEditorWrapper = ({
   const { field } = useController({
     name: `${baseFieldPath}.data.customName`,
     rules: REQUIREMENTS[type].customNameRules,
+    shouldUnregister: true,
   })
 
   useEffect(() => {

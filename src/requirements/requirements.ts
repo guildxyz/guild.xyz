@@ -35,7 +35,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Nft/NftForm")
     ),
     types: ["ERC721", "ERC1155", "NOUNS"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -48,7 +47,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Token/TokenForm")
     ),
     types: ["ERC20", "COIN"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -61,7 +59,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Allowlist/AllowlistForm")
     ),
     types: ["ALLOWLIST"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -85,7 +82,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/ContractState/ContractStateForm")
     ),
     types: ["CONTRACT"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -142,6 +138,7 @@ export const REQUIREMENTS_DATA = [
     types: [
       "GUILD",
       "GUILD_ROLE",
+      "GUILD_ROLE_RELATIVE",
       "GUILD_MINGUILDS",
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
@@ -171,7 +168,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/VisitLink/VisitLinkForm")
     ),
     types: ["LINK_VISIT"],
-    isCustomizable: true,
     customNameRules: {
       pattern: {
         value: VISIT_LINK_REGEX,
@@ -192,8 +188,20 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/twitter.svg",
-    name: "Twitter",
+    icon: platforms.FORM.icon,
+    name: platforms.FORM.name,
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Form/FormRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Form/FormForm")
+    ),
+    types: ["FORM_SUBMISSION"],
+    isNegatable: true,
+  },
+  {
+    icon: "/requirementLogos/x.svg",
+    name: "X",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Twitter/TwitterRequirement")
     ),
@@ -202,20 +210,25 @@ export const REQUIREMENTS_DATA = [
     ),
     types: [
       "TWITTER",
-      "TWITTER_NAME",
-      "TWITTER_BIO",
-      "TWITTER_FOLLOW",
-      "TWITTER_FOLLOW_V2",
-      "TWITTER_FOLLOWED_BY",
-      "TWITTER_FOLLOWER_COUNT",
-      "TWITTER_LIKE",
-      "TWITTER_LIKE_V2",
-      "TWITTER_RETWEET",
-      "TWITTER_RETWEET_V2",
-      "TWITTER_LIST_MEMBER",
-      "TWITTER_LIST_FOLLOW",
       "TWITTER_ACCOUNT_AGE",
       "TWITTER_ACCOUNT_AGE_RELATIVE",
+      "TWITTER_ACCOUNT_PROTECTED",
+      "TWITTER_ACCOUNT_VERIFIED",
+      "TWITTER_BIO",
+      "TWITTER_FOLLOW",
+      "TWITTER_FOLLOWED_BY",
+      "TWITTER_FOLLOWER_COUNT",
+      "TWITTER_FOLLOWING_COUNT",
+      "TWITTER_FOLLOW_V2",
+      "TWITTER_LIKE",
+      "TWITTER_LIKE_COUNT",
+      "TWITTER_LIKE_V2",
+      "TWITTER_LIST_FOLLOW",
+      "TWITTER_LIST_MEMBER",
+      "TWITTER_NAME",
+      "TWITTER_RETWEET",
+      "TWITTER_RETWEET_V2",
+      "TWITTER_TWEET_COUNT",
     ],
     isPlatform: true,
     isNegatable: true,
@@ -281,7 +294,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/PolygonID/PolygonIDForm")
     ),
     types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -330,7 +342,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/EthereumAttestation/EthereumAttestationForm")
     ),
     types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -429,8 +440,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Mirror/MirrorForm")
     ),
-    types: ["MIRROR", "MIRROR_COLLECT"],
-    isCustomizable: true,
+    types: ["MIRROR_COLLECT", "MIRROR"],
     isNegatable: true,
   },
   {
@@ -462,7 +472,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Disco/DiscoForm")
     ),
     types: ["DISCO"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -498,8 +507,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Fuel/FuelForm")
     ),
-    types: ["FUEL", "FUEL_BALANCE"],
-    isCustomizable: true,
+    types: ["FUEL", "FUEL_BALANCE", "FUEL_TRANSACTIONS"],
     isNegatable: true,
   },
   {
@@ -536,7 +544,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Yup/YupForm")
     ),
     types: ["YUP"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -561,7 +568,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Optimism/OptimismForm")
     ),
     types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -574,7 +580,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Rep3/Rep3Form")
     ),
     types: ["REP3"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -641,7 +646,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Orange/OrangeForm")
     ),
     types: ["ORANGE"],
-    isCustomizable: true,
     isNegatable: true,
   },
   {
@@ -654,7 +658,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Cask/CaskForm")
     ),
     types: ["CASK"],
-    isCustomizable: true,
     isNegatable: true,
   },
 ] as const

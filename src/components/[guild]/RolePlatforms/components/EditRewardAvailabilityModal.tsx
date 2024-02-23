@@ -34,6 +34,7 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   platformType: PlatformName
+  claimedCount?: number
   defaultValues?: RolePlatformAvailabilityForm
   isLoading?: boolean
   onDone: (data: RolePlatformAvailabilityForm) => void
@@ -52,19 +53,20 @@ const getShortDate = (isoDate: string): string | undefined => {
   return isoDate.split(/:\d{2}\.\d{3}Z/)[0]
 }
 
-const datetimeLocalToIsoString = (datetimeLocal: string): string | undefined => {
-  if (!datetimeLocal) return undefined
+const datetimeLocalToIsoString = (datetimeLocal: string): string | null => {
+  if (!datetimeLocal) return null
 
   try {
     return new Date(datetimeLocal).toISOString()
   } catch {
-    return undefined
+    return null
   }
 }
 
 const EditRewardAvailabilityModal = ({
   isOpen,
   onClose,
+  claimedCount,
   platformType,
   defaultValues,
   isLoading,
@@ -138,7 +140,7 @@ const EditRewardAvailabilityModal = ({
                   }}
                 >
                   <NumberInput
-                    min={1}
+                    min={1 < claimedCount ? claimedCount : 1}
                     mx="px"
                     pb="px"
                     w="calc(100% - 2px)"

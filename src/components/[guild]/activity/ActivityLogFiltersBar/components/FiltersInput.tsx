@@ -3,8 +3,6 @@ import {
   HStack,
   IconButton,
   Input,
-  Stack,
-  Text,
   useColorModeValue,
   Wrap,
 } from "@chakra-ui/react"
@@ -12,16 +10,15 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import { CaretDown, X } from "phosphor-react"
 import { KeyboardEvent, useEffect, useRef, useState } from "react"
-import { useActivityLog } from "../../ActivityLogContext"
 import {
   isSupportedQueryParam,
-  SupportedSearchOption,
   SUPPORTED_SEARCH_OPTIONS,
+  SupportedSearchOption,
   useActivityLogFilters,
 } from "./ActivityLogFiltersContext"
 import Dropdown from "./Dropdown"
 import FilterTag from "./FilterTag"
-import Suggestion from "./Suggestion"
+import Suggestions from "./Suggestions"
 
 const getPositionerCSSVariables = (
   element: HTMLDivElement
@@ -33,8 +30,6 @@ const getPositionerCSSVariables = (
 }
 
 const FiltersInput = (): JSX.Element => {
-  const { isUserActivityLog } = useActivityLog()
-
   const rootBgColor = useColorModeValue("white", "blackAlpha.300")
 
   const { activeFilters, addFilter, removeLastFilter, clearFilters } =
@@ -115,13 +110,6 @@ const FiltersInput = (): JSX.Element => {
       setPositionerStyle(rawPositionerStyle)
   }, [rawPositionerStyle.transform])
 
-  const shouldRenderRoleSuggestions =
-    !isUserActivityLog && !activeFilters?.some((af) => af.filter === "roleId")
-
-  const shouldRenderRewardSuggestions =
-    !isUserActivityLog &&
-    !activeFilters?.some((af) => af.filter === "rolePlatformId")
-
   return (
     <>
       <Box
@@ -167,7 +155,13 @@ const FiltersInput = (): JSX.Element => {
               borderRadius="full"
               variant="ghost"
               onClick={() => {
-                clearFilters(["userId", "roleId", "rolePlatformId", "action"])
+                clearFilters([
+                  "userId",
+                  "roleId",
+                  "rolePlatformId",
+                  "action",
+                  "guildId",
+                ])
                 setInputValue("")
               }}
             />
@@ -187,60 +181,7 @@ const FiltersInput = (): JSX.Element => {
         </HStack>
       </Box>
       <Dropdown ref={positionerRef} {...positionerProps}>
-        <Stack spacing={0} {...contentProps}>
-          {!isUserActivityLog && (
-            <Suggestion
-              label="User"
-              {...getOptionProps({ label: "User", value: "userId" })}
-            >
-              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
-                Filter by wallet addresses
-              </Text>
-            </Suggestion>
-          )}
-
-          {isUserActivityLog && (
-            <Suggestion
-              label="Guild"
-              {...getOptionProps({ label: "Guild", value: "guildId" })}
-            >
-              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
-                Filter by guild
-              </Text>
-            </Suggestion>
-          )}
-
-          {shouldRenderRoleSuggestions && (
-            <Suggestion
-              label="Role"
-              {...getOptionProps({ label: "Role", value: "roleId" })}
-            >
-              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
-                Filter by role
-              </Text>
-            </Suggestion>
-          )}
-
-          {shouldRenderRewardSuggestions && (
-            <Suggestion
-              label="Reward"
-              {...getOptionProps({ label: "Reward", value: "rolePlatformId" })}
-            >
-              <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
-                Filter by reward
-              </Text>
-            </Suggestion>
-          )}
-
-          <Suggestion
-            label="Action"
-            {...getOptionProps({ label: "Action", value: "action" })}
-          >
-            <Text as="span" colorScheme="gray" fontWeight="normal" noOfLines={1}>
-              Filter by action
-            </Text>
-          </Suggestion>
-        </Stack>
+        <Suggestions contentProps={contentProps} getOptionProps={getOptionProps} />
       </Dropdown>
     </>
   )

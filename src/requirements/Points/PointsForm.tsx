@@ -32,6 +32,7 @@ const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
   const { id } = useGuild()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const { setValue } = useFormContext()
   const { errors } = useFormState()
@@ -53,6 +54,7 @@ const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={pointRequirementTypes}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

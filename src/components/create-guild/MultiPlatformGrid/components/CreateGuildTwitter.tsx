@@ -35,7 +35,7 @@ const CreateGuildTwitter = ({ isOpen, onClose }: Props) => {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Add twitter link</ModalHeader>
+        <ModalHeader>Add X link</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormProvider {...methodsTwitter}>

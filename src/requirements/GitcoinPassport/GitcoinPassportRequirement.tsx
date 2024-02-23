@@ -19,8 +19,8 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { RequirementButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import DataBlock from "components/common/DataBlock"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { CaretDown } from "phosphor-react"
 import { scorers } from "./components/Score"
 import SetupPassport from "./components/SetupPassport"
@@ -38,8 +38,8 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
   const requirement = useRequirementContext()
   const tableBgColor = useColorModeValue("white", "blackAlpha.300")
 
-  const { data: roleAccess } = useAccess(requirement.roleId)
-  const showCreatePassportButton = roleAccess?.errors?.some(
+  const { reqAccesses } = useRoleMembership(requirement.roleId)
+  const showCreatePassportButton = reqAccesses?.some(
     (err) =>
       err.requirementId === requirement.id &&
       err.errorType === "PLATFORM_NOT_CONNECTED"

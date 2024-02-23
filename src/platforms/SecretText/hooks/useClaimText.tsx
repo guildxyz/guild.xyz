@@ -9,27 +9,28 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { reactMarkdownComponents } from "components/[guild]/collect/components/RichTextDescription"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { useUserRewards } from "hooks/useUserRewards"
 import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { useClaimedReward } from "../../../hooks/useClaimedReward"
 
 type ClaimResponse = {
   uniqueValue: string
 }
 
-const joinFetcher = (signedValidation: SignedValdation) =>
-  fetcher(`/user/join`, signedValidation)
-
 const useClaimText = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
+  const { uniqueValue } = useClaimedReward(rolePlatformId)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -37,6 +38,11 @@ const useClaimText = (rolePlatformId: number) => {
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
+
+  const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
+  const hasUserReward = !!userRewards?.find(
+    (reward) => reward.rolePlatformId === rolePlatformId
+  )
 
   const triggerConfetti = useJsConfetti()
   const showErrorToast = useShowErrorToast()
@@ -47,7 +53,7 @@ const useClaimText = (rolePlatformId: number) => {
     () => cache.get(endpoint)?.data
   )
 
-  const claimFetcher = (signedValidation: SignedValdation) =>
+  const claimFetcher = (signedValidation: SignedValidation) =>
     fetcher(endpoint, {
       method: "POST",
       ...signedValidation,
@@ -88,20 +94,27 @@ const useClaimText = (rolePlatformId: number) => {
     }
   )
 
-  const join = useSubmitWithSign(joinFetcher, {
-    onSuccess: () => onClaimTextSubmit(),
-    onError: (error) =>
+  const {
+    error: membershipUpdateError,
+    isLoading: isMembershipUpdateLoading,
+    triggerMembershipUpdate,
+  } = useMembershipUpdate(
+    () => onClaimTextSubmit(),
+    (error) =>
       showErrorToast({
         error: "Couldn't check eligibility",
         correlationId: error.correlationId,
-      }),
-  })
+      })
+  )
 
   return {
-    error: claim.error ?? join.error,
-    response: responseFromCache ?? claim.response,
-    isLoading: claim.isLoading || join.isLoading,
-    onSubmit: () => join.onSubmit({ guildId }),
+    error: claim.error ?? membershipUpdateError,
+    response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
+    isPreparing: isUserRewardsLoading,
+    isLoading: claim.isLoading || isMembershipUpdateLoading,
+    onSubmit: hasUserReward
+      ? () => onClaimTextSubmit()
+      : () => triggerMembershipUpdate(),
     modalProps: {
       isOpen,
       onOpen,

@@ -1,6 +1,6 @@
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
+import Link from "next/link"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 import { useIsTabsStuck } from "../Tabs"
@@ -24,12 +24,13 @@ const TabButton = ({
     buttonColorScheme: "whiteAlpha",
   }
 
-  const Component = href ? LinkButton : Button
-
   return (
-    <Component
-      href={href}
-      colorScheme={"gray"}
+    <Button
+      {...(href && {
+        as: Link,
+        href,
+        prefetch: false,
+      })}
       {...(!isStuck && {
         color: textColor,
         colorScheme: buttonColorScheme,
@@ -54,7 +55,7 @@ const TabButton = ({
       {...rest}
     >
       {children}
-    </Component>
+    </Button>
   )
 }
 

@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Box,
   Heading,
@@ -8,7 +9,6 @@ import {
   UnorderedList,
 } from "@chakra-ui/react"
 import Layout from "components/common/Layout"
-import Link from "components/common/Link"
 
 const Page = (): JSX.Element => (
   <Layout title="General Terms and Conditions" maxWidth="container.md">
@@ -202,7 +202,7 @@ const Page = (): JSX.Element => (
               <ListItem>Telegram</ListItem>
               <ListItem>GitHub</ListItem>
               <ListItem>Google</ListItem>
-              <ListItem>Twitter</ListItem>
+              <ListItem>X</ListItem>
             </OrderedList>
           </ListItem>
 

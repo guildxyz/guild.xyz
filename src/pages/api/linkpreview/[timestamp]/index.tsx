@@ -1,24 +1,14 @@
-import { ImageResponse } from "@vercel/og"
+import loadGoogleFont from "fonts/loadGoogleFont"
+import { ImageResponse } from "next/og"
 import { GuildBase } from "types"
-import fetcher from "utils/fetcher"
 
 export const config = {
-  runtime: "experimental-edge",
-  unstable_allowDynamic: [
-    "/src/hooks/useLocalStorage.ts",
-    "/src/hooks/useTimeInaccuracy.ts",
-    "/src/utils/fetcher.ts",
-  ],
+  runtime: "edge",
 }
 
-const interFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Regular.woff", import.meta.url)
-).then((res) => res.arrayBuffer())
-const interBoldFont = fetch(
-  new URL("../../../../../public/fonts/Inter-Bold.woff", import.meta.url)
-).then((res) => res.arrayBuffer())
+const interFont = loadGoogleFont("Inter", "400")
 const dystopianFont = fetch(
-  new URL("../../../../../public/fonts/Dystopian-Black.woff", import.meta.url)
+  new URL("../../../../../src/fonts/Dystopian-Black.woff", import.meta.url)
 ).then((res) => res.arrayBuffer())
 
 const handler = async (req, _) => {
@@ -26,13 +16,13 @@ const handler = async (req, _) => {
   const baseUrl = `${protocol}//${host}`
 
   try {
-    const [guilds, interFontData, interBoldFontData, dystopianFontData] =
-      await Promise.all([
-        fetcher(`/v2/guilds`).catch((_) => []),
-        interFont,
-        interBoldFont,
-        dystopianFont,
-      ])
+    const [guilds, interFontData, dystopianFontData] = await Promise.all([
+      fetch(`${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds`)
+        .then((res) => res.json())
+        .catch((_) => []),
+      interFont,
+      dystopianFont,
+    ])
 
     return new ImageResponse(
       (
@@ -166,12 +156,6 @@ const handler = async (req, _) => {
             data: interFontData,
             style: "normal",
             weight: 400,
-          },
-          {
-            name: "Inter",
-            data: interBoldFontData,
-            style: "normal",
-            weight: 700,
           },
           {
             name: "Dystopian",

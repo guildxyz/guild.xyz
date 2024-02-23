@@ -5,19 +5,14 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { CaretDown } from "phosphor-react"
 import Star from "static/icons/star.svg"
-import { PlatformType } from "types"
+import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
 
 const LeaderboardPointsSelector = () => {
-  const { urlName, guildPlatforms } = useGuild()
+  const { urlName } = useGuild()
   const router = useRouter()
 
-  if (!guildPlatforms) return null
-
-  const pointsRewards = guildPlatforms.filter(
-    (gp) => gp.platformId === PlatformType.POINTS
-  )
-
+  const pointsRewards = useAccessedGuildPoints("ALL")
   if (pointsRewards.length < 2) return null
 
   const pointsRewardsData = pointsRewards.map((gp) => ({

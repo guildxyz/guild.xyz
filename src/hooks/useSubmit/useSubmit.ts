@@ -1,4 +1,5 @@
 import type { WalletUnlocked } from "@fuel-ts/wallet"
+import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useFuel from "hooks/useFuel"
@@ -8,7 +9,7 @@ import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { keccak256, stringToBytes, trim } from "viem"
+import { createPublicClient, http, keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
   WalletClient,
@@ -73,7 +74,7 @@ const useSubmit = <DataType, ResponseType>(
   }
 }
 
-export type SignedValdation = { signedPayload: string; validation: Validation }
+export type SignedValidation = { signedPayload: string; validation: Validation }
 
 export type Validation = {
   params: MessageParams
@@ -311,6 +312,29 @@ export const fuelSign = async ({
   return [payload, { params, sig }]
 }
 
+const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
+  Promise.all(
+    supportedChains.map(async (chain) => {
+      const publicClient = createPublicClient({
+        chain: CHAIN_CONFIG[chain],
+        transport: http(),
+      })
+
+      const bytecode = await publicClient
+        .getBytecode({
+          address,
+        })
+        .catch(() => null)
+
+      return [chain, bytecode && trim(bytecode) !== "0x"] as const
+    })
+  ).then(
+    (results) =>
+      new Set(
+        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain)
+      )
+  )
+
 export const sign = async ({
   publicClient,
   walletClient,
@@ -329,8 +353,18 @@ export const sign = async ({
     params.method = ValidationMethod.KEYPAIR
     sig = await signWithKeyPair(keyPair, params)
   } else {
-    const bytecode = await publicClient.getBytecode({ address }).catch(() => null)
-    const isSmartContract = bytecode && trim(bytecode) !== "0x"
+    const walletChains = await chainsOfAddressWithDeployedContract(address).then(
+      (set) => [...set]
+    )
+    const walletChainId =
+      walletChains.length > 0 ? Chains[walletChains[0]] : undefined
+
+    if (walletChainId) {
+      await walletClient.switchChain({ id: walletChainId })
+      params.chainId = `${walletChainId}`
+    }
+
+    const isSmartContract = walletChains.length > 0
 
     params.method = isSmartContract
       ? ValidationMethod.EIP1271

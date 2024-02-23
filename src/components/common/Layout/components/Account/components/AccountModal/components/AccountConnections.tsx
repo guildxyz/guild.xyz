@@ -40,12 +40,14 @@ const AccountConnections = () => {
       (platform) =>
         ![
           "POAP",
+          "TWITTER_V1",
           "CONTRACT_CALL",
           "EMAIL",
           "UNIQUE_TEXT",
           "TEXT",
           "POINTS",
           "POLYGON_ID",
+          "FORM",
         ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [

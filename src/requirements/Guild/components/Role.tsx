@@ -3,42 +3,57 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
+  Stack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
+import { ControlledRelativeTimeInput } from "../../../components/common/RelativeTimeInput"
+import { ControlledTimestampInput } from "../../../components/common/TimestampInput"
 import GuildSelect from "../../common/GuildSelect"
 
 type Props = {
   baseFieldPath: string
+  isRelative?: boolean
 }
 
-const Role = ({ baseFieldPath }: Props): JSX.Element => {
+const RoleBase = ({ baseFieldPath, isRelative = false }: Props): JSX.Element => {
   const {
     formState: { errors },
   } = useFormContext()
 
   const guildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
   const roleId = useWatch({ name: `${baseFieldPath}.data.roleId` })
+  const maxAmount = useWatch({ name: `${baseFieldPath}.data.maxAmount` })
 
   const { isLoading, roles } = useGuild(guildId)
 
-  const roleOptions =
-    roles?.map((role) => ({
-      img: role.imageUrl,
-      label: role.name,
-      value: role.id,
-    })) ?? []
+  const roleOptions = useMemo(
+    () =>
+      roles
+        ?.filter((role) => {
+          const createdAt = role.createdAt ? new Date(role.createdAt) : null
+          return !isRelative && maxAmount && createdAt
+            ? maxAmount >= createdAt
+            : true
+        })
+        .map((role) => ({
+          img: role.imageUrl,
+          label: role.name,
+          value: role.id,
+        })) ?? [],
+    [roles, isRelative, maxAmount]
+  )
 
   const selectedRole = roleOptions?.find((role) => role.value === roleId)
 
   return (
     <>
       <GuildSelect baseFieldPath={baseFieldPath} />
-
       <FormControl
         isRequired
         isDisabled={!guildId || isLoading}
@@ -77,4 +92,39 @@ const Role = ({ baseFieldPath }: Props): JSX.Element => {
   )
 }
 
-export default Role
+export const Role = ({ baseFieldPath }) => (
+  <>
+    <RoleBase baseFieldPath={baseFieldPath} />
+    <Stack w="full" gap={0}>
+      <FormLabel>Have a role since</FormLabel>
+      <ControlledTimestampInput fieldName={`${baseFieldPath}.data.maxAmount`} />
+    </Stack>
+  </>
+)
+
+export const RoleRelative = ({ baseFieldPath }) => {
+  const {
+    formState: { errors },
+  } = useFormContext()
+
+  return (
+    <>
+      <RoleBase baseFieldPath={baseFieldPath} isRelative />
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.maxAmount}
+      >
+        <FormLabel>Have a role for</FormLabel>
+
+        <ControlledRelativeTimeInput
+          isRequired
+          fieldName={`${baseFieldPath}.data.maxAmount`}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.data?.maxAmount?.message}
+        </FormErrorMessage>
+      </FormControl>
+    </>
+  )
+}

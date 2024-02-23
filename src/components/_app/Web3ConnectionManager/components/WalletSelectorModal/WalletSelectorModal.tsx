@@ -11,12 +11,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import MetaMaskOnboarding from "@metamask/onboarding"
+
+import { Link } from "@chakra-ui/next-js"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import Link from "components/common/Link"
+import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useFuel from "hooks/useFuel"
@@ -61,12 +62,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
 
-  // initialize metamask onboarding
-  const onboarding = useRef<MetaMaskOnboarding>()
-  if (typeof window !== "undefined") {
-    onboarding.current = new MetaMaskOnboarding()
-  }
-
   const closeModalAndSendAction = () => {
     onClose()
     setTimeout(() => {
@@ -76,6 +71,14 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const { keyPair, id, error: publicUserError } = useUserPublic()
   const set = useSetKeyPair()
+  const linkVaults = useLinkVaults()
+
+  useEffect(() => {
+    if (!!keyPair && isDelegateConnection) {
+      linkVaults.onSubmit()
+      setIsDelegateConnection(false)
+    }
+  }, [keyPair, isDelegateConnection])
 
   useEffect(() => {
     if (keyPair) onClose()

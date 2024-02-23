@@ -4,37 +4,28 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import AvailabilityTags, {
-  getTimeDiff,
-} from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformType } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 
 const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
 
   const state = useMemo(() => {
-    const startTimeDiff = getTimeDiff(platform?.startTime)
-    const endTimeDiff = getTimeDiff(platform?.endTime)
-
-    if (
-      startTimeDiff > 0 ||
-      endTimeDiff < 0 ||
-      (typeof platform?.capacity === "number" &&
-        platform?.capacity === platform?.claimedCount)
-    )
+    if (!getRolePlatformTimeframeInfo(platform).isAvailable)
       return {
-        tooltipLabel:
-          platform?.capacity === platform?.claimedCount
-            ? "All available POAPs have already been claimed"
-            : startTimeDiff > 0
-            ? "Claim hasn't started yet"
-            : "Claim already ended",
+        tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
         buttonProps: {
           isDisabled: true,
         },
@@ -58,16 +49,18 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
       label={
         <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
           {"Claim: "}
-          <LinkButton
+          <Button
+            as={Link}
             href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
             variant="link"
+            colorScheme="primary"
             rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
             {...state.buttonProps}
           >
             {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
-          </LinkButton>
+          </Button>
         </Tooltip>
       }
     >

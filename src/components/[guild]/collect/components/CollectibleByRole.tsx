@@ -1,7 +1,7 @@
+import { Link } from "@chakra-ui/next-js"
 import { HStack, Text } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
-import Link from "components/common/Link"
 import { Role } from "types"
 
 type Props = {

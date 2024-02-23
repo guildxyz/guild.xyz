@@ -1,5 +1,5 @@
+import { Link } from "@chakra-ui/next-js"
 import { Text } from "@chakra-ui/react"
-import Link from "components/common/Link"
 
 const GoogleTerms = () => (
   <Text colorScheme="gray" textAlign="center" fontSize="sm">

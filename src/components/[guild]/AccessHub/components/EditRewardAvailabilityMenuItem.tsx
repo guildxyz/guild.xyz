@@ -18,7 +18,7 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
   )
   const rolePlatform = roles
     .flatMap((role) => role.rolePlatforms)
-    .find((rp) => rp.guildPlatformId === guildPlatform.id)
+    .find((rp) => rp.guildPlatformId === guildPlatform?.id)
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -45,6 +45,7 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         platformType={PlatformType[guildPlatform.platformId] as PlatformName}
+        claimedCount={rolePlatform?.claimedCount}
         defaultValues={{
           capacity: rolePlatform?.capacity,
           startTime: rolePlatform?.startTime,

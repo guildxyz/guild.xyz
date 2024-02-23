@@ -1,4 +1,7 @@
-module.exports = {
+// @ts-check
+
+/** @type {import("next").NextConfig} */
+const nextConfig = {
   webpack(config, options) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -13,27 +16,6 @@ module.exports = {
       ],
     })
 
-    /**
-     * Filtering packages which can't be used in the edge runtime, to avoid build
-     * warnings and errors
-     */
-    if (options.isServer && options.nextRuntime === "edge") {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "@chakra-ui/anatomy": false,
-        "@chakra-ui/react": false,
-        "@chakra-ui/theme-tools": false,
-        "chakra-react-select": false,
-        stream: false,
-        "crypto-addr-codec": false,
-        "@ensdomains/address-encoder": false,
-        "decode-named-character-reference": false,
-        isows: false,
-        "@wagmi/connectors": false,
-        fuels: false,
-      }
-    }
-
     return config
   },
   // Once we upgrade to a newer next.js version, this probably won't be needed, as SWC is the default minifier in newer versions
@@ -41,20 +23,43 @@ module.exports = {
   productionBrowserSourceMaps: true,
   images: {
     dangerouslyAllowSVG: true,
-    domains: [
-      "storageapi.fleek.co",
-      "ipfs.fleek.co",
-      "cdn.discordapp.com",
-      "guild-xyz.mypinata.cloud",
-      "assets.poap.xyz",
-      "pbs.twimg.com",
-      "abs.twimg.com",
-      "localhost",
-      "guild.xyz",
-      "discord.com",
-      "img.evbuc.com",
-      "images.lumacdn.com",
-      "og.link3.to",
+    remotePatterns: [
+      {
+        hostname: "storageapi.fleek.co",
+      },
+      {
+        hostname: "ipfs.fleek.co",
+      },
+      {
+        hostname: "cdn.discordapp.com",
+      },
+      {
+        hostname: "guild-xyz.mypinata.cloud",
+      },
+      {
+        hostname: "assets.poap.xyz",
+      },
+      {
+        hostname: "pbs.twimg.com",
+      },
+      {
+        hostname: "abs.twimg.com",
+      },
+      {
+        hostname: "guild.xyz",
+      },
+      {
+        hostname: "discord.com",
+      },
+      {
+        hostname: "img.evbuc.com",
+      },
+      {
+        hostname: "images.lumacdn.com",
+      },
+      {
+        hostname: "og.link3.to",
+      },
     ],
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -164,6 +169,7 @@ module.exports = {
           destination: "https://app.posthog.com/:path*",
         },
       ],
+      fallback: [],
     }
   },
   async redirects() {
@@ -188,6 +194,11 @@ module.exports = {
       {
         source: "/guild/:path*",
         destination: "/:path*",
+        permanent: true,
+      },
+      {
+        source: "/buildonbase/:path*",
+        destination: "/base/:path*",
         permanent: true,
       },
       {
@@ -228,3 +239,5 @@ module.exports = {
     ]
   },
 }
+
+module.exports = nextConfig

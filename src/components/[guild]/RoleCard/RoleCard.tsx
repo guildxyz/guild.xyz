@@ -11,15 +11,16 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import ClientOnly from "components/common/ClientOnly"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import platforms from "platforms/platforms"
 import { memo, useEffect, useRef } from "react"
 import { PlatformType, Role, Visibility as VisibilityType } from "types"
 import RoleRequirements from "../Requirements"
-import useAccess from "../hooks/useAccess"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
-import useIsMember from "../hooks/useIsMember"
 import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
 import MemberCount from "./components/MemberCount"
@@ -39,8 +40,8 @@ const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 const RoleCard = memo(({ role }: Props) => {
   const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-  const { hasAccess } = useAccess(role.id)
+  const { isMember } = useMembership()
+  const { hasRoleAccess } = useRoleMembership(role.id)
   /**
    * If using defaultIsOpen: !hasAccess, the RewardIcons doesn't show initially in
    * collapsed state when going back to explorer -> coming back to guild until
@@ -63,9 +64,9 @@ const RoleCard = memo(({ role }: Props) => {
   }, [isOpen])
 
   useEffect(() => {
-    if (isMember && hasAccess && !isAdmin) onClose()
+    if (isMember && hasRoleAccess && !isAdmin) onClose()
     else onOpen()
-  }, [hasAccess, isMember])
+  }, [hasRoleAccess, isMember])
 
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 

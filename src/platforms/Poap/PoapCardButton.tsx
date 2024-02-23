@@ -1,11 +1,15 @@
-import { ButtonProps, Tooltip } from "@chakra-ui/react"
-import { getTimeDiff } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import { Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
-import LinkButton from "components/common/LinkButton"
+import Link from "next/link"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 
 type Props = {
   platform: GuildPlatform
@@ -19,28 +23,13 @@ const PoapCardButton = ({ platform }: Props) => {
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
-  const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
-  const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
-
-  const isButtonDisabled =
-    startTimeDiff > 0 ||
-    endTimeDiff < 0 ||
-    (typeof rolePlatform?.capacity === "number" &&
-      rolePlatform?.capacity === rolePlatform?.claimedCount)
-
-  const tooltipLabel =
-    typeof rolePlatform?.capacity === "number" &&
-    rolePlatform?.capacity === rolePlatform?.claimedCount
-      ? "All available POAPs have already been claimed"
-      : startTimeDiff > 0
-      ? "Claim hasn't started yet"
-      : "Claim already ended"
+  const { isAvailable: isButtonEnabled } = getRolePlatformTimeframeInfo(rolePlatform)
 
   const buttonLabel =
     !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
 
-  const buttonProps: Omit<ButtonProps, "as"> = {
-    isDisabled: isButtonDisabled,
+  const buttonProps = {
+    isDisabled: !isButtonEnabled,
     w: "full",
     colorScheme: platforms.POAP.colorScheme,
   }
@@ -48,20 +37,21 @@ const PoapCardButton = ({ platform }: Props) => {
   return (
     <>
       <Tooltip
-        isDisabled={!isButtonDisabled}
-        label={tooltipLabel}
+        isDisabled={isButtonEnabled}
+        label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >
-        {isButtonDisabled ? (
+        {!isButtonEnabled ? (
           <Button {...buttonProps}>{buttonLabel}</Button>
         ) : (
-          <LinkButton
+          <Button
+            as={Link}
             href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
             {...buttonProps}
           >
             {buttonLabel}
-          </LinkButton>
+          </Button>
         )}
       </Tooltip>
     </>

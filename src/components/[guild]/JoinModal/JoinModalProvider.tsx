@@ -1,7 +1,7 @@
 import { useDisclosure } from "@chakra-ui/react"
+import useMembership from "components/explorer/hooks/useMembership"
 import useClearUrlQuery from "hooks/useClearUrlQuery"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
-import useIsMember from "../hooks/useIsMember"
 import JoinModal from "./JoinModal"
 
 const JoinModalContext = createContext<() => void>(null)
@@ -9,7 +9,7 @@ const JoinModalContext = createContext<() => void>(null)
 const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {
   const query = useClearUrlQuery()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const isMember = useIsMember()
+  const { isMember } = useMembership()
 
   useEffect(() => {
     if (typeof query.join === "string") onOpen()

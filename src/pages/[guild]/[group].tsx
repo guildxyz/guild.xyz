@@ -1,12 +1,11 @@
+import { Link } from "@chakra-ui/next-js"
 import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import useAccess from "components/[guild]/hooks/useAccess"
-import useAutoStatusUpdate from "components/[guild]/hooks/useAutoStatusUpdate"
+import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useIsMember from "components/[guild]/hooks/useIsMember"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
@@ -16,9 +15,9 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
-import Link from "components/common/Link"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
+import useMembership from "components/explorer/hooks/useMembership"
 import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -41,8 +40,10 @@ const DynamicAddAndOrderRoles = dynamic(
 const DynamicAddRewardButton = dynamic(
   () => import("components/[guild]/AddRewardButton")
 )
-const DynamicResendRewardButton = dynamic(
-  () => import("components/[guild]/ResendRewardButton")
+const DynamicRecheckAccessesButton = dynamic(() =>
+  import("components/[guild]/RecheckAccessesButton").then(
+    (module) => module.TopRecheckAccessesButton
+  )
 )
 const DynamicAddRoleCard = dynamic(
   () => import("components/[guild]/[group]/AddRoleCard")
@@ -56,8 +57,6 @@ const GroupPage = (): JSX.Element => {
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
   } = useGuild()
-
-  useAutoStatusUpdate()
 
   const group = useRoleGroup()
   const groupRoles = roles?.filter((role) => role.groupId === group.id)
@@ -104,8 +103,7 @@ const GroupPage = (): JSX.Element => {
   const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
-  const isMember = useIsMember()
-  const { hasAccess } = useAccess()
+  const { isMember } = useMembership()
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
@@ -119,24 +117,7 @@ const GroupPage = (): JSX.Element => {
       </Head>
 
       <Layout
-        backButton={
-          <HStack mb={3}>
-            <GuildLogo
-              imageUrl={guildImageUrl}
-              size={6}
-              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-            />
-            <Link
-              href={`/${guildUrlName}`}
-              fontFamily="display"
-              fontWeight="bold"
-              color={textColor}
-              opacity="0.7"
-            >
-              {guildName}
-            </Link>
-          </HStack>
-        }
+        backButton={<GuildImageAndName />}
         action={isAdmin && <DynamicEditCampaignButton />}
         title={group.name}
         textColor={textColor}
@@ -159,8 +140,8 @@ const GroupPage = (): JSX.Element => {
       >
         <Flex justifyContent="end" mb={3}>
           <HStack>
-            {isMember && !isAdmin && <DynamicResendRewardButton />}
-            {!isMember && (isAdmin ? hasAccess : true) ? (
+            {isMember && !isAdmin && <DynamicRecheckAccessesButton />}
+            {!isMember ? (
               <JoinButton />
             ) : !isAdmin ? (
               <LeaveButton />

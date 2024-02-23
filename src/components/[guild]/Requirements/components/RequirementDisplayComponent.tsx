@@ -6,9 +6,9 @@ import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType, Rest } from "types"
-import HiddenRequiementAccessIndicator from "./HiddenRequiementAccessIndicator"
-import RequiementAccessIndicator from "./RequiementAccessIndicator"
+import HiddenRequirementAccessIndicator from "./HiddenRequirementAccessIndicator"
 import Requirement from "./Requirement"
+import RequirementAccessIndicator from "./RequirementAccessIndicator"
 import { RequirementProvider, useRequirementContext } from "./RequirementContext"
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 
 const RequirementDisplayComponent = ({
   requirement,
-  rightElement = <RequiementAccessIndicator />,
+  rightElement = <RequirementAccessIndicator />,
   ...rest
 }: Props) => {
   if (requirement.type === "HIDDEN")
@@ -26,7 +26,7 @@ const RequirementDisplayComponent = ({
       <Requirement
         image={<Icon as={Question} boxSize={5} />}
         rightElement={
-          <HiddenRequiementAccessIndicator roleId={requirement.roleId} />
+          <HiddenRequirementAccessIndicator roleId={requirement.roleId} />
         }
       >
         Some secret requirements
@@ -77,7 +77,6 @@ export const InvalidRequirementErrorBoundary = ({
         </Requirement>
       }
       onError={(error, info) => {
-        console.log(error)
         captureEvent("ErrorBoundary catched error", {
           requirementType: requirement?.type,
           requirement,

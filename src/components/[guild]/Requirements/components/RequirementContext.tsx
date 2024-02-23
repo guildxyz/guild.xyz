@@ -12,7 +12,7 @@ const RequirementProvider = ({
   requirement,
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
-  // Added this for safety, but we sholdn't run into this if statement
+  // Added this for safety, but we shouldn't run into this if statement
   if (!requirement) return null
 
   return (

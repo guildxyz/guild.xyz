@@ -11,7 +11,8 @@ import { ActivityLogActionProvider } from "components/[guild]/activity/ActivityL
 import ActionIcon from "components/[guild]/activity/ActivityLogAction/components/ActionIcon"
 import ActionLabel from "components/[guild]/activity/ActivityLogAction/components/ActionLabel"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import GhostIcon from "static/avatars/ghost.svg"
 
@@ -59,16 +60,16 @@ const NotificationsActivityLog = (): JSX.Element => {
         )}
       </Stack>
       {data?.entries?.length > 0 && (
-        <LinkButton
+        <Button
+          as={Link}
           href="/profile/activity"
           w="full"
           h="10"
           mt="2"
-          colorScheme="gray"
           rightIcon={<Icon as={ArrowRight} />}
         >
           View all
-        </LinkButton>
+        </Button>
       )}
     </>
   )

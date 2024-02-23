@@ -36,8 +36,7 @@ type Props = {
 }
 
 const Page = ({ fancyId }: Omit<Props, "fallback">) => {
-  const { theme, urlName, roles, guildPlatforms, isFallback, socialLinks } =
-    useGuild()
+  const { theme, urlName, roles, guildPlatforms, socialLinks } = useGuild()
 
   const { captureEvent } = usePostHogContext()
 
@@ -59,7 +58,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
   const poapDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(poapDescriptionRef)
 
-  if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
+  // if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
 
   return (
     <ErrorBoundary

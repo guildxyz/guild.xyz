@@ -23,6 +23,7 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "POLYGON_ZKEVM",
   "BASE_MAINNET",
   "BASE_GOERLI",
+  "BSC",
   "SCROLL",
   "SCROLL_SEPOLIA",
   "ZORA",
@@ -36,8 +37,8 @@ export const COVALENT_CHAINS = new Set<Chain>([
   "MANTLE",
   "RONIN",
   "ARBITRUM",
-  "X1_TESTNET",
   "METIS",
+  "TAIKO_KATLA",
 ])
 
 // These requirement types do not have a covalent equivalent, remove them once they do
@@ -91,6 +92,7 @@ const walletActivityRequirementTypes: SelectOption[] = [
 
 const WalletActivityForm = ({
   baseFieldPath,
+  field,
 }: RequirementFormProps): JSX.Element => {
   const {
     resetField,
@@ -99,6 +101,7 @@ const WalletActivityForm = ({
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const isEditMode = !!field?.id
 
   const supportedRequirementTypes = COVALENT_CHAINS.has(chain)
     ? walletActivityRequirementTypes
@@ -126,6 +129,7 @@ const WalletActivityForm = ({
     "SCROLL_SEPOLIA",
     "BASE_MAINNET",
     "BASE_GOERLI",
+    "BSC",
     "ZORA",
     "ZKSYNC_ERA",
     "CRONOS",
@@ -134,10 +138,8 @@ const WalletActivityForm = ({
     "LINEA",
     "MANTLE",
     "RONIN",
-    "X1_TESTNET",
     "METIS",
-    "GOERLI",
-    "POLYGON_MUMBAI",
+    "TAIKO_KATLA",
   ]
 
   for (const covalentChain of COVALENT_CHAINS.values()) {
@@ -175,6 +177,7 @@ const WalletActivityForm = ({
               rules={{ required: "It's required to select a type" }}
               options={supportedRequirementTypes}
               beforeOnChange={resetFields}
+              isDisabled={isEditMode}
             />
 
             <FormErrorMessage>

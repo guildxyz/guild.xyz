@@ -1,14 +1,20 @@
 import { Link } from "@chakra-ui/react"
+import useIsIOS from "hooks/useIsIOS"
 import { Requirement } from "types"
 
 type Props = {
   requirement: Requirement
+  withIntent?: boolean
 }
 
-export default function TwitterUserLink({ requirement }: Props) {
+const TwitterUserLink = ({ requirement, withIntent }: Props) => {
+  const isIOS = useIsIOS()
+
   return (
     <Link
-      href={`https://twitter.com/${requirement.data.id}`}
+      href={`https://x.com/${
+        withIntent && !isIOS ? "intent/follow?screen_name=" : ""
+      }${requirement.data.id}`}
       isExternal
       colorScheme="blue"
       fontWeight="medium"
@@ -17,3 +23,5 @@ export default function TwitterUserLink({ requirement }: Props) {
     </Link>
   )
 }
+
+export default TwitterUserLink

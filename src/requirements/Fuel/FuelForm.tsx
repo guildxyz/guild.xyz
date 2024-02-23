@@ -6,12 +6,18 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import FuelBalance from "./components/FuelBalance"
+import FuelTransactions from "./components/FuelTransactions"
 
 const fuelRequirementTypes = [
   {
-    label: "Token or NFT balance",
+    label: "Token balance",
     value: "FUEL_BALANCE",
     FuelRequirement: FuelBalance,
+  },
+  {
+    label: "Wallet activity",
+    value: "FUEL_TRANSACTIONS",
+    FuelRequirement: FuelTransactions,
   },
 ]
 
@@ -24,6 +30,8 @@ const FuelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const selected = fuelRequirementTypes.find((reqType) => reqType.value === type)
+
+  const isEditMode = !!field?.id
 
   const resetFields = () => {
     setValue(`${baseFieldPath}.address`, undefined)
@@ -51,6 +59,7 @@ const FuelForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={fuelRequirementTypes}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

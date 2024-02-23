@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   AspectRatio,
   Box,
@@ -8,7 +9,6 @@ import {
   useColorMode,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import Link from "components/common/Link"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { CaretDown } from "phosphor-react"
@@ -113,10 +113,13 @@ const Discover = (): JSX.Element => {
                 {link.image && (
                   <AspectRatio ratio={2} _groupHover={{ opacity: 0.8 }}>
                     <Image
-                      layout="fill"
-                      objectFit="cover"
                       src={link.image}
                       alt={link.title}
+                      fill
+                      sizes="500px"
+                      style={{
+                        objectFit: "cover",
+                      }}
                     />
                   </AspectRatio>
                 )}

@@ -131,6 +131,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     description: metadata?.description as string,
     fee: fee as bigint,
     isLoading: isFirstTotalSupplyTodayLoadings || isMulticallLoading,
+
     error: multicallError || error,
     refetch,
   }

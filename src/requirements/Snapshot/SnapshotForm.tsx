@@ -60,7 +60,10 @@ const snapshotRequirementTypes = [
   },
 ]
 
-const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+const SnapshotForm = ({
+  baseFieldPath,
+  field,
+}: RequirementFormProps): JSX.Element => {
   const { resetField } = useFormContext()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
@@ -68,6 +71,7 @@ const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { errors } = useFormState()
 
   const selected = snapshotRequirementTypes.find((reqType) => reqType.value === type)
+  const isEditMode = !!field?.id
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
@@ -83,6 +87,7 @@ const SnapshotForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
           beforeOnChange={() =>
             resetField(`${baseFieldPath}.data`, { defaultValue: "" })
           }
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

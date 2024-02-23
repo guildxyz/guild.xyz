@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react"
+import { Alert, AlertIcon, Box, Flex, Text } from "@chakra-ui/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { AccountSectionTitle } from "../AccountConnections"
@@ -7,11 +7,20 @@ import GuildPinSkeleton from "./GuildPinSkeleton"
 
 const UsersGuildPins = () => {
   const { isAccountModalOpen } = useWeb3ConnectionManager()
-  const { data, isValidating } = useUsersGuildPins(!isAccountModalOpen)
+  const { data, error, isValidating } = useUsersGuildPins(!isAccountModalOpen)
 
   return (
     <>
       <AccountSectionTitle title="Guild Pins" />
+
+      {error && (
+        <>
+          <Alert status="warning" mb={3}>
+            <AlertIcon /> There was an error while fetching your pins, some may not
+            be visible.
+          </Alert>
+        </>
+      )}
       <Box
         minW="full"
         overflowX="scroll"

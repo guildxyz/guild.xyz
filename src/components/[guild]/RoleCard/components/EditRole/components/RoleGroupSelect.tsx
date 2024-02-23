@@ -28,7 +28,7 @@ const RoleGroupSelect = () => {
             valueAsNumber = parseInt(e.target.value)
           } catch {}
 
-          onChange(!isNaN(valueAsNumber) ? valueAsNumber : null)
+          onChange(isNaN(valueAsNumber) ? null : valueAsNumber)
         }}
       >
         <option>Home page</option>

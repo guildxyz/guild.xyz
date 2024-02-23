@@ -1,6 +1,6 @@
+import { Link } from "@chakra-ui/next-js"
 import { Heading, Img, VStack } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import Link from "components/common/Link"
 
 type Props = {
   link: string

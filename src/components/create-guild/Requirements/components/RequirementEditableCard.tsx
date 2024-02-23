@@ -56,9 +56,6 @@ const RequirementEditableCard = ({
   const roleId = formState?.defaultValues?.id
 
   const isPoap = !!formState?.defaultValues?.poapId
-  const poapId = formState?.defaultValues?.poapId
-
-  const isCustomizable = REQUIREMENTS[type]?.isCustomizable
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
 
@@ -156,8 +153,8 @@ const RequirementEditableCard = ({
               setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
-              imageWrapper={isCustomizable ? RequirementImageEditor : undefined}
-              childrenWrapper={isCustomizable ? RequirementNameEditor : undefined}
+              imageWrapper={RequirementImageEditor}
+              childrenWrapper={RequirementNameEditor}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>

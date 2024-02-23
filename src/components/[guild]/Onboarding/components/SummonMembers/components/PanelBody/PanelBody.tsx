@@ -12,7 +12,7 @@ import Image from "next/image"
 import PanelDescription from "./components/PanelDescription"
 import PanelTitle from "./components/PanelTitle"
 
-const GUILD_CASTLE_SIZE = "70px"
+const GUILD_CASTLE_SIZE = 70
 const GUILD_LOGO_DC_URL =
   "https://cdn.discordapp.com/attachments/950682012866465833/951448318976884826/dc-message.png"
 
@@ -57,6 +57,10 @@ const PanelBody = () => {
             alt="Guild Logo"
             width={GUILD_CASTLE_SIZE}
             height={GUILD_CASTLE_SIZE}
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+            }}
           />
         </Box>
       </Grid>

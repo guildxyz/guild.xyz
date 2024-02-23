@@ -4,7 +4,6 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtomValue } from "jotai"
 import { mutate } from "swr"
-import { AddressConnectionProvider } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { recaptchaAtom } from "utils/recaptcha"
 import useSubmit from "./useSubmit"
@@ -25,7 +24,6 @@ type SetKeypairPayload = Omit<StoredKeyPair, "keyPair"> & {
   verificationParams?: {
     reCaptcha: string
   }
-  addressConnectionProvider?: AddressConnectionProvider
 }
 
 const getStore = () => createStore("guild.xyz", "signingKeyPairs")
@@ -67,20 +65,17 @@ const generateKeyPair = async () => {
 
 const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const { captureEvent } = usePostHogContext()
-  const { address, isDelegateConnection, setIsDelegateConnection } =
-    useWeb3ConnectionManager()
+  const { address } = useWeb3ConnectionManager()
   const fetcherWithSign = useFetcherWithSign()
 
-  const { id, captchaVerifiedSince, setKeys } = useUserPublic()
+  const { id, captchaVerifiedSince } = useUserPublic()
 
   const recaptcha = useAtomValue(recaptchaAtom)
 
   const setSubmitResponse = useSubmit(
     async ({
-      provider,
       signProps,
     }: {
-      provider?: AddressConnectionProvider
       signProps?: Partial<SignProps>
     } = {}) => {
       const reCaptchaToken =
@@ -106,12 +101,6 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
         body.verificationParams = {
           reCaptcha: reCaptchaToken,
         }
-      }
-
-      if (isDelegateConnection || provider === "DELEGATE") {
-        const prevKeyPair = await getKeyPairFromIdb(id)
-        body.addressConnectionProvider = "DELEGATE"
-        body.pubKey = prevKeyPair?.pubKey ?? body.pubKey
       }
 
       const userProfile = await fetcherWithSign([
@@ -173,12 +162,6 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
         submitOptions?.onError?.(error)
       },
       onSuccess: () => {
-        mutate(["delegateCashVaults", id]).then(() => {
-          window.localStorage.removeItem(`isDelegateDismissed_${id}`)
-        })
-
-        setIsDelegateConnection(false)
-
         submitOptions?.onSuccess?.()
       },
     }

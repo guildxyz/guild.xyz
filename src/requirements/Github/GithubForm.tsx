@@ -43,15 +43,16 @@ const githubRequirementTypes = [
   },
 ]
 
-const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
+const GithubForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const { resetField } = useFormContext()
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
+    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: null })
+    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: null })
   }
   const type = useWatch({ name: `${baseFieldPath}.type` })
+  const isEditMode = !!field?.id
 
   const { errors } = useFormState()
 
@@ -70,6 +71,7 @@ const GithubForm = ({ baseFieldPath }: RequirementFormProps) => {
           rules={{ required: "It's required to select a type" }}
           options={githubRequirementTypes}
           beforeOnChange={resetFields}
+          isDisabled={isEditMode}
         />
 
         <FormErrorMessage>

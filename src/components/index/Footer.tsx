@@ -1,5 +1,5 @@
+import { Link } from "@chakra-ui/next-js"
 import { Box, Container, GridItem, Img, SimpleGrid, Stack } from "@chakra-ui/react"
-import Link from "components/common/Link"
 
 const Footer = (): JSX.Element => (
   <Box
@@ -44,7 +44,7 @@ const Footer = (): JSX.Element => (
             fontFamily="display"
           >
             <Link href="https://twitter.com/guildxyz" isExternal>
-              twitter
+              x
             </Link>
             <Link href="https://github.com/guildxyz/guild.xyz" isExternal>
               github

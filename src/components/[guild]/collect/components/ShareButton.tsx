@@ -8,7 +8,8 @@ import {
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
-import { CopySimple, ShareNetwork, TwitterLogo } from "phosphor-react"
+import { CopySimple, ShareNetwork } from "phosphor-react"
+import XLogo from "static/icons/x.svg"
 
 type Props = {
   onClick?: () => void
@@ -43,7 +44,7 @@ const ShareButton = ({ onClick, shareText }: Props): JSX.Element => {
             {hasCopied ? "Copied!" : "Copy URL"}
           </MenuItem>
           <MenuItem
-            icon={<TwitterLogo size={12} />}
+            icon={<XLogo size={12} />}
             fontSize="sm"
             onClick={() => {
               if (typeof window === "undefined") return

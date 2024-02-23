@@ -8,6 +8,7 @@ import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
+import { dystopian, inter } from "fonts"
 import useSetupFuel from "hooks/useSetupFuel"
 import { useSetAtom } from "jotai"
 import type { AppProps } from "next/app"
@@ -61,6 +62,14 @@ const App = ({
 
   return (
     <>
+      <style jsx global>
+        {`
+          :root {
+            --font-inter: ${inter.style.fontFamily};
+            --font-dystopian: ${dystopian.style.fontFamily};
+          }
+        `}
+      </style>
       <Script src="/intercom.js" />
       <ReCAPTCHA
         ref={(recaptcha) => {
@@ -89,6 +98,7 @@ const App = ({
             </Box>
           </Slide>
         ) : null}
+
         <IconContext.Provider
           value={{
             color: "currentColor",

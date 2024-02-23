@@ -258,11 +258,11 @@ const ToolbarPlugin = () => {
   const [canUndo, setCanUndo] = useState(false)
   const [canRedo, setCanRedo] = useState(false)
   const [blockType, setBlockType] = useState<BlockType>("paragraph")
-  const [selectedElementKey, setSelectedElementKey] = useState(null)
+  const [, setSelectedElementKey] = useState(null)
   const [isLink, setIsLink] = useState(false)
   const [isBold, setIsBold] = useState(false)
   const [isItalic, setIsItalic] = useState(false)
-  const [isCode, setIsCode] = useState(false)
+  const [, setIsCode] = useState(false)
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection()

@@ -57,7 +57,7 @@ const ConnectorButton = ({
   return (
     <Button
       onClick={
-        connector.id === "injected" && !isMetaMaskInstalled
+        connectorName === "MetaMask" && !isMetaMaskInstalled
           ? handleOnboarding
           : () => connect({ connector })
       }
