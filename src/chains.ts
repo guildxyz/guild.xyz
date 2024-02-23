@@ -1,6 +1,7 @@
 import {
   beraTestnet,
   bitfinityTestnet,
+  blastSepolia,
   bobaAvax,
   exosama,
   kava,
@@ -520,6 +521,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/taiko-katla.svg",
     },
   },
+  BLAST_SEPOLIA: {
+    ...blastSepolia,
+    iconUrl: "/networkLogos/blast.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/blast.png",
+      dark: "/networkLogos/blast.png",
+    },
+  },
 }
 
 enum Chains {
@@ -570,6 +580,7 @@ enum Chains {
   BERA_TESTNET = beraTestnet.id,
   MANTA = manta.id,
   TAIKO_KATLA = taikoKatlaTestnet.id,
+  BLAST_SEPOLIA = blastSepolia.id,
 }
 
 export type Chain = keyof typeof Chains
