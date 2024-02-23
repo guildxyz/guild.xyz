@@ -7,6 +7,7 @@ import {
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
@@ -21,13 +22,14 @@ import {
 const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
+  const { claimed } = useClaimedReward(platform.id)
 
   const state = useMemo(() => {
     if (!getRolePlatformTimeframeInfo(platform).isAvailable)
       return {
         tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
         buttonProps: {
-          isDisabled: true,
+          isDisabled: !claimed,
         },
       }
 
