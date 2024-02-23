@@ -35,8 +35,14 @@ type Props = {
 }
 
 const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
-  const { addresses, platformUsers, isShared, responses, submittedAt, formId } =
-    row?.original ?? {}
+  const {
+    addresses,
+    platformUsers,
+    isShared,
+    submissionAnswers,
+    submittedAt,
+    formId,
+  } = row?.original ?? {}
 
   const { form } = useGuildForm(formId)
 
@@ -74,7 +80,9 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
               const { DisplayComponent } = fieldTypes.find(
                 (ft) => ft.value === field.type
               )
-              const value = responses.find((f) => f.fieldId === field.id).value
+              const value = submissionAnswers.find(
+                (f) => f.fieldId === field.id
+              ).value
 
               return (
                 <Box key={field.id}>

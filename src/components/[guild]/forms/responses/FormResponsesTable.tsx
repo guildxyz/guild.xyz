@@ -106,7 +106,7 @@ const FormResponsesTable = ({ form }) => {
         ),
       }),
       ...form.fields.map((field) =>
-        columnHelper.accessor("responses", {
+        columnHelper.accessor("submissionAnswers", {
           id: `field_${field.id}`,
           header: ({ column }) => (
             <HStack w="full" justifyContent={"space-between"}>

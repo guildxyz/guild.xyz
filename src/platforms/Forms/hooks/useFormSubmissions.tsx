@@ -8,7 +8,7 @@ import useSWRInfinite from "swr/infinite"
 import { PlatformAccountDetails } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
-type Response = {
+type SubmissionAnswer = {
   fieldId: string
   value: string | number | string[]
 }
@@ -20,7 +20,7 @@ export type FormSubmission = {
   platformUsers: PlatformAccountDetails[]
   isShared: boolean
   submittedAt: string
-  responses: Response[]
+  submissionAnswers: SubmissionAnswer[]
 }
 
 const LIMIT = 50
