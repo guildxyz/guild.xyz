@@ -55,7 +55,7 @@
     "colorthief": "^2.3.2",
     "events": "^3.3.0",
     "framer-motion": "^7.10.3",
-    "fuels": "^0.65.0",
+    "fuels": "^0.74.0",
     "idb-keyval": "^6.2.0",
     "jotai": "^2.4.3",
     "js-confetti": "^0.11.0",
