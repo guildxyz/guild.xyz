@@ -3,6 +3,7 @@ import {
   ButtonGroup,
   Circle,
   Divider,
+  Flex,
   HStack,
   ModalBody,
   ModalCloseButton,
@@ -17,16 +18,13 @@ import {
 import { Row } from "@tanstack/react-table"
 import FormFieldTitle from "components/[guild]/CreateFormModal/components/FormCardEditable/components/FormFieldTitle"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
-import { WalletTag } from "components/[guild]/crm/Identities"
-import UserPlatformTags from "components/[guild]/crm/UserPlatformTags"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useResolveAddress from "hooks/useResolveAddress"
-import { ArrowRight, CaretLeft, CaretRight } from "phosphor-react"
+import { CaretLeft, CaretRight } from "phosphor-react"
 import { FormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
-import shortenHex from "utils/shortenHex"
+import CollapsibleIdentityTags from "./CollapsibleIdentityTags"
 
 type Props = {
   row: Row<FormSubmission>
@@ -42,9 +40,6 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
 
   const { form } = useGuildForm(formId)
 
-  const primaryAddress = addresses?.[0]
-  const domain = useResolveAddress(primaryAddress)
-
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
   const darkBg = useColorModeValue("gray.50", "blackAlpha.300")
 
@@ -54,39 +49,22 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
       <ModalContent maxH="100vh !important">
         <ModalCloseButton top={9} right={8} />
 
-        <ModalHeader pb="6" borderBottomWidth="1px">
+        <ModalHeader pt="6" pb="6" borderBottomWidth="1px">
           <Text colorScheme={"gray"} fontSize="sm" mb="4">
             {`${form?.name ?? "Form"} submission by`}
           </Text>
-          <HStack spacing={2.5}>
+          <HStack spacing={2.5} alignItems={"flex-start"} fontFamily="body">
             <Circle size={12} bg={avatarBg}>
               <GuildAvatar
-                address={primaryAddress}
+                address={addresses?.[0]}
                 size={5}
                 display="flex"
                 alignItems="center"
               />
             </Circle>
-            <UserPlatformTags
-              {...{ platformUsers, isShared }}
-              spacing="1"
-              fontFamily="body"
-            >
-              <WalletTag>
-                {!platformUsers?.length
-                  ? shortenHex(primaryAddress ?? "")
-                  : addresses?.length}
-              </WalletTag>
-              <Button
-                size="xs"
-                borderRadius="md"
-                borderWidth="1.5px"
-                variant="outline"
-                rightIcon={<ArrowRight />}
-              >
-                View in members
-              </Button>
-            </UserPlatformTags>
+            <Flex alignItems={"center"} minH="12">
+              <CollapsibleIdentityTags {...{ addresses, platformUsers, isShared }} />
+            </Flex>
           </HStack>
         </ModalHeader>
 
