@@ -1,6 +1,7 @@
 import { Center, Img } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { connectorButtonProps } from "../ConnectorButton"
+import UserAgentAlert from "./components/UserAgentAlert"
 import UserOnboardingModal from "./components/UserOnboardingModal"
 import useLoginWithGoogle from "./hooks/useLoginWithGoogle"
 
@@ -17,6 +18,8 @@ const GoogleLoginButton = () => {
 
   return (
     <>
+      <UserAgentAlert />
+
       <Button
         isLoading={isLoading}
         onClick={onSubmit}
