@@ -1,4 +1,4 @@
-import { MenuItem, Tag, useDisclosure } from "@chakra-ui/react"
+import { MenuItem, useDisclosure } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
@@ -32,9 +32,6 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <LinkMenuItem
           href={`/${urlName}/forms/${formId}/responses`}
           icon={<Table />}
-          isDisabled
-          command={(<Tag>Soon</Tag>) as any}
-          pointerEvents={"none"}
         >
           View responses
         </LinkMenuItem>

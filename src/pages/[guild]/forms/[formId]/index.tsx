@@ -9,6 +9,8 @@ import FillForm from "components/[guild]/forms/FillForm"
 import FormNoAccess from "components/[guild]/forms/FormNoAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
+import Card from "components/common/Card"
+import ErrorAlert from "components/common/ErrorAlert"
 import Layout from "components/common/Layout"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -25,7 +27,7 @@ const FormPage = ({ formId }: Props) => {
   const { roles, imageUrl, guildPlatforms } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
-  const { form } = useGuildForm(formId)
+  const { form, error } = useGuildForm(formId)
 
   const relevantGuildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildData?.formId === formId
@@ -51,7 +53,11 @@ const FormPage = ({ formId }: Props) => {
       maxWidth="container.md"
       mt={{ md: "-4" }}
     >
-      {hasRoleAccess ? (
+      {error ? (
+        <Card>
+          <ErrorAlert label="Couldn't load form" mb="0" />
+        </Card>
+      ) : hasRoleAccess ? (
         <FillForm form={form} />
       ) : (
         <FormNoAccess isMember={isMember}>

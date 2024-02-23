@@ -36,6 +36,7 @@ const OrderByColumn = ({ label, column }: Props) => {
               px="2"
               right="-2"
               colorScheme={sortDirection ? "blue" : "gray"}
+              flexShrink={0}
             >
               {sortDirection && (
                 <Text colorScheme="blue" pl="0.5" pr="1" mb="-1px" fontSize="xs">
@@ -63,6 +64,7 @@ const OrderByColumn = ({ label, column }: Props) => {
                       onClose()
                     }}
                     leftIcon={<TrashSimple />}
+                    flexShrink={0}
                   >
                     Clear
                   </Button>

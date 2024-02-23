@@ -28,7 +28,8 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
         : option.value
     )
 
-    const isOtherActive = value !== undefined && !options.includes(value)
+    const isOtherActive =
+      value !== undefined && value !== null && !options.includes(value)
 
     return (
       <RadioGroup
@@ -68,6 +69,7 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
                   ? {
                       variant: "unstyled",
                       height: "1.5em",
+                      className: "disabledOtherInput", // so we can handle to keep it's opacity in ResponseModal
                     }
                   : {})}
                 onFocus={() => {

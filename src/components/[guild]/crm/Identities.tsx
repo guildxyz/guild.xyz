@@ -1,13 +1,21 @@
-import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
+import {
+  HStack,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  TagProps,
+  Tooltip,
+} from "@chakra-ui/react"
 import { useCardBg } from "components/common/Card"
 import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
+import { PropsWithChildren } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"
 import { Member } from "./useMembers"
 
 type Props = {
-  member: Member
+  member: Omit<Member, "roles" | "joinedAt">
 }
 
 export const sortAccounts = (
@@ -34,7 +42,7 @@ export const deduplicateXPlatformUsers = (
 }
 
 const Identities = ({ member }: Props) => {
-  const { addresses, platformUsers, areSocialsPrivate } = member
+  const { addresses, platformUsers, isShared } = member
 
   const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
 
@@ -49,10 +57,10 @@ const Identities = ({ member }: Props) => {
           isOpen={i === 0}
         />
       ))}
-      <WalletTag zIndex={areSocialsPrivate && 1}>
+      <WalletTag zIndex={!isShared && 1}>
         {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
       </WalletTag>
-      {areSocialsPrivate && <PrivateSocialsTag />}
+      {!isShared && <PrivateSocialsTag />}
     </HStack>
   )
 }
@@ -87,7 +95,15 @@ export const IdentityTag = ({
   )
 }
 
-export const WalletTag = ({ children, ...rest }) => {
+type WalletTagProps = {
+  rightElement?: JSX.Element
+} & TagProps
+
+export const WalletTag = ({
+  children,
+  rightElement,
+  ...rest
+}: PropsWithChildren<WalletTagProps>) => {
   const borderColor = useCardBg()
 
   return (
@@ -106,6 +122,7 @@ export const WalletTag = ({ children, ...rest }) => {
     >
       <TagLeftIcon as={Wallet} mr="0" />
       <TagLabel ml="1">{children}</TagLabel>
+      {rightElement}
     </Tag>
   )
 }
