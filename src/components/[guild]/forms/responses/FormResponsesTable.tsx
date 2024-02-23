@@ -111,9 +111,9 @@ const FormResponsesTable = ({ form }) => {
           header: ({ column }) => (
             <HStack w="full" justifyContent={"space-between"}>
               <FormThText>{field.question}</FormThText>
-              {field.type !== "MULTIPLE_CHOICE" && (
+              {/* field.type !== "MULTIPLE_CHOICE" && (
                 <OrderByColumn label={field.question} column={column} />
-              )}
+              ) */}
             </HStack>
           ),
           cell: (info) => {
