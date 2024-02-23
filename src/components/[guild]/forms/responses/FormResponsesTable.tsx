@@ -119,7 +119,7 @@ const FormResponsesTable = ({ form }) => {
           cell: (info) => {
             const value = info.getValue().find((f) => f.fieldId === field.id).value
             if (Array.isArray(value)) return value.join(", ")
-            return value
+            return value || "-"
           },
         })
       ),
