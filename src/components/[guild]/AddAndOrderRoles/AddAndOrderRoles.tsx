@@ -9,11 +9,11 @@ import {
   MenuList,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown, ListNumbers, Plus } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import useIsStuck from "hooks/useIsStuck"
+import { CaretDown, ListNumbers, Plus } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import RecheckAccessesButton from "../RecheckAccessesButton"
 import AddRoleDrawer from "./components/AddRoleDrawer"

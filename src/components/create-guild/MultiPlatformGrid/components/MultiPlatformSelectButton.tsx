@@ -9,7 +9,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import { CheckCircle, type IconProps } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -24,6 +23,7 @@ import CreateGuildTelegram from "components/create-guild/MultiPlatformGrid/compo
 import CreateGuildTwitter from "components/create-guild/MultiPlatformGrid/components/CreateGuildTwitter"
 import CreateGuildUniqueText from "components/create-guild/MultiPlatformGrid/components/CreateGuildUniqueText"
 import Image from "next/image"
+import { CheckCircle, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes } from "react"
 import { useFormContext, useWatch } from "react-hook-form"

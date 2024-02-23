@@ -1,7 +1,7 @@
 import { Icon } from "@chakra-ui/react"
-import { X } from "@phosphor-icons/react"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
+import { useThemeContext } from "components/[guild]/ThemeContext"
+import { X } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 
 const RemoveBackgroundImage = () => {

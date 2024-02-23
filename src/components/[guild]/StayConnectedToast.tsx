@@ -1,7 +1,7 @@
 import { ToastId, useToast } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import { useToastWithButton } from "hooks/useToast"
 import { useRouter } from "next/router"
+import { ArrowRight } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"

@@ -1,5 +1,5 @@
 import { HStack, StackProps, Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
-import { Clock, Users } from "@phosphor-icons/react"
+import { Clock, Users } from "phosphor-react"
 
 type Props = {
   startDate: number

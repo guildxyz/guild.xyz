@@ -7,10 +7,10 @@ import {
   ModalFooter,
   Text,
 } from "@chakra-ui/react"
-import { CheckCircle } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Button from "components/common/Button"
 import useMembership from "components/explorer/hooks/useMembership"
+import { CheckCircle } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import TransactionLink from "./TransactionLink"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"

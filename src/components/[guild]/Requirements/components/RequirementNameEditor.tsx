@@ -7,9 +7,9 @@ import {
   Tooltip,
   useEditableControls,
 } from "@chakra-ui/react"
-import { Check, PencilSimple } from "@phosphor-icons/react"
 import SetVisibility from "components/[guild]/SetVisibility"
 import { useSetAtom } from "jotai"
+import { Check, PencilSimple } from "phosphor-react"
 import {
   MutableRefObject,
   PropsWithChildren,

@@ -5,10 +5,10 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from "@chakra-ui/react"
-import { ArrowRight } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
+import { ArrowRight } from "phosphor-react"
 import { useRef } from "react"
 
 type Props = {

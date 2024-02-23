@@ -7,8 +7,8 @@ import {
   Icon,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotsSixVertical } from "@phosphor-icons/react"
 import { Reorder, useDragControls } from "framer-motion"
+import { DotsSixVertical } from "phosphor-react"
 import { PropsWithChildren, ReactNode } from "react"
 import { Rest } from "types"
 

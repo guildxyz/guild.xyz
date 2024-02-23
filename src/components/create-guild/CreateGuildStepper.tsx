@@ -17,10 +17,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CaretDown } from "@phosphor-icons/react"
 import SummonMembers from "components/[guild]/Onboarding/components/SummonMembers"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Card from "components/common/Card"
+import { CaretDown } from "phosphor-react"
 import { Fragment } from "react"
 import BasicInfo from "./BasicInfo"
 import ChooseTemplate from "./ChooseTemplate"

@@ -1,11 +1,11 @@
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { CircleWavyCheck, Question } from "@phosphor-icons/react"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import RewardCard from "components/common/RewardCard"
 import dynamic from "next/dynamic"
+import { CircleWavyCheck, Question } from "phosphor-react"
 
 const DynamicMintGuildPin = dynamic(
   () =>

@@ -1,7 +1,7 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
-import { Robot } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMembership from "components/explorer/hooks/useMembership"
+import { Robot } from "phosphor-react"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
 import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"

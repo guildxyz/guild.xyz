@@ -9,10 +9,10 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { PencilSimple, TrashSimple } from "@phosphor-icons/react"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
+import { PencilSimple, TrashSimple } from "phosphor-react"
 import { useRef } from "react"
 import useDeleteRoleGroup from "../hooks/useDeleteRoleGroup"
 import EditCampaignModal from "./EditCampaignModal"

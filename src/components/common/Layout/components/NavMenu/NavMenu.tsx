@@ -11,6 +11,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import Button from "components/common/Button"
+import dynamic from "next/dynamic"
 import {
   CircleWavyCheck,
   Code,
@@ -20,9 +22,7 @@ import {
   List,
   MagnifyingGlass,
   Plus,
-} from "@phosphor-icons/react"
-import Button from "components/common/Button"
-import dynamic from "next/dynamic"
+} from "phosphor-react"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
 import NavGroup from "./components/NavGroup"

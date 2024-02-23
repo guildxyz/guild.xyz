@@ -1,8 +1,8 @@
 import { Box, Flex, Grid, GridItem, Heading, Icon, Img, Tag } from "@chakra-ui/react"
-import { FilePdf } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"
+import { FilePdf } from "phosphor-react"
 
 type Props = {
   href: string

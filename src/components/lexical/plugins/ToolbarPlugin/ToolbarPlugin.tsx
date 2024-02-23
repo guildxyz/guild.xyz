@@ -25,21 +25,6 @@ import {
 } from "@lexical/rich-text"
 import { $isAtNodeEnd, $wrapNodes } from "@lexical/selection"
 import { $getNearestNodeOfType, mergeRegister } from "@lexical/utils"
-import {
-  ArrowClockwise,
-  ArrowCounterClockwise,
-  Check,
-  Code,
-  ListBullets,
-  ListNumbers,
-  Quotes,
-  TextBolder,
-  TextHOne,
-  TextHTwo,
-  TextItalic,
-  TextT,
-  type IconProps,
-} from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import {
   $createParagraphNode,
@@ -53,6 +38,21 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from "lexical"
+import {
+  ArrowClockwise,
+  ArrowCounterClockwise,
+  Check,
+  Code,
+  IconProps,
+  ListBullets,
+  ListNumbers,
+  Quotes,
+  TextBolder,
+  TextHOne,
+  TextHTwo,
+  TextItalic,
+  TextT,
+} from "phosphor-react"
 import { useCallback, useEffect, useRef, useState } from "react"
 import ImageEditor from "./components/ImageEditor"
 import LinkEditor from "./components/LinkEditor"

@@ -1,5 +1,5 @@
 import { Box, Icon, Img, Text, VStack } from "@chakra-ui/react"
-import { Sparkle } from "@phosphor-icons/react"
+import { Sparkle } from "phosphor-react"
 import LandingSection from "./LandingSection"
 import LandingSectionText from "./LandingSectionText"
 

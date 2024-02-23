@@ -6,6 +6,7 @@ import {
   Eye,
   FolderUser,
   House,
+  IconProps,
   IdentificationCard,
   LinkSimple,
   LockKey,
@@ -24,8 +25,7 @@ import {
   UserList,
   UserMinus,
   UserSwitch,
-  type IconProps,
-} from "@phosphor-icons/react"
+} from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 
 export enum ACTION {

@@ -11,14 +11,14 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { ArrowSquareIn, ListPlus } from "@phosphor-icons/react"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
+import SearchBar from "components/explorer/SearchBar"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
-import SearchBar from "components/explorer/SearchBar"
+import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import { UseFormSetValue } from "react-hook-form"
 import { FixedSizeList } from "react-window"

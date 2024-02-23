@@ -6,8 +6,8 @@ import {
   TagRightIcon,
   Tooltip,
 } from "@chakra-ui/react"
-import { Users } from "@phosphor-icons/react"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
+import { Users } from "phosphor-react"
 
 type Props = {
   memberCount: number
