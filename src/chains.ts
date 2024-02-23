@@ -21,6 +21,7 @@ import {
   avalanche,
   base,
   baseGoerli,
+  baseSepolia,
   boba,
   bsc,
   celo,
@@ -309,6 +310,16 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
     etherscanApiUrl: "https://api-goerli.basescan.org",
   },
+  BASE_SEPOLIA: {
+    ...baseSepolia,
+    iconUrl: "/networkLogos/base.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    etherscanApiUrl: "https://api-sepolia.basescan.org",
+  },
   EXOSAMA: {
     ...exosama,
     iconUrl: "/networkLogos/exosama.png",
@@ -531,6 +542,7 @@ enum Chains {
   BOBA_AVAX = bobaAvax.id,
   PALM = palm.id,
   BASE_GOERLI = baseGoerli.id,
+  BASE_SEPOLIA = baseSepolia.id,
   EXOSAMA = exosama.id,
   EVMOS = evmos.id,
   ZETACHAIN_ATHENS = zetachainAthensTestnet.id,
