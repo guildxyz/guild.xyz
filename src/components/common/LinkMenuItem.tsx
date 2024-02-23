@@ -31,9 +31,10 @@ const LinkButton = ({ children, ...rest }: ButtonProps & LinkProps) => {
       onClick={() => setHasClicked(true)}
       rightIcon={(<ArrowRight />) as any}
       isLoading={hasClicked}
+      loadingText={"Redirecting"}
       {...rest}
     >
-      {hasClicked ? "Redirecting" : children}
+      {children}
     </Button>
   )
 }

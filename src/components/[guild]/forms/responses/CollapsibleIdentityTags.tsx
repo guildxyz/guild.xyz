@@ -2,10 +2,9 @@ import { Center, Collapse, Icon, IconButton } from "@chakra-ui/react"
 import { WalletTag } from "components/[guild]/crm/Identities"
 import UserPlatformTags from "components/[guild]/crm/UserPlatformTags"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
+import { LinkButton } from "components/common/LinkMenuItem"
 import useResolveAddress from "hooks/useResolveAddress"
-import Link from "next/link"
-import { ArrowRight, CaretDown } from "phosphor-react"
+import { CaretDown } from "phosphor-react"
 import { useState } from "react"
 import shortenHex from "utils/shortenHex"
 
@@ -53,17 +52,15 @@ const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
           {...{ addresses, platformUsers, isCollapseOpen: isOpen }}
         />
         {featureFlags.includes("CRM") && isOpen.children && (
-          <Button
-            as={Link}
+          <LinkButton
             href={`/${urlName}/members?search=${addresses?.[0]}`}
             size="xs"
             borderRadius="md"
             borderWidth="1.5px"
             variant="outline"
-            rightIcon={<ArrowRight />}
           >
             View in members
-          </Button>
+          </LinkButton>
         )}
         <IconButton
           size="xs"
