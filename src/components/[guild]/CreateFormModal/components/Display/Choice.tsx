@@ -68,6 +68,7 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
                   ? {
                       variant: "unstyled",
                       height: "1.5em",
+                      className: "disabledOtherInput", // so we can handle to keep it's opacity in ResponseModal
                     }
                   : {})}
                 onFocus={() => {

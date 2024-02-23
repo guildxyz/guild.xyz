@@ -85,7 +85,26 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
               ).value
 
               return (
-                <Box key={field.id}>
+                <Box
+                  key={field.id}
+                  // we render the DisplayComponents as disabled, but retrive / change some of their styles with css so they're displayed nicely
+                  sx={{
+                    "input:not(.disabledOtherInput), textarea, [data-checked]": {
+                      opacity: "1 !important",
+                    },
+                    "input, textarea": {
+                      border: "0 !important",
+                      cursor: value && "text !important",
+                    },
+                    ".chakra-checkbox__control[data-checked], .chakra-radio__control[data-checked], .chakra-button[data-checked]:hover":
+                      {
+                        background: "primary.500 !important",
+                        border: "0 !important",
+                      },
+                    ".chakra-checkbox__control[data-checked] svg, .chakra-radio__control[data-checked]:before":
+                      { color: "white" },
+                  }}
+                >
                   <FormFieldTitle field={field} mb={2} />
                   <DisplayComponent
                     field={field}
