@@ -15,6 +15,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
 import { useAccount } from "wagmi"
+import { connectorButtonProps } from "./ConnectorButton"
 
 const DelegateCashButton = (): JSX.Element => {
   const { isConnected } = useAccount()
@@ -30,9 +31,9 @@ const DelegateCashButton = (): JSX.Element => {
   return (
     <Popover trigger="hover">
       <PopoverTrigger>
-        <Box mb="4" tabIndex={0}>
+        <Box tabIndex={0}>
           <Button
-            rightIcon={
+            leftIcon={
               <Center boxSize={6}>
                 <Img
                   src={`/walletLogos/${iconUrl}`}
@@ -42,12 +43,10 @@ const DelegateCashButton = (): JSX.Element => {
                 />
               </Center>
             }
-            w="full"
-            size="xl"
-            justifyContent="space-between"
             onClick={() => {
               setIsDelegateConnection(true)
             }}
+            {...connectorButtonProps}
           >
             {connectorName}
           </Button>

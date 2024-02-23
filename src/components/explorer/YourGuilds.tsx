@@ -6,7 +6,7 @@ import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import Link from "next/link"
-import { Plus, Wallet } from "phosphor-react"
+import { Plus, SignIn } from "phosphor-react"
 import { forwardRef } from "react"
 
 const useYourGuilds = () =>
@@ -39,17 +39,17 @@ const YourGuilds = forwardRef((_, ref: any) => {
             <HStack spacing="4">
               <Img src="landing/robot.svg" boxSize={"2em"} alt="Guild Robot" />
               <Text fontWeight={"semibold"}>
-                Connect your wallet to view your guilds / create new ones
+                Sign in to view your guilds / create new ones
               </Text>
             </HStack>
             <Button
               w={{ base: "full", sm: "auto" }}
               flexShrink="0"
               colorScheme="indigo"
-              leftIcon={<Wallet />}
+              leftIcon={<SignIn />}
               onClick={openWalletSelectorModal}
             >
-              Connect
+              Sign in
             </Button>
           </Stack>
         </Card>
