@@ -59,7 +59,7 @@ const useFormSubmissions = (formId, queryString) => {
           ...user,
           platformUsers: user.platformUsers.sort(sortAccounts),
           isShared: user.isShared === true || user.isShared === null,
-          responses: user.responses.map((response) => {
+          submissionAnswers: user.submissionAnswers.map((response) => {
             if (response.value.startsWith("["))
               return { ...response, value: JSON.parse(response.value) }
 
