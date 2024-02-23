@@ -28,7 +28,8 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
         : option.value
     )
 
-    const isOtherActive = value !== undefined && !options.includes(value)
+    const isOtherActive =
+      value !== undefined && value !== null && !options.includes(value)
 
     return (
       <RadioGroup
