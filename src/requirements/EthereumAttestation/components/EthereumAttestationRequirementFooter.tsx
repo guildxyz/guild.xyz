@@ -12,6 +12,7 @@ export const EAS_SCAN_BASE = {
   BASE_GOERLI: "https://base-goerli.easscan.org/schema/view",
   BASE_SEPOLIA: "https://base-sepolia.easscan.org/schema/view",
   BASE_MAINNET: "https://base.easscan.org/schema/view",
+  LINEA: "https://linea.easscan.org/schema/view",
 } as const
 
 const EthereumAttestationRequirementFooter = () => {
