@@ -73,29 +73,35 @@ const MemberRow = ({ row }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <Tr role="group">
-      {row.getVisibleCells().map((cell) => (
-        <CrmInteractiveTd
-          key={cell.id}
-          onClick={cell.column.id !== "select" ? onOpen : undefined}
-          transition="background .2s"
-          {...(cell.column.id === "identity" && {
-            position: "sticky",
-            left: "0",
-            width: "0px",
-            maxWidth: "350px",
-            transition: "max-width .2s",
-            zIndex: 3,
-            className: "identityTd",
-          })}
-        >
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-        </CrmInteractiveTd>
-      ))}
+    <CrmRow {...{ row, onOpen }}>
       <MemberModal {...{ row, isOpen, onClose }} />
-    </Tr>
+    </CrmRow>
   )
 }
+
+export const CrmRow = ({ row, onOpen, children = undefined }) => (
+  <Tr role="group">
+    {row.getVisibleCells().map((cell) => (
+      <CrmInteractiveTd
+        key={cell.id}
+        onClick={cell.column.id !== "select" ? onOpen : undefined}
+        transition="background .2s"
+        {...(cell.column.id === "identity" && {
+          position: "sticky",
+          left: "0",
+          width: "0px",
+          maxWidth: "350px",
+          transition: "max-width .2s",
+          zIndex: 3,
+          className: "identityTd",
+        })}
+      >
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </CrmInteractiveTd>
+    ))}
+    {children}
+  </Tr>
+)
 
 export const CrmSkeletonRow = ({ columns }) => (
   <Tr>

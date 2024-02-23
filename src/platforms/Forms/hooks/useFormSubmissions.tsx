@@ -10,7 +10,7 @@ import { useFetcherWithSign } from "utils/fetcher"
 
 type SubmissionAnswer = {
   fieldId: string
-  value: string | number | string[]
+  value: string /*  | number | string[] */ // the BE sends everything as a string now, this might change in the future
 }
 
 export type FormSubmission = {

@@ -109,8 +109,10 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
                   <DisplayComponent
                     field={field}
                     isDisabled
-                    // this is not needed now that the value always comes as a string, can be removed if it remains like this
-                    value={typeof value === "number" ? value.toString() : value}
+                    // the BE sends everything as a string now, this might change in the future
+                    value={
+                      /* typeof value === "number" ? value.toString() :  */ value
+                    }
                   />
                 </Box>
               )
