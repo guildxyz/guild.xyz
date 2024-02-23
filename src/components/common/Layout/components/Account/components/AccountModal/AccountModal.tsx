@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
+import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -44,7 +45,7 @@ const AccountModal = () => {
     disconnect,
   } = useWeb3ConnectionManager()
 
-  const { address: evmAddress } = useAccount()
+  const { address: evmAddress, connector } = useAccount()
 
   const chainId = useChainId()
 
@@ -154,15 +155,18 @@ const AccountModal = () => {
                     onClose={closeNetworkModal}
                   />
                 </Stack>
-                <Tooltip label="Disconnect">
-                  <IconButton
-                    size="sm"
-                    variant="outline"
-                    onClick={handleLogout}
-                    icon={<Icon as={SignOut} p="1px" />}
-                    aria-label="Disconnect"
-                  />
-                </Tooltip>
+                <HStack spacing={1}>
+                  {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
+                  <Tooltip label="Disconnect">
+                    <IconButton
+                      size="sm"
+                      variant="outline"
+                      onClick={handleLogout}
+                      icon={<Icon as={SignOut} p="1px" />}
+                      aria-label="Disconnect"
+                    />
+                  </Tooltip>
+                </HStack>
               </HStack>
 
               <AccountConnections />
