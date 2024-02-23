@@ -9,7 +9,6 @@ import CrmThead from "components/[guild]/crm/CRMTable/CrmThead"
 import Identities from "components/[guild]/crm/Identities"
 import { IDENTITIES_COLLAPSED_STYLE } from "components/[guild]/crm/IdentitiesExpansionToggle"
 import IdentitiesSearch from "components/[guild]/crm/IdentitiesSearch"
-import OrderByColumn from "components/[guild]/crm/OrderByColumn"
 import {
   buildQueryStringFromState,
   parseFiltersFromQuery,
@@ -132,7 +131,7 @@ const FormResponsesTable = ({ form }) => {
         header: ({ column }) => (
           <HStack w="full" justifyContent={"space-between"}>
             <FormThText>Submitted at</FormThText>
-            <OrderByColumn label="Submission date" column={column} />
+            {/* <OrderByColumn label="Submission date" column={column} /> */}
           </HStack>
         ),
         cell: (info) => new Date(info.getValue()).toLocaleDateString(),
