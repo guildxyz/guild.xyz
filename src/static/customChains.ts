@@ -506,7 +506,7 @@ export const oasisSapphire = /*#__PURE__*/ defineChain({
   name: "Oasis Sapphire",
   network: "oasissapphire",
   nativeCurrency: {
-    name: "ROSE",
+    name: "Rose",
     symbol: "ROSE",
     decimals: 18,
   },
