@@ -16,10 +16,10 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import { Clock, Hash } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
-import { Clock, Hash } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"

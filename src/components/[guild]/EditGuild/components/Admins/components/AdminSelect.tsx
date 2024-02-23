@@ -1,4 +1,5 @@
 import { forwardRef, Icon } from "@chakra-ui/react"
+import { Bug } from "@phosphor-icons/react"
 import {
   chakraComponents,
   CreatableSelect,
@@ -8,7 +9,6 @@ import {
 } from "chakra-react-select"
 import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
-import { Bug } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { mainnet, useEnsAddress } from "wagmi"

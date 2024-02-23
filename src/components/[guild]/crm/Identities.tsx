@@ -1,6 +1,6 @@
 import { HStack, Tag, TagLabel, TagLeftIcon, Tooltip } from "@chakra-ui/react"
+import { LockSimple, Wallet } from "@phosphor-icons/react"
 import { useCardBg } from "components/common/Card"
-import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"

@@ -13,13 +13,13 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, CheckCircle } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useAccount } from "wagmi"
 

@@ -1,4 +1,5 @@
 import { Tooltip } from "@chakra-ui/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -8,7 +9,6 @@ import AvailabilityTags from "components/[guild]/RolePlatforms/components/Platfo
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import Link from "next/link"
-import { ArrowRight } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"

@@ -26,6 +26,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, Plus, TrashSimple } from "@phosphor-icons/react"
 import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
@@ -33,7 +34,6 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
   FormProvider,
   useController,

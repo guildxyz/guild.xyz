@@ -11,6 +11,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Warning } from "@phosphor-icons/react"
 import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
@@ -20,7 +21,6 @@ import Card from "components/common/Card"
 import DataBlock from "components/common/DataBlock"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"

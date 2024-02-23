@@ -14,21 +14,21 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import {
   ArrowSquareIn,
   CaretDown,
   Check,
   DotsThree,
-  IconProps,
   LockSimple,
   Warning,
   X,
-} from "phosphor-react"
+  type IconProps,
+} from "@phosphor-icons/react"
+import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import capitalize from "utils/capitalize"
 import {
   POPOVER_FOOTER_STYLES,

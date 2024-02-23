@@ -1,5 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import { ArrowRight, Check } from "@phosphor-icons/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -7,7 +8,6 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { ArrowRight, Check } from "phosphor-react"
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()

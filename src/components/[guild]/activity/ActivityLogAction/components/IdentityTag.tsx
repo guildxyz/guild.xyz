@@ -1,5 +1,5 @@
 import { Tag, TagLabel, TagLeftIcon } from "@chakra-ui/react"
-import { Wallet } from "phosphor-react"
+import { Wallet } from "@phosphor-icons/react"
 import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 

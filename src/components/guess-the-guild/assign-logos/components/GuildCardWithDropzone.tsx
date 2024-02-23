@@ -9,9 +9,9 @@ import {
   Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowDown, Users } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
-import { ArrowDown, Users } from "phosphor-react"
 import { ReactNode } from "react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
