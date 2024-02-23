@@ -19,6 +19,7 @@ import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useAccount } from "wagmi"
@@ -38,8 +39,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
   )?.id
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
-  // TODO: we'll be able to fetch this from our API once PR#1011 is merged
-  const alreadyClaimed = false
+  const { claimed } = useClaimedReward(rolePlatformId)
 
   const {
     onSubmit,
@@ -51,7 +51,6 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
   } = useClaimText(rolePlatformId)
 
   const isLoading = isAccessLoading || isPreparing || isClaimLoading
-  const isDisabled = !!alreadyClaimed
 
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
 
@@ -64,7 +63,6 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         loadingText={
           isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
         }
-        colorScheme={!isDisabled ? "green" : "gray"}
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
             guild: urlName,
@@ -73,10 +71,10 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
           if (!response) onSubmit()
         }}
         {...rest}
-        isDisabled={isDisabled || rest?.isDisabled}
+        isDisabled={rest?.isDisabled}
       >
-        {alreadyClaimed
-          ? "Already claimed"
+        {claimed
+          ? "View mint link"
           : !hasRoleAccess
           ? "Check access & claim"
           : "Claim now"}
@@ -87,7 +85,9 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         <ModalContent>
           <ModalCloseButton />
 
-          <ModalHeader pb={0}>Claim POAP</ModalHeader>
+          <ModalHeader pb={0}>
+            {claimed ? "Your mint link" : "Claim POAP"}
+          </ModalHeader>
 
           <ModalBody pt={8}>
             {isLoading ? (
