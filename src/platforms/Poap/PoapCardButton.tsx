@@ -35,7 +35,7 @@ const PoapCardButton = ({ platform }: Props) => {
       : "Claim POAP"
 
   const buttonProps = {
-    isDisabled: !isButtonEnabled,
+    isDisabled: !isButtonEnabled && !claimed,
     w: "full",
     colorScheme: platforms.POAP.colorScheme,
   }

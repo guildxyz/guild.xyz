@@ -61,7 +61,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         size="lg"
         w="full"
         isLoading={isLoading}
-        colorScheme={!rest.isDisabled ? "green" : "gray"}
+        colorScheme={!rest.isDisabled || claimed ? "green" : "gray"}
         loadingText={
           isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
         }
@@ -73,7 +73,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
           if (!response) onSubmit()
         }}
         {...rest}
-        isDisabled={rest?.isDisabled}
+        isDisabled={rest?.isDisabled && !claimed}
       >
         {claimed
           ? "View mint link"
