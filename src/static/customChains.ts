@@ -492,5 +492,42 @@ export const blastSepolia = /*#__PURE__*/ defineChain({
       url: "https://testnet.blastscan.io",
     },
   },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 756690,
+    },
+  },
   testnet: true,
+})
+
+export const oasisSapphire = /*#__PURE__*/ defineChain({
+  id: 23294,
+  name: "Oasis Sapphire",
+  network: "oasissapphire",
+  nativeCurrency: {
+    name: "ROSE",
+    symbol: "ROSE",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://sapphire.oasis.io"],
+    },
+    public: {
+      http: ["https://sapphire.oasis.io"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.sapphire.oasis.io",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 734531,
+    },
+  },
 })

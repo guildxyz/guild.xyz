@@ -7,6 +7,7 @@ import {
   kava,
   lukso,
   neonEVM,
+  oasisSapphire,
   ontology,
   palm,
   pgn,
@@ -530,6 +531,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/blast.png",
     },
   },
+  OASIS_SAPPHIRE: {
+    ...oasisSapphire,
+    iconUrl: "/networkLogos/oasis-sapphire.svg",
+    coinIconUrl: "/networkLogos/oasis-sapphire.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/oasis-sapphire.svg",
+      dark: "/networkLogos/oasis-sapphire.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -581,6 +591,7 @@ enum Chains {
   MANTA = manta.id,
   TAIKO_KATLA = taikoKatlaTestnet.id,
   BLAST_SEPOLIA = blastSepolia.id,
+  OASIS_SAPPHIRE = oasisSapphire.id,
 }
 
 export type Chain = keyof typeof Chains
