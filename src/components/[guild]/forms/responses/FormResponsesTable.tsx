@@ -1,4 +1,4 @@
-import { Checkbox, HStack, Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -67,32 +67,32 @@ const FormResponsesTable = ({ form }) => {
 
   const columns = useMemo(
     () => [
-      {
-        id: "select",
-        size: 30,
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              isChecked: table.getIsAllRowsSelected(),
-              isIndeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler(),
-            }}
-            colorScheme="primary"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              isChecked: row.getIsSelected(),
-              isDisabled: !row.getCanSelect(),
-              isIndeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler(),
-            }}
-            colorScheme="primary"
-            mt="2px"
-          />
-        ),
-      },
+      // {
+      //   id: "select",
+      //   size: 30,
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         isChecked: table.getIsAllRowsSelected(),
+      //         isIndeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler(),
+      //       }}
+      //       colorScheme="primary"
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         isChecked: row.getIsSelected(),
+      //         isDisabled: !row.getCanSelect(),
+      //         isIndeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler(),
+      //       }}
+      //       colorScheme="primary"
+      //       mt="2px"
+      //     />
+      //   ),
+      // },
       columnHelper.accessor((row) => row, {
         id: "identity",
         size: 210,
