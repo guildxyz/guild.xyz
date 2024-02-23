@@ -1,5 +1,5 @@
 import { Center, Icon } from "@chakra-ui/react"
-import { Circle } from "@phosphor-icons/react"
+import { Circle } from "phosphor-react"
 
 export type MarkerProps = {
   colorScheme?: string

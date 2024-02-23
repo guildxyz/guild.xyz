@@ -1,7 +1,7 @@
 import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
-import { Info, Question } from "@phosphor-icons/react"
 import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
+import { Info, Question } from "phosphor-react"
 import { GUILD_FEE_PERCENTAGE, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useRequirementContext } from "../../RequirementContext"

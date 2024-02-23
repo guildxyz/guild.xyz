@@ -14,9 +14,9 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"

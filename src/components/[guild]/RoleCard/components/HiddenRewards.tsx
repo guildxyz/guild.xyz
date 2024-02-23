@@ -1,5 +1,5 @@
 import { Center, useColorModeValue } from "@chakra-ui/react"
-import { Question } from "@phosphor-icons/react"
+import { Question } from "phosphor-react"
 import { RewardDisplay } from "./Reward"
 
 const HiddenRewards = () => {

@@ -1,10 +1,5 @@
-import {
-  Detective,
-  EyeSlash,
-  GlobeHemisphereEast,
-  type IconProps,
-} from "@phosphor-icons/react"
 import { Option } from "components/common/RadioSelect/RadioSelect"
+import { Detective, EyeSlash, GlobeHemisphereEast, IconProps } from "phosphor-react"
 import { Visibility } from "types"
 import PrivateVisibilityOptions from "./components/PrivateVisibilityOptions"
 import VisibilityTag from "./components/VisibilityTag"

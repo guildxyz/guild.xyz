@@ -9,9 +9,9 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { DotLottiePlayer, type DotLottieCommonPlayer } from "@dotlottie/react-player"
-import { ArrowRight, CaretDown } from "@phosphor-icons/react"
 import useScrollEffect from "hooks/useScrollEffect"
 import Link from "next/link"
+import { ArrowRight, CaretDown } from "phosphor-react"
 import { useRef, useState } from "react"
 import LandingButton from "./LandingButton"
 

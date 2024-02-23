@@ -13,10 +13,9 @@ import {
 } from "@chakra-ui/react"
 
 import { Link } from "@chakra-ui/next-js"
-import { ArrowLeft, ArrowSquareOut } from "@phosphor-icons/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { Error } from "components/common/Error"
+import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
 import { Modal } from "components/common/Modal"
@@ -25,6 +24,7 @@ import useFuel from "hooks/useFuel"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
+import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import ReCAPTCHA from "react-google-recaptcha"
 import { useAccount, useConnect } from "wagmi"
@@ -33,6 +33,7 @@ import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
 import DelegateCashButton from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
+import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
@@ -97,7 +98,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, router, id, publicUserError])
+  }, [keyPair, router, id, publicUserError, connector])
 
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
@@ -160,12 +161,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               ? "Link address"
               : isDelegateConnection
               ? "Connect hot wallet"
-              : "Connect wallet"}
+              : "Connect to Guild"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Error
+          <ErrorComponent
             {...(set.error || linkAddress.error
               ? {
                   error: set.error ?? linkAddress.error,
@@ -202,8 +203,28 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </CardMotionWrapper>
           ) : (
             <Stack spacing="0">
+              {!connector && (
+                <>
+                  <GoogleLoginButton />
+                  <Text
+                    mt={6}
+                    mb={2}
+                    textTransform={"uppercase"}
+                    fontSize={"xs"}
+                    fontWeight={700}
+                    color={"gray"}
+                  >
+                    Or connect with wallet
+                  </Text>
+                </>
+              )}
+
               {connectors
-                .filter((conn) => isInSafeContext || conn.id !== "safe")
+                .filter(
+                  (conn) =>
+                    (isInSafeContext || conn.id !== "safe") &&
+                    (!!connector || conn.id !== "cwaasWallet")
+                )
                 .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
                     <ConnectorButton

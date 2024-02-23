@@ -1,5 +1,5 @@
-import { Wallet } from "@phosphor-icons/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { Wallet } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import ConnectAccount from "./ConnectAccount"
 

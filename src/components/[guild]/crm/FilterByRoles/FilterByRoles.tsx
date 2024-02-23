@@ -19,17 +19,17 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Funnel } from "@phosphor-icons/react"
 import { Column } from "@tanstack/react-table"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
+import { Funnel } from "phosphor-react"
 import { useState } from "react"
 import { Role, Visibility } from "types"
 import useGuild from "../../hooks/useGuild"
 import { Member } from "../useMembers"
-import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
 import AddAndEditHiddenRoles from "./components/AddAndEditHiddenRoles"
 import AddHiddenRoles from "./components/AddHiddenRoles"
 import FilterByRolesSearch from "./components/FilterByRolesSearch"
+import FilterByRolesLogicSelector from "./FilterByRolesLogicSelector"
 
 type Props = {
   column: Column<Member, Member>

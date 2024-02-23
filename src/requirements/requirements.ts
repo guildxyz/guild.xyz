@@ -1,3 +1,5 @@
+import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
+import dynamic from "next/dynamic"
 import {
   Coins,
   CurrencyCircleDollar,
@@ -7,9 +9,7 @@ import {
   Robot,
   Wallet,
   Wrench,
-} from "@phosphor-icons/react"
-import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
-import dynamic from "next/dynamic"
+} from "phosphor-react"
 import platforms from "platforms/platforms"
 import { RequirementFormProps } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"

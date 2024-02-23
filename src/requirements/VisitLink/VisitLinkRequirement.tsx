@@ -1,5 +1,4 @@
 import { HStack, Icon, Link, LinkProps, Stack, Text } from "@chakra-ui/react"
-import { Link as LinkIcon } from "@phosphor-icons/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Requirement, {
   RequirementProps,
@@ -15,6 +14,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { Link as LinkIcon } from "phosphor-react"
 import fetcher from "utils/fetcher"
 
 export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)

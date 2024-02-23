@@ -12,7 +12,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Check } from "@phosphor-icons/react"
 import HiddenRewards from "components/[guild]/RoleCard/components/HiddenRewards"
 import {
   RewardDisplay,
@@ -23,6 +22,7 @@ import RoleRequirementsSection, {
   RoleRequirementsSectionHeader,
 } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
+import { Check } from "phosphor-react"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
 import { KeyboardEvent } from "react"
 import { useWatch } from "react-hook-form"

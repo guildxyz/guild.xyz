@@ -1,9 +1,9 @@
 import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
-import { SignIn } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
+import { SignIn } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 import Notifications from "./components/Notifications/Notifications"
@@ -23,7 +23,7 @@ const Account = (): JSX.Element => {
         onClick={openWalletSelectorModal}
         data-test="connect-wallet-button"
       >
-        Connect to a wallet
+        Sign in
       </AccountButton>
     )
   }

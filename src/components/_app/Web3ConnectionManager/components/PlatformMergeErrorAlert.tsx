@@ -12,12 +12,12 @@ import {
   UnorderedList,
   chakra,
 } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
+import { ArrowSquareOut } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useRef } from "react"
 import { PlatformName } from "types"

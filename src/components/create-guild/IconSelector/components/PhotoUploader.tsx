@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
-import { File } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import GuildLogo from "components/common/GuildLogo"
 import useDropzone, { ERROR_MESSAGES } from "hooks/useDropzone"
 import { Uploader } from "hooks/usePinata/usePinata"
+import { File } from "phosphor-react"
 import { FileError } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 

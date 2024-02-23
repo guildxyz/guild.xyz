@@ -1,6 +1,6 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
 import { CHAIN_CONFIG, Chains } from "chains"
+import { ArrowSquareOut } from "phosphor-react"
 import { useChainId } from "wagmi"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"
 

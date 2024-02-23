@@ -1,5 +1,5 @@
 import { ButtonProps, Icon, IconButton, Tooltip } from "@chakra-ui/react"
-import { Trash } from "@phosphor-icons/react"
+import { Trash } from "phosphor-react"
 import { PropsWithChildren } from "react"
 
 type Props = {

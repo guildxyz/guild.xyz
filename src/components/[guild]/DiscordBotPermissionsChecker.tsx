@@ -9,11 +9,11 @@ import {
   ToastId,
   useDisclosure,
 } from "@chakra-ui/react"
-import { Info } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
+import { Info } from "phosphor-react"
 import { useEffect, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
