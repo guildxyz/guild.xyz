@@ -13,29 +13,28 @@ import { ArrowRight } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
-import { PlatformType } from "types"
+import { PlatformType, RolePlatform } from "types"
 import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 
-const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
+const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
   const { claimed } = useClaimedReward(platform.id)
 
   const state = useMemo(() => {
-    if (!getRolePlatformTimeframeInfo(platform).isAvailable)
+    if (claimed || getRolePlatformTimeframeInfo(platform).isAvailable)
       return {
-        tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
-        buttonProps: {
-          isDisabled: !claimed,
-        },
+        tooltipLabel: "View POAP",
+        buttonProps: {},
       }
-
     return {
-      tooltipLabel: "View POAP",
-      buttonProps: {},
+      tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
+      buttonProps: {
+        isDisabled: true,
+      },
     }
   }, [platform])
 
