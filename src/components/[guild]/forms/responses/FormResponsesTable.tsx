@@ -118,8 +118,12 @@ const FormResponsesTable = ({ form }) => {
           ),
           cell: (info) => {
             const value = info.getValue().find((f) => f.fieldId === field.id).value
-            if (Array.isArray(value)) return value.join(", ")
-            return value || "-"
+
+            return (
+              <Text noOfLines={6}>
+                {Array.isArray(value) ? value.join(", ") : value || "-"}
+              </Text>
+            )
           },
         })
       ),
