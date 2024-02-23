@@ -6,12 +6,12 @@ import {
   Text,
   Textarea,
 } from "@chakra-ui/react"
+import { File } from "@phosphor-icons/react"
 import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
 import { useRouter } from "next/router"
-import { File } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"

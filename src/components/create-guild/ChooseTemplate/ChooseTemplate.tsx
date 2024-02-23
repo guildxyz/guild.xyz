@@ -1,6 +1,6 @@
 import { Box, Button, Collapse } from "@chakra-ui/react"
+import { ArrowLeft } from "@phosphor-icons/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { ArrowLeft } from "phosphor-react"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"

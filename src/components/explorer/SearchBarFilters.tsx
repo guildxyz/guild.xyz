@@ -1,7 +1,7 @@
 import { Box, HStack, Icon, useColorModeValue } from "@chakra-ui/react"
+import { CircleWavyCheck, PushPin, Sparkle } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { motion } from "framer-motion"
-import { CircleWavyCheck, PushPin, Sparkle } from "phosphor-react"
 
 const ExplorerFilters = ["FEATURED", "NEWEST", "VERIFIED"] as const
 export type Filters = (typeof ExplorerFilters)[number]

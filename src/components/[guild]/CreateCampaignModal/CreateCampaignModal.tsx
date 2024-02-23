@@ -6,11 +6,11 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { ArrowRight } from "phosphor-react"
 import { FormProvider, useForm } from "react-hook-form"
 import CampaignForm, { CampaignFormType } from "./components/CampaignForm"
 import useCreateRoleGroup from "./hooks/useCreateRoleGroup"

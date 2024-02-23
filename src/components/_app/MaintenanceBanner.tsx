@@ -1,7 +1,7 @@
 import { Alert, AlertIcon, HStack, IconButton, Text } from "@chakra-ui/react"
+import { X } from "@phosphor-icons/react"
 import useLocalStorage from "hooks/useLocalStorage"
 import { useRouter } from "next/router"
-import { X } from "phosphor-react"
 
 type Props = {
   maintenanceFrom: string

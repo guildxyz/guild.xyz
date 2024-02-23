@@ -1,4 +1,5 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
+import { Plus, Wallet } from "@phosphor-icons/react"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -6,7 +7,6 @@ import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import Link from "next/link"
-import { Plus, Wallet } from "phosphor-react"
 import { forwardRef } from "react"
 
 const useYourGuilds = () =>

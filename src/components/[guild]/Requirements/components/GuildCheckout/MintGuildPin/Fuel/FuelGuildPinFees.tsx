@@ -12,7 +12,7 @@ import {
   Text,
   Tr,
 } from "@chakra-ui/react"
-import { ArrowSquareOut, Question } from "phosphor-react"
+import { ArrowSquareOut, Question } from "@phosphor-icons/react"
 import FeesTable from "../../components/FeesTable"
 import useFuelGuildPinFee from "./hooks/useFuelGuildPinFee"
 

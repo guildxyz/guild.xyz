@@ -9,13 +9,13 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { ArrowSquareIn, CaretRight, type IconProps } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import dynamic from "next/dynamic"
 import Image from "next/image"
-import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"

@@ -9,9 +9,9 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react"
+import { DownloadSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { DownloadSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import GuildGhost from "static/avatars/ghost.svg"
 import convertSVGToPNG from "utils/convertSVGToPNG"
