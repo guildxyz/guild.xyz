@@ -14,9 +14,9 @@ import {
   SimpleGrid,
   usePopper,
 } from "@chakra-ui/react"
+import { Item } from "app/page-builder/types"
 import Card from "components/common/Card"
 import { AnimatePresence, DragHandlers, motion } from "framer-motion"
-import { Item } from "pages/page-builder"
 import { ArrowsOutSimple, TrashSimple } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 

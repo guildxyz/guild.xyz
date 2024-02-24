@@ -15,7 +15,7 @@
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
     "test": "cypress run",
     "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
-    "test:utils": "vitest '/utils'",
+    "test:pageBuilder": "vitest '/app/page-builder/utils'",
     "snyk-protect": "snyk-protect"
   },
   "dependencies": {

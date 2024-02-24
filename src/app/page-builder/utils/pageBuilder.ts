@@ -1,4 +1,4 @@
-import { Item } from "pages/page-builder"
+import { Item } from "../types"
 
 const GRID_W = 6
 

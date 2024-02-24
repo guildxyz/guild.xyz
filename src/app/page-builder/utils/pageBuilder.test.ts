@@ -1,5 +1,5 @@
-import { Item } from "pages/page-builder"
 import { describe, expect, test } from "vitest"
+import { Item } from "../types"
 import move from "./pageBuilder"
 
 describe("DESKTOP", () => {
@@ -489,5 +489,72 @@ describe("DESKTOP", () => {
     })
 
     expect(GRID).toEqual(EXPECTED_OUTPUT)
+  })
+
+  test("3x2 card at (2,1) & 2x1 card at (5,2) - resizing the second card", () => {
+    const GRID: Item[] = [
+      {
+        id: "card1",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 2,
+          y: 1,
+          width: 3,
+          height: 2,
+        },
+      },
+      {
+        id: "card2",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 5,
+          y: 2,
+          width: 2,
+          height: 1,
+        },
+      },
+    ]
+
+    const EXPECTED_OUTPUT: Item[] = [
+      {
+        id: "card1",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 2,
+          y: 1,
+          width: 3,
+          height: 2,
+        },
+      },
+      {
+        id: "card2",
+        type: "ROLE",
+        data: {},
+        desktop: {
+          x: 1,
+          y: 3,
+          width: 3,
+          height: 1,
+        },
+      },
+    ]
+
+    move(GRID, GRID[1], {
+      width: 3,
+      height: 1,
+      x: 5,
+      y: 2,
+    })
+
+    expect(GRID).toEqual(EXPECTED_OUTPUT)
+  })
+
+  test("1x1 card at (1,1), (2,1) & (3,1) - resizing the first one to a 3x1 card", () => {
+    // TODO
+
+    expect(false).toBe(true)
   })
 })
