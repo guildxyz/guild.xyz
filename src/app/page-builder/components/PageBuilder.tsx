@@ -2,10 +2,13 @@
 
 import { EASINGS, Grid, GridItem, Stack } from "@chakra-ui/react"
 import ItemWrapper from "app/page-builder/components/ItemWrapper"
-import move from "app/page-builder/utils/pageBuilder"
+import move, { handleWrap } from "app/page-builder/utils/pageBuilder"
+import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { AnimatePresence, LayoutGroup, PanInfo, motion } from "framer-motion"
+import { Plus } from "phosphor-react"
 import { useRef, useState } from "react"
+import { uuidv7 } from "uuidv7"
 import { Item } from "../types"
 import calculateGridPosition from "../utils/calculateGridPosition"
 import Role from "./Role"
@@ -174,7 +177,7 @@ const PageBuilder = () => {
 
   return (
     <Stack spacing={4}>
-      {/* <Button
+      <Button
         leftIcon={<Plus />}
         maxW="max-content"
         onClick={() =>
@@ -208,7 +211,12 @@ const PageBuilder = () => {
                   width: 1,
                   height: 1,
                   x: lastItem.desktop.x + lastItem.desktop.width,
-                  y: lastItem.desktop.y,
+                  y:
+                    lastItem.desktop.y +
+                    (typeof lastItem.desktop.height === "number"
+                      ? lastItem.desktop.height
+                      : 1) -
+                    1,
                 }),
               } satisfies Item,
             ]
@@ -216,7 +224,7 @@ const PageBuilder = () => {
         }
       >
         Add card
-      </Button> */}
+      </Button>
 
       <Grid
         templateColumns="repeat(6, 1fr)"
