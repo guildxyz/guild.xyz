@@ -1,0 +1,1077 @@
+diff --git a/src/components/[guild]/JoinModal/hooks/useConnectPlatform.ts b/src/components/[guild]/JoinModal/hooks/useConnectPlatform.ts
+index 1c0f11204..63393ca20 100644
+--- a/src/components/[guild]/JoinModal/hooks/useConnectPlatform.ts
++++ b/src/components/[guild]/JoinModal/hooks/useConnectPlatform.ts
+@@ -1,7 +1,6 @@
+ import { usePrevious } from "@chakra-ui/react"
+ import useUser from "components/[guild]/hooks/useUser"
+ import { usePostHogContext } from "components/_app/PostHogProvider"
+-import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
+ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+ import useShowErrorToast from "hooks/useShowErrorToast"
+ import useSubmit, { SignedValdation, useSubmitWithSign } from "hooks/useSubmit"
+@@ -148,14 +147,6 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false)
+       useSubmitOptions?.onSuccess?.()
+     },
+     onError: ([platformName, rawError]) => {
+-      try {
+-        useSubmitOptions?.onError?.([platformName, rawError])
+-      } catch (err) {
+-        if (err instanceof StopExecution) {
+-          return
+-        }
+-      }
+-
+       const errorObject = {
+         error: undefined,
+         isAutoConnect: undefined,
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/WalletSelectorModal.tsx b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/WalletSelectorModal.tsx
+index 66dd5f9ef..46fa80ee6 100644
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/WalletSelectorModal.tsx
++++ b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/WalletSelectorModal.tsx
+@@ -32,7 +32,6 @@ import AccountButton from "./components/AccountButton"
+ import ConnectorButton from "./components/ConnectorButton"
+ import DelegateCashButton from "./components/DelegateCashButton"
+ import FuelConnectorButtons from "./components/FuelConnectorButtons"
+-import GoogleLoginButton from "./components/GoogleLoginButton"
+ import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
+ import useLinkAddress from "./hooks/useLinkAddress"
+ import processConnectionError from "./utils/processConnectionError"
+@@ -202,7 +201,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
+             <Stack spacing="0">
+               {!connector && (
+                 <>
+-                  <GoogleLoginButton />
+                   <Text
+                     mt={6}
+                     mb={2}
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/GoogleLoginButton.tsx b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/GoogleLoginButton.tsx
+deleted file mode 100644
+index 738fc5222..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/GoogleLoginButton.tsx
++++ /dev/null
+@@ -1,52 +0,0 @@
+-import { Center, Img } from "@chakra-ui/react"
+-import Button from "components/common/Button"
+-import { connectorButtonProps } from "../ConnectorButton"
+-import UserOnboardingModal from "./components/UserOnboardingModal"
+-import useLoginWithGoogle from "./hooks/useLoginWithGoogle"
+-
+-const GoogleLoginButton = () => {
+-  const {
+-    isNewWallet,
+-    isOpen,
+-    onClose,
+-    isLoading,
+-    onSubmit,
+-    response,
+-    isGoogleAuthLoading,
+-  } = useLoginWithGoogle()
+-
+-  return (
+-    <>
+-      <Button
+-        mt="4"
+-        isLoading={isLoading}
+-        onClick={onSubmit}
+-        colorScheme="white"
+-        leftIcon={
+-          <Center boxSize={6}>
+-            <Img
+-              src={`/walletLogos/google.svg`}
+-              maxW={6}
+-              maxH={6}
+-              alt={`Google logo`}
+-            />
+-          </Center>
+-        }
+-        loadingText={isGoogleAuthLoading ? "Confirm in popup..." : "Loading"}
+-        {...connectorButtonProps}
+-      >
+-        Sign in with Google
+-      </Button>
+-
+-      <UserOnboardingModal
+-        isNewWallet={isNewWallet}
+-        isOpen={isOpen}
+-        onClose={onClose}
+-        isLoginLoading={isLoading}
+-        isLoginSuccess={!!response}
+-      />
+-    </>
+-  )
+-}
+-
+-export default GoogleLoginButton
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData.tsx b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData.tsx
+deleted file mode 100644
+index 33d7b3072..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData.tsx
++++ /dev/null
+@@ -1,114 +0,0 @@
+-import { Icon, IconButton, Tooltip, useClipboard } from "@chakra-ui/react"
+-import { usePostHogContext } from "components/_app/PostHogProvider"
+-import useSubmit from "hooks/useSubmit"
+-import useToast, { useToastWithButton } from "hooks/useToast"
+-import { Copy } from "phosphor-react"
+-import { useEffect } from "react"
+-import useDriveOAuth from "../hooks/useDriveOAuth"
+-import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
+-
+-const CopyCWaaSBackupData = () => {
+-  const { captureEvent } = usePostHogContext()
+-  const driveOAuth = useDriveOAuth()
+-  const toast = useToast()
+-  const toastWithButton = useToastWithButton()
+-  const {
+-    onCopy,
+-    setValue: setBackup,
+-    value: backup,
+-    hasCopied,
+-  } = useClipboard("", 5000)
+-
+-  useEffect(() => {
+-    if (!hasCopied) return
+-
+-    toast({
+-      status: "success",
+-      title: "Copied!",
+-      description: "Backup data successfully copied to the clipboard",
+-    })
+-  }, [hasCopied])
+-
+-  // This toast is needed, because we can't copy to clipboard immediately after the submit, due to browser limitations
+-  useEffect(() => {
+-    if (!backup) return
+-
+-    toastWithButton({
+-      status: "info",
+-      title: "Backup downloaded",
+-      description: "Click the button below to copy it to the clipboard",
+-      buttonProps: {
+-        size: "sm",
+-        variant: "outline",
+-        onClick: onCopy,
+-        isDisabled: hasCopied,
+-        children: "Copy",
+-      },
+-    })
+-  }, [backup])
+-
+-  const copyBackup = useSubmit(
+-    async () => {
+-      captureEvent("[WaaS Backup] Clicked copy backup data")
+-
+-      if (!!backup) {
+-        onCopy()
+-        return
+-      }
+-
+-      const { authData, error } = await driveOAuth.onOpen()
+-      if (error || !authData) {
+-        throw new Error("Google authentication failed")
+-      }
+-      captureEvent("[WaaS Backup] Drive OAuth successful")
+-
+-      const {
+-        files: [wallet = null],
+-      } = await listWalletsOnDrive(authData.access_token)
+-
+-      if (!wallet) {
+-        throw new Error("No wallet found on Drive")
+-      }
+-      captureEvent("[WaaS Backup] Wallet file found")
+-
+-      const {
+-        appProperties: { backupData = null },
+-      } = await getDriveFileAppProperties(wallet.id, authData.access_token)
+-
+-      if (!backupData) {
+-        throw new Error("No backup data found on wallet file")
+-      }
+-      captureEvent("[WaaS Backup] Backup data found")
+-      setBackup(backupData)
+-    },
+-    {
+-      onError: (error) => {
+-        captureEvent("[WaaS Backup] Failed to copy backup data", {
+-          error,
+-          message: error?.message,
+-        })
+-
+-        toast({
+-          status: "error",
+-          title: "Failed",
+-          description: error?.message ?? "Unknown error",
+-        })
+-      },
+-    }
+-  )
+-
+-  return (
+-    <Tooltip label="Copy wallet backup data">
+-      <IconButton
+-        size="sm"
+-        variant="outline"
+-        onClick={copyBackup.onSubmit}
+-        isLoading={copyBackup.isLoading}
+-        icon={<Icon as={Copy} p="1px" />}
+-        aria-label="Copy wallet backup data"
+-      />
+-    </Tooltip>
+-  )
+-}
+-
+-export default CopyCWaaSBackupData
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/UserOnboardingModal.tsx b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/UserOnboardingModal.tsx
+deleted file mode 100644
+index 9bccb9f26..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/UserOnboardingModal.tsx
++++ /dev/null
+@@ -1,225 +0,0 @@
+-import {
+-  Accordion,
+-  AccordionButton,
+-  AccordionIcon,
+-  AccordionItem,
+-  AccordionPanel,
+-  Box,
+-  Center,
+-  Collapse,
+-  Icon,
+-  ModalBody,
+-  ModalContent,
+-  ModalFooter,
+-  ModalHeader,
+-  ModalOverlay,
+-  Spinner,
+-  Stack,
+-  Text,
+-} from "@chakra-ui/react"
+-import {
+-  DotLottieCommonPlayer,
+-  DotLottiePlayer,
+-  PlayerEvents,
+-} from "@dotlottie/react-player"
+-import { usePostHogContext } from "components/_app/PostHogProvider"
+-import Button from "components/common/Button"
+-import CopyableAddress from "components/common/CopyableAddress"
+-import GuildAvatar from "components/common/GuildAvatar"
+-import { Modal } from "components/common/Modal"
+-import useCountdownSeconds from "hooks/useCountdownSeconds"
+-import { LockSimple, Question, Wallet } from "phosphor-react"
+-import { useEffect, useRef, useState } from "react"
+-import type { CWaaSConnector } from "waasConnector"
+-import { useConnect } from "wagmi"
+-import GoogleTerms from "../../GoogleTerms"
+-
+-const UserOnboardingModal = ({
+-  isLoginLoading,
+-  isLoginSuccess,
+-  onClose,
+-  isOpen,
+-  isNewWallet,
+-}: {
+-  isLoginLoading: boolean
+-  isLoginSuccess: boolean
+-  onClose: () => void
+-  isOpen: boolean
+-  isNewWallet: boolean
+-}) => {
+-  const [isSuccessAnimDone, setIsSuccessAnimDone] = useState(false)
+-  const [accordionIndex, setAccordionIndex] = useState(0)
+-
+-  const { captureEvent } = usePostHogContext()
+-
+-  const { connectors, connect } = useConnect()
+-  const cwaasConnector = connectors.find(
+-    ({ id }) => id === "cwaasWallet"
+-  ) as CWaaSConnector
+-
+-  // Timer to decide if resend button is disabled
+-  const { seconds, start } = useCountdownSeconds(5)
+-
+-  const successPlayer = useRef<DotLottieCommonPlayer>()
+-
+-  const isSuccess = !!isLoginSuccess && !!successPlayer
+-
+-  // Play the success animation if everything was successful, and the player is ready
+-  useEffect(() => {
+-    if (!isSuccess) return
+-    successPlayer.current?.play()
+-  }, [isSuccess])
+-
+-  return (
+-    <Modal isOpen={isOpen} onClose={onClose}>
+-      <ModalOverlay />
+-      <ModalContent>
+-        <ModalHeader>
+-          {isLoginLoading
+-            ? isNewWallet
+-              ? "Generating a wallet for you..."
+-              : "Restoring your wallet..."
+-            : "Your new wallet"}
+-        </ModalHeader>
+-        <ModalBody>
+-          <Stack alignItems={"center"} gap={8}>
+-            <Stack alignItems={"center"}>
+-              <Box
+-                backgroundColor={"blackAlpha.200"}
+-                boxSize={20}
+-                borderRadius={"full"}
+-                position={"relative"}
+-              >
+-                {!isSuccess && (
+-                  <>
+-                    <Spinner w="full" h="full" speed="0.8s" thickness={"4px"} />
+-                    <Icon
+-                      as={Wallet}
+-                      position={"absolute"}
+-                      top={"50%"}
+-                      left={"50%"}
+-                      transform={"translate(-50%, -50%)"}
+-                      boxSize={7}
+-                    />
+-                  </>
+-                )}
+-
+-                <Collapse in={!isSuccessAnimDone}>
+-                  <DotLottiePlayer
+-                    style={{
+-                      position: "absolute",
+-                      top: "50%",
+-                      left: "50%",
+-                      transform: "translate(-50%, -50%)",
+-                      width: "var(--chakra-sizes-24)",
+-                      height: "var(--chakra-sizes-24)",
+-                    }}
+-                    src="/success_lottie.json"
+-                    ref={successPlayer}
+-                    onEvent={(event) => {
+-                      if (event !== PlayerEvents.Complete) return
+-
+-                      setIsSuccessAnimDone(true)
+-                      setAccordionIndex(1)
+-                      start()
+-                    }}
+-                    className="keep-colors"
+-                  />
+-                </Collapse>
+-
+-                {isSuccessAnimDone && (
+-                  <Center h="full">
+-                    <GuildAvatar
+-                      address={cwaasConnector?._currentAddress?.address}
+-                    />
+-                  </Center>
+-                )}
+-              </Box>
+-
+-              {isSuccessAnimDone ? (
+-                <CopyableAddress
+-                  decimals={5}
+-                  address={cwaasConnector?._currentAddress?.address ?? ""}
+-                />
+-              ) : (
+-                isNewWallet && <Box height="1.5rem" />
+-              )}
+-            </Stack>
+-
+-            {isNewWallet && (
+-              <Accordion index={accordionIndex}>
+-                <AccordionItem borderTop={"none"} pb={2}>
+-                  <AccordionButton
+-                    px={1}
+-                    onClick={() => {
+-                      captureEvent("[WaaS] Click onboarding accordion", {
+-                        index: 0,
+-                      })
+-                      setAccordionIndex(0)
+-                    }}
+-                  >
+-                    <Question size={18} />
+-                    <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
+-                      What's a wallet?
+-                    </Text>
+-
+-                    <AccordionIcon />
+-                  </AccordionButton>
+-                  <AccordionPanel pb={4} pl={8} pt={0} color={"whiteAlpha.600"}>
+-                    A wallet lets you store your digital assets like Guild Pins, NFTs
+-                    and other tokens. It's essential to have one to explore Guild and
+-                    all things web3!
+-                  </AccordionPanel>
+-                </AccordionItem>
+-
+-                <AccordionItem borderBottom={"none"} pt={2}>
+-                  <AccordionButton
+-                    px={1}
+-                    onClick={() => {
+-                      captureEvent("[WaaS] Click onboarding accordion", {
+-                        index: 1,
+-                      })
+-                      setAccordionIndex(1)
+-                    }}
+-                  >
+-                    <LockSimple size={18} />
+-                    <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
+-                      How can I access my wallet?
+-                    </Text>
+-                    <AccordionIcon />
+-                  </AccordionButton>
+-                  <AccordionPanel pb={4} pl={8} pt={0} color={"whiteAlpha.600"}>
+-                    {isLoginLoading
+-                      ? "Your wallet has a private key that we'll save to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"
+-                      : "Your wallet has a private key that we've saved to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"}
+-                  </AccordionPanel>
+-                </AccordionItem>
+-              </Accordion>
+-            )}
+-          </Stack>
+-        </ModalBody>
+-        <ModalFooter>
+-          {isSuccessAnimDone ? (
+-            <Button
+-              w={"full"}
+-              size="lg"
+-              colorScheme="green"
+-              isDisabled={seconds > 0}
+-              onClick={() => {
+-                connect({ connector: cwaasConnector })
+-                onClose()
+-                captureEvent("[WaaS] Wallet is connected")
+-              }}
+-            >
+-              {seconds > 0 ? `Wait ${seconds} sec...` : "Got it"}
+-            </Button>
+-          ) : (
+-            <GoogleTerms />
+-          )}
+-        </ModalFooter>
+-      </ModalContent>
+-    </Modal>
+-  )
+-}
+-
+-export default UserOnboardingModal
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useDriveOAuth.ts b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useDriveOAuth.ts
+deleted file mode 100644
+index 630ccae5d..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useDriveOAuth.ts
++++ /dev/null
+@@ -1,10 +0,0 @@
+-import useOauthPopupWindow from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
+-import platforms from "platforms/platforms"
+-
+-const useDriveOAuth = () =>
+-  useOauthPopupWindow<{ access_token: string }>("GOOGLE", undefined, {
+-    scope: `${platforms.GOOGLE.oauth.params.scope} https://www.googleapis.com/auth/drive.file`,
+-    response_type: "token",
+-  })
+-
+-export default useDriveOAuth
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle.ts b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle.ts
+deleted file mode 100644
+index ad1d95331..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle.ts
++++ /dev/null
+@@ -1,150 +0,0 @@
+-import { useDisclosure } from "@chakra-ui/react"
+-import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+-import { usePostHogContext } from "components/_app/PostHogProvider"
+-import { publicClient } from "connectors"
+-import useSetKeyPair from "hooks/useSetKeyPair"
+-import useSubmit from "hooks/useSubmit"
+-import useToast from "hooks/useToast"
+-import { useState } from "react"
+-import type { CWaaSConnector } from "waasConnector"
+-import { useConnect } from "wagmi"
+-import {
+-  getDriveFileAppProperties,
+-  listWalletsOnDrive,
+-  uploadBackupDataToDrive,
+-} from "../utils/googleDrive"
+-import useDriveOAuth from "./useDriveOAuth"
+-
+-const useLoginWithGoogle = () => {
+-  const { onOpen, onClose, isOpen } = useDisclosure()
+-  const toast = useToast()
+-  const { captureEvent } = usePostHogContext()
+-  const { connectors, connectAsync } = useConnect()
+-  const cwaasConnector = connectors.find(
+-    ({ id }) => id === "cwaasWallet"
+-  ) as CWaaSConnector
+-
+-  const [isNewWallet, setIsNewWallet] = useState(false)
+-
+-  const googleAuth = useDriveOAuth()
+-
+-  const { onSubmit: onConnectGoogleSubmit } = usePlatformConnect({
+-    onSuccess: () => {
+-      captureEvent("[WaaS] Google platform connected")
+-    },
+-    onError: (err) => {
+-      captureEvent("[WaaS] Google platform connection failed", { error: err })
+-      throw new StopExecution()
+-    },
+-  })
+-
+-  const { onSubmit: onSetKeypairSubmit } = useSetKeyPair({
+-    onSuccess: () => captureEvent("[WaaS] Keypair verified"),
+-    onError: (err) => {
+-      captureEvent("[WaaS] Failed to verify keypair", { error: err })
+-      throw err
+-    },
+-    allowThrow: true,
+-  })
+-
+-  const createOrRestoreWallet = async (accessToken: string) => {
+-    const { files } = await listWalletsOnDrive(accessToken)
+-
+-    if (files.length <= 0) {
+-      setIsNewWallet(true)
+-    }
+-
+-    onOpen()
+-
+-    if (files.length <= 0) {
+-      const { wallet, account } = await cwaasConnector.createWallet()
+-      await uploadBackupDataToDrive(wallet.backup, account.address, accessToken)
+-      return true
+-    } else {
+-      const {
+-        appProperties: { backupData },
+-      } = await getDriveFileAppProperties(files[0].id, accessToken)
+-
+-      // TODO: Check if the current wallet (if there is one) is the same. If so, don't call restore
+-      await cwaasConnector.restoreWallet(backupData)
+-      return false
+-    }
+-  }
+-
+-  const logInWithGoogle = useSubmit(
+-    async () => {
+-      captureEvent("[WaaS] Log in with Google clicked")
+-
+-      // 1) Google OAuth
+-      const { authData, error } = await googleAuth.onOpen()
+-
+-      if (!authData || !!error) {
+-        captureEvent("[WaaS] Google OAuth failed", { error })
+-        return
+-      }
+-
+-      captureEvent("[WaaS] Successful Google OAuth")
+-
+-      // 2) Create or Restore wallet
+-      const isNew = await createOrRestoreWallet(
+-        (authData as any)?.access_token
+-      ).catch((err) => {
+-        captureEvent("[WaaS] Wallet creation / restoration failed", { error: err })
+-        toast({
+-          status: "error",
+-          title: "Error",
+-          description: err instanceof Error ? err.message : "Unknown error",
+-        })
+-      })
+-
+-      captureEvent("[WaaS] Wallet successfully initialized", { isNew })
+-
+-      // 3) Verify a keypair
+-      const walletClient = await cwaasConnector.getWalletClient()
+-      const { keyPair, user } = await onSetKeypairSubmit({
+-        signProps: {
+-          walletClient,
+-          address: walletClient.account.address,
+-        },
+-      })
+-
+-      // 4) Try to connect Google account
+-      await onConnectGoogleSubmit({
+-        signOptions: {
+-          keyPair: keyPair.keyPair,
+-          walletClient,
+-          address: walletClient.account.address,
+-          publicClient: publicClient({}),
+-        },
+-        platformName: "GOOGLE",
+-        authData,
+-      })
+-
+-      if (!isNew) {
+-        await connectAsync({ connector: cwaasConnector })
+-        captureEvent("[WaaS] Wallet is connected")
+-        onClose()
+-      }
+-
+-      // TODO We could load the Player dynamically here
+-      return true
+-    },
+-    {
+-      onError: () => {
+-        onClose()
+-      },
+-    }
+-  )
+-
+-  return {
+-    isNewWallet,
+-    isOpen,
+-    onClose,
+-    isGoogleAuthLoading: googleAuth.isAuthenticating,
+-    ...logInWithGoogle,
+-  }
+-}
+-
+-export class StopExecution extends Error {}
+-
+-export default useLoginWithGoogle
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/index.ts b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/index.ts
+deleted file mode 100644
+index 0a2b44b78..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/index.ts
++++ /dev/null
+@@ -1 +0,0 @@
+-export { default } from "./GoogleLoginButton"
+diff --git a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/utils/googleDrive.ts b/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/utils/googleDrive.ts
+deleted file mode 100644
+index aa05778bb..000000000
+--- a/src/components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/utils/googleDrive.ts
++++ /dev/null
+@@ -1,145 +0,0 @@
+-import fetcher from "utils/fetcher"
+-
+-const BACKUP_DESCRIPTION = `DO NOT DELETE OR SHARE THIS FILE WITH ANYONE!\n\nThis file contains backup information of the following Coinbase wallet: ADDRESS_PLACEHOLDER\n\nThis backup information is required for accessing the wallet. If this information is lost or compromised, neither Coinbase, nor Guild will be able to help you\n\nFeel free to move this file to a different location on your Google Drive, just make sure you don't move it to a shared location\n\nFor extra security, this backup only works in its current state on google drive, if you download it, then re-upload it, the re-uploaded file won't work, and you WON'T BE ACLE TO ACCESS YOUR WALLET`
+-const DRIVE_MULTIPART_UPLOAD_URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`
+-const DRIVE_FILES_LIST_URL = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
+-  "appProperties has { key='isGuildWallet' and value='true' }"
+-)}`
+-
+-export const uploadBackupDataToDrive = (
+-  backupData: string,
+-  address: string,
+-  accessToken: string
+-) => {
+-  const createdAt = Date.now()
+-  const fileName = `guild-backup-${createdAt}.wallet`
+-  const addr = address.toLowerCase()
+-
+-  const formData = new FormData()
+-
+-  formData.append(
+-    "metadata",
+-    new Blob(
+-      [
+-        JSON.stringify({
+-          name: fileName,
+-          description:
+-            "DO NOT DELETE THIS FILE! IT IS NEEDED TO ACCESS A CRYPTO WALLET!",
+-
+-          // A collection of arbitrary key-value pairs which are private to the requesting app
+-          appProperties: {
+-            createdAt,
+-            isGuildWallet: true,
+-            address: addr,
+-            backupData,
+-          },
+-
+-          // Restrictions for accessing the content of the file
+-          contentRestrictions: [
+-            {
+-              readOnly: true,
+-              reason:
+-                "File has been automatically locked by Guild due to containing critical information",
+-            },
+-          ],
+-
+-          // Whether the options to copy, print, or download this file, should be disabled for readers and commenters
+-          copyRequiresWriterPermission: true,
+-        }),
+-      ],
+-      {
+-        type: "application/json; charset=UTF-8",
+-      }
+-    )
+-  )
+-
+-  formData.append(
+-    "media",
+-    new File(
+-      [
+-        `${BACKUP_DESCRIPTION.replace("ADDRESS_PLACEHOLDER", addr).replace(
+-          "BACKUP_PLACEHOLDER",
+-          backupData
+-        )}`,
+-      ],
+-      fileName,
+-      {
+-        type: "text/plain",
+-      }
+-    )
+-  )
+-
+-  return fetch(DRIVE_MULTIPART_UPLOAD_URL, {
+-    method: "POST",
+-    headers: {
+-      Authorization: `Bearer ${accessToken}`,
+-    },
+-    body: formData,
+-  }).catch((error) => {
+-    console.error(error)
+-    throw new Error("Failed to upload backup data to Google Drive")
+-  })
+-}
+-
+-type DriveFileList = {
+-  kind: "drive#fileList"
+-  incompleteSearch: boolean
+-  files: Array<{
+-    kind: "drive#file"
+-    mimeType: string
+-    id: string
+-    name: string
+-  }>
+-}
+-
+-export const listWalletsOnDrive = (accessToken: string): Promise<DriveFileList> =>
+-  fetcher(DRIVE_FILES_LIST_URL, {
+-    headers: {
+-      Authorization: `Bearer ${accessToken}`,
+-    },
+-  }).catch((error) => {
+-    console.error(error)
+-    throw new Error("Failed to check Google Drive files")
+-  })
+-
+-export const getFileFromDrive = (fileId: string, accessToken: string) =>
+-  fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
+-    headers: {
+-      Authorization: `Bearer ${accessToken}`,
+-    },
+-  })
+-    .then((resp) => resp.text())
+-    .catch((error) => {
+-      console.error(error)
+-      throw new Error("Failed to download file from Google Drive")
+-    })
+-
+-export const getDriveFileAppProperties = (
+-  fileId: string,
+-  accessToken: string
+-): Promise<{
+-  appProperties: {
+-    isGuildWallet: string
+-    backupData: string
+-    address: string
+-    createdAt: string
+-  }
+-}> =>
+-  fetcher(
+-    `https://www.googleapis.com/drive/v3/files/${fileId}?fields=appProperties`,
+-    {
+-      headers: {
+-        Authorization: `Bearer ${accessToken}`,
+-      },
+-    }
+-  )
+-    .then((result) => {
+-      if (!result?.appProperties?.backupData) {
+-        throw new Error("backupData app property not found")
+-      }
+-      return result
+-    })
+-    .catch((error) => {
+-      console.error(error)
+-      throw new Error("Failed to retrieve backup data from Google Drive")
+-    })
+diff --git a/src/components/common/Layout/components/Account/components/AccountModal/AccountModal.tsx b/src/components/common/Layout/components/Account/components/AccountModal/AccountModal.tsx
+index 51528b7c8..4d3d573b3 100644
+--- a/src/components/common/Layout/components/Account/components/AccountModal/AccountModal.tsx
++++ b/src/components/common/Layout/components/Account/components/AccountModal/AccountModal.tsx
+@@ -19,7 +19,6 @@ import {
+ } from "@chakra-ui/react"
+ import { CHAIN_CONFIG, Chains } from "chains"
+ import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
+-import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
+ import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
+ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+ import Button from "components/common/Button"
+@@ -155,7 +154,6 @@ const AccountModal = () => {
+                     onClose={closeNetworkModal}
+                   />
+                 </Stack>
+-                {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
+                 <Tooltip label="Disconnect">
+                   <IconButton
+                     size="sm"
+diff --git a/src/connectors.ts b/src/connectors.ts
+index b3d889772..b3cdbf549 100644
+--- a/src/connectors.ts
++++ b/src/connectors.ts
+@@ -1,8 +1,6 @@
+ import { CHAIN_CONFIG } from "chains"
+-import fetcher from "utils/fetcher"
+ import { createWalletClient, http } from "viem"
+ import { mnemonicToAccount } from "viem/accounts"
+-import { CWaaSConnector } from "waasConnector"
+ import { configureChains } from "wagmi"
+ import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet"
+ import { InjectedConnector } from "wagmi/connectors/injected"
+@@ -73,20 +71,6 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
+           debug: false,
+         },
+       }),
+-      new CWaaSConnector({
+-        chains,
+-        options: {
+-          provideAuthToken: async () => {
+-            const token = await fetcher("/v2/third-party/coinbase/token")
+-            return token
+-          },
+-          collectAndReportMetrics: true,
+-          prod:
+-            (typeof window !== "undefined" &&
+-              window.origin === "https://guild.xyz") ||
+-            undefined,
+-        },
+-      }),
+     ]
+ 
+ export { connectors, publicClient }
+diff --git a/src/waasConnector.ts b/src/waasConnector.ts
+deleted file mode 100644
+index 8ffb42788..000000000
+--- a/src/waasConnector.ts
++++ /dev/null
+@@ -1,231 +0,0 @@
+-// eslint-disable-next-line import/no-extraneous-dependencies
+-import { toViem } from "@coinbase/waas-sdk-viem"
+-import type {
+-  Address,
+-  InitializeWaasOptions,
+-  NewWallet,
+-  ProtocolFamily,
+-  Waas,
+-  Wallet,
+-} from "@coinbase/waas-sdk-web"
+-import { LocalAccount, createWalletClient, http } from "viem"
+-import { Chain, Connector, WalletClient } from "wagmi"
+-
+-let cwaasModule: typeof import("@coinbase/waas-sdk-web")
+-const cwaasImport = async () => {
+-  if (cwaasModule) return cwaasModule
+-  // eslint-disable-next-line import/no-extraneous-dependencies
+-  const mod = await import("@coinbase/waas-sdk-web")
+-  cwaasModule = mod
+-  return mod
+-}
+-
+-export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
+-  readonly id = "cwaasWallet"
+-
+-  readonly name = "Coinbase WaaS"
+-
+-  readonly ready = true
+-
+-  _chainId: number
+-
+-  _waas?: Waas
+-
+-  _currentAddress: Address<ProtocolFamily>
+-
+-  private throwIfNoWallet() {
+-    if (!this._waas) {
+-      throw new Error("CWaaS SDK is not initialized")
+-    }
+-
+-    if (!this._waas.wallets.wallet) {
+-      throw new Error("Create or restore a CWaaS wallet")
+-    }
+-  }
+-
+-  async getProvider() {
+-    try {
+-      if (!this._waas) {
+-        const { InitializeWaas } = await cwaasImport()
+-
+-        const waas = await InitializeWaas(this.options)
+-        this._waas = waas
+-      }
+-
+-      return this._waas
+-    } catch (error) {
+-      console.error(error)
+-      throw error
+-    }
+-  }
+-
+-  async connect(config?: { chainId?: number; backup?: string }) {
+-    this.emit("message", { type: "connecting" })
+-
+-    await this.getProvider()
+-    this.throwIfNoWallet()
+-
+-    const addresses = await this.getAllEvmAddresses()
+-
+-    this._chainId = config?.chainId ?? 1
+-
+-    this._currentAddress ||= addresses[0]
+-
+-    return {
+-      account: this._currentAddress.address,
+-      chain: {
+-        id: config?.chainId,
+-        unsupported: false,
+-      },
+-    }
+-  }
+-
+-  async disconnect(): Promise<void> {
+-    this.emit("disconnect")
+-  }
+-
+-  async getAccount(): Promise<`0x${string}`> {
+-    this.throwIfNoWallet()
+-
+-    return this._currentAddress.address
+-  }
+-
+-  async getChainId(): Promise<number> {
+-    return this._chainId
+-  }
+-
+-  async getWalletClient(config?: { chainId?: number }): Promise<WalletClient> {
+-    this.throwIfNoWallet()
+-
+-    const account = toViem(this._currentAddress)
+-
+-    const chain = this.chains.find(({ id }) => id === (config?.chainId ?? 1))
+-
+-    const walletClient = createWalletClient({
+-      account,
+-      chain,
+-      transport: http(), // chain.rpcUrls[0].http[0]
+-    })
+-
+-    return walletClient
+-  }
+-
+-  async isAuthorized(): Promise<boolean> {
+-    try {
+-      await this.getProvider()
+-      this.throwIfNoWallet()
+-      const { ProtocolFamily } = await cwaasImport()
+-
+-      const waas = await this.getProvider()
+-
+-      const addresses = await waas.wallets.wallet.addresses.for(ProtocolFamily.EVM)
+-
+-      return !!addresses?.address
+-    } catch {
+-      return false
+-    }
+-  }
+-
+-  async switchChain(chainId: number): Promise<Chain> {
+-    this._chainId = chainId
+-    await this.getWalletClient({ chainId })
+-    const chain = this.chains.find(({ id }) => id === chainId)
+-    this.onChainChanged(chainId)
+-    return chain
+-  }
+-
+-  protected onAccountsChanged(accounts: `0x${string}`[]): void {
+-    if (accounts.length === 0) this.emit("disconnect")
+-    else this.emit("change", { account: this._currentAddress.address })
+-  }
+-
+-  protected onChainChanged(chainId: string | number): void {
+-    this.emit("change", { chain: { id: +chainId, unsupported: false } })
+-  }
+-
+-  protected onDisconnect(error: Error): void {
+-    this.emit("disconnect")
+-  }
+-
+-  // Some utils
+-
+-  private async withAccount<W extends Wallet>(wallet: W) {
+-    const waas = await this.getProvider()
+-    const { ProtocolFamily } = await cwaasImport()
+-
+-    const address = await waas.wallets.wallet.addresses.for(ProtocolFamily.EVM)
+-
+-    const account = toViem(address)
+-
+-    return { wallet, account }
+-  }
+-
+-  async createWallet(): Promise<{
+-    wallet: NewWallet
+-    account: LocalAccount
+-  }> {
+-    try {
+-      const waas = await this.getProvider()
+-      const { Logout, ProtocolFamily } = await cwaasImport()
+-
+-      // if (!!waas.wallets.wallet) {
+-      //   this._currentAddress = (await waas.wallets.wallet.createAddress(
+-      //     ProtocolFamily.EVM
+-      //   )) as Address<ProtocolFamily>
+-
+-      //   const viemAccount = toViem(this._currentAddress)
+-      //   return {
+-      //     wallet: waas.wallets.wallet,
+-      //     account: viemAccount,
+-      //   }
+-      // }
+-
+-      if (waas.wallets.wallet) {
+-        await Logout()
+-      }
+-
+-      const wallet = await waas.wallets.create()
+-      this._currentAddress = await wallet.addresses.for(ProtocolFamily.EVM)
+-      const withViemAccount = await this.withAccount(wallet)
+-      return withViemAccount
+-    } catch (error) {
+-      console.error(error)
+-      throw new Error("Failed to create wallet")
+-    }
+-  }
+-
+-  async restoreWallet(backupData: string) {
+-    try {
+-      const waas = await this.getProvider()
+-      const { Logout, ProtocolFamily } = await cwaasImport()
+-
+-      if (waas.wallets.wallet) {
+-        await Logout()
+-      }
+-
+-      const wallet = await waas.wallets.restoreFromBackup(backupData)
+-
+-      this._currentAddress = await wallet.addresses.for(ProtocolFamily.EVM)
+-
+-      const withViemAccount = await this.withAccount(wallet)
+-      return withViemAccount
+-    } catch (error) {
+-      console.error(error)
+-      throw new Error("Failed to restore wallet")
+-    }
+-  }
+-
+-  async getAllEvmAddresses() {
+-    const { ProtocolFamily } = await cwaasImport()
+-    const waas = await this.getProvider()
+-
+-    const allAddresses =
+-      (await waas.wallets.wallet.addresses.all()) as Address<ProtocolFamily>[]
+-
+-    const evmAddresses = allAddresses.filter(
+-      (address) => address.protocolFamily === ProtocolFamily.EVM
+-    )
+-
+-    return evmAddresses
+-  }
+-}

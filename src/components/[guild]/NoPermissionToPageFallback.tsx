@@ -39,12 +39,16 @@ const NoPermissionToPageFallback = ({ children }) => {
               fontWeight="semibold"
               pr="4"
             >
-              Connect your wallet to access this page
+              Sign in to access this page
             </AlertDescription>
           </Stack>
           <Spacer />
-          <Button leftIcon={<SignIn />} onClick={openWalletSelectorModal}>
-            Connect wallet
+          <Button
+            leftIcon={<SignIn />}
+            colorScheme="white"
+            onClick={openWalletSelectorModal}
+          >
+            Sign in
           </Button>
         </Alert>
       </Card>
@@ -61,7 +65,9 @@ const NoPermissionToPageFallback = ({ children }) => {
             </AlertDescription>
           </Stack>
           <Spacer />
-          <Button onClick={openAccountModal}>View account</Button>
+          <Button colorScheme="white" onClick={openAccountModal}>
+            View account
+          </Button>
         </Alert>
       </Card>
     )
