@@ -10,10 +10,10 @@ import Button from "components/common/Button"
 import { useClaimedReward } from "hooks/useClaimedReward"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
+import { ShowMintLinkButton } from "platforms/Poap/ShowMintLinkButton"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
-import { useMemo } from "react"
-import { PlatformType, RolePlatform } from "types"
+import { PlatformType } from "types"
 import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
@@ -24,19 +24,7 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
   const { claimed } = useClaimedReward(platform.id)
 
-  const state = useMemo(() => {
-    if (claimed || getRolePlatformTimeframeInfo(platform).isAvailable)
-      return {
-        tooltipLabel: "View POAP",
-        buttonProps: {},
-      }
-    return {
-      tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
-      buttonProps: {
-        isDisabled: true,
-      },
-    }
-  }, [platform])
+  const { isAvailable } = getRolePlatformTimeframeInfo(platform)
 
   return (
     <RewardDisplay
@@ -48,20 +36,45 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
         />
       }
       label={
-        <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
-          {"Claim: "}
-          <Button
-            as={Link}
-            href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
-            variant="link"
-            colorScheme="primary"
-            rightIcon={<ArrowRight />}
-            iconSpacing="1"
-            maxW="full"
-            {...state.buttonProps}
-          >
-            {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
-          </Button>
+        <Tooltip
+          isDisabled={claimed}
+          label={
+            isAvailable
+              ? "View POAP"
+              : claimTextButtonTooltipLabel[getRolePlatformStatus(platform)]
+          }
+          hasArrow
+          shouldWrapChildren
+        >
+          {claimed ? (
+            <>
+              {"Mint link: "}
+              <ShowMintLinkButton
+                rolePlatformId={platform.id}
+                variant="link"
+                colorScheme="primary"
+                maxW="full"
+              >
+                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
+              </ShowMintLinkButton>
+            </>
+          ) : (
+            <>
+              {"Claim: "}
+              <Button
+                as={Link}
+                href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
+                variant="link"
+                colorScheme="primary"
+                rightIcon={<ArrowRight />}
+                iconSpacing="1"
+                maxW="full"
+                isDisabled={!isAvailable}
+              >
+                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
+              </Button>
+            </>
+          )}
         </Tooltip>
       }
     >

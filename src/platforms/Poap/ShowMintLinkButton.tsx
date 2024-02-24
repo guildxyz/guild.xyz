@@ -4,7 +4,7 @@ import {
   Center,
   HStack,
   Icon,
-  Link,
+  Link as LinkButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,87 +13,40 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
+import { PropsWithChildren } from "react"
+import { Rest } from "types"
 import { useAccount } from "wagmi"
 
-type Props = {
-  rolePlatformId: number
-  isClaimed: boolean
-  isClaimedLoading: boolean
-} & ButtonProps
+export type ShowMintLinkButtonProps = { rolePlatformId: number } & ButtonProps & Rest
 
-const ClaimPoapButton = ({
-  rolePlatformId,
-  isClaimed: claimed,
-  isClaimedLoading,
-  ...rest
-}: Props) => {
-  const { captureEvent } = usePostHogContext()
-
-  const { urlName, roles } = useGuild()
+export const ShowMintLinkButton: React.FC<
+  PropsWithChildren<ShowMintLinkButtonProps>
+> = ({ rolePlatformId, children, ...rest }) => {
   const { address } = useAccount()
-
-  const roleId = roles?.find((role) =>
-    role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
-  )?.id
-  const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
-
   const {
-    onSubmit,
-    isPreparing,
-    isLoading: isClaimLoading,
+    isLoading,
     error,
     response,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatformId)
-
-  const isLoading =
-    isAccessLoading || isPreparing || isClaimLoading || isClaimedLoading
-
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
 
   return (
     <>
-      <Button
-        size="lg"
-        w="full"
-        isLoading={isLoading}
-        colorScheme={!rest.isDisabled || claimed ? "green" : "gray"}
-        loadingText={
-          isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
-        }
-        onClick={() => {
-          captureEvent("Click: ClaimPoapButton", {
-            guild: urlName,
-          })
-          onOpen()
-          if (!response) onSubmit()
-        }}
-        {...rest}
-        isDisabled={rest?.isDisabled && !claimed}
-      >
-        {claimed
-          ? "View mint link"
-          : !hasRoleAccess
-          ? "Check access & claim"
-          : "Claim now"}
+      <Button onClick={onOpen} {...rest}>
+        {children}
       </Button>
-
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
 
-          <ModalHeader pb={0}>
-            {claimed ? "Your mint link" : "Claim POAP"}
-          </ModalHeader>
+          <ModalHeader pb={0}>{"Your mint link"}</ModalHeader>
 
           <ModalBody pt={8}>
             {isLoading ? (
@@ -113,7 +66,7 @@ const ClaimPoapButton = ({
                 />
                 <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
                   <Text>You can mint your POAP on the link below:</Text>
-                  <Link
+                  <LinkButton
                     mt={2}
                     maxW="full"
                     href={`${httpsLink}?address=${address}`}
@@ -125,7 +78,7 @@ const ClaimPoapButton = ({
                       {httpsLink}
                     </Text>
                     <Icon as={ArrowSquareOut} />
-                  </Link>
+                  </LinkButton>
                 </Box>
               </HStack>
             ) : (
@@ -137,4 +90,3 @@ const ClaimPoapButton = ({
     </>
   )
 }
-export default ClaimPoapButton

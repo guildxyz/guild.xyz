@@ -7,6 +7,7 @@ import {
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import ClaimPoapButton from "./ClaimPoapButton"
 
@@ -32,12 +33,13 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
 
   const { isAvailable: isButtonEnabled, startTimeDiff } =
     getRolePlatformTimeframeInfo(rolePlatform)
+  const { claimed, isLoading } = useClaimedReward(rolePlatform.id)
 
   return (
     <Stack p={padding} w="full" spacing={2}>
       <ConnectWalletButton />
       <Tooltip
-        isDisabled={isButtonEnabled}
+        isDisabled={isButtonEnabled || claimed}
         label={
           startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
         }
@@ -47,6 +49,8 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
         <ClaimPoapButton
           rolePlatformId={rolePlatformId}
           isDisabled={!isButtonEnabled}
+          isClaimed={claimed}
+          isClaimedLoading={isLoading}
         />
       </Tooltip>
 
