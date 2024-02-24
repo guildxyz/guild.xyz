@@ -2,15 +2,13 @@
 
 import { EASINGS, Grid, GridItem, Stack } from "@chakra-ui/react"
 import ItemWrapper from "app/page-builder/components/ItemWrapper"
-import move, { handleWrap } from "app/page-builder/utils/pageBuilder"
-import Button from "components/common/Button"
+import move from "app/page-builder/utils/pageBuilder"
 import Card from "components/common/Card"
-import { AnimatePresence, DragHandlers, LayoutGroup, motion } from "framer-motion"
-import { Plus } from "phosphor-react"
+import { AnimatePresence, LayoutGroup, PanInfo, motion } from "framer-motion"
 import { useRef, useState } from "react"
-import { uuidv7 } from "uuidv7"
 import { Item } from "../types"
 import calculateGridPosition from "../utils/calculateGridPosition"
+import Role from "./Role"
 
 const initialItems: Item[] = [
   {
@@ -18,47 +16,74 @@ const initialItems: Item[] = [
     desktop: {
       x: 1,
       y: 1,
-      width: 1,
-      height: 1,
+      width: 2,
+      height: 2,
     },
     type: "ROLE",
-    data: {},
+    data: {
+      guildId: 1985,
+      roleId: 1900,
+    },
   },
   {
     id: "1",
     desktop: {
-      x: 2,
+      x: 3,
       y: 1,
       width: 1,
       height: 1,
     },
 
     type: "ROLE",
-    data: {},
+    data: {
+      guildId: 1985,
+      roleId: 1900,
+    },
   },
   {
     id: "2",
     desktop: {
-      x: 1,
+      x: 3,
       y: 2,
       width: 2,
       height: 1,
     },
 
     type: "ROLE",
-    data: {},
+    data: {
+      guildId: 1985,
+      roleId: 1900,
+    },
   },
   {
     id: "3",
     desktop: {
       x: 1,
       y: 3,
-      width: 1,
-      height: 1,
+      width: 3,
+      height: 2,
     },
 
     type: "ROLE",
-    data: {},
+    data: {
+      guildId: 1985,
+      roleId: 1900,
+    },
+  },
+  {
+    id: "4",
+    desktop: {
+      x: 4,
+      y: 3,
+      width: 1,
+      height: 2,
+    },
+
+    type: "ROLE",
+    data: {
+      guildId: 1985,
+      roleId: 1900,
+    },
   },
 ]
 
@@ -70,22 +95,16 @@ const MotionCard = motion(Card)
 const PageBuilder = () => {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const elementPositionToXY = (
-    element: HTMLDivElement,
-    itemPosition: Item["desktop"]
-  ) => {
-    if (!containerRef.current || !element) return
+  const elementToXY = (element: HTMLDivElement, itemPosition: Item["desktop"]) => {
+    if (!containerRef.current) return
 
-    const {
-      left: elLeft,
-      top: elTop,
-      width: elWidth,
-      height: elHeight,
-    } = element.getBoundingClientRect()
-    const elXCenter = elLeft + elWidth / 2
-    const elYCenter = elTop + elHeight / 2
+    const { left: elLeft, top: elTop } = element.getBoundingClientRect()
+
+    const elXCenter = elLeft + BASE_SIZE / 2 - (itemPosition.x - 1) * PADDING
+    const elYCenter = elTop + BASE_SIZE / 2 - (itemPosition.y - 1) * PADDING
 
     const { left, top } = containerRef.current.getBoundingClientRect()
+
     const x = Math.max(elXCenter - left, 0)
     const y = Math.max(elYCenter - top, 0)
 
@@ -98,26 +117,27 @@ const PageBuilder = () => {
 
   const [items, setItems] = useState<Item[]>(initialItems)
 
-  const onDrag: DragHandlers["onDrag"] = (event, info) => {
+  const onDrag: (
+    itemId: string,
+    event: MouseEvent | TouchEvent | PointerEvent,
+    panInfo: PanInfo
+  ) => void = (itemId, event, panInfo) => {
     if (
       !containerRef.current ||
-      (Math.abs(info.delta.x) < 1 && Math.abs(info.delta.y) < 1)
+      (Math.abs(panInfo.delta.x) < 1 && Math.abs(panInfo.delta.y) < 1)
     )
       return
 
-    const element = event.target as HTMLDivElement
-    const htmlDataItemId = element.getAttribute("data-item-id")
-
     const itemsClone = structuredClone(items)
-    const itemToMove = itemsClone.find(
-      (item) => item.id.toString() === htmlDataItemId
-    )
+    const itemToMove = itemsClone.find((item) => item.id === itemId)
 
     if (!itemToMove) return
 
     if (!placeholderPosition) setPlaceholderPosition(itemToMove.desktop)
 
-    const newPosition = elementPositionToXY(element, { ...itemToMove.desktop })
+    const newPosition = elementToXY(event.target as HTMLDivElement, {
+      ...itemToMove.desktop,
+    })
 
     // Early return, so we don't need to calculate anything for the grid & we also don't need to set the placeholder state
     if (
@@ -154,7 +174,7 @@ const PageBuilder = () => {
 
   return (
     <Stack spacing={4}>
-      <Button
+      {/* <Button
         leftIcon={<Plus />}
         maxW="max-content"
         onClick={() =>
@@ -196,7 +216,7 @@ const PageBuilder = () => {
         }
       >
         Add card
-      </Button>
+      </Button> */}
 
       <Grid
         templateColumns="repeat(6, 1fr)"
@@ -205,51 +225,51 @@ const PageBuilder = () => {
         ref={containerRef}
       >
         <LayoutGroup>
-          {placeholderPosition && (
-            <GridItem
-              as={MotionCard}
-              initial={{
-                opacity: 0,
-                scale: 0.95,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                transition: { duration: 0.1, ease: EASINGS.easeOut },
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.95,
-                transition: { duration: 0.1, ease: EASINGS.easeIn },
-              }}
-              layout
-              background="transparent"
-              border={2}
-              shadow="none"
-              borderColor="whiteAlpha.300"
-              borderStyle="dashed"
-              gridColumnStart={placeholderPosition.x}
-              gridRowStart={placeholderPosition.y}
-              colSpan={
-                typeof placeholderPosition.width === "number"
-                  ? placeholderPosition.width
-                  : 6
-              }
-              rowSpan={
-                typeof placeholderPosition.height === "number"
-                  ? placeholderPosition.height
-                  : 1
-              }
-            />
-          )}
-
           <AnimatePresence>
+            {placeholderPosition && (
+              <GridItem
+                key={`placeholer-${placeholderPosition.x}-${placeholderPosition.y}`}
+                as={MotionCard}
+                initial={{
+                  opacity: 0,
+                  scale: 0.95,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  transition: { duration: 0.1, ease: EASINGS.easeOut },
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.95,
+                  transition: { duration: 0.1, ease: EASINGS.easeIn },
+                }}
+                layout
+                background="transparent"
+                border={2}
+                shadow="none"
+                borderColor="whiteAlpha.300"
+                borderStyle="dashed"
+                gridColumnStart={placeholderPosition.x}
+                gridRowStart={placeholderPosition.y}
+                colSpan={
+                  typeof placeholderPosition.width === "number"
+                    ? placeholderPosition.width
+                    : 6
+                }
+                rowSpan={
+                  typeof placeholderPosition.height === "number"
+                    ? placeholderPosition.height
+                    : 1
+                }
+              />
+            )}
+
             {items?.map((item) => (
               <ItemWrapper
                 key={item.id}
-                data-item-id={item.id}
                 item={item}
-                onDrag={onDrag}
+                onDrag={(event, panInfo) => onDrag(item.id, event, panInfo)}
                 onDragEnd={() => setPlaceholderPosition(null)}
                 onResize={(width, height) => {
                   const itemsClone = structuredClone(items)
@@ -268,7 +288,9 @@ const PageBuilder = () => {
                     prevItems.filter(({ id }) => id !== item.id)
                   )
                 }
-              />
+              >
+                <Role data={item.data} desktop={item.desktop} />
+              </ItemWrapper>
             ))}
           </AnimatePresence>
         </LayoutGroup>

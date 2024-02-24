@@ -29,7 +29,6 @@ type Props = {
     height: Item["desktop"]["height"]
   ) => void
   onRemove: () => void
-  "data-item-id": string
 }
 
 const MotionCard = motion(Card)
@@ -59,7 +58,6 @@ const ItemWrapper = ({
   onResize,
   onRemove,
   children,
-  ...rest
 }: PropsWithChildren<Props>) => {
   const x = item.desktop.x
   const y = item.desktop.y
@@ -83,9 +81,10 @@ const ItemWrapper = ({
       rowSpan={Number(item.desktop.height)}
       cursor={isDragging ? "grabbing" : "grab"}
       layout
-      style={{
-        borderRadius: "var(--chakra-radii-2xl)",
-      }}
+      // style={{
+      //   width: "100%",
+      //   borderRadius: 16,
+      // }}
       drag
       onDragStart={() => setDragging(true)}
       onDrag={onDrag}
@@ -103,17 +102,12 @@ const ItemWrapper = ({
       onHoverStart={() => setShouldDisplayMenu(true)}
       onHoverEnd={() => setShouldDisplayMenu(false)}
     >
-      {children}
+      <MotionBox position="relative" w="full" h="full" ref={referenceRef}>
+        {children}
 
-      <Box
-        {...rest} // TODO: not sure why doesn't this work if I add it to the GridItem component directly
-        w="full"
-        h="full"
-        position="relative"
-        alignItems="center"
-        justifyContent="center"
-        ref={referenceRef}
-      >
+        {/* This will be the target element of the drag events, so we can make sure that we always calculate the x,y position of an item relative to this element */}
+        <Box position="absolute" inset={0} />
+
         <AnimatePresence>
           {shouldDisplayMenu && !isDragging && (
             <Portal>
@@ -161,7 +155,7 @@ const ItemWrapper = ({
             </Portal>
           )}
         </AnimatePresence>
-      </Box>
+      </MotionBox>
     </MotionCard>
   )
 }
