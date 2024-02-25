@@ -4,19 +4,32 @@ import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import useSWR from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useWalletClient } from "wagmi"
 import { SendMessageForm } from "../SendNewMessage/SendNewMessage"
 import useGuildMessages, { Message } from "./useGuildMessages"
-import { useUsersXMTPKeys } from "./useUsersXMTPKeys"
 
 const useSendMessage = (onSuccess?: () => void) => {
   const { id } = useGuild()
-  const { keys: xmtpKeys } = useUsersXMTPKeys()
   const fetcherWithSign = useFetcherWithSign()
-  const { data: signer } = useWalletClient()
-
   const { id: userId } = useUser()
+
+  const { data: xmtpKeys } = useSWR(
+    userId ? `/v2/users/${userId}/keys` : null,
+    (url: string) =>
+      fetcherWithSign([
+        url,
+        {
+          method: "GET",
+          body: {
+            Accept: "application/json",
+            query: { service: "XMTP" },
+          },
+        },
+      ])
+  )
+  const { data: signer } = useWalletClient()
 
   const sendMessage = (formValues: SendMessageForm) => {
     if (formValues.protocol === "WEB3INBOX" || xmtpKeys.length) {
