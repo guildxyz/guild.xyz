@@ -116,7 +116,7 @@ const FormResponsesTable = ({ form }) => {
             </HStack>
           ),
           cell: (info) => {
-            const value = info.getValue().find((f) => f.fieldId === field.id).value
+            const value = info.getValue().find((f) => f.fieldId === field.id)?.value
 
             return (
               <Text noOfLines={6}>
