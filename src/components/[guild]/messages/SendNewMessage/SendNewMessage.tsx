@@ -118,20 +118,20 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
           <FormProvider {...methods}>
             <Stack spacing={6}>
               <Stack>
+                <FormControl isRequired isInvalid={!!errors.protocol}>
+                  <FormLabel>Select protocol</FormLabel>
+                  <Select
+                    {...register("protocol", {
+                      onChange: ({ target }) =>
+                        setValue("senderType", SenderTypes[target.value]),
+                    })}
+                  >
+                    <option value={"WEB3INBOX"}>Web3Inbox</option>
+                    <option value={"XMTP"}>XMTP</option>
+                  </Select>
+                  <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
+                </FormControl>
                 <FormControl isRequired isInvalid={!!errors.roleIds}>
-                  <FormControl isRequired isInvalid={!!errors.protocol}>
-                    <FormLabel>Select protocol</FormLabel>
-                    <Select
-                      {...register("protocol", {
-                        onChange: ({ target }) =>
-                          setValue("senderType", SenderTypes[target.value]),
-                      })}
-                    >
-                      <option value={"WEB3INBOX"}>Web3Inbox</option>
-                      <option value={"XMTP"}>XMTP</option>
-                    </Select>
-                    <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
-                  </FormControl>
                   <FormLabel>Recipient roles</FormLabel>
                   <RoleIdsSelect />
                   <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
