@@ -119,7 +119,7 @@ const FormResponsesTable = ({ form }) => {
             const value = info.getValue().find((f) => f.fieldId === field.id)?.value
 
             return (
-              <Text noOfLines={6}>
+              <Text noOfLines={6} maxWidth={"400px"}>
                 {Array.isArray(value) ? value.join(", ") : value || "-"}
               </Text>
             )
