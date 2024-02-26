@@ -242,7 +242,7 @@ const AddRewardButton = (): JSX.Element => {
                   skipSettings
                 />
               ) : (
-                <PlatformsGrid onSelection={setSelection} showPoap pb="4" />
+                <PlatformsGrid onSelection={setSelection} pb="4" />
               )}
             </ModalBody>
 

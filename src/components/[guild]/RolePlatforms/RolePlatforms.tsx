@@ -115,9 +115,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                   contentRow={
                     CAPACITY_TIME_PLATFORMS.includes(type) && (
                       <AvailabilitySetup
-                        platformType={
-                          PlatformType[guildPlatform.platformId] as PlatformName
-                        }
+                        platformType={type}
                         rolePlatform={rolePlatform}
                         defaultValues={{
                           capacity: rolePlatform.capacity,
