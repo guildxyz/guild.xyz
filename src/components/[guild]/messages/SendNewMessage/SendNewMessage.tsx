@@ -16,6 +16,7 @@ import {
   Textarea,
   useColorModeValue,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react"
 import { XMTPProvider } from "@xmtp/react-sdk"
 import { useIsTabsStuck } from "components/[guild]/Tabs"
@@ -118,7 +119,7 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
   const { onSubmit, isLoading } = useSendMessage(() => {
     reset()
     onClose()
-  }, xmtpKeys.keys)
+  }, xmtpKeys?.keys)
   console.log(xmtpKeys)
   const roleIds = useWatch({ control, name: "roleIds" })
   const protocol = useWatch({ control, name: "protocol" })
@@ -140,54 +141,56 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
           <FormProvider {...methods}>
             <Stack spacing={6}>
               <Stack>
-                <FormControl isRequired isInvalid={!!errors.protocol}>
-                  <FormLabel>Select protocol</FormLabel>
-                  <Select
-                    {...register("protocol", {
-                      onChange: ({ target }) =>
-                        setValue("senderType", SenderTypes[target.value]),
-                    })}
-                  >
-                    <option value={"WEB3INBOX"}>Web3Inbox</option>
-                    <option value={"XMTP"}>XMTP</option>
-                  </Select>
-                  <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
-                </FormControl>
-                <FormControl isRequired isInvalid={!!errors.roleIds}>
-                  <FormLabel>Recipient roles</FormLabel>
-                  <RoleIdsSelect />
-                  <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
-                  <Text colorScheme="gray" pt={2}>
-                    <Text
-                      as="span"
-                      fontWeight="bold"
-                      color={reachableUsers?.length > 0 && greenTextColor}
+                <VStack spacing={6}>
+                  <FormControl isRequired isInvalid={!!errors.protocol}>
+                    <FormLabel>Select protocol</FormLabel>
+                    <Select
+                      {...register("protocol", {
+                        onChange: ({ target }) =>
+                          setValue("senderType", SenderTypes[target.value]),
+                      })}
                     >
-                      {isReachableUsersLoading ? (
-                        <Spinner size="xs" />
-                      ) : (
-                        reachableUsers?.length ?? 0
-                      )}
+                      <option value={"WEB3INBOX"}>Web3Inbox</option>
+                      <option value={"XMTP"}>XMTP</option>
+                    </Select>
+                    <FormErrorMessage>{errors.message?.message}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl isRequired isInvalid={!!errors.roleIds}>
+                    <FormLabel>Recipient roles</FormLabel>
+                    <RoleIdsSelect />
+                    <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
+                    <Text colorScheme="gray" pt={2}>
+                      <Text
+                        as="span"
+                        fontWeight="bold"
+                        color={reachableUsers?.length > 0 && greenTextColor}
+                      >
+                        {isReachableUsersLoading ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          reachableUsers?.length ?? 0
+                        )}
+                      </Text>
+                      <Text
+                        as="span"
+                        color={reachableUsers?.length > 0 && greenTextColor}
+                      >
+                        {" reachable "}
+                      </Text>
+                      <Text as="span" color="chakra-body-text">
+                        {"/ "}
+                      </Text>
+                      <Text as="span" fontWeight="bold">
+                        {isTargetedCountValidating ? (
+                          <Spinner size="xs" />
+                        ) : (
+                          targetedCount
+                        )}
+                      </Text>
+                      {" targeted"}
                     </Text>
-                    <Text
-                      as="span"
-                      color={reachableUsers?.length > 0 && greenTextColor}
-                    >
-                      {" reachable "}
-                    </Text>
-                    <Text as="span" color="chakra-body-text">
-                      {"/ "}
-                    </Text>
-                    <Text as="span" fontWeight="bold">
-                      {isTargetedCountValidating ? (
-                        <Spinner size="xs" />
-                      ) : (
-                        targetedCount
-                      )}
-                    </Text>
-                    {" targeted"}
-                  </Text>
-                </FormControl>
+                  </FormControl>
+                </VStack>
 
                 <Text>
                   {protocol === "WEB3INBOX" ? (
@@ -209,12 +212,6 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
                         https://xmtp.com
                       </Link>{" "}
                       to start accepting messages!{" "}
-                      {xmtpKeys.keys.length === 0 && (
-                        <Text mt={2}>
-                          When you send your first XMTP message, your keys will be
-                          securely stored in our backend.
-                        </Text>
-                      )}
                     </>
                   )}
                 </Text>
