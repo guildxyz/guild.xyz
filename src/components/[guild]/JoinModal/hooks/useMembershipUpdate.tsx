@@ -121,9 +121,9 @@ const useMembershipUpdate = (
                       requirementId: reqJob.requirementId,
                       access: reqJob.access,
                       amount: reqJob.amount,
-                      errorMsg: firstError.msg,
-                      errorType: firstError.errorType,
-                      subType: firstError.subType,
+                      errorMsg: firstError?.msg,
+                      errorType: firstError?.errorType,
+                      subType: firstError?.subType,
                       lastCheckedAt: reqJob.done ? new Date() : null,
                     }
                   }),
