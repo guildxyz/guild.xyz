@@ -7,11 +7,11 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { AnimatePresence, LayoutGroup, PanInfo, motion } from "framer-motion"
 import { Plus } from "phosphor-react"
-import { useRef, useState } from "react"
+import { Suspense, useRef, useState } from "react"
 import { uuidv7 } from "uuidv7"
 import { Item } from "../types"
 import calculateGridPosition from "../utils/calculateGridPosition"
-import Role from "./Role"
+import Role, { RoleSkeleton } from "./Role"
 
 const initialItems: Item[] = [
   {
@@ -297,7 +297,9 @@ const PageBuilder = () => {
                   )
                 }
               >
-                <Role data={item.data} desktop={item.desktop} />
+                <Suspense fallback={<RoleSkeleton desktop={item.desktop} />}>
+                  <Role data={item.data} desktop={item.desktop} />
+                </Suspense>
               </ItemWrapper>
             ))}
           </AnimatePresence>

@@ -1,4 +1,14 @@
-import { HStack, Heading, Icon, Stack, StackProps, Text } from "@chakra-ui/react"
+import {
+  HStack,
+  Heading,
+  Icon,
+  Skeleton,
+  SkeletonCircle,
+  SkeletonText,
+  Stack,
+  StackProps,
+  Text,
+} from "@chakra-ui/react"
 import { Role as RoleType } from "@guildxyz/types"
 import GuildLogo from "components/common/GuildLogo"
 import { Users } from "phosphor-react"
@@ -14,7 +24,7 @@ type Props = {
 //     `${process.env.NEXT_PUBLIC_API.replace(
 //       "v1",
 //       "v2"
-//     )}/guilds/${guildId}/roles/${roleId}`
+//     )}/guilds/${guildId}/roles/${roleId}`,
 //   ).then((res) => res.json())
 
 /**
@@ -90,4 +100,44 @@ const Role = ({
   )
 }
 
+const RoleSkeleton = ({
+  desktop: { width, height: rawHeight },
+}: Omit<Item, "id" | "type" | "data">) => {
+  const height = typeof rawHeight === "number" ? rawHeight : 1
+  const roleHeaderStackDirection: StackProps["direction"] =
+    width < 3 || height < 2 ? "column" : "row"
+
+  return (
+    <Stack p={4} h="full">
+      <Stack spacing={4} h="full">
+        <Stack
+          direction={roleHeaderStackDirection}
+          spacing={2}
+          justifyContent={height < 2 ? "space-between" : "start"}
+          h={height < 2 ? "full" : "auto"}
+        >
+          <SkeletonCircle boxSize={12} />
+          <Stack spacing={1}>
+            <HStack>
+              <Skeleton h={4} w={12} />
+              <HStack
+                color="GrayText"
+                fontSize="xs"
+                fontWeight="semibold"
+                spacing={0.5}
+              >
+                <Skeleton h={4} w={16} />
+              </HStack>
+            </HStack>
+            <Skeleton h={5} w="80%" />
+          </Stack>
+        </Stack>
+
+        {height > 1 && <SkeletonText noOfLines={4} skeletonHeight={4} />}
+      </Stack>
+    </Stack>
+  )
+}
+
 export default Role
+export { RoleSkeleton }
