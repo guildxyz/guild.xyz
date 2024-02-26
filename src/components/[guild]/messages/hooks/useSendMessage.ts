@@ -4,31 +4,16 @@ import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import useSWR from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
 import { useWalletClient } from "wagmi"
 import { SendMessageForm } from "../SendNewMessage/SendNewMessage"
 import useGuildMessages, { Message } from "./useGuildMessages"
 
-const useSendMessage = (onSuccess?: () => void) => {
+const useSendMessage = (onSuccess: () => void, xmtpKeys: string[]) => {
   const { id } = useGuild()
   const fetcherWithSign = useFetcherWithSign()
   const { id: userId } = useUser()
 
-  const { data: xmtpKeys } = useSWR(
-    userId ? `/v2/users/${userId}/keys` : null,
-    (url: string) =>
-      fetcherWithSign([
-        url,
-        {
-          method: "GET",
-          body: {
-            Accept: "application/json",
-            query: { service: "XMTP" },
-          },
-        },
-      ])
-  )
   const { data: signer } = useWalletClient()
 
   const sendMessage = (formValues: SendMessageForm) => {

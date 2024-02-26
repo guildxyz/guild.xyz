@@ -29,6 +29,9 @@ import useReachableUsers from "../hooks/useReachableUsers"
 import useSendMessage from "../hooks/useSendMessage"
 import useTargetedCount from "../hooks/useTargetedCount"
 import RoleIdsSelect from "./components/RoleIdsSelect"
+import { useFetcherWithSign } from "../../../../utils/fetcher"
+import useUser from "../../hooks/useUser"
+import useSWR from "swr"
 
 export type MessageProtocol = "XMTP" | "WEB3INBOX"
 export type MessageDestination = "GUILD" | "ADMINS" | "ROLES"
@@ -93,11 +96,30 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
     handleSubmit,
     setValue,
   } = methods
+
+  const fetcherWithSign = useFetcherWithSign()
+  const { id: userId } = useUser()
+
+  const { data: xmtpKeys } = useSWR<{ keys: string[] }>(
+    userId ? `/v2/users/${userId}/keys` : null,
+    (url: string) =>
+      fetcherWithSign([
+        url,
+        {
+          method: "GET",
+          body: {
+            Accept: "application/json",
+            query: { service: "XMTP" },
+          },
+        },
+      ])
+  )
+
   const { onSubmit, isLoading } = useSendMessage(() => {
     reset()
     onClose()
-  })
-
+  }, xmtpKeys.keys)
+  console.log(xmtpKeys)
   const roleIds = useWatch({ control, name: "roleIds" })
   const protocol = useWatch({ control, name: "protocol" })
 
@@ -186,7 +208,13 @@ const MessageModalContent = ({ onClose }: MessageModalContentProps) => {
                       <Link href="https://xmtp.com" colorScheme="blue" isExternal>
                         https://xmtp.com
                       </Link>{" "}
-                      to start accepting messages!
+                      to start accepting messages!{" "}
+                      {xmtpKeys.keys.length === 0 && (
+                        <Text mt={2}>
+                          When you send your first XMTP message, your keys will be
+                          securely stored in our backend.
+                        </Text>
+                      )}
                     </>
                   )}
                 </Text>
