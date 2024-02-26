@@ -89,8 +89,8 @@ const MintableRole = ({ role }: Props) => {
   )
 
   const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
-    useMembershipUpdate(
-      () =>
+    useMembershipUpdate({
+      onSuccess: () =>
         onClaimSubmit({
           userId: userId,
           data: {
@@ -98,12 +98,12 @@ const MintableRole = ({ role }: Props) => {
             roleId: role.id,
           },
         }),
-      (err) =>
+      onError: (err) =>
         showErrorToast({
           error: "Couldn't check eligibility",
           correlationId: err.correlationId,
-        })
-    )
+        }),
+    })
 
   const isLoading = isMembershipUpdateLoading || isClaimLoading
 

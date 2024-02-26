@@ -59,15 +59,15 @@ const RecheckAccessesButton = ({
   const canResend = dateNow - latestResendDate > TIMEOUT
 
   const { triggerMembershipUpdate, isLoading, isFinished, joinProgress } =
-    useMembershipUpdate(
-      () => {
+    useMembershipUpdate({
+      onSuccess: () => {
         toast({
           status: "success",
           title: "Successfully updated accesses",
         })
         setLatestResendDate(Date.now())
       },
-      (error) => {
+      onError: (error) => {
         const errorMsg = "Couldn't update accesses"
         const correlationId = error.correlationId
         showErrorToast(
@@ -78,8 +78,8 @@ const RecheckAccessesButton = ({
               }
             : errorMsg
         )
-      }
-    )
+      },
+    })
 
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)

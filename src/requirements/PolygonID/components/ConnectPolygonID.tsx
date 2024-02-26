@@ -165,17 +165,19 @@ const ConnectPolygonIDModal = ({
 const RecheckConnectionButton = (): JSX.Element => {
   const showErrorToast = useShowErrorToast()
 
-  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate((error) => {
-    const errorMsg = "Couldn't check access"
-    const correlationId = error.correlationId
-    showErrorToast(
-      correlationId
-        ? {
-            error: errorMsg,
-            correlationId,
-          }
-        : errorMsg
-    )
+  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate({
+    onError: (error) => {
+      const errorMsg = "Couldn't check access"
+      const correlationId = error.correlationId
+      showErrorToast(
+        correlationId
+          ? {
+              error: errorMsg,
+              correlationId,
+            }
+          : errorMsg
+      )
+    },
   })
 
   return (

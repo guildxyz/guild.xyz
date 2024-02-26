@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useUserRewards } from "hooks/useUserRewards"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "platforms/Points/useUsersPoints"
@@ -16,9 +17,7 @@ export type JoinData = {
 
 const stateAtom = atom<"INITIAL" | "GETTING_JOB" | "POLLING" | "FINISHED">("INITIAL")
 
-const useMembershipUpdate = (
-  onSuccess?: (response: JoinJob) => void,
-  onError?: (error?: any) => void,
+type Props = UseSubmitOptions<JoinJob> & {
   /**
    * We're setting keepPreviousData to true in useJoin, so we can display no access
    * and error states correctly. Would be nice to find a better solution for this
@@ -30,8 +29,14 @@ const useMembershipUpdate = (
    * - The manual progress.mutate(undefined, { revalidate: false }) doesn't work for
    *   some reason
    */
-  keepPreviousData = false
-) => {
+  keepPreviousData?: boolean
+}
+
+const useMembershipUpdate = ({
+  onSuccess,
+  onError,
+  keepPreviousData,
+}: Props = {}) => {
   const guild = useGuild()
   const { mutate: mutateMembership } = useMembership()
   const { mutate: mutateUserRewards } = useUserRewards()
