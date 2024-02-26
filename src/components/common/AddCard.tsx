@@ -1,5 +1,5 @@
+import { Link } from "@chakra-ui/next-js"
 import { Box, HStack, Icon, Stack, Tag, Text, useColorMode } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import { Plus } from "phosphor-react"
 import { FC, forwardRef } from "react"
 import { Rest } from "types"

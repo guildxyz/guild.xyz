@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import {
   RewardDisplay,
@@ -5,7 +6,6 @@ import {
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Link from "components/common/Link"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowRight, Check } from "phosphor-react"
 

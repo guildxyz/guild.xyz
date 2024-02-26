@@ -88,6 +88,7 @@ type PlatformName =
   | "TEXT"
   | "POLYGON_ID"
   | "POINTS"
+  | "FORM"
 
 type PlatformUserData = {
   acessToken?: string
@@ -180,6 +181,10 @@ type GuildAdmin = {
   isOwner: boolean
 }
 
+/**
+ * This is really verbose with the huge amount of repeated nevers, it'll be solved by
+ * adding it to @guildxyz/types, so leaving it like this for now
+ */
 type PlatformGuildData = {
   DISCORD: {
     role?: never
@@ -202,6 +207,7 @@ type PlatformGuildData = {
     imageUrl?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -223,6 +229,7 @@ type PlatformGuildData = {
     imageUrl?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -243,6 +250,7 @@ type PlatformGuildData = {
     texts?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -263,6 +271,7 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   TEXT: {
     text: string
@@ -283,6 +292,7 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   POAP: {
     text?: never
@@ -303,6 +313,28 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId: string
     eventId: number
+    formId?: never
+  }
+  FORM: {
+    text?: never
+    texts?: never
+    name?: never
+    imageUrl?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: number
   }
 }
 
@@ -536,6 +568,7 @@ export enum PlatformType {
   "POLYGON_ID" = 12,
   "POINTS" = 13,
   "POAP" = 14,
+  "FORM" = 15,
 }
 type WalletConnectConnectionData = {
   connected: boolean

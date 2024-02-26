@@ -89,11 +89,9 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
             Select
           </Button>
         ) : isAlreadyInUse ? (
-          <Link href={`/${guildUrlName}`} passHref>
-            <Button as="a" h={10} colorScheme="gray">
-              Go to guild
-            </Button>
-          </Link>
+          <Button as={Link} href={`/${guildUrlName}`} h={10} colorScheme="gray">
+            Go to guild
+          </Button>
         ) : null}
       </OptionCard>
     </CardMotionWrapper>

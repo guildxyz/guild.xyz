@@ -1,6 +1,7 @@
 import { useBreakpointValue } from "@chakra-ui/react"
 import { useIsTabsStuck } from "components/[guild]/Tabs"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { Plus } from "phosphor-react"
 
 const GoToCreateGuildButton = () => {
@@ -8,7 +9,8 @@ const GoToCreateGuildButton = () => {
   const label = useBreakpointValue({ base: "Create", sm: "Create guild" })
 
   return (
-    <LinkButton
+    <Button
+      as={Link}
       leftIcon={<Plus />}
       size="sm"
       variant="ghost"
@@ -18,7 +20,7 @@ const GoToCreateGuildButton = () => {
       prefetch={false}
     >
       {label}
-    </LinkButton>
+    </Button>
   )
 }
 

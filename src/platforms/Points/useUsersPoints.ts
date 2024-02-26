@@ -6,8 +6,10 @@ const useUsersPoints = (pointId?) => {
   const { id: guildId } = useGuild()
   const { id: userId } = useUser()
 
+  const shouldFetch = userId && guildId
+
   const { data, ...rest } = useSWRWithOptionalAuth(
-    `/v2/users/${userId}/points?guildId=${guildId}`,
+    shouldFetch ? `/v2/users/${userId}/points?guildId=${guildId}` : null,
     null,
     false,
     true

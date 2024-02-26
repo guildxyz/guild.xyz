@@ -88,6 +88,11 @@ const Reward = ({
     }
   }, [isMember, hasRoleAccess, isConnected, accessButtonProps, isLinkColorful])
 
+  const name =
+    platform.guildPlatform?.platformGuildName ||
+    platform.guildPlatform?.platformGuildData?.name ||
+    platform.guildPlatform?.platformGuildId
+
   return (
     <RewardDisplay
       icon={
@@ -111,14 +116,12 @@ const Reward = ({
                 maxW="full"
                 {...state.buttonProps}
               >
-                {platform.guildPlatform?.platformGuildName ||
-                  platform.guildPlatform?.platformGuildId}
+                {name}
               </Button>
             </Tooltip>
           ) : (
             <Text as="span" fontWeight="bold">
-              {platform.guildPlatform?.platformGuildName ||
-                platform.guildPlatform?.platformGuildId}
+              {name}
             </Text>
           )}
         </>

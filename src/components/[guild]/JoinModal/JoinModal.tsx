@@ -76,7 +76,12 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       return <ConnectComponent key={platform} />
     }
 
-    if (!platforms[platform] || platform === "POINTS" || platform === "POLYGON_ID")
+    if (
+      !platforms[platform] ||
+      platform === "POINTS" ||
+      platform === "FORM" ||
+      platform === "POLYGON_ID"
+    )
       return null
 
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
@@ -90,16 +95,16 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     joinProgress,
     reset,
-  } = useJoin(
-    (res) => {
+  } = useJoin({
+    onSuccess: (res) => {
       methods.setValue("platforms", {})
       onClose()
     },
-    (err) => {
+    onError: (err) => {
       errorToast(err)
       reset()
-    }
-  )
+    },
+  })
 
   const onJoin = (data) =>
     onSubmit({

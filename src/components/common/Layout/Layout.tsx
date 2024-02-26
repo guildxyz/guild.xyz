@@ -32,7 +32,7 @@ type Props = {
   backButton?: JSX.Element
   maxWidth?: string
   showFooter?: boolean
-}
+} & BoxProps
 
 const Layout = ({
   image,
@@ -52,6 +52,7 @@ const Layout = ({
   maxWidth = "container.lg",
   showFooter = true,
   children,
+  ...wrapperProps
 }: PropsWithChildren<Props>): JSX.Element => {
   const childrenWrapper = useRef(null)
   const [bgHeight, setBgHeight] = useState("0")
@@ -117,10 +118,13 @@ const Layout = ({
               <Image
                 src={backgroundImage}
                 alt="Guild background image"
-                layout="fill"
-                objectFit="cover"
                 priority
-                style={{ filter: "brightness(30%)" }}
+                fill
+                sizes="100vw"
+                style={{
+                  filter: "brightness(30%)",
+                  objectFit: "cover",
+                }}
               />
             ) : (
               <Box
@@ -176,7 +180,9 @@ const Layout = ({
               )}
             </VStack>
           )}
-          <Box ref={childrenWrapper}>{children}</Box>
+          <Box ref={childrenWrapper} {...wrapperProps}>
+            {children}
+          </Box>
         </Container>
 
         {showFooter && <Footer />}

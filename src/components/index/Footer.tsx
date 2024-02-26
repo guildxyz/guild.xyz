@@ -1,5 +1,5 @@
+import { Link } from "@chakra-ui/next-js"
 import { Box, Container, GridItem, Img, SimpleGrid, Stack } from "@chakra-ui/react"
-import Link from "components/common/Link"
 
 const Footer = (): JSX.Element => (
   <Box

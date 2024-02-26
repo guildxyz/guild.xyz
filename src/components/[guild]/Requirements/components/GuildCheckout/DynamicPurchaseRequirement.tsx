@@ -7,7 +7,7 @@ import {
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import { useRequirementContext } from "../RequirementContext"
-import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./components/GuildCheckoutContext"
 import { useTransactionStatusContext } from "./components/TransactionStatusContext"
 
 const DynamicallyLoadedPurchaseRequirement = dynamic(

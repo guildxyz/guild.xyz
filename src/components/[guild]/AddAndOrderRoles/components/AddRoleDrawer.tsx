@@ -25,7 +25,7 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { useToastWithTweetButton } from "hooks/useToast"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -35,17 +35,16 @@ import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
-  const { id, urlName } = useGuild()
+  const { id } = useGuild()
 
-  const toastWithTweetButton = useToastWithTweetButton()
+  const toast = useToast()
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole({
       onSuccess: () => {
-        toastWithTweetButton({
+        toast({
           title: "Role successfully created",
-          tweetText: `I've just added a new role to my guild. Check it out, maybe you have access 😉
-  guild.xyz/${urlName}`,
+          status: "success",
         })
       },
     })

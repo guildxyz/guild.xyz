@@ -151,7 +151,7 @@ const useFetcherWithSign = () => {
   return (props) => {
     const [resource, { signOptions, ...options }] = props
 
-    return type === "EVM"
+    return !!signOptions?.address || type === "EVM" // Currently an address override is only done for CWaaS wallets, and those are EVM
       ? fetcherWithSign(
           {
             address,

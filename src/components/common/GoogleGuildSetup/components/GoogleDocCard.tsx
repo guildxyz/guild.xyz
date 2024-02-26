@@ -46,11 +46,14 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
           {isValidating ? (
             <Button isLoading />
           ) : isAlreadyInUse ? (
-            <NextLink href={`/${guildUrlName}`} passHref>
-              <Button as="a" colorScheme="gray" minW="max-content">
-                Go to guild
-              </Button>
-            </NextLink>
+            <Button
+              as={NextLink}
+              href={`/${guildUrlName}`}
+              colorScheme="gray"
+              minW="max-content"
+            >
+              Go to guild
+            </Button>
           ) : onSelect ? (
             <Button
               colorScheme="blue"

@@ -1,6 +1,7 @@
 import { Center, Img, useColorModeValue } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useFuel, { FuelConnectorName } from "hooks/useFuel"
+import { connectorButtonProps } from "./ConnectorButton"
 
 const FuelConnectorButtons = () => {
   const { connectors, connect, connectorName, isConnecting } = useFuel()
@@ -20,13 +21,12 @@ const FuelConnectorButtons = () => {
       {connectors.map((connector) => (
         <Button
           key={connector.name}
-          mb={4}
           onClick={() =>
             connect({
               connector: connector.name,
             })
           }
-          rightIcon={
+          leftIcon={
             <Center boxSize={6}>
               <Img
                 src={connectorIcons[connector.name]}
@@ -36,12 +36,9 @@ const FuelConnectorButtons = () => {
               />
             </Center>
           }
-          w="full"
-          size="xl"
-          justifyContent="space-between"
           isLoading={connector.name === connectorName && isConnecting}
           loadingText="Connecting..."
-          spinnerPlacement="end"
+          {...connectorButtonProps}
         >
           {connector.name}
         </Button>

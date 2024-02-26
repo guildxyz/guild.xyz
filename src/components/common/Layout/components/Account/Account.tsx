@@ -23,7 +23,7 @@ const Account = (): JSX.Element => {
         onClick={openWalletSelectorModal}
         data-test="connect-wallet-button"
       >
-        Connect to a wallet
+        Sign in
       </AccountButton>
     )
   }

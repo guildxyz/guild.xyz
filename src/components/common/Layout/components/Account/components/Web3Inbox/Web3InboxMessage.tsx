@@ -13,8 +13,9 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
@@ -109,15 +110,17 @@ const Web3InboxMessage = ({
             <Text fontFamily="body" colorScheme="gray" fontSize="sm">
               {prettyDate}
             </Text>
-            <LinkButton
+            <Button
+              as={Link}
               href={url}
               variant="ghost"
+              colorScheme="primary"
               size="sm"
               ml="auto"
               rightIcon={<ArrowRight />}
             >
               Go to guild
-            </LinkButton>
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

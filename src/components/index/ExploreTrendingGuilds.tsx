@@ -48,18 +48,17 @@ const ExploreTrendingGuilds = (): JSX.Element => {
           </Box>
 
           <Flex alignItems="center" justifyContent="center">
-            <Link passHref href="/explorer">
-              <LandingButton
-                as="a"
-                w="max-content"
-                position="relative"
-                colorScheme="DISCORD"
-                mb={8}
-                rightIcon={<ArrowRight />}
-              >
-                See all the guilds
-              </LandingButton>
-            </Link>
+            <LandingButton
+              as={Link}
+              href="/explorer"
+              w="max-content"
+              position="relative"
+              colorScheme="DISCORD"
+              mb={8}
+              rightIcon={<ArrowRight />}
+            >
+              See all the guilds
+            </LandingButton>
           </Flex>
         </>
       )}

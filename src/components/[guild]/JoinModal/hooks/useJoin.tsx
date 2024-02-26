@@ -1,7 +1,9 @@
+import { JoinJob } from "@guildxyz/types"
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
@@ -14,10 +16,7 @@ import useMembershipUpdate from "./useMembershipUpdate"
  */
 export const isAfterJoinAtom = atom(false)
 
-const useJoin = (
-  onSuccess?: Parameters<typeof useMembershipUpdate>[0],
-  onError?: Parameters<typeof useMembershipUpdate>[1]
-) => {
+const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const guild = useGuild()
   const user = useUser()
   const toastWithTweetButton = useToastWithTweetButton()
@@ -29,7 +28,7 @@ const useJoin = (
   const { onOpen } = mintGuildPinContext ?? {}
   const { pathname } = useRouter()
 
-  const onJoinSuccess: Parameters<typeof useMembershipUpdate>[0] = (response) => {
+  const onJoinSuccess: UseSubmitOptions<JoinJob>["onSuccess"] = (response) => {
     if (
       pathname === "/[guild]" &&
       guild.featureFlags.includes("GUILD_CREDENTIAL") &&
@@ -61,10 +60,11 @@ const useJoin = (
     onSuccess?.(response)
   }
 
-  const { triggerMembershipUpdate: onSubmit, ...rest } = useMembershipUpdate(
-    onJoinSuccess,
-    onError
-  )
+  const { triggerMembershipUpdate: onSubmit, ...rest } = useMembershipUpdate({
+    onSuccess: onJoinSuccess,
+    onError,
+    keepPreviousData: true,
+  })
 
   return { ...rest, onSubmit }
 }

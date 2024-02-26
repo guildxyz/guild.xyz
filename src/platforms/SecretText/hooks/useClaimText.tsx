@@ -98,14 +98,14 @@ const useClaimText = (rolePlatformId: number) => {
     error: membershipUpdateError,
     isLoading: isMembershipUpdateLoading,
     triggerMembershipUpdate,
-  } = useMembershipUpdate(
-    () => onClaimTextSubmit(),
-    (error) =>
+  } = useMembershipUpdate({
+    onSuccess: () => onClaimTextSubmit(),
+    onError: (error) =>
       showErrorToast({
         error: "Couldn't check eligibility",
         correlationId: error.correlationId,
-      })
-  )
+      }),
+  })
 
   return {
     error: claim.error ?? membershipUpdateError,
