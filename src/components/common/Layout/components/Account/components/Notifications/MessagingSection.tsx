@@ -16,10 +16,9 @@ import { XMTPProvider, useCanMessage } from "@xmtp/react-sdk"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import useSubmit from "hooks/useSubmit"
 import dynamic from "next/dynamic"
 import { ArrowSquareOut, Gear } from "phosphor-react"
-import { useEffect } from "react"
+import useSWR from "swr"
 import { useAccount } from "wagmi"
 import SubscriptionPromptSkeleton from "../MessageSkeleton/SubscriptionPromptSkeleton"
 import { SubscriptionPrompt } from "./SubscriptionPrompt"
@@ -45,16 +44,12 @@ const MessagingSection = () => {
   const { address } = useAccount()
 
   const {
+    data: hasXMTPAccess,
     isLoading: isCheckingXMTPAccess,
-    onSubmit: checkXMTPAccess,
-    response: hasXMTPAccess,
-  } = useSubmit(async () => canMessageStatic(address), {
+    mutate: checkXMTPAccess,
+  } = useSWR(canMessageStatic(address), {
     onError: () => showErrorToast("Error happened during checking XMTP access"),
   })
-
-  useEffect(() => {
-    checkXMTPAccess()
-  }, [])
 
   const { subscribe: subscribeToXMTP, isSubscribing: isSubscribingToXMTP } =
     useSubscribeToXMTP(checkXMTPAccess)
