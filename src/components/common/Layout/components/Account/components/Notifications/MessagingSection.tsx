@@ -47,7 +47,7 @@ const MessagingSection = () => {
     data: canMessage,
     isLoading: isCanMessageLoading,
     mutate: onCanMessageSubmit,
-  } = useSWR(canMessageStatic(address), {
+  } = useSWR(address, canMessageStatic, {
     onError: () => showErrorToast("Error happened during checking XMTP access"),
   })
 
