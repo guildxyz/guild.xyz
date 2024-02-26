@@ -54,23 +54,24 @@ const GuildSelect = ({ baseFieldPath }) => {
   }, [fetchedGuild])
 
   const mergedGuildOptions = useMemo(() => {
-    if (!guildOptions && !foundGuild) return []
+    let options = []
 
-    const foundGuildOption = foundGuild
-      ? {
+    if (foundGuild)
+      options = [
+        {
           img: foundGuild.imageUrl,
           label: foundGuild.name,
           value: foundGuild.id,
           details: foundGuild.urlName,
-        }
-      : null
+        },
+      ]
 
-    if (foundGuild && !guildOptions) return [foundGuildOption]
+    if (guildOptions)
+      options = options.concat(
+        guildOptions.filter((option) => option.value !== foundGuild?.id)
+      )
 
-    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.id))
-      return [...guildOptions, foundGuildOption]
-
-    return guildOptions
+    return options
   }, [guildOptions, foundGuild])
 
   const selectedGuild = mergedGuildOptions?.find((guild) => guild.value === guildId)
