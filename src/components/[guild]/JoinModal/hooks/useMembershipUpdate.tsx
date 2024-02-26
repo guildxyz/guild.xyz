@@ -114,21 +114,19 @@ const useMembershipUpdate = (
                     (roleAccess) => roleAccess.roleId === +roleId
                   )?.access,
                   roleId,
-                  requirements: reqJobs?.map((reqJob) => ({
-                    requirementId: reqJob.requirementId,
-                    access: reqJob.access,
-                    amount: reqJob.amount,
-                    errorMsg:
-                      reqJob.requirementError?.msg ??
-                      reqJob.userLevelErrors?.[0]?.msg,
-                    errorType:
-                      reqJob.requirementError?.errorType ??
-                      reqJob.userLevelErrors?.[0]?.errorType,
-                    subType:
-                      reqJob.requirementError?.subType ??
-                      reqJob.userLevelErrors?.[0]?.subType,
-                    lastCheckedAt: reqJob.done ? new Date() : null,
-                  })),
+                  requirements: reqJobs?.map((reqJob) => {
+                    const firstError =
+                      reqJob.requirementError ?? reqJob.userLevelErrors?.[0]
+                    return {
+                      requirementId: reqJob.requirementId,
+                      access: reqJob.access,
+                      amount: reqJob.amount,
+                      errorMsg: firstError.msg,
+                      errorType: firstError.errorType,
+                      subType: firstError.subType,
+                      lastCheckedAt: reqJob.done ? new Date() : null,
+                    }
+                  }),
                 }
               }),
             }
