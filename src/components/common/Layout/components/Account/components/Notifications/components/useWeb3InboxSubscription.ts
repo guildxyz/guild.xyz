@@ -77,9 +77,9 @@ const useWeb3InboxSubscription = () => {
     subscriptionStatus,
     isLoading: isLoading || isPreparing || isAccountLoading,
     error: accountError ?? error,
-    isRegistering: isRegistering,
-    isSigning: isSigning,
-    isSubscribing: isSubscribing,
+    isRegistering,
+    isSigning,
+    isSubscribing,
     subscribe: handleSubscribe,
   }
 }
