@@ -150,15 +150,11 @@ const GuildPage = (): JSX.Element => {
       query[key].push(value)
     })
 
-    router.replace(
-      {
-        pathname: router.pathname,
-        query: { guild: router.query.guild, ...query },
-      },
-      undefined,
-      { shallow: true }
-    )
-  }, [queryString, router.isReady, router.pathname])
+    router.replace({
+      pathname: router.pathname,
+      query: { guild: router.query.guild, ...query },
+    })
+  }, [queryString, router.isReady, router.pathname, router.query])
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
