@@ -29,7 +29,7 @@ export const APP_DETAILS: Record<
   },
   SHEFI: {
     name: "SheFi Summit",
-    image: "/requirementLogos/shefi.png",
+    image: "/requirementLogos/shefi.jpg",
   },
 }
 
