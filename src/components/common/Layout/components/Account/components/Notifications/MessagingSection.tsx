@@ -44,15 +44,15 @@ const MessagingSection = () => {
   const { address } = useAccount()
 
   const {
-    data: hasXMTPAccess,
-    isLoading: isCheckingXMTPAccess,
-    mutate: checkXMTPAccess,
+    data: canMessage,
+    isLoading: isCanMessageLoading,
+    mutate: onCanMessageSubmit,
   } = useSWR(canMessageStatic(address), {
     onError: () => showErrorToast("Error happened during checking XMTP access"),
   })
 
   const { subscribe: subscribeToXMTP, isSubscribing: isSubscribingToXMTP } =
-    useSubscribeToXMTP(checkXMTPAccess)
+    useSubscribeToXMTP(onCanMessageSubmit)
 
   return (
     <>
@@ -75,9 +75,9 @@ const MessagingSection = () => {
           </>
         }
       >
-        {isLoading || isCheckingXMTPAccess ? (
+        {isLoading || isCanMessageLoading ? (
           <SubscriptionPromptSkeleton />
-        ) : !subscriptionStatus && !hasXMTPAccess ? (
+        ) : !subscriptionStatus && !canMessage ? (
           <SubscriptionPrompt onClick={onOpen} />
         ) : (
           <Messages />
@@ -123,18 +123,18 @@ const MessagingSection = () => {
                 XMTP
               </Text>
               <Button
-                isDisabled={Boolean(hasXMTPAccess)}
+                isDisabled={Boolean(canMessage)}
                 variant="solid"
                 colorScheme="blue"
                 onClick={subscribeToXMTP}
-                isLoading={isCheckingXMTPAccess || isSubscribingToXMTP}
+                isLoading={isCanMessageLoading || isSubscribingToXMTP}
                 loadingText={
-                  isCheckingXMTPAccess || isSubscribingToXMTP
+                  isCanMessageLoading || isSubscribingToXMTP
                     ? "Check your wallet"
                     : "Subscribing"
                 }
               >
-                {Boolean(hasXMTPAccess) ? "Subscribed" : "Enable identity"}
+                {Boolean(canMessage) ? "Subscribed" : "Enable identity"}
               </Button>
             </HStack>
           </ModalBody>
