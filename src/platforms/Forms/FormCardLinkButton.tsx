@@ -1,11 +1,13 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
+import { LinkButton } from "components/common/LinkMenuItem"
 import Link from "next/link"
 import { Check } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
-import useUserSubmission from "./hooks/useUserSubmission"
+import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 
 type Props = {
   platform: GuildPlatform
@@ -13,11 +15,24 @@ type Props = {
 
 const FormCardLinkButton = ({ platform }: Props) => {
   const { urlName } = useGuild()
+  const { isAdmin } = useGuildPermission()
   const { form, isValidating: isFormsValidating } = useGuildForm(
     platform.platformGuildData?.formId
   )
 
-  const { data: userSubmission, isValidating } = useUserSubmission(form)
+  const { userSubmission, isValidating } = useUserFormSubmission(form)
+
+  if (isAdmin && !!userSubmission)
+    return (
+      <LinkButton
+        href={`/${urlName}/forms/${form?.id}/responses`}
+        prefetch={false}
+        w="full"
+        variant={"outline"}
+      >
+        View responses
+      </LinkButton>
+    )
 
   return (
     <Button

@@ -188,7 +188,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                 <Tooltip
                   isDisabled={!isEditForm}
                   hasArrow
-                  label="Removing the question won't delete existing responses data"
+                  label="By removing the question you won't be able to see existing responses to it"
                 >
                   <IconButton
                     aria-label="Remove"
