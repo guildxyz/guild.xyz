@@ -95,6 +95,9 @@ export const PADDING = 14
 
 const MotionCard = motion(Card)
 
+let timeout: NodeJS.Timeout
+const GRID_REORDER_TIMEOUT = 100
+
 const PageBuilder = () => {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -131,48 +134,51 @@ const PageBuilder = () => {
     )
       return
 
-    const itemsClone = structuredClone(items)
-    const itemToMove = itemsClone.find((item) => item.id === itemId)
+    clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      const itemsClone = structuredClone(items)
+      const itemToMove = itemsClone.find((item) => item.id === itemId)
 
-    if (!itemToMove) return
+      if (!itemToMove) return
 
-    if (!placeholderPosition) setPlaceholderPosition(itemToMove.desktop)
+      if (!placeholderPosition) setPlaceholderPosition(itemToMove.desktop)
 
-    const newPosition = elementToXY(event.target as HTMLDivElement, {
-      ...itemToMove.desktop,
-    })
-
-    // Early return, so we don't need to calculate anything for the grid & we also don't need to set the placeholder state
-    if (
-      newPosition?.x === itemToMove.desktop.x &&
-      newPosition?.y === itemToMove.desktop.y
-    )
-      return
-
-    move(itemsClone, itemToMove, {
-      ...itemToMove.desktop,
-      ...newPosition,
-    })
-
-    // We should find a more clever solution for this, because we can pretty easily get a "maximum call stack depth exceeded" because of setState
-    if (
-      items.some((item) => {
-        const updatedItem = itemsClone.find((_item) => _item.id === item.id)
-        const isUpdated = Object.keys(updatedItem?.desktop ?? {})
-          .map((key) => {
-            if (item.desktop[key] !== updatedItem?.desktop[key]) return true
-          })
-          .some(Boolean)
-
-        return isUpdated
+      const newPosition = elementToXY(event.target as HTMLDivElement, {
+        ...itemToMove.desktop,
       })
-    ) {
-      setPlaceholderPosition({
+
+      // Early return, so we don't need to calculate anything for the grid & we also don't need to set the placeholder state
+      if (
+        newPosition?.x === itemToMove.desktop.x &&
+        newPosition?.y === itemToMove.desktop.y
+      )
+        return
+
+      move(itemsClone, itemToMove, {
         ...itemToMove.desktop,
         ...newPosition,
       })
-      setItems(itemsClone)
-    }
+
+      // We should find a more clever solution for this, because we can pretty easily get a "maximum call stack depth exceeded" because of setState
+      if (
+        items.some((item) => {
+          const updatedItem = itemsClone.find((_item) => _item.id === item.id)
+          const isUpdated = Object.keys(updatedItem?.desktop ?? {})
+            .map((key) => {
+              if (item.desktop[key] !== updatedItem?.desktop[key]) return true
+            })
+            .some(Boolean)
+
+          return isUpdated
+        })
+      ) {
+        setPlaceholderPosition({
+          ...itemToMove.desktop,
+          ...newPosition,
+        })
+        setItems(itemsClone)
+      }
+    }, GRID_REORDER_TIMEOUT)
   }
 
   return (
