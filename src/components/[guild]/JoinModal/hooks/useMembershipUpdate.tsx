@@ -118,9 +118,15 @@ const useMembershipUpdate = (
                     requirementId: reqJob.requirementId,
                     access: reqJob.access,
                     amount: reqJob.amount,
-                    errorMsg: reqJob.userLevelErrors?.[0]?.msg,
-                    errorType: reqJob.userLevelErrors?.[0]?.errorType,
-                    subType: reqJob.userLevelErrors?.[0]?.subType,
+                    errorMsg:
+                      reqJob.requirementError?.msg ??
+                      reqJob.userLevelErrors?.[0]?.msg,
+                    errorType:
+                      reqJob.requirementError?.errorType ??
+                      reqJob.userLevelErrors?.[0]?.errorType,
+                    subType:
+                      reqJob.requirementError?.subType ??
+                      reqJob.userLevelErrors?.[0]?.subType,
                     lastCheckedAt: reqJob.done ? new Date() : null,
                   })),
                 }
