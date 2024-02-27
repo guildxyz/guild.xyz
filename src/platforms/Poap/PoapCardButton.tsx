@@ -1,4 +1,4 @@
-import { Tooltip } from "@chakra-ui/react"
+import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
@@ -12,6 +12,7 @@ import {
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 import { ShowMintLinkButton } from "./ShowMintLinkButton"
+import UploadMintLinksModal from "./UploadMintLinksModal"
 
 type Props = {
   platform: GuildPlatform
@@ -19,6 +20,8 @@ type Props = {
 
 const PoapCardButton = ({ platform }: Props) => {
   const { urlName, roles } = useGuild()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { isAdmin } = useGuildPermission()
 
   const rolePlatform = roles
@@ -44,6 +47,22 @@ const PoapCardButton = ({ platform }: Props) => {
           >
             Show mint link
           </ShowMintLinkButton>
+        ) : !rolePlatform?.capacity && isAdmin ? (
+          <>
+            <Button
+              w="full"
+              colorScheme={platforms.POAP.colorScheme}
+              onClick={onOpen}
+            >
+              Upload mint links
+            </Button>
+            <UploadMintLinksModal
+              isOpen={isOpen}
+              onClose={onClose}
+              guildPlatformId={platform?.id}
+              platformGuildData={platform?.platformGuildData}
+            />
+          </>
         ) : (
           <Button
             as={Link}
@@ -52,7 +71,7 @@ const PoapCardButton = ({ platform }: Props) => {
             w="full"
             colorScheme={platforms.POAP.colorScheme}
           >
-            {!rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"}
+            Claim POAP
           </Button>
         )}
       </Tooltip>
