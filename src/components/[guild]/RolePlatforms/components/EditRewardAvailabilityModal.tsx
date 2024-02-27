@@ -92,14 +92,14 @@ const EditRewardAvailabilityModal = ({
   } = useController({
     control,
     name: "capacity",
-    rules: !!AUTO_SUPPLY_PLATFORMS[platformType]
+    rules: !AUTO_SUPPLY_PLATFORMS[platformType]
       ? {
           min: {
             value: 1,
             message: "Amount must be positive",
           },
         }
-      : {},
+      : undefined,
   })
 
   const startTimeValue = useWatch({ control, name: "startTime" })
