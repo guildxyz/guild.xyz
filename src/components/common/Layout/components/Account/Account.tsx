@@ -1,5 +1,6 @@
 import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import GuildAvatar from "components/common/GuildAvatar"
 import useResolveAddress from "hooks/useResolveAddress"
@@ -12,8 +13,9 @@ import Notifications from "./components/Notifications/Notifications"
 import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
-  const { address, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { address } = useWeb3ConnectionManager()
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
@@ -22,7 +24,7 @@ const Account = (): JSX.Element => {
     return (
       <AccountButton
         leftIcon={<SignIn />}
-        onClick={openWalletSelectorModal}
+        onClick={() => setIsWalletSelectorModalOpen(true)}
         data-test="connect-wallet-button"
       >
         Sign in

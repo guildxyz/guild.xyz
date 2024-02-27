@@ -1,15 +1,15 @@
 import { CHAIN_CONFIG, Chains } from "chains"
 import useFuel from "hooks/useFuel"
 import useToast from "hooks/useToast"
-import { atom, useAtom } from "jotai"
+import { atom, useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { PlatformName, User } from "types"
 import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wagmi"
+import { walletSelectorModalAtom } from "../components/WalletSelectorModal"
 
 const delegateConnectionAtom = atom(false)
 const safeContextAtom = atom(false)
-const walletSelectorModalAtom = atom(false)
 const platformMergeAlertAtom = atom(false)
 const accountMergeAddressAtom = atom("")
 const accountMergePlatformNameAtom = atom("" as PlatformName)
@@ -24,9 +24,6 @@ type Web3ConnectionManagerType = {
   ) => void
   closePlatformMergeAlert: () => void
 
-  isWalletSelectorModalOpen: boolean
-  openWalletSelectorModal: () => void
-  closeWalletSelectorModal: () => void
   requestNetworkChange: (
     chainId: number,
     callback?: () => void,
@@ -47,11 +44,7 @@ type Web3ConnectionManagerType = {
 const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const router = useRouter()
 
-  const [isWalletSelectorModalOpen, setIsWalletSelectorModalOpen] = useAtom(
-    walletSelectorModalAtom
-  )
-  const openWalletSelectorModal = () => setIsWalletSelectorModalOpen(true)
-  const closeWalletSelectorModal = () => setIsWalletSelectorModalOpen(false)
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   const [isPlatformMergeAlertOpen, setIsPlatformMergeAlertOpen] = useAtom(
     platformMergeAlertAtom
@@ -123,7 +116,8 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const address = evmAddress || fuelAddress
 
   useEffect(() => {
-    if (!isWeb3Connected && router.query.redirectUrl) openWalletSelectorModal()
+    if (!isWeb3Connected && router.query.redirectUrl)
+      setIsWalletSelectorModalOpen(true)
   }, [isWeb3Connected, router.query])
 
   const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
@@ -150,9 +144,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     isPlatformMergeAlertOpen,
     showPlatformMergeAlert,
     closePlatformMergeAlert,
-    isWalletSelectorModalOpen,
-    openWalletSelectorModal,
-    closeWalletSelectorModal,
     requestNetworkChange,
     isNetworkChangeInProgress,
     isDelegateConnection,

@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
@@ -19,7 +19,7 @@ import useUser from "./hooks/useUser"
 const NoPermissionToPageFallback = ({ children }) => {
   const { id, isLoading } = useUser()
   const { isAdmin } = useGuildPermission()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   if (isLoading)
@@ -49,7 +49,7 @@ const NoPermissionToPageFallback = ({ children }) => {
           <Button
             leftIcon={<SignIn />}
             colorScheme="white"
-            onClick={openWalletSelectorModal}
+            onClick={() => setIsWalletSelectorModalOpen(true)}
           >
             Sign in
           </Button>
