@@ -1,5 +1,6 @@
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
@@ -38,6 +39,7 @@ const useMembershipUpdate = ({
   keepPreviousData,
 }: Props = {}) => {
   const guild = useGuild()
+  const { isAdmin } = useGuildPermission()
   const { mutate: mutateMembership } = useMembership()
   const { mutate: mutateUserRewards } = useUserRewards()
   const { mutate: mutateUserPoints } = useUsersPoints()
@@ -84,7 +86,7 @@ const useMembershipUpdate = ({
     if (!response.roleAccesses?.some((role) => role.access === true)) return
 
     // mutate guild in case the user sees more entities due to visibilities
-    guild.mutateGuild()
+    if (!isAdmin) guild.mutateGuild()
 
     mutateUserRewards()
     mutateUserPoints()
