@@ -21,7 +21,7 @@ import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Description from "../Description"
-import { ContinueBtnTooltip } from "../GuildCreationProgress/GuildCreationProgress"
+import { ContinueBtnTooltipLabelAtom } from "../GuildCreationProgress/GuildCreationProgress"
 import IconSelector from "../IconSelector"
 import Name from "../Name"
 import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
@@ -31,7 +31,7 @@ const BasicInfo = (): JSX.Element => {
   const { setDisabled } = useCreateGuildContext()
   const { setLocalBackgroundImage } = useThemeContext()
 
-  const setContinueTooltip = useSetAtom(ContinueBtnTooltip)
+  const setContinueTooltipLabel = useSetAtom(ContinueBtnTooltipLabelAtom)
 
   const {
     control,
@@ -47,10 +47,10 @@ const BasicInfo = (): JSX.Element => {
 
   useEffect(() => {
     setDisabled(!name || !contacts[0].contact || !!Object.values(errors).length)
-    setContinueTooltip(
+    setContinueTooltipLabel(
       !contacts[0].contact || errors.contacts ? "Contact email required!" : ""
     )
-    return () => setContinueTooltip("")
+    return () => setContinueTooltipLabel("")
   }, [name, errors, contacts, errors.contacts])
 
   const iconUploader = usePinata({

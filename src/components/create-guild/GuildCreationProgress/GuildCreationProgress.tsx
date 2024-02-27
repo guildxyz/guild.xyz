@@ -11,7 +11,7 @@ type Props = {
   isDisabled?: boolean
 }
 
-export const ContinueBtnTooltip = atom("")
+export const ContinueBtnTooltipLabelAtom = atom("")
 
 const GuildCreationProgress = ({
   next,
@@ -21,7 +21,7 @@ const GuildCreationProgress = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const progressText = `${progress}%`
 
-  const continueBtnTooltip = useAtomValue(ContinueBtnTooltip)
+  const continueBtnTooltipLabel = useAtomValue(ContinueBtnTooltipLabelAtom)
 
   return (
     <FloatingFooter>
@@ -33,7 +33,7 @@ const GuildCreationProgress = ({
           </Text>
         </HStack>
         {children ?? (
-          <Tooltip label={continueBtnTooltip} hasArrow>
+          <Tooltip label={continueBtnTooltipLabel} hasArrow>
             <Button colorScheme="green" onClick={next} isDisabled={isDisabled}>
               Continue
             </Button>
