@@ -14,7 +14,6 @@ import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
 import RequirementEditableCard from "./components/RequirementEditableCard"
-import useAddRequirementsFromQuery from "./hooks/useAddRequirementsFromQuery"
 
 type Props = {
   titleSize?: ChakraProps["fontSize"]
@@ -38,8 +37,6 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
       required: "Set some requirements, or make the role free",
     },
   })
-
-  useAddRequirementsFromQuery(append)
 
   // Watching the nested fields too, so we can properly update the list
   const watchFieldArray = watch("requirements")
