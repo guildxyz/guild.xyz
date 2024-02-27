@@ -8,7 +8,6 @@ import { PlatformName, User } from "types"
 import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wagmi"
 import { walletSelectorModalAtom } from "../components/WalletSelectorModal"
 
-const delegateConnectionAtom = atom(false)
 const safeContextAtom = atom(false)
 const platformMergeAlertAtom = atom(false)
 const accountMergeAddressAtom = atom("")
@@ -31,8 +30,6 @@ type Web3ConnectionManagerType = {
   ) => void
   isNetworkChangeInProgress: boolean
 
-  isDelegateConnection: boolean
-  setIsDelegateConnection: (newValue: boolean) => void
   isInSafeContext: boolean
   isWeb3Connected: boolean
   address?: `0x${string}`
@@ -93,9 +90,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     accountMergePlatformNameAtom
   )
 
-  const [isDelegateConnection, setIsDelegateConnection] = useAtom(
-    delegateConnectionAtom
-  )
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
   const {
@@ -146,8 +140,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     closePlatformMergeAlert,
     requestNetworkChange,
     isNetworkChangeInProgress,
-    isDelegateConnection,
-    setIsDelegateConnection,
     isInSafeContext,
     isWeb3Connected,
     address,

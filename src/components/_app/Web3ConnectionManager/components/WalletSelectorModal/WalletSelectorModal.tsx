@@ -31,7 +31,9 @@ import { useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
-import DelegateCashButton from "./components/DelegateCashButton"
+import DelegateCashButton, {
+  delegateConnectionAtom,
+} from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
@@ -48,13 +50,10 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const {
-    isWeb3Connected,
-    isDelegateConnection,
-    setIsDelegateConnection,
-    isInSafeContext,
-    disconnect,
-  } = useWeb3ConnectionManager()
+  const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
+  const [isDelegateConnection, setIsDelegateConnection] = useAtom(
+    delegateConnectionAtom
+  )
 
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
   const { connector } = useAccount()
