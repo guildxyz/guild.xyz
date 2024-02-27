@@ -68,16 +68,6 @@ const nextConfig = {
     return {
       beforeFiles: [
         {
-          source: "/",
-          has: [
-            {
-              type: "host",
-              value: "lego.guild.xyz",
-            },
-          ],
-          destination: "/lego/",
-        },
-        {
           source: "/arc",
           has: [
             {
