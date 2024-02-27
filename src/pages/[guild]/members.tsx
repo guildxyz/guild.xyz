@@ -141,20 +141,11 @@ const GuildPage = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (!router.isReady) return
+    if (!router.isReady || !queryString) return
 
-    const searchParams = new URLSearchParams(queryString)
-    const query = {}
-    searchParams.forEach((value, key) => {
-      query[key] = query[key] || []
-      query[key].push(value)
-    })
-
-    router.replace({
-      pathname: router.pathname,
-      query: { guild: router.query.guild, ...query },
-    })
-  }, [queryString, router.isReady, router.pathname, router.query])
+    const asPath = router.asPath.split("?")[0]
+    router.replace(`${asPath}?${queryString}`)
+  }, [queryString, router.isReady])
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
