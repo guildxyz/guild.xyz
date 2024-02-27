@@ -1,8 +1,10 @@
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useUserRewards } from "hooks/useUserRewards"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "platforms/Points/useUsersPoints"
@@ -16,9 +18,7 @@ export type JoinData = {
 
 const stateAtom = atom<"INITIAL" | "GETTING_JOB" | "POLLING" | "FINISHED">("INITIAL")
 
-const useMembershipUpdate = (
-  onSuccess?: (response: JoinJob) => void,
-  onError?: (error?: any) => void,
+type Props = UseSubmitOptions<JoinJob> & {
   /**
    * We're setting keepPreviousData to true in useJoin, so we can display no access
    * and error states correctly. Would be nice to find a better solution for this
@@ -30,9 +30,16 @@ const useMembershipUpdate = (
    * - The manual progress.mutate(undefined, { revalidate: false }) doesn't work for
    *   some reason
    */
-  keepPreviousData = false
-) => {
+  keepPreviousData?: boolean
+}
+
+const useMembershipUpdate = ({
+  onSuccess,
+  onError,
+  keepPreviousData,
+}: Props = {}) => {
   const guild = useGuild()
+  const { isAdmin } = useGuildPermission()
   const { mutate: mutateMembership } = useMembership()
   const { mutate: mutateUserRewards } = useUserRewards()
   const { mutate: mutateUserPoints } = useUsersPoints()
@@ -79,7 +86,7 @@ const useMembershipUpdate = (
     if (!response.roleAccesses?.some((role) => role.access === true)) return
 
     // mutate guild in case the user sees more entities due to visibilities
-    guild.mutateGuild()
+    if (!isAdmin) guild.mutateGuild()
 
     mutateUserRewards()
     mutateUserPoints()
@@ -126,15 +133,19 @@ const useMembershipUpdate = (
                     (roleAccess) => roleAccess.roleId === +roleId
                   )?.access,
                   roleId,
-                  requirements: reqJobs?.map((reqJob) => ({
-                    requirementId: reqJob.requirementId,
-                    access: reqJob.access,
-                    amount: reqJob.amount,
-                    errorMsg: reqJob.userLevelErrors?.[0]?.msg,
-                    errorType: reqJob.userLevelErrors?.[0]?.errorType,
-                    subType: reqJob.userLevelErrors?.[0]?.subType,
-                    lastCheckedAt: reqJob.done ? new Date() : null,
-                  })),
+                  requirements: reqJobs?.map((reqJob) => {
+                    const firstError =
+                      reqJob.requirementError ?? reqJob.userLevelErrors?.[0]
+                    return {
+                      requirementId: reqJob.requirementId,
+                      access: reqJob.access,
+                      amount: reqJob.amount,
+                      errorMsg: firstError?.msg,
+                      errorType: firstError?.errorType,
+                      subType: firstError?.subType,
+                      lastCheckedAt: reqJob.done ? new Date() : null,
+                    }
+                  }),
                 }
               }),
             }

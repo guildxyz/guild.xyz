@@ -1,19 +1,15 @@
-import { MenuItem, MenuItemProps, Spinner } from "@chakra-ui/react"
-import Link from "next/link"
+import { ButtonProps, MenuItem, MenuItemProps, Spinner } from "@chakra-ui/react"
+import Link, { LinkProps } from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { useState } from "react"
+import Button from "./Button"
 
-type Props = {
-  href: string
-} & MenuItemProps
-
-const LinkMenuItem = ({ href, icon, children, ...rest }: Props) => {
+const LinkMenuItem = ({ icon, children, ...rest }: MenuItemProps & LinkProps) => {
   const [hasClicked, setHasClicked] = useState(false)
 
   return (
     <MenuItem
       as={Link}
-      href={href}
       onClick={() => setHasClicked(true)}
       icon={hasClicked ? <Spinner size="xs" /> : icon}
       command={(<ArrowRight />) as any}
@@ -26,4 +22,22 @@ const LinkMenuItem = ({ href, icon, children, ...rest }: Props) => {
   )
 }
 
+const LinkButton = ({ children, ...rest }: ButtonProps & LinkProps) => {
+  const [hasClicked, setHasClicked] = useState(false)
+
+  return (
+    <Button
+      as={Link}
+      onClick={() => setHasClicked(true)}
+      rightIcon={(<ArrowRight />) as any}
+      isLoading={hasClicked}
+      loadingText={"Redirecting"}
+      {...rest}
+    >
+      {children}
+    </Button>
+  )
+}
+
 export default LinkMenuItem
+export { LinkButton }

@@ -1,11 +1,13 @@
 import {
   beraTestnet,
   bitfinityTestnet,
+  blastSepolia,
   bobaAvax,
   exosama,
   kava,
   lukso,
   neonEVM,
+  oasisSapphire,
   ontology,
   palm,
   pgn,
@@ -21,6 +23,7 @@ import {
   avalanche,
   base,
   baseGoerli,
+  baseSepolia,
   boba,
   bsc,
   celo,
@@ -309,6 +312,16 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
     etherscanApiUrl: "https://api-goerli.basescan.org",
   },
+  BASE_SEPOLIA: {
+    ...baseSepolia,
+    iconUrl: "/networkLogos/base.svg",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/base.svg",
+      dark: "/networkLogos/base.svg",
+    },
+    etherscanApiUrl: "https://api-sepolia.basescan.org",
+  },
   EXOSAMA: {
     ...exosama,
     iconUrl: "/networkLogos/exosama.png",
@@ -509,6 +522,24 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/taiko-katla.svg",
     },
   },
+  BLAST_SEPOLIA: {
+    ...blastSepolia,
+    iconUrl: "/networkLogos/blast.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/blast.png",
+      dark: "/networkLogos/blast.png",
+    },
+  },
+  OASIS_SAPPHIRE: {
+    ...oasisSapphire,
+    iconUrl: "/networkLogos/oasis-sapphire.svg",
+    coinIconUrl: "/networkLogos/oasis-sapphire.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/oasis-sapphire.svg",
+      dark: "/networkLogos/oasis-sapphire.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -531,6 +562,7 @@ enum Chains {
   BOBA_AVAX = bobaAvax.id,
   PALM = palm.id,
   BASE_GOERLI = baseGoerli.id,
+  BASE_SEPOLIA = baseSepolia.id,
   EXOSAMA = exosama.id,
   EVMOS = evmos.id,
   ZETACHAIN_ATHENS = zetachainAthensTestnet.id,
@@ -558,6 +590,8 @@ enum Chains {
   BERA_TESTNET = beraTestnet.id,
   MANTA = manta.id,
   TAIKO_KATLA = taikoKatlaTestnet.id,
+  BLAST_SEPOLIA = blastSepolia.id,
+  OASIS_SAPPHIRE = oasisSapphire.id,
 }
 
 export type Chain = keyof typeof Chains

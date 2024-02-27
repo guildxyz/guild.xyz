@@ -9,7 +9,7 @@ import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
-import useUserSubmission from "platforms/Forms/hooks/useUserSubmission"
+import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import platforms from "platforms/platforms"
 import { PlatformType } from "types"
 
@@ -20,8 +20,8 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
     platformGuildData?.formId
   )
 
-  const { data: userSubmission, isValidating: isUserSubmissionValidating } =
-    useUserSubmission(form)
+  const { userSubmission, isValidating: isUserSubmissionValidating } =
+    useUserFormSubmission(form)
 
   return (
     <RewardDisplay

@@ -95,16 +95,16 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     error: joinError,
     joinProgress,
     reset,
-  } = useJoin(
-    (res) => {
+  } = useJoin({
+    onSuccess: (res) => {
       methods.setValue("platforms", {})
       onClose()
     },
-    (err) => {
+    onError: (err) => {
       errorToast(err)
       reset()
-    }
-  )
+    },
+  })
 
   const onJoin = (data) =>
     onSubmit({

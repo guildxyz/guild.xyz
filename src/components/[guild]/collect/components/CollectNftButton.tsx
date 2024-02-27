@@ -45,12 +45,14 @@ const CollectNftButton = ({
   } = useCollectNft()
 
   const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
-    useMembershipUpdate(onMintSubmit, (error) =>
-      showErrorToast({
-        error: "Couldn't check eligibility",
-        correlationId: error.correlationId,
-      })
-    )
+    useMembershipUpdate({
+      onSuccess: onMintSubmit,
+      onError: (error) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: error.correlationId,
+        }),
+    })
 
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
