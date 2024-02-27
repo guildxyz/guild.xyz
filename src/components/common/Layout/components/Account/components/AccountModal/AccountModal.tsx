@@ -28,22 +28,20 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
+import { useAtom } from "jotai"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount, useChainId } from "wagmi"
+import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
-  const {
-    address,
-    type,
-    setIsDelegateConnection,
-    isAccountModalOpen: isOpen,
-    closeAccountModal: onClose,
-    disconnect,
-  } = useWeb3ConnectionManager()
+  const { address, type, setIsDelegateConnection, disconnect } =
+    useWeb3ConnectionManager()
+  const [isOpen, setIsOpen] = useAtom(accountModalAtom)
+  const onClose = () => setIsOpen(false)
 
   const { address: evmAddress, connector } = useAccount()
 

@@ -10,7 +10,6 @@ import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wag
 const delegateConnectionAtom = atom(false)
 const safeContextAtom = atom(false)
 const walletSelectorModalAtom = atom(false)
-const accountModalAtom = atom(false)
 const platformMergeAlertAtom = atom(false)
 const accountMergeAddressAtom = atom("")
 const accountMergePlatformNameAtom = atom("" as PlatformName)
@@ -28,9 +27,6 @@ type Web3ConnectionManagerType = {
   isWalletSelectorModalOpen: boolean
   openWalletSelectorModal: () => void
   closeWalletSelectorModal: () => void
-  isAccountModalOpen: boolean
-  openAccountModal: () => void
-  closeAccountModal: () => void
   requestNetworkChange: (
     chainId: number,
     callback?: () => void,
@@ -56,10 +52,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   )
   const openWalletSelectorModal = () => setIsWalletSelectorModalOpen(true)
   const closeWalletSelectorModal = () => setIsWalletSelectorModalOpen(false)
-
-  const [isAccountModalOpen, setIsAccountModalOpen] = useAtom(accountModalAtom)
-  const openAccountModal = () => setIsAccountModalOpen(true)
-  const closeAccountModal = () => setIsAccountModalOpen(false)
 
   const [isPlatformMergeAlertOpen, setIsPlatformMergeAlertOpen] = useAtom(
     platformMergeAlertAtom
@@ -161,9 +153,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     isWalletSelectorModalOpen,
     openWalletSelectorModal,
     closeWalletSelectorModal,
-    isAccountModalOpen,
-    openAccountModal,
-    closeAccountModal,
     requestNetworkChange,
     isNetworkChangeInProgress,
     isDelegateConnection,

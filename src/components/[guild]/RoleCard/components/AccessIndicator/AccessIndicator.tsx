@@ -10,11 +10,12 @@ import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
+import { useSetAtom } from "jotai"
 import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
@@ -33,7 +34,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
     useRoleMembership(roleId)
   const accessedRequirementCount = reqAccesses?.filter((r) => r.access)?.length
 
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const { isMember } = useMembership()
   const openJoinModal = useOpenJoinModal()
   const isMobile = useBreakpointValue({ base: true, md: false })
@@ -124,7 +125,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         colorScheme="blue"
         label="Reconnect needed to check access"
         icon={LockSimple}
-        onClick={() => openAccountModal()}
+        onClick={() => setIsAccountModalOpen(true)}
         cursor="pointer"
       />
     )
@@ -135,7 +136,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         colorScheme="blue"
         label="Connect needed to check access"
         icon={LockSimple}
-        onClick={() => openAccountModal()}
+        onClick={() => setIsAccountModalOpen(true)}
         cursor="pointer"
       />
     )
