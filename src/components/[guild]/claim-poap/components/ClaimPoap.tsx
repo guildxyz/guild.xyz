@@ -33,7 +33,7 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
 
   const { isAvailable: isButtonEnabled, startTimeDiff } =
     getRolePlatformTimeframeInfo(rolePlatform)
-  const { claimed, isLoading } = useClaimedReward(rolePlatform.id)
+  const { claimed } = useClaimedReward(rolePlatform.id)
 
   return (
     <Stack p={padding} w="full" spacing={2}>
@@ -48,8 +48,8 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
       >
         <ClaimPoapButton
           rolePlatformId={rolePlatformId}
+          rolePlatform={rolePlatform}
           isDisabled={!isButtonEnabled}
-          isClaimedLoading={isLoading}
         />
       </Tooltip>
 
