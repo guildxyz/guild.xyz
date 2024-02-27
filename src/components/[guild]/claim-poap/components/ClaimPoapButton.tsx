@@ -22,20 +22,16 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useAccount } from "wagmi"
+import { useClaimedReward } from "../../../../hooks/useClaimedReward"
 
 type Props = {
   rolePlatformId: number
-  isClaimed: boolean
   isClaimedLoading: boolean
 } & ButtonProps
 
-const ClaimPoapButton = ({
-  rolePlatformId,
-  isClaimed: claimed,
-  isClaimedLoading,
-  ...rest
-}: Props) => {
+const ClaimPoapButton = ({ rolePlatformId, isClaimedLoading, ...rest }: Props) => {
   const { captureEvent } = usePostHogContext()
+  const { claimed } = useClaimedReward(rolePlatformId)
 
   const { urlName, roles } = useGuild()
   const { address } = useAccount()

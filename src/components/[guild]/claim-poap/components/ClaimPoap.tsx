@@ -49,7 +49,6 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
         <ClaimPoapButton
           rolePlatformId={rolePlatformId}
           isDisabled={!isButtonEnabled}
-          isClaimed={claimed}
           isClaimedLoading={isLoading}
         />
       </Tooltip>
