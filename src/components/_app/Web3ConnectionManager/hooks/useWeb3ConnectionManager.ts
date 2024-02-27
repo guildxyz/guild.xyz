@@ -1,23 +1,14 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import useFuel from "hooks/useFuel"
-import useToast from "hooks/useToast"
 import { atom, useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
 import { User } from "types"
-import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wagmi"
+import { useAccount, useDisconnect, useSignMessage } from "wagmi"
 import { walletSelectorModalAtom } from "../components/WalletSelectorModal"
 
 const safeContextAtom = atom(false)
 
 type Web3ConnectionManagerType = {
-  requestNetworkChange: (
-    chainId: number,
-    callback?: () => void,
-    errorHandler?: (err: any) => void
-  ) => void
-  isNetworkChangeInProgress: boolean
-
   isInSafeContext: boolean
   isWeb3Connected: boolean
   address?: `0x${string}`
@@ -30,31 +21,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const router = useRouter()
 
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-
-  const { switchNetworkAsync, isLoading: isNetworkChangeInProgress } =
-    useSwitchNetwork()
-
-  const toast = useToast()
-
-  const requestNetworkChange = async (
-    newChainId: number,
-    callback?: () => void,
-    errorHandler?: (err: unknown) => void
-  ) => {
-    if (!switchNetworkAsync) {
-      toast({
-        title: "Your wallet doesn't support switching chains automatically",
-        description: `Please switch to ${
-          CHAIN_CONFIG[Chains[newChainId]].name
-        } from your wallet manually!`,
-        status: "info",
-      })
-    } else {
-      switchNetworkAsync(newChainId)
-        .then(() => callback?.())
-        .catch(errorHandler)
-    }
-  }
 
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
@@ -99,8 +65,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   }
 
   return {
-    requestNetworkChange,
-    isNetworkChangeInProgress,
     isInSafeContext,
     isWeb3Connected,
     address,

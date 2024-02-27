@@ -1,9 +1,9 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { LinkBreak, Wallet } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import shortenHex from "utils/shortenHex"
@@ -20,7 +20,7 @@ const WithdrawButton = (): JSX.Element => {
 
   const { address } = useAccount()
   const chainId = useChainId()
-  const { requestNetworkChange } = useWeb3ConnectionManager()
+  const { requestNetworkChange } = useTriggerNetworkChange()
 
   const isOnVaultsChain = Chains[chain] === chainId
 
