@@ -43,8 +43,12 @@ const GuildSelect = ({ baseFieldPath }) => {
   const { isLoading, ...currentGuild } = useGuild()
 
   const selectedGuildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
-  const { isLoading: isSelectedGuildLoading, ...selectedGuild } =
-    useGuild(selectedGuildId)
+  const { isLoading: isSelectedGuildLoading, ...selectedGuild } = useGuild(
+    searchValue &&
+      debouncedSearchValue?.replace("https://guild.xyz/", "").match(GUILD_URL_REGEX)
+      ? debouncedSearchValue.replace("https://guild.xyz/", "")
+      : selectedGuildId
+  )
 
   const mergedGuildOptions = useMemo(() => {
     let options = []
