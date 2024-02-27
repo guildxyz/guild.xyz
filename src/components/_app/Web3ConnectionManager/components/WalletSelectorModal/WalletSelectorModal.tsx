@@ -14,7 +14,6 @@ import {
 
 import { Link } from "@chakra-ui/next-js"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
@@ -123,19 +122,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       <ModalOverlay />
       <ModalContent data-test="wallet-selector-modal">
         <ModalHeader display={"flex"}>
-          <Box
-            {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
-              ? {
-                  w: "10",
-                  opacity: 1,
-                }
-              : {
-                  w: "0",
-                  opacity: 0,
-                })}
-            transition="width .2s, opacity .2s"
-            mt="-1px"
-          >
+          {((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection) && (
             <IconButton
               rounded={"full"}
               aria-label="Back"
@@ -154,8 +141,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 disconnect()
               }}
             />
-          </Box>
-          <Text>
+          )}
+          <Text ml="1.5" mt="-1px">
             {isAddressLink
               ? "Link address"
               : isDelegateConnection
@@ -197,9 +184,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           )}
 
           {isWeb3Connected ? (
-            <CardMotionWrapper>
-              <AccountButton />
-            </CardMotionWrapper>
+            <AccountButton />
           ) : (
             <Stack spacing="0">
               {!connector && (
@@ -225,26 +210,17 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     (!!connector || conn.id !== "cwaasWallet")
                 )
                 .map((conn) => (
-                  <CardMotionWrapper key={conn.id}>
-                    <ConnectorButton
-                      connector={conn}
-                      connect={connect}
-                      isLoading={isLoading}
-                      pendingConnector={pendingConnector}
-                      error={error}
-                    />
-                  </CardMotionWrapper>
+                  <ConnectorButton
+                    key={conn.id}
+                    connector={conn}
+                    connect={connect}
+                    isLoading={isLoading}
+                    pendingConnector={pendingConnector}
+                    error={error}
+                  />
                 ))}
-              {!isDelegateConnection && (
-                <CardMotionWrapper>
-                  <DelegateCashButton />
-                </CardMotionWrapper>
-              )}
-              {windowFuel && (
-                <CardMotionWrapper key="fuel">
-                  <FuelConnectorButtons />
-                </CardMotionWrapper>
-              )}
+              {!isDelegateConnection && <DelegateCashButton />}
+              {windowFuel && <FuelConnectorButtons key="fuel" />}
             </Stack>
           )}
 
