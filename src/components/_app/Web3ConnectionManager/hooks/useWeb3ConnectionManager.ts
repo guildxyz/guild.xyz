@@ -4,25 +4,13 @@ import useToast from "hooks/useToast"
 import { atom, useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { PlatformName, User } from "types"
+import { User } from "types"
 import { useAccount, useDisconnect, useSignMessage, useSwitchNetwork } from "wagmi"
 import { walletSelectorModalAtom } from "../components/WalletSelectorModal"
 
 const safeContextAtom = atom(false)
-const platformMergeAlertAtom = atom(false)
-const accountMergeAddressAtom = atom("")
-const accountMergePlatformNameAtom = atom("" as PlatformName)
 
 type Web3ConnectionManagerType = {
-  accountMergeAddress?: string
-  accountMergePlatformName?: PlatformName
-  isPlatformMergeAlertOpen: boolean
-  showPlatformMergeAlert: (
-    addressOrDomain: string,
-    platformName: PlatformName
-  ) => void
-  closePlatformMergeAlert: () => void
-
   requestNetworkChange: (
     chainId: number,
     callback?: () => void,
@@ -42,12 +30,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const router = useRouter()
 
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
-
-  const [isPlatformMergeAlertOpen, setIsPlatformMergeAlertOpen] = useAtom(
-    platformMergeAlertAtom
-  )
-  const openPlatformMergeAlert = () => setIsPlatformMergeAlertOpen(true)
-  const closePlatformMergeAlert = () => setIsPlatformMergeAlertOpen(false)
 
   const { switchNetworkAsync, isLoading: isNetworkChangeInProgress } =
     useSwitchNetwork()
@@ -73,22 +55,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
         .catch(errorHandler)
     }
   }
-
-  const showPlatformMergeAlert = (
-    addressOrDomain: string,
-    platformName: PlatformName
-  ) => {
-    setAccountMergeAddress(addressOrDomain)
-    setAccountMergePlatformName(platformName)
-    openPlatformMergeAlert()
-  }
-
-  const [accountMergeAddress, setAccountMergeAddress] = useAtom(
-    accountMergeAddressAtom
-  )
-  const [accountMergePlatformName, setAccountMergePlatformName] = useAtom(
-    accountMergePlatformNameAtom
-  )
 
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
@@ -133,11 +99,6 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   }
 
   return {
-    accountMergeAddress,
-    accountMergePlatformName,
-    isPlatformMergeAlertOpen,
-    showPlatformMergeAlert,
-    closePlatformMergeAlert,
     requestNetworkChange,
     isNetworkChangeInProgress,
     isInSafeContext,
