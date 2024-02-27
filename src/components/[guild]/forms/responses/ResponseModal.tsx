@@ -82,7 +82,7 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
               )
               const value = submissionAnswers.find(
                 (f) => f.fieldId === field.id
-              ).value
+              )?.value
 
               return (
                 <Box
