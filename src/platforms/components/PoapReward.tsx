@@ -6,7 +6,8 @@ import {
 } from "components/[guild]/RoleCard/components/Reward"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
@@ -48,16 +49,18 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
       label={
         <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
           {"Claim: "}
-          <LinkButton
+          <Button
+            as={Link}
             href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
             variant="link"
+            colorScheme="primary"
             rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
             {...state.buttonProps}
           >
             {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
-          </LinkButton>
+          </Button>
         </Tooltip>
       }
     >

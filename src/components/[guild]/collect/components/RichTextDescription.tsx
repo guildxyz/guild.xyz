@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Box,
   Code,
@@ -8,7 +9,6 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
 import { SpecialComponents } from "react-markdown/lib/ast-to-react"

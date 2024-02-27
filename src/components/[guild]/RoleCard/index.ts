@@ -5,7 +5,7 @@ export type RoleCardCollapseProps = {
   descriptionRef?: MutableRefObject<HTMLDivElement>
   initialRequirementsRef?: MutableRefObject<HTMLDivElement>
   isExpanded: boolean
-  onToggleExpanded: () => void
+  onToggleExpanded?: () => void
 }
 
 export default RoleCard

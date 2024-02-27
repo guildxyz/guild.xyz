@@ -7,7 +7,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Tag,
   Text,
   useColorModeValue,
   Wrap,
@@ -17,9 +16,10 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
-import { IdentityTag, PrivateSocialsTag, WalletTag } from "./Identities"
+import { WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
+import UserPlatformTags from "./UserPlatformTags"
 
 type Props = {
   row: Row<Member>
@@ -28,8 +28,7 @@ type Props = {
 }
 
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
-  const { addresses, platformUsers, roles, joinedAt, areSocialsPrivate } =
-    row.original
+  const { addresses, platformUsers, roles, joinedAt, isShared } = row.original
 
   const rolesColumn = row
     .getAllCells()
@@ -66,27 +65,13 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
         </ModalHeader>
 
         <ModalBody>
-          <Wrap>
-            {areSocialsPrivate ? (
-              <PrivateSocialsTag isOpen />
-            ) : platformUsers.length ? (
-              platformUsers.map((platformAccount) => (
-                <IdentityTag
-                  key={platformAccount.platformId}
-                  platformAccount={platformAccount}
-                  fontWeight="semibold"
-                  isOpen
-                />
-              ))
-            ) : (
-              <Tag>No connected socials</Tag>
-            )}
+          <UserPlatformTags {...{ addresses, platformUsers, isShared }}>
             {addresses.slice(1).map((address) => (
               <WalletTag key={address}>
                 <CopyableAddress address={address} fontSize="sm" />
               </WalletTag>
             ))}
-          </Wrap>
+          </UserPlatformTags>
 
           <Text fontWeight={"bold"} mt="8" mb="2">
             Member since

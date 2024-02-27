@@ -1,9 +1,9 @@
+import { Link } from "@chakra-ui/next-js"
 import { Img } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import Link from "components/common/Link"
 import useSWRImmutable from "swr/immutable"
 import slugify from "utils/slugify"
 

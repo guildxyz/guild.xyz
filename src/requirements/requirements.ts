@@ -138,6 +138,7 @@ export const REQUIREMENTS_DATA = [
     types: [
       "GUILD",
       "GUILD_ROLE",
+      "GUILD_ROLE_RELATIVE",
       "GUILD_MINGUILDS",
       "GUILD_ADMIN",
       "GUILD_USER_SINCE",
@@ -184,6 +185,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Email/EmailForm")
     ),
     types: ["EMAIL", "EMAIL_VERIFIED", "EMAIL_DOMAIN"],
+    isNegatable: true,
+  },
+  {
+    icon: platforms.FORM.icon,
+    name: platforms.FORM.name,
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Form/FormRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Form/FormForm")
+    ),
+    types: ["FORM_SUBMISSION"],
     isNegatable: true,
   },
   {
@@ -427,7 +440,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Mirror/MirrorForm")
     ),
-    types: ["MIRROR", "MIRROR_COLLECT"],
+    types: ["MIRROR_COLLECT", "MIRROR"],
     isNegatable: true,
   },
   {

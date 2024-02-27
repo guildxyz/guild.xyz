@@ -73,31 +73,37 @@ const MemberRow = ({ row }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
-    <Tr role="group">
-      {row.getVisibleCells().map((cell) => (
-        <CrmInteractiveTd
-          key={cell.id}
-          onClick={cell.column.id !== "select" ? onOpen : undefined}
-          transition="background .2s"
-          {...(cell.column.id === "identity" && {
-            position: "sticky",
-            left: "0",
-            width: "0px",
-            maxWidth: "350px",
-            transition: "max-width .2s",
-            zIndex: 3,
-            className: "identityTd",
-          })}
-        >
-          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-        </CrmInteractiveTd>
-      ))}
+    <CrmRow {...{ row, onOpen }}>
       <MemberModal {...{ row, isOpen, onClose }} />
-    </Tr>
+    </CrmRow>
   )
 }
 
-const CrmSkeletonRow = ({ columns }) => (
+export const CrmRow = ({ row, onOpen, children = undefined }) => (
+  <Tr role="group">
+    {row.getVisibleCells().map((cell) => (
+      <CrmInteractiveTd
+        key={cell.id}
+        onClick={cell.column.id !== "select" ? onOpen : undefined}
+        transition="background .2s"
+        {...(cell.column.id === "identity" && {
+          position: "sticky",
+          left: "0",
+          width: "0px",
+          maxWidth: "350px",
+          transition: "max-width .2s",
+          zIndex: 3,
+          className: "identityTd",
+        })}
+      >
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </CrmInteractiveTd>
+    ))}
+    {children}
+  </Tr>
+)
+
+export const CrmSkeletonRow = ({ columns }) => (
   <Tr>
     <CrmTd w="12">
       <Checkbox mt="2px" />
@@ -117,7 +123,7 @@ const CrmSkeletonRow = ({ columns }) => (
   </Tr>
 )
 
-const CrmTd = ({ children, ...rest }) => {
+export const CrmTd = ({ children, ...rest }) => {
   const tdBg = useColorModeValue(`gray.50`, "#3A3A40") // dark color is from blackAlpha.200, but without opacity so it can overlay when sticky
 
   return (
@@ -127,7 +133,7 @@ const CrmTd = ({ children, ...rest }) => {
   )
 }
 
-const CrmInteractiveTd = ({ children, ...rest }) => {
+export const CrmInteractiveTd = ({ children, ...rest }) => {
   const tdHoverBg = useColorModeValue(`blackAlpha.50`, "whiteAlpha.50")
 
   return (
@@ -150,7 +156,7 @@ const CrmInteractiveTd = ({ children, ...rest }) => {
   )
 }
 
-const CrmInfoRow = ({ children, ...rest }) => (
+export const CrmInfoRow = ({ children, ...rest }) => (
   <Tr>
     <CrmTd
       textAlign={"center"}

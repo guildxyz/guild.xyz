@@ -1,7 +1,7 @@
 // import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 // import { Contract } from "@ethersproject/contracts"
 import { Chains } from "chains"
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -12,7 +12,7 @@ import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
-import { useGuildCheckoutContext } from "../components/GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
 import useTokenBuyerContractData from "./useTokenBuyerContractData"
@@ -24,7 +24,7 @@ const usePurchaseAsset = () => {
   const requirement = useRequirementContext()
   const { pickedCurrency } = useGuildCheckoutContext()
 
-  const { mutate: mutateAccess } = useAccess(requirement?.roleId)
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const postHogOptions = { guild: urlName, chain: requirement.chain }
 
@@ -102,7 +102,7 @@ const usePurchaseAsset = () => {
     onSuccess: () => {
       captureEvent("Purchased requirement (GuildCheckout)", postHogOptions)
 
-      mutateAccess()
+      triggerMembershipUpdate()
 
       toast({
         status: "success",

@@ -36,10 +36,12 @@ const GuildLogo = memo(
               src={imageUrl}
               quality={imageQuality}
               alt="Guild logo"
-              layout="fill"
-              sizes={typeof size === "string" ? size : Object.values(size).at(-1)}
-              objectFit="cover"
               priority={priority}
+              fill
+              sizes={typeof size === "string" ? size : Object.values(size).at(-1)}
+              style={{
+                objectFit: "cover",
+              }}
             />
           ))}
       </Circle>

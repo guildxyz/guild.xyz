@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Box,
   Divider,
@@ -25,13 +26,12 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Chain, CHAIN_CONFIG, Chains } from "chains"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
@@ -74,6 +74,7 @@ const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "POLYGON",
   "POLYGON_MUMBAI",
   "MANTLE",
+  "ZKSYNC_ERA",
 ] as const
 
 export type ContractCallSupportedChain =
