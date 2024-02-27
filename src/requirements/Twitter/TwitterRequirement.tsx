@@ -11,7 +11,6 @@ import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { ArrowSquareOut } from "phosphor-react"
 import XLogo from "static/icons/x.svg"
 import useSWRImmutable from "swr/immutable"
-import { PlatformType } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import pluralize from "../../utils/pluralize"
 import TwitterIntent, { TwitterIntentAction } from "./components/TwitterIntent"
@@ -30,10 +29,7 @@ export const TWITTER_HANDLE_REGEX = /^[a-z0-9_]+$/i
 
 const TwitterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
-  const { id: userId, platformUsers } = useUser()
-  const isTwitterConnected = platformUsers?.find(
-    (pu) => pu.platformId === PlatformType.TWITTER
-  )
+  const { id: userId } = useUser()
 
   const { data: twitterAvatar } = useSWRImmutable(
     // requirement.data?.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
@@ -48,11 +44,7 @@ const TwitterRequirement = (props: RequirementProps) => {
       }
       footer={
         requirementIntentAction[requirement.type] && !!userId ? (
-          !isTwitterConnected ? (
-            <ConnectRequirementPlatformButton />
-          ) : (
-            <TwitterIntent action={requirementIntentAction[requirement.type]} />
-          )
+          <TwitterIntent action={requirementIntentAction[requirement.type]} />
         ) : (
           <ConnectRequirementPlatformButton />
         )
