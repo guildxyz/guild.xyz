@@ -175,6 +175,7 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
       } else {
         errorObject.error = rawError
       }
+      console.log(toastError)
 
       captureEvent("Platform connection error", errorObject)
 
@@ -187,6 +188,12 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         showErrorToast(
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
+            : // temporary until we solve the X rate limit
+            platformName === "TWITTER" && rawError === "Failed to fetch"
+            ? {
+                error:
+                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+              }
             : rawError
         )
       }
