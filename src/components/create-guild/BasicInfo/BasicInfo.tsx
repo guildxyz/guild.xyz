@@ -1,10 +1,19 @@
-import { Box, FormLabel, HStack, SimpleGrid, Stack } from "@chakra-ui/react"
+import {
+  Box,
+  FormLabel,
+  HStack,
+  SimpleGrid,
+  Stack,
+  chakra,
+  useColorModeValue,
+} from "@chakra-ui/react"
 import BackgroundImageUploader from "components/[guild]/EditGuild/components/BackgroundImageUploader"
 import ColorPicker from "components/[guild]/EditGuild/components/ColorPicker"
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Section from "components/common/Section"
 import usePinata from "hooks/usePinata"
+import { useSetAtom } from "jotai"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import slugify from "slugify"
@@ -12,6 +21,7 @@ import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Description from "../Description"
+import { ContinueBtnTooltip } from "../GuildCreationProgress/GuildCreationProgress"
 import IconSelector from "../IconSelector"
 import Name from "../Name"
 import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromPlatformData"
@@ -21,11 +31,15 @@ const BasicInfo = (): JSX.Element => {
   const { setDisabled } = useCreateGuildContext()
   const { setLocalBackgroundImage } = useThemeContext()
 
+  const setContinueTooltip = useSetAtom(ContinueBtnTooltip)
+
   const {
     control,
     setValue,
     formState: { errors, dirtyFields },
   } = useFormContext<GuildFormType>()
+
+  const requiredIndicatorColor = useColorModeValue("red.500", "red.300")
 
   const name = useWatch({ control, name: "name" })
   const contacts = useWatch({ control, name: "contacts" })
@@ -33,6 +47,10 @@ const BasicInfo = (): JSX.Element => {
 
   useEffect(() => {
     setDisabled(!name || !contacts[0].contact || !!Object.values(errors).length)
+    setContinueTooltip(
+      !contacts[0].contact || errors.contacts ? "Contact email required!" : ""
+    )
+    return () => setContinueTooltip("")
   }, [name, errors, contacts, errors.contacts])
 
   const iconUploader = usePinata({
@@ -103,7 +121,15 @@ const BasicInfo = (): JSX.Element => {
         <ColorPicker fieldName="theme.color" />
         <BackgroundImageUploader uploader={backgroundUploader} />
       </Stack>
-      <Section title="How could we contact you?" spacing="4">
+      <Section
+        title={
+          <>
+            How could we contact you?{" "}
+            <chakra.span color={requiredIndicatorColor}>*</chakra.span>
+          </>
+        }
+        spacing="4"
+      >
         <ContactInfo />
       </Section>
     </Stack>
