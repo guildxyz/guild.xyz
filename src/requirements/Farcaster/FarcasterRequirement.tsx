@@ -47,10 +47,11 @@ const FarcasterRequirement = (props: RequirementProps) => {
           case "FARCASTER_RECAST":
             return (
               <>
-                {`${requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"} the `}
+                {requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"}
 
                 {requirement.data?.hash && (
                   <>
+                    {` the `}
                     <DataBlockWithCopy text={requirement.data.hash}>
                       {shortenHex(requirement.data.hash, 3)}
                     </DataBlockWithCopy>{" "}
@@ -60,8 +61,7 @@ const FarcasterRequirement = (props: RequirementProps) => {
 
                 {requirement.data?.url && (
                   <>
-                    {" "}
-                    {` cast with url: `}{" "}
+                    {" this cast: "}
                     <DataBlockWithCopy text={requirement.data.url} />
                   </>
                 )}
