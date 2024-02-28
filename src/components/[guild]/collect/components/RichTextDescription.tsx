@@ -13,14 +13,14 @@ import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
 import { SpecialComponents } from "react-markdown/lib/ast-to-react"
 import { NormalComponents } from "react-markdown/lib/complex-types"
-import { ensureHttps } from "utils/ensureHttps"
+import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
 
 export const reactMarkdownComponents: Partial<
   Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents
 > = {
   a: ({ href, children, ...props }) => (
     <Link
-      href={ensureHttps(href)}
+      href={ensureUrlProtocol(href)}
       isExternal
       colorScheme="blue"
       whiteSpace={"pre-wrap"}
@@ -79,10 +79,13 @@ export const reactMarkdownComponents: Partial<
 type Props = {
   text: string
 }
-const RichTextDescription = forwardRef(({ text }: Props, ref: any) => (
-  <Box ref={ref} lineHeight={1.75}>
-    <ReactMarkdown components={reactMarkdownComponents}>{text}</ReactMarkdown>
-  </Box>
-))
+const RichTextDescription = forwardRef(({ text }: Props, ref: any) => {
+  console.log(text)
+  return (
+    <Box ref={ref} lineHeight={1.75}>
+      <ReactMarkdown components={reactMarkdownComponents}>{text}</ReactMarkdown>
+    </Box>
+  )
+})
 
 export default RichTextDescription
