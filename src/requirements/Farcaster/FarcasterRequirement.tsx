@@ -5,12 +5,14 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import shortenHex from "utils/shortenHex"
+import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   const { data: farcasterUser } = useFarcasterUser(requirement.data?.id)
+  const { data: farcasterChannel } = useFarcasterChannel(requirement.data?.id)
 
   return (
     <Requirement
@@ -55,7 +57,15 @@ const FarcasterRequirement = (props: RequirementProps) => {
               </>
             )
           case "FARCASTER_CHANNEL_FOLLOW":
-            return <>{`Follow channel `}</>
+            return (
+              <>
+                {`Follow the `}
+                <DataBlock isLoading={!farcasterChannel}>
+                  {farcasterChannel?.label ?? "Loading..."}
+                </DataBlock>
+                {` channel on Farcaster`}
+              </>
+            )
           default:
             return <>Have a Farcaster profile</>
         }

@@ -3,6 +3,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import FarcasterCastHash from "./components/FarcasterCastHash"
+import FarcasterChannel from "./components/FarcasterChannel"
 import FarcasterTotalFollowers from "./components/FarcasterTotalFollowers"
 import FarcasterUser from "./components/FarcasterUser"
 
@@ -74,7 +75,9 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         <FarcasterUser baseFieldPath={baseFieldPath} />
       )}
 
-      {["FARCASTER_CHANNEL_FOLLOW"].includes(type) && <>New form placeholder</>}
+      {["FARCASTER_CHANNEL_FOLLOW"].includes(type) && (
+        <FarcasterChannel baseFieldPath={baseFieldPath} />
+      )}
 
       {["FARCASTER_LIKE", "FARCASTER_RECAST"].includes(type) && (
         <FarcasterCastHash baseFieldPath={baseFieldPath} />
