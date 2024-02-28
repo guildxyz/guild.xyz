@@ -57,8 +57,6 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
           placeholder="Search user"
           onInputChange={setSearch}
           isLoading={isValidating}
-          // so restCount stays visible
-          filterOption={() => true}
           menuIsOpen={debounceSearch ? undefined : false}
           components={{
             DropdownIndicator: () => null,

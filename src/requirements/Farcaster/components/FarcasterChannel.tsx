@@ -9,7 +9,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormState, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 import useFarcasterChannels, {
   useFarcasterChannel,
@@ -20,9 +20,7 @@ type Props = {
 }
 
 const FarcasterChannel = ({ baseFieldPath }: Props) => {
-  const {
-    formState: { errors },
-  } = useFormContext()
+  const { errors } = useFormState()
 
   const [search, setSearch] = useState("")
   const debounceSearch = useDebouncedState(search)
@@ -59,8 +57,6 @@ const FarcasterChannel = ({ baseFieldPath }: Props) => {
           placeholder="Search channel"
           onInputChange={setSearch}
           isLoading={isValidating}
-          // so restCount stays visible
-          filterOption={() => true}
           menuIsOpen={debounceSearch ? undefined : false}
           components={{
             DropdownIndicator: () => null,
