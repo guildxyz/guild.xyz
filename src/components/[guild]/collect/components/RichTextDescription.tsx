@@ -79,13 +79,10 @@ export const reactMarkdownComponents: Partial<
 type Props = {
   text: string
 }
-const RichTextDescription = forwardRef(({ text }: Props, ref: any) => {
-  console.log(text)
-  return (
-    <Box ref={ref} lineHeight={1.75}>
-      <ReactMarkdown components={reactMarkdownComponents}>{text}</ReactMarkdown>
-    </Box>
-  )
-})
+const RichTextDescription = forwardRef(({ text }: Props, ref: any) => (
+  <Box ref={ref} lineHeight={1.75}>
+    <ReactMarkdown components={reactMarkdownComponents}>{text}</ReactMarkdown>
+  </Box>
+))
 
 export default RichTextDescription
