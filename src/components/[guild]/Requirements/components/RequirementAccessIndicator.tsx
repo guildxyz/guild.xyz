@@ -98,7 +98,12 @@ const RequirementAccessIndicator = () => {
           {reqAccessData?.errorMsg
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
-          <RecheckAccessesButton size="sm" ml="2" variant={"outline"} />
+          <RecheckAccessesButton
+            roleId={roleId}
+            size="sm"
+            ml="2"
+            variant={"outline"}
+          />
         </PopoverHeader>
       </RequirementAccessIndicatorUI>
     )
@@ -136,7 +141,7 @@ const RequirementAccessIndicator = () => {
           >
             View connections
           </Button>
-          <RecheckAccessesButton />
+          <RecheckAccessesButton roleId={roleId} />
         </ButtonGroup>
       </PopoverFooter>
     </RequirementAccessIndicatorUI>

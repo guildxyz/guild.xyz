@@ -94,21 +94,18 @@ const useClaimText = (rolePlatformId: number) => {
     }
   )
 
-  const {
-    error: membershipUpdateError,
-    isLoading: isMembershipUpdateLoading,
-    triggerMembershipUpdate,
-  } = useMembershipUpdate({
-    onSuccess: () => onClaimTextSubmit(),
-    onError: (error) =>
-      showErrorToast({
-        error: "Couldn't check eligibility",
-        correlationId: error.correlationId,
-      }),
-  })
+  const { isLoading: isMembershipUpdateLoading, triggerMembershipUpdate } =
+    useMembershipUpdate({
+      onSuccess: () => onClaimTextSubmit(),
+      onError: (error) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: error.correlationId,
+        }),
+    })
 
   return {
-    error: claim.error ?? membershipUpdateError,
+    error: claim.error,
     response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
     isPreparing: isUserRewardsLoading,
     isLoading: claim.isLoading || isMembershipUpdateLoading,

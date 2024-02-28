@@ -154,6 +154,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         />
         <Divider orientation="vertical" h="8" borderColor={grayDividerColor} />
         <RecheckAccessesButton
+          roleId={roleId}
           size="sm"
           h="8"
           {...ACCESS_INDICATOR_STYLES}
@@ -181,6 +182,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
       <Divider orientation="vertical" h="8" borderColor={grayDividerColor} />
       <RecheckAccessesButton
+        roleId={roleId}
         size="sm"
         h="8"
         {...ACCESS_INDICATOR_STYLES}
@@ -188,7 +190,6 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         borderBottomLeftRadius="0 !important"
         // Card's `overflow: clip` isn't enough in Safari
         borderBottomRightRadius={{ base: "2xl", md: "lg" }}
-        roleIds={[roleId]}
       />
     </HStack>
   )
