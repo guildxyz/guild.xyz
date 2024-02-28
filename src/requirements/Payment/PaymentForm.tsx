@@ -1,7 +1,7 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
 import { Chains } from "chains"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
@@ -20,7 +20,7 @@ const PaymentForm = ({
 }: RequirementFormProps): JSX.Element => {
   const { address } = useAccount()
   const chainId = useChainId()
-  const { requestNetworkChange } = useWeb3ConnectionManager()
+  const { requestNetworkChange } = useTriggerNetworkChange()
 
   const { setValue } = useFormContext()
 

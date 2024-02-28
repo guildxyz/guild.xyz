@@ -182,7 +182,7 @@ const RecheckConnectionButton = (): JSX.Element => {
 
   return (
     <Button
-      onClick={triggerMembershipUpdate}
+      onClick={() => triggerMembershipUpdate()}
       colorScheme="green"
       isLoading={isLoading}
       w="full"

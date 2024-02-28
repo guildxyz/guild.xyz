@@ -91,7 +91,7 @@ const AccountConnections = () => {
                 <PopoverContent>
                   <PopoverArrow />
                   <PopoverBody>
-                    Each of your addresses will be used for requirement checks.
+                    Each of your addresses will be used for requirement checks
                   </PopoverBody>
                 </PopoverContent>
               </Popover>

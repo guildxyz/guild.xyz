@@ -10,17 +10,17 @@ import AccountModal from "components/common/Layout/components/Account/components
 import { connectors, publicClient } from "connectors"
 import { dystopian, inter } from "fonts"
 import useSetupFuel from "hooks/useSetupFuel"
-import { useSetAtom } from "jotai"
+import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
+import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import Script from "next/script"
 import { IconContext } from "phosphor-react"
 import { useEffect, useState } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
-import { recaptchaAtom } from "utils/recaptcha"
+import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiConfig, createConfig } from "wagmi"
 
 /**
@@ -35,12 +35,14 @@ const config = createConfig({
   connectors,
 })
 
+const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+
 const App = ({
   Component,
   pageProps,
 }: AppProps<{ cookies: string }>): JSX.Element => {
   const router = useRouter()
-  const setRecaptcha = useSetAtom(recaptchaAtom)
+  const shouldUseReCAPTCHA = useAtomValue(shouldUseReCAPTCHAAtom)
 
   const [isRouteChangeInProgress, setIsRouteChangeInProgress] = useState(false)
   const { colorMode } = useColorMode()
@@ -71,13 +73,14 @@ const App = ({
         `}
       </style>
       <Script src="/intercom.js" />
-      <ReCAPTCHA
-        ref={(recaptcha) => {
-          setRecaptcha(recaptcha)
-        }}
-        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-        size="invisible"
-      />
+
+      {shouldUseReCAPTCHA && (
+        <DynamicReCAPTCHA
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+          size="invisible"
+        />
+      )}
+
       <Chakra cookies={pageProps.cookies}>
         {isRouteChangeInProgress ? (
           <Slide

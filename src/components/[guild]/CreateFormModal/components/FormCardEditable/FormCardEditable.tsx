@@ -163,7 +163,11 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
               isEditing ? (
               <selectedFieldType.SetupComponent index={index} />
             ) : (
-              <selectedFieldType.DisplayComponent field={field} isDisabled />
+              <selectedFieldType.DisplayComponent
+                field={field}
+                isDisabled
+                {...(field.type === "LONG_TEXT" && { resize: "none" })}
+              />
             )}
             {isEditing && (
               <HStack ml="auto" mt={4} spacing={3}>

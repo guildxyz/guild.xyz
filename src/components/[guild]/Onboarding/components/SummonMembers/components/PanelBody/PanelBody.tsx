@@ -13,8 +13,7 @@ import PanelDescription from "./components/PanelDescription"
 import PanelTitle from "./components/PanelTitle"
 
 const GUILD_CASTLE_SIZE = 70
-const GUILD_LOGO_DC_URL =
-  "https://cdn.discordapp.com/attachments/950682012866465833/951448318976884826/dc-message.png"
+const GUILD_LOGO_DC_URL = "/img/dc-message.png"
 
 const PanelBody = () => {
   const bg = useColorModeValue("gray.100", "#2F3136")
@@ -31,8 +30,8 @@ const PanelBody = () => {
       p="4"
       borderLeft={"4px solid var(--chakra-colors-DISCORD-500)"}
     >
-      <Grid templateColumns={`1fr ${GUILD_CASTLE_SIZE}`} gap={3}>
-        <VStack alignItems="left">
+      <Grid templateColumns={`1fr ${GUILD_CASTLE_SIZE}px`} gap={3}>
+        <VStack alignItems="start">
           <HStack spacing={2}>
             <Center h="26px" w="26px" borderRadius="full" overflow={"hidden"}>
               <Image

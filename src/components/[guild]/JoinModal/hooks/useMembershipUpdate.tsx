@@ -1,5 +1,6 @@
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
@@ -10,6 +11,8 @@ import useUsersPoints from "platforms/Points/useUsersPoints"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import mapAccessJobState, { groupBy } from "../utils/mapAccessJobState"
+
+const MEMBERSHIP_UPDATE_EVENT_NAME = "MEMBERSHIP_UPDATE_SUCCESS"
 
 export type JoinData = {
   oauthData: any
@@ -38,6 +41,7 @@ const useMembershipUpdate = ({
   keepPreviousData,
 }: Props = {}) => {
   const guild = useGuild()
+  const { isAdmin } = useGuildPermission()
   const { mutate: mutateMembership } = useMembership()
   const { mutate: mutateUserRewards } = useUserRewards()
   const { mutate: mutateUserPoints } = useUsersPoints()
@@ -84,12 +88,17 @@ const useMembershipUpdate = ({
     if (!response.roleAccesses?.some((role) => role.access === true)) return
 
     // mutate guild in case the user sees more entities due to visibilities
-    guild.mutateGuild()
+    if (!isAdmin) guild.mutateGuild()
 
     mutateUserRewards()
     mutateUserPoints()
 
-    onSuccess?.(response)
+    /**
+     * Instead of calling onSuccess here, we call it in triggerMembershipUpdate, when
+     * this event is catched. This is for making sure, the correct onSuccess runs
+     * (the same one where we call triggerMembershipUpdate)
+     */
+    window.postMessage({ type: MEMBERSHIP_UPDATE_EVENT_NAME, response })
 
     setTimeout(() => {
       setState("INITIAL")
@@ -131,15 +140,19 @@ const useMembershipUpdate = ({
                     (roleAccess) => roleAccess.roleId === +roleId
                   )?.access,
                   roleId,
-                  requirements: reqJobs?.map((reqJob) => ({
-                    requirementId: reqJob.requirementId,
-                    access: reqJob.access,
-                    amount: reqJob.amount,
-                    errorMsg: reqJob.userLevelErrors?.[0]?.msg,
-                    errorType: reqJob.userLevelErrors?.[0]?.errorType,
-                    subType: reqJob.userLevelErrors?.[0]?.subType,
-                    lastCheckedAt: reqJob.done ? new Date() : null,
-                  })),
+                  requirements: reqJobs?.map((reqJob) => {
+                    const firstError =
+                      reqJob.requirementError ?? reqJob.userLevelErrors?.[0]
+                    return {
+                      requirementId: reqJob.requirementId,
+                      access: reqJob.access,
+                      amount: reqJob.amount,
+                      errorMsg: firstError?.msg,
+                      errorType: firstError?.errorType,
+                      subType: firstError?.subType,
+                      lastCheckedAt: reqJob.done ? new Date() : null,
+                    }
+                  }),
                 }
               }),
             }
@@ -178,6 +191,17 @@ const useMembershipUpdate = ({
     triggerMembershipUpdate: (data?) => {
       progress.mutate(undefined, { revalidate: false })
       useSubmitResponse.onSubmit(data)
+
+      const listener = (event: MessageEvent<any>) => {
+        if (event?.data?.type === MEMBERSHIP_UPDATE_EVENT_NAME) {
+          try {
+            onSuccess?.(event?.data?.response)
+            window.removeEventListener("message", listener)
+          } catch {}
+        }
+      }
+
+      window.addEventListener("message", listener)
     },
     reset: () => {
       useSubmitResponse.reset()

@@ -202,7 +202,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <ModalButton
               mt="2"
               onClick={handleSubmit(onJoin)}
-              colorScheme="green"
+              colorScheme={hasNoAccess ? "gray" : "green"}
+              variant={hasNoAccess ? "outline" : "solid"}
+              size={hasNoAccess ? "md" : "lg"}
               isLoading={isLoading}
               loadingText={
                 joinProgress?.state === "FINISHED"
@@ -213,7 +215,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               }
               isDisabled={!isWeb3Connected}
             >
-              Check access to join
+              {hasNoAccess ? "Recheck access" : "Check access to join"}
             </ModalButton>
           </ModalBody>
         </FormProvider>

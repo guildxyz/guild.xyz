@@ -1,11 +1,12 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
 import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import { useSetAtom } from "jotai"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
@@ -88,7 +89,7 @@ const useConnectPlatform = (
 const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
-  const { showPlatformMergeAlert } = useWeb3ConnectionManager()
+  const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   const { mutate: mutateUser, id } = useUser()
 
@@ -182,11 +183,17 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
         const [, addressOrDomain] = toastError.match(
           /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
         )
-        showPlatformMergeAlert(addressOrDomain, platformName)
+        showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
         showErrorToast(
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
+            : // temporary until we solve the X rate limit
+            platformName === "TWITTER"
+            ? {
+                error:
+                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+              }
             : rawError
         )
       }
