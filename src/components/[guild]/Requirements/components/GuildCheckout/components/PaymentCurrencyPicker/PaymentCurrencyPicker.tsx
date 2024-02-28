@@ -11,8 +11,9 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
+import { useSetAtom } from "jotai"
 import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
@@ -35,7 +36,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   const dropdownBgColor = useColorModeValue("gray.50", "blackAlpha.400")
 
   const { address } = useAccount()
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   const currencyOptions = SUPPORTED_CURRENCIES.filter(
     (c) =>
@@ -144,7 +145,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                     size="sm"
                     variant="link"
                     rightIcon={<Icon as={ArrowSquareOut} />}
-                    onClick={openAccountModal}
+                    onClick={() => setIsAccountModalOpen(true)}
                   >
                     {shortenHex(address, 3)}
                   </Button>

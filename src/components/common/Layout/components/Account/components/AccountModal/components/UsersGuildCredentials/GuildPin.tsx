@@ -1,6 +1,7 @@
 import { Link } from "@chakra-ui/next-js"
 import { Card, Circle, Img, Tag, useColorModeValue } from "@chakra-ui/react"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
+import { useSetAtom } from "jotai"
 
 type Props = {
   name: string
@@ -13,7 +14,7 @@ const GuildPin = ({ name, image, guild, rank }: Props) => {
   const borderColor = useColorModeValue("white", "gray.700")
   const tagBgColor = useColorModeValue("gray.100", "whiteAlpha.300")
 
-  const { closeAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
     <Link
@@ -28,7 +29,7 @@ const GuildPin = ({ name, image, guild, rank }: Props) => {
           transform: "translateX(2rem)",
         },
       }}
-      onClick={closeAccountModal}
+      onClick={() => setIsAccountModalOpen(false)}
     >
       <Circle
         position="relative"

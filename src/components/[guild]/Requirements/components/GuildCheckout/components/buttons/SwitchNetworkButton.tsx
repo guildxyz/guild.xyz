@@ -1,6 +1,6 @@
 import { Collapse } from "@chakra-ui/react"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { useAccount, useChainId } from "wagmi"
 
 type Props = {
@@ -13,7 +13,7 @@ const SwitchNetworkButton = ({ targetChainId, hidden }: Props): JSX.Element => {
   const chainId = useChainId()
 
   const { requestNetworkChange, isNetworkChangeInProgress } =
-    useWeb3ConnectionManager()
+    useTriggerNetworkChange()
 
   return (
     <Collapse in={!hidden && isConnected && chainId !== targetChainId}>

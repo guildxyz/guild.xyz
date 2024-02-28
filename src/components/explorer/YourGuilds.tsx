@@ -1,10 +1,12 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useSetAtom } from "jotai"
 import Link from "next/link"
 import { Plus, SignIn } from "phosphor-react"
 import { forwardRef } from "react"
@@ -16,7 +18,8 @@ const useYourGuilds = () =>
   })
 
 const YourGuilds = forwardRef((_, ref: any) => {
-  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()
 
@@ -47,7 +50,7 @@ const YourGuilds = forwardRef((_, ref: any) => {
               flexShrink="0"
               colorScheme="indigo"
               leftIcon={<SignIn />}
-              onClick={openWalletSelectorModal}
+              onClick={() => setIsWalletSelectorModalOpen(true)}
             >
               Sign in
             </Button>

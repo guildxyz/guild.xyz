@@ -7,9 +7,10 @@ import {
   Text,
 } from "@chakra-ui/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
@@ -29,7 +30,7 @@ const DynamicConnectRequirementPlatformButton = dynamic(
 )
 
 const RequirementAccessIndicator = () => {
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const { id, roleId, type, data, isNegated } = useRequirementContext()
 
   const { reqAccesses, hasRoleAccess } = useRoleMembership(roleId)
@@ -130,7 +131,7 @@ const RequirementAccessIndicator = () => {
         <ButtonGroup size="sm">
           <Button
             rightIcon={<Icon as={ArrowSquareIn} />}
-            onClick={openAccountModal}
+            onClick={() => setIsAccountModalOpen(true)}
             variant="outline"
           >
             View connections

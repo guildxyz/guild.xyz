@@ -10,10 +10,11 @@ import {
 } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useUser from "components/[guild]/hooks/useUser"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { atom, useAtom } from "jotai"
+import { atom, useSetAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
 import { useWalletClient } from "wagmi"
@@ -36,8 +37,8 @@ const LinkAddressButton = (props) => {
   const { data: walletClient } = useWalletClient()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const setAddressLinkParams = useSetAtom(addressLinkParamsAtom)
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   if (!id) return null
 
@@ -63,7 +64,7 @@ const LinkAddressButton = (props) => {
     handleClose()
     disconnect()
 
-    openWalletSelectorModal()
+    setIsWalletSelectorModalOpen(true)
   }
 
   return (

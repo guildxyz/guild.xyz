@@ -6,8 +6,9 @@ import { publicClient } from "connectors"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useAtomValue } from "jotai"
+import { useAtomValue, useSetAtom } from "jotai"
 import { useState } from "react"
+import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
 import useLinkAddress from "../../../hooks/useLinkAddress"
@@ -107,8 +108,12 @@ const useLoginWithGoogle = () => {
     }
   }
 
+  const setShouldUseReCAPTCHA = useSetAtom(shouldUseReCAPTCHAAtom)
+
   const logInWithGoogle = useSubmit(
     async () => {
+      setShouldUseReCAPTCHA(true)
+
       captureEvent("[WaaS] Log in with Google clicked")
 
       // 1) Google OAuth

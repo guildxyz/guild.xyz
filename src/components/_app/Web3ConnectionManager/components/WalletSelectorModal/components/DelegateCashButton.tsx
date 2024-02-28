@@ -11,11 +11,13 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { atom, useSetAtom } from "jotai"
 import { ArrowSquareOut } from "phosphor-react"
 import { useAccount } from "wagmi"
 import { connectorButtonProps } from "./ConnectorButton"
+
+export const delegateConnectionAtom = atom(false)
 
 const DelegateCashButton = (): JSX.Element => {
   const { isConnected } = useAccount()
@@ -24,7 +26,7 @@ const DelegateCashButton = (): JSX.Element => {
   const iconUrl = "delegatecash.png"
   const connectorName = "Delegate"
 
-  const { setIsDelegateConnection } = useWeb3ConnectionManager()
+  const setIsDelegateConnection = useSetAtom(delegateConnectionAtom)
 
   if (keyPair && isConnected) return null
 

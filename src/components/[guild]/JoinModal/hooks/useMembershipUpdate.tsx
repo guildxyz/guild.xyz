@@ -12,6 +12,8 @@ import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import mapAccessJobState, { groupBy } from "../utils/mapAccessJobState"
 
+const MEMBERSHIP_UPDATE_EVENT_NAME = "MEMBERSHIP_UPDATE_SUCCESS"
+
 export type JoinData = {
   oauthData: any
 }
@@ -91,7 +93,12 @@ const useMembershipUpdate = ({
     mutateUserRewards()
     mutateUserPoints()
 
-    onSuccess?.(response)
+    /**
+     * Instead of calling onSuccess here, we call it in triggerMembershipUpdate, when
+     * this event is catched. This is for making sure, the correct onSuccess runs
+     * (the same one where we call triggerMembershipUpdate)
+     */
+    window.postMessage({ type: MEMBERSHIP_UPDATE_EVENT_NAME, response })
 
     setTimeout(() => {
       setState("INITIAL")
@@ -184,6 +191,17 @@ const useMembershipUpdate = ({
     triggerMembershipUpdate: (data?) => {
       progress.mutate(undefined, { revalidate: false })
       useSubmitResponse.onSubmit(data)
+
+      const listener = (event: MessageEvent<any>) => {
+        if (event?.data?.type === MEMBERSHIP_UPDATE_EVENT_NAME) {
+          try {
+            onSuccess?.(event?.data?.response)
+            window.removeEventListener("message", listener)
+          } catch {}
+        }
+      }
+
+      window.addEventListener("message", listener)
     },
     reset: () => {
       useSubmitResponse.reset()
