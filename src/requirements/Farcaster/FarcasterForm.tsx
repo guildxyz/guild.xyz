@@ -20,6 +20,10 @@ const typeOptions = [
     label: "Follow a profile",
   },
   {
+    value: "FARCASTER_CHANNEL_FOLLOW",
+    label: "Follow a channel",
+  },
+  {
     value: "FARCASTER_FOLLOWED_BY",
     label: "Be followed by",
   },
@@ -69,6 +73,8 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       {["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(type) && (
         <FarcasterUser baseFieldPath={baseFieldPath} />
       )}
+
+      {["FARCASTER_CHANNEL_FOLLOW"].includes(type) && <>New form placeholder</>}
 
       {["FARCASTER_LIKE", "FARCASTER_RECAST"].includes(type) && (
         <FarcasterCastHash baseFieldPath={baseFieldPath} />
