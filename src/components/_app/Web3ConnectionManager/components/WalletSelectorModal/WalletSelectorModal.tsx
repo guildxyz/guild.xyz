@@ -24,8 +24,7 @@ import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
-import { useEffect, useRef } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
+import { useEffect } from "react"
 import { useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
@@ -103,8 +102,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
 
   const { windowFuel } = useFuel()
-
-  const recaptchaRef = useRef<ReCAPTCHA>()
 
   const linkAddress = useLinkAddress()
 
@@ -225,36 +222,27 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           )}
 
           {shouldShowVerify && (
-            <>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                size="invisible"
-              />
-              <Box animation={"fadeIn .3s .1s both"}>
-                <ModalButton
-                  data-test="verify-address-button"
-                  size="xl"
-                  mb="4"
-                  colorScheme={"green"}
-                  onClick={() => {
-                    if (isAddressLink) {
-                      return linkAddress.onSubmit(addressLinkParams)
-                    }
-                    return set.onSubmit()
-                  }}
-                  isLoading={
-                    linkAddress.isLoading ||
-                    set.isLoading ||
-                    (!id && !publicUserError)
+            <Box animation={"fadeIn .3s .1s both"}>
+              <ModalButton
+                data-test="verify-address-button"
+                size="xl"
+                mb="4"
+                colorScheme={"green"}
+                onClick={() => {
+                  if (isAddressLink) {
+                    return linkAddress.onSubmit(addressLinkParams)
                   }
-                  isDisabled={!id && !publicUserError}
-                  loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
-                >
-                  {isAddressLink ? "Link address" : "Verify address"}
-                </ModalButton>
-              </Box>
-            </>
+                  return set.onSubmit()
+                }}
+                isLoading={
+                  linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
+                }
+                isDisabled={!id && !publicUserError}
+                loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+              >
+                {isAddressLink ? "Link address" : "Verify address"}
+              </ModalButton>
+            </Box>
           )}
         </ModalBody>
         <ModalFooter mt="-4">
