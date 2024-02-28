@@ -185,6 +185,11 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/ethdenver/:path*",
+        destination: "/guildday/:path*",
+        permanent: true,
+      },
+      {
         source: "/buildonbase/:path*",
         destination: "/base/:path*",
         permanent: true,
