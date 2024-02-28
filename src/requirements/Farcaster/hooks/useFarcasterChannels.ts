@@ -2,7 +2,6 @@ import { useEffect } from "react"
 import { SWRResponse, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
-import { truncate } from "utils/truncate"
 
 const BASE_URL =
   "https://api.neynar.com/v2/farcaster/channel/search?api_key=NEYNAR_API_DOCS&q="
@@ -46,7 +45,6 @@ const useFarcasterChannel = (id?: string): SWRResponse<SelectOption> => {
 const farcasterChannelToSelectOption = (channel: Record<string, any>) => ({
   label: channel.name,
   value: channel.id,
-  details: truncate(channel.description, 20),
   img: channel.image_url,
 })
 
