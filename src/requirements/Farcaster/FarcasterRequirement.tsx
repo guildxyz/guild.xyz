@@ -11,8 +11,16 @@ import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
-  const { data: farcasterUser } = useFarcasterUser(requirement.data?.id)
-  const { data: farcasterChannel } = useFarcasterChannel(requirement.data?.id)
+  const { data: farcasterUser } = useFarcasterUser(
+    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.data?.id)
+      ? requirement.data?.id
+      : undefined
+  )
+  const { data: farcasterChannel } = useFarcasterChannel(
+    requirement.type === "FARCASTER_FOLLOW_CHANNEL"
+      ? requirement.data?.id
+      : undefined
+  )
 
   return (
     <Requirement
