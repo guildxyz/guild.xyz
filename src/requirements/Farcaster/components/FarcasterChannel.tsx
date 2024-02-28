@@ -9,40 +9,40 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFormState, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
-import useFarcasterUsers, { useFarcasterUser } from "../hooks/useFarcasterUsers"
+import useFarcasterChannels, {
+  useFarcasterChannel,
+} from "../hooks/useFarcasterChannels"
 
 type Props = {
   baseFieldPath: string
 }
 
-const FarcasterUser = ({ baseFieldPath }: Props) => {
-  const {
-    formState: { errors },
-  } = useFormContext()
+const FarcasterChannel = ({ baseFieldPath }: Props) => {
+  const { errors } = useFormState()
 
   const [search, setSearch] = useState("")
   const debounceSearch = useDebouncedState(search)
 
-  const { data: options, isValidating } = useFarcasterUsers(debounceSearch)
+  const { data: options, isValidating } = useFarcasterChannels(debounceSearch)
 
-  const fid = useWatch({ name: `${baseFieldPath}.data.id` })
-  const { data: farcasterUser } = useFarcasterUser(fid)
+  const id = useWatch({ name: `${baseFieldPath}.data.id` })
+  const { data: farcasterChannel } = useFarcasterChannel(id)
 
   return (
     <FormControl
       isRequired
       isInvalid={parseFromObject(errors, baseFieldPath)?.data?.id}
     >
-      <FormLabel>User:</FormLabel>
+      <FormLabel>Channel:</FormLabel>
 
       <InputGroup>
-        {farcasterUser?.img && (
+        {farcasterChannel?.img && (
           <InputLeftElement>
             <OptionImage
-              img={farcasterUser.img.toString()}
-              alt={farcasterUser.label}
+              img={farcasterChannel.img.toString()}
+              alt={farcasterChannel.label}
             />
           </InputLeftElement>
         )}
@@ -54,7 +54,7 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
           }}
           isClearable
           options={options}
-          placeholder="Search user"
+          placeholder="Search channel"
           onInputChange={setSearch}
           isLoading={isValidating}
           menuIsOpen={debounceSearch ? undefined : false}
@@ -62,7 +62,7 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
             DropdownIndicator: () => null,
             IndicatorSeparator: () => null,
           }}
-          fallbackValue={farcasterUser}
+          fallbackValue={farcasterChannel}
         />
       </InputGroup>
 
@@ -72,4 +72,4 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
     </FormControl>
   )
 }
-export default FarcasterUser
+export default FarcasterChannel
