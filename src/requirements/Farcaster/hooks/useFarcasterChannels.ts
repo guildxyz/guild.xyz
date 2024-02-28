@@ -1,28 +1,36 @@
-import { SWRResponse } from "swr"
+import { useEffect } from "react"
+import { SWRResponse, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import { truncate } from "utils/truncate"
 
 const BASE_URL =
   "https://api.neynar.com/v2/farcaster/channel/search?api_key=NEYNAR_API_DOCS&q="
+const SINGLE_CHANNEL_BASE_URL =
+  "https://api.neynar.com/v2/farcaster/channel?api_key=NEYNAR_API_DOCS&id="
 
 const useFarcasterChannels = (search?: string): SWRResponse<SelectOption[]> => {
+  const { mutate } = useSWRConfig()
   const swrResponse = useSWRImmutable(search ? `${BASE_URL}${search}` : null)
+
+  useEffect(() => {
+    if (!swrResponse.data) return
+    swrResponse.data.channels?.forEach((channel) => {
+      mutate(
+        `${SINGLE_CHANNEL_BASE_URL}${channel.id}`,
+        { channel },
+        {
+          revalidate: false,
+        }
+      )
+    })
+  }, [swrResponse.data])
 
   return {
     ...swrResponse,
-    data:
-      swrResponse.data?.channels?.slice(0, 5).map((channel) => ({
-        label: channel.name,
-        value: channel.id,
-        details: truncate(channel.description, 20),
-        img: channel.image_url,
-      })) ?? [],
+    data: swrResponse.data?.channels?.map(farcasterChannelToSelectOption) ?? [],
   }
 }
-
-const SINGLE_CHANNEL_BASE_URL =
-  "https://api.neynar.com/v2/farcaster/channel?api_key=NEYNAR_API_DOCS&id="
 
 const useFarcasterChannel = (id?: string): SWRResponse<SelectOption> => {
   const swrResponse = useSWRImmutable(id ? `${SINGLE_CHANNEL_BASE_URL}${id}` : null)
@@ -31,16 +39,16 @@ const useFarcasterChannel = (id?: string): SWRResponse<SelectOption> => {
 
   return {
     ...swrResponse,
-    data: channel
-      ? {
-          label: channel.name,
-          value: channel.id,
-          details: channel.description,
-          img: channel.image_url,
-        }
-      : undefined,
+    data: channel ? farcasterChannelToSelectOption(channel) : undefined,
   }
 }
+
+const farcasterChannelToSelectOption = (channel: Record<string, any>) => ({
+  label: channel.name,
+  value: channel.id,
+  details: truncate(channel.description, 20),
+  img: channel.image_url,
+})
 
 export default useFarcasterChannels
 export { useFarcasterChannel }
