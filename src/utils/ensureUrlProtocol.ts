@@ -1,5 +1,5 @@
 export const ensureUrlProtocol = (url: string): string => {
-  url = url.trim()
+  url = encodeURI(url.trim())
   try {
     new URL(url)
     return url

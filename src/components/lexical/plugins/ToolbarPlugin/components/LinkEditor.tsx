@@ -9,15 +9,19 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { mergeRegister } from "@lexical/utils"
 import Button from "components/common/Button"
+import useDebouncedState from "hooks/useDebouncedState"
 import { $getSelection, $isRangeSelection, SELECTION_CHANGE_COMMAND } from "lexical"
 import { Link } from "phosphor-react"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { getSelectedNode, LOW_PRIORITY } from "../ToolbarPlugin"
+import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
+import { LOW_PRIORITY, getSelectedNode } from "../ToolbarPlugin"
 
 type LinkEditorProps = {
   isOpen: boolean
@@ -33,6 +37,26 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   const [linkUrl, setLinkUrl] = useState("")
   const [lastSelection, setLastSelection] = useState(null)
   const [shouldOpenEditor, setShouldOpenEditor] = useState(false)
+
+  const [isLinkInvalid, setIsLinkInvalid] = useState(false)
+  const errorTextColor = useColorModeValue("red.500", "red.300")
+
+  const debouncedLinkUrl = useDebouncedState(linkUrl)
+
+  const checkLinkValid = (link: string) => {
+    if (!link) return true
+    const url = ensureUrlProtocol(link)
+    try {
+      new URL(url)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  useEffect(() => {
+    setIsLinkInvalid(!checkLinkValid(debouncedLinkUrl))
+  }, [debouncedLinkUrl])
 
   const updateLinkEditor = useCallback(() => {
     const selection = $getSelection()
@@ -99,8 +123,8 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   }, [editor, updateLinkEditor])
 
   const addLink = () => {
-    if (!lastSelection || !linkUrl) return
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkUrl)
+    if (!lastSelection || !linkUrl || !checkLinkValid(linkUrl)) return
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, ensureUrlProtocol(linkUrl))
     onClose()
   }
 
@@ -155,11 +179,16 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
               flexShrink={0}
               borderRadius="lg"
               onClick={addLink}
-              isDisabled={!linkUrl?.length}
+              isDisabled={!linkUrl?.length || isLinkInvalid}
             >
               Save
             </Button>
           </HStack>
+          {isLinkInvalid && (
+            <Text fontSize="xs" color={errorTextColor} mt={1} ml={1}>
+              Invalid link!
+            </Text>
+          )}
         </PopoverBody>
       </PopoverContent>
     </Popover>
