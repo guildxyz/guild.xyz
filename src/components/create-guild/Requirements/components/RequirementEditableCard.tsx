@@ -25,6 +25,7 @@ import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
+import useEditRequirement from "../hooks/useEditRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
 import IsNegatedPicker from "./IsNegatedPicker"
@@ -77,10 +78,20 @@ const RequirementEditableCard = ({
     onClose()
   }
 
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(roleId, {
+      onSuccess: () => onClose(),
+    })
+
   const onSubmit = methods.handleSubmit((data) => {
-    updateRequirement(index, data)
+    if (roleId) {
+      onEditRequirementSubmit(data)
+    } else {
+      updateRequirement(index, data)
+      onClose()
+    }
+    // TODO: do we need this?
     methods.reset(undefined, { keepValues: true })
-    onClose()
   })
 
   // temporary to set values for balancy so it works without opening the edit modal
@@ -196,8 +207,14 @@ const RequirementEditableCard = ({
             </ModalBody>
             <ModalFooter gap="3">
               <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
-                Done
+              <Button
+                colorScheme={"green"}
+                onClick={onSubmit}
+                ml="auto"
+                isLoading={isEditRequirementLoading}
+                loadingText="Saving"
+              >
+                Save
               </Button>
             </ModalFooter>
           </FormProvider>
