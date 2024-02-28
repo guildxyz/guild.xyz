@@ -56,7 +56,7 @@ const FarcasterRequirement = (props: RequirementProps) => {
                 {` cast`}
               </>
             )
-          case "FARCASTER_CHANNEL_FOLLOW":
+          case "FARCASTER_FOLLOW_CHANNEL":
             return (
               <>
                 {`Follow the `}

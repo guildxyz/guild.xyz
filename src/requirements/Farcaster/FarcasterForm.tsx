@@ -21,7 +21,7 @@ const typeOptions = [
     label: "Follow a profile",
   },
   {
-    value: "FARCASTER_CHANNEL_FOLLOW",
+    value: "FARCASTER_FOLLOW_CHANNEL",
     label: "Follow a channel",
   },
   {
@@ -75,7 +75,7 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         <FarcasterUser baseFieldPath={baseFieldPath} />
       )}
 
-      {["FARCASTER_CHANNEL_FOLLOW"].includes(type) && (
+      {["FARCASTER_FOLLOW_CHANNEL"].includes(type) && (
         <FarcasterChannel baseFieldPath={baseFieldPath} />
       )}
 
