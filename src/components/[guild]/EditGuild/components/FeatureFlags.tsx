@@ -35,6 +35,7 @@ const FeatureFlags = (): JSX.Element => {
   return (
     <FormControl>
       <StyledSelect
+        menuPlacement={"top"}
         ref={ref}
         name={name}
         value={options.filter((option) => value?.includes(option.value))}
