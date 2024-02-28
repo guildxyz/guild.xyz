@@ -1,9 +1,11 @@
+import { Icon, Link } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
@@ -68,9 +70,15 @@ const FarcasterRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`Follow the `}
-                <DataBlock isLoading={!farcasterChannel}>
-                  {farcasterChannel?.label ?? "Loading..."}
-                </DataBlock>
+                <Link
+                  href={`https://warpcast.com/~/channel/${requirement.data.id}`}
+                  isExternal
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {farcasterChannel?.label ?? requirement.data.id}
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </Link>
                 {` channel on Farcaster`}
               </>
             )
