@@ -13,12 +13,13 @@ import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
 import { SpecialComponents } from "react-markdown/lib/ast-to-react"
 import { NormalComponents } from "react-markdown/lib/complex-types"
+import { ensureHttps } from "utils/ensureHttps"
 
 export const reactMarkdownComponents: Partial<
   Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents
 > = {
   a: ({ href, children, ...props }) => (
-    <Link href={href} isExternal colorScheme="blue" {...props}>
+    <Link href={ensureHttps(href)} isExternal colorScheme="blue" {...props}>
       {children}
     </Link>
   ),
