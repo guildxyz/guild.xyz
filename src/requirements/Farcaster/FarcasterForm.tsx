@@ -75,7 +75,7 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         <FarcasterUser baseFieldPath={baseFieldPath} />
       )}
 
-      {["FARCASTER_FOLLOW_CHANNEL"].includes(type) && (
+      {type === "FARCASTER_FOLLOW_CHANNEL" && (
         <FarcasterChannel baseFieldPath={baseFieldPath} />
       )}
 
