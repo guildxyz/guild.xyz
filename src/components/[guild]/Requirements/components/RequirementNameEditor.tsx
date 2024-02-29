@@ -25,7 +25,6 @@ import {
   useWatch,
 } from "react-hook-form"
 import REQUIREMENTS from "requirements"
-import parseFromObject from "utils/parseFromObject"
 import { useRequirementContext } from "./RequirementContext"
 
 type RequirementNameForm = {
@@ -68,8 +67,8 @@ const RequirementNameEditor = ({
         />
 
         <Tooltip
-          label={parseFromObject(errors, "customName")?.message}
-          isDisabled={isEditing && !parseFromObject(errors, "customName")}
+          label={errors.customName?.message}
+          isDisabled={isEditing && !errors.customName}
           hasArrow
         >
           <IconButton
@@ -80,7 +79,7 @@ const RequirementNameEditor = ({
             icon={<Check />}
             colorScheme={"green"}
             {...getSubmitButtonProps()}
-            isDisabled={isEditing && !!parseFromObject(errors, "customName")}
+            isDisabled={isEditing && !!errors.customName}
           />
         </Tooltip>
       </Box>
