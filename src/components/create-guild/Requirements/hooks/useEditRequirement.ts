@@ -55,8 +55,6 @@ const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void })
           }
         )
 
-        // TODO: trigger membership update - if one is already in progress, we should cancel that first
-
         config?.onSuccess?.()
       },
       onError: (error) => showErrorToast(error),
