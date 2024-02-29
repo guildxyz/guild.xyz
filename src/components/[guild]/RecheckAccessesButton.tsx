@@ -72,7 +72,7 @@ const RecheckAccessesButton = ({
     onSuccess: () => {
       toast({
         status: "success",
-        title: "Successfully updated accesses",
+        title: `Successfully updated ${roleId ? "role access" : "accesses"}`,
       })
       setIsFinished(true)
 
@@ -173,7 +173,7 @@ const RecheckAccessesButton = ({
           <PopoverArrow />
           {isFinished ? (
             <PopoverHeader {...POPOVER_HEADER_STYLES}>
-              Successfully updated accesses
+              {`Successfully updated ${roleId ? "access" : "accesses"}`}
             </PopoverHeader>
           ) : isLoading ? (
             shouldBeLoading ? (
