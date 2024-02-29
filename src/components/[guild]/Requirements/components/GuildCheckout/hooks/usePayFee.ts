@@ -1,4 +1,5 @@
 import { Chains } from "chains"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -7,7 +8,6 @@ import useToast from "hooks/useToast"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
-import { mutate } from "swr"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
@@ -16,7 +16,7 @@ import useAllowance from "./useAllowance"
 
 const usePayFee = () => {
   const { captureEvent } = usePostHogContext()
-  const { id, urlName } = useGuild()
+  const { urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
   const { address } = useAccount()
@@ -84,6 +84,8 @@ const usePayFee = () => {
     enabled,
   } as const
 
+  const { triggerMembershipUpdate } = useMembershipUpdate()
+
   const { error, isPreparing, isLoading, estimatedGas, onSubmitTransaction } =
     useSubmitTransaction(contractCallParams, {
       customErrorsMap: {
@@ -108,7 +110,7 @@ const usePayFee = () => {
         onClose()
 
         refetchVault()
-        mutate(`/guild/access/${id}/${address}`)
+        triggerMembershipUpdate({ roleIds: [requirement.roleId] })
       },
     })
 
