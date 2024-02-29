@@ -44,7 +44,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
       ref={ref}
       name={name}
       value={value}
-      onChange={(_, newValue) => onChange(isNaN(newValue) ? null : newValue)}
+      onChange={(_, newValue) => onChange(isNaN(newValue) ? undefined : newValue)}
       onBlur={onBlur}
       {...props}
     />
