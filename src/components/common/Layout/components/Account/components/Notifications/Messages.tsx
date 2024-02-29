@@ -1,4 +1,5 @@
 import {
+  Box,
   HStack,
   Img,
   ModalBody,
@@ -13,11 +14,15 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useNotifications, useWeb3InboxAccount } from "@web3inbox/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
+import { useRef } from "react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import { useAccount } from "wagmi"
+import { WEB3_INBOX_INIT_PARAMS } from "./components/useWeb3InboxSubscription"
 
 const GUILD_NOTIFICATION_ICON = "/requirementLogos/guild.png"
 
@@ -128,4 +133,58 @@ const Web3InboxMessage = ({
   )
 }
 
-export default Web3InboxMessage
+const Messages = () => {
+  const { address } = useAccount()
+  const { data: account, isLoading: isAccountLoading } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+
+  const { data: messages, isLoading } = useNotifications(
+    5,
+    false,
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
+
+  const inboxContainerRef = useRef(null)
+  const isScrollable = !!inboxContainerRef.current
+    ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
+    : false
+
+  return (
+    <Box
+      ref={inboxContainerRef}
+      maxH="30vh"
+      overflowY="auto"
+      className="custom-scrollbar"
+      pb="4"
+      sx={{
+        WebkitMaskImage:
+          isScrollable &&
+          "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
+      }}
+    >
+      {messages?.length > 0 ? (
+        <Stack pt={2} spacing={0}>
+          {messages
+            .sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
+            .map(({ sentAt, id, title, body, url }) => (
+              <Web3InboxMessage
+                key={id}
+                sentAt={sentAt}
+                title={title}
+                body={body}
+                url={url}
+              />
+            ))}
+        </Stack>
+      ) : (
+        <HStack pt={3} px={4}>
+          <Text colorScheme="gray">Your messages from guilds will appear here</Text>
+        </HStack>
+      )}
+    </Box>
+  )
+}
+
+export default Messages

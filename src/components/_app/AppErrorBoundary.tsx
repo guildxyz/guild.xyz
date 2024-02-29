@@ -9,6 +9,7 @@ const AppErrorBoundary = ({ children }: PropsWithChildren<unknown>) => {
   return (
     <ErrorBoundary
       onError={(error, info) => {
+        console.error("the error is:", error)
         captureEvent("Top level ErrorBoundary catched error", {
           error,
           info,

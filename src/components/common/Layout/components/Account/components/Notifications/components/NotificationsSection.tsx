@@ -1,9 +1,9 @@
-import { Stack, StackProps, Text } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
+import { Stack, Text } from "@chakra-ui/react"
+import { PropsWithChildren, ReactNode } from "react"
 
 type Props = {
-  title: string
-} & StackProps
+  title: string | ReactNode
+}
 
 const NotificationsSection = ({ title, children }: PropsWithChildren<Props>) => (
   <Stack spacing={0} px={4}>
