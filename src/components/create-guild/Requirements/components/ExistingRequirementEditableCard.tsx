@@ -1,28 +1,21 @@
 import {
   Button,
-  CloseButton,
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Card from "components/common/Card"
-import DataBlock from "components/common/DataBlock"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
-import { Warning } from "phosphor-react"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
@@ -33,6 +26,9 @@ import useEditRequirement from "../hooks/useEditRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
 import IsNegatedPicker from "./IsNegatedPicker"
+import RemoveRequirementButton from "./RemoveRequirementButton"
+import RequirementBaseCard from "./RequirementBaseCard"
+import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
 
 type Props = {
   requirement: RequirementType
@@ -53,7 +49,7 @@ const ExistingRequirementEditableCard = ({
   const FormComponent = REQUIREMENTS[requirement.type]?.formComponent
   const ref = useRef()
   const closeButtonRef = useRef()
-  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
+
   const methods = useForm({ mode: "all", defaultValues: requirement })
 
   const showViewOriginal =
@@ -131,23 +127,12 @@ const ExistingRequirementEditableCard = ({
   if (!RequirementComponent || !FormComponent)
     return (
       <>
-        <Card px="6" py="4" pr="8" pos="relative">
-          <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
-            {`Unsupported requirement type: `}
-            <DataBlock>{requirement.type}</DataBlock>
-          </Requirement>
-          <CloseButton
+        <UnsupportedRequirementTypeCard type={requirement.type}>
+          <RemoveRequirementButton
             ref={closeButtonRef}
-            position="absolute"
-            top={2}
-            right={2}
-            color={removeButtonColor}
-            borderRadius={"full"}
-            size="sm"
             onClick={() => onRequirementDeleteOpen()}
-            aria-label="Remove requirement"
           />
-        </Card>
+        </UnsupportedRequirementTypeCard>
 
         {requirementDeleteConfitmationAlert}
       </>
@@ -161,21 +146,10 @@ const ExistingRequirementEditableCard = ({
 
   return (
     <>
-      <Card
-        px="6"
-        py="4"
-        pr="8"
-        pos="relative"
-        sx={{
-          ":has([data-req-name-editor]) [data-req-image-editor]": {
-            opacity: 1,
-          },
-        }}
-      >
+      <RequirementBaseCard>
         <RequirementProvider requirement={requirement}>
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
-              fieldRoot={""}
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
               imageWrapper={RequirementImageEditor}
@@ -184,18 +158,11 @@ const ExistingRequirementEditableCard = ({
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
 
-        <CloseButton
+        <RemoveRequirementButton
           ref={closeButtonRef}
-          position="absolute"
-          top={2}
-          right={2}
-          color={removeButtonColor}
-          borderRadius={"full"}
-          size="sm"
           onClick={() => onRequirementDeleteOpen()}
-          aria-label="Remove requirement"
         />
-      </Card>
+      </RequirementBaseCard>
 
       <Modal
         isOpen={isOpen}
@@ -225,7 +192,20 @@ const ExistingRequirementEditableCard = ({
               <BalancyFooter baseFieldPath={null} />
               <Button
                 colorScheme={"green"}
-                onClick={methods.handleSubmit(onEditRequirementSubmit)}
+                onClick={methods.handleSubmit((editedReq) =>
+                  onEditRequirementSubmit({
+                    ...editedReq,
+                    /**
+                     * Keeping the old data too, because we don't mount e.g. the
+                     * `customName` & `customImage` inputs inside this form, so we
+                     * would overwrite those on every requirement edit
+                     */
+                    data: {
+                      ...requirement.data,
+                      ...editedReq.data,
+                    },
+                  })
+                )}
                 ml="auto"
                 isLoading={isEditRequirementLoading}
                 loadingText="Saving"
