@@ -24,39 +24,44 @@ const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void })
       },
     ])
 
-  return useSubmit<Requirement, Requirement>(editRequirement, {
-    onSuccess: (editedRequirement) => {
-      toast({
-        status: "success",
-        title: "Successfully updated requirement",
-      })
+  return useSubmit<Requirement, Requirement & { deletedRequirements?: number[] }>(
+    editRequirement,
+    {
+      onSuccess: (editedRequirement) => {
+        toast({
+          status: "success",
+          title: "Successfully updated requirement",
+        })
 
-      mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
-            if (role.id !== roleId) return role
+        mutateGuild(
+          (prevGuild) => ({
+            ...prevGuild,
+            roles: prevGuild.roles.map((role) => {
+              if (role.id !== roleId) return role
 
-            return {
-              ...role,
-              requirements: role.requirements.map((requirement) => {
-                if (requirement.id !== editedRequirement.id) return requirement
-                return editedRequirement
-              }),
-            }
+              return {
+                ...role,
+                requirements: role.requirements.map((requirement) => {
+                  if (requirement.id !== editedRequirement.id) return requirement
+                  // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+                  const { deletedRequirements: _, ...req } = editedRequirement
+                  return req
+                }),
+              }
+            }),
           }),
-        }),
-        {
-          revalidate: false,
-        }
-      )
+          {
+            revalidate: false,
+          }
+        )
 
-      // TODO: trigger membership update - if one is already in progress, we should cancel that first
+        // TODO: trigger membership update - if one is already in progress, we should cancel that first
 
-      config?.onSuccess?.()
-    },
-    onError: (error) => showErrorToast(error),
-  })
+        config?.onSuccess?.()
+      },
+      onError: (error) => showErrorToast(error),
+    }
+  )
 }
 
 export default useEditRequirement
