@@ -8,15 +8,16 @@ import timeoutPromise from "utils/timeoutPromise"
 const TG_CONFIRMATION_TIMEOUT_MS = 500
 
 async function postBackResult(data) {
-  const result = !data
-    ? {
-        type: "OAUTH_ERROR",
-        data: {
-          error: "Unknown error",
-          errorDescription: "Unknown error",
-        },
-      }
-    : { type: "OAUTH_SUCCESS", data }
+  const result =
+    !data || !("result" in data)
+      ? {
+          type: "OAUTH_ERROR",
+          data: {
+            error: "Unknown error",
+            errorDescription: "Unknown error",
+          },
+        }
+      : { type: "OAUTH_SUCCESS", data: data.result }
 
   const channel = new BroadcastChannel("TELEGRAM")
 
