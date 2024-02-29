@@ -1,111 +1,107 @@
 import { Center } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import useSubmit from "hooks/useSubmit"
-import { useRouter } from "next/router"
-import Script from "next/script"
+import usePopupWindow from "hooks/usePopupWindow"
 import { TelegramLogo } from "phosphor-react"
+import { useEffect } from "react"
+import timeoutPromise from "utils/timeoutPromise"
 
-type WindowTelegram = {
-  Login: {
-    auth: (
-      options: {
-        bot_id: string
-        request_access?: string
-        lang?: string
-      },
-      callback: (
-        dataOrFalse:
-          | {
-              auth_date: number
-              first_name: string
-              hash: string
-              id: number
-              last_name: string
-              username: string
-            }
-          | false
-      ) => void
-    ) => void
+const TG_CONFIRMATION_TIMEOUT_MS = 500
+
+async function postBackResult(data) {
+  const result = !data
+    ? {
+        type: "OAUTH_ERROR",
+        data: {
+          error: "Unknown error",
+          errorDescription: "Unknown error",
+        },
+      }
+    : { type: "OAUTH_SUCCESS", data }
+
+  const channel = new BroadcastChannel("TELEGRAM")
+
+  const isMessageConfirmed = timeoutPromise(
+    new Promise<void>((resolve) => {
+      channel.onmessage = () => resolve()
+    }),
+    TG_CONFIRMATION_TIMEOUT_MS
+  )
+    .then(() => true)
+    .catch(() => false)
+
+  channel.postMessage(result)
+
+  const isReceived = await isMessageConfirmed
+
+  const origin = typeof window === "undefined" ? "https://guild.xyz" : window.origin
+
+  if (isReceived) {
+    channel.close()
+    window.close()
+  } else {
+    localStorage.setItem(`${"TELEGRAM"}_shouldConnect`, JSON.stringify(result))
+    window.location.href = `${origin}/explorer`
   }
 }
 
 const TGAuth = () => {
-  const router = useRouter()
+  const origin = typeof window === "undefined" ? "https://guild.xyz" : window.origin
+  const url = `https://oauth.telegram.org/auth?bot_id=${process.env.NEXT_PUBLIC_TG_BOT_ID}&origin=${origin}&request_access=write&lang=en&return_to=${origin}/tgauth`
+  const { onOpen } = usePopupWindow(url)
 
-  const auth = () =>
-    new Promise<boolean>((resolve, reject) => {
-      try {
-        const windowTelegram = (
-          window as Window & typeof globalThis & { Telegram: WindowTelegram }
-        )?.Telegram
-        const telegramAuth = windowTelegram.Login?.auth
+  const onClick =
+    typeof window !== "undefined" && window.opener
+      ? onOpen
+      : () => {
+          window.location.href = url
+        }
 
-        if (typeof telegramAuth !== "function")
-          reject("Telegram login widget error.")
+  useEffect(() => {
+    // Handle case when the popup sends data in URL fragments
+    {
+      const hash = new URLSearchParams(window.location.hash?.slice(1) ?? "")
+      const hasTgAuthResult = hash.has("tgAuthResult")
 
-        telegramAuth(
-          {
-            bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
-            lang: "en",
-            request_access: "write",
-          },
-          (data) => {
-            if (data === false) {
-              window.opener?.postMessage(
-                {
-                  type: "TG_AUTH_ERROR",
-                  data: {
-                    error: "Authentication error",
-                    errorDescription:
-                      "Something went wrong with Telegram authentication, please try again",
-                  },
-                },
-                router.query.openerOrigin
-              )
-              reject()
-            } else {
-              window.opener?.postMessage(
-                {
-                  type: "TG_AUTH_SUCCESS",
-                  data,
-                },
-                router.query.openerOrigin
-              )
-              resolve(true)
-            }
-          }
-        )
-      } catch (tgAuthErr) {
-        window.opener.postMessage(
-          {
-            type: "TG_AUTH_ERROR",
-            data: {
-              error: "Error",
-              errorDescription: "Telegram auth widget error.",
-            },
-          },
-          router.query.openerOrigin
-        )
-        reject()
+      if (hasTgAuthResult) {
+        const stringData = Buffer.from(hash.get("tgAuthResult"), "base64").toString()
+        const parsed = JSON.parse(stringData)
+        postBackResult(parsed)
+        return
       }
-    }).finally(() => window.close())
+    }
 
-  const { isLoading, onSubmit } = useSubmit(auth)
+    // Handle case when the popup sends the data in window event
+    const listener = (event: MessageEvent<any>) => {
+      if (
+        event.isTrusted &&
+        event.origin === "https://oauth.telegram.org" &&
+        typeof event.data === "string"
+      ) {
+        const parsed = JSON.parse(event.data)
+        postBackResult(parsed)
+      }
+    }
+
+    window.addEventListener("message", listener)
+
+    return () => {
+      window.removeEventListener("message", listener)
+    }
+  }, [])
 
   return (
     <Center h="100vh">
-      <Script src="https://telegram.org/js/telegram-widget.js?19" />
       <Button
         colorScheme={"telegram"}
         leftIcon={<TelegramLogo />}
         borderRadius="full"
-        isLoading={isLoading}
         loadingText="Authenticate in the Telegram window"
-        onClick={onSubmit}
+        onClick={onClick}
       >
         Log in with Telegram
       </Button>
     </Center>
   )
 }
+
 export default TGAuth

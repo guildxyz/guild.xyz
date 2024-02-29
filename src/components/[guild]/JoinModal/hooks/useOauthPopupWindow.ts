@@ -124,7 +124,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     )
 
     const channel = new BroadcastChannel(
-      platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken
+      platformName === "TWITTER_V1"
+        ? "TWITTER_V1"
+        : platformName === "TELEGRAM"
+        ? "TELEGRAM"
+        : csrfToken
     )
 
     const getTgListener =
