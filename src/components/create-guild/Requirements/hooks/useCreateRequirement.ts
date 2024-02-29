@@ -3,6 +3,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirement = (
   roleId: number,
@@ -17,7 +18,7 @@ const useCreateRequirement = (
       `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
       {
         method: "POST",
-        body,
+        body: preprocessRequirement(body),
       },
     ])
 
