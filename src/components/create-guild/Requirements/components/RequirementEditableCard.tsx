@@ -90,8 +90,6 @@ const RequirementEditableCard = ({
       updateRequirement(index, data)
       onClose()
     }
-    // TODO: do we need this?
-    methods.reset(undefined, { keepValues: true })
   })
 
   // temporary to set values for balancy so it works without opening the edit modal
