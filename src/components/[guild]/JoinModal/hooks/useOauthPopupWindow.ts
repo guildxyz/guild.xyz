@@ -63,13 +63,17 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
   params.response_type = params.response_type ?? "code"
 
-  const { onOpen } = usePopupWindow()
+  const { onOpen, windowInstance } = usePopupWindow()
 
   const [oauthState, setOauthState] = useState<OAuthState<OAuthResponse>>({
     error: null,
     authData: null,
     isAuthenticating: false,
   })
+
+  useEffect(() => {
+    windowInstance?.close?.()
+  }, [oauthState?.error, oauthState?.authData])
 
   const oauthPopupHandler = async () => {
     let result: OAuthState<OAuthResponse> = {
