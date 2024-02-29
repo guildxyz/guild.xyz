@@ -54,7 +54,7 @@ Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload
 const TRANSITION_DURATION_MS = 200
 const HOME_MAX_HEIGHT = "550px"
 
-type AddRequirementProps = { onAdd: (req: Requirement) => void }
+type AddRequirementProps = { onAdd?: (req: Requirement) => void }
 
 const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -171,7 +171,7 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
 }
 
 type AddRequirementFormProps = {
-  onAdd: (req: Requirement) => void
+  onAdd?: (req: Requirement) => void
   handleClose: (forceClose?: boolean) => void
   selectedType?: RequirementType
   setOnCloseAttemptToast: Dispatch<SetStateAction<string | boolean>>
@@ -201,11 +201,18 @@ const AddRequirementForm = forwardRef(
       if (!isPresent) setTimeout(safeToRemove, TRANSITION_DURATION_MS)
     }, [isPresent])
 
+    const toast = useToast()
     const {
       onSubmit: onCreateRequirementSubmit,
       isLoading: isCreateRequirementLoading,
     } = useCreateRequirement(roleId, {
-      onSuccess: () => handleClose(true),
+      onSuccess: () => {
+        toast({
+          status: "success",
+          title: "Successfully created requirement",
+        })
+        handleClose(true)
+      },
     })
 
     const onSubmit = methods.handleSubmit((data) => {
@@ -216,7 +223,7 @@ const AddRequirementForm = forwardRef(
       }
 
       if (!roleId) {
-        onAdd(requirement)
+        onAdd?.(requirement)
         handleClose(true)
       } else {
         onCreateRequirementSubmit(requirement)

@@ -20,11 +20,6 @@ const useCreateRequirement = (
 
   return useSubmitWithSign<Requirement>(createRequirement, {
     onSuccess: (newRequirement) => {
-      toast({
-        status: "success",
-        title: "Successfully created requirement",
-      })
-
       mutateGuild((prevGuild) => ({
         ...prevGuild,
         roles: prevGuild.roles.map((role) => {

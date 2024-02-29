@@ -351,13 +351,13 @@ type Requirement = {
   id: number
   type: RequirementType
   address?: `0x${string}`
-  chain: Chain
+  chain?: Chain
   data?: Record<string, any>
   roleId: number
   name: string
   symbol: string
   decimals?: number
-  isNegated: boolean
+  isNegated?: boolean
   visibility?: Visibility
   visibilityRoleId?: number | null
 

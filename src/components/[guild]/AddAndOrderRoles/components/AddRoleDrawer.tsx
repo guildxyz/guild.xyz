@@ -54,7 +54,11 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     name: "",
     description: "",
     logic: "AND",
-    requirements: [],
+    requirements: [
+      {
+        type: "FREE",
+      },
+    ],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     visibility: Visibility.PUBLIC,

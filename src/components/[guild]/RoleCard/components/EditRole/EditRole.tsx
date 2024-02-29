@@ -25,7 +25,7 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import SetRequirements from "components/create-guild/Requirements"
+import EditRequirements from "components/create-guild/Requirements/EditRequirements"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -34,7 +34,7 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Logic, Requirement, RolePlatform, Visibility } from "types"
+import { Logic, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import mapRequirements from "utils/mapRequirements"
@@ -52,7 +52,6 @@ export type RoleEditFormData = {
   description: string
   imageUrl: string
   logic: Logic
-  requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   visibility: Visibility
   anyOfNum?: number
@@ -89,7 +88,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     imageUrl,
     logic,
     anyOfNum: anyOfNum ?? 1,
-    requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
     visibility,
     groupId,
@@ -105,7 +103,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
     methods.reset({
       ...role,
-      requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
       anyOfNum: role.anyOfNum ?? 1,
     })
@@ -173,15 +170,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const drawerBodyRef = useRef<HTMLDivElement>()
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    handleSubmitDirty(methods)(onSubmit, (formErrors) => {
-      if (formErrors.requirements && drawerBodyRef.current) {
-        drawerBodyRef.current.scrollBy({
-          top: drawerBodyRef.current.scrollHeight,
-          behavior: "smooth",
-        })
-      }
-    }),
-
+    handleSubmitDirty(methods)(onSubmit),
     iconUploader.isUploading
   )
 
@@ -259,7 +248,10 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                   <RoleGroupSelect />
                 </Section>
 
-                <SetRequirements />
+                <EditRequirements
+                  roleId={roleId}
+                  requirements={mapRequirements(requirements)}
+                />
               </VStack>
             </FormProvider>
           </DrawerBody>

@@ -1,15 +1,13 @@
-import { ChakraProps, Checkbox, Collapse, Stack, Text, Wrap } from "@chakra-ui/react"
+import { ChakraProps, Stack, Wrap } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
-import ErrorAlert from "components/common/ErrorAlert"
 import { SectionTitle } from "components/common/Section"
 import { AnimatePresence } from "framer-motion"
-import { useMemo } from "react"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { GuildFormType } from "types"
+import { GuildFormType, Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
@@ -20,22 +18,19 @@ type Props = {
 }
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
-  const {
-    getValues,
-    watch,
-    setValue,
-    resetField,
-    formState: { errors },
-  } = useFormContext<GuildFormType["roles"][number]>()
+  const { getValues, watch, setValue } =
+    useFormContext<GuildFormType["roles"][number]>()
 
   const logic = useWatch({ name: "logic" })
 
-  const { fields, append, replace, update } = useFieldArray({
+  const {
+    fields,
+    append: appendToFieldArray,
+    update,
+    remove,
+  } = useFieldArray({
     name: "requirements",
     keyName: "formFieldId",
-    rules: {
-      required: "Set some requirements, or make the role free",
-    },
   })
 
   // Watching the nested fields too, so we can properly update the list
@@ -44,27 +39,21 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
     ...field,
     ...watchFieldArray?.[index],
   }))
+  const freeEntry = !!getValues("requirements")?.some(({ type }) => type === "FREE")
 
   const removeReq = (index: number) => {
-    setValue(
-      `requirements`,
-      watchFieldArray.filter((_, i) => i !== index)
-    )
+    if (controlledFields.length === 1) {
+      setValue("requirements", [{ type: "FREE" }])
+    } else {
+      remove(index)
+    }
   }
 
-  const freeEntry = useMemo(
-    () => !!controlledFields?.find((requirement) => requirement.type === "FREE"),
-    [controlledFields]
-  )
-
-  const onFreeEntryChange = (e) => {
-    resetField("requirements", {
-      defaultValue: [],
-    })
-
-    if (e.target.checked) {
-      replace([{ type: "FREE", data: {}, chain: null, address: null }])
-      setValue("logic", "AND")
+  const append = (req: Requirement) => {
+    if (freeEntry) {
+      setValue("requirements", [req])
+    } else {
+      appendToFieldArray(req)
     }
   }
 
@@ -73,25 +62,6 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
       <Wrap spacing="3">
         <SectionTitle
           title="Requirements"
-          titleRightElement={
-            <>
-              <Text as="span" fontWeight="normal" fontSize="sm" color="gray">
-                {`- or `}
-              </Text>
-              <Checkbox
-                id="free-entry-checkbox"
-                flexGrow={0}
-                fontWeight="normal"
-                size="sm"
-                spacing={1}
-                defaultChecked={freeEntry}
-                onChange={onFreeEntryChange}
-                isInvalid={false}
-              >
-                Free entry
-              </Checkbox>
-            </>
-          }
           {...(titleSize && { fontSize: titleSize })}
         />
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
@@ -103,16 +73,17 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
         </CardMotionWrapper>
       )}
 
-      {freeEntry ? (
-        <CardMotionWrapper>
-          <Card px="6" py="4">
-            <FreeRequirement />
-          </Card>
-        </CardMotionWrapper>
-      ) : (
-        <Stack spacing={0}>
-          <AnimatePresence>
-            {controlledFields.map((field, i) => {
+      <Stack spacing={0}>
+        <AnimatePresence>
+          {freeEntry ? (
+            <CardMotionWrapper key="free-entry">
+              <Card px="6" py="4">
+                <FreeRequirement />
+              </Card>
+              <LogicDivider logic="OR" />
+            </CardMotionWrapper>
+          ) : (
+            controlledFields.map((field, i) => {
               const type: RequirementType = getValues(`requirements.${i}.type`)
 
               return (
@@ -128,20 +99,12 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                   <LogicDivider logic={logic ?? "AND"} />
                 </CardMotionWrapper>
               )
-            })}
-            <AddRequirement onAdd={append} />
-          </AnimatePresence>
-        </Stack>
-      )}
+            })
+          )}
 
-      <Collapse
-        in={!!errors.requirements?.root}
-        style={{
-          width: "100%",
-        }}
-      >
-        <ErrorAlert label={errors.requirements?.root?.message} />
-      </Collapse>
+          <AddRequirement onAdd={append} />
+        </AnimatePresence>
+      </Stack>
     </Stack>
   )
 }
