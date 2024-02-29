@@ -56,7 +56,7 @@ const Requirement = ({
     : {}
 
   const ImageWrapper = imageWrapper ?? React.Fragment
-  const wrapperProps =
+  const imageWrapperProps =
     !!childrenWrapper && !!imageWrapper
       ? {
           onSave: (customImage) =>
@@ -76,7 +76,7 @@ const Requirement = ({
     >
       <Box mt="3px" alignSelf={"start"}>
         <RequirementImageCircle isImageLoading={isImageLoading}>
-          <ImageWrapper {...wrapperProps}>
+          <ImageWrapper {...imageWrapperProps}>
             <RequirementImage image={requirement?.data?.customImage || image} />
           </ImageWrapper>
         </RequirementImageCircle>
