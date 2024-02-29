@@ -9,16 +9,15 @@ const TG_CONFIRMATION_TIMEOUT_MS = 500
 
 async function postBackResult(data) {
   alert(JSON.stringify(data))
-  const result =
-    !data || !("result" in data)
-      ? {
-          type: "OAUTH_ERROR",
-          data: {
-            error: "Unknown error",
-            errorDescription: "Unknown error",
-          },
-        }
-      : { type: "OAUTH_SUCCESS", data: data.result }
+  const result = !data
+    ? {
+        type: "OAUTH_ERROR",
+        data: {
+          error: "Unknown error",
+          errorDescription: "Unknown error",
+        },
+      }
+    : { type: "OAUTH_SUCCESS", data }
 
   const channel = new BroadcastChannel("TELEGRAM")
 
@@ -80,7 +79,11 @@ const TGAuth = () => {
         typeof event.data === "string"
       ) {
         const parsed = JSON.parse(event.data)
-        postBackResult(parsed)
+        if (parsed?.result?.id) {
+          postBackResult(parsed)
+        } else {
+          postBackResult(null)
+        }
       }
     }
 
