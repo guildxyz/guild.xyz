@@ -120,6 +120,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -135,6 +136,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -150,6 +152,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -164,6 +167,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       <HiddenRequirementAccessIndicatorPopover
         count={count}
         errorMessages={hiddenReqsErrorMessages}
+        roleId={roleId}
       />
     </RequirementAccessIndicatorUI>
   )
@@ -177,11 +181,13 @@ type HiddenRequirementAccessIndicatorPopoverProps = {
     errored: number
   }
   errorMessages: string[]
+  roleId: number
 }
 
 const HiddenRequirementAccessIndicatorPopover = ({
   count,
   errorMessages,
+  roleId,
 }: HiddenRequirementAccessIndicatorPopoverProps) => {
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
@@ -229,7 +235,7 @@ const HiddenRequirementAccessIndicatorPopover = ({
           >
             View connections
           </Button>
-          <RecheckAccessesButton />
+          <RecheckAccessesButton roleId={roleId} />
         </ButtonGroup>
       </PopoverFooter>
     </>

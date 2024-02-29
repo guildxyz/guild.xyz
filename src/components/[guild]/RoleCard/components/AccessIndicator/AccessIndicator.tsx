@@ -154,6 +154,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         />
         <Divider orientation="vertical" h="8" borderColor={grayDividerColor} />
         <RecheckAccessesButton
+          roleId={roleId}
           size="sm"
           h="8"
           {...ACCESS_INDICATOR_STYLES}
@@ -181,6 +182,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
       <Divider orientation="vertical" h="8" borderColor={grayDividerColor} />
       <RecheckAccessesButton
+        roleId={roleId}
         size="sm"
         h="8"
         {...ACCESS_INDICATOR_STYLES}
