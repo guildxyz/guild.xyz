@@ -125,7 +125,7 @@ const RequirementEditableCard = ({
             <ModalFooter gap="3">
               <BalancyFooter baseFieldPath={null} />
               <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
-                Save
+                Done
               </Button>
             </ModalFooter>
           </FormProvider>
