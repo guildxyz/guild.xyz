@@ -1,4 +1,4 @@
-import { Stack, Wrap } from "@chakra-ui/react"
+import { Stack } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -19,9 +19,7 @@ const EditRequirements = ({ requirements }: Props) => {
 
   return (
     <Stack spacing="5" w="full">
-      <Wrap spacing="3">
-        <SectionTitle title="Requirements" />
-      </Wrap>
+      <SectionTitle title="Requirements" />
 
       {!freeEntry && (
         <CardMotionWrapper>
