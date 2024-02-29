@@ -36,13 +36,11 @@ import IsNegatedPicker from "./IsNegatedPicker"
 
 type Props = {
   requirement: RequirementType
-  roleId: number
   isEditDisabled?: boolean
 }
 
 const ExistingRequirementEditableCard = ({
   requirement,
-  roleId,
   isEditDisabled = false,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -62,14 +60,14 @@ const ExistingRequirementEditableCard = ({
     requirement.data?.customName || requirement.data?.customImage
 
   const { roles } = useGuild()
-  const role = roles.find((r) => r.id === roleId)
+  const role = roles.find((r) => r.id === requirement.roleId)
   const isLastRequirement = role.requirements.length === 1
 
   const {
     onSubmit: onDeleteRequirementSubmit,
     isLoading: isRequirementDeleteLoading,
     isSigning: isRequirementDeleteSigning,
-  } = useDeleteRequirement(roleId, requirement.id)
+  } = useDeleteRequirement(requirement.roleId, requirement.id)
 
   const onDeleteRequirement = () =>
     isLastRequirement
@@ -82,7 +80,7 @@ const ExistingRequirementEditableCard = ({
   const {
     onSubmit: onCreateRequirementSubmit,
     isLoading: isCreateRequirementLoading,
-  } = useCreateRequirement(roleId, {
+  } = useCreateRequirement(requirement.roleId, {
     onSuccess: () => {
       /**
        * Showing a delete toast intentionally, because we call
@@ -109,7 +107,7 @@ const ExistingRequirementEditableCard = ({
   }
 
   const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
-    useEditRequirement(roleId, {
+    useEditRequirement(requirement.roleId, {
       onSuccess: () => onClose(),
     })
 
@@ -163,7 +161,17 @@ const ExistingRequirementEditableCard = ({
 
   return (
     <>
-      <Card px="6" py="4" pr="8" pos="relative">
+      <Card
+        px="6"
+        py="4"
+        pr="8"
+        pos="relative"
+        sx={{
+          ":has([data-req-name-editor]) [data-req-image-editor]": {
+            opacity: 1,
+          },
+        }}
+      >
         <RequirementProvider requirement={requirement}>
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
@@ -194,7 +202,6 @@ const ExistingRequirementEditableCard = ({
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         scrollBehavior="inside"
         finalFocusRef={ref}
-        // colorScheme={"dark"}
       >
         <ModalOverlay />
         <ModalContent>

@@ -8,7 +8,7 @@ import {
   useEditableControls,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
-import { useSetAtom } from "jotai"
+import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { Check, PencilSimple } from "phosphor-react"
 import {
   MutableRefObject,
@@ -17,38 +17,42 @@ import {
   useRef,
   useState,
 } from "react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
+import {
+  FormProvider,
+  useController,
+  useForm,
+  useFormContext,
+  useWatch,
+} from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import { useRequirementContext } from "./RequirementContext"
-import { showEditableImageAtom } from "./RequirementImageEditor"
+
+type RequirementNameForm = {
+  customName?: string
+}
 
 const RequirementNameEditor = ({
-  baseFieldPath,
   textRef,
+  isLoading,
   children,
 }: PropsWithChildren<{
-  baseFieldPath: string
   textRef: MutableRefObject<HTMLParagraphElement>
+  isLoading?: boolean
 }>) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =
     useEditableControls()
   const {
     resetField,
     formState: { errors },
-  } = useFormContext()
+  } = useFormContext<RequirementNameForm>()
 
-  const customName = useWatch({ name: `${baseFieldPath}.data.customName` })
-
-  const setReqId = useSetAtom(showEditableImageAtom)
-
-  useEffect(() => {
-    setReqId(isEditing ? baseFieldPath : "")
-  }, [isEditing])
+  const customName = useWatch({ name: "customName" })
 
   if (isEditing)
     return (
       <Box
+        data-req-name-editor
         borderWidth={1}
         borderRadius="lg"
         display={"flex"}
@@ -64,12 +68,8 @@ const RequirementNameEditor = ({
         />
 
         <Tooltip
-          label={
-            parseFromObject(errors, `${baseFieldPath}.data.customName`)?.message
-          }
-          isDisabled={
-            isEditing && !parseFromObject(errors, `${baseFieldPath}.data.customName`)
-          }
+          label={parseFromObject(errors, "customName")?.message}
+          isDisabled={isEditing && !parseFromObject(errors, "customName")}
           hasArrow
         >
           <IconButton
@@ -80,10 +80,7 @@ const RequirementNameEditor = ({
             icon={<Check />}
             colorScheme={"green"}
             {...getSubmitButtonProps()}
-            isDisabled={
-              isEditing &&
-              !!parseFromObject(errors, `${baseFieldPath}.data.customName`)
-            }
+            isDisabled={isEditing && !!parseFromObject(errors, "customName")}
           />
         </Tooltip>
       </Box>
@@ -109,28 +106,38 @@ const RequirementNameEditor = ({
              * to textRef.current.textContent
              */
             if (!!customName) return
-            resetField(`${baseFieldPath}.data.customName`, {
+            resetField("customName", {
               defaultValue: textRef.current?.textContent,
               keepDirty: true,
             })
           },
+          isLoading,
         })}
       />
-      <SetVisibility entityType="requirement" fieldBase={baseFieldPath} mt={-0.5} />
+      <SetVisibility entityType="requirement" mt={-0.5} />
     </Text>
   )
 }
 
+export type RequirementNameEditorProps = {
+  onSave?: (newName: string) => void
+}
+
 const RequirementNameEditorWrapper = ({
-  baseFieldPath,
+  onSave,
   children,
-}: PropsWithChildren<{ baseFieldPath: string }>) => {
-  const { type } = useRequirementContext()
+}: PropsWithChildren<RequirementNameEditorProps>) => {
+  const methods = useForm<RequirementNameForm>({
+    mode: "all",
+  })
+  const requirement = useRequirementContext()
+  const { id, roleId, type } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
   const [originalValue, setOriginalValue] = useState("")
   const { field } = useController({
-    name: `${baseFieldPath}.data.customName`,
+    control: methods.control,
+    name: "customName",
     rules: REQUIREMENTS[type].customNameRules,
     shouldUnregister: true,
   })
@@ -140,7 +147,6 @@ const RequirementNameEditorWrapper = ({
 
     if (!!field.value && !originalValue) {
       setOriginalValue(field.value)
-      return
     } else {
       setOriginalValue(textRef.current.textContent)
     }
@@ -150,25 +156,49 @@ const RequirementNameEditorWrapper = ({
 
   const conditionallyResetToOriginal = (value) => {
     if (value === originalValue || value.trim() === "") {
-      resetField(`${baseFieldPath}.data.customName`, {
+      resetField("customName", {
         defaultValue: originalValue,
         keepDirty: true,
       })
     }
   }
 
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(roleId)
+
+  const onSubmit = (customName: string) => {
+    if (id && roleId) {
+      if (field.value === originalValue) return
+
+      onEditRequirementSubmit({
+        ...requirement,
+        data: {
+          ...requirement.data,
+          customName,
+        },
+      })
+      return
+    }
+
+    onSave?.(customName)
+  }
+
   return (
-    <Editable
-      size="sm"
-      width="full"
-      {...field}
-      onSubmit={conditionallyResetToOriginal}
-      onCancel={conditionallyResetToOriginal}
-    >
-      <RequirementNameEditor baseFieldPath={baseFieldPath} textRef={textRef}>
-        {children}
-      </RequirementNameEditor>
-    </Editable>
+    <FormProvider {...methods}>
+      <Editable
+        size="sm"
+        {...field}
+        onSubmit={onSubmit}
+        onCancel={conditionallyResetToOriginal}
+      >
+        <RequirementNameEditor
+          textRef={textRef}
+          isLoading={isEditRequirementLoading}
+        >
+          {children}
+        </RequirementNameEditor>
+      </Editable>
+    </FormProvider>
   )
 }
 

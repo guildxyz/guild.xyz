@@ -2,11 +2,8 @@ import { Requirement } from "types"
 
 const mapRequirements = (requirements?: Array<Requirement>) =>
   requirements?.map((requirement) => {
-    const newRequirement: Requirement = {
-      ...requirement,
-      createdAt: undefined,
-      updatedAt: undefined,
-    }
+    // Using structuredClone so we don't modify the original requirement unintentionally
+    const newRequirement: Requirement = structuredClone(requirement)
 
     if (requirement.type === "COIN")
       newRequirement.address = "0x0000000000000000000000000000000000000000"
@@ -36,9 +33,9 @@ const mapRequirements = (requirements?: Array<Requirement>) =>
       )
     }
 
-    // Removind id, roleId, symbol, name, since we don't need those in the form
-    // delete newRequirement.id
-    delete newRequirement.roleId
+    // Removing attributes which we don't need inside the form
+    delete newRequirement.createdAt
+    delete newRequirement.updatedAt
     delete newRequirement.symbol
     delete newRequirement.name
 

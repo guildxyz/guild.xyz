@@ -11,9 +11,9 @@ import AddRequirement from "./components/AddRequirement"
 import ExistingRequirementEditableCard from "./components/ExistingRequirementEditableCard"
 import LogicFormControl from "./components/LogicFormControl"
 
-type Props = { roleId: number; requirements: Requirement[] }
+type Props = { requirements: Requirement[] }
 
-const EditRequirements = ({ roleId, requirements }: Props) => {
+const EditRequirements = ({ requirements }: Props) => {
   const logic = useWatch({ name: "logic" })
   const freeEntry = requirements.some(({ type }) => type === "FREE")
 
@@ -43,7 +43,6 @@ const EditRequirements = ({ roleId, requirements }: Props) => {
               <CardMotionWrapper key={requirement.id}>
                 <ExistingRequirementEditableCard
                   requirement={requirement}
-                  roleId={roleId}
                   isEditDisabled={requirement.type === "PAYMENT"}
                 />
                 <LogicDivider logic={logic ?? "AND"} />

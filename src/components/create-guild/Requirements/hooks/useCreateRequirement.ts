@@ -27,14 +27,17 @@ const useCreateRequirement = (
     Requirement
   >(createRequirement, {
     onSuccess: (newRequirement) => {
-      mutateGuild((prevGuild) => ({
-        ...prevGuild,
-        roles: prevGuild.roles.map((role) => {
-          if (role.id !== roleId) return role
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          roles: prevGuild.roles.map((role) => {
+            if (role.id !== roleId) return role
 
-          return { ...role, requirements: [...role.requirements, newRequirement] }
+            return { ...role, requirements: [...role.requirements, newRequirement] }
+          }),
         }),
-      }))
+        { revalidate: false }
+      )
 
       // TODO: trigger membership update - if one is already in progress, we should cancel that first
 

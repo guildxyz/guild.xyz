@@ -248,10 +248,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                   <RoleGroupSelect />
                 </Section>
 
-                <EditRequirements
-                  roleId={roleId}
-                  requirements={mapRequirements(requirements)}
-                />
+                <EditRequirements requirements={mapRequirements(requirements)} />
               </VStack>
             </FormProvider>
           </DrawerBody>

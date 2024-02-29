@@ -10,10 +10,13 @@ import {
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
-import React, { PropsWithChildren } from "react"
+import React, { ComponentType, PropsWithChildren } from "react"
+import { useFormContext } from "react-hook-form"
 import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
+import { RequirementImageEditorProps } from "./RequirementImageEditor"
+import { RequirementNameEditorProps } from "./RequirementNameEditor"
 import ResetRequirementButton from "./ResetRequirementButton"
 import ViewOriginalPopover from "./ViewOriginalPopover"
 
@@ -23,8 +26,8 @@ export type RequirementProps = PropsWithChildren<{
   image?: string | JSX.Element
   footer?: JSX.Element
   rightElement?: JSX.Element
-  imageWrapper?: React.FC<any>
-  childrenWrapper?: React.FC<any>
+  imageWrapper?: ComponentType<RequirementImageEditorProps>
+  childrenWrapper?: ComponentType<RequirementNameEditorProps>
   showViewOriginal?: boolean
 }>
 
@@ -40,11 +43,28 @@ const Requirement = ({
   showViewOriginal,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+  const { setValue } = useFormContext() ?? {}
 
   const ChildrenWrapper = childrenWrapper ?? Box
+  const childrenWrapperProps = !!childrenWrapper
+    ? {
+        onSave: (customName) =>
+          setValue?.(`${fieldRoot}.data.customName`, customName, {
+            shouldDirty: true,
+          }),
+      }
+    : {}
+
   const ImageWrapper = imageWrapper ?? React.Fragment
   const wrapperProps =
-    !!childrenWrapper && !!imageWrapper ? { baseFieldPath: fieldRoot } : {}
+    !!childrenWrapper && !!imageWrapper
+      ? {
+          onSave: (customImage) =>
+            setValue?.(`${fieldRoot}.data.customImage`, customImage, {
+              shouldDirty: true,
+            }),
+        }
+      : {}
 
   return (
     <SimpleGrid
@@ -62,7 +82,7 @@ const Requirement = ({
         </RequirementImageCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-        <ChildrenWrapper {...wrapperProps} display="inline-block">
+        <ChildrenWrapper {...childrenWrapperProps} display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.type === "LINK_VISIT"
             ? children

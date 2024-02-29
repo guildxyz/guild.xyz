@@ -31,20 +31,25 @@ const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void })
         title: "Successfully updated requirement",
       })
 
-      mutateGuild((prevGuild) => ({
-        ...prevGuild,
-        roles: prevGuild.roles.map((role) => {
-          if (role.id !== roleId) return role
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          roles: prevGuild.roles.map((role) => {
+            if (role.id !== roleId) return role
 
-          return {
-            ...role,
-            requirements: role.requirements.map((requirement) => {
-              if (requirement.id !== editedRequirement.id) return requirement
-              return editedRequirement
-            }),
-          }
+            return {
+              ...role,
+              requirements: role.requirements.map((requirement) => {
+                if (requirement.id !== editedRequirement.id) return requirement
+                return editedRequirement
+              }),
+            }
+          }),
         }),
-      }))
+        {
+          revalidate: false,
+        }
+      )
 
       // TODO: trigger membership update - if one is already in progress, we should cancel that first
 

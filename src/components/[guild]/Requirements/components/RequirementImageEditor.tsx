@@ -1,43 +1,49 @@
-import { Circle, Icon, Text } from "@chakra-ui/react"
+import { Circle, Icon, Spinner, Text } from "@chakra-ui/react"
+import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import usePinata from "hooks/usePinata"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import { atom, useAtomValue } from "jotai"
 import { Upload, X } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import { useDropzone } from "react-dropzone"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useRequirementContext } from "./RequirementContext"
 
-export const showEditableImageAtom = atom("")
-
-type Props = {
-  baseFieldPath: string
+export type RequirementImageEditorProps = {
+  onSave?: (newName: string) => void
 }
 
 const RequirementImageEditor = ({
-  baseFieldPath,
+  onSave,
   children,
-}: PropsWithChildren<Props>) => {
-  const { control, setValue } = useFormContext()
-  const toast = useToast()
-
-  const customImage = useWatch({
-    name: `${baseFieldPath}.data.customImage`,
-    control,
-  })
+}: PropsWithChildren<RequirementImageEditorProps>) => {
+  const requirement = useRequirementContext()
+  const { id, roleId, data } = requirement
 
   const [progress, setProgress] = useState<number>(0)
 
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(roleId)
+  const toast = useToast()
+  const showErrorToast = useShowErrorToast()
+
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
-      setValue(
-        `${baseFieldPath}.data.customImage`,
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldDirty: true }
-      )
+      const customImage = `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
+
+      if (id && roleId) {
+        onEditRequirementSubmit({
+          ...requirement,
+          data: {
+            ...requirement.data,
+            customImage,
+          },
+        })
+        return
+      }
+
+      onSave?.(customImage)
     },
-    onError: () => {
-      setValue(`${baseFieldPath}.data.customImage`, undefined)
-    },
+    onError: () => showErrorToast("Couldn't upload image"),
   })
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -50,27 +56,30 @@ const RequirementImageEditor = ({
     onError: (error) => toast({ status: "error", title: error.message }),
   })
 
-  const reqId = useAtomValue(showEditableImageAtom)
-
-  if (customImage)
+  if (data?.customImage)
     return (
       <>
         <Circle
+          data-req-image-editor
           position="absolute"
-          onClick={() => {
-            setValue(`${baseFieldPath}.data.customImage`, "", {
-              shouldDirty: true,
-            })
-          }}
-          opacity={reqId === baseFieldPath ? 1 : 0}
+          opacity={0}
           _hover={{
             opacity: 1,
           }}
-          background={"blackAlpha.600"}
+          background="blackAlpha.600"
           p={3.5}
-          cursor={"pointer"}
+          cursor="pointer"
+          onClick={() =>
+            onEditRequirementSubmit({
+              ...requirement,
+              data: {
+                ...requirement.data,
+                customImage: undefined,
+              },
+            })
+          }
         >
-          <Icon as={X} boxSize={4} color={"white"} />
+          <Icon as={X} boxSize={4} color="white" />
         </Circle>
         {children}
       </>
@@ -78,26 +87,29 @@ const RequirementImageEditor = ({
 
   if (uploader.isUploading)
     return (
-      <Text fontSize={13} textAlign={"center"} w={"full"}>
+      <Text fontSize={13} textAlign="center" w="full">
         {(progress * 100).toFixed()}%
       </Text>
     )
 
+  if (isEditRequirementLoading) return <Spinner size="sm" />
+
   return (
     <>
       <Circle
+        data-req-image-editor
         position="absolute"
-        opacity={reqId === baseFieldPath ? 1 : 0}
+        opacity={0}
         _hover={{
           opacity: 1,
         }}
         p={3.5}
-        background={"blackAlpha.700"}
-        cursor={"pointer"}
+        background="blackAlpha.700"
+        cursor="pointer"
         {...getRootProps()}
       >
         <input {...getInputProps()} hidden />
-        <Icon as={Upload} boxSize={4} color={"white"} />
+        <Icon as={Upload} boxSize={4} color="white" />
       </Circle>
       {children}
     </>

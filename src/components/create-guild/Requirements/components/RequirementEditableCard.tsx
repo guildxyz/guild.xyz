@@ -155,7 +155,17 @@ const RequirementEditableCard = ({
 
   return (
     <>
-      <Card px="6" py="4" pr="8" pos="relative">
+      <Card
+        px="6"
+        py="4"
+        pr="8"
+        pos="relative"
+        sx={{
+          ":has([data-req-name-editor]) [data-req-image-editor]": {
+            opacity: 1,
+          },
+        }}
+      >
         <RequirementProvider requirement={field}>
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
@@ -187,7 +197,6 @@ const RequirementEditableCard = ({
         onClose={methods.formState.isDirty ? onAlertOpen : onClose}
         scrollBehavior="inside"
         finalFocusRef={ref}
-        // colorScheme={"dark"}
       >
         <ModalOverlay />
         <ModalContent>
