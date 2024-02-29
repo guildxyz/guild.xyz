@@ -30,11 +30,13 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
   return (
     <Requirement
       image={
-        data?.logoURI ?? (
-          <Text as="span" fontWeight="bold" fontSize="xx-small">
-            ERC20
-          </Text>
-        )
+        requirement.type === "COIN"
+          ? CHAIN_CONFIG[requirement.chain].coinIconUrl
+          : data?.logoURI ?? (
+              <Text as="span" fontWeight="bold" fontSize="xx-small">
+                ERC20
+              </Text>
+            )
       }
       isImageLoading={isValidating}
       footer={
