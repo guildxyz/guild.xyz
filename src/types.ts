@@ -89,6 +89,7 @@ type PlatformName =
   | "POLYGON_ID"
   | "POINTS"
   | "FORM"
+  | "GATHER"
 
 type PlatformUserData = {
   acessToken?: string
