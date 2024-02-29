@@ -7,7 +7,6 @@ import { useSWRConfig } from "swr"
 import { OneOf, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessRequirements from "utils/preprocessRequirements"
 import { RoleEditFormData } from "../EditRole"
 
 const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =>
@@ -182,10 +181,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
-      data.requirements = preprocessRequirements(data?.requirements)
-
       if (!!data.logic && data.logic !== "ANY_OF") delete data.anyOfNum
-
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
     isSigning: null,

@@ -1,24 +1,30 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import useToast from "hooks/useToast"
+import useSubmit from "hooks/useSubmit"
 import { Requirement } from "types"
-import fetcher from "utils/fetcher"
+import { useFetcherWithSign } from "utils/fetcher"
 
 const useCreateRequirement = (
   roleId: number,
   config?: { onSuccess?: () => void }
 ) => {
   const { id: guildId, mutateGuild } = useGuild()
-  const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const createRequirement = async (
-    signedValidation: SignedValidation
-  ): Promise<Requirement> =>
-    fetcher(`/v2/guilds/${guildId}/roles/${roleId}/requirements`, signedValidation)
+  const fetcherWithSign = useFetcherWithSign()
+  const createRequirement = async (body: Requirement): Promise<Requirement> =>
+    fetcherWithSign([
+      `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
+      {
+        method: "POST",
+        body,
+      },
+    ])
 
-  return useSubmitWithSign<Requirement>(createRequirement, {
+  return useSubmit<
+    Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
+    Requirement
+  >(createRequirement, {
     onSuccess: (newRequirement) => {
       mutateGuild((prevGuild) => ({
         ...prevGuild,

@@ -12,7 +12,7 @@ import { useSWRConfig } from "swr"
 import { GuildPlatform, PlatformType, Requirement, Role, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessRequirements from "utils/preprocessRequirements"
+import preprocessRequirement from "utils/preprocessRequirement"
 
 export type RoleToCreate = Omit<
   Role,
@@ -95,10 +95,9 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data: RoleToCreate) => {
-      data.requirements = preprocessRequirements(data?.requirements)
+      data.requirements = data?.requirements?.map(preprocessRequirement)
 
       delete data.roleType
-
       if (data.logic !== "ANY_OF") delete data.anyOfNum
 
       if (group) data.groupId = group.id

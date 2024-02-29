@@ -11,7 +11,6 @@ const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void })
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
-
   const editRequirement = async (data: Requirement): Promise<Requirement> =>
     fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/requirements/${data.id}`,
@@ -19,12 +18,7 @@ const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void })
         method: "PUT",
         body: {
           ...data,
-          // Removing fields which are only used on the frontend
           id: undefined,
-          requirementId: undefined,
-          logic: undefined,
-          formFieldId: undefined,
-          balancyDecimals: undefined,
         },
       },
     ])
