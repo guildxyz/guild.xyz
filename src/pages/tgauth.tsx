@@ -3,6 +3,7 @@ import Button from "components/common/Button"
 import usePopupWindow from "hooks/usePopupWindow"
 import { TelegramLogo } from "phosphor-react"
 import { useEffect } from "react"
+import { isMobile } from "react-device-detect"
 import timeoutPromise from "utils/timeoutPromise"
 
 const TG_CONFIRMATION_TIMEOUT_MS = 500
@@ -51,7 +52,12 @@ const TGAuth = () => {
 
   const onClick =
     typeof window !== "undefined" && window.opener
-      ? onOpen
+      ? isMobile
+        ? () => {
+            window.opener = null
+            window.location.href = url
+          }
+        : () => onOpen()
       : () => {
           window.location.href = url
         }
