@@ -2,16 +2,9 @@ import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
 import { Requirement, RequirementType } from "types"
 
 const preprocessRequirement = (requirement: Partial<Requirement>): Requirement => {
-  const processedRequirement: Requirement = {
-    ...requirement,
-    data: requirement.data
-      ? {
-          ...structuredClone(requirement.data),
-          validAddresses: undefined,
-        }
-      : undefined,
-    nftRequirementType: undefined,
-  } as Requirement
+  const processedRequirement: Requirement = structuredClone(
+    requirement
+  ) as Requirement
 
   if (
     processedRequirement.type?.startsWith("ALCHEMY_") &&
@@ -66,7 +59,7 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
     }
   }
 
-  if (requirement.type === "COIN") {
+  if (processedRequirement.type === "COIN") {
     processedRequirement.address = undefined
     if (!processedRequirement.data.minAmount) {
       processedRequirement.data.minAmount = 0
@@ -74,19 +67,20 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   }
 
   if (
-    (requirement.type === "ERC721" ||
-      requirement.type === "ERC1155" ||
-      requirement.type === "NOUNS") &&
-    requirement.data?.attributes &&
-    !requirement.data.attributes.length
+    (processedRequirement.type === "ERC721" ||
+      processedRequirement.type === "ERC1155" ||
+      processedRequirement.type === "NOUNS") &&
+    processedRequirement.data?.attributes &&
+    !processedRequirement.data.attributes.length
   ) {
     processedRequirement.data.attributes = undefined
     if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0
   }
 
   if (
-    (requirement.type === "ERC721" || requirement.type === "ERC1155") &&
-    requirement.data?.attributes?.length
+    (processedRequirement.type === "ERC721" ||
+      processedRequirement.type === "ERC1155") &&
+    processedRequirement.data?.attributes?.length
   ) {
     processedRequirement.data.attributes = requirement.data.attributes.map(
       (attribute) => ({
@@ -98,9 +92,9 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   }
 
   if (
-    (requirement.type === "ERC721" ||
-      requirement.type === "ERC1155" ||
-      requirement.type === "NOUNS") &&
+    (processedRequirement.type === "ERC721" ||
+      processedRequirement.type === "ERC1155" ||
+      processedRequirement.type === "NOUNS") &&
     !processedRequirement.data
   ) {
     processedRequirement.data = {
@@ -109,24 +103,31 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   }
 
   if (
-    requirement.type === "ALLOWLIST" &&
-    !requirement.data?.addresses &&
-    !requirement.data?.hideAllowlist &&
+    processedRequirement.type === "ALLOWLIST" &&
+    !processedRequirement.data?.addresses &&
+    !processedRequirement.data?.hideAllowlist &&
     !!processedRequirement.data
   ) {
     processedRequirement.data.addresses = []
   }
 
-  if (requirement.type === "CONTRACT" && Array.isArray(requirement.data?.params)) {
+  if (
+    processedRequirement.type === "CONTRACT" &&
+    Array.isArray(processedRequirement.data?.params)
+  ) {
     processedRequirement.data.params = requirement.data.params.map(
       (param) => param.value
     )
   }
 
+  if (!processedRequirement.address) delete processedRequirement.address
+
   // temp, we'll need to remove some of these fields once we validate reqs with zod
   delete (processedRequirement as any).requirementId
   delete (processedRequirement as any).logic
   delete (processedRequirement as any).balancyDecimals
+  delete (processedRequirement as any).data?.validAddresses
+  delete processedRequirement.nftRequirementType
 
   // only used on the frontend
   delete (processedRequirement as any).formFieldId
