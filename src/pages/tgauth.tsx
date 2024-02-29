@@ -8,7 +8,6 @@ import timeoutPromise from "utils/timeoutPromise"
 const TG_CONFIRMATION_TIMEOUT_MS = 500
 
 async function postBackResult(data) {
-  alert(JSON.stringify(data))
   const result = !data
     ? {
         type: "OAUTH_ERROR",
@@ -80,7 +79,7 @@ const TGAuth = () => {
       ) {
         const parsed = JSON.parse(event.data)
         if (parsed?.result?.id) {
-          postBackResult(parsed)
+          postBackResult(parsed.result)
         } else {
           postBackResult(null)
         }
