@@ -31,7 +31,7 @@ const useActiveMembershipUpdate = ({
         (result: JoinJob[]) =>
           // casting to any until @guildxyz/types contains createdAtTimestamp
           result?.sort((jobA: any, jobB: any) =>
-            jobA.createdAtTimestamp > jobB.createdAtTimestamp ? 1 : -1
+            jobA.createdAtTimestamp > jobB.createdAtTimestamp ? -1 : 1
           )?.[0]
       ),
     {
@@ -54,7 +54,7 @@ const useActiveMembershipUpdate = ({
               errorMsg: reqJob.userLevelErrors?.[0]?.msg,
               errorType: reqJob.userLevelErrors?.[0]?.errorType,
               subType: reqJob.userLevelErrors?.[0]?.subType,
-              lastCheckedAt: reqJob.done ? new Date() : null,
+              lastCheckedAt: (res as any).createdAtTimestamp,
             })),
           }
         })

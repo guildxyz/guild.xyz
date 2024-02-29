@@ -10,9 +10,11 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  Text,
   VStack,
 } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
@@ -53,11 +55,21 @@ const RecheckAccessesButton = ({
   const { urlName } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-
-  const [latestResendDate, setLatestResendDate] = useAtom(latestResendDateAtom)
-  const [dateNow, setDateNow] = useState(Date.now())
   const [isFinished, setIsFinished] = useState(false)
-  const canResend = true /* dateNow - latestResendDate > TIMEOUT */
+
+  const { reqAccesses } = useRoleMembership(roleId)
+  const [latestAllResendDate, setLatestAllResendDate] = useAtom(latestResendDateAtom)
+  const lastCheckedAt = useMemo(
+    () => new Date(reqAccesses?.[0]?.lastCheckedAt ?? latestAllResendDate),
+    [reqAccesses, latestAllResendDate]
+  )
+  const [dateNow, setDateNow] = useState(Date.now())
+  useEffect(() => {
+    const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
+    return () => clearInterval(interval)
+  }, [lastCheckedAt])
+
+  const canResend = dateNow - lastCheckedAt.getTime() > TIMEOUT
 
   const tooltipLabel =
     tooltipLabelInitial ||
@@ -79,7 +91,7 @@ const RecheckAccessesButton = ({
       setTimeout(() => {
         setIsFinished(false)
       }, 3000)
-      setLatestResendDate(Date.now())
+      if (!roleId) setLatestAllResendDate(Date.now())
     },
     onError: (error) => {
       const errorMsg = "Couldn't update accesses"
@@ -94,11 +106,6 @@ const RecheckAccessesButton = ({
       )
     },
   })
-
-  useEffect(() => {
-    const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
-    return () => clearInterval(interval)
-  }, [])
 
   const onClick = () => {
     triggerMembershipUpdate(roleId && { roleIds: [roleId] })
@@ -202,6 +209,15 @@ const RecheckAccessesButton = ({
           ) : (
             <PopoverHeader {...POPOVER_HEADER_STYLES}>
               You can only use this function once per minute
+              <Text
+                colorScheme="gray"
+                w="full"
+                fontSize="sm"
+                fontWeight={"medium"}
+                mt="1"
+              >
+                Last checked at: {lastCheckedAt.toLocaleTimeString()}
+              </Text>
             </PopoverHeader>
           )}
         </PopoverContent>
