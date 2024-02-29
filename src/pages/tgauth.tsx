@@ -8,6 +8,7 @@ import timeoutPromise from "utils/timeoutPromise"
 const TG_CONFIRMATION_TIMEOUT_MS = 500
 
 async function postBackResult(data) {
+  alert(JSON.stringify(data))
   const result =
     !data || !("result" in data)
       ? {
