@@ -4,7 +4,6 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
-import { useUserRewards } from "hooks/useUserRewards"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "platforms/Points/useUsersPoints"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -41,7 +40,6 @@ const useMembershipUpdate = ({
 }: Props = {}) => {
   const guild = useGuild()
   const { isAdmin } = useGuildPermission()
-  const { mutate: mutateUserRewards } = useUserRewards()
   const { mutate: mutateUserPoints } = useUsersPoints()
   const fetcherWithSign = useFetcherWithSign()
   const [isGettingJob, setIsGettingJob] = useAtom(isGettingJobAtom)
@@ -84,7 +82,6 @@ const useMembershipUpdate = ({
         // mutate guild in case the user sees more entities due to visibilities
         if (!isAdmin) guild.mutateGuild()
 
-        mutateUserRewards()
         mutateUserPoints()
       }
 
