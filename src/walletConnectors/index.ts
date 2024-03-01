@@ -4,7 +4,6 @@ import { mutate } from "swr"
 import fetcher, { fetcherWithSign } from "utils/fetcher"
 import { createWalletClient, http } from "viem"
 import { mnemonicToAccount } from "viem/accounts"
-import { CWaaSConnector } from "waasConnector"
 import { WalletClient, configureChains } from "wagmi"
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet"
 import { InjectedConnector } from "wagmi/connectors/injected"
@@ -12,6 +11,9 @@ import { MockConnector } from "wagmi/connectors/mock"
 import { SafeConnector } from "wagmi/connectors/safe"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { publicProvider } from "wagmi/providers/public"
+import { CWaaSConnector } from "walletConnectors/cWaasConnector"
+import { RabbyConnector } from "walletConnectors/rabbyConnector"
+import { RoninConnector } from "./roninConnector"
 
 const { chains: allChains, publicClient } = configureChains(
   Object.values(CHAIN_CONFIG).filter(
@@ -43,6 +45,10 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
           shimDisconnect: true,
         },
       }),
+      new RabbyConnector({ chains }),
+      new RoninConnector({ chains }),
+      // new OkxConnector({ chains }),
+      // new MetamaskConnector({ chains }),
       new CoinbaseWalletConnector({
         chains,
         options: {

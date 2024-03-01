@@ -7,7 +7,6 @@ import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
-import { connectors, publicClient } from "connectors"
 import { dystopian, inter } from "fonts"
 import useSetupFuel from "hooks/useSetupFuel"
 import { useAtomValue } from "jotai"
@@ -22,6 +21,7 @@ import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiConfig, createConfig } from "wagmi"
+import { connectors, publicClient } from "walletConnectors"
 
 /**
  * Polyfill HTML inert property for Firefox support:

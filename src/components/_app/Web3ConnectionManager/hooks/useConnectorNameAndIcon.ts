@@ -31,6 +31,10 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
         : isOKXWallet
         ? "okx.png"
         : "metamask.png"
+      : connector?.id === "ronin"
+      ? "ronin.png"
+      : connector?.id === "rabby"
+      ? "rabby.png"
       : connector?.id === "walletConnect"
       ? "walletconnect.svg"
       : connector?.id === "safe"
@@ -55,12 +59,6 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
           : "MetaMask"
         : connector?.name ?? fuelConnectorName,
     connectorIcon,
-  }
-}
-
-declare global {
-  interface Window {
-    okxwallet: any
   }
 }
 

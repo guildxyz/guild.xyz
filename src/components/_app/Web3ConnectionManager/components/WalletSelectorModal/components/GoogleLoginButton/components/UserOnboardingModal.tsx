@@ -30,8 +30,8 @@ import { Modal } from "components/common/Modal"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
 import { LockSimple, Question, Wallet } from "phosphor-react"
 import { useEffect, useMemo, useRef, useState } from "react"
-import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
+import type { CWaaSConnector } from "walletConnectors/cWaasConnector"
 import GoogleTerms from "../../GoogleTerms"
 
 const UserOnboardingModal = ({
