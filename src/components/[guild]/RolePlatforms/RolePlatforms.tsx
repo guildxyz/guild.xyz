@@ -6,7 +6,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildPlatform, PlatformName, PlatformType } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
@@ -59,7 +59,7 @@ const RolePlatforms = ({ roleId }: Props) => {
             let guildPlatform: GuildPlatform, type
             if (rolePlatform.guildPlatformId) {
               guildPlatform = guildPlatforms.find(
-                (platform) => platform.id === rolePlatform.guildPlatformId
+                (platform) => platform.id === rolePlatform.guildPlatformId,
               )
               type = PlatformType[guildPlatform?.platformId]
             } else {
@@ -105,7 +105,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                         onClick={() => {
                           setValue(
                             `rolePlatforms`,
-                            fields.filter((_, i) => i !== index)
+                            fields.filter((_, i) => i !== index),
                           )
                         }}
                       />
@@ -115,9 +115,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                   contentRow={
                     CAPACITY_TIME_PLATFORMS.includes(type) && (
                       <AvailabilitySetup
-                        platformType={
-                          PlatformType[guildPlatform.platformId] as PlatformName
-                        }
+                        platformType={type}
                         rolePlatform={rolePlatform}
                         defaultValues={{
                           capacity: rolePlatform.capacity,

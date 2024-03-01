@@ -35,7 +35,7 @@ const CollectNftButton = ({
 
   const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
   const hasUserReward = !!userRewards?.find(
-    (reward) => reward.rolePlatformId === rolePlatformId
+    (reward) => reward.rolePlatformId === rolePlatformId,
   )
 
   const {
@@ -45,12 +45,14 @@ const CollectNftButton = ({
   } = useCollectNft()
 
   const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
-    useMembershipUpdate(onMintSubmit, (error) =>
-      showErrorToast({
-        error: "Couldn't check eligibility",
-        correlationId: error.correlationId,
-      })
-    )
+    useMembershipUpdate({
+      onSuccess: onMintSubmit,
+      onError: (error) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: error.correlationId,
+        }),
+    })
 
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
@@ -80,8 +82,8 @@ const CollectNftButton = ({
     isNftBalanceLoading || isMembershipUpdateLoading || isUserRewardsLoading
       ? "Checking eligibility"
       : isMinting
-      ? mintLoadingText
-      : "Checking your balance"
+        ? mintLoadingText
+        : "Checking your balance"
 
   const isDisabled = shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
 
@@ -109,10 +111,10 @@ const CollectNftButton = ({
       {alreadyCollected
         ? "Already collected"
         : typeof isSufficientBalance === "boolean" && !isSufficientBalance
-        ? "Insufficient balance"
-        : !hasRoleAccess
-        ? "Check access & collect"
-        : label}
+          ? "Insufficient balance"
+          : !hasRoleAccess
+            ? "Check access & collect"
+            : label}
     </Button>
   )
 }

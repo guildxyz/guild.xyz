@@ -19,7 +19,7 @@ export type Membership = {
       errorMsg?: string
       errorType?: string
       subType?: string
-      lastCheckedAt: Date
+      lastCheckedAt: string
     }>
   }>
 }
@@ -30,7 +30,7 @@ const useMembership = () => {
   const { address, isWeb3Connected } = useWeb3ConnectionManager()
 
   const { data: membership, ...rest } = useSWRWithOptionalAuth<Membership>(
-    isWeb3Connected ? `/v2/users/${address}/memberships?guildId=${id}` : null
+    isWeb3Connected ? `/v2/users/${address}/memberships?guildId=${id}` : null,
   )
 
   const isMember = !!membership?.roles?.some((role) => role.access)
@@ -46,7 +46,7 @@ const useRoleMembership = (roleId: number) => {
   const guildMembership = useMembership()
 
   const roleMembership = guildMembership?.membership?.roles?.find(
-    (role) => role?.roleId === roleId
+    (role) => role?.roleId === roleId,
   )
 
   const hasRoleAccess = !!roleMembership?.access

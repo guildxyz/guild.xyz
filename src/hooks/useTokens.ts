@@ -43,6 +43,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   BOBA_AVAX: ["https://tokens.coingecko.com/boba/all.json"],
   PALM: [],
   BASE_GOERLI: [],
+  BASE_SEPOLIA: [],
   EXOSAMA: [],
   EVMOS: ["https://tokens.coingecko.com/evmos/all.json"],
   POLYGON_MUMBAI: [],
@@ -62,6 +63,9 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   BERA_TESTNET: [],
   MANTA: [],
   TAIKO_KATLA: [],
+  BLAST_SEPOLIA: [],
+  BLAST_MAINNET: [],
+  OASIS_SAPPHIRE: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
@@ -71,10 +75,10 @@ const fetchTokens = async ([_, chain]) =>
         (acc, curr) =>
           acc.concat(
             (Array.isArray(curr) ? curr : curr?.tokens)?.filter(
-              ({ chainId }) => chainId === Chains[chain]
-            )
+              ({ chainId }) => chainId === Chains[chain],
+            ),
           ),
-        []
+        [],
       )
       return CHAIN_CONFIG[chain]
         ? [
@@ -85,13 +89,13 @@ const fetchTokens = async ([_, chain]) =>
             },
           ].concat(finalTokenArray)
         : finalTokenArray
-    }
+    },
   )
 
 const useTokens = (chain: string) => {
   const { isLoading, data } = useSWRImmutable<Array<CoingeckoToken>>(
     chain ? ["tokens", chain] : null,
-    fetchTokens
+    fetchTokens,
   )
 
   return { tokens: data, isLoading }

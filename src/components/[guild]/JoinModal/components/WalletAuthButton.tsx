@@ -1,10 +1,12 @@
 import { Wallet } from "@phosphor-icons/react"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useSetAtom } from "jotai"
 import shortenHex from "utils/shortenHex"
 import ConnectAccount from "./ConnectAccount"
 
 const WalletAuthButton = (): JSX.Element => {
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { address } = useWeb3ConnectionManager()
 
   return (
@@ -14,7 +16,7 @@ const WalletAuthButton = (): JSX.Element => {
       icon={<Wallet />}
       isConnected={address && shortenHex(address, 3)}
       colorScheme="gray"
-      onClick={openWalletSelectorModal}
+      onClick={() => setIsWalletSelectorModalOpen(true)}
     />
   )
 }

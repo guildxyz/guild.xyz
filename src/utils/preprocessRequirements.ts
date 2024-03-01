@@ -2,12 +2,12 @@ import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
 import { Requirement, RequirementType } from "types"
 
 const preprocessRequirements = (
-  requirements: Array<Partial<Requirement>>
+  requirements: Array<Partial<Requirement>>,
 ): Requirement[] => {
   if (!requirements || !Array.isArray(requirements)) return undefined
 
   const freeRequirement = requirements.find(
-    (requirement) => requirement.type === "FREE"
+    (requirement) => requirement.type === "FREE",
   )
 
   if (freeRequirement) return [freeRequirement as Requirement]
@@ -33,7 +33,7 @@ const preprocessRequirements = (
         ) {
           processedRequirement.type = processedRequirement.type.replace(
             "ALCHEMY_",
-            "COVALENT_"
+            "COVALENT_",
           ) as RequirementType
 
           if (processedRequirement?.data?.timestamps?.minAmount) {
@@ -81,12 +81,10 @@ const preprocessRequirements = (
         }
 
         if (requirement.type === "COIN") {
-          processedRequirement.address = "0x0000000000000000000000000000000000000000"
-        } else if (
-          !requirement.address ||
-          requirement.address === "0x0000000000000000000000000000000000000000"
-        ) {
           processedRequirement.address = undefined
+          if (!processedRequirement.data.minAmount) {
+            processedRequirement.data.minAmount = 0
+          }
         }
 
         if (
@@ -109,7 +107,7 @@ const preprocessRequirements = (
               ...attribute,
               minValue: attribute.minValue || undefined,
               maxValue: attribute.maxValue || undefined,
-            })
+            }),
           )
         }
 
@@ -138,7 +136,7 @@ const preprocessRequirements = (
           Array.isArray(requirement.data?.params)
         ) {
           processedRequirement.data.params = requirement.data.params.map(
-            (param) => param.value
+            (param) => param.value,
           )
         }
 

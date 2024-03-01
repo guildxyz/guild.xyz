@@ -68,16 +68,6 @@ const nextConfig = {
     return {
       beforeFiles: [
         {
-          source: "/",
-          has: [
-            {
-              type: "host",
-              value: "lego.guild.xyz",
-            },
-          ],
-          destination: "/lego/",
-        },
-        {
           source: "/arc",
           has: [
             {
@@ -192,6 +182,11 @@ const nextConfig = {
       {
         source: "/guild/:path*",
         destination: "/:path*",
+        permanent: true,
+      },
+      {
+        source: "/ethdenver/:path*",
+        destination: "/guildday/:path*",
         permanent: true,
       },
       {

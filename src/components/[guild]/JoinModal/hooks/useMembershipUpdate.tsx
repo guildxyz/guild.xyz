@@ -1,24 +1,25 @@
 import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useUserRewards } from "hooks/useUserRewards"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "platforms/Points/useUsersPoints"
-import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
-import mapAccessJobState, { groupBy } from "../utils/mapAccessJobState"
+import mapAccessJobState from "../utils/mapAccessJobState"
+import useActiveMembershipUpdate from "./useActiveMembershipUpdate"
 
 export type JoinData = {
   oauthData: any
 }
 
-const stateAtom = atom<"INITIAL" | "GETTING_JOB" | "POLLING" | "FINISHED">("INITIAL")
+// syncing useSubmit's isLoading into a global atom
+const isGettingJobAtom = atom<boolean>(false)
+const currentlyCheckedRoleIdsAtom = atom<number[]>([])
 
-const useMembershipUpdate = (
-  onSuccess?: (response: JoinJob) => void,
-  onError?: (error?: any) => void,
+type Props = UseSubmitOptions<JoinJob> & {
   /**
    * We're setting keepPreviousData to true in useJoin, so we can display no access
    * and error states correctly. Would be nice to find a better solution for this
@@ -30,21 +31,30 @@ const useMembershipUpdate = (
    * - The manual progress.mutate(undefined, { revalidate: false }) doesn't work for
    *   some reason
    */
-  keepPreviousData = false
-) => {
+  keepPreviousData?: boolean
+}
+
+const useMembershipUpdate = ({
+  onSuccess,
+  onError,
+  keepPreviousData,
+}: Props = {}) => {
   const guild = useGuild()
-  const { mutate: mutateMembership } = useMembership()
+  const { isAdmin } = useGuildPermission()
   const { mutate: mutateUserRewards } = useUserRewards()
   const { mutate: mutateUserPoints } = useUsersPoints()
   const fetcherWithSign = useFetcherWithSign()
-  const [state, setState] = useAtom(stateAtom)
+  const [isGettingJob, setIsGettingJob] = useAtom(isGettingJobAtom)
+  const [currentlyCheckedRoleIds, setCurrentlyCheckedRoleIds] = useAtom(
+    currentlyCheckedRoleIdsAtom,
+  )
   const { captureEvent } = usePostHogContext()
   const posthogOptions = {
     guild: guild.urlName,
   }
 
-  const submit = async (data): Promise<string> => {
-    setState("GETTING_JOB")
+  const submit = async (data?): Promise<string> => {
+    setIsGettingJob(true)
 
     const initialPollResult: JoinJob[] = await fetcherWithSign([
       `/v2/actions/join?${new URLSearchParams({
@@ -66,112 +76,48 @@ const useMembershipUpdate = (
     return jobId
   }
 
-  const useSubmitResponse = useSubmit(submit, {
-    onSuccess: () => setState("POLLING"),
+  const { triggerPoll, ...progress } = useActiveMembershipUpdate({
+    onSuccess: (res) => {
+      if (res?.failed) return onError?.(res.failedErrorMsg)
+
+      if (res?.roleAccesses?.some((role) => !role.access)) {
+        // mutate guild in case the user sees more entities due to visibilities
+        if (!isAdmin) guild.mutateGuild()
+
+        mutateUserRewards()
+        mutateUserPoints()
+      }
+
+      setCurrentlyCheckedRoleIds([])
+      onSuccess?.(res)
+    },
     onError: (error) => {
-      setState("INITIAL")
+      onError?.(error)
+      setCurrentlyCheckedRoleIds([])
+    },
+    keepPreviousData,
+  })
+
+  const useSubmitResponse = useSubmit(submit, {
+    onSuccess: () => {
+      setIsGettingJob(false)
+      triggerPoll()
+    },
+    onError: (error) => {
+      setIsGettingJob(false)
       captureEvent(`Guild join error`, { ...posthogOptions, error })
       onError?.(error)
     },
   })
 
-  const onFinish = (response: JoinJob) => {
-    if (!response.roleAccesses?.some((role) => role.access === true)) return
-
-    // mutate guild in case the user sees more entities due to visibilities
-    guild.mutateGuild()
-
-    mutateUserRewards()
-    mutateUserPoints()
-
-    onSuccess?.(response)
-
-    setTimeout(() => {
-      setState("INITIAL")
-    }, 3000)
-  }
-
-  const progress = useSWRImmutable<JoinJob>(
-    state === "POLLING"
-      ? `/v2/actions/join?${new URLSearchParams({
-          guildId: `${guild?.id}`,
-        }).toString()}`
-      : null,
-
-    (key) =>
-      fetcherWithSign([key, { method: "GET" }]).then(
-        (result: JoinJob[]) => result?.[0]
-      ),
-    {
-      onSuccess: (res) => {
-        const byRoleId = groupBy(res?.["children:access-check:jobs"] ?? [], "roleId")
-
-        // Mutate membership data according to join status
-        mutateMembership(
-          (prev) => {
-            // In case the user is already a member, we only mutate when we have the whole data
-            if (!!prev?.joinedAt && !res?.done) {
-              return prev
-            }
-
-            return {
-              guildId: prev?.guildId,
-              isAdmin: prev?.isAdmin,
-              joinedAt:
-                prev?.joinedAt || res?.done ? new Date().toISOString() : null,
-              roles: Object.entries(byRoleId).map(([roleIdStr, reqJobs]) => {
-                const roleId = +roleIdStr
-                return {
-                  access: res?.roleAccesses?.find(
-                    (roleAccess) => roleAccess.roleId === +roleId
-                  )?.access,
-                  roleId,
-                  requirements: reqJobs?.map((reqJob) => ({
-                    requirementId: reqJob.requirementId,
-                    access: reqJob.access,
-                    amount: reqJob.amount,
-                    errorMsg: reqJob.userLevelErrors?.[0]?.msg,
-                    errorType: reqJob.userLevelErrors?.[0]?.errorType,
-                    subType: reqJob.userLevelErrors?.[0]?.subType,
-                    lastCheckedAt: reqJob.done ? new Date() : null,
-                  })),
-                }
-              }),
-            }
-          },
-          { revalidate: false }
-        )
-
-        if (res?.failed) {
-          onError?.(res.failedErrorMsg)
-          setState("FINISHED")
-          return
-        }
-
-        if (!!res?.roleAccesses && res.roleAccesses.every((role) => !role.access)) {
-          setState("FINISHED")
-          return
-        }
-
-        if (res?.done) {
-          setState("FINISHED")
-          onFinish(res)
-        }
-      },
-      keepPreviousData,
-      refreshInterval: state === "POLLING" ? 500 : undefined,
-    }
-  )
-
-  const isLoading = state === "GETTING_JOB" || state === "POLLING"
+  const isLoading = isGettingJob || progress.isValidating
 
   return {
-    isFinished: state === "FINISHED",
     isLoading,
-    error: state === "FINISHED" && progress?.data?.failedErrorMsg,
-    joinProgress: state !== "INITIAL" && mapAccessJobState(progress.data, isLoading),
+    joinProgress: mapAccessJobState(progress.data, isLoading),
+    currentlyCheckedRoleIds,
     triggerMembershipUpdate: (data?) => {
-      progress.mutate(undefined, { revalidate: false })
+      setCurrentlyCheckedRoleIds(data?.roleIds)
       useSubmitResponse.onSubmit(data)
     },
     reset: () => {

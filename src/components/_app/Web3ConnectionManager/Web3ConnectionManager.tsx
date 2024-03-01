@@ -1,19 +1,15 @@
 import ClientOnly from "components/common/ClientOnly"
+import { useAtom } from "jotai"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
-import WalletSelectorModal from "./components/WalletSelectorModal"
+import WalletSelectorModal, {
+  walletSelectorModalAtom,
+} from "./components/WalletSelectorModal"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
-import useWeb3ConnectionManager from "./hooks/useWeb3ConnectionManager"
 
 const Web3ConnectionManager = () => {
-  const {
-    isWalletSelectorModalOpen,
-    openWalletSelectorModal,
-    closeWalletSelectorModal,
-    isPlatformMergeAlertOpen,
-    accountMergeAddress,
-    accountMergePlatformName,
-    closePlatformMergeAlert,
-  } = useWeb3ConnectionManager()
+  const [isWalletSelectorModalOpen, setIsWalletSelectorModalOpen] = useAtom(
+    walletSelectorModalAtom,
+  )
 
   useConnectFromLocalStorage()
 
@@ -21,15 +17,10 @@ const Web3ConnectionManager = () => {
     <ClientOnly>
       <WalletSelectorModal
         isOpen={isWalletSelectorModalOpen}
-        onOpen={openWalletSelectorModal}
-        onClose={closeWalletSelectorModal}
+        onOpen={() => setIsWalletSelectorModalOpen(true)}
+        onClose={() => setIsWalletSelectorModalOpen(false)}
       />
-      <PlatformMergeErrorAlert
-        onClose={closePlatformMergeAlert}
-        isOpen={isPlatformMergeAlertOpen}
-        addressOrDomain={accountMergeAddress}
-        platformName={accountMergePlatformName}
-      />
+      <PlatformMergeErrorAlert />
     </ClientOnly>
   )
 }

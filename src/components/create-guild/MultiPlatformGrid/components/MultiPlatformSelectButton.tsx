@@ -13,6 +13,7 @@ import { CheckCircle, type IconProps } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import CreateGuildContractCall from "components/create-guild/MultiPlatformGrid/components/CreateGuildContractCall"
@@ -23,6 +24,7 @@ import CreateGuildSecretText from "components/create-guild/MultiPlatformGrid/com
 import CreateGuildTelegram from "components/create-guild/MultiPlatformGrid/components/CreateGuildTelegram"
 import CreateGuildTwitter from "components/create-guild/MultiPlatformGrid/components/CreateGuildTwitter"
 import CreateGuildUniqueText from "components/create-guild/MultiPlatformGrid/components/CreateGuildUniqueText"
+import { useSetAtom } from "jotai"
 import Image from "next/image"
 import platforms from "platforms/platforms"
 import { ComponentType, RefAttributes } from "react"
@@ -78,7 +80,8 @@ const MultiPlatformSelectButton = ({
   onSelection,
   ...rest
 }: Props) => {
-  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const methods = useFormContext()
   const { setValue } = useFormContext<GuildFormType>()
   const { isOpen, onClose, onOpen } = useDisclosure()
@@ -92,7 +95,7 @@ const MultiPlatformSelectButton = ({
       onSelection(platform)
     },
     false,
-    "creation"
+    "creation",
   )
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
@@ -102,8 +105,8 @@ const MultiPlatformSelectButton = ({
     methods.setValue(
       "guildPlatforms",
       guildPlatforms.filter(
-        (guildPlatform) => guildPlatform.platformName !== platformName
-      )
+        (guildPlatform) => guildPlatform.platformName !== platformName,
+      ),
     )
   }
 
@@ -112,7 +115,7 @@ const MultiPlatformSelectButton = ({
     !platforms[platform].oauth ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
-        platformName === platform && !platformUserData?.readonly
+        platformName === platform && !platformUserData?.readonly,
     ) ||
     isTwitter
 
@@ -136,24 +139,24 @@ const MultiPlatformSelectButton = ({
           cursor="pointer"
           onClick={
             !isWeb3Connected
-              ? openWalletSelectorModal
+              ? () => setIsWalletSelectorModalOpen(true)
               : isPlatformConnected
-              ? isAdded
-                ? () => {
-                    if (isTwitter) {
-                      setValue("socialLinks.TWITTER", "")
-                    } else {
-                      removePlatform(platform)
-                      captureEvent("guild creation flow > platform removed", {
-                        platform,
-                      })
+                ? isAdded
+                  ? () => {
+                      if (isTwitter) {
+                        setValue("socialLinks.TWITTER", "")
+                      } else {
+                        removePlatform(platform)
+                        captureEvent("guild creation flow > platform removed", {
+                          platform,
+                        })
+                      }
                     }
-                  }
-                : () => {
-                    onOpen()
-                    onSelection(platform)
-                  }
-              : onConnect
+                  : () => {
+                      onOpen()
+                      onSelection(platform)
+                    }
+                : onConnect
           }
           h="auto"
           py={6}

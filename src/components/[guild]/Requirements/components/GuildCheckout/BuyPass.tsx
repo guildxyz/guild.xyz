@@ -88,7 +88,7 @@ const BuyPass = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            {!userSatisfiesOtherRequirements && role?.logic === "AND" && (
+            {userSatisfiesOtherRequirements === false && role?.logic === "AND" && (
               <Alert
                 status="warning"
                 bgColor="orange.100"

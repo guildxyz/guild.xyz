@@ -15,24 +15,24 @@ import {
 import { Link } from "@chakra-ui/next-js"
 import { ArrowLeft, ArrowSquareOut } from "@phosphor-icons/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
-import CardMotionWrapper from "components/common/CardMotionWrapper"
-import { Error } from "components/common/Error"
+import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import useFuel from "hooks/useFuel"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
-import { useEffect, useRef } from "react"
-import ReCAPTCHA from "react-google-recaptcha"
+import { useEffect } from "react"
 import { useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
-import DelegateCashButton from "./components/DelegateCashButton"
+import DelegateCashButton, {
+  delegateConnectionAtom,
+} from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
+import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
 import useLinkAddress from "./hooks/useLinkAddress"
 import processConnectionError from "./utils/processConnectionError"
@@ -47,13 +47,10 @@ type Props = {
 const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
-  const {
-    isWeb3Connected,
-    isDelegateConnection,
-    setIsDelegateConnection,
-    isInSafeContext,
-    disconnect,
-  } = useWeb3ConnectionManager()
+  const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
+  const [isDelegateConnection, setIsDelegateConnection] = useAtom(
+    delegateConnectionAtom,
+  )
 
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
   const { connector } = useAccount()
@@ -97,15 +94,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
         activate.finally(() => onOpen())
       }
     }
-  }, [keyPair, router, id, publicUserError])
+  }, [keyPair, router, id, publicUserError, connector])
 
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
-
-  const { windowFuel } = useFuel()
-
-  const recaptchaRef = useRef<ReCAPTCHA>()
 
   const linkAddress = useLinkAddress()
 
@@ -123,19 +116,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       <ModalOverlay />
       <ModalContent data-test="wallet-selector-modal">
         <ModalHeader display={"flex"}>
-          <Box
-            {...((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection
-              ? {
-                  w: "10",
-                  opacity: 1,
-                }
-              : {
-                  w: "0",
-                  opacity: 0,
-                })}
-            transition="width .2s, opacity .2s"
-            mt="-1px"
-          >
+          {((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection) && (
             <IconButton
               rounded={"full"}
               aria-label="Back"
@@ -154,18 +135,18 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 disconnect()
               }}
             />
-          </Box>
-          <Text>
+          )}
+          <Text ml="1.5" mt="-1px">
             {isAddressLink
               ? "Link address"
               : isDelegateConnection
-              ? "Connect hot wallet"
-              : "Connect wallet"}
+                ? "Connect hot wallet"
+                : "Connect to Guild"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Error
+          <ErrorComponent
             {...(set.error || linkAddress.error
               ? {
                   error: set.error ?? linkAddress.error,
@@ -183,8 +164,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                         err?.message ?? typeof err?.error === "string"
                           ? err?.error
                           : typeof err === "string"
-                          ? err
-                          : err?.errors?.[0]?.msg,
+                            ? err
+                            : err?.errors?.[0]?.msg,
                     }
                   },
                 }
@@ -197,68 +178,68 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           )}
 
           {isWeb3Connected ? (
-            <CardMotionWrapper>
-              <AccountButton />
-            </CardMotionWrapper>
+            <AccountButton />
           ) : (
             <Stack spacing="0">
+              {!connector && (
+                <>
+                  <GoogleLoginButton />
+                  <Text
+                    mt={6}
+                    mb={2}
+                    textTransform={"uppercase"}
+                    fontSize={"xs"}
+                    fontWeight={700}
+                    color={"gray"}
+                  >
+                    Or connect with wallet
+                  </Text>
+                </>
+              )}
+
               {connectors
-                .filter((conn) => isInSafeContext || conn.id !== "safe")
+                .filter(
+                  (conn) =>
+                    (isInSafeContext || conn.id !== "safe") &&
+                    (!!connector || conn.id !== "cwaasWallet"),
+                )
                 .map((conn) => (
-                  <CardMotionWrapper key={conn.id}>
-                    <ConnectorButton
-                      connector={conn}
-                      connect={connect}
-                      isLoading={isLoading}
-                      pendingConnector={pendingConnector}
-                      error={error}
-                    />
-                  </CardMotionWrapper>
+                  <ConnectorButton
+                    key={conn.id}
+                    connector={conn}
+                    connect={connect}
+                    isLoading={isLoading}
+                    pendingConnector={pendingConnector}
+                    error={error}
+                  />
                 ))}
-              {!isDelegateConnection && (
-                <CardMotionWrapper>
-                  <DelegateCashButton />
-                </CardMotionWrapper>
-              )}
-              {windowFuel && (
-                <CardMotionWrapper key="fuel">
-                  <FuelConnectorButtons />
-                </CardMotionWrapper>
-              )}
+              {!isDelegateConnection && <DelegateCashButton />}
+              <FuelConnectorButtons key="fuel" />
             </Stack>
           )}
 
           {shouldShowVerify && (
-            <>
-              <ReCAPTCHA
-                ref={recaptchaRef}
-                sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                size="invisible"
-              />
-              <Box animation={"fadeIn .3s .1s both"}>
-                <ModalButton
-                  data-test="verify-address-button"
-                  size="xl"
-                  mb="4"
-                  colorScheme={"green"}
-                  onClick={() => {
-                    if (isAddressLink) {
-                      return linkAddress.onSubmit(addressLinkParams)
-                    }
-                    return set.onSubmit()
-                  }}
-                  isLoading={
-                    linkAddress.isLoading ||
-                    set.isLoading ||
-                    (!id && !publicUserError)
+            <Box animation={"fadeIn .3s .1s both"}>
+              <ModalButton
+                data-test="verify-address-button"
+                size="xl"
+                mb="4"
+                colorScheme={"green"}
+                onClick={() => {
+                  if (isAddressLink) {
+                    return linkAddress.onSubmit(addressLinkParams)
                   }
-                  isDisabled={!id && !publicUserError}
-                  loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
-                >
-                  {isAddressLink ? "Link address" : "Verify address"}
-                </ModalButton>
-              </Box>
-            </>
+                  return set.onSubmit()
+                }}
+                isLoading={
+                  linkAddress.isLoading || set.isLoading || (!id && !publicUserError)
+                }
+                isDisabled={!id && !publicUserError}
+                loadingText={!id ? "Looking for keypairs" : "Check your wallet"}
+              >
+                {isAddressLink ? "Link address" : "Verify address"}
+              </ModalButton>
+            </Box>
           )}
         </ModalBody>
         <ModalFooter mt="-4">

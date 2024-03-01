@@ -13,7 +13,7 @@ const IntercomContext = createContext<{
 })
 
 export const addIntercomSettings = (
-  newData: Record<string, string | number | boolean>
+  newData: Record<string, string | number | boolean>,
 ) => {
   if (typeof window === "undefined" || !newData) return
   const windowAsObject = window as Record<string, any>
@@ -21,7 +21,7 @@ export const addIntercomSettings = (
   if (!windowAsObject.intercomSettings) windowAsObject.intercomSettings = {}
 
   const shouldUpdate = Object.entries(newData).some(
-    ([key, value]) => windowAsObject.intercomSettings[key] !== value
+    ([key, value]) => windowAsObject.intercomSettings[key] !== value,
   )
 
   if (!shouldUpdate) return
@@ -64,7 +64,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
     if (!isWeb3Connected) return
 
     addIntercomSettings({
-      address: address.toLowerCase(),
+      address: address?.toLowerCase(),
       walletType,
       wallet: connectorName,
       userId: null,
@@ -86,7 +86,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       isAdmin: managedGuilds.length > 0,
       managedGuilds: managedGuilds.map((guild) => guild.urlName).join(", "),
       biggestGuild: managedGuilds.sort(
-        (guild1, guild2) => guild2.memberCount - guild1.memberCount
+        (guild1, guild2) => guild2.memberCount - guild1.memberCount,
       )[0]?.memberCount,
     })
   }, [address, isWeb3Connected, user, yourGuilds])

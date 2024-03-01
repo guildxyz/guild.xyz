@@ -102,7 +102,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                         name={`fields.${index}.type`}
                         options={fieldTypes}
                         beforeOnChange={(
-                          newValue: SelectOption<Schemas["Field"]["type"]>
+                          newValue: SelectOption<Schemas["Field"]["type"]>,
                         ) => {
                           const isChoice =
                             newValue.value === "SINGLE_CHOICE" ||
@@ -122,8 +122,8 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                                   },
                                 ]
                               : isRate
-                              ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
-                              : [],
+                                ? [...Array(10)].map((_, i) => ({ value: i + 1 }))
+                                : [],
                           })
                         }}
                       />
@@ -163,7 +163,11 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
               isEditing ? (
               <selectedFieldType.SetupComponent index={index} />
             ) : (
-              <selectedFieldType.DisplayComponent field={field} isDisabled />
+              <selectedFieldType.DisplayComponent
+                field={field}
+                isDisabled
+                {...(field.type === "LONG_TEXT" && { resize: "none" })}
+              />
             )}
             {isEditing && (
               <HStack ml="auto" mt={4} spacing={3}>
@@ -188,7 +192,7 @@ const FormCardEditable = ({ index, fieldId, onUpdate, onRemove }: Props) => {
                 <Tooltip
                   isDisabled={!isEditForm}
                   hasArrow
-                  label="Removing the question won't delete existing responses data"
+                  label="By removing the question you won't be able to see existing responses to it"
                 >
                   <IconButton
                     aria-label="Remove"

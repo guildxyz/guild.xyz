@@ -8,8 +8,9 @@ import {
 const TO_FILTER_FLAG = "TO_FILTER"
 const KEYS_TO_FILTER = new Set(["validAddresses", "balancyDecimals", "formFieldId"])
 const DIRTY_KEYS_TO_KEEP = [
-  // data (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
+  // data & chain (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
   "data",
+  "chain",
   "socialLinks",
   "eventSources",
 ]
@@ -58,8 +59,8 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
           formDataFilterForDirtyHelper(value, formData[key]),
         ])
         .filter(
-          ([key, value]) => value !== TO_FILTER_FLAG && !KEYS_TO_FILTER.has(key)
-        )
+          ([key, value]) => value !== TO_FILTER_FLAG && !KEYS_TO_FILTER.has(key),
+        ),
     )
 
     DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
@@ -95,16 +96,16 @@ const formDataFilterForDirty = (dirtyFields: any, formData: any) => {
 
 const handleSubmitDirty =
   <TFieldValues extends FieldValues = FieldValues, TContext = any>(
-    methods: UseFormReturn<TFieldValues, TContext>
+    methods: UseFormReturn<TFieldValues, TContext>,
   ) =>
   (
     onValid: SubmitHandler<Partial<TFieldValues>>,
-    onInvalid?: SubmitErrorHandler<TFieldValues>
+    onInvalid?: SubmitErrorHandler<TFieldValues>,
   ) =>
     methods.handleSubmit((formValues) => {
       onValid(
         (formDataFilterForDirty(methods.formState.dirtyFields, formValues) ??
-          {}) as Partial<TFieldValues>
+          {}) as Partial<TFieldValues>,
       )
     }, onInvalid)
 

@@ -15,7 +15,8 @@
     "cypress:open:mobile": "cypress open --config viewportWidth=375,viewportHeight=667",
     "test": "cypress run",
     "test:mobile": "cypress run --config viewportWidth=375,viewportHeight=667",
-    "snyk-protect": "snyk-protect"
+    "snyk-protect": "snyk-protect",
+    "postinstall": "npx dotenv-cli -e .env.local -- bash -c 'npm i --no-save --ignore-scripts $WAAS_WEB_URL $WAAS_VIEM_URL'"
   },
   "dependencies": {
     "@chakra-ui/anatomy": "^2.1.2",
@@ -26,6 +27,7 @@
     "@dotlottie/react-player": "^1.6.15",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@fuel-wallet/react": "^0.15.2",
     "@guildxyz/types": "1.7.12",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
@@ -77,7 +79,7 @@
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
     "uuidv7": "^0.6.3",
-    "viem": "^1.21.4",
+    "viem": "~1.19.1",
     "wagmi": "^1.4.13",
     "wicg-inert": "^3.1.2",
     "zod": "^3.22.4"

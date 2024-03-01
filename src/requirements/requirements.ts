@@ -21,7 +21,7 @@ export const REQUIREMENTS_DATA = [
     icon: Wallet,
     name: "Free",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Free/FreeRequirement")
+      () => import("requirements/Free/FreeRequirement"),
     ),
     types: ["FREE"],
   },
@@ -29,10 +29,10 @@ export const REQUIREMENTS_DATA = [
     icon: ImageSquare,
     name: "NFT",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Nft/NftRequirement")
+      () => import("requirements/Nft/NftRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Nft/NftForm")
+      () => import("requirements/Nft/NftForm"),
     ),
     types: ["ERC721", "ERC1155", "NOUNS"],
     isNegatable: true,
@@ -41,10 +41,10 @@ export const REQUIREMENTS_DATA = [
     icon: CurrencyCircleDollar,
     name: "Token",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Token/TokenRequirement")
+      () => import("requirements/Token/TokenRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Token/TokenForm")
+      () => import("requirements/Token/TokenForm"),
     ),
     types: ["ERC20", "COIN"],
     isNegatable: true,
@@ -53,10 +53,10 @@ export const REQUIREMENTS_DATA = [
     icon: ListChecks,
     name: "Allowlist",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Allowlist/AllowlistRequirement")
+      () => import("requirements/Allowlist/AllowlistRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Allowlist/AllowlistForm")
+      () => import("requirements/Allowlist/AllowlistForm"),
     ),
     types: ["ALLOWLIST"],
     isNegatable: true,
@@ -65,10 +65,10 @@ export const REQUIREMENTS_DATA = [
     icon: Coins,
     name: "Payment",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Payment/PaymentRequirement")
+      () => import("requirements/Payment/PaymentRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Payment/PaymentForm")
+      () => import("requirements/Payment/PaymentForm"),
     ),
     types: ["PAYMENT"],
   },
@@ -76,10 +76,10 @@ export const REQUIREMENTS_DATA = [
     icon: Wrench,
     name: "Contract query",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/ContractState/ContractStateRequirement")
+      () => import("requirements/ContractState/ContractStateRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/ContractState/ContractStateForm")
+      () => import("requirements/ContractState/ContractStateForm"),
     ),
     types: ["CONTRACT"],
     isNegatable: true,
@@ -88,10 +88,10 @@ export const REQUIREMENTS_DATA = [
     icon: Wallet,
     name: "Wallet activity",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/WalletActivity/WalletActivityRequirement")
+      () => import("requirements/WalletActivity/WalletActivityRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/WalletActivity/WalletActivityForm")
+      () => import("requirements/WalletActivity/WalletActivityForm"),
     ),
     types: [
       "WALLET_ACTIVITY",
@@ -118,10 +118,10 @@ export const REQUIREMENTS_DATA = [
     icon: Robot,
     name: "Captcha",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Captcha/CaptchaRequirement")
+      () => import("requirements/Captcha/CaptchaRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Captcha/CaptchaForm")
+      () => import("requirements/Captcha/CaptchaForm"),
     ),
     types: ["CAPTCHA"],
     isNegatable: true,
@@ -130,10 +130,10 @@ export const REQUIREMENTS_DATA = [
     icon: GuildLogo,
     name: "Guild",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Guild/GuildRequirement")
+      () => import("requirements/Guild/GuildRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Guild/GuildForm")
+      () => import("requirements/Guild/GuildForm"),
     ),
     types: [
       "GUILD",
@@ -150,10 +150,10 @@ export const REQUIREMENTS_DATA = [
     icon: Star,
     name: "Points",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Points/PointsRequirement")
+      () => import("requirements/Points/PointsRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Points/PointsForm")
+      () => import("requirements/Points/PointsForm"),
     ),
     types: ["POINTS_AMOUNT", "POINTS_TOTAL_AMOUNT", "POINTS_RANK"],
     isNegatable: true,
@@ -162,10 +162,10 @@ export const REQUIREMENTS_DATA = [
     icon: Link,
     name: "Visit link",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/VisitLink/VisitLinkRequirement")
+      () => import("requirements/VisitLink/VisitLinkRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/VisitLink/VisitLinkForm")
+      () => import("requirements/VisitLink/VisitLinkForm"),
     ),
     types: ["LINK_VISIT"],
     customNameRules: {
@@ -179,10 +179,10 @@ export const REQUIREMENTS_DATA = [
     icon: platforms.EMAIL.icon,
     name: platforms.EMAIL.name,
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Email/EmailRequirement")
+      () => import("requirements/Email/EmailRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Email/EmailForm")
+      () => import("requirements/Email/EmailForm"),
     ),
     types: ["EMAIL", "EMAIL_VERIFIED", "EMAIL_DOMAIN"],
     isNegatable: true,
@@ -191,10 +191,10 @@ export const REQUIREMENTS_DATA = [
     icon: platforms.FORM.icon,
     name: platforms.FORM.name,
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Form/FormRequirement")
+      () => import("requirements/Form/FormRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Form/FormForm")
+      () => import("requirements/Form/FormForm"),
     ),
     types: ["FORM_SUBMISSION"],
     isNegatable: true,
@@ -203,10 +203,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/x.svg",
     name: "X",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Twitter/TwitterRequirement")
+      () => import("requirements/Twitter/TwitterRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Twitter/TwitterForm")
+      () => import("requirements/Twitter/TwitterForm"),
     ),
     types: [
       "TWITTER",
@@ -237,10 +237,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/platforms/github.png",
     name: "GitHub",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Github/GithubRequirement")
+      () => import("requirements/Github/GithubRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Github/GithubForm")
+      () => import("requirements/Github/GithubForm"),
     ),
     types: [
       "GITHUB",
@@ -257,10 +257,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/platforms/discord.png",
     name: "Discord",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Discord/DiscordRequirement")
+      () => import("requirements/Discord/DiscordRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Discord/DiscordForm")
+      () => import("requirements/Discord/DiscordForm"),
     ),
     types: [
       "DISCORD",
@@ -276,10 +276,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/coinbase.png",
     name: "Coinbase",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement")
+      () => import("requirements/CoinbaseEAS/CoinbaseEASRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
+      () => import("requirements/CoinbaseEAS/CoinbaseEASForm"),
     ),
     types: ["COINBASE_EAS_ATTESTED_BY"],
     isNegatable: true,
@@ -288,10 +288,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/PolygonID/PolygonIDRequirement")
+      () => import("requirements/PolygonID/PolygonIDRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/PolygonID/PolygonIDForm")
+      () => import("requirements/PolygonID/PolygonIDForm"),
     ),
     types: ["POLYGON_ID_QUERY", "POLYGON_ID_BASIC"],
     isNegatable: true,
@@ -300,10 +300,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/gitcoin-passport.svg",
     name: "Gitcoin Passport",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement")
+      () => import("requirements/GitcoinPassport/GitcoinPassportRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/GitcoinPassport/GitcoinPassportForm")
+      () => import("requirements/GitcoinPassport/GitcoinPassportForm"),
     ),
     types: ["GITCOIN", "GITCOIN_PASS", "GITCOIN_STAMP", "GITCOIN_SCORE"],
     isNegatable: true,
@@ -312,10 +312,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/poap.svg",
     name: "Poap",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Poap/PoapRequirement")
+      () => import("requirements/Poap/PoapRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Poap/PoapForm")
+      () => import("requirements/Poap/PoapForm"),
     ),
     types: ["POAP"],
     isNegatable: true,
@@ -324,10 +324,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/gitpoap.svg",
     name: "GitPOAP",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/GitPoap/GitPoapRequirement")
+      () => import("requirements/GitPoap/GitPoapRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/GitPoap/GitPoapForm")
+      () => import("requirements/GitPoap/GitPoapForm"),
     ),
     types: ["GITPOAP"],
     isNegatable: true,
@@ -336,10 +336,11 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/eas.png",
     name: "EAS",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/EthereumAttestation/EthereumAttestationRequirement")
+      () =>
+        import("requirements/EthereumAttestation/EthereumAttestationRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/EthereumAttestation/EthereumAttestationForm")
+      () => import("requirements/EthereumAttestation/EthereumAttestationForm"),
     ),
     types: ["EAS_ATTESTED_BY", "EAS_ATTEST"],
     isNegatable: true,
@@ -348,16 +349,17 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/farcaster.png",
     name: "Farcaster",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Farcaster/FarcasterRequirement")
+      () => import("requirements/Farcaster/FarcasterRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Farcaster/FarcasterForm")
+      () => import("requirements/Farcaster/FarcasterForm"),
     ),
     types: [
       "FARCASTER",
       "FARCASTER_PROFILE",
       "FARCASTER_TOTAL_FOLLOWERS",
       "FARCASTER_FOLLOW",
+      "FARCASTER_FOLLOW_CHANNEL",
       "FARCASTER_FOLLOWED_BY",
       "FARCASTER_LIKE",
       "FARCASTER_RECAST",
@@ -368,10 +370,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/lens.png",
     name: "Lens",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Lens/LensRequirement")
+      () => import("requirements/Lens/LensRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Lens/LensForm")
+      () => import("requirements/Lens/LensForm"),
     ),
     types: [
       "LENS",
@@ -389,10 +391,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/web3inbox.png",
     name: "Web3Inbox",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Web3Inbox/Web3InboxRequirement")
+      () => import("requirements/Web3Inbox/Web3InboxRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Web3Inbox/Web3InboxForm")
+      () => import("requirements/Web3Inbox/Web3InboxForm"),
     ),
     types: ["WEB3INBOX_SUBSCRIBERS"],
   },
@@ -400,10 +402,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/galaxy.svg",
     name: "Galxe",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Galaxy/GalaxyRequirement")
+      () => import("requirements/Galaxy/GalaxyRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Galaxy/GalaxyForm")
+      () => import("requirements/Galaxy/GalaxyForm"),
     ),
     types: ["GALAXY", "GALAXY_PARTICIPATION"],
     isNegatable: true,
@@ -412,10 +414,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/snapshot.png",
     name: "Snapshot",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Snapshot/SnapshotRequirement")
+      () => import("requirements/Snapshot/SnapshotRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Snapshot/SnapshotForm")
+      () => import("requirements/Snapshot/SnapshotForm"),
     ),
     types: [
       "SNAPSHOT",
@@ -435,10 +437,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/mirror.svg",
     name: "Mirror",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Mirror/MirrorRequirement")
+      () => import("requirements/Mirror/MirrorRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Mirror/MirrorForm")
+      () => import("requirements/Mirror/MirrorForm"),
     ),
     types: ["MIRROR_COLLECT", "MIRROR"],
     isNegatable: true,
@@ -447,10 +449,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/sound.png",
     name: "Sound",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sound/SoundRequirement")
+      () => import("requirements/Sound/SoundRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sound/SoundForm")
+      () => import("requirements/Sound/SoundForm"),
     ),
     types: [
       "SOUND",
@@ -466,10 +468,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/disco.png",
     name: "Disco",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Disco/DiscoRequirement")
+      () => import("requirements/Disco/DiscoRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Disco/DiscoForm")
+      () => import("requirements/Disco/DiscoForm"),
     ),
     types: ["DISCO"],
     isNegatable: true,
@@ -478,10 +480,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/unlock.png",
     name: "Unlock",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Unlock/UnlockRequirement")
+      () => import("requirements/Unlock/UnlockRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Unlock/UnlockForm")
+      () => import("requirements/Unlock/UnlockForm"),
     ),
     types: ["UNLOCK"],
     isNegatable: true,
@@ -490,10 +492,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/juicebox.png",
     name: "Juicebox",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Juicebox/JuiceboxRequirement")
+      () => import("requirements/Juicebox/JuiceboxRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Juicebox/JuiceboxForm")
+      () => import("requirements/Juicebox/JuiceboxForm"),
     ),
     types: ["JUICEBOX"],
     isNegatable: true,
@@ -502,10 +504,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/walletLogos/fuel.svg",
     name: "Fuel",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Fuel/FuelRequirement")
+      () => import("requirements/Fuel/FuelRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Fuel/FuelForm")
+      () => import("requirements/Fuel/FuelForm"),
     ),
     types: ["FUEL", "FUEL_BALANCE", "FUEL_TRANSACTIONS"],
     isNegatable: true,
@@ -514,10 +516,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/sismo.svg",
     name: "Sismo",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sismo/SismoRequirement")
+      () => import("requirements/Sismo/SismoRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sismo/SismoForm")
+      () => import("requirements/Sismo/SismoForm"),
     ),
     types: ["SISMO"],
     isNegatable: true,
@@ -526,10 +528,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Noox/NooxRequirement")
+      () => import("requirements/Noox/NooxRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Noox/NooxForm")
+      () => import("requirements/Noox/NooxForm"),
     ),
     types: ["NOOX"],
     isNegatable: true,
@@ -538,10 +540,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/yup.svg",
     name: "Yup",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Yup/YupRequirement")
+      () => import("requirements/Yup/YupRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Yup/YupForm")
+      () => import("requirements/Yup/YupForm"),
     ),
     types: ["YUP"],
     isNegatable: true,
@@ -550,10 +552,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/rabbithole.png",
     name: "RabbitHole",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rabbithole/RabbitholeRequirement")
+      () => import("requirements/Rabbithole/RabbitholeRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rabbithole/RabbitholeForm")
+      () => import("requirements/Rabbithole/RabbitholeForm"),
     ),
     types: ["RABBITHOLE"],
     isNegatable: true,
@@ -562,10 +564,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/networkLogos/optimism.svg",
     name: "OP Attestation",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Optimism/OptimismRequirement")
+      () => import("requirements/Optimism/OptimismRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Optimism/OptimismForm")
+      () => import("requirements/Optimism/OptimismForm"),
     ),
     types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
     isNegatable: true,
@@ -574,10 +576,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rep3/Rep3Requirement")
+      () => import("requirements/Rep3/Rep3Requirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rep3/Rep3Form")
+      () => import("requirements/Rep3/Rep3Form"),
     ),
     types: ["REP3"],
     isNegatable: true,
@@ -586,10 +588,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/shield.png",
     name: "Shield",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Shield/ShieldRequirement")
+      () => import("requirements/Shield/ShieldRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Shield/ShieldForm")
+      () => import("requirements/Shield/ShieldForm"),
     ),
     types: [
       "SHIELD_ANOM_TX",
@@ -604,10 +606,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Parallel/ParallelRequirement")
+      () => import("requirements/Parallel/ParallelRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Parallel/ParallelForm")
+      () => import("requirements/Parallel/ParallelForm"),
     ),
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
     isNegatable: true,
@@ -616,10 +618,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/kycdao.svg",
     name: "kycDAO",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/KycDAO/KycDAORequirement")
+      () => import("requirements/KycDAO/KycDAORequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/KycDAO/KycDAOForm")
+      () => import("requirements/KycDAO/KycDAOForm"),
     ),
     types: ["KYC_DAO"],
     isNegatable: true,
@@ -628,10 +630,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/otterspace.png",
     name: "Otterspace",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Otterspace/OtterspaceRequirement")
+      () => import("requirements/Otterspace/OtterspaceRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Otterspace/OtterspaceForm")
+      () => import("requirements/Otterspace/OtterspaceForm"),
     ),
     types: ["OTTERSPACE"],
     isNegatable: true,
@@ -640,10 +642,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/orange.png",
     name: "Orange",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Orange/OrangeRequirement")
+      () => import("requirements/Orange/OrangeRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Orange/OrangeForm")
+      () => import("requirements/Orange/OrangeForm"),
     ),
     types: ["ORANGE"],
     isNegatable: true,
@@ -652,10 +654,10 @@ export const REQUIREMENTS_DATA = [
     icon: "/requirementLogos/cask.png",
     name: "Cask",
     displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Cask/CaskRequirement")
+      () => import("requirements/Cask/CaskRequirement"),
     ),
     formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Cask/CaskForm")
+      () => import("requirements/Cask/CaskForm"),
     ),
     types: ["CASK"],
     isNegatable: true,

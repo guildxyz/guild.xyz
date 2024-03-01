@@ -1,8 +1,8 @@
+import { useWallet } from "@fuel-wallet/react"
 import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import type { WalletUnlocked } from "fuels"
-import useFuel from "hooks/useFuel"
+import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
@@ -22,6 +22,9 @@ import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 export type UseSubmitOptions<ResponseType = void> = {
   onSuccess?: (response: ResponseType) => void
   onError?: (error: any) => void
+
+  // Use catefully! If this is set to true, a .onSubmit() call can reject!
+  allowThrow?: boolean
 }
 
 type FetcherFunction<ResponseType> = ({
@@ -34,24 +37,29 @@ type FetcherFunction<ResponseType> = ({
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
-  { onSuccess, onError }: UseSubmitOptions<ResponseType> = {}
+  { onSuccess, onError, allowThrow }: UseSubmitOptions<ResponseType> = {},
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
   const [response, setResponse] = useState<ResponseType>(undefined)
 
   return {
-    onSubmit: (data?: DataType) => {
+    onSubmit: (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
-      fetch(data)
+      return fetch(data)
         .then((d) => {
           onSuccess?.(d)
           setResponse(d)
+          return d
         })
         .catch((e) => {
           onError?.(e)
           setError(e)
+          if (allowThrow) {
+            throw e
+          }
+          return null
         })
         .finally(() => setIsLoading(false))
     },
@@ -123,12 +131,12 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     message: DEFAULT_MESSAGE,
     forcePrompt: false,
     keyPair: undefined,
-  }
+  },
 ) => {
   const { data: peerMeta } = useSWR<any>(
     typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
     () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
-    { refreshInterval: 200, revalidateOnMount: true }
+    { refreshInterval: 200, revalidateOnMount: true },
   )
 
   const timeInaccuracy = useTimeInaccuracy()
@@ -146,39 +154,43 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const { data: walletClient } = useWalletClient()
   const chainId = useChainId()
 
-  const { wallet: fuelWallet } = useFuel()
+  const { wallet: fuelWallet } = useWallet()
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
-    async (data: DataType | Record<string, unknown> = {}) => {
+    async ({
+      signProps,
+      ...data
+    }: (DataType | Record<string, unknown>) & { signProps?: SignProps } = {}) => {
       const payload = JSON.stringify(data ?? {})
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
 
-      const [signedPayload, validation] = await (type === "EVM"
-        ? sign({
-            publicClient,
-            walletClient,
-            address,
-            payload,
-            chainId: chainId.toString(),
-            forcePrompt,
-            keyPair,
-            msg: message,
-            ts: Date.now() + timeInaccuracy,
-          })
-        : fuelSign({
-            wallet: fuelWallet,
-            address,
-            payload,
-            forcePrompt,
-            keyPair,
-            msg: message,
-            ts: Date.now() + timeInaccuracy,
-          })
+      const [signedPayload, validation] = await (
+        type === "EVM"
+          ? sign({
+              publicClient,
+              walletClient,
+              address,
+              payload,
+              chainId: chainId.toString(),
+              forcePrompt,
+              keyPair,
+              msg: message,
+              ts: Date.now() + timeInaccuracy,
+            })
+          : fuelSign({
+              wallet: fuelWallet,
+              address,
+              payload,
+              forcePrompt,
+              keyPair,
+              msg: message,
+              ts: Date.now() + timeInaccuracy,
+            })
       )
         .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ domain }) =>
-            peerMeta?.url?.includes?.(domain)
+            peerMeta?.url?.includes?.(domain),
           )
           if ((forcePrompt || !keyPair) && callbackData) {
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
@@ -204,7 +216,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         throw e
       })
     },
-    options
+    options,
   )
 
   return {
@@ -226,7 +238,7 @@ const useSubmitWithSign = <ResponseType>(
   } = {
     message: DEFAULT_MESSAGE,
     forcePrompt: false,
-  }
+  },
 ) => {
   const { keyPair } = useUserPublic()
   return useSubmitWithSignWithParamKeyPair(fetch, {
@@ -240,6 +252,7 @@ const useSubmitWithSign = <ResponseType>(
 type SignBaseProps = {
   address: `0x${string}`
   payload: string
+  chainId?: string
   forcePrompt: boolean
   keyPair?: CryptoKeyPair
   msg?: string
@@ -249,7 +262,6 @@ type SignBaseProps = {
 export type SignProps = SignBaseProps & {
   publicClient: PublicClient
   walletClient: WalletClient
-  chainId: string
 }
 
 export type FuelSignProps = SignBaseProps & { wallet: WalletUnlocked }
@@ -258,7 +270,7 @@ const createMessageParams = (
   address: `0x${string}`,
   ts: number,
   msg: string,
-  payload: string
+  payload: string,
 ): MessageParams => ({
   addr: address.toLowerCase(),
   nonce: randomBytes(32).toString("base64"),
@@ -274,7 +286,7 @@ const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
     .sign(
       { name: "ECDSA", hash: "SHA-512" },
       keyPair.privateKey,
-      Buffer.from(getMessage(params))
+      Buffer.from(getMessage(params)),
     )
     .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
 
@@ -316,12 +328,12 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         .catch(() => null)
 
       return [chain, bytecode && trim(bytecode) !== "0x"] as const
-    })
+    }),
   ).then(
     (results) =>
       new Set(
-        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain)
-      )
+        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain),
+      ),
   )
 
 export const sign = async ({
@@ -343,7 +355,7 @@ export const sign = async ({
     sig = await signWithKeyPair(keyPair, params)
   } else {
     const walletChains = await chainsOfAddressWithDeployedContract(address).then(
-      (set) => [...set]
+      (set) => [...set],
     )
     const walletChainId =
       walletChains.length > 0 ? Chains[walletChains[0]] : undefined
@@ -359,10 +371,21 @@ export const sign = async ({
       ? ValidationMethod.EIP1271
       : ValidationMethod.STANDARD
 
-    sig = await walletClient.signMessage({
-      account: walletClient.account,
-      message: getMessage(params),
-    })
+    if (isSmartContract) {
+      params.chainId = chainId
+    }
+
+    if (walletClient.account.type === "local") {
+      // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
+      sig = await walletClient.account.signMessage({
+        message: getMessage(params),
+      })
+    } else {
+      sig = await walletClient.signMessage({
+        account: address,
+        message: getMessage(params),
+      })
+    }
   }
 
   return [payload, { params, sig }]

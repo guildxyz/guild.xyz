@@ -1,3 +1,5 @@
+import { Icon, Link } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -5,12 +7,22 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import shortenHex from "utils/shortenHex"
+import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
-  const { data: farcasterUser } = useFarcasterUser(requirement.data?.id)
+  const { data: farcasterUser } = useFarcasterUser(
+    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.data?.id)
+      ? requirement.data?.id
+      : undefined,
+  )
+  const { data: farcasterChannel } = useFarcasterChannel(
+    requirement.type === "FARCASTER_FOLLOW_CHANNEL"
+      ? requirement.data?.id
+      : undefined,
+  )
 
   return (
     <Requirement
@@ -52,6 +64,22 @@ const FarcasterRequirement = (props: RequirementProps) => {
                   {shortenHex(requirement.data.hash, 3)}
                 </DataBlockWithCopy>
                 {` cast`}
+              </>
+            )
+          case "FARCASTER_FOLLOW_CHANNEL":
+            return (
+              <>
+                {`Follow the `}
+                <Link
+                  href={`https://warpcast.com/~/channel/${requirement.data.id}`}
+                  isExternal
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {farcasterChannel?.label ?? requirement.data.id}
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </Link>
+                {` channel on Farcaster`}
               </>
             )
           default:

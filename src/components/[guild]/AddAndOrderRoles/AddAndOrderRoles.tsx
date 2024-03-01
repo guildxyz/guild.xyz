@@ -67,7 +67,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
         </OnboardingMarker>
         <Divider orientation="vertical" h="8" />
         <RecheckAccessesButton
-          tooltipLabel="Re-check my accesses"
+          tooltipLabel="Re-check all of my accesses"
           borderTopLeftRadius="0"
           borderBottomLeftRadius="0"
         />

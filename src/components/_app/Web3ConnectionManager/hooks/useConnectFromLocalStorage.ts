@@ -10,9 +10,18 @@ const useConnectFromLocalStorage = () => {
   const { keyPair } = useUserPublic()
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
-  const { onSubmit } = useConnect(() => {
-    toast({ status: "success", title: "Success", description: "Platform connected" })
-  }, true)
+  const { onSubmit } = useConnect(
+    {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          title: "Success",
+          description: "Platform connected",
+        })
+      },
+    },
+    true,
+  )
   const { platformUsers } = useUser()
 
   useEffect(() => {
@@ -24,7 +33,7 @@ const useConnectFromLocalStorage = () => {
       window.localStorage.removeItem(storageKey)
 
       const isAlreadyConnected = platformUsers.some(
-        (platformUser) => platformUser.platformName === platformName
+        (platformUser) => platformUser.platformName === platformName,
       )
       if (isAlreadyConnected) return
 

@@ -29,7 +29,7 @@ import {
   RoleTypeToAddTo,
   useAddRewardContext,
 } from "../AddRewardContext"
-import { useIsTabsStuck } from "../Tabs/Tabs"
+import { useIsTabsStuck } from "../Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
@@ -242,7 +242,7 @@ const AddRewardButton = (): JSX.Element => {
                   skipSettings
                 />
               ) : (
-                <PlatformsGrid onSelection={setSelection} showPoap pb="4" />
+                <PlatformsGrid onSelection={setSelection} pb="4" />
               )}
             </ModalBody>
 

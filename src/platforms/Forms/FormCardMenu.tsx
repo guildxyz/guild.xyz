@@ -1,4 +1,4 @@
-import { MenuItem, Tag, useDisclosure } from "@chakra-ui/react"
+import { MenuItem, useDisclosure } from "@chakra-ui/react"
 import { PencilSimple, Table } from "@phosphor-icons/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -14,7 +14,7 @@ type Props = {
 const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   const { urlName, guildPlatforms } = useGuild()
   const guildPlatform = guildPlatforms?.find(
-    (gp) => gp.platformGuildId === platformGuildId
+    (gp) => gp.platformGuildId === platformGuildId,
   )
   const formId = guildPlatform?.platformGuildData?.formId
 
@@ -32,9 +32,6 @@ const FormCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <LinkMenuItem
           href={`/${urlName}/forms/${formId}/responses`}
           icon={<Table />}
-          isDisabled
-          command={(<Tag>Soon</Tag>) as any}
-          pointerEvents={"none"}
         >
           View responses
         </LinkMenuItem>

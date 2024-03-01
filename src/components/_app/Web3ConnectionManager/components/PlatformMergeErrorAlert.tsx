@@ -18,6 +18,7 @@ import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
+import { atom, useAtom } from "jotai"
 import platforms from "platforms/platforms"
 import { useRef } from "react"
 import { PlatformName } from "types"
@@ -25,21 +26,17 @@ import capitalize from "utils/capitalize"
 import shortenHex from "utils/shortenHex"
 import useWeb3ConnectionManager from "../hooks/useWeb3ConnectionManager"
 
-type Props = {
-  isOpen: boolean
-  onClose: () => void
-  addressOrDomain: string
-  platformName: PlatformName
-}
+export const platformMergeAlertAtom = atom<
+  false | { addressOrDomain: string; platformName: PlatformName }
+>(false)
 
-const PlatformMergeErrorAlert = ({
-  isOpen,
-  onClose,
-  addressOrDomain,
-  platformName,
-}: Props) => {
+const PlatformMergeErrorAlert = () => {
   const { address } = useWeb3ConnectionManager()
   const toast = useToast()
+  const [state, setState] = useAtom(platformMergeAlertAtom)
+  const { addressOrDomain, platformName } = state || {}
+  const onClose = () => setState(false)
+
   const socialAccountName = platforms[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(
     platformName ?? "DISCORD",
@@ -48,20 +45,20 @@ const PlatformMergeErrorAlert = ({
         status: "success",
         title: "Successful connect",
         description: `${capitalize(
-          socialAccountName
+          socialAccountName,
         )} account successfully disconnected from old address, and connected to this one`,
       })
       onClose()
     },
     undefined,
     undefined,
-    true
+    true,
   )
 
   const cancelRef = useRef(null)
 
   return (
-    <Alert isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
+    <Alert isOpen={!!state} onClose={onClose} leastDestructiveRef={cancelRef}>
       <AlertDialogOverlay />
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -70,7 +67,7 @@ const PlatformMergeErrorAlert = ({
         <AlertDialogBody>
           <Text>
             This {socialAccountName} account is already connected to this address:{" "}
-            {addressOrDomain.startsWith("0x") ? (
+            {addressOrDomain?.startsWith("0x") ? (
               <CopyableAddress address={addressOrDomain} decimals={4} />
             ) : (
               <chakra.span fontWeight={"semibold"}>{addressOrDomain}</chakra.span>

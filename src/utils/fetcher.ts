@@ -1,7 +1,7 @@
+import { useWallet } from "@fuel-wallet/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import useFuel from "hooks/useFuel"
 import { sign } from "hooks/useSubmit"
 import { FuelSignProps, SignProps, fuelSign } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
@@ -13,7 +13,7 @@ const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
 
 const fetcher = async (
   resource: string,
-  { body, validation, signedPayload, ...init }: Record<string, any> = {}
+  { body, validation, signedPayload, ...init }: Record<string, any> = {},
 ) => {
   const isGuildApiCall = !resource.startsWith("http") && !resource.startsWith("/api")
 
@@ -29,7 +29,7 @@ const fetcher = async (
                   payload: signedPayload,
                   ...validation,
                 }
-              : body
+              : body,
           ),
         }
       : {}),
@@ -45,11 +45,11 @@ const fetcher = async (
       delete options.body
 
       options.headers[PARAMS_HEADER_NAME] = Buffer.from(
-        JSON.stringify(validation.params)
+        JSON.stringify(validation.params),
       ).toString("base64")
 
       options.headers[SIG_HEADER_NAME] = Buffer.from(validation.sig, "hex").toString(
-        "base64"
+        "base64",
       )
 
       options.headers[AUTH_FLAG_HEADER_NAME] = "header"
@@ -109,7 +109,7 @@ const fetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body = {}, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {},
 ) => {
   const [signedPayload, validation] = await sign({
     forcePrompt: false,
@@ -125,7 +125,7 @@ const fuelFetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body = {}, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {},
 ) => {
   const [signedPayload, validation] = await fuelSign({
     forcePrompt: false,
@@ -146,12 +146,12 @@ const useFetcherWithSign = () => {
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
-  const { wallet: fuelWallet } = useFuel()
+  const { wallet: fuelWallet } = useWallet()
 
   return (props) => {
     const [resource, { signOptions, ...options }] = props
 
-    return type === "EVM"
+    return !!signOptions?.address || type === "EVM" // Currently an address override is only done for CWaaS wallets, and those are EVM
       ? fetcherWithSign(
           {
             address,
@@ -163,7 +163,7 @@ const useFetcherWithSign = () => {
             ...signOptions,
           },
           resource,
-          options
+          options,
         )
       : fuelFetcherWithSign(
           {
@@ -174,7 +174,7 @@ const useFetcherWithSign = () => {
             ...signOptions,
           },
           resource,
-          options
+          options,
         )
   }
 }

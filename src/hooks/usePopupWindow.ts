@@ -1,3 +1,4 @@
+import platforms from "platforms/platforms"
 import { useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"
 
@@ -20,7 +21,7 @@ const defaultWindowFeatures = {
 
 const usePopupWindow = (
   uri?: string,
-  windowFeatures: WindowFeatures = defaultWindowFeatures
+  windowFeatures: WindowFeatures = defaultWindowFeatures,
 ) => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
@@ -43,13 +44,17 @@ const usePopupWindow = (
     setWindowInstance(
       window.open(
         typeof url === "string" ? url : uri,
-        isMobile && !url?.includes("tgauth") ? "_self" : "_blank",
+        isMobile &&
+          !url?.includes("tgauth") &&
+          !url?.includes(platforms.GOOGLE.oauth?.url)
+          ? "_self"
+          : "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })
           .map(([key, value]) =>
-            typeof value === "number" ? `${key}=${value}` : key
+            typeof value === "number" ? `${key}=${value}` : key,
           )
-          .join(",")
-      )
+          .join(","),
+      ),
     )
   }
 

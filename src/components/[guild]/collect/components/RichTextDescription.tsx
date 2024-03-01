@@ -13,24 +13,25 @@ import { forwardRef } from "react"
 import ReactMarkdown, { type Components } from "react-markdown"
 
 export const reactMarkdownComponents: Components = {
-  a: ({ href, children, ...props }) => (
+  a: ({ ref, href, children, ...props }) => (
     <Link
-      ref={props.ref as any}
+      ref={ref as any}
       href={href}
       isExternal
       colorScheme="blue"
+      whiteSpace={"pre-wrap"}
       {...props}
     >
       {children}
     </Link>
   ),
   h1: ({ children, node: _node, ...props }) => (
-    <Heading as="h1" fontSize="2xl" mb={3} mt={4} {...props}>
+    <Heading as="h1" fontSize="2xl" mb={3} mt={4} whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Heading>
   ),
   h2: ({ children, node: _node, ...props }) => (
-    <Heading as="h2" fontSize="lg" mb={3} mt={4} {...props}>
+    <Heading as="h2" fontSize="lg" mb={3} mt={4} whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Heading>
   ),
@@ -40,7 +41,7 @@ export const reactMarkdownComponents: Components = {
     </Code>
   ),
   p: ({ children, node: _node, ...props }) => (
-    <Text display="block" mb={3} {...props}>
+    <Text display="block" mb={3} whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Text>
   ),
@@ -60,10 +61,12 @@ export const reactMarkdownComponents: Components = {
     </OrderedList>
   ),
   li: ({ children, node: _node, ...props }) => (
-    <ListItem {...props}>{children}</ListItem>
+    <ListItem whiteSpace={"pre-wrap"} {...props}>
+      {children}
+    </ListItem>
   ),
   blockquote: ({ children, node: _node, ...props }) => (
-    <Box as="blockquote" fontStyle="italic" {...props}>
+    <Box as="blockquote" fontStyle="italic" whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Box>
   ),

@@ -10,12 +10,11 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
 import GuildAvatar from "components/common/GuildAvatar"
-import { FUEL_ADDRESS_REGEX } from "hooks/useFuel"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { useMemo } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import useSWR from "swr"
-import { SelectOption } from "types"
+import { FUEL_ADDRESS_REGEX, SelectOption } from "types"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { usePublicClient } from "wagmi"
@@ -40,7 +39,7 @@ const fetchMemberOptions = ([_, members, publicClient]) =>
           .catch(() => shortenHex(member))) || shortenHex(member),
       value: member,
       img: <GuildAvatar address={member} size={4} mr="2" />,
-    }))
+    })),
   ).catch(() => [])
 
 const Admins = () => {
@@ -50,7 +49,7 @@ const Admins = () => {
   const { isOwner } = useGuildPermission()
   const ownerAddress = useMemo(
     () => guildAdmins?.find((admin) => admin.isOwner)?.address,
-    [guildAdmins]
+    [guildAdmins],
   )
   const publicClient = usePublicClient()
 
@@ -67,15 +66,15 @@ const Admins = () => {
     !!members && !!admins && !!ownerAddress
       ? ["options", members, publicClient]
       : null,
-    fetchMemberOptions
+    fetchMemberOptions,
   )
 
   const memberOptions = useMemo(
     () =>
       options?.filter(
-        (option) => !admins?.some(({ address }) => address === option.value)
+        (option) => !admins?.some(({ address }) => address === option.value),
       ),
-    [options, admins]
+    [options, admins],
   )
 
   const adminOptions = useMemo(() => {
@@ -157,7 +156,7 @@ const Admins = () => {
             onChange(
               selectedOption?.map((option) => ({
                 address: option.value.toLowerCase(),
-              }))
+              })),
             )
           }}
           isLoading={isLoading}

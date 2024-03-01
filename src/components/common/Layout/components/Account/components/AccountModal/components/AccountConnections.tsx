@@ -48,7 +48,7 @@ const AccountConnections = () => {
           "POINTS",
           "POLYGON_ID",
           "FORM",
-        ].includes(platform) && !connectedPlatforms?.includes(platform)
+        ].includes(platform) && !connectedPlatforms?.includes(platform),
     )
     return [
       ...connectedPlatforms,
@@ -60,7 +60,7 @@ const AccountConnections = () => {
   const linkedAddresses = addresses?.filter(
     (addr) =>
       (typeof addr === "string" ? addr : addr?.address)?.toLowerCase() !==
-      address.toLowerCase()
+      address.toLowerCase(),
   )
 
   return (
@@ -75,7 +75,7 @@ const AccountConnections = () => {
             <EmailAddress key={"EMAIL"} />
           ) : (
             <SocialAccount key={platform} type={platform} />
-          )
+          ),
         )}
       </AccountSection>
 
@@ -91,7 +91,7 @@ const AccountConnections = () => {
                 <PopoverContent>
                   <PopoverArrow />
                   <PopoverBody>
-                    Each of your addresses will be used for requirement checks.
+                    Each of your addresses will be used for requirement checks
                   </PopoverBody>
                 </PopoverContent>
               </Popover>
@@ -133,7 +133,7 @@ const AccountConnections = () => {
               <LinkedAddress key={addressData?.address} addressData={addressData} />
             ))
             .concat(
-              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
+              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null,
             )
         )}
       </AccountSection>

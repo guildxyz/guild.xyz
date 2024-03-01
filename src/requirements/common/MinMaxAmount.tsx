@@ -53,7 +53,7 @@ const MinMaxAmount = ({
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
     const parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
-    return onChange(isNaN(parsedValue) ? "" : parsedValue)
+    return onChange(isNaN(parsedValue) ? undefined : parsedValue)
   }
 
   return (
@@ -143,7 +143,7 @@ const MinMaxAmount = ({
                 render={({ field: { onChange, onBlur, value, ref } }) => (
                   <NumberInput
                     ref={ref}
-                    value={value ?? undefined}
+                    value={value ?? ""}
                     onChange={(newValue) => handleChange(newValue, onChange)}
                     onBlur={onBlur}
                     min={0}

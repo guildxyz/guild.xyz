@@ -36,12 +36,12 @@ const useClaimText = (rolePlatformId: number) => {
 
   const { id: guildId, roles, mutateGuild } = useGuild()
   const roleId = roles.find((role) =>
-    role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
+    role.rolePlatforms.some((rp) => rp.id === rolePlatformId),
   )?.id
 
   const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
   const hasUserReward = !!userRewards?.find(
-    (reward) => reward.rolePlatformId === rolePlatformId
+    (reward) => reward.rolePlatformId === rolePlatformId,
   )
 
   const triggerConfetti = useJsConfetti()
@@ -50,7 +50,7 @@ const useClaimText = (rolePlatformId: number) => {
   const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
   const { data: responseFromCache, mutate: mutateCachedResponse } = useSWRImmutable(
     endpoint,
-    () => cache.get(endpoint)?.data
+    () => cache.get(endpoint)?.data,
   )
 
   const claimFetcher = (signedValidation: SignedValidation) =>
@@ -91,24 +91,21 @@ const useClaimText = (rolePlatformId: number) => {
         }))
       },
       onError: (error) => showErrorToast(error),
-    }
+    },
   )
 
-  const {
-    error: membershipUpdateError,
-    isLoading: isMembershipUpdateLoading,
-    triggerMembershipUpdate,
-  } = useMembershipUpdate(
-    () => onClaimTextSubmit(),
-    (error) =>
-      showErrorToast({
-        error: "Couldn't check eligibility",
-        correlationId: error.correlationId,
-      })
-  )
+  const { isLoading: isMembershipUpdateLoading, triggerMembershipUpdate } =
+    useMembershipUpdate({
+      onSuccess: () => onClaimTextSubmit(),
+      onError: (error) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: error.correlationId,
+        }),
+    })
 
   return {
-    error: claim.error ?? membershipUpdateError,
+    error: claim.error,
     response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
     isPreparing: isUserRewardsLoading,
     isLoading: claim.isLoading || isMembershipUpdateLoading,

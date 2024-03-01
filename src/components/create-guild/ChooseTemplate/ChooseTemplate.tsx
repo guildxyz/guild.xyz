@@ -1,6 +1,8 @@
 import { Box, Button, Collapse } from "@chakra-ui/react"
 import { ArrowLeft } from "@phosphor-icons/react"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
@@ -9,13 +11,16 @@ import TemplateCard from "./components/TemplateCard"
 import useTemplate from "./useTemplate"
 
 const ChooseTemplate = (): JSX.Element => {
-  const { isWeb3Connected, openWalletSelectorModal, isWalletSelectorModalOpen } =
-    useWeb3ConnectionManager()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const { buildTemplate, toggleReward, toggleTemplate } = useTemplate()
+  const [isWalletSelectorModalOpen, setIsWalletSelectorModalOpen] = useAtom(
+    walletSelectorModalAtom,
+  )
 
   useEffect(() => {
     if (isWeb3Connected || isWalletSelectorModalOpen) return
-    openWalletSelectorModal()
+
+    setIsWalletSelectorModalOpen(true)
   }, [isWeb3Connected, isWalletSelectorModalOpen])
 
   const { setDisabled, stepPart, setPart } = useCreateGuildContext()

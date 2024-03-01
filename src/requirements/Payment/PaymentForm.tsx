@@ -1,8 +1,8 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
 import { Check, Question } from "@phosphor-icons/react"
 import { Chains } from "chains"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -20,7 +20,7 @@ const PaymentForm = ({
 }: RequirementFormProps): JSX.Element => {
   const { address } = useAccount()
   const chainId = useChainId()
-  const { requestNetworkChange } = useWeb3ConnectionManager()
+  const { requestNetworkChange } = useTriggerNetworkChange()
 
   const { setValue } = useFormContext()
 
@@ -68,7 +68,7 @@ const PaymentForm = ({
   useEffect(() => {
     if (isLoading)
       setOnCloseAttemptToast(
-        "You can't close the modal until the transaction finishes"
+        "You can't close the modal until the transaction finishes",
       )
     else setOnCloseAttemptToast(false)
   }, [isLoading])

@@ -92,12 +92,14 @@ const EditRewardAvailabilityModal = ({
   } = useController({
     control,
     name: "capacity",
-    rules: {
-      min: {
-        value: 1,
-        message: "Amount must be positive",
-      },
-    },
+    rules: !AUTO_SUPPLY_PLATFORMS[platformType]
+      ? {
+          min: {
+            value: 1,
+            message: "Amount must be positive",
+          },
+        }
+      : undefined,
   })
 
   const startTimeValue = useWatch({ control, name: "startTime" })
@@ -150,7 +152,7 @@ const EditRewardAvailabilityModal = ({
                     onBlur={capacityFieldOnBlur}
                     onChange={(_, valueAsNumber) => {
                       capacityFieldOnChange(
-                        !isNaN(valueAsNumber) ? valueAsNumber : ""
+                        !isNaN(valueAsNumber) ? valueAsNumber : "",
                       )
                     }}
                   >
@@ -209,8 +211,8 @@ const EditRewardAvailabilityModal = ({
                           endTimeValue
                             ? getShortDate(
                                 new Date(
-                                  new Date(endTimeValue).getTime() - DAY_IN_MS
-                                ).toISOString()
+                                  new Date(endTimeValue).getTime() - DAY_IN_MS,
+                                ).toISOString(),
                               )
                             : undefined
                         }
@@ -233,11 +235,11 @@ const EditRewardAvailabilityModal = ({
                           new Date(startTimeValue).getTime() > Date.now()
                             ? getShortDate(
                                 new Date(
-                                  new Date(startTimeValue).getTime() + DAY_IN_MS
-                                ).toISOString()
+                                  new Date(startTimeValue).getTime() + DAY_IN_MS,
+                                ).toISOString(),
                               )
                             : getShortDate(
-                                new Date(Date.now() + DAY_IN_MS).toISOString()
+                                new Date(Date.now() + DAY_IN_MS).toISOString(),
                               )
                         }
                         isDisabled={AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}

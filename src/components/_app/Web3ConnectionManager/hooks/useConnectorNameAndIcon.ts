@@ -1,12 +1,11 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
-import useFuel from "hooks/useFuel"
+import { useIsConnected } from "@fuel-wallet/react"
 import { useMemo } from "react"
 import { Connector, useAccount } from "wagmi"
 
 const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const { connector: evmConnectorFromHook } = useAccount()
-  const { connectorName: fuelConnectorName, isConnected: isFuelConnected } =
-    useFuel()
+  const { isConnected: isFuelConnected } = useIsConnected()
 
   const connector = connectorParam ?? evmConnectorFromHook
 
@@ -17,7 +16,7 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   // wrapping with useMemo to make sure it updates on window.ethereum change
   const isBraveWallet = useMemo(
     () => _window.ethereum?.isBraveWallet,
-    [_window.ethereum]
+    [_window.ethereum],
   )
   const isOKXWallet = useMemo(() => !!_window.okxwallet, [_window.okxwallet])
 
@@ -29,21 +28,21 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
       ? isBraveWallet
         ? "brave.png"
         : isOKXWallet
-        ? "okx.png"
-        : "metamask.png"
+          ? "okx.png"
+          : "metamask.png"
       : connector?.id === "walletConnect"
-      ? "walletconnect.svg"
-      : connector?.id === "safe"
-      ? colorMode === "dark"
-        ? "gnosis-safe-white.svg"
-        : "gnosis-safe-black.svg"
-      : connector?.id === "coinbaseWallet"
-      ? "coinbasewallet.png"
-      : isFuelConnected
-      ? isFueletWallet
-        ? fueletLogo
-        : "fuel.svg"
-      : null
+        ? "walletconnect.svg"
+        : connector?.id === "safe"
+          ? colorMode === "dark"
+            ? "gnosis-safe-white.svg"
+            : "gnosis-safe-black.svg"
+          : connector?.id === "coinbaseWallet"
+            ? "coinbasewallet.png"
+            : isFuelConnected
+              ? isFueletWallet
+                ? fueletLogo
+                : "fuel.svg"
+              : null
 
   return {
     connectorName:
@@ -51,9 +50,9 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
         ? isBraveWallet
           ? "Brave"
           : isOKXWallet
-          ? "OKX Wallet"
-          : "MetaMask"
-        : connector?.name ?? fuelConnectorName,
+            ? "OKX Wallet"
+            : "MetaMask"
+        : connector?.name ?? (isFuelConnected ? "Fuel" : ""),
     connectorIcon,
   }
 }

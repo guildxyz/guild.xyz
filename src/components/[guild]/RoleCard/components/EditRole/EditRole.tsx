@@ -130,7 +130,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
     id,
-    onSuccess
+    onSuccess,
   )
 
   /**
@@ -161,7 +161,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         {
           shouldTouch: true,
           shouldDirty: true,
-        }
+        },
       )
     },
     onError: () => {
@@ -182,7 +182,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
       }
     }),
 
-    iconUploader.isUploading
+    iconUploader.isUploading,
   )
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
@@ -273,6 +273,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 transition={{ duration: 0.3 }}
                 position="absolute"
                 w="full"
+                zIndex={1}
                 bottom="0"
               >
                 <Button variant="outline" mr={3} onClick={onCloseAndClear}>

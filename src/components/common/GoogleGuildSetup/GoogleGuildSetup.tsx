@@ -16,15 +16,16 @@ import {
 } from "@chakra-ui/react"
 import { Check, CopySimple, PencilSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
+import { useSetAtom } from "jotai"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
+import { accountModalAtom } from "../Layout/components/Account/components/AccountModal"
 import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
@@ -68,7 +69,7 @@ const GoogleGuildSetup = ({
   const platformGuildId = useWatch({ control, name: fieldName })
 
   const selectedFile = gateables?.find(
-    (file) => file.platformGuildId === platformGuildId
+    (file) => file.platformGuildId === platformGuildId,
   )
 
   const [showForm, setShowForm] = useState(false)
@@ -165,11 +166,11 @@ const GUILD_EMAIL_ADDRESS = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const { platformUsers } = useUser()
   const googleAcc = platformUsers?.find(
-    (acc) => acc.platformId === PlatformType.GOOGLE
+    (acc) => acc.platformId === PlatformType.GOOGLE,
   )
 
   const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -212,7 +213,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
             <Button
               variant="link"
               color="inherit"
-              onClick={openAccountModal}
+              onClick={() => setIsAccountModalOpen(true)}
               rightIcon={<PencilSimple />}
             >
               {googleAcc?.platformUserData?.username}

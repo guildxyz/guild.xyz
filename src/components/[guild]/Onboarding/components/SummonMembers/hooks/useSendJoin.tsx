@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { PlatformGuildData, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
@@ -33,7 +34,26 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
         status: "success",
         title: `${type === "JOIN" ? "Join" : "Claim"} button sent!`,
       })
-      mutateGuild()
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          guildPlatforms: prevGuild.guildPlatforms.map((gp) => {
+            if (
+              gp.platformId === PlatformType.DISCORD &&
+              !gp.platformGuildData?.joinButton
+            )
+              return {
+                ...gp,
+                platformGuildData: {
+                  ...gp.platformGuildData,
+                  joinButton: true,
+                } as PlatformGuildData["DISCORD"],
+              }
+            return gp
+          }),
+        }),
+        { revalidate: false },
+      )
       onSuccess?.()
     },
   })

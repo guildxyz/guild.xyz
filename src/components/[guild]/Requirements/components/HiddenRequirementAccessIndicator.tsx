@@ -26,9 +26,10 @@ import {
 } from "@phosphor-icons/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { useSetAtom } from "jotai"
 import capitalize from "utils/capitalize"
 import {
   POPOVER_FOOTER_STYLES,
@@ -50,7 +51,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
 
   const hiddenReqsAccessData =
     reqAccesses?.filter(
-      (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId)
+      (reqAccessData) => !publicReqIds.includes(reqAccessData.requirementId),
     ) ?? []
 
   const hiddenReqsErrorMessages = [
@@ -61,10 +62,10 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
             !!req.access === null &&
             !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
-              req.errorType
-            )
+              req.errorType,
+            ),
         )
-        ?.map((req) => req.errorMsg)
+        ?.map((req) => req.errorMsg),
     ),
   ]
 
@@ -76,7 +77,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       }
 
       const reqError = reqAccesses?.find(
-        (obj) => obj.requirementId === curr.requirementId && obj.access === null
+        (obj) => obj.requirementId === curr.requirementId && obj.access === null,
       )
       if (!reqError) {
         acc.notAccessed += 1
@@ -85,7 +86,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
 
       if (
         ["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
-          reqError.errorType
+          reqError.errorType,
         )
       ) {
         acc.platformErrored += 1
@@ -100,15 +101,15 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       notAccessed: 0,
       platformErrored: 0,
       errored: 0,
-    }
+    },
   )
 
   if (
     role.logic === "AND"
       ? count.accessed === hiddenReqsAccessData.length
       : role.logic === "ANY_OF"
-      ? count.accessed >= role.anyOfNum
-      : count.accessed > 0
+        ? count.accessed >= role.anyOfNum
+        : count.accessed > 0
   )
     return (
       <RequirementAccessIndicatorUI
@@ -119,6 +120,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -134,6 +136,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -149,6 +152,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -163,6 +167,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       <HiddenRequirementAccessIndicatorPopover
         count={count}
         errorMessages={hiddenReqsErrorMessages}
+        roleId={roleId}
       />
     </RequirementAccessIndicatorUI>
   )
@@ -176,13 +181,15 @@ type HiddenRequirementAccessIndicatorPopoverProps = {
     errored: number
   }
   errorMessages: string[]
+  roleId: number
 }
 
 const HiddenRequirementAccessIndicatorPopover = ({
   count,
   errorMessages,
+  roleId,
 }: HiddenRequirementAccessIndicatorPopoverProps) => {
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
     <>
@@ -224,11 +231,11 @@ const HiddenRequirementAccessIndicatorPopover = ({
           <Button
             variant="outline"
             rightIcon={<Icon as={ArrowSquareIn} />}
-            onClick={openAccountModal}
+            onClick={() => setIsAccountModalOpen(true)}
           >
             View connections
           </Button>
-          <RecheckAccessesButton />
+          <RecheckAccessesButton roleId={roleId} />
         </ButtonGroup>
       </PopoverFooter>
     </>

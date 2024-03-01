@@ -2,9 +2,9 @@ import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
 import { LinkBreak, Wallet } from "@phosphor-icons/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import useVault from "requirements/Payment/hooks/useVault"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
@@ -20,7 +20,7 @@ const WithdrawButton = (): JSX.Element => {
 
   const { address } = useAccount()
   const chainId = useChainId()
-  const { requestNetworkChange } = useWeb3ConnectionManager()
+  const { requestNetworkChange } = useTriggerNetworkChange()
 
   const isOnVaultsChain = Chains[chain] === chainId
 
@@ -30,15 +30,15 @@ const WithdrawButton = (): JSX.Element => {
   const { onSubmitTransaction, isPreparing, isLoading, error } = useWithdraw(
     vaultAddress,
     data?.id,
-    chain
+    chain,
   )
 
   const isDisabledLabel =
     balance === BigInt(0)
       ? "Withdrawable amount is 0"
       : owner && owner !== address
-      ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
-      : isOnVaultsChain && error
+        ? `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
+        : isOnVaultsChain && error
 
   return (
     <Tooltip
@@ -68,14 +68,14 @@ const WithdrawButton = (): JSX.Element => {
         {isLoading
           ? "Withdrawing"
           : isDisabledLabel || !formattedWithdrawableAmount
-          ? "Withdraw"
-          : isOnVaultsChain
-          ? `Withdraw ${
-              formattedWithdrawableAmount < 0.001
-                ? "< 0.001"
-                : formattedWithdrawableAmount.toFixed(3)
-            } ${symbol}`
-          : `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
+            ? "Withdraw"
+            : isOnVaultsChain
+              ? `Withdraw ${
+                  formattedWithdrawableAmount < 0.001
+                    ? "< 0.001"
+                    : formattedWithdrawableAmount.toFixed(3)
+                } ${symbol}`
+              : `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
       </Button>
     </Tooltip>
   )

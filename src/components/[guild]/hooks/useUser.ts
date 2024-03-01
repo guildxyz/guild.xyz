@@ -1,4 +1,5 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   StoredKeyPair,
@@ -6,13 +7,14 @@ import {
   getKeyPairFromIdb,
 } from "hooks/useSetKeyPair"
 import useToast from "hooks/useToast"
+import { useSetAtom } from "jotai"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 const useUser = (
-  userIdOrAddress?: number | string
+  userIdOrAddress?: number | string,
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
   const { address } = useWeb3ConnectionManager()
   const { id } = useUserPublic()
@@ -26,7 +28,7 @@ const useUser = (
       ? [`/v2/users/${idToUse}/profile`, { method: "GET", body: {} }]
       : null,
     fetcherWithSign,
-    { shouldRetryOnError: false }
+    { shouldRetryOnError: false },
   )
 
   return {
@@ -37,7 +39,7 @@ const useUser = (
   }
 }
 
-type PublicUser = {
+export type PublicUser = {
   id: number
   publicKey?: string
   captchaVerifiedSince?: string
@@ -45,7 +47,7 @@ type PublicUser = {
 }
 
 const useUserPublic = (
-  userIdOrAddress?: number | string
+  userIdOrAddress?: number | string,
 ): PublicUser & {
   isLoading: boolean
   mutate: KeyedMutator<PublicUser>
@@ -53,11 +55,14 @@ const useUserPublic = (
   deleteKeys: () => Promise<void>
   setKeys: (keyPair: StoredKeyPair) => Promise<void>
 } => {
-  const { address, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { address } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
 
-  const idToUse = userIdOrAddress ?? address
+  const idToUseRaw = userIdOrAddress ?? address
+  const idToUse =
+    typeof idToUseRaw === "string" ? idToUseRaw.toLowerCase() : idToUseRaw
 
   const { data, mutate, isLoading, error } = useSWRImmutable<PublicUser>(
     idToUse ? `/v2/users/${idToUse}/profile` : null,
@@ -85,12 +90,12 @@ const useUserPublic = (
             duration: 5000,
           })
 
-          openWalletSelectorModal()
+          setIsWalletSelectorModalOpen(true)
         }
       }
 
       return user
-    }
+    },
   )
 
   return {

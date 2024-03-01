@@ -25,10 +25,11 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
     const options = field.options.map((option) =>
       typeof option === "number" || typeof option === "string"
         ? option
-        : option.value
+        : option.value,
     )
 
-    const isOtherActive = value !== undefined && !options.includes(value)
+    const isOtherActive =
+      value !== undefined && value !== null && !options.includes(value)
 
     return (
       <RadioGroup
@@ -68,6 +69,7 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
                   ? {
                       variant: "unstyled",
                       height: "1.5em",
+                      className: "disabledOtherInput", // so we can handle to keep it's opacity in ResponseModal
                     }
                   : {})}
                 onFocus={() => {
@@ -80,7 +82,7 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
         </Stack>
       </RadioGroup>
     )
-  }
+  },
 )
 
 const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
@@ -91,7 +93,7 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
     const options = field.options.map((option) =>
       typeof option === "number" || typeof option === "string"
         ? option
-        : option.value
+        : option.value,
     )
 
     const otherValue = valuesArray?.find((v) => !options.includes(v))
@@ -143,6 +145,7 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
                   ? {
                       variant: "unstyled",
                       height: "1.5em",
+                      className: "disabledOtherInput", // so we can handle to keep it's opacity in ResponseModal
                     }
                   : {})}
                 onFocus={() => {
@@ -155,7 +158,7 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
         </Stack>
       </CheckboxGroup>
     )
-  }
+  },
 )
 
 export { MultipleChoice, SingleChoice }

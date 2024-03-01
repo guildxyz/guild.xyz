@@ -30,10 +30,10 @@ import { ArrowSquareOut, Plus, TrashSimple } from "@phosphor-icons/react"
 import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import {
   FormProvider,
   useController,
@@ -84,7 +84,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const { isConnected: isEvmConnected, address } = useAccount()
   const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
-    useWeb3ConnectionManager()
+    useTriggerNetworkChange()
 
   const methods = useForm<CreateNftFormType>({
     mode: "all",

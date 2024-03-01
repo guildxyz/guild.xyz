@@ -12,8 +12,10 @@ import {
 import { ArrowSquareIn, CaretRight, type IconProps } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
+import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import platforms from "platforms/platforms"
@@ -55,13 +57,13 @@ const PlatformSelectButton = ({
   ...rest
 }: Props) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
     () => onSelection(platform),
     false,
-    "creation"
+    "creation",
   )
 
   const selectPlatform = () => onSelection(platform)
@@ -71,13 +73,13 @@ const PlatformSelectButton = ({
     !platforms[platform].oauth ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
-        platformName === platform && !platformUserData?.readonly
+        platformName === platform && !platformUserData?.readonly,
     )
 
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
   const DynamicCtaIcon = useMemo(
     () => dynamic(async () => (!isPlatformConnected ? ArrowSquareIn : CaretRight)),
-    [isPlatformConnected]
+    [isPlatformConnected],
   )
 
   return (
@@ -88,10 +90,10 @@ const PlatformSelectButton = ({
           !!disabledText
             ? undefined
             : !isWeb3Connected
-            ? openWalletSelectorModal
-            : isPlatformConnected
-            ? selectPlatform
-            : onConnect
+              ? () => setIsWalletSelectorModalOpen(true)
+              : isPlatformConnected
+                ? selectPlatform
+                : onConnect
         }
         h="auto"
         {...rest}
