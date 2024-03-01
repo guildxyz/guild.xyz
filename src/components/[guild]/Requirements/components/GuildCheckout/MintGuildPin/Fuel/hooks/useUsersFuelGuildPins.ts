@@ -1,9 +1,7 @@
+import { useWallet } from "@fuel-wallet/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useFuel from "hooks/useFuel"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata } from "types"
-import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
-import { FUEL_GUILD_PIN_CONTRACT_ID } from "./useMintFuelGuildPin"
 
 /**
  * Note: we can only fetch Fuel Guild Pins if the user's Fuel(et) Wallet is
@@ -18,15 +16,15 @@ const useUsersFuelGuildPins = (disabled = false) => {
 
   const fuelAddresses = addresses?.filter((address) => address.walletType === "FUEL")
 
-  const { wallet } = useFuel()
+  const { wallet } = useWallet()
 
   const shouldFetch = Boolean(!disabled && fuelAddresses?.length && !!wallet)
 
   const fetchFuelGuildPins = async () => {
-    const contract = GuildPinContractAbi__factory.connect(
-      FUEL_GUILD_PIN_CONTRACT_ID,
-      wallet
-    )
+    // const contract = GuildPinContractAbi__factory.connect(
+    //   FUEL_GUILD_PIN_CONTRACT_ID,
+    //   wallet
+    // )
 
     return []
   }

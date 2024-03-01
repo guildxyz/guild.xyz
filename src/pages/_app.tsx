@@ -1,4 +1,5 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
+import { FuelProvider } from "@fuel-wallet/react"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -9,7 +10,6 @@ import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
 import { dystopian, inter } from "fonts"
-import useSetupFuel from "hooks/useSetupFuel"
 import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
@@ -59,8 +59,6 @@ const App = ({
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
   }, [])
-
-  useSetupFuel()
 
   return (
     <>
@@ -112,21 +110,23 @@ const App = ({
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiConfig config={config}>
-              <PostHogProvider>
-                <IntercomProvider>
-                  <ExplorerProvider>
-                    <AppErrorBoundary>
-                      <Component {...pageProps} />
-                    </AppErrorBoundary>
+              <FuelProvider>
+                <PostHogProvider>
+                  <IntercomProvider>
+                    <ExplorerProvider>
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
 
-                    <ClientOnly>
-                      <AccountModal />
-                    </ClientOnly>
-                  </ExplorerProvider>
-                </IntercomProvider>
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
+                    </ExplorerProvider>
+                  </IntercomProvider>
 
-                <Web3ConnectionManager />
-              </PostHogProvider>
+                  <Web3ConnectionManager />
+                </PostHogProvider>
+              </FuelProvider>
             </WagmiConfig>
           </SWRConfig>
         </IconContext.Provider>

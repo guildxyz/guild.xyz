@@ -27,6 +27,7 @@
     "@dotlottie/react-player": "^1.6.15",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@fuel-wallet/react": "^0.15.2",
     "@guildxyz/types": "1.7.11",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
