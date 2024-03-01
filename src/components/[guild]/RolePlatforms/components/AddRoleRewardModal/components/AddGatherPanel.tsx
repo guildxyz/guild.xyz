@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react"
 import { SectionTitle } from "components/common/Section"
 import useDebouncedState from "hooks/useDebouncedState"
-import { Info, Question } from "phosphor-react"
+import { Question } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
@@ -110,8 +110,8 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
 
       {!isLoading && !!data && (
         <>
-          <Alert status="success" mb={6} alignItems={"center"}>
-            <AlertIcon />{" "}
+          <Alert overflow="initial" status="success" mb={6} alignItems={"center"}>
+            <AlertIcon mt={0} />{" "}
             <p>
               <strong>Connection successful!</strong> Your space ID and API key have
               been successfully verified.
@@ -121,40 +121,35 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
       )}
 
       {isLoading && (
-        <HStack
+        <Alert
+          overflow="initial"
+          status="info"
           mb={6}
-          bg={bg}
-          w="full"
-          borderWidth="1px"
-          borderRadius={"xl"}
-          px="4"
-          py="3.5"
+          display={"flex"}
+          gap={4}
+          alignItems={"center"}
         >
           <Spinner size={"sm"} /> <Text>Checking connection...</Text>
-        </HStack>
+        </Alert>
       )}
 
       {!isLoading && !data && !accessCheckError && (
-        <HStack
-          mb={6}
-          bg={bg}
-          w="full"
-          borderWidth="1px"
-          borderRadius={"xl"}
-          px="4"
-          py="3.5"
-        >
-          <Info opacity={0.6} />
-          <Text opacity={0.6}>
-            Enter API key and space URL below to verify connection.
-          </Text>
-        </HStack>
+        <Alert overflow="initial" status="info" mb={6} alignItems={"center"}>
+          <AlertIcon mt={0} />
+          <p>Enter API key and space URL below to set up connection.</p>
+        </Alert>
       )}
 
       {!isLoading && !!accessCheckError && (
         <>
-          <Alert status="warning" mb={6} alignItems={"center"}>
-            <AlertIcon />
+          <Alert
+            overflow="initial"
+            status="warning"
+            mb={6}
+            display={"flex"}
+            alignItems={"center"}
+          >
+            <AlertIcon mt={0} />
             {accessCheckError.type === "APIKeyError" ? (
               <p>
                 <strong>Unable to access your account!</strong> Please make sure to
@@ -183,6 +178,7 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
             </Tooltip>
           </HStack>
           <Input
+            type="password"
             {...register("apiKey", {
               required: "This field is required",
             })}

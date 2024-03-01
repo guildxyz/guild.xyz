@@ -1,4 +1,5 @@
 const GatherReward = () => {
+  // TODO: Implement this
   return <></>
 }
 

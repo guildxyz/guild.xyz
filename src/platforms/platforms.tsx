@@ -32,6 +32,8 @@ import useDiscordCardProps from "./Discord/useDiscordCardProps"
 import FormCardLinkButton from "./Forms/FormCardLinkButton"
 import FormCardMenu from "./Forms/FormCardMenu"
 import useFormCardProps from "./Forms/useFormCardProps"
+import GatherCardButton from "./Gather/GatherCardButton"
+import useGatherCardProps from "./Gather/useGatherCardProps"
 import GithubCardMenu from "./Github/GithubCardMenu"
 import useGithubCardProps from "./Github/useGithubCardProps"
 import GoogleCardMenu from "./Google/GoogleCardMenu"
@@ -531,7 +533,8 @@ const platforms: Record<PlatformName, PlatformData> = {
     gatedEntity: "space",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: true,
-    cardPropsHook: usePointsCardProps,
+    cardPropsHook: useGatherCardProps,
+    cardButton: GatherCardButton,
     PlatformPreview: dynamic(() => import("platforms/components/GatherPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading />,

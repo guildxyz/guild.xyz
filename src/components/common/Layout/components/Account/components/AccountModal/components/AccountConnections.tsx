@@ -141,7 +141,7 @@ const AccountConnections = () => {
   )
 }
 
-const AccountSection = ({ children, ...rest }) => {
+export const AccountSection = ({ children, ...rest }) => {
   const bg = useColorModeValue("gray.50", "blackAlpha.200")
 
   return (

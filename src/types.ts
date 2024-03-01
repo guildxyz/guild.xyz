@@ -209,6 +209,9 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -231,6 +234,9 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -252,6 +258,9 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -273,6 +282,9 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
   }
   TEXT: {
     text: string
@@ -294,6 +306,9 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
   }
   POAP: {
     text?: never
@@ -315,6 +330,9 @@ type PlatformGuildData = {
     fancyId: string
     eventId: number
     formId?: never
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
   }
   FORM: {
     text?: never
@@ -336,6 +354,33 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: number
+    spaceId?: never
+    gatherApiKey?: never
+    affiliation?: never
+  }
+  GATHER: {
+    spaceId: string
+    gatherApiKey: string
+    affiliation: string
+    role: string
+    text?: never
+    texts?: never
+    name?: never
+    imageUrl?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
   }
 }
 
@@ -570,6 +615,7 @@ export enum PlatformType {
   "POINTS" = 13,
   "POAP" = 14,
   "FORM" = 15,
+  "GATHER" = 16,
 }
 type WalletConnectConnectionData = {
   connected: boolean
