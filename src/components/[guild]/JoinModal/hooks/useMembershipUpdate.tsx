@@ -46,7 +46,7 @@ const useMembershipUpdate = ({
   const fetcherWithSign = useFetcherWithSign()
   const [isGettingJob, setIsGettingJob] = useAtom(isGettingJobAtom)
   const [currentlyCheckedRoleIds, setCurrentlyCheckedRoleIds] = useAtom(
-    currentlyCheckedRoleIdsAtom
+    currentlyCheckedRoleIdsAtom,
   )
   const { captureEvent } = usePostHogContext()
   const posthogOptions = {

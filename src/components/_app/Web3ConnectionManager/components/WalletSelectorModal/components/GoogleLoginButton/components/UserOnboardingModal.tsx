@@ -22,13 +22,13 @@ import {
   DotLottiePlayer,
   PlayerEvents,
 } from "@dotlottie/react-player"
+import { LockSimple, Question, Wallet } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
-import { LockSimple, Question, Wallet } from "phosphor-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
@@ -54,7 +54,7 @@ const UserOnboardingModal = ({
 
   const { connectors, connect } = useConnect()
   const cwaasConnector = connectors.find(
-    ({ id }) => id === "cwaasWallet"
+    ({ id }) => id === "cwaasWallet",
   ) as CWaaSConnector
 
   // Timer to decide if resend button is disabled
@@ -66,7 +66,7 @@ const UserOnboardingModal = ({
 
   const avatar = useMemo(
     () => <GuildAvatar address={cwaasConnector?._currentAddress?.address} />,
-    [cwaasConnector?._currentAddress?.address]
+    [cwaasConnector?._currentAddress?.address],
   )
 
   // Play the success animation if everything was successful, and the player is ready

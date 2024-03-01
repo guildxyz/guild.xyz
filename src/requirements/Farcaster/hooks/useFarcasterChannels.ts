@@ -20,7 +20,7 @@ const useFarcasterChannels = (search?: string): SWRResponse<SelectOption[]> => {
         { channel },
         {
           revalidate: false,
-        }
+        },
       )
     })
   }, [swrResponse.data])

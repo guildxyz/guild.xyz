@@ -9,7 +9,7 @@ const useFuelGuildPinFee = () => {
   const getFee = async () => {
     const contract = GuildPinContractAbi__factory.connect(
       FUEL_GUILD_PIN_CONTRACT_ID,
-      wallet
+      wallet,
     )
     const { value } = await contract.functions.fee().simulate()
 

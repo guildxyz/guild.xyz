@@ -18,13 +18,13 @@ const googleLoginCheckResult =
   !isWebView && !isBrave
     ? null
     : isWebView
-    ? "Google login doesn't work in embedded browsers, please use a native browser application"
-    : "You might need to disable the Brave Shields (Brave logo next to the URL bar) for Google login to work"
+      ? "Google login doesn't work in embedded browsers, please use a native browser application"
+      : "You might need to disable the Brave Shields (Brave logo next to the URL bar) for Google login to work"
 
 const UserAgentAlert = () => {
   const [isDismissed, setIsDismissed] = useLocalStorage(
     "google_login_warning_dismissed",
-    false
+    false,
   )
 
   if (!googleLoginCheckResult || isDismissed) {

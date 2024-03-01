@@ -14,9 +14,9 @@ import {
   useColorModeValue,
   Wrap,
 } from "@chakra-ui/react"
+import { Funnel } from "@phosphor-icons/react"
 import { Column } from "@tanstack/react-table"
 import Button from "components/common/Button"
-import { Funnel } from "phosphor-react"
 import { Visibility } from "types"
 import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"

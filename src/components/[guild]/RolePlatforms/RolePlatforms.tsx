@@ -1,9 +1,9 @@
 import { CloseButton, SimpleGrid, Spacer, useColorModeValue } from "@chakra-ui/react"
+import { Plus } from "@phosphor-icons/react"
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
-import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildPlatform, PlatformType } from "types"
@@ -59,7 +59,7 @@ const RolePlatforms = ({ roleId }: Props) => {
             let guildPlatform: GuildPlatform, type
             if (rolePlatform.guildPlatformId) {
               guildPlatform = guildPlatforms.find(
-                (platform) => platform.id === rolePlatform.guildPlatformId
+                (platform) => platform.id === rolePlatform.guildPlatformId,
               )
               type = PlatformType[guildPlatform?.platformId]
             } else {
@@ -105,7 +105,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                         onClick={() => {
                           setValue(
                             `rolePlatforms`,
-                            fields.filter((_, i) => i !== index)
+                            fields.filter((_, i) => i !== index),
                           )
                         }}
                       />

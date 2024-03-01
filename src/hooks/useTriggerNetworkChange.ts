@@ -9,7 +9,7 @@ const useTriggerNetworkChange = () => {
   const requestNetworkChange = async (
     newChainId: number,
     callback?: () => void,
-    errorHandler?: (err: unknown) => void
+    errorHandler?: (err: unknown) => void,
   ) => {
     if (!switchNetworkAsync) {
       toast({

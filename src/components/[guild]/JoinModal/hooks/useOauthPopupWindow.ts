@@ -25,7 +25,7 @@ type OAuthState<OAuthResponse> = {
 }
 
 export type AuthLevel<
-  T = (typeof platforms)[PlatformName]["oauth"]["params"]["scope"]
+  T = (typeof platforms)[PlatformName]["oauth"]["params"]["scope"],
 > = T extends string ? never : keyof T
 
 type TGAuthResult = {
@@ -44,7 +44,7 @@ type TGAuthResult = {
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
   authLevel: AuthLevel = "membership",
-  paramOverrides = {}
+  paramOverrides = {},
 ): OAuthState<OAuthResponse> & {
   onOpen: () => Promise<OAuthState<OAuthResponse>>
 } => {
@@ -120,11 +120,11 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     window.localStorage.setItem(
       localStorageKey,
-      JSON.stringify(infoToPassInLocalStorage)
+      JSON.stringify(infoToPassInLocalStorage),
     )
 
     const channel = new BroadcastChannel(
-      platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken
+      platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken,
     )
 
     const getTgListener =

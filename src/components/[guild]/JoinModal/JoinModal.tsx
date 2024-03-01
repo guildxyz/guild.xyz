@@ -13,6 +13,7 @@ import {
   Tooltip,
   VStack,
 } from "@chakra-ui/react"
+import { ArrowRight, LockSimple } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -21,7 +22,6 @@ import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
-import { ArrowRight, LockSimple } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { ComponentType } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -200,8 +200,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 joinProgress?.state === "FINISHED"
                   ? "Finalizing results"
                   : !!joinProgress
-                  ? "See status above"
-                  : "Checking access"
+                    ? "See status above"
+                    : "Checking access"
               }
               isDisabled={!isWeb3Connected}
             >

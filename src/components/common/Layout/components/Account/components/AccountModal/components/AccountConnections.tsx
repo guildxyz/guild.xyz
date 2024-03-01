@@ -14,10 +14,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Question } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { SectionProps } from "components/common/Section"
-import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useMemo } from "react"
 import { PlatformName } from "types"
@@ -48,7 +48,7 @@ const AccountConnections = () => {
           "POINTS",
           "POLYGON_ID",
           "FORM",
-        ].includes(platform) && !connectedPlatforms?.includes(platform)
+        ].includes(platform) && !connectedPlatforms?.includes(platform),
     )
     return [
       ...connectedPlatforms,
@@ -60,7 +60,7 @@ const AccountConnections = () => {
   const linkedAddresses = addresses?.filter(
     (addr) =>
       (typeof addr === "string" ? addr : addr?.address)?.toLowerCase() !==
-      address.toLowerCase()
+      address.toLowerCase(),
   )
 
   return (
@@ -75,7 +75,7 @@ const AccountConnections = () => {
             <EmailAddress key={"EMAIL"} />
           ) : (
             <SocialAccount key={platform} type={platform} />
-          )
+          ),
         )}
       </AccountSection>
 
@@ -133,7 +133,7 @@ const AccountConnections = () => {
               <LinkedAddress key={addressData?.address} addressData={addressData} />
             ))
             .concat(
-              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
+              vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null,
             )
         )}
       </AccountSection>

@@ -83,7 +83,7 @@ const useMintFuelGuildPin = () => {
 
     const contract = GuildPinContractAbi__factory.connect(
       FUEL_GUILD_PIN_CONTRACT_ID,
-      wallet
+      wallet,
     )
 
     const contractCallParams = {

@@ -20,7 +20,7 @@ const useConnectFromLocalStorage = () => {
         })
       },
     },
-    true
+    true,
   )
   const { platformUsers } = useUser()
 
@@ -33,7 +33,7 @@ const useConnectFromLocalStorage = () => {
       window.localStorage.removeItem(storageKey)
 
       const isAlreadyConnected = platformUsers.some(
-        (platformUser) => platformUser.platformName === platformName
+        (platformUser) => platformUser.platformName === platformName,
       )
       if (isAlreadyConnected) return
 

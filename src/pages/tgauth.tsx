@@ -1,9 +1,9 @@
 import { Center } from "@chakra-ui/react"
+import { TelegramLogo } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
 import Script from "next/script"
-import { TelegramLogo } from "phosphor-react"
 
 type WindowTelegram = {
   Login: {

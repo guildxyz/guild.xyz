@@ -48,7 +48,7 @@ const BasicInfo = (): JSX.Element => {
   useEffect(() => {
     setDisabled(!name || !contacts[0].contact || !!Object.values(errors).length)
     setContinueTooltipLabel(
-      !contacts[0].contact || errors.contacts ? "Contact email required!" : ""
+      !contacts[0].contact || errors.contacts ? "Contact email required!" : "",
     )
     return () => setContinueTooltipLabel("")
   }, [name, errors, contacts, errors.contacts])
@@ -67,17 +67,17 @@ const BasicInfo = (): JSX.Element => {
   })
 
   const discordPlatformData = guildPlatforms.find(
-    (platform) => platform.platformName === "DISCORD"
+    (platform) => platform.platformName === "DISCORD",
   )?.platformGuildData
 
   const telegramPlatformData = guildPlatforms.find(
-    (platform) => platform.platformName === "TELEGRAM"
+    (platform) => platform.platformName === "TELEGRAM",
   )?.platformGuildData
 
   useSetImageAndNameFromPlatformData(
     discordPlatformData?.imageUrl ?? telegramPlatformData?.imageUrl,
     discordPlatformData?.name ?? telegramPlatformData?.name,
-    iconUploader.onUpload
+    iconUploader.onUpload,
   )
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const BasicInfo = (): JSX.Element => {
       setValue(
         "theme.backgroundImage",
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldDirty: true }
+        { shouldDirty: true },
       )
     },
     onError: () => {

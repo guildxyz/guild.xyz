@@ -1,10 +1,10 @@
-import Button from "components/common/Button"
+import { Funnel } from "@phosphor-icons/react"
 import {
   Filter,
   FILTER_NAMES,
   useActivityLogFilters,
 } from "components/[guild]/activity/ActivityLogFiltersBar/components/ActivityLogFiltersContext"
-import { Funnel } from "phosphor-react"
+import Button from "components/common/Button"
 
 type Props = {
   filter: Omit<Filter, "id">

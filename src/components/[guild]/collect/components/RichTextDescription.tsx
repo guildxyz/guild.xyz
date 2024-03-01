@@ -10,15 +10,12 @@ import {
   UnorderedList,
 } from "@chakra-ui/react"
 import { forwardRef } from "react"
-import ReactMarkdown from "react-markdown"
-import { SpecialComponents } from "react-markdown/lib/ast-to-react"
-import { NormalComponents } from "react-markdown/lib/complex-types"
+import ReactMarkdown, { type Components } from "react-markdown"
 
-export const reactMarkdownComponents: Partial<
-  Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents
-> = {
-  a: ({ href, children, ...props }) => (
+export const reactMarkdownComponents: Components = {
+  a: ({ ref, href, children, ...props }) => (
     <Link
+      ref={ref as any}
       href={href}
       isExternal
       colorScheme="blue"

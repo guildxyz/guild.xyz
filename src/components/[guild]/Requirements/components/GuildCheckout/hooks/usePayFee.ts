@@ -38,7 +38,7 @@ const usePayFee = () => {
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
     requirement.address,
     requirement.data.id,
-    requirement.chain
+    requirement.chain,
   )
 
   const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS

@@ -13,13 +13,13 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { ArrowsClockwise, Check } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
-import { ArrowsClockwise, Check } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import GetRewardsJoinStep from "./JoinModal/components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./JoinModal/components/progress/GetRolesJoinStep"
@@ -61,7 +61,7 @@ const RecheckAccessesButton = ({
   const [latestAllResendDate, setLatestAllResendDate] = useAtom(latestResendDateAtom)
   const lastCheckedAt = useMemo(
     () => new Date(reqAccesses?.[0]?.lastCheckedAt ?? latestAllResendDate),
-    [reqAccesses, latestAllResendDate]
+    [reqAccesses, latestAllResendDate],
   )
   const [dateNow, setDateNow] = useState(Date.now())
   useEffect(() => {
@@ -102,7 +102,7 @@ const RecheckAccessesButton = ({
               error: errorMsg,
               correlationId,
             }
-          : errorMsg
+          : errorMsg,
       )
     },
   })

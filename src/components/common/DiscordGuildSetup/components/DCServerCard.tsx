@@ -1,11 +1,11 @@
 import { usePrevious } from "@chakra-ui/react"
+import { ArrowSquareIn } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
 import Link from "next/link"
-import { ArrowSquareIn } from "phosphor-react"
 import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 import { useEffect } from "react"
 

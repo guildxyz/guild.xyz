@@ -14,12 +14,12 @@ import {
   useDisclosure,
   usePrevious,
 } from "@chakra-ui/react"
+import { Check, CopySimple, PencilSimple } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
 import { useSetAtom } from "jotai"
-import { Check, CopySimple, PencilSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
@@ -69,7 +69,7 @@ const GoogleGuildSetup = ({
   const platformGuildId = useWatch({ control, name: fieldName })
 
   const selectedFile = gateables?.find(
-    (file) => file.platformGuildId === platformGuildId
+    (file) => file.platformGuildId === platformGuildId,
   )
 
   const [showForm, setShowForm] = useState(false)
@@ -166,7 +166,7 @@ const GUILD_EMAIL_ADDRESS = process.env.NEXT_PUBLIC_GOOGLE_SERVICE_ACCOUNT_EMAIL
 const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   const { platformUsers } = useUser()
   const googleAcc = platformUsers?.find(
-    (acc) => acc.platformId === PlatformType.GOOGLE
+    (acc) => acc.platformId === PlatformType.GOOGLE,
   )
 
   const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)

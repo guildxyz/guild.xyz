@@ -31,8 +31,8 @@ const useActiveMembershipUpdate = ({
         (result: JoinJob[]) =>
           // casting to any until @guildxyz/types contains createdAtTimestamp
           result?.sort((jobA: any, jobB: any) =>
-            jobA.createdAtTimestamp > jobB.createdAtTimestamp ? -1 : 1
-          )?.[0]
+            jobA.createdAtTimestamp > jobB.createdAtTimestamp ? -1 : 1,
+          )?.[0],
       ),
     {
       onSuccess: (res) => {
@@ -44,7 +44,7 @@ const useActiveMembershipUpdate = ({
           const roleId = +roleIdStr
           return {
             access: res?.roleAccesses?.find(
-              (roleAccess) => roleAccess.roleId === +roleId
+              (roleAccess) => roleAccess.roleId === +roleId,
             )?.access,
             roleId,
             requirements: reqJobs?.map((reqJob) => ({
@@ -66,12 +66,12 @@ const useActiveMembershipUpdate = ({
             joinedAt: prev?.joinedAt || res?.done ? new Date().toISOString() : null,
             roles: [
               ...(prev?.roles?.filter(
-                (role) => !Object.keys(byRoleId).includes(role.roleId.toString())
+                (role) => !Object.keys(byRoleId).includes(role.roleId.toString()),
               ) ?? []),
               ...newRoles,
             ],
           }),
-          { revalidate: false }
+          { revalidate: false },
         )
 
         /**
@@ -88,7 +88,7 @@ const useActiveMembershipUpdate = ({
       },
       keepPreviousData,
       refreshInterval: shouldPoll ? 500 : undefined,
-    }
+    },
   )
 
   return {

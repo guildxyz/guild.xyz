@@ -1,4 +1,5 @@
 import { JoinJob } from "@guildxyz/types"
+import { CircleWavyCheck } from "@phosphor-icons/react"
 import { GUILD_PIN_MAINTENANCE } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/MintGuildPin"
 import { useMintGuildPinContext } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -7,7 +8,6 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
-import { CircleWavyCheck } from "phosphor-react"
 import { useState } from "react"
 import useMembershipUpdate from "./useMembershipUpdate"
 

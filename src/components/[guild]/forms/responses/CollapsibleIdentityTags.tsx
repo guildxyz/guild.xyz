@@ -1,10 +1,10 @@
 import { Center, Collapse, Icon, IconButton } from "@chakra-ui/react"
+import { CaretDown } from "@phosphor-icons/react"
 import { WalletTag } from "components/[guild]/crm/Identities"
 import UserPlatformTags from "components/[guild]/crm/UserPlatformTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { LinkButton } from "components/common/LinkMenuItem"
 import useResolveAddress from "hooks/useResolveAddress"
-import { CaretDown } from "phosphor-react"
 import { useState } from "react"
 import shortenHex from "utils/shortenHex"
 
@@ -29,7 +29,7 @@ const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
       setIsOpen(
         prevOpen
           ? { wrapper: false, children: false }
-          : { wrapper: true, children: true }
+          : { wrapper: true, children: true },
       )
     }, 100)
   }

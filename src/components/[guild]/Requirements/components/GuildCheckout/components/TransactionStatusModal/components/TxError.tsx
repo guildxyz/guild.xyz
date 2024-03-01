@@ -1,5 +1,5 @@
 import { Center, Flex, Icon, ModalBody, ModalFooter } from "@chakra-ui/react"
-import { XCircle } from "phosphor-react"
+import { XCircle } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"
 

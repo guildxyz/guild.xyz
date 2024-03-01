@@ -1,6 +1,6 @@
 import { IconButton } from "@chakra-ui/react"
+import { Clock, GearSix } from "@phosphor-icons/react"
 import Button from "components/common/Button"
-import { Clock, GearSix } from "phosphor-react"
 
 type Props = {
   onClick: () => void

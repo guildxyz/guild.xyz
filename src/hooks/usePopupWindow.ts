@@ -21,7 +21,7 @@ const defaultWindowFeatures = {
 
 const usePopupWindow = (
   uri?: string,
-  windowFeatures: WindowFeatures = defaultWindowFeatures
+  windowFeatures: WindowFeatures = defaultWindowFeatures,
 ) => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
@@ -51,10 +51,10 @@ const usePopupWindow = (
           : "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })
           .map(([key, value]) =>
-            typeof value === "number" ? `${key}=${value}` : key
+            typeof value === "number" ? `${key}=${value}` : key,
           )
-          .join(",")
-      )
+          .join(","),
+      ),
     )
   }
 

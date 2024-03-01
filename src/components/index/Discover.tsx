@@ -8,10 +8,10 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react"
+import { CaretDown } from "@phosphor-icons/react"
 import Card from "components/common/Card"
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { CaretDown } from "phosphor-react"
 import { useState } from "react"
 import LandingButton from "./LandingButton"
 import LandingWideSection from "./LandingWideSection"

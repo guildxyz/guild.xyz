@@ -42,7 +42,7 @@ const useMembers = (queryString: string) => {
 
       return `/v2/crm/guilds/${id}/members?${[queryString, pagination].join("&")}`
     },
-    [queryString, id, keyPair]
+    [queryString, id, keyPair],
   )
 
   const fetcherWithSign = useFetcherWithSign()
@@ -61,15 +61,15 @@ const useMembers = (queryString: string) => {
           isShared: user.isShared === true || user.isShared === null,
           roles: {
             hidden: user.roles.filter(
-              (role) => role.visibility === Visibility.HIDDEN
+              (role) => role.visibility === Visibility.HIDDEN,
             ),
             public: user.roles.filter(
-              (role) => role.visibility !== Visibility.HIDDEN
+              (role) => role.visibility !== Visibility.HIDDEN,
             ),
           },
-        }))
+        })),
       ),
-    [fetcherWithSign]
+    [fetcherWithSign],
   )
 
   const { data, mutate, ...rest } = useSWRInfinite<Member[]>(getKey, fetchMembers, {

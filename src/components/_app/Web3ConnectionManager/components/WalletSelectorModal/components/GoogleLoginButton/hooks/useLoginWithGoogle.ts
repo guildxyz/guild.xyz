@@ -40,7 +40,7 @@ const useLoginWithGoogle = () => {
   const { captureEvent } = usePostHogContext()
   const { connectors, connectAsync } = useConnect()
   const cwaasConnector = connectors.find(
-    ({ id }) => id === "cwaasWallet"
+    ({ id }) => id === "cwaasWallet",
   ) as CWaaSConnector
 
   const [isNewWallet, setIsNewWallet] = useState(false)
@@ -88,7 +88,7 @@ const useLoginWithGoogle = () => {
       await uploadBackupDataToDrive(
         wallet.backup,
         account.address,
-        accessToken
+        accessToken,
       ).catch((err) => {
         throw new DriveRequestFailed(err)
       })
@@ -128,7 +128,7 @@ const useLoginWithGoogle = () => {
 
       // 2) Create or Restore wallet
       const isNew = await createOrRestoreWallet(
-        (authData as any)?.access_token
+        (authData as any)?.access_token,
       ).catch((err) => {
         captureEvent("[WaaS] Wallet creation / restoration failed", {
           error: err,
@@ -155,7 +155,7 @@ const useLoginWithGoogle = () => {
 
       const keyPair = !!addressLinkParams?.userId
         ? await onLinkAddress({ ...addressLinkParams, signProps }).then(
-            (result) => result?.keyPair
+            (result) => result?.keyPair,
           )
         : await onSetKeypairSubmit({
             signProps,
@@ -184,7 +184,7 @@ const useLoginWithGoogle = () => {
       onError: () => {
         onClose()
       },
-    }
+    },
   )
 
   return {

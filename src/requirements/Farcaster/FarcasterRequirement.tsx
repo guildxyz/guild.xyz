@@ -1,11 +1,11 @@
 import { Icon, Link } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
@@ -16,12 +16,12 @@ const FarcasterRequirement = (props: RequirementProps) => {
   const { data: farcasterUser } = useFarcasterUser(
     ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.data?.id)
       ? requirement.data?.id
-      : undefined
+      : undefined,
   )
   const { data: farcasterChannel } = useFarcasterChannel(
     requirement.type === "FARCASTER_FOLLOW_CHANNEL"
       ? requirement.data?.id
-      : undefined
+      : undefined,
   )
 
   return (

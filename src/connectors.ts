@@ -15,9 +15,9 @@ import { publicProvider } from "wagmi/providers/public"
 
 const { chains: allChains, publicClient } = configureChains(
   Object.values(CHAIN_CONFIG).filter(
-    (chain) => chain.rpcUrls.default.http.length > 0
+    (chain) => chain.rpcUrls.default.http.length > 0,
   ),
-  [publicProvider()]
+  [publicProvider()],
 )
 
 const chains = allChains.filter((chain) => chain.rpcUrls.default.http.length > 0)
@@ -89,7 +89,7 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
               ? await mutate<PublicUser>(
                   `/v2/users/${walletClient.account.address.toLowerCase()}/profile`,
                   (prev) => prev,
-                  { revalidate: false }
+                  { revalidate: false },
                 )
               : null
 
@@ -97,7 +97,7 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
             const user = !!walletClient
               ? !userCheck
                 ? await mutate<PublicUser>(
-                    `/v2/users/${walletClient.account.address.toLowerCase()}/profile`
+                    `/v2/users/${walletClient.account.address.toLowerCase()}/profile`,
                   )
                 : userCheck
               : null
@@ -116,7 +116,7 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
                     keyPair: user?.keyPair?.keyPair,
                   },
                   "/v2/third-party/coinbase/token",
-                  { method: "GET" }
+                  { method: "GET" },
                 )
               : await fetcher("/v2/third-party/coinbase/token")
 

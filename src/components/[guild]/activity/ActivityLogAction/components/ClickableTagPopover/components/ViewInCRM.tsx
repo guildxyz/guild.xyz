@@ -1,8 +1,8 @@
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useRouter } from "next/router"
-import { ArrowSquareOut } from "phosphor-react"
 
 type Props = {
   label: string

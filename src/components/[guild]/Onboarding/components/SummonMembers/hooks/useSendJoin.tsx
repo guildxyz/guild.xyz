@@ -52,7 +52,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
             return gp
           }),
         }),
-        { revalidate: false }
+        { revalidate: false },
       )
       onSuccess?.()
     },

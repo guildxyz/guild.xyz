@@ -1,7 +1,7 @@
 import { forwardRef, TagProps } from "@chakra-ui/react"
+import { DotsThreeVertical, type IconProps } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RoleTag from "components/[guild]/RoleTag"
-import { DotsThreeVertical, IconProps } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { useActivityLog } from "../../ActivityLogContext"
 import ClickableTagPopover from "./ClickableTagPopover"

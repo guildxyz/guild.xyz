@@ -1,10 +1,10 @@
+import { Check } from "@phosphor-icons/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
 import { LinkButton } from "components/common/LinkMenuItem"
 import Link from "next/link"
-import { Check } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { GuildPlatform } from "types"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
@@ -17,7 +17,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
   const { urlName } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { form, isValidating: isFormsValidating } = useGuildForm(
-    platform.platformGuildData?.formId
+    platform.platformGuildData?.formId,
   )
 
   const { userSubmission, isValidating } = useUserFormSubmission(form)

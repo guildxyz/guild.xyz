@@ -18,6 +18,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { ArrowLeft, CaretRight } from "@phosphor-icons/react"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -26,7 +27,6 @@ import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useToast from "hooks/useToast"
-import { ArrowLeft, CaretRight } from "phosphor-react"
 import {
   Dispatch,
   FC,

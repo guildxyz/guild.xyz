@@ -20,18 +20,18 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
-import GuildLogo from "components/common/GuildLogo"
-import { Modal } from "components/common/Modal"
 import {
   ArrowSquareOut,
   CaretDown,
   Check,
   Shield,
   ShieldCheck,
-} from "phosphor-react"
+} from "@phosphor-icons/react"
+import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
+import Button from "components/common/Button"
+import GuildLogo from "components/common/GuildLogo"
+import { Modal } from "components/common/Modal"
 import { useEffect, useRef } from "react"
 import pluralize from "utils/pluralize"
 import useEditSharedSocials from "../hooks/useEditSharedSocials"

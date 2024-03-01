@@ -81,11 +81,11 @@ const MintableRole = ({ role }: Props) => {
           },
           {
             revalidate: false,
-          }
+          },
         )
       },
       onError: () => showErrorToast("Couldn't claim proof"),
-    }
+    },
   )
 
   const {

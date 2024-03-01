@@ -14,7 +14,7 @@ import { User } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 
 const useUser = (
-  userIdOrAddress?: number | string
+  userIdOrAddress?: number | string,
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
   const { address } = useWeb3ConnectionManager()
   const { id } = useUserPublic()
@@ -28,7 +28,7 @@ const useUser = (
       ? [`/v2/users/${idToUse}/profile`, { method: "GET", body: {} }]
       : null,
     fetcherWithSign,
-    { shouldRetryOnError: false }
+    { shouldRetryOnError: false },
   )
 
   return {
@@ -47,7 +47,7 @@ export type PublicUser = {
 }
 
 const useUserPublic = (
-  userIdOrAddress?: number | string
+  userIdOrAddress?: number | string,
 ): PublicUser & {
   isLoading: boolean
   mutate: KeyedMutator<PublicUser>
@@ -95,7 +95,7 @@ const useUserPublic = (
       }
 
       return user
-    }
+    },
   )
 
   return {

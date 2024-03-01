@@ -8,7 +8,7 @@ import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 
 const Web3ConnectionManager = () => {
   const [isWalletSelectorModalOpen, setIsWalletSelectorModalOpen] = useAtom(
-    walletSelectorModalAtom
+    walletSelectorModalAtom,
   )
 
   useConnectFromLocalStorage()

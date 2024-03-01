@@ -223,7 +223,7 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
       (await waas.wallets.wallet.addresses.all()) as Address<ProtocolFamily>[]
 
     const evmAddresses = allAddresses.filter(
-      (address) => address.protocolFamily === ProtocolFamily.EVM
+      (address) => address.protocolFamily === ProtocolFamily.EVM,
     )
 
     return evmAddresses

@@ -1,5 +1,5 @@
 import { Icon, Skeleton, Text, Tooltip, useColorModeValue } from "@chakra-ui/react"
-import { Warning } from "phosphor-react"
+import { Warning } from "@phosphor-icons/react"
 import { PropsWithChildren } from "react"
 
 type Props = {

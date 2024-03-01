@@ -3,13 +3,13 @@ import fetcher from "utils/fetcher"
 const BACKUP_DESCRIPTION = `DO NOT DELETE OR SHARE THIS FILE WITH ANYONE!\n\nThis file contains backup information of the following Coinbase wallet: ADDRESS_PLACEHOLDER\n\nThis backup information is required for accessing the wallet. If this information is lost or compromised, neither Coinbase nor Guild will be able to help you.\n\nFeel free to move this file to a different location on your Google Drive, just make sure you don't move it to a shared location!\n\nFor extra security, this backup only works in it's current state on Google Drive: if you download it, then re-upload it, the re-uploaded file won't work, and you WON'T BE ABLE TO ACCESS YOUR WALLET!`
 const DRIVE_MULTIPART_UPLOAD_URL = `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`
 const DRIVE_FILES_LIST_URL = `https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(
-  "appProperties has { key='isGuildWallet' and value='true' }"
+  "appProperties has { key='isGuildWallet' and value='true' }",
 )}`
 
 export const uploadBackupDataToDrive = (
   backupData: string,
   address: string,
-  accessToken: string
+  accessToken: string,
 ) => {
   const createdAt = Date.now()
   const fileName = `guild-backup-${createdAt}.wallet`
@@ -49,8 +49,8 @@ export const uploadBackupDataToDrive = (
       ],
       {
         type: "application/json; charset=UTF-8",
-      }
-    )
+      },
+    ),
   )
 
   formData.append(
@@ -59,14 +59,14 @@ export const uploadBackupDataToDrive = (
       [
         `${BACKUP_DESCRIPTION.replace("ADDRESS_PLACEHOLDER", addr).replace(
           "BACKUP_PLACEHOLDER",
-          backupData
+          backupData,
         )}`,
       ],
       fileName,
       {
         type: "text/plain",
-      }
-    )
+      },
+    ),
   )
 
   return fetch(DRIVE_MULTIPART_UPLOAD_URL, {
@@ -116,7 +116,7 @@ export const getFileFromDrive = (fileId: string, accessToken: string) =>
 
 export const getDriveFileAppProperties = (
   fileId: string,
-  accessToken: string
+  accessToken: string,
 ): Promise<{
   appProperties: {
     isGuildWallet: string
@@ -131,7 +131,7 @@ export const getDriveFileAppProperties = (
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   )
     .then((result) => {
       if (!result?.appProperties?.backupData) {

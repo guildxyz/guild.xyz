@@ -13,7 +13,7 @@ import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
-  error: string
+  error: string,
 ):
   | string
   | {
@@ -47,13 +47,13 @@ const useConnectPlatform = (
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
   authLevel: AuthLevel = "membership",
-  disconnectFromExistingUser?: boolean
+  disconnectFromExistingUser?: boolean,
 ) => {
   const { platformUsers } = useUser()
 
   const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
     platform,
-    isReauth ? "creation" : authLevel
+    isReauth ? "creation" : authLevel,
   )
 
   const prevAuthData = usePrevious(authData)
@@ -138,12 +138,12 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
           ...prev,
           platformUsers: [
             ...(prev?.platformUsers ?? []).filter(
-              ({ platformId }) => platformId !== newPlatformUser.platformId
+              ({ platformId }) => platformId !== newPlatformUser.platformId,
             ),
             newPlatformUser,
           ],
         }),
-        { revalidate: false }
+        { revalidate: false },
       )
 
       useSubmitOptions?.onSuccess?.()
@@ -181,7 +181,7 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
 
       if (toastError?.startsWith("Before connecting your")) {
         const [, addressOrDomain] = toastError.match(
-          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+          /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/,
         )
         showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
@@ -189,12 +189,12 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
             : // temporary until we solve the X rate limit
-            platformName === "TWITTER"
-            ? {
-                error:
-                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
-              }
-            : rawError
+              platformName === "TWITTER"
+              ? {
+                  error:
+                    "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+                }
+              : rawError,
         )
       }
     },
@@ -241,7 +241,7 @@ const useConnectEmail = ({
             pending: false,
           },
         }),
-        { revalidate: false }
+        { revalidate: false },
       )
 
       onSuccess?.()

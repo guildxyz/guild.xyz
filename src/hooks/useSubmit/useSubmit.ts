@@ -37,7 +37,7 @@ type FetcherFunction<ResponseType> = ({
 
 const useSubmit = <DataType, ResponseType>(
   fetch: (data?: DataType) => Promise<ResponseType>,
-  { onSuccess, onError, allowThrow }: UseSubmitOptions<ResponseType> = {}
+  { onSuccess, onError, allowThrow }: UseSubmitOptions<ResponseType> = {},
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
@@ -131,12 +131,12 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     message: DEFAULT_MESSAGE,
     forcePrompt: false,
     keyPair: undefined,
-  }
+  },
 ) => {
   const { data: peerMeta } = useSWR<any>(
     typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
     () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
-    { refreshInterval: 200, revalidateOnMount: true }
+    { refreshInterval: 200, revalidateOnMount: true },
   )
 
   const timeInaccuracy = useTimeInaccuracy()
@@ -165,31 +165,32 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
 
-      const [signedPayload, validation] = await (type === "EVM"
-        ? sign({
-            publicClient,
-            walletClient,
-            address,
-            payload,
-            chainId: chainId.toString(),
-            forcePrompt,
-            keyPair,
-            msg: message,
-            ts: Date.now() + timeInaccuracy,
-          })
-        : fuelSign({
-            wallet: fuelWallet,
-            address,
-            payload,
-            forcePrompt,
-            keyPair,
-            msg: message,
-            ts: Date.now() + timeInaccuracy,
-          })
+      const [signedPayload, validation] = await (
+        type === "EVM"
+          ? sign({
+              publicClient,
+              walletClient,
+              address,
+              payload,
+              chainId: chainId.toString(),
+              forcePrompt,
+              keyPair,
+              msg: message,
+              ts: Date.now() + timeInaccuracy,
+            })
+          : fuelSign({
+              wallet: fuelWallet,
+              address,
+              payload,
+              forcePrompt,
+              keyPair,
+              msg: message,
+              ts: Date.now() + timeInaccuracy,
+            })
       )
         .then(async ([signed, val]) => {
           const callbackData = signCallbacks.find(({ domain }) =>
-            peerMeta?.url?.includes?.(domain)
+            peerMeta?.url?.includes?.(domain),
           )
           if ((forcePrompt || !keyPair) && callbackData) {
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
@@ -215,7 +216,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
         throw e
       })
     },
-    options
+    options,
   )
 
   return {
@@ -237,7 +238,7 @@ const useSubmitWithSign = <ResponseType>(
   } = {
     message: DEFAULT_MESSAGE,
     forcePrompt: false,
-  }
+  },
 ) => {
   const { keyPair } = useUserPublic()
   return useSubmitWithSignWithParamKeyPair(fetch, {
@@ -269,7 +270,7 @@ const createMessageParams = (
   address: `0x${string}`,
   ts: number,
   msg: string,
-  payload: string
+  payload: string,
 ): MessageParams => ({
   addr: address.toLowerCase(),
   nonce: randomBytes(32).toString("base64"),
@@ -285,7 +286,7 @@ const signWithKeyPair = (keyPair: CryptoKeyPair, params: MessageParams) =>
     .sign(
       { name: "ECDSA", hash: "SHA-512" },
       keyPair.privateKey,
-      Buffer.from(getMessage(params))
+      Buffer.from(getMessage(params)),
     )
     .then((signatureBuffer) => Buffer.from(signatureBuffer).toString("hex"))
 
@@ -327,12 +328,12 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         .catch(() => null)
 
       return [chain, bytecode && trim(bytecode) !== "0x"] as const
-    })
+    }),
   ).then(
     (results) =>
       new Set(
-        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain)
-      )
+        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain),
+      ),
   )
 
 export const sign = async ({
@@ -354,7 +355,7 @@ export const sign = async ({
     sig = await signWithKeyPair(keyPair, params)
   } else {
     const walletChains = await chainsOfAddressWithDeployedContract(address).then(
-      (set) => [...set]
+      (set) => [...set],
     )
     const walletChainId =
       walletChains.length > 0 ? Chains[walletChains[0]] : undefined

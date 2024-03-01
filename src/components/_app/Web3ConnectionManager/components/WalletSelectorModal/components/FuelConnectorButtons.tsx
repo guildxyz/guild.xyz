@@ -10,7 +10,7 @@ const FuelConnectorButtons = () => {
 
   const fueletLogo = useColorModeValue(
     "/walletLogos/fuelet-black.svg",
-    "/walletLogos/fuelet-white.svg"
+    "/walletLogos/fuelet-white.svg",
   )
 
   const connectorIcons: Record<string, string> = {

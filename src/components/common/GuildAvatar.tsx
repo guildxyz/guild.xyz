@@ -14,7 +14,7 @@ const GuildAvatar = memo(({ size = 8, address, ...rest }: Props): JSX.Element =>
     () =>
       import(
         `static/avatars/${addressAvatarPairs[address?.toLowerCase()?.slice(-2)]}.svg`
-      )
+      ),
   )
 
   return (

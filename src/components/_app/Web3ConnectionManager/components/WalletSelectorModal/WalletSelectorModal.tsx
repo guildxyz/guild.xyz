@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 
 import { Link } from "@chakra-ui/next-js"
+import { ArrowLeft, ArrowSquareOut } from "@phosphor-icons/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
@@ -22,7 +23,6 @@ import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
-import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
@@ -49,7 +49,7 @@ const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
   const [isDelegateConnection, setIsDelegateConnection] = useAtom(
-    delegateConnectionAtom
+    delegateConnectionAtom,
   )
 
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
@@ -140,8 +140,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             {isAddressLink
               ? "Link address"
               : isDelegateConnection
-              ? "Connect hot wallet"
-              : "Connect to Guild"}
+                ? "Connect hot wallet"
+                : "Connect to Guild"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
@@ -164,8 +164,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                         err?.message ?? typeof err?.error === "string"
                           ? err?.error
                           : typeof err === "string"
-                          ? err
-                          : err?.errors?.[0]?.msg,
+                            ? err
+                            : err?.errors?.[0]?.msg,
                     }
                   },
                 }
@@ -201,7 +201,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 .filter(
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== "cwaasWallet")
+                    (!!connector || conn.id !== "cwaasWallet"),
                 )
                 .map((conn) => (
                   <ConnectorButton

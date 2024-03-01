@@ -28,14 +28,14 @@ const FormResponsesTable = ({ form }) => {
   const router = useRouter()
 
   const [columnFilters, setColumnFilters] = useState(() =>
-    parseFiltersFromQuery(router.query)
+    parseFiltersFromQuery(router.query),
   )
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
   const [rowSelection, setRowSelection] = useState({})
 
   const queryString = useMemo(
     () => buildQueryStringFromState(columnFilters, sorting),
-    [columnFilters, sorting]
+    [columnFilters, sorting],
   )
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const FormResponsesTable = ({ form }) => {
   }, [queryString])
   const { data, error, isLoading, isValidating, setSize } = useFormSubmissions(
     form.id,
-    queryString
+    queryString,
   )
 
   // TODO: keep row selection when the data changes. Right now we just reset the selection
@@ -124,7 +124,7 @@ const FormResponsesTable = ({ form }) => {
               </Text>
             )
           },
-        })
+        }),
       ),
       columnHelper.accessor("submittedAt", {
         size: 140,
@@ -137,7 +137,7 @@ const FormResponsesTable = ({ form }) => {
         cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       }),
     ],
-    [form]
+    [form],
   )
 
   const table = useReactTable({

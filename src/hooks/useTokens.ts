@@ -75,10 +75,10 @@ const fetchTokens = async ([_, chain]) =>
         (acc, curr) =>
           acc.concat(
             (Array.isArray(curr) ? curr : curr?.tokens)?.filter(
-              ({ chainId }) => chainId === Chains[chain]
-            )
+              ({ chainId }) => chainId === Chains[chain],
+            ),
           ),
-        []
+        [],
       )
       return CHAIN_CONFIG[chain]
         ? [
@@ -89,13 +89,13 @@ const fetchTokens = async ([_, chain]) =>
             },
           ].concat(finalTokenArray)
         : finalTokenArray
-    }
+    },
   )
 
 const useTokens = (chain: string) => {
   const { isLoading, data } = useSWRImmutable<Array<CoingeckoToken>>(
     chain ? ["tokens", chain] : null,
-    fetchTokens
+    fetchTokens,
   )
 
   return { tokens: data, isLoading }

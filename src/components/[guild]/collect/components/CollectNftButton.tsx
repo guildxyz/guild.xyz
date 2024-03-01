@@ -35,7 +35,7 @@ const CollectNftButton = ({
 
   const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
   const hasUserReward = !!userRewards?.find(
-    (reward) => reward.rolePlatformId === rolePlatformId
+    (reward) => reward.rolePlatformId === rolePlatformId,
   )
 
   const {
@@ -82,8 +82,8 @@ const CollectNftButton = ({
     isNftBalanceLoading || isMembershipUpdateLoading || isUserRewardsLoading
       ? "Checking eligibility"
       : isMinting
-      ? mintLoadingText
-      : "Checking your balance"
+        ? mintLoadingText
+        : "Checking your balance"
 
   const isDisabled = shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
 
@@ -111,10 +111,10 @@ const CollectNftButton = ({
       {alreadyCollected
         ? "Already collected"
         : typeof isSufficientBalance === "boolean" && !isSufficientBalance
-        ? "Insufficient balance"
-        : !hasRoleAccess
-        ? "Check access & collect"
-        : label}
+          ? "Insufficient balance"
+          : !hasRoleAccess
+            ? "Check access & collect"
+            : label}
     </Button>
   )
 }

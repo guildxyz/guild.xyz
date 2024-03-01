@@ -6,6 +6,7 @@ import {
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { CaretDown, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
@@ -16,7 +17,6 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
-import { CaretDown, Check, LockSimple, Warning, X } from "phosphor-react"
 import AccessIndicatorUI, {
   ACCESS_INDICATOR_STYLES,
 } from "./components/AccessIndicatorUI"
@@ -42,11 +42,11 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const grayDividerColor = useColorModeValue("blackAlpha.400", "whiteAlpha.300")
 
   const requirementsWithErrors = role?.requirements?.filter(
-    (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null
+    (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null,
   )
   const errors = useRequirementErrorConfig()
   const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
-    (req) => !!errors[req.type.split("_")[0]]
+    (req) => !!errors[req.type.split("_")[0]],
   )
   const errorTextFromConfig =
     requirementsWithErrors.length > 0 &&

@@ -1,4 +1,5 @@
 import { Tooltip } from "@chakra-ui/react"
+import { ArrowSquareOut } from "@phosphor-icons/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -8,7 +9,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import Link from "next/link"
-import { ArrowSquareOut } from "phosphor-react"
 import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import platforms from "platforms/platforms"
 import { PlatformType } from "types"
@@ -17,7 +17,7 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
   const { platformId, platformGuildData } = platform.guildPlatform
   const { form, isValidating: isFormsValidating } = useGuildForm(
-    platformGuildData?.formId
+    platformGuildData?.formId,
   )
 
   const { userSubmission, isValidating: isUserSubmissionValidating } =

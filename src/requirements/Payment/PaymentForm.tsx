@@ -1,8 +1,8 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
+import { Check, Question } from "@phosphor-icons/react"
 import { Chains } from "chains"
 import Button from "components/common/Button"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
-import { Check, Question } from "phosphor-react"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -68,7 +68,7 @@ const PaymentForm = ({
   useEffect(() => {
     if (isLoading)
       setOnCloseAttemptToast(
-        "You can't close the modal until the transaction finishes"
+        "You can't close the modal until the transaction finishes",
       )
     else setOnCloseAttemptToast(false)
   }, [isLoading])

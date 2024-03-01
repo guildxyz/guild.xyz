@@ -57,7 +57,7 @@ function HeadingLineBreakPlugin() {
     return editor.registerCommand(
       KEY_ENTER_COMMAND,
       enterListener,
-      COMMAND_PRIORITY_LOW
+      COMMAND_PRIORITY_LOW,
     )
   }, [editor])
 

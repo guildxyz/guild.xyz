@@ -17,7 +17,7 @@ import { WalletClient } from "viem"
 const getAddressLinkProof = async (
   address: `0x${string}`,
   signMessage: (message: string) => Promise<string>,
-  walletClient?: WalletClient
+  walletClient?: WalletClient,
 ) => {
   const addr = address.toLowerCase()
   const timestamp = Date.now()
@@ -66,7 +66,7 @@ const useLinkAddress = () => {
       const keys = await getKeyPairFromIdb(userId)
       if (!keys || !keys.keyPair) {
         throw new Error(
-          "Failed to link address, please refresh the page and try again"
+          "Failed to link address, please refresh the page and try again",
         )
       }
 
@@ -74,7 +74,7 @@ const useLinkAddress = () => {
         (signProps?.walletClient?.account?.address?.toLowerCase() as `0x${string}`) ??
           addressToLink,
         signMessage,
-        signProps?.walletClient
+        signProps?.walletClient,
       )
       const newAddress = await fetcherWithSign(
         {
@@ -86,7 +86,7 @@ const useLinkAddress = () => {
           publicClient: undefined,
         },
         `/v2/users/${userId}/addresses`,
-        { method: "POST", body }
+        { method: "POST", body },
       )
 
       // Update signed profile data with new address
@@ -96,7 +96,7 @@ const useLinkAddress = () => {
           ...(prev ?? {}),
           addresses: [...(prev?.addresses ?? []), newAddress],
         }),
-        { revalidate: false }
+        { revalidate: false },
       )
 
       const newPublicProfile = {
@@ -112,13 +112,13 @@ const useLinkAddress = () => {
         newPublicProfile,
         {
           revalidate: false,
-        }
+        },
       )
 
       setAddressLinkParams({ userId: undefined, address: undefined })
 
       return newPublicProfile
-    }
+    },
   )
 }
 

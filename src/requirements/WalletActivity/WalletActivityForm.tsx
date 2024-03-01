@@ -113,12 +113,12 @@ const WalletActivityForm = ({
             ({
               ...rest,
               value: value.replace("ALCHEMY_", "COVALENT_"),
-            } as SelectOption)
+            }) as SelectOption,
         )
     : walletActivityRequirementTypes
 
   const selected = supportedRequirementTypes.find(
-    (reqType) => reqType.value === type
+    (reqType) => reqType.value === type,
   )
 
   const walletActivitySupportedChains: Chain[] = [

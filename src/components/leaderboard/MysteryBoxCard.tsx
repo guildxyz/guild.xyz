@@ -14,12 +14,12 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { Check, Gift } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
-import { Check, Gift } from "phosphor-react"
 import { useForm } from "react-hook-form"
 import useClaimMysteryBox from "./hooks/useClaimMysteryBox"
 import useHasAlreadyClaimedMysteryBox from "./hooks/useHasAlreadyClaimedMysteryBox"

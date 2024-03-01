@@ -9,7 +9,7 @@ type Props = {
 }
 
 const shownSupportedChains = supportedChains.filter(
-  (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0
+  (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0,
 )
 
 const NetworkButtonsList = ({
@@ -21,10 +21,10 @@ const NetworkButtonsList = ({
   const listedChains =
     listedChainIDs?.length > 0
       ? shownSupportedChains.filter((chain) =>
-          listedChainIDs?.includes(Chains[chain])
+          listedChainIDs?.includes(Chains[chain]),
         )
       : shownSupportedChains.filter(
-          (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0
+          (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0,
         )
 
   return (

@@ -33,7 +33,7 @@ const FillForm = ({ form }: Props) => {
     .filter((field) => field.isRequired)
     .map((field) => field.id)
   const isSubmitDisabled = Object.keys(formValues).some(
-    (fieldId) => requiredFieldIds.includes(fieldId) && !formValues[fieldId]
+    (fieldId) => requiredFieldIds.includes(fieldId) && !formValues[fieldId],
   )
 
   const { userSubmission, mutate: mutateSubmission } = useUserFormSubmission(form)
@@ -57,7 +57,7 @@ const FillForm = ({ form }: Props) => {
         })
       },
       onError: (error) => showErrorToast(error),
-    }
+    },
   )
 
   if (!form) return <FillFormSkeleton />
@@ -69,7 +69,7 @@ const FillForm = ({ form }: Props) => {
       <Stack>
         {form.fields.map((field) => {
           const { DisplayComponent } = fieldTypes.find(
-            (ft) => ft.value === field.type
+            (ft) => ft.value === field.type,
           )
 
           return (
@@ -109,7 +109,7 @@ const FillForm = ({ form }: Props) => {
                   value,
                 })),
               }),
-            console.error
+            console.error,
           )}
         >
           Submit

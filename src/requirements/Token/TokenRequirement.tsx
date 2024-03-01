@@ -58,8 +58,8 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
         requirement.data?.maxAmount
           ? `${requirement.data.minAmount} - ${requirement.data.maxAmount}`
           : requirement.data?.minAmount > 0
-          ? `at least ${requirement.data?.minAmount}`
-          : "any amount of"
+            ? `at least ${requirement.data?.minAmount}`
+            : "any amount of"
       } ${
         requirement.type === "COIN"
           ? CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol

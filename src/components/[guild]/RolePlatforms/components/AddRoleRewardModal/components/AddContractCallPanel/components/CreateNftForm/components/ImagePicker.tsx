@@ -8,10 +8,10 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import { Image } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
-import { Image } from "phosphor-react"
 import { useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { CreateNftFormType } from "../CreateNftForm"

@@ -1,8 +1,8 @@
 import { Icon, IconButton, Tooltip, useClipboard } from "@chakra-ui/react"
+import { Check, CloudArrowDown, Copy } from "@phosphor-icons/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useSubmit from "hooks/useSubmit"
 import useToast, { useToastWithButton } from "hooks/useToast"
-import { Check, CloudArrowDown, Copy } from "phosphor-react"
 import { useEffect } from "react"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
@@ -93,7 +93,7 @@ const CopyCWaaSBackupData = () => {
           description: error?.message ?? "Unknown error",
         })
       },
-    }
+    },
   )
 
   return (

@@ -6,7 +6,7 @@ import {
   ResponsiveValue,
   Tooltip,
 } from "@chakra-ui/react"
-import { CircleWavyCheck } from "phosphor-react"
+import { CircleWavyCheck } from "@phosphor-icons/react"
 
 type Props = {
   size: ResponsiveValue<number>

@@ -59,8 +59,8 @@ const formDataFilterForDirtyHelper = (dirtyFields: any, formData: any) => {
           formDataFilterForDirtyHelper(value, formData[key]),
         ])
         .filter(
-          ([key, value]) => value !== TO_FILTER_FLAG && !KEYS_TO_FILTER.has(key)
-        )
+          ([key, value]) => value !== TO_FILTER_FLAG && !KEYS_TO_FILTER.has(key),
+        ),
     )
 
     DIRTY_KEYS_TO_KEEP.forEach((keyToKeep) => {
@@ -96,16 +96,16 @@ const formDataFilterForDirty = (dirtyFields: any, formData: any) => {
 
 const handleSubmitDirty =
   <TFieldValues extends FieldValues = FieldValues, TContext = any>(
-    methods: UseFormReturn<TFieldValues, TContext>
+    methods: UseFormReturn<TFieldValues, TContext>,
   ) =>
   (
     onValid: SubmitHandler<Partial<TFieldValues>>,
-    onInvalid?: SubmitErrorHandler<TFieldValues>
+    onInvalid?: SubmitErrorHandler<TFieldValues>,
   ) =>
     methods.handleSubmit((formValues) => {
       onValid(
         (formDataFilterForDirty(methods.formState.dirtyFields, formValues) ??
-          {}) as Partial<TFieldValues>
+          {}) as Partial<TFieldValues>,
       )
     }, onInvalid)
 

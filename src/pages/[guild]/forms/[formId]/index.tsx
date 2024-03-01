@@ -30,10 +30,10 @@ const FormPage = ({ formId }: Props) => {
   const { form, error } = useGuildForm(formId)
 
   const relevantGuildPlatform = guildPlatforms.find(
-    (gp) => gp.platformGuildData?.formId === formId
+    (gp) => gp.platformGuildData?.formId === formId,
   )
   const role = roles.find((r) =>
-    r.rolePlatforms.some((rp) => rp.guildPlatformId === relevantGuildPlatform?.id)
+    r.rolePlatforms.some((rp) => rp.guildPlatformId === relevantGuildPlatform?.id),
   )
 
   const { hasRoleAccess, isMember } = useRoleMembership(role?.id)

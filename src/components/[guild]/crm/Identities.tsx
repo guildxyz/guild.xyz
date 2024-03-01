@@ -6,8 +6,8 @@ import {
   TagProps,
   Tooltip,
 } from "@chakra-ui/react"
+import { LockSimple, Wallet } from "@phosphor-icons/react"
 import { useCardBg } from "components/common/Card"
-import { LockSimple, Wallet } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { PropsWithChildren } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
@@ -20,7 +20,7 @@ type Props = {
 
 export const sortAccounts = (
   account1: PlatformAccountDetails,
-  account2: PlatformAccountDetails
+  account2: PlatformAccountDetails,
 ) => {
   if (PlatformType[account2.platformId] === "DISCORD" && account2.username) return 1
   if (account2.username && !account1.username) return 1
@@ -29,7 +29,7 @@ export const sortAccounts = (
 
 // temporary until we have TWITTER_V1, so we only show one X account
 export const deduplicateXPlatformUsers = (
-  platformUsers: PlatformAccountDetails[]
+  platformUsers: PlatformAccountDetails[],
 ) => {
   const xV1 = platformUsers?.find((a) => a.platformId === PlatformType.TWITTER_V1)
   const xV2 = platformUsers?.find((a) => a.platformId === PlatformType.TWITTER)
@@ -37,7 +37,7 @@ export const deduplicateXPlatformUsers = (
   if (!xV1 || !xV2) return platformUsers
 
   return platformUsers.filter(
-    (a) => a.platformId !== PlatformType[xV2.username ? "TWITTER_V1" : "TWITTER"]
+    (a) => a.platformId !== PlatformType[xV2.username ? "TWITTER_V1" : "TWITTER"],
   )
 }
 

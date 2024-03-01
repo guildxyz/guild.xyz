@@ -10,6 +10,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, LockSimple } from "@phosphor-icons/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Visibility from "components/[guild]/Visibility"
@@ -19,7 +20,6 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { Transition, motion } from "framer-motion"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import platforms from "platforms/platforms"
 import { PropsWithChildren, ReactNode, useMemo } from "react"

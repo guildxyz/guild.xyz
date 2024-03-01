@@ -71,7 +71,7 @@ const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = 
 }
 
 export const getTokenBuyerContractData = (
-  guildId?: number
+  guildId?: number,
 ): TokenBuyerContractConfig =>
   SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
@@ -214,7 +214,7 @@ export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
   POLYGON_MUMBAI: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
 }
 export const paymentSupportedChains: Chain[] = Object.keys(
-  FEE_COLLECTOR_CONTRACT
+  FEE_COLLECTOR_CONTRACT,
 ) as Chain[]
 
 export const GUILD_PIN_CONTRACTS = {

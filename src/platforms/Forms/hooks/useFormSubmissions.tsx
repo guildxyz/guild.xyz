@@ -42,7 +42,7 @@ const useFormSubmissions = (formId, queryString) => {
         pagination,
       ].join("&")}`
     },
-    [queryString, id, formId]
+    [queryString, id, formId],
   )
 
   const { data, ...rest } = useSWRInfinite<FormSubmission[]>(
@@ -65,7 +65,7 @@ const useFormSubmissions = (formId, queryString) => {
 
             return response
           }),
-        }))
+        })),
       ),
     {
       revalidateIfStale: false,
@@ -74,7 +74,7 @@ const useFormSubmissions = (formId, queryString) => {
       revalidateFirstPage: false,
       revalidateOnMount: true,
       keepPreviousData: true,
-    }
+    },
   )
 
   const flattenedData = useMemo(() => data?.flat(), [data])
@@ -96,7 +96,7 @@ const useUserFormSubmission = (form: Schemas["Form"]) => {
     fetcherWithSign,
     {
       shouldRetryOnError: false,
-    }
+    },
   )
 
   return {

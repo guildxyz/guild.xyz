@@ -16,10 +16,10 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import { Clock, Hash } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
-import { Clock, Hash } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
@@ -152,7 +152,7 @@ const EditRewardAvailabilityModal = ({
                     onBlur={capacityFieldOnBlur}
                     onChange={(_, valueAsNumber) => {
                       capacityFieldOnChange(
-                        !isNaN(valueAsNumber) ? valueAsNumber : ""
+                        !isNaN(valueAsNumber) ? valueAsNumber : "",
                       )
                     }}
                   >
@@ -211,8 +211,8 @@ const EditRewardAvailabilityModal = ({
                           endTimeValue
                             ? getShortDate(
                                 new Date(
-                                  new Date(endTimeValue).getTime() - DAY_IN_MS
-                                ).toISOString()
+                                  new Date(endTimeValue).getTime() - DAY_IN_MS,
+                                ).toISOString(),
                               )
                             : undefined
                         }
@@ -235,11 +235,11 @@ const EditRewardAvailabilityModal = ({
                           new Date(startTimeValue).getTime() > Date.now()
                             ? getShortDate(
                                 new Date(
-                                  new Date(startTimeValue).getTime() + DAY_IN_MS
-                                ).toISOString()
+                                  new Date(startTimeValue).getTime() + DAY_IN_MS,
+                                ).toISOString(),
                               )
                             : getShortDate(
-                                new Date(Date.now() + DAY_IN_MS).toISOString()
+                                new Date(Date.now() + DAY_IN_MS).toISOString(),
                               )
                         }
                         isDisabled={AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}

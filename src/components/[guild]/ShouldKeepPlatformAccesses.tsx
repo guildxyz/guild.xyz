@@ -1,6 +1,6 @@
 import { UseRadioGroupProps } from "@chakra-ui/react"
+import { CircleWavyCheck, UserCircleMinus } from "@phosphor-icons/react"
 import RadioSelect from "components/common/RadioSelect"
-import { CircleWavyCheck, UserCircleMinus } from "phosphor-react"
 
 type Props = {
   keepAccessDescription: string

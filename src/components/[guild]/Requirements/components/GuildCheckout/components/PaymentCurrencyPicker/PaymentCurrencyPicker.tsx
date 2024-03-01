@@ -10,11 +10,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { ArrowSquareOut, CaretDown } from "@phosphor-icons/react"
 import { Chains } from "chains"
 import Button from "components/common/Button"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useSetAtom } from "jotai"
-import { ArrowSquareOut, CaretDown } from "phosphor-react"
 import { useEffect } from "react"
 import { SUPPORTED_CURRENCIES } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
@@ -40,7 +40,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
 
   const currencyOptions = SUPPORTED_CURRENCIES.filter(
     (c) =>
-      c.chainId === Chains[requirement.chain] && c.address !== requirement.address
+      c.chainId === Chains[requirement.chain] && c.address !== requirement.address,
   )
 
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])

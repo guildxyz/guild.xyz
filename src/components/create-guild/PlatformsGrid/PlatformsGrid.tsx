@@ -40,7 +40,7 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
       description: "Mint POAP",
     },
     ...(!guildPlatforms.find(
-      (platform) => platform.platformId === PlatformType.POLYGON_ID
+      (platform) => platform.platformId === PlatformType.POLYGON_ID,
     )
       ? [
           {

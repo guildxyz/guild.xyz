@@ -13,7 +13,7 @@ const AUTH_FLAG_HEADER_NAME = "x-guild-auth-location"
 
 const fetcher = async (
   resource: string,
-  { body, validation, signedPayload, ...init }: Record<string, any> = {}
+  { body, validation, signedPayload, ...init }: Record<string, any> = {},
 ) => {
   const isGuildApiCall = !resource.startsWith("http") && !resource.startsWith("/api")
 
@@ -29,7 +29,7 @@ const fetcher = async (
                   payload: signedPayload,
                   ...validation,
                 }
-              : body
+              : body,
           ),
         }
       : {}),
@@ -45,11 +45,11 @@ const fetcher = async (
       delete options.body
 
       options.headers[PARAMS_HEADER_NAME] = Buffer.from(
-        JSON.stringify(validation.params)
+        JSON.stringify(validation.params),
       ).toString("base64")
 
       options.headers[SIG_HEADER_NAME] = Buffer.from(validation.sig, "hex").toString(
-        "base64"
+        "base64",
       )
 
       options.headers[AUTH_FLAG_HEADER_NAME] = "header"
@@ -109,7 +109,7 @@ const fetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body = {}, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {},
 ) => {
   const [signedPayload, validation] = await sign({
     forcePrompt: false,
@@ -125,7 +125,7 @@ const fuelFetcherWithSign = async (
     forcePrompt?: boolean
   },
   resource: string,
-  { body = {}, ...rest }: Record<string, any> = {}
+  { body = {}, ...rest }: Record<string, any> = {},
 ) => {
   const [signedPayload, validation] = await fuelSign({
     forcePrompt: false,
@@ -163,7 +163,7 @@ const useFetcherWithSign = () => {
             ...signOptions,
           },
           resource,
-          options
+          options,
         )
       : fuelFetcherWithSign(
           {
@@ -174,7 +174,7 @@ const useFetcherWithSign = () => {
             ...signOptions,
           },
           resource,
-          options
+          options,
         )
   }
 }

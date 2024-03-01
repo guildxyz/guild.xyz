@@ -47,12 +47,12 @@ const generateKeyPair = async () => {
         namedCurve: "P-256",
       },
       false,
-      ["sign", "verify"]
+      ["sign", "verify"],
     )
 
     const generatedPubKey = await window.crypto.subtle.exportKey(
       "raw",
-      generatedKeys.publicKey
+      generatedKeys.publicKey,
     )
 
     const generatedPubKeyHex = Buffer.from(generatedPubKey).toString("hex")
@@ -136,7 +136,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
         userProfile,
         {
           revalidate: false,
-        }
+        },
       )
 
       await mutate(
@@ -149,7 +149,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
         },
         {
           revalidate: false,
-        }
+        },
       )
 
       return { keyPair: generatedKeys, user: userProfile }
@@ -172,7 +172,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       onSuccess: () => {
         submitOptions?.onSuccess?.()
       },
-    }
+    },
   )
 
   return setSubmitResponse

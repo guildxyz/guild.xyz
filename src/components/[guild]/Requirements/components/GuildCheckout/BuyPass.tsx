@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Stack,
 } from "@chakra-ui/react"
+import { Coin } from "@phosphor-icons/react"
 import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -19,7 +20,6 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { useRequirementContext } from "../RequirementContext"

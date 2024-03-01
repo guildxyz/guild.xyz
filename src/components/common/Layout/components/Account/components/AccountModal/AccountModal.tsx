@@ -17,6 +17,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { LinkBreak, SignOut } from "@phosphor-icons/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { delegateConnectionAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/DelegateCashButton"
@@ -30,7 +31,6 @@ import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
-import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount, useChainId } from "wagmi"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
@@ -58,7 +58,7 @@ const AccountModal = () => {
 
   const handleLogout = () => {
     const keysToRemove = Object.keys({ ...window.localStorage }).filter((key) =>
-      /^dc_auth_[a-z]*$/.test(key)
+      /^dc_auth_[a-z]*$/.test(key),
     )
 
     keysToRemove.forEach((key) => {
@@ -110,7 +110,7 @@ const AccountModal = () => {
                     {(typeof addresses?.[0] === "string"
                       ? (addresses as any)?.indexOf(address.toLowerCase())
                       : addresses?.findIndex(
-                          ({ address: a }) => a === address.toLowerCase()
+                          ({ address: a }) => a === address.toLowerCase(),
                         )) === 0 && addresses.length > 1 ? (
                       <PrimaryAddressTag size="sm" />
                     ) : null}

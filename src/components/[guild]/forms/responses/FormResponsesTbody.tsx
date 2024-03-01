@@ -60,7 +60,7 @@ const FormResponsesTbody = ({ table, data, error, isValidating }: Props) => {
                     End of results
                   </Text>
                 </CrmInfoRow>
-              )
+              ),
             )
         ) : (
           <CrmInfoRow py="10">

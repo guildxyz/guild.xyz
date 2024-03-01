@@ -57,7 +57,7 @@ const CrmTbody = ({ table, data, error, isValidating }: Props) => {
                     End of results
                   </Text>
                 </CrmInfoRow>
-              )
+              ),
             )
         ) : (
           <CrmInfoRow py="10">No members satisfy the filters you've set</CrmInfoRow>

@@ -6,27 +6,27 @@ import {
   PopoverHeader,
   Text,
 } from "@chakra-ui/react"
+import { ArrowSquareIn, Check, LockSimple, Warning, X } from "@phosphor-icons/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import Button from "components/common/Button"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
-import { ArrowSquareIn, Check, LockSimple, Warning, X } from "phosphor-react"
 import RequirementAccessIndicatorUI from "./RequirementAccessIndicatorUI"
 import { useRequirementContext } from "./RequirementContext"
 
 const DynamicConnectPolygonID = dynamic(
-  () => import("requirements/PolygonID/components/ConnectPolygonID")
+  () => import("requirements/PolygonID/components/ConnectPolygonID"),
 )
 const DynamicCompleteCaptcha = dynamic(
-  () => import("requirements/Captcha/components/CompleteCaptcha")
+  () => import("requirements/Captcha/components/CompleteCaptcha"),
 )
 const DynamicSetupPassport = dynamic(
-  () => import("requirements/GitcoinPassport/components/SetupPassport")
+  () => import("requirements/GitcoinPassport/components/SetupPassport"),
 )
 const DynamicConnectRequirementPlatformButton = dynamic(
-  () => import("./ConnectRequirementPlatformButton")
+  () => import("./ConnectRequirementPlatformButton"),
 )
 
 const RequirementAccessIndicator = () => {
@@ -69,8 +69,8 @@ const RequirementAccessIndicator = () => {
           {type === "CAPTCHA"
             ? "Complete CAPTCHA to check access"
             : type.startsWith("GITCOIN_")
-            ? "Setup GitCoin Passport to check access"
-            : "Connect account to check access"}
+              ? "Setup GitCoin Passport to check access"
+              : "Connect account to check access"}
         </PopoverHeader>
         <PopoverFooter {...POPOVER_FOOTER_STYLES}>
           {type === "POLYGON_ID_QUERY" || type === "POLYGON_ID_BASIC" ? (

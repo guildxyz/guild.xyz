@@ -1,5 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Img, Skeleton, Text } from "@chakra-ui/react"
+import { Detective } from "@phosphor-icons/react"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -7,7 +8,6 @@ import Requirement, {
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useRole from "components/[guild]/hooks/useRole"
-import { Detective } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { Group } from "types"
 import pluralize from "utils/pluralize"

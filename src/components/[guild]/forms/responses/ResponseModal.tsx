@@ -15,6 +15,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { CaretLeft, CaretRight } from "@phosphor-icons/react"
 import { Row } from "@tanstack/react-table"
 import FormFieldTitle from "components/[guild]/CreateFormModal/components/FormCardEditable/components/FormFieldTitle"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
@@ -22,7 +23,6 @@ import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import Button from "components/common/Button"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import { CaretLeft, CaretRight } from "phosphor-react"
 import { FormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import CollapsibleIdentityTags from "./CollapsibleIdentityTags"
 
@@ -78,10 +78,10 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
           <Stack gap="5">
             {form?.fields?.map((field) => {
               const { DisplayComponent } = fieldTypes.find(
-                (ft) => ft.value === field.type
+                (ft) => ft.value === field.type,
               )
               const value = submissionAnswers.find(
-                (f) => f.fieldId === field.id
+                (f) => f.fieldId === field.id,
               )?.value
 
               return (

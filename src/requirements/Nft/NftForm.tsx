@@ -16,12 +16,12 @@ import {
   Spinner,
   Stack,
 } from "@chakra-ui/react"
+import { Plus } from "@phosphor-icons/react"
 import { Chain } from "chains"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import {
   useController,

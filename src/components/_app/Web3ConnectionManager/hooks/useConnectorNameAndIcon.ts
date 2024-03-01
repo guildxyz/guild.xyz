@@ -16,7 +16,7 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   // wrapping with useMemo to make sure it updates on window.ethereum change
   const isBraveWallet = useMemo(
     () => _window.ethereum?.isBraveWallet,
-    [_window.ethereum]
+    [_window.ethereum],
   )
   const isOKXWallet = useMemo(() => !!_window.okxwallet, [_window.okxwallet])
 
@@ -28,21 +28,21 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
       ? isBraveWallet
         ? "brave.png"
         : isOKXWallet
-        ? "okx.png"
-        : "metamask.png"
+          ? "okx.png"
+          : "metamask.png"
       : connector?.id === "walletConnect"
-      ? "walletconnect.svg"
-      : connector?.id === "safe"
-      ? colorMode === "dark"
-        ? "gnosis-safe-white.svg"
-        : "gnosis-safe-black.svg"
-      : connector?.id === "coinbaseWallet"
-      ? "coinbasewallet.png"
-      : isFuelConnected
-      ? isFueletWallet
-        ? fueletLogo
-        : "fuel.svg"
-      : null
+        ? "walletconnect.svg"
+        : connector?.id === "safe"
+          ? colorMode === "dark"
+            ? "gnosis-safe-white.svg"
+            : "gnosis-safe-black.svg"
+          : connector?.id === "coinbaseWallet"
+            ? "coinbasewallet.png"
+            : isFuelConnected
+              ? isFueletWallet
+                ? fueletLogo
+                : "fuel.svg"
+              : null
 
   return {
     connectorName:
@@ -50,8 +50,8 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
         ? isBraveWallet
           ? "Brave"
           : isOKXWallet
-          ? "OKX Wallet"
-          : "MetaMask"
+            ? "OKX Wallet"
+            : "MetaMask"
         : connector?.name ?? (isFuelConnected ? "Fuel" : ""),
     connectorIcon,
   }

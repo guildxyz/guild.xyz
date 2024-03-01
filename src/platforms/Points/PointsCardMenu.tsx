@@ -1,8 +1,8 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import { PencilSimple } from "@phosphor-icons/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { PencilSimple } from "phosphor-react"
 import EditPointsModal from "./EditPointsModal"
 
 type Props = {
