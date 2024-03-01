@@ -84,16 +84,16 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
     setSpaceId(relevantSection.replace("/", "\\"))
   }, [spaceUrl])
 
-  const onSubmit = (data) => {
+  const onSubmit = (_data) => {
     append({
       guildPlatform: {
         platformName: "GATHER",
         platformGuildId: spaceId,
         platformGuildData: {
           spaceId: spaceId,
-          gatherApiKey: data.apiKey,
-          affiliation: data.affiliation,
-          role: data.role,
+          gatherApiKey: _data.apiKey,
+          affiliation: _data.affiliation,
+          role: _data.role,
         },
       },
       isNew: true,
