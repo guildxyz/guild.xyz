@@ -64,6 +64,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   MANTA: [],
   TAIKO_KATLA: [],
   BLAST_SEPOLIA: [],
+  BLAST_MAINNET: [],
   OASIS_SAPPHIRE: [],
 }
 
