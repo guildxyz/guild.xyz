@@ -1,0 +1,251 @@
+import {
+  Box,
+  EASINGS,
+  GridItem,
+  HStack,
+  IconButton,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
+  SimpleGrid,
+  usePopper,
+} from "@chakra-ui/react"
+import { Item } from "app/page-builder/types"
+import Card from "components/common/Card"
+import { AnimatePresence, DragHandlers, motion } from "framer-motion"
+import { ArrowsOutSimple, TrashSimple } from "phosphor-react"
+import { PropsWithChildren, useState } from "react"
+
+type Props = {
+  item: Item
+  onDrag: DragHandlers["onDrag"]
+  onDragEnd: DragHandlers["onDragEnd"]
+  onResize: (
+    width: Item["desktop"]["width"],
+    height: Item["desktop"]["height"]
+  ) => void
+  onRemove: () => void
+}
+
+const MotionCard = motion(Card)
+const MotionBox = motion(Box)
+
+const motionMountProps = {
+  initial: {
+    opacity: 0,
+    scale: 0.95,
+  },
+  animate: {
+    opacity: 1,
+    scale: 1,
+    transition: { duration: 0.1, ease: EASINGS.easeOut },
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    transition: { duration: 0.1, ease: EASINGS.easeIn },
+  },
+}
+
+const ItemWrapper = ({
+  item,
+  onDrag,
+  onDragEnd,
+  onResize,
+  onRemove,
+  children,
+}: PropsWithChildren<Props>) => {
+  const x = item.desktop.x
+  const y = item.desktop.y
+
+  const [isDragging, setDragging] = useState(false)
+  const [shouldDisplayMenu, setShouldDisplayMenu] = useState(false)
+
+  const { referenceRef, getPopperProps } = usePopper({
+    placement: "bottom",
+    strategy: "absolute",
+    offset: [0, -4],
+  })
+
+  return (
+    <MotionCard
+      as={GridItem}
+      role="group"
+      gridColumnStart={x}
+      gridRowStart={y}
+      colSpan={typeof item.desktop.width === "number" ? item.desktop.width : 6}
+      rowSpan={Number(item.desktop.height)}
+      cursor={isDragging ? "grabbing" : "grab"}
+      layout
+      // style={{
+      //   width: "100%",
+      //   borderRadius: 16,
+      // }}
+      drag
+      onDragStart={() => setDragging(true)}
+      onDrag={onDrag}
+      onDragEnd={(event, info) => {
+        setDragging(false)
+        onDragEnd(event, info)
+      }}
+      whileDrag={{
+        boxShadow: "var(--chakra-shadows-xl)",
+      }}
+      dragSnapToOrigin
+      zIndex={isDragging ? 3 : 2}
+      overflow="visible"
+      {...motionMountProps}
+      onHoverStart={() => setShouldDisplayMenu(true)}
+      onHoverEnd={() => setShouldDisplayMenu(false)}
+    >
+      <MotionBox position="relative" w="full" h="full" ref={referenceRef}>
+        {children}
+
+        {/* This will be the target element of the drag events, so we can make sure that we always calculate the x,y position of an item relative to this element */}
+        <Box position="absolute" inset={0} />
+
+        <AnimatePresence>
+          {shouldDisplayMenu && !isDragging && (
+            <Portal>
+              <MotionBox
+                {...getPopperProps()}
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  transition: { duration: 0.1, ease: EASINGS.easeOut },
+                }}
+                exit={{
+                  opacity: 0,
+                  transition: { duration: 0.1, ease: EASINGS.easeIn },
+                }}
+                py={2}
+                zIndex={4}
+                onHoverStart={() => setShouldDisplayMenu(true)}
+                onHoverEnd={() => setShouldDisplayMenu(false)}
+              >
+                <HStack
+                  bgColor="gray.900"
+                  borderRadius="lg"
+                  p={1}
+                  boxShadow="md"
+                  spacing={0}
+                >
+                  <SizePopover
+                    onResize={(w, h) => {
+                      setShouldDisplayMenu(false)
+                      onResize(w, h)
+                    }}
+                  />
+                  <IconButton
+                    aria-label="Remove item"
+                    size="sm"
+                    icon={<TrashSimple />}
+                    borderRadius="md"
+                    variant="ghost"
+                    onClick={() => onRemove()}
+                  />
+                </HStack>
+              </MotionBox>
+            </Portal>
+          )}
+        </AnimatePresence>
+      </MotionBox>
+    </MotionCard>
+  )
+}
+
+const SizePopover = ({ onResize }: { onResize: Props["onResize"] }) => {
+  // Would be hot af if we could solve this without an extra state / with just plain CSS
+  const [hoveredPosition, setHoveredPosition] = useState<{
+    x: number
+    y: number
+  } | null>(null)
+
+  return (
+    <Popover gutter={10}>
+      <PopoverTrigger>
+        <IconButton
+          aria-label="Edit size"
+          size="sm"
+          icon={<ArrowsOutSimple />}
+          borderRadius="md"
+          variant="ghost"
+        />
+      </PopoverTrigger>
+      <PopoverContent
+        maxW="max-content"
+        borderWidth={0}
+        borderRadius="lg"
+        p={1}
+        sx={{
+          "--popper-bg": "var(--chakra-colors-gray-900)!important",
+          "--popper-arrow-shadow-color": "transparent!important",
+        }}
+      >
+        <PopoverArrow />
+        <PopoverHeader
+          borderBottom="none"
+          textTransform="uppercase"
+          fontSize="xs"
+          fontWeight="bold"
+          textAlign="center"
+          textColor="GrayText"
+          pt={1}
+          pb={0}
+        >
+          Size
+        </PopoverHeader>
+        <PopoverBody padding={1}>
+          <SimpleGrid
+            spacing={1}
+            columns={6}
+            onMouseLeave={() => setHoveredPosition(null)}
+          >
+            {[...Array(18)].map((_, i) => {
+              const row = Math.floor(i / 6)
+              const column = i % 6
+
+              const x = column + 1
+              const y = row + 1
+
+              const isDisabled = column > 2
+
+              return (
+                <Box
+                  data-x={x}
+                  data-y={y}
+                  tabIndex={0}
+                  key={i}
+                  borderWidth={1}
+                  borderRadius="sm"
+                  bgColor={
+                    x <= hoveredPosition?.x && y <= hoveredPosition?.y
+                      ? "indigo.500"
+                      : "whiteAlpha.100"
+                  }
+                  boxSize={4}
+                  fontSize="xs"
+                  // TODO: eliminate any casts
+                  onClick={() => onResize(x as any, y as any)}
+                  cursor={!isDisabled && "pointer"}
+                  borderStyle={isDisabled ? "dashed" : "solid"}
+                  opacity={isDisabled ? 0.5 : 1}
+                  onMouseOver={
+                    isDisabled ? undefined : () => setHoveredPosition({ x, y })
+                  }
+                />
+              )
+            })}
+          </SimpleGrid>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
+  )
+}
+export default ItemWrapper
