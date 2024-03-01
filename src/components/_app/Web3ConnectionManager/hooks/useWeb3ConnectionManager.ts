@@ -77,7 +77,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   return {
     isInSafeContext,
     isWeb3Connected,
-    address: address as `0x${string}`,
+    address: address,
     type,
     disconnect,
     signMessage,
