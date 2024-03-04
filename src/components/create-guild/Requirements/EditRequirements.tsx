@@ -1,6 +1,5 @@
 import { Stack } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
-import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
 import { AnimatePresence } from "framer-motion"
@@ -10,6 +9,7 @@ import { Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import ExistingRequirementEditableCard from "./components/ExistingRequirementEditableCard"
 import LogicFormControl from "./components/LogicFormControl"
+import RequirementBaseCard from "./components/RequirementBaseCard"
 
 type Props = { requirements: Requirement[] }
 
@@ -31,9 +31,9 @@ const EditRequirements = ({ requirements }: Props) => {
         <AnimatePresence>
           {freeEntry ? (
             <CardMotionWrapper key="free-entry">
-              <Card px="6" py="4">
+              <RequirementBaseCard>
                 <FreeRequirement />
-              </Card>
+              </RequirementBaseCard>
               <LogicDivider logic="OR" />
             </CardMotionWrapper>
           ) : (
