@@ -107,7 +107,7 @@ const ExistingRequirementEditableCard = ({
       onSuccess: () => onClose(),
     })
 
-  const requirementDeleteConfitmationAlert = (
+  const requirementDeleteConfirmationAlert = (
     <ConfirmationAlert
       finalFocusRef={closeButtonRef}
       isLoading={
@@ -134,7 +134,7 @@ const ExistingRequirementEditableCard = ({
           />
         </UnsupportedRequirementTypeCard>
 
-        {requirementDeleteConfitmationAlert}
+        {requirementDeleteConfirmationAlert}
       </>
     )
 
@@ -222,7 +222,7 @@ const ExistingRequirementEditableCard = ({
         onDiscard={onCloseAndClear}
       />
 
-      {requirementDeleteConfitmationAlert}
+      {requirementDeleteConfirmationAlert}
     </>
   )
 }
