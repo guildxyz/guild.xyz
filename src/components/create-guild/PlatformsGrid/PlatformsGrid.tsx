@@ -40,7 +40,7 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
       description: "Mint POAP",
     },
     {
-      platform: "GATHER",
+      platform: "GATHER_TOWN",
       description: "Manage spaces",
     },
     ...(!guildPlatforms.find(

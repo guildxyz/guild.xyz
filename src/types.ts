@@ -89,7 +89,7 @@ type PlatformName =
   | "POLYGON_ID"
   | "POINTS"
   | "FORM"
-  | "GATHER"
+  | "GATHER_TOWN"
 
 type PlatformUserData = {
   acessToken?: string
@@ -209,9 +209,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -234,9 +235,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -258,9 +260,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -282,9 +285,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   TEXT: {
     text: string
@@ -306,9 +310,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   POAP: {
     text?: never
@@ -330,9 +335,10 @@ type PlatformGuildData = {
     fancyId: string
     eventId: number
     formId?: never
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   FORM: {
     text?: never
@@ -354,15 +360,17 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: number
-    spaceId?: never
+    gatherSpaceId?: never
     gatherApiKey?: never
-    affiliation?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   GATHER: {
-    spaceId: string
+    gatherSpaceId: string
     gatherApiKey: string
-    affiliation: string
-    role: string
+    gatherAffiliation: string
+    gatherRole: string
+    role?: never
     text?: never
     texts?: never
     name?: never
@@ -615,7 +623,7 @@ export enum PlatformType {
   "POINTS" = 13,
   "POAP" = 14,
   "FORM" = 15,
-  "GATHER" = 16,
+  "GATHER_TOWN" = 16,
 }
 type WalletConnectConnectionData = {
   connected: boolean

@@ -7,16 +7,16 @@ const useGatherCardProps = (guildPlatform: GuildPlatform) => {
 
   const getNameFromSpaceId = () => {
     return decodeURIComponent(
-      guildPlatform.platformGuildData?.spaceId.split("\\")[1]
+      guildPlatform.platformGuildData?.gatherSpaceId.split("\\")[1]
     )
   }
 
   return {
     name: getNameFromSpaceId(),
-    type: "GATHER" as PlatformName,
+    type: "GATHER_TOWN" as PlatformName,
     image: (
       <Circle size={10} bgColor={bgColor} overflow="hidden">
-        <Img src={platforms.GATHER.imageUrl} boxSize={10} color="white" />
+        <Img src={platforms.GATHER_TOWN.imageUrl} boxSize={10} color="white" />
       </Circle>
     ),
   }

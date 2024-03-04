@@ -93,7 +93,7 @@ const CreateGuildGoogle = ({ isOpen, onClose }: Props): JSX.Element => {
                     "googleData.platformGuildData.iconLink"
                   ),
                   ...googleData.platformGuildData,
-                  role: googleMethods.getValues("permission"),
+                  gatherRole: googleMethods.getValues("permission"),
                 },
               })
               onClose()

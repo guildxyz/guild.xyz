@@ -24,7 +24,9 @@ const GatherCardButton = ({ platform }: Props) => {
   )}`
 
   const getNameFromSpaceId = () => {
-    return decodeURIComponent(platform.platformGuildData?.spaceId.split("\\")[1])
+    return decodeURIComponent(
+      platform.platformGuildData?.gatherSpaceId.split("\\")[1]
+    )
   }
 
   const {
@@ -42,13 +44,13 @@ const GatherCardButton = ({ platform }: Props) => {
           target="_blank"
           href={spaceUrl}
           rightIcon={<ArrowSquareOut />}
-          colorScheme="GATHER"
+          colorScheme="GATHER_TOWN"
           w="full"
         >
           Go to space
         </Button>
       ) : (
-        <Button colorScheme="GATHER" w="full" onClick={onOpen}>
+        <Button colorScheme="GATHER_TOWN" w="full" onClick={onOpen}>
           Claim
         </Button>
       )}

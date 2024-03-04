@@ -87,7 +87,7 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
   const onSubmit = (_data) => {
     append({
       guildPlatform: {
-        platformName: "GATHER",
+        platformName: "GATHER_TOWN",
         platformGuildId: spaceId,
         platformGuildData: {
           spaceId: spaceId,
@@ -271,7 +271,7 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
 
       <Flex justifyContent={"flex-end"} mt="auto" pt="10">
         <Button
-          isDisabled={!!accessCheckError}
+          isDisabled={!!accessCheckError || !apiKey || !spaceUrl}
           colorScheme="green"
           onClick={methods.handleSubmit(onSubmit)}
         >

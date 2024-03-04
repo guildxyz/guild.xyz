@@ -12,6 +12,7 @@ import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
+import GatherCardMenu from "platforms/Gather/GatherCardMenu"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import platforms from "platforms/platforms"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
@@ -102,14 +103,14 @@ const AccessHub = (): JSX.Element => {
 
   const mockGatherPlatform: GuildPlatform = {
     id: 12345,
-    platformId: PlatformType.GATHER,
-    platformName: "GATHER",
+    platformId: PlatformType.GATHER_TOWN,
+    platformName: "GATHER_TOWN",
     platformGuildId: "iblh2jvcgOkEkdu2\\My%20Event",
     platformGuildData: {
-      spaceId: "iblh2jvcgOkEkdu2\\My%20Event",
+      gatherSpaceId: "iblh2jvcgOkEkdu2\\My%20Event",
       gatherApiKey: "Rff3ZW3RqlitBPpq",
-      affiliation: "Test Affiliation",
-      role: "Test Role",
+      gatherAffiliation: "Test Affiliation",
+      gatherRole: "Test Role",
     },
     platformGuildName: "Platform Guild Name",
   }
@@ -165,11 +166,14 @@ const AccessHub = (): JSX.Element => {
           ))}
 
           <PlatformCard
-            usePlatformProps={platforms.GATHER.cardPropsHook}
+            usePlatformProps={platforms.GATHER_TOWN.cardPropsHook}
             key={"gather"}
             guildPlatform={mockGatherPlatform}
+            cornerButton={
+              <GatherCardMenu platformGuildId={mockGatherPlatform.platformGuildId} />
+            }
           >
-            <platforms.GATHER.cardButton platform={mockGatherPlatform} />
+            <platforms.GATHER_TOWN.cardButton platform={mockGatherPlatform} />
           </PlatformCard>
 
           {(isMember || isAdmin) &&

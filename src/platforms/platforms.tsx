@@ -525,16 +525,17 @@ const platforms: Record<PlatformName, PlatformData> = {
       ssr: false,
     }),
   },
-  GATHER: {
+  GATHER_TOWN: {
     icon: Buildings,
     imageUrl: "/platforms/gather.png",
     name: "Gather",
-    colorScheme: "GATHER",
+    colorScheme: "GATHER_TOWN",
     gatedEntity: "space",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     shouldShowKeepAccessesModal: true,
     cardPropsHook: useGatherCardProps,
     cardButton: GatherCardButton,
+    cardMenuComponent: FormCardMenu,
     PlatformPreview: dynamic(() => import("platforms/components/GatherPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading />,

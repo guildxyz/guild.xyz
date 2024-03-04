@@ -112,7 +112,7 @@ const colors = {
     800: "#3730a3",
     900: "#312e81",
   },
-  GATHER: {
+  GATHER_TOWN: {
     50: "#F2F4FC",
     100: "#E6E8FA",
     200: "#C0C7F2",
