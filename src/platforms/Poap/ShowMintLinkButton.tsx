@@ -5,11 +5,13 @@ import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
-export type ShowMintLinkButtonProps = { rolePlatformId: number } & ButtonProps & Rest
+type ShowMintLinkButtonProps = { rolePlatformId: number } & ButtonProps & Rest
 
-export const ShowMintLinkButton: React.FC<
-  PropsWithChildren<ShowMintLinkButtonProps>
-> = ({ rolePlatformId, children, ...rest }) => {
+const ShowMintLinkButton: React.FC<PropsWithChildren<ShowMintLinkButtonProps>> = ({
+  rolePlatformId,
+  children,
+  ...rest
+}) => {
   const {
     isLoading,
     error,
@@ -32,3 +34,5 @@ export const ShowMintLinkButton: React.FC<
     </>
   )
 }
+
+export default ShowMintLinkButton

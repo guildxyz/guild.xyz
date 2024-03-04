@@ -11,8 +11,12 @@ import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
-import { ShowMintLinkButton } from "./ShowMintLinkButton"
 import UploadMintLinksModal from "./UploadMintLinksModal"
+import dynamic from "next/dynamic"
+
+const DynamicShowMintLinkButton = dynamic(() => import("./ShowMintLinkButton"), {
+  ssr: false,
+})
 
 type Props = {
   platform: GuildPlatform
@@ -40,13 +44,13 @@ const PoapCardButton = ({ platform }: Props) => {
         shouldWrapChildren
       >
         {claimed ? (
-          <ShowMintLinkButton
+          <DynamicShowMintLinkButton
             rolePlatformId={rolePlatform.id}
             w="full"
             colorScheme={platforms.POAP.colorScheme}
           >
             Show mint link
-          </ShowMintLinkButton>
+          </DynamicShowMintLinkButton>
         ) : !rolePlatform?.capacity && isAdmin ? (
           <>
             <Button

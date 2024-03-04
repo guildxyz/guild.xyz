@@ -8,9 +8,9 @@ import AvailabilityTags from "components/[guild]/RolePlatforms/components/Platfo
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useClaimedReward } from "hooks/useClaimedReward"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
-import { ShowMintLinkButton } from "platforms/Poap/ShowMintLinkButton"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import platforms from "platforms/platforms"
 import { PlatformType } from "types"
@@ -18,6 +18,13 @@ import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
+
+const DynamicShowMintLinkButton = dynamic(
+  () => import("platforms/Poap/ShowMintLinkButton"),
+  {
+    ssr: false,
+  }
+)
 
 const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
@@ -49,14 +56,14 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
           {claimed ? (
             <>
               {"Mint link: "}
-              <ShowMintLinkButton
+              <DynamicShowMintLinkButton
                 rolePlatformId={platform.id}
                 variant="link"
                 colorScheme="primary"
                 maxW="full"
               >
                 {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
-              </ShowMintLinkButton>
+              </DynamicShowMintLinkButton>
             </>
           ) : (
             <>
