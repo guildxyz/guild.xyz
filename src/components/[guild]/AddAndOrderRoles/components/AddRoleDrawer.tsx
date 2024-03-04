@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -130,6 +131,8 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
+  const setVisibilityModalProps = useVisibilityModalProps()
+
   return (
     <>
       <Drawer
@@ -150,7 +153,15 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                 alignItems="center"
               >
                 <Box>
-                  <SetVisibility entityType="role" />
+                  <SetVisibility
+                    entityType="role"
+                    onSave={({ visibility, visibilityRoleId }) => {
+                      methods.setValue("visibility", visibility)
+                      methods.setValue("visibilityRoleId", visibilityRoleId)
+                      setVisibilityModalProps.onClose()
+                    }}
+                    {...setVisibilityModalProps}
+                  />
                 </Box>
               </DrawerHeader>
 

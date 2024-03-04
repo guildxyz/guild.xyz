@@ -8,11 +8,13 @@ import {
   useEditableControls,
 } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { Check, PencilSimple } from "phosphor-react"
 import {
   MutableRefObject,
   PropsWithChildren,
+  ReactNode,
   useEffect,
   useRef,
   useState,
@@ -25,6 +27,7 @@ import {
   useWatch,
 } from "react-hook-form"
 import REQUIREMENTS from "requirements"
+import { Requirement } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 type RequirementNameForm = {
@@ -34,10 +37,12 @@ type RequirementNameForm = {
 const RequirementNameEditor = ({
   textRef,
   isLoading,
+  rightElement,
   children,
 }: PropsWithChildren<{
   textRef: MutableRefObject<HTMLParagraphElement>
   isLoading?: boolean
+  rightElement?: ReactNode
 }>) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =
     useEditableControls()
@@ -113,19 +118,19 @@ const RequirementNameEditor = ({
           isLoading,
         })}
       />
-      <SetVisibility entityType="requirement" mt={-0.5} />
+      {rightElement}
     </Text>
   )
 }
 
-export type RequirementNameEditorProps = {
-  onSave?: (newName: string) => void
+export type RequirementNameAndVisibilityEditorProps = {
+  onSave?: (editedData: Requirement) => void
 }
 
-const RequirementNameEditorWrapper = ({
+const RequirementNameAndVisibilityEditor = ({
   onSave,
   children,
-}: PropsWithChildren<RequirementNameEditorProps>) => {
+}: PropsWithChildren<RequirementNameAndVisibilityEditorProps>) => {
   const methods = useForm<RequirementNameForm>({
     mode: "all",
   })
@@ -162,24 +167,44 @@ const RequirementNameEditorWrapper = ({
     }
   }
 
-  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
-    useEditRequirement(roleId)
+  const setVisibilityModalProps = useVisibilityModalProps()
 
-  const onSubmit = (customName: string) => {
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(roleId, {
+      onSuccess: () => setVisibilityModalProps.onClose(),
+    })
+
+  const onEditNameSubmit = (customName: string) => {
+    const editedData = {
+      ...requirement,
+      data: {
+        ...requirement.data,
+        customName,
+      },
+    }
+
+    onSubmit(editedData)
+  }
+
+  const onEditVisibilitySubmit = (visibilityData) => {
+    const editedData = {
+      ...requirement,
+      ...visibilityData,
+    }
+
+    onSubmit(editedData)
+  }
+
+  const onSubmit = (req: Requirement) => {
     if (id && roleId) {
       if (field.value === originalValue) return
 
-      onEditRequirementSubmit({
-        ...requirement,
-        data: {
-          ...requirement.data,
-          customName,
-        },
-      })
+      onEditRequirementSubmit(req)
       return
     }
 
-    onSave?.(customName)
+    onSave?.(req)
+    setVisibilityModalProps.onClose()
   }
 
   return (
@@ -187,12 +212,25 @@ const RequirementNameEditorWrapper = ({
       <Editable
         size="sm"
         {...field}
-        onSubmit={onSubmit}
+        onSubmit={onEditNameSubmit}
         onCancel={conditionallyResetToOriginal}
       >
         <RequirementNameEditor
           textRef={textRef}
           isLoading={isEditRequirementLoading}
+          rightElement={
+            <SetVisibility
+              entityType="requirement"
+              mt={-0.5}
+              defaultValues={{
+                visibility: requirement.visibility,
+                visibilityRoleId: requirement.visibilityRoleId,
+              }}
+              onSave={onEditVisibilitySubmit}
+              isLoading={isEditRequirementLoading}
+              {...setVisibilityModalProps}
+            />
+          }
         >
           {children}
         </RequirementNameEditor>
@@ -201,4 +239,4 @@ const RequirementNameEditorWrapper = ({
   )
 }
 
-export default RequirementNameEditorWrapper
+export default RequirementNameAndVisibilityEditor

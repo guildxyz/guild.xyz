@@ -11,11 +11,13 @@ import {
 } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import SetVisibility from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
-import { Rest } from "types"
+import { useFormContext } from "react-hook-form"
+import { Rest, RoleFormType } from "types"
 
 type Props = {
   label: string | JSX.Element
@@ -39,6 +41,9 @@ const RewardCard = ({
   ...rest
 }: PropsWithChildren<Props>) => {
   const rolePlatform = useRolePlatform()
+  const setVisibilityModalProps = useVisibilityModalProps()
+
+  const { setValue } = useFormContext<RoleFormType>() ?? {}
 
   return (
     <ColorCard
@@ -84,10 +89,31 @@ const RewardCard = ({
               <Skeleton isLoaded={!!title}>
                 <Text fontWeight={"bold"}>{title || "Loading reward..."}</Text>
               </Skeleton>
-              {rolePlatform && (
+              {/**
+               * TODO: use the `PUT /guilds/:guildId/roles/:roleId/role-platforms/:rolePlatformId`
+               * endpoint here
+               */}
+              {!!rolePlatform && (
                 <SetVisibility
+                  defaultValues={{
+                    visibility: rolePlatform?.visibility,
+                    visibilityRoleId: rolePlatform?.visibilityRoleId,
+                  }}
                   entityType="reward"
-                  fieldBase={`rolePlatforms.${rolePlatform.index}`}
+                  onSave={({ visibility, visibilityRoleId }) => {
+                    setValue(
+                      `rolePlatforms.${rolePlatform.index}.visibility`,
+                      visibility,
+                      { shouldDirty: true }
+                    )
+                    setValue(
+                      `rolePlatforms.${rolePlatform.index}.visibilityRoleId`,
+                      visibilityRoleId,
+                      { shouldDirty: true }
+                    )
+                    setVisibilityModalProps.onClose()
+                  }}
+                  {...setVisibilityModalProps}
                 />
               )}
             </HStack>

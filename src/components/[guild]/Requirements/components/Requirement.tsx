@@ -8,15 +8,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
-import { Visibility as VisibilityType } from "types"
+import { Requirement as Req, Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import { RequirementImageEditorProps } from "./RequirementImageEditor"
-import { RequirementNameEditorProps } from "./RequirementNameEditor"
+import { RequirementNameAndVisibilityEditorProps } from "./RequirementNameAndVisibilityEditor"
 import ResetRequirementButton from "./ResetRequirementButton"
 import ViewOriginalPopover from "./ViewOriginalPopover"
 
@@ -27,7 +26,7 @@ export type RequirementProps = PropsWithChildren<{
   footer?: JSX.Element
   rightElement?: JSX.Element
   imageWrapper?: ComponentType<RequirementImageEditorProps>
-  childrenWrapper?: ComponentType<RequirementNameEditorProps>
+  childrenWrapper?: ComponentType<RequirementNameAndVisibilityEditorProps>
   showViewOriginal?: boolean
 }>
 
@@ -48,10 +47,17 @@ const Requirement = ({
   const ChildrenWrapper = childrenWrapper ?? Box
   const childrenWrapperProps = !!childrenWrapper
     ? {
-        onSave: (customName) =>
-          setValue?.(`${fieldRoot}.data.customName`, customName, {
+        onSave: ({ visibility, visibilityRoleId, data }: Req) => {
+          setValue?.(`${fieldRoot}.visibility`, visibility, {
             shouldDirty: true,
-          }),
+          })
+          setValue?.(`${fieldRoot}.visibilityRoleId`, visibilityRoleId, {
+            shouldDirty: true,
+          })
+          setValue?.(`${fieldRoot}.data.customName`, data?.customName, {
+            shouldDirty: true,
+          })
+        },
       }
     : {}
 
@@ -87,14 +93,12 @@ const Requirement = ({
           {requirement?.type === "LINK_VISIT"
             ? children
             : requirement?.data?.customName || children}
-          {!fieldRoot ? (
+          {!setValue ? (
             <Visibility
               visibilityRoleId={requirement?.visibilityRoleId}
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
-          ) : !childrenWrapper ? (
-            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
           ) : null}
         </ChildrenWrapper>
 
@@ -113,7 +117,7 @@ const Requirement = ({
                   <Text wordBreak="break-word" flexGrow={1}>
                     {children}
                   </Text>
-                  {!!fieldRoot && <ResetRequirementButton />}
+                  {!!setValue && <ResetRequirementButton />}
                 </Stack>
               </HStack>
             </ViewOriginalPopover>

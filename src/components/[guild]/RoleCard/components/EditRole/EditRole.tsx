@@ -15,6 +15,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import RolePlatforms from "components/[guild]/RolePlatforms"
 import SetVisibility from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -54,6 +55,7 @@ export type RoleEditFormData = {
   logic: Logic
   rolePlatforms: RolePlatform[]
   visibility: Visibility
+  visibilityRoleId?: number
   anyOfNum?: number
   groupId?: number
 }
@@ -78,6 +80,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     requirements,
     rolePlatforms,
     visibility,
+    visibilityRoleId,
     groupId,
   } = roles?.find((role) => role.id === roleId) ?? {}
 
@@ -90,6 +93,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     anyOfNum: anyOfNum ?? 1,
     rolePlatforms: rolePlatforms ?? [],
     visibility,
+    visibilityRoleId,
     groupId,
   }
   const methods = useForm<RoleEditFormData>({
@@ -116,11 +120,13 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const toast = useToast()
 
+  const setVisibilityModalProps = useVisibilityModalProps()
   const onSuccess = () => {
     toast({
       title: `Role successfully updated!`,
       status: "success",
     })
+    setVisibilityModalProps.onClose()
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
@@ -228,7 +234,20 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 }
               >
                 <HStack justifyContent={"space-between"} flexGrow={1}>
-                  <SetVisibility entityType="role" />
+                  <SetVisibility
+                    entityType="role"
+                    defaultValues={{
+                      visibility: defaultValues.visibility,
+                      visibilityRoleId: defaultValues.visibilityRoleId,
+                    }}
+                    onSave={({ visibility: newVisibility }) => {
+                      methods.setValue("visibility", newVisibility, {
+                        shouldDirty: true,
+                      })
+                      setVisibilityModalProps.onClose()
+                    }}
+                    {...setVisibilityModalProps}
+                  />
                   {roles?.length > 1 && (
                     <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
                   )}

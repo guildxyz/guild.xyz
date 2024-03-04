@@ -11,7 +11,7 @@ import {
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
-import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
+import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import { useCallback, useRef } from "react"
@@ -92,7 +92,7 @@ const RequirementEditableCard = ({
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
               imageWrapper={RequirementImageEditor}
-              childrenWrapper={RequirementNameEditor}
+              childrenWrapper={RequirementNameAndVisibilityEditor}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>

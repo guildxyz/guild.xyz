@@ -5,7 +5,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildPlatform, PlatformType } from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
@@ -21,15 +21,19 @@ type Props = {
 
 const RolePlatforms = ({ roleId }: Props) => {
   const { guildPlatforms } = useGuild()
-  const { setValue } = useFormContext()
+  const { setValue, watch } = useFormContext()
 
   const { onOpen } = useAddRewardContext()
 
-  /**
-   * Using fields like this with useWatch because the one from useFieldArray is not
-   * reactive to the append triggered in the add platform button
-   */
-  const fields = useWatch({ name: "rolePlatforms" })
+  const { fields, remove } = useFieldArray({
+    name: "rolePlatforms",
+    keyName: "fieldId",
+  })
+  const watchFieldArray = watch("rolePlatforms")
+  const controlledFields = watchFieldArray.map((field, index) => ({
+    ...field,
+    ...fields[index],
+  }))
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
@@ -52,10 +56,10 @@ const RolePlatforms = ({ roleId }: Props) => {
       }
     >
       <SimpleGrid spacing={{ base: 3 }}>
-        {!fields || fields?.length <= 0 ? (
+        {!controlledFields || controlledFields?.length <= 0 ? (
           <AddCard title="Add reward" onClick={onOpen} />
         ) : (
-          fields.map((rolePlatform: any, index) => {
+          controlledFields.map((rolePlatform: any, index) => {
             let guildPlatform: GuildPlatform, type
             if (rolePlatform.guildPlatformId) {
               guildPlatform = guildPlatforms.find(
@@ -78,7 +82,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 
             return (
               <RolePlatformProvider
-                key={JSON.stringify(rolePlatform)}
+                key={rolePlatform.fieldId}
                 rolePlatform={{
                   ...rolePlatform,
                   roleId,
@@ -102,12 +106,7 @@ const RolePlatforms = ({ roleId }: Props) => {
                         rounded="full"
                         aria-label="Remove platform"
                         zIndex="1"
-                        onClick={() => {
-                          setValue(
-                            `rolePlatforms`,
-                            fields.filter((_, i) => i !== index)
-                          )
-                        }}
+                        onClick={() => remove(index)}
                       />
                     )
                   }
