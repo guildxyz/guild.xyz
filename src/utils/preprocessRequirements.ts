@@ -81,12 +81,10 @@ const preprocessRequirements = (
         }
 
         if (requirement.type === "COIN") {
-          processedRequirement.address = "0x0000000000000000000000000000000000000000"
-        } else if (
-          !requirement.address ||
-          requirement.address === "0x0000000000000000000000000000000000000000"
-        ) {
           processedRequirement.address = undefined
+          if (!processedRequirement.data.minAmount) {
+            processedRequirement.data.minAmount = 0
+          }
         }
 
         if (

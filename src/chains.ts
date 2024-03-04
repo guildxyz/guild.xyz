@@ -1,6 +1,7 @@
 import {
   beraTestnet,
   bitfinityTestnet,
+  blastMainnet,
   blastSepolia,
   bobaAvax,
   exosama,
@@ -531,6 +532,15 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/blast.png",
     },
   },
+  BLAST_MAINNET: {
+    ...blastMainnet,
+    iconUrl: "/networkLogos/blast.png",
+    coinIconUrl: ETH_ICON,
+    blockExplorerIconUrl: {
+      light: "/networkLogos/blast.png",
+      dark: "/networkLogos/blast.png",
+    },
+  },
   OASIS_SAPPHIRE: {
     ...oasisSapphire,
     iconUrl: "/networkLogos/oasis-sapphire.svg",
@@ -591,6 +601,7 @@ enum Chains {
   MANTA = manta.id,
   TAIKO_KATLA = taikoKatlaTestnet.id,
   BLAST_SEPOLIA = blastSepolia.id,
+  BLAST_MAINNET = blastMainnet.id,
   OASIS_SAPPHIRE = oasisSapphire.id,
 }
 

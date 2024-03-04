@@ -16,7 +16,6 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -34,7 +33,6 @@ import GetRewardsJoinStep from "./components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./components/progress/GetRolesJoinStep"
 import SatisfyRequirementsJoinStep from "./components/progress/SatisfyRequirementsJoinStep"
 import useJoin from "./hooks/useJoin"
-import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
   isOpen: boolean
@@ -89,13 +87,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const errorToast = useShowErrorToast()
 
-  const {
-    isLoading,
-    onSubmit,
-    error: joinError,
-    joinProgress,
-    reset,
-  } = useJoin({
+  const { isLoading, onSubmit, joinProgress, reset } = useJoin({
     onSuccess: (res) => {
       methods.setValue("platforms", {})
       onClose()
@@ -141,8 +133,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={joinError} processError={processJoinPlatformError} />
-
             <Collapse in={!isInDetailedProgressState}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
                 <WalletAuthButton />
@@ -202,7 +192,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <ModalButton
               mt="2"
               onClick={handleSubmit(onJoin)}
-              colorScheme="green"
+              colorScheme={hasNoAccess ? "gray" : "green"}
+              variant={hasNoAccess ? "outline" : "solid"}
+              size={hasNoAccess ? "md" : "lg"}
               isLoading={isLoading}
               loadingText={
                 joinProgress?.state === "FINISHED"
@@ -213,7 +205,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               }
               isDisabled={!isWeb3Connected}
             >
-              Check access to join
+              {hasNoAccess ? "Recheck access" : "Check access to join"}
             </ModalButton>
           </ModalBody>
         </FormProvider>

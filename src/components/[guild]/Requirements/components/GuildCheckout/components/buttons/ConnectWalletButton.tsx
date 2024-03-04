@@ -1,10 +1,12 @@
 import { Collapse, Tooltip } from "@chakra-ui/react"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { useSetAtom } from "jotai"
 
 const ConnectWalletButton = (): JSX.Element => {
-  const { openWalletSelectorModal, type, isWeb3Connected } =
-    useWeb3ConnectionManager()
+  const { type, isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   return (
     <Collapse in={type !== "EVM"}>
@@ -16,7 +18,7 @@ const ConnectWalletButton = (): JSX.Element => {
         <Button
           size="lg"
           colorScheme="blue"
-          onClick={openWalletSelectorModal}
+          onClick={() => setIsWalletSelectorModalOpen(true)}
           isDisabled={isWeb3Connected}
           w="full"
         >

@@ -16,9 +16,10 @@ import {
 } from "@chakra-ui/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import { useSetAtom } from "jotai"
 import {
   ArrowSquareIn,
   CaretDown,
@@ -119,6 +120,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -134,6 +136,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -149,6 +152,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -163,6 +167,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       <HiddenRequirementAccessIndicatorPopover
         count={count}
         errorMessages={hiddenReqsErrorMessages}
+        roleId={roleId}
       />
     </RequirementAccessIndicatorUI>
   )
@@ -176,13 +181,15 @@ type HiddenRequirementAccessIndicatorPopoverProps = {
     errored: number
   }
   errorMessages: string[]
+  roleId: number
 }
 
 const HiddenRequirementAccessIndicatorPopover = ({
   count,
   errorMessages,
+  roleId,
 }: HiddenRequirementAccessIndicatorPopoverProps) => {
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
     <>
@@ -224,11 +231,11 @@ const HiddenRequirementAccessIndicatorPopover = ({
           <Button
             variant="outline"
             rightIcon={<Icon as={ArrowSquareIn} />}
-            onClick={openAccountModal}
+            onClick={() => setIsAccountModalOpen(true)}
           >
             View connections
           </Button>
-          <RecheckAccessesButton />
+          <RecheckAccessesButton roleId={roleId} />
         </ButtonGroup>
       </PopoverFooter>
     </>

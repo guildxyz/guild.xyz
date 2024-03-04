@@ -1,5 +1,6 @@
-import { Button, HStack, Progress, Text } from "@chakra-ui/react"
+import { Button, HStack, Progress, Text, Tooltip } from "@chakra-ui/react"
 import FloatingFooter from "components/common/FloatingFooter"
+import { atom, useAtomValue } from "jotai"
 import { PropsWithChildren } from "react"
 import GuildLottieProgress from "./components/GuildLottieProgress"
 
@@ -10,6 +11,8 @@ type Props = {
   isDisabled?: boolean
 }
 
+export const ContinueBtnTooltipLabelAtom = atom("")
+
 const GuildCreationProgress = ({
   next,
   progress,
@@ -17,6 +20,8 @@ const GuildCreationProgress = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const progressText = `${progress}%`
+
+  const continueBtnTooltipLabel = useAtomValue(ContinueBtnTooltipLabelAtom)
 
   return (
     <FloatingFooter>
@@ -28,9 +33,11 @@ const GuildCreationProgress = ({
           </Text>
         </HStack>
         {children ?? (
-          <Button colorScheme="green" onClick={next} isDisabled={isDisabled}>
-            Continue
-          </Button>
+          <Tooltip label={continueBtnTooltipLabel} hasArrow>
+            <Button colorScheme="green" onClick={next} isDisabled={isDisabled}>
+              Continue
+            </Button>
+          </Tooltip>
         )}
       </HStack>
       <Progress

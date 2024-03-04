@@ -25,15 +25,13 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
 
   const {
     onSubmit,
-    isPreparing,
     isLoading: isClaimLoading,
     error,
     response,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatform.id)
 
-  const isLoading =
-    isAccessLoading || isPreparing || isClaimLoading || isClaimedLoading
+  const isLoading = isAccessLoading || isClaimLoading || isClaimedLoading
 
   const isDisabled = rest?.isDisabled || !rolePlatform?.capacity
 
@@ -44,9 +42,7 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
         w="full"
         isLoading={isLoading}
         colorScheme={!rest.isDisabled || claimed ? "green" : "gray"}
-        loadingText={
-          isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
-        }
+        loadingText={isAccessLoading ? "Checking access" : "Claiming POAP"}
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
             guild: urlName,

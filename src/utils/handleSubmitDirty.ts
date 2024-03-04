@@ -8,8 +8,9 @@ import {
 const TO_FILTER_FLAG = "TO_FILTER"
 const KEYS_TO_FILTER = new Set(["validAddresses", "balancyDecimals", "formFieldId"])
 const DIRTY_KEYS_TO_KEEP = [
-  // data (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
+  // data & chain (of a requirement) is kept, because if we send partial data, that will overwrite the whole data field
   "data",
+  "chain",
   "socialLinks",
   "eventSources",
 ]
