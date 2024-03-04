@@ -43,14 +43,13 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
 
   const {
     onSubmit,
-    isPreparing,
     isLoading: isClaimLoading,
     error,
     response,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatformId)
 
-  const isLoading = isAccessLoading || isPreparing || isClaimLoading
+  const isLoading = isAccessLoading || isClaimLoading
   const isDisabled = !!alreadyClaimed
 
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
@@ -61,9 +60,7 @@ const ClaimPoapButton = ({ rolePlatformId, ...rest }: Props) => {
         size="lg"
         w="full"
         isLoading={isLoading}
-        loadingText={
-          isAccessLoading || isPreparing ? "Checking access" : "Claiming POAP"
-        }
+        loadingText={isAccessLoading ? "Checking access" : "Claiming POAP"}
         colorScheme={!isDisabled ? "green" : "gray"}
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
