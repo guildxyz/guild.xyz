@@ -1,5 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import { ArrowSquareOut } from "phosphor-react"
 import { GuildPlatform } from "types"
 import ClaimGatherModal from "./ClaimGatherModal"
@@ -16,8 +17,8 @@ const GatherCardButton = ({ platform }: Props) => {
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
-  //const { claimed } = useClaimedReward(platform.id)
-  const claimed = false
+  const { claimed } = useClaimedReward(rolePlatform.id)
+
   const spaceUrl = `https://app.gather.town/app/${platform?.platformGuildId.replace(
     "\\",
     "/"
