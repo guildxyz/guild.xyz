@@ -533,7 +533,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     colorScheme: "GATHER_TOWN",
     gatedEntity: "space",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
-    shouldShowKeepAccessesModal: true,
+    shouldShowKeepAccessesModal: false,
     cardPropsHook: useGatherCardProps,
     cardButton: GatherCardButton,
     cardMenuComponent: GatherCardMenu,

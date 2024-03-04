@@ -17,7 +17,7 @@ const GatherCardButton = ({ platform }: Props) => {
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
-  const { claimed } = useClaimedReward(rolePlatform.id)
+  const { claimed, mutate } = useClaimedReward(rolePlatform.id)
 
   const spaceUrl = `https://app.gather.town/app/${platform?.platformGuildId.replace(
     "\\",
@@ -30,6 +30,13 @@ const GatherCardButton = ({ platform }: Props) => {
     error,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimGather(rolePlatform?.id)
+
+  const submitClaim = () => {
+    onSubmit().then(() => {
+      mutate()
+      onClose()
+    })
+  }
 
   return (
     <>
@@ -56,7 +63,7 @@ const GatherCardButton = ({ platform }: Props) => {
         onClose={onClose}
         isLoading={isLoading}
         error={error}
-        onSubmit={onSubmit}
+        onSubmit={submitClaim}
       />
     </>
   )
