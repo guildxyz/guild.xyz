@@ -23,12 +23,6 @@ const GatherCardButton = ({ platform }: Props) => {
     "/"
   )}`
 
-  const getNameFromSpaceId = () => {
-    return decodeURIComponent(
-      platform.platformGuildData?.gatherSpaceId.split("\\")[1]
-    )
-  }
-
   const {
     onSubmit,
     isLoading,
@@ -51,12 +45,12 @@ const GatherCardButton = ({ platform }: Props) => {
         </Button>
       ) : (
         <Button colorScheme="GATHER_TOWN" w="full" onClick={onOpen}>
-          Claim
+          Claim access
         </Button>
       )}
 
       <ClaimGatherModal
-        title={getNameFromSpaceId()}
+        title={platform.platformGuildData?.name}
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}

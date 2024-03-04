@@ -12,10 +12,9 @@ import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
-import GatherCardMenu from "platforms/Gather/GatherCardMenu"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import platforms from "platforms/platforms"
-import { GuildPlatform, PlatformName, PlatformType } from "types"
+import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -101,20 +100,6 @@ const AccessHub = (): JSX.Element => {
     (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
     (!!groups?.length && !group)
 
-  const mockGatherPlatform: GuildPlatform = {
-    id: 12345,
-    platformId: PlatformType.GATHER_TOWN,
-    platformName: "GATHER_TOWN",
-    platformGuildId: "iblh2jvcgOkEkdu2\\My%20Event",
-    platformGuildData: {
-      gatherSpaceId: "iblh2jvcgOkEkdu2\\My%20Event",
-      gatherApiKey: "Rff3ZW3RqlitBPpq",
-      gatherAffiliation: "Test Affiliation",
-      gatherRole: "Test Role",
-    },
-    platformGuildName: "Platform Guild Name",
-  }
-
   return (
     <ClientOnly>
       <Collapse in={showAccessHub} unmountOnExit>
@@ -164,17 +149,6 @@ const AccessHub = (): JSX.Element => {
           {accessedGuildPoints?.map((pointPlatform) => (
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
           ))}
-
-          <PlatformCard
-            usePlatformProps={platforms.GATHER_TOWN.cardPropsHook}
-            key={"gather"}
-            guildPlatform={mockGatherPlatform}
-            cornerButton={
-              <GatherCardMenu platformGuildId={mockGatherPlatform.platformGuildId} />
-            }
-          >
-            <platforms.GATHER_TOWN.cardButton platform={mockGatherPlatform} />
-          </PlatformCard>
 
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&

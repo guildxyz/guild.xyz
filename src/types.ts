@@ -366,6 +366,7 @@ type PlatformGuildData = {
     gatherRole?: never
   }
   GATHER: {
+    name: string
     gatherSpaceId: string
     gatherApiKey: string
     gatherAffiliation: string
@@ -373,7 +374,6 @@ type PlatformGuildData = {
     role?: never
     text?: never
     texts?: never
-    name?: never
     imageUrl?: never
     chain?: never
     contractAddress?: never

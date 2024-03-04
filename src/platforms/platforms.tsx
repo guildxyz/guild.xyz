@@ -33,6 +33,7 @@ import FormCardLinkButton from "./Forms/FormCardLinkButton"
 import FormCardMenu from "./Forms/FormCardMenu"
 import useFormCardProps from "./Forms/useFormCardProps"
 import GatherCardButton from "./Gather/GatherCardButton"
+import GatherCardMenu from "./Gather/GatherCardMenu"
 import useGatherCardProps from "./Gather/useGatherCardProps"
 import GithubCardMenu from "./Github/GithubCardMenu"
 import useGithubCardProps from "./Github/useGithubCardProps"
@@ -535,7 +536,7 @@ const platforms: Record<PlatformName, PlatformData> = {
     shouldShowKeepAccessesModal: true,
     cardPropsHook: useGatherCardProps,
     cardButton: GatherCardButton,
-    cardMenuComponent: FormCardMenu,
+    cardMenuComponent: GatherCardMenu,
     PlatformPreview: dynamic(() => import("platforms/components/GatherPreview"), {
       ssr: false,
       loading: () => <PlatformPreview isLoading />,
@@ -550,9 +551,6 @@ const platforms: Record<PlatformName, PlatformData> = {
         loading: AddPlatformPanelLoadingSpinner,
       }
     ),
-    RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
-      ssr: false,
-    }),
   },
 }
 
