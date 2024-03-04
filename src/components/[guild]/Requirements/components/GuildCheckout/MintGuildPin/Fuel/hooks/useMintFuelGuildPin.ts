@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { useAccount, useWallet } from "@fuel-wallet/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { BaseAssetId } from "fuels"
-import useFuel from "hooks/useFuel"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -11,6 +11,7 @@ import fetcher from "utils/fetcher"
 import { useMintGuildPinContext } from "../../../MintGuildPinContext"
 import type { GuildActionInput } from "../GuildPinContractAbi"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
+import parseFuelAddress from "../parseFuelAddress"
 import useFuelGuildPinFee from "./useFuelGuildPinFee"
 
 type FuelMintData = {
@@ -46,7 +47,9 @@ const useMintFuelGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { wallet, address } = useFuel()
+  const { wallet } = useWallet()
+  const { account } = useAccount()
+  const address = parseFuelAddress(account)
 
   const [loadingText, setLoadingText] = useState("")
 

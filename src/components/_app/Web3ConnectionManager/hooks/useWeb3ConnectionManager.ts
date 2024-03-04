@@ -1,4 +1,10 @@
-import useFuel from "hooks/useFuel"
+import {
+  useAccount as useFuelAccount,
+  useDisconnect as useFuelDisconnect,
+  useIsConnected,
+  useWallet,
+} from "@fuel-wallet/react"
+import parseFuelAddress from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/parseFuelAddress"
 import { atom, useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
@@ -36,7 +42,9 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     setIsInSafeContext(true)
   }, [isEvmConnected, evmConnector])
 
-  const { address: fuelAddress, isConnected: isFuelConnected } = useFuel()
+  const { account: fuelAccount } = useFuelAccount()
+  const fuelAddress = parseFuelAddress(fuelAccount)
+  const { isConnected: isFuelConnected } = useIsConnected()
 
   const isWeb3Connected = isEvmConnected || isFuelConnected
   const address = evmAddress || fuelAddress
@@ -49,7 +57,9 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
 
   const { disconnect: disconnectEvm } = useDisconnect()
-  const { disconnect: disconnectFuel, wallet } = useFuel()
+  const { disconnect: disconnectFuel } = useFuelDisconnect()
+
+  const { wallet: fuelWallet } = useWallet()
 
   const disconnect = () => {
     if (type === "EVM" && typeof disconnectEvm === "function") disconnectEvm()
@@ -61,13 +71,13 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     if (type === "EVM") {
       return signMessageAsync({ message })
     }
-    return wallet.signMessage(message)
+    return fuelWallet.signMessage(message)
   }
 
   return {
     isInSafeContext,
     isWeb3Connected,
-    address,
+    address: address,
     type,
     disconnect,
     signMessage,

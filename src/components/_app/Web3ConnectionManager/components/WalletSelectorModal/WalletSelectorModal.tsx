@@ -19,7 +19,6 @@ import { addressLinkParamsAtom } from "components/common/Layout/components/Accou
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
-import useFuel from "hooks/useFuel"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
@@ -100,8 +99,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
   const isWalletConnectModalActive = useIsWalletConnectModalActive()
-
-  const { windowFuel } = useFuel()
 
   const linkAddress = useLinkAddress()
 
@@ -217,7 +214,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   />
                 ))}
               {!isDelegateConnection && <DelegateCashButton />}
-              {windowFuel && <FuelConnectorButtons key="fuel" />}
+              <FuelConnectorButtons key="fuel" />
             </Stack>
           )}
 

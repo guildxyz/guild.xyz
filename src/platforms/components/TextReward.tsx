@@ -33,7 +33,6 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const {
     onSubmit,
-    isPreparing,
     isLoading,
     error,
     response,
@@ -90,7 +89,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     <>
       <RewardDisplay
         icon={
-          isLoading || isPreparing ? (
+          isLoading ? (
             <Spinner boxSize={6} />
           ) : (
             <RewardIcon
@@ -109,11 +108,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
               <Button
                 variant="link"
                 rightIcon={
-                  isAccessValidating || isPreparing ? (
-                    <Spinner boxSize="1em" />
-                  ) : (
-                    <ArrowSquareOut />
-                  )
+                  isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
                 }
                 iconSpacing="1"
                 maxW="full"

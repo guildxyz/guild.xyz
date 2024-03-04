@@ -8,6 +8,7 @@ import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
 import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { CircleWavyCheck } from "phosphor-react"
+import { useState } from "react"
 import useMembershipUpdate from "./useMembershipUpdate"
 
 /**
@@ -22,51 +23,66 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
   const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
+  // temporary because progress.mutate(undefined, { revalidate: false }) doesn't work for some reason
+  const [isNoAccess, setIsNoAccess] = useState(false)
 
   const mintGuildPinContext = useMintGuildPinContext()
   // Destructuring it separately, since we don't have a MintGuildPinContext on the POAP minting page
   const { onOpen } = mintGuildPinContext ?? {}
   const { pathname } = useRouter()
 
-  const onJoinSuccess: UseSubmitOptions<JoinJob>["onSuccess"] = (response) => {
-    if (
-      pathname === "/[guild]" &&
-      guild.featureFlags.includes("GUILD_CREDENTIAL") &&
-      guild.guildPin?.isActive &&
-      !GUILD_PIN_MAINTENANCE
-    ) {
-      toastWithButton({
-        status: "success",
-        title: "Successfully joined guild",
-        description: "Let others know as well by minting it onchain",
-        buttonProps: {
-          leftIcon: <CircleWavyCheck weight="fill" />,
-          children: "Mint Guild Pin",
-          onClick: onOpen,
-        },
-      })
-    } else {
-      toastWithTweetButton({
-        title: "Successfully joined guild",
-        tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
+  const { triggerMembershipUpdate, joinProgress, isLoading, reset } =
+    useMembershipUpdate({
+      onSuccess: (response) => {
+        if (response?.roleAccesses?.every((role) => !role.access)) {
+          setIsNoAccess(true)
+          return
+        }
+
+        if (
+          pathname === "/[guild]" &&
+          guild.featureFlags.includes("GUILD_CREDENTIAL") &&
+          guild.guildPin?.isActive &&
+          !GUILD_PIN_MAINTENANCE
+        ) {
+          toastWithButton({
+            status: "success",
+            title: "Successfully joined guild",
+            description: "Let others know as well by minting it onchain",
+            buttonProps: {
+              leftIcon: <CircleWavyCheck weight="fill" />,
+              children: "Mint Guild Pin",
+              onClick: onOpen,
+            },
+          })
+        } else {
+          toastWithTweetButton({
+            title: "Successfully joined guild",
+            tweetText: `Just joined the ${guild.name} guild. Continuing my brave quest to explore all corners of web3!
       guild.xyz/${guild.urlName}`,
-      })
-    }
+          })
+        }
 
-    // mutate user in case they connected new platforms during the join flow
-    user?.mutate?.()
+        // mutate user in case they connected new platforms during the join flow
+        user?.mutate?.()
 
-    setIsAfterJoin(true)
-    onSuccess?.(response)
+        setIsAfterJoin(true)
+
+        onSuccess?.(response)
+      },
+      onError,
+      keepPreviousData: true,
+    })
+
+  return {
+    onSubmit: (data) => {
+      setIsNoAccess(false)
+      triggerMembershipUpdate(data)
+    },
+    joinProgress: (isLoading || isNoAccess) && joinProgress,
+    isLoading,
+    reset,
   }
-
-  const { triggerMembershipUpdate: onSubmit, ...rest } = useMembershipUpdate({
-    onSuccess: onJoinSuccess,
-    onError,
-    keepPreviousData: true,
-  })
-
-  return { ...rest, onSubmit }
 }
 
 export default useJoin

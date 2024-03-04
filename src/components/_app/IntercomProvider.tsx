@@ -64,7 +64,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
     if (!isWeb3Connected) return
 
     addIntercomSettings({
-      address: address.toLowerCase(),
+      address: address?.toLowerCase(),
       walletType,
       wallet: connectorName,
       userId: null,
