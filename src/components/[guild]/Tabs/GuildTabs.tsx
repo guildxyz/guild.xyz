@@ -1,5 +1,5 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { PlatformType } from "types"
+import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import Tabs, { TabsProps } from "./Tabs"
@@ -17,14 +17,13 @@ type Props = {
 } & TabsProps
 
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
-  const { urlName, featureFlags, guildPlatforms } = useGuild()
+  const { urlName, featureFlags } = useGuild()
   const { isAdmin } = useGuildPermission()
 
   const { captureEvent } = usePostHogContext()
 
-  const existingPointsReward = guildPlatforms?.find(
-    (gp) => gp.platformId === PlatformType.POINTS
-  )
+  const existingPointsRewards = useAccessedGuildPoints("ALL")
+  const firstExistingPointsReward = existingPointsRewards?.[0]
 
   return (
     <Tabs {...rest}>
@@ -32,9 +31,9 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
         Home
       </TabButton>
 
-      {existingPointsReward && (
+      {firstExistingPointsReward && (
         <TabButton
-          href={`/${urlName}/leaderboard/${existingPointsReward.id}`}
+          href={`/${urlName}/leaderboard/${firstExistingPointsReward.id}`}
           isActive={activeTab === "LEADERBOARD"}
           onClick={() => {
             captureEvent("Click on leaderboard tab", {

@@ -17,19 +17,22 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import {
-  useInitWeb3InboxClient,
-  useManageSubscription,
-  useMessages,
-  useW3iAccount,
-} from "@web3inbox/widget-react"
+  initWeb3InboxClient,
+  useNotifications,
+  usePrepareRegistration,
+  useRegister,
+  useSubscribe,
+  useSubscription,
+  useWeb3InboxAccount,
+  useWeb3InboxClient,
+} from "@web3inbox/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import { atom, useAtomValue, useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import { ArrowRight, ArrowSquareOut } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useRef, useState } from "react"
 import { useAccount, useSignMessage } from "wagmi"
 import WebInboxSkeleton from "./WebInboxSkeleton"
 
@@ -38,36 +41,30 @@ const DynamicWeb3InboxMessage = dynamic(() => import("./Web3InboxMessage"))
 const WEB3_INBOX_INIT_PARAMS = {
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
   domain: "guild.xyz",
-  isLimited: process.env.NODE_ENV === "production",
+  allApps: process.env.NODE_ENV !== "production",
 }
 
-/**
- * IsSubscribed from useManageSubscription is not reliable (it won't update until
- * 2-3s after successful subscription), so we're using a custom state here instead
- *
- * TODO: we can remove this custom logic once they solve this issue in the Web3Inbox
- * package
- */
-const w3iSubscriptionAtom = atom(false)
-
 const Web3Inbox = () => {
-  const isReady = useInitWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+  initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
+  const { data } = useWeb3InboxClient()
+  const isReady = !!data
 
   const { address } = useAccount()
-  const { account, setAccount } = useW3iAccount()
+  const { data: account } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
 
-  const customIsSubscribed = useAtomValue(w3iSubscriptionAtom)
-  const { isSubscribed } = useManageSubscription(
+  const { data: subscription } = useSubscription(
     account,
     WEB3_INBOX_INIT_PARAMS.domain
   )
 
-  useEffect(() => {
-    if (!address) return
-    setAccount(`eip155:1:${address}`)
-  }, [address, setAccount])
-
-  const { messages } = useMessages(account, WEB3_INBOX_INIT_PARAMS.domain)
+  const { data: messages } = useNotifications(
+    5,
+    false,
+    account,
+    WEB3_INBOX_INIT_PARAMS.domain
+  )
 
   const inboxContainerRef = useRef(null)
   const isScrollable = !!inboxContainerRef.current
@@ -78,7 +75,7 @@ const Web3Inbox = () => {
 
   return (
     <Stack spacing={0}>
-      <Collapse in={!isSubscribed && !customIsSubscribed}>
+      <Collapse in={!subscription}>
         <HStack pt={4} pb={5} pl={1} spacing={4}>
           <Center boxSize="6" flexShrink={0}>
             <Img src="/img/message.svg" boxSize={5} alt="Messages" mt={0.5} />
@@ -97,7 +94,7 @@ const Web3Inbox = () => {
       </Collapse>
 
       <Collapse
-        in={isSubscribed || customIsSubscribed}
+        in={!!subscription}
         style={{ marginInline: "calc(-1 * var(--chakra-space-4))" }}
       >
         <Box
@@ -115,12 +112,11 @@ const Web3Inbox = () => {
           {messages?.length > 0 ? (
             <Stack pt={2} spacing={0}>
               {messages
-                .sort((msgA, msgB) => msgB.publishedAt - msgA.publishedAt)
-                .map(({ publishedAt, message: { id, icon, title, body, url } }) => (
+                .sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
+                .map(({ sentAt, id, title, body, url }) => (
                   <DynamicWeb3InboxMessage
                     key={id}
-                    publishedAt={publishedAt}
-                    icon={icon}
+                    sentAt={sentAt}
                     title={title}
                     body={body}
                     url={url}
@@ -144,9 +140,15 @@ const SubscribeToMessages = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { address } = useAccount()
 
-  const { register, isRegistering, account } = useW3iAccount()
-  const setCustomIsSubscribed = useSetAtom(w3iSubscriptionAtom)
-  const { subscribe, isSubscribing } = useManageSubscription(
+  const { data: account } = useWeb3InboxAccount(
+    address ? `eip155:1:${address}` : undefined
+  )
+
+  const [isSigning, setIsSigning] = useState(false)
+
+  const { prepareRegistration } = usePrepareRegistration()
+  const { register, isLoading: isRegistering } = useRegister()
+  const { subscribe, isLoading: isSubscribing } = useSubscribe(
     account,
     WEB3_INBOX_INIT_PARAMS.domain
   )
@@ -160,8 +162,14 @@ const SubscribeToMessages = () => {
     if (!address) return
 
     try {
-      await register(async (message) => signMessageAsync({ message }))
-    } catch (registerIdentityError) {
+      const { message, registerParams } = await prepareRegistration()
+      setIsSigning(true)
+      const signature = await signMessageAsync({ message: message }).finally(() =>
+        setIsSigning(false)
+      )
+      await register({ registerParams, signature })
+    } catch (web3InboxRegisterError) {
+      console.error("web3InboxRegisterError", web3InboxRegisterError)
       showErrorToast("Web3Inbox registration error")
       return
     }
@@ -173,9 +181,9 @@ const SubscribeToMessages = () => {
         title: "Success",
         description: "Successfully subscribed to Guild messages via Web3Inbox",
       })
-      setCustomIsSubscribed(true)
       onClose()
-    } catch {
+    } catch (web3InboxSubscribeError) {
+      console.error("web3InboxSubscribeError", web3InboxSubscribeError)
       showErrorToast("Couldn't subscribe to Guild messages")
     }
   }
@@ -209,8 +217,8 @@ const SubscribeToMessages = () => {
               variant="solid"
               colorScheme="blue"
               onClick={performSubscribe}
-              isLoading={isRegistering || isSubscribing}
-              loadingText="Check your wallet"
+              isLoading={isSigning || isRegistering || isSubscribing}
+              loadingText={isSigning ? "Check your wallet" : "Subscribing"}
               w="full"
             >
               Sign to subscribe

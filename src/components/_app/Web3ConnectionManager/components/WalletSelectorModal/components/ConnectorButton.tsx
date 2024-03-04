@@ -1,4 +1,4 @@
-import { Center, Icon, Img } from "@chakra-ui/react"
+import { ButtonProps, Center, Icon, Img } from "@chakra-ui/react"
 import MetaMaskOnboarding from "@metamask/onboarding"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
@@ -14,6 +14,20 @@ type Props = {
   isLoading: boolean
   connect: (args) => void
   error?: Error
+}
+
+const connectorButtonProps: ButtonProps = {
+  w: "full",
+  size: "xl",
+  iconSpacing: 4,
+  justifyContent: "start",
+  mb: 2.5,
+  sx: {
+    "> div.chakra-button__spinner": {
+      boxSize: 6,
+      justifyContent: "center",
+    },
+  },
 }
 
 const ConnectorButton = ({
@@ -42,13 +56,12 @@ const ConnectorButton = ({
 
   return (
     <Button
-      mb="4"
       onClick={
         connectorName === "MetaMask" && !isMetaMaskInstalled
           ? handleOnboarding
           : () => connect({ connector })
       }
-      rightIcon={
+      leftIcon={
         connectorIcon ? (
           <Center boxSize={6}>
             <Img
@@ -68,15 +81,13 @@ const ConnectorButton = ({
           (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
         !error
       }
-      spinnerPlacement="end"
       loadingText={`${connectorName} - connecting...`}
-      w="full"
-      size="xl"
-      justifyContent="space-between"
+      {...connectorButtonProps}
     >
       {connectorName}
     </Button>
   )
 }
 
+export { connectorButtonProps }
 export default ConnectorButton

@@ -209,6 +209,7 @@ export const getAssetsCallParams: Record<
 
 export const FEE_COLLECTOR_CONTRACT: Partial<Record<Chain, string>> = {
   ETHEREUM: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
+  OPTIMISM: "0xf7c2baa81feb6dd7bda0b3a03afbc1e13f955da5",
   POLYGON: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
   POLYGON_MUMBAI: "0xe4b4c6a7c6b6396032096C12aDf46B7F14a70F4d",
 }

@@ -8,7 +8,7 @@ import { useRequirementContext } from "../../RequirementContext"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
 import FeesTable from "./FeesTable"
-import { useGuildCheckoutContext } from "./GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContext"
 import PriceFallback from "./PriceFallback"
 
 const PurchaseFeeAndTotal = (): JSX.Element => {

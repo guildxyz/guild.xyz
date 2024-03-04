@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   HStack,
   SimpleGrid,
@@ -12,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import GuildLogo from "components/common/GuildLogo"
-import Link from "components/common/Link"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import image from "next/image"
 import { Users } from "phosphor-react"

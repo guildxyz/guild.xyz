@@ -273,6 +273,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 transition={{ duration: 0.3 }}
                 position="absolute"
                 w="full"
+                zIndex={1}
                 bottom="0"
               >
                 <Button variant="outline" mr={3} onClick={onCloseAndClear}>

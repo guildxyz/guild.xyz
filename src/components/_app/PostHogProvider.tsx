@@ -15,6 +15,8 @@ if (typeof window !== "undefined") {
     capture_pageleave: false,
     capture_pageview: false,
 
+    persistence: "memory",
+
     // Disable in development
     loaded: (ph) => {
       if (

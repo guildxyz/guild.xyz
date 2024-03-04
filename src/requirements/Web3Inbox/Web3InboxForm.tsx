@@ -11,7 +11,7 @@ import { useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
-export const WEB3INBOX_APPS = ["GUILD", "WEB3INBOX"] as const
+export const WEB3INBOX_APPS = ["GUILD", "WEB3INBOX", "SHEFI"] as const
 export const APP_DETAILS: Record<
   (typeof WEB3INBOX_APPS)[number],
   {
@@ -26,6 +26,10 @@ export const APP_DETAILS: Record<
   WEB3INBOX: {
     name: "Web3Inbox",
     image: "/requirementLogos/web3inbox.png",
+  },
+  SHEFI: {
+    name: "SheFi Summit",
+    image: "/requirementLogos/shefi.jpg",
   },
 }
 

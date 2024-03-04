@@ -3,6 +3,8 @@ import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlag
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
 
+export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
+
 type Token = {
   address: `0x${string}`
   name: string
@@ -88,6 +90,7 @@ type PlatformName =
   | "TEXT"
   | "POLYGON_ID"
   | "POINTS"
+  | "FORM"
 
 type PlatformUserData = {
   acessToken?: string
@@ -112,15 +115,13 @@ type SharedSocial = {
   isShared: boolean
 }
 
-type AddressConnectionProvider = "DELEGATE"
-
 type User = {
   id: number
   addresses: Array<{
     address: `0x${string}`
     userId: number
     isPrimary: boolean
-    provider: AddressConnectionProvider
+    isDelegated: boolean
     createdAt: string
     walletType: "EVM" | "FUEL"
   }>
@@ -130,9 +131,6 @@ type User = {
   isSuperAdmin: boolean
 
   captchaVerifiedSince: Date
-
-  // Should be removed once we use only v2 API
-  addressProviders?: Record<string, AddressConnectionProvider>
 
   emails: {
     emailAddress: string
@@ -185,6 +183,10 @@ type GuildAdmin = {
   isOwner: boolean
 }
 
+/**
+ * This is really verbose with the huge amount of repeated nevers, it'll be solved by
+ * adding it to @guildxyz/types, so leaving it like this for now
+ */
 type PlatformGuildData = {
   DISCORD: {
     role?: never
@@ -207,6 +209,7 @@ type PlatformGuildData = {
     imageUrl?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -228,6 +231,7 @@ type PlatformGuildData = {
     imageUrl?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -248,6 +252,7 @@ type PlatformGuildData = {
     texts?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -268,6 +273,7 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   TEXT: {
     text: string
@@ -288,6 +294,7 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   POAP: {
     text?: never
@@ -308,6 +315,28 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId: string
     eventId: number
+    formId?: never
+  }
+  FORM: {
+    text?: never
+    texts?: never
+    name?: never
+    imageUrl?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: number
   }
 }
 
@@ -541,6 +570,7 @@ export enum PlatformType {
   "POLYGON_ID" = 12,
   "POINTS" = 13,
   "POAP" = 14,
+  "FORM" = 15,
 }
 type WalletConnectConnectionData = {
   connected: boolean
@@ -646,7 +676,6 @@ type DetailedPinLeaderboardUserData = {
 
 export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
 export type {
-  AddressConnectionProvider,
   BaseUser,
   CoingeckoToken,
   DetailedPinLeaderboardUserData as DetailedUserLeaderboardData,

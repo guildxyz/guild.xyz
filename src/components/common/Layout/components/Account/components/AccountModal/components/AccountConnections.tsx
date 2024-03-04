@@ -47,6 +47,7 @@ const AccountConnections = () => {
           "TEXT",
           "POINTS",
           "POLYGON_ID",
+          "FORM",
         ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [
@@ -90,7 +91,7 @@ const AccountConnections = () => {
                 <PopoverContent>
                   <PopoverArrow />
                   <PopoverBody>
-                    Each of your addresses will be used for requirement checks.
+                    Each of your addresses will be used for requirement checks
                   </PopoverBody>
                 </PopoverContent>
               </Popover>

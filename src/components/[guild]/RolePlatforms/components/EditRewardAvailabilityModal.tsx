@@ -34,6 +34,7 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   platformType: PlatformName
+  claimedCount?: number
   defaultValues?: RolePlatformAvailabilityForm
   isLoading?: boolean
   onDone: (data: RolePlatformAvailabilityForm) => void
@@ -65,6 +66,7 @@ const datetimeLocalToIsoString = (datetimeLocal: string): string | null => {
 const EditRewardAvailabilityModal = ({
   isOpen,
   onClose,
+  claimedCount,
   platformType,
   defaultValues,
   isLoading,
@@ -90,12 +92,14 @@ const EditRewardAvailabilityModal = ({
   } = useController({
     control,
     name: "capacity",
-    rules: {
-      min: {
-        value: 1,
-        message: "Amount must be positive",
-      },
-    },
+    rules: !AUTO_SUPPLY_PLATFORMS[platformType]
+      ? {
+          min: {
+            value: 1,
+            message: "Amount must be positive",
+          },
+        }
+      : undefined,
   })
 
   const startTimeValue = useWatch({ control, name: "startTime" })
@@ -138,7 +142,7 @@ const EditRewardAvailabilityModal = ({
                   }}
                 >
                   <NumberInput
-                    min={1}
+                    min={1 < claimedCount ? claimedCount : 1}
                     mx="px"
                     pb="px"
                     w="calc(100% - 2px)"

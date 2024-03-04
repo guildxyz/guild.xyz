@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Collapse,
   FormControl,
@@ -15,7 +16,6 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
 import { Question } from "phosphor-react"
 import platforms from "platforms/platforms"
 import { useEffect } from "react"

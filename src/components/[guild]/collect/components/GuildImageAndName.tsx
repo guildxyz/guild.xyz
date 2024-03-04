@@ -1,21 +1,26 @@
+import { Link } from "@chakra-ui/next-js"
 import { HStack } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
-import Link from "components/common/Link"
 
 const GuildImageAndName = () => {
   const { name, urlName, imageUrl } = useGuild()
   const { textColor } = useThemeContext()
 
   return (
-    <HStack>
-      <GuildLogo imageUrl={imageUrl} size={8} />
+    <HStack mb={3}>
+      <GuildLogo
+        imageUrl={imageUrl}
+        size={6}
+        bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+      />
       <Link
         href={`/${urlName}`}
         fontFamily="display"
         fontWeight="bold"
         color={textColor}
+        opacity="0.7"
       >
         {name}
       </Link>

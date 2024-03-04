@@ -7,9 +7,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
+import { useSetAtom } from "jotai"
 import { SignIn } from "phosphor-react"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useUser from "./hooks/useUser"
@@ -17,7 +19,8 @@ import useUser from "./hooks/useUser"
 const NoPermissionToPageFallback = ({ children }) => {
   const { id, isLoading } = useUser()
   const { isAdmin } = useGuildPermission()
-  const { openWalletSelectorModal, openAccountModal } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   if (isLoading)
     return (
@@ -39,12 +42,16 @@ const NoPermissionToPageFallback = ({ children }) => {
               fontWeight="semibold"
               pr="4"
             >
-              Connect your wallet to access this page
+              Sign in to access this page
             </AlertDescription>
           </Stack>
           <Spacer />
-          <Button leftIcon={<SignIn />} onClick={openWalletSelectorModal}>
-            Connect wallet
+          <Button
+            leftIcon={<SignIn />}
+            colorScheme="white"
+            onClick={() => setIsWalletSelectorModalOpen(true)}
+          >
+            Sign in
           </Button>
         </Alert>
       </Card>
@@ -61,7 +68,9 @@ const NoPermissionToPageFallback = ({ children }) => {
             </AlertDescription>
           </Stack>
           <Spacer />
-          <Button onClick={openAccountModal}>View account</Button>
+          <Button colorScheme="white" onClick={() => setIsAccountModalOpen(true)}>
+            View account
+          </Button>
         </Alert>
       </Card>
     )

@@ -6,7 +6,6 @@ import PlatformSelectButton from "./components/PlatformSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
-  showPoap?: boolean
 } & StackProps
 
 type PlatformsGridData = {
@@ -15,8 +14,8 @@ type PlatformsGridData = {
   isGeneral?: boolean
 }
 
-const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
-  const { guildPlatforms } = useGuild()
+const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
+  const { guildPlatforms, featureFlags } = useGuild()
 
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
   const platformsData: PlatformsGridData[] = [
@@ -36,14 +35,10 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
       platform: "GITHUB",
       description: "Manage repositories",
     },
-    ...(showPoap
-      ? [
-          {
-            platform: "POAP",
-            description: "Mint POAP",
-          } as PlatformsGridData,
-        ]
-      : []),
+    {
+      platform: "POAP",
+      description: "Mint POAP",
+    },
     ...(!guildPlatforms.find(
       (platform) => platform.platformId === PlatformType.POLYGON_ID
     )
@@ -69,6 +64,15 @@ const PlatformsGrid = ({ onSelection, showPoap = false, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
+    ...(featureFlags.includes("FORMS")
+      ? [
+          {
+            platform: "FORM",
+            description: "Gather responses",
+            isGeneral: true,
+          } as PlatformsGridData,
+        ]
+      : []),
   ]
 
   return (

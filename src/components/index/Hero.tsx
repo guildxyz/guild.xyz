@@ -116,25 +116,24 @@ const Hero = (): JSX.Element => {
           w={{ base: "full", sm: "unset" }}
           mb={3}
         >
-          <Link passHref href="/create-guild" prefetch={false}>
-            <LandingButton
-              as="a"
-              w={{ base: "full", sm: "unset" }}
-              colorScheme="DISCORD"
-              rightIcon={<ArrowRight />}
-            >
-              Create Guild
-            </LandingButton>
-          </Link>
-          <Link passHref href="/explorer">
-            <LandingButton
-              as="a"
-              w={{ base: "full", sm: "unset" }}
-              colorScheme="solid-gray"
-            >
-              Explore Guilds
-            </LandingButton>
-          </Link>
+          <LandingButton
+            as={Link}
+            href="/create-guild"
+            prefetch={false}
+            w={{ base: "full", sm: "unset" }}
+            colorScheme="DISCORD"
+            rightIcon={<ArrowRight />}
+          >
+            Create Guild
+          </LandingButton>
+          <LandingButton
+            as={Link}
+            href="/explorer"
+            w={{ base: "full", sm: "unset" }}
+            colorScheme="solid-gray"
+          >
+            Explore Guilds
+          </LandingButton>
         </Stack>
 
         <Text

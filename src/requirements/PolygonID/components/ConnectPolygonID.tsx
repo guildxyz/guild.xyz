@@ -13,11 +13,14 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
-import useAccess from "components/[guild]/hooks/useAccess"
-import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { ArrowsClockwise } from "phosphor-react"
 import { QRCodeSVG } from "qrcode.react"
 import { useEffect } from "react"
@@ -25,21 +28,21 @@ import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
 const ConnectPolygonID = (props: ButtonProps) => {
+  const { id: userId } = useUser()
   const { id, roleId, type, data, chain } = useRequirementContext()
   const { onOpen, onClose, isOpen } = useDisclosure()
 
-  const { data: roleAccess } = useAccess(roleId, isOpen && { refreshInterval: 5000 })
+  const { reqAccesses } = useRoleMembership(roleId)
 
-  const errorType = roleAccess?.errors?.find(
-    (err) => err.requirementId === id
-  )?.errorType
+  const reqAccess = reqAccesses?.find((err) => err.requirementId === id)
+  const errorType = reqAccess?.errorType
 
   // close modal (and stop revalidating access) on successful connect
   useEffect(() => {
     if (!errorType) onClose()
   }, [errorType])
 
-  if (!errorType) return null
+  if (!userId || (!!reqAccess && !errorType)) return null
 
   return (
     <>
@@ -145,16 +148,47 @@ const ConnectPolygonIDModal = ({
                 >
                   Generate new QR code
                 </Button>
-                <Text mt="10" textAlign="center">
-                  Scan with your Polygon ID app! The modal will automatically close
-                  on successful connect
+                <Text my="8" textAlign="center">
+                  Scan with your Polygon ID app, then re-check access below! The
+                  modal will automatically close on successful connect
                 </Text>
+                <RecheckConnectionButton />
               </>
             )}
           </Center>
         </ModalBody>
       </ModalContent>
     </Modal>
+  )
+}
+
+const RecheckConnectionButton = (): JSX.Element => {
+  const showErrorToast = useShowErrorToast()
+
+  const { triggerMembershipUpdate, isLoading } = useMembershipUpdate({
+    onError: (error) => {
+      const errorMsg = "Couldn't check access"
+      const correlationId = error.correlationId
+      showErrorToast(
+        correlationId
+          ? {
+              error: errorMsg,
+              correlationId,
+            }
+          : errorMsg
+      )
+    },
+  })
+
+  return (
+    <Button
+      onClick={() => triggerMembershipUpdate()}
+      colorScheme="green"
+      isLoading={isLoading}
+      w="full"
+    >
+      Check connection
+    </Button>
   )
 }
 
