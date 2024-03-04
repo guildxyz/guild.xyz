@@ -10,7 +10,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { Guild } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -19,6 +19,13 @@ import useGuilds from "../Guild/hooks/useGuilds"
 const customFilterOption = (candidate, input) =>
   candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
   candidate.data?.details?.includes(input?.replace("https://guild.xyz/", ""))
+
+const convertGuildToOption = (guild: Guild) => ({
+  img: guild.imageUrl,
+  label: guild.name,
+  value: guild.id,
+  details: guild.urlName,
+})
 
 const GUILD_URL_REGEX = /^[a-z0-9\-]*$/i
 
@@ -33,47 +40,35 @@ const GuildSelect = ({ baseFieldPath }) => {
 
   const { data: guildOptions, isValidating: isGuildsLoading } =
     useGuilds(debouncedSearchValue)
+  const currentGuild = useGuild()
 
   const guildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
-
-  const { isLoading, ...fetchedGuild } = useGuild(
+  const { isLoading: isSelectedGuildLoading, ...selectedGuild } = useGuild(
     searchValue &&
       debouncedSearchValue?.replace("https://guild.xyz/", "").match(GUILD_URL_REGEX)
       ? debouncedSearchValue.replace("https://guild.xyz/", "")
       : guildId
   )
-  const [foundGuild, setFoundGuild] = useState<Guild>()
-
-  useEffect(() => {
-    if (
-      !fetchedGuild?.id ||
-      (foundGuild?.isDetailed && fetchedGuild.id === foundGuild?.id)
-    )
-      return
-    setFoundGuild(fetchedGuild)
-  }, [fetchedGuild])
 
   const mergedGuildOptions = useMemo(() => {
-    if (!guildOptions && !foundGuild) return []
+    let options = []
 
-    const foundGuildOption = foundGuild
-      ? {
-          img: foundGuild.imageUrl,
-          label: foundGuild.name,
-          value: foundGuild.id,
-          details: foundGuild.urlName,
-        }
-      : null
+    if (currentGuild?.id) {
+      options = [convertGuildToOption(currentGuild)]
+    }
+    if (guildId && selectedGuild?.id && currentGuild?.id !== guildId) {
+      options = [convertGuildToOption(selectedGuild), ...options]
+    }
+    if (guildOptions) {
+      options = options.concat(
+        guildOptions.filter(
+          (option) => option.value !== currentGuild?.id && option.value !== guildId
+        )
+      )
+    }
 
-    if (foundGuild && !guildOptions) return [foundGuildOption]
-
-    if (foundGuild && !guildOptions?.find((g) => g.value === foundGuild.id))
-      return [...guildOptions, foundGuildOption]
-
-    return guildOptions
-  }, [guildOptions, foundGuild])
-
-  const selectedGuild = mergedGuildOptions?.find((guild) => guild.value === guildId)
+    return options
+  }, [guildOptions, currentGuild])
 
   return (
     <FormControl
@@ -83,12 +78,9 @@ const GuildSelect = ({ baseFieldPath }) => {
       <FormLabel>Guild</FormLabel>
 
       <InputGroup>
-        {selectedGuild?.img && (
+        {guildId && selectedGuild?.imageUrl && (
           <InputLeftElement>
-            <OptionImage
-              img={selectedGuild?.img as string}
-              alt={selectedGuild?.label}
-            />
+            <OptionImage img={selectedGuild?.imageUrl} alt={selectedGuild?.name} />
           </InputLeftElement>
         )}
         <ControlledSelect
@@ -100,7 +92,7 @@ const GuildSelect = ({ baseFieldPath }) => {
               message: "Please input a valid Guild URL",
             },
           }}
-          isLoading={isGuildsLoading || isLoading}
+          isLoading={isGuildsLoading || isSelectedGuildLoading}
           options={mergedGuildOptions}
           beforeOnChange={() => resetField(`${baseFieldPath}.data.roleId`)}
           onInputChange={(newValue) => setSearchValue(newValue)}
