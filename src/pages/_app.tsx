@@ -10,6 +10,7 @@ import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
 import { dystopian, inter } from "fonts"
+import useOAuthResultToast from "hooks/useOAuthResultToast"
 import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
@@ -46,6 +47,8 @@ const App = ({
 
   const [isRouteChangeInProgress, setIsRouteChangeInProgress] = useState(false)
   const { colorMode } = useColorMode()
+
+  useOAuthResultToast()
 
   useEffect(() => {
     let previousPathname = null
