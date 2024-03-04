@@ -9,18 +9,17 @@ import { RolePlatform } from "../../../../types"
 import { MintLinkModal } from "./MintLinkModal"
 
 type Props = {
-  rolePlatformId: number
   rolePlatform: RolePlatform
 } & ButtonProps
 
-const ClaimPoapButton = ({ rolePlatformId, rolePlatform, ...rest }: Props) => {
+const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
   const { captureEvent } = usePostHogContext()
-  const { claimed, isLoading: isClaimedLoading } = useClaimedReward(rolePlatformId)
+  const { claimed, isLoading: isClaimedLoading } = useClaimedReward(rolePlatform.id)
 
   const { urlName, roles } = useGuild()
 
   const roleId = roles?.find((role) =>
-    role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
+    role.rolePlatforms.some((rp) => rp.id === rolePlatform.id)
   )?.id
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
@@ -31,7 +30,7 @@ const ClaimPoapButton = ({ rolePlatformId, rolePlatform, ...rest }: Props) => {
     error,
     response,
     modalProps: { isOpen, onOpen, onClose },
-  } = useClaimText(rolePlatformId)
+  } = useClaimText(rolePlatform.id)
 
   const isLoading =
     isAccessLoading || isPreparing || isClaimLoading || isClaimedLoading

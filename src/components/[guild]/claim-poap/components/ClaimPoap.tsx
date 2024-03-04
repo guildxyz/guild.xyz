@@ -46,11 +46,7 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
         hasArrow
         shouldWrapChildren
       >
-        <ClaimPoapButton
-          rolePlatformId={rolePlatformId}
-          rolePlatform={rolePlatform}
-          isDisabled={!isButtonEnabled}
-        />
+        <ClaimPoapButton rolePlatform={rolePlatform} isDisabled={!isButtonEnabled} />
       </Tooltip>
 
       <Flex justifyContent="center" alignItems="center" wrap="wrap">
