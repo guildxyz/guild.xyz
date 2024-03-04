@@ -45,6 +45,13 @@ const preprocessRequirements = (
           }
         }
 
+        // So we don't send empty strings to the API
+        if (
+          processedRequirement.type?.startsWith("COVALENT_") &&
+          !processedRequirement?.address
+        )
+          processedRequirement.address = undefined
+
         // Make sure minAmount and maxAmount are in correct order
         if (
           processedRequirement.type?.includes("RELATIVE") &&
