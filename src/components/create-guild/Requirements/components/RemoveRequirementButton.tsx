@@ -7,7 +7,7 @@ import {
 
 const RemoveRequirementButton = forwardRef(
   ({ onClick }: Pick<CloseButtonProps, "onClick">, ref) => {
-    const bgColor = useColorModeValue("gray.700", "gray.400")
+    const color = useColorModeValue("gray.700", "gray.400")
 
     return (
       <CloseButton
@@ -15,7 +15,7 @@ const RemoveRequirementButton = forwardRef(
         position="absolute"
         top={2}
         right={2}
-        color={bgColor}
+        color={color}
         borderRadius="full"
         size="sm"
         onClick={onClick}
