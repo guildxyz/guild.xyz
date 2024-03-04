@@ -76,7 +76,7 @@ const App = ({
           }
         `}
       </style>
-      <Script src="/intercom.js" />
+      <Script src="/intercom.js" strategy="lazyOnload" />
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA
