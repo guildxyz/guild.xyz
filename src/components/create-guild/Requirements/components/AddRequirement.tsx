@@ -154,12 +154,7 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
               {selectedType && (
                 <AddRequirementForm
                   ref={formRef}
-                  {...{
-                    onAdd,
-                    handleClose,
-                    selectedType,
-                    setOnCloseAttemptToast,
-                  }}
+                  {...{ onAdd, handleClose, selectedType, setOnCloseAttemptToast }}
                 />
               )}
             </AnimatePresence>
@@ -189,9 +184,7 @@ const AddRequirementForm = forwardRef(
   ) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
-    const methods = useForm<Requirement>({
-      mode: "all",
-    })
+    const methods = useForm<Requirement>({ mode: "all" })
 
     const roleVisibility: Visibility = useWatch({ name: ".visibility" })
     const roleId: number = useWatch({ name: ".id" })
