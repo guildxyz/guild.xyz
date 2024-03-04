@@ -48,7 +48,13 @@ const App = ({
   const { colorMode } = useColorMode()
 
   useEffect(() => {
-    const handleRouteChangeStart = () => setIsRouteChangeInProgress(true)
+    let previousPathname = null
+
+    const handleRouteChangeStart = (url: string) => {
+      const pathname = url.split("?")[0]
+      if (previousPathname !== pathname) setIsRouteChangeInProgress(true)
+      previousPathname = pathname
+    }
     const handleRouteChangeComplete = () => setIsRouteChangeInProgress(false)
 
     router.events.on("routeChangeStart", handleRouteChangeStart)
