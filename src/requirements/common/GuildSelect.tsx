@@ -40,30 +40,29 @@ const GuildSelect = ({ baseFieldPath }) => {
 
   const { data: guildOptions, isValidating: isGuildsLoading } =
     useGuilds(debouncedSearchValue)
-  const { isLoading, ...currentGuild } = useGuild()
+  const currentGuild = useGuild()
 
-  const selectedGuildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
+  const guildId = useWatch({ name: `${baseFieldPath}.data.guildId` })
   const { isLoading: isSelectedGuildLoading, ...selectedGuild } = useGuild(
     searchValue &&
       debouncedSearchValue?.replace("https://guild.xyz/", "").match(GUILD_URL_REGEX)
       ? debouncedSearchValue.replace("https://guild.xyz/", "")
-      : selectedGuildId
+      : guildId
   )
 
   const mergedGuildOptions = useMemo(() => {
     let options = []
 
-    if (currentGuild) {
+    if (currentGuild?.id) {
       options = [convertGuildToOption(currentGuild)]
     }
-    if (selectedGuildId && selectedGuild && currentGuild.id !== selectedGuildId) {
+    if (guildId && selectedGuild?.id && currentGuild?.id !== guildId) {
       options = [convertGuildToOption(selectedGuild), ...options]
     }
     if (guildOptions) {
       options = options.concat(
         guildOptions.filter(
-          (option) =>
-            option.value !== currentGuild?.id && option.value !== selectedGuildId
+          (option) => option.value !== currentGuild?.id && option.value !== guildId
         )
       )
     }
@@ -79,7 +78,7 @@ const GuildSelect = ({ baseFieldPath }) => {
       <FormLabel>Guild</FormLabel>
 
       <InputGroup>
-        {selectedGuildId && selectedGuild?.imageUrl && (
+        {guildId && selectedGuild?.imageUrl && (
           <InputLeftElement>
             <OptionImage img={selectedGuild?.imageUrl} alt={selectedGuild?.name} />
           </InputLeftElement>
@@ -93,7 +92,7 @@ const GuildSelect = ({ baseFieldPath }) => {
               message: "Please input a valid Guild URL",
             },
           }}
-          isLoading={isGuildsLoading || isLoading}
+          isLoading={isGuildsLoading || isSelectedGuildLoading}
           options={mergedGuildOptions}
           beforeOnChange={() => resetField(`${baseFieldPath}.data.roleId`)}
           onInputChange={(newValue) => setSearchValue(newValue)}
