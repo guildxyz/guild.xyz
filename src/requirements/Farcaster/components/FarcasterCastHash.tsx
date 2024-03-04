@@ -1,5 +1,4 @@
-import { Divider, FormControl, FormLabel, Input } from "@chakra-ui/react"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
@@ -20,32 +19,6 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
 
   return (
     <>
-      <Divider mb={2} />
-      <FormControl
-        isRequired={!url}
-        isInvalid={!url && parseFromObject(errors, baseFieldPath)?.data?.hash}
-      >
-        <FormLabel opacity={!!url ? 0.3 : 1}>Cast hash:</FormLabel>
-
-        <Input
-          {...register(`${baseFieldPath}.data.hash`, {
-            required: !url ? "This field is required." : false,
-            disabled: !!url,
-            pattern: {
-              value: ADDRESS_REGEX,
-              message:
-                "Please input a 42 characters long, 0x-prefixed hexadecimal hash.",
-            },
-          })}
-        />
-
-        <FormErrorMessage>
-          {!url && parseFromObject(errors, baseFieldPath)?.data?.hash?.message}
-        </FormErrorMessage>
-      </FormControl>
-
-      <LogicDivider logic="OR" />
-
       <FormControl
         isRequired={!hash}
         isInvalid={!hash && parseFromObject(errors, baseFieldPath)?.data?.url}
@@ -65,6 +38,30 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
 
         <FormErrorMessage>
           {!hash && parseFromObject(errors, baseFieldPath)?.data?.url?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl
+        isRequired={!url}
+        isInvalid={!url && parseFromObject(errors, baseFieldPath)?.data?.hash}
+      >
+        <FormLabel opacity={!!url ? 0.3 : 1}>Cast hash:</FormLabel>
+
+        <Input
+          {...register(`${baseFieldPath}.data.hash`, {
+            required: !url ? "This field is required." : false,
+            disabled: !!url,
+            pattern: {
+              value: ADDRESS_REGEX,
+              message:
+                "Please input a 42 characters long, 0x-prefixed hexadecimal hash.",
+            },
+          })}
+          placeholder={!!url ? url.split("/").at(-1) : ""}
+        />
+
+        <FormErrorMessage>
+          {!url && parseFromObject(errors, baseFieldPath)?.data?.hash?.message}
         </FormErrorMessage>
       </FormControl>
     </>
