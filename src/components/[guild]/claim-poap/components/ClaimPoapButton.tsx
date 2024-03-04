@@ -5,8 +5,8 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useClaimedReward } from "../../../../hooks/useClaimedReward"
-import { MintLinksModal } from "./MintLinksModal"
 import { RolePlatform } from "../../../../types"
+import { MintLinkModal } from "./MintLinkModal"
 
 type Props = {
   rolePlatformId: number
@@ -64,7 +64,7 @@ const ClaimPoapButton = ({ rolePlatformId, rolePlatform, ...rest }: Props) => {
           ? "Check access & claim"
           : "Claim now"}
       </Button>
-      <MintLinksModal
+      <MintLinkModal
         isLoading={isLoading}
         onClose={onClose}
         isOpen={isOpen}

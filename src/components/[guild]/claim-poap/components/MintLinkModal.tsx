@@ -1,5 +1,3 @@
-import { useAccount } from "wagmi"
-import { Modal } from "../../../common/Modal"
 import {
   Box,
   Center,
@@ -15,9 +13,11 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { ArrowSquareOut, CheckCircle } from "phosphor-react"
+import { useAccount } from "wagmi"
 import ErrorAlert from "../../../common/ErrorAlert"
+import { Modal } from "../../../common/Modal"
 
-export const MintLinksModal = ({ isOpen, onClose, isLoading, error, response }) => {
+export const MintLinkModal = ({ isOpen, onClose, isLoading, error, response }) => {
   const httpsLink = response?.uniqueValue?.replace("http://", "https://")
   const { address } = useAccount()
 
