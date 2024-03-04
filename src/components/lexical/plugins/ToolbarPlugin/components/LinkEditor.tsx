@@ -1,4 +1,6 @@
 import {
+  FormControl,
+  FormErrorMessage,
   HStack,
   IconButton,
   Input,
@@ -9,17 +11,15 @@ import {
   PopoverContent,
   PopoverHeader,
   PopoverTrigger,
-  Text,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { mergeRegister } from "@lexical/utils"
 import Button from "components/common/Button"
-import useDebouncedState from "hooks/useDebouncedState"
 import { $getSelection, $isRangeSelection, SELECTION_CHANGE_COMMAND } from "lexical"
 import { Link } from "phosphor-react"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
 import { LOW_PRIORITY, getSelectedNode } from "../ToolbarPlugin"
 
@@ -31,17 +31,23 @@ type LinkEditorProps = {
 }
 
 const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) => {
+  const methods = useForm<{ link: string }>({
+    mode: "all",
+  })
+
+  const {
+    control,
+    setValue,
+    register,
+    formState: { errors },
+  } = methods
+  const link = useWatch({ name: "link", control: control })
+
   const [editor] = useLexicalComposerContext()
 
   const initialFocusRef = useRef<HTMLInputElement>()
-  const [linkUrl, setLinkUrl] = useState("")
   const [lastSelection, setLastSelection] = useState(null)
   const [shouldOpenEditor, setShouldOpenEditor] = useState(false)
-
-  const [isLinkInvalid, setIsLinkInvalid] = useState(false)
-  const errorTextColor = useColorModeValue("red.500", "red.300")
-
-  const debouncedLinkUrl = useDebouncedState(linkUrl)
 
   const checkLinkValid = (link: string) => {
     if (!link) return true
@@ -54,10 +60,6 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
     }
   }
 
-  useEffect(() => {
-    setIsLinkInvalid(!checkLinkValid(debouncedLinkUrl))
-  }, [debouncedLinkUrl])
-
   const updateLinkEditor = useCallback(() => {
     const selection = $getSelection()
 
@@ -65,19 +67,18 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
       const node = getSelectedNode(selection)
       const parent = node.getParent()
       if ($isLinkNode(parent)) {
-        setLinkUrl(parent.getURL())
+        setValue("link", parent.getURL())
         setShouldOpenEditor(true)
       } else if ($isLinkNode(node)) {
-        setLinkUrl(node.getURL())
+        setValue("link", node.getURL())
         setShouldOpenEditor(true)
       } else {
-        setLinkUrl("")
+        setValue("link", "")
         setShouldOpenEditor(false)
       }
     }
 
     const nativeSelection = window.getSelection()
-
     const rootElement = editor.getRootElement()
 
     if (
@@ -89,7 +90,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
       setLastSelection(selection)
     } else {
       setLastSelection(null)
-      setLinkUrl("")
+      setValue("link", "")
     }
 
     return true
@@ -123,75 +124,83 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   }, [editor, updateLinkEditor])
 
   const addLink = () => {
-    if (!lastSelection || !linkUrl || !checkLinkValid(linkUrl)) return
-    editor.dispatchCommand(TOGGLE_LINK_COMMAND, ensureUrlProtocol(linkUrl))
+    if (!lastSelection) return
+    editor.dispatchCommand(
+      TOGGLE_LINK_COMMAND,
+      !!link ? ensureUrlProtocol(link) : null
+    )
     onClose()
   }
 
   return (
-    <Popover
-      initialFocusRef={initialFocusRef}
-      isOpen={isOpen}
-      onClose={onClose}
-      placement="top"
-    >
-      <PopoverTrigger>
-        <IconButton
-          onClick={shouldOpenEditor ? onOpen : insertLink}
-          isActive={isOpen}
-          aria-label="Insert Link"
-          icon={<Link />}
-        />
-      </PopoverTrigger>
+    <FormProvider {...methods}>
+      <Popover
+        initialFocusRef={initialFocusRef}
+        isOpen={isOpen}
+        onClose={onClose}
+        placement="top"
+      >
+        <PopoverTrigger>
+          <IconButton
+            onClick={shouldOpenEditor ? onOpen : insertLink}
+            isActive={isOpen}
+            aria-label="Insert Link"
+            icon={<Link />}
+          />
+        </PopoverTrigger>
 
-      <PopoverContent>
-        <PopoverHeader
-          px={2}
-          pt={2}
-          pb={0}
-          fontWeight="semibold"
-          fontSize="sm"
-          border="none"
-        >
-          Edit link
-        </PopoverHeader>
+        <PopoverContent>
+          <PopoverHeader
+            px={2}
+            pt={2}
+            pb={0}
+            fontWeight="semibold"
+            fontSize="sm"
+            border="none"
+          >
+            Edit link
+          </PopoverHeader>
 
-        <PopoverArrow />
-        <PopoverCloseButton />
-
-        <PopoverBody p={2}>
-          <HStack>
-            <Input
-              ref={initialFocusRef}
-              size="sm"
-              placeholder="https://example.com"
-              value={linkUrl}
-              onChange={(event) => {
-                setLinkUrl(event.target.value)
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverBody p={2}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                addLink
               }}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") addLink()
-              }}
-            />
-            <Button
-              size="sm"
-              variant="solid"
-              flexShrink={0}
-              borderRadius="lg"
-              onClick={addLink}
-              isDisabled={!linkUrl?.length || isLinkInvalid}
             >
-              Save
-            </Button>
-          </HStack>
-          {isLinkInvalid && (
-            <Text fontSize="xs" color={errorTextColor} mt={1} ml={1}>
-              Invalid link!
-            </Text>
-          )}
-        </PopoverBody>
-      </PopoverContent>
-    </Popover>
+              <FormControl isInvalid={!!errors.link}>
+                <HStack>
+                  <Input
+                    ref={initialFocusRef}
+                    size="sm"
+                    placeholder="https://example.com"
+                    {...register("link", {
+                      validate: (val) => checkLinkValid(val) || "Invalid link!",
+                    })}
+                  />
+
+                  <Button
+                    size="sm"
+                    variant="solid"
+                    flexShrink={0}
+                    borderRadius="lg"
+                    onClick={addLink}
+                    isDisabled={!!errors.link}
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </HStack>
+
+                <FormErrorMessage>{errors.link?.message}</FormErrorMessage>
+              </FormControl>
+            </form>
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+    </FormProvider>
   )
 }
 
