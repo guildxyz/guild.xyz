@@ -43,7 +43,8 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
   const removeReq = (index: number) => {
     if (controlledFields.length === 1) {
-      setValue("requirements", [{ type: "FREE" }])
+      remove(0)
+      appendToFieldArray({ type: "FREE" })
     } else {
       remove(index)
     }
@@ -51,10 +52,10 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
   const append = (req: Requirement) => {
     if (freeEntry) {
-      setValue("requirements", [req], { shouldDirty: true })
-    } else {
-      appendToFieldArray(req)
+      remove(0)
     }
+
+    appendToFieldArray(req)
   }
 
   return (
