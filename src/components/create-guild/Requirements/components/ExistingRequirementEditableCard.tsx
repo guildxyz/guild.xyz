@@ -38,7 +38,7 @@ const ExistingRequirementEditableCard = ({
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
   const FormComponent = REQUIREMENTS[requirement.type]?.formComponent
-  const ref = useRef()
+  const editButtonRef = useRef()
   const closeButtonRef = useRef()
 
   const methods = useForm({ mode: "all", defaultValues: requirement })
@@ -122,7 +122,7 @@ const ExistingRequirementEditableCard = ({
     )
 
   const rightElement = !isEditDisabled && (
-    <Button ref={ref} size="sm" onClick={onOpen}>
+    <Button ref={editButtonRef} size="sm" onClick={onOpen}>
       Edit
     </Button>
   )
@@ -152,7 +152,7 @@ const ExistingRequirementEditableCard = ({
           requirementField={requirement}
           isOpen={isOpen}
           onClose={onClose}
-          finalFocusRef={ref}
+          finalFocusRef={editButtonRef}
           isLoading={isEditRequirementLoading}
           footer={
             <>

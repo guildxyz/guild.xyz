@@ -22,7 +22,7 @@ const RequirementEditableCard = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent
-  const ref = useRef()
+  const editButtonRef = useRef()
 
   const methods = useForm({ mode: "all", defaultValues: field })
 
@@ -43,7 +43,7 @@ const RequirementEditableCard = ({
     )
 
   const rightElement = !isEditDisabled && (
-    <Button ref={ref} size="sm" onClick={onOpen}>
+    <Button ref={editButtonRef} size="sm" onClick={onOpen}>
       Edit
     </Button>
   )
@@ -71,7 +71,7 @@ const RequirementEditableCard = ({
           requirementField={field}
           isOpen={isOpen}
           onClose={onClose}
-          finalFocusRef={ref}
+          finalFocusRef={editButtonRef}
           footer={
             <>
               <BalancyFooter baseFieldPath={null} />
