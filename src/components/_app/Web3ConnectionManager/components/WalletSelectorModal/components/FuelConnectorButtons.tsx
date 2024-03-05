@@ -1,12 +1,13 @@
 import { Center, Img, useColorModeValue } from "@chakra-ui/react"
-import { useConnectors, useIsConnected } from "@fuel-wallet/react"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"
 import { connectorButtonProps } from "./ConnectorButton"
 
 const FuelConnectorButtons = () => {
-  const { connectors } = useConnectors()
-  const { isConnected } = useIsConnected()
+  // const { connectors } = useConnectors()
+  const connectors = []
+  // const { isConnected } = useIsConnected()
+  const isConnected = false
 
   const fueletLogo = useColorModeValue(
     "/walletLogos/fuelet-black.svg",

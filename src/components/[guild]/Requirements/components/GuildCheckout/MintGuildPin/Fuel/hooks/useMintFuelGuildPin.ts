@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useAccount, useWallet } from "@fuel-wallet/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { BaseAssetId } from "fuels"
@@ -47,8 +46,10 @@ const useMintFuelGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { wallet } = useWallet()
-  const { account } = useAccount()
+  // const { wallet } = useWallet()
+  // const { account } = useAccount()
+  const wallet = null
+  const account = null
   const address = parseFuelAddress(account)
 
   const [loadingText, setLoadingText] = useState("")
