@@ -56,6 +56,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
   const { connector } = useAccount()
 
+  console.log("connectors", connectors)
+
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
 

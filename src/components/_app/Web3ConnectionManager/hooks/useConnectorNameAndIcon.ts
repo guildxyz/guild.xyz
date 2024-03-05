@@ -7,8 +7,8 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const { connector: evmConnectorFromHook } = useAccount()
   const { connectorName: fuelConnectorName, isConnected: isFuelConnected } =
     useFuel()
-
   const connector = connectorParam ?? evmConnectorFromHook
+  console.log("connectorParam", connectorParam)
 
   const { colorMode } = useColorMode()
 

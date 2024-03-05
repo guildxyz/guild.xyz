@@ -6,13 +6,12 @@ import { createWalletClient, http } from "viem"
 import { mnemonicToAccount } from "viem/accounts"
 import { WalletClient, configureChains } from "wagmi"
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet"
-import { InjectedConnector } from "wagmi/connectors/injected"
 import { MockConnector } from "wagmi/connectors/mock"
 import { SafeConnector } from "wagmi/connectors/safe"
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect"
 import { publicProvider } from "wagmi/providers/public"
 import { CWaaSConnector } from "walletConnectors/cWaasConnector"
-import { RabbyConnector } from "walletConnectors/rabbyConnector"
+import { EIP6963Connector } from "./EIP6963Connector"
 import { RoninConnector } from "./roninConnector"
 
 const { chains: allChains, publicClient } = configureChains(
@@ -38,17 +37,8 @@ const connectors = process.env.NEXT_PUBLIC_MOCK_CONNECTOR
       }),
     ]
   : [
-      new InjectedConnector({
-        chains,
-        options: {
-          name: "Injected",
-          shimDisconnect: true,
-        },
-      }),
-      new RabbyConnector({ chains }),
+      new EIP6963Connector({ chains }),
       new RoninConnector({ chains }),
-      // new OkxConnector({ chains }),
-      // new MetamaskConnector({ chains }),
       new CoinbaseWalletConnector({
         chains,
         options: {
