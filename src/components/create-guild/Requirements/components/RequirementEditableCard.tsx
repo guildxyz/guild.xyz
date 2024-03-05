@@ -14,8 +14,8 @@ import RequirementImageEditor from "components/[guild]/Requirements/components/R
 import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import { useCallback, useRef } from "react"
-import { FormProvider, useForm, useFormContext } from "react-hook-form"
+import { useRef } from "react"
+import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
@@ -57,14 +57,6 @@ const RequirementEditableCard = ({
     onClose()
   })
 
-  // temporary to set values for balancy so it works without opening the edit modal
-  const { setValue } = useFormContext()
-  const setValueForBalancy = useCallback(
-    (path, data) => {
-      setValue(`requirements.${index}.${path}`, data)
-    },
-    [index, setValue]
-  )
   const onRemove = () => removeRequirement(index)
 
   if (!RequirementComponent || !FormComponent)
@@ -87,8 +79,6 @@ const RequirementEditableCard = ({
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
               fieldRoot={`requirements.${index}`}
-              footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-              setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
               imageWrapper={RequirementImageEditor}
