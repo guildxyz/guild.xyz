@@ -8,9 +8,7 @@ import {
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import useMembership, {
-  useRoleMembership,
-} from "components/explorer/hooks/useMembership"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import ClaimGatherModal from "platforms/Gather/ClaimGatherModal"
 import useClaimGather from "platforms/Gather/hooks/useClaimGather"
@@ -45,14 +43,9 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
-  const { isMember } = useMembership()
-  const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
-    role.id
-  )
+  const { hasRoleAccess, isMember } = useRoleMembership(role.id)
   const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
-
-  const label = claimed ? "Go to space" : "Claim access"
 
   const state = useMemo(() => {
     if (isMember && hasRoleAccess) {
@@ -66,7 +59,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
       }
 
       return {
-        tooltipLabel: label,
+        tooltipLabel: claimed ? "Go to space" : "Claim access",
         buttonProps: {},
       }
     }
@@ -110,36 +103,37 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
           isLoading ? (
             <Text opacity={0.5}>Claiming reward...</Text>
           ) : (
-            <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
-              {`${label}: `}
-
-              {claimed ? (
-                <Button
-                  as="a"
-                  variant="link"
-                  target="_blank"
-                  href={spaceUrl}
-                  iconSpacing={1}
-                  rightIcon={<ArrowSquareOut />}
-                  maxW="full"
-                >
-                  {platformGuildData.name ??
-                    platforms[PlatformType[platformId]].name}
-                </Button>
-              ) : (
-                <Button
-                  variant="link"
-                  maxW="full"
-                  iconSpacing={1}
-                  rightIcon={<ArrowSquareOut />}
-                  isDisabled={state.buttonProps.isDisabled}
-                  onClick={onOpen}
-                >
-                  {platformGuildData.name ??
-                    platforms[PlatformType[platformId]].name}
-                </Button>
-              )}
-            </Tooltip>
+            <Text>
+              {`Access space: `}
+              <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
+                {claimed ? (
+                  <Button
+                    as="a"
+                    variant="link"
+                    target="_blank"
+                    href={spaceUrl}
+                    iconSpacing={1}
+                    rightIcon={<ArrowSquareOut />}
+                    maxW="full"
+                  >
+                    {platformGuildData.name ??
+                      platforms[PlatformType[platformId]].name}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="link"
+                    maxW="full"
+                    iconSpacing={1}
+                    rightIcon={<ArrowSquareOut />}
+                    isDisabled={state.buttonProps.isDisabled}
+                    onClick={onOpen}
+                  >
+                    {platformGuildData.name ??
+                      platforms[PlatformType[platformId]].name}
+                  </Button>
+                )}
+              </Tooltip>
+            </Text>
           )
         }
       >
