@@ -102,7 +102,6 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
           <AddRequirement onAdd={append} />
         </AnimatePresence>
-        C
       </Stack>
     </Stack>
   )
