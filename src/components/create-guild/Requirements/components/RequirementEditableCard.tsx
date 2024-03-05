@@ -1,26 +1,15 @@
-import {
-  Button,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Button, useDisclosure } from "@chakra-ui/react"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
-import DiscardAlert from "components/common/DiscardAlert"
-import { Modal } from "components/common/Modal"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import BalancyFooter from "./BalancyFooter"
-import IsNegatedPicker from "./IsNegatedPicker"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
+import RequirementModalAndDiscardAlert from "./RequirementModalAndDiscardAlert"
 import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
 
 const RequirementEditableCard = ({
@@ -33,24 +22,11 @@ const RequirementEditableCard = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent
-  const FormComponent = REQUIREMENTS[type]?.formComponent
   const ref = useRef()
 
   const methods = useForm({ mode: "all", defaultValues: field })
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
-
-  const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
-  } = useDisclosure()
-
-  const onCloseAndClear = () => {
-    methods.reset()
-    onAlertClose()
-    onClose()
-  }
 
   const onSubmit = methods.handleSubmit((data) => {
     updateRequirement(index, data)
@@ -59,7 +35,7 @@ const RequirementEditableCard = ({
 
   const onRemove = () => removeRequirement(index)
 
-  if (!RequirementComponent || !FormComponent)
+  if (!RequirementComponent)
     return (
       <UnsupportedRequirementTypeCard type={type}>
         <RemoveRequirementButton onClick={() => onRemove()} />
@@ -90,42 +66,22 @@ const RequirementEditableCard = ({
         <RemoveRequirementButton onClick={() => onRemove()} />
       </RequirementBaseCard>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        scrollBehavior="inside"
-        finalFocusRef={ref}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalCloseButton
-              onClick={(e) => {
-                e.preventDefault()
-                onCloseAndClear()
-              }}
-            />
-            <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
-            <ModalBody>
-              {REQUIREMENTS[type].isNegatable && (
-                <IsNegatedPicker baseFieldPath={``} />
-              )}
-              <FormComponent baseFieldPath={``} field={field} />
-            </ModalBody>
-            <ModalFooter gap="3">
+      <FormProvider {...methods}>
+        <RequirementModalAndDiscardAlert
+          requirementField={field}
+          isOpen={isOpen}
+          onClose={onClose}
+          finalFocusRef={ref}
+          footer={
+            <>
               <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
+              <Button colorScheme="green" onClick={onSubmit} ml="auto">
                 Done
               </Button>
-            </ModalFooter>
-          </FormProvider>
-        </ModalContent>
-      </Modal>
-      <DiscardAlert
-        isOpen={isAlertOpen}
-        onClose={onAlertClose}
-        onDiscard={onCloseAndClear}
-      />
+            </>
+          }
+        />
+      </FormProvider>
     </>
   )
 }

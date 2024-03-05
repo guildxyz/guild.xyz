@@ -1,20 +1,9 @@
-import {
-  Button,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Button, useDisclosure } from "@chakra-ui/react"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
 import useGuild from "components/[guild]/hooks/useGuild"
-import DiscardAlert from "components/common/DiscardAlert"
-import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -25,9 +14,9 @@ import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import useEditRequirement from "../hooks/useEditRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
-import IsNegatedPicker from "./IsNegatedPicker"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
+import RequirementModalAndDiscardAlert from "./RequirementModalAndDiscardAlert"
 import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
 
 type Props = {
@@ -44,11 +33,6 @@ const ExistingRequirementEditableCard = ({
     isOpen: isRequirementDeleteOpen,
     onOpen: onRequirementDeleteOpen,
     onClose: onRequirementDeleteClose,
-  } = useDisclosure()
-  const {
-    isOpen: isDiscardAlertOpen,
-    onOpen: onDiscardAlertOpen,
-    onClose: onDiscardAlertClose,
   } = useDisclosure()
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
@@ -96,12 +80,6 @@ const ExistingRequirementEditableCard = ({
       })
     },
   })
-
-  const onCloseAndClear = () => {
-    methods.reset()
-    onDiscardAlertClose()
-    onClose()
-  }
 
   const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
     useEditRequirement(requirement.roleId, {
@@ -165,34 +143,18 @@ const ExistingRequirementEditableCard = ({
         />
       </RequirementBaseCard>
 
-      <Modal
-        isOpen={isOpen}
-        onClose={methods.formState.isDirty ? onDiscardAlertOpen : onClose}
-        scrollBehavior="inside"
-        finalFocusRef={ref}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalCloseButton
-              onClick={(e) => {
-                e.preventDefault()
-                onCloseAndClear()
-              }}
-            />
-            <ModalHeader>{`Edit ${
-              REQUIREMENTS[requirement.type].name
-            } requirement`}</ModalHeader>
-            <ModalBody>
-              {REQUIREMENTS[requirement.type].isNegatable && (
-                <IsNegatedPicker baseFieldPath={``} />
-              )}
-              <FormComponent baseFieldPath="" field={requirement} />
-            </ModalBody>
-            <ModalFooter gap="3">
+      <FormProvider {...methods}>
+        <RequirementModalAndDiscardAlert
+          requirementField={requirement}
+          isOpen={isOpen}
+          onClose={onClose}
+          finalFocusRef={ref}
+          isLoading={isEditRequirementLoading}
+          footer={
+            <>
               <BalancyFooter baseFieldPath={null} />
               <Button
-                colorScheme={"green"}
+                colorScheme="green"
                 onClick={methods.handleSubmit((editedReq) =>
                   onEditRequirementSubmit({
                     ...editedReq,
@@ -214,15 +176,10 @@ const ExistingRequirementEditableCard = ({
               >
                 Save
               </Button>
-            </ModalFooter>
-          </FormProvider>
-        </ModalContent>
-      </Modal>
-      <DiscardAlert
-        isOpen={isDiscardAlertOpen}
-        onClose={onDiscardAlertClose}
-        onDiscard={onCloseAndClear}
-      />
+            </>
+          }
+        />
+      </FormProvider>
 
       {requirementDeleteConfirmationAlert}
     </>
