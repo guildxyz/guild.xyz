@@ -44,7 +44,7 @@ const POPOVER_HEADER_STYLES = {
   px: "3",
 }
 
-const latestResendDateAtom = atomWithStorage("latestResendDate", -Infinity)
+const latestResendDateAtom = atomWithStorage("latestResendDate", 0)
 
 const RecheckAccessesButton = ({
   tooltipLabel: tooltipLabelInitial,
@@ -59,10 +59,12 @@ const RecheckAccessesButton = ({
 
   const { reqAccesses } = useRoleMembership(roleId)
   const [latestAllResendDate, setLatestAllResendDate] = useAtom(latestResendDateAtom)
+
   const lastCheckedAt = useMemo(
     () => new Date(reqAccesses?.[0]?.lastCheckedAt ?? latestAllResendDate),
     [reqAccesses, latestAllResendDate]
   )
+
   const [dateNow, setDateNow] = useState(Date.now())
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
