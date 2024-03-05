@@ -12,6 +12,7 @@ const FEATURE_FLAGS = [
   "ROLE_GROUPS",
   "MESSAGING",
   "FORMS",
+  "PERIODIC_SYNC",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
