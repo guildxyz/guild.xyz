@@ -30,6 +30,17 @@ type LinkEditorProps = {
   insertLink: () => void
 }
 
+const checkLinkValid = (linkToCheck: string) => {
+  if (!linkToCheck) return true
+  const url = ensureUrlProtocol(linkToCheck)
+  try {
+    new URL(url)
+    return true
+  } catch {
+    return false
+  }
+}
+
 const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) => {
   const methods = useForm<{ link: string }>({
     mode: "all",
@@ -48,17 +59,6 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   const initialFocusRef = useRef<HTMLInputElement>()
   const [lastSelection, setLastSelection] = useState(null)
   const [shouldOpenEditor, setShouldOpenEditor] = useState(false)
-
-  const checkLinkValid = (linkToCheck: string) => {
-    if (!linkToCheck) return true
-    const url = ensureUrlProtocol(linkToCheck)
-    try {
-      new URL(url)
-      return true
-    } catch {
-      return false
-    }
-  }
 
   const updateLinkEditor = useCallback(() => {
     const selection = $getSelection()
