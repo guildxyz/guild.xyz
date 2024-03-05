@@ -1,4 +1,4 @@
-import { Stack } from "@chakra-ui/react"
+import { Collapse, Stack } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
@@ -21,11 +21,9 @@ const EditRequirements = ({ requirements }: Props) => {
     <Stack spacing="5" w="full">
       <SectionTitle title="Requirements" />
 
-      {!freeEntry && (
-        <CardMotionWrapper>
-          <LogicFormControl />
-        </CardMotionWrapper>
-      )}
+      <Collapse in={!freeEntry}>
+        <LogicFormControl />
+      </Collapse>
 
       <Stack spacing={0}>
         <AnimatePresence>

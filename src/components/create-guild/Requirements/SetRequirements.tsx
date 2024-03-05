@@ -1,4 +1,4 @@
-import { ChakraProps, Stack, Wrap } from "@chakra-ui/react"
+import { ChakraProps, Collapse, Stack, Wrap } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
@@ -67,11 +67,9 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
 
-      {!freeEntry && (
-        <CardMotionWrapper>
-          <LogicFormControl />
-        </CardMotionWrapper>
-      )}
+      <Collapse in={!freeEntry}>
+        <LogicFormControl />
+      </Collapse>
 
       <Stack spacing={0}>
         <AnimatePresence>
@@ -104,6 +102,7 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
           <AddRequirement onAdd={append} />
         </AnimatePresence>
+        C
       </Stack>
     </Stack>
   )
