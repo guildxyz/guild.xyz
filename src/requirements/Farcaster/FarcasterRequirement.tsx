@@ -3,14 +3,19 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
-import shortenHex from "utils/shortenHex"
+import FarcasterCast from "./components/FarcasterCast"
+import useFarcasterCast from "./hooks/useFarcasterCast"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   const { data: farcasterUser } = useFarcasterUser(requirement.data?.id)
+  const {
+    data: farcasterCast,
+    isLoading: castLoading,
+    error: castError,
+  } = useFarcasterCast(requirement.data?.hash, requirement.data?.url)
 
   return (
     <Requirement
@@ -48,23 +53,15 @@ const FarcasterRequirement = (props: RequirementProps) => {
             return (
               <>
                 {requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"}
-
-                {requirement.data?.hash && (
-                  <>
-                    {` the `}
-                    <DataBlockWithCopy text={requirement.data.hash}>
-                      {shortenHex(requirement.data.hash, 3)}
-                    </DataBlockWithCopy>{" "}
-                    {` cast`}
-                  </>
-                )}
-
-                {requirement.data?.url && (
-                  <>
-                    {" this cast: "}
-                    <DataBlockWithCopy text={requirement.data.url} />
-                  </>
-                )}
+                <>
+                  {" this cast: "}
+                  <FarcasterCast
+                    size="sm"
+                    cast={farcasterCast}
+                    loading={castLoading}
+                    error={castError}
+                  />
+                </>
               </>
             )
           default:

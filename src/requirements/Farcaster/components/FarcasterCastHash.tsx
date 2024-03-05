@@ -4,6 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import parseFromObject from "utils/parseFromObject"
+import useFarcasterCast from "../hooks/useFarcasterCast"
 import FarcasterCast from "./FarcasterCast"
 
 type Props = {
@@ -19,8 +20,13 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
   const hash = useWatch({ name: `${baseFieldPath}.data.hash` })
   const url = useWatch({ name: `${baseFieldPath}.data.url` })
 
+  const { data, isLoading, error } = useFarcasterCast(hash, url)
+
   return (
     <>
+      {(!!data || !!isLoading || !!error) && (
+        <FarcasterCast cast={data} loading={isLoading} error={!!error} />
+      )}
       <Divider mb={2} />
       <FormControl
         isRequired={!url}
@@ -44,19 +50,6 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
           {!url && parseFromObject(errors, baseFieldPath)?.data?.hash?.message}
         </FormErrorMessage>
       </FormControl>
-
-      <FarcasterCast
-        cast={{
-          hash: "0x1237123",
-          author: "author",
-          profile_pic: "https://i.imgur.com/naZWL9n.gif",
-          text: "Text",
-          timestamp: "2023-09-13T22:10:22.000Z",
-          likes: 12,
-          recasts: 11,
-          replies: 10,
-        }}
-      />
 
       <LogicDivider logic="OR" />
 
