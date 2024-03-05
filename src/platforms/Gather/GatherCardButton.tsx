@@ -31,7 +31,6 @@ const GatherCardButton = ({ platform }: Props) => {
     onSubmit,
     response: claimed,
     isLoading,
-    error,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimGather(rolePlatform?.id)
 
@@ -81,7 +80,6 @@ const GatherCardButton = ({ platform }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}
-        error={error}
         onSubmit={submitClaim}
       />
     </>

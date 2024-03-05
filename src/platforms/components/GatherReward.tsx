@@ -29,7 +29,6 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
     onSubmit,
     response: claimed,
     isLoading,
-    error,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimGather(platform.id)
 
@@ -145,7 +144,6 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}
-        error={error}
         onSubmit={submitClaim}
       />
     </>

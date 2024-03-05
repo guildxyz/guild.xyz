@@ -1,12 +1,11 @@
 import {
-  Alert,
-  AlertIcon,
   Button,
   HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
@@ -22,7 +21,6 @@ type ModalProps = {
   onClose: () => void
   onSubmit: () => void
   isLoading: boolean
-  error?: any
 }
 
 const ClaimGatherModal = ({
@@ -31,7 +29,6 @@ const ClaimGatherModal = ({
   onClose,
   onSubmit,
   isLoading,
-  error,
 }: ModalProps) => {
   const { emails } = useUser()
 
@@ -41,9 +38,9 @@ const ClaimGatherModal = ({
       <ModalContent>
         <ModalCloseButton />
 
-        <ModalHeader pb={0}>{title}</ModalHeader>
+        <ModalHeader>{title}</ModalHeader>
 
-        <ModalBody pt={8}>
+        <ModalBody pt="0" pb="8">
           {isLoading ? (
             <HStack spacing="6">
               <Spinner />
@@ -51,36 +48,33 @@ const ClaimGatherModal = ({
             </HStack>
           ) : (
             <>
-              <Alert status={!!emails?.emailAddress ? "info" : "warning"} mb={3}>
-                <AlertIcon mt={0} />
-                {!!emails?.emailAddress ? (
-                  <>
-                    Access will be granted to the email address associated with your
-                    Guild.xyz account.
-                  </>
-                ) : (
-                  <p>
-                    <strong>Email address missing!</strong> Please connect the email
-                    address you plan to use for Gather to your Guild.xyz account.
-                  </p>
-                )}
-              </Alert>
+              {!!emails?.emailAddress ? (
+                <Text mb="4">
+                  Access will be granted to your connected email address:
+                </Text>
+              ) : (
+                <Text mb="4">
+                  Please connect the email address you plan to use Gather with to
+                  your account!
+                </Text>
+              )}
 
               <AccountSection>
                 <EmailAddress key={"EMAIL"} />
               </AccountSection>
-
-              <Button
-                isDisabled={!emails?.emailAddress}
-                w="full"
-                mt={6}
-                onClick={onSubmit}
-              >
-                Continue with email
-              </Button>
             </>
           )}
         </ModalBody>
+        <ModalFooter>
+          <Button
+            isDisabled={!emails?.emailAddress}
+            w="full"
+            onClick={onSubmit}
+            colorScheme={"GATHER_TOWN"}
+          >
+            Continue with email
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )
