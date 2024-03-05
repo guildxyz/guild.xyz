@@ -4,13 +4,16 @@ import {
   HStack,
   Icon,
   Input,
+  InputGroup,
+  InputRightElement,
   Link,
   Stack,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
-import { Question } from "phosphor-react"
+import { Eye, EyeClosed, Question } from "phosphor-react"
+import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import GatherConnectionStatusAlert from "./GatherConnectionStatusAlert"
 import useGatherAccess from "./hooks/useGatherAccess"
@@ -20,6 +23,8 @@ const GatherConnectionForm = () => {
     register,
     formState: { errors },
   } = useFormContext<AddGatherFormType>()
+
+  const [showApiKey, setShowApiKey] = useState(false)
 
   const [gatherApiKey, gatherSpaceId] = useWatch({
     name: ["gatherApiKey", "gatherSpaceId"],
@@ -53,12 +58,18 @@ const GatherConnectionForm = () => {
               <Icon as={Question} color="GrayText" />
             </Tooltip>
           </HStack>
-          <Input
-            type="password"
-            {...register("gatherApiKey", {
-              required: "This field is required",
-            })}
-          />
+          <InputGroup>
+            <Input
+              autoComplete="off"
+              type={showApiKey ? "text" : "password"}
+              {...register("gatherApiKey", {
+                required: "This field is required",
+              })}
+            />
+            <InputRightElement onClick={() => setShowApiKey(!showApiKey)}>
+              {showApiKey ? <EyeClosed /> : <Eye />}
+            </InputRightElement>
+          </InputGroup>
         </Stack>
         <Text as="small" colorScheme="gray">
           If you don’t have an API key yet, you can create one{" "}
