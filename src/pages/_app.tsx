@@ -1,5 +1,4 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { FuelProvider } from "@fuel-wallet/react"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -76,7 +75,7 @@ const App = ({
           }
         `}
       </style>
-      <Script src="/intercom.js" />
+      <Script src="/intercom.js" strategy="lazyOnload" />
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA
@@ -116,23 +115,23 @@ const App = ({
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiConfig config={config}>
-              <FuelProvider>
-                <PostHogProvider>
-                  <IntercomProvider>
-                    <ExplorerProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+              {/* <FuelProvider> */}
+              <PostHogProvider>
+                <IntercomProvider>
+                  <ExplorerProvider>
+                    <AppErrorBoundary>
+                      <Component {...pageProps} />
+                    </AppErrorBoundary>
 
-                      <ClientOnly>
-                        <AccountModal />
-                      </ClientOnly>
-                    </ExplorerProvider>
-                  </IntercomProvider>
+                    <ClientOnly>
+                      <AccountModal />
+                    </ClientOnly>
+                  </ExplorerProvider>
+                </IntercomProvider>
 
-                  <Web3ConnectionManager />
-                </PostHogProvider>
-              </FuelProvider>
+                <Web3ConnectionManager />
+              </PostHogProvider>
+              {/* </FuelProvider> */}
             </WagmiConfig>
           </SWRConfig>
         </IconContext.Provider>

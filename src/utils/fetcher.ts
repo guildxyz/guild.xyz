@@ -1,4 +1,3 @@
-import { useWallet } from "@fuel-wallet/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -146,7 +145,8 @@ const useFetcherWithSign = () => {
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
-  const { wallet: fuelWallet } = useWallet()
+  // const { wallet: fuelWallet } = useWallet()
+  const fuelWallet = null
 
   return (props) => {
     const [resource, { signOptions, ...options }] = props
