@@ -51,7 +51,7 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
   const append = (req: Requirement) => {
     if (freeEntry) {
-      setValue("requirements", [req])
+      setValue("requirements", [req], { shouldDirty: true })
     } else {
       appendToFieldArray(req)
     }
