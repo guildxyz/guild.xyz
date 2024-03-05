@@ -249,6 +249,7 @@ const AddRequirementForm = forwardRef(
               <Button
                 colorScheme="green"
                 onClick={onSubmit}
+                isDisabled={!methods.formState.isDirty}
                 isLoading={isCreateRequirementLoading}
                 loadingText={isCreateRequirementLoading ? "Creating" : undefined}
                 ml="auto"

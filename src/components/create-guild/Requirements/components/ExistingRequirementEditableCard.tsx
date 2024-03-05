@@ -210,6 +210,7 @@ const ExistingRequirementEditableCard = ({
                 ml="auto"
                 isLoading={isEditRequirementLoading}
                 loadingText="Saving"
+                isDisabled={!methods.formState.isDirty}
               >
                 Save
               </Button>
