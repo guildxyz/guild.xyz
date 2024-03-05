@@ -29,7 +29,9 @@ const useRegisterVault = ({
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(token !== NULL_ADDRESS && chain),
+    query: {
+      enabled: Boolean(token !== NULL_ADDRESS && chain),
+    },
   })
   const tokenDecimals =
     token === NULL_ADDRESS
@@ -47,7 +49,9 @@ const useRegisterVault = ({
       functionName: "registerVault",
       args: registerVaultParams,
       chainId: Chains[chain],
-      enabled: Boolean(feeInWei && chainId === Chains[chain]),
+      query: {
+        enabled: Boolean(feeInWei && chainId === Chains[chain]),
+      },
     },
     {
       setContext: false,

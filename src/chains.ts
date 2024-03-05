@@ -17,7 +17,9 @@ import {
   taikoKatlaTestnet,
   x1Testnet,
 } from "static/customChains"
-import { Chain as ViemChain } from "viem"
+import { Chain as ViemChain, http } from "viem"
+import { mnemonicToAccount } from "viem/accounts"
+import { createConfig } from "wagmi"
 import {
   arbitrum,
   arbitrumNova,
@@ -52,7 +54,65 @@ import {
   zetachainAthensTestnet,
   zkSync,
   zora,
-} from "viem/chains"
+} from "wagmi/chains"
+import {
+  coinbaseWallet,
+  injected,
+  mock,
+  safe,
+  walletConnect,
+} from "wagmi/connectors"
+
+// WAGMI 2 TODO: add all chains here
+export const wagmiConfig = createConfig({
+  chains: [mainnet, polygon],
+  transports: {
+    [mainnet.id]: http(),
+    [polygon.id]: http(),
+  },
+  ssr: true,
+  connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
+    ? [
+        mock({
+          accounts: [
+            mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC).address,
+          ],
+        }),
+      ]
+    : [
+        injected(),
+        coinbaseWallet({
+          appName: "Guild.xyz",
+        }),
+        walletConnect({
+          projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+          showQrModal: true,
+          qrModalOptions: {
+            explorerRecommendedWalletIds: [
+              "971e689d0a5be527bac79629b4ee9b925e82208e5168b733496a09c0faed0709", // OKX
+              "107bb20463699c4e614d3a2fb7b961e66f48774cb8f6d6c1aee789853280972c", // Bitcoin.com
+              "541d5dcd4ede02f3afaf75bf8e3e4c4f1fb09edb5fa6c4377ebf31c2785d9adf", // Ronin
+              "4622a2b2d6af1c9844944291e5e7351a6aa24cd7b23099efac1b2fd875da31a0", // Trust
+            ],
+            themeVariables: {
+              "--wcm-z-index": "10001",
+              "--w3m-z-index": "10001",
+            } as any, // casting it, so `--wcm-z-index` is accepted
+          },
+        }),
+        safe({
+          allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
+          debug: false,
+        }),
+        // TODO: CWaaS connector
+      ],
+})
+
+// declare module "wagmi" {
+//   interface Register {
+//     config: typeof wagmiConfig
+//   }
+// }
 
 type GuildChain = ViemChain & {
   iconUrl: string

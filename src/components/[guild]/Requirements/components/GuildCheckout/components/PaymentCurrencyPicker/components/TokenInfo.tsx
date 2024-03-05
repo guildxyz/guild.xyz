@@ -59,7 +59,9 @@ const TokenInfo = ({
     address,
     token: tokenAddress,
     chainId,
-    enabled: tokenAddress !== NULL_ADDRESS,
+    query: {
+      enabled: tokenAddress !== NULL_ADDRESS,
+    },
   })
 
   const symbol = isNativeCurrency

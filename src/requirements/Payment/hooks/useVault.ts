@@ -1,6 +1,6 @@
 import { Chain, Chains } from "chains"
 import feeCollectorAbi from "static/abis/feeCollector"
-import { useContractRead } from "wagmi"
+import { useReadContract } from "wagmi"
 
 type GetVaultResponse = {
   owner: `0x${string}`
@@ -18,13 +18,15 @@ const useVault = (
   vaultId: number | string,
   chain: Chain
 ): GetVaultResponse => {
-  const { data, error, isLoading, refetch } = useContractRead({
+  const { data, error, isLoading, refetch } = useReadContract({
     address: contractAddress,
     abi: feeCollectorAbi,
     chainId: Chains[chain],
     functionName: "getVault",
     args: [BigInt(vaultId ?? 0)],
-    enabled: Boolean(contractAddress && vaultId && chain),
+    query: {
+      enabled: Boolean(contractAddress && vaultId && chain),
+    },
   })
 
   const [owner, token, multiplePayments, fee, balance] = data ?? []

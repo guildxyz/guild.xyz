@@ -1,21 +1,18 @@
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import { useEffect } from "react"
 import processViemContractError from "utils/processViemContractError"
-import { Abi, TransactionReceipt, decodeEventLog } from "viem"
+import { TransactionReceipt, decodeEventLog } from "viem"
 import {
-  UsePrepareContractWriteConfig,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
+  UseSimulateContractParameters,
+  useSimulateContract,
+  useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi"
 import useEstimateGas from "./useEstimateGas"
 
-const useSubmitTransaction = <
-  TAbi extends Abi | readonly unknown[],
-  TFunctionName extends string,
-  TChainId extends number
->(
-  contractCallConfig: UsePrepareContractWriteConfig<TAbi, TFunctionName, TChainId>,
+// WAGMI 2 TODO: generic parameters
+const useSubmitTransaction = (
+  contractCallConfig: UseSimulateContractParameters,
   options?: {
     setContext?: boolean
     customErrorsMap?: Record<string, string> // TODO: maybe we can infer custom error names from the ABI too? We could experiment with it later.
@@ -52,11 +49,13 @@ const useSubmitTransaction = <
   }
 
   const {
-    config,
+    data: config,
     error: prepareError,
     isLoading: isPrepareLoading,
-  } = usePrepareContractWrite<TAbi, TFunctionName, TChainId>({
-    enabled: contractCallConfig.enabled ?? true,
+  } = useSimulateContract({
+    query: {
+      enabled: contractCallConfig.query?.enabled ?? true,
+    },
     ...contractCallConfig,
   })
 
@@ -71,23 +70,25 @@ const useSubmitTransaction = <
     functionName: contractCallConfig.functionName,
     args: contractCallConfig.args as readonly unknown[],
     value: contractCallConfig.value,
-    enabled: contractCallConfig.enabled ?? true,
+    query: {
+      enabled: contractCallConfig.query?.enabled ?? true,
+    },
   })
 
   const {
-    write,
-    data,
+    writeContract,
+    data: hash,
     error: contractWriteError,
     isError: isContractWriteError,
-    isLoading: isContractWriteLoading,
+    isPending: isContractWriteLoading,
     reset,
-  } = useContractWrite<TAbi, TFunctionName, "prepared">(config)
+  } = useWriteContract()
 
   useEffect(() => {
-    if (!txHash && data?.hash) {
-      setTxHash(data.hash)
+    if (!txHash && hash) {
+      setTxHash(hash)
     }
-  }, [data])
+  }, [hash])
 
   const {
     data: transactionReceipt,
@@ -95,7 +96,7 @@ const useSubmitTransaction = <
     isSuccess,
     isError: isWaitForTransactionError,
     isLoading: isWaitForTransactionLoading,
-  } = useWaitForTransaction({ hash: data?.hash })
+  } = useWaitForTransactionReceipt({ hash })
 
   const rawError =
     waitForTransactionError ||
@@ -121,9 +122,9 @@ const useSubmitTransaction = <
           .map((log) => {
             try {
               return decodeEventLog({
-                abi: contractCallConfig.abi as TAbi,
+                abi: contractCallConfig.abi,
                 data: log.data,
-                topics: (log as any).topics,
+                topics: log.topics,
               })
             } catch {
               return null
@@ -131,7 +132,7 @@ const useSubmitTransaction = <
           })
           .filter(Boolean)
 
-        onSuccess(transactionReceipt, events)
+        onSuccess(transactionReceipt as TransactionReceipt, events)
       }
     } else {
       setTxError(true)
@@ -146,7 +147,7 @@ const useSubmitTransaction = <
       setTxError(false)
       setTxSuccess(false)
 
-      if (!write && error) {
+      if (!writeContract && error) {
         onError?.(error, rawError)
         return
       }
@@ -160,7 +161,7 @@ const useSubmitTransaction = <
         return
       }
 
-      write?.()
+      writeContract?.(config)
     },
     isPreparing: isPrepareLoading || isGasEstimationLoading,
     isLoading: isWaitForTransactionLoading || isContractWriteLoading,

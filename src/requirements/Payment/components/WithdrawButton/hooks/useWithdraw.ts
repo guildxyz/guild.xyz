@@ -26,7 +26,9 @@ const useWithdraw = (
       address: contractAddress,
       functionName: "withdraw",
       args: [BigInt(vaultId), "guild"],
-      enabled: isOnVaultsChain,
+      query: {
+        enabled: isOnVaultsChain,
+      },
     },
     {
       setContext: false,

@@ -1,7 +1,7 @@
 import { Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import delegateRegistryAbi from "static/abis/delegateRegistry"
-import { useContractReads } from "wagmi"
+import { useReadContracts } from "wagmi"
 
 enum DelegationType {
   NONE,
@@ -49,13 +49,15 @@ const useDelegateVaults = () => {
 
   const delegates = addresses?.map(({ address }) => address)
 
-  const { data } = useContractReads({
+  const { data } = useReadContracts({
     contracts: delegates
       ?.map((delegate) =>
         delegateContracts.map((contract) => ({ ...contract, args: [delegate] }))
       )
       .flat(),
-    enabled,
+    query: {
+      enabled,
+    },
   })
 
   const results = data

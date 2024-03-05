@@ -51,7 +51,9 @@ const usePayFee = () => {
     address,
     token: pickedCurrency as `0x${string}`,
     chainId: Chains[requirement.chain],
-    enabled: !pickedCurrencyIsNative,
+    query: {
+      enabled: !pickedCurrencyIsNative,
+    },
   })
 
   const isSufficientBalance =
@@ -81,7 +83,9 @@ const usePayFee = () => {
     args: [BigInt(requirement.data.id)],
     value: pickedCurrencyIsNative ? fee : undefined,
     chainId: Chains[requirement.chain],
-    enabled,
+    query: {
+      enabled,
+    },
   } as const
 
   const { triggerMembershipUpdate } = useMembershipUpdate()

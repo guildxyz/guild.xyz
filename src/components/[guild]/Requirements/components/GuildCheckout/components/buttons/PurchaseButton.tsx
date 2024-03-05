@@ -52,7 +52,9 @@ const PurchaseButton = (): JSX.Element => {
     address,
     token: pickedCurrency,
     chainId: Chains[requirement?.chain],
-    enabled: !pickedCurrencyIsNative,
+    query: {
+      enabled: !pickedCurrencyIsNative,
+    },
   })
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading

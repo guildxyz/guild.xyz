@@ -13,8 +13,7 @@ import {
   getTokenBuyerContractData,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
-import { createPublicClient, formatUnits, http, parseUnits } from "viem"
-import { erc20ABI } from "wagmi"
+import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
 export type FetchPriceResponse<T extends string | bigint = string> = {
@@ -56,7 +55,7 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
   })
   const decimals = await publicClient.readContract({
     address: tokenAddress as `0x${string}`,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "decimals",
   })
 

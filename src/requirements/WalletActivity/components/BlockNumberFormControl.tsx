@@ -79,7 +79,9 @@ const BlockNumberFormControl = ({
   }, [])
 
   const { data: currentBlock, isLoading } = useBlockNumber({
-    enabled: shouldFetchBlockNumber,
+    query: {
+      enabled: shouldFetchBlockNumber,
+    },
   })
   const isBlockNumberLoading = shouldFetchBlockNumber && (!currentBlock || isLoading)
 

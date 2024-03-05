@@ -23,7 +23,9 @@ const BuyTotal = (): JSX.Element => {
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[requirement.chain],
-    enabled: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
+    query: {
+      enabled: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
+    },
   })
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS

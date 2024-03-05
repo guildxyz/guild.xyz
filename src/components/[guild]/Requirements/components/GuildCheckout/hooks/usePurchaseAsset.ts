@@ -57,7 +57,9 @@ const usePurchaseAsset = () => {
     address,
     token: pickedCurrency,
     chainId: Chains[requirement?.chain],
-    enabled: pickedCurrency !== NULL_ADDRESS,
+    query: {
+      enabled: pickedCurrency !== NULL_ADDRESS,
+    },
   })
 
   const isSufficientBalance =
@@ -88,7 +90,9 @@ const usePurchaseAsset = () => {
     functionName: "getAssets",
     args: contractCallParams,
     value: generatedGetAssetsParams?.value,
-    enabled,
+    query: {
+      enabled,
+    },
   }
 
   return useSubmitTransaction(config, {

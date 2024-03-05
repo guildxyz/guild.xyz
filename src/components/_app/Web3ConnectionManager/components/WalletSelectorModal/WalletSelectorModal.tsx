@@ -14,6 +14,7 @@ import {
 
 import { Link } from "@chakra-ui/next-js"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
@@ -24,7 +25,7 @@ import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
-import { useAccount, useConnect } from "wagmi"
+import { Connector, useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
@@ -52,7 +53,13 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     delegateConnectionAtom
   )
 
-  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const {
+    connectors,
+    error,
+    connect,
+    variables: { connector: pendingConnector },
+    isPending,
+  } = useConnect()
   const { connector } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
@@ -204,14 +211,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     (!!connector || conn.id !== "cwaasWallet")
                 )
                 .map((conn) => (
-                  <ConnectorButton
-                    key={conn.id}
-                    connector={conn}
-                    connect={connect}
-                    isLoading={isLoading}
-                    pendingConnector={pendingConnector}
-                    error={error}
-                  />
+                  <CardMotionWrapper key={conn.id}>
+                    <ConnectorButton
+                      connector={conn}
+                      connect={connect}
+                      isLoading={isPending}
+                      pendingConnector={pendingConnector as Connector}
+                      error={error}
+                    />
+                  </CardMotionWrapper>
                 ))}
               {!isDelegateConnection && <DelegateCashButton />}
               <FuelConnectorButtons key="fuel" />

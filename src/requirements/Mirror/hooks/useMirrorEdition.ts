@@ -1,6 +1,6 @@
 import { Chain, Chains } from "chains"
 import mirrorAbi from "static/abis/mirror"
-import { useContractReads } from "wagmi"
+import { useReadContracts } from "wagmi"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 
@@ -15,7 +15,7 @@ const useMirrorEdition = (
 
   const contract = { abi: mirrorAbi, chainId: Chains[chain], address }
 
-  const { data, isLoading, error } = useContractReads({
+  const { data, isLoading, error } = useReadContracts({
     contracts: [
       {
         ...contract,
@@ -26,7 +26,9 @@ const useMirrorEdition = (
         functionName: "imageURI",
       },
     ],
-    enabled,
+    query: {
+      enabled,
+    },
   })
 
   const [name, imageURI] = data?.map((res) => res.result) ?? []

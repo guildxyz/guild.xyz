@@ -5,7 +5,7 @@ import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { PublicClient, createPublicClient, http } from "viem"
-import { mainnet } from "wagmi"
+import { mainnet } from "wagmi/chains"
 
 const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 

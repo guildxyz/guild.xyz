@@ -4,7 +4,7 @@ import guildRewardNftAbi from "static/abis/guildRewardNft"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"
 import { getBlockByTime } from "utils/getBlockByTime"
-import { useContractRead, useContractReads } from "wagmi"
+import { useReadContract, useReadContracts } from "wagmi"
 
 type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
 
@@ -50,17 +50,19 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     address,
     abi: guildRewardNftAbi,
     chainId: Chains[chain],
-  }
+  } as const
 
   const {
     data: firstTotalSupplyToday,
     isLoading: isFirstTotalSupplyTodayLoadings,
     error,
-  } = useContractRead({
+  } = useReadContract({
     ...contract,
     functionName: "totalSupply",
     blockNumber: firstBlockNumberToday?.result,
-    enabled: Boolean(firstBlockNumberToday?.result),
+    query: {
+      enabled: Boolean(firstBlockNumberToday?.result),
+    },
   })
 
   const {
@@ -68,7 +70,10 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     isLoading: isMulticallLoading,
     error: multicallError,
     refetch,
-  } = useContractReads({
+  } = useReadContracts({
+    // WAGMI 2 TODO
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     contracts: [
       {
         ...contract,

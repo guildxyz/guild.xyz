@@ -35,7 +35,7 @@ const useGuildPinFee = (): {
   //   data,
   //   isLoading: isGuildPinFeeLoading,
   //   error: guildPinFeeError,
-  // } = useContractRead({
+  // } = useReadContract({
   //   abi: GUILD_PIN_CONTRACTS[guildPin.chain].abi,
   //   address: GUILD_PIN_CONTRACTS[guildPin.chain].address,
   //   functionName: "fee",

@@ -9,14 +9,16 @@ import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { createPublicClient, http, keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
   WalletClient,
-  useChainId,
-  usePublicClient,
-  useWalletClient,
-} from "wagmi"
+  createPublicClient,
+  http,
+  keccak256,
+  stringToBytes,
+  trim,
+} from "viem"
+import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {

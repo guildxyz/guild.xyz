@@ -44,7 +44,7 @@ const useEstimateGas = (config: EstimateContractGasParameters) => {
     isLoading: isEstimateGasLoading,
     mutate,
   } = useSWR(
-    !!walletClient?.account && !!config?.enabled
+    !!walletClient?.account && !!config?.query?.enabled
       ? [
           "estimateGas",
           config.address,

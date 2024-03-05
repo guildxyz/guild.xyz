@@ -3,8 +3,7 @@ import { sql } from "@vercel/postgres"
 import { CHAIN_CONFIG, Chain } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { OneOf } from "types"
-import { createPublicClient, http, recoverMessageAddress } from "viem"
-import { erc721ABI } from "wagmi"
+import { createPublicClient, erc721Abi, http, recoverMessageAddress } from "viem"
 
 export type MysteryBoxResponse = OneOf<{ message: string }, { error: string }>
 
@@ -71,7 +70,7 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
     })
 
     balanceOf = await publicClient.readContract({
-      abi: erc721ABI,
+      abi: erc721Abi,
       address: MYSTERY_BOX_NFT.address,
       functionName: "balanceOf",
       args: [walletAddress],

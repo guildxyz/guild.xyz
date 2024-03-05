@@ -45,7 +45,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(!isNativeCurrency && chain),
+    query: {
+      enabled: Boolean(!isNativeCurrency && chain),
+    },
   })
 
   const convertedFee = fee
