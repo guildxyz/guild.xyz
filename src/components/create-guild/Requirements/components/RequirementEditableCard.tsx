@@ -9,7 +9,7 @@ import REQUIREMENTS from "requirements"
 import BalancyFooter from "./BalancyFooter"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
-import RequirementModalAndDiscardAlert from "./RequirementModalAndDiscardAlert"
+import RequirementEditModal from "./RequirementEditModal"
 import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
 
 const RequirementEditableCard = ({
@@ -67,7 +67,7 @@ const RequirementEditableCard = ({
       </RequirementBaseCard>
 
       <FormProvider {...methods}>
-        <RequirementModalAndDiscardAlert
+        <RequirementEditModal
           requirementField={field}
           isOpen={isOpen}
           onClose={onClose}

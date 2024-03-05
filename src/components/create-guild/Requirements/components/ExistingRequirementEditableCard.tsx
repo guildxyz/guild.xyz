@@ -17,7 +17,9 @@ import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
-import RequirementModalAndDiscardAlert from "./RequirementModalAndDiscardAlert"
+import RequirementEditModal, {
+  RequirementEditModalProps,
+} from "./RequirementEditModal"
 import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
 
 type Props = {
@@ -29,19 +31,20 @@ const ExistingRequirementEditableCard = ({
   requirement,
   isEditDisabled = false,
 }: Props) => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const {
-    isOpen: isRequirementDeleteOpen,
-    onOpen: onRequirementDeleteOpen,
-    onClose: onRequirementDeleteClose,
+    isOpen: isEditOpen,
+    onOpen: onEditOpen,
+    onClose: onEditClose,
+  } = useDisclosure()
+  const {
+    isOpen: isDeleteOpen,
+    onOpen: onDeleteOpen,
+    onClose: onDeleteClose,
   } = useDisclosure()
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
-  const FormComponent = REQUIREMENTS[requirement.type]?.formComponent
   const editButtonRef = useRef()
-  const closeButtonRef = useRef()
-
-  const methods = useForm({ mode: "all", defaultValues: requirement })
+  const removeButtonRef = useRef()
 
   const showViewOriginal =
     requirement.data?.customName || requirement.data?.customImage
@@ -52,8 +55,8 @@ const ExistingRequirementEditableCard = ({
 
   const {
     onSubmit: onDeleteRequirementSubmit,
-    isLoading: isRequirementDeleteLoading,
-    isSigning: isRequirementDeleteSigning,
+    isLoading: isDeleteLoading,
+    isSigning: isDeleteSigning,
   } = useDeleteRequirement(requirement.roleId, requirement.id)
 
   // on FREE req creation, the BE automatically deletes other requirements, so we don't have to delete in that case
@@ -82,24 +85,12 @@ const ExistingRequirementEditableCard = ({
     },
   })
 
-  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
-    useEditRequirement(requirement.roleId, {
-      onSuccess: (editedRequirement) => {
-        methods.reset(mapRequirement(editedRequirement))
-        onClose()
-      },
-    })
-
-  const requirementDeleteConfirmationAlert = (
+  const DeleteConfirmationAlert = (
     <ConfirmationAlert
-      finalFocusRef={closeButtonRef}
-      isLoading={
-        isRequirementDeleteLoading ||
-        isRequirementDeleteSigning ||
-        isCreateRequirementLoading
-      }
-      isOpen={isRequirementDeleteOpen}
-      onClose={onRequirementDeleteClose}
+      finalFocusRef={removeButtonRef}
+      isLoading={isDeleteLoading || isDeleteSigning || isCreateRequirementLoading}
+      isOpen={isDeleteOpen}
+      onClose={onDeleteClose}
       onConfirm={() => onDeleteRequirement()}
       title="Delete requirement"
       description="Are you sure you want to delete this requirement?"
@@ -107,22 +98,22 @@ const ExistingRequirementEditableCard = ({
     />
   )
 
-  if (!RequirementComponent || !FormComponent)
+  if (!RequirementComponent)
     return (
       <>
         <UnsupportedRequirementTypeCard type={requirement.type}>
           <RemoveRequirementButton
-            ref={closeButtonRef}
-            onClick={() => onRequirementDeleteOpen()}
+            ref={removeButtonRef}
+            onClick={() => onDeleteOpen()}
           />
         </UnsupportedRequirementTypeCard>
 
-        {requirementDeleteConfirmationAlert}
+        {DeleteConfirmationAlert}
       </>
     )
 
   const rightElement = !isEditDisabled && (
-    <Button ref={editButtonRef} size="sm" onClick={onOpen}>
+    <Button ref={editButtonRef} size="sm" onClick={onEditOpen}>
       Edit
     </Button>
   )
@@ -142,51 +133,74 @@ const ExistingRequirementEditableCard = ({
         </RequirementProvider>
 
         <RemoveRequirementButton
-          ref={closeButtonRef}
-          onClick={() => onRequirementDeleteOpen()}
+          ref={removeButtonRef}
+          onClick={() => onDeleteOpen()}
         />
       </RequirementBaseCard>
 
-      <FormProvider {...methods}>
-        <RequirementModalAndDiscardAlert
-          requirementField={requirement}
-          isOpen={isOpen}
-          onClose={onClose}
-          finalFocusRef={editButtonRef}
-          isLoading={isEditRequirementLoading}
-          footer={
-            <>
-              <BalancyFooter baseFieldPath={null} />
-              <Button
-                colorScheme="green"
-                onClick={methods.handleSubmit((editedReq) =>
-                  onEditRequirementSubmit({
-                    ...editedReq,
-                    /**
-                     * Keeping the old data too, because we don't mount e.g. the
-                     * `customName` & `customImage` inputs inside this form, so we
-                     * would overwrite those on every requirement edit
-                     */
-                    data: {
-                      ...requirement.data,
-                      ...editedReq.data,
-                    },
-                  })
-                )}
-                ml="auto"
-                isLoading={isEditRequirementLoading}
-                loadingText="Saving"
-                isDisabled={!methods.formState.isDirty}
-              >
-                Save
-              </Button>
-            </>
-          }
-        />
-      </FormProvider>
+      <ExistingRequirementEditModal
+        isOpen={isEditOpen}
+        onClose={onEditClose}
+        requirementField={requirement}
+        finalFocusRef={editButtonRef}
+      />
 
-      {requirementDeleteConfirmationAlert}
+      {DeleteConfirmationAlert}
     </>
+  )
+}
+
+const ExistingRequirementEditModal = ({
+  requirementField: requirement,
+  isOpen,
+  onClose,
+  finalFocusRef,
+}: Omit<RequirementEditModalProps, "footer">) => {
+  const methods = useForm({ mode: "all", defaultValues: requirement })
+
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(requirement.roleId, {
+      onSuccess: (editedRequirement) => {
+        methods.reset(mapRequirement(editedRequirement))
+        onClose()
+      },
+    })
+
+  return (
+    <FormProvider {...methods}>
+      <RequirementEditModal
+        requirementField={requirement}
+        {...{ isOpen, onClose, finalFocusRef }}
+        footer={
+          <>
+            <BalancyFooter baseFieldPath={null} />
+            <Button
+              colorScheme="green"
+              onClick={methods.handleSubmit((editedReq) =>
+                onEditRequirementSubmit({
+                  ...editedReq,
+                  /**
+                   * Keeping the old data too, because we don't mount e.g. the
+                   * `customName` & `customImage` inputs inside this form, so we
+                   * would overwrite those on every requirement edit
+                   */
+                  data: {
+                    ...requirement.data,
+                    ...editedReq.data,
+                  },
+                })
+              )}
+              ml="auto"
+              isLoading={isEditRequirementLoading}
+              loadingText="Saving"
+              isDisabled={!methods.formState.isDirty}
+            >
+              Save
+            </Button>
+          </>
+        }
+      />
+    </FormProvider>
   )
 }
 

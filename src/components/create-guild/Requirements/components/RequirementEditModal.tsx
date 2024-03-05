@@ -16,18 +16,18 @@ import REQUIREMENTS from "requirements"
 import { Requirement } from "types"
 import IsNegatedPicker from "./IsNegatedPicker"
 
-type Props = {
+export type RequirementEditModalProps = {
   requirementField: Requirement
-  isLoading?: boolean
   footer: ReactNode
 } & Pick<ModalProps, "isOpen" | "onClose" | "finalFocusRef">
-const RequirementModalAndDiscardAlert = ({
+
+const RequirementEditModal = ({
   requirementField,
   isOpen,
   onClose,
   finalFocusRef,
   footer,
-}: Props) => {
+}: RequirementEditModalProps) => {
   const {
     isOpen: isDiscardAlertOpen,
     onOpen: onDiscardAlertOpen,
@@ -84,4 +84,4 @@ const RequirementModalAndDiscardAlert = ({
     </>
   )
 }
-export default RequirementModalAndDiscardAlert
+export default RequirementEditModal
