@@ -45,6 +45,12 @@ const ExistingRequirementEditableCard = ({
     onOpen: onRequirementDeleteOpen,
     onClose: onRequirementDeleteClose,
   } = useDisclosure()
+  const {
+    isOpen: isDiscardAlertOpen,
+    onOpen: onDiscardAlertOpen,
+    onClose: onDiscardAlertClose,
+  } = useDisclosure()
+
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
   const FormComponent = REQUIREMENTS[requirement.type]?.formComponent
   const ref = useRef()
@@ -65,6 +71,7 @@ const ExistingRequirementEditableCard = ({
     isSigning: isRequirementDeleteSigning,
   } = useDeleteRequirement(requirement.roleId, requirement.id)
 
+  // on FREE req creation, the BE automatically deletes other requirements, so we don't have to delete in that case
   const onDeleteRequirement = () =>
     isLastRequirement
       ? onCreateRequirementSubmit({
@@ -90,15 +97,9 @@ const ExistingRequirementEditableCard = ({
     },
   })
 
-  const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
-  } = useDisclosure()
-
   const onCloseAndClear = () => {
     methods.reset()
-    onAlertClose()
+    onDiscardAlertClose()
     onClose()
   }
 
@@ -166,7 +167,7 @@ const ExistingRequirementEditableCard = ({
 
       <Modal
         isOpen={isOpen}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
+        onClose={methods.formState.isDirty ? onDiscardAlertOpen : onClose}
         scrollBehavior="inside"
         finalFocusRef={ref}
       >
@@ -217,8 +218,8 @@ const ExistingRequirementEditableCard = ({
         </ModalContent>
       </Modal>
       <DiscardAlert
-        isOpen={isAlertOpen}
-        onClose={onAlertClose}
+        isOpen={isDiscardAlertOpen}
+        onClose={onDiscardAlertClose}
         onDiscard={onCloseAndClear}
       />
 
