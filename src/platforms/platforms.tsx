@@ -551,6 +551,9 @@ const platforms: Record<PlatformName, PlatformData> = {
         loading: AddPlatformPanelLoadingSpinner,
       }
     ),
+    RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
+      ssr: false,
+    }),
   },
 }
 

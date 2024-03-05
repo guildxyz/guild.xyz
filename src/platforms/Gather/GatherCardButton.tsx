@@ -1,7 +1,13 @@
+import { Tooltip } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { ArrowSquareOut } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import { GuildPlatform } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 import ClaimGatherModal from "./ClaimGatherModal"
 import useClaimGather from "./hooks/useClaimGather"
 
@@ -29,6 +35,9 @@ const GatherCardButton = ({ platform }: Props) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimGather(rolePlatform?.id)
 
+  const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
+  const isButtonDisabled = !isAvailable && !claimed
+
   const submitClaim = () => {
     onSubmit()
     onClose()
@@ -41,16 +50,30 @@ const GatherCardButton = ({ platform }: Props) => {
           as="a"
           target="_blank"
           href={spaceUrl}
+          iconSpacing={1}
           rightIcon={<ArrowSquareOut />}
-          colorScheme="GATHER_TOWN"
           w="full"
+          colorScheme="GATHER_TOWN"
         >
           Go to space
         </Button>
       ) : (
-        <Button colorScheme="GATHER_TOWN" w="full" onClick={onOpen}>
-          Claim access
-        </Button>
+        <Tooltip
+          isDisabled={!isButtonDisabled}
+          label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
+          hasArrow
+          shouldWrapChildren
+          w="full"
+        >
+          <Button
+            colorScheme="GATHER_TOWN"
+            w="full"
+            onClick={onOpen}
+            isDisabled={isButtonDisabled}
+          >
+            Claim access
+          </Button>
+        </Tooltip>
       )}
 
       <ClaimGatherModal
