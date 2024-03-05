@@ -174,6 +174,18 @@ const RequirementNameAndVisibilityEditor = ({
       onSuccess: () => setVisibilityModalProps.onClose(),
     })
 
+  const onSubmit = (req: Requirement) => {
+    if (id && roleId) {
+      if (field.value === originalValue) return
+
+      onEditRequirementSubmit(req)
+      return
+    }
+
+    onSave?.(req)
+    setVisibilityModalProps.onClose()
+  }
+
   const onEditNameSubmit = (customName: string) => {
     const editedData = {
       ...requirement,
@@ -193,18 +205,6 @@ const RequirementNameAndVisibilityEditor = ({
     }
 
     onSubmit(editedData)
-  }
-
-  const onSubmit = (req: Requirement) => {
-    if (id && roleId) {
-      if (field.value === originalValue) return
-
-      onEditRequirementSubmit(req)
-      return
-    }
-
-    onSave?.(req)
-    setVisibilityModalProps.onClose()
   }
 
   return (
