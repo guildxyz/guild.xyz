@@ -6,7 +6,12 @@ import { Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
-const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void }) => {
+type EditedRequirement = Requirement & { deletedRequirements?: number[] }
+
+const useEditRequirement = (
+  roleId: number,
+  config?: { onSuccess?: (editedRequirement: EditedRequirement) => void }
+) => {
   const { id: guildId, mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -24,42 +29,39 @@ const useEditRequirement = (roleId: number, config?: { onSuccess?: () => void })
       },
     ])
 
-  return useSubmit<Requirement, Requirement & { deletedRequirements?: number[] }>(
-    editRequirement,
-    {
-      onSuccess: (editedRequirement) => {
-        toast({
-          status: "success",
-          title: "Successfully updated requirement",
-        })
+  return useSubmit<Requirement, EditedRequirement>(editRequirement, {
+    onSuccess: (editedRequirement) => {
+      toast({
+        status: "success",
+        title: "Successfully updated requirement",
+      })
 
-        mutateGuild(
-          (prevGuild) => ({
-            ...prevGuild,
-            roles: prevGuild.roles.map((role) => {
-              if (role.id !== roleId) return role
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          roles: prevGuild.roles.map((role) => {
+            if (role.id !== roleId) return role
 
-              return {
-                ...role,
-                requirements: role.requirements.map((requirement) => {
-                  if (requirement.id !== editedRequirement.id) return requirement
-                  // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-                  const { deletedRequirements: _, ...req } = editedRequirement
-                  return req
-                }),
-              }
-            }),
+            return {
+              ...role,
+              requirements: role.requirements.map((requirement) => {
+                if (requirement.id !== editedRequirement.id) return requirement
+                // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+                const { deletedRequirements: _, ...req } = editedRequirement
+                return req
+              }),
+            }
           }),
-          {
-            revalidate: false,
-          }
-        )
+        }),
+        {
+          revalidate: false,
+        }
+      )
 
-        config?.onSuccess?.()
-      },
-      onError: (error) => showErrorToast(error),
-    }
-  )
+      config?.onSuccess?.(editedRequirement)
+    },
+    onError: (error) => showErrorToast(error),
+  })
 }
 
 export default useEditRequirement

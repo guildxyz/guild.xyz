@@ -9,6 +9,7 @@ import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType } from "types"
+import mapRequirement from "utils/mapRequirement"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import useEditRequirement from "../hooks/useEditRequirement"
@@ -83,7 +84,10 @@ const ExistingRequirementEditableCard = ({
 
   const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
     useEditRequirement(requirement.roleId, {
-      onSuccess: () => onClose(),
+      onSuccess: (editedRequirement) => {
+        methods.reset(mapRequirement(editedRequirement))
+        onClose()
+      },
     })
 
   const requirementDeleteConfirmationAlert = (
