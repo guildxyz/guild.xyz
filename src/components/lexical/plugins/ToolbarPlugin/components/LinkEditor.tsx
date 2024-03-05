@@ -49,9 +49,9 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   const [lastSelection, setLastSelection] = useState(null)
   const [shouldOpenEditor, setShouldOpenEditor] = useState(false)
 
-  const checkLinkValid = (link: string) => {
-    if (!link) return true
-    const url = ensureUrlProtocol(link)
+  const checkLinkValid = (linkToCheck: string) => {
+    if (!linkToCheck) return true
+    const url = ensureUrlProtocol(linkToCheck)
     try {
       new URL(url)
       return true
@@ -167,7 +167,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
             <form
               onSubmit={(e) => {
                 e.preventDefault()
-                addLink
+                addLink()
               }}
             >
               <FormControl isInvalid={!!errors.link}>
