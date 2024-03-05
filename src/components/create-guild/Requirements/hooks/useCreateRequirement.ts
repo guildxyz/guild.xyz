@@ -24,16 +24,26 @@ const useCreateRequirement = (
 
   return useSubmit<
     Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
-    Requirement
+    Requirement & { deletedRequirements?: number[] }
   >(createRequirement, {
-    onSuccess: (newRequirement) => {
+    onSuccess: (response) => {
       mutateGuild(
         (prevGuild) => ({
           ...prevGuild,
           roles: prevGuild.roles.map((role) => {
             if (role.id !== roleId) return role
 
-            return { ...role, requirements: [...role.requirements, newRequirement] }
+            return {
+              ...role,
+              requirements: [
+                ...role.requirements?.filter((req) =>
+                  Array.isArray(response.deletedRequirements)
+                    ? !response.deletedRequirements.includes(req.id)
+                    : true
+                ),
+                response,
+              ],
+            }
           }),
         }),
         { revalidate: false }
