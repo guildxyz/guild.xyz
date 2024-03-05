@@ -1,11 +1,14 @@
 import { Button, Flex } from "@chakra-ui/react"
 import GatherForm from "platforms/Gather/GatherForm"
-import { getNameFromSpaceId } from "platforms/Gather/useGatherCardProps"
+import useGatherAccess from "platforms/Gather/hooks/useGatherAccess"
+import {
+  gatherSpaceIdToName,
+  gatherSpaceUrlToSpaceId,
+} from "platforms/Gather/useGatherCardProps"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 
 export type AddGatherFormType = {
   gatherApiKey: string
-  gatherSpaceUrl: string
   gatherSpaceId: string
   gatherRole: string
   gatherAffiliation: string
@@ -30,21 +33,26 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
   } = methods
 
   const [apiKey, spaceUrl] = useWatch({
-    name: ["gatherApiKey", "gatherSpaceUrl"],
+    name: ["gatherApiKey", "gatherSpaceId"],
     control: control,
   })
+  const { success: accessSuccess } = useGatherAccess(
+    !errors?.gatherApiKey && apiKey,
+    !errors?.gatherSpaceId && spaceUrl
+  )
 
   const onSubmit = (_data) => {
+    const spaceId = gatherSpaceUrlToSpaceId(_data.gatherSpaceId)
     append({
       guildPlatform: {
         platformName: "GATHER_TOWN",
-        platformGuildId: _data.gatherSpaceId,
+        platformGuildId: spaceId,
         platformGuildData: {
-          gatherSpaceId: _data.gatherSpaceId,
+          gatherSpaceId: spaceId,
           gatherApiKey: _data.gatherApiKey,
           gatherAffiliation: _data.gatherAffiliation,
           gatherRole: _data.gatherRole,
-          name: getNameFromSpaceId(_data.gatherSpaceId),
+          name: gatherSpaceIdToName(spaceId),
         },
       },
       isNew: true,
@@ -58,12 +66,7 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
 
       <Flex justifyContent={"flex-end"} mt="auto" pt="10">
         <Button
-          isDisabled={
-            !!errors?.gatherApiKey ||
-            !!errors?.gatherSpaceUrl ||
-            !apiKey ||
-            !spaceUrl
-          }
+          isDisabled={!accessSuccess}
           colorScheme="green"
           onClick={methods.handleSubmit(onSubmit)}
         >

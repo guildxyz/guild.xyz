@@ -117,7 +117,7 @@ const useTemplate = () => {
           guildPlatformIndex,
           platformRoleId:
             guildPlatform.platformName === "GOOGLE"
-              ? guildPlatform.platformGuildData.gatherRole
+              ? guildPlatform.platformGuildData.role
               : undefined,
         },
         ...currentRolePlatforms,

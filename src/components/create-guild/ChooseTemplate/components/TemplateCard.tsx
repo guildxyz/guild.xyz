@@ -49,9 +49,7 @@ const getRewardLabel = (platform: Partial<GuildPlatform>) => {
       return "Role in: "
 
     case PlatformType.GOOGLE:
-      return `${capitalize(
-        platform.platformGuildData.gatherRole ?? "reader"
-      )} access to: `
+      return `${capitalize(platform.platformGuildData.role ?? "reader")} access to: `
 
     default:
       return "Access to: "

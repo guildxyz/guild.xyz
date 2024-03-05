@@ -13,8 +13,7 @@ import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPlatform } from "types"
-import GatherForm from "./GatherForm"
-import { getNameFromSpaceId } from "./useGatherCardProps"
+import GatherGuestForm from "./GatherGuestForm"
 
 type Props = {
   isOpen: boolean
@@ -30,10 +29,10 @@ const EditGatherModal = ({
   platformGuildData,
 }: Props) => {
   const {
-    gatherApiKey: currentApiKey,
     gatherAffiliation: currentAffiliation,
     gatherRole: currentRole,
     gatherSpaceId: currentSpaceId,
+    name: currentName,
   } = platformGuildData
 
   const toast = useToast()
@@ -49,19 +48,14 @@ const EditGatherModal = ({
   })
 
   const onEditGatherRewardSubmit = (data) => {
-    data.name = getNameFromSpaceId(data?.gatherSpaceId)
-    delete data?.gatherSpaceUrl
+    data.gatherSpaceId = currentSpaceId
+    data.name = currentName
     onSubmit({ platformGuildData: data })
   }
-
-  const spaceUrl = `https://app.gather.town/app/${currentSpaceId.replace("\\", "/")}`
 
   const methods = useForm<AddGatherFormType>({
     mode: "all",
     defaultValues: {
-      gatherApiKey: currentApiKey,
-      gatherSpaceUrl: spaceUrl,
-      gatherSpaceId: currentSpaceId,
       gatherAffiliation: currentAffiliation,
       gatherRole: currentRole,
     },
@@ -70,10 +64,8 @@ const EditGatherModal = ({
   const handleClose = () => {
     onClose()
     methods.reset({
-      gatherApiKey: currentApiKey,
       gatherAffiliation: currentAffiliation,
       gatherRole: currentRole,
-      gatherSpaceId: currentSpaceId,
     })
   }
 
@@ -86,7 +78,7 @@ const EditGatherModal = ({
         <ModalBody>
           <FormProvider {...methods}>
             <Stack>
-              <GatherForm />
+              <GatherGuestForm />
 
               <Button
                 colorScheme="indigo"

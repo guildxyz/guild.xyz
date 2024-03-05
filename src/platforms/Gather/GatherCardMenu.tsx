@@ -1,4 +1,5 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
+import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -23,6 +24,7 @@ const GatherCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <MenuItem icon={<PencilSimple />} onClick={onOpen}>
           Edit reward
         </MenuItem>
+        <EditRewardAvailabilityMenuItem platformGuildId={platformGuildId} />
         <RemovePlatformMenuItem platformGuildId={platformGuildId} />
       </PlatformCardMenu>
 
