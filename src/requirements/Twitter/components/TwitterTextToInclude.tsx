@@ -1,4 +1,13 @@
-import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  chakra,
+} from "@chakra-ui/react"
 import { useFormContext, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -9,6 +18,14 @@ const TwitterTextToInclude = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <>
+      <Alert status="info">
+        <AlertIcon />
+        <AlertDescription>
+          X <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>{" "}
+          authentication limits to about 450 requests every 15 minutes. Users may
+          need to wait if this threshold is exceeded.
+        </AlertDescription>
+      </Alert>
       <FormControl
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       >
