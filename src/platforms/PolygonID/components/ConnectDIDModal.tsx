@@ -60,7 +60,9 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
       ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id?poll=true`
       : null,
     {
-      errorRetryInterval: 3000,
+      onErrorRetry: (_error, _key, _config, revalidate, _revalidateOps) => {
+        setTimeout(() => revalidate(), 3000)
+      },
     }
   )
 
