@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   HStack,
   Img,
@@ -41,7 +42,17 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
       <HStack>
         <InputGroup>
           <InputLeftElement>@</InputLeftElement>
-          <Input {...field} pl={7} />
+          <Input
+            {...field}
+            pl={7}
+            onChange={({ target: { value } }) => {
+              if (value.length <= 0) return field.onChange(value)
+
+              const splittedLink = value.split("?")[0].split("/")
+
+              return field.onChange(splittedLink[splittedLink.length - 1])
+            }}
+          />
         </InputGroup>
         {debouncedUsername?.length > 0 && (
           <SkeletonCircle
@@ -59,6 +70,7 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
           </SkeletonCircle>
         )}
       </HStack>
+      <FormHelperText>Paste username of profile URL</FormHelperText>
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>
