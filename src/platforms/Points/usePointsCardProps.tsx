@@ -1,8 +1,8 @@
 import Star from "static/icons/star.svg"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
-const usePointsCardProps = (guildPlatform: GuildPlatform) => {
+const usePointsCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const rolePlatform = useRolePlatform()
   const { name, imageUrl } = guildPlatform.platformGuildData
 

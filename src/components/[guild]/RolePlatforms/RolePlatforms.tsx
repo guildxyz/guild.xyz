@@ -6,7 +6,12 @@ import Section from "components/common/Section"
 import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { GuildPlatform, PlatformType, RoleFormType } from "types"
+import {
+  GuildPlatform,
+  GuildPlatformWithOptionalId,
+  PlatformType,
+  RoleFormType,
+} from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import SetVisibility from "../SetVisibility"
@@ -105,7 +110,7 @@ const RolePlatformCard = ({
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
-  let guildPlatform: GuildPlatform, type
+  let guildPlatform: GuildPlatformWithOptionalId, type
   if (rolePlatform.guildPlatformId) {
     guildPlatform = guildPlatforms.find(
       (platform) => platform.id === rolePlatform.guildPlatformId
@@ -165,7 +170,8 @@ const RolePlatformCard = ({
           !rolePlatform.isNew ? (
             <RemovePlatformButton
               removeButtonColor={removeButtonColor}
-              guildPlatform={guildPlatform}
+              // It's safe to cast this value, since we're sure that guildPlatform.id will be defined here
+              guildPlatform={guildPlatform as GuildPlatform}
             />
           ) : (
             <CloseButton

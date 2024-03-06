@@ -13,7 +13,7 @@ import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { DAY_IN_MS } from "../../EditRewardAvailabilityModal"
 
-type Props = { rolePlatform: Omit<RolePlatform, "id"> } & WrapProps
+type Props = { rolePlatform: Omit<RolePlatform, "id" | "guildPlatform"> } & WrapProps
 
 export const getTimeDiff = (dateString: string) => {
   if (!dateString) return undefined
@@ -21,7 +21,7 @@ export const getTimeDiff = (dateString: string) => {
 }
 
 export const shouldShowAvailabilityTags = (
-  rolePlatform?: Omit<RolePlatform, "id">
+  rolePlatform?: Omit<RolePlatform, "id" | "guildPlatform">
 ): boolean =>
   typeof rolePlatform?.capacity === "number" ||
   !!rolePlatform?.startTime ||

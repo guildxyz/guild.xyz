@@ -1,17 +1,11 @@
 import RewardCard from "components/common/RewardCard"
-import platforms from "platforms/platforms"
+import platforms, { CardPropsHook } from "platforms/platforms"
 import { PropsWithChildren } from "react"
-import { GuildPlatform, PlatformName, Rest } from "types"
+import { GuildPlatformWithOptionalId, Rest } from "types"
 
 type Props = {
-  guildPlatform: GuildPlatform
-  usePlatformProps: (guildPlatform: GuildPlatform) => {
-    link?: string
-    image?: string | JSX.Element
-    name: string
-    info?: string | JSX.Element
-    type: PlatformName
-  }
+  guildPlatform: GuildPlatformWithOptionalId
+  usePlatformProps: CardPropsHook
   titleRightElement?: JSX.Element
   actionRow?: JSX.Element
   cornerButton?: JSX.Element

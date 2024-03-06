@@ -20,7 +20,12 @@ import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
 import XLogo from "static/icons/x.svg"
-import { GuildPlatform, OneOf, PlatformName } from "types"
+import {
+  GuildPlatformWithOptionalId,
+  OneOf,
+  PlatformName,
+  RoleFormType,
+} from "types"
 import fetcher from "utils/fetcher"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
@@ -66,6 +71,19 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "POAP",
 ]
 
+export type AddPlatformPanelProps = {
+  onSuccess: (data: RoleFormType["rolePlatforms"][number]) => void
+  skipSettings?: boolean
+}
+
+export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
+  type: PlatformName
+  name: string
+  image?: string | JSX.Element
+  info?: string | JSX.Element
+  link?: string
+}
+
 type PlatformData<
   OAuthParams extends {
     client_id?: string
@@ -80,23 +98,14 @@ type PlatformData<
   name: string
   colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
-  cardPropsHook?: (guildPlatform: GuildPlatform) => {
-    type: PlatformName
-    name: string
-    image?: string | JSX.Element
-    info?: string | JSX.Element
-    link?: string
-  }
+  cardPropsHook?: CardPropsHook
   // true when the AddPlatformPanel just automatically adds the platform without any user input
   autoPlatformSetup?: boolean
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-  AddPlatformPanel?: ComponentType<{
-    onSuccess: () => void
-    skipSettings?: boolean
-  }>
+  AddPlatformPanel?: ComponentType<AddPlatformPanelProps>
   PlatformPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
 

@@ -6,13 +6,11 @@ import EditRewardAvailabilityModal, {
 import AvailabilityTags, {
   shouldShowAvailabilityTags,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
-import { GuildPlatform, PlatformName, RolePlatform } from "types"
+import { PlatformName, RoleFormType, RolePlatform } from "types"
 
 type Props = {
   platformType: PlatformName
-  rolePlatform?: Omit<RolePlatform, "id"> & {
-    guildPlatform?: Omit<GuildPlatform, "id">
-  }
+  rolePlatform?: RoleFormType["rolePlatforms"][number]
   defaultValues?: RolePlatformAvailabilityForm
   onDone: (data: RolePlatformAvailabilityForm) => void
 }

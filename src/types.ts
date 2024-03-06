@@ -432,6 +432,8 @@ type GuildPlatform = {
   permission?: string
 }
 
+type GuildPlatformWithOptionalId = Omit<GuildPlatform, "id"> & { id?: number }
+
 const supportedSocialLinks = [
   "TWITTER",
   "LENS",
@@ -494,7 +496,12 @@ type Guild = {
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
     requirements: Array<Partial<Requirement>>
-    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex?: number }>
+    rolePlatforms: Array<
+      Partial<Omit<RolePlatform, "guildPlatform">> & {
+        guildPlatform?: GuildPlatformWithOptionalId
+        guildPlatformIndex?: number
+      }
+    >
   } & { name: string }
 >
 
@@ -692,6 +699,7 @@ export type {
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
+  GuildPlatformWithOptionalId,
   GuildTags,
   LeaderboardPinData,
   Logic,
