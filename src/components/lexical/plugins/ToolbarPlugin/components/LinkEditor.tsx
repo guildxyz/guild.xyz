@@ -19,7 +19,7 @@ import Button from "components/common/Button"
 import { $getSelection, $isRangeSelection, SELECTION_CHANGE_COMMAND } from "lexical"
 import { Link } from "phosphor-react"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm } from "react-hook-form"
 import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
 import { LOW_PRIORITY, getSelectedNode } from "../ToolbarPlugin"
 
@@ -47,15 +47,12 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   })
 
   const {
-    control,
     setValue,
     register,
     formState: { errors },
   } = methods
-  const link = useWatch({ name: "link", control: control })
 
   const [editor] = useLexicalComposerContext()
-
   const initialFocusRef = useRef<HTMLInputElement>()
   const [lastSelection, setLastSelection] = useState(null)
   const [shouldOpenEditor, setShouldOpenEditor] = useState(false)
@@ -123,7 +120,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
     })
   }, [editor, updateLinkEditor])
 
-  const addLink = () => {
+  const addLink = ({ link }: { link: string }) => {
     if (!lastSelection) return
     editor.dispatchCommand(
       TOGGLE_LINK_COMMAND,
@@ -164,12 +161,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
           <PopoverArrow />
           <PopoverCloseButton />
           <PopoverBody p={2}>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-                addLink()
-              }}
-            >
+            <form onSubmit={methods.handleSubmit(addLink)}>
               <FormControl isInvalid={!!errors.link}>
                 <HStack>
                   <Input
@@ -186,7 +178,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
                     variant="solid"
                     flexShrink={0}
                     borderRadius="lg"
-                    onClick={addLink}
+                    onClick={methods.handleSubmit(addLink)}
                     isDisabled={!!errors.link}
                     type="submit"
                   >
