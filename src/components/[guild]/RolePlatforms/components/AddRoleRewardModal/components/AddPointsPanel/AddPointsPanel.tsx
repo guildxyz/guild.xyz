@@ -31,7 +31,7 @@ export type AddPointsFormType = {
   imageUrl: string
 }
 
-const AddPointsPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddPointsPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const { id, guildPlatforms } = useGuild()
 
   const existingPointsRewards = guildPlatforms.filter(
@@ -67,7 +67,7 @@ const AddPointsPanel = ({ onSuccess }: AddPlatformPanelProps) => {
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
   const onSubmit = (data: AddPointsFormType) =>
-    onSuccess({
+    onAdd({
       ...(selectedExistingId
         ? {
             guildPlatformId: selectedExistingId,

@@ -7,14 +7,14 @@ const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGithubPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddGithubPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   return (
     <FormProvider {...methods}>
       <GitHubGuildSetup
         onSelection={(platformGuildId) =>
-          onSuccess({
+          onAdd({
             guildPlatform: {
               platformName: "GITHUB",
               platformId: PlatformType.GITHUB,

@@ -8,7 +8,7 @@ const defaultValues = {
 }
 
 const AddGooglePanel = ({
-  onSuccess,
+  onAdd,
   skipSettings,
 }: AddPlatformPanelProps): JSX.Element => {
   const methods = useForm({
@@ -22,7 +22,7 @@ const AddGooglePanel = ({
         defaultValues={defaultValues}
         onSelect={(newPlatform) => {
           const { platformRoleId, ...guildPlatformData } = newPlatform
-          onSuccess({
+          onAdd({
             guildPlatform: {
               ...guildPlatformData,
               platformName: "GOOGLE",

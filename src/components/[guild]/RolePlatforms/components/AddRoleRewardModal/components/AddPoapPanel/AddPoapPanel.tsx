@@ -44,7 +44,7 @@ const defaultValues: ImportPoapForm = {
   texts: [],
 }
 
-const AddPoapPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddPoapPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm<ImportPoapForm>({
     defaultValues,
   })
@@ -90,7 +90,7 @@ const AddPoapPanel = ({ onSuccess }: AddPlatformPanelProps) => {
   }, [poap])
 
   const onContinue = (data: ImportPoapForm) =>
-    onSuccess({
+    onAdd({
       guildPlatform: {
         platformName: "POAP",
         platformId: PlatformType.POAP,

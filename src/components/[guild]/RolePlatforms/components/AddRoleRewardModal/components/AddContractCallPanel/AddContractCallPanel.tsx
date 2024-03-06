@@ -1,10 +1,10 @@
 import { AddPlatformPanelProps } from "platforms/platforms"
 import CreateNftForm from "./components/CreateNftForm"
 
-const AddContractCallPanel = ({ onSuccess }: AddPlatformPanelProps) => (
+const AddContractCallPanel = ({ onAdd }: AddPlatformPanelProps) => (
   <CreateNftForm
     onSuccess={(guildPlatform) =>
-      onSuccess({
+      onAdd({
         guildPlatform,
         isNew: true,
       })

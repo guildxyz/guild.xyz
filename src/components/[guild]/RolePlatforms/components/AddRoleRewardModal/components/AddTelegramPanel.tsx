@@ -4,7 +4,7 @@ import { AddPlatformPanelProps } from "platforms/platforms"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 
-const AddTelegramPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddTelegramPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -23,7 +23,7 @@ const AddTelegramPanel = ({ onSuccess }: AddPlatformPanelProps) => {
         <Button
           colorScheme={"green"}
           onClick={() =>
-            onSuccess({
+            onAdd({
               guildPlatform: {
                 platformName: "TELEGRAM",
                 platformId: PlatformType.TELEGRAM,

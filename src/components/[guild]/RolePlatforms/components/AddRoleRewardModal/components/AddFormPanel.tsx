@@ -33,7 +33,7 @@ const defaultValues: CreateForm = {
   fields: [],
 }
 
-const AddFormPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddFormPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm<CreateForm>({
     mode: "all",
     resolver: zodResolver(FormCreationSchema),
@@ -45,7 +45,7 @@ const AddFormPanel = ({ onSuccess }: AddPlatformPanelProps) => {
   const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm(
     (createdForm) => {
       methods.reset(defaultValues)
-      onSuccess({
+      onAdd({
         guildPlatform: {
           platformName: "FORM",
           platformId: PlatformType.FORM,

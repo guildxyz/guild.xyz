@@ -19,7 +19,7 @@ import { RoleFormType } from "types"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 type Props = {
-  append: AddPlatformPanelProps["onSuccess"]
+  append: AddPlatformPanelProps["onAdd"]
 }
 
 const AddRoleRewardModal = ({ append }: Props) => {
@@ -72,7 +72,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
             <SelectRoleOrSetRequirements selectedPlatform={selection} />
           ) : AddPlatformPanel ? (
             <AddPlatformPanel
-              onSuccess={(data) => {
+              onAdd={(data) => {
                 append({ ...data, visibility: roleVisibility })
                 onClose()
               }}

@@ -72,7 +72,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
 ]
 
 export type AddPlatformPanelProps = {
-  onSuccess: (data: RoleFormType["rolePlatforms"][number]) => void
+  onAdd: (data: RoleFormType["rolePlatforms"][number]) => void
   skipSettings?: boolean
 }
 

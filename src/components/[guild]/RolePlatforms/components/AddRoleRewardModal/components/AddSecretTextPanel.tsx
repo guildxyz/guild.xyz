@@ -17,7 +17,7 @@ enum TextPlatformName {
   UNIQUE_TEXT,
 }
 
-const AddSecretTextPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddSecretTextPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const { id: userId } = useUser()
 
   const methods = useForm<SecretTextRewardForm & UniqueTextRewardForm>({
@@ -46,7 +46,7 @@ const AddSecretTextPanel = ({ onSuccess }: AddPlatformPanelProps) => {
         data.texts?.filter(Boolean) ?? []
     }
 
-    onSuccess({
+    onAdd({
       guildPlatform: {
         platformName,
         platformId: PlatformType[platformName],

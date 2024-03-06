@@ -251,7 +251,7 @@ const AddRewardButton = (): JSX.Element => {
                 <SelectRoleOrSetRequirements selectedPlatform={selection} />
               ) : AddPlatformPanel ? (
                 <AddPlatformPanel
-                  onSuccess={(createdRolePlatform) => {
+                  onAdd={(createdRolePlatform) => {
                     methods.setValue("rolePlatforms.0", {
                       ...createdRolePlatform,
                       visibility,

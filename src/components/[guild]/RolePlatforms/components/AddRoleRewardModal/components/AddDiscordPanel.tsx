@@ -7,7 +7,7 @@ const defaultValues = {
   platformGuildId: null,
 }
 
-const AddDiscordPanel = ({ onSuccess }: AddPlatformPanelProps) => {
+const AddDiscordPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const platformGuildId = useWatch({
@@ -26,7 +26,7 @@ const AddDiscordPanel = ({ onSuccess }: AddPlatformPanelProps) => {
         selectedServer={platformGuildId}
         defaultValues={defaultValues}
         onSubmit={() =>
-          onSuccess({
+          onAdd({
             guildPlatform: {
               platformName: "DISCORD",
               platformId: PlatformType.DISCORD,
