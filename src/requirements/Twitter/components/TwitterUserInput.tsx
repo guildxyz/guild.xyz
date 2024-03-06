@@ -50,7 +50,7 @@ const TwitterUserInput = ({ baseFieldPath }: RequirementFormProps) => {
 
               const splittedLink = value.split("?")[0].split("/")
 
-              return field.onChange(splittedLink[splittedLink.length - 1])
+              return field.onChange(splittedLink.at(-1))
             }}
           />
         </InputGroup>
