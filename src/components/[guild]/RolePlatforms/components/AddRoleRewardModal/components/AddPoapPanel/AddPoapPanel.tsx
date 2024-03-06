@@ -17,16 +17,12 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
-import platforms from "platforms/platforms"
+import platforms, { AddPlatformPanelProps } from "platforms/platforms"
 import { useEffect } from "react"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
-import { Visibility } from "types"
+import { PlatformGuildData, PlatformType } from "types"
 import UploadMintLinks from "./components/UploadMintLinks"
-
-type Props = {
-  onSuccess: () => void
-}
 
 export type ImportPoapForm = {
   eventId: string
@@ -48,7 +44,7 @@ const defaultValues: ImportPoapForm = {
   texts: [],
 }
 
-const AddPoapPanel = ({ onSuccess }: Props) => {
+const AddPoapPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm<ImportPoapForm>({
     defaultValues,
   })
@@ -93,15 +89,11 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
     setValue("endTime", new Date(poap.expiry_date).toISOString())
   }, [poap])
 
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  const onContinue = (data: ImportPoapForm) => {
-    append({
+  const onContinue = (data: ImportPoapForm) =>
+    onAdd({
       guildPlatform: {
         platformName: "POAP",
+        platformId: PlatformType.POAP,
         platformGuildId: `poap-${data.eventId}`,
         platformGuildData: {
           texts: data.texts?.filter(Boolean) ?? [],
@@ -109,15 +101,12 @@ const AddPoapPanel = ({ onSuccess }: Props) => {
           eventId: +data.eventId,
           fancyId: data.fancyId,
           imageUrl: data.imageUrl,
-        },
+        } satisfies PlatformGuildData["POAP"],
       },
       startTime: data.startTime,
       endTime: data.endTime,
       isNew: true,
-      visibility: roleVisibility,
     })
-    onSuccess()
-  }
 
   return (
     <FormProvider {...methods}>

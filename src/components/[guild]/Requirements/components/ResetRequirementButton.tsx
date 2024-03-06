@@ -6,7 +6,7 @@ const ResetRequirementButton = () => {
   const { id } = useRequirementContext()
   const { control, setValue } = useFormContext()
   const requirements = useWatch({ name: "requirements", control })
-  const index = requirements.findIndex((requirement) => requirement.id === id)
+  const index = requirements?.findIndex((requirement) => requirement.id === id)
 
   const onReset = () => {
     setValue(`requirements.${index}.data.customName`, "", {

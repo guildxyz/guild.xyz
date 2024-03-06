@@ -1,9 +1,9 @@
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
-const useContractCallCardProps = (guildPlatform: GuildPlatform) => {
+const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { roles } = useGuild()
   const { chain, contractAddress } = guildPlatform.platformGuildData
   const { name, image } = useNftDetails(chain, contractAddress)

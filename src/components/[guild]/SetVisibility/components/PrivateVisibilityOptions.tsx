@@ -11,16 +11,13 @@ import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { SetVisibilityForm } from "../SetVisibility"
 
-const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
+const PrivateVisibilityOptions = () => {
   const { roles } = useGuild()
-  const { setValue, formState } = useFormContext()
+  const { setValue } = useFormContext<SetVisibilityForm>()
 
-  const roleId = formState?.defaultValues?.id
-
-  const visibilityRoleIdField = `${fieldBase}.visibilityRoleId`
-
-  const visibilityRoleId = useWatch({ name: visibilityRoleIdField })
+  const visibilityRoleId = useWatch({ name: "visibilityRoleId" })
 
   const [shouldSatisfyThisRole, setShouldSatisfyThisRole] = useState(
     !visibilityRoleId
@@ -28,14 +25,12 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
 
   const roleOptions = useMemo(() => {
     if (!roles) return []
-    return roles
-      .filter(({ id }) => id !== roleId)
-      .map(({ name, id, imageUrl }) => ({
-        value: id,
-        label: name,
-        img: imageUrl,
-      }))
-  }, [roles, roleId])
+    return roles.map(({ name, id, imageUrl }) => ({
+      value: id,
+      label: name,
+      img: imageUrl,
+    }))
+  }, [roles])
 
   return (
     <VStack
@@ -56,7 +51,7 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
           w="full"
           borderRadius="md"
           onClick={() => {
-            setValue(visibilityRoleIdField, null, { shouldDirty: true })
+            setValue("visibilityRoleId", null, { shouldDirty: true })
             setShouldSatisfyThisRole(true)
           }}
         >
@@ -97,8 +92,7 @@ const PrivateVisibilityOptions = ({ fieldBase }: { fieldBase: string }) => {
           <ControlledSelect
             noResultText="No other roles found"
             autoFocus
-            // openMenuOnFocus
-            name={visibilityRoleIdField}
+            name="visibilityRoleId"
             rules={{
               required: "Please select a role",
               pattern: {

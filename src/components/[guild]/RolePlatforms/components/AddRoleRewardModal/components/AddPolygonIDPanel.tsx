@@ -1,32 +1,23 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { AddPlatformPanelProps } from "platforms/platforms"
 import { useEffect } from "react"
-import { useFieldArray, useWatch } from "react-hook-form"
-import { Visibility } from "types"
+import { PlatformType } from "types"
 
-type Props = {
-  onSuccess: () => void
-}
-
-const AddPolygonIDPanel = ({ onSuccess }: Props) => {
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
+const AddPolygonIDPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const { id: guildId } = useGuild()
 
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  useEffect(() => {
-    append({
-      guildPlatform: {
-        platformName: "POLYGON_ID",
-        platformGuildId: `polygonid-${guildId}`,
-      },
-      isNew: true,
-      platformGuildData: {},
-      visibility: roleVisibility,
-    })
-    onSuccess()
-  }, [])
+  useEffect(
+    () =>
+      onAdd({
+        guildPlatform: {
+          platformName: "POLYGON_ID",
+          platformId: PlatformType.POLYGON_ID,
+          platformGuildId: `polygonid-${guildId}`,
+        },
+        isNew: true,
+      }),
+    []
+  )
 
   return null
 }

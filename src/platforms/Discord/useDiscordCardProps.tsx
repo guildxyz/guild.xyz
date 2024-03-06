@@ -3,9 +3,9 @@ import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useAtom } from "jotai"
 import { Info } from "phosphor-react"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
-const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
+const useDiscordCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { name: guildName, imageUrl } = useGuild()
   // const rolePlatform = useRolePlatform()
   // const { data } = useServerData(guildPlatform.platformGuildId, {
