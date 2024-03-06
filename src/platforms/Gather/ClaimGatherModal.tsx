@@ -1,6 +1,10 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
   Button,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,7 +17,7 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import { AccountSection } from "components/common/Layout/components/Account/components/AccountModal/components/AccountConnections"
 import EmailAddress from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import { ArrowSquareOut, Spinner } from "phosphor-react"
+import { ArrowSquareOut } from "phosphor-react"
 
 type ModalProps = {
   title: string
@@ -45,37 +49,35 @@ const ClaimGatherModal = ({
         <ModalHeader>{title}</ModalHeader>
 
         <ModalBody pt="0" pb="8">
-          {isLoading ? (
-            <HStack spacing="6">
-              <Spinner />
-              <Text>Requesting access...</Text>
-            </HStack>
+          {claimed ? (
+            <Alert status="success">
+              <AlertIcon />
+              <Box>
+                <AlertTitle position="relative" top={"2px"} mb="1">
+                  Reward successfully claimed!
+                </AlertTitle>
+                <AlertDescription>
+                  Now you can access this space as{" "}
+                  <Text fontWeight={"medium"}>{emails?.emailAddress}</Text>
+                </AlertDescription>
+              </Box>
+            </Alert>
           ) : (
             <>
-              {claimed ? (
-                <>
-                  <Text>
-                    Reward successfully claimed! Now you can access this space.
-                  </Text>
-                </>
+              {!!emails?.emailAddress ? (
+                <Text mb="4">
+                  Access will be granted to your connected email address:
+                </Text>
               ) : (
-                <>
-                  {!!emails?.emailAddress ? (
-                    <Text mb="4">
-                      Access will be granted to your connected email address:
-                    </Text>
-                  ) : (
-                    <Text mb="4">
-                      Please connect the email address you plan to use Gather with to
-                      your account!
-                    </Text>
-                  )}
-
-                  <AccountSection>
-                    <EmailAddress key={"EMAIL"} />
-                  </AccountSection>
-                </>
+                <Text mb="4">
+                  Please connect the email address you plan to use Gather with to
+                  your account!
+                </Text>
               )}
+
+              <AccountSection>
+                <EmailAddress key={"EMAIL"} />
+              </AccountSection>
             </>
           )}
         </ModalBody>
@@ -86,6 +88,7 @@ const ClaimGatherModal = ({
                 as="a"
                 target="_blank"
                 href={gatherSpaceUrl}
+                onClick={onClose}
                 iconSpacing={1}
                 rightIcon={<ArrowSquareOut />}
                 w="full"
@@ -101,6 +104,7 @@ const ClaimGatherModal = ({
                 w="full"
                 onClick={onSubmit}
                 colorScheme={"GATHER_TOWN"}
+                isLoading={isLoading}
               >
                 Continue with email
               </Button>
