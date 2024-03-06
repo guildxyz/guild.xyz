@@ -10,7 +10,7 @@ const GatherPreview = () => {
   return (
     <PlatformPreview
       type="GATHER_TOWN"
-      name={`Access to space: ${platformGuildData?.name}`}
+      name={`Access space: ${platformGuildData?.name}`}
       image={platforms.GATHER_TOWN.imageUrl}
     />
   )
