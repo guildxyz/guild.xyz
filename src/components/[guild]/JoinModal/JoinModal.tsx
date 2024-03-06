@@ -61,6 +61,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const { name, requiredPlatforms, featureFlags } = useGuild()
 
+  console.log(requiredPlatforms)
+
   const methods = useForm({
     mode: "all",
     defaultValues: {

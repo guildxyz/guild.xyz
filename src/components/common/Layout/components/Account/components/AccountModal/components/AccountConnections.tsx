@@ -48,6 +48,7 @@ const AccountConnections = () => {
           "POINTS",
           "POLYGON_ID",
           "FORM",
+          "GATHER_TOWN",
         ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [
