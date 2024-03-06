@@ -152,11 +152,11 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
         signedData.validation.params
       )
 
-      window.open(
-        url.toString(),
-        type === "TELEGRAM" ? "_self" : "_blank",
-        type === "TELEGRAM" ? "noopener,noreferrer" : undefined
-      )
+      if (type === "TELEGRAM") {
+        window.location.href = url.toString()
+      } else {
+        window.open(url.toString(), "_blank")
+      }
 
       await messageListener
     },
