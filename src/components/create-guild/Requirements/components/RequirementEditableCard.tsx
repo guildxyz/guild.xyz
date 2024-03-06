@@ -8,6 +8,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Tooltip,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -20,11 +21,13 @@ import Card from "components/common/Card"
 import DataBlock from "components/common/DataBlock"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import { useAtomValue } from "jotai"
 import { Warning } from "phosphor-react"
 import { useCallback, useRef } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
+import { SetRequirementBtnTooltipAtom } from "./AddRequirement"
 import BalancyFooter from "./BalancyFooter"
 import ConfirmationAlert from "./ConfirmaionAlert"
 import IsNegatedPicker from "./IsNegatedPicker"
@@ -58,6 +61,8 @@ const RequirementEditableCard = ({
   const isPoap = !!formState?.defaultValues?.poapId
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
+
+  const requirementBtnTooltip = useAtomValue(SetRequirementBtnTooltipAtom)
 
   const {
     onSubmit: onDeleteRequirement,
@@ -196,9 +201,11 @@ const RequirementEditableCard = ({
             </ModalBody>
             <ModalFooter gap="3">
               <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
-                Done
-              </Button>
+              <Tooltip label={requirementBtnTooltip} hasArrow>
+                <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
+                  Done
+                </Button>
+              </Tooltip>
             </ModalFooter>
           </FormProvider>
         </ModalContent>
