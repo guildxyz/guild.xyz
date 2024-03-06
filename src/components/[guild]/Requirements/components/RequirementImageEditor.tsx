@@ -1,5 +1,4 @@
 import { Circle, Icon, Spinner, Text } from "@chakra-ui/react"
-import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -8,41 +7,27 @@ import { PropsWithChildren, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useRequirementContext } from "./RequirementContext"
 
-export type RequirementImageEditorProps = {
-  onSave?: (newName: string) => void
+type RequirementImageEditorProps = {
+  onSave: (newName: string) => void
+  isLoading?: boolean
 }
 
 const RequirementImageEditor = ({
   onSave,
+  isLoading,
   children,
 }: PropsWithChildren<RequirementImageEditorProps>) => {
   const requirement = useRequirementContext()
-  const { id, roleId, data } = requirement
+  const { data } = requirement
 
   const [progress, setProgress] = useState<number>(0)
 
-  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
-    useEditRequirement(roleId)
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
   const uploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      const customImage = `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`
-
-      if (id && roleId) {
-        onEditRequirementSubmit({
-          ...requirement,
-          data: {
-            ...requirement.data,
-            customImage,
-          },
-        })
-        return
-      }
-
-      onSave?.(customImage)
-    },
+    onSuccess: ({ IpfsHash }) =>
+      onSave(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
     onError: () => showErrorToast("Couldn't upload image"),
   })
 
@@ -69,15 +54,7 @@ const RequirementImageEditor = ({
           background="blackAlpha.600"
           p={3.5}
           cursor="pointer"
-          onClick={() =>
-            onEditRequirementSubmit({
-              ...requirement,
-              data: {
-                ...requirement.data,
-                customImage: undefined,
-              },
-            })
-          }
+          onClick={() => onSave("")}
         >
           <Icon as={X} boxSize={4} color="white" />
         </Circle>
@@ -92,7 +69,7 @@ const RequirementImageEditor = ({
       </Text>
     )
 
-  if (isEditRequirementLoading) return <Spinner size="sm" />
+  if (isLoading) return <Spinner size="sm" />
 
   return (
     <>

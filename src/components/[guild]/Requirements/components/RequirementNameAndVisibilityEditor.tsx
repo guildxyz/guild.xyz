@@ -7,9 +7,6 @@ import {
   Tooltip,
   useEditableControls,
 } from "@chakra-ui/react"
-import SetVisibility from "components/[guild]/SetVisibility"
-import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
-import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { Check, PencilSimple } from "phosphor-react"
 import {
   MutableRefObject,
@@ -27,7 +24,6 @@ import {
   useWatch,
 } from "react-hook-form"
 import REQUIREMENTS from "requirements"
-import { Requirement } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
 type RequirementNameForm = {
@@ -123,19 +119,23 @@ const RequirementNameEditor = ({
   )
 }
 
-export type RequirementNameAndVisibilityEditorProps = {
-  onSave?: (editedData: Requirement) => void
+type RequirementNameAndVisibilityEditorProps = {
+  onSave: (customName: string) => void
+  isLoading?: boolean
+  rightElement?: ReactNode
 }
 
 const RequirementNameAndVisibilityEditor = ({
   onSave,
+  isLoading,
+  rightElement,
   children,
 }: PropsWithChildren<RequirementNameAndVisibilityEditorProps>) => {
   const methods = useForm<RequirementNameForm>({
     mode: "all",
   })
   const requirement = useRequirementContext()
-  const { id, roleId, type } = requirement
+  const { type } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
   const [originalValue, setOriginalValue] = useState("")
@@ -167,70 +167,18 @@ const RequirementNameAndVisibilityEditor = ({
     }
   }
 
-  const setVisibilityModalProps = useVisibilityModalProps()
-
-  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
-    useEditRequirement(roleId, {
-      onSuccess: () => setVisibilityModalProps.onClose(),
-    })
-
-  const onSubmit = (req: Requirement) => {
-    if (id && roleId) {
-      if (field.value === originalValue) return
-
-      onEditRequirementSubmit(req)
-      return
-    }
-
-    onSave?.(req)
-    setVisibilityModalProps.onClose()
-  }
-
-  const onEditNameSubmit = (customName: string) => {
-    const editedData = {
-      ...requirement,
-      data: {
-        ...requirement.data,
-        customName,
-      },
-    }
-
-    onSubmit(editedData)
-  }
-
-  const onEditVisibilitySubmit = (visibilityData) => {
-    const editedData = {
-      ...requirement,
-      ...visibilityData,
-    }
-
-    onSubmit(editedData)
-  }
-
   return (
     <FormProvider {...methods}>
       <Editable
         size="sm"
         {...field}
-        onSubmit={onEditNameSubmit}
+        onSubmit={onSave}
         onCancel={conditionallyResetToOriginal}
       >
         <RequirementNameEditor
           textRef={textRef}
-          isLoading={isEditRequirementLoading}
-          rightElement={
-            <SetVisibility
-              entityType="requirement"
-              mt={-0.5}
-              defaultValues={{
-                visibility: requirement.visibility,
-                visibilityRoleId: requirement.visibilityRoleId,
-              }}
-              onSave={onEditVisibilitySubmit}
-              isLoading={isEditRequirementLoading}
-              {...setVisibilityModalProps}
-            />
-          }
+          isLoading={isLoading}
+          rightElement={rightElement}
         >
           {children}
         </RequirementNameEditor>

@@ -18,8 +18,7 @@ type Props = {
 }
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
-  const { getValues, watch, setValue } =
-    useFormContext<GuildFormType["roles"][number]>()
+  const { getValues, watch } = useFormContext<GuildFormType["roles"][number]>()
 
   const logic = useWatch({ name: "logic" })
 
@@ -89,7 +88,7 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                 <CardMotionWrapper key={field.formFieldId}>
                   <RequirementEditableCard
                     type={type}
-                    field={field}
+                    field={field as Requirement}
                     index={i}
                     removeRequirement={removeReq}
                     updateRequirement={update}

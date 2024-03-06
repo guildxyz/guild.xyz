@@ -3,14 +3,26 @@ import { RequirementProvider } from "components/[guild]/Requirements/components/
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
-import { useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
-import REQUIREMENTS from "requirements"
+import SetVisibility from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
+import { PropsWithChildren, memo, useRef } from "react"
+import { FormProvider, useForm, useFormContext } from "react-hook-form"
+import REQUIREMENTS, { RequirementType } from "requirements"
+import { Requirement, RoleFormType } from "types"
 import BalancyFooter from "./BalancyFooter"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
 import RequirementEditModal from "./RequirementEditModal"
 import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
+
+type Props = {
+  index: number
+  type: RequirementType
+  field: Requirement
+  removeRequirement: (index: number) => void
+  updateRequirement: (index: number, data: Requirement) => void
+  isEditDisabled?: boolean
+}
 
 const RequirementEditableCard = ({
   index,
@@ -19,11 +31,12 @@ const RequirementEditableCard = ({
   removeRequirement,
   updateRequirement,
   isEditDisabled = false,
-}) => {
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent
   const editButtonRef = useRef()
 
+  const { setValue } = useFormContext<RoleFormType>()
   const methods = useForm({ mode: "all", defaultValues: field })
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
@@ -48,17 +61,72 @@ const RequirementEditableCard = ({
     </Button>
   )
 
+  const RequirementImageEditorWithSetValue = memo(
+    ({ children }: PropsWithChildren<unknown>) => (
+      <RequirementImageEditor
+        onSave={(customImage) =>
+          setValue?.(`requirements.${index}.data.customImage`, customImage, {
+            shouldDirty: true,
+          })
+        }
+      >
+        {children}
+      </RequirementImageEditor>
+    )
+  )
+
+  const RequirementNameAndVisibilityEditorWithSetValue = memo(
+    ({ children }: PropsWithChildren<unknown>) => {
+      const setVisibilityModalProps = useVisibilityModalProps()
+
+      return (
+        <RequirementNameAndVisibilityEditor
+          onSave={(customName) => {
+            setValue(`requirements.${index}.data.customName`, customName, {
+              shouldDirty: true,
+            })
+          }}
+          rightElement={
+            <SetVisibility
+              entityType="requirement"
+              mt={-0.5}
+              defaultValues={{
+                visibility: field.visibility,
+                visibilityRoleId: field.visibilityRoleId,
+              }}
+              onSave={({ visibility, visibilityRoleId }) => {
+                setValue(`requirements.${index}.visibility`, visibility, {
+                  shouldDirty: true,
+                })
+                setValue(
+                  `requirements.${index}.visibilityRoleId`,
+                  visibilityRoleId,
+                  {
+                    shouldDirty: true,
+                  }
+                )
+                setVisibilityModalProps.onClose()
+              }}
+              {...setVisibilityModalProps}
+            />
+          }
+        >
+          {children}
+        </RequirementNameAndVisibilityEditor>
+      )
+    }
+  )
+
   return (
     <>
       <RequirementBaseCard>
         <RequirementProvider requirement={field}>
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
-              fieldRoot={`requirements.${index}`}
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
-              imageWrapper={RequirementImageEditor}
-              childrenWrapper={RequirementNameAndVisibilityEditor}
+              imageWrapper={RequirementImageEditorWithSetValue}
+              childrenWrapper={RequirementNameAndVisibilityEditorWithSetValue}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>

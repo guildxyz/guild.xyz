@@ -11,22 +11,19 @@ import {
 import Visibility from "components/[guild]/Visibility"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
-import { Requirement as Req, Visibility as VisibilityType } from "types"
+import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
-import { RequirementImageEditorProps } from "./RequirementImageEditor"
-import { RequirementNameAndVisibilityEditorProps } from "./RequirementNameAndVisibilityEditor"
 import ResetRequirementButton from "./ResetRequirementButton"
 import ViewOriginalPopover from "./ViewOriginalPopover"
 
 export type RequirementProps = PropsWithChildren<{
-  fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
   footer?: JSX.Element
   rightElement?: JSX.Element
-  imageWrapper?: ComponentType<RequirementImageEditorProps>
-  childrenWrapper?: ComponentType<RequirementNameAndVisibilityEditorProps>
+  imageWrapper?: ComponentType<unknown>
+  childrenWrapper?: ComponentType<unknown>
   showViewOriginal?: boolean
 }>
 
@@ -36,7 +33,6 @@ const Requirement = ({
   footer,
   rightElement,
   children,
-  fieldRoot,
   imageWrapper,
   childrenWrapper,
   showViewOriginal,
@@ -45,32 +41,7 @@ const Requirement = ({
   const { setValue } = useFormContext() ?? {}
 
   const ChildrenWrapper = childrenWrapper ?? Box
-  const childrenWrapperProps = !!childrenWrapper
-    ? {
-        onSave: ({ visibility, visibilityRoleId, data }: Req) => {
-          setValue?.(`${fieldRoot}.visibility`, visibility, {
-            shouldDirty: true,
-          })
-          setValue?.(`${fieldRoot}.visibilityRoleId`, visibilityRoleId, {
-            shouldDirty: true,
-          })
-          setValue?.(`${fieldRoot}.data.customName`, data?.customName, {
-            shouldDirty: true,
-          })
-        },
-      }
-    : {}
-
   const ImageWrapper = imageWrapper ?? React.Fragment
-  const imageWrapperProps =
-    !!childrenWrapper && !!imageWrapper
-      ? {
-          onSave: (customImage) =>
-            setValue?.(`${fieldRoot}.data.customImage`, customImage, {
-              shouldDirty: true,
-            }),
-        }
-      : {}
 
   return (
     <SimpleGrid
@@ -82,13 +53,13 @@ const Requirement = ({
     >
       <Box mt="3px" alignSelf={"start"}>
         <RequirementImageCircle isImageLoading={isImageLoading}>
-          <ImageWrapper {...imageWrapperProps}>
+          <ImageWrapper>
             <RequirementImage image={requirement?.data?.customImage || image} />
           </ImageWrapper>
         </RequirementImageCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-        <ChildrenWrapper {...childrenWrapperProps} display="inline-block">
+        <ChildrenWrapper display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.type === "LINK_VISIT"
             ? children

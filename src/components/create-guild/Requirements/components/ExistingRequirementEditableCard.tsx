@@ -1,11 +1,16 @@
 import { Button, useDisclosure } from "@chakra-ui/react"
-import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
+import {
+  RequirementProvider,
+  useRequirementContext,
+} from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
+import SetVisibility from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
-import { useRef } from "react"
+import { PropsWithChildren, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType } from "types"
@@ -126,8 +131,8 @@ const ExistingRequirementEditableCard = ({
             <RequirementComponent
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
-              imageWrapper={RequirementImageEditor}
-              childrenWrapper={RequirementNameAndVisibilityEditor}
+              imageWrapper={RequirementImageEditorWithSave}
+              childrenWrapper={RequirementNameAndVisibilityEditorWithSave}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
@@ -201,6 +206,80 @@ const ExistingRequirementEditModal = ({
         }
       />
     </FormProvider>
+  )
+}
+
+const RequirementImageEditorWithSave = ({
+  children,
+}: PropsWithChildren<unknown>) => {
+  const requirement = useRequirementContext()
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(requirement.roleId)
+
+  return (
+    <RequirementImageEditor
+      onSave={(customImage) =>
+        onEditRequirementSubmit({
+          ...requirement,
+          data: {
+            ...requirement.data,
+            customImage,
+          },
+        })
+      }
+      isLoading={isEditRequirementLoading}
+    >
+      {children}
+    </RequirementImageEditor>
+  )
+}
+
+const RequirementNameAndVisibilityEditorWithSave = ({
+  children,
+}: PropsWithChildren<unknown>) => {
+  const requirement = useRequirementContext()
+
+  const setVisibilityModalProps = useVisibilityModalProps()
+
+  const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
+    useEditRequirement(requirement.roleId, {
+      onSuccess: () => setVisibilityModalProps.onClose(),
+    })
+
+  const onEditVisibilitySubmit = (visibilityData) => {
+    const editedData = {
+      ...requirement,
+      ...visibilityData,
+    }
+
+    onEditRequirementSubmit(editedData)
+  }
+
+  return (
+    <RequirementNameAndVisibilityEditor
+      onSave={(customName) =>
+        onEditRequirementSubmit({
+          ...requirement,
+          data: { ...requirement.data, customName },
+        })
+      }
+      rightElement={
+        <SetVisibility
+          entityType="requirement"
+          mt={-0.5}
+          defaultValues={{
+            visibility: requirement.visibility,
+            visibilityRoleId: requirement.visibilityRoleId,
+          }}
+          onSave={onEditVisibilitySubmit}
+          isLoading={isEditRequirementLoading}
+          {...setVisibilityModalProps}
+        />
+      }
+      isLoading={isEditRequirementLoading}
+    >
+      {children}
+    </RequirementNameAndVisibilityEditor>
   )
 }
 
