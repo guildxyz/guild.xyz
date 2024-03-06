@@ -13,7 +13,7 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import { AccountSection } from "components/common/Layout/components/Account/components/AccountModal/components/AccountConnections"
 import EmailAddress from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
-import { Spinner } from "phosphor-react"
+import { ArrowSquareOut, Spinner } from "phosphor-react"
 
 type ModalProps = {
   title: string
@@ -21,6 +21,8 @@ type ModalProps = {
   onClose: () => void
   onSubmit: () => void
   isLoading: boolean
+  claimed: boolean
+  gatherSpaceUrl: string
 }
 
 const ClaimGatherModal = ({
@@ -29,6 +31,8 @@ const ClaimGatherModal = ({
   onClose,
   onSubmit,
   isLoading,
+  claimed,
+  gatherSpaceUrl,
 }: ModalProps) => {
   const { emails } = useUser()
 
@@ -48,32 +52,60 @@ const ClaimGatherModal = ({
             </HStack>
           ) : (
             <>
-              {!!emails?.emailAddress ? (
-                <Text mb="4">
-                  Access will be granted to your connected email address:
-                </Text>
+              {claimed ? (
+                <>
+                  <Text>
+                    Reward successfully claimed! Now you can access this space.
+                  </Text>
+                </>
               ) : (
-                <Text mb="4">
-                  Please connect the email address you plan to use Gather with to
-                  your account!
-                </Text>
-              )}
+                <>
+                  {!!emails?.emailAddress ? (
+                    <Text mb="4">
+                      Access will be granted to your connected email address:
+                    </Text>
+                  ) : (
+                    <Text mb="4">
+                      Please connect the email address you plan to use Gather with to
+                      your account!
+                    </Text>
+                  )}
 
-              <AccountSection>
-                <EmailAddress key={"EMAIL"} />
-              </AccountSection>
+                  <AccountSection>
+                    <EmailAddress key={"EMAIL"} />
+                  </AccountSection>
+                </>
+              )}
             </>
           )}
         </ModalBody>
         <ModalFooter>
-          <Button
-            isDisabled={!emails?.emailAddress}
-            w="full"
-            onClick={onSubmit}
-            colorScheme={"GATHER_TOWN"}
-          >
-            Continue with email
-          </Button>
+          {claimed ? (
+            <>
+              <Button
+                as="a"
+                target="_blank"
+                href={gatherSpaceUrl}
+                iconSpacing={1}
+                rightIcon={<ArrowSquareOut />}
+                w="full"
+                colorScheme="GATHER_TOWN"
+              >
+                Go to space
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                isDisabled={!emails?.emailAddress || isLoading}
+                w="full"
+                onClick={onSubmit}
+                colorScheme={"GATHER_TOWN"}
+              >
+                Continue with email
+              </Button>
+            </>
+          )}
         </ModalFooter>
       </ModalContent>
     </Modal>

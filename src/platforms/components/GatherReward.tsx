@@ -32,11 +32,6 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimGather(platform.id)
 
-  const submitClaim = () => {
-    onSubmit()
-    onClose()
-  }
-
   const { roles } = useGuild()
   const role = roles.find((r) =>
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
@@ -144,7 +139,9 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}
-        onSubmit={submitClaim}
+        onSubmit={onSubmit}
+        claimed={claimed}
+        gatherSpaceUrl={spaceUrl}
       />
     </>
   )

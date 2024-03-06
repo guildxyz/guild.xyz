@@ -37,11 +37,6 @@ const GatherCardButton = ({ platform }: Props) => {
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
   const isButtonDisabled = !isAvailable && !claimed
 
-  const submitClaim = () => {
-    onSubmit()
-    onClose()
-  }
-
   return (
     <>
       {claimed ? (
@@ -80,7 +75,9 @@ const GatherCardButton = ({ platform }: Props) => {
         isOpen={isOpen}
         onClose={onClose}
         isLoading={isLoading}
-        onSubmit={submitClaim}
+        onSubmit={onSubmit}
+        gatherSpaceUrl={spaceUrl}
+        claimed={claimed}
       />
     </>
   )
