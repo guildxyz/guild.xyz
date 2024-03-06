@@ -30,7 +30,7 @@ type LinkEditorProps = {
   insertLink: () => void
 }
 
-const checkLinkValid = (linkToCheck: string) => {
+const isValidLink = (linkToCheck: string) => {
   if (!linkToCheck) return true
   const url = ensureUrlProtocol(linkToCheck)
   try {
@@ -169,7 +169,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
                     size="sm"
                     placeholder="https://example.com"
                     {...register("link", {
-                      validate: (val) => checkLinkValid(val) || "Invalid link!",
+                      validate: (val) => isValidLink(val) || "Invalid link!",
                     })}
                   />
 
@@ -178,7 +178,6 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
                     variant="solid"
                     flexShrink={0}
                     borderRadius="lg"
-                    onClick={methods.handleSubmit(addLink)}
                     isDisabled={!!errors.link}
                     type="submit"
                   >
