@@ -1,23 +1,26 @@
 import {
-  FormControl,
-  FormLabel,
-  Input,
+  Box,
+  Center,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
+  Text,
+  useBreakpointValue,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import FormErrorMessage from "components/common/FormErrorMessage"
-import useShowErrorToast from "hooks/useShowErrorToast"
-import { useSubmitWithSign } from "hooks/useSubmit"
+import ErrorAlert from "components/common/ErrorAlert"
 import useToast from "hooks/useToast"
-import { useForm, useWatch } from "react-hook-form"
-import fetcher from "utils/fetcher"
+import { ArrowsClockwise } from "phosphor-react"
+import { QRCodeSVG } from "qrcode.react"
+import { useEffect } from "react"
+import useSWR from "swr"
+import useSWRImmutable from "swr/immutable"
+import { useFetcherWithSign } from "utils/fetcher"
 import useConnectedDID from "../hooks/useConnectedDID"
 import { useMintPolygonIDProofContext } from "./MintPolygonIDProofProvider"
 
@@ -27,73 +30,93 @@ type Props = {
 }
 
 const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
-  const { id } = useUser()
-  const {
-    register,
-    formState: { errors },
-    control,
-    handleSubmit,
-  } = useForm({ defaultValues: { did: "" } })
+  const { id: userId } = useUser()
 
-  const DID = useWatch({ name: "did", control })
+  const { onMintPolygonIDProofModalOpen } = useMintPolygonIDProofContext()
 
-  const { onConnectDIDModalClose, onMintPolygonIDProofModalOpen } =
-    useMintPolygonIDProofContext()
   const toast = useToast()
-  const showErrorToast = useShowErrorToast()
-  const { mutate } = useConnectedDID()
-  const { isLoading, onSubmit } = useSubmitWithSign<{ did: string }>(
-    (signedValidation) =>
-      fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/connect`, {
-        method: "POST",
-        ...signedValidation,
-      }),
+
+  const fetcherWithSign = useFetcherWithSign()
+  const {
+    data: qrCode,
+    isValidating,
+    error,
+    mutate,
+  } = useSWRImmutable(
+    isOpen
+      ? [
+          `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`,
+          {
+            method: "GET",
+          },
+        ]
+      : null,
+    fetcherWithSign
+  )
+
+  const { mutate: mutateConnectedDID } = useConnectedDID()
+  const { data: connectedDID } = useSWR<string>(
+    userId && isOpen && qrCode
+      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id?poll=true`
+      : null,
     {
-      onSuccess: ({ did: newDID }) => {
-        toast({
-          status: "success",
-          title: "Successfully connected DID",
-        })
-        mutate(() => newDID, {
-          revalidate: false,
-        })
-        onConnectDIDModalClose()
-        onMintPolygonIDProofModalOpen()
-      },
-      onError: () => showErrorToast("Couldn't connect your DID"),
+      errorRetryInterval: 3000,
     }
   )
 
+  useEffect(() => {
+    if (!isOpen || !connectedDID) return
+    toast({ status: "success", title: "Your identity has been authenticated" })
+    mutateConnectedDID(connectedDID)
+    onClose()
+    onMintPolygonIDProofModalOpen()
+  }, [isOpen, connectedDID])
+
+  const qrSize = useBreakpointValue({ base: 300, md: 400 })
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"}>
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark" size="lg">
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
         <ModalHeader>Connect PolygonID</ModalHeader>
         <ModalBody pb={4}>
-          <FormControl isRequired isInvalid={!!errors?.did}>
-            <FormLabel>Paste your DID</FormLabel>
-            <Input
-              {...register("did", {
-                required: "This field is required",
-              })}
-            />
-            <FormErrorMessage>{errors?.did?.message}</FormErrorMessage>
-          </FormControl>
+          <Center flexDirection="column">
+            {error ? (
+              <ErrorAlert label="Couldn't generate QR code" />
+            ) : !qrCode && isValidating ? (
+              <>
+                <Spinner size="xl" mt={8} />
+                <Text mt={4} mb={8}>
+                  Generating QR code
+                </Text>
+              </>
+            ) : (
+              <>
+                <Box borderRadius="md" borderWidth={3} overflow="hidden">
+                  <QRCodeSVG value={JSON.stringify(qrCode)} size={qrSize} />
+                </Box>
+                <Button
+                  size="xs"
+                  borderRadius="lg"
+                  mt={2}
+                  variant="ghost"
+                  leftIcon={<ArrowsClockwise />}
+                  isLoading={isValidating}
+                  loadingText="Generating QR code"
+                  color="gray"
+                  onClick={() => mutate()}
+                >
+                  Generate new QR code
+                </Button>
+                <Text my="8" textAlign="center">
+                  Scan with your Polygon ID app! The modal will automatically close
+                  on successful connect.
+                </Text>
+              </>
+            )}
+          </Center>
         </ModalBody>
-
-        <ModalFooter pt={0}>
-          <Button
-            isDisabled={!DID}
-            colorScheme="green"
-            ml="auto"
-            isLoading={isLoading}
-            loadingText={"Connecting..."}
-            onClick={handleSubmit(({ did }) => onSubmit({ data: did, userId: id }))}
-          >
-            Connect
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   )
