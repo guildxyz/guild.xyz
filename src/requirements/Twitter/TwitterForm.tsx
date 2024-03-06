@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Divider,
   FormControl,
   FormErrorMessage,
@@ -6,9 +9,6 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
-import { SetRequirementBtnTooltipAtom } from "components/create-guild/Requirements/components/AddRequirement"
-import { useSetAtom } from "jotai"
-import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -123,8 +123,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   const selected = twitterRequirementTypes.find((reqType) => reqType.value === type)
 
-  const setAddRequirementBtnTooltip = useSetAtom(SetRequirementBtnTooltipAtom)
-
   const resetFields = () => {
     resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: null })
@@ -133,11 +131,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const tooltipMessage = ["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type)
     ? "Due to limitations with X's API, the requirement check may be inconsistent."
     : "X's API authentication limits to about 450 requests every 15 minutes. Users may need to wait if this threshold is exceeded."
-
-  useEffect(() => {
-    setAddRequirementBtnTooltip(tooltipMessage)
-    return () => setAddRequirementBtnTooltip("")
-  }, [tooltipMessage])
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -162,6 +155,10 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       {selected?.TwitterRequirement && (
         <>
           <Divider />
+          <Alert>
+            <AlertIcon />
+            <AlertDescription>{tooltipMessage}</AlertDescription>
+          </Alert>
           <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}

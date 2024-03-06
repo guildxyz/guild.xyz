@@ -1,11 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  FormControl,
-  FormLabel,
-  chakra,
-} from "@chakra-ui/react"
+import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
@@ -37,24 +30,14 @@ const TwitterAccountVerified = ({
   const defaultValue: ValueType = "any"
 
   return (
-    <>
-      <Alert status="info">
-        <AlertIcon />
-        <AlertDescription>
-          X <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>{" "}
-          authentication limits to about 450 requests every 15 minutes. Users may
-          need to wait if this threshold is exceeded.
-        </AlertDescription>
-      </Alert>
-      <FormControl isRequired>
-        <FormLabel>Verification type</FormLabel>
-        <ControlledSelect
-          defaultValue={defaultValue}
-          name={`${baseFieldPath}.data.id`}
-          options={options}
-        />
-      </FormControl>
-    </>
+    <FormControl isRequired>
+      <FormLabel>Verification type</FormLabel>
+      <ControlledSelect
+        defaultValue={defaultValue}
+        name={`${baseFieldPath}.data.id`}
+        options={options}
+      />
+    </FormControl>
   )
 }
 export default TwitterAccountVerified

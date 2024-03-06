@@ -26,7 +26,6 @@ import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useToast from "hooks/useToast"
-import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import {
   Dispatch,
@@ -172,8 +171,6 @@ type AddRequirementFormProps = {
   setOnCloseAttemptToast: Dispatch<SetStateAction<string | boolean>>
 }
 
-export const SetRequirementBtnTooltipAtom = atom("")
-
 const AddRequirementForm = forwardRef(
   (
     {
@@ -185,8 +182,6 @@ const AddRequirementForm = forwardRef(
     ref: LegacyRef<HTMLDivElement>
   ) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
-
-    const addRequirementBtnTooltip = useAtomValue(SetRequirementBtnTooltipAtom)
 
     const methods = useForm({ mode: "all" })
     const roleVisibility: Visibility = useWatch({ name: ".visibility" })
@@ -228,11 +223,9 @@ const AddRequirementForm = forwardRef(
           {selectedType !== "PAYMENT" && (
             <ModalFooter gap="3">
               <BalancyFooter baseFieldPath={null} />
-              <Tooltip label={addRequirementBtnTooltip} hasArrow>
-                <Button colorScheme="green" onClick={onSubmit} ml="auto">
-                  Add requirement
-                </Button>
-              </Tooltip>
+              <Button colorScheme="green" onClick={onSubmit} ml="auto">
+                Add requirement
+              </Button>
             </ModalFooter>
           )}
         </FormProvider>
