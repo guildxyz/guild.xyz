@@ -51,7 +51,7 @@ const GatherConnectionForm = () => {
           <HStack>
             <Text as="span">API key:</Text>
             <Tooltip
-              label="Used to securely communicate with Gather."
+              label="Used to securely communicate with Gather"
               placement="top"
               hasArrow
             >
@@ -90,7 +90,7 @@ const GatherConnectionForm = () => {
           <HStack mt={6}>
             <Text as="span">Space URL:</Text>
             <Tooltip
-              label="You can copy this from your browser when you are inside the space."
+              label="You can copy this from your browser when you are inside the space"
               placement="top"
               hasArrow
             >

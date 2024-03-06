@@ -28,7 +28,7 @@ const GatherGuestForm = () => {
             <HStack>
               <Text as="span">Affiliation:</Text>
               <Tooltip
-                label="Displays information below the person's name in the user info card available from the Participants list."
+                label="Displays information below the person's name in the user info card available from the Participants list"
                 placement="top"
                 hasArrow
               >
@@ -42,7 +42,7 @@ const GatherGuestForm = () => {
             <HStack>
               <Text as="span">Role:</Text>
               <Tooltip
-                label="Describes the person's role in your space. This field is for your internal use only and does not actually assign a user role."
+                label="Describes the person's role in your space. This field is for your internal use only and does not actually assign a user role"
                 placement="top"
                 hasArrow
               >
