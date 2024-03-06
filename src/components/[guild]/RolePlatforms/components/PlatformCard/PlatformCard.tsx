@@ -4,8 +4,6 @@ import { PropsWithChildren } from "react"
 import { GuildPlatform, PlatformName, Rest } from "types"
 
 type Props = {
-  actionRow?: JSX.Element
-  cornerButton?: JSX.Element
   guildPlatform: GuildPlatform
   usePlatformProps: (guildPlatform: GuildPlatform) => {
     link?: string
@@ -14,12 +12,16 @@ type Props = {
     info?: string | JSX.Element
     type: PlatformName
   }
+  titleRightElement?: JSX.Element
+  actionRow?: JSX.Element
+  cornerButton?: JSX.Element
   contentRow?: JSX.Element
 } & Rest
 
 const PlatformCard = ({
-  usePlatformProps,
   guildPlatform,
+  usePlatformProps,
+  titleRightElement,
   actionRow,
   cornerButton,
   contentRow,
@@ -32,6 +34,7 @@ const PlatformCard = ({
     <RewardCard
       label={platforms[type].name}
       title={name}
+      titleRightElement={titleRightElement}
       description={contentRow ?? info}
       image={image}
       colorScheme={platforms[type].colorScheme}

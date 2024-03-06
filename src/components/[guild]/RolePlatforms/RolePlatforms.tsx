@@ -6,9 +6,11 @@ import Section from "components/common/Section"
 import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatform, PlatformType, RoleFormType } from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
+import SetVisibility from "../SetVisibility"
+import useVisibilityModalProps from "../SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import PlatformCard from "./components/PlatformCard"
@@ -20,22 +22,23 @@ type Props = {
 }
 
 const RolePlatforms = ({ roleId }: Props) => {
-  const { guildPlatforms } = useGuild()
-  const { setValue, watch } = useFormContext()
-
   const { onOpen } = useAddRewardContext()
 
-  const { fields, remove } = useFieldArray({
+  const { watch } = useFormContext<RoleFormType>()
+
+  const { fields, append, remove } = useFieldArray<
+    RoleFormType,
+    "rolePlatforms",
+    "fieldId"
+  >({
     name: "rolePlatforms",
     keyName: "fieldId",
   })
   const watchFieldArray = watch("rolePlatforms")
-  const controlledFields = watchFieldArray.map((field, index) => ({
+  const controlledFields = fields.map((field, index) => ({
     ...field,
-    ...fields[index],
+    ...watchFieldArray[index],
   }))
-
-  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
   return (
     <Section
@@ -59,86 +62,15 @@ const RolePlatforms = ({ roleId }: Props) => {
         {!controlledFields || controlledFields?.length <= 0 ? (
           <AddCard title="Add reward" onClick={onOpen} />
         ) : (
-          controlledFields.map((rolePlatform: any, index) => {
-            let guildPlatform: GuildPlatform, type
-            if (rolePlatform.guildPlatformId) {
-              guildPlatform = guildPlatforms.find(
-                (platform) => platform.id === rolePlatform.guildPlatformId
-              )
-              type = PlatformType[guildPlatform?.platformId]
-            } else {
-              guildPlatform = rolePlatform.guildPlatform
-              type = guildPlatform?.platformName
-            }
-
-            if (!type) return null
-
-            const { cardPropsHook: useCardProps, cardSettingsComponent } =
-              platforms[type]
-
-            let PlatformCardSettings = cardSettingsComponent
-            // only show Google access level settings and Discord role settings for new platforms
-            if (!rolePlatform.isNew) PlatformCardSettings = null
-
-            return (
-              <RolePlatformProvider
-                key={rolePlatform.fieldId}
-                rolePlatform={{
-                  ...rolePlatform,
-                  roleId,
-                  guildPlatform,
-                  index,
-                }}
-              >
-                <PlatformCard
-                  usePlatformProps={useCardProps}
-                  guildPlatform={guildPlatform}
-                  cornerButton={
-                    !rolePlatform.isNew ? (
-                      <RemovePlatformButton
-                        removeButtonColor={removeButtonColor}
-                        guildPlatform={guildPlatform}
-                      />
-                    ) : (
-                      <CloseButton
-                        size="sm"
-                        color={removeButtonColor}
-                        rounded="full"
-                        aria-label="Remove platform"
-                        zIndex="1"
-                        onClick={() => remove(index)}
-                      />
-                    )
-                  }
-                  actionRow={PlatformCardSettings && <PlatformCardSettings />}
-                  contentRow={
-                    CAPACITY_TIME_PLATFORMS.includes(type) && (
-                      <AvailabilitySetup
-                        platformType={type}
-                        rolePlatform={rolePlatform}
-                        defaultValues={{
-                          capacity: rolePlatform.capacity,
-                          startTime: rolePlatform.startTime,
-                          endTime: rolePlatform.endTime,
-                        }}
-                        onDone={({ capacity, startTime, endTime }) => {
-                          setValue(`rolePlatforms.${index}.capacity`, capacity, {
-                            shouldDirty: true,
-                          })
-                          setValue(`rolePlatforms.${index}.startTime`, startTime, {
-                            shouldDirty: true,
-                          })
-                          setValue(`rolePlatforms.${index}.endTime`, endTime, {
-                            shouldDirty: true,
-                          })
-                        }}
-                      />
-                    )
-                  }
-                />
-              </RolePlatformProvider>
-            )
-          })
+          controlledFields.map((rolePlatform, index) => (
+            <RolePlatformCard
+              key={rolePlatform.fieldId}
+              roleId={roleId}
+              rolePlatform={rolePlatform}
+              index={index}
+              remove={() => remove(index)}
+            />
+          ))
         )}
       </SimpleGrid>
 
@@ -152,5 +84,128 @@ const RolePlatformsWrapper = (props: Props): JSX.Element => (
     <RolePlatforms {...props} />
   </AddRewardProvider>
 )
+
+type RolePlatformCardProps = {
+  roleId?: number
+  rolePlatform: RoleFormType["rolePlatforms"][number] & { fieldId: string }
+  index: number
+  remove: () => void
+}
+
+const RolePlatformCard = ({
+  roleId,
+  rolePlatform,
+  index,
+  remove,
+}: RolePlatformCardProps) => {
+  const { guildPlatforms } = useGuild()
+  const { setValue } = useFormContext()
+
+  const setVisibilityModalProps = useVisibilityModalProps()
+
+  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
+
+  let guildPlatform: GuildPlatform, type
+  if (rolePlatform.guildPlatformId) {
+    guildPlatform = guildPlatforms.find(
+      (platform) => platform.id === rolePlatform.guildPlatformId
+    )
+    type = PlatformType[guildPlatform?.platformId]
+  } else {
+    guildPlatform = rolePlatform.guildPlatform
+    type = guildPlatform?.platformName
+  }
+
+  if (!type) return null
+
+  const { cardPropsHook: useCardProps, cardSettingsComponent } = platforms[type]
+
+  let PlatformCardSettings = cardSettingsComponent
+  // only show Google access level settings and Discord role settings for new platforms
+  if (!rolePlatform.isNew) PlatformCardSettings = null
+
+  return (
+    <RolePlatformProvider
+      key={rolePlatform.fieldId}
+      rolePlatform={{
+        ...rolePlatform,
+        roleId,
+        guildPlatform,
+        index,
+      }}
+    >
+      <PlatformCard
+        usePlatformProps={useCardProps}
+        guildPlatform={guildPlatform}
+        /**
+         * TODO: use the `PUT
+         * /guilds/:guildId/roles/:roleId/role-platforms/:rolePlatformId` endpoint
+         * here
+         */
+        titleRightElement={
+          <SetVisibility
+            defaultValues={{
+              visibility: rolePlatform?.visibility,
+              visibilityRoleId: rolePlatform?.visibilityRoleId,
+            }}
+            entityType="reward"
+            onSave={({ visibility, visibilityRoleId }) => {
+              setValue(`rolePlatforms.${index}.visibility`, visibility, {
+                shouldDirty: true,
+              })
+              setValue(`rolePlatforms.${index}.visibilityRoleId`, visibilityRoleId, {
+                shouldDirty: true,
+              })
+              setVisibilityModalProps.onClose()
+            }}
+            {...setVisibilityModalProps}
+          />
+        }
+        cornerButton={
+          !rolePlatform.isNew ? (
+            <RemovePlatformButton
+              removeButtonColor={removeButtonColor}
+              guildPlatform={guildPlatform}
+            />
+          ) : (
+            <CloseButton
+              size="sm"
+              color={removeButtonColor}
+              rounded="full"
+              aria-label="Remove platform"
+              zIndex="1"
+              onClick={() => remove()}
+            />
+          )
+        }
+        actionRow={PlatformCardSettings && <PlatformCardSettings />}
+        contentRow={
+          CAPACITY_TIME_PLATFORMS.includes(type) && (
+            <AvailabilitySetup
+              platformType={type}
+              rolePlatform={rolePlatform}
+              defaultValues={{
+                capacity: rolePlatform.capacity,
+                startTime: rolePlatform.startTime,
+                endTime: rolePlatform.endTime,
+              }}
+              onDone={({ capacity, startTime, endTime }) => {
+                setValue(`rolePlatforms.${index}.capacity`, capacity, {
+                  shouldDirty: true,
+                })
+                setValue(`rolePlatforms.${index}.startTime`, startTime, {
+                  shouldDirty: true,
+                })
+                setValue(`rolePlatforms.${index}.endTime`, endTime, {
+                  shouldDirty: true,
+                })
+              }}
+            />
+          )
+        }
+      />
+    </RolePlatformProvider>
+  )
+}
 
 export default RolePlatformsWrapper

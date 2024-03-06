@@ -428,7 +428,7 @@ type GuildPlatform = {
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   invite?: string
-  platformGuildName: string
+  platformGuildName?: string
   permission?: string
 }
 
@@ -494,7 +494,7 @@ type Guild = {
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
     requirements: Array<Partial<Requirement>>
-    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex?: number }>
   } & { name: string }
 >
 

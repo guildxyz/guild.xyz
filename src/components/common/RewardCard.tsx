@@ -9,19 +9,16 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
-import SetVisibility from "components/[guild]/SetVisibility"
-import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import ColorCard from "components/common/ColorCard"
 import ColorCardLabel from "components/common/ColorCard/ColorCardLabel"
 import Image from "next/image"
 import { PropsWithChildren } from "react"
-import { useFormContext } from "react-hook-form"
-import { Rest, RoleFormType } from "types"
+import { Rest } from "types"
 
 type Props = {
   label: string | JSX.Element
   title: string
+  titleRightElement?: JSX.Element
   description?: string | JSX.Element
   image: string | JSX.Element
   colorScheme: ChakraProps["color"]
@@ -32,6 +29,7 @@ type Props = {
 const RewardCard = ({
   label,
   title,
+  titleRightElement,
   description,
   image,
   colorScheme,
@@ -39,111 +37,80 @@ const RewardCard = ({
   cornerButton,
   children,
   ...rest
-}: PropsWithChildren<Props>) => {
-  const rolePlatform = useRolePlatform()
-  const setVisibilityModalProps = useVisibilityModalProps()
-
-  const { setValue } = useFormContext<RoleFormType>() ?? {}
-
-  return (
-    <ColorCard
-      color={`${colorScheme}.500`}
-      pt={{ base: 10, sm: 11 }}
-      display="flex"
-      flexDir="column"
-      justifyContent="space-between"
-      {...rest}
+}: PropsWithChildren<Props>) => (
+  <ColorCard
+    color={`${colorScheme}.500`}
+    pt={{ base: 10, sm: 11 }}
+    display="flex"
+    flexDir="column"
+    justifyContent="space-between"
+    {...rest}
+  >
+    {cornerButton && (
+      <Box position="absolute" top={2} right={2}>
+        {cornerButton}
+      </Box>
+    )}
+    <Flex
+      justifyContent={"space-between"}
+      flexDirection={{ base: "column", md: "row" }}
+      mb={children && 5}
     >
-      {cornerButton && (
-        <Box position="absolute" top={2} right={2}>
-          {cornerButton}
-        </Box>
-      )}
-      <Flex
-        justifyContent={"space-between"}
-        flexDirection={{ base: "column", md: "row" }}
-        mb={children && 5}
-      >
-        <HStack spacing={3} minHeight={10}>
-          {typeof image === "string" ? (
-            <>
-              {image.length > 0 ? (
-                <Box
-                  overflow={"hidden"}
-                  borderRadius="full"
-                  boxSize={10}
-                  flexShrink={0}
-                  position="relative"
-                >
-                  <Image src={image} alt={title} fill sizes="2.5rem" />
-                </Box>
-              ) : (
-                <SkeletonCircle size="10" />
-              )}
-            </>
-          ) : (
-            image
-          )}
-          <Stack spacing={0}>
-            <HStack spacing="0">
-              <Skeleton isLoaded={!!title}>
-                <Text fontWeight={"bold"}>{title || "Loading reward..."}</Text>
-              </Skeleton>
-              {/**
-               * TODO: use the `PUT /guilds/:guildId/roles/:roleId/role-platforms/:rolePlatformId`
-               * endpoint here
-               */}
-              {!!rolePlatform && (
-                <SetVisibility
-                  defaultValues={{
-                    visibility: rolePlatform?.visibility,
-                    visibilityRoleId: rolePlatform?.visibilityRoleId,
-                  }}
-                  entityType="reward"
-                  onSave={({ visibility, visibilityRoleId }) => {
-                    setValue(
-                      `rolePlatforms.${rolePlatform.index}.visibility`,
-                      visibility,
-                      { shouldDirty: true }
-                    )
-                    setValue(
-                      `rolePlatforms.${rolePlatform.index}.visibilityRoleId`,
-                      visibilityRoleId,
-                      { shouldDirty: true }
-                    )
-                    setVisibilityModalProps.onClose()
-                  }}
-                  {...setVisibilityModalProps}
-                />
-              )}
-            </HStack>
-            {typeof description === "string" ? (
-              <Text as="span" color="gray" fontSize="sm" noOfLines={3}>
-                {description}
-              </Text>
-            ) : (
-              description
-            )}
-          </Stack>
-        </HStack>
-        {actionRow && (
+      <HStack spacing={3} minHeight={10}>
+        {typeof image === "string" ? (
           <>
-            <Divider my={3} display={{ md: "none" }} />
-            {actionRow}
+            {image.length > 0 ? (
+              <Box
+                overflow={"hidden"}
+                borderRadius="full"
+                boxSize={10}
+                flexShrink={0}
+                position="relative"
+              >
+                <Image src={image} alt={title} fill sizes="2.5rem" />
+              </Box>
+            ) : (
+              <SkeletonCircle size="10" />
+            )}
           </>
+        ) : (
+          image
         )}
-      </Flex>
-      {children}
-      <ColorCardLabel
-        fallbackColor="white"
-        backgroundColor={`${colorScheme}.500`}
-        label={label}
-        top="-2px"
-        left="-2px"
-        borderBottomRightRadius="xl"
-        borderTopLeftRadius="2xl"
-      />
-    </ColorCard>
-  )
-}
+        <Stack spacing={0}>
+          <HStack spacing="0">
+            <Skeleton isLoaded={!!title}>
+              <Text fontWeight={"bold"}>{title || "Loading reward..."}</Text>
+            </Skeleton>
+
+            {titleRightElement}
+          </HStack>
+          {typeof description === "string" ? (
+            <Text as="span" color="gray" fontSize="sm" noOfLines={3}>
+              {description}
+            </Text>
+          ) : (
+            description
+          )}
+        </Stack>
+      </HStack>
+      {actionRow && (
+        <>
+          <Divider my={3} display={{ md: "none" }} />
+          {actionRow}
+        </>
+      )}
+    </Flex>
+    {children}
+    <ColorCardLabel
+      fallbackColor="white"
+      backgroundColor={`${colorScheme}.500`}
+      label={label}
+      top="-2px"
+      left="-2px"
+      borderBottomRightRadius="xl"
+      borderTopLeftRadius="2xl"
+    />
+  </ColorCard>
+)
+
 export default RewardCard
