@@ -61,8 +61,6 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const { name, requiredPlatforms, featureFlags } = useGuild()
 
-  console.log(requiredPlatforms)
-
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -82,7 +80,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       !platforms[platform] ||
       platform === "POINTS" ||
       platform === "FORM" ||
-      platform === "POLYGON_ID"
+      platform === "POLYGON_ID" ||
+      platform === "GATHER_TOWN"
     )
       return null
 
