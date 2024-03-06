@@ -1,5 +1,4 @@
-import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
-import { Requirement, RequirementType } from "types"
+import { Requirement } from "types"
 
 const preprocessRequirements = (
   requirements: Array<Partial<Requirement>>
@@ -27,57 +26,19 @@ const preprocessRequirements = (
           nftRequirementType: undefined,
         } as Requirement
 
-        if (
-          processedRequirement.type?.startsWith("ALCHEMY_") &&
-          COVALENT_CHAINS.has(processedRequirement.chain)
-        ) {
-          processedRequirement.type = processedRequirement.type.replace(
-            "ALCHEMY_",
-            "COVALENT_"
-          ) as RequirementType
-
-          if (processedRequirement?.data?.timestamps?.minAmount) {
-            processedRequirement.data.timestamps.minAmount *= 1000
-          }
-
-          if (processedRequirement?.data?.timestamps?.maxAmount) {
-            processedRequirement.data.timestamps.maxAmount *= 1000
-          }
-        }
-
         // Make sure minAmount and maxAmount are in correct order
         if (
           processedRequirement.type?.includes("RELATIVE") &&
-          typeof processedRequirement.data?.minAmount === "number" &&
-          typeof processedRequirement.data?.maxAmount === "number" &&
           typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
           typeof processedRequirement.data?.timestamps?.maxAmount === "number"
         ) {
-          const [tsUpperEnd, tsLowerEnd] = [
+          const [upperEnd, lowerEnd] = [
             processedRequirement.data.timestamps.minAmount,
             processedRequirement.data.timestamps.maxAmount,
           ].sort((a, b) => a - b)
 
-          const [upperEnd, lowerEnd] = [
-            processedRequirement.data.minAmount,
-            processedRequirement.data.maxAmount,
-          ].sort((a, b) => a - b)
-
-          processedRequirement.data.minAmount = lowerEnd
-          processedRequirement.data.maxAmount = upperEnd
-
-          processedRequirement.data.timestamps.minAmount = tsLowerEnd
-          processedRequirement.data.timestamps.maxAmount = tsUpperEnd
-        }
-
-        if (processedRequirement.type?.startsWith("COVALENT_")) {
-          if (!processedRequirement?.data?.timestamps?.minAmount) {
-            delete processedRequirement.data.timestamps.minAmount
-          }
-
-          if (!processedRequirement?.data?.timestamps?.maxAmount) {
-            delete processedRequirement.data.timestamps.maxAmount
-          }
+          processedRequirement.data.timestamps.minAmount = lowerEnd
+          processedRequirement.data.timestamps.maxAmount = upperEnd
         }
 
         if (requirement.type === "COIN") {

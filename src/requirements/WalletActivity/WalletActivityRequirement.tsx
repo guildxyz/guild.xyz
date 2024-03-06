@@ -29,8 +29,8 @@ const requirementIcons: Record<
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
-  const maxAmount = requirement.data.timestamps.maxAmount
-  const minAmount = requirement.data.timestamps.minAmount
+  const maxAmount = requirement.data?.timestamps?.maxAmount
+  const minAmount = requirement.data?.timestamps?.minAmount
 
   const getFirstTxContent = () => {
     if (maxAmount && minAmount === undefined)

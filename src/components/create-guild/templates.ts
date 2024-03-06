@@ -62,7 +62,7 @@ export const TEMPLATES: Array<RoleFormType> = [
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
       {
-        type: "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+        type: "COVALENT_CONTRACT_DEPLOY_RELATIVE",
         chain: "ETHEREUM",
         data: {
           txCount: 1,
@@ -86,7 +86,7 @@ export const TEMPLATES: Array<RoleFormType> = [
         },
       },
       {
-        type: "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+        type: "COVALENT_CONTRACT_DEPLOY_RELATIVE",
         chain: "ARBITRUM",
         data: {
           txCount: 1,
@@ -94,7 +94,7 @@ export const TEMPLATES: Array<RoleFormType> = [
         },
       },
       {
-        type: "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
+        type: "COVALENT_CONTRACT_DEPLOY_RELATIVE",
         chain: "POLYGON",
         data: {
           txCount: 1,
@@ -112,7 +112,7 @@ export const TEMPLATES: Array<RoleFormType> = [
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
       {
-        type: "ALCHEMY_TX_COUNT_RELATIVE",
+        type: "COVALENT_TX_COUNT_RELATIVE",
         chain: "ETHEREUM",
         data: {
           txCount: 1,
@@ -136,7 +136,7 @@ export const TEMPLATES: Array<RoleFormType> = [
         },
       },
       {
-        type: "ALCHEMY_TX_COUNT_RELATIVE",
+        type: "COVALENT_TX_COUNT_RELATIVE",
         chain: "ARBITRUM",
         data: {
           txCount: 3,
@@ -144,7 +144,7 @@ export const TEMPLATES: Array<RoleFormType> = [
         },
       },
       {
-        type: "ALCHEMY_TX_COUNT_RELATIVE",
+        type: "COVALENT_TX_COUNT_RELATIVE",
         chain: "POLYGON",
         data: {
           txCount: 3,

@@ -1,9 +1,11 @@
 import { RequirementFormProps } from "requirements"
+import MinMaxAmountFormControls from "requirements/Github/components/MinMaxAmountFormControls"
 import AddressFormControl from "./AddressFormControl"
-import MinMaxBlockNumberFormControls from "./MinMaxBlockNumberFormControls"
 import TxCountFormControl from "./TxCountFormControl"
 
-const AlchemyTxCount = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
+const CovalentTxCountRelative = ({
+  baseFieldPath,
+}: RequirementFormProps): JSX.Element => (
   <>
     <TxCountFormControl
       baseFieldPath={baseFieldPath}
@@ -12,8 +14,8 @@ const AlchemyTxCount = ({ baseFieldPath }: RequirementFormProps): JSX.Element =>
 
     <AddressFormControl baseFieldPath={baseFieldPath} />
 
-    <MinMaxBlockNumberFormControls baseFieldPath={baseFieldPath} />
+    <MinMaxAmountFormControls baseFieldPath={baseFieldPath} type="RELATIVE" />
   </>
 )
 
-export default AlchemyTxCount
+export default CovalentTxCountRelative

@@ -32,6 +32,7 @@ const GithubCommitCount = ({ baseFieldPath }: RequirementFormProps) => {
   return (
     <>
       <MinMaxAmountFormControls
+        timestamp={false}
         baseFieldPath={baseFieldPath}
         minAmountLabel="From"
         maxAmountLabel="To"

@@ -7,12 +7,12 @@ import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import AlchemyContractDeploy from "./components/AlchemyContractDeploy"
-import AlchemyContractDeployRelative from "./components/AlchemyContractDeployRelative"
-import AlchemyFirstTxRelative from "./components/AlchemyFirstTxRelative"
-import AlchemyTxCount from "./components/AlchemyTxCount"
-import AlchemyTxCountRelative from "./components/AlchemyTxCountRelative"
+import CovalentContractDeploy from "./components/CovalentContractDeploy"
+import CovalentContractDeployRelative from "./components/CovalentContractDeployRelative"
 import CovalentFirstTx from "./components/CovalentFirstTx"
+import CovalentFirstTxRelative from "./components/CovalentFirstTxRelative"
+import CovalentTxCount from "./components/CovalentTxCount"
+import CovalentTxCountRelative from "./components/CovalentTxCountRelative"
 
 // These can be extended for additional Covalent support
 export const COVALENT_CHAINS = new Set<Chain>([
@@ -48,27 +48,27 @@ const walletActivityRequirementTypes: SelectOption[] = [
   {
     label: "Wallet age (relative)",
     value: "COVALENT_FIRST_TX_RELATIVE",
-    WalletActivityRequirement: AlchemyFirstTxRelative,
+    WalletActivityRequirement: CovalentFirstTxRelative,
   },
   {
     label: "Deployed a contract",
     value: "COVALENT_CONTRACT_DEPLOY",
-    WalletActivityRequirement: AlchemyContractDeploy,
+    WalletActivityRequirement: CovalentContractDeploy,
   },
   {
     label: "Deployed a contract (relative)",
     value: "COVALENT_CONTRACT_DEPLOY_RELATIVE",
-    WalletActivityRequirement: AlchemyContractDeployRelative,
+    WalletActivityRequirement: CovalentContractDeployRelative,
   },
   {
     label: "Transaction count",
     value: "COVALENT_TX_COUNT",
-    WalletActivityRequirement: AlchemyTxCount,
+    WalletActivityRequirement: CovalentTxCount,
   },
   {
     label: "Transaction count (relative)",
     value: "COVALENT_TX_COUNT_RELATIVE",
-    WalletActivityRequirement: AlchemyTxCountRelative,
+    WalletActivityRequirement: CovalentTxCountRelative,
   },
 ]
 
@@ -122,8 +122,6 @@ const WalletActivityForm = ({
 
   const resetFields = () => {
     resetField(`${baseFieldPath}.address`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: "" })
-    resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.timestamps.minAmount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.timestamps.maxAmount`, { defaultValue: "" })
     resetField(`${baseFieldPath}.data.txCount`, { defaultValue: "" })

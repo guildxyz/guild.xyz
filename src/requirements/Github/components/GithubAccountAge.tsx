@@ -6,6 +6,7 @@ type Props = {
 
 const GithubAccountAge = ({ baseFieldPath }: Props) => (
   <MinMaxAmountFormControls
+    timestamp={false}
     baseFieldPath={baseFieldPath}
     minAmountLabel="Minimum registration date"
     maxAmountLabel="Maximum registration date"

@@ -83,7 +83,8 @@ const RelativeTimeInput = forwardRef(
               borderBottomRightRadius: 0,
             },
           }}
-          min={0}
+          min={props.min && props.min / multipliers[format]}
+          max={props.max && props.max / multipliers[format]}
         >
           <NumberInputField />
           <NumberInputStepper>

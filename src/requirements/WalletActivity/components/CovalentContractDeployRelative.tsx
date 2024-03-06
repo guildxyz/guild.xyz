@@ -1,8 +1,8 @@
 import { RequirementFormProps } from "requirements"
-import MinMaxBlockNumberFormControls from "./MinMaxBlockNumberFormControls"
+import MinMaxAmountFormControls from "requirements/Github/components/MinMaxAmountFormControls"
 import TxCountFormControl from "./TxCountFormControl"
 
-const AlchemyContractDeploy = ({
+const CovalentContractDeployRelative = ({
   baseFieldPath,
 }: RequirementFormProps): JSX.Element => (
   <>
@@ -11,8 +11,8 @@ const AlchemyContractDeploy = ({
       formLabel="Number of contracts"
     />
 
-    <MinMaxBlockNumberFormControls baseFieldPath={baseFieldPath} />
+    <MinMaxAmountFormControls baseFieldPath={baseFieldPath} type="RELATIVE" />
   </>
 )
 
-export default AlchemyContractDeploy
+export default CovalentContractDeployRelative
