@@ -17,6 +17,7 @@ export type OAuthResultParams =
       status: "error"
       message: string
       platform?: PlatformName
+      path?: string
     }
 
 const OAuth: NextPage<OAuthResultParams> = (query) => {
@@ -28,8 +29,14 @@ const OAuth: NextPage<OAuthResultParams> = (query) => {
       channel.postMessage(query)
       window.close()
       return
-    } else if (query.status === "success") {
-      router.push(query.path)
+    } else if ("path" in query) {
+      const params = new URLSearchParams({
+        "oauth-platform": query.platform as string,
+        "oauth-status": query.status as string,
+        ...("message" in query ? { "oauth-message": query.message } : {}),
+      }).toString()
+
+      router.push(`${query.path}?${params}`)
       return
     }
   }, [])

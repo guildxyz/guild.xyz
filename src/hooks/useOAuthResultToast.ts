@@ -9,14 +9,23 @@ export default function useOAuthResultToast() {
   const router = useRouter()
 
   useEffect(() => {
-    if (router.query["oauth-status"] && router.query["oauth-platform"]) {
-      router.replace(router.basePath)
+    if (router.query["oauth-status"]) {
+      const platformNameHumanReadable =
+        platforms[(router.query["oauth-platform"] as PlatformName) ?? ""]?.name ??
+        "Social"
+
+      const title =
+        router.query["oauth-status"] === "success"
+          ? `${platformNameHumanReadable} successfully connected`
+          : `Failed to connect ${platformNameHumanReadable}`
+
       toast({
-        status: "success",
-        description: `${
-          platforms[router.query["oauth-platform"] as PlatformName].name
-        } successfully connected`,
+        status: router.query["oauth-status"] as "success" | "error",
+        title,
+        description: router.query["oauth-message"],
       })
+
+      router.replace(router.basePath)
     }
   }, [router.query])
 }
