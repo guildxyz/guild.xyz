@@ -5,7 +5,7 @@ import {
 } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
-import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
+import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -132,7 +132,7 @@ const ExistingRequirementEditableCard = ({
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
               imageWrapper={RequirementImageEditorWithSave}
-              childrenWrapper={RequirementNameAndVisibilityEditorWithSave}
+              childrenWrapper={RequirementNameEditorWithSave}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
@@ -234,9 +234,7 @@ const RequirementImageEditorWithSave = ({
   )
 }
 
-const RequirementNameAndVisibilityEditorWithSave = ({
-  children,
-}: PropsWithChildren<unknown>) => {
+const RequirementNameEditorWithSave = ({ children }: PropsWithChildren<unknown>) => {
   const requirement = useRequirementContext()
 
   const setVisibilityModalProps = useVisibilityModalProps()
@@ -256,7 +254,7 @@ const RequirementNameAndVisibilityEditorWithSave = ({
   }
 
   return (
-    <RequirementNameAndVisibilityEditor
+    <RequirementNameEditor
       onSave={(customName) =>
         onEditRequirementSubmit({
           ...requirement,
@@ -279,7 +277,7 @@ const RequirementNameAndVisibilityEditorWithSave = ({
       isLoading={isEditRequirementLoading}
     >
       {children}
-    </RequirementNameAndVisibilityEditor>
+    </RequirementNameEditor>
   )
 }
 

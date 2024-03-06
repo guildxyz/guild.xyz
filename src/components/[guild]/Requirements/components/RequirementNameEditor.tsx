@@ -119,18 +119,18 @@ const RequirementNameEditor = ({
   )
 }
 
-type RequirementNameAndVisibilityEditorProps = {
+type RequirementNameEditorProps = {
   onSave: (customName: string) => void
   isLoading?: boolean
   rightElement?: ReactNode
 }
 
-const RequirementNameAndVisibilityEditor = ({
+const RequirementNameEditorWrapper = ({
   onSave,
   isLoading,
   rightElement,
   children,
-}: PropsWithChildren<RequirementNameAndVisibilityEditorProps>) => {
+}: PropsWithChildren<RequirementNameEditorProps>) => {
   const methods = useForm<RequirementNameForm>({
     mode: "all",
   })
@@ -187,4 +187,4 @@ const RequirementNameAndVisibilityEditor = ({
   )
 }
 
-export default RequirementNameAndVisibilityEditor
+export default RequirementNameEditorWrapper

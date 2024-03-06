@@ -2,7 +2,7 @@ import { Button, useDisclosure } from "@chakra-ui/react"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
-import RequirementNameAndVisibilityEditor from "components/[guild]/Requirements/components/RequirementNameAndVisibilityEditor"
+import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import { PropsWithChildren, memo, useRef } from "react"
@@ -75,12 +75,12 @@ const RequirementEditableCard = ({
     )
   )
 
-  const RequirementNameAndVisibilityEditorWithSetValue = memo(
+  const RequirementNameEditorWithSetValue = memo(
     ({ children }: PropsWithChildren<unknown>) => {
       const setVisibilityModalProps = useVisibilityModalProps()
 
       return (
-        <RequirementNameAndVisibilityEditor
+        <RequirementNameEditor
           onSave={(customName) => {
             setValue(`requirements.${index}.data.customName`, customName, {
               shouldDirty: true,
@@ -112,7 +112,7 @@ const RequirementEditableCard = ({
           }
         >
           {children}
-        </RequirementNameAndVisibilityEditor>
+        </RequirementNameEditor>
       )
     }
   )
@@ -126,7 +126,7 @@ const RequirementEditableCard = ({
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
               imageWrapper={RequirementImageEditorWithSetValue}
-              childrenWrapper={RequirementNameAndVisibilityEditorWithSetValue}
+              childrenWrapper={RequirementNameEditorWithSetValue}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
