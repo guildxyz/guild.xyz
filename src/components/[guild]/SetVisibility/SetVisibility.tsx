@@ -122,7 +122,10 @@ const SetVisibility = ({
 
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          methods.reset(defaultValues)
+          onClose()
+        }}
         finalFocusRef={buttonRef}
         size="lg"
         colorScheme="dark"

@@ -30,7 +30,7 @@ import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Visibility } from "types"
+import { RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
@@ -66,7 +66,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     rolePlatforms: [],
   }
 
-  const methods = useForm({
+  const methods = useForm<RoleFormType>({
     mode: "all",
     defaultValues,
   })
@@ -155,6 +155,10 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                 <Box>
                   <SetVisibility
                     entityType="role"
+                    defaultValues={{
+                      visibility: methods.getValues("visibility"),
+                      visibilityRoleId: methods.getValues("visibilityRoleId"),
+                    }}
                     onSave={({ visibility, visibilityRoleId }) => {
                       methods.setValue("visibility", visibility)
                       methods.setValue("visibilityRoleId", visibilityRoleId)
