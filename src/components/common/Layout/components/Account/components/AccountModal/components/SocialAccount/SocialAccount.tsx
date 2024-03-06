@@ -69,9 +69,10 @@ export const TwitterV1Tooltip = () => (
   </Tooltip>
 )
 
-function getOAuthURL(platformName: string) {
+function getOAuthURL(platformName: string, authToken: string) {
   const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
   url.searchParams.set("path", window.location.pathname)
+  url.searchParams.set("token", authToken)
   return url.href
 }
 
@@ -130,28 +131,36 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
 
               return
             } else {
-              reject(result.message)
+              reject(new Error(result.message))
             }
           }
         }
       })
 
-      await fetcherWithSign([
+      const { token } = await fetcherWithSign([
         `/v2/oauth/${platformName}/token`,
         { method: "GET", credentials: "include" },
       ])
 
-      const url = getOAuthURL(platformName)
+      const url = getOAuthURL(platformName, token)
 
       if (type === "TELEGRAM") {
-        window.location.href = url.toString()
+        window.location.href = url
       } else {
-        window.open(url.toString(), "_blank")
+        window.open(url, "_blank")
       }
 
       await messageListener
     },
-    { onSuccess, onError: console.error }
+    {
+      onSuccess,
+      onError: (error) => {
+        toast({
+          status: "error",
+          description: error.message ?? `Failed to connect ${type}`,
+        })
+      },
+    }
   )
 
   return (
