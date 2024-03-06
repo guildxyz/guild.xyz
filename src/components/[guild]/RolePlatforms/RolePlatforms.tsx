@@ -79,7 +79,7 @@ const RolePlatforms = ({ roleId }: Props) => {
         )}
       </SimpleGrid>
 
-      <AddRoleRewardModal />
+      <AddRoleRewardModal append={append} />
     </Section>
   )
 }

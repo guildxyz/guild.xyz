@@ -17,21 +17,12 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-  useWatch,
-} from "react-hook-form"
+import { AddPlatformPanelProps } from "platforms/platforms"
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
-import { PlatformType } from "types"
+import { PlatformGuildData, PlatformType } from "types"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
-
-type Props = {
-  onSuccess: () => void
-}
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
@@ -40,7 +31,7 @@ export type AddPointsFormType = {
   imageUrl: string
 }
 
-const AddPointsPanel = ({ onSuccess }: Props) => {
+const AddPointsPanel = ({ onSuccess }: AddPlatformPanelProps) => {
   const { id, guildPlatforms } = useGuild()
 
   const existingPointsRewards = guildPlatforms.filter(
@@ -60,10 +51,6 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
     formState: { errors },
   } = methods
 
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
   const amount = useWatch({ control, name: "amount" })
   const selectedExistingId = useWatch({
     control,
@@ -79,26 +66,28 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
   const name = selectedName ?? localName
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
-  const onSubmit = (data) => {
-    append({
+  const onSubmit = (data: AddPointsFormType) =>
+    onSuccess({
       ...(selectedExistingId
         ? {
             guildPlatformId: selectedExistingId,
             // have to send these in this case too so the validator doesn't throw an error
             guildPlatform: {
               platformName: "POINTS",
+              platformId: PlatformType.POINTS,
               platformGuildId: "",
               platformGuildData: {},
-            },
+            } as any,
           }
         : {
             guildPlatform: {
               platformName: "POINTS",
+              platformId: PlatformType.POINTS,
               platformGuildId: `points-${id}-${data.name.toLowerCase() || "points"}`,
               platformGuildData: {
                 name: data.name,
                 imageUrl: data.imageUrl,
-              },
+              } satisfies PlatformGuildData["POINTS"],
             },
           }),
       isNew: true,
@@ -106,8 +95,6 @@ const AddPointsPanel = ({ onSuccess }: Props) => {
         score: parseInt(data.amount),
       },
     })
-    onSuccess()
-  }
 
   return (
     <FormProvider {...methods}>

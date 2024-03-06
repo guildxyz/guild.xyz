@@ -13,10 +13,16 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import platforms from "platforms/platforms"
+import platforms, { AddPlatformPanelProps } from "platforms/platforms"
+import { useWatch } from "react-hook-form"
+import { RoleFormType } from "types"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
-const AddRoleRewardModal = () => {
+type Props = {
+  append: AddPlatformPanelProps["onSuccess"]
+}
+
+const AddRoleRewardModal = ({ append }: Props) => {
   const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
   const goBack = () => {
@@ -28,6 +34,8 @@ const AddRoleRewardModal = () => {
   }
 
   const { AddPlatformPanel } = platforms[selection] ?? {}
+
+  const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
   return (
     <Modal
@@ -63,10 +71,19 @@ const AddRoleRewardModal = () => {
           {selection && step === "SELECT_ROLE" ? (
             <SelectRoleOrSetRequirements selectedPlatform={selection} />
           ) : AddPlatformPanel ? (
-            <AddPlatformPanel onSuccess={onClose} skipSettings />
+            <AddPlatformPanel
+              onSuccess={(data) => {
+                append({ ...data, visibility: roleVisibility })
+                onClose()
+              }}
+              skipSettings
+            />
           ) : (
             <>
-              <SelectExistingPlatform onClose={onClose} />
+              <SelectExistingPlatform
+                onClose={onClose}
+                onSelect={(selectedRolePlatform) => append(selectedRolePlatform)}
+              />
               <Text fontWeight="bold" mb="3">
                 Add new reward
               </Text>

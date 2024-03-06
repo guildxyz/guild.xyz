@@ -1,38 +1,28 @@
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
-
-type Props = {
-  onSuccess: () => void
-}
+import { AddPlatformPanelProps } from "platforms/platforms"
+import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGithubPanel = ({ onSuccess }: Props) => {
+const AddGithubPanel = ({ onSuccess }: AddPlatformPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
   return (
     <FormProvider {...methods}>
       <GitHubGuildSetup
-        onSelection={(platformGuildId) => {
-          append({
+        onSelection={(platformGuildId) =>
+          onSuccess({
             guildPlatform: {
               platformName: "GITHUB",
+              platformId: PlatformType.GITHUB,
               platformGuildId: encodeURIComponent(platformGuildId),
             },
             isNew: true,
-            visibility: roleVisibility,
           })
-          onSuccess()
-        }}
+        }
       />
     </FormProvider>
   )

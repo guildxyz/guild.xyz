@@ -298,7 +298,7 @@ type PlatformGuildData = {
   }
   POAP: {
     text?: never
-    texts?: never
+    texts?: string[]
     name: string
     imageUrl: string
     chain?: never
@@ -337,6 +337,27 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: number
+  }
+  POINTS: {
+    text?: never
+    texts?: never
+    name?: string
+    imageUrl?: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
   }
 }
 
@@ -378,7 +399,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
-  platformRoleData?: Record<string, string | boolean>
+  platformRoleData?: Record<string, string | number | boolean>
   index?: number
   isNew?: boolean
   roleId?: number

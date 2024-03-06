@@ -1,13 +1,10 @@
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
+import { AddPlatformPanelProps } from "platforms/platforms"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 
-type Props = {
-  onSuccess: () => void
-}
-
-const AddTelegramPanel = ({ onSuccess }: Props) => {
+const AddTelegramPanel = ({ onSuccess }: AddPlatformPanelProps) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {
@@ -20,28 +17,21 @@ const AddTelegramPanel = ({ onSuccess }: Props) => {
     control: methods.control,
   })
 
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
   return (
     <FormProvider {...methods}>
       <TelegramGroup fieldName={`platformGuildId`}>
         <Button
           colorScheme={"green"}
-          onClick={() => {
-            append({
+          onClick={() =>
+            onSuccess({
               guildPlatform: {
                 platformName: "TELEGRAM",
+                platformId: PlatformType.TELEGRAM,
                 platformGuildId,
               },
               isNew: true,
-              visibility: roleVisibility,
             })
-            onSuccess()
-          }}
+          }
         >
           Add Telegram
         </Button>

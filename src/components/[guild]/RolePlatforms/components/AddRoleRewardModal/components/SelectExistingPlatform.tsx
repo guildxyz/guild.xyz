@@ -3,18 +3,23 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
-import { useFieldArray, useWatch } from "react-hook-form"
-import { PlatformType, Visibility } from "types"
+import { useWatch } from "react-hook-form"
+import { PlatformType, RoleFormType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
-const SelectExistingPlatform = ({ onClose }) => {
+type Props = {
+  onClose: () => void
+  onSelect: (selectedRolePlatform: RoleFormType["rolePlatforms"][number]) => void
+}
+
+const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
   const { guildPlatforms, roles } = useGuild()
   const alreadyUsedRolePlatforms = roles
     ?.flatMap((role) => role.rolePlatforms)
     .filter(Boolean)
     .map((rp) => rp.guildPlatformId)
 
-  const { fields, append } = useFieldArray({
+  const rolePlatforms = useWatch<RoleFormType, "rolePlatforms">({
     name: "rolePlatforms",
   })
 
@@ -22,7 +27,7 @@ const SelectExistingPlatform = ({ onClose }) => {
 
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
-      !fields.find(
+      !rolePlatforms.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
       ) && guildPlatform.platformId !== PlatformType.POINTS
   )
@@ -70,7 +75,7 @@ const SelectExistingPlatform = ({ onClose }) => {
                   h="10"
                   isDisabled={isAddButtonDisabled}
                   onClick={() => {
-                    append({
+                    onSelect({
                       guildPlatformId: platform.id,
                       isNew: true,
                       platformRoleId: isGoogleReward
