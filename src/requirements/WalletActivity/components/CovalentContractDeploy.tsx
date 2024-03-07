@@ -1,5 +1,5 @@
+import AbsoluteMinMaxTimeFormControls from "components/common/AbsoluteMinMaxTimeFormControls"
 import { RequirementFormProps } from "requirements"
-import MinMaxAmountFormControls from "requirements/Github/components/MinMaxAmountFormControls"
 import TxCountFormControl from "./TxCountFormControl"
 
 const CovalentContractDeploy = ({
@@ -11,7 +11,10 @@ const CovalentContractDeploy = ({
       formLabel="Number of contracts"
     />
 
-    <MinMaxAmountFormControls baseFieldPath={baseFieldPath} />
+    <AbsoluteMinMaxTimeFormControls
+      minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
+      maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
+    />
   </>
 )
 

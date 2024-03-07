@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react"
+import AbsoluteMinMaxTimeFormControls from "components/common/AbsoluteMinMaxTimeFormControls"
 import { RequirementFormProps } from "requirements"
-import MinMaxAmountFormControls from "requirements/Github/components/MinMaxAmountFormControls"
 
 const CovalentFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element => (
   <>
@@ -8,10 +8,11 @@ const CovalentFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
       A wallet's age is determined by the time of its first transaction.
     </Text>
 
-    <MinMaxAmountFormControls
-      baseFieldPath={baseFieldPath}
-      minAmountLabel="Wallet created after (date)"
-      maxAmountLabel="Wallet created before (date)"
+    <AbsoluteMinMaxTimeFormControls
+      minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
+      maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
+      minTimeLabel="Wallet created after (date)"
+      maxTimeLabel="Wallet created before (date)"
     />
   </>
 )

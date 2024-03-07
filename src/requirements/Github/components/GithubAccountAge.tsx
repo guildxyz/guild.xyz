@@ -1,15 +1,15 @@
-import MinMaxAmountFormControls from "./MinMaxAmountFormControls"
+import AbsoluteMinMaxTimeFormControls from "components/common/AbsoluteMinMaxTimeFormControls"
 
 type Props = {
   baseFieldPath: string
 }
 
 const GithubAccountAge = ({ baseFieldPath }: Props) => (
-  <MinMaxAmountFormControls
-    timestamp={false}
-    baseFieldPath={baseFieldPath}
-    minAmountLabel="Minimum registration date"
-    maxAmountLabel="Maximum registration date"
+  <AbsoluteMinMaxTimeFormControls
+    minTimeFieldName={`${baseFieldPath}.data.minAmount`}
+    maxTimeFieldName={`${baseFieldPath}.data.maxAmount`}
+    minTimeLabel="Minimum registration date"
+    maxTimeLabel="Maximum registration date"
   />
 )
 

@@ -1,5 +1,5 @@
+import RelativeMinMaxTimeFormControls from "components/common/RelativeMinMaxTimeFormControls"
 import { RequirementFormProps } from "requirements"
-import MinMaxAmountFormControls from "requirements/Github/components/MinMaxAmountFormControls"
 import AddressFormControl from "./AddressFormControl"
 import TxCountFormControl from "./TxCountFormControl"
 
@@ -14,7 +14,10 @@ const CovalentTxCountRelative = ({
 
     <AddressFormControl baseFieldPath={baseFieldPath} />
 
-    <MinMaxAmountFormControls baseFieldPath={baseFieldPath} type="RELATIVE" />
+    <RelativeMinMaxTimeFormControls
+      minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
+      maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
+    />
   </>
 )
 
