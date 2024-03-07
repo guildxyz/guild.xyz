@@ -43,7 +43,7 @@ const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
             px={3}
             fontSize={"sm"}
             fontWeight={"medium"}
-          >{`Last synced all user accesses ${readableDate} ago`}</PopoverHeader>
+          >{`Last synced all member accesses ${readableDate} ago`}</PopoverHeader>
           {isSuperAdmin && (
             <PopoverFooter
               pt={0}
