@@ -9,7 +9,7 @@ import useToast from "hooks/useToast"
 import { useState } from "react"
 import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
@@ -28,7 +28,7 @@ export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
   POLYGON: "0xc1c23618110277ffe6d529816eb23de42b24cc33",
   POLYGON_MUMBAI: "0xf14249947c6de788c61f8ac5db0495ee2663ec1b",
   MANTLE: "0x326f14942f8899406e3224bd63E9f250D275a52e",
-  ZKSYNC_ERA: "0x2a1eaf11a9753a871b15e2865d8a47cf17dd9450"
+  ZKSYNC_ERA: "0x2a1eaf11a9753a871b15e2865d8a47cf17dd9450",
 }
 
 type NftMetadata = {
@@ -49,7 +49,7 @@ export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> 
 export type CreateNFTResponse = {
   // returning the submitted form too, so we can easily populate the SWR cache with the NFT details (e.g. image, name, etc.)
   formData: CreateNftFormType
-  guildPlatform: Omit<GuildPlatform, "id" | "platformGuildName">
+  guildPlatform: Omit<GuildPlatformWithOptionalId, "platformGuildName">
 }
 
 const useCreateNft = (

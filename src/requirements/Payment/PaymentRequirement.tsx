@@ -2,14 +2,14 @@ import { Icon, Text } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { Coins } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
@@ -60,9 +60,9 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     ? CHAIN_CONFIG[chain].nativeCurrency.symbol
     : tokenData?.symbol
 
-  const { data: accessData } = useAccess(roleId ?? 0)
+  const { reqAccesses } = useRoleMembership(roleId ?? 0)
 
-  const satisfiesRequirement = accessData?.requirements?.find(
+  const satisfiesRequirement = reqAccesses?.find(
     (req) => req.requirementId === id
   )?.access
 

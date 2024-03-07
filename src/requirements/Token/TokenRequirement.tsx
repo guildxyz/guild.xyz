@@ -1,6 +1,7 @@
 import { HStack, Text } from "@chakra-ui/react"
+import { CHAIN_CONFIG } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
-import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
+import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
 import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
@@ -9,31 +10,24 @@ import Requirement, {
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
-import { useEffect } from "react"
-import { UseFormSetValue } from "react-hook-form"
 
-type Props = RequirementProps & {
-  setValueForBalancy: UseFormSetValue<any>
-}
+type Props = RequirementProps
 
-const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
+const TokenRequirement = ({ ...rest }: Props) => {
   const requirement = useRequirementContext()
 
   const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
 
-  useEffect(() => {
-    if (setValueForBalancy && data.decimals)
-      setValueForBalancy("balancyDecimals", data.decimals)
-  }, [setValueForBalancy, data.decimals])
-
   return (
     <Requirement
       image={
-        data?.logoURI ?? (
-          <Text as="span" fontWeight="bold" fontSize="xx-small">
-            ERC20
-          </Text>
-        )
+        requirement.type === "COIN"
+          ? CHAIN_CONFIG[requirement.chain].coinIconUrl
+          : data?.logoURI ?? (
+              <Text as="span" fontWeight="bold" fontSize="xx-small">
+                ERC20
+              </Text>
+            )
       }
       isImageLoading={isValidating}
       footer={
@@ -57,7 +51,11 @@ const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
           : requirement.data?.minAmount > 0
           ? `at least ${requirement.data?.minAmount}`
           : "any amount of"
-      } ${data?.symbol ?? requirement.symbol}`}
+      } ${
+        requirement.type === "COIN"
+          ? CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+          : data?.symbol ?? requirement.symbol
+      }`}
     </Requirement>
   )
 }

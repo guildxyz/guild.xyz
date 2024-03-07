@@ -3,6 +3,8 @@ import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlag
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
 
+export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
+
 type Token = {
   address: `0x${string}`
   name: string
@@ -88,6 +90,7 @@ type PlatformName =
   | "TEXT"
   | "POLYGON_ID"
   | "POINTS"
+  | "FORM"
 
 type PlatformUserData = {
   acessToken?: string
@@ -180,6 +183,10 @@ type GuildAdmin = {
   isOwner: boolean
 }
 
+/**
+ * This is really verbose with the huge amount of repeated nevers, it'll be solved by
+ * adding it to @guildxyz/types, so leaving it like this for now
+ */
 type PlatformGuildData = {
   DISCORD: {
     role?: never
@@ -202,6 +209,7 @@ type PlatformGuildData = {
     imageUrl?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -223,6 +231,7 @@ type PlatformGuildData = {
     imageUrl?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -243,6 +252,7 @@ type PlatformGuildData = {
     texts?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -263,6 +273,7 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   TEXT: {
     text: string
@@ -283,10 +294,11 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId?: never
     eventId?: never
+    formId?: never
   }
   POAP: {
     text?: never
-    texts?: never
+    texts?: string[]
     name: string
     imageUrl: string
     chain?: never
@@ -303,6 +315,49 @@ type PlatformGuildData = {
     iconLink?: never
     fancyId: string
     eventId: number
+    formId?: never
+  }
+  FORM: {
+    text?: never
+    texts?: never
+    name?: never
+    imageUrl?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: number
+  }
+  POINTS: {
+    text?: never
+    texts?: never
+    name?: string
+    imageUrl?: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
   }
 }
 
@@ -319,13 +374,13 @@ type Requirement = {
   id: number
   type: RequirementType
   address?: `0x${string}`
-  chain: Chain
+  chain?: Chain
   data?: Record<string, any>
   roleId: number
   name: string
   symbol: string
   decimals?: number
-  isNegated: boolean
+  isNegated?: boolean
   visibility?: Visibility
   visibilityRoleId?: number | null
 
@@ -344,7 +399,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
-  platformRoleData?: Record<string, string | boolean>
+  platformRoleData?: Record<string, string | number | boolean>
   index?: number
   isNew?: boolean
   roleId?: number
@@ -394,9 +449,11 @@ type GuildPlatform = {
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   invite?: string
-  platformGuildName: string
+  platformGuildName?: string
   permission?: string
 }
+
+type GuildPlatformWithOptionalId = Omit<GuildPlatform, "id"> & { id?: number }
 
 const supportedSocialLinks = [
   "TWITTER",
@@ -460,7 +517,12 @@ type Guild = {
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
     requirements: Array<Partial<Requirement>>
-    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+    rolePlatforms: Array<
+      Partial<Omit<RolePlatform, "guildPlatform">> & {
+        guildPlatform?: GuildPlatformWithOptionalId
+        guildPlatformIndex?: number
+      }
+    >
   } & { name: string }
 >
 
@@ -536,6 +598,7 @@ export enum PlatformType {
   "POLYGON_ID" = 12,
   "POINTS" = 13,
   "POAP" = 14,
+  "FORM" = 15,
 }
 type WalletConnectConnectionData = {
   connected: boolean
@@ -657,6 +720,7 @@ export type {
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
+  GuildPlatformWithOptionalId,
   GuildTags,
   LeaderboardPinData,
   Logic,

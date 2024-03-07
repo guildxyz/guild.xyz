@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
@@ -25,27 +26,26 @@ import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
-import { useToastWithTweetButton } from "hooks/useToast"
+import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Visibility } from "types"
+import { RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
-  const { id, urlName } = useGuild()
+  const { id } = useGuild()
 
-  const toastWithTweetButton = useToastWithTweetButton()
+  const toast = useToast()
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
     useCreateRole({
       onSuccess: () => {
-        toastWithTweetButton({
+        toast({
           title: "Role successfully created",
-          tweetText: `I've just added a new role to my guild. Check it out, maybe you have access 😉
-  guild.xyz/${urlName}`,
+          status: "success",
         })
       },
     })
@@ -55,14 +55,18 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     name: "",
     description: "",
     logic: "AND",
-    requirements: [],
+    requirements: [
+      {
+        type: "FREE",
+      },
+    ],
     roleType: "NEW",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     visibility: Visibility.PUBLIC,
     rolePlatforms: [],
   }
 
-  const methods = useForm({
+  const methods = useForm<RoleFormType>({
     mode: "all",
     defaultValues,
   })
@@ -127,6 +131,8 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
+  const setVisibilityModalProps = useVisibilityModalProps()
+
   return (
     <>
       <Drawer
@@ -147,7 +153,19 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                 alignItems="center"
               >
                 <Box>
-                  <SetVisibility entityType="role" />
+                  <SetVisibility
+                    entityType="role"
+                    defaultValues={{
+                      visibility: methods.getValues("visibility"),
+                      visibilityRoleId: methods.getValues("visibilityRoleId"),
+                    }}
+                    onSave={({ visibility, visibilityRoleId }) => {
+                      methods.setValue("visibility", visibility)
+                      methods.setValue("visibilityRoleId", visibilityRoleId)
+                      setVisibilityModalProps.onClose()
+                    }}
+                    {...setVisibilityModalProps}
+                  />
                 </Box>
               </DrawerHeader>
 

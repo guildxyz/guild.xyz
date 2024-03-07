@@ -1,4 +1,5 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   StoredKeyPair,
@@ -6,6 +7,7 @@ import {
   getKeyPairFromIdb,
 } from "hooks/useSetKeyPair"
 import useToast from "hooks/useToast"
+import { useSetAtom } from "jotai"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
@@ -37,7 +39,7 @@ const useUser = (
   }
 }
 
-type PublicUser = {
+export type PublicUser = {
   id: number
   publicKey?: string
   captchaVerifiedSince?: string
@@ -53,11 +55,14 @@ const useUserPublic = (
   deleteKeys: () => Promise<void>
   setKeys: (keyPair: StoredKeyPair) => Promise<void>
 } => {
-  const { address, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { address } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
 
-  const idToUse = userIdOrAddress ?? address
+  const idToUseRaw = userIdOrAddress ?? address
+  const idToUse =
+    typeof idToUseRaw === "string" ? idToUseRaw.toLowerCase() : idToUseRaw
 
   const { data, mutate, isLoading, error } = useSWRImmutable<PublicUser>(
     idToUse ? `/v2/users/${idToUse}/profile` : null,
@@ -85,7 +90,7 @@ const useUserPublic = (
             duration: 5000,
           })
 
-          openWalletSelectorModal()
+          setIsWalletSelectorModalOpen(true)
         }
       }
 

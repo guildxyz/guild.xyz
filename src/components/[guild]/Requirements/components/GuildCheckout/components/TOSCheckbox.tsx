@@ -1,6 +1,6 @@
 import { Checkbox, useColorModeValue } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { useGuildCheckoutContext } from "./GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./GuildCheckoutContext"
 
 const TOSCheckbox = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   const borderColor = useColorModeValue("gray.300", "inherit")

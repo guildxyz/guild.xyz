@@ -1,4 +1,4 @@
-import useAccess from "components/[guild]/hooks/useAccess"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -7,7 +7,6 @@ import { useSWRConfig } from "swr"
 import { OneOf, Visibility } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessRequirements from "utils/preprocessRequirements"
 import { RoleEditFormData } from "../EditRole"
 
 const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =>
@@ -20,7 +19,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const postHogOptions = { guild: urlName, memberCount }
 
   const { mutate } = useSWRConfig()
-  const { mutate: mutateAccess } = useAccess()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
@@ -28,19 +27,11 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   const submit = async (data: RoleEditFormData) => {
     const {
-      requirements: unfilteredRequirements,
       rolePlatforms,
       // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
       id: _id,
       ...baseRoleData
     } = data
-
-    // Only submit the requirements that have any fields besides id and type
-    const requirements = (unfilteredRequirements ?? []).filter((req) => {
-      const { id: reqId, type: reqType, ...rest } = req
-      if (!!reqId && !!reqType) return Object.keys(rest).length > 0
-      return true
-    })
 
     const roleUpdate: Promise<
       OneOf<
@@ -54,28 +45,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             { method: "PUT", body: baseRoleData },
           ]).catch((error) => error)
         : new Promise((resolve) => resolve(undefined))
-
-    const requirementUpdates = Promise.all(
-      (requirements ?? [])
-        .filter((reqirement) => "id" in reqirement)
-        .map((requirement) =>
-          fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}/requirements/${requirement.id}`,
-            { method: "PUT", body: requirement },
-          ]).catch((error) => error)
-        )
-    )
-
-    const requirementCreations = Promise.all(
-      (requirements ?? [])
-        .filter((reqirement) => !("id" in reqirement))
-        .map((requirement) =>
-          fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}/requirements`,
-            { method: "POST", body: requirement },
-          ]).catch((error) => error)
-        )
-    )
 
     const rolePlatformUpdates = Promise.all(
       (rolePlatforms ?? [])
@@ -99,24 +68,11 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         )
     )
 
-    const [
-      updatedRole,
-      updatedRequirements,
-      createdRequirements,
-      updatedRolePlatforms,
-      createdRolePlatforms,
-    ] = await Promise.all([
-      roleUpdate,
-      requirementUpdates,
-      requirementCreations,
-      rolePlatformUpdates,
-      rolePlatformCreations,
-    ])
+    const [updatedRole, updatedRolePlatforms, createdRolePlatforms] =
+      await Promise.all([roleUpdate, rolePlatformUpdates, rolePlatformCreations])
 
     return {
       updatedRole,
-      updatedRequirements,
-      createdRequirements,
       updatedRolePlatforms,
       createdRolePlatforms,
     }
@@ -124,70 +80,31 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
 
   const useSubmitResponse = useSubmit(submit, {
     onSuccess: (result) => {
-      const {
-        updatedRole,
-        updatedRequirements,
-        createdRequirements,
-        updatedRolePlatforms,
-        createdRolePlatforms,
-      } = result
+      const { updatedRole, updatedRolePlatforms, createdRolePlatforms } = result
 
-      const deletedRequirementIds = new Set(
-        createdRequirements.flatMap((req) => req.deletedRequirements)
-      )
-
-      const [
-        failedRequirementUpdatesCount,
-        failedRequirementCreationsCount,
-        failedRolePlatformUpdatesCount,
-        failedRolePlatformCreationsCount,
-      ] = [
-        updatedRequirements.filter((req) => !!req.error).length,
-        createdRequirements.filter((req) => !!req.error).length,
+      const [failedRolePlatformUpdatesCount, failedRolePlatformCreationsCount] = [
         updatedRolePlatforms.filter((req) => !!req.error).length,
         createdRolePlatforms.filter((req) => !!req.error).length,
       ]
 
-      const [
-        successfulRequirementUpdates,
-        successfulRequirementCreations,
-        successfulRolePlatformUpdates,
-        successfulRolePlatformCreations,
-      ] = [
-        updatedRequirements.filter((res) => !res.error),
-        createdRequirements.filter((res) => !res.error),
+      const [successfulRolePlatformUpdates, successfulRolePlatformCreations] = [
         updatedRolePlatforms.filter((res) => !res.error),
         createdRolePlatforms.filter((res) => !res.error),
       ]
 
       const [
-        failedRequirementUpdatesCorrelationId,
-        failedRequirementCreationsCorrelationId,
         failedRolePlatformUpdatesCorrelationId,
         failedRolePlatformCreationsCorrelationId,
       ] = [
-        updatedRequirements.filter((req) => !!req.error)[0]?.correlationId,
-        createdRequirements.filter((req) => !!req.error)[0]?.correlationId,
         updatedRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
         createdRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
       ]
 
       if (
         !updatedRole?.error &&
-        failedRequirementUpdatesCount <= 0 &&
-        failedRequirementCreationsCount <= 0 &&
         failedRolePlatformUpdatesCount <= 0 &&
         failedRolePlatformCreationsCount <= 0
       ) {
-        createdRequirements?.forEach((req) => {
-          if (req.visibility !== Visibility.PUBLIC) {
-            captureEvent(`Created a ${req.visibility} requirement`, {
-              ...postHogOptions,
-              requirementType: req.type,
-            })
-          }
-        })
-
         if (
           !!updatedRole &&
           currentRole.visibility === Visibility.PUBLIC &&
@@ -207,18 +124,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             correlationId: updatedRole.correlationId,
           })
         }
-        if (failedRequirementUpdatesCount > 0) {
-          errorToast({
-            error: "Failed to update some requirements",
-            correlationId: failedRequirementUpdatesCorrelationId,
-          })
-        }
-        if (failedRequirementCreationsCount > 0) {
-          errorToast({
-            error: "Failed to create some requirements",
-            correlationId: failedRequirementCreationsCorrelationId,
-          })
-        }
         if (failedRolePlatformUpdatesCount > 0) {
           errorToast({
             error: "Failed to update some rewards",
@@ -233,7 +138,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         }
       }
 
-      const updatedRequirementsById = mapToObject(successfulRequirementUpdates)
       const updatedRolePlatformsById = mapToObject(successfulRolePlatformUpdates)
 
       const createdRolePlatformsToMutate = successfulRolePlatformCreations.map(
@@ -254,17 +158,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
                 ? {
                     ...prevRole,
                     ...(updatedRole ?? {}),
-                    requirements: [
-                      ...(prevRole.requirements
-                        ?.filter(
-                          (requirement) => !deletedRequirementIds.has(requirement.id)
-                        )
-                        ?.map((prevReq) => ({
-                          ...prevReq,
-                          ...(updatedRequirementsById[prevReq.id] ?? {}),
-                        })) ?? []),
-                      ...successfulRequirementCreations,
-                    ],
                     rolePlatforms: [
                       ...(prevRole.rolePlatforms?.map((prevRolePlatform) => ({
                         ...prevRolePlatform,
@@ -279,7 +172,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         { revalidate: false }
       )
 
-      mutateAccess()
+      triggerMembershipUpdate()
       mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),
@@ -288,10 +181,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
-      data.requirements = preprocessRequirements(data?.requirements)
-
       if (!!data.logic && data.logic !== "ANY_OF") delete data.anyOfNum
-
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))
     },
     isSigning: null,

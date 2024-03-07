@@ -24,6 +24,7 @@ import {
   ImageNode,
 } from "components/lexical/nodes/ImageNode"
 import AutoLinkPlugin from "components/lexical/plugins/AutoLinkPlugin"
+import HeadingLineBreakPlugin from "components/lexical/plugins/HeadingLineBreakPlugin"
 import ImagesPlugin from "components/lexical/plugins/ImagesPlugin"
 import ToolbarPlugin from "components/lexical/plugins/ToolbarPlugin/ToolbarPlugin"
 
@@ -120,6 +121,7 @@ const RichTextDescriptionEditor = ({
           ErrorBoundary={LexicalErrorBoundary}
         />
         <ImagesPlugin />
+        <HeadingLineBreakPlugin />
       </Stack>
 
       <MarkdownShortcutPlugin transformers={MARKDOWN_TRANSFORMERS} />

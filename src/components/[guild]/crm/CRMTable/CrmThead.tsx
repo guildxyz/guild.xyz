@@ -1,10 +1,9 @@
 import { Progress, Th, Thead, Tr } from "@chakra-ui/react"
 import { Table, flexRender } from "@tanstack/react-table"
 import { useCardBg } from "components/common/Card"
-import { Member } from "../useMembers"
 
 type Props = {
-  table: Table<Member>
+  table: Table<any>
   isLoading: boolean
 }
 

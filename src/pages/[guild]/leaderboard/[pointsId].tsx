@@ -48,7 +48,7 @@ const Leaderboard = () => {
     guildId
       ? `/v2/guilds/${guildId}/points/${router.query.pointsId}/leaderboard`
       : null,
-    null,
+    { revalidateOnMount: true },
     false,
     false
   )

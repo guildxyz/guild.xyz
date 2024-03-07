@@ -1,12 +1,13 @@
 import { Alert, AlertIcon, Box, Flex, Text } from "@chakra-ui/react"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
+import { useAtomValue } from "jotai"
 import { AccountSectionTitle } from "../AccountConnections"
 import GuildPin from "./GuildPin"
 import GuildPinSkeleton from "./GuildPinSkeleton"
 
 const UsersGuildPins = () => {
-  const { isAccountModalOpen } = useWeb3ConnectionManager()
+  const isAccountModalOpen = useAtomValue(accountModalAtom)
   const { data, error, isValidating } = useUsersGuildPins(!isAccountModalOpen)
 
   return (

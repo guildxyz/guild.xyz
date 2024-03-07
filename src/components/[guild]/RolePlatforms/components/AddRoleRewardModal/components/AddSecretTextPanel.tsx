@@ -7,20 +7,17 @@ import SecretTextDataForm, {
 import UniqueTextDataForm, {
   UniqueTextRewardForm,
 } from "platforms/UniqueText/UniqueTextDataForm"
+import { AddPlatformPanelProps } from "platforms/platforms"
 import { useState } from "react"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
-
-type Props = {
-  onSuccess: () => void
-}
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PlatformGuildData, PlatformName, PlatformType } from "types"
 
 enum TextPlatformName {
   TEXT,
   UNIQUE_TEXT,
 }
 
-const AddSecretTextPanel = ({ onSuccess }: Props) => {
+const AddSecretTextPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const { id: userId } = useUser()
 
   const methods = useForm<SecretTextRewardForm & UniqueTextRewardForm>({
@@ -30,34 +27,37 @@ const AddSecretTextPanel = ({ onSuccess }: Props) => {
   const name = useWatch({ control: methods.control, name: "name" })
   const text = useWatch({ control: methods.control, name: "text" })
 
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
   const [tabIndex, setTabIndex] = useState(0)
 
   const onContinue = (data: SecretTextRewardForm & UniqueTextRewardForm) => {
-    append({
+    const platformName = TextPlatformName[tabIndex] as PlatformName
+
+    const platformGuildData = {
+      name: data.name,
+      imageUrl: data.imageUrl,
+    }
+
+    if (TextPlatformName[tabIndex] === "TEXT") {
+      ;(platformGuildData as PlatformGuildData["TEXT"]).text = data.text
+    }
+
+    if (TextPlatformName[tabIndex] === "UNIQUE_TEXT") {
+      ;(platformGuildData as PlatformGuildData["UNIQUE_TEXT"]).texts =
+        data.texts?.filter(Boolean) ?? []
+    }
+
+    onAdd({
       guildPlatform: {
-        platformName: TextPlatformName[tabIndex],
+        platformName,
+        platformId: PlatformType[platformName],
+
         platformGuildId: `${TextPlatformName[
           tabIndex
         ].toLowerCase()}-${userId}-${Date.now()}`,
-        platformGuildData: {
-          text: TextPlatformName[tabIndex] === "TEXT" ? data.text : undefined,
-          texts:
-            TextPlatformName[tabIndex] === "UNIQUE_TEXT"
-              ? data.texts?.filter(Boolean) ?? []
-              : undefined,
-          name: data.name,
-          imageUrl: data.imageUrl,
-        },
+        platformGuildData,
       },
       isNew: true,
-      visibility: roleVisibility,
     })
-    onSuccess()
   }
 
   const handleChange = (newTabIndex: number) => {

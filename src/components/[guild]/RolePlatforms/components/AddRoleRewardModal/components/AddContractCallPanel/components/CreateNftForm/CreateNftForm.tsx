@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Box,
   Divider,
@@ -25,14 +26,13 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Chain, CHAIN_CONFIG, Chains } from "chains"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import {
   FormProvider,
@@ -74,7 +74,7 @@ const CONTRACT_CALL_SUPPORTED_CHAINS = [
   "POLYGON",
   "POLYGON_MUMBAI",
   "MANTLE",
-  "ZKSYNC_ERA"
+  "ZKSYNC_ERA",
 ] as const
 
 export type ContractCallSupportedChain =
@@ -84,7 +84,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const { isConnected: isEvmConnected, address } = useAccount()
   const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
-    useWeb3ConnectionManager()
+    useTriggerNetworkChange()
 
   const methods = useForm<CreateNftFormType>({
     mode: "all",

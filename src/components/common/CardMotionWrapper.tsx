@@ -1,5 +1,5 @@
 import { Box, EASINGS } from "@chakra-ui/react"
-import { domMax, LazyMotion, m } from "framer-motion"
+import { LazyMotion, domMax, m } from "framer-motion"
 import { PropsWithChildren } from "react"
 
 const MotionBox = m(Box)

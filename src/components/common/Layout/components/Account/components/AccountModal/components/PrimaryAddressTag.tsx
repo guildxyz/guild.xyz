@@ -6,7 +6,7 @@ type Props = {
 
 const PrimaryAddressTag = ({ size }: Props): JSX.Element => (
   <Tooltip
-    label="Guild owners will receive this address if they export members from their guild."
+    label="Guild owners will receive this address if they export members from their guild"
     placement="top"
     hasArrow
   >

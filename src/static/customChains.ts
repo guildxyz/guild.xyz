@@ -468,3 +468,97 @@ export const taikoKatlaTestnet = /*#__PURE__*/ defineChain({
     },
   },
 })
+
+export const blastMainnet = /*#__PURE__*/ defineChain({
+  id: 81457,
+  name: "Blast",
+  network: "blast",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://rpc.blast.io"],
+    },
+    public: {
+      http: ["https://rpc.blast.io"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blastscan",
+      url: "https://blastscan.io",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 88189,
+    },
+  },
+})
+
+export const blastSepolia = /*#__PURE__*/ defineChain({
+  id: 168587773,
+  name: "Blast Sepolia",
+  network: "blastsepolia",
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://sepolia.blast.io"],
+    },
+    public: {
+      http: ["https://sepolia.blast.io"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blastscan",
+      url: "https://testnet.blastscan.io",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 756690,
+    },
+  },
+  testnet: true,
+})
+
+export const oasisSapphire = /*#__PURE__*/ defineChain({
+  id: 23294,
+  name: "Oasis Sapphire",
+  network: "oasissapphire",
+  nativeCurrency: {
+    name: "Rose",
+    symbol: "ROSE",
+    decimals: 18,
+  },
+  rpcUrls: {
+    default: {
+      http: ["https://sapphire.oasis.io"],
+    },
+    public: {
+      http: ["https://sapphire.oasis.io"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BlockScout",
+      url: "https://explorer.sapphire.oasis.io",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 734531,
+    },
+  },
+})

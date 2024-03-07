@@ -26,9 +26,6 @@ type ClaimResponse = {
   uniqueValue: string
 }
 
-const joinFetcher = (signedValidation: SignedValidation) =>
-  fetcher(`/user/join`, signedValidation)
-
 const useClaimText = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
   const { uniqueValue } = useClaimedReward(rolePlatformId)
@@ -90,20 +87,11 @@ const useClaimText = (rolePlatformId: number) => {
     }
   )
 
-  const join = useSubmitWithSign(joinFetcher, {
-    onSuccess: () => onClaimTextSubmit(),
-    onError: (error) =>
-      showErrorToast({
-        error: "Couldn't check eligibility",
-        correlationId: error.correlationId,
-      }),
-  })
-
   return {
-    error: claim.error ?? join.error,
+    error: claim.error,
     response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
-    isLoading: claim.isLoading || join.isLoading,
-    onSubmit: () => join.onSubmit({ guildId }),
+    isLoading: claim.isLoading,
+    onSubmit: onClaimTextSubmit,
     modalProps: {
       isOpen,
       onOpen,
@@ -143,7 +131,10 @@ const ClaimTextModal = ({
             <Text>Getting your secret...</Text>
           </HStack>
         ) : response?.uniqueValue ? (
-          <ReactMarkdown components={reactMarkdownComponents}>
+          <ReactMarkdown
+            transformLinkUri={false}
+            components={reactMarkdownComponents}
+          >
             {response.uniqueValue}
           </ReactMarkdown>
         ) : (

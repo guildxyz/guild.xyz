@@ -57,7 +57,7 @@ const RewardSuggestions = ({
         if (!lowerCaseInputValue) return true
 
         return (
-          reward.name.toLowerCase().includes(lowerCaseInputValue) ||
+          reward.name?.toLowerCase()?.includes(lowerCaseInputValue) ||
           "reward".includes(lowerCaseInputValue)
         )
       }) ?? [],

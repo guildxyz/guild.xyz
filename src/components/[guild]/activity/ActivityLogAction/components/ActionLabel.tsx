@@ -222,6 +222,11 @@ const ActionLabel = (): JSX.Element => {
                 {!parentId && (
                   <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 )}
+                {showGuildTag ? (
+                  <ClickableGuildTag guildId={ids.guild} />
+                ) : (
+                  <ClickableUserTag userId={ids.user} />
+                )}
               </>
             )
 

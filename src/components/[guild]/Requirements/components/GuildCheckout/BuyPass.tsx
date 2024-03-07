@@ -13,18 +13,18 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { Chains } from "chains"
-import useAccess from "components/[guild]/hooks/useAccess"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { Coin } from "phosphor-react"
 import { paymentSupportedChains } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { useRequirementContext } from "../RequirementContext"
 import BuyTotal from "./components/BuyTotal"
-import { useGuildCheckoutContext } from "./components/GuildCheckoutContex"
+import { useGuildCheckoutContext } from "./components/GuildCheckoutContext"
 import PaymentFeeCurrency from "./components/PaymentFeeCurrency"
 import PaymentMethodButtons from "./components/PaymentMethodButtons"
 import { UnlockingRewards } from "./components/PaymentTransactionStatusModal"
@@ -44,11 +44,9 @@ const BuyPass = () => {
   const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 
-  const { data: accessData, isValidating: isAccessValidating } = useAccess(
-    requirement?.roleId
-  )
+  const { isLoading: isMembershipLoading, reqAccesses } = useRoleMembership(role?.id)
 
-  const userSatisfiesOtherRequirements = accessData?.requirements
+  const userSatisfiesOtherRequirements = reqAccesses
     ?.filter((r) => r.requirementId !== requirement?.id)
     ?.every((r) => r.access)
 
@@ -61,7 +59,7 @@ const BuyPass = () => {
 
   if (
     !isWeb3Connected ||
-    (!accessData && isAccessValidating) ||
+    isMembershipLoading ||
     requirement?.type !== "PAYMENT" ||
     !paymentSupportedChains.includes(requirement?.chain)
   )
@@ -90,7 +88,7 @@ const BuyPass = () => {
           <ModalCloseButton />
 
           <ModalBody>
-            {!userSatisfiesOtherRequirements && role?.logic === "AND" && (
+            {userSatisfiesOtherRequirements === false && role?.logic === "AND" && (
               <Alert
                 status="warning"
                 bgColor="orange.100"

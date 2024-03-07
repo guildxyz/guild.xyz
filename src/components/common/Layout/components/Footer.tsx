@@ -1,5 +1,5 @@
+import { Link } from "@chakra-ui/next-js"
 import { Box, Icon, Text } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import { ArrowSquareOut } from "phosphor-react"
 
 const Footer = (): JSX.Element => (

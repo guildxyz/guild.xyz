@@ -13,7 +13,7 @@ const useTemplate = () => {
   })
 
   const buildTemplate = () => {
-    const templatesCopy: Array<RoleFormType> = JSON.parse(JSON.stringify(TEMPLATES))
+    const templatesCopy: Array<RoleFormType> = structuredClone(TEMPLATES)
 
     return templatesCopy
       .map((template) => {
@@ -80,7 +80,7 @@ const useTemplate = () => {
         (template) => template.name === roleTemplateName
       )
 
-      const templateCopy = JSON.parse(JSON.stringify(originalTemplate))
+      const templateCopy = structuredClone(originalTemplate)
 
       templateCopy.description = undefined
 

@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   ButtonProps,
   FormControl,
@@ -19,7 +20,6 @@ import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import Link from "components/common/Link"
 import { Modal } from "components/common/Modal"
 import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
