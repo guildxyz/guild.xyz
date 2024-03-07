@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { Users } from "phosphor-react"
+import { PropsWithChildren } from "react"
 
 type Props = {
   memberCount: number
@@ -15,7 +16,12 @@ type Props = {
   size?: "sm" | "md"
 }
 
-const MemberCount = ({ memberCount, roleId, size = "md" }: Props) => {
+const MemberCount = ({
+  memberCount,
+  roleId,
+  size = "md",
+  children,
+}: PropsWithChildren<Props>) => {
   const { status } = useActiveStatusUpdates(roleId)
 
   const iconSize = size === "sm" ? "14px" : "16px"
@@ -37,12 +43,13 @@ const MemberCount = ({ memberCount, roleId, size = "md" }: Props) => {
 
   return (
     <Tag bg="unset" color="gray" mt="3px !important" flexShrink={0} size={size}>
-      <TagLeftIcon as={Users} boxSize={iconSize} />
+      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
       <TagLabel mb="-1px">
         {new Intl.NumberFormat("en", { notation: "compact" }).format(
           memberCount ?? 0
         )}
       </TagLabel>
+      {children}
     </Tag>
   )
 }
