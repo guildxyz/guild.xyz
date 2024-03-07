@@ -1,8 +1,10 @@
 import {
   FormControl,
-  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
   HStack,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
@@ -12,6 +14,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { Eye, EyeClosed, Question } from "phosphor-react"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -49,7 +52,7 @@ const GatherConnectionForm = () => {
       <FormControl pt={{ md: 0.5 }} isInvalid={!!errors?.gatherApiKey}>
         <Stack>
           <HStack>
-            <Text as="span">API key:</Text>
+            <FormLabel as="span">API key:</FormLabel>
             <Tooltip
               label="Used to securely communicate with Gather"
               placement="top"
@@ -67,11 +70,17 @@ const GatherConnectionForm = () => {
               })}
             />
             <InputRightElement onClick={() => setShowApiKey(!showApiKey)}>
-              {showApiKey ? <EyeClosed /> : <Eye />}
+              <IconButton
+                opacity={0.5}
+                _hover={{ opacity: 1 }}
+                variant={"simple"}
+                aria-label="Hide/ShowPassword"
+                icon={showApiKey ? <EyeClosed /> : <Eye />}
+              ></IconButton>
             </InputRightElement>
           </InputGroup>
         </Stack>
-        <Text as="small" colorScheme="gray">
+        <FormHelperText>
           If you don’t have an API key yet, you can create one{" "}
           <Link
             href="https://gather.town/apiKeys"
@@ -81,7 +90,7 @@ const GatherConnectionForm = () => {
             here
           </Link>
           .
-        </Text>
+        </FormHelperText>
         <FormErrorMessage>{errors?.gatherApiKey?.message}</FormErrorMessage>
       </FormControl>
 
