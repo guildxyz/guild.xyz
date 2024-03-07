@@ -1,9 +1,9 @@
 import {
   FormControl,
+  FormLabel,
   HStack,
   Icon,
   Input,
-  Stack,
   Text,
   Tooltip,
 } from "@chakra-ui/react"
@@ -23,35 +23,29 @@ const GatherGuestForm = () => {
           Customize the parameters for guests who gained access to your space via
           this reward.
         </Text>
-        <Stack gap={6}>
-          <Stack>
-            <HStack>
-              <Text as="span">Affiliation:</Text>
-              <Tooltip
-                label="Displays information below the person's name in the user info card available from the Participants list"
-                placement="top"
-                hasArrow
-              >
-                <Icon as={Question} color="GrayText" />
-              </Tooltip>
-            </HStack>
-            <Input {...register("gatherAffiliation")} placeholder="Optional" />
-          </Stack>
+        <HStack mb={2} spacing={0}>
+          <FormLabel mb={0}>Affiliation:</FormLabel>
+          <Tooltip
+            label="Displays information below the person's name in the user info card available from the Participants list"
+            placement="top"
+            hasArrow
+          >
+            <Icon as={Question} color="GrayText" />
+          </Tooltip>
+        </HStack>
+        <Input {...register("gatherAffiliation")} placeholder="Optional" />
 
-          <Stack>
-            <HStack>
-              <Text as="span">Role:</Text>
-              <Tooltip
-                label="Describes the person's role in your space. This field is for your internal use only and does not actually assign a user role"
-                placement="top"
-                hasArrow
-              >
-                <Icon as={Question} color="GrayText" />
-              </Tooltip>
-            </HStack>
-            <Input {...register("gatherRole")} placeholder="Optional" />
-          </Stack>
-        </Stack>
+        <HStack mt={6} mb={2} spacing={0}>
+          <FormLabel mb={0}>Role:</FormLabel>
+          <Tooltip
+            label="Describes the person's role in your space. This field is for your internal use only and does not actually assign a user role"
+            placement="top"
+            hasArrow
+          >
+            <Icon as={Question} color="GrayText" />
+          </Tooltip>
+        </HStack>
+        <Input {...register("gatherRole")} placeholder="Optional" />
       </FormControl>
     </>
   )
