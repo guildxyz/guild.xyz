@@ -5,7 +5,9 @@ import {
   gatherSpaceIdToName,
   gatherSpaceUrlToSpaceId,
 } from "platforms/Gather/useGatherCardProps"
+import { AddPlatformPanelProps } from "platforms/platforms"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 
 export type AddGatherFormType = {
   gatherApiKey: string
@@ -14,11 +16,7 @@ export type AddGatherFormType = {
   gatherAffiliation: string
 }
 
-type Props = {
-  onSuccess: () => void
-}
-
-const AddGatherPanel = ({ onSuccess }: Props) => {
+const AddGatherPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm<AddGatherFormType>({
     mode: "all",
   })
@@ -43,8 +41,9 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
 
   const onSubmit = (_data) => {
     const spaceId = gatherSpaceUrlToSpaceId(_data.gatherSpaceId)
-    append({
+    onAdd({
       guildPlatform: {
+        platformId: PlatformType.GATHER_TOWN,
         platformName: "GATHER_TOWN",
         platformGuildId: spaceId,
         platformGuildData: {
@@ -57,7 +56,6 @@ const AddGatherPanel = ({ onSuccess }: Props) => {
       },
       isNew: true,
     })
-    onSuccess()
   }
 
   return (
