@@ -336,6 +336,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   },
   EVMOS: {
     ...evmos,
+    rpcUrls: {
+      default: {
+        http: ["https://evmos.lava.build"],
+      },
+      public: {
+        http: ["https://evmos.lava.build"],
+      },
+    },
     iconUrl: "/networkLogos/evmos.svg",
     coinIconUrl: "/networkLogos/evmos.svg",
     blockExplorerIconUrl: {
