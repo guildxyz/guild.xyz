@@ -16,7 +16,7 @@ import {
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Eye, EyeClosed, Question } from "phosphor-react"
-import { useState } from "react"
+import { CSSProperties, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import GatherConnectionStatusAlert from "./GatherConnectionStatusAlert"
 import useGatherAccess from "./hooks/useGatherAccess"
@@ -32,6 +32,11 @@ const GatherConnectionForm = () => {
   const [gatherApiKey, gatherSpaceId] = useWatch({
     name: ["gatherApiKey", "gatherSpaceId"],
   })
+
+  const censorInputStyle = {
+    "-webkit-text-security": "disc",
+  } as CSSProperties
+
   const {
     success: accessSuccess,
     isLoading: accessLoading,
@@ -63,8 +68,8 @@ const GatherConnectionForm = () => {
           </HStack>
           <InputGroup>
             <Input
+              style={showApiKey ? {} : censorInputStyle}
               autoComplete="off"
-              type={showApiKey ? "text" : "password"}
               {...register("gatherApiKey", {
                 required: "This field is required",
               })}
