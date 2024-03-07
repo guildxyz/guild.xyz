@@ -40,6 +40,7 @@ import {
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
 import { Requirement, Visibility } from "types"
+import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 
@@ -53,7 +54,7 @@ Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload
 const TRANSITION_DURATION_MS = 200
 const HOME_MAX_HEIGHT = "550px"
 
-type AddRequirementProps = { onAdd: (req: Requirement) => void }
+type AddRequirementProps = { onAdd?: (req: Requirement) => void }
 
 const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -165,7 +166,7 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
 }
 
 type AddRequirementFormProps = {
-  onAdd: (req: Requirement) => void
+  onAdd?: (req: Requirement) => void
   handleClose: (forceClose?: boolean) => void
   selectedType?: RequirementType
   setOnCloseAttemptToast: Dispatch<SetStateAction<string | boolean>>
@@ -183,22 +184,44 @@ const AddRequirementForm = forwardRef(
   ) => {
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
-    const methods = useForm({ mode: "all" })
+    const methods = useForm<Requirement>({ mode: "all" })
+
     const roleVisibility: Visibility = useWatch({ name: ".visibility" })
+    const roleId: number = useWatch({ name: ".id" })
 
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
       if (!isPresent) setTimeout(safeToRemove, TRANSITION_DURATION_MS)
     }, [isPresent])
 
-    const onSubmit = methods.handleSubmit((data: Requirement) => {
-      onAdd({
+    const toast = useToast()
+    const {
+      onSubmit: onCreateRequirementSubmit,
+      isLoading: isCreateRequirementLoading,
+    } = useCreateRequirement(roleId, {
+      onSuccess: () => {
+        toast({
+          status: "success",
+          title: "Successfully created requirement",
+        })
+        handleClose(true)
+      },
+    })
+
+    const onSubmit = methods.handleSubmit((data) => {
+      const requirement: Requirement = {
         type: selectedType,
         visibility: roleVisibility,
         ...data,
-      })
-      handleClose(true)
-    })
+      }
+
+      if (!roleId) {
+        onAdd?.(requirement)
+        handleClose(true)
+      } else {
+        onCreateRequirementSubmit(requirement)
+      }
+    }, console.error)
 
     return (
       <Box
@@ -223,7 +246,14 @@ const AddRequirementForm = forwardRef(
           {selectedType !== "PAYMENT" && (
             <ModalFooter gap="3">
               <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme="green" onClick={onSubmit} ml="auto">
+              <Button
+                colorScheme="green"
+                onClick={onSubmit}
+                isDisabled={!methods.formState.isDirty}
+                isLoading={isCreateRequirementLoading}
+                loadingText={isCreateRequirementLoading ? "Creating" : undefined}
+                ml="auto"
+              >
                 Add requirement
               </Button>
             </ModalFooter>

@@ -10,22 +10,13 @@ import Requirement, {
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
-import { useEffect } from "react"
-import { UseFormSetValue } from "react-hook-form"
 
-type Props = RequirementProps & {
-  setValueForBalancy: UseFormSetValue<any>
-}
+type Props = RequirementProps
 
-const TokenRequirement = ({ setValueForBalancy, ...rest }: Props) => {
+const TokenRequirement = ({ ...rest }: Props) => {
   const requirement = useRequirementContext()
 
   const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
-
-  useEffect(() => {
-    if (setValueForBalancy && data.decimals)
-      setValueForBalancy("balancyDecimals", data.decimals)
-  }, [setValueForBalancy, data.decimals])
 
   return (
     <Requirement

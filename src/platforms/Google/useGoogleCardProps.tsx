@@ -1,6 +1,6 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 const fileTypeNames = {
   "application/vnd.google-apps.audio": "Audio",
@@ -30,7 +30,7 @@ const getFileTypeName = (fileType: string) => {
   return staticFileType
 }
 
-const useGoogleCardProps = (guildPlatform: GuildPlatform) => {
+const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const rolePlatform = useRolePlatform()
   const imageBgColor = useColorModeValue("gray.100", "gray.800")
 

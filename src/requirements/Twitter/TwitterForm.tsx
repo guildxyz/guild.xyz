@@ -1,9 +1,13 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Stack,
+  chakra,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
@@ -125,6 +129,20 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: null })
   }
 
+  const tooltipMessage = ["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type) ? (
+    <>
+      Due to limitations with X's API{" "}
+      <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>, the requirement
+      check may be inconsistent.
+    </>
+  ) : (
+    <>
+      X <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span> authentication
+      limits to about 450 requests every 15 minutes. Users may need to wait if this
+      threshold is exceeded.
+    </>
+  )
+
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -148,6 +166,10 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       {selected?.TwitterRequirement && (
         <>
           <Divider />
+          <Alert>
+            <AlertIcon />
+            <AlertDescription>{tooltipMessage}</AlertDescription>
+          </Alert>
           <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}

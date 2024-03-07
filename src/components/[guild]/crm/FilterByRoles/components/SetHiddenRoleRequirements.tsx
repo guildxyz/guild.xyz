@@ -68,9 +68,6 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
           <AddRequirement onAdd={append} />
         </AnimatePresence>
       </Stack>
-      {/* <FormErrorMessage id="requirements-error-message">
-        {errors.requirements?.message as string}
-      </FormErrorMessage> */}
     </Stack>
   )
 }
