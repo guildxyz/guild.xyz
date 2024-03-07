@@ -68,6 +68,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "TEXT",
   "UNIQUE_TEXT",
   "POAP",
+  "GATHER_TOWN",
 ]
 
 type PlatformData<
