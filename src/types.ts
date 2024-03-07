@@ -412,6 +412,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
 }
 
