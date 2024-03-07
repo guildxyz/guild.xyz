@@ -2,6 +2,7 @@ import { Center, Spinner, ThemingProps } from "@chakra-ui/react"
 import { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import dynamic from "next/dynamic"
 import {
+  Buildings,
   DiscordLogo,
   EnvelopeSimple,
   GithubLogo,
@@ -36,6 +37,9 @@ import useDiscordCardProps from "./Discord/useDiscordCardProps"
 import FormCardLinkButton from "./Forms/FormCardLinkButton"
 import FormCardMenu from "./Forms/FormCardMenu"
 import useFormCardProps from "./Forms/useFormCardProps"
+import GatherCardButton from "./Gather/GatherCardButton"
+import GatherCardMenu from "./Gather/GatherCardMenu"
+import useGatherCardProps from "./Gather/useGatherCardProps"
 import GithubCardMenu from "./Github/GithubCardMenu"
 import useGithubCardProps from "./Github/useGithubCardProps"
 import GoogleCardMenu from "./Google/GoogleCardMenu"
@@ -69,6 +73,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "TEXT",
   "UNIQUE_TEXT",
   "POAP",
+  "GATHER_TOWN",
 ]
 
 export type AddPlatformPanelProps = {
@@ -528,6 +533,35 @@ const platforms: Record<PlatformName, PlatformData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/FormReward"), {
+      ssr: false,
+    }),
+  },
+  GATHER_TOWN: {
+    icon: Buildings,
+    imageUrl: "/platforms/gather.png",
+    name: "Gather",
+    colorScheme: "GATHER_TOWN",
+    gatedEntity: "space",
+    asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    shouldShowKeepAccessesModal: false,
+    cardPropsHook: useGatherCardProps,
+    cardButton: GatherCardButton,
+    cardMenuComponent: GatherCardMenu,
+    PlatformPreview: dynamic(() => import("platforms/components/GatherPreview"), {
+      ssr: false,
+      loading: () => <PlatformPreview isLoading />,
+    }),
+    AddPlatformPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddPlatformPanelLoadingSpinner,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
       ssr: false,
     }),
   },

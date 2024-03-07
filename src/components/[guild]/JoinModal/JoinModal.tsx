@@ -78,7 +78,8 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       !platforms[platform] ||
       platform === "POINTS" ||
       platform === "FORM" ||
-      platform === "POLYGON_ID"
+      platform === "POLYGON_ID" ||
+      platform === "GATHER_TOWN"
     )
       return null
 
