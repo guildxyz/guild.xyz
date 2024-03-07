@@ -1,10 +1,9 @@
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import { useSWRConfig } from "swr"
-import { OneOf, Visibility } from "types"
+import { OneOf } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import { RoleEditFormData } from "../EditRole"
@@ -13,10 +12,7 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
   Object.fromEntries(array.map((item) => [item[by], item]))
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, urlName, roles, memberCount, mutateGuild } = useGuild()
-  const currentRole = roles.find((role) => role.id === roleId)
-  const { captureEvent } = usePostHogContext()
-  const postHogOptions = { guild: urlName, memberCount }
+  const { id, mutateGuild } = useGuild()
 
   const { mutate } = useSWRConfig()
   const { triggerMembershipUpdate } = useMembershipUpdate()
@@ -105,17 +101,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         failedRolePlatformUpdatesCount <= 0 &&
         failedRolePlatformCreationsCount <= 0
       ) {
-        if (
-          !!updatedRole &&
-          currentRole.visibility === Visibility.PUBLIC &&
-          updatedRole.visibility !== Visibility.PUBLIC
-        ) {
-          captureEvent(
-            `Changed role visibility from PUBLIC to ${updatedRole.visibility}`,
-            postHogOptions
-          )
-        }
-
         onSuccess?.()
       } else {
         if (updatedRole?.error) {
