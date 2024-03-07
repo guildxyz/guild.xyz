@@ -17,12 +17,12 @@ const GatherGuestForm = () => {
 
   return (
     <>
+      <SectionTitle title={"Guest parameters"} mb={1}></SectionTitle>
+      <Text colorScheme="gray" fontWeight="semibold" mb="8">
+        Customize the parameters for guests who gained access to your space via this
+        reward.
+      </Text>
       <FormControl>
-        <SectionTitle title={"Guest parameters"} mb={1}></SectionTitle>
-        <Text colorScheme="gray" fontWeight="semibold" mb="8">
-          Customize the parameters for guests who gained access to your space via
-          this reward.
-        </Text>
         <HStack mb={2} spacing={0}>
           <FormLabel mb={0}>Affiliation:</FormLabel>
           <Tooltip
@@ -34,7 +34,9 @@ const GatherGuestForm = () => {
           </Tooltip>
         </HStack>
         <Input {...register("gatherAffiliation")} placeholder="Optional" />
+      </FormControl>
 
+      <FormControl>
         <HStack mt={6} mb={2} spacing={0}>
           <FormLabel mb={0}>Role:</FormLabel>
           <Tooltip
