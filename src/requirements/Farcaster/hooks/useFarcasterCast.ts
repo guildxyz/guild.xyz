@@ -1,13 +1,19 @@
 import useSWRImmutable from "swr/immutable"
+import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
 const BASE_URL =
   "https://api.neynar.com/v2/farcaster/cast?api_key=NEYNAR_API_DOCS&identifier="
 
 const useFarcasterCast = (hash?: string, url?: string) => {
+  const isHashValid = ADDRESS_REGEX.test(hash)
+  const isUrlValid = url?.startsWith("https://warpcast.com/")
+
   const fetchUrl = hash
     ? `${BASE_URL}${hash}&type=hash`
     : `${BASE_URL}${url}&type=url`
-  const { data, isLoading, error } = useSWRImmutable(hash || url ? fetchUrl : null)
+  const { data, isLoading, error } = useSWRImmutable(
+    (hash && isHashValid) || (url && isUrlValid) ? fetchUrl : null
+  )
 
   return {
     isLoading: isLoading,
