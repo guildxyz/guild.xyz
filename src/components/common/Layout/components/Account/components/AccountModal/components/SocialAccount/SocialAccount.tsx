@@ -8,7 +8,6 @@ import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
-import usePopupWindow from "hooks/usePopupWindow"
 import useSubmit from "hooks/useSubmit"
 import { OAuthResultParams } from "pages/oauth-result"
 import { Question } from "phosphor-react"
@@ -82,7 +81,6 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const { triggerMembershipUpdate } = useMembershipUpdate()
   const fetcherWithSign = useFetcherWithSign()
   const { id, mutate: mutateUser } = useUser()
-  const { onOpen } = usePopupWindow()
 
   const onSuccess = () => {
     toast({
@@ -154,7 +152,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
       if (type === "TELEGRAM") {
         window.location.href = url
       } else {
-        onOpen(url)
+        window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
       }
 
       await messageListener
