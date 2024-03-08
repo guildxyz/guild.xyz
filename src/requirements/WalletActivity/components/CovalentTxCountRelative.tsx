@@ -17,6 +17,8 @@ const CovalentTxCountRelative = ({
     <RelativeMinMaxTimeFormControls
       minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
       maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
+      minTimeLabel="Count transactions after the last (period)"
+      maxTimeLabel="Count transactions before the last (period)"
     />
   </>
 )

@@ -14,6 +14,8 @@ const CovalentContractDeploy = ({
     <AbsoluteMinMaxTimeFormControls
       minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
       maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
+      minTimeLabel="Contract deployed after (date)"
+      maxTimeLabel="Contract deployed before (date)"
     />
   </>
 )

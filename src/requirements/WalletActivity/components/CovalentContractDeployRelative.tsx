@@ -14,6 +14,8 @@ const CovalentContractDeployRelative = ({
     <RelativeMinMaxTimeFormControls
       minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
       maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
+      minTimeLabel="Contract deployed after the last (period)"
+      maxTimeLabel="Contract deployed before the last (period)"
     />
   </>
 )
