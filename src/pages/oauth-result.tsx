@@ -5,7 +5,7 @@ import { PlatformName } from "@guildxyz/types"
 import { GetServerSideProps, NextPage } from "next"
 import { useRouter } from "next/router"
 import platforms from "platforms/platforms"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export type OAuthResultParams =
   | {
@@ -22,22 +22,37 @@ export type OAuthResultParams =
 
 const OAuth: NextPage<OAuthResultParams> = (query) => {
   const router = useRouter()
+  const [hasReceivedConfirmation, setHasReceivedConfirmation] = useState(false)
 
   useEffect(() => {
-    if (query.platform && !!window.opener) {
+    let timeout: NodeJS.Timeout
+    if (query.platform) {
       const channel = new BroadcastChannel(`guild-${query.platform}`)
-      channel.postMessage(query)
-      window.close()
-      return
-    } else if ("path" in query) {
-      const params = new URLSearchParams({
-        "oauth-platform": query.platform as string,
-        "oauth-status": query.status as string,
-        ...("message" in query ? { "oauth-message": query.message } : {}),
-      }).toString()
+      channel.onmessage = (event) => {
+        if (event.isTrusted && event.origin === window.origin) {
+          if (event.data?.type === "oauth-confirmation") {
+            setHasReceivedConfirmation(true)
+            window.close()
+            if (timeout) {
+              clearTimeout(timeout)
+            }
+          }
+        }
+      }
 
-      router.push(`${query.path}?${params}`)
-      return
+      channel.postMessage(query)
+    }
+
+    if ("path" in query) {
+      timeout = setTimeout(() => {
+        const params = new URLSearchParams({
+          "oauth-platform": query.platform as string,
+          "oauth-status": query.status as string,
+          ...("message" in query ? { "oauth-message": query.message } : {}),
+        }).toString()
+
+        router.push(`${query.path}?${params}`)
+      }, 1000)
     }
   }, [])
 
@@ -51,7 +66,11 @@ const OAuth: NextPage<OAuthResultParams> = (query) => {
           : "Connection unsuccessful"}
       </Heading>
       <Text>
-        {query.status === "success" ? "Taking you back to Guild" : query.message}
+        {query.status === "success"
+          ? hasReceivedConfirmation
+            ? "You may now close this window"
+            : "Taking you back to Guild"
+          : query.message}
       </Text>
     </Center>
   )

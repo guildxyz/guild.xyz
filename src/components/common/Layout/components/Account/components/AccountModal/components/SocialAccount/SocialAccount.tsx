@@ -8,6 +8,7 @@ import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
+import usePopupWindow from "hooks/usePopupWindow"
 import useSubmit from "hooks/useSubmit"
 import { OAuthResultParams } from "pages/oauth-result"
 import { Question } from "phosphor-react"
@@ -81,6 +82,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const { triggerMembershipUpdate } = useMembershipUpdate()
   const fetcherWithSign = useFetcherWithSign()
   const { id, mutate: mutateUser } = useUser()
+  const { onOpen } = usePopupWindow()
 
   const onSuccess = () => {
     toast({
@@ -103,7 +105,12 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
       const channel = new BroadcastChannel(`guild-${platformName}`)
       const messageListener = new Promise<void>((resolve, reject) => {
         channel.onmessage = (event) => {
-          if (event.isTrusted && event.origin === window.origin) {
+          if (
+            event.isTrusted &&
+            event.origin === window.origin &&
+            event.data?.type !== "oauth-confirmation"
+          ) {
+            channel.postMessage({ type: "oauth-confirmation" })
             const result: OAuthResultParams = event.data
 
             if (result.status === "success") {
@@ -139,7 +146,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
 
       const { token } = await fetcherWithSign([
         `/v2/oauth/${platformName}/token`,
-        { method: "GET", credentials: "include" },
+        { method: "GET" },
       ])
 
       const url = getOAuthURL(platformName, token)
@@ -147,7 +154,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
       if (type === "TELEGRAM") {
         window.location.href = url
       } else {
-        window.open(url, "_blank")
+        onOpen(url)
       }
 
       await messageListener
