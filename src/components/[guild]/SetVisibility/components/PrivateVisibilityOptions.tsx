@@ -6,7 +6,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { SetVisibilityForm } from "components/[guild]/SetVisibility"
+import type { SetVisibilityForm } from "components/[guild]/SetVisibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
