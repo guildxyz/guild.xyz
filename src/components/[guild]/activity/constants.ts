@@ -46,6 +46,11 @@ export enum ACTION {
   CreateRole = "create role",
   UpdateRole = "update role",
   DeleteRole = "delete role",
+  // Form
+  CreateForm = "create form",
+  UpdateForm = "update form",
+  DeleteForm = "delete form",
+  SubmitForm = "submit form",
   // Reward
   AddReward = "add reward",
   RemoveReward = "remove reward",
@@ -116,6 +121,22 @@ export const activityLogActionIcons: Record<
     color?: string
   }
 > = {
+  [ACTION.CreateForm]: {
+    as: House,
+    color: "green.500",
+  },
+  [ACTION.UpdateForm]: {
+    as: House,
+    color: "green.500",
+  },
+  [ACTION.DeleteForm]: {
+    as: House,
+    color: "green.500",
+  },
+  [ACTION.SubmitForm]: {
+    as: House,
+    color: "green.500",
+  },
   [ACTION.CreateGuild]: {
     as: House,
     color: "green.500",
@@ -300,6 +321,9 @@ export const HIDDEN_ACTIONS: ACTION[] = [
   ACTION.UpdateDescription,
   ACTION.UpdateLogic,
   ACTION.UpdateTheme,
+  ACTION.CreateForm,
+  ACTION.UpdateForm,
+  ACTION.DeleteForm,
 ]
 
 export const USER_ACTIONS: ACTION[] = [
@@ -319,6 +343,7 @@ export const USER_ACTIONS: ACTION[] = [
   ACTION.KickFromGuild,
   ACTION.SendReward,
   ACTION.RevokeReward,
+  ACTION.SubmitForm,
 ]
 
 export const ADMIN_ACTIONS = Object.values(ACTION).filter(
