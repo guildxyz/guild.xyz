@@ -95,16 +95,6 @@ export const REQUIREMENTS_DATA = [
     ),
     types: [
       "WALLET_ACTIVITY",
-      "ALCHEMY_FIRST_TX",
-      "ALCHEMY_FIRST_TX_RELATIVE",
-      "ALCHEMY_CONTRACT_DEPLOY",
-      "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
-      "ALCHEMY_TX_COUNT",
-      "ALCHEMY_TX_COUNT_RELATIVE",
-      "ALCHEMY_TX_VALUE",
-      "ALCHEMY_TX_VALUE_RELATIVE",
-
-      // Same types for covalent, except tx_value types
       "COVALENT_FIRST_TX",
       "COVALENT_FIRST_TX_RELATIVE",
       "COVALENT_CONTRACT_DEPLOY",
