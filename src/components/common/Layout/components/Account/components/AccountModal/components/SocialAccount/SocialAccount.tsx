@@ -11,7 +11,7 @@ import useMembership from "components/explorer/hooks/useMembership"
 import useSubmit from "hooks/useSubmit"
 import { OAuthResultParams } from "pages/oauth-result"
 import { Question } from "phosphor-react"
-import { memo } from "react"
+import { memo, useCallback } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 import useDisconnect from "../../hooks/useDisconnect"
@@ -154,27 +154,30 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
     }
   )
 
-  const { data } = useSWRImmutable(
+  const { data: url } = useSWRImmutable(
     fetcherWithSign ? `guild-oauth-token-${type}` : null,
-    () => fetcherWithSign([`/v2/oauth/${type}/token`, { method: "GET" }]),
+    () =>
+      fetcherWithSign([`/v2/oauth/${type}/token`, { method: "GET" }]).then(
+        ({ token }) => getOAuthURL(type, token)
+      ),
     { refreshInterval: 1000 * 60 * 2 }
   )
 
+  const onClick = useCallback(() => {
+    if (!url) return
+
+    asd.onSubmit()
+
+    if (type === "TELEGRAM") {
+      window.location.href = url
+    } else {
+      window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
+    }
+  }, [url])
+
   return (
     <Button
-      onClick={() => {
-        if (!data?.token) return
-
-        asd.onSubmit()
-
-        const url = getOAuthURL(type, data.token)
-
-        if (type === "TELEGRAM") {
-          window.location.href = url
-        } else {
-          window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
-        }
-      }}
+      onClick={onClick}
       isLoading={isLoading}
       isDisabled={response}
       colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
