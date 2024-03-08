@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { forwardRef, useState } from "react"
 import { useController } from "react-hook-form"
+import pluralize from "utils/pluralize"
 
 type Format = "DAY" | "MONTH" | "YEAR"
 
@@ -101,9 +102,9 @@ const RelativeTimeInput = forwardRef(
           value={format}
           onChange={(e) => setFormat(e.target.value as Format)}
         >
-          <option value="DAY">Day{displayValue != 1 && "s"}</option>
-          <option value="MONTH">Month{displayValue != 1 && "s"}</option>
-          <option value="YEAR">Year{displayValue != 1 && "s"}</option>
+          <option value="DAY">{pluralize(Number(displayValue), "Day")}</option>
+          <option value="MONTH">{pluralize(Number(displayValue), "Month")}</option>
+          <option value="YEAR">{pluralize(Number(displayValue), "Year")}</option>
         </Select>
       </InputGroup>
     )
