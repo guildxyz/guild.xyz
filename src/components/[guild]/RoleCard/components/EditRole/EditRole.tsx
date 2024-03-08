@@ -240,8 +240,14 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                       visibility: defaultValues.visibility,
                       visibilityRoleId: defaultValues.visibilityRoleId,
                     }}
-                    onSave={({ visibility: newVisibility }) => {
+                    onSave={({
+                      visibility: newVisibility,
+                      visibilityRoleId: newVisibilityRoleId,
+                    }) => {
                       methods.setValue("visibility", newVisibility, {
+                        shouldDirty: true,
+                      })
+                      methods.setValue("visibilityRoleId", newVisibilityRoleId, {
                         shouldDirty: true,
                       })
                       setVisibilityModalProps.onClose()
