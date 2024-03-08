@@ -11,8 +11,8 @@ const CovalentFirstTx = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
     <AbsoluteMinMaxTimeFormControls
       minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
       maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
-      minTimeLabel="Wallet created after (date)"
-      maxTimeLabel="Wallet created before (date)"
+      minTimeLabel="Wallet created after"
+      maxTimeLabel="Wallet created before"
     />
   </>
 )

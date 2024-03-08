@@ -58,12 +58,14 @@ const RelativeTimeInput = forwardRef(
     )
     const [format, setFormat] = useState<Format>("DAY")
 
+    const displayValue = value && !isNaN(value) ? value / multipliers[format] : ""
+
     return (
       <InputGroup>
         <NumberInput
           ref={ref}
           {...props}
-          value={value && !isNaN(value) ? value / multipliers[format] : ""}
+          value={displayValue}
           onChange={(_, valueAsNumber) => {
             const newValue =
               typeof valueAsNumber === "number" && !isNaN(valueAsNumber)
@@ -99,9 +101,9 @@ const RelativeTimeInput = forwardRef(
           value={format}
           onChange={(e) => setFormat(e.target.value as Format)}
         >
-          <option value="DAY">Day</option>
-          <option value="MONTH">Month</option>
-          <option value="YEAR">Year</option>
+          <option value="DAY">Day{displayValue != 1 && "s"}</option>
+          <option value="MONTH">Month{displayValue != 1 && "s"}</option>
+          <option value="YEAR">Year{displayValue != 1 && "s"}</option>
         </Select>
       </InputGroup>
     )

@@ -12,8 +12,8 @@ const CovalentFirstTxRelative = ({
     <RelativeMinMaxTimeFormControls
       minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
       maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
-      minTimeLabel="Wallet younger than (period)"
-      maxTimeLabel="Wallet older than (period)"
+      minTimeLabel="Wallet younger than"
+      maxTimeLabel="Wallet older than"
     />
   </>
 )

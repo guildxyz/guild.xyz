@@ -15,8 +15,8 @@ const CovalentTxCount = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
     <AbsoluteMinMaxTimeFormControls
       minTimeFieldName={`${baseFieldPath}.data.timestamps.minAmount`}
       maxTimeFieldName={`${baseFieldPath}.data.timestamps.maxAmount`}
-      minTimeLabel="Count transactions from (date)"
-      maxTimeLabel="Count transactions until (date)"
+      minTimeLabel="Count transactions from"
+      maxTimeLabel="Count transactions until"
     />
   </>
 )

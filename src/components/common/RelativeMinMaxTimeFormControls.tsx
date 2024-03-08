@@ -37,7 +37,7 @@ const RelativeMinMaxTimeFormControls = ({
         <FormLabel>{maxTimeLabel}</FormLabel>
         <ControlledRelativeTimeInput
           fieldName={maxTimeFieldName}
-          max={minTime}
+          max={minTime ? minTime : undefined}
           min={0}
         />
         <FormErrorMessage>
