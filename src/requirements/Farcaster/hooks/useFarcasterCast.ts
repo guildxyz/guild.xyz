@@ -1,19 +1,13 @@
-import useDebouncedState from "hooks/useDebouncedState"
 import useSWRImmutable from "swr/immutable"
 
 const BASE_URL =
   "https://api.neynar.com/v2/farcaster/cast?api_key=NEYNAR_API_DOCS&identifier="
 
 const useFarcasterCast = (hash?: string, url?: string) => {
-  const debouncedHash = useDebouncedState(hash)
-  const debouncedUrl = useDebouncedState(url)
-
-  const fetchUrl = debouncedHash
-    ? `${BASE_URL}${debouncedHash}&type=hash`
-    : `${BASE_URL}${debouncedUrl}&type=url`
-  const { data, isLoading, error } = useSWRImmutable(
-    debouncedHash || debouncedUrl ? fetchUrl : null
-  )
+  const fetchUrl = hash
+    ? `${BASE_URL}${hash}&type=hash`
+    : `${BASE_URL}${url}&type=url`
+  const { data, isLoading, error } = useSWRImmutable(hash || url ? fetchUrl : null)
 
   return {
     isLoading: isLoading,

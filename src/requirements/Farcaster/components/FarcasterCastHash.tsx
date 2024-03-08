@@ -1,5 +1,6 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useFormContext, useWatch } from "react-hook-form"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import parseFromObject from "utils/parseFromObject"
@@ -18,8 +19,10 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
 
   const hash = useWatch({ name: `${baseFieldPath}.data.hash` })
   const url = useWatch({ name: `${baseFieldPath}.data.url` })
+  const debouncedHash = useDebouncedState(hash)
+  const debouncedUrl = useDebouncedState(url)
 
-  const { data, isLoading, error } = useFarcasterCast(hash, url)
+  const { data, isLoading, error } = useFarcasterCast(debouncedHash, debouncedUrl)
 
   return (
     <>

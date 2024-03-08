@@ -3,6 +3,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import useDebouncedState from "hooks/useDebouncedState"
 import FarcasterCast from "./components/FarcasterCast"
 import useFarcasterCast from "./hooks/useFarcasterCast"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
@@ -11,11 +12,14 @@ const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   const { data: farcasterUser } = useFarcasterUser(requirement.data?.id)
+  const debouncedHash = useDebouncedState(requirement.data?.hash)
+  const debouncedUrl = useDebouncedState(requirement.data?.url)
+
   const {
-    data: farcasterCast,
-    isLoading: castLoading,
+    data: cast,
+    isLoading: isCastLoading,
     error: castError,
-  } = useFarcasterCast(requirement.data?.hash, requirement.data?.url)
+  } = useFarcasterCast(debouncedHash, debouncedUrl)
 
   return (
     <Requirement
@@ -57,8 +61,8 @@ const FarcasterRequirement = (props: RequirementProps) => {
                   {" this cast: "}
                   <FarcasterCast
                     size="sm"
-                    cast={farcasterCast}
-                    loading={castLoading}
+                    cast={cast}
+                    loading={isCastLoading}
                     error={castError}
                   />
                 </>
