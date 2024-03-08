@@ -14,7 +14,9 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
+import SetVisibility, {
+  type SetVisibilityForm,
+} from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
@@ -182,6 +184,19 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
 
+  const handleVisibilitySave = ({
+    visibility: newVisibility,
+    visibilityRoleId: newVisibilityRoleId,
+  }: SetVisibilityForm) => {
+    methods.setValue("visibility", newVisibility, {
+      shouldDirty: true,
+    })
+    methods.setValue("visibilityRoleId", newVisibilityRoleId, {
+      shouldDirty: true,
+    })
+    setVisibilityModalProps.onClose()
+  }
+
   return (
     <>
       <OnboardingMarker
@@ -240,12 +255,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                       visibility: defaultValues.visibility,
                       visibilityRoleId: defaultValues.visibilityRoleId,
                     }}
-                    onSave={({ visibility: newVisibility }) => {
-                      methods.setValue("visibility", newVisibility, {
-                        shouldDirty: true,
-                      })
-                      setVisibilityModalProps.onClose()
-                    }}
+                    onSave={handleVisibilitySave}
                     {...setVisibilityModalProps}
                   />
                   {roles?.length > 1 && (

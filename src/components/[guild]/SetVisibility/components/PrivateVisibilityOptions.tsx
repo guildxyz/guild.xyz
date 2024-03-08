@@ -6,12 +6,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
+import type { SetVisibilityForm } from "components/[guild]/SetVisibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useMemo, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { SetVisibilityForm } from "../SetVisibility"
 
 const PrivateVisibilityOptions = () => {
   const { roles } = useGuild()
