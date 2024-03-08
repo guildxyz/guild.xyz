@@ -102,9 +102,15 @@ const RelativeTimeInput = forwardRef(
           value={format}
           onChange={(e) => setFormat(e.target.value as Format)}
         >
-          <option value="DAY">{pluralize(Number(displayValue), "Day")}</option>
-          <option value="MONTH">{pluralize(Number(displayValue), "Month")}</option>
-          <option value="YEAR">{pluralize(Number(displayValue), "Year")}</option>
+          <option value="DAY">
+            {pluralize(Number(displayValue), "Day", false)}
+          </option>
+          <option value="MONTH">
+            {pluralize(Number(displayValue), "Month", false)}
+          </option>
+          <option value="YEAR">
+            {pluralize(Number(displayValue), "Year", false)}
+          </option>
         </Select>
       </InputGroup>
     )
