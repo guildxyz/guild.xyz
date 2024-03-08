@@ -140,19 +140,6 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
         }
       })
 
-      const { token } = await fetcherWithSign([
-        `/v2/oauth/${type}/token`,
-        { method: "GET" },
-      ])
-
-      const url = getOAuthURL(type, token)
-
-      if (type === "TELEGRAM") {
-        window.location.href = url
-      } else {
-        window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
-      }
-
       await messageListener
     },
     {
@@ -168,7 +155,21 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
 
   return (
     <Button
-      onClick={asd.onSubmit}
+      onClick={() => {
+        asd.onSubmit()
+
+        fetcherWithSign([`/v2/oauth/${type}/token`, { method: "GET" }]).then(
+          ({ token }) => {
+            const url = getOAuthURL(type, token)
+
+            if (type === "TELEGRAM") {
+              window.location.href = url
+            } else {
+              window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
+            }
+          }
+        )
+      }}
       isLoading={isLoading}
       isDisabled={response}
       colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
