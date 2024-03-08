@@ -97,10 +97,8 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   )
 
   const asd = useSubmit(
-    async (data: { platformName: PlatformName }) => {
-      const { platformName } = data
-
-      const channel = new BroadcastChannel(`guild-${platformName}`)
+    async () => {
+      const channel = new BroadcastChannel(`guild-${type}`)
       const messageListener = new Promise<void>((resolve, reject) => {
         channel.onmessage = (event) => {
           if (
@@ -143,11 +141,11 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
       })
 
       const { token } = await fetcherWithSign([
-        `/v2/oauth/${platformName}/token`,
+        `/v2/oauth/${type}/token`,
         { method: "GET" },
       ])
 
-      const url = getOAuthURL(platformName, token)
+      const url = getOAuthURL(type, token)
 
       if (type === "TELEGRAM") {
         window.location.href = url
@@ -170,7 +168,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
 
   return (
     <Button
-      onClick={() => asd.onSubmit({ platformName: type })}
+      onClick={asd.onSubmit}
       isLoading={isLoading}
       isDisabled={response}
       colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
