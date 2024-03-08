@@ -5,24 +5,27 @@ import {
   Props,
   Select,
   SelectInstance,
+  components,
 } from "chakra-react-select"
 import { Ref, forwardRef } from "react"
 import { OneOf } from "types"
 import CustomClearIndicator from "./components/CustomClearIndicator"
+import CustomIndicatorsContainer from "./components/CustomIndicatorsContainer"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
 export type StyledSelectProps = OneOf<
   { isCreatable: true; noResultText?: string } & CreatableProps<any, any, any>,
   { noResultText?: string } & Props
-> & { as?: any }
+> & { as?: any; isCopyable?: { pathToCopy: string } }
 
 const StyledSelect = forwardRef(
   (
-    { isCreatable, noResultText, ...props }: StyledSelectProps,
+    { isCreatable, noResultText, isCopyable, ...props }: StyledSelectProps,
     ref: Ref<SelectInstance<unknown, boolean, GroupBase<unknown>>>
   ): JSX.Element => {
     const SelectComponent = props.as ?? (isCreatable ? CreatableSelect : Select)
+
     return (
       <SelectComponent
         ref={ref}
@@ -60,6 +63,14 @@ const StyledSelect = forwardRef(
           MenuList: (menuListProps) =>
             CustomMenuList({ ...menuListProps, noResultText }),
           ClearIndicator: CustomClearIndicator,
+          IndicatorsContainer: isCopyable
+            ? (containerProps) =>
+                CustomIndicatorsContainer({
+                  ...containerProps,
+                  value: props.value,
+                  pathToCopy: isCopyable.pathToCopy,
+                })
+            : components.IndicatorsContainer,
           IndicatorSeparator: null,
           ...props.components,
         }}

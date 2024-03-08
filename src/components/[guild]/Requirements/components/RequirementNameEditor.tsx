@@ -146,6 +146,8 @@ const RequirementNameEditorWrapper = ({
     shouldUnregister: true,
   })
 
+  console.log(originalValue.toString())
+
   useEffect(() => {
     if (!textRef.current) return
 
