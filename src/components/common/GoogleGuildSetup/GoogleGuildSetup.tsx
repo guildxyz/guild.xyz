@@ -15,16 +15,17 @@ import {
   usePrevious,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { AnimatePresence } from "framer-motion"
 import useGateables from "hooks/useGateables"
+import { useSetAtom } from "jotai"
 import { Check, CopySimple, PencilSimple } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import AddCard from "../AddCard"
 import CardMotionWrapper from "../CardMotionWrapper"
+import { accountModalAtom } from "../Layout/components/Account/components/AccountModal"
 import { Modal } from "../Modal"
 import GoogleDocCard, { GoogleSkeletonCard } from "./components/GoogleDocCard"
 import GoogleDocSetupCard from "./components/GoogleDocSetupCard"
@@ -169,7 +170,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
   )
 
   const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)
-  const { openAccountModal } = useWeb3ConnectionManager()
+  const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -212,7 +213,7 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
             <Button
               variant="link"
               color="inherit"
-              onClick={openAccountModal}
+              onClick={() => setIsAccountModalOpen(true)}
               rightIcon={<PencilSimple />}
             >
               {googleAcc?.platformUserData?.username}

@@ -1,3 +1,4 @@
+import { Link } from "@chakra-ui/next-js"
 import {
   Box,
   Code,
@@ -8,27 +9,33 @@ import {
   Text,
   UnorderedList,
 } from "@chakra-ui/react"
-import Link from "components/common/Link"
 import { forwardRef } from "react"
 import ReactMarkdown from "react-markdown"
 import { SpecialComponents } from "react-markdown/lib/ast-to-react"
 import { NormalComponents } from "react-markdown/lib/complex-types"
+import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
 
 export const reactMarkdownComponents: Partial<
   Omit<NormalComponents, keyof SpecialComponents> & SpecialComponents
 > = {
   a: ({ href, children, ...props }) => (
-    <Link href={href} isExternal colorScheme="blue" {...props}>
+    <Link
+      href={ensureUrlProtocol(href)}
+      isExternal
+      colorScheme="blue"
+      whiteSpace={"pre-wrap"}
+      {...props}
+    >
       {children}
     </Link>
   ),
   h1: ({ children, node: _node, ...props }) => (
-    <Heading as="h1" fontSize="2xl" mb={3} mt={4} {...props}>
+    <Heading as="h1" fontSize="2xl" mb={3} mt={4} whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Heading>
   ),
   h2: ({ children, node: _node, ...props }) => (
-    <Heading as="h2" fontSize="lg" mb={3} mt={4} {...props}>
+    <Heading as="h2" fontSize="lg" mb={3} mt={4} whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Heading>
   ),
@@ -38,7 +45,7 @@ export const reactMarkdownComponents: Partial<
     </Code>
   ),
   p: ({ children, node: _node, ...props }) => (
-    <Text display="block" mb={3} {...props}>
+    <Text display="block" mb={3} whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Text>
   ),
@@ -58,10 +65,12 @@ export const reactMarkdownComponents: Partial<
     </OrderedList>
   ),
   li: ({ children, node: _node, ...props }) => (
-    <ListItem {...props}>{children}</ListItem>
+    <ListItem whiteSpace={"pre-wrap"} {...props}>
+      {children}
+    </ListItem>
   ),
   blockquote: ({ children, node: _node, ...props }) => (
-    <Box as="blockquote" fontStyle="italic" {...props}>
+    <Box as="blockquote" fontStyle="italic" whiteSpace={"pre-wrap"} {...props}>
       {children}
     </Box>
   ),

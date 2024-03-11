@@ -9,7 +9,7 @@ import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
 import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
-import { useGuildCheckoutContext } from "../GuildCheckoutContex"
+import { useGuildCheckoutContext } from "../GuildCheckoutContext"
 
 const PurchaseButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()

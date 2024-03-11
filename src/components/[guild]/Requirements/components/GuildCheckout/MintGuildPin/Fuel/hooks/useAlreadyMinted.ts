@@ -1,6 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
-import useFuel from "hooks/useFuel"
 import useSWRImmutable from "swr/immutable"
 import type { GuildActionInput } from "../GuildPinContractAbi"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
@@ -9,7 +8,8 @@ import { FUEL_GUILD_PIN_CONTRACT_ID } from "./useMintFuelGuildPin"
 const useAlreadyMinted = () => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
-  const { wallet } = useFuel()
+  // const { wallet } = useWallet()
+  const wallet = null
 
   const getAlreadyMinted = async () => {
     const contract = GuildPinContractAbi__factory.connect(

@@ -1,12 +1,11 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
-import useFuel from "hooks/useFuel"
 import { useMemo } from "react"
 import { Connector, useAccount } from "wagmi"
 
 const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const { connector: evmConnectorFromHook } = useAccount()
-  const { connectorName: fuelConnectorName, isConnected: isFuelConnected } =
-    useFuel()
+  // const { isConnected: isFuelConnected } = useIsConnected()
+  const isFuelConnected = false
 
   const connector = connectorParam ?? evmConnectorFromHook
 
@@ -53,7 +52,7 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
           : isOKXWallet
           ? "OKX Wallet"
           : "MetaMask"
-        : connector?.name ?? fuelConnectorName,
+        : connector?.name ?? (isFuelConnected ? "Fuel" : ""),
     connectorIcon,
   }
 }

@@ -14,7 +14,10 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RolePlatforms from "components/[guild]/RolePlatforms"
-import SetVisibility from "components/[guild]/SetVisibility"
+import SetVisibility, {
+  type SetVisibilityForm,
+} from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -25,7 +28,7 @@ import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import SetRequirements from "components/create-guild/Requirements"
+import EditRequirements from "components/create-guild/Requirements/EditRequirements"
 import { AnimatePresence, motion } from "framer-motion"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
@@ -34,10 +37,10 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Logic, Requirement, RolePlatform, Visibility } from "types"
+import { Logic, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
-import mapRequirements from "utils/mapRequirements"
+import mapRequirement from "utils/mapRequirement"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import RoleGroupSelect from "./components/RoleGroupSelect"
 import useEditRole from "./hooks/useEditRole"
@@ -52,9 +55,9 @@ export type RoleEditFormData = {
   description: string
   imageUrl: string
   logic: Logic
-  requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   visibility: Visibility
+  visibilityRoleId?: number
   anyOfNum?: number
   groupId?: number
 }
@@ -79,6 +82,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     requirements,
     rolePlatforms,
     visibility,
+    visibilityRoleId,
     groupId,
   } = roles?.find((role) => role.id === roleId) ?? {}
 
@@ -89,9 +93,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     imageUrl,
     logic,
     anyOfNum: anyOfNum ?? 1,
-    requirements: mapRequirements(requirements),
     rolePlatforms: rolePlatforms ?? [],
     visibility,
+    visibilityRoleId,
     groupId,
   }
   const methods = useForm<RoleEditFormData>({
@@ -105,7 +109,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
     methods.reset({
       ...role,
-      requirements: mapRequirements(role.requirements),
       rolePlatforms: role.rolePlatforms ?? [],
       anyOfNum: role.anyOfNum ?? 1,
     })
@@ -119,11 +122,13 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const toast = useToast()
 
+  const setVisibilityModalProps = useVisibilityModalProps()
   const onSuccess = () => {
     toast({
       title: `Role successfully updated!`,
       status: "success",
     })
+    setVisibilityModalProps.onClose()
     onClose()
     methods.reset(undefined, { keepValues: true })
   }
@@ -173,19 +178,24 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const drawerBodyRef = useRef<HTMLDivElement>()
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
-    handleSubmitDirty(methods)(onSubmit, (formErrors) => {
-      if (formErrors.requirements && drawerBodyRef.current) {
-        drawerBodyRef.current.scrollBy({
-          top: drawerBodyRef.current.scrollHeight,
-          behavior: "smooth",
-        })
-      }
-    }),
-
+    handleSubmitDirty(methods)(onSubmit),
     iconUploader.isUploading
   )
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
+
+  const handleVisibilitySave = ({
+    visibility: newVisibility,
+    visibilityRoleId: newVisibilityRoleId,
+  }: SetVisibilityForm) => {
+    methods.setValue("visibility", newVisibility, {
+      shouldDirty: true,
+    })
+    methods.setValue("visibilityRoleId", newVisibilityRoleId, {
+      shouldDirty: true,
+    })
+    setVisibilityModalProps.onClose()
+  }
 
   return (
     <>
@@ -239,7 +249,15 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 }
               >
                 <HStack justifyContent={"space-between"} flexGrow={1}>
-                  <SetVisibility entityType="role" />
+                  <SetVisibility
+                    entityType="role"
+                    defaultValues={{
+                      visibility: defaultValues.visibility,
+                      visibilityRoleId: defaultValues.visibilityRoleId,
+                    }}
+                    onSave={handleVisibilitySave}
+                    {...setVisibilityModalProps}
+                  />
                   {roles?.length > 1 && (
                     <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
                   )}
@@ -259,7 +277,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                   <RoleGroupSelect />
                 </Section>
 
-                <SetRequirements />
+                <EditRequirements requirements={requirements.map(mapRequirement)} />
               </VStack>
             </FormProvider>
           </DrawerBody>
@@ -273,6 +291,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                 transition={{ duration: 0.3 }}
                 position="absolute"
                 w="full"
+                zIndex={1}
                 bottom="0"
               >
                 <Button variant="outline" mr={3} onClick={onCloseAndClear}>

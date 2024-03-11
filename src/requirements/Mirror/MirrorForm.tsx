@@ -59,7 +59,7 @@ const MirrorForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
       >
-        <FormLabel>Address:</FormLabel>
+        <FormLabel>NFT address:</FormLabel>
         <InputGroup>
           {image && (
             <InputLeftElement>

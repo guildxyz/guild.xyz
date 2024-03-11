@@ -2,11 +2,13 @@ import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { createStore, del, get, set } from "idb-keyval"
-import { useAtomValue } from "jotai"
+import { useAtomValue, useSetAtom } from "jotai"
+import { useEffect } from "react"
 import { mutate } from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
-import { recaptchaAtom } from "utils/recaptcha"
+import { recaptchaAtom, shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import useSubmit from "./useSubmit"
+import { SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
 
 /**
  * This is a generic RPC internal error code, but we are only using it for testing
@@ -62,21 +64,32 @@ const generateKeyPair = async () => {
   }
 }
 
-const useSetKeyPair = () => {
+const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const { captureEvent } = usePostHogContext()
   const { address } = useWeb3ConnectionManager()
   const fetcherWithSign = useFetcherWithSign()
 
-  const { id, captchaVerifiedSince } = useUserPublic()
+  const { id, captchaVerifiedSince, error: publicUserError } = useUserPublic()
+  const setShouldUseReCAPTCHA = useSetAtom(shouldUseReCAPTCHAAtom)
+
+  useEffect(() => {
+    if (!!publicUserError || (id && !captchaVerifiedSince)) {
+      setShouldUseReCAPTCHA(true)
+    }
+  }, [id, publicUserError, captchaVerifiedSince, setShouldUseReCAPTCHA])
 
   const recaptcha = useAtomValue(recaptchaAtom)
 
   const setSubmitResponse = useSubmit(
-    async () => {
+    async ({
+      signProps,
+    }: {
+      signProps?: Partial<SignProps>
+    } = {}) => {
       const reCaptchaToken =
-        !recaptcha || !!captchaVerifiedSince
+        !recaptcha.ref || !!captchaVerifiedSince
           ? undefined
-          : await recaptcha.executeAsync()
+          : await recaptcha.ref.executeAsync()
 
       const generatedKeys = await generateKeyPair().catch((err) => {
         if (err?.code !== 4001) {
@@ -92,20 +105,21 @@ const useSetKeyPair = () => {
       }
 
       if (reCaptchaToken) {
-        recaptcha.reset()
+        recaptcha.ref.reset()
         body.verificationParams = {
           reCaptcha: reCaptchaToken,
         }
       }
 
       const userProfile = await fetcherWithSign([
-        `/v2/users/${id ?? address}/public-key`,
+        `/v2/users/${signProps?.address ?? id ?? address}/public-key`,
         {
           method: "POST",
           body,
           signOptions: {
             forcePrompt: true,
             msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+            ...signProps,
           },
         },
       ])
@@ -124,8 +138,9 @@ const useSetKeyPair = () => {
           revalidate: false,
         }
       )
+
       await mutate(
-        `/v2/users/${address}/profile`,
+        `/v2/users/${(signProps?.address ?? address)?.toLowerCase()}/profile`,
         {
           id: userProfile?.id,
           publicKey: userProfile?.publicKey,
@@ -136,8 +151,12 @@ const useSetKeyPair = () => {
           revalidate: false,
         }
       )
+
+      return { keyPair: generatedKeys, user: userProfile }
     },
+
     {
+      ...submitOptions,
       onError: (error) => {
         console.error("setKeyPair error", error)
         if (
@@ -147,6 +166,11 @@ const useSetKeyPair = () => {
           const trace = error?.stack || new Error().stack
           captureEvent(`Failed to set keypair`, { error, trace })
         }
+
+        submitOptions?.onError?.(error)
+      },
+      onSuccess: () => {
+        submitOptions?.onSuccess?.()
       },
     }
   )

@@ -12,6 +12,7 @@ import {
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
 import CreateGuildContractCall from "components/create-guild/MultiPlatformGrid/components/CreateGuildContractCall"
@@ -22,6 +23,7 @@ import CreateGuildSecretText from "components/create-guild/MultiPlatformGrid/com
 import CreateGuildTelegram from "components/create-guild/MultiPlatformGrid/components/CreateGuildTelegram"
 import CreateGuildTwitter from "components/create-guild/MultiPlatformGrid/components/CreateGuildTwitter"
 import CreateGuildUniqueText from "components/create-guild/MultiPlatformGrid/components/CreateGuildUniqueText"
+import { useSetAtom } from "jotai"
 import Image from "next/image"
 import { CheckCircle, IconProps } from "phosphor-react"
 import platforms from "platforms/platforms"
@@ -43,7 +45,16 @@ export type PlatformHookType = ({
 }
 
 const createGuildPlatformComponents: Record<
-  Exclude<PlatformName, "POAP" | "TWITTER_V1" | "EMAIL" | "POLYGON_ID" | "POINTS">,
+  Exclude<
+    PlatformName,
+    | "POAP"
+    | "TWITTER_V1"
+    | "EMAIL"
+    | "POLYGON_ID"
+    | "POINTS"
+    | "FORM"
+    | "GATHER_TOWN"
+  >,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,
@@ -75,7 +86,8 @@ const MultiPlatformSelectButton = ({
   onSelection,
   ...rest
 }: Props) => {
-  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const methods = useFormContext()
   const { setValue } = useFormContext<GuildFormType>()
   const { isOpen, onClose, onOpen } = useDisclosure()
@@ -133,7 +145,7 @@ const MultiPlatformSelectButton = ({
           cursor="pointer"
           onClick={
             !isWeb3Connected
-              ? openWalletSelectorModal
+              ? () => setIsWalletSelectorModalOpen(true)
               : isPlatformConnected
               ? isAdded
                 ? () => {
@@ -163,7 +175,7 @@ const MultiPlatformSelectButton = ({
           <HStack spacing={4}>
             {imageUrl ? (
               <Circle size="12" pos="relative" overflow="hidden">
-                <Image src={imageUrl} alt="Guild logo" layout="fill" />
+                <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
               </Circle>
             ) : (
               <Circle

@@ -20,12 +20,7 @@ const CreateGuildIndex = (): JSX.Element => {
 
   return (
     <ClientOnly>
-      <MultiPlatformsGrid
-        onSelection={(platform) => {
-          captureEvent("guild creation flow > platform opened", { platform })
-          setWhitoutPlatform(false)
-        }}
-      />
+      <MultiPlatformsGrid onSelection={() => setWhitoutPlatform(false)} />
 
       <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 5 }} spacing={3}>
         <Text fontWeight="semibold" colorScheme="gray">

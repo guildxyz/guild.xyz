@@ -11,8 +11,10 @@ import {
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import DisplayCard from "components/common/DisplayCard"
+import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
@@ -55,7 +57,7 @@ const PlatformSelectButton = ({
   ...rest
 }: Props) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
-  const { openWalletSelectorModal } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
@@ -88,7 +90,7 @@ const PlatformSelectButton = ({
           !!disabledText
             ? undefined
             : !isWeb3Connected
-            ? openWalletSelectorModal
+            ? () => setIsWalletSelectorModalOpen(true)
             : isPlatformConnected
             ? selectPlatform
             : onConnect
@@ -103,7 +105,7 @@ const PlatformSelectButton = ({
         <HStack spacing={4}>
           {imageUrl ? (
             <Circle size="12" pos="relative" overflow="hidden">
-              <Image src={imageUrl} alt="Guild logo" layout="fill" />
+              <Image src={imageUrl} alt="Guild logo" fill sizes="3rem" />
             </Circle>
           ) : (
             <Circle

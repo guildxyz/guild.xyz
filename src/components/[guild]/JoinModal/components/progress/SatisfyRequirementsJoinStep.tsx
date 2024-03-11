@@ -9,7 +9,7 @@ const SatisfyRequirementsJoinStep = ({
   ...stackProps
 }: {
   joinState: JoinState
-  fallbackText: JSX.Element
+  fallbackText?: JSX.Element
   RightComponent?: ReactNode
 } & StackProps) => {
   const status = useMemo(() => {
@@ -45,7 +45,10 @@ const SatisfyRequirementsJoinStep = ({
           ? joinState?.requirements?.checked
           : joinState?.requirements?.satisfied
       }
-      fallbackText={fallbackText || "Preparing access check"}
+      fallbackText={
+        fallbackText ||
+        (status === "ERROR" ? "No accessed requirements" : "Preparing access check")
+      }
       {...stackProps}
     />
   )

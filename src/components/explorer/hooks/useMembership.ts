@@ -19,7 +19,7 @@ export type Membership = {
       errorMsg?: string
       errorType?: string
       subType?: string
-      lastCheckedAt: Date
+      lastCheckedAt: string
     }>
   }>
 }

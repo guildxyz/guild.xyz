@@ -1,12 +1,14 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import LinkButton from "components/common/LinkButton"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
 import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { Plus, Wallet } from "phosphor-react"
+import { useSetAtom } from "jotai"
+import Link from "next/link"
+import { Plus, SignIn } from "phosphor-react"
 import { forwardRef } from "react"
 
 const useYourGuilds = () =>
@@ -16,7 +18,8 @@ const useYourGuilds = () =>
   })
 
 const YourGuilds = forwardRef((_, ref: any) => {
-  const { isWeb3Connected, openWalletSelectorModal } = useWeb3ConnectionManager()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   const { data: usersGuilds, isLoading: isGuildsLoading } = useYourGuilds()
 
@@ -37,19 +40,19 @@ const YourGuilds = forwardRef((_, ref: any) => {
             spacing="5"
           >
             <HStack spacing="4">
-              <Img src="landing/robot.svg" boxSize={"2em"} />
+              <Img src="landing/robot.svg" boxSize={"2em"} alt="Guild Robot" />
               <Text fontWeight={"semibold"}>
-                Connect your wallet to view your guilds / create new ones
+                Sign in to view your guilds / create new ones
               </Text>
             </HStack>
             <Button
               w={{ base: "full", sm: "auto" }}
               flexShrink="0"
               colorScheme="indigo"
-              leftIcon={<Wallet />}
-              onClick={openWalletSelectorModal}
+              leftIcon={<SignIn />}
+              onClick={() => setIsWalletSelectorModalOpen(true)}
             >
-              Connect
+              Sign in
             </Button>
           </Stack>
         </Card>
@@ -78,14 +81,14 @@ const YourGuilds = forwardRef((_, ref: any) => {
                 or create your own!
               </Text>
             </HStack>
-            <LinkButton
+            <Button
+              as={Link}
               leftIcon={<Plus />}
               href="/create-guild"
-              colorScheme="gray"
               prefetch={false}
             >
               Create guild
-            </LinkButton>
+            </Button>
           </Stack>
         </Card>
       )}

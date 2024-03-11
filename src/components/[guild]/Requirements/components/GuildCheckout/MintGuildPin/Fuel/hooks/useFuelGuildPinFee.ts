@@ -1,10 +1,10 @@
-import useFuel from "hooks/useFuel"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinContractAbi__factory } from "../GuildPinContractAbi_factory"
 import { FUEL_GUILD_PIN_CONTRACT_ID } from "./useMintFuelGuildPin"
 
 const useFuelGuildPinFee = () => {
-  const { wallet } = useFuel()
+  // const { wallet } = useWallet()
+  const wallet = null
 
   const getFee = async () => {
     const contract = GuildPinContractAbi__factory.connect(

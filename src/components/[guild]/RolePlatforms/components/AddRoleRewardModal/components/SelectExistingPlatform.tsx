@@ -1,20 +1,25 @@
-import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
+import { SimpleGrid, Text } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
+import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
 import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
-import { useFieldArray, useWatch } from "react-hook-form"
-import { PlatformType, Visibility } from "types"
+import { useWatch } from "react-hook-form"
+import { PlatformType, RoleFormType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
-const SelectExistingPlatform = ({ onClose }) => {
+type Props = {
+  onClose: () => void
+  onSelect: (selectedRolePlatform: RoleFormType["rolePlatforms"][number]) => void
+}
+
+const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
   const { guildPlatforms, roles } = useGuild()
   const alreadyUsedRolePlatforms = roles
     ?.flatMap((role) => role.rolePlatforms)
     .filter(Boolean)
     .map((rp) => rp.guildPlatformId)
 
-  const { fields, append } = useFieldArray({
+  const rolePlatforms = useWatch<RoleFormType, "rolePlatforms">({
     name: "rolePlatforms",
   })
 
@@ -22,9 +27,15 @@ const SelectExistingPlatform = ({ onClose }) => {
 
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
-      !fields.find(
+      (platforms[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
+        PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
+        !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
+      // temporary until we have Edit button for points to set amount
+      guildPlatform.platformId !== PlatformType.POINTS &&
+      // not added to the role yet
+      !rolePlatforms.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
-      ) && guildPlatform.platformId !== PlatformType.POINTS
+      )
   )
 
   if (!filteredPlatforms.length) return null
@@ -32,7 +43,7 @@ const SelectExistingPlatform = ({ onClose }) => {
   return (
     <>
       <Text fontWeight={"bold"} mb="3">
-        Give access to existing reward
+        Quick add existing reward type
       </Text>
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
@@ -47,46 +58,27 @@ const SelectExistingPlatform = ({ onClose }) => {
             platform.platformGuildData?.mimeType ===
             "application/vnd.google-apps.form"
 
-          const isAddButtonDisabled =
-            platformData.asRewardRestriction ===
-              PlatformAsRewardRestrictions.SINGLE_ROLE &&
-            alreadyUsedRolePlatforms?.includes(platform.id)
-
           return (
             <PlatformCard
               key={platform.id}
               usePlatformProps={useCardProps}
               guildPlatform={platform}
               colSpan={1}
-            >
-              <Tooltip
-                maxW="full"
-                isDisabled={!isAddButtonDisabled}
-                label={`You can use ${platformData.name} rewards for one role only`}
-                placement="bottom"
-                hasArrow
-              >
-                <Button
-                  h="10"
-                  isDisabled={isAddButtonDisabled}
-                  onClick={() => {
-                    append({
-                      guildPlatformId: platform.id,
-                      isNew: true,
-                      platformRoleId: isGoogleReward
-                        ? isForm
-                          ? "writer"
-                          : "reader"
-                        : null,
-                      visibility: roleVisibility,
-                    })
-                    onClose()
-                  }}
-                >
-                  Add reward
-                </Button>
-              </Tooltip>
-            </PlatformCard>
+              onClick={() => {
+                onSelect({
+                  guildPlatformId: platform.id,
+                  isNew: true,
+                  platformRoleId: isGoogleReward
+                    ? isForm
+                      ? "writer"
+                      : "reader"
+                    : null,
+                  visibility: roleVisibility,
+                })
+                onClose()
+              }}
+              {...DISPLAY_CARD_INTERACTIVITY_STYLES}
+            ></PlatformCard>
           )
         })}
       </SimpleGrid>

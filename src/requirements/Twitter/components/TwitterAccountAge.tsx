@@ -9,23 +9,21 @@ const TwitterAccountAge = ({ baseFieldPath }: RequirementFormProps): JSX.Element
   const { errors } = useFormState()
 
   return (
-    <>
-      <FormControl
+    <FormControl
+      isRequired
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
+    >
+      <FormLabel>Registered before</FormLabel>
+
+      <ControlledTimestampInput
+        fieldName={`${baseFieldPath}.data.minAmount`}
         isRequired
-        isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.minAmount}
-      >
-        <FormLabel>Registered before</FormLabel>
+      />
 
-        <ControlledTimestampInput
-          fieldName={`${baseFieldPath}.data.minAmount`}
-          isRequired
-        />
-
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath).data?.minAmount?.message}
-        </FormErrorMessage>
-      </FormControl>
-    </>
+      <FormErrorMessage>
+        {parseFromObject(errors, baseFieldPath).data?.minAmount?.message}
+      </FormErrorMessage>
+    </FormControl>
   )
 }
 

@@ -1,12 +1,15 @@
 import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
+import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import { useSetAtom } from "jotai"
 import { useEffect } from "react"
-import { PlatformName, User } from "types"
-import fetcher from "utils/fetcher"
+import { PlatformName } from "types"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
@@ -55,8 +58,10 @@ const useConnectPlatform = (
 
   const prevAuthData = usePrevious(authData)
 
-  const { onSubmit, isLoading, response } = useConnect(() => {
-    onSuccess?.()
+  const { onSubmit, isLoading, response } = useConnect({
+    onSuccess: () => {
+      onSuccess?.()
+    },
   })
 
   useEffect(() => {
@@ -81,22 +86,31 @@ const useConnectPlatform = (
   }
 }
 
-const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
+const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) => {
   const { captureEvent } = usePostHogContext()
   const showErrorToast = useShowErrorToast()
-  const { showPlatformMergeAlert } = useWeb3ConnectionManager()
+  const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   const { mutate: mutateUser, id } = useUser()
 
-  const submit = (signedValidation: SignedValidation) => {
-    const platformName =
-      JSON.parse(signedValidation?.signedPayload ?? "{}")?.platformName ??
-      "UNKNOWN_PLATFORM"
+  const fetcherWithSign = useFetcherWithSign()
 
-    return fetcher(`/v2/users/${id}/platform-users`, {
-      method: "POST",
-      ...signedValidation,
-    })
+  const submit = ({ signOptions = undefined, ...payload }) => {
+    const platformName = payload?.platformName ?? "UNKNOWN_PLATFORM"
+
+    const userId =
+      id ??
+      signOptions?.address?.toLowerCase() ??
+      signOptions?.walletClient?.account?.address?.toLowerCase()
+
+    return fetcherWithSign([
+      `/v2/users/${userId}/platform-users`,
+      {
+        signOptions,
+        method: "POST",
+        body: payload,
+      },
+    ])
       .then((body) => {
         if (body === "rejected") {
           // eslint-disable-next-line @typescript-eslint/no-throw-literal
@@ -116,9 +130,8 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
       })
   }
 
-  return useSubmitWithSign<User["platformUsers"][number]>(submit, {
+  return useSubmit(submit, {
     onSuccess: (newPlatformUser) => {
-      // captureEvent("Platform connection", { platformName })
       mutateUser(
         (prev) => ({
           ...prev,
@@ -132,9 +145,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         { revalidate: false }
       )
 
-      onSuccess?.()
+      useSubmitOptions?.onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
+      try {
+        useSubmitOptions?.onError?.([platformName, rawError])
+      } catch (err) {
+        if (err instanceof StopExecution) {
+          return
+        }
+      }
+
       const errorObject = {
         error: undefined,
         isAutoConnect: undefined,
@@ -161,11 +182,17 @@ const useConnect = (onSuccess?: () => void, isAutoConnect = false) => {
         const [, addressOrDomain] = toastError.match(
           /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
         )
-        showPlatformMergeAlert(addressOrDomain, platformName)
+        showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
         showErrorToast(
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
+            : // temporary until we solve the X rate limit
+            platformName === "TWITTER"
+            ? {
+                error:
+                  "There're a lot of users connecting now, and X is rate limiting us, so your request timed out. Please try again later!",
+              }
             : rawError
         )
       }

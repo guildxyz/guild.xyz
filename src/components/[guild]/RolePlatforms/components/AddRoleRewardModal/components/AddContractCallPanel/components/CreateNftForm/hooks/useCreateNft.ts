@@ -9,7 +9,7 @@ import useToast from "hooks/useToast"
 import { useState } from "react"
 import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
@@ -49,7 +49,7 @@ export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> 
 export type CreateNFTResponse = {
   // returning the submitted form too, so we can easily populate the SWR cache with the NFT details (e.g. image, name, etc.)
   formData: CreateNftFormType
-  guildPlatform: Omit<GuildPlatform, "id" | "platformGuildName">
+  guildPlatform: Omit<GuildPlatformWithOptionalId, "platformGuildName">
 }
 
 const useCreateNft = (

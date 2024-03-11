@@ -5,12 +5,6 @@ class MyDocument extends Document {
     return (
       <Html lang="en-US">
         <Head>
-          <link
-            rel="preload stylesheet"
-            as="style"
-            href="/fonts/fonts.css"
-            crossOrigin="anonymous"
-          />
           {process.env.NODE_ENV === "production" && (
             <>
               <script

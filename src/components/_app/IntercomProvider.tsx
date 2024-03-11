@@ -1,4 +1,5 @@
 import useUser from "components/[guild]/hooks/useUser"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -57,12 +58,13 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
   const { address, isWeb3Connected, type: walletType } = useWeb3ConnectionManager()
   const { connectorName } = useConnectorNameAndIcon()
   const user = useUser()
+  const { data: yourGuilds } = useYourGuilds()
 
   useEffect(() => {
     if (!isWeb3Connected) return
 
     addIntercomSettings({
-      address: address.toLowerCase(),
+      address: address?.toLowerCase(),
       walletType,
       wallet: connectorName,
       userId: null,
@@ -70,17 +72,24 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
       managedGuilds: null,
     })
 
-    if (!user) return
+    if (!user || !yourGuilds) return
 
     const connectedPlatforms = user.platformUsers
       ?.map((pu) => pu.platformName)
       .join(", ")
 
+    const managedGuilds = yourGuilds.filter((guild) => guild.isAdmin)
+
     addIntercomSettings({
       userId: user.id,
       connectedPlatforms,
+      isAdmin: managedGuilds.length > 0,
+      managedGuilds: managedGuilds.map((guild) => guild.urlName).join(", "),
+      biggestGuild: managedGuilds.sort(
+        (guild1, guild2) => guild2.memberCount - guild1.memberCount
+      )[0]?.memberCount,
     })
-  }, [address, isWeb3Connected, user])
+  }, [address, isWeb3Connected, user, yourGuilds])
 
   return (
     <IntercomContext.Provider

@@ -15,6 +15,7 @@ import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"
+import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
@@ -26,6 +27,8 @@ const visitLink = (signedValidation: SignedValidation) =>
   })
 
 const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
+  const formContext = useFormContext()
+
   const { id: requirementId, data, roleId } = useRequirementContext()
   const { id: userId } = useUser()
 
@@ -94,7 +97,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
                 <Text wordBreak="break-word" flexGrow={1}>
                   <Original />
                 </Text>
-                {!!props.fieldRoot && <ResetRequirementButton />}
+                {!!formContext && <ResetRequirementButton />}
               </Stack>
             </HStack>
           </ViewOriginalPopover>

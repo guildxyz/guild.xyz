@@ -47,6 +47,8 @@ const AccountConnections = () => {
           "TEXT",
           "POINTS",
           "POLYGON_ID",
+          "FORM",
+          "GATHER_TOWN",
         ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [
@@ -90,7 +92,7 @@ const AccountConnections = () => {
                 <PopoverContent>
                   <PopoverArrow />
                   <PopoverBody>
-                    Each of your addresses will be used for requirement checks.
+                    Each of your addresses will be used for requirement checks
                   </PopoverBody>
                 </PopoverContent>
               </Popover>
@@ -140,7 +142,7 @@ const AccountConnections = () => {
   )
 }
 
-const AccountSection = ({ children, ...rest }) => {
+export const AccountSection = ({ children, ...rest }) => {
   const bg = useColorModeValue("gray.50", "blackAlpha.200")
 
   return (

@@ -113,7 +113,7 @@ const RoleRequirements = ({
             </>
           )}
 
-          {hiddenRequirements.length > 0 && (
+          {hiddenRequirements.length > 0 && onToggleExpanded && (
             <>
               <ExpandRequirementsButton
                 logic={role.logic}

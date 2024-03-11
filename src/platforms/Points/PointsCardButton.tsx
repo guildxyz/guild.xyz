@@ -1,6 +1,7 @@
 import { Icon } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import LinkButton from "components/common/LinkButton"
+import Button from "components/common/Button"
+import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { GuildPlatform } from "types"
 
@@ -14,13 +15,9 @@ const PointsCardButton = ({ platform }: Props) => {
 
   return (
     <>
-      <LinkButton
-        colorScheme={"gray"}
-        href={`/${urlName}/leaderboard/${id}`}
-        w="full"
-      >
+      <Button as={Link} href={`/${urlName}/leaderboard/${id}`} w="full">
         View leaderboard <Icon as={ArrowRight} mb="-0.5" />
-      </LinkButton>
+      </Button>
     </>
   )
 }

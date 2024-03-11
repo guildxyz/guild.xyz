@@ -95,16 +95,6 @@ export const REQUIREMENTS_DATA = [
     ),
     types: [
       "WALLET_ACTIVITY",
-      "ALCHEMY_FIRST_TX",
-      "ALCHEMY_FIRST_TX_RELATIVE",
-      "ALCHEMY_CONTRACT_DEPLOY",
-      "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
-      "ALCHEMY_TX_COUNT",
-      "ALCHEMY_TX_COUNT_RELATIVE",
-      "ALCHEMY_TX_VALUE",
-      "ALCHEMY_TX_VALUE_RELATIVE",
-
-      // Same types for covalent, except tx_value types
       "COVALENT_FIRST_TX",
       "COVALENT_FIRST_TX_RELATIVE",
       "COVALENT_CONTRACT_DEPLOY",
@@ -185,6 +175,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Email/EmailForm")
     ),
     types: ["EMAIL", "EMAIL_VERIFIED", "EMAIL_DOMAIN"],
+    isNegatable: true,
+  },
+  {
+    icon: platforms.FORM.icon,
+    name: platforms.FORM.name,
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Form/FormRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Form/FormForm")
+    ),
+    types: ["FORM_SUBMISSION"],
     isNegatable: true,
   },
   {
@@ -346,6 +348,7 @@ export const REQUIREMENTS_DATA = [
       "FARCASTER_PROFILE",
       "FARCASTER_TOTAL_FOLLOWERS",
       "FARCASTER_FOLLOW",
+      "FARCASTER_FOLLOW_CHANNEL",
       "FARCASTER_FOLLOWED_BY",
       "FARCASTER_LIKE",
       "FARCASTER_RECAST",
@@ -428,7 +431,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Mirror/MirrorForm")
     ),
-    types: ["MIRROR", "MIRROR_COLLECT"],
+    types: ["MIRROR_COLLECT", "MIRROR"],
     isNegatable: true,
   },
   {

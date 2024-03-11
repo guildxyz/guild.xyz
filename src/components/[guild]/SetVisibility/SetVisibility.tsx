@@ -10,55 +10,86 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  ModalProps,
   Tooltip,
-  useColorMode,
-  useDisclosure,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { useRef } from "react"
-import { useController, useFormContext, useWatch } from "react-hook-form"
+import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import { Visibility } from "types"
 import useVisibilityTooltipLabel from "./hooks/useVisibilityTooltipLabel"
-import {
-  VISIBILITY_DATA,
-  VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY,
-} from "./visibilityData"
+import { VISIBILITY_DATA } from "./visibilityData"
 
 type FilterableEntity = "role" | "requirement" | "reward"
+export type SetVisibilityForm = {
+  visibility?: Visibility
+  visibilityRoleId?: number
+}
 
 const SetVisibility = ({
   entityType,
-  fieldBase,
+  isOpen,
+  onOpen,
+  onClose,
+  onSave,
+  isLoading,
+  defaultValues = {
+    visibility: Visibility.PUBLIC,
+    visibilityRoleId: undefined,
+  },
   ...buttonProps
 }: {
   entityType: FilterableEntity
-  fieldBase?: string
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+  onSave: (data: SetVisibilityForm) => void
+  isLoading?: boolean
+  defaultValues?: SetVisibilityForm
 } & ButtonProps) => {
-  const parentField = fieldBase ?? ""
-  const { isOpen, onClose, onOpen } = useDisclosure()
+  const methods = useForm<SetVisibilityForm>({
+    mode: "all",
+    defaultValues,
+  })
 
   const buttonRef = useRef()
 
-  const currentVisibility: Visibility = useWatch({
-    name: `${parentField}.visibility`,
+  const { field: visibilityField } = useController({
+    control: methods.control,
+    name: "visibility",
   })
 
-  const currentVisibilityRoleId: number = useWatch({
-    name: `${parentField}.visibilityRoleId`,
+  const visibilityRoleId: number = useWatch({
+    control: methods.control,
+    name: "visibilityRoleId",
   })
 
   const tooltipLabel = useVisibilityTooltipLabel(
-    currentVisibility,
-    currentVisibilityRoleId
+    visibilityField.value,
+    visibilityRoleId
   )
 
-  if (!currentVisibility) {
+  const circleBgColor = useColorModeValue("blackAlpha.200", "gray.600")
+
+  const options = Object.entries(VISIBILITY_DATA).map(
+    ([key, { Icon, Child, ...rest }]) => ({
+      value: key,
+      leftComponent: (
+        <Circle bg={circleBgColor} p={3}>
+          <Icon />
+        </Circle>
+      ),
+      ...rest,
+      children: Child && <Child />,
+    })
+  )
+
+  if (!visibilityField.value) {
     return null
   }
 
-  const Icon = VISIBILITY_DATA[currentVisibility].Icon
+  const Icon = VISIBILITY_DATA[visibilityField.value].Icon
 
   return (
     <>
@@ -71,7 +102,7 @@ const SetVisibility = ({
           ref={buttonRef}
           {...buttonProps}
         >
-          {VISIBILITY_DATA[currentVisibility].title}
+          {VISIBILITY_DATA[visibilityField.value].title}
         </Button>
       ) : (
         <Tooltip label={tooltipLabel} placement="top" hasArrow>
@@ -89,121 +120,51 @@ const SetVisibility = ({
         </Tooltip>
       )}
 
-      <SetVisibilityModal
-        entityType={entityType}
-        fieldBase={parentField}
+      <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          methods.reset(defaultValues)
+          onClose()
+        }}
         finalFocusRef={buttonRef}
-      />
+        size="lg"
+        colorScheme="dark"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Change {entityType} visibility</ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            <FormProvider {...methods}>
+              <RadioSelect
+                colorScheme="indigo"
+                options={options}
+                {...visibilityField}
+              />
+            </FormProvider>
+          </ModalBody>
+
+          <ModalFooter>
+            <HStack justifyContent={"end"}>
+              <Button
+                colorScheme={"green"}
+                onClick={() =>
+                  onSave({
+                    visibility: visibilityField.value,
+                    visibilityRoleId,
+                  })
+                }
+                isLoading={isLoading}
+                loadingText="Saving"
+              >
+                Done
+              </Button>
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
-  )
-}
-
-const SetVisibilityModal = ({
-  entityType,
-  fieldBase = "",
-  isOpen,
-  onClose,
-  ...modalProps
-}: {
-  entityType: "role" | "requirement" | "reward"
-  fieldBase?: string
-  isOpen: boolean
-  onClose: () => void
-} & Partial<ModalProps>) => {
-  const visibilityField = `${fieldBase}.visibility`
-  const { field } = useController({ name: visibilityField })
-  const { colorMode } = useColorMode()
-
-  const saveAndClose = () => {
-    onClose()
-  }
-
-  const requirements = useWatch({ name: "requirements" })
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
-  const { setValue } = useFormContext()
-  const roleVisibility = useWatch({ name: ".visibility" })
-
-  const mapToAtLeastPrivate = (entities, base) =>
-    entities?.forEach(({ visibility }, index) => {
-      if (visibility === Visibility.PUBLIC) {
-        setValue(`${base}.${index}.visibility`, Visibility.PRIVATE, {
-          shouldDirty: true,
-        })
-      }
-    })
-
-  const mapToHidden = (entities, base) =>
-    entities?.forEach(({ visibility }, index) => {
-      if (visibility !== Visibility.HIDDEN) {
-        setValue(`${base}.${index}.visibility`, Visibility.HIDDEN, {
-          shouldDirty: true,
-        })
-      }
-    })
-
-  const onChange = (newValue: Visibility) => {
-    if (entityType === "role") {
-      if (newValue === Visibility.PRIVATE) {
-        mapToAtLeastPrivate(requirements, "requirements")
-        mapToAtLeastPrivate(rolePlatforms, "rolePlatforms")
-      } else if (newValue === Visibility.HIDDEN) {
-        mapToHidden(requirements, "requirements")
-        mapToHidden(rolePlatforms, "rolePlatforms")
-      }
-    }
-
-    setValue(visibilityField, newValue, { shouldDirty: true })
-  }
-
-  const options = Object.entries(VISIBILITY_DATA).map(
-    ([key, { Icon, Child, ...rest }]) => ({
-      value: key,
-      leftComponent: (
-        <Circle bg={colorMode === "dark" ? "gray.600" : "blackAlpha.200"} p={3}>
-          <Icon />
-        </Circle>
-      ),
-      ...rest,
-      ...(entityType === "role"
-        ? {}
-        : VISIBILITY_DATA_BASED_ON_ROLE_VISIBILITY[key]?.[roleVisibility] ?? {}),
-      children: Child && <Child fieldBase={fieldBase} />,
-    })
-  )
-
-  return (
-    <Modal
-      colorScheme={"dark"}
-      isOpen={isOpen}
-      onClose={saveAndClose}
-      size="lg"
-      {...modalProps}
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Change {entityType} visibility</ModalHeader>
-        <ModalCloseButton />
-
-        <ModalBody>
-          <RadioSelect
-            colorScheme="indigo"
-            options={options}
-            {...field}
-            onChange={onChange}
-          />
-        </ModalBody>
-
-        <ModalFooter>
-          <HStack justifyContent={"end"}>
-            <Button colorScheme={"green"} onClick={saveAndClose}>
-              Done
-            </Button>
-          </HStack>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
   )
 }
 

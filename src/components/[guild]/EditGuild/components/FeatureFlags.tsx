@@ -11,6 +11,7 @@ const FEATURE_FLAGS = [
   "GUILD_QUEUES",
   "ROLE_GROUPS",
   "MESSAGING",
+  "FORMS",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
@@ -34,6 +35,7 @@ const FeatureFlags = (): JSX.Element => {
   return (
     <FormControl>
       <StyledSelect
+        menuPlacement={"top"}
         ref={ref}
         name={name}
         value={options.filter((option) => value?.includes(option.value))}

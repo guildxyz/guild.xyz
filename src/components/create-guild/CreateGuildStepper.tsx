@@ -150,13 +150,6 @@ const CreateGuildStepper = ({
             <Step
               onClick={() => {
                 if (enableGoingBack && activeStep > index) {
-                  captureEvent(
-                    "guild creation flow > guild creation process step back",
-                    {
-                      to: index + 1,
-                      from: activeStep + 1 + "/" + (stepPart + 1),
-                    }
-                  )
                   setActiveStep(index)
                 }
               }}

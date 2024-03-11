@@ -1,5 +1,6 @@
-import { Box, Button, Container, HStack, Progress, Text } from "@chakra-ui/react"
-import Card from "components/common/Card"
+import { Button, HStack, Progress, Text, Tooltip } from "@chakra-ui/react"
+import FloatingFooter from "components/common/FloatingFooter"
+import { atom, useAtomValue } from "jotai"
 import { PropsWithChildren } from "react"
 import GuildLottieProgress from "./components/GuildLottieProgress"
 
@@ -10,6 +11,8 @@ type Props = {
   isDisabled?: boolean
 }
 
+export const ContinueBtnTooltipLabelAtom = atom("")
+
 const GuildCreationProgress = ({
   next,
   progress,
@@ -18,65 +21,39 @@ const GuildCreationProgress = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const progressText = `${progress}%`
 
+  const continueBtnTooltipLabel = useAtomValue(ContinueBtnTooltipLabelAtom)
+
   return (
-    <Box
-      position={"fixed"}
-      bottom={0}
-      left={0}
-      w={"full"}
-      zIndex={1201} // above intercom floating button
-    >
-      <Container maxW={"container.lg"} px={{ base: 0, md: 8, lg: 10 }}>
-        {/**
-         * Intercom: This box keeps the container padding, so the Card inside could be
-         * `width:100%`
-         */}
-        <Box position="relative">
-          <Card
-            borderRadius={0}
-            borderTopRadius={{ md: "2xl" }}
-            borderWidth={{ base: "1px 0 0 0", md: "1px 1px 0 1px" }}
-            shadow={
-              "rgba(0, 0, 0, 0.1) 0px 5px 10px,rgba(0, 0, 0, 0.2) 0px 15px 40px"
-            }
-            position="absolute"
-            bottom={0}
-            w="full"
-          >
-            <HStack justify={"space-between"} py={3} px={{ base: 2, md: 3 }}>
-              <HStack gap={4} px={3}>
-                <GuildLottieProgress progress={progress} />
-                <Text colorScheme="gray" fontWeight={"semibold"} fontSize={"sm"}>
-                  Guild {progressText} completed
-                </Text>
-              </HStack>
-              {children ?? (
-                <Button colorScheme={"green"} onClick={next} isDisabled={isDisabled}>
-                  Continue
-                </Button>
-              )}
-            </HStack>
-            <Progress
-              borderRadius="full"
-              h={1}
-              w="100%"
-              value={progress}
-              colorScheme="primary"
-              sx={{
-                /**
-                 * This equals to :first-child, just changed it so we don't get the
-                 * annoying emotion error in the console:
-                 * https://github.com/emotion-js/emotion/issues/2917#issuecomment-1791940421
-                 */
-                "& > div:not(:not(:last-child) ~ *)": {
-                  transitionProperty: "width",
-                },
-              }}
-            />
-          </Card>
-        </Box>
-      </Container>
-    </Box>
+    <FloatingFooter>
+      <HStack justify="space-between" py={3} px={{ base: 2, md: 3 }}>
+        <HStack gap={4} px={3}>
+          <GuildLottieProgress progress={progress} />
+          <Text colorScheme="gray" fontWeight="semibold" fontSize="sm">
+            Guild {progressText} completed
+          </Text>
+        </HStack>
+        {children ?? (
+          <Tooltip label={continueBtnTooltipLabel} hasArrow>
+            <Button colorScheme="green" onClick={next} isDisabled={isDisabled}>
+              Continue
+            </Button>
+          </Tooltip>
+        )}
+      </HStack>
+      <Progress
+        hasStripe
+        borderRadius="none"
+        h={1}
+        w="100%"
+        value={progress}
+        colorScheme="primary"
+        sx={{
+          "> div": {
+            transitionProperty: "width",
+          },
+        }}
+      />
+    </FloatingFooter>
   )
 }
 

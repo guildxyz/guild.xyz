@@ -9,7 +9,7 @@ type Props = {
 export default function TwitterTweetLink({ requirement }: Props) {
   return (
     <Link
-      href={`https://twitter.com/twitter/status/${requirement.data.id}`}
+      href={`https://x.com/x/status/${requirement.data.id}`}
       isExternal
       colorScheme={"blue"}
       fontWeight="medium"

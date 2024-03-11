@@ -1,7 +1,5 @@
 import { useColorModeValue } from "@chakra-ui/react"
-import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContex"
-import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useGuildCheckoutContext } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import usePrice from "../../../hooks/usePrice"
 import TokenInfo from "./TokenInfo"
 
@@ -11,19 +9,9 @@ type Props = {
 }
 
 const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
-
   const { setPickedCurrency } = useGuildCheckoutContext()
 
   const hoverBgColor = useColorModeValue("gray.100", "whiteAlpha.50")
-
-  const onClick = () => {
-    setPickedCurrency(address)
-    captureEvent("Picked currency (GuildCheckout)", {
-      guild: urlName,
-    })
-  }
 
   const {
     data: { estimatedPriceInSellToken },
@@ -43,7 +31,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       transition="background-color 0.1s ease"
       _hover={{ bgColor: hoverBgColor }}
       _focusVisible={{ bgColor: hoverBgColor }}
-      onClick={onClick}
+      onClick={() => setPickedCurrency(address)}
       chainId={chainId}
       address={address}
       requiredAmount={estimatedPriceInSellToken}
