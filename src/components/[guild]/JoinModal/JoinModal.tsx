@@ -76,9 +76,13 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
     if (
       !platforms[platform] ||
+      platform === "POAP" ||
+      platform === "CONTRACT_CALL" ||
+      platform === "TEXT" ||
+      platform === "UNIQUE_TEXT" ||
+      platform === "POLYGON_ID" ||
       platform === "POINTS" ||
       platform === "FORM" ||
-      platform === "POLYGON_ID" ||
       platform === "GATHER_TOWN"
     )
       return null
