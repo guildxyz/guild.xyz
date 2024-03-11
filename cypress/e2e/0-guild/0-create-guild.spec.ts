@@ -90,7 +90,7 @@ describe("create guild page", () => {
       extraContact().type("username@example.com")
       getContinueBtn().should("not.be.disabled")
 
-      cy.getByDataTest("removeContactBtn").should("be.visible").click()
+      cy.getByDataTest("remove-contact-btn").should("be.visible").click()
       extraContact().should("not.exist")
 
       getContinueBtn().should("not.be.disabled")

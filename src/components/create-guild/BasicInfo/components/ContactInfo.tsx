@@ -110,7 +110,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                         size="xs"
                         rounded="full"
                         aria-label="Remove contact"
-                        data-test="removeContactBtn"
+                        data-test="remove-contact-btn"
                         onClick={() => remove(index)}
                       />
                     </InputRightElement>
