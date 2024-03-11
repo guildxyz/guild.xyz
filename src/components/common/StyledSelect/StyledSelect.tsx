@@ -17,7 +17,7 @@ import CustomSelectOption from "./components/CustomSelectOption"
 export type StyledSelectProps = OneOf<
   { isCreatable: true; noResultText?: string } & CreatableProps<any, any, any>,
   { noResultText?: string } & Props
-> & { as?: any; isCopyable?: { pathToCopy: string } }
+> & { as?: any; isCopyable?: boolean }
 
 const StyledSelect = forwardRef(
   (
@@ -68,7 +68,6 @@ const StyledSelect = forwardRef(
                 CustomIndicatorsContainer({
                   ...containerProps,
                   value: props.value,
-                  pathToCopy: isCopyable.pathToCopy,
                 })
             : components.IndicatorsContainer,
           IndicatorSeparator: null,

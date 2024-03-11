@@ -111,7 +111,7 @@ const TokenPicker = ({
             validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
-          isCopyable={type === "COIN" ? null : { pathToCopy: "value" }}
+          isCopyable={type !== "COIN"}
           isLoading={isLoading}
           options={mappedTokens}
           filterOption={customFilterOption}

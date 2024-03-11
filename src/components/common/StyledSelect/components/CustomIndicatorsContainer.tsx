@@ -12,7 +12,6 @@ const MotionIconButton = motion(IconButton)
 const CustomIndicatorsContainer = ({
   children,
   value,
-  pathToCopy,
   ...rest
 }: {
   value: StyledSelectProps["value"]
@@ -23,7 +22,7 @@ const CustomIndicatorsContainer = ({
 
   const handleCopyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(parseFromObject(value, pathToCopy))
+      await navigator.clipboard.writeText(parseFromObject(value, "value"))
       setCopied(true)
       setTimeout(() => {
         setCopied(false)
