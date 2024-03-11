@@ -9,7 +9,7 @@ import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
 import { OAuthResultParams } from "pages/oauth-result"
 import platforms from "platforms/platforms"
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
@@ -68,22 +68,33 @@ const useConnectPlatform = (
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
   authLevel: AuthLevel = "membership",
-  disconnectFromExistingUser?: boolean // TODO
+  disconnectFromExistingUser?: boolean
 ) => {
   const { id, mutate: mutateUser } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const toast = useToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
-  const { data: url } = useSWR(
+  const { data: authToken } = useSWR(
     id ? `guild-oauth-token-${platformName}-${id}` : null,
     () =>
       fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
-        ({ token }) =>
-          getOAuthURL(platformName, token, authLevel, disconnectFromExistingUser)
+        ({ token }) => token
       ),
     { dedupingInterval: 1000 * 60 * 2 }
   )
+
+  const url = useMemo(() => {
+    if (authToken) {
+      return getOAuthURL(
+        platformName,
+        authToken,
+        authLevel,
+        disconnectFromExistingUser
+      )
+    }
+    return null
+  }, [platformName, authToken, authLevel, disconnectFromExistingUser])
 
   const listener = useSubmit(
     async () => {
