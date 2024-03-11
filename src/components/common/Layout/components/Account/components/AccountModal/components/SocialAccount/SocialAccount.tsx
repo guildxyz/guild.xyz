@@ -2,18 +2,14 @@ import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPla
 import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import platforms from "platforms/platforms"
-import { PlatformName, PlatformType } from "types"
+import { PlatformName } from "types"
 
 import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
-import useSubmit from "hooks/useSubmit"
-import { OAuthResultParams } from "pages/oauth-result"
 import { Question } from "phosphor-react"
-import { memo, useCallback } from "react"
-import useSWRImmutable from "swr/immutable"
-import { useFetcherWithSign } from "utils/fetcher"
+import { memo } from "react"
 import useDisconnect from "../../hooks/useDisconnect"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
@@ -70,18 +66,10 @@ export const TwitterV1Tooltip = () => (
   </Tooltip>
 )
 
-function getOAuthURL(platformName: string, authToken: string) {
-  const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
-  url.searchParams.set("path", window.location.pathname)
-  url.searchParams.set("token", authToken)
-  return url.href
-}
-
 const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const toast = useToast()
+  const { id } = useUser()
   const { triggerMembershipUpdate } = useMembershipUpdate()
-  const fetcherWithSign = useFetcherWithSign()
-  const { id, mutate: mutateUser } = useUser()
 
   const onSuccess = () => {
     toast({
@@ -91,95 +79,17 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
     triggerMembershipUpdate()
   }
 
-  const { isLoading, response } = useConnectPlatform(
+  const { isLoading, response, onConnect } = useConnectPlatform(
     type as PlatformName,
     onSuccess,
     isReconnect
   )
 
-  const asd = useSubmit(
-    async () => {
-      const channel = new BroadcastChannel(`guild-${type}`)
-      const messageListener = new Promise<void>((resolve, reject) => {
-        channel.onmessage = (event) => {
-          if (
-            event.isTrusted &&
-            event.origin === window.origin &&
-            event.data?.type !== "oauth-confirmation"
-          ) {
-            channel.postMessage({ type: "oauth-confirmation" })
-            const result: OAuthResultParams = event.data
-
-            if (result.status === "success") {
-              fetcherWithSign([
-                `/v2/users/${id}/platform-users/${PlatformType[type]}`,
-                { method: "GET" },
-              ])
-                .then((newPlatformUser) =>
-                  mutateUser(
-                    (prev) => ({
-                      ...prev,
-                      platformUsers: [
-                        ...(prev?.platformUsers ?? []).filter(
-                          ({ platformId }) =>
-                            platformId !== newPlatformUser.platformId
-                        ),
-                        { ...newPlatformUser, platformName: type },
-                      ],
-                    }),
-                    { revalidate: false }
-                  )
-                )
-                .then(() => resolve())
-                .catch(() => reject("Failed to get new platform connection"))
-
-              return
-            } else {
-              reject(new Error(result.message))
-            }
-          }
-        }
-      })
-
-      await messageListener
-    },
-    {
-      onSuccess,
-      onError: (error) => {
-        toast({
-          status: "error",
-          description: error.message ?? `Failed to connect ${type}`,
-        })
-      },
-    }
-  )
-
-  const { data: url } = useSWRImmutable(
-    fetcherWithSign ? `guild-oauth-token-${type}` : null,
-    () =>
-      fetcherWithSign([`/v2/oauth/${type}/token`, { method: "GET" }]).then(
-        ({ token }) => getOAuthURL(type, token)
-      ),
-    { refreshInterval: 1000 * 60 * 2 }
-  )
-
-  const onClick = useCallback(() => {
-    if (!url) return
-
-    asd.onSubmit()
-
-    if (type === "TELEGRAM") {
-      window.location.href = url
-    } else {
-      window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
-    }
-  }, [url])
-
   return (
     <Button
-      onClick={onClick}
+      onClick={onConnect}
       isLoading={isLoading}
-      isDisabled={response}
+      isDisabled={response || !id}
       colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"

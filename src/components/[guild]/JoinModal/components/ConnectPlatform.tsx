@@ -27,18 +27,17 @@ const ConnectPlatform = ({ platform }: Props) => {
   const { triggerMembershipUpdate } = useMembershipUpdate()
   const onSuccess = () => isReconnect && triggerMembershipUpdate()
 
-  const { onConnect, isLoading, loadingText, authData, response } =
-    useConnectPlatform(platform, onSuccess, isReconnect)
+  const { onConnect, isLoading, loadingText } = useConnectPlatform(
+    platform,
+    onSuccess,
+    isReconnect
+  )
 
   const platformFromDb = platformUsers?.find(
     (platformAccount) => platformAccount.platformName === platform
   )
 
   const { setValue } = useFormContext()
-
-  useEffect(() => {
-    if (!isConnected && authData) setValue(`platforms.${platform}`, { authData })
-  }, [isConnected, authData])
 
   useEffect(() => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
@@ -54,10 +53,7 @@ const ConnectPlatform = ({ platform }: Props) => {
       icon={<Icon as={platforms[platform].icon} />}
       colorScheme={platforms[platform].colorScheme as string}
       isConnected={
-        (platformFromDb?.platformUserData?.username ??
-          platformFromDb?.platformUserId) ||
-        response?.platformUserId ||
-        (authData && "hidden")
+        platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
       }
       isReconnect={isReconnect}
       isLoading={isLoading || (!platformUsers && isLoadingUser)}

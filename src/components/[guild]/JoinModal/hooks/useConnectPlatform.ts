@@ -1,4 +1,3 @@
-import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
@@ -6,11 +5,15 @@ import { StopExecution } from "components/_app/Web3ConnectionManager/components/
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
-import { useEffect } from "react"
-import { PlatformName } from "types"
+import { OAuthResultParams } from "pages/oauth-result"
+import platforms from "platforms/platforms"
+import { useCallback } from "react"
+import useSWR from "swr"
+import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
+import { AuthLevel } from "./useOauthPopupWindow"
 
 const parseConnectError = (
   error: string
@@ -42,47 +45,117 @@ const parseConnectError = (
   }
 }
 
+function getOAuthURL(platformName: string, authToken: string, scope?: AuthLevel) {
+  const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
+  url.searchParams.set("path", window.location.pathname)
+  url.searchParams.set("token", authToken)
+  if (scope) {
+    url.searchParams.set("scope", scope)
+  }
+  return url.href
+}
+
 const useConnectPlatform = (
-  platform: PlatformName,
+  platformName: PlatformName,
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
   authLevel: AuthLevel = "membership",
-  disconnectFromExistingUser?: boolean
+  disconnectFromExistingUser?: boolean // TODO
 ) => {
-  const { platformUsers } = useUser()
+  const { id, mutate: mutateUser } = useUser()
+  const fetcherWithSign = useFetcherWithSign()
+  const toast = useToast()
 
-  const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
-    platform,
-    isReauth ? "creation" : authLevel
+  const { data: url } = useSWR(
+    id ? `guild-oauth-token-${platformName}-${id}` : null,
+    () =>
+      fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
+        ({ token }) => getOAuthURL(platformName, token, authLevel)
+      ),
+    { dedupingInterval: 1000 * 60 * 2 }
   )
 
-  const prevAuthData = usePrevious(authData)
+  const listener = useSubmit(
+    async () => {
+      const channel = new BroadcastChannel(`guild-${platformName}`)
+      const messageListener = new Promise<boolean>((resolve, reject) => {
+        channel.onmessage = (event) => {
+          if (
+            event.isTrusted &&
+            event.origin === window.origin &&
+            event.data?.type !== "oauth-confirmation"
+          ) {
+            channel.postMessage({ type: "oauth-confirmation" })
+            const result: OAuthResultParams = event.data
 
-  const { onSubmit, isLoading, response } = useConnect({
-    onSuccess: () => {
-      onSuccess?.()
+            if (result.status === "success") {
+              fetcherWithSign([
+                `/v2/users/${id}/platform-users/${PlatformType[platformName]}`,
+                { method: "GET" },
+              ])
+                .then((newPlatformUser) =>
+                  mutateUser(
+                    (prev) => ({
+                      ...prev,
+                      platformUsers: [
+                        ...(prev?.platformUsers ?? []).filter(
+                          ({ platformId }) =>
+                            platformId !== newPlatformUser.platformId
+                        ),
+                        { ...newPlatformUser, platformName },
+                      ],
+                    }),
+                    { revalidate: false }
+                  )
+                )
+                .then(() => resolve(true))
+                .catch(() => reject("Failed to get new platform connection"))
+
+              return
+            } else {
+              reject(new Error(result.message))
+            }
+          }
+        }
+      })
+
+      const result = await messageListener
+      return result
     },
-  })
+    {
+      onSuccess,
+      onError: (error) => {
+        toast({
+          status: "error",
+          description:
+            error.message ?? `Failed to connect ${platforms[platformName].name}`,
+        })
+      },
+    }
+  )
 
-  useEffect(() => {
-    // couldn't prevent spamming requests without all these three conditions
-    if (!platformUsers || !authData || prevAuthData) return
+  const onClick = useCallback(() => {
+    if (!url) return
 
-    onSubmit({
-      platformName: platform,
-      authData,
-      reauth: isReauth || undefined,
-      disconnectFromExistingUser,
-    })
-  }, [authData, platformUsers])
+    listener.onSubmit()
+
+    if (platformName === "TELEGRAM") {
+      window.location.href = url
+    } else {
+      /**
+       * TODO: Test if using the hook is fine here, for now we do this to have a
+       * shallower call stack, which reduces the chance of browsers blocking the
+       * popup
+       */
+      window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
+    }
+  }, [url])
 
   return {
-    onConnect: onOpen,
-    isLoading: isAuthenticating || isLoading,
-    loadingText: isAuthenticating && "Confirm in the pop-up",
-    response,
-    authData,
-    ...rest,
+    onConnect: onClick,
+    isLoading: listener.isLoading,
+    loadingText: "Confirm in the pop-up",
+    response: listener.response,
   }
 }
 
