@@ -2,6 +2,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
 import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
+import usePopupWindow from "hooks/usePopupWindow"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
@@ -74,6 +75,7 @@ const useConnectPlatform = (
   const fetcherWithSign = useFetcherWithSign()
   const toast = useToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
+  const { onOpen } = usePopupWindow()
 
   const { data: authToken } = useSWR(
     id ? `guild-oauth-token-${platformName}-${id}` : null,
@@ -177,12 +179,7 @@ const useConnectPlatform = (
     if (platformName === "TELEGRAM") {
       window.location.href = url
     } else {
-      /**
-       * TODO: Test if using the hook is fine here, for now we do this to have a
-       * shallower call stack, which reduces the chance of browsers blocking the
-       * popup
-       */
-      window.open(url, "_blank", "popup,width=600,height=750,scrollbars")
+      onOpen(url)
     }
   }, [url])
 
