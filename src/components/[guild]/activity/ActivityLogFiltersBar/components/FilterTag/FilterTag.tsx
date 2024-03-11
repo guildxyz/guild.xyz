@@ -15,6 +15,7 @@ import * as combobox from "@zag-js/combobox"
 import { normalizeProps, useMachine } from "@zag-js/react"
 import ActivityLogRoleTag from "../../../ActivityLogAction/components/ActivityLogRoleTag"
 
+import FormTag from "components/[guild]/activity/ActivityLogAction/components/FormTag"
 import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -67,7 +68,7 @@ const FilterTag = ({
   const { id: guildId, roles, guildPlatforms } = useGuild(filterGuildId)
 
   const [isLoading, setIsLoading] = useState(false)
-  const [shouldRemove, setShouldRemove] = useState(value.length === 0)
+  const [shouldRemove, setShouldRemove] = useState(value?.length === 0)
 
   const [inputError, setInputError] = useState<string>(null)
 
@@ -234,6 +235,22 @@ const FilterTag = ({
                   case "userId":
                     return (
                       <UserTag userId={Number(value)} pr={7} borderLeftRadius={0} />
+                    )
+                  case "formId":
+                    return (
+                      <FormTag
+                        formId={Number(value)}
+                        guildId={
+                          activityLogType === "guild"
+                            ? guildId
+                            : Number(
+                                activeFilters?.find((af) => af.filter === "guildId")
+                                  ?.value
+                              )
+                        }
+                        pr={7}
+                        borderLeftRadius={0}
+                      />
                     )
                   default:
                     return null
