@@ -14,7 +14,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Info, UserSwitch } from "phosphor-react"
-import { useFetcherWithSign } from "utils/fetcher"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
@@ -67,10 +67,8 @@ const SyncRoleButton = ({ roleId }) => {
   const showErrorToast = useShowErrorToast()
 
   const submit = () =>
-    fetcherWithSign([
-      "/v2/periodic-sync/roles",
-      { method: "POST", body: { roleId } },
-    ])
+    // TODO: use fetcherWithSign (with params in array) when the BE will add auth back
+    fetcher("/v2/periodic-sync/roles", { method: "POST", body: { roleId } })
 
   const { onSubmit, isLoading } = useSubmit(submit, {
     onSuccess: () => {
