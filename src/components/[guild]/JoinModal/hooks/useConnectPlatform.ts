@@ -137,7 +137,9 @@ const useConnectPlatform = (
         }
       })
 
-      const result = await messageListener
+      const result = await messageListener.finally(() => {
+        channel.close()
+      })
       return result
     },
     {
