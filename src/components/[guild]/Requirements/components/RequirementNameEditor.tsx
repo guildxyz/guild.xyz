@@ -128,8 +128,6 @@ const RequirementNameEditorWrapper = ({
     data: { customName },
   } = requirement
 
-  console.log(requirement)
-
   const textRef = useRef<HTMLParagraphElement>(null)
   const { field } = useController({
     control: methods.control,
