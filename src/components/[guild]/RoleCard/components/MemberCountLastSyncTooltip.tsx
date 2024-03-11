@@ -72,7 +72,10 @@ const SyncRoleButton = ({ roleId }) => {
 
   const { onSubmit, isLoading } = useSubmit(submit, {
     onSuccess: () => {
-      toast({ status: "success", title: "Successfully started syncing members" })
+      toast({
+        status: "success",
+        title: "Successfully moved sync job to the start of the queue",
+      })
     },
     onError: (err) => {
       showErrorToast(err)
