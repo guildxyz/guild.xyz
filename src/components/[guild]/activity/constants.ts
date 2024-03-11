@@ -131,11 +131,11 @@ export const activityLogActionIcons: Record<
   },
   [ACTION.UpdateForm]: {
     as: File,
-    color: "green.500",
+    color: "blue.400",
   },
   [ACTION.DeleteForm]: {
     as: FileMinus,
-    color: "green.500",
+    color: "red.500",
   },
   [ACTION.SubmitForm]: {
     as: FileText,
