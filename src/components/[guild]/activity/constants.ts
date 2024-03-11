@@ -4,6 +4,10 @@ import {
   ArrowsClockwise,
   ArrowsLeftRight,
   Eye,
+  File,
+  FileMinus,
+  FilePlus,
+  FileText,
   FolderUser,
   House,
   IconProps,
@@ -122,19 +126,19 @@ export const activityLogActionIcons: Record<
   }
 > = {
   [ACTION.CreateForm]: {
-    as: House,
+    as: FilePlus,
     color: "green.500",
   },
   [ACTION.UpdateForm]: {
-    as: House,
+    as: File,
     color: "green.500",
   },
   [ACTION.DeleteForm]: {
-    as: House,
+    as: FileMinus,
     color: "green.500",
   },
   [ACTION.SubmitForm]: {
-    as: House,
+    as: FileText,
     color: "green.500",
   },
   [ACTION.CreateGuild]: {
