@@ -141,7 +141,11 @@ const useConnectPlatform = (
       return result
     },
     {
-      onSuccess,
+      onSuccess: (isSuccess) => {
+        if (isSuccess) {
+          onSuccess?.()
+        }
+      },
       onError: (error) => {
         toast({
           status: "error",
