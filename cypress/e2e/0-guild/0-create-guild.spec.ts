@@ -3,6 +3,7 @@ before(() => {
 })
 
 const getContinueBtn = () => cy.get('[type="button"]').contains("Continue")
+const getRoles = () => cy.get('[data-test^="role-"]')
 
 const fillCustomizeGuildForm = ({ shouldContinue = true } = {}) => {
   cy.contains("add rewards later").click()
@@ -10,11 +11,9 @@ const fillCustomizeGuildForm = ({ shouldContinue = true } = {}) => {
 
   cy.get("input[name='name']")
     .should("be.visible")
-    .clear()
     .type(`${Cypress.env("platformlessGuildName")} ${Cypress.env("RUN_ID")}`)
   cy.get("input[name='contacts.0.contact']")
     .should("be.visible")
-    .clear()
     .type("username@example.com")
 
   if (shouldContinue) getContinueBtn().should("be.enabled").click()
@@ -41,7 +40,7 @@ describe("create guild page", () => {
 
     it("can customize guild without platform", () => {
       cy.contains("add rewards later").click()
-      getContinueBtn().should("be.not.be.disabled")
+      getContinueBtn().should("not.be.disabled")
       getContinueBtn().click()
 
       // Name is required
@@ -122,7 +121,7 @@ describe("create guild page", () => {
       // Selecting the first role template
       getContinueBtn().should("be.disabled")
       cy.get('#role-checkbox[data-test^="selected-role-"]').should("not.exist")
-      cy.get('[data-test^="role-"]')
+      getRoles()
         .first()
         .click()
         .invoke("attr", "data-test")
@@ -134,7 +133,7 @@ describe("create guild page", () => {
       getContinueBtn().should("not.be.disabled")
 
       // Deselecting the first role template
-      cy.get('[data-test^="role-"]')
+      getRoles()
         .first()
         .click()
         .invoke("attr", "data-test")
@@ -148,45 +147,45 @@ describe("create guild page", () => {
 
     it("can add rewards only to selected role templates", () => {
       // Selecting the first role template, check if visible on reward step
-      cy.get('[data-test^="role-"]')
+      getRoles()
         .first()
         .click()
         .invoke("attr", "data-test")
         .then((roleName) => {
           getContinueBtn().click()
           cy.get(`[data-test=${roleName}]`).should("be.visible")
-          cy.get('[data-test^="role-"]').filter(":visible").should("have.length", 1)
+          getRoles().filter(":visible").should("have.length", 1)
         })
 
       // Selecting the second role template in addition, check if both are visible on reward step
       cy.contains("Go back and choose more templates").click()
 
-      cy.get('[data-test^="role-"]')
+      getRoles()
         .eq(1)
         .click()
         .invoke("attr", "data-test")
         .then((roleName) => {
           getContinueBtn().click()
           cy.get(`[data-test=${roleName}]`).should("be.visible")
-          cy.get('[data-test^="role-"]').filter(":visible").should("have.length", 2)
+          getRoles().filter(":visible").should("have.length", 2)
         })
 
       // Deselecting the first template, check that it disappears from the reward step
       cy.contains("Go back and choose more templates").click()
 
-      cy.get('[data-test^="role-"]')
+      getRoles()
         .first()
         .click()
         .invoke("attr", "data-test")
         .then((roleName) => {
           getContinueBtn().click()
           cy.get(`[data-test=${roleName}]`).should("not.be.visible")
-          cy.get('[data-test^="role-"]').filter(":visible").should("have.length", 1)
+          getRoles().filter(":visible").should("have.length", 1)
         })
     })
 
     it("can create guild", () => {
-      cy.get('[data-test^="role-"]').first().click()
+      getRoles().first().click()
 
       getContinueBtn().click()
 
