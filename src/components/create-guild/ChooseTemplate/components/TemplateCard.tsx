@@ -243,8 +243,7 @@ const TemplateCard = ({
         >
           {selected ? (
             <Circle
-              id={`role-checkbox`}
-              data-test={`selected-role-${slugify(role.name)}`}
+              data-test={`checked-role-${slugify(role.name)}`}
               bgColor="green.500"
               color="white"
               size={6}
@@ -255,9 +254,8 @@ const TemplateCard = ({
             </Circle>
           ) : (
             <Circle
-              id={`role-checkbox`}
-              borderColor={"gray"}
-              borderStyle={"solid"}
+              borderColor="gray"
+              borderStyle="solid"
               borderWidth={2}
               size={6}
             />

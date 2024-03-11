@@ -120,14 +120,14 @@ describe("create guild page", () => {
     it("can select role templates", () => {
       // Selecting the first role template
       getContinueBtn().should("be.disabled")
-      cy.get('#role-checkbox[data-test^="selected-role-"]').should("not.exist")
+      cy.get('[data-test^="role-checkbox-"]').should("not.exist")
       getRoles()
         .first()
         .click()
         .invoke("attr", "data-test")
-        .then((roleName) => {
-          const checkboxSelector = `data-test=selected-${roleName}`
-          cy.get(`#role-checkbox[${checkboxSelector}]`).should("exist")
+        .then((dataTestAttr) => {
+          const checkboxSelector = `data-test=checked-${dataTestAttr}`
+          cy.get(`[${checkboxSelector}]`).should("exist")
         })
 
       getContinueBtn().should("not.be.disabled")
@@ -137,9 +137,9 @@ describe("create guild page", () => {
         .first()
         .click()
         .invoke("attr", "data-test")
-        .then((roleName) => {
-          const checkboxSelector = `data-test=selected-${roleName}`
-          cy.get(`#role-checkbox[${checkboxSelector}]`).should("not.exist")
+        .then((dataTestAttr) => {
+          const checkboxSelector = `data-test=checked-${dataTestAttr}`
+          cy.get(`[${checkboxSelector}]`).should("not.exist")
         })
 
       getContinueBtn().should("be.disabled")
