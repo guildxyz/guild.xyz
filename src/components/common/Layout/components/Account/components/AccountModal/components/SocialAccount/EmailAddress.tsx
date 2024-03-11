@@ -169,7 +169,7 @@ const ConnectEmailButton = ({
           <form onSubmit={submit}>
             <ModalHeader>Connect email</ModalHeader>
             <ModalCloseButton />
-            <ModalBody display={"flex"} flexDir="column" pb="6">
+            <ModalBody display={"flex"} flexDir="column" pb="8" pt="1">
               <Error
                 error={verificationRequest.error ?? connect.error}
                 processError={processEmailError}
@@ -247,6 +247,7 @@ const ConnectEmailButton = ({
                     w="full"
                     isLoading={connect.isLoading || connect.isSigning}
                     size={"sm"}
+                    borderRadius="lg"
                     variant={"ghost"}
                     type={"submit"}
                     isDisabled={isResendButtonDisabled}

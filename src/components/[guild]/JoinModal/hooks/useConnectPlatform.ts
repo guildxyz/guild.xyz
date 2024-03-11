@@ -132,7 +132,6 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
 
   return useSubmit(submit, {
     onSuccess: (newPlatformUser) => {
-      // captureEvent("Platform connection", { platformName })
       mutateUser(
         (prev) => ({
           ...prev,

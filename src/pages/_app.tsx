@@ -1,5 +1,4 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { FuelProvider } from "@fuel-wallet/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { wagmiConfig } from "chains"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
@@ -117,23 +116,23 @@ const App = ({
               reconnectOnMount={!process.env.NEXT_PUBLIC_MOCK_CONNECTOR}
             >
               <QueryClientProvider client={queryClient}>
-                <FuelProvider>
-                  <PostHogProvider>
-                    <IntercomProvider>
-                      <ExplorerProvider>
-                        <AppErrorBoundary>
-                          <Component {...pageProps} />
-                        </AppErrorBoundary>
+                {/*<FuelProvider>*/}
+                <PostHogProvider>
+                  <IntercomProvider>
+                    <ExplorerProvider>
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
 
-                        <ClientOnly>
-                          <AccountModal />
-                        </ClientOnly>
-                      </ExplorerProvider>
-                    </IntercomProvider>
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
+                    </ExplorerProvider>
+                  </IntercomProvider>
 
-                    <Web3ConnectionManager />
-                  </PostHogProvider>
-                </FuelProvider>
+                  <Web3ConnectionManager />
+                </PostHogProvider>
+                {/*</FuelProvider>*/}
               </QueryClientProvider>
             </WagmiProvider>
           </SWRConfig>

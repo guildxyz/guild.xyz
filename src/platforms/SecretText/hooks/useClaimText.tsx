@@ -131,7 +131,10 @@ const ClaimTextModal = ({
             <Text>Getting your secret...</Text>
           </HStack>
         ) : response?.uniqueValue ? (
-          <ReactMarkdown components={reactMarkdownComponents}>
+          <ReactMarkdown
+            transformLinkUri={false}
+            components={reactMarkdownComponents}
+          >
             {response.uniqueValue}
           </ReactMarkdown>
         ) : (

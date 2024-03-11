@@ -85,7 +85,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       try {
         finalOauthParams = await oauthOptionsInitializer(redirectUri)
       } catch (error) {
-        captureEvent("Failed to generate X 1.0 request token", { error })
         result = {
           error: {
             error: "Error",

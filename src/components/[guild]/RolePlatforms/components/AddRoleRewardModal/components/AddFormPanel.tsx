@@ -6,13 +6,10 @@ import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateFor
 import { FormCreationSchema } from "components/[guild]/CreateFormModal/schemas"
 import Button from "components/common/Button"
 import { ArrowRight } from "phosphor-react"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
+import { AddPlatformPanelProps } from "platforms/platforms"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PlatformGuildData, PlatformType } from "types"
 import { uuidv7 } from "uuidv7"
-
-type Props = {
-  onSuccess: () => void
-}
 
 type MapOptions<Variant> = Variant extends {
   options?: (
@@ -36,12 +33,7 @@ const defaultValues: CreateForm = {
   fields: [],
 }
 
-const AddFormPanel = ({ onSuccess }: Props) => {
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
+const AddFormPanel = ({ onAdd }: AddPlatformPanelProps) => {
   const methods = useForm<CreateForm>({
     mode: "all",
     resolver: zodResolver(FormCreationSchema),
@@ -53,18 +45,17 @@ const AddFormPanel = ({ onSuccess }: Props) => {
   const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm(
     (createdForm) => {
       methods.reset(defaultValues)
-      append({
+      onAdd({
         guildPlatform: {
           platformName: "FORM",
+          platformId: PlatformType.FORM,
           platformGuildId: `form-${createdForm.id}`,
           platformGuildData: {
             formId: createdForm.id,
-          },
+          } satisfies PlatformGuildData["FORM"],
         },
-        visibility: roleVisibility,
         isNew: true,
       })
-      onSuccess()
     }
   )
 

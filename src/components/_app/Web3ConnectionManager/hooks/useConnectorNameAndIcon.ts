@@ -1,11 +1,11 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
-import { useIsConnected } from "@fuel-wallet/react"
 import { useMemo } from "react"
 import { Connector, useAccount } from "wagmi"
 
 const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const { connector: evmConnectorFromHook } = useAccount()
-  const { isConnected: isFuelConnected } = useIsConnected()
+  // const { isConnected: isFuelConnected } = useIsConnected()
+  const isFuelConnected = false
 
   const connector = connectorParam ?? evmConnectorFromHook
 

@@ -11,7 +11,7 @@ import { useRef } from "react"
 import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import preprocessRequirements from "utils/preprocessRequirements"
+import preprocessRequirement from "utils/preprocessRequirement"
 import { useAccount } from "wagmi"
 
 type RoleOrGuild = Role & { guildId: number }
@@ -79,10 +79,8 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
   return {
     ...useSubmitResponse,
     onSubmit: (data) => {
-      data.requirements = preprocessRequirements(data?.requirements)
-
+      data.requirements = data?.requirements?.map(preprocessRequirement)
       delete data.roleType
-
       if (data.logic !== "ANY_OF") delete data.anyOfNum
 
       return useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer)))

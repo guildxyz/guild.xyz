@@ -48,6 +48,7 @@ const AccountConnections = () => {
           "POINTS",
           "POLYGON_ID",
           "FORM",
+          "GATHER_TOWN",
         ].includes(platform) && !connectedPlatforms?.includes(platform)
     )
     return [
@@ -141,7 +142,7 @@ const AccountConnections = () => {
   )
 }
 
-const AccountSection = ({ children, ...rest }) => {
+export const AccountSection = ({ children, ...rest }) => {
   const bg = useColorModeValue("gray.50", "blackAlpha.200")
 
   return (

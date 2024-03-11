@@ -22,7 +22,7 @@ import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetReq
 import platforms from "platforms/platforms"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
+import { Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -35,7 +35,15 @@ import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 
-const defaultValues = {
+type AddRewardForm = {
+  // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
+  rolePlatforms: RoleFormType["rolePlatforms"][number][]
+  requirements?: Requirement[]
+  roleIds?: number[]
+  visibility: Visibility
+}
+
+const defaultValues: AddRewardForm = {
   rolePlatforms: [],
   requirements: [],
   roleIds: [],
@@ -58,9 +66,10 @@ const AddRewardButton = (): JSX.Element => {
     isBackButtonDisabled,
   } = useAddRewardContext()
 
-  const methods = useForm({
+  const methods = useForm<AddRewardForm>({
     defaultValues,
   })
+  const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
@@ -102,13 +111,17 @@ const AddRewardButton = (): JSX.Element => {
 
   const onSubmit = (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (data.requirements?.length > 0) {
-      const visibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+      const roleVisibility =
+        saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
         ...data,
         name: data.name || `New ${platforms[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
-        visibility,
-        rolePlatforms: data.rolePlatforms.map((rp) => ({ ...rp, visibility })),
+        roleVisibility,
+        rolePlatforms: data.rolePlatforms.map((rp) => ({
+          ...rp,
+          visibility: roleVisibility,
+        })),
       })
     } else if (data.roleIds?.length) {
       onAddRewardSubmit({
@@ -238,7 +251,13 @@ const AddRewardButton = (): JSX.Element => {
                 <SelectRoleOrSetRequirements selectedPlatform={selection} />
               ) : AddPlatformPanel ? (
                 <AddPlatformPanel
-                  onSuccess={() => setStep("SELECT_ROLE")}
+                  onAdd={(createdRolePlatform) => {
+                    methods.setValue("rolePlatforms.0", {
+                      ...createdRolePlatform,
+                      visibility,
+                    })
+                    setStep("SELECT_ROLE")
+                  }}
                   skipSettings
                 />
               ) : (
