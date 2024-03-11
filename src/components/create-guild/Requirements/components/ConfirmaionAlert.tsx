@@ -43,7 +43,7 @@ const ConfirmationAlert = ({
               data-test="delete-requirement-button"
               colorScheme="red"
               ml={3}
-              onClick={onConfirm || onClose}
+              onClick={!!onConfirm ? () => onConfirm() : () => onClose()}
               isLoading={isLoading}
             >
               {confirmationText}

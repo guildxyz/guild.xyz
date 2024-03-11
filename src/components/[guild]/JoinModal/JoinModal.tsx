@@ -74,18 +74,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       return <ConnectComponent key={platform} />
     }
 
-    if (
-      !platforms[platform] ||
-      platform === "POAP" ||
-      platform === "CONTRACT_CALL" ||
-      platform === "TEXT" ||
-      platform === "UNIQUE_TEXT" ||
-      platform === "POLYGON_ID" ||
-      platform === "POINTS" ||
-      platform === "FORM" ||
-      platform === "GATHER_TOWN"
-    )
-      return null
+    if (!platforms[platform]?.isPlatform) return null
 
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
