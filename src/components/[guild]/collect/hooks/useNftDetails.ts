@@ -104,15 +104,14 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     ],
   })
 
-  // Haven't used data?.map(...) here in order to properly infer types from responses
-  const [owner, name, totalSupply, isERC1155, tokenURI, fee] = [
-    data?.[0]?.result,
-    data?.[1]?.result,
-    data?.[2]?.result,
-    data?.[3]?.result,
-    data?.[4]?.result,
-    data?.[5]?.result,
-  ]
+  const [
+    { result: owner },
+    { result: name },
+    { result: totalSupply },
+    { result: isERC1155 },
+    { result: tokenURI },
+    { result: fee },
+  ] = data
 
   const { data: metadata } = useSWRImmutable(
     tokenURI
