@@ -12,16 +12,12 @@ describe("guild pins", () => {
     cy.visit(Cypress.env("TEST_GUILD_URL_NAME"))
     cy.connectWallet()
 
-    cy.waitForAccessCheck()
-
     cy.getByDataTest("guild-pin-reward-card").should("exist")
   })
 
   it("can see the pin setup modal", () => {
     cy.visit(Cypress.env("TEST_GUILD_URL_NAME"))
     cy.connectWallet()
-
-    cy.waitForAccessCheck()
 
     cy.getByDataTest("guild-pin-reward-card")
       .get("button")
