@@ -45,12 +45,20 @@ const parseConnectError = (
   }
 }
 
-function getOAuthURL(platformName: string, authToken: string, scope?: AuthLevel) {
+function getOAuthURL(
+  platformName: string,
+  authToken: string,
+  scope?: AuthLevel,
+  force?: boolean
+) {
   const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
   url.searchParams.set("path", window.location.pathname)
   url.searchParams.set("token", authToken)
   if (scope) {
     url.searchParams.set("scope", scope)
+  }
+  if (force) {
+    url.searchParams.set("force", "1")
   }
   return url.href
 }
@@ -65,12 +73,14 @@ const useConnectPlatform = (
   const { id, mutate: mutateUser } = useUser()
   const fetcherWithSign = useFetcherWithSign()
   const toast = useToast()
+  const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   const { data: url } = useSWR(
     id ? `guild-oauth-token-${platformName}-${id}` : null,
     () =>
       fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
-        ({ token }) => getOAuthURL(platformName, token, authLevel)
+        ({ token }) =>
+          getOAuthURL(platformName, token, authLevel, disconnectFromExistingUser)
       ),
     { dedupingInterval: 1000 * 60 * 2 }
   )
@@ -113,6 +123,14 @@ const useConnectPlatform = (
 
               return
             } else {
+              if (result.message?.startsWith("Before connecting your")) {
+                const [, addressOrDomain] = result.message.match(
+                  /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+                )
+                showPlatformMergeAlert({ addressOrDomain, platformName })
+                resolve(false)
+                return
+              }
               reject(new Error(result.message))
             }
           }
