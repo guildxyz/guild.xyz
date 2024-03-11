@@ -36,7 +36,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
   const { isLoading, data: connectedDID } = useConnectedDID()
 
   const state = useMemo(() => {
-    if (isMember && hasRoleAccess && connectedDID) {
+    if (hasRoleAccess && connectedDID) {
       return {
         tooltipLabel: "Mint proof",
         buttonProps: {
@@ -46,7 +46,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasRoleAccess))
+    if (!isMember)
       return {
         tooltipLabel: (
           <>

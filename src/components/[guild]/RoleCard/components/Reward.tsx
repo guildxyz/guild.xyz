@@ -65,14 +65,15 @@ const Reward = ({
   )
 
   const state = useMemo(() => {
-    if (isMember && hasRoleAccess)
+    if (hasRoleAccess)
       return {
         tooltipLabel: label,
         buttonProps: isLinkColorful
           ? { ...accessButtonProps, colorScheme: "blue" }
           : accessButtonProps,
       }
-    if (!isConnected || (!isMember && hasRoleAccess))
+
+    if (!isMember)
       return {
         tooltipLabel: (
           <>
@@ -82,6 +83,7 @@ const Reward = ({
         ),
         buttonProps: { onClick: openJoinModal },
       }
+
     return {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
