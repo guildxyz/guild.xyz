@@ -71,7 +71,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     error: multicallError,
     refetch,
   } = useReadContracts({
-    // WAGMI 2 TODO
+    // WAGMI TODO: don't know why we get this error here, had to ts-ignore it unfortunately...
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     contracts: [
@@ -105,13 +105,20 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   })
 
   const [
-    { result: owner },
-    { result: name },
-    { result: totalSupply },
-    { result: isERC1155 },
-    { result: tokenURI },
-    { result: fee },
-  ] = data
+    ownerResponse,
+    nameResponse,
+    totalSupplyResponse,
+    supportsInterfaceResponse,
+    tokenURResponseI,
+    feeResponse,
+  ] = data || []
+
+  const owner = ownerResponse?.result
+  const name = nameResponse?.result
+  const totalSupply = totalSupplyResponse?.result
+  const isERC1155 = supportsInterfaceResponse?.result
+  const tokenURI = tokenURResponseI?.result
+  const fee = feeResponse?.result
 
   const { data: metadata } = useSWRImmutable(
     tokenURI
