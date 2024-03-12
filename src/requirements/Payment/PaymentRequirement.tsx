@@ -10,10 +10,10 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useToken from "hooks/useToken"
 import { Coins } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { useToken } from "wagmi"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
@@ -45,9 +45,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useToken({
     address: token,
     chainId: Chains[chain],
-    query: {
-      enabled: Boolean(!isNativeCurrency && chain),
-    },
+    shouldFetch: Boolean(!isNativeCurrency && chain),
   })
 
   const convertedFee = fee

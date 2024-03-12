@@ -1,0 +1,58 @@
+import { erc20Abi } from "viem"
+import { useReadContracts } from "wagmi"
+
+const useToken = ({
+  address,
+  chainId,
+  shouldFetch = true,
+}: {
+  address: `0x${string}`
+  chainId: number
+  shouldFetch?: boolean
+}) => {
+  const { data, ...rest } = useReadContracts({
+    allowFailure: false,
+    query: {
+      enabled: !!address && !!chainId && !!shouldFetch,
+    },
+    // WAGMI TODO: don't know why we get this error here, had to ts-ignore it unfortunately...
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    contracts: [
+      {
+        address,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+      {
+        address,
+        abi: erc20Abi,
+        functionName: "name",
+      },
+      {
+        address,
+        abi: erc20Abi,
+        functionName: "symbol",
+      },
+      {
+        address,
+        abi: erc20Abi,
+        functionName: "totalSupply",
+      },
+    ],
+  })
+
+  const [decimals, name, symbol, totalSupply] = data ?? []
+
+  return {
+    data: {
+      decimals,
+      name,
+      symbol,
+      totalSupply,
+    },
+    ...rest,
+  }
+}
+
+export default useToken

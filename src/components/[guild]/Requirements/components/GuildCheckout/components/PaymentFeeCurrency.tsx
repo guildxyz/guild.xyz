@@ -1,10 +1,10 @@
 import { Box, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
+import useToken from "hooks/useToken"
 import { useEffect } from "react"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { useToken } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "./GuildCheckoutContext"
 import TokenInfo from "./PaymentCurrencyPicker/components/TokenInfo"
@@ -27,9 +27,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[requirement.chain],
-    query: {
-      enabled: Boolean(!isNativeCurrency && Chains[requirement.chain]),
-    },
+    shouldFetch: Boolean(!isNativeCurrency && Chains[requirement.chain]),
   })
 
   const convertedFee = fee

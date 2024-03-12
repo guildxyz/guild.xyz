@@ -2,10 +2,11 @@ import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
+import useToken from "hooks/useToken"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem"
-import { useChainId, useToken } from "wagmi"
+import { useChainId } from "wagmi"
 
 type RegisterVaultParams = {
   owner: `0x${string}`
@@ -29,9 +30,7 @@ const useRegisterVault = ({
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[chain],
-    query: {
-      enabled: Boolean(token !== NULL_ADDRESS && chain),
-    },
+    shouldFetch: Boolean(token !== NULL_ADDRESS && chain),
   })
   const tokenDecimals =
     token === NULL_ADDRESS
