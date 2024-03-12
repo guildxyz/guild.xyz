@@ -110,6 +110,7 @@ const CreateGuildStepper = ({
 
   return (
     <Card
+      data-test="create-guild-stepper"
       pos="relative"
       py="6"
       px={{ base: 5, md: 6 }}

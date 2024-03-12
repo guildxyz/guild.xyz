@@ -2,8 +2,25 @@ before(() => {
   cy.clearIndexedDB()
 })
 
-describe.skip("create guild page (without wallet)", () => {
-  before(() => {
+const getContinueBtn = () => cy.get('[type="button"]').contains("Continue")
+const getRoles = () => cy.get('[data-test^="role-"]')
+
+const fillCustomizeGuildForm = ({ shouldContinue = true } = {}) => {
+  cy.contains("add rewards later").click()
+  getContinueBtn().click()
+
+  cy.get("input[name='name']")
+    .should("be.visible")
+    .type(`${Cypress.env("platformlessGuildName")} ${Cypress.env("RUN_ID")}`)
+  cy.get("input[name='contacts.0.contact']")
+    .should("be.visible")
+    .type("username@example.com")
+
+  if (shouldContinue) getContinueBtn().should("be.enabled").click()
+}
+
+describe("create guild page - without wallet", () => {
+  beforeEach(() => {
     cy.visit("/create-guild")
   })
 
@@ -17,52 +34,161 @@ describe.skip("create guild page (without wallet)", () => {
         cy.get("button[aria-label='Close']").click()
       })
 
-    cy.contains("Create guild without platform").click()
-    cy.getByDataTest("wallet-selector-modal").should("exist")
-  })
-})
-
-describe.skip("create guild page (with wallet)", () => {
-  before(() => {
-    cy.visit("/create-guild")
-    cy.connectWallet()
+    getContinueBtn().should("be.disabled")
   })
 
-  it("can create a guild without platform", () => {
-    cy.contains("Create guild without platform").click()
-    cy.get(".chakra-step [data-status='active'] div").should("contain.text", "2")
+  it("can customize guild without platform", () => {
+    cy.contains("add rewards later").click()
+    getContinueBtn().should("not.be.disabled")
+    getContinueBtn().click()
 
-    cy.contains("Start from scratch").click({ force: true })
-    cy.get(".chakra-step p[data-status='active']").should("contain.text", "Basic")
-    cy.contains("Growth").click({ force: true })
-    cy.get(".chakra-step p[data-status='active']").should("contain.text", "Growth")
-
-    cy.contains("Next").click()
-
+    // Name is required
+    getContinueBtn().should("be.disabled")
+    cy.get("input[name='name']")
     cy.get("input[name='name']").focus().blur()
-    cy.get("input[name='name'] ~ .chakra-collapse")
+    cy.get("input[name='name']")
+      .next(".chakra-collapse")
       .should("exist")
       .contains("This field is required")
-    cy.getByDataTest("create-guild-button").should("be.disabled")
     cy.get("input[name='name']").type(
       `${Cypress.env("platformlessGuildName")} ${Cypress.env("RUN_ID")}`
     )
-    cy.getByDataTest("create-guild-button").should("be.disabled")
 
-    cy.get("input[name='socialLinks.TWITTER']").focus().blur()
-    cy.get("input[name='socialLinks.TWITTER']")
+    cy.get("input[name='urlName']").invoke("val").should("not.be.empty")
+
+    // Email is required
+    getContinueBtn().should("be.disabled")
+    const emailInput = () => cy.get("input[name='contacts.0.contact']")
+    emailInput().focus().blur()
+    emailInput()
       .parent()
-      .siblings(".chakra-collapse")
+      .next(".chakra-collapse")
+      .should("exist")
       .contains("This field is required")
-    cy.getByDataTest("create-guild-button").should("be.disabled")
-    cy.get("input[name='socialLinks.TWITTER']").type("guild.xyz")
-    cy.get("input[name='socialLinks.TWITTER']")
+
+    emailInput().type("username@example.com")
+    getContinueBtn().should("not.be.disabled")
+  })
+
+  it("cannot add empty additional contacts", () => {
+    fillCustomizeGuildForm({ shouldContinue: false })
+
+    cy.get("button.chakra-button")
+      .contains("Add contact")
+      .should("be.visible")
+      .click()
+    const extraContact = () => cy.get("input[name='contacts.1.contact']")
+    extraContact().should("be.visible").blur()
+    extraContact()
       .parent()
-      .siblings(".chakra-collapse")
-      .contains("Invalid X URL")
-    cy.getByDataTest("create-guild-button").should("be.disabled")
-    cy.get("input[name='socialLinks.TWITTER']").clear().type("twitter.com/guildxyz")
-    cy.getByDataTest("create-guild-button").should("be.enabled")
+      .next(".chakra-collapse")
+      .should("exist")
+      .contains("This field is required")
+    getContinueBtn().should("be.disabled")
+
+    extraContact().type("username@example.com")
+    getContinueBtn().should("not.be.disabled")
+
+    cy.getByDataTest("remove-contact-btn").should("be.visible").click()
+    extraContact().should("not.exist")
+
+    getContinueBtn().should("not.be.disabled")
+  })
+
+  it("requires wallet to access templates", () => {
+    fillCustomizeGuildForm()
+
+    cy.getByDataTest("wallet-selector-modal")
+      .should("be.visible")
+      .within(() => {
+        cy.get("button[aria-label='Close']").click()
+      })
+
+    cy.getByDataTest("wallet-selector-modal").should("be.visible")
+  })
+})
+
+describe("create guild page - with wallet", () => {
+  beforeEach(() => {
+    cy.clearIndexedDB()
+    cy.visit("/create-guild")
+    cy.connectWallet()
+    fillCustomizeGuildForm()
+  })
+
+  it("can select role templates", () => {
+    // Selecting the first role template
+    getContinueBtn().should("be.disabled")
+    cy.get('[data-test^="role-checkbox-"]').should("not.exist")
+    getRoles()
+      .first()
+      .click()
+      .invoke("attr", "data-test")
+      .then((dataTestAttr) => {
+        const checkboxSelector = `data-test=checked-${dataTestAttr}`
+        cy.get(`[${checkboxSelector}]`).should("exist")
+      })
+
+    getContinueBtn().should("not.be.disabled")
+
+    // Deselecting the first role template
+    getRoles()
+      .first()
+      .click()
+      .invoke("attr", "data-test")
+      .then((dataTestAttr) => {
+        const checkboxSelector = `data-test=checked-${dataTestAttr}`
+        cy.get(`[${checkboxSelector}]`).should("not.exist")
+      })
+
+    getContinueBtn().should("be.disabled")
+  })
+
+  it("can add rewards only to selected role templates", () => {
+    // Selecting the first role template, check if visible on reward step
+    getRoles()
+      .first()
+      .click()
+      .invoke("attr", "data-test")
+      .then((roleName) => {
+        getContinueBtn().click()
+        cy.get(`[data-test=${roleName}]`).should("be.visible")
+        getRoles().filter(":visible").should("have.length", 1)
+      })
+
+    // Selecting the second role template in addition, check if both are visible on reward step
+    cy.contains("Go back and choose more templates").click()
+
+    getRoles()
+      .eq(1)
+      .click()
+      .invoke("attr", "data-test")
+      .then((roleName) => {
+        getContinueBtn().click()
+        cy.get(`[data-test=${roleName}]`).should("be.visible")
+        getRoles().filter(":visible").should("have.length", 2)
+      })
+
+    // Deselecting the first template, check that it disappears from the reward step
+    cy.contains("Go back and choose more templates").click()
+
+    getRoles()
+      .first()
+      .click()
+      .invoke("attr", "data-test")
+      .then((roleName) => {
+        getContinueBtn().click()
+        cy.get(`[data-test=${roleName}]`).should("not.be.visible")
+        getRoles().filter(":visible").should("have.length", 1)
+      })
+  })
+
+  it("can create guild", () => {
+    getRoles().first().click()
+
+    getContinueBtn().click()
+
+    cy.getByDataTest("create-guild-button").should("not.be.disabled")
 
     cy.intercept("POST", `${Cypress.env("guildApiUrl")}/guilds`).as(
       "createGuildRequest"
@@ -71,5 +197,14 @@ describe.skip("create guild page (with wallet)", () => {
     cy.getByDataTest("create-guild-button").click()
 
     cy.wait("@createGuildRequest").its("response.statusCode").should("eq", 201)
+
+    // User is redirected to the guild page
+    cy.url().should("include", "/platformless-cypress-gang-localhost")
+    getContinueBtn().click()
+
+    cy.contains("Guild 100% complete").should("be.visible")
+    cy.get("button").contains("Close").click()
+
+    cy.getByDataTest("create-guild-stepper").should("not.exist")
   })
 })
