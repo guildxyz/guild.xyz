@@ -1,7 +1,5 @@
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
 import randomBytes from "randombytes"
 import { useEffect, useState } from "react"
 import { OneOf, PlatformName } from "types"
@@ -24,10 +22,6 @@ type OAuthState<OAuthResponse> = {
   isAuthenticating: boolean
 }
 
-export type AuthLevel<
-  T = (typeof platforms)[PlatformName]["oauth"]["params"]["scope"]
-> = T extends string ? never : keyof T
-
 type TGAuthResult = {
   event: "auth_result"
   result: {
@@ -43,18 +37,11 @@ type TGAuthResult = {
 
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
-  authLevel: AuthLevel = "membership",
-  paramOverrides = {}
+  url: string,
+  params: Record<string, any>
 ): OAuthState<OAuthResponse> & {
   onOpen: () => Promise<OAuthState<OAuthResponse>>
 } => {
-  const { captureEvent } = usePostHogContext()
-
-  const { params, url, oauthOptionsInitializer } = platforms[platformName]
-    ?.oauth ?? {
-    params: {} as any,
-  }
-
   const toast = useToast()
 
   const redirectUri =
@@ -79,33 +66,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     }
     setOauthState(result)
 
-    let finalOauthParams = params
-
-    if (oauthOptionsInitializer) {
-      try {
-        finalOauthParams = await oauthOptionsInitializer(redirectUri)
-      } catch (error) {
-        result = {
-          error: {
-            error: "Error",
-            errorDescription: error.message,
-          },
-          isAuthenticating: false,
-          authData: null,
-        }
-
-        setOauthState(result)
-        return
-      }
-    }
-
-    if (paramOverrides) {
-      finalOauthParams = {
-        ...finalOauthParams,
-        ...paramOverrides,
-      }
-    }
-
     const csrfToken = randomBytes(32).toString("hex")
     const localStorageKey = `${platformName}_oauthinfo`
 
@@ -114,7 +74,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       from: window.location.toString(),
       platformName,
       redirect_url: redirectUri,
-      scope: finalOauthParams.scope ?? "",
+      scope: params.scope ?? "",
     }
 
     window.localStorage.setItem(
@@ -192,14 +152,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     })
 
     const searchParams = new URLSearchParams({
-      ...finalOauthParams,
+      ...params,
       redirect_uri: redirectUri,
       state: `${platformName}-${csrfToken}`,
-      scope: finalOauthParams.scope
-        ? typeof finalOauthParams.scope === "string"
-          ? finalOauthParams.scope
-          : finalOauthParams.scope[authLevel]
-        : undefined,
     }).toString()
 
     onOpen(`${url}?${searchParams}`)
@@ -223,10 +178,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     toast({ status: "error", title, description: errorDescription })
   }, [oauthState.error])
-
-  if (!platforms[platformName]?.oauth) {
-    return {} as any
-  }
 
   return {
     ...oauthState,

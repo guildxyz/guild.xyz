@@ -118,7 +118,7 @@ const MultiPlatformSelectButton = ({
 
   const isTwitter = platform === "TWITTER"
   const isPlatformConnected =
-    !platforms[platform].oauth ||
+    !platforms[platform].isConnectable ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly

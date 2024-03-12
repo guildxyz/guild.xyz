@@ -14,7 +14,8 @@ import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import { AuthLevel } from "./useOauthPopupWindow"
+
+type AuthLevel = "membership" | "creation"
 
 const parseConnectError = (
   error: string
