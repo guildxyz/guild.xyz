@@ -83,7 +83,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       {...props}
       showViewOriginal={false}
       footer={
-        !!link && (
+        (!!data?.customName || !!data?.customImage) && (
           <ViewOriginalPopover>
             <HStack p={3} gap={4}>
               <RequirementImageCircle>
@@ -97,7 +97,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
                 <Text wordBreak="break-word" flexGrow={1}>
                   <Original />
                 </Text>
-                {!!formContext && <ResetRequirementButton />}
+                <ResetRequirementButton />
               </Stack>
             </HStack>
           </ViewOriginalPopover>

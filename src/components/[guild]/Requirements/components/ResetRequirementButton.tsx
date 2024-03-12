@@ -1,25 +1,29 @@
-import { Button } from "@chakra-ui/react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { Button, Spinner } from "@chakra-ui/react"
+import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { useRequirementContext } from "./RequirementContext"
 
 const ResetRequirementButton = () => {
-  const { id } = useRequirementContext()
-  const { control, setValue } = useFormContext()
-  const requirements = useWatch({ name: "requirements", control })
-  const index = requirements?.findIndex((requirement) => requirement.id === id)
-
-  const onReset = () => {
-    setValue(`requirements.${index}.data.customName`, "", {
-      shouldDirty: true,
-    })
-    setValue(`requirements.${index}.data.customImage`, "", {
-      shouldDirty: true,
-    })
-  }
+  const requirement = useRequirementContext()
+  const { onSubmit, isLoading } = useEditRequirement(requirement.roleId)
 
   return (
-    <Button size={"sm"} onClick={onReset}>
-      Reset to original
+    <Button
+      size={"sm"}
+      isDisabled={isLoading}
+      onClick={() =>
+        onSubmit({
+          ...requirement,
+          data: { ...requirement.data, customName: "", customImage: "" },
+        })
+      }
+    >
+      {isLoading ? (
+        <>
+          <Spinner size={"xs"} mr={2}></Spinner> Saving...{" "}
+        </>
+      ) : (
+        "Reset to original"
+      )}
     </Button>
   )
 }
