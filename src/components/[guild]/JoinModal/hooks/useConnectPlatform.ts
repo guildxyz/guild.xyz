@@ -78,7 +78,7 @@ const useConnectPlatform = (
   const { onOpen } = usePopupWindow()
 
   const { data: authToken } = useSWR(
-    id ? `guild-oauth-token-${platformName}-${id}` : null,
+    id ? `guild-oauth-token-${id}` : null,
     () =>
       fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
         ({ token }) => token
