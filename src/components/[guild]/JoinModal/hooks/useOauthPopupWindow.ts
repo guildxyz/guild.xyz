@@ -86,48 +86,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken
     )
 
-    const getTgListener =
-      (resolve: (value: void | PromiseLike<void>) => void) =>
-      (event: MessageEvent<any>) => {
-        if (
-          event.origin ===
-            process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL.replace("/tgauth", "") &&
-          "type" in event.data &&
-          ["TG_AUTH_SUCCESS", "TG_AUTH_ERROR"].includes(event.data.type)
-        ) {
-          try {
-            const { type, data } = event.data as
-              | { type: "TG_AUTH_SUCCESS"; data: TGAuthResult["result"] }
-              | {
-                  type: "TG_AUTH_ERROR"
-                  data: { error: string; errorDescription: string }
-                }
-
-            result =
-              type === "TG_AUTH_SUCCESS"
-                ? {
-                    isAuthenticating: false,
-                    error: null,
-                    authData: data as any,
-                  }
-                : {
-                    isAuthenticating: false,
-                    error: data,
-                    authData: null,
-                  }
-
-            setOauthState(result)
-            resolve()
-          } catch {}
-        }
-      }
-
-    let tgListener: (event: MessageEvent<any>) => void
-
     const hasReceivedResponse = new Promise<void>((resolve) => {
-      tgListener = getTgListener(resolve)
-      window.addEventListener("message", tgListener)
-
       channel.onmessage = (event: MessageEvent<Message>) => {
         const { type, data } = event.data
 
@@ -164,7 +123,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       window.localStorage.removeItem(localStorageKey)
       // Close Broadcast Channel
       channel.close()
-      window.removeEventListener("message", tgListener)
     })
 
     return result
