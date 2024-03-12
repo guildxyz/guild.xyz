@@ -29,13 +29,15 @@ const OAuth: NextPage<OAuthResultParams> = (query) => {
     if (query.platform) {
       const channel = new BroadcastChannel(`guild-${query.platform}`)
       channel.onmessage = (event) => {
-        if (event.isTrusted && event.origin === window.origin) {
-          if (event.data?.type === "oauth-confirmation") {
-            setHasReceivedConfirmation(true)
-            window.close()
-            if (timeout) {
-              clearTimeout(timeout)
-            }
+        if (
+          event.isTrusted &&
+          event.origin === window.origin &&
+          event.data?.type === "oauth-confirmation"
+        ) {
+          setHasReceivedConfirmation(true)
+          window.close()
+          if (timeout) {
+            clearTimeout(timeout)
           }
         }
       }
