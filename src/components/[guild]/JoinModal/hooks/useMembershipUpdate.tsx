@@ -78,7 +78,7 @@ const useMembershipUpdate = ({
     onSuccess: (res) => {
       if (res?.failed) return onError?.(res.failedErrorMsg)
 
-      if (res?.roleAccesses?.some((role) => !role.access)) {
+      if (res?.roleAccesses?.some((role) => !!role.access)) {
         // mutate guild in case the user sees more entities due to visibilities
         if (!isAdmin) guild.mutateGuild()
 
