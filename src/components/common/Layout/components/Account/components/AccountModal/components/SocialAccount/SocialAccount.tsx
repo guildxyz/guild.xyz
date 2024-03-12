@@ -1,15 +1,14 @@
-import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
-import Button from "components/common/Button"
-import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
-import { PlatformName } from "types"
-
 import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
+import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
+import Button from "components/common/Button"
 import useMembership from "components/explorer/hooks/useMembership"
+import useToast from "hooks/useToast"
 import { Question } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { memo } from "react"
+import { PlatformName } from "types"
 import useDisconnect from "../../hooks/useDisconnect"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
@@ -68,7 +67,6 @@ export const TwitterV1Tooltip = () => (
 
 const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const toast = useToast()
-  const { id } = useUser()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const onSuccess = () => {
@@ -89,7 +87,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
     <Button
       onClick={onConnect}
       isLoading={isLoading}
-      isDisabled={response || !id}
+      isDisabled={response}
       colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"
