@@ -81,9 +81,8 @@ const useMembershipUpdate = ({
       if (res?.roleAccesses?.some((role) => !role.access)) {
         // mutate guild in case the user sees more entities due to visibilities
         if (!isAdmin) guild.mutateGuild()
-
-        mutateUserPoints()
       }
+      mutateUserPoints()
 
       setCurrentlyCheckedRoleIds([])
       onSuccess?.(res)
