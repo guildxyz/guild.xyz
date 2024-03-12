@@ -352,6 +352,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         BigInt(100000)) *
       BigInt(100000)
 
+    res.setHeader("Cache-Control", "s-maxage=30")
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei: buyAmountInWei.toString(),
