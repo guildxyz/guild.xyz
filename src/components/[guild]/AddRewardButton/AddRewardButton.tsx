@@ -45,7 +45,7 @@ type AddRewardForm = {
 
 const defaultValues: AddRewardForm = {
   rolePlatforms: [],
-  requirements: [],
+  requirements: [{ type: "FREE" } as any],
   roleIds: [],
   visibility: Visibility.PUBLIC,
 }
@@ -110,20 +110,7 @@ const AddRewardButton = (): JSX.Element => {
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
   const onSubmit = (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
-    if (data.requirements?.length > 0) {
-      const roleVisibility =
-        saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
-      onCreateRoleSubmit({
-        ...data,
-        name: data.name || `New ${platforms[selection].name} role`,
-        imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
-        roleVisibility,
-        rolePlatforms: data.rolePlatforms.map((rp) => ({
-          ...rp,
-          visibility: roleVisibility,
-        })),
-      })
-    } else if (data.roleIds?.length) {
+    if (data.roleIds?.length) {
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         rolePlatforms: data.roleIds
@@ -142,6 +129,19 @@ const AddRewardButton = (): JSX.Element => {
                 ? Visibility.HIDDEN
                 : roles.find((role) => role.id === +roleId).visibility,
           })),
+      })
+    } else if (data.requirements?.length) {
+      const roleVisibility =
+        saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+      onCreateRoleSubmit({
+        ...data,
+        name: data.name || `New ${platforms[selection].name} role`,
+        imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
+        roleVisibility,
+        rolePlatforms: data.rolePlatforms.map((rp) => ({
+          ...rp,
+          visibility: roleVisibility,
+        })),
       })
     }
   }
