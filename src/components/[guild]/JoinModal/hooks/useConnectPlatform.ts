@@ -176,6 +176,11 @@ const useConnectPlatform = (
 
     listener.onSubmit()
 
+    /**
+     * We can't force Telegram into a standard OAuth behaviour if it is opened in a
+     * popup. We can only guarantee a redirect to happen, if we refresh the current
+     * window
+     */
     if (platformName === "TELEGRAM") {
       window.location.href = url
     } else {
