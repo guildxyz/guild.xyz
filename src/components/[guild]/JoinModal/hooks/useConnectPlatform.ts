@@ -83,7 +83,7 @@ const useConnectPlatform = (
       fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
         ({ token }) => token
       ),
-    { dedupingInterval: 1000 * 60 * 4 }
+    { dedupingInterval: 1000 * 60 * 4, refreshInterval: 1000 * 30 }
   )
 
   const url = useMemo(() => {
