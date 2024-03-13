@@ -2,10 +2,9 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  AlertTitle,
   Box,
-  FormLabel,
   HStack,
-  Spacer,
   Stack,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
@@ -106,54 +105,47 @@ const AddFormPanel = ({ onAdd }: AddPlatformPanelProps) => {
     <FormProvider {...methods}>
       <Stack spacing={6}>
         {notConnectedForms.length && (
-          <div>
-            <FormLabel>Continue with existing form</FormLabel>
-            <Alert
-              status="info"
-              alignItems={{ base: "start", md: "center" }}
-              pb={5}
-              flexDirection={{ base: "column", md: "row" }}
-              gap={{ base: 5, md: 3 }}
-            >
-              <HStack>
-                <AlertIcon />
-                <Stack>
-                  <AlertDescription
-                    position="relative"
-                    top={0.5}
-                    fontWeight="semibold"
-                  >
-                    There're forms that you've created but haven't added as a reward
-                    yet.
-                  </AlertDescription>
-                </Stack>
-                <Spacer />
-              </HStack>
+          <Alert
+            status="info"
+            alignItems={{ base: "start", md: "center" }}
+            pb={5}
+            flexDirection={{ base: "column", md: "row" }}
+            gap={{ base: 5, md: 3 }}
+          >
+            <HStack>
+              <AlertIcon />
+              <Stack>
+                <AlertTitle>Continue with existing form?</AlertTitle>
+                <AlertDescription>
+                  There're forms that you've created but haven't added as a reward
+                  yet.
+                </AlertDescription>
+              </Stack>
+            </HStack>
 
-              <Box flexShrink={0} w={56}>
-                <StyledSelect
-                  isLoading={isRawFormsLoading}
-                  onChange={({ value }) =>
-                    onAdd({
-                      guildPlatform: {
-                        platformName: "FORM",
-                        platformId: value.FORM,
-                        platformGuildId: `form-${value.id}`,
-                        platformGuildData: {
-                          formId: value.id,
-                        } satisfies PlatformGuildData["FORM"],
-                      },
-                      isNew: false,
-                    })
-                  }
-                  options={notConnectedForms?.map((form) => ({
-                    label: form.name,
-                    value: form,
-                  }))}
-                />
-              </Box>
-            </Alert>
-          </div>
+            <Box flexShrink={0} w={{ base: "100%", md: 48 }}>
+              <StyledSelect
+                isLoading={isRawFormsLoading}
+                onChange={({ value }) =>
+                  onAdd({
+                    guildPlatform: {
+                      platformName: "FORM",
+                      platformId: value.FORM,
+                      platformGuildId: `form-${value.id}`,
+                      platformGuildData: {
+                        formId: value.id,
+                      } satisfies PlatformGuildData["FORM"],
+                    },
+                    isNew: false,
+                  })
+                }
+                options={notConnectedForms?.map((form) => ({
+                  label: form.name,
+                  value: form,
+                }))}
+              />
+            </Box>
+          </Alert>
         )}
         <CreateFormForm />
         <Button
