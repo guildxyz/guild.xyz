@@ -1,4 +1,4 @@
-import { Button, Spinner } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/react"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -9,7 +9,7 @@ const ResetRequirementButton = () => {
   return (
     <Button
       size={"sm"}
-      isDisabled={isLoading}
+      isLoading={isLoading}
       onClick={() =>
         onSubmit({
           ...requirement,
@@ -17,13 +17,7 @@ const ResetRequirementButton = () => {
         })
       }
     >
-      {isLoading ? (
-        <>
-          <Spinner size={"xs"} mr={2}></Spinner> Saving...{" "}
-        </>
-      ) : (
-        "Reset to original"
-      )}
+      Reset to original
     </Button>
   )
 }
