@@ -17,11 +17,13 @@ import {
   CircleWavyCheck,
   Code,
   DiscordLogo,
+  File,
   House,
   Info,
   List,
-  MagnifyingGlass,
+  Palette,
   Plus,
+  Shield,
 } from "phosphor-react"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
@@ -68,17 +70,20 @@ const NavMenu = (): JSX.Element => {
             gap={{ base: 2, sm: 12 }}
           >
             <NavGroup title="Navigation">
-              <NavButton leftIcon={<House />} href="/">
-                About Guild.xyz
-              </NavButton>
-              <NavButton leftIcon={<MagnifyingGlass />} href="/explorer">
-                Explore all guilds
+              <NavButton leftIcon={<House />} href="/explorer">
+                Explore guilds
               </NavButton>
               <NavButton leftIcon={<Plus />} href="/create-guild">
                 Create guild
               </NavButton>
               <NavButton leftIcon={<CircleWavyCheck />} href="/leaderboard">
                 Guild Pins leaderboard
+              </NavButton>
+              <NavButton leftIcon={<Shield />} href="/privacy-policy">
+                Privacy Policy
+              </NavButton>
+              <NavButton leftIcon={<File />} href="/terms-and-conditions">
+                Terms and Conditions
               </NavButton>
             </NavGroup>
             <NavGroup title="Other">
@@ -113,6 +118,14 @@ const NavMenu = (): JSX.Element => {
                 leftIcon={<Info />}
               >
                 Guide
+              </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://guild.xyz/guild-xyz-brand-kit.zip"
+                rel="noopener"
+                leftIcon={<Palette />}
+              >
+                Brand kit
               </NavButton>
             </NavGroup>
           </Grid>
