@@ -33,7 +33,7 @@ const ConfirmationAlert = ({
     <Alert leastDestructiveRef={cancelRef} onClose={onClose} {...rest}>
       <AlertDialogOverlay>
         <AlertDialogContent>
-          <AlertDialogHeader>{title}</AlertDialogHeader>
+          <AlertDialogHeader pb="5">{title}</AlertDialogHeader>
           <AlertDialogBody>{description}</AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
