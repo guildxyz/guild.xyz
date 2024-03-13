@@ -2,6 +2,7 @@ import { kv } from "@vercel/kv"
 import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
+import { OneOf } from "types"
 import {
   ADDRESS_REGEX,
   GUILD_FEE_PERCENTAGE,
@@ -128,16 +129,19 @@ const getGuildFee = async (
   }
 }
 
-const validateBody = (
+const validateParams = (
   obj: Record<string, any>
-): { isValid: boolean; error?: string } => {
+): OneOf<
+  { isValid: boolean; error?: string },
+  { isValid: boolean; data: FetchPriceBodyParams }
+> => {
   if (!obj)
     return {
       isValid: false,
-      error: "You must provide a request body.",
+      error: "You must provide request params.",
     }
 
-  if (typeof obj.guildId !== "number")
+  if (!obj.guildId || typeof +obj.guildId !== "number")
     return {
       isValid: false,
       error: "Missing or invalid param: guildId",
@@ -176,16 +180,26 @@ const validateBody = (
       error: "Invalid requirement address.",
     }
 
-  if (
-    typeof obj.data?.minAmount !== "undefined" &&
-    isNaN(parseFloat(obj.data?.minAmount))
-  )
+  if (typeof obj.minAmount !== "undefined" && isNaN(parseFloat(obj.minAmount))) {
     return {
       isValid: false,
       error: "Invalid requirement amount.",
     }
+  }
 
-  return { isValid: true }
+  return {
+    isValid: true,
+    data: {
+      guildId: +obj.guildId,
+      type: obj.type as RequirementType,
+      chain: obj.chain as Chain,
+      sellToken: obj.sellToken,
+      address: obj.address,
+      data: {
+        minAmount: parseFloat(obj.minAmount),
+      },
+    },
+  }
 }
 
 export const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
@@ -200,17 +214,16 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
   req: NextApiRequest,
   res: NextApiResponse<FetchPriceResponse | { error: string }>
 ) => {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST")
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET")
     return res.status(405).json({ error: `Method ${req.method} is not allowed` })
   }
 
-  const { isValid, error } = validateBody(req.body)
+  const { isValid, error, data: validatedParams } = validateParams(req.query)
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { guildId, type, chain, sellToken, address, data }: FetchPriceBodyParams =
-    req.body
+  const { guildId, type, chain, sellToken, address, data } = validatedParams
   const minAmount = parseFloat(data.minAmount ?? 1)
 
   if (type === "ERC20") {
@@ -352,6 +365,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         BigInt(100000)) *
       BigInt(100000)
 
+    res.setHeader("Cache-Control", "s-maxage=30")
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei: buyAmountInWei.toString(),
