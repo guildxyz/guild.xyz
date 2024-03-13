@@ -109,5 +109,10 @@
   "lint-staged": {
     "./**/*.@(js|jsx|ts|tsx|css|md)": "prettier --write"
   },
-  "snyk": true
+  "snyk": true,
+  "overrides": {
+    "@coinbase/waas-sdk-viem": {
+      "viem": "^2.8.4"
+    }
+  }
 }
