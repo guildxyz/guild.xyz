@@ -10,7 +10,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import { DotsThreeVertical, Funnel, PencilSimpleLine } from "phosphor-react"
+import {
+  DotsThreeVertical,
+  Funnel,
+  IconProps,
+  PencilSimpleLine,
+} from "phosphor-react"
+import { ForwardRefExoticComponent, RefAttributes } from "react"
 import useSWRImmutable from "swr/immutable"
 import { ActivityLogType } from "../../ActivityLogContext"
 import {
@@ -20,7 +26,10 @@ import {
 import ClickableTagPopover from "./ClickableTagPopover"
 import ViewInFormResponses from "./ClickableTagPopover/components/ViewInFormResponses"
 
-type Props = FormTagProps & Omit<TagProps, "colorScheme">
+type Props = FormTagProps &
+  Omit<TagProps, "colorScheme"> & {
+    rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
+  }
 
 type FormTagProps = { formId: number; guildId: number }
 
@@ -30,7 +39,7 @@ type ClickableFormTagProps = FormTagProps & {
 }
 
 const FormTag = forwardRef<Props, "span">(
-  ({ formId, guildId, ...tagProps }: Props, ref): JSX.Element => {
+  ({ formId, guildId, rightIcon, ...tagProps }: Props, ref): JSX.Element => {
     const { data } = useSWRImmutable<Schemas["Form"]>(
       `/v2/guilds/${guildId}/forms/${formId}`
     )
@@ -59,7 +68,7 @@ const FormTag = forwardRef<Props, "span">(
           </HStack>
         )}
 
-        <TagRightIcon as={DotsThreeVertical} />
+        {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
     )
   }
@@ -109,7 +118,12 @@ const ClickableFormTag = ({
         </>
       }
     >
-      <FormTag formId={formId} guildId={guildId} cursor="pointer" />
+      <FormTag
+        formId={formId}
+        guildId={guildId}
+        rightIcon={DotsThreeVertical}
+        cursor="pointer"
+      />
     </ClickableTagPopover>
   )
 }
