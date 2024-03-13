@@ -71,7 +71,7 @@ const NavMenu = (): JSX.Element => {
           >
             <NavGroup title="Navigation">
               <NavButton leftIcon={<House />} href="/explorer">
-                Explore guilds
+                Explore all guilds
               </NavButton>
               <NavButton leftIcon={<Plus />} href="/create-guild">
                 Create guild
