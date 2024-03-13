@@ -3,7 +3,12 @@ import { fetchNativeCurrencyPriceInUSD } from "pages/api/fetchPrice"
 import useSWR from "swr"
 import useSWRImmutable from "swr/immutable"
 import { EstimateContractGasParameters, formatUnits } from "viem"
-import { useChainId, useFeeData, usePublicClient, useWalletClient } from "wagmi"
+import {
+  useChainId,
+  useEstimateFeesPerGas,
+  usePublicClient,
+  useWalletClient,
+} from "wagmi"
 
 const convertGasFeeToUSD = async ([_, chainId, estimatedGas]: [
   string,
@@ -30,7 +35,7 @@ const useEstimateGas = (config: EstimateContractGasParameters) => {
     data: feeData,
     isLoading: isFeeDataLoading,
     error: feeDataError,
-  } = useFeeData()
+  } = useEstimateFeesPerGas()
 
   const estimateGas = () =>
     publicClient.estimateContractGas({

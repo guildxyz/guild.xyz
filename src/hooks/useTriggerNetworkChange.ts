@@ -1,17 +1,17 @@
 import { CHAIN_CONFIG, Chains } from "chains"
-import { useSwitchNetwork } from "wagmi"
+import { useSwitchChain } from "wagmi"
 import useToast from "./useToast"
 
 const useTriggerNetworkChange = () => {
   const toast = useToast()
-  const { switchNetworkAsync, isLoading } = useSwitchNetwork()
+  const { switchChainAsync, isPending } = useSwitchChain()
 
   const requestNetworkChange = async (
     newChainId: number,
     callback?: () => void,
     errorHandler?: (err: unknown) => void
   ) => {
-    if (!switchNetworkAsync) {
+    if (!switchChainAsync) {
       toast({
         title: "Your wallet doesn't support switching chains automatically",
         description: `Please switch to ${
@@ -20,13 +20,15 @@ const useTriggerNetworkChange = () => {
         status: "info",
       })
     } else {
-      switchNetworkAsync(newChainId)
+      switchChainAsync({
+        chainId: newChainId,
+      })
         .then(() => callback?.())
         .catch(errorHandler)
     }
   }
 
-  return { requestNetworkChange, isNetworkChangeInProgress: isLoading }
+  return { requestNetworkChange, isNetworkChangeInProgress: isPending }
 }
 
 export default useTriggerNetworkChange
