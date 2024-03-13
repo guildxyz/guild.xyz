@@ -161,7 +161,8 @@ export const REQUIREMENTS_DATA = [
     customNameRules: {
       pattern: {
         value: VISIT_LINK_REGEX,
-        message: "The label has to contain the link as [link title]",
+        message:
+          "Your text must contain a link label in square brackets, e.g., [Link Label].",
       },
     },
   },

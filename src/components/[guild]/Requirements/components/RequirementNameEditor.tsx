@@ -7,6 +7,7 @@ import {
   Tooltip,
   useEditableControls,
 } from "@chakra-ui/react"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { Check, PencilSimple } from "phosphor-react"
 import { MutableRefObject, PropsWithChildren, ReactNode, useRef } from "react"
 import {
@@ -129,7 +130,10 @@ const RequirementNameEditorWrapper = ({
   } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
-  const { field } = useController({
+  const {
+    field,
+    formState: { errors },
+  } = useController({
     control: methods.control,
     name: "customName",
     rules: REQUIREMENTS[type].customNameRules,
@@ -147,12 +151,22 @@ const RequirementNameEditorWrapper = ({
     }
   }
 
+  const errorToast = useShowErrorToast()
+
+  const handleSubmit = (name: string) => {
+    if (!!errors?.customName) {
+      errorToast(errors.customName.message as string)
+      return
+    }
+    onSave(name)
+  }
+
   return (
     <FormProvider {...methods}>
       <Editable
         size="sm"
         {...field}
-        onSubmit={onSave}
+        onSubmit={handleSubmit}
         onCancel={conditionallyResetToOriginal}
       >
         <RequirementNameEditor
