@@ -233,18 +233,6 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.CreateForm:
           case ACTION.UpdateForm:
           case ACTION.DeleteForm:
-            return (
-              <>
-                <Text as="span">{capitalizedName}</Text>
-                {activityLogType !== "guild" && (
-                  <ClickableGuildTag guildId={ids.guild} />
-                )}
-                {activityLogType !== "user" && (
-                  <ClickableUserTag userId={ids.user} />
-                )}
-                <ClickableFormTag formId={data.id} guildId={ids.guild} />
-              </>
-            )
           case ACTION.SubmitForm:
             return (
               <>
@@ -256,7 +244,7 @@ const ActionLabel = (): JSX.Element => {
                   <ClickableUserTag userId={ids.user} />
                 )}
                 <ClickableFormTag
-                  formId={data.id}
+                  formId={ids.form}
                   guildId={ids.guild}
                   userId={ids.user}
                 />

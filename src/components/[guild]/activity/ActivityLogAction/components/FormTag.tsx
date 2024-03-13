@@ -97,7 +97,10 @@ const ClickableFormTag = ({
             size="sm"
             borderRadius={0}
             onClick={() => {
-              if (activityLogType !== "guild") {
+              if (
+                activityLogType !== "guild" &&
+                !activeFilters.find((f) => f.filter === "guildId")
+              ) {
                 addFilter({ filter: "guildId", value: guildId.toString() })
               }
               addFilter({ filter: "formId", value: formId.toString() })
