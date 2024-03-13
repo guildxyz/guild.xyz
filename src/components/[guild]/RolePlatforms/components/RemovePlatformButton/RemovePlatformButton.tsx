@@ -1,12 +1,24 @@
-import { CloseButton, Tooltip, useDisclosure } from "@chakra-ui/react"
+import {
+  CloseButton,
+  Divider,
+  Icon,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmaionAlert"
+import { Info } from "phosphor-react"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
   removeButtonColor: string
+  isPlatform: boolean
 }
 
-const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
+const RemovePlatformButton = ({
+  removeButtonColor,
+  isPlatform,
+}: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading } = useRemovePlatform(onClose)
 
@@ -29,11 +41,26 @@ const RemovePlatformButton = ({ removeButtonColor }: Props): JSX.Element => {
         onClose={onClose}
         onConfirm={onSubmit}
         title="Remove reward"
-        description="Are you sure you want to remove this reward?"
+        description={
+          <>
+            Are you sure you want to remove this reward?
+            {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
+          </>
+        }
         confirmationText="Remove"
       />
     </>
   )
 }
+
+export const AlreadyGrantedAccessesWillRemainInfo = () => (
+  <>
+    <Divider mb="4" mt="6" />
+    <Text colorScheme="gray" display="flex">
+      <Icon as={Info} mt="3px" mr="1.5" />
+      Already granted accesses will remain as is on the platform.
+    </Text>
+  </>
+)
 
 export default RemovePlatformButton

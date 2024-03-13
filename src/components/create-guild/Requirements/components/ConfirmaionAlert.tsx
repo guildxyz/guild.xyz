@@ -13,7 +13,7 @@ import { useRef } from "react"
 type Props = {
   onConfirm: () => void
   title: string
-  description: string
+  description: string | JSX.Element
   confirmationText: string
   isLoading: boolean
 } & Omit<AlertDialogProps, "leastDestructiveRef" | "children">

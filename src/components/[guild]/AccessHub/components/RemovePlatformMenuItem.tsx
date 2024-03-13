@@ -1,9 +1,12 @@
 import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import useRemoveGuildPlatform from "components/[guild]/AccessHub/hooks/useRemoveGuildPlatform"
+import { AlreadyGrantedAccessesWillRemainInfo } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmaionAlert"
 import { TrashSimple } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { useEffect } from "react"
+import { PlatformType } from "types"
 
 type Props = {
   platformGuildId: string
@@ -16,6 +19,8 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
   const guildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
+
+  const { isPlatform } = platforms[PlatformType[guildPlatform?.platformId]] ?? {}
 
   const { onSubmit, isLoading, response } = useRemoveGuildPlatform(guildPlatform?.id)
 
@@ -38,7 +43,12 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
         onClose={onClose}
         onConfirm={onSubmit}
         title="Remove reward"
-        description="Are you sure you want to remove this reward?"
+        description={
+          <>
+            Are you sure you want to remove this reward?
+            {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
+          </>
+        }
         confirmationText="Remove"
       />
     </>

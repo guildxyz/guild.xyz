@@ -118,7 +118,11 @@ const RolePlatformCard = ({
 
   if (!type) return null
 
-  const { cardPropsHook: useCardProps, cardSettingsComponent } = platforms[type]
+  const {
+    cardPropsHook: useCardProps,
+    cardSettingsComponent,
+    isPlatform,
+  } = platforms[type]
 
   let PlatformCardSettings = cardSettingsComponent
   // only show Google access level settings and Discord role settings for new platforms
@@ -163,7 +167,7 @@ const RolePlatformCard = ({
         }
         cornerButton={
           !rolePlatform.isNew ? (
-            <RemovePlatformButton removeButtonColor={removeButtonColor} />
+            <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
           ) : (
             <CloseButton
               size="sm"
