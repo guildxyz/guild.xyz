@@ -259,7 +259,6 @@ const ActionLabel = (): JSX.Element => {
                   formId={data.id}
                   guildId={ids.guild}
                   userId={ids.user}
-                  activityLogType={activityLogType}
                 />
               </>
             )

@@ -18,7 +18,7 @@ import {
 } from "phosphor-react"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import useSWRImmutable from "swr/immutable"
-import { ActivityLogType } from "../../ActivityLogContext"
+import { useActivityLog } from "../../ActivityLogContext"
 import {
   FILTER_NAMES,
   useActivityLogFilters,
@@ -26,17 +26,12 @@ import {
 import ClickableTagPopover from "./ClickableTagPopover"
 import ViewInFormResponses from "./ClickableTagPopover/components/ViewInFormResponses"
 
+type FormTagProps = { formId: number; guildId: number }
+
 type Props = FormTagProps &
   Omit<TagProps, "colorScheme"> & {
     rightIcon?: ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
   }
-
-type FormTagProps = { formId: number; guildId: number }
-
-type ClickableFormTagProps = FormTagProps & {
-  activityLogType?: ActivityLogType
-  userId?: number
-}
 
 const FormTag = forwardRef<Props, "span">(
   ({ formId, guildId, rightIcon, ...tagProps }: Props, ref): JSX.Element => {
@@ -74,13 +69,18 @@ const FormTag = forwardRef<Props, "span">(
   }
 )
 
+type ClickableFormTagProps = FormTagProps & {
+  userId?: number
+}
+
 const ClickableFormTag = ({
   formId,
   guildId,
   userId,
-  activityLogType,
 }: ClickableFormTagProps): JSX.Element => {
   const { addFilter, activeFilters } = useActivityLogFilters() ?? {}
+  const { activityLogType } = useActivityLog()
+
   const isDisabled =
     !formId ||
     !addFilter ||
