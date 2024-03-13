@@ -37,6 +37,7 @@ import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
+import { WAAS_CONNECTOR_ID } from "waasConnector"
 
 const AccountModal = () => {
   const { address, type, disconnect } = useWeb3ConnectionManager()
@@ -155,7 +156,7 @@ const AccountModal = () => {
                   />
                 </Stack>
                 <HStack spacing={1}>
-                  {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
+                  {connector?.id === WAAS_CONNECTOR_ID && <CopyCWaaSBackupData />}
                   <Tooltip label="Disconnect">
                     <IconButton
                       size="sm"

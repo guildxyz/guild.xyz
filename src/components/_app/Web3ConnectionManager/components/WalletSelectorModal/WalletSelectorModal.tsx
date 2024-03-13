@@ -25,6 +25,7 @@ import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
+import { WAAS_CONNECTOR_ID } from "waasConnector"
 import { Connector, useAccount, useConnect } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
@@ -53,13 +54,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     delegateConnectionAtom
   )
 
-  const {
-    connectors,
-    error,
-    connect,
-    variables: { connector: pendingConnector },
-    isPending,
-  } = useConnect()
+  const { connectors, error, connect, isPending } = useConnect()
   const { connector } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
@@ -208,7 +203,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 .filter(
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== "cwaasWallet")
+                    (!!connector || conn.id !== WAAS_CONNECTOR_ID)
                 )
                 .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
@@ -216,7 +211,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                       connector={conn}
                       connect={connect}
                       isLoading={isPending}
-                      pendingConnector={pendingConnector as Connector}
+                      pendingConnector={null as Connector}
                       error={error}
                     />
                   </CardMotionWrapper>

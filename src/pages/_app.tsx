@@ -1,7 +1,6 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuel-wallet/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { wagmiConfig } from "chains"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -23,6 +22,7 @@ import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { WagmiProvider } from "wagmi"
+import { wagmiConfig } from "wagmiConfig"
 
 /**
  * Polyfill HTML inert property for Firefox support:
