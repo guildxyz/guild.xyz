@@ -9,6 +9,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import { DotsThreeVertical, Funnel, PencilSimpleLine } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 import { ActivityLogType } from "../../ActivityLogContext"
@@ -28,28 +29,9 @@ type ClickableFormTagProps = FormTagProps & {
   userId?: number
 }
 
-type FormField = {
-  id: string
-  question: string
-  isRequired: boolean
-  options?: string
-  type: string
-  allowOther: boolean
-}
-type FormType = {
-  name: string
-  description: string
-  fields: FormField[]
-  id: number
-  creatorUserId: number
-  guildId: number
-  createdAt: string
-  updatedAt: string
-}
-
 const FormTag = forwardRef<Props, "span">(
   ({ formId, guildId, ...tagProps }: Props, ref): JSX.Element => {
-    const { data } = useSWRImmutable<FormType>(
+    const { data } = useSWRImmutable<Schemas["Form"]>(
       `/v2/guilds/${guildId}/forms/${formId}`
     )
 
