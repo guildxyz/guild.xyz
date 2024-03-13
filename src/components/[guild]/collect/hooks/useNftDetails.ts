@@ -71,7 +71,12 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     error: multicallError,
     refetch,
   } = useReadContracts({
-    // WAGMI TODO: don't know why we get this error here, had to ts-ignore it unfortunately...
+    /**
+     * We need to @ts-ignore this line, since we get a "Type instantiation is
+     * excessively deep and possibly infinite" error here until strictNullChecks is
+     * set to false in our tsconfig. We should set it to true & sort out the related
+     * issues in another PR.
+     */
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     contracts: [
