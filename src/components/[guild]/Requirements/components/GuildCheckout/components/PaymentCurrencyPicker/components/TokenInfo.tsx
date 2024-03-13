@@ -10,9 +10,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { CHAIN_CONFIG, Chains } from "chains"
+import useTokenBalance from "hooks/useTokenBalance"
 import { Fragment } from "react"
 import { Rest } from "types"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 
 type Props = {
@@ -47,7 +49,6 @@ const TokenInfo = ({
 
   const { address } = useAccount()
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
-    address,
     chainId,
   })
 
@@ -55,13 +56,10 @@ const TokenInfo = ({
     data: tokenBalanceData,
     isLoading: isTokenBalanceLoading,
     isError: isTokenBalanceError,
-  } = useBalance({
-    address,
+  } = useTokenBalance({
     token: tokenAddress,
     chainId,
-    query: {
-      enabled: tokenAddress !== NULL_ADDRESS,
-    },
+    shouldFetch: tokenAddress !== NULL_ADDRESS,
   })
 
   const symbol = isNativeCurrency
@@ -72,9 +70,11 @@ const TokenInfo = ({
 
   const formattedBalance = Number(
     Number(
-      (tokenAddress === NULL_ADDRESS
-        ? coinBalanceData?.formatted
-        : tokenBalanceData?.formatted) ?? 0
+      tokenAddress === NULL_ADDRESS && coinBalanceData?.value
+        ? formatUnits(coinBalanceData.value, coinBalanceData.decimals)
+        : tokenBalanceData?.value
+        ? formatUnits(tokenBalanceData.value, tokenBalanceData.decimals)
+        : 0
     ).toFixed(3)
   )
 

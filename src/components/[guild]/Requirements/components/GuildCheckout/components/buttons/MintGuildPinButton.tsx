@@ -3,7 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useBalance, useChainId } from "wagmi"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import useGuildPinFee from "../../hooks/useGuildPinFee"
 import useMintGuildPin from "../../hooks/useMintGuildPin"
@@ -30,9 +30,7 @@ const MintGuildPinButton = (): JSX.Element => {
   )
 
   const { guildPinFee, isGuildPinFeeLoading } = useGuildPinFee()
-  const { address } = useAccount()
   const { data: balanceData, isLoading: isBalanceLoading } = useBalance({
-    address,
     chainId: Chains[guildPin?.chain],
   })
   const isSufficientBalance =

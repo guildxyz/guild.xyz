@@ -2,6 +2,7 @@ import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useTokenBalance from "hooks/useTokenBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
@@ -60,17 +61,14 @@ const BuyButton = (): JSX.Element => {
       : false
 
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
-    address,
     chainId,
   })
-  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
-    address,
-    token: pickedCurrency,
-    chainId,
-    query: {
-      enabled: pickedCurrency !== NULL_ADDRESS,
-    },
-  })
+  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } =
+    useTokenBalance({
+      token: pickedCurrency,
+      chainId,
+      shouldFetch: pickedCurrency !== NULL_ADDRESS,
+    })
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 

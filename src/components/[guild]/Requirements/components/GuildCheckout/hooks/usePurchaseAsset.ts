@@ -7,6 +7,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
+import useTokenBalance from "hooks/useTokenBalance"
 import { useMemo } from "react"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
@@ -50,16 +51,12 @@ const usePurchaseAsset = () => {
   )
 
   const { data: coinBalanceData } = useBalance({
-    address,
     chainId: Chains[requirement?.chain],
   })
-  const { data: tokenBalanceData } = useBalance({
-    address,
+  const { data: tokenBalanceData } = useTokenBalance({
     token: pickedCurrency,
     chainId: Chains[requirement?.chain],
-    query: {
-      enabled: pickedCurrency !== NULL_ADDRESS,
-    },
+    shouldFetch: pickedCurrency !== NULL_ADDRESS,
   })
 
   const isSufficientBalance =

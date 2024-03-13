@@ -42,9 +42,7 @@ const CollectNftButton = ({
     nftAddress,
     chainId: Chains[chain],
   })
-  const { data: coinBalanceData, isLoading: isBalanceLoading } = useBalance({
-    address,
-  })
+  const { data: coinBalanceData, isLoading: isBalanceLoading } = useBalance()
 
   const isSufficientBalance =
     typeof fee === "bigint" && coinBalanceData

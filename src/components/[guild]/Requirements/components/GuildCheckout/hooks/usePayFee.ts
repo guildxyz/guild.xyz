@@ -5,11 +5,12 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
+import useTokenBalance from "hooks/useTokenBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
@@ -19,7 +20,6 @@ const usePayFee = () => {
   const { urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const { address } = useAccount()
   const chainId = useChainId()
 
   const requirement = useRequirementContext()
@@ -44,16 +44,12 @@ const usePayFee = () => {
   const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const { data: coinBalanceData } = useBalance({
-    address,
     chainId: Chains[requirement.chain],
   })
-  const { data: tokenBalanceData } = useBalance({
-    address,
+  const { data: tokenBalanceData } = useTokenBalance({
     token: pickedCurrency as `0x${string}`,
     chainId: Chains[requirement.chain],
-    query: {
-      enabled: !pickedCurrencyIsNative,
-    },
+    shouldFetch: !pickedCurrencyIsNative,
   })
 
   const isSufficientBalance =
