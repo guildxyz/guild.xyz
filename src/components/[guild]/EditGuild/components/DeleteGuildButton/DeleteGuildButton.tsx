@@ -1,6 +1,6 @@
 import { useDisclosure } from "@chakra-ui/react"
 import DeleteButton from "components/[guild]/DeleteButton"
-import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmaionAlert"
+import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useDeleteGuild from "./hooks/useDeleteGuild"
 
 type Props = {
