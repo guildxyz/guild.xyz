@@ -104,7 +104,7 @@ const AddFormPanel = ({ onAdd }: AddPlatformPanelProps) => {
   return (
     <FormProvider {...methods}>
       <Stack spacing={6}>
-        {notConnectedForms.length && (
+        {!isLoading && notConnectedForms?.length && (
           <Alert
             status="info"
             alignItems={{ base: "start", md: "center" }}
@@ -136,7 +136,7 @@ const AddFormPanel = ({ onAdd }: AddPlatformPanelProps) => {
                         formId: value.id,
                       } satisfies PlatformGuildData["FORM"],
                     },
-                    isNew: false,
+                    isNew: true,
                   })
                 }
                 options={notConnectedForms?.map((form) => ({
