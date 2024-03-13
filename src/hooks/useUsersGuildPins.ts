@@ -25,8 +25,11 @@ const getUsersGuildPinIdsOnChain = async (
 
   const results =
     contracts.length > 0
-      ? await client.multicall({
-          contracts: contracts,
+      ? // WAGMI TODO: don't know why we get this error here, had to ts-ignore it unfortunately...
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        await client.multicall({
+          contracts,
         })
       : []
 
