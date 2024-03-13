@@ -70,7 +70,7 @@ const EditGatherModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size="4xl">
+    <Modal isOpen={isOpen} onClose={handleClose} size="4xl" colorScheme={"dark"}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Edit Gather reward</ModalHeader>
@@ -81,7 +81,7 @@ const EditGatherModal = ({
               <GatherGuestForm />
 
               <Button
-                colorScheme="indigo"
+                colorScheme="green"
                 w="max-content"
                 ml="auto"
                 onClick={methods.handleSubmit(onEditGatherRewardSubmit)}

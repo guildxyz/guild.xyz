@@ -23,7 +23,6 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
-import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
@@ -43,7 +42,6 @@ import VerifiedIcon from "components/common/VerifiedIcon"
 import useMembership from "components/explorer/hooks/useMembership"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
-import { useAtom } from "jotai"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -161,15 +159,6 @@ const GuildPage = (): JSX.Element => {
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
-
-  /**
-   * Temporary to show "You might need to wait a few minutes to get your roles" on
-   * the Discord reward card until after join we implement queues generally
-   */
-  const [, setIsAfterJoin] = useAtom(isAfterJoinAtom)
-  useEffect(() => {
-    setIsAfterJoin(false)
-  }, [])
 
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()

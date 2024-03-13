@@ -9,6 +9,7 @@ import {
   InputGroup,
   InputRightElement,
   Link,
+  Stack,
   Tooltip,
 } from "@chakra-ui/react"
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
@@ -19,40 +20,34 @@ import { useFormContext, useWatch } from "react-hook-form"
 import GatherConnectionStatusAlert from "./GatherConnectionStatusAlert"
 import useGatherAccess from "./hooks/useGatherAccess"
 
+const censorInputStyle = {
+  "-webkit-text-security": "disc",
+} as CSSProperties
+
 const GatherConnectionForm = () => {
   const {
     register,
     formState: { errors },
   } = useFormContext<AddGatherFormType>()
 
-  const [showApiKey, setShowApiKey] = useState(false)
-
   const [gatherApiKey, gatherSpaceId] = useWatch({
     name: ["gatherApiKey", "gatherSpaceId"],
   })
 
-  const censorInputStyle = {
-    "-webkit-text-security": "disc",
-  } as CSSProperties
-
   const {
-    success: accessSuccess,
-    isLoading: accessLoading,
+    success: isAccessSuccess,
+    isLoading: isAccessLoading,
     error: accessError,
   } = useGatherAccess(
     !errors?.gatherApiKey && gatherApiKey,
     !errors?.gatherSpaceId && gatherSpaceId
   )
 
-  return (
-    <>
-      <GatherConnectionStatusAlert
-        isLoading={accessLoading}
-        success={accessSuccess}
-        error={accessError}
-      />
+  const [showApiKey, setShowApiKey] = useState(false)
 
-      <FormControl pt={{ md: 0.5 }} isInvalid={!!errors?.gatherApiKey}>
+  return (
+    <Stack spacing={0}>
+      <FormControl isInvalid={!!errors?.gatherApiKey} mb={4}>
         <HStack mb={2} spacing={0}>
           <FormLabel mb={0}>API key:</FormLabel>
           <Tooltip
@@ -95,8 +90,8 @@ const GatherConnectionForm = () => {
         <FormErrorMessage>{errors?.gatherApiKey?.message}</FormErrorMessage>
       </FormControl>
 
-      <FormControl pt={{ md: 0.5 }} isInvalid={!!errors?.gatherSpaceId}>
-        <HStack mt={6} mb={2} spacing={0}>
+      <FormControl isInvalid={!!errors?.gatherSpaceId}>
+        <HStack mb={2} spacing={0}>
           <FormLabel mb={0}>Space URL:</FormLabel>
           <Tooltip
             label="You can copy this from your browser when you are inside the space"
@@ -124,7 +119,13 @@ const GatherConnectionForm = () => {
         />
         <FormErrorMessage>{errors?.gatherSpaceId?.message}</FormErrorMessage>
       </FormControl>
-    </>
+
+      <GatherConnectionStatusAlert
+        isLoading={isAccessLoading}
+        success={isAccessSuccess}
+        error={accessError}
+      />
+    </Stack>
   )
 }
 

@@ -1,3 +1,4 @@
+import { useWallet } from "@fuel-wallet/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata } from "types"
@@ -15,8 +16,7 @@ const useUsersFuelGuildPins = (disabled = false) => {
 
   const fuelAddresses = addresses?.filter((address) => address.walletType === "FUEL")
 
-  // const { wallet } = useWallet()
-  const wallet = null
+  const { wallet } = useWallet()
 
   const shouldFetch = Boolean(!disabled && fuelAddresses?.length && !!wallet)
 

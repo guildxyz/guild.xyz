@@ -1,3 +1,4 @@
+import { useWallet } from "@fuel-wallet/react"
 import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -155,8 +156,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const { data: walletClient } = useWalletClient()
   const chainId = useChainId()
 
-  // const { wallet: fuelWallet } = useWallet()
-  const fuelWallet = null
+  const { wallet: fuelWallet } = useWallet()
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async ({

@@ -37,7 +37,31 @@ const useLoginWithGoogle = () => {
   const addressLinkParams = useAtomValue(addressLinkParamsAtom)
   const { onOpen, onClose, isOpen } = useDisclosure()
   const toast = useToast()
-  const { captureEvent } = usePostHogContext()
+  const { captureEvent: capture } = usePostHogContext()
+  const captureEvent = (message: string, options?: Record<string, any>) => {
+    let finalOptions = options
+    if (options?.error instanceof Error) {
+      finalOptions = {
+        ...finalOptions,
+        errorMessage: options.error.message,
+        errorName: options.error.name,
+        errorStack: options.error.stack,
+        errorCause: options.error.cause,
+      }
+
+      if (options.error.cause instanceof Error) {
+        finalOptions = {
+          ...finalOptions,
+          causeMessage: options.error.cause.message,
+          causeName: options.error.cause.name,
+          causeStack: options.error.cause.stack,
+          causeCause: options.error.cause.cause,
+        }
+      }
+    }
+
+    capture(message, finalOptions)
+  }
   const { connectors, connectAsync } = useConnect()
   const cwaasConnector = connectors.find(
     ({ id }) => id === "cwaasWallet"

@@ -43,6 +43,7 @@ const RequirementAccessIndicatorUI = ({
   const { colorMode } = useColorMode()
   const [openCount, setOpenCount] = useState(0)
 
+  // just an easter egg appreciating the cool morphing animation we have
   const onOpen = () => {
     if (isAlwaysOpen) return
 
@@ -101,7 +102,7 @@ const RequirementAccessIndicatorUI = ({
                 <PopoverContent width="unset" maxW={{ base: "2xs", md: "xs" }}>
                   {!isAlwaysOpen && [5, 10].includes(openCount) ? (
                     <PopoverHeader border="0">
-                      {openCount === 5 ? "👀" : "🙈 You like that anim don't ya?"}
+                      {openCount === 5 ? "👀" : "🙈"}
                     </PopoverHeader>
                   ) : (
                     children

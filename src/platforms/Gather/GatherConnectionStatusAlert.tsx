@@ -1,4 +1,11 @@
-import { Alert, AlertIcon, AlertStatus, Spinner, Text } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertIcon,
+  AlertStatus,
+  Collapse,
+  Spinner,
+  Text,
+} from "@chakra-ui/react"
 import { SWRResponse } from "swr"
 
 const GatherConnectionStatusAlert = ({
@@ -59,30 +66,18 @@ const GatherConnectionStatusAlert = ({
         ),
       }
     } else {
-      return {
-        status: "info",
-        children: (
-          <>
-            <AlertIcon mt={0} />
-            <p>Enter API key and space URL below to set up connection.</p>
-          </>
-        ),
-      }
+      return {}
     }
   }
 
   const { status, children, ...rest } = getAlertDetails()
 
   return (
-    <Alert
-      overflow="initial"
-      mb={6}
-      alignItems="center"
-      status={status as AlertStatus}
-      {...rest}
-    >
-      {children}
-    </Alert>
+    <Collapse in={isLoading || success || error}>
+      <Alert mt={4} alignItems="center" status={status as AlertStatus} {...rest}>
+        {children}
+      </Alert>
+    </Collapse>
   )
 }
 

@@ -8,20 +8,12 @@ import {
   useEditableControls,
 } from "@chakra-ui/react"
 import { Check, PencilSimple } from "phosphor-react"
-import {
-  MutableRefObject,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { MutableRefObject, PropsWithChildren, ReactNode, useRef } from "react"
 import {
   FormProvider,
   useController,
   useForm,
   useFormContext,
-  useWatch,
 } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import { useRequirementContext } from "./RequirementContext"
@@ -35,10 +27,12 @@ const RequirementNameEditor = ({
   isLoading,
   rightElement,
   children,
+  defaultValue,
 }: PropsWithChildren<{
   textRef: MutableRefObject<HTMLParagraphElement>
   isLoading?: boolean
   rightElement?: ReactNode
+  defaultValue?: string
 }>) => {
   const { isEditing, getSubmitButtonProps, getEditButtonProps } =
     useEditableControls()
@@ -46,8 +40,6 @@ const RequirementNameEditor = ({
     resetField,
     formState: { errors },
   } = useFormContext<RequirementNameForm>()
-
-  const customName = useWatch({ name: "customName" })
 
   if (isEditing)
     return (
@@ -100,14 +92,10 @@ const RequirementNameEditor = ({
         color="gray"
         {...getEditButtonProps({
           onClick: () => {
-            /**
-             * The "LINK_VISIT" requirement will have a custom value by default, with
-             * a special variable ([link title]) in it, so we don't want to reset it
-             * to textRef.current.textContent
-             */
-            if (!!customName) return
             resetField("customName", {
-              defaultValue: textRef.current?.textContent,
+              defaultValue: !!defaultValue
+                ? defaultValue
+                : textRef.current?.textContent,
               keepDirty: true,
             })
           },
@@ -135,10 +123,12 @@ const RequirementNameEditorWrapper = ({
     mode: "all",
   })
   const requirement = useRequirementContext()
-  const { type } = requirement
+  const {
+    type,
+    data: { customName },
+  } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
-  const [originalValue, setOriginalValue] = useState("")
   const { field } = useController({
     control: methods.control,
     name: "customName",
@@ -146,22 +136,12 @@ const RequirementNameEditorWrapper = ({
     shouldUnregister: true,
   })
 
-  useEffect(() => {
-    if (!textRef.current) return
-
-    if (!!field.value && !originalValue) {
-      setOriginalValue(field.value)
-    } else {
-      setOriginalValue(textRef.current.textContent)
-    }
-  }, [textRef.current, originalValue, field.value])
-
   const { resetField } = useFormContext()
 
   const conditionallyResetToOriginal = (value) => {
-    if (value === originalValue || value.trim() === "") {
+    if (value === customName || value.trim() === "") {
       resetField("customName", {
-        defaultValue: originalValue,
+        defaultValue: customName,
         keepDirty: true,
       })
     }
@@ -179,6 +159,7 @@ const RequirementNameEditorWrapper = ({
           textRef={textRef}
           isLoading={isLoading}
           rightElement={rightElement}
+          defaultValue={customName}
         >
           {children}
         </RequirementNameEditor>
