@@ -1,5 +1,5 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 

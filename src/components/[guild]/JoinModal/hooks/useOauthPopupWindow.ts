@@ -1,7 +1,6 @@
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import randomBytes from "randombytes"
 import { useEffect, useState } from "react"
 import { OneOf, PlatformName } from "types"
@@ -25,7 +24,7 @@ type OAuthState<OAuthResponse> = {
 }
 
 export type AuthLevel<
-  T = (typeof platforms)[PlatformName]["oauth"]["params"]["scope"]
+  T = (typeof rewards)[PlatformName]["oauth"]["params"]["scope"]
 > = T extends string ? never : keyof T
 
 type TGAuthResult = {
@@ -48,10 +47,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 ): OAuthState<OAuthResponse> & {
   onOpen: () => Promise<OAuthState<OAuthResponse>>
 } => {
-  const { captureEvent } = usePostHogContext()
-
-  const { params, url, oauthOptionsInitializer } = platforms[platformName]
-    ?.oauth ?? {
+  const { params, url, oauthOptionsInitializer } = rewards[platformName]?.oauth ?? {
     params: {} as any,
   }
 
@@ -224,7 +220,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     toast({ status: "error", title, description: errorDescription })
   }, [oauthState.error])
 
-  if (!platforms[platformName]?.oauth) {
+  if (!rewards[platformName]?.oauth) {
     return {} as any
   }
 

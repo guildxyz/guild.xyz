@@ -4,7 +4,7 @@ import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { Plus } from "phosphor-react"
-import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
+import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildPlatformWithOptionalId, PlatformType, RoleFormType } from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
@@ -122,7 +122,7 @@ const RolePlatformCard = ({
     cardPropsHook: useCardProps,
     cardSettingsComponent,
     isPlatform,
-  } = platforms[type]
+  } = rewards[type]
 
   let PlatformCardSettings = cardSettingsComponent
   // only show Google access level settings and Discord role settings for new platforms

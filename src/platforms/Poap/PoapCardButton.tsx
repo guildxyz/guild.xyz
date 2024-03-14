@@ -3,16 +3,16 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
 import { useClaimedReward } from "hooks/useClaimedReward"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
 import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 import UploadMintLinksModal from "./UploadMintLinksModal"
-import dynamic from "next/dynamic"
 
 const DynamicShowMintLinkButton = dynamic(() => import("./ShowMintLinkButton"), {
   ssr: false,
@@ -47,17 +47,13 @@ const PoapCardButton = ({ platform }: Props) => {
           <DynamicShowMintLinkButton
             rolePlatformId={rolePlatform.id}
             w="full"
-            colorScheme={platforms.POAP.colorScheme}
+            colorScheme={rewards.POAP.colorScheme}
           >
             Show mint link
           </DynamicShowMintLinkButton>
         ) : !rolePlatform?.capacity && isAdmin ? (
           <>
-            <Button
-              w="full"
-              colorScheme={platforms.POAP.colorScheme}
-              onClick={onOpen}
-            >
+            <Button w="full" colorScheme={rewards.POAP.colorScheme} onClick={onOpen}>
               Upload mint links
             </Button>
             <UploadMintLinksModal
@@ -73,7 +69,7 @@ const PoapCardButton = ({ platform }: Props) => {
             href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
             isDisabled={!isAvailable}
             w="full"
-            colorScheme={platforms.POAP.colorScheme}
+            colorScheme={rewards.POAP.colorScheme}
           >
             Claim POAP
           </Button>

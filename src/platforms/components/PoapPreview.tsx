@@ -1,4 +1,4 @@
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
@@ -14,7 +14,7 @@ const PoapPreview = ({ children }): JSX.Element => {
     <PlatformPreview
       type="POAP"
       name={name}
-      image={imageUrl ? `${imageUrl}?size=small` : platforms.POAP.imageUrl}
+      image={imageUrl ? `${imageUrl}?size=small` : rewards.POAP.imageUrl}
     >
       {children}
     </PlatformPreview>

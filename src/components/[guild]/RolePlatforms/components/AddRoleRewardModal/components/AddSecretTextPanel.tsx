@@ -7,7 +7,7 @@ import SecretTextDataForm, {
 import UniqueTextDataForm, {
   UniqueTextRewardForm,
 } from "platforms/UniqueText/UniqueTextDataForm"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformName, PlatformType } from "types"

@@ -1,6 +1,6 @@
 import { Box, Heading, SimpleGrid, Stack, StackProps } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformName, PlatformType } from "types"
 import PlatformSelectButton from "./components/PlatformSelectButton"
 
@@ -111,10 +111,10 @@ const PlatformSelectButtons = ({
       <PlatformSelectButton
         key={platform}
         platform={platform}
-        title={platforms[platform].name}
+        title={rewards[platform].name}
         description={description}
-        icon={platforms[platform].icon}
-        imageUrl={platforms[platform].imageUrl}
+        icon={rewards[platform].icon}
+        imageUrl={rewards[platform].imageUrl}
         onSelection={onSelection}
       />
     ))}

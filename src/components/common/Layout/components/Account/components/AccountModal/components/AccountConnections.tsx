@@ -18,7 +18,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { SectionProps } from "components/common/Section"
 import { Question } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformName } from "types"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
@@ -36,9 +36,9 @@ const AccountConnections = () => {
   const orderedSocials = useMemo(() => {
     const connectedPlatforms =
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
-    const notConnectedPlatforms = Object.keys(platforms).filter(
+    const notConnectedPlatforms = Object.keys(rewards).filter(
       (platform: PlatformName) =>
-        platforms[platform].isPlatform && !connectedPlatforms?.includes(platform)
+        rewards[platform].isPlatform && !connectedPlatforms?.includes(platform)
     )
     return [
       ...connectedPlatforms,

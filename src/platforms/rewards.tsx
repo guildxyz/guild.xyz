@@ -84,7 +84,7 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   link?: string
 }
 
-type PlatformData<
+type RewardData<
   OAuthParams extends {
     client_id?: string
     scope?: string | { membership: string; creation: string }
@@ -125,7 +125,7 @@ const AddPlatformPanelLoadingSpinner = () => (
   </Center>
 )
 
-const platforms: Record<PlatformName, PlatformData> = {
+const rewards: Record<PlatformName, RewardData> = {
   EMAIL: {
     icon: EnvelopeSimple,
     name: "Email",
@@ -542,4 +542,4 @@ const platforms: Record<PlatformName, PlatformData> = {
   },
 }
 
-export default platforms
+export default rewards

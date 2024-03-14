@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
+import { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 

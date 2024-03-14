@@ -1,4 +1,4 @@
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import CreateNftForm from "./components/CreateNftForm"
 
 const AddContractCallPanel = ({ onAdd }: AddPlatformPanelProps) => (

@@ -17,7 +17,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType } from "types"

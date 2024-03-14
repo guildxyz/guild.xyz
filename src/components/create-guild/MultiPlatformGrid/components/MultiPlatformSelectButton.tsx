@@ -26,7 +26,7 @@ import CreateGuildUniqueText from "components/create-guild/MultiPlatformGrid/com
 import { useSetAtom } from "jotai"
 import Image from "next/image"
 import { CheckCircle, IconProps } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ComponentType, RefAttributes } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, PlatformName, Rest } from "types"
@@ -118,7 +118,7 @@ const MultiPlatformSelectButton = ({
 
   const isTwitter = platform === "TWITTER"
   const isPlatformConnected =
-    !platforms[platform].oauth ||
+    !rewards[platform].oauth ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly

@@ -1,5 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import { useEffect } from "react"
 import { PlatformType } from "types"
 

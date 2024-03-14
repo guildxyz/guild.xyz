@@ -1,6 +1,6 @@
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 

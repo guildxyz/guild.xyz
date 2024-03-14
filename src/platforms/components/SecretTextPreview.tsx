@@ -1,5 +1,5 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import PlatformPreview from "./PlatformPreview"
 
@@ -21,7 +21,7 @@ const SecretTextPreview = ({ children }): JSX.Element => {
             alignItems="center"
             justifyContent="center"
           >
-            <Icon as={platforms.TEXT.icon} boxSize={5} color="white" />
+            <Icon as={rewards.TEXT.icon} boxSize={5} color="white" />
           </Circle>
         )
       }

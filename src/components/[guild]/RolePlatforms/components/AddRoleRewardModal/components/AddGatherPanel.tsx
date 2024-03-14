@@ -5,7 +5,7 @@ import {
   gatherSpaceIdToName,
   gatherSpaceUrlToSpaceId,
 } from "platforms/Gather/useGatherCardProps"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddPlatformPanelProps } from "platforms/rewards"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 

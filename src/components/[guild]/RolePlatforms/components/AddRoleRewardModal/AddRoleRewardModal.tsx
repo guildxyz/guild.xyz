@@ -13,7 +13,7 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import platforms, { AddPlatformPanelProps } from "platforms/platforms"
+import rewards, { AddPlatformPanelProps } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { RoleFormType } from "types"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
@@ -33,7 +33,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
     }
   }
 
-  const { AddPlatformPanel } = platforms[selection] ?? {}
+  const { AddPlatformPanel } = rewards[selection] ?? {}
 
   const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
@@ -62,7 +62,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
               />
             )}
             <Text>
-              {selection ? `Add ${platforms[selection].name} reward` : "Add reward"}
+              {selection ? `Add ${rewards[selection].name} reward` : "Add reward"}
             </Text>
           </HStack>
         </ModalHeader>

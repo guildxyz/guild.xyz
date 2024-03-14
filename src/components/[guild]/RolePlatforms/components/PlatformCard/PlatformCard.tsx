@@ -1,5 +1,5 @@
 import RewardCard from "components/common/RewardCard"
-import platforms, { CardPropsHook } from "platforms/platforms"
+import rewards, { CardPropsHook } from "platforms/rewards"
 import { PropsWithChildren } from "react"
 import { GuildPlatformWithOptionalId, Rest } from "types"
 
@@ -26,12 +26,12 @@ const PlatformCard = ({
 
   return (
     <RewardCard
-      label={platforms[type].name}
+      label={rewards[type].name}
       title={name}
       titleRightElement={titleRightElement}
       description={contentRow ?? info}
       image={image}
-      colorScheme={platforms[type].colorScheme}
+      colorScheme={rewards[type].colorScheme}
       {...{ actionRow, cornerButton }}
       {...rest}
     >
