@@ -12,7 +12,7 @@ import dynamic from "next/dynamic"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformType } from "types"
 import {
   getRolePlatformStatus,
@@ -62,7 +62,7 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
                 colorScheme="primary"
                 maxW="full"
               >
-                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
+                {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
               </DynamicShowMintLinkButton>
             </>
           ) : (
@@ -78,7 +78,7 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
                 maxW="full"
                 isDisabled={!isAvailable}
               >
-                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
+                {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
               </Button>
             </>
           )}

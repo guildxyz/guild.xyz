@@ -18,7 +18,7 @@ import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import { ArrowSquareIn, CaretRight, IconProps } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ComponentType, RefAttributes, useMemo } from "react"
 import { PlatformName, Rest } from "types"
 
@@ -70,7 +70,7 @@ const PlatformSelectButton = ({
 
   const user = useUser()
   const isPlatformConnected =
-    !platforms[platform].isPlatform ||
+    !rewards[platform].isPlatform ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly

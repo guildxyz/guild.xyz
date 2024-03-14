@@ -4,7 +4,7 @@ import { AlreadyGrantedAccessesWillRemainInfo } from "components/[guild]/RolePla
 import useGuild from "components/[guild]/hooks/useGuild"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import { TrashSimple } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect } from "react"
 import { PlatformType } from "types"
 
@@ -20,7 +20,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
     (gp) => gp.platformGuildId === platformGuildId
   )
 
-  const { isPlatform } = platforms[PlatformType[guildPlatform?.platformId]] ?? {}
+  const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
 
   const { onSubmit, isLoading, response } = useRemoveGuildPlatform(guildPlatform?.id)
 

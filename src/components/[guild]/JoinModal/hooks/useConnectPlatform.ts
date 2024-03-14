@@ -9,7 +9,7 @@ import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
 import { OAuthResultParams } from "pages/oauth-result"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
@@ -166,7 +166,7 @@ const useConnectPlatform = (
         toast({
           status: "error",
           description:
-            error.message ?? `Failed to connect ${platforms[platformName].name}`,
+            error.message ?? `Failed to connect ${rewards[platformName].name}`,
         })
       },
     }

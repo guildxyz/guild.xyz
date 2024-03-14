@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const PointsPreview = (): JSX.Element => {
   const { guildPlatforms } = useGuild()
@@ -20,7 +20,7 @@ const PointsPreview = (): JSX.Element => {
     : platformGuildData ?? {}
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="POINTS"
       name={`Get ${amount} ${name || "points"}`}
       image={imageUrl}

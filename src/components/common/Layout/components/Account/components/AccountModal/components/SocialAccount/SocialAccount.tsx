@@ -1,14 +1,15 @@
-import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import Button from "components/common/Button"
+import useToast from "hooks/useToast"
+import { PlatformName } from "types"
+
+import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
-import Button from "components/common/Button"
 import useMembership from "components/explorer/hooks/useMembership"
-import useToast from "hooks/useToast"
 import { Question } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { memo } from "react"
-import { PlatformName } from "types"
 import useDisconnect from "../../hooks/useDisconnect"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
@@ -88,7 +89,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
       onClick={onConnect}
       isLoading={isLoading}
       isDisabled={response}
-      colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
+      colorScheme={isReconnect ? "orange" : rewards[type].colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"
     >
@@ -111,7 +112,7 @@ const DisconnectPlatformButton = ({ type }: { type: PlatformName }) => {
         isLoading,
         loadingText,
         onConfirm,
-        name: platforms[type].name,
+        name: rewards[type].name,
       }}
     />
   )

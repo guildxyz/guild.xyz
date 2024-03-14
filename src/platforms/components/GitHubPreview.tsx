@@ -2,7 +2,7 @@ import useSetRoleImageAndNameFromPlatformData from "components/[guild]/AddReward
 import useGateables from "hooks/useGateables"
 import { useWatch } from "react-hook-form"
 import { PlatformType } from "types"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const GitHubPreview = (): JSX.Element => {
   const encodedRepoId = useWatch({
@@ -17,7 +17,7 @@ const GitHubPreview = (): JSX.Element => {
   useSetRoleImageAndNameFromPlatformData(repo?.avatarUrl, repo?.repositoryName)
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="GITHUB"
       isLoading={isLoading}
       name={repo?.repositoryName}

@@ -2,7 +2,7 @@ import { SimpleGrid, Text } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { PlatformType, RoleFormType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
@@ -27,7 +27,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
-      (platforms[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
+      (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
         PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
         !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
       // temporary until we have Edit button for points to set amount
@@ -48,7 +48,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
         {filteredPlatforms?.map((platform) => {
-          const platformData = platforms[PlatformType[platform.platformId]]
+          const platformData = rewards[PlatformType[platform.platformId]]
           if (!platformData) return null
 
           const useCardProps = platformData.cardPropsHook
@@ -61,7 +61,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           return (
             <PlatformCard
               key={platform.id}
-              usePlatformProps={useCardProps}
+              usePlatformCardProps={useCardProps}
               guildPlatform={platform}
               colSpan={1}
               onClick={() => {

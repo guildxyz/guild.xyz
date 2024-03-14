@@ -10,7 +10,7 @@ import Button from "components/common/Button"
 import Link from "next/link"
 import { ArrowSquareOut } from "phosphor-react"
 import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformType } from "types"
 
 const FormReward = ({ platform, withMotionImg }: RewardProps) => {
@@ -55,7 +55,7 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
               iconSpacing="1"
               maxW="full"
             >
-              {form?.name ?? platforms[PlatformType[platformId]].name}
+              {form?.name ?? rewards[PlatformType[platformId]].name}
             </Button>
           </Tooltip>
         </>

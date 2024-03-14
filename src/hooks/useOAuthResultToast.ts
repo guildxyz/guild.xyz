@@ -1,7 +1,7 @@
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
 import { useSetAtom } from "jotai"
 import { useRouter } from "next/router"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect } from "react"
 import { PlatformName } from "types"
 import useToast from "./useToast"
@@ -14,7 +14,7 @@ export default function useOAuthResultToast() {
   useEffect(() => {
     if (router.query["oauth-status"]) {
       const platformNameHumanReadable =
-        platforms[(router.query["oauth-platform"] as PlatformName) ?? ""]?.name ??
+        rewards[(router.query["oauth-platform"] as PlatformName) ?? ""]?.name ??
         "Social"
 
       const title =

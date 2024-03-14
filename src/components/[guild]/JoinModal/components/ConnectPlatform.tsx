@@ -3,7 +3,7 @@ import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReco
 import useUser from "components/[guild]/hooks/useUser"
 import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/SocialAccount"
 import Script from "next/script"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -43,15 +43,15 @@ const ConnectPlatform = ({ platform }: Props) => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
   }, [platformFromDb])
 
-  const accountName = `${platforms[platform].name}${
+  const accountName = `${rewards[platform].name}${
     platform === "TWITTER_V1" ? " (v1)" : ""
   }`
 
   return (
     <ConnectAccount
       account={accountName}
-      icon={<Icon as={platforms[platform].icon} />}
-      colorScheme={platforms[platform].colorScheme as string}
+      icon={<Icon as={rewards[platform].icon} />}
+      colorScheme={rewards[platform].colorScheme as string}
       isConnected={
         platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
       }

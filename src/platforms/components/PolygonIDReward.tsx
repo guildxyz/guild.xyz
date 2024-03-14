@@ -13,7 +13,7 @@ import useMembership, {
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import { useMintPolygonIDProofContext } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import { useAccount } from "wagmi"
@@ -94,7 +94,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
             maxW="full"
             {...state.buttonProps}
           >
-            {platforms[PlatformType[platformId]].name} proofs
+            {rewards[PlatformType[platformId]].name} proofs
           </Button>
         </Tooltip>
       }
