@@ -30,9 +30,8 @@ const CustomIndicatorsContainer = ({
           size={"xs"}
           rounded={"full"}
           variant={"ghost"}
-          onMouseDown={() => {
-            onCopy()
-          }}
+          onMouseDown={() => onCopy()}
+          onTouchEnd={() => onCopy()}
         />
       )}
       {children}
