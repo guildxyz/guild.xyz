@@ -6,6 +6,7 @@ import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import { ClickableRoleTag } from "./ActivityLogRoleTag"
+import { ClickableFormTag } from "./FormTag"
 import { ClickableGuildTag } from "./GuildTag"
 import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
@@ -225,6 +226,27 @@ const ActionLabel = (): JSX.Element => {
                 {showGuildTag ? (
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
+                  <ClickableUserTag userId={ids.user} />
+                )}
+              </>
+            )
+          case ACTION.CreateForm:
+          case ACTION.UpdateForm:
+          case ACTION.DeleteForm:
+          case ACTION.SubmitForm:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                {activityLogType !== "guild" && (
+                  <ClickableGuildTag guildId={ids.guild} />
+                )}
+
+                <ClickableFormTag
+                  formId={ids.form}
+                  guildId={ids.guild}
+                  userId={ids.user}
+                />
+                {activityLogType !== "user" && (
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
