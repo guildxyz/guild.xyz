@@ -16,6 +16,8 @@ const CustomIndicatorsContainerWithCopy = ({
 } & IndicatorsContainerProps<unknown, boolean, GroupBase<unknown>>) => {
   const successIconColor = useColorModeValue("green.800", "green.200")
 
+  /* We are not using the useClipboard hook, because its onCopy function triggers
+  a re-render, hiding the checkmark feedback on successful copy. */
   const [isCopied, setIsCopied] = useState(false)
 
   const handleCopy = async () => {
