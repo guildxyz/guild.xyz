@@ -40,11 +40,7 @@ const AccountConnections = () => {
       (platform: PlatformName) =>
         rewards[platform].isPlatform && !connectedPlatforms?.includes(platform)
     )
-    return [
-      ...connectedPlatforms,
-      "EMAIL",
-      ...notConnectedPlatforms,
-    ] as PlatformName[]
+    return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
 
   const linkedAddresses = addresses?.filter(

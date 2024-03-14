@@ -209,7 +209,6 @@ const rewards: Record<PlatformName, RewardData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-    isPlatform: true,
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -373,7 +372,8 @@ const rewards: Record<PlatformName, RewardData> = {
         ssr: false,
       }
     ),
-    isPlatform: true,
+    // Until we don't have a generalized connection flow
+    isPlatform: false,
   },
   POINTS: {
     icon: Star,
