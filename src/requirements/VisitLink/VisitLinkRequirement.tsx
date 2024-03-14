@@ -100,7 +100,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
                 <Text wordBreak="break-word" flexGrow={1}>
                   <Original />
                 </Text>
-                <ResetRequirementButton />
+                {/* We only need to show it in the edit drawer, hence the formContext check */}
+                {!!formContext && <ResetRequirementButton />}
               </Stack>
             </HStack>
           </ViewOriginalPopover>
