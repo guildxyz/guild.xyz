@@ -326,9 +326,6 @@ export const HIDDEN_ACTIONS: ACTION[] = [
   ACTION.UpdateDescription,
   ACTION.UpdateLogic,
   ACTION.UpdateTheme,
-  ACTION.CreateForm,
-  ACTION.UpdateForm,
-  ACTION.DeleteForm,
 ]
 
 export const USER_ACTIONS: ACTION[] = [
