@@ -267,7 +267,6 @@ const rewards: Record<PlatformName, RewardData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-    isPlatform: true,
     oauth: {
       url: "https://api.twitter.com/oauth/authorize",
       params: {
@@ -452,7 +451,8 @@ const rewards: Record<PlatformName, RewardData> = {
         ssr: false,
       }
     ),
-    isPlatform: true,
+    // Until we don't have a generalized connection flow
+    isPlatform: false,
   },
   POINTS: {
     icon: Star,
