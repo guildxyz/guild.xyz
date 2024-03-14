@@ -61,7 +61,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           return (
             <PlatformCard
               key={platform.id}
-              usePlatformProps={useCardProps}
+              usePlatformCardProps={useCardProps}
               guildPlatform={platform}
               colSpan={1}
               onClick={() => {

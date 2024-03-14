@@ -139,7 +139,7 @@ const RolePlatformCard = ({
       }}
     >
       <PlatformCard
-        usePlatformProps={useCardProps}
+        usePlatformCardProps={useCardProps}
         guildPlatform={guildPlatform}
         /**
          * TODO: use the `PUT

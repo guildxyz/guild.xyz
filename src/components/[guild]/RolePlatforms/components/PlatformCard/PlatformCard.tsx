@@ -5,7 +5,7 @@ import { GuildPlatformWithOptionalId, Rest } from "types"
 
 type Props = {
   guildPlatform: GuildPlatformWithOptionalId
-  usePlatformProps: CardPropsHook
+  usePlatformCardProps: CardPropsHook
   titleRightElement?: JSX.Element
   actionRow?: JSX.Element
   cornerButton?: JSX.Element
@@ -14,7 +14,7 @@ type Props = {
 
 const PlatformCard = ({
   guildPlatform,
-  usePlatformProps,
+  usePlatformCardProps,
   titleRightElement,
   actionRow,
   cornerButton,
@@ -22,7 +22,7 @@ const PlatformCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
-  const { info, name, image, type } = usePlatformProps(guildPlatform)
+  const { info, name, image, type } = usePlatformCardProps(guildPlatform)
 
   return (
     <RewardCard

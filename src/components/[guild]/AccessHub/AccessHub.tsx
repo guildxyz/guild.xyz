@@ -126,7 +126,7 @@ const AccessHub = (): JSX.Element => {
 
             return (
               <PlatformCard
-                usePlatformProps={useCardProps}
+                usePlatformCardProps={useCardProps}
                 guildPlatform={platform}
                 key={platform.id}
                 cornerButton={
