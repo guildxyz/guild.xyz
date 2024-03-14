@@ -52,7 +52,6 @@ const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAler
 const GroupPage = (): JSX.Element => {
   const {
     roles,
-    isLoading,
     name: guildName,
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
