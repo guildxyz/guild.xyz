@@ -75,6 +75,9 @@ const TokenPicker = ({
     (token) => token.value?.toLowerCase() === address?.toLowerCase()
   )?.img
 
+  const type =
+    address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
+
   return (
     <FormControl isRequired isInvalid={!!error}>
       <FormLabel>Token:</FormLabel>
@@ -108,6 +111,7 @@ const TokenPicker = ({
             validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
+          isCopyable={type !== "COIN"}
           isLoading={isLoading}
           options={mappedTokens}
           filterOption={customFilterOption}
