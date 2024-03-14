@@ -8,7 +8,9 @@ import {
   RequirementImage,
   RequirementImageCircle,
 } from "components/[guild]/Requirements/components/RequirementImage"
-import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
+import ResetRequirementButton, {
+  getDefaultVisitLinkCustomName,
+} from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
@@ -83,7 +85,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       {...props}
       showViewOriginal={false}
       footer={
-        !!link && (
+        (data?.customName !== getDefaultVisitLinkCustomName(data) ||
+          !!data?.customImage) && (
           <ViewOriginalPopover>
             <HStack p={3} gap={4}>
               <RequirementImageCircle>
@@ -97,6 +100,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
                 <Text wordBreak="break-word" flexGrow={1}>
                   <Original />
                 </Text>
+                {/* We only need to show it in the edit drawer, hence the formContext check */}
                 {!!formContext && <ResetRequirementButton />}
               </Stack>
             </HStack>
