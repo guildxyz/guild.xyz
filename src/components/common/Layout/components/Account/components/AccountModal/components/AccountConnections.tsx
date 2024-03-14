@@ -37,19 +37,8 @@ const AccountConnections = () => {
     const connectedPlatforms =
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
     const notConnectedPlatforms = Object.keys(platforms).filter(
-      (platform) =>
-        ![
-          "POAP",
-          "TWITTER_V1",
-          "CONTRACT_CALL",
-          "EMAIL",
-          "UNIQUE_TEXT",
-          "TEXT",
-          "POINTS",
-          "POLYGON_ID",
-          "FORM",
-          "GATHER_TOWN",
-        ].includes(platform) && !connectedPlatforms?.includes(platform)
+      (platform: PlatformName) =>
+        platforms[platform].isPlatform && !connectedPlatforms?.includes(platform)
     )
     return [
       ...connectedPlatforms,

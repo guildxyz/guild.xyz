@@ -70,7 +70,7 @@ const PlatformSelectButton = ({
 
   const user = useUser()
   const isPlatformConnected =
-    !platforms[platform].isConnectable ||
+    !platforms[platform].isPlatform ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly

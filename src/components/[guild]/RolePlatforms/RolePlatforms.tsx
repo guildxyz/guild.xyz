@@ -6,12 +6,7 @@ import Section from "components/common/Section"
 import { Plus } from "phosphor-react"
 import platforms, { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import {
-  GuildPlatform,
-  GuildPlatformWithOptionalId,
-  PlatformType,
-  RoleFormType,
-} from "types"
+import { GuildPlatformWithOptionalId, PlatformType, RoleFormType } from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
 import SetVisibility from "../SetVisibility"
@@ -123,7 +118,11 @@ const RolePlatformCard = ({
 
   if (!type) return null
 
-  const { cardPropsHook: useCardProps, cardSettingsComponent } = platforms[type]
+  const {
+    cardPropsHook: useCardProps,
+    cardSettingsComponent,
+    isPlatform,
+  } = platforms[type]
 
   let PlatformCardSettings = cardSettingsComponent
   // only show Google access level settings and Discord role settings for new platforms
@@ -168,11 +167,7 @@ const RolePlatformCard = ({
         }
         cornerButton={
           !rolePlatform.isNew ? (
-            <RemovePlatformButton
-              removeButtonColor={removeButtonColor}
-              // It's safe to cast this value, since we're sure that guildPlatform.id will be defined here
-              guildPlatform={guildPlatform as GuildPlatform}
-            />
+            <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
           ) : (
             <CloseButton
               size="sm"
