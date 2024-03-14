@@ -1,5 +1,5 @@
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
-import { AddPlatformPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 
@@ -7,7 +7,7 @@ const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGithubPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddGithubPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   return (

@@ -7,7 +7,7 @@ import SecretTextDataForm, {
 import UniqueTextDataForm, {
   UniqueTextRewardForm,
 } from "platforms/UniqueText/UniqueTextDataForm"
-import { AddPlatformPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformName, PlatformType } from "types"
@@ -17,7 +17,7 @@ enum TextPlatformName {
   UNIQUE_TEXT,
 }
 
-const AddSecretTextPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddSecretTextPanel = ({ onAdd }: AddRewardPanelProps) => {
   const { id: userId } = useUser()
 
   const methods = useForm<SecretTextRewardForm & UniqueTextRewardForm>({

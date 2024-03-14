@@ -1,9 +1,9 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { AddPlatformPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { useEffect } from "react"
 import { PlatformType } from "types"
 
-const AddPolygonIDPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddPolygonIDPanel = ({ onAdd }: AddRewardPanelProps) => {
   const { id: guildId } = useGuild()
 
   useEffect(

@@ -1,5 +1,5 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { AddPlatformPanelProps } from "platforms/rewards"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 
@@ -7,7 +7,7 @@ const defaultValues = {
   platformGuildId: null,
 }
 
-const AddDiscordPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
 
   const platformGuildId = useWatch({

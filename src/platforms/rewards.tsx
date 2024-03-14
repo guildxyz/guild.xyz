@@ -71,7 +71,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "GATHER_TOWN",
 ]
 
-export type AddPlatformPanelProps = {
+export type AddRewardPanelProps = {
   onAdd: (data: RoleFormType["rolePlatforms"][number]) => void
   skipSettings?: boolean
 }
@@ -99,13 +99,13 @@ type RewardData<
   colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
   cardPropsHook?: CardPropsHook
-  // true when the AddPlatformPanel just automatically adds the platform without any user input
-  autoPlatformSetup?: boolean
+  // true when the AddRewardPanel just automatically adds the platform without any user input
+  autoRewardSetup?: boolean
   cardSettingsComponent?: () => JSX.Element
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
-  AddPlatformPanel?: ComponentType<AddPlatformPanelProps>
+  AddRewardPanel?: ComponentType<AddRewardPanelProps>
   PlatformPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
   isPlatform?: boolean
@@ -119,7 +119,7 @@ type RewardData<
   asRewardRestriction: PlatformAsRewardRestrictions
 }
 
-const AddPlatformPanelLoadingSpinner = () => (
+const AddRewardPanelLoadingSpinner = () => (
   <Center w="full" h="51vh">
     <Spinner size="xl" thickness="4px" />
   </Center>
@@ -143,14 +143,14 @@ const rewards: Record<PlatformName, RewardData> = {
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
@@ -184,14 +184,14 @@ const rewards: Record<PlatformName, RewardData> = {
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddDiscordPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
@@ -216,14 +216,14 @@ const rewards: Record<PlatformName, RewardData> = {
     cardPropsHook: useGithubCardProps,
     cardMenuComponent: GithubCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGithubPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
@@ -294,14 +294,14 @@ const rewards: Record<PlatformName, RewardData> = {
     cardMenuComponent: GoogleCardMenu,
     cardWarningComponent: GoogleCardWarning,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
@@ -327,7 +327,7 @@ const rewards: Record<PlatformName, RewardData> = {
     cardButton: PoapCardButton,
     cardMenuComponent: PoapCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPoapPanel"
@@ -353,14 +353,14 @@ const rewards: Record<PlatformName, RewardData> = {
     cardButton: ContractCallRewardCardButton,
     cardMenuComponent: ContractCallCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(
@@ -386,14 +386,14 @@ const rewards: Record<PlatformName, RewardData> = {
     cardButton: TextCardButton,
     cardMenuComponent: SecretTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddSecretTextPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(
@@ -437,15 +437,15 @@ const rewards: Record<PlatformName, RewardData> = {
     cardButton: PolygonIDCardButton,
     cardMenuComponent: PolygonIDCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
-    autoPlatformSetup: true,
-    AddPlatformPanel: dynamic(
+    autoRewardSetup: true,
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPolygonIDPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     PlatformPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
@@ -471,14 +471,14 @@ const rewards: Record<PlatformName, RewardData> = {
       ssr: false,
       loading: () => <PlatformPreview isLoading />,
     }),
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/PointsReward"), {
@@ -498,14 +498,14 @@ const rewards: Record<PlatformName, RewardData> = {
       ssr: false,
       loading: () => <PlatformPreview isLoading />,
     }),
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/FormReward"), {
@@ -526,14 +526,14 @@ const rewards: Record<PlatformName, RewardData> = {
       ssr: false,
       loading: () => <PlatformPreview isLoading />,
     }),
-    AddPlatformPanel: dynamic(
+    AddRewardPanel: dynamic(
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
         ),
       {
         ssr: false,
-        loading: AddPlatformPanelLoadingSpinner,
+        loading: AddRewardPanelLoadingSpinner,
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {

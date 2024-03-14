@@ -75,7 +75,7 @@ const AddRewardButton = (): JSX.Element => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const goBack = () => {
-    if (step === "SELECT_ROLE" && !rewards[selection].autoPlatformSetup) {
+    if (step === "SELECT_ROLE" && !rewards[selection].autoRewardSetup) {
       methods.reset(defaultValues)
     } else {
       setSelection(null)
@@ -146,7 +146,7 @@ const AddRewardButton = (): JSX.Element => {
     }
   }
 
-  const { AddPlatformPanel, PlatformPreview } = rewards[selection] ?? {}
+  const { AddRewardPanel, PlatformPreview } = rewards[selection] ?? {}
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
@@ -249,8 +249,8 @@ const AddRewardButton = (): JSX.Element => {
             >
               {selection && step === "SELECT_ROLE" ? (
                 <SelectRoleOrSetRequirements selectedPlatform={selection} />
-              ) : AddPlatformPanel ? (
-                <AddPlatformPanel
+              ) : AddRewardPanel ? (
+                <AddRewardPanel
                   onAdd={(createdRolePlatform) => {
                     methods.setValue("rolePlatforms.0", {
                       ...createdRolePlatform,

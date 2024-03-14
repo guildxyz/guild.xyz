@@ -13,13 +13,13 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards, { AddPlatformPanelProps } from "platforms/rewards"
+import rewards, { AddRewardPanelProps } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { RoleFormType } from "types"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 type Props = {
-  append: AddPlatformPanelProps["onAdd"]
+  append: AddRewardPanelProps["onAdd"]
 }
 
 const AddRoleRewardModal = ({ append }: Props) => {
@@ -33,7 +33,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
     }
   }
 
-  const { AddPlatformPanel } = rewards[selection] ?? {}
+  const { AddRewardPanel } = rewards[selection] ?? {}
 
   const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
@@ -70,8 +70,8 @@ const AddRoleRewardModal = ({ append }: Props) => {
         <ModalBody ref={modalRef} className="custom-scrollbar">
           {selection && step === "SELECT_ROLE" ? (
             <SelectRoleOrSetRequirements selectedPlatform={selection} />
-          ) : AddPlatformPanel ? (
-            <AddPlatformPanel
+          ) : AddRewardPanel ? (
+            <AddRewardPanel
               onAdd={(data) => {
                 append({ ...data, visibility: roleVisibility })
                 onClose()
