@@ -16,8 +16,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import StyledSelect from "components/common/StyledSelect"
 import { ArrowRight } from "phosphor-react"
-import { AddPlatformPanelProps } from "platforms/platforms"
 import { useMemo } from "react"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"
@@ -63,7 +63,7 @@ const defaultValues = {
   fields: [],
 }
 
-const AddFormPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
   const { notConnectedForms, isLoading: isRawFormsLoading } =
     useGetNotConnectedForms()
 

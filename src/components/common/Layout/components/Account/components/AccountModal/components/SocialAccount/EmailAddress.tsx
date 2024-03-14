@@ -27,7 +27,7 @@ import { Modal } from "components/common/Modal"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { PencilSimple } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect, useRef, useState } from "react"
 import { useController, useForm, useWatch } from "react-hook-form"
 import fetcher from "utils/fetcher"
@@ -156,7 +156,7 @@ const ConnectEmailButton = ({
     <>
       <Button
         onClick={onOpen}
-        colorScheme={emails?.pending ? "orange" : platforms.EMAIL.colorScheme}
+        colorScheme={emails?.pending ? "orange" : rewards.EMAIL.colorScheme}
         variant={"solid"}
         size="sm"
         {...props}
@@ -285,7 +285,7 @@ const DisconnectEmailButton = () => {
 
   return (
     <DisconnectAccountButton
-      name={platforms.EMAIL.name}
+      name={rewards.EMAIL.name}
       {...{ disclosure, isLoading, loadingText, onConfirm }}
     />
   )

@@ -1,3 +1,4 @@
+import { useWallet } from "@fuel-wallet/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
@@ -8,8 +9,7 @@ import { FUEL_GUILD_PIN_CONTRACT_ID } from "./useMintFuelGuildPin"
 const useAlreadyMinted = () => {
   const { id: userId } = useUser()
   const { id: guildId } = useGuild()
-  // const { wallet } = useWallet()
-  const wallet = null
+  const { wallet } = useWallet()
 
   const getAlreadyMinted = async () => {
     const contract = GuildPinContractAbi__factory.connect(

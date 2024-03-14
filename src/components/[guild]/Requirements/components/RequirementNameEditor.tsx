@@ -5,7 +5,7 @@ import {
   IconButton,
   Text,
   Tooltip,
-  useEditableControls,
+  useEditableContext,
 } from "@chakra-ui/react"
 import { Check, PencilSimple } from "phosphor-react"
 import { MutableRefObject, PropsWithChildren, ReactNode, useRef } from "react"
@@ -34,8 +34,8 @@ const RequirementNameEditor = ({
   rightElement?: ReactNode
   defaultValue?: string
 }>) => {
-  const { isEditing, getSubmitButtonProps, getEditButtonProps } =
-    useEditableControls()
+  const { isEditing, getInputProps, getSubmitButtonProps, getEditButtonProps } =
+    useEditableContext()
   const {
     resetField,
     formState: { errors },
@@ -43,27 +43,34 @@ const RequirementNameEditor = ({
 
   if (isEditing)
     return (
-      <Box
-        data-req-name-editor
-        borderWidth={1}
-        borderRadius="lg"
-        display={"flex"}
-        pl={2}
-        overflow={"hidden"}
+      <Tooltip
+        label={errors.customName?.message}
+        hasArrow
+        isOpen={!!errors.customName}
       >
-        <EditableInput
-          _focus={{
-            boxShadow: "none",
-          }}
-          p={0}
-          borderRadius={0}
-        />
-
-        <Tooltip
-          label={errors.customName?.message}
-          isDisabled={isEditing && !errors.customName}
-          hasArrow
+        <Box
+          data-req-name-editor
+          borderWidth={1}
+          borderRadius="lg"
+          display="flex"
+          pl={2}
+          overflow="hidden"
         >
+          <EditableInput
+            {...getInputProps({
+              onKeyDown: (e) => {
+                if (!!errors?.customName && e.key === "Enter") {
+                  e.preventDefault()
+                }
+              },
+            })}
+            _focus={{
+              boxShadow: "none",
+            }}
+            p={0}
+            borderRadius={0}
+          />
+
           <IconButton
             size="xs"
             variant="ghost"
@@ -71,11 +78,15 @@ const RequirementNameEditor = ({
             aria-label="Edit"
             icon={<Check />}
             colorScheme={"green"}
-            {...getSubmitButtonProps()}
+            {...getSubmitButtonProps({
+              onClick: (e) => {
+                if (!!errors.customName) e.preventDefault()
+              },
+            })}
             isDisabled={isEditing && !!errors.customName}
           />
-        </Tooltip>
-      </Box>
+        </Box>
+      </Tooltip>
     )
 
   return (
@@ -129,7 +140,10 @@ const RequirementNameEditorWrapper = ({
   } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
-  const { field } = useController({
+  const {
+    field,
+    formState: { errors },
+  } = useController({
     control: methods.control,
     name: "customName",
     rules: REQUIREMENTS[type].customNameRules,
@@ -147,12 +161,20 @@ const RequirementNameEditorWrapper = ({
     }
   }
 
+  const handleSubmit = (name: string) => {
+    if (!!errors?.customName) {
+      return
+    }
+    onSave(name)
+  }
+
   return (
     <FormProvider {...methods}>
       <Editable
         size="sm"
         {...field}
-        onSubmit={onSave}
+        submitOnBlur={false}
+        onSubmit={handleSubmit}
         onCancel={conditionallyResetToOriginal}
       >
         <RequirementNameEditor

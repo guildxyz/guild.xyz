@@ -13,7 +13,7 @@ import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import ClaimGatherModal from "platforms/Gather/ClaimGatherModal"
 import useClaimGather from "platforms/Gather/hooks/useClaimGather"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
@@ -112,7 +112,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
                     maxW="full"
                   >
                     {platformGuildData.name ??
-                      platforms[PlatformType[platformId]].name}
+                      rewards[PlatformType[platformId]].name}
                   </Button>
                 ) : (
                   <Button
@@ -124,7 +124,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
                     onClick={onOpen}
                   >
                     {platformGuildData.name ??
-                      platforms[PlatformType[platformId]].name}
+                      rewards[PlatformType[platformId]].name}
                   </Button>
                 )}
               </Tooltip>

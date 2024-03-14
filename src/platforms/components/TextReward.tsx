@@ -16,7 +16,7 @@ import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton
 import useClaimText, {
   ClaimTextModal,
 } from "platforms/SecretText/hooks/useClaimText"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
@@ -119,7 +119,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
                 }}
                 {...state.buttonProps}
               >
-                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
+                {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
               </Button>
             </Tooltip>
           )

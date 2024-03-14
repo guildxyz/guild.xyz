@@ -7,7 +7,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 
 const FormRequirement = (props: RequirementProps) => {
   const { urlName } = useGuild()
@@ -16,7 +16,7 @@ const FormRequirement = (props: RequirementProps) => {
   const { userSubmission } = useUserFormSubmission(form)
 
   return (
-    <Requirement image={<Icon as={platforms.FORM.icon} boxSize={6} />} {...props}>
+    <Requirement image={<Icon as={rewards.FORM.icon} boxSize={6} />} {...props}>
       <Text as="span">{"Fill the "}</Text>
       <Tooltip
         label="Respone already submitted"

@@ -17,7 +17,7 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
-import platforms, { AddPlatformPanelProps } from "platforms/platforms"
+import rewards, { AddRewardPanelProps } from "platforms/rewards"
 import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
@@ -44,7 +44,7 @@ const defaultValues: ImportPoapForm = {
   texts: [],
 }
 
-const AddPoapPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<ImportPoapForm>({
     defaultValues,
   })
@@ -116,7 +116,7 @@ const AddPoapPanel = ({ onAdd }: AddPlatformPanelProps) => {
           <Link
             href="https://drops.poap.xyz/en-GB/drop/create"
             isExternal
-            colorScheme={platforms.POAP.colorScheme}
+            colorScheme={rewards.POAP.colorScheme}
           >
             POAP.xyz
           </Link>

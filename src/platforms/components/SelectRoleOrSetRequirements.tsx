@@ -7,7 +7,7 @@ import RoleSelector from "components/[guild]/RoleSelector"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -37,7 +37,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     setActiveTab(value)
   }
 
-  const { asRewardRestriction } = platforms[selection]
+  const { asRewardRestriction } = rewards[selection]
 
   return (
     <Tabs
