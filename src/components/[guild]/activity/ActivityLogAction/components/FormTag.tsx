@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import { DotsThreeVertical, Funnel, IconProps } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -46,7 +46,7 @@ const FormTag = forwardRef<Props, "span">(
         {...tagProps}
       >
         <HStack spacing={1}>
-          <Icon as={platforms.FORM.icon} />
+          <Icon as={rewards.FORM.icon} />
 
           <Text as="span" w="max-content">
             {isValidating ? "Loading..." : data?.name ?? "Unknown form"}
