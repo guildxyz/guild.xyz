@@ -162,7 +162,7 @@ export const REQUIREMENTS_DATA = [
       pattern: {
         value: VISIT_LINK_REGEX,
         message:
-          "Your text must contain a link label in square brackets, e.g., [Link Label].",
+          "Your text must contain a link label in square brackets, e.g. [Link Label].",
       },
     },
   },
