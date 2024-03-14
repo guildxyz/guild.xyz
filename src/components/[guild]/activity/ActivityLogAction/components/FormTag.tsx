@@ -35,8 +35,8 @@ type Props = FormTagProps &
 
 const FormTag = forwardRef<Props, "span">(
   ({ formId, guildId, rightIcon, ...tagProps }: Props, ref): JSX.Element => {
-    const { data } = useSWRImmutable<Schemas["Form"]>(
-      `/v2/guilds/${guildId}/forms/${formId}`
+    const { data, isValidating } = useSWRImmutable<Schemas["Form"]>(
+      !!formId ? `/v2/guilds/${guildId}/forms/${formId}` : null
     )
 
     const tagColorScheme = useColorModeValue("alpha", "blackalpha")
@@ -50,7 +50,7 @@ const FormTag = forwardRef<Props, "span">(
         h="max-content"
         {...tagProps}
       >
-        {!data?.name ? (
+        {!!formId && !isValidating && !data?.name ? (
           "Unknown form"
         ) : (
           <HStack spacing={1}>
