@@ -22,19 +22,6 @@ type OAuthState<OAuthResponse> = {
   isAuthenticating: boolean
 }
 
-type TGAuthResult = {
-  event: "auth_result"
-  result: {
-    id: number
-    first_name: string
-    username: string
-    photo_url: string
-    auth_date: number
-    hash: string
-  }
-  origin: string
-}
-
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
   url: string,
