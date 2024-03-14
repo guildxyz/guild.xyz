@@ -1,4 +1,5 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useGuildEvents from "hooks/useGuildEvents"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -19,6 +20,7 @@ type Props = {
 const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
   const { urlName, featureFlags } = useGuild()
   const { isAdmin } = useGuildPermission()
+  const { data: events } = useGuildEvents()
 
   const { captureEvent } = usePostHogContext()
 
@@ -45,18 +47,20 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Leaderboard
         </TabButton>
       )}
-      <TabButton
-        href={`/${urlName}/events`}
-        isActive={activeTab === "EVENTS"}
-        onClick={() => {
-          captureEvent("Click on events tab", {
-            from: "home",
-            guild: urlName,
-          })
-        }}
-      >
-        Events
-      </TabButton>
+      {(activeTab === "EVENTS" || events?.length) && (
+        <TabButton
+          href={`/${urlName}/events`}
+          isActive={activeTab === "EVENTS"}
+          onClick={() => {
+            captureEvent("Click on events tab", {
+              from: "home",
+              guild: urlName,
+            })
+          }}
+        >
+          Events
+        </TabButton>
+      )}
       {isAdmin && featureFlags.includes("CRM") && (
         <TabButton href={`/${urlName}/members`} isActive={activeTab === "MEMBERS"}>
           Members
