@@ -146,7 +146,7 @@ const AddRewardButton = (): JSX.Element => {
     }
   }
 
-  const { AddRewardPanel, PlatformPreview } = rewards[selection] ?? {}
+  const { AddRewardPanel, RewardPreview } = rewards[selection] ?? {}
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
@@ -213,7 +213,7 @@ const AddRewardButton = (): JSX.Element => {
                 </HStack>
 
                 {step === "SELECT_ROLE" && (
-                  <PlatformPreview>
+                  <RewardPreview>
                     <AvailabilitySetup
                       platformType={rolePlatform?.guildPlatform?.platformName}
                       rolePlatform={rolePlatform}
@@ -236,7 +236,7 @@ const AddRewardButton = (): JSX.Element => {
                         methods.setValue(`rolePlatforms.0.endTime`, endTime)
                       }}
                     />
-                  </PlatformPreview>
+                  </RewardPreview>
                 )}
               </Stack>
             </ModalHeader>

@@ -1,6 +1,6 @@
 import rewards from "platforms/rewards"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const PoapPreview = ({ children }): JSX.Element => {
   const name = useWatch({
@@ -11,13 +11,13 @@ const PoapPreview = ({ children }): JSX.Element => {
   })
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="POAP"
       name={name}
       image={imageUrl ? `${imageUrl}?size=small` : rewards.POAP.imageUrl}
     >
       {children}
-    </PlatformPreview>
+    </RewardPreview>
   )
 }
 

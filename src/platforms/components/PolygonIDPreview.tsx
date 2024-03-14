@@ -1,8 +1,8 @@
 import rewards from "platforms/rewards"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const PolygonIDPreview = (): JSX.Element => (
-  <PlatformPreview type="POLYGON_ID" image={rewards.POLYGON_ID.imageUrl} />
+  <RewardPreview type="POLYGON_ID" image={rewards.POLYGON_ID.imageUrl} />
 )
 
 export default PolygonIDPreview

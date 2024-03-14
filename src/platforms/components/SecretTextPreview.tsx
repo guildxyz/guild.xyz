@@ -1,7 +1,7 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
 import rewards from "platforms/rewards"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const SecretTextPreview = ({ children }): JSX.Element => {
   const platformGuildData = useWatch({
@@ -10,7 +10,7 @@ const SecretTextPreview = ({ children }): JSX.Element => {
   const circleBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="TEXT"
       name={platformGuildData?.name ?? "Secret"}
       image={
@@ -27,7 +27,7 @@ const SecretTextPreview = ({ children }): JSX.Element => {
       }
     >
       {children}
-    </PlatformPreview>
+    </RewardPreview>
   )
 }
 

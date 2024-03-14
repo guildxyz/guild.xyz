@@ -21,7 +21,7 @@ type Props = {
   name?: string
 }
 
-const PlatformPreview = ({
+const RewardPreview = ({
   isLoading,
   type,
   image,
@@ -64,4 +64,4 @@ const PlatformPreview = ({
   )
 }
 
-export default PlatformPreview
+export default RewardPreview

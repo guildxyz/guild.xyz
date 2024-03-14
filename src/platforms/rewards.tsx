@@ -55,7 +55,7 @@ import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
-import PlatformPreview from "./components/PlatformPreview"
+import RewardPreview from "./components/RewardPreview"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -106,7 +106,7 @@ type RewardData<
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  PlatformPreview?: ComponentType<PropsWithChildren<unknown>>
+  RewardPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
   isPlatform?: boolean
   oauth?: {
@@ -153,9 +153,9 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
     oauth: {
@@ -194,9 +194,9 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/DiscordPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
     oauth: {
@@ -226,9 +226,9 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/GitHubPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
     oauth: {
@@ -304,9 +304,9 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/GooglePreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/GooglePreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
     oauth: {
@@ -336,9 +336,9 @@ const rewards: Record<PlatformName, RewardData> = {
         ssr: false,
       }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/PoapPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/PoapPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     RoleCardComponent: dynamic(() => import("platforms/components/PoapReward"), {
       ssr: false,
@@ -363,11 +363,11 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(
+    RewardPreview: dynamic(
       () => import("platforms/components/ContractCallPreview"),
       {
         ssr: false,
-        loading: () => <PlatformPreview isLoading />,
+        loading: () => <RewardPreview isLoading />,
       }
     ),
     RoleCardComponent: dynamic(
@@ -396,13 +396,10 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(
-      () => import("platforms/components/SecretTextPreview"),
-      {
-        ssr: false,
-        loading: () => <PlatformPreview isLoading />,
-      }
-    ),
+    RewardPreview: dynamic(() => import("platforms/components/SecretTextPreview"), {
+      ssr: false,
+      loading: () => <RewardPreview isLoading />,
+    }),
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
       ssr: false,
     }),
@@ -416,13 +413,10 @@ const rewards: Record<PlatformName, RewardData> = {
     cardButton: TextCardButton,
     cardMenuComponent: UniqueTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    PlatformPreview: dynamic(
-      () => import("platforms/components/UniqueTextPreview"),
-      {
-        ssr: false,
-        loading: () => <PlatformPreview isLoading />,
-      }
-    ),
+    RewardPreview: dynamic(() => import("platforms/components/UniqueTextPreview"), {
+      ssr: false,
+      loading: () => <RewardPreview isLoading />,
+    }),
     RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
       ssr: false,
     }),
@@ -448,9 +442,9 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    PlatformPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/PolygonIDPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     RoleCardComponent: dynamic(
       () => import("platforms/components/PolygonIDReward"),
@@ -467,9 +461,9 @@ const rewards: Record<PlatformName, RewardData> = {
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     cardPropsHook: usePointsCardProps,
-    PlatformPreview: dynamic(() => import("platforms/components/PointsPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     AddRewardPanel: dynamic(
       () =>
@@ -494,9 +488,9 @@ const rewards: Record<PlatformName, RewardData> = {
     cardPropsHook: useFormCardProps,
     cardButton: FormCardLinkButton,
     cardMenuComponent: FormCardMenu,
-    PlatformPreview: dynamic(() => import("platforms/components/FormPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/FormPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     AddRewardPanel: dynamic(
       () =>
@@ -522,9 +516,9 @@ const rewards: Record<PlatformName, RewardData> = {
     cardPropsHook: useGatherCardProps,
     cardButton: GatherCardButton,
     cardMenuComponent: GatherCardMenu,
-    PlatformPreview: dynamic(() => import("platforms/components/GatherPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/GatherPreview"), {
       ssr: false,
-      loading: () => <PlatformPreview isLoading />,
+      loading: () => <RewardPreview isLoading />,
     }),
     AddRewardPanel: dynamic(
       () =>
