@@ -20,16 +20,10 @@ const Page = (): JSX.Element => (
     <Stack
       spacing={8}
       sx={{
-        "h2, h3, h4": {
-          fontFamily: "display",
-        },
         h2: {
+          fontFamily: "display",
           fontSize: "2xl",
           mb: 6,
-        },
-        h3: {
-          fontSize: "lg",
-          mb: 4,
         },
         p: {
           lineHeight: 1.75,
@@ -47,9 +41,6 @@ const Page = (): JSX.Element => (
         },
         "li ul, li ol": {
           mb: 4,
-        },
-        "li ol li, li ul li": {
-          mb: 0,
         },
       }}
     >
