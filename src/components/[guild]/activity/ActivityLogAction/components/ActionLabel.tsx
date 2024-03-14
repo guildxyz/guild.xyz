@@ -240,14 +240,15 @@ const ActionLabel = (): JSX.Element => {
                 {activityLogType !== "guild" && (
                   <ClickableGuildTag guildId={ids.guild} />
                 )}
-                {activityLogType !== "user" && (
-                  <ClickableUserTag userId={ids.user} />
-                )}
+
                 <ClickableFormTag
                   formId={ids.form}
                   guildId={ids.guild}
                   userId={ids.user}
                 />
+                {activityLogType !== "user" && (
+                  <ClickableUserTag userId={ids.user} />
+                )}
               </>
             )
 
