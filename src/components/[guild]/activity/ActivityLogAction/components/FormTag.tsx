@@ -112,7 +112,7 @@ const ClickableFormTag = ({
           </Button>
           {(activityLogType === "guild" || activityLogType === "all") && (
             <ViewInFormResponses
-              label="view response in submissions"
+              label="View response in submissions"
               formId={formId}
               guildId={guildId}
               userId={userId}
