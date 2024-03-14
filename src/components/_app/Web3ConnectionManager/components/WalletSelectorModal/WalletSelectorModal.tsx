@@ -44,7 +44,13 @@ type Props = {
 }
 
 // We don't open the modal on these routes
-const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
+const ignoredRoutes = [
+  "/_error",
+  "/tgauth",
+  "/oauth",
+  "/googleauth",
+  "/oauth-result",
+]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()

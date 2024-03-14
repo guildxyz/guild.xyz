@@ -1,6 +1,5 @@
 import usePopupWindow from "hooks/usePopupWindow"
 import useToast from "hooks/useToast"
-import rewards from "platforms/rewards"
 import randomBytes from "randombytes"
 import { useEffect, useState } from "react"
 import { OneOf, PlatformName } from "types"
@@ -23,34 +22,13 @@ type OAuthState<OAuthResponse> = {
   isAuthenticating: boolean
 }
 
-export type AuthLevel<
-  T = (typeof rewards)[PlatformName]["oauth"]["params"]["scope"]
-> = T extends string ? never : keyof T
-
-type TGAuthResult = {
-  event: "auth_result"
-  result: {
-    id: number
-    first_name: string
-    username: string
-    photo_url: string
-    auth_date: number
-    hash: string
-  }
-  origin: string
-}
-
 const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   platformName: PlatformName,
-  authLevel: AuthLevel = "membership",
-  paramOverrides = {}
+  url: string,
+  params: Record<string, any>
 ): OAuthState<OAuthResponse> & {
   onOpen: () => Promise<OAuthState<OAuthResponse>>
 } => {
-  const { params, url, oauthOptionsInitializer } = rewards[platformName]?.oauth ?? {
-    params: {} as any,
-  }
-
   const toast = useToast()
 
   const redirectUri =
@@ -75,33 +53,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     }
     setOauthState(result)
 
-    let finalOauthParams = params
-
-    if (oauthOptionsInitializer) {
-      try {
-        finalOauthParams = await oauthOptionsInitializer(redirectUri)
-      } catch (error) {
-        result = {
-          error: {
-            error: "Error",
-            errorDescription: error.message,
-          },
-          isAuthenticating: false,
-          authData: null,
-        }
-
-        setOauthState(result)
-        return
-      }
-    }
-
-    if (paramOverrides) {
-      finalOauthParams = {
-        ...finalOauthParams,
-        ...paramOverrides,
-      }
-    }
-
     const csrfToken = randomBytes(32).toString("hex")
     const localStorageKey = `${platformName}_oauthinfo`
 
@@ -110,7 +61,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       from: window.location.toString(),
       platformName,
       redirect_url: redirectUri,
-      scope: finalOauthParams.scope ?? "",
+      scope: params.scope ?? "",
     }
 
     window.localStorage.setItem(
@@ -122,48 +73,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       platformName === "TWITTER_V1" ? "TWITTER_V1" : csrfToken
     )
 
-    const getTgListener =
-      (resolve: (value: void | PromiseLike<void>) => void) =>
-      (event: MessageEvent<any>) => {
-        if (
-          event.origin ===
-            process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL.replace("/tgauth", "") &&
-          "type" in event.data &&
-          ["TG_AUTH_SUCCESS", "TG_AUTH_ERROR"].includes(event.data.type)
-        ) {
-          try {
-            const { type, data } = event.data as
-              | { type: "TG_AUTH_SUCCESS"; data: TGAuthResult["result"] }
-              | {
-                  type: "TG_AUTH_ERROR"
-                  data: { error: string; errorDescription: string }
-                }
-
-            result =
-              type === "TG_AUTH_SUCCESS"
-                ? {
-                    isAuthenticating: false,
-                    error: null,
-                    authData: data as any,
-                  }
-                : {
-                    isAuthenticating: false,
-                    error: data,
-                    authData: null,
-                  }
-
-            setOauthState(result)
-            resolve()
-          } catch {}
-        }
-      }
-
-    let tgListener: (event: MessageEvent<any>) => void
-
     const hasReceivedResponse = new Promise<void>((resolve) => {
-      tgListener = getTgListener(resolve)
-      window.addEventListener("message", tgListener)
-
       channel.onmessage = (event: MessageEvent<Message>) => {
         const { type, data } = event.data
 
@@ -188,14 +98,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     })
 
     const searchParams = new URLSearchParams({
-      ...finalOauthParams,
+      ...params,
       redirect_uri: redirectUri,
       state: `${platformName}-${csrfToken}`,
-      scope: finalOauthParams.scope
-        ? typeof finalOauthParams.scope === "string"
-          ? finalOauthParams.scope
-          : finalOauthParams.scope[authLevel]
-        : undefined,
     }).toString()
 
     onOpen(`${url}?${searchParams}`)
@@ -205,7 +110,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       window.localStorage.removeItem(localStorageKey)
       // Close Broadcast Channel
       channel.close()
-      window.removeEventListener("message", tgListener)
     })
 
     return result
@@ -219,10 +123,6 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
 
     toast({ status: "error", title, description: errorDescription })
   }, [oauthState.error])
-
-  if (!rewards[platformName]?.oauth) {
-    return {} as any
-  }
 
   return {
     ...oauthState,

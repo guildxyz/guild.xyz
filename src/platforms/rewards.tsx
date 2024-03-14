@@ -22,7 +22,6 @@ import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
 import XLogo from "static/icons/x.svg"
 import { GuildPlatformWithOptionalId, PlatformName, RoleFormType } from "types"
-import fetcher from "utils/fetcher"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -84,15 +83,7 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   link?: string
 }
 
-type RewardData<
-  OAuthParams extends {
-    client_id?: string
-    scope?: string | { membership: string; creation: string }
-  } = {
-    client_id?: string
-    scope?: string | { membership: string; creation: string }
-  } & Record<string, any>
-> = {
+type RewardData = {
   icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
   name: string
@@ -109,13 +100,6 @@ type RewardData<
   RewardPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
   isPlatform?: boolean
-  oauth?: {
-    url: string
-    params: OAuthParams
-
-    // Probably only will be needed for Twitter v1. Once Twitter shuts it down, we will remove it, and this field can be removed as well
-    oauthOptionsInitializer?: (redirectUri: string) => Promise<OAuthParams>
-  }
   asRewardRestriction: PlatformAsRewardRestrictions
 }
 
@@ -158,21 +142,6 @@ const rewards: Record<PlatformName, RewardData> = {
       loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
-    oauth: {
-      url: process.env.NEXT_PUBLIC_TELEGRAM_POPUP_URL,
-      params: {
-        bot_id: process.env.NEXT_PUBLIC_TG_BOT_ID,
-        origin: typeof window === "undefined" ? "https://guild.xyz" : window.origin,
-        request_access: "write", // TODO
-        lang: "en",
-
-        // Used on our /tgAuth route to know where to postMessage the result (window.opener.origin is unavailable due to opener and the popup having different origins)
-        openerOrigin:
-          typeof window !== "undefined"
-            ? window.location.origin
-            : "https://guild.xyz",
-      },
-    },
   },
   DISCORD: {
     icon: DiscordLogo,
@@ -199,13 +168,6 @@ const rewards: Record<PlatformName, RewardData> = {
       loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
-    oauth: {
-      url: "https://discord.com/api/oauth2/authorize",
-      params: {
-        client_id: process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID,
-        scope: "guilds identify guilds.members.read",
-      },
-    },
   },
   GITHUB: {
     icon: GithubLogo,
@@ -231,16 +193,6 @@ const rewards: Record<PlatformName, RewardData> = {
       loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
-    oauth: {
-      url: "https://github.com/login/oauth/authorize",
-      params: {
-        client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
-        scope: {
-          creation: "repo,read:user",
-          membership: "repo:invite,read:user",
-        },
-      },
-    },
   },
   TWITTER: {
     icon: XLogo,
@@ -250,16 +202,6 @@ const rewards: Record<PlatformName, RewardData> = {
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
     isPlatform: true,
-    oauth: {
-      url: "https://twitter.com/i/oauth2/authorize",
-      params: {
-        client_id: process.env.NEXT_PUBLIC_TWITTER_CLIENT_ID,
-        scope:
-          "tweet.read users.read follows.read like.read list.read offline.access",
-        code_challenge: "challenge",
-        code_challenge_method: "plain",
-      },
-    },
   },
   TWITTER_V1: {
     icon: XLogo,
@@ -267,20 +209,6 @@ const rewards: Record<PlatformName, RewardData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-    oauth: {
-      url: "https://api.twitter.com/oauth/authorize",
-      params: {
-        oauth_callback:
-          typeof window === "undefined"
-            ? "https://guild.xyz/oauth"
-            : `${window.origin}/oauth`,
-        x_auth_access_type: "read",
-      },
-      oauthOptionsInitializer: (callbackUrl) =>
-        fetcher(
-          `/api/twitter-request-token?callbackUrl=${encodeURIComponent(callbackUrl)}`
-        ).then((oauth_token) => ({ oauth_token } as any)),
-    },
   },
   GOOGLE: {
     icon: GoogleLogo,
@@ -308,13 +236,6 @@ const rewards: Record<PlatformName, RewardData> = {
       loading: () => <RewardPreview isLoading />,
     }),
     isPlatform: true,
-    oauth: {
-      url: "https://accounts.google.com/o/oauth2/v2/auth",
-      params: {
-        client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-        scope: "openid email profile",
-      },
-    },
   },
   POAP: {
     icon: null,

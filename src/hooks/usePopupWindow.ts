@@ -1,4 +1,3 @@
-import rewards from "platforms/rewards"
 import { useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"
 
@@ -44,9 +43,7 @@ const usePopupWindow = (
     setWindowInstance(
       window.open(
         typeof url === "string" ? url : uri,
-        isMobile &&
-          !url?.includes("tgauth") &&
-          !url?.includes(rewards.GOOGLE.oauth?.url)
+        isMobile && !url?.includes("accounts.google.com/o/oauth2")
           ? "_self"
           : "_blank",
         Object.entries({ ...defaultWindowFeatures, ...windowFeatures })

@@ -78,7 +78,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
     triggerMembershipUpdate()
   }
 
-  const { onConnect, isLoading, response } = useConnectPlatform(
+  const { isLoading, response, onConnect } = useConnectPlatform(
     type as PlatformName,
     onSuccess,
     isReconnect
@@ -86,8 +86,8 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
 
   return (
     <Button
-      isLoading={isLoading}
       onClick={onConnect}
+      isLoading={isLoading}
       isDisabled={response}
       colorScheme={isReconnect ? "orange" : rewards[type].colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
