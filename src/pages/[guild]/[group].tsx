@@ -1,4 +1,3 @@
-import { Link } from "@chakra-ui/next-js"
 import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
@@ -53,6 +52,7 @@ const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAler
 const GroupPage = (): JSX.Element => {
   const {
     roles,
+    isLoading,
     name: guildName,
     urlName: guildUrlName,
     imageUrl: guildImageUrl,
@@ -182,7 +182,7 @@ const GroupPage = (): JSX.Element => {
             <DynamicNoRolesAlert type="GROUP" />
           )}
 
-          {groupRoles?.length > renderedRolesCount && (
+          {publicRoles?.length && groupRoles?.length > renderedRolesCount && (
             <Center pt={6}>
               <Spinner />
             </Center>
