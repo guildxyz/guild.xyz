@@ -1,8 +1,8 @@
 import {
   Button,
-  Circle,
   forwardRef,
   HStack,
+  Icon,
   Tag,
   TagProps,
   TagRightIcon,
@@ -10,12 +10,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import {
-  DotsThreeVertical,
-  Funnel,
-  IconProps,
-  PencilSimpleLine,
-} from "phosphor-react"
+import { DotsThreeVertical, Funnel, IconProps } from "phosphor-react"
+import platforms from "platforms/platforms"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import useSWRImmutable from "swr/immutable"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -40,7 +36,6 @@ const FormTag = forwardRef<Props, "span">(
     )
 
     const tagColorScheme = useColorModeValue("alpha", "blackalpha")
-    const imgBgColor = useColorModeValue("gray.700", "gray.600")
 
     return (
       <Tag
@@ -50,18 +45,13 @@ const FormTag = forwardRef<Props, "span">(
         h="max-content"
         {...tagProps}
       >
-        {!!formId && !isValidating && !data?.name ? (
-          "Unknown form"
-        ) : (
-          <HStack spacing={1}>
-            <Circle bgColor={imgBgColor} size={4}>
-              <PencilSimpleLine />
-            </Circle>
-            <Text as="span" w="max-content">
-              {data?.name}
-            </Text>
-          </HStack>
-        )}
+        <HStack spacing={1}>
+          <Icon as={platforms.FORM.icon} />
+
+          <Text as="span" w="max-content">
+            {isValidating ? "Loading..." : data?.name ?? "Unknown form"}
+          </Text>
+        </HStack>
 
         {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
