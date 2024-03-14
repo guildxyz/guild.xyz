@@ -13,7 +13,7 @@ import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import ClaimGatherModal from "platforms/Gather/ClaimGatherModal"
 import useClaimGather from "platforms/Gather/hooks/useClaimGather"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
@@ -42,7 +42,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
   const openJoinModal = useOpenJoinModal()
 
   const state = useMemo(() => {
-    if (isMember && hasRoleAccess) {
+    if (hasRoleAccess) {
       if (!getRolePlatformTimeframeInfo(platform).isAvailable && !claimed) {
         return {
           tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
@@ -58,7 +58,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasRoleAccess))
+    if (!isMember)
       return {
         tooltipLabel: (
           <>
@@ -68,6 +68,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
         ),
         buttonProps: { onClick: openJoinModal },
       }
+
     return {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
@@ -111,7 +112,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
                     maxW="full"
                   >
                     {platformGuildData.name ??
-                      platforms[PlatformType[platformId]].name}
+                      rewards[PlatformType[platformId]].name}
                   </Button>
                 ) : (
                   <Button
@@ -123,7 +124,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
                     onClick={onOpen}
                   >
                     {platformGuildData.name ??
-                      platforms[PlatformType[platformId]].name}
+                      rewards[PlatformType[platformId]].name}
                   </Button>
                 )}
               </Tooltip>

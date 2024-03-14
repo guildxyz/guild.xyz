@@ -10,7 +10,7 @@ import {
   Wallet,
   Wrench,
 } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { RequirementFormProps } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import Star from "static/icons/star.svg"
@@ -161,13 +161,14 @@ export const REQUIREMENTS_DATA = [
     customNameRules: {
       pattern: {
         value: VISIT_LINK_REGEX,
-        message: "The label has to contain the link as [link title]",
+        message:
+          "Your text must contain a link label in square brackets, e.g. [Link Label].",
       },
     },
   },
   {
-    icon: platforms.EMAIL.icon,
-    name: platforms.EMAIL.name,
+    icon: rewards.EMAIL.icon,
+    name: rewards.EMAIL.name,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Email/EmailRequirement")
     ),
@@ -178,8 +179,8 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: platforms.FORM.icon,
-    name: platforms.FORM.name,
+    icon: rewards.FORM.icon,
+    name: rewards.FORM.name,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Form/FormRequirement")
     ),

@@ -1,55 +1,50 @@
 import {
   FormControl,
+  FormHelperText,
   FormLabel,
   HStack,
-  Icon,
   Input,
-  Text,
-  Tooltip,
+  SimpleGrid,
+  Spacer,
+  Tag,
 } from "@chakra-ui/react"
 import { AddGatherFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
-import { SectionTitle } from "components/common/Section"
-import { Question } from "phosphor-react"
+import Card from "components/common/Card"
 import { useFormContext } from "react-hook-form"
 
 const GatherGuestForm = () => {
   const { register } = useFormContext<AddGatherFormType>()
 
   return (
-    <>
-      <SectionTitle title={"Guest parameters"} mb={1}></SectionTitle>
-      <Text colorScheme="gray" fontWeight="semibold" mb="8">
-        Customize the parameters for guests who gained access to your space via this
-        reward.
-      </Text>
-      <FormControl>
-        <HStack mb={2} spacing={0}>
-          <FormLabel mb={0}>Affiliation:</FormLabel>
-          <Tooltip
-            label="Displays information below the person's name in the user info card available from the Participants list"
-            placement="top"
-            hasArrow
-          >
-            <Icon as={Question} color="GrayText" />
-          </Tooltip>
-        </HStack>
-        <Input {...register("gatherAffiliation")} placeholder="Optional" />
-      </FormControl>
-
-      <FormControl>
-        <HStack mt={6} mb={2} spacing={0}>
-          <FormLabel mb={0}>Role:</FormLabel>
-          <Tooltip
-            label="Describes the person's role in your space. This field is for your internal use only and does not actually assign a user role"
-            placement="top"
-            hasArrow
-          >
-            <Icon as={Question} color="GrayText" />
-          </Tooltip>
-        </HStack>
-        <Input {...register("gatherRole")} placeholder="Optional" />
-      </FormControl>
-    </>
+    <SimpleGrid gap="4" columns={{ md: 2 }}>
+      <Card pt="4 !important" p="5" w="full">
+        <FormControl h="full" display="flex" flexDir={"column"}>
+          <HStack justifyContent={"space-between"}>
+            <FormLabel mb="0">Affiliation</FormLabel>
+            <Tag size="sm">Optional</Tag>
+          </HStack>
+          <FormHelperText mt="1.5" mb="5">
+            Displays information below the person's name in the user info card
+            available from the Participants list
+          </FormHelperText>
+          <Spacer />
+          <Input {...register("gatherAffiliation")} />
+        </FormControl>
+      </Card>
+      <Card pt="4 !important" p="5" w="full">
+        <FormControl>
+          <HStack justifyContent={"space-between"}>
+            <FormLabel mb="0">Role</FormLabel>
+            <Tag size="sm">Optional</Tag>
+          </HStack>
+          <FormHelperText mt="1.5" mb="5">
+            Describes the person's role in your space. This field is for your
+            internal use only and does not actually assign a user role
+          </FormHelperText>
+          <Input {...register("gatherRole")} />
+        </FormControl>
+      </Card>
+    </SimpleGrid>
   )
 }
 

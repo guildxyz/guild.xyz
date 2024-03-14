@@ -22,7 +22,7 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import { ArrowRight, LockSimple } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ComponentType } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
@@ -74,14 +74,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       return <ConnectComponent key={platform} />
     }
 
-    if (
-      !platforms[platform] ||
-      platform === "POINTS" ||
-      platform === "FORM" ||
-      platform === "POLYGON_ID" ||
-      platform === "GATHER_TOWN"
-    )
-      return null
+    if (!rewards[platform]?.isPlatform) return null
 
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
@@ -89,7 +82,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const errorToast = useShowErrorToast()
 
   const { isLoading, onSubmit, joinProgress, reset } = useJoin({
-    onSuccess: (res) => {
+    onSuccess: () => {
       methods.setValue("platforms", {})
       onClose()
     },

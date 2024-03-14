@@ -16,7 +16,7 @@ import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton
 import useClaimText, {
   ClaimTextModal,
 } from "platforms/SecretText/hooks/useClaimText"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import {
@@ -53,7 +53,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
 
   const state = useMemo(() => {
-    if (isMember && hasRoleAccess) {
+    if (hasRoleAccess) {
       if (!getRolePlatformTimeframeInfo(platform).isAvailable && !claimed) {
         return {
           tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
@@ -69,7 +69,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasRoleAccess))
+    if (!isMember)
       return {
         tooltipLabel: (
           <>
@@ -79,6 +79,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
         ),
         buttonProps: { onClick: openJoinModal },
       }
+
     return {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
@@ -118,7 +119,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
                 }}
                 {...state.buttonProps}
               >
-                {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
+                {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
               </Button>
             </Tooltip>
           )

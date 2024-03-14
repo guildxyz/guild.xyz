@@ -1,6 +1,6 @@
 import { Center, Icon, Text, Wrap } from "@chakra-ui/react"
 import { ArrowLeft, ArrowRight } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
@@ -166,7 +166,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{`Join Guild through ${
-                  platforms[data.platformName].name
+                  rewards[data.platformName].name
                 }`}</Text>
                 {showGuildTag ? (
                   <ClickableGuildTag guildId={ids.guild} />

@@ -3,7 +3,7 @@ import useSetRoleImageAndNameFromPlatformData from "components/[guild]/AddReward
 import useGateables from "hooks/useGateables"
 import { useWatch } from "react-hook-form"
 import { PlatformType } from "types"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const GooglePreview = (): JSX.Element => {
   const circleBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")
@@ -19,7 +19,7 @@ const GooglePreview = (): JSX.Element => {
   useSetRoleImageAndNameFromPlatformData("/platforms/google.png", doc?.name)
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="GOOGLE"
       isLoading={isLoading}
       name={doc?.name}

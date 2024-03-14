@@ -1,11 +1,11 @@
-import { useColorMode, useColorModeValue } from "@chakra-ui/react"
+import { useColorMode } from "@chakra-ui/react"
+import { useIsConnected } from "@fuel-wallet/react"
 import { useMemo } from "react"
 import { Connector, useAccount } from "wagmi"
 
 const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const { connector: evmConnectorFromHook } = useAccount()
-  // const { isConnected: isFuelConnected } = useIsConnected()
-  const isFuelConnected = false
+  const { isConnected: isFuelConnected } = useIsConnected()
 
   const connector = connectorParam ?? evmConnectorFromHook
 
@@ -19,9 +19,6 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
     [_window.ethereum]
   )
   const isOKXWallet = useMemo(() => !!_window.okxwallet, [_window.okxwallet])
-
-  const isFueletWallet = useMemo(() => !!_window.fuelet, [_window.fuelet])
-  const fueletLogo = useColorModeValue("fuelet-black.svg", "fuelet-white.svg")
 
   const connectorIcon =
     connector?.id === "injected"
@@ -39,9 +36,7 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
       : connector?.id === "coinbaseWallet"
       ? "coinbasewallet.png"
       : isFuelConnected
-      ? isFueletWallet
-        ? fueletLogo
-        : "fuel.svg"
+      ? "fuel.svg"
       : null
 
   return {

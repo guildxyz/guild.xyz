@@ -11,6 +11,13 @@ import type {
 import { LocalAccount, createWalletClient, http } from "viem"
 import { Chain, Connector, WalletClient } from "wagmi"
 
+export class WaasActionFailed extends Error {
+  constructor(error: unknown) {
+    super("Coinbase WaaS action failed")
+    this.cause = error
+  }
+}
+
 let cwaasModule: typeof import("@coinbase/waas-sdk-web")
 const cwaasImport = async () => {
   if (cwaasModule) return cwaasModule
@@ -190,7 +197,7 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
       return withViemAccount
     } catch (error) {
       console.error(error)
-      throw new Error("Failed to create wallet")
+      throw new WaasActionFailed(error)
     }
   }
 
@@ -211,7 +218,7 @@ export class CWaaSConnector extends Connector<Waas, InitializeWaasOptions> {
       return withViemAccount
     } catch (error) {
       console.error(error)
-      throw new Error("Failed to restore wallet")
+      throw new WaasActionFailed(error)
     }
   }
 

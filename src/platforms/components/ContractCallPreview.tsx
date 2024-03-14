@@ -1,7 +1,7 @@
 import useSetRoleImageAndNameFromPlatformData from "components/[guild]/AddRewardButton/hooks/useSetRoleImageAndNameFromPlatformData"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const ContractCallPreview = ({ children }): JSX.Element => {
   const chain = useWatch({
@@ -15,14 +15,14 @@ const ContractCallPreview = ({ children }): JSX.Element => {
   useSetRoleImageAndNameFromPlatformData(image, name)
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="CONTRACT_CALL"
       isLoading={isLoading}
       name={name}
       image={image}
     >
       {children}
-    </PlatformPreview>
+    </RewardPreview>
   )
 }
 

@@ -15,10 +15,10 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   // Make sure minAmount and maxAmount are in correct order
   if (
     processedRequirement.type?.includes("RELATIVE") &&
-    typeof processedRequirement.data?.minAmount === "number" &&
-    typeof processedRequirement.data?.maxAmount === "number" &&
-    typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
-    typeof processedRequirement.data?.timestamps?.maxAmount === "number"
+    ((typeof processedRequirement.data?.minAmount === "number" &&
+      typeof processedRequirement.data?.maxAmount === "number") ||
+      (typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
+        typeof processedRequirement.data?.timestamps?.maxAmount === "number"))
   ) {
     const [tsUpperEnd, tsLowerEnd] = [
       processedRequirement.data.timestamps.minAmount,

@@ -7,7 +7,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { motion } from "framer-motion"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "types"
 
@@ -25,7 +25,7 @@ const SocialAccountUI = ({
   username?: string
   isConnected?: boolean
 }>) => {
-  const { icon, colorScheme } = platforms[type]
+  const { icon, colorScheme } = rewards[type]
   const circleBorderColor = useColorModeValue("gray.100", "gray.700")
 
   return (
@@ -49,7 +49,7 @@ const SocialAccountUI = ({
         />
       )}
       <Text fontWeight="bold" flex="1" noOfLines={1} fontSize="sm">
-        {username ?? `${platforms[type].name} ${isConnected ? "connected" : ""}`}
+        {username ?? `${rewards[type].name} ${isConnected ? "connected" : ""}`}
       </Text>
       {children}
     </MotionHStack>
