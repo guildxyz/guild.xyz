@@ -44,6 +44,7 @@ export type ActivityLogActionResponse = {
     }[]
     roles: { id: number; name: string }[]
     users: { id: number; address: string }[]
+    forms: { id: number; name: string }[]
   }
 }
 
@@ -60,6 +61,7 @@ const transformActivityLogInfiniteResponse = (
       rolePlatforms: [],
       roles: [],
       users: [],
+      forms: [],
     },
   }
 

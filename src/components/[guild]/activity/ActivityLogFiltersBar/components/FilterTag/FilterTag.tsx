@@ -238,19 +238,7 @@ const FilterTag = ({
                     )
                   case "formId":
                     return (
-                      <FormTag
-                        formId={Number(value)}
-                        guildId={
-                          activityLogType === "guild"
-                            ? guildId
-                            : Number(
-                                activeFilters?.find((af) => af.filter === "guildId")
-                                  ?.value
-                              )
-                        }
-                        pr={7}
-                        borderLeftRadius={0}
-                      />
+                      <FormTag formId={Number(value)} pr={7} borderLeftRadius={0} />
                     )
                   default:
                     return null

@@ -1,5 +1,4 @@
 import {
-  Button,
   forwardRef,
   HStack,
   Icon,
@@ -9,20 +8,15 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Schemas } from "@guildxyz/types"
-import { DotsThreeVertical, Funnel, IconProps } from "phosphor-react"
+import { DotsThreeVertical, IconProps } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
-import useSWRImmutable from "swr/immutable"
 import { useActivityLog } from "../../ActivityLogContext"
-import {
-  FILTER_NAMES,
-  useActivityLogFilters,
-} from "../../ActivityLogFiltersBar/components/ActivityLogFiltersContext"
 import ClickableTagPopover from "./ClickableTagPopover"
+import FilterBy from "./ClickableTagPopover/components/FilterBy"
 import ViewInFormResponses from "./ClickableTagPopover/components/ViewInFormResponses"
 
-type FormTagProps = { formId: number; guildId: number }
+type FormTagProps = { formId: number }
 
 type Props = FormTagProps &
   Omit<TagProps, "colorScheme"> & {
@@ -30,10 +24,9 @@ type Props = FormTagProps &
   }
 
 const FormTag = forwardRef<Props, "span">(
-  ({ formId, guildId, rightIcon, ...tagProps }: Props, ref): JSX.Element => {
-    const { data, isValidating } = useSWRImmutable<Schemas["Form"]>(
-      !!formId ? `/v2/guilds/${guildId}/forms/${formId}` : null
-    )
+  ({ formId, rightIcon, ...tagProps }: Props, ref): JSX.Element => {
+    const { data } = useActivityLog()
+    const form = data?.values.forms.find((f) => f.id === formId)
 
     const tagColorScheme = useColorModeValue("alpha", "blackalpha")
 
@@ -49,7 +42,7 @@ const FormTag = forwardRef<Props, "span">(
           <Icon as={rewards.FORM.icon} />
 
           <Text as="span" w="max-content">
-            {isValidating ? "Loading..." : data?.name ?? "Unknown form"}
+            {form?.name ?? "Unknown form"}
           </Text>
         </HStack>
 
@@ -60,7 +53,8 @@ const FormTag = forwardRef<Props, "span">(
 )
 
 type ClickableFormTagProps = FormTagProps & {
-  userId?: number
+  guildId: number
+  userId: number
 }
 
 const ClickableFormTag = ({
@@ -68,55 +62,31 @@ const ClickableFormTag = ({
   guildId,
   userId,
 }: ClickableFormTagProps): JSX.Element => {
-  const { addFilter, activeFilters } = useActivityLogFilters() ?? {}
   const { activityLogType } = useActivityLog()
 
-  const isDisabled =
-    !formId ||
-    !addFilter ||
-    !!activeFilters.find(
-      (f) => f.filter === "formId" && f.value === formId.toString()
-    )
   return (
     <ClickableTagPopover
       options={
         <>
-          <Button
-            variant="ghost"
-            leftIcon={<Funnel />}
-            size="sm"
-            borderRadius={0}
-            onClick={() => {
-              if (
-                activityLogType !== "guild" &&
-                !activeFilters.find((f) => f.filter === "guildId")
-              ) {
-                addFilter({ filter: "guildId", value: guildId.toString() })
-              }
-              addFilter({ filter: "formId", value: formId.toString() })
+          <FilterBy
+            filter={{
+              filter: "formId",
+              value: formId?.toString(),
             }}
-            isDisabled={isDisabled}
-            justifyContent="start"
-          >
-            {`Filter by ${FILTER_NAMES.formId?.toLowerCase()}`}
-          </Button>
-          {(activityLogType === "guild" || activityLogType === "all") && (
-            <ViewInFormResponses
-              label="View response in submissions"
-              formId={formId}
-              guildId={guildId}
-              userId={userId}
-            />
-          )}
+          />
+          {(activityLogType === "guild" || activityLogType === "all") &&
+            !!formId && (
+              <ViewInFormResponses
+                label="View response in submissions"
+                guildId={guildId}
+                formId={formId}
+                userId={userId}
+              />
+            )}
         </>
       }
     >
-      <FormTag
-        formId={formId}
-        guildId={guildId}
-        rightIcon={DotsThreeVertical}
-        cursor="pointer"
-      />
+      <FormTag formId={formId} rightIcon={DotsThreeVertical} cursor="pointer" />
     </ClickableTagPopover>
   )
 }
