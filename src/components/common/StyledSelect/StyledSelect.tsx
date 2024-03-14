@@ -10,7 +10,7 @@ import {
 import { Ref, forwardRef } from "react"
 import { OneOf } from "types"
 import CustomClearIndicator from "./components/CustomClearIndicator"
-import CustomIndicatorsContainer from "./components/CustomIndicatorsContainer"
+import CustomIndicatorsContainerWithCopy from "./components/CustomIndicatorsContainerWithCopy"
 import CustomMenuList from "./components/CustomMenuList"
 import CustomSelectOption from "./components/CustomSelectOption"
 
@@ -65,7 +65,7 @@ const StyledSelect = forwardRef(
           ClearIndicator: CustomClearIndicator,
           IndicatorsContainer: isCopyable
             ? (containerProps) =>
-                CustomIndicatorsContainer({
+                CustomIndicatorsContainerWithCopy({
                   ...containerProps,
                   value: props.value,
                 })
