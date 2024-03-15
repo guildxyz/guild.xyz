@@ -31,13 +31,13 @@ import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import { LinkBreak, SignOut } from "phosphor-react"
-import { useAccount, useChainId } from "wagmi"
+import { WAAS_CONNECTOR_ID } from "waasConnector"
+import { useAccount } from "wagmi"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
 import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
-import { WAAS_CONNECTOR_ID } from "waasConnector"
 
 const AccountModal = () => {
   const { address, type, disconnect } = useWeb3ConnectionManager()
@@ -45,9 +45,7 @@ const AccountModal = () => {
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
   const onClose = () => setIsOpen(false)
 
-  const { address: evmAddress, connector } = useAccount()
-
-  const chainId = useChainId()
+  const { address: evmAddress, chainId, connector } = useAccount()
 
   const {
     isOpen: isNetworkModalOpen,

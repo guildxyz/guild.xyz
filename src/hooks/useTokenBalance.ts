@@ -1,5 +1,5 @@
 import { erc20Abi } from "viem"
-import { useAccount, useChainId, useReadContracts } from "wagmi"
+import { useAccount, useReadContracts } from "wagmi"
 
 const useTokenBalance = ({
   token,
@@ -10,8 +10,7 @@ const useTokenBalance = ({
   chainId?: number
   shouldFetch?: boolean
 }) => {
-  const detectedChainId = useChainId()
-  const { address: userAddress } = useAccount()
+  const { address: userAddress, chainId: detectedChainId } = useAccount()
   const { data, ...rest } = useReadContracts({
     allowFailure: false,
     query: {

@@ -11,7 +11,7 @@ import useTokenBalance from "hooks/useTokenBalance"
 import { useMemo } from "react"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
@@ -32,8 +32,7 @@ const usePurchaseAsset = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
 
   const { data: priceData } = usePrice(pickedCurrency)
 

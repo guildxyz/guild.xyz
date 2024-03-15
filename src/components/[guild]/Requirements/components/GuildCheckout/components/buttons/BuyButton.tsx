@@ -6,7 +6,7 @@ import useTokenBalance from "hooks/useTokenBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePayFee from "../../hooks/usePayFee"
@@ -16,7 +16,6 @@ const BuyButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { address } = useAccount()
   const chainId = useChainId()
 
   const requirement = useRequirementContext()

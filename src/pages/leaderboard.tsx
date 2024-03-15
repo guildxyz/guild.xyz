@@ -40,9 +40,8 @@ const getKey = (pageIndex: number, previousPageData: any[]) => {
 }
 
 const Page = ({ leaderboard: initialData }: Props) => {
-  const { address } = useAccount()
+  const { isConnected } = useAccount()
   const { data: mysteryBoxBalance } = useNftBalance({
-    address,
     nftAddress: MYSTERY_BOX_NFT.address,
     chainId: Chains[MYSTERY_BOX_NFT.chain],
   })
@@ -123,7 +122,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
         <Stack spacing={10}>
           <ClientOnly>
             <AnimatePresence>
-              {address && <PinLeaderboardUsersPositionCard />}
+              {isConnected && <PinLeaderboardUsersPositionCard />}
             </AnimatePresence>
           </ClientOnly>
 

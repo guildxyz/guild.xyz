@@ -8,7 +8,7 @@ import { LinkBreak, Wallet } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
-import { useAccount, useChainId } from "wagmi"
+import { useAccount } from "wagmi"
 import useWithdraw from "./hooks/useWithdraw"
 
 const WithdrawButton = (): JSX.Element => {
@@ -18,8 +18,7 @@ const WithdrawButton = (): JSX.Element => {
     data: { symbol, decimals },
   } = useTokenData(chain, token)
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const { requestNetworkChange } = useTriggerNetworkChange()
 
   const isOnVaultsChain = Chains[chain] === chainId

@@ -3,14 +3,13 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { erc20Abi, maxUint256 } from "viem"
-import { useAccount, useChainId, useReadContract } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 
 const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
   const showErrorToast = useShowErrorToast()
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
 
   const requirement = useRequirementContext()
 

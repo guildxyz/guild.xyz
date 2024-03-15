@@ -4,7 +4,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useTokenBalance from "hooks/useTokenBalance"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
@@ -16,8 +16,7 @@ const PurchaseButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { address, isConnected } = useAccount()
-  const chainId = useChainId()
+  const { isConnected, chainId } = useAccount()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()

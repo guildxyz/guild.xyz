@@ -16,7 +16,7 @@ import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
-import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 import useGuildPinFee from "./useGuildPinFee"
@@ -47,8 +47,7 @@ const useMintGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 

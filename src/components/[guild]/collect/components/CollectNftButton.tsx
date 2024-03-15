@@ -6,7 +6,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useNftBalance from "hooks/useNftBalance"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useBalance, useChainId } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
 
@@ -36,9 +36,7 @@ const CollectNftButton = ({
 
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
-  const { address } = useAccount()
   const { isLoading: isNftBalanceLoading } = useNftBalance({
-    address,
     nftAddress,
     chainId: Chains[chain],
   })

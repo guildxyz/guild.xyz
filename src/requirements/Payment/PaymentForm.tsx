@@ -7,7 +7,7 @@ import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
-import { useAccount, useChainId } from "wagmi"
+import { useAccount } from "wagmi"
 import RegisterVaultForm, {
   RegisterVaultFormType,
 } from "./components/RegisterVaultForm"
@@ -18,8 +18,7 @@ const PaymentForm = ({
   addRequirement,
   setOnCloseAttemptToast,
 }: RequirementFormProps): JSX.Element => {
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const { requestNetworkChange } = useTriggerNetworkChange()
 
   const { setValue } = useFormContext()

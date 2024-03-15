@@ -1,16 +1,14 @@
 import { erc721Abi } from "viem"
-import { useChainId, useReadContract } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
 
 const useNftBalance = ({
   nftAddress,
-  address,
   chainId: chainIdFromParam,
 }: {
   nftAddress: `0x${string}`
-  address: `0x${string}`
   chainId?: number
 }) => {
-  const chainIdFromHook = useChainId()
+  const { address, chainId: chainIdFromHook } = useAccount()
   const chainId = chainIdFromParam ?? chainIdFromHook
 
   return useReadContract({
