@@ -123,7 +123,7 @@ const AddRewardButton = (): JSX.Element => {
           visibility: roleVisibility,
         })),
       })
-    } else if (data.roleIds?.length) {
+    } else {
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         rolePlatforms: data.roleIds
