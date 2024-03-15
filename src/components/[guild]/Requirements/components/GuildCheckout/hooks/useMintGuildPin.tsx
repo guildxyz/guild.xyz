@@ -57,7 +57,7 @@ const useMintGuildPin = () => {
 
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]?.address
+  const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]
 
   const { guildPinFee } = useGuildPinFee()
 

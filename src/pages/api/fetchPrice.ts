@@ -50,10 +50,12 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
   if (tokenAddress === CHAIN_CONFIG[chain].nativeCurrency.symbol)
     return CHAIN_CONFIG[chain].nativeCurrency.decimals
 
-  const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[chain],
-    transport: http(),
-  })
+  // WAGMI TODO
+  // const publicClient = createPublicClient({
+  //   chain: CHAIN_CONFIG[chain],
+  //   transport: http(),
+  // })
+  const publicClient = {} as any
   const decimals = await publicClient.readContract({
     address: tokenAddress as `0x${string}`,
     abi: erc20Abi,

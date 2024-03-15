@@ -1,6 +1,5 @@
 import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementType } from "requirements"
-import guildPinAbi from "static/abis/guildPin"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
 import { Abi, toBytes } from "viem"
@@ -218,48 +217,17 @@ export const paymentSupportedChains: Chain[] = Object.keys(
 ) as Chain[]
 
 export const GUILD_PIN_CONTRACTS = {
-  POLYGON: {
-    address: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
-    abi: guildPinAbi,
-  },
-  POLYGON_MUMBAI: {
-    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-    abi: guildPinAbi,
-  },
-  BASE_MAINNET: {
-    address: "0x326f14942f8899406e3224bd63e9f250d275a52e",
-    abi: guildPinAbi,
-  },
-  ZKSYNC_ERA: {
-    address: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
-    abi: guildPinAbi,
-  },
-  BSC: {
-    address: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
-    abi: guildPinAbi,
-  },
-  ARBITRUM: {
-    address: "0x0e6a14106497a7de36fba446628860c062e9e302",
-    abi: guildPinAbi,
-  },
-  CRONOS: {
-    address: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
-    abi: guildPinAbi,
-  },
-  OPTIMISM: {
-    address: "0x6c2c223b84724c4b8fD41ae0142c2369DFa7E319",
-    abi: guildPinAbi,
-  },
-  MANTLE: {
-    address: "0x4205e56A69a0130a9e0828D45d0c84e45340a196",
-    abi: guildPinAbi,
-  },
-  ONTOLOGY: {
-    address: "0x4205e56A69a0130a9e0828D45d0c84e45340a196",
-    abi: guildPinAbi,
-  },
+  POLYGON: "0xff04820c36759c9f5203021fe051239ad2dcca8a",
+  POLYGON_MUMBAI: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+  BASE_MAINNET: "0x326f14942f8899406e3224bd63e9f250d275a52e",
+  ZKSYNC_ERA: "0xd1e4254fe7e56f58777ba624e7eeb3644f872b0d",
+  BSC: "0x807f16eba4a2c51b86cb8ec8be8eab34305c2bfd",
+  ARBITRUM: "0x0e6a14106497a7de36fba446628860c062e9e302",
+  CRONOS: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
+  OPTIMISM: "0x6c2c223b84724c4b8fD41ae0142c2369DFa7E319",
+  MANTLE: "0x4205e56A69a0130a9e0828D45d0c84e45340a196",
+  ONTOLOGY: "0x4205e56A69a0130a9e0828D45d0c84e45340a196",
 } as const
-// TODO: satisfies Partial<Record<Chain, { address: string; abi: ContractInterface }>> - we just can't use it in Next.js 12, but we should add it later.
 
 export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACTS
 

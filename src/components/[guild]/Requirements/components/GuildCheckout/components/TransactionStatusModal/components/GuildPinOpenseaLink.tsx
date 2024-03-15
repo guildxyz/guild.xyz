@@ -17,7 +17,7 @@ const GuildPinOpenseaLink = (): JSX.Element => {
       <Link
         isExternal
         href={`${openseaBaseUrl[Chains[chainId]]}/${
-          GUILD_PIN_CONTRACTS[Chains[chainId]].address
+          GUILD_PIN_CONTRACTS[Chains[chainId]]
         }/${mintedTokenId}`}
       >
         <Img src={"/requirementLogos/opensea.svg"} boxSize={"1em"} mr="1.5" />

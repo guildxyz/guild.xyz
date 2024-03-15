@@ -22,7 +22,7 @@ const TokenRequirement = ({ ...rest }: Props) => {
     <Requirement
       image={
         requirement.type === "COIN"
-          ? CHAIN_CONFIG[requirement.chain].coinIconUrl
+          ? CHAIN_CONFIG[requirement.chain]?.nativeCurrency?.iconUrl
           : data?.logoURI ?? (
               <Text as="span" fontWeight="bold" fontSize="xx-small">
                 ERC20

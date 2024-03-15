@@ -20,8 +20,7 @@ const BlockExplorerUrl = ({
   const { colorMode } = useColorMode()
   const { chain, type, address, data } = useRequirementContext()
 
-  const blockExplorerUrl =
-    CHAIN_CONFIG[chainProp ?? chain].blockExplorers.default.url
+  const blockExplorerUrl = CHAIN_CONFIG[chainProp ?? chain].blockExplorerUrl
 
   if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorerUrl)
     return null

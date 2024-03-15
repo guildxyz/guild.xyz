@@ -1,9 +1,10 @@
 import { kv } from "@vercel/kv"
 import { sql } from "@vercel/postgres"
-import { CHAIN_CONFIG, Chain } from "chains"
+import { Chain, Chains } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { OneOf } from "types"
 import { createPublicClient, erc721Abi, http, recoverMessageAddress } from "viem"
+import { wagmiConfig } from "wagmiConfig"
 
 export type MysteryBoxResponse = OneOf<{ message: string }, { error: string }>
 
@@ -65,7 +66,7 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
 
   try {
     const publicClient = createPublicClient({
-      chain: CHAIN_CONFIG[MYSTERY_BOX_NFT.chain],
+      chain: wagmiConfig.chains.find((c) => Chains[c.id] === MYSTERY_BOX_NFT.chain),
       transport: http(),
     })
 

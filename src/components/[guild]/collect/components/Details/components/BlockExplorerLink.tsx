@@ -29,7 +29,7 @@ const BlockExplorerLink = ({
         </Text>
       ) : (
         <Link
-          href={`${CHAIN_CONFIG[chain].blockExplorers.default.url}/${path}/${address}`}
+          href={`${CHAIN_CONFIG[chain].blockExplorerUrl}/${path}/${address}`}
           isExternal
         >
           <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>

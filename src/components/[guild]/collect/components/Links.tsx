@@ -46,7 +46,7 @@ const Links = () => {
         )}
 
         <Link
-          href={`${CHAIN_CONFIG[chain].blockExplorers.default.url}/token/${nftAddress}`}
+          href={`${CHAIN_CONFIG[chain].blockExplorerUrl}/token/${nftAddress}`}
           isExternal
           colorScheme="gray"
           fontWeight="medium"

@@ -62,7 +62,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
                   {
                     type: "ERC721",
                     chain,
-                    address: GUILD_PIN_CONTRACTS[chain].address,
+                    address: GUILD_PIN_CONTRACTS[chain],
                     data: {
                       attributes: [
                         {
