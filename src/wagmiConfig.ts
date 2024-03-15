@@ -16,7 +16,7 @@ import fetcher, { fetcherWithSign } from "utils/fetcher"
 import { http, type Chain, type WalletClient } from "viem"
 import { mnemonicToAccount } from "viem/accounts"
 import waasConnector, { WAAS_CONNECTOR_ID } from "waasConnector"
-import { Connector, createConfig } from "wagmi"
+import { createConfig, type Connector } from "wagmi"
 import {
   arbitrum,
   arbitrumNova,

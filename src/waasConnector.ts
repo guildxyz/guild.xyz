@@ -9,7 +9,7 @@ import type {
   Wallet,
 } from "@coinbase/waas-sdk-web"
 import { LocalAccount, createClient, http } from "viem"
-import { Connector, createConnector } from "wagmi"
+import { createConnector, type Connector } from "wagmi"
 
 export const WAAS_CONNECTOR_ID = "waas-connector"
 

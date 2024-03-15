@@ -26,7 +26,7 @@ import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { WAAS_CONNECTOR_ID } from "waasConnector"
-import { Connector, useAccount, useConnect } from "wagmi"
+import { useAccount, useConnect, type Connector } from "wagmi"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
@@ -61,6 +61,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   )
 
   const { connectors, error, connect, isPending } = useConnect()
+
   const { connector } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
@@ -209,8 +210,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 .filter(
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== WAAS_CONNECTOR_ID)
+                    (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
+                    conn.id !== "injected" &&
+                    // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
+                    conn.id !== "com.coinbase.wallet"
                 )
+                .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
                 .map((conn) => (
                   <CardMotionWrapper key={conn.id}>
                     <ConnectorButton
