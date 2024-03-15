@@ -15,6 +15,7 @@ import {
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
 import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
+import { wagmiConfig } from "wagmiConfig"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
 export type FetchPriceResponse<T extends string | bigint = string> = {
@@ -50,12 +51,10 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
   if (tokenAddress === CHAIN_CONFIG[chain].nativeCurrency.symbol)
     return CHAIN_CONFIG[chain].nativeCurrency.decimals
 
-  // WAGMI TODO
-  // const publicClient = createPublicClient({
-  //   chain: CHAIN_CONFIG[chain],
-  //   transport: http(),
-  // })
-  const publicClient = {} as any
+  const publicClient = createPublicClient({
+    chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain),
+    transport: http(),
+  })
   const decimals = await publicClient.readContract({
     address: tokenAddress as `0x${string}`,
     abi: erc20Abi,
