@@ -223,6 +223,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
               },
             }}
             isClearable
+            isCopyable
             isLoading={isLoading}
             placeholder={
               chain === "ETHEREUM" ? "Search or paste address" : "Paste NFT address"

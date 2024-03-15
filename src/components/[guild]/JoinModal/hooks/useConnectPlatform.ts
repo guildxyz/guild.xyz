@@ -1,16 +1,21 @@
-import { usePrevious } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
 import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
+import usePopupWindow from "hooks/usePopupWindow"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
+import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
-import { useEffect } from "react"
-import { PlatformName } from "types"
+import { OAuthResultParams } from "pages/oauth-result"
+import rewards from "platforms/rewards"
+import { useCallback, useMemo } from "react"
+import useSWR from "swr"
+import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import useOauthPopupWindow, { AuthLevel } from "./useOauthPopupWindow"
+
+type AuthLevel = "membership" | "creation"
 
 const parseConnectError = (
   error: string
@@ -42,47 +47,153 @@ const parseConnectError = (
   }
 }
 
+function getOAuthURL(
+  platformName: string,
+  authToken: string,
+  scope?: AuthLevel,
+  force?: boolean
+) {
+  const url = new URL(`../v2/oauth/${platformName}`, process.env.NEXT_PUBLIC_API)
+  url.searchParams.set("path", window.location.pathname)
+  url.searchParams.set("token", authToken)
+  if (scope) {
+    url.searchParams.set("scope", scope)
+  }
+  if (force) {
+    url.searchParams.set("force", "1")
+  }
+  return url.href
+}
+
 const useConnectPlatform = (
-  platform: PlatformName,
+  platformName: PlatformName,
   onSuccess?: () => void,
   isReauth?: boolean, // Temporary, once /connect works without it, we can remove this
   authLevel: AuthLevel = "membership",
   disconnectFromExistingUser?: boolean
 ) => {
-  const { platformUsers } = useUser()
+  const { id, mutate: mutateUser } = useUser()
+  const fetcherWithSign = useFetcherWithSign()
+  const toast = useToast()
+  const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
+  const { onOpen } = usePopupWindow()
 
-  const { onOpen, authData, isAuthenticating, ...rest } = useOauthPopupWindow(
-    platform,
-    isReauth ? "creation" : authLevel
+  const { data: authToken } = useSWR(
+    id ? `guild-oauth-token-${id}` : null,
+    () =>
+      fetcherWithSign([`/v2/oauth/${platformName}/token`, { method: "GET" }]).then(
+        ({ token }) => token
+      ),
+    { dedupingInterval: 1000 * 60 * 4, refreshInterval: 1000 * 30 }
   )
 
-  const prevAuthData = usePrevious(authData)
+  const url = useMemo(() => {
+    if (authToken) {
+      return getOAuthURL(
+        platformName,
+        authToken,
+        authLevel,
+        disconnectFromExistingUser
+      )
+    }
+    return null
+  }, [platformName, authToken, authLevel, disconnectFromExistingUser])
 
-  const { onSubmit, isLoading, response } = useConnect({
-    onSuccess: () => {
-      onSuccess?.()
+  const listener = useSubmit(
+    async () => {
+      const channel = new BroadcastChannel(`guild-${platformName}`)
+      const messageListener = new Promise<boolean>((resolve, reject) => {
+        channel.onmessage = (event) => {
+          if (
+            event.isTrusted &&
+            event.origin === window.origin &&
+            event.data?.type !== "oauth-confirmation"
+          ) {
+            channel.postMessage({ type: "oauth-confirmation" })
+            const result: OAuthResultParams = event.data
+
+            if (result.status === "success") {
+              fetcherWithSign([
+                `/v2/users/${id}/platform-users/${PlatformType[platformName]}`,
+                { method: "GET" },
+              ])
+                .then((newPlatformUser) =>
+                  mutateUser(
+                    (prev) => ({
+                      ...prev,
+                      platformUsers: [
+                        ...(prev?.platformUsers ?? []).filter(
+                          ({ platformId }) =>
+                            platformId !== newPlatformUser.platformId
+                        ),
+                        { ...newPlatformUser, platformName },
+                      ],
+                    }),
+                    { revalidate: false }
+                  )
+                )
+                .then(() => resolve(true))
+                .catch(() => reject("Failed to get new platform connection"))
+
+              return
+            } else {
+              if (result.message?.startsWith("Before connecting your")) {
+                const [, addressOrDomain] = result.message.match(
+                  /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
+                )
+                showPlatformMergeAlert({ addressOrDomain, platformName })
+                resolve(false)
+                return
+              }
+              reject(new Error(result.message))
+            }
+          }
+        }
+      })
+
+      const result = await messageListener.finally(() => {
+        channel.close()
+      })
+      return result
     },
-  })
+    {
+      onSuccess: (isSuccess) => {
+        if (isSuccess) {
+          onSuccess?.()
+        }
+      },
+      onError: (error) => {
+        toast({
+          status: "error",
+          description:
+            error.message ?? `Failed to connect ${rewards[platformName].name}`,
+        })
+      },
+    }
+  )
 
-  useEffect(() => {
-    // couldn't prevent spamming requests without all these three conditions
-    if (!platformUsers || !authData || prevAuthData) return
+  const onClick = useCallback(() => {
+    if (!url) return
 
-    onSubmit({
-      platformName: platform,
-      authData,
-      reauth: isReauth || undefined,
-      disconnectFromExistingUser,
-    })
-  }, [authData, platformUsers])
+    listener.onSubmit()
+
+    /**
+     * We can't force Telegram into a standard OAuth behaviour if it is opened in a
+     * popup. We can only guarantee a redirect to happen, if we refresh the current
+     * window
+     */
+    if (platformName === "TELEGRAM") {
+      window.location.href = url
+    } else {
+      onOpen(url)
+    }
+  }, [url])
 
   return {
-    onConnect: onOpen,
-    isLoading: isAuthenticating || isLoading,
-    loadingText: isAuthenticating && "Confirm in the pop-up",
-    response,
-    authData,
-    ...rest,
+    onConnect: onClick,
+    isLoading: listener.isLoading,
+    loadingText: "Confirm in the pop-up",
+    response: listener.response,
   }
 }
 

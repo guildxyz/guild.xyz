@@ -5,7 +5,7 @@ import {
   gatherSpaceIdToName,
   gatherSpaceUrlToSpaceId,
 } from "platforms/Gather/useGatherCardProps"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 
@@ -16,7 +16,7 @@ export type AddGatherFormType = {
   gatherAffiliation: string
 }
 
-const AddGatherPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<AddGatherFormType>({
     mode: "all",
   })

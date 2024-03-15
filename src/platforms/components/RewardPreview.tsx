@@ -10,7 +10,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Question } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PropsWithChildren } from "react"
 import { PlatformName } from "types"
 
@@ -21,7 +21,7 @@ type Props = {
   name?: string
 }
 
-const PlatformPreview = ({
+const RewardPreview = ({
   isLoading,
   type,
   image,
@@ -46,7 +46,7 @@ const PlatformPreview = ({
             alignItems="center"
             justifyContent="center"
           >
-            <Icon as={platforms[type]?.icon ?? Question} size={6} />
+            <Icon as={rewards[type]?.icon ?? Question} size={6} />
           </Circle>
         )}
       </SkeletonCircle>
@@ -54,7 +54,7 @@ const PlatformPreview = ({
       <Stack spacing={0.5} fontFamily="body">
         <Skeleton isLoaded={!isLoading}>
           <Text as="span" fontSize="lg" noOfLines={1}>
-            {name ?? `${platforms[type]?.name ?? "Unknown"} reward`}
+            {name ?? `${rewards[type]?.name ?? "Unknown"} reward`}
           </Text>
         </Skeleton>
 
@@ -64,4 +64,4 @@ const PlatformPreview = ({
   )
 }
 
-export default PlatformPreview
+export default RewardPreview

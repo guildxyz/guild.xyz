@@ -1,6 +1,6 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 const useFormCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
@@ -12,10 +12,10 @@ const useFormCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
     type: "FORM" as PlatformName,
     image: (
       <Circle size={10} bgColor={circleBgColor}>
-        <Icon as={platforms.FORM.icon} color="white" />
+        <Icon as={rewards.FORM.icon} color="white" />
       </Circle>
     ),
-    name: form?.name ?? platforms.FORM.name,
+    name: form?.name ?? rewards.FORM.name,
   }
 }
 

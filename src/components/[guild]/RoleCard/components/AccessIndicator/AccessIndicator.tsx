@@ -110,15 +110,6 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (isValidating)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  if (errorTextFromConfig)
-    return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label={errorTextFromConfig}
-        icon={Warning}
-      />
-    )
-
   if (reqAccesses?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
@@ -138,6 +129,15 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         icon={LockSimple}
         onClick={() => setIsAccountModalOpen(true)}
         cursor="pointer"
+      />
+    )
+
+  if (errorTextFromConfig)
+    return (
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label={errorTextFromConfig}
+        icon={Warning}
       />
     )
 

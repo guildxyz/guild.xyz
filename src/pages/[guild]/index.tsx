@@ -284,7 +284,7 @@ const GuildPage = (): JSX.Element => {
             <DynamicNoRolesAlert />
           )}
 
-          {roles?.length > renderedRolesCount && (
+          {publicRoles?.length && roles?.length > renderedRolesCount && (
             <Center pt={6}>
               <Spinner />
             </Center>

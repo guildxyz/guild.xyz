@@ -2,7 +2,7 @@ import { Circle, useColorModeValue } from "@chakra-ui/react"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import dynamic from "next/dynamic"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import Star from "static/icons/star.svg"
 import numberToOrdinal from "utils/numberToOrdinal"
 import PointsCardButton from "./PointsCardButton"
@@ -25,7 +25,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
   return (
     <>
       <RewardCard
-        label={platforms.POINTS.name}
+        label={rewards.POINTS.name}
         title={
           isLoading ? null : `You have ${data?.totalPoints ?? 0} ${name || "points"}`
         }
@@ -36,7 +36,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
             </Circle>
           )
         }
-        colorScheme={platforms.POINTS.colorScheme}
+        colorScheme={rewards.POINTS.colorScheme}
         cornerButton={
           isAdmin && (
             <DynamicPointsCardMenu

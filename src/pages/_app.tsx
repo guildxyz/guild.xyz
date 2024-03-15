@@ -1,4 +1,5 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
+import { FuelProvider } from "@fuel-wallet/react"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -9,6 +10,7 @@ import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
 import { connectors, publicClient } from "connectors"
 import { dystopian, inter } from "fonts"
+import useOAuthResultToast from "hooks/useOAuthResultToast"
 import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
@@ -45,6 +47,8 @@ const App = ({
 
   const [isRouteChangeInProgress, setIsRouteChangeInProgress] = useState(false)
   const { colorMode } = useColorMode()
+
+  useOAuthResultToast()
 
   useEffect(() => {
     let previousPathname = null
@@ -115,23 +119,23 @@ const App = ({
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiConfig config={config}>
-              {/* <FuelProvider> */}
-              <PostHogProvider>
-                <IntercomProvider>
-                  <ExplorerProvider>
-                    <AppErrorBoundary>
-                      <Component {...pageProps} />
-                    </AppErrorBoundary>
+              <FuelProvider>
+                <PostHogProvider>
+                  <IntercomProvider>
+                    <ExplorerProvider>
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
 
-                    <ClientOnly>
-                      <AccountModal />
-                    </ClientOnly>
-                  </ExplorerProvider>
-                </IntercomProvider>
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
+                    </ExplorerProvider>
+                  </IntercomProvider>
 
-                <Web3ConnectionManager />
-              </PostHogProvider>
-              {/* </FuelProvider> */}
+                  <Web3ConnectionManager />
+                </PostHogProvider>
+              </FuelProvider>
             </WagmiConfig>
           </SWRConfig>
         </IconContext.Provider>
