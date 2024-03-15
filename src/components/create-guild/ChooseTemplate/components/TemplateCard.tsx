@@ -23,7 +23,7 @@ import RoleRequirementsSection, {
 } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
 import { Check } from "phosphor-react"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { KeyboardEvent } from "react"
 import { useWatch } from "react-hook-form"
 import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
@@ -142,7 +142,7 @@ const TemplateCard = ({
                 {guildPlatforms?.length ? (
                   guildPlatforms.map((platform, i) => {
                     const isDisabled =
-                      platforms[platform.platformName].asRewardRestriction ===
+                      rewards[platform.platformName].asRewardRestriction ===
                         PlatformAsRewardRestrictions.SINGLE_ROLE &&
                       roles
                         .filter((r) => r.name !== name)
@@ -158,7 +158,7 @@ const TemplateCard = ({
                         label={
                           isDisabled
                             ? `${
-                                platforms[platform.platformName].name
+                                rewards[platform.platformName].name
                               } rewards can only be added to one role`
                             : ""
                         }
@@ -272,8 +272,8 @@ const getValueToDisplay = (
   }
 ): string =>
   platform.platformGuildData.name ??
-  `${platforms[platform.platformName].name} ${
-    platforms[platform.platformName].gatedEntity
+  `${rewards[platform.platformName].name} ${
+    rewards[platform.platformName].gatedEntity
   }`
 
 export default TemplateCard

@@ -1,7 +1,7 @@
 import { Alert, AlertDescription, AlertIcon, HStack, Text } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useGateables from "hooks/useGateables"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformName, PlatformType } from "types"
 import Button from "./Button"
 
@@ -20,7 +20,7 @@ const ReconnectAlert = ({ platformName }: { platformName: PlatformName }) => {
       <AlertDescription fontWeight="semibold" w="full">
         <HStack justifyContent={"space-between"} w="full">
           <Text fontSize={{ base: "sm", sm: "md" }}>
-            {platforms[platformName].name} connection error, please reconnect
+            {rewards[platformName].name} connection error, please reconnect
           </Text>
           <Button
             flexShrink={0}

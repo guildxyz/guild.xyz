@@ -7,7 +7,7 @@ import {
   TagRightIcon,
 } from "@chakra-ui/react"
 import { DotsThreeVertical, IconProps } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -36,8 +36,8 @@ const RewardTag = forwardRef<Props, "span">(
         ? `${role?.name ?? "Unknown role"} - ${rewardName}`
         : rewardName) ?? label
 
-    const icon = platforms[reward?.platformName || platformType]?.icon
-    const colorScheme = platforms[reward?.platformName || platformType]?.colorScheme
+    const icon = rewards[reward?.platformName || platformType]?.icon
+    const colorScheme = rewards[reward?.platformName || platformType]?.colorScheme
 
     return (
       <Tag

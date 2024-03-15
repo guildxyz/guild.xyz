@@ -46,7 +46,13 @@ type Props = {
 }
 
 // We don't open the modal on these routes
-const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
+const ignoredRoutes = [
+  "/_error",
+  "/tgauth",
+  "/oauth",
+  "/googleauth",
+  "/oauth-result",
+]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
@@ -270,11 +276,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   Privacy Policy
                 </Link>
                 {` and `}
-                <Link
-                  href="/terms-and-conditions"
-                  fontWeight={"semibold"}
-                  onClick={onClose}
-                >
+                <Link href="/terms-of-use" fontWeight={"semibold"} onClick={onClose}>
                   Terms & conditions
                 </Link>
               </Text>

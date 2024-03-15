@@ -1,10 +1,10 @@
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 
-const AddTelegramPanel = ({ onAdd }: AddPlatformPanelProps) => {
+const AddTelegramPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({
     mode: "all",
     defaultValues: {

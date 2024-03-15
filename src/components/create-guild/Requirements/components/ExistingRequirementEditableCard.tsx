@@ -19,7 +19,7 @@ import useCreateRequirement from "../hooks/useCreateRequirement"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import useEditRequirement from "../hooks/useEditRequirement"
 import BalancyFooter from "./BalancyFooter"
-import ConfirmationAlert from "./ConfirmaionAlert"
+import ConfirmationAlert from "./ConfirmationAlert"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
 import RequirementEditModal, {

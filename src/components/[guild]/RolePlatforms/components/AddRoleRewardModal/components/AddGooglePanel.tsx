@@ -1,5 +1,5 @@
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
-import { AddPlatformPanelProps } from "platforms/platforms"
+import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 
@@ -10,7 +10,7 @@ const defaultValues = {
 const AddGooglePanel = ({
   onAdd,
   skipSettings,
-}: AddPlatformPanelProps): JSX.Element => {
+}: AddRewardPanelProps): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,

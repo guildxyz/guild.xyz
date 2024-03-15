@@ -380,7 +380,7 @@ export const sign = async ({
       params.chainId = chainId
     }
 
-    if (walletClient.account.type === "local") {
+    if (walletClient?.account?.type === "local") {
       // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
       sig = await walletClient.account.signMessage({
         message: getMessage(params),
