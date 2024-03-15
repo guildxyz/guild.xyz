@@ -273,11 +273,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   Privacy Policy
                 </Link>
                 {` and `}
-                <Link
-                  href="/terms-and-conditions"
-                  fontWeight={"semibold"}
-                  onClick={onClose}
-                >
+                <Link href="/terms-of-use" fontWeight={"semibold"} onClick={onClose}>
                   Terms & conditions
                 </Link>
               </Text>

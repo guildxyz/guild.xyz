@@ -82,8 +82,8 @@ const NavMenu = (): JSX.Element => {
               <NavButton leftIcon={<Shield />} href="/privacy-policy">
                 Privacy Policy
               </NavButton>
-              <NavButton leftIcon={<File />} href="/terms-and-conditions">
-                Terms and Conditions
+              <NavButton leftIcon={<File />} href="/terms-of-use">
+                Terms of Use
               </NavButton>
             </NavGroup>
             <NavGroup title="Other">
