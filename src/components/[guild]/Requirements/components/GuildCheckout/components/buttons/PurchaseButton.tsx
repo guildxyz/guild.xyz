@@ -16,7 +16,7 @@ const PurchaseButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { isConnected, chainId } = useAccount()
+  const { isConnected, address, chainId } = useAccount()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
@@ -45,6 +45,7 @@ const PurchaseButton = (): JSX.Element => {
   const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
+    address,
     chainId: Chains[requirement?.chain],
   })
   const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } =

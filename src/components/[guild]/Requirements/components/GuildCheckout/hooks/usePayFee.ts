@@ -10,7 +10,7 @@ import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
@@ -20,7 +20,7 @@ const usePayFee = () => {
   const { urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, onClose } = useGuildCheckoutContext()
@@ -44,6 +44,7 @@ const usePayFee = () => {
   const pickedCurrencyIsNative = pickedCurrency === NULL_ADDRESS
 
   const { data: coinBalanceData } = useBalance({
+    address,
     chainId: Chains[requirement.chain],
   })
   const { data: tokenBalanceData } = useTokenBalance({

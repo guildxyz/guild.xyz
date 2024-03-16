@@ -50,6 +50,7 @@ const usePurchaseAsset = () => {
   )
 
   const { data: coinBalanceData } = useBalance({
+    address,
     chainId: Chains[requirement?.chain],
   })
   const { data: tokenBalanceData } = useTokenBalance({

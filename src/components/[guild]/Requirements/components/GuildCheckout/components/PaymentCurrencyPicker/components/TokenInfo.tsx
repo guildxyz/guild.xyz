@@ -49,6 +49,7 @@ const TokenInfo = ({
 
   const { address } = useAccount()
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
+    address,
     chainId,
   })
 

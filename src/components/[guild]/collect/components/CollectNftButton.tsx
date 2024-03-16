@@ -6,7 +6,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useNftBalance from "hooks/useNftBalance"
-import { useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
 
@@ -25,7 +25,7 @@ const CollectNftButton = ({
 
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
   const {
@@ -40,7 +40,9 @@ const CollectNftButton = ({
     nftAddress,
     chainId: Chains[chain],
   })
-  const { data: coinBalanceData, isLoading: isBalanceLoading } = useBalance()
+  const { data: coinBalanceData, isLoading: isBalanceLoading } = useBalance({
+    address,
+  })
 
   const isSufficientBalance =
     typeof fee === "bigint" && coinBalanceData
