@@ -10,15 +10,14 @@ import {
 } from "wagmi"
 import useEstimateGas from "./useEstimateGas"
 
-// WAGMI 2 TODO: generic parameters
 const useSubmitTransaction = (
   contractCallConfig: UseSimulateContractParameters,
   options?: {
     setContext?: boolean
-    customErrorsMap?: Record<string, string> // TODO: maybe we can infer custom error names from the ABI too? We could experiment with it later.
+    customErrorsMap?: Record<string, string>
     onSuccess?: (
       transactionReceipt: TransactionReceipt,
-      events: any[] // TODO for later: we could properly type this & infer event names/arg types in the future
+      events: ReturnType<typeof decodeEventLog>[]
     ) => void
     onError?: (errorMessage: string, rawError: any) => void
   }
@@ -68,7 +67,7 @@ const useSubmitTransaction = (
     abi: contractCallConfig.abi,
     address: contractCallConfig.address,
     functionName: contractCallConfig.functionName,
-    args: contractCallConfig.args as readonly unknown[],
+    args: contractCallConfig.args,
     value: contractCallConfig.value,
     query: {
       enabled: contractCallConfig.query?.enabled ?? true,

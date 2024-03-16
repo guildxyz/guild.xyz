@@ -66,7 +66,9 @@ const useRegisterVault = ({
           return
         }
 
-        const vaultRegisteredEvent: {
+        const vaultRegisteredEvent = events.find(
+          (event) => event.eventName === "VaultRegistered"
+        ) as {
           eventName: "VaultRegistered"
           args: {
             fee: bigint
@@ -74,7 +76,7 @@ const useRegisterVault = ({
             token: `0x${string}`
             vaultId: bigint
           }
-        } = events.find((event) => event.eventName === "VaultRegistered")
+        }
 
         if (!vaultRegisteredEvent) {
           showErrorToast("Couldn't find 'VaultRegistered' event")
