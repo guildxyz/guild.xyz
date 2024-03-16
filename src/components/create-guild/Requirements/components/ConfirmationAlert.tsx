@@ -40,7 +40,7 @@ const ConfirmationAlert = ({
               Cancel
             </Button>
             <Button
-              data-test="delete-requirement-button"
+              data-test="delete-confirmation-button"
               colorScheme="red"
               ml={3}
               onClick={!!onConfirm ? () => onConfirm() : () => onClose()}

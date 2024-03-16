@@ -1,4 +1,5 @@
 import { PublicUser } from "components/[guild]/hooks/useUser"
+import { mock } from "mockConnector"
 import {
   beraTestnet,
   bitfinityTestnet,
@@ -59,13 +60,7 @@ import {
   zkSync,
   zora,
 } from "wagmi/chains"
-import {
-  coinbaseWallet,
-  injected,
-  mock,
-  safe,
-  walletConnect,
-} from "wagmi/connectors"
+import { coinbaseWallet, injected, safe, walletConnect } from "wagmi/connectors"
 
 /**
  * We should consider adding only those chains here which we actually use for
@@ -181,9 +176,7 @@ export const wagmiConfig = createConfig({
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
     ? [
         mock({
-          accounts: [
-            mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC).address,
-          ],
+          accounts: [mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
         }),
       ]
     : [

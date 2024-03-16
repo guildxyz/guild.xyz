@@ -37,12 +37,12 @@ const ConnectorButton = ({
   const { isConnected, connector: activeConnector } = useAccount()
 
   const { keyPair } = useUserPublic()
-  console.log(connector.id, connector)
 
   const { connectorName, connectorIcon } = useConnectorNameAndIcon(connector)
 
   return (
     <Button
+      data-wagmi-connector-id={connector.id}
       onClick={() => connect({ connector })}
       leftIcon={
         connectorIcon ? (
