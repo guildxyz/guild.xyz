@@ -11,7 +11,7 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import useClaimText, {
   ClaimTextModal,
@@ -109,7 +109,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
               <Button
                 variant="link"
                 rightIcon={
-                  isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareOut />
+                  isAccessValidating ? <Spinner boxSize="1em" /> : <ArrowSquareIn />
                 }
                 iconSpacing="1"
                 maxW="full"
