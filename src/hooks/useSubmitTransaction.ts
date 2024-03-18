@@ -1,7 +1,14 @@
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import { useEffect } from "react"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt, decodeEventLog } from "viem"
+import {
+  Abi,
+  ContractFunctionArgs,
+  ContractFunctionName,
+  DecodeEventLogReturnType,
+  TransactionReceipt,
+  decodeEventLog,
+} from "viem"
 import {
   UseSimulateContractParameters,
   useSimulateContract,
@@ -17,7 +24,7 @@ const useSubmitTransaction = (
     customErrorsMap?: Record<string, string>
     onSuccess?: (
       transactionReceipt: TransactionReceipt,
-      events: ReturnType<typeof decodeEventLog>[]
+      events: DecodeEventLogReturnType[]
     ) => void
     onError?: (errorMessage: string, rawError: any) => void
   }
@@ -52,10 +59,8 @@ const useSubmitTransaction = (
     error: prepareError,
     isLoading: isPrepareLoading,
   } = useSimulateContract({
-    query: {
-      enabled: contractCallConfig.query?.enabled ?? true,
-    },
     ...contractCallConfig,
+    query: { enabled: contractCallConfig.query?.enabled ?? true },
   })
 
   const {
@@ -64,14 +69,12 @@ const useSubmitTransaction = (
     gasEstimationError,
     isLoading: isGasEstimationLoading,
   } = useEstimateGas({
-    abi: contractCallConfig.abi,
-    address: contractCallConfig.address,
-    functionName: contractCallConfig.functionName,
-    args: contractCallConfig.args,
-    value: contractCallConfig.value,
-    query: {
-      enabled: contractCallConfig.query?.enabled ?? true,
-    },
+    abi: contractCallConfig.abi as Abi,
+    address: contractCallConfig.address as `0x${string}`,
+    functionName: contractCallConfig.functionName as ContractFunctionName,
+    args: contractCallConfig.args as ContractFunctionArgs,
+    value: contractCallConfig.value as bigint,
+    shouldFetch: contractCallConfig.query?.enabled ?? true,
   })
 
   const {
@@ -121,7 +124,7 @@ const useSubmitTransaction = (
           .map((log) => {
             try {
               return decodeEventLog({
-                abi: contractCallConfig.abi,
+                abi: contractCallConfig.abi as Abi,
                 data: log.data,
                 topics: log.topics,
               })
@@ -131,10 +134,16 @@ const useSubmitTransaction = (
           })
           .filter(Boolean)
 
-        onSuccess(transactionReceipt as TransactionReceipt, events)
+        onSuccess(
+          transactionReceipt as TransactionReceipt,
+          events as unknown as DecodeEventLogReturnType[]
+        )
       }
-    } else {
+    }
+
+    if (error) {
       setTxError(true)
+
       onError?.(error, rawError)
       reset()
     }

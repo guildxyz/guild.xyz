@@ -5,7 +5,7 @@ import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToken from "hooks/useToken"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { parseUnits } from "viem"
+import { Abi, ContractEventName, DecodeEventLogReturnType, parseUnits } from "viem"
 import { useChainId } from "wagmi"
 
 type RegisterVaultParams = {
@@ -14,6 +14,15 @@ type RegisterVaultParams = {
   fee: number
   chain: Chain
 }
+
+const findEvent = <TAbi extends Abi, TEventName extends ContractEventName<TAbi>>(
+  events: DecodeEventLogReturnType<TAbi, ContractEventName<TAbi>>[],
+  eventName: TEventName
+): DecodeEventLogReturnType<TAbi, TEventName> | undefined =>
+  events.find((event) => event.eventName === eventName) as DecodeEventLogReturnType<
+    TAbi,
+    TEventName
+  >
 
 const useRegisterVault = ({
   chain,
@@ -66,17 +75,10 @@ const useRegisterVault = ({
           return
         }
 
-        const vaultRegisteredEvent = events.find(
-          (event) => event.eventName === "VaultRegistered"
-        ) as {
-          eventName: "VaultRegistered"
-          args: {
-            fee: bigint
-            owner: `0x${string}`
-            token: `0x${string}`
-            vaultId: bigint
-          }
-        }
+        const vaultRegisteredEvent = findEvent<
+          typeof feeCollectorAbi,
+          "VaultRegistered"
+        >(events as [], "VaultRegistered")
 
         if (!vaultRegisteredEvent) {
           showErrorToast("Couldn't find 'VaultRegistered' event")

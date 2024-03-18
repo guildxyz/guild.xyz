@@ -26,7 +26,9 @@ const convertGasFeeToUSD = async ([_, chainId, estimatedGas]: [
   return estimatedGasFeeInFloat * nativeCurrencyPriceInUSD
 }
 
-const useEstimateGas = (config: EstimateContractGasParameters) => {
+const useEstimateGas = (
+  config: EstimateContractGasParameters & { shouldFetch?: boolean }
+) => {
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
   const chainId = useChainId()
@@ -49,7 +51,7 @@ const useEstimateGas = (config: EstimateContractGasParameters) => {
     isLoading: isEstimateGasLoading,
     mutate,
   } = useSWR(
-    !!walletClient?.account && !!config?.query?.enabled
+    !!walletClient?.account && !!config?.shouldFetch
       ? [
           "estimateGas",
           config.address,
