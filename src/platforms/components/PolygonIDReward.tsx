@@ -10,7 +10,7 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import { useMintPolygonIDProofContext } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
 import rewards from "platforms/rewards"
@@ -87,7 +87,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
               isLoading || isValidating ? (
                 <Spinner boxSize="1em" />
               ) : (
-                <ArrowSquareOut />
+                <ArrowSquareIn />
               )
             }
             iconSpacing="1"
