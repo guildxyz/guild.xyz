@@ -1,8 +1,8 @@
-import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementType } from "requirements"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
 import { Abi, toBytes } from "viem"
+import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
 import {
   encodePermit2Permit,
   encodeUnwrapEth,

@@ -1,9 +1,9 @@
-import { Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { erc20Abi, maxUint256 } from "viem"
 import { useAccount, useReadContract } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 
 const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {

@@ -1,6 +1,6 @@
-import { Chain, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const CHAINS_ENDPOINTS = {
   1: "mainnet",

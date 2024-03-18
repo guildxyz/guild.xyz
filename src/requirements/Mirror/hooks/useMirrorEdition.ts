@@ -1,6 +1,6 @@
-import { Chain, Chains } from "chains"
 import mirrorAbi from "static/abis/mirror"
 import { useReadContracts } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 

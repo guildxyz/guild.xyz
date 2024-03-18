@@ -8,8 +8,12 @@ import useToast from "hooks/useToast"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useState } from "react"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
-import { WAAS_CONNECTOR_ID, WaaSConnector, WaasActionFailed } from "waasConnector"
 import { useConnect } from "wagmi"
+import {
+  WAAS_CONNECTOR_ID,
+  WaaSConnector,
+  WaasActionFailed,
+} from "wagmiConfig/waasConnector"
 import useLinkAddress from "../../../hooks/useLinkAddress"
 import {
   DriveRequestFailed,

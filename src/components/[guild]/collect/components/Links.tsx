@@ -1,5 +1,4 @@
 import { Icon, Img, Link, useColorMode, Wrap } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "chains"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import SocialIcon from "components/[guild]/SocialIcon"
@@ -8,6 +7,7 @@ import { ArrowSquareOut } from "phosphor-react"
 import { SocialLinkKey } from "types"
 import capitalize from "utils/capitalize"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import useNftDetails from "../hooks/useNftDetails"
 
 const Links = () => {

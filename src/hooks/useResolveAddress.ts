@@ -1,4 +1,3 @@
-import { Chain, Chains } from "chains"
 import { createStore, del, get, set } from "idb-keyval"
 import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
@@ -7,6 +6,7 @@ import fetcher from "utils/fetcher"
 import { PublicClient, createPublicClient, http } from "viem"
 import { mainnet } from "wagmi/chains"
 import { wagmiConfig } from "wagmiConfig"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 

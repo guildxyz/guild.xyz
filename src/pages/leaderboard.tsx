@@ -1,6 +1,5 @@
 import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
-import { Chains } from "chains"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
@@ -20,6 +19,7 @@ import { useEffect, useState } from "react"
 import useSWRInfinite from "swr/infinite"
 import { DetailedUserLeaderboardData } from "types"
 import { useAccount } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { MYSTERY_BOX_NFT } from "./api/leaderboard/mystery-box"
 
 const MotionSection = motion(Section)

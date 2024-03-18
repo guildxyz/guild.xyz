@@ -1,5 +1,4 @@
 import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
-import { Chains } from "chains"
 import Button from "components/common/Button"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { Check, Question } from "phosphor-react"
@@ -8,6 +7,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form
 import { RequirementFormProps } from "requirements"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import RegisterVaultForm, {
   RegisterVaultFormType,
 } from "./components/RegisterVaultForm"

@@ -1,4 +1,3 @@
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
@@ -7,6 +6,7 @@ import feeCollectorAbi from "static/abis/feeCollector"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { Abi, ContractEventName, DecodeEventLogReturnType, parseUnits } from "viem"
 import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 
 type RegisterVaultParams = {
   owner: `0x${string}`

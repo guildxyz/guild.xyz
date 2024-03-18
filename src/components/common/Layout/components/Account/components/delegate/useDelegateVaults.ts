@@ -1,7 +1,7 @@
-import { Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import delegateRegistryAbi from "static/abis/delegateRegistry"
 import { useReadContracts } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 
 enum DelegationType {
   NONE,

@@ -1,10 +1,10 @@
-import { Chain, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"
 import { getBlockByTime } from "utils/getBlockByTime"
 import { useReadContract, useReadContracts } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
 

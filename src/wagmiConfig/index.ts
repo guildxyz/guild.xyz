@@ -1,5 +1,4 @@
 import { PublicUser } from "components/[guild]/hooks/useUser"
-import { mock } from "mockConnector"
 import {
   beraTestnet,
   bitfinityTestnet,
@@ -16,7 +15,6 @@ import { mutate } from "swr"
 import fetcher, { fetcherWithSign } from "utils/fetcher"
 import { http, type Chain, type WalletClient } from "viem"
 import { mnemonicToAccount } from "viem/accounts"
-import waasConnector, { WAAS_CONNECTOR_ID } from "waasConnector"
 import { createConfig, type Connector } from "wagmi"
 import {
   arbitrum,
@@ -61,6 +59,8 @@ import {
   zora,
 } from "wagmi/chains"
 import { coinbaseWallet, injected, safe, walletConnect } from "wagmi/connectors"
+import { mock } from "wagmiConfig/mockConnector"
+import waasConnector, { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 
 /**
  * We should consider adding only those chains here which we actually use for

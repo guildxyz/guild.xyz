@@ -1,15 +1,15 @@
 import { HStack, Text } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
+import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
 import PurchaseTransactionStatusModal from "components/[guild]/Requirements/components/GuildCheckout/components/PurchaseTransactionStatusModal"
-import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useTokenData from "hooks/useTokenData"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 
 type Props = RequirementProps
 

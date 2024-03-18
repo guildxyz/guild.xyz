@@ -1,5 +1,4 @@
 import { kv } from "@vercel/kv"
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import { OneOf } from "types"
@@ -16,6 +15,7 @@ import {
 import { flipPath } from "utils/guildCheckout/utils"
 import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
 import { wagmiConfig } from "wagmiConfig"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
 export type FetchPriceResponse<T extends string | bigint = string> = {

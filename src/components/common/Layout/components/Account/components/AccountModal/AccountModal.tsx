@@ -17,7 +17,6 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { delegateConnectionAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/DelegateCashButton"
 import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
@@ -31,8 +30,9 @@ import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
 import { LinkBreak, SignOut } from "phosphor-react"
-import { WAAS_CONNECTOR_ID } from "waasConnector"
 import { useAccount } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"

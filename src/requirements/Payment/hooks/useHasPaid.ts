@@ -1,6 +1,6 @@
-import { Chain, Chains } from "chains"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { useAccount, useReadContract } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const useHasPaid = (
   contractAddress: `0x${string}`,

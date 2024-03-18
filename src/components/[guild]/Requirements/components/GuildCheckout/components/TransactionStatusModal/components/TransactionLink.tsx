@@ -1,7 +1,7 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import { ArrowSquareOut } from "phosphor-react"
 import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"
 
 const TransactionLink = (): JSX.Element => {

@@ -1,5 +1,4 @@
 import { Text } from "@chakra-ui/react"
-import { Chain, Chains } from "chains"
 import {
   TransactionStatusProvider,
   useTransactionStatusContext,
@@ -13,6 +12,7 @@ import {
 import useNftBalance from "hooks/useNftBalance"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { GuildPlatform } from "types"
+import { Chain, Chains } from "wagmiConfig/chains"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {

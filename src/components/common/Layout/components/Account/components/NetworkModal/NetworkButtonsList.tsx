@@ -1,6 +1,6 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { Chains, supportedChains } from "chains"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
+import { Chains, supportedChains } from "wagmiConfig/chains"
 import NetworkButton from "./NetworkButton"
 
 type Props = {

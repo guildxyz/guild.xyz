@@ -1,7 +1,7 @@
 import { useColorMode } from "@chakra-ui/react"
-import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "./RequirementContext"
 
 type Props = {

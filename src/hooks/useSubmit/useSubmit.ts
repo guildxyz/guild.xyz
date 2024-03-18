@@ -1,5 +1,4 @@
 import { useWallet } from "@fuel-wallet/react"
-import { Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { type WalletUnlocked } from "fuels"
@@ -20,6 +19,7 @@ import {
 } from "viem"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
+import { Chains, supportedChains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {

@@ -1,7 +1,7 @@
-import { Chain, Chains } from "chains"
 import { GUILD_REWARD_NFT_FACTORY_ADDRESSES } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import guildRewardNFTFactoryAbi from "static/abis/guildRewardNFTFactory"
 import { useReadContract } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const useGuildFee = (
   chain: Chain

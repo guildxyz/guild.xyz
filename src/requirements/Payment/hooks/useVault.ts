@@ -1,6 +1,6 @@
-import { Chain, Chains } from "chains"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { useReadContract } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 type GetVaultResponse = {
   owner: `0x${string}`

@@ -1,5 +1,5 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import { useSwitchChain } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import useToast from "./useToast"
 
 const useTriggerNetworkChange = () => {

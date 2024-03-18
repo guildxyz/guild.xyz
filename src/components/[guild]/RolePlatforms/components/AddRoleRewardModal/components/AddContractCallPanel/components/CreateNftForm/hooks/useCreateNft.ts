@@ -1,4 +1,3 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -14,6 +13,7 @@ import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<

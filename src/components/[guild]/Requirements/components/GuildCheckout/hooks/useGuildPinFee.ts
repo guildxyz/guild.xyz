@@ -1,8 +1,8 @@
-import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import guildPinAbi from "static/abis/guildPin"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import { useReadContract } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 
 const useGuildPinFee = (): {
   guildPinFee: bigint

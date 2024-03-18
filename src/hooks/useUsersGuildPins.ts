@@ -1,4 +1,3 @@
-import { Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import guildPinAbi from "static/abis/guildPin"
@@ -16,6 +15,7 @@ import {
   type Chain as ViemChain,
 } from "viem"
 import { wagmiConfig } from "wagmiConfig"
+import { Chains } from "wagmiConfig/chains"
 
 const getUsersGuildPinIdsOnChain = async (
   balance: bigint,
