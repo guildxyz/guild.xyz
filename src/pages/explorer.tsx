@@ -55,7 +55,6 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
           window.scrollTo({
             top: scrollPosition,
             left: 0,
-            behavior: "smooth",
           }),
         10
       )
