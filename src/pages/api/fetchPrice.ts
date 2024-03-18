@@ -87,7 +87,7 @@ const getGuildFee = async (
     return Promise.reject("Unsupported chain")
 
   const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[Chains[chainId]],
+    chain: wagmiConfig.chains.find((c) => c.id === chainId),
     transport: http(),
   })
   const guildBaseFeeInWei = await publicClient.readContract({
@@ -284,6 +284,8 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         }
       }
 
+      console.log(response.status, "errorMessage", errorMessage)
+
       return res.status(response.status).json({
         error: errorMessage,
       })
@@ -328,6 +330,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         responseData.sellTokenToEthRate
       )
     } catch (getGuildFeeError) {
+      console.log("getGuildFeeError", getGuildFeeError)
       return res.status(500).json({ error: getGuildFeeError })
     }
     const {
