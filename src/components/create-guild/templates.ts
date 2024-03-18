@@ -215,12 +215,6 @@ export const TEMPLATES: Array<RoleFormType> = [
         chain: "ETHEREUM",
       },
       {
-        type: "RABBITHOLE",
-        address: "0x2face815247a997eaa29881c16f75fd83f4df65b",
-        chain: "ETHEREUM",
-        data: {},
-      },
-      {
         data: { minAmount: 10 },
         type: "YUP",
         chain: "ETHEREUM",
