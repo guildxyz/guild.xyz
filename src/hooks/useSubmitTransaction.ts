@@ -54,14 +54,11 @@ const useSubmitTransaction = (
     setTxSuccessInContext(newState)
   }
 
-  const {
-    data: config,
-    error: prepareError,
-    isLoading: isPrepareLoading,
-  } = useSimulateContract({
-    ...contractCallConfig,
-    query: { enabled: contractCallConfig.query?.enabled ?? true },
-  })
+  const { error: simulateContractError, isLoading: isSimulateContractLoading } =
+    useSimulateContract({
+      query: { enabled: contractCallConfig.query?.enabled ?? true },
+      ...contractCallConfig,
+    })
 
   const {
     estimatedGas,
@@ -103,7 +100,7 @@ const useSubmitTransaction = (
   const rawError =
     waitForTransactionError ||
     contractWriteError ||
-    prepareError ||
+    simulateContractError ||
     gasEstimationError
   const error = processViemContractError(rawError, (errorName) => {
     if (!options?.customErrorsMap || !(errorName in options.customErrorsMap))
@@ -169,9 +166,9 @@ const useSubmitTransaction = (
         return
       }
 
-      writeContract?.(config)
+      writeContract(contractCallConfig)
     },
-    isPreparing: isPrepareLoading || isGasEstimationLoading,
+    isPreparing: isSimulateContractLoading || isGasEstimationLoading,
     isLoading: isWaitForTransactionLoading || isContractWriteLoading,
     estimatedGas,
     estimatedGasInUSD,
