@@ -6,10 +6,10 @@ import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
 import ExplorerTabs from "components/explorer/ExplorerTabs"
 import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
 import YourGuilds, { useYourGuilds } from "components/explorer/YourGuilds"
+import useRestoreScroll from "components/explorer/hooks/useRestoreScroll"
 import { atom, useAtom } from "jotai"
 import { GetStaticProps } from "next"
-import { useRouter } from "next/router"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
@@ -18,7 +18,6 @@ type Props = {
 }
 
 export const ExplorerScrollRestoration = atom(true)
-let scrollPosition = 0
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const yourGuildsRef = useRef(null)
@@ -29,45 +28,14 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
-
-  const router = useRouter()
   const [shouldRestoreScroll, setShouldRestoreScroll] = useAtom(
     ExplorerScrollRestoration
   )
 
-  useEffect(() => {
-    const handleRouteChangeStart = () => {
-      scrollPosition = window.scrollY
-    }
-
-    const handleRouteChangeComplete = () => {
-      if (!shouldRestoreScroll) {
-        setShouldRestoreScroll(true)
-        return
-      }
-      /**
-       * For some reason, without the delay, the scrolling is not executed. It might
-       * be caused by the default 'scrollRestoration', which probably overwrites our
-       * own scrolling, if not delayed.
-       */
-      setTimeout(
-        () =>
-          window.scrollTo({
-            top: scrollPosition,
-            left: 0,
-          }),
-        10
-      )
-    }
-
-    router.events.on("routeChangeStart", handleRouteChangeStart)
-    router.events.on("routeChangeComplete", handleRouteChangeComplete)
-
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChangeStart)
-      router.events.off("routeChangeComplete", handleRouteChangeComplete)
-    }
-  }, [router, scrollPosition, shouldRestoreScroll])
+  const scrollRestoration = useRestoreScroll({
+    active: shouldRestoreScroll,
+    onRestore: () => setShouldRestoreScroll(true),
+  })
 
   return (
     <>
