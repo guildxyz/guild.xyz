@@ -178,6 +178,7 @@ export const ClickableCrmRoleTag = ({
         <ViewRole roleId={roleId} />
       </>
     }
+    shouldRenderPortal={false}
   >
     <CrmRoleTag roleId={roleId} cursor="pointer" {...tagProps} />
   </ClickableTagPopover>
