@@ -1,3 +1,4 @@
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
@@ -9,6 +10,7 @@ const defaultValues = {
 
 const AddGithubPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
+  useSyncIsAddRewardPanelDirtyAtom(methods)
 
   return (
     <FormProvider {...methods}>

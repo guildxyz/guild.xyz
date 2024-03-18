@@ -1,3 +1,4 @@
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { AddRewardPanelProps } from "platforms/rewards"
@@ -11,6 +12,7 @@ const AddTelegramPanel = ({ onAdd }: AddRewardPanelProps) => {
       platformGuildId: null,
     },
   })
+  useSyncIsAddRewardPanelDirtyAtom(methods)
 
   const platformGuildId = useWatch({
     name: "platformGuildId",

@@ -23,6 +23,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import { PlatformGuildData, PlatformType } from "types"
 import UploadMintLinks from "./components/UploadMintLinks"
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 
 export type ImportPoapForm = {
   eventId: string
@@ -48,6 +49,8 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<ImportPoapForm>({
     defaultValues,
   })
+  useSyncIsAddRewardPanelDirtyAtom(methods)
+
   const {
     control,
     register,

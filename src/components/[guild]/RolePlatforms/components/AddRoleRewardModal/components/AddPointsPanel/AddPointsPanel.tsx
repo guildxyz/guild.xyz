@@ -23,6 +23,7 @@ import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType } from "types"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
@@ -44,6 +45,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       data: { guildPlatformId: existingPointsRewards?.[0]?.id },
     },
   })
+  useSyncIsAddRewardPanelDirtyAtom(methods)
 
   const {
     control,

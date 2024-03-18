@@ -11,17 +11,20 @@ import {
   Text,
   Tooltip,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
+import { atom, useAtom } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards from "platforms/rewards"
-import { useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { useEffect, useState } from "react"
+import { FormProvider, UseFormReturn, useForm, useWatch } from "react-hook-form"
 import { Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
@@ -34,6 +37,15 @@ import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
+
+export const isAddRewardPanelDirtyAtom = atom(false)
+export const useSyncIsAddRewardPanelDirtyAtom = (methods: UseFormReturn<any>) => {
+  const [, setIsAddRewardPanelDirty] = useAtom(isAddRewardPanelDirtyAtom)
+
+  useEffect(() => {
+    setIsAddRewardPanelDirty(methods.formState.isDirty)
+  }, [methods.formState.isDirty])
+}
 
 type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
@@ -52,6 +64,14 @@ const defaultValues: AddRewardForm = {
 
 const AddRewardButton = (): JSX.Element => {
   const { roles } = useGuild()
+  const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] = useAtom(
+    isAddRewardPanelDirtyAtom
+  )
+  const {
+    isOpen: isDiscardAlertOpen,
+    onOpen: onDiscardAlertOpen,
+    onClose: onDiscardAlertClose,
+  } = useDisclosure()
 
   const {
     modalRef,
@@ -172,8 +192,11 @@ const AddRewardButton = (): JSX.Element => {
         <Modal
           isOpen={isOpen}
           onClose={() => {
-            methods.reset(defaultValues)
-            onAddRewardModalClose()
+            if (isAddRewardPanelDirty) onDiscardAlertOpen()
+            else {
+              methods.reset(defaultValues)
+              onAddRewardModalClose()
+            }
           }}
           size={step === "HOME" ? "4xl" : "2xl"}
           scrollBehavior="inside"
@@ -304,6 +327,15 @@ const AddRewardButton = (): JSX.Element => {
           </ModalContent>
         </Modal>
       </FormProvider>
+      <DiscardAlert
+        isOpen={isDiscardAlertOpen}
+        onClose={onDiscardAlertClose}
+        onDiscard={() => {
+          onAddRewardModalClose()
+          onDiscardAlertClose()
+          setIsAddRewardPanelDirty(false)
+        }}
+      />
     </>
   )
 }

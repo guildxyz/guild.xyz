@@ -1,3 +1,4 @@
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
@@ -9,6 +10,7 @@ const defaultValues = {
 
 const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
+  useSyncIsAddRewardPanelDirtyAtom(methods)
 
   const platformGuildId = useWatch({
     control: methods.control,

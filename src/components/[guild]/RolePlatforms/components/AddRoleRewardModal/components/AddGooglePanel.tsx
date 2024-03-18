@@ -1,3 +1,4 @@
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
@@ -15,6 +16,7 @@ const AddGooglePanel = ({
     mode: "all",
     defaultValues,
   })
+  useSyncIsAddRewardPanelDirtyAtom(methods)
 
   return (
     <FormProvider {...methods}>
