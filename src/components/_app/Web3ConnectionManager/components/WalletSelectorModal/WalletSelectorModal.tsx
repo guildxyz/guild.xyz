@@ -114,6 +114,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const shouldShowVerify =
     isWeb3Connected && (!!publicUserError || (!!id && !keyPair))
 
+  const shouldShowOKXInjected =
+    typeof window !== "undefined" &&
+    !!window.okxwallet &&
+    !connectors?.find((c) => c.id === "com.okex.wallet")
+
   return (
     <Modal
       isOpen={isOpen}
@@ -211,7 +216,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
                     (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
-                    conn.id !== "injected" &&
+                    (conn.id !== "injected" || !shouldShowOKXInjected) &&
                     // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
                     conn.id !== "com.coinbase.wallet"
                 )
