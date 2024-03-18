@@ -160,6 +160,7 @@ const ContinueWithExistingFormAlert = ({ onAdd }) => {
               options={notConnectedForms?.map((form) => ({
                 label: form.name,
                 value: form,
+                details: <ArrowRight />,
               }))}
             />
           </Center>
