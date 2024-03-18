@@ -6,7 +6,6 @@ import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
 import ExplorerTabs from "components/explorer/ExplorerTabs"
 import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
 import YourGuilds, { useYourGuilds } from "components/explorer/YourGuilds"
-import { atom, useAtom } from "jotai"
 import { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import { useEffect, useRef } from "react"
@@ -17,7 +16,7 @@ type Props = {
   guilds: GuildBase[]
 }
 
-const ExplorerScrollPositionAtom = atom(0)
+let scrollPosition = 0
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const yourGuildsRef = useRef(null)
@@ -30,13 +29,10 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
   const router = useRouter()
-  const [explorerScrollPosition, setExplorerScrollPositionAtom] = useAtom(
-    ExplorerScrollPositionAtom
-  )
 
   useEffect(() => {
     const handleRouteChangeStart = () => {
-      setExplorerScrollPositionAtom(window.scrollY)
+      scrollPosition = window.scrollY
     }
 
     const handleRouteChangeComplete = () => {
@@ -48,7 +44,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       setTimeout(
         () =>
           window.scrollTo({
-            top: explorerScrollPosition,
+            top: scrollPosition,
             left: 0,
             behavior: "smooth",
           }),
@@ -63,7 +59,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
       router.events.off("routeChangeStart", handleRouteChangeStart)
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
-  }, [router, explorerScrollPosition])
+  }, [router, scrollPosition])
 
   return (
     <>
