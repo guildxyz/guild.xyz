@@ -1,9 +1,8 @@
-import { defineChain } from "viem"
+import { Chain } from "viem"
 
-export const bobaAvax = /*#__PURE__*/ defineChain({
+export const bobaAvax = {
   id: 43288,
   name: "Boba-Avax L2",
-  network: "bobaAvax",
   nativeCurrency: {
     decimals: 18,
     name: "Boba",
@@ -25,12 +24,11 @@ export const bobaAvax = /*#__PURE__*/ defineChain({
       blockCreated: 94846,
     },
   },
-})
+} as const satisfies Chain
 
-export const palm = /*#__PURE__*/ defineChain({
+export const palm = {
   id: 11297108109,
   name: "Palm",
-  network: "palm",
   nativeCurrency: {
     decimals: 18,
     name: "Palm",
@@ -56,12 +54,11 @@ export const palm = /*#__PURE__*/ defineChain({
       blockCreated: 13483902,
     },
   },
-})
+} as const satisfies Chain
 
-export const exosama = /*#__PURE__*/ defineChain({
+export const exosama = {
   id: 2109,
   name: "Exosama",
-  network: "exosama",
   nativeCurrency: {
     decimals: 18,
     name: "Moonsama",
@@ -81,12 +78,11 @@ export const exosama = /*#__PURE__*/ defineChain({
       url: "https://explorer.exosama.com",
     },
   },
-})
+} as const satisfies Chain
 
-export const scrollAlpha = /*#__PURE__*/ defineChain({
+export const scrollAlpha = {
   id: 534353,
   name: "Scroll Alpha",
-  network: "scrollAlpha",
   nativeCurrency: {
     decimals: 18,
     name: "Ether",
@@ -112,12 +108,11 @@ export const scrollAlpha = /*#__PURE__*/ defineChain({
       blockCreated: 47009,
     },
   },
-})
+} as const satisfies Chain
 
-export const neonEVM = /*#__PURE__*/ defineChain({
+export const neonEVM = {
   id: 245022934,
   name: "Neon EVM",
-  network: "neonEVM",
   nativeCurrency: {
     decimals: 18,
     name: "Neon",
@@ -143,12 +138,11 @@ export const neonEVM = /*#__PURE__*/ defineChain({
       blockCreated: 206545524,
     },
   },
-})
+} as const satisfies Chain
 
-export const bitfinityTestnet = /*#__PURE__*/ defineChain({
+export const bitfinityTestnet = {
   id: 355113,
   name: "Bitfinity Testnet",
-  network: "bitfinity-testnet",
   nativeCurrency: {
     decimals: 18,
     name: "Bitfinity",
@@ -174,12 +168,11 @@ export const bitfinityTestnet = /*#__PURE__*/ defineChain({
       blockCreated: 7032,
     },
   },
-})
+} as const satisfies Chain
 
-export const ontology = /*#__PURE__*/ defineChain({
+export const ontology = {
   id: 58,
   name: "Ontology EVM",
-  network: "ontology",
   nativeCurrency: {
     decimals: 18,
     name: "ONG",
@@ -215,12 +208,11 @@ export const ontology = /*#__PURE__*/ defineChain({
       blockCreated: 14244158,
     },
   },
-})
+} as const satisfies Chain
 
-export const beraTestnet = /*#__PURE__*/ defineChain({
+export const beraTestnet = {
   id: 2061,
   name: "Berachain Testnet",
-  network: "beratestnet",
   nativeCurrency: {
     decimals: 18,
     name: "BERA",
@@ -246,12 +238,11 @@ export const beraTestnet = /*#__PURE__*/ defineChain({
       blockCreated: 114673,
     },
   },
-})
+} as const satisfies Chain
 
-export const taikoKatlaTestnet = /*#__PURE__*/ defineChain({
+export const taikoKatlaTestnet = {
   id: 167008,
   name: "Taiko Katla Testnet",
-  network: "taikoKatlaTestnet",
   nativeCurrency: {
     decimals: 18,
     name: "ETH",
@@ -277,12 +268,11 @@ export const taikoKatlaTestnet = /*#__PURE__*/ defineChain({
       blockCreated: 77870,
     },
   },
-})
+} as const satisfies Chain
 
-export const oasisSapphire = /*#__PURE__*/ defineChain({
+export const oasisSapphire = {
   id: 23294,
   name: "Oasis Sapphire",
-  network: "oasissapphire",
   nativeCurrency: {
     name: "Rose",
     symbol: "ROSE",
@@ -308,4 +298,4 @@ export const oasisSapphire = /*#__PURE__*/ defineChain({
       blockCreated: 734531,
     },
   },
-})
+} as const satisfies Chain
