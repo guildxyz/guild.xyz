@@ -209,6 +209,7 @@ const rewards: Record<PlatformName, RewardData> = {
     colorScheme: "TWITTER",
     gatedEntity: "account",
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
+    isPlatform: true,
   },
   GOOGLE: {
     icon: GoogleLogo,
