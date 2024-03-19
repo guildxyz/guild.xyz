@@ -32,7 +32,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     explorerScrollRestorationAtom
   )
 
-  const scrollRestoration = useRestoreScroll({
+  useRestoreScroll({
     active: shouldRestoreScroll,
     onRestore: () => setShouldRestoreScroll(true),
   })
