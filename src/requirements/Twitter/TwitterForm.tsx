@@ -149,17 +149,19 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         </FormErrorMessage>
       </FormControl>
 
-      {["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type) && (
+      {selected?.TwitterRequirement && (
         <>
           <Divider />
-          <Alert>
-            <AlertIcon />
-            <AlertDescription>
-              Due to limitations with X's API{" "}
-              <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>, the
-              requirement check may be inconsistent.
-            </AlertDescription>
-          </Alert>
+          {["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type) && (
+            <Alert>
+              <AlertIcon />
+              <AlertDescription>
+                Due to limitations with X's API{" "}
+                <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>, the
+                requirement check may be inconsistent.
+              </AlertDescription>
+            </Alert>
+          )}
           <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}
