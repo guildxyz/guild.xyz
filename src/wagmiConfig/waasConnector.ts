@@ -193,9 +193,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
         await this.getProvider()
         const { Logout, ProtocolFamily } = await cwaasImport()
 
-        if (waas.wallets.wallet) {
-          await Logout()
-        }
+        await Logout().catch(() => {})
 
         const wallet = await waas.wallets.create()
         this.currentAddress = await wallet.addresses.for(ProtocolFamily.EVM)
@@ -212,9 +210,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
         await this.getProvider()
         const { Logout, ProtocolFamily } = await cwaasImport()
 
-        if (waas.wallets.wallet) {
-          await Logout()
-        }
+        await Logout().catch(() => {})
 
         const wallet = await waas.wallets.restoreFromBackup(backupData)
 
