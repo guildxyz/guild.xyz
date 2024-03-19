@@ -95,10 +95,10 @@ const useActiveMembershipUpdate = ({
     ...progress,
     isValidating: shouldPoll,
     triggerPoll: () => {
-      setShouldPoll(true)
-
       // this doesn't work for some reason, but leaving it here till we investigate
-      progress.mutate(undefined, { revalidate: false })
+      progress.mutate(null, { revalidate: false })
+
+      setShouldPoll(true)
 
       const listener = (event: MessageEvent<any>) => {
         if (event?.data?.type === SUCCESS_EVENT_NAME) {
