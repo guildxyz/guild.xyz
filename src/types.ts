@@ -444,7 +444,6 @@ type Requirement = {
 
   // Props used inside the forms on the UI
   formFieldId?: number
-  nftRequirementType?: string
   balancyDecimals?: number
   createdAt?: string
   updatedAt?: string
