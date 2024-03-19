@@ -1,16 +1,17 @@
 // import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 // import { Contract } from "@ethersproject/contracts"
-import { Chains } from "chains"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
+import useTokenBalance from "hooks/useTokenBalance"
 import { useMemo } from "react"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
@@ -31,8 +32,7 @@ const usePurchaseAsset = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
 
   const { data: priceData } = usePrice(pickedCurrency)
 
@@ -41,23 +41,22 @@ const usePurchaseAsset = () => {
   const generatedGetAssetsParams = useMemo(
     () =>
       generateGetAssetsParams(guildId, address, chainId, pickedCurrency, priceData),
-    [guildId, address, chainId, pickedCurrency, priceData]
+    [guildId, address, chainId, pickedCurrency, priceData],
   )
 
   const { allowance } = useAllowance(
     pickedCurrency,
-    tokenBuyerContractData[Chains[chainId]]?.address
+    tokenBuyerContractData[Chains[chainId]]?.address,
   )
 
   const { data: coinBalanceData } = useBalance({
     address,
     chainId: Chains[requirement?.chain],
   })
-  const { data: tokenBalanceData } = useBalance({
-    address,
+  const { data: tokenBalanceData } = useTokenBalance({
     token: pickedCurrency,
     chainId: Chains[requirement?.chain],
-    enabled: pickedCurrency !== NULL_ADDRESS,
+    shouldFetch: pickedCurrency !== NULL_ADDRESS,
   })
 
   const isSufficientBalance =
@@ -79,7 +78,7 @@ const usePurchaseAsset = () => {
         ? typeof allowance === "bigint" && priceData.maxPriceInWei <= allowance
         : true) &&
       tokenBuyerContractData[Chains[chainId]] &&
-      contractCallParams
+      contractCallParams,
   )
 
   const config = {
@@ -88,7 +87,9 @@ const usePurchaseAsset = () => {
     functionName: "getAssets",
     args: contractCallParams,
     value: generatedGetAssetsParams?.value,
-    enabled,
+    query: {
+      enabled,
+    },
   }
 
   return useSubmitTransaction(config, {

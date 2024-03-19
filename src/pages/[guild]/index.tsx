@@ -24,7 +24,6 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
-import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
@@ -44,7 +43,6 @@ import VerifiedIcon from "components/common/VerifiedIcon"
 import useMembership from "components/explorer/hooks/useMembership"
 import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
-import { useAtom } from "jotai"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
@@ -61,32 +59,29 @@ const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
-  () => import("components/[guild]/AddAndOrderRoles")
-)
-const DynamicAddRewardButton = dynamic(
-  () => import("components/[guild]/AddRewardButton")
+  () => import("components/[guild]/AddAndOrderRoles"),
 )
 const DynamicAddRewardAndCampaign = dynamic(
-  () => import("components/[guild]/AddRewardAndCampaign")
+  () => import("components/[guild]/AddRewardAndCampaign"),
 )
 const DynamicMembersExporter = dynamic(
-  () => import("components/[guild]/Members/components/MembersExporter")
+  () => import("components/[guild]/Members/components/MembersExporter"),
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 const DynamicActiveStatusUpdates = dynamic(
-  () => import("components/[guild]/ActiveStatusUpdates")
+  () => import("components/[guild]/ActiveStatusUpdates"),
 )
 const DynamicRecheckAccessesButton = dynamic(() =>
   import("components/[guild]/RecheckAccessesButton").then(
-    (module) => module.TopRecheckAccessesButton
-  )
+    (module) => module.TopRecheckAccessesButton,
+  ),
 )
 const DynamicDiscordBotPermissionsChecker = dynamic(
   () => import("components/[guild]/DiscordBotPermissionsChecker"),
   {
     ssr: false,
-  }
+  },
 )
 
 const GuildPage = (): JSX.Element => {
@@ -112,7 +107,7 @@ const GuildPage = (): JSX.Element => {
   const sortedRoles = useMemo(() => {
     if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
+        (role1, role2) => role2.memberCount - role1.memberCount,
       )
       return byMembers
     }
@@ -127,10 +122,10 @@ const GuildPage = (): JSX.Element => {
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
+    (role) => role.visibility !== Visibility.HIDDEN,
   )
   const hiddenRoles = sortedRoles.filter(
-    (role) => role.visibility === Visibility.HIDDEN
+    (role) => role.visibility === Visibility.HIDDEN,
   )
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
@@ -156,20 +151,11 @@ const GuildPage = (): JSX.Element => {
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
     roles,
-    admins?.map((admin) => admin.address)
+    admins?.map((admin) => admin.address),
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
-
-  /**
-   * Temporary to show "You might need to wait a few minutes to get your roles" on
-   * the Discord reward card until after join we implement queues generally
-   */
-  const [, setIsAfterJoin] = useAtom(isAfterJoinAtom)
-  useEffect(() => {
-    setIsAfterJoin(false)
-  }, [])
 
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
@@ -258,10 +244,8 @@ const GuildPage = (): JSX.Element => {
                   <LeaveButton />
                 ) : isAddRoleStuck ? (
                   <DynamicAddAndOrderRoles />
-                ) : featureFlags.includes("ROLE_GROUPS") ? (
-                  <DynamicAddRewardAndCampaign />
                 ) : (
-                  <DynamicAddRewardButton />
+                  <DynamicAddRewardAndCampaign />
                 )}
               </HStack>
             }
@@ -295,7 +279,7 @@ const GuildPage = (): JSX.Element => {
             <DynamicNoRolesAlert />
           )}
 
-          {roles?.length > renderedRolesCount && (
+          {publicRoles?.length && roles?.length > renderedRolesCount && (
             <Center pt={6}>
               <Spinner />
             </Center>

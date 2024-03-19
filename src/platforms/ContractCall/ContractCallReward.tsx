@@ -1,5 +1,5 @@
 import { Circle, Img, SkeletonCircle, SkeletonProps } from "@chakra-ui/react"
-import { ArrowSquareOut } from "@phosphor-icons/react"
+import { ArrowRight } from "@phosphor-icons/react"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -44,14 +44,14 @@ const ContractCallReward = ({
           <Button
             as={Link}
             variant="link"
-            rightIcon={<ArrowSquareOut />}
+            rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
             onClick={() => {
               captureEvent(
                 "Click on collect page link (ContractCallReward)",
-                postHogOptions
+                postHogOptions,
               )
             }}
             colorScheme={isLinkColorful ? "blue" : "gray"}
@@ -73,7 +73,7 @@ const MotionSkeletonCircle = motion(
     <Circle ref={ref} size={props.boxSize}>
       <SkeletonCircle {...props} />
     </Circle>
-  ))
+  )),
 )
 
 const ContractCallRewardIcon = ({
@@ -85,7 +85,7 @@ const ContractCallRewardIcon = ({
 }: RewardIconProps & { isLoading?: boolean }) => {
   const { image } = useNftDetails(
     guildPlatform?.platformGuildData?.chain,
-    guildPlatform?.platformGuildData?.contractAddress
+    guildPlatform?.platformGuildData?.contractAddress,
   )
 
   const props = {

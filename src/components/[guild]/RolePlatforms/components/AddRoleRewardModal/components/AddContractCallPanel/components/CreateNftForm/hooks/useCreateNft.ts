@@ -1,4 +1,3 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -9,11 +8,12 @@ import useToast from "hooks/useToast"
 import { useState } from "react"
 import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
-import { GuildPlatform, PlatformType } from "types"
+import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
-import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
@@ -49,18 +49,17 @@ export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> 
 export type CreateNFTResponse = {
   // returning the submitted form too, so we can easily populate the SWR cache with the NFT details (e.g. image, name, etc.)
   formData: CreateNftFormType
-  guildPlatform: Omit<GuildPlatform, "id" | "platformGuildName">
+  guildPlatform: Omit<GuildPlatformWithOptionalId, "platformGuildName">
 }
 
 const useCreateNft = (
-  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
+  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void,
 ) => {
   const { urlName } = useGuild()
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -112,7 +111,7 @@ const useCreateNft = (
       tokenTreasury,
       parseUnits(
         price?.toString() ?? "0",
-        CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
+        CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals,
       ),
     ] as const
 
@@ -133,7 +132,7 @@ const useCreateNft = (
     })
 
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
-      { hash }
+      { hash },
     )
 
     const events = getEventsFromViemTxReceipt(guildRewardNFTFacotryAbi, receipt)
@@ -203,12 +202,12 @@ const useCreateNft = (
             description: response.formData.description,
             fee: parseUnits(
               response.formData.price.toString() ?? "0",
-              CHAIN_CONFIG[response.formData.chain].nativeCurrency.decimals
+              CHAIN_CONFIG[response.formData.chain].nativeCurrency.decimals,
             ),
           },
           {
             revalidate: false,
-          }
+          },
         )
 
         onSuccess(response.guildPlatform)

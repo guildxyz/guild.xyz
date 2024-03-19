@@ -30,8 +30,8 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
 import { useEffect, useMemo, useRef, useState } from "react"
-import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
+import { WAAS_CONNECTOR_ID, WaaSConnector } from "wagmiConfig/waasConnector"
 import GoogleTerms from "../../GoogleTerms"
 
 const UserOnboardingModal = ({
@@ -54,8 +54,8 @@ const UserOnboardingModal = ({
 
   const { connectors, connect } = useConnect()
   const cwaasConnector = connectors.find(
-    ({ id }) => id === "cwaasWallet",
-  ) as CWaaSConnector
+    ({ id }) => id === WAAS_CONNECTOR_ID,
+  ) as WaaSConnector
 
   // Timer to decide if resend button is disabled
   const { seconds, start } = useCountdownSeconds(5)
@@ -65,8 +65,8 @@ const UserOnboardingModal = ({
   const isSuccess = !!isLoginSuccess && !!successPlayer
 
   const avatar = useMemo(
-    () => <GuildAvatar address={cwaasConnector?._currentAddress?.address} />,
-    [cwaasConnector?._currentAddress?.address],
+    () => <GuildAvatar address={cwaasConnector?.currentAddress?.address} />,
+    [cwaasConnector?.currentAddress?.address],
   )
 
   // Play the success animation if everything was successful, and the player is ready
@@ -138,7 +138,7 @@ const UserOnboardingModal = ({
               {isSuccessAnimDone ? (
                 <CopyableAddress
                   decimals={5}
-                  address={cwaasConnector?._currentAddress?.address ?? ""}
+                  address={cwaasConnector?.currentAddress?.address ?? ""}
                 />
               ) : (
                 isNewWallet && <Box height="1.5rem" />

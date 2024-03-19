@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from "@chakra-ui/react"
+import { Box, Spinner, Stack, Text } from "@chakra-ui/react"
 import NoPermissionToPageFallback from "components/[guild]/NoPermissionToPageFallback"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -44,7 +44,12 @@ const ActivityLog = (): JSX.Element => {
       <NoPermissionToPageFallback>
         <ActivityLogFiltersProvider>
           <GuildActivityLogFiltersBar />
-          <SectionTitle title="Actions" mt={8} mb="4" />
+          <SectionTitle
+            title="Actions"
+            mt={8}
+            mb="4"
+            titleRightElement={isLoading && <Spinner size="xs" mt="4" />}
+          />
           <Stack spacing={2.5}>
             {isLoading ? (
               <ActivityLogSkeletons />

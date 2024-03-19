@@ -6,7 +6,6 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { Chains } from "chains"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import {
@@ -19,6 +18,7 @@ import { useCollectNftContext } from "components/[guild]/collect/components/Coll
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
 import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
+import { Chains } from "wagmiConfig/chains"
 import useNftDetails from "../hooks/useNftDetails"
 import CollectNftFeesTable from "./CollectNftFeesTable"
 
@@ -41,7 +41,7 @@ const CollectNft = () => {
     .find((rp) => rp.id === rolePlatformId)
   const { totalCollectors, totalCollectorsToday, isLoading, error } = useNftDetails(
     chain,
-    nftAddress
+    nftAddress,
   )
 
   const { isAvailable: isButtonEnabled, startTimeDiff } =

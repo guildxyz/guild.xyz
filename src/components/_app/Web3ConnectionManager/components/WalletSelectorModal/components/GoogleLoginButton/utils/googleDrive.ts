@@ -6,6 +6,13 @@ const DRIVE_FILES_LIST_URL = `https://www.googleapis.com/drive/v3/files?q=${enco
   "appProperties has { key='isGuildWallet' and value='true' }",
 )}`
 
+export class DriveRequestFailed extends Error {
+  constructor(error: unknown) {
+    super("Google Drive request failed")
+    this.cause = error
+  }
+}
+
 export const uploadBackupDataToDrive = (
   backupData: string,
   address: string,
@@ -77,7 +84,7 @@ export const uploadBackupDataToDrive = (
     body: formData,
   }).catch((error) => {
     console.error(error)
-    throw new Error("Failed to upload backup data to Google Drive")
+    throw new DriveRequestFailed(error)
   })
 }
 
@@ -99,7 +106,7 @@ export const listWalletsOnDrive = (accessToken: string): Promise<DriveFileList> 
     },
   }).catch((error) => {
     console.error(error)
-    throw new Error("Failed to check Google Drive files")
+    throw new DriveRequestFailed(error)
   })
 
 export const getFileFromDrive = (fileId: string, accessToken: string) =>
@@ -141,5 +148,5 @@ export const getDriveFileAppProperties = (
     })
     .catch((error) => {
       console.error(error)
-      throw new Error("Failed to retrieve backup data from Google Drive")
+      throw new DriveRequestFailed(error)
     })

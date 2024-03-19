@@ -1,6 +1,5 @@
 import { Icon, Text } from "@chakra-ui/react"
 import { Coins } from "@phosphor-icons/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
@@ -11,9 +10,10 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useToken from "hooks/useToken"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { useToken } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
@@ -45,15 +45,15 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(!isNativeCurrency && chain),
+    shouldFetch: Boolean(!isNativeCurrency && chain),
   })
 
   const convertedFee = fee
     ? isNativeCurrency
       ? formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
       : tokenData?.decimals
-      ? formatUnits(fee, tokenData.decimals)
-      : undefined
+        ? formatUnits(fee, tokenData.decimals)
+        : undefined
     : undefined
 
   const symbol = isNativeCurrency
@@ -63,7 +63,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   const { reqAccesses } = useRoleMembership(roleId ?? 0)
 
   const satisfiesRequirement = reqAccesses?.find(
-    (req) => req.requirementId === id
+    (req) => req.requirementId === id,
   )?.access
 
   return (
@@ -100,8 +100,8 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
             vaultError
               ? "Couldn't fetch vault"
               : tokenError
-              ? "Couldn't fetch token info"
-              : undefined
+                ? "Couldn't fetch token info"
+                : undefined
           }
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}

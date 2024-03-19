@@ -16,6 +16,7 @@ import { normalizeProps, useMachine } from "@zag-js/react"
 import ActivityLogRoleTag from "../../../ActivityLogAction/components/ActivityLogRoleTag"
 
 import { Warning, X } from "@phosphor-icons/react"
+import FormTag from "components/[guild]/activity/ActivityLogAction/components/FormTag"
 import GuildTag from "components/[guild]/activity/ActivityLogAction/components/GuildTag"
 import { useActivityLog } from "components/[guild]/activity/ActivityLogContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -67,7 +68,7 @@ const FilterTag = ({
   const { id: guildId, roles, guildPlatforms } = useGuild(filterGuildId)
 
   const [isLoading, setIsLoading] = useState(false)
-  const [shouldRemove, setShouldRemove] = useState(value.length === 0)
+  const [shouldRemove, setShouldRemove] = useState(value?.length === 0)
 
   const [inputError, setInputError] = useState<string>(null)
 
@@ -86,7 +87,7 @@ const FilterTag = ({
       openOnClick: true,
       autoFocus: isFiltersInputFocused,
       loop: true,
-    })
+    }),
   )
 
   const {
@@ -143,11 +144,11 @@ const FilterTag = ({
 
   const getRewardTagProps = () => {
     const role = roles?.find((r) =>
-      r.rolePlatforms.some((rp) => rp.id === Number(value))
+      r.rolePlatforms.some((rp) => rp.id === Number(value)),
     )
     const rolePlatform = role?.rolePlatforms.find((rp) => rp.id === Number(value))
     const guildPlatform = guildPlatforms?.find(
-      (gp) => gp.id === rolePlatform.guildPlatformId
+      (gp) => gp.id === rolePlatform.guildPlatformId,
     )
 
     const name =
@@ -234,6 +235,10 @@ const FilterTag = ({
                   case "userId":
                     return (
                       <UserTag userId={Number(value)} pr={7} borderLeftRadius={0} />
+                    )
+                  case "formId":
+                    return (
+                      <FormTag formId={Number(value)} pr={7} borderLeftRadius={0} />
                     )
                   default:
                     return null

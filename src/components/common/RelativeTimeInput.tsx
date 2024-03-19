@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react"
 import { forwardRef, useState } from "react"
 import { useController } from "react-hook-form"
+import pluralize from "utils/pluralize"
 
 type Format = "DAY" | "MONTH" | "YEAR"
 
@@ -44,7 +45,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
       ref={ref}
       name={name}
       value={value}
-      onChange={(_, newValue) => onChange(isNaN(newValue) ? null : newValue)}
+      onChange={(_, newValue) => onChange(isNaN(newValue) ? undefined : newValue)}
       onBlur={onBlur}
       {...props}
     />
@@ -54,16 +55,18 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
 const RelativeTimeInput = forwardRef(
   (props: NumberInputProps, ref: any): JSX.Element => {
     const [value, setValue] = useState<number>(
-      !isNaN(Number(props.value)) ? Number(props.value) : undefined
+      !isNaN(Number(props.value)) ? Number(props.value) : undefined,
     )
     const [format, setFormat] = useState<Format>("DAY")
+
+    const displayValue = value && !isNaN(value) ? value / multipliers[format] : ""
 
     return (
       <InputGroup>
         <NumberInput
           ref={ref}
           {...props}
-          value={value && !isNaN(value) ? value / multipliers[format] : ""}
+          value={displayValue}
           onChange={(_, valueAsNumber) => {
             const newValue =
               typeof valueAsNumber === "number" && !isNaN(valueAsNumber)
@@ -83,7 +86,8 @@ const RelativeTimeInput = forwardRef(
               borderBottomRightRadius: 0,
             },
           }}
-          min={0}
+          min={props.min && props.min / multipliers[format]}
+          max={props.max && props.max / multipliers[format]}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -98,13 +102,19 @@ const RelativeTimeInput = forwardRef(
           value={format}
           onChange={(e) => setFormat(e.target.value as Format)}
         >
-          <option value="DAY">Day</option>
-          <option value="MONTH">Month</option>
-          <option value="YEAR">Year</option>
+          <option value="DAY">
+            {pluralize(Number(displayValue), "Day", false)}
+          </option>
+          <option value="MONTH">
+            {pluralize(Number(displayValue), "Month", false)}
+          </option>
+          <option value="YEAR">
+            {pluralize(Number(displayValue), "Year", false)}
+          </option>
         </Select>
       </InputGroup>
     )
-  }
+  },
 )
 
 export { ControlledRelativeTimeInput, RelativeTimeInput }

@@ -1,11 +1,12 @@
 import { Center, Icon, Text, Wrap } from "@chakra-ui/react"
 import { ArrowLeft, ArrowRight } from "@phosphor-icons/react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import capitalize from "utils/capitalize"
 import { useActivityLog } from "../../ActivityLogContext"
 import { ACTION } from "../../constants"
 import { useActivityLogActionContext } from "../ActivityLogActionContext"
 import { ClickableRoleTag } from "./ActivityLogRoleTag"
+import { ClickableFormTag } from "./FormTag"
 import { ClickableGuildTag } from "./GuildTag"
 import IdentityTag from "./IdentityTag"
 import { ClickableRewardTag } from "./RewardTag"
@@ -165,7 +166,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{`Join Guild through ${
-                  platforms[data.platformName].name
+                  rewards[data.platformName].name
                 }`}</Text>
                 {showGuildTag ? (
                   <ClickableGuildTag guildId={ids.guild} />
@@ -190,7 +191,7 @@ const ActionLabel = (): JSX.Element => {
           case ACTION.GetRole:
           case ACTION.LoseRole:
             const parentaction = activityLog?.entries?.find(
-              (log) => log.id === parentId
+              (log) => log.id === parentId,
             )?.action
             const isChildOfUserStatusUpdate = [
               ACTION.UserStatusUpdate,
@@ -225,6 +226,27 @@ const ActionLabel = (): JSX.Element => {
                 {showGuildTag ? (
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
+                  <ClickableUserTag userId={ids.user} />
+                )}
+              </>
+            )
+          case ACTION.CreateForm:
+          case ACTION.UpdateForm:
+          case ACTION.DeleteForm:
+          case ACTION.SubmitForm:
+            return (
+              <>
+                <Text as="span">{capitalizedName}</Text>
+                {activityLogType !== "guild" && (
+                  <ClickableGuildTag guildId={ids.guild} />
+                )}
+
+                <ClickableFormTag
+                  formId={ids.form}
+                  guildId={ids.guild}
+                  userId={ids.user}
+                />
+                {activityLogType !== "user" && (
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>

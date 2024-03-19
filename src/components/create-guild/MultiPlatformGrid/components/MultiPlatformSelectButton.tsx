@@ -26,7 +26,7 @@ import CreateGuildTwitter from "components/create-guild/MultiPlatformGrid/compon
 import CreateGuildUniqueText from "components/create-guild/MultiPlatformGrid/components/CreateGuildUniqueText"
 import { useSetAtom } from "jotai"
 import Image from "next/image"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ComponentType, RefAttributes } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, PlatformName, Rest } from "types"
@@ -47,7 +47,13 @@ export type PlatformHookType = ({
 const createGuildPlatformComponents: Record<
   Exclude<
     PlatformName,
-    "POAP" | "TWITTER_V1" | "EMAIL" | "POLYGON_ID" | "POINTS" | "FORM"
+    | "POAP"
+    | "TWITTER_V1"
+    | "EMAIL"
+    | "POLYGON_ID"
+    | "POINTS"
+    | "FORM"
+    | "GATHER_TOWN"
   >,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {
@@ -112,7 +118,7 @@ const MultiPlatformSelectButton = ({
 
   const isTwitter = platform === "TWITTER"
   const isPlatformConnected =
-    !platforms[platform].oauth ||
+    !rewards[platform].isPlatform ||
     user.platformUsers?.some(
       ({ platformName, platformUserData }) =>
         platformName === platform && !platformUserData?.readonly,

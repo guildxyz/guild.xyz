@@ -1,9 +1,9 @@
-import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 import useGuildPinFee from "../../hooks/useGuildPinFee"
 import useMintGuildPin from "../../hooks/useMintGuildPin"
@@ -14,7 +14,7 @@ const MintGuildPinButton = (): JSX.Element => {
 
   const { error, isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
 
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
 
   const {
     onSubmit,
@@ -26,11 +26,10 @@ const MintGuildPinButton = (): JSX.Element => {
   const alreadyMintedOnChain = data?.find(
     (pin) =>
       pin.chainId === chainId &&
-      +pin.attributes.find((attr) => attr.trait_type === "guildId").value === id
+      +pin.attributes.find((attr) => attr.trait_type === "guildId").value === id,
   )
 
   const { guildPinFee, isGuildPinFeeLoading } = useGuildPinFee()
-  const { address } = useAccount()
   const { data: balanceData, isLoading: isBalanceLoading } = useBalance({
     address,
     chainId: Chains[guildPin?.chain],
@@ -43,8 +42,8 @@ const MintGuildPinButton = (): JSX.Element => {
   const loadingText = isMinting
     ? mintLoadingText
     : isValidating
-    ? "Checking your NFTs"
-    : "Checking your balance"
+      ? "Checking your NFTs"
+      : "Checking your balance"
 
   const isDisabled =
     isInvalidImage ||
@@ -73,10 +72,10 @@ const MintGuildPinButton = (): JSX.Element => {
       {isInvalidImage || isTooSmallImage
         ? "Setup required"
         : alreadyMintedOnChain
-        ? "Already minted"
-        : !isSufficientBalance
-        ? "Insufficient balance"
-        : "Mint NFT"}
+          ? "Already minted"
+          : !isSufficientBalance
+            ? "Insufficient balance"
+            : "Mint NFT"}
     </Button>
   )
 }

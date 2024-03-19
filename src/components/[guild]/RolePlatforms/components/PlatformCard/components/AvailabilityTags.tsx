@@ -13,14 +13,16 @@ import { RolePlatform } from "types"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { DAY_IN_MS } from "../../EditRewardAvailabilityModal"
 
-type Props = { rolePlatform: RolePlatform } & WrapProps
+type Props = { rolePlatform: Omit<RolePlatform, "id" | "guildPlatform"> } & WrapProps
 
 export const getTimeDiff = (dateString: string) => {
   if (!dateString) return undefined
   return new Date(dateString).getTime() - Date.now()
 }
 
-export const shouldShowAvailabilityTags = (rolePlatform?: RolePlatform): boolean =>
+export const shouldShowAvailabilityTags = (
+  rolePlatform?: Omit<RolePlatform, "id" | "guildPlatform">,
+): boolean =>
   typeof rolePlatform?.capacity === "number" ||
   !!rolePlatform?.startTime ||
   !!rolePlatform?.endTime
@@ -97,7 +99,7 @@ const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) 
       <Tag {...rest}>
         <TagLeftIcon as={Clock} mr={1} />
         <TagLabel>{`Claim starts in ${formatRelativeTimeFromNow(
-          startTimeDiff
+          startTimeDiff,
         )}`}</TagLabel>
       </Tag>
     </Tooltip>

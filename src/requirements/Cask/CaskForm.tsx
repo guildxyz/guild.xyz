@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
-import { Chain } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
+import { Chain } from "wagmiConfig/chains"
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 const SUPPORTED_CHAINS: Chain[] = [

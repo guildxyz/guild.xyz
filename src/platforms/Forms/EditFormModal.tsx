@@ -34,7 +34,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
     resolver: zodResolver(FormCreationSchema),
     defaultValues: {
       ...form,
-      fields: form.fields.map((field) => {
+      fields: form.fields?.map((field) => {
         if (
           field.type === "SINGLE_CHOICE" ||
           field.type === "MULTIPLE_CHOICE" ||
@@ -82,7 +82,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
 
   const boxShadow = useColorModeValue(
     "0 -4px 6px -1px rgba(0, 0, 0, 0.1),0 -2px 4px -1px rgba(0, 0, 0, 0.06)",
-    "0 -10px 15px -3px rgba(0, 0, 0, 0.1),0 -4px 6px -2px rgba(0, 0, 0, 0.05)"
+    "0 -10px 15px -3px rgba(0, 0, 0, 0.1),0 -4px 6px -2px rgba(0, 0, 0, 0.05)",
   )
 
   return (

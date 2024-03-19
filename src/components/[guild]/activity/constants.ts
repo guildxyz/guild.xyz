@@ -4,6 +4,10 @@ import {
   ArrowsClockwise,
   ArrowsLeftRight,
   Eye,
+  File,
+  FileMinus,
+  FilePlus,
+  FileText,
   FolderUser,
   House,
   IdentificationCard,
@@ -46,6 +50,11 @@ export enum ACTION {
   CreateRole = "create role",
   UpdateRole = "update role",
   DeleteRole = "delete role",
+  // Form
+  CreateForm = "create form",
+  UpdateForm = "update form",
+  DeleteForm = "delete form",
+  SubmitForm = "submit form",
   // Reward
   AddReward = "add reward",
   RemoveReward = "remove reward",
@@ -102,6 +111,7 @@ export type ActivityLogAction = {
   data?: Record<string, any>
   ids: {
     user?: number
+    form?: number
     guild?: number
     role?: number
     rolePlatform?: number
@@ -116,6 +126,22 @@ export const activityLogActionIcons: Record<
     color?: string
   }
 > = {
+  [ACTION.CreateForm]: {
+    as: FilePlus,
+    color: "green.500",
+  },
+  [ACTION.UpdateForm]: {
+    as: File,
+    color: "blue.400",
+  },
+  [ACTION.DeleteForm]: {
+    as: FileMinus,
+    color: "red.500",
+  },
+  [ACTION.SubmitForm]: {
+    as: FileText,
+    color: "green.500",
+  },
   [ACTION.CreateGuild]: {
     as: House,
     color: "green.500",
@@ -319,8 +345,9 @@ export const USER_ACTIONS: ACTION[] = [
   ACTION.KickFromGuild,
   ACTION.SendReward,
   ACTION.RevokeReward,
+  ACTION.SubmitForm,
 ]
 
 export const ADMIN_ACTIONS = Object.values(ACTION).filter(
-  (action) => !USER_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action)
+  (action) => !USER_ACTIONS.includes(action) && !HIDDEN_ACTIONS.includes(action),
 )

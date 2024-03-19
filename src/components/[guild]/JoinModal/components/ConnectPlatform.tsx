@@ -3,7 +3,7 @@ import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReco
 import useUser from "components/[guild]/hooks/useUser"
 import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/SocialAccount"
 import Script from "next/script"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
@@ -27,37 +27,33 @@ const ConnectPlatform = ({ platform }: Props) => {
   const { triggerMembershipUpdate } = useMembershipUpdate()
   const onSuccess = () => isReconnect && triggerMembershipUpdate()
 
-  const { onConnect, isLoading, loadingText, authData, response } =
-    useConnectPlatform(platform, onSuccess, isReconnect)
+  const { onConnect, isLoading, loadingText } = useConnectPlatform(
+    platform,
+    onSuccess,
+    isReconnect,
+  )
 
   const platformFromDb = platformUsers?.find(
-    (platformAccount) => platformAccount.platformName === platform
+    (platformAccount) => platformAccount.platformName === platform,
   )
 
   const { setValue } = useFormContext()
 
   useEffect(() => {
-    if (!isConnected && authData) setValue(`platforms.${platform}`, { authData })
-  }, [isConnected, authData])
-
-  useEffect(() => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
   }, [platformFromDb])
 
-  const accountName = `${platforms[platform].name}${
+  const accountName = `${rewards[platform].name}${
     platform === "TWITTER_V1" ? " (v1)" : ""
   }`
 
   return (
     <ConnectAccount
       account={accountName}
-      icon={<Icon as={platforms[platform].icon} />}
-      colorScheme={platforms[platform].colorScheme as string}
+      icon={<Icon as={rewards[platform].icon} />}
+      colorScheme={rewards[platform].colorScheme as string}
       isConnected={
-        (platformFromDb?.platformUserData?.username ??
-          platformFromDb?.platformUserId) ||
-        response?.platformUserId ||
-        (authData && "hidden")
+        platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
       }
       isReconnect={isReconnect}
       isLoading={isLoading || (!platformUsers && isLoadingUser)}

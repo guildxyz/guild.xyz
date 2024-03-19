@@ -18,7 +18,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { LinkBreak, SignOut } from "@phosphor-icons/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { delegateConnectionAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/DelegateCashButton"
 import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
@@ -31,7 +30,9 @@ import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
-import { useAccount, useChainId } from "wagmi"
+import { useAccount } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
@@ -44,9 +45,7 @@ const AccountModal = () => {
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
   const onClose = () => setIsOpen(false)
 
-  const { address: evmAddress, connector } = useAccount()
-
-  const chainId = useChainId()
+  const { address: evmAddress, chainId, connector } = useAccount()
 
   const {
     isOpen: isNetworkModalOpen,
@@ -155,7 +154,7 @@ const AccountModal = () => {
                   />
                 </Stack>
                 <HStack spacing={1}>
-                  {connector?.id === "cwaasWallet" && <CopyCWaaSBackupData />}
+                  {connector?.id === WAAS_CONNECTOR_ID && <CopyCWaaSBackupData />}
                   <Tooltip label="Disconnect">
                     <IconButton
                       size="sm"

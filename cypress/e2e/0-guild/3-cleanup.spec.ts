@@ -3,7 +3,7 @@ before(() => {
 })
 
 const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
-  "RUN_ID"
+  "RUN_ID",
 )}`
 
 describe("post-test cleanup", () => {
@@ -24,14 +24,14 @@ describe("post-test cleanup", () => {
             cy.connectWallet()
 
             cy.intercept("DELETE", `${Cypress.env("guildApiUrl")}/guilds/*`).as(
-              "deleteGuild"
+              "deleteGuild",
             )
 
             cy.get(".chakra-button[aria-label='Edit Guild']").click()
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
 
             cy.get(".chakra-button[aria-label='Delete guild']").click()
-            cy.getByDataTest("delete-guild-button").click()
+            cy.getByDataTest("delete-confirmation-button").click()
 
             cy.wait("@deleteGuild")
           } else {

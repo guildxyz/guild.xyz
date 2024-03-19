@@ -9,11 +9,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
+import useTokenBalance from "hooks/useTokenBalance"
 import { Fragment } from "react"
 import { Rest } from "types"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 
 type Props = {
   chainId: number
@@ -55,11 +57,10 @@ const TokenInfo = ({
     data: tokenBalanceData,
     isLoading: isTokenBalanceLoading,
     isError: isTokenBalanceError,
-  } = useBalance({
-    address,
+  } = useTokenBalance({
     token: tokenAddress,
     chainId,
-    enabled: tokenAddress !== NULL_ADDRESS,
+    shouldFetch: tokenAddress !== NULL_ADDRESS,
   })
 
   const symbol = isNativeCurrency
@@ -70,10 +71,12 @@ const TokenInfo = ({
 
   const formattedBalance = Number(
     Number(
-      (tokenAddress === NULL_ADDRESS
-        ? coinBalanceData?.formatted
-        : tokenBalanceData?.formatted) ?? 0
-    ).toFixed(3)
+      tokenAddress === NULL_ADDRESS && coinBalanceData?.value
+        ? formatUnits(coinBalanceData.value, coinBalanceData.decimals)
+        : tokenBalanceData?.value
+          ? formatUnits(tokenBalanceData.value, tokenBalanceData.decimals)
+          : 0,
+    ).toFixed(3),
   )
 
   const Wrapper = asMenuItem ? MenuItem : Fragment
@@ -116,12 +119,12 @@ const TokenInfo = ({
               {isTokenBalanceError
                 ? "Couldn't fetch token data"
                 : error
-                ? `[?] ${symbol}`
-                : `${
-                    isTooSmallRequiredAmount
-                      ? "< 0.001"
-                      : Number(requiredAmount?.toFixed(3))
-                  } ${symbol}`}
+                  ? `[?] ${symbol}`
+                  : `${
+                      isTooSmallRequiredAmount
+                        ? "< 0.001"
+                        : Number(requiredAmount?.toFixed(3))
+                    } ${symbol}`}
               <Text as="span" colorScheme="gray">
                 {` (${CHAIN_CONFIG[Chains[chainId]].name})`}
               </Text>

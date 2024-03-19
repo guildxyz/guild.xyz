@@ -14,7 +14,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { ArrowsClockwise, Check } from "@phosphor-icons/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -27,7 +26,6 @@ import SatisfyRequirementsJoinStep from "./JoinModal/components/progress/Satisfy
 import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
 import { useIsTabsStuck } from "./Tabs/Tabs"
 import { useThemeContext } from "./ThemeContext"
-import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
 
@@ -44,25 +42,25 @@ const POPOVER_HEADER_STYLES = {
   px: "3",
 }
 
-const latestResendDateAtom = atomWithStorage("latestResendDate", -Infinity)
+const latestResendDateAtom = atomWithStorage("latestResendDate", 0)
 
 const RecheckAccessesButton = ({
   tooltipLabel: tooltipLabelInitial,
   roleId,
   ...rest
 }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
-  const { urlName } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const [isFinished, setIsFinished] = useState(false)
 
   const { reqAccesses } = useRoleMembership(roleId)
   const [latestAllResendDate, setLatestAllResendDate] = useAtom(latestResendDateAtom)
+
   const lastCheckedAt = useMemo(
     () => new Date(reqAccesses?.[0]?.lastCheckedAt ?? latestAllResendDate),
     [reqAccesses, latestAllResendDate],
   )
+
   const [dateNow, setDateNow] = useState(Date.now())
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
@@ -107,13 +105,6 @@ const RecheckAccessesButton = ({
     },
   })
 
-  const onClick = () => {
-    triggerMembershipUpdate(roleId && { roleIds: [roleId] })
-    captureEvent("Click: ResendRewardButton", {
-      guild: urlName,
-    })
-  }
-
   const shouldBeLoading = useMemo(() => {
     if (!currentlyCheckedRoleIds) return isLoading
 
@@ -150,7 +141,8 @@ const RecheckAccessesButton = ({
                 _active: { bg: undefined },
               }
             : {
-                onClick,
+                onClick: () =>
+                  triggerMembershipUpdate(roleId && { roleIds: [roleId] }),
               })}
           sx={{
             "@-webkit-keyframes rotate": {

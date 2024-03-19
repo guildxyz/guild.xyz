@@ -44,11 +44,12 @@ export type ActivityLogActionResponse = {
     }[]
     roles: { id: number; name: string }[]
     users: { id: number; address: string }[]
+    forms: { id: number; name: string }[]
   }
 }
 
 const transformActivityLogInfiniteResponse = (
-  rawResponse: ActivityLogActionResponse[]
+  rawResponse: ActivityLogActionResponse[],
 ): ActivityLogActionResponse => {
   if (!rawResponse) return undefined
 
@@ -60,6 +61,7 @@ const transformActivityLogInfiniteResponse = (
       rolePlatforms: [],
       roles: [],
       users: [],
+      forms: [],
     },
   }
 
@@ -67,7 +69,7 @@ const transformActivityLogInfiniteResponse = (
     transformedResponse.entries.push(...chunk.entries)
 
     Object.keys(chunk.values).forEach((key) =>
-      transformedResponse.values[key]?.push(...chunk.values[key])
+      transformedResponse.values[key]?.push(...chunk.values[key]),
     )
   })
 
@@ -115,7 +117,7 @@ const ActivityLogProvider = ({
 
   const getKey = (
     pageIndex: number,
-    previousPageData: ActivityLogActionResponse
+    previousPageData: ActivityLogActionResponse,
   ) => {
     if (
       (!guildId && !userId && !isSuperadminActivityLog) ||
@@ -159,8 +161,8 @@ const ActivityLogProvider = ({
       actionGroup === ActivityLogActionGroup.AdminAction
         ? ADMIN_ACTIONS
         : actionGroup === ActivityLogActionGroup.UserAction
-        ? USER_ACTIONS
-        : []
+          ? USER_ACTIONS
+          : []
 
     actions.forEach((action) => {
       searchParams.append("action", action.toString())
@@ -184,14 +186,14 @@ const ActivityLogProvider = ({
       revalidateOnReconnect: false,
       revalidateFirstPage: false,
       revalidateOnMount: true,
-    }
+    },
   )
 
   const activityLogType: ActivityLogType = isSuperadminActivityLog
     ? "all"
     : !!userId
-    ? "user"
-    : "guild"
+      ? "user"
+      : "guild"
 
   const value = {
     ...ogSWRInfiniteResponse,

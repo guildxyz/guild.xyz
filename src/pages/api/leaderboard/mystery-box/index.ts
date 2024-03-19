@@ -1,10 +1,10 @@
 import { kv } from "@vercel/kv"
 import { sql } from "@vercel/postgres"
-import { CHAIN_CONFIG, Chain } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { OneOf } from "types"
-import { createPublicClient, http, recoverMessageAddress } from "viem"
-import { erc721ABI } from "wagmi"
+import { createPublicClient, erc721Abi, http, recoverMessageAddress } from "viem"
+import { wagmiConfig } from "wagmiConfig"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 export type MysteryBoxResponse = OneOf<{ message: string }, { error: string }>
 
@@ -19,7 +19,7 @@ export const MYSTERY_BOX_CLAIMERS_KV_KEY = "mysteryBoxClaimers"
 
 const handler: NextApiHandler<MysteryBoxResponse> = async (
   req: NextApiRequest,
-  res: NextApiResponse<MysteryBoxResponse>
+  res: NextApiResponse<MysteryBoxResponse>,
 ) => {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST")
@@ -66,12 +66,12 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
 
   try {
     const publicClient = createPublicClient({
-      chain: CHAIN_CONFIG[MYSTERY_BOX_NFT.chain],
+      chain: wagmiConfig.chains.find((c) => Chains[c.id] === MYSTERY_BOX_NFT.chain),
       transport: http(),
     })
 
     balanceOf = await publicClient.readContract({
-      abi: erc721ABI,
+      abi: erc721Abi,
       address: MYSTERY_BOX_NFT.address,
       functionName: "balanceOf",
       args: [walletAddress],
@@ -97,7 +97,7 @@ const handler: NextApiHandler<MysteryBoxResponse> = async (
   }
   try {
     await sql`INSERT INTO mystery_box_claims (wallet_address, shipping_details) VALUES (${walletAddress}, ${JSON.stringify(
-      shippingDetails
+      shippingDetails,
     )});`
     await kv.sadd(MYSTERY_BOX_CLAIMERS_KV_KEY, walletAddress)
   } catch (dbError) {

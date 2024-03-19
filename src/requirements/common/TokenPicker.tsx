@@ -7,7 +7,6 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
-import { Chain } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -15,6 +14,7 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useMemo } from "react"
 import { UseControllerProps, useController, useFormContext } from "react-hook-form"
+import { Chain } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain
@@ -62,7 +62,7 @@ const TokenPicker = ({
         value: token.address,
         decimals: token.decimals,
       })),
-    [tokens]
+    [tokens],
   )
 
   const {
@@ -72,8 +72,11 @@ const TokenPicker = ({
   } = useTokenData(chain, address, () => trigger(fieldName))
 
   const tokenImage = mappedTokens?.find(
-    (token) => token.value?.toLowerCase() === address?.toLowerCase()
+    (token) => token.value?.toLowerCase() === address?.toLowerCase(),
   )?.img
+
+  const type =
+    address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
 
   return (
     <FormControl isRequired isInvalid={!!error}>
@@ -108,6 +111,7 @@ const TokenPicker = ({
             validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
+          isCopyable={type !== "COIN"}
           isLoading={isLoading}
           options={mappedTokens}
           filterOption={customFilterOption}

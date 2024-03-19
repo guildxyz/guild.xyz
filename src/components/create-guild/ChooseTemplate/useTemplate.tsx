@@ -13,12 +13,12 @@ const useTemplate = () => {
   })
 
   const buildTemplate = () => {
-    const templatesCopy: Array<RoleFormType> = JSON.parse(JSON.stringify(TEMPLATES))
+    const templatesCopy: Array<RoleFormType> = structuredClone(TEMPLATES)
 
     return templatesCopy
       .map((template) => {
         const twitterRequirementIndex = template.requirements.findIndex(
-          (requriement) => requriement.type === "TWITTER_FOLLOW"
+          (requriement) => requriement.type === "TWITTER_FOLLOW",
         )
 
         if (twitterRequirementIndex > -1)
@@ -33,7 +33,7 @@ const useTemplate = () => {
           template.rolePlatforms = [{ guildPlatformIndex: discordPlatfromIndex }]
 
         const joinDiscordServerRequirementIndex = template.requirements.findIndex(
-          (requriement) => requriement.type === "DISCORD_MEMBER_SINCE"
+          (requriement) => requriement.type === "DISCORD_MEMBER_SINCE",
         )
 
         if (joinDiscordServerRequirementIndex > -1)
@@ -41,20 +41,20 @@ const useTemplate = () => {
             methods
               .getValues("guildPlatforms")
               .find(
-                (guildPlatform) => guildPlatform.platformName === "DISCORD"
+                (guildPlatform) => guildPlatform.platformName === "DISCORD",
               )?.platformGuildId
 
         return template
       })
       .filter((template) => {
         const twitterRequirementIndex = template.requirements.findIndex(
-          (requriement) => requriement.type === "TWITTER_FOLLOW"
+          (requriement) => requriement.type === "TWITTER_FOLLOW",
         )
         const hasTwitter = methods.getValues("socialLinks.TWITTER")
         const twitterIsRequired = twitterRequirementIndex > -1
 
         const discordRequirementIndex = template.requirements.findIndex(
-          (requriement) => requriement.type === "DISCORD_MEMBER_SINCE"
+          (requriement) => requriement.type === "DISCORD_MEMBER_SINCE",
         )
         const hasDiscord = methods
           .getValues("guildPlatforms")
@@ -77,10 +77,10 @@ const useTemplate = () => {
       remove(roleIndex)
     } else {
       const originalTemplate = buildTemplate().find(
-        (template) => template.name === roleTemplateName
+        (template) => template.name === roleTemplateName,
       )
 
-      const templateCopy = JSON.parse(JSON.stringify(originalTemplate))
+      const templateCopy = structuredClone(originalTemplate)
 
       templateCopy.description = undefined
 
@@ -96,15 +96,15 @@ const useTemplate = () => {
     const roleClicked: RoleFormType = methods.getValues("roles")[roleIndex]
 
     const reward = roleClicked.rolePlatforms?.find(
-      (rolePlatform) => rolePlatform.guildPlatformIndex === guildPlatformIndex
+      (rolePlatform) => rolePlatform.guildPlatformIndex === guildPlatformIndex,
     )
 
     if (reward) {
       methods.setValue(
         `roles.${roleIndex}.rolePlatforms`,
         roleClicked.rolePlatforms.filter(
-          (rolePlatform) => rolePlatform.guildPlatformIndex !== guildPlatformIndex
-        )
+          (rolePlatform) => rolePlatform.guildPlatformIndex !== guildPlatformIndex,
+        ),
       )
     } else {
       const guildPlatform = methods.getValues("guildPlatforms")[guildPlatformIndex]

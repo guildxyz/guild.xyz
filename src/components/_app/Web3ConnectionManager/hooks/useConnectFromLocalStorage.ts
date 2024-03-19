@@ -3,7 +3,7 @@ import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect } from "react"
 
 const useConnectFromLocalStorage = () => {
@@ -27,7 +27,7 @@ const useConnectFromLocalStorage = () => {
   useEffect(() => {
     if (!keyPair || !platformUsers) return
 
-    Object.keys(platforms).forEach((platformName) => {
+    Object.keys(rewards).forEach((platformName) => {
       const storageKey = `${platformName}_shouldConnect`
       const strData = window.localStorage.getItem(storageKey)
       window.localStorage.removeItem(storageKey)

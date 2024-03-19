@@ -15,6 +15,7 @@ import {
 import { Link } from "@chakra-ui/next-js"
 import { ArrowLeft, ArrowSquareOut } from "@phosphor-icons/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
@@ -24,7 +25,8 @@ import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { useAccount, useConnect } from "wagmi"
+import { useAccount, useConnect, type Connector } from "wagmi"
+import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
@@ -44,7 +46,13 @@ type Props = {
 }
 
 // We don't open the modal on these routes
-const ignoredRoutes = ["/_error", "/tgauth", "/oauth", "/googleauth"]
+const ignoredRoutes = [
+  "/_error",
+  "/tgauth",
+  "/oauth",
+  "/googleauth",
+  "/oauth-result",
+]
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
@@ -52,7 +60,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     delegateConnectionAtom,
   )
 
-  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const { connectors, error, connect, isPending } = useConnect()
+
   const { connector } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
@@ -89,10 +98,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
     ) {
-      const activate = connector.connect()
-      if (typeof activate !== "undefined") {
-        activate.finally(() => onOpen())
-      }
+      onOpen()
     }
   }, [keyPair, router, id, publicUserError, connector])
 
@@ -201,17 +207,22 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 .filter(
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== "cwaasWallet"),
+                    (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
+                    conn.id !== "injected" &&
+                    // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
+                    conn.id !== "com.coinbase.wallet",
                 )
+                .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
                 .map((conn) => (
-                  <ConnectorButton
-                    key={conn.id}
-                    connector={conn}
-                    connect={connect}
-                    isLoading={isLoading}
-                    pendingConnector={pendingConnector}
-                    error={error}
-                  />
+                  <CardMotionWrapper key={conn.id}>
+                    <ConnectorButton
+                      connector={conn}
+                      connect={connect}
+                      isLoading={isPending}
+                      pendingConnector={null as Connector}
+                      error={error}
+                    />
+                  </CardMotionWrapper>
                 ))}
               {!isDelegateConnection && <DelegateCashButton />}
               <FuelConnectorButtons key="fuel" />
@@ -267,11 +278,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   Privacy Policy
                 </Link>
                 {` and `}
-                <Link
-                  href="/terms-and-conditions"
-                  fontWeight={"semibold"}
-                  onClick={onClose}
-                >
+                <Link href="/terms-of-use" fontWeight={"semibold"} onClick={onClose}>
                   Terms & conditions
                 </Link>
               </Text>

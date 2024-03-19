@@ -1,31 +1,14 @@
 import { SimpleGrid } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
+import { Chains, supportedChains } from "wagmiConfig/chains"
 import NetworkButton from "./NetworkButton"
 
 type Props = {
-  listedChainIDs?: number[]
   networkChangeCallback?: () => void
 }
 
-const shownSupportedChains = supportedChains.filter(
-  (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0,
-)
-
-const NetworkButtonsList = ({
-  listedChainIDs,
-  networkChangeCallback,
-}: Props): JSX.Element => {
+const NetworkButtonsList = ({ networkChangeCallback }: Props): JSX.Element => {
   const { requestNetworkChange } = useTriggerNetworkChange()
-
-  const listedChains =
-    listedChainIDs?.length > 0
-      ? shownSupportedChains.filter((chain) =>
-          listedChainIDs?.includes(Chains[chain]),
-        )
-      : shownSupportedChains.filter(
-          (chain) => CHAIN_CONFIG[chain].rpcUrls.default.http.length > 0,
-        )
 
   return (
     <SimpleGrid
@@ -33,7 +16,7 @@ const NetworkButtonsList = ({
       spacing={{ base: 3, md: "18px" }}
       w="full"
     >
-      {listedChains.map((chain) => (
+      {supportedChains.map((chain) => (
         <NetworkButton
           key={chain}
           chain={chain}

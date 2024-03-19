@@ -8,7 +8,7 @@ import fetcher from "utils/fetcher"
 const useDeleteRequirement = (
   roleId: number,
   requirementId: number,
-  onSuccess?: () => void
+  onSuccess?: () => void,
 ) => {
   const { mutateGuild, id } = useGuild()
   const { triggerMembershipUpdate } = useMembershipUpdate()
@@ -25,7 +25,7 @@ const useDeleteRequirement = (
   return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
       toast({
-        title: `Requirement deleted!`,
+        title: "Requirement deleted!",
         status: "success",
       })
       onSuccess?.()
@@ -42,12 +42,12 @@ const useDeleteRequirement = (
                     ...role,
                     requirements:
                       role.requirements?.filter(
-                        (requirement) => requirement.id !== requirementId
+                        (requirement) => requirement.id !== requirementId,
                       ) ?? [],
-                  }
+                  },
             ) ?? [],
         }),
-        { revalidate: false }
+        { revalidate: false },
       )
 
       triggerMembershipUpdate()

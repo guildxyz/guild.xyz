@@ -1,9 +1,9 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
+import useToken from "hooks/useToken"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { useToken } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -17,13 +17,13 @@ const BuyTotal = (): JSX.Element => {
   const { token, fee, isLoading, error } = useVault(
     requirement.address,
     requirement.data.id,
-    requirement.chain
+    requirement.chain,
   )
 
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[requirement.chain],
-    enabled: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
+    shouldFetch: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
   })
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
@@ -35,20 +35,20 @@ const BuyTotal = (): JSX.Element => {
       ? parseFloat(
           formatUnits(
             estimatedGas,
-            CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
-          )
+            CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals,
+          ),
         )
       : null
 
   const priceInSellToken = fee
     ? isNativeCurrency
       ? Number(
-          formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
+          formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals),
         )
       : tokenData?.decimals
-      ? Number(formatUnits(fee, tokenData.decimals)) +
-        (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
-      : 0
+        ? Number(formatUnits(fee, tokenData.decimals)) +
+          (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
+        : 0
     : 0
 
   const isTooSmallPrice = priceInSellToken < 0.001

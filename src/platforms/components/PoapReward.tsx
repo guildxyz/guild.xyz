@@ -8,34 +8,30 @@ import {
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import { useClaimedReward } from "hooks/useClaimedReward"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
-import platforms from "platforms/platforms"
-import { useMemo } from "react"
+import rewards from "platforms/rewards"
 import { PlatformType } from "types"
 import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
 
-const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
+const DynamicShowMintLinkButton = dynamic(
+  () => import("platforms/Poap/ShowMintLinkButton"),
+  {
+    ssr: false,
+  },
+)
+
+const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
+  const { claimed } = useClaimedReward(platform.id)
 
-  const state = useMemo(() => {
-    if (!getRolePlatformTimeframeInfo(platform).isAvailable)
-      return {
-        tooltipLabel: claimTextButtonTooltipLabel[getRolePlatformStatus(platform)],
-        buttonProps: {
-          isDisabled: true,
-        },
-      }
-
-    return {
-      tooltipLabel: "View POAP",
-      buttonProps: {},
-    }
-  }, [platform])
+  const { isAvailable } = getRolePlatformTimeframeInfo(platform)
 
   return (
     <RewardDisplay
@@ -47,20 +43,45 @@ const PoapReward = ({ platform, withMotionImg }: RewardProps) => {
         />
       }
       label={
-        <Tooltip label={state.tooltipLabel} hasArrow shouldWrapChildren>
-          {"Claim: "}
-          <Button
-            as={Link}
-            href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
-            variant="link"
-            colorScheme="primary"
-            rightIcon={<ArrowRight />}
-            iconSpacing="1"
-            maxW="full"
-            {...state.buttonProps}
-          >
-            {platformGuildData.name ?? platforms[PlatformType[platformId]].name}
-          </Button>
+        <Tooltip
+          isDisabled={claimed}
+          label={
+            isAvailable
+              ? "View POAP"
+              : claimTextButtonTooltipLabel[getRolePlatformStatus(platform)]
+          }
+          hasArrow
+          shouldWrapChildren
+        >
+          {claimed ? (
+            <>
+              {"Mint link: "}
+              <DynamicShowMintLinkButton
+                rolePlatformId={platform.id}
+                variant="link"
+                colorScheme="primary"
+                maxW="full"
+              >
+                {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
+              </DynamicShowMintLinkButton>
+            </>
+          ) : (
+            <>
+              {"Claim: "}
+              <Button
+                as={Link}
+                href={`/${urlName}/claim-poap/${platformGuildData.fancyId}`}
+                variant="link"
+                colorScheme="primary"
+                rightIcon={<ArrowRight />}
+                iconSpacing="1"
+                maxW="full"
+                isDisabled={!isAvailable}
+              >
+                {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
+              </Button>
+            </>
+          )}
         </Tooltip>
       }
     >

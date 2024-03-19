@@ -1,5 +1,5 @@
-import { Chain } from "chains"
 import useSWR from "swr"
+import { Chain } from "wagmiConfig/chains"
 
 const nounsAddresses = {
   ETHEREUM: "0x9C8fF314C9Bc7F6e59A9d9225Fb22946427eDC03".toLowerCase(),
@@ -7,7 +7,7 @@ const nounsAddresses = {
 
 const useNftType = (
   contractAddress: string,
-  chain: Chain
+  chain: Chain,
 ): { nftType: "ERC1155" | "SIMPLE" | "NOUNS"; isLoading: boolean } => {
   const isNounsContract =
     !!chain &&
@@ -22,7 +22,7 @@ const useNftType = (
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       shouldRetryOnError: false,
-    }
+    },
   )
 
   if (isNounsContract) {

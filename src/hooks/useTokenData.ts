@@ -1,7 +1,7 @@
-import { Chain, CHAIN_CONFIG } from "chains"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Token } from "types"
+import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
 import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
@@ -22,7 +22,7 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
     if (lowerCaseAddress === ENS_ADDRESS)
       return { name: "ENS", symbol: "ENS", decimals: undefined, logoURI: undefined }
     return tokensFromApi.tokens?.find(
-      (token) => token.address?.toLowerCase() === lowerCaseAddress
+      (token) => token.address?.toLowerCase() === lowerCaseAddress,
     )
   }, [tokensFromApi, address])
 
@@ -32,7 +32,7 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
       errorRetryInterval: 100,
       shouldRetryOnError: address?.toLowerCase() !== ENS_ADDRESS,
       ...(onFinish ? { onSuccess: onFinish, onError: onFinish } : {}),
-    }
+    },
   )
 
   /**

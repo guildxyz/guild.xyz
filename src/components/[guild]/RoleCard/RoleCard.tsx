@@ -15,7 +15,7 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { memo, useEffect, useRef } from "react"
 import { PlatformType, Role, Visibility as VisibilityType } from "types"
 import RoleRequirements from "../Requirements"
@@ -105,7 +105,7 @@ const RoleCard = memo(({ role }: Props) => {
                 >
                   {role.rolePlatforms?.map((platform, i) => {
                     const guildPlatform = guildPlatforms?.find(
-                      (p) => p.id === platform.guildPlatformId
+                      (p) => p.id === platform.guildPlatformId,
                     )
 
                     return (
@@ -150,7 +150,7 @@ const RoleCard = memo(({ role }: Props) => {
                  * Spreading inert because it's not added to @types/react yet:
                  * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
                  */
-                {...(!isOpen && { inert: "true" })}
+                {...(!isOpen && { inert: true })}
               >
                 <RoleDescription
                   description={role.description}
@@ -167,10 +167,10 @@ const RoleCard = memo(({ role }: Props) => {
               <Box p={5} pt={2} mt="auto">
                 {role.rolePlatforms?.map((platform, i) => {
                   const guildPlatformType = guildPlatforms.find(
-                    (gp) => gp.id === platform.guildPlatformId
+                    (gp) => gp.id === platform.guildPlatformId,
                   )?.platformId
 
-                  if (!platforms[PlatformType[guildPlatformType]]) return
+                  if (!rewards[PlatformType[guildPlatformType]]) return
 
                   return (
                     <SlideFade
@@ -182,7 +182,7 @@ const RoleCard = memo(({ role }: Props) => {
                        * Spreading inert because it's not added to @types/react yet:
                        * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
                        */
-                      {...(!isOpen && { inert: "true" })}
+                      {...(!isOpen && { inert: true })}
                     >
                       <Reward
                         platform={platform}

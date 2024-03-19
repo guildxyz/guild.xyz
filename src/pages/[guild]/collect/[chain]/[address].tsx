@@ -8,7 +8,6 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import CollectNft from "components/[guild]/collect/components/CollectNft"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
@@ -44,11 +43,12 @@ import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
+import { Chain } from "wagmiConfig/chains"
 
 const EditNFTDescriptionModalButton = dynamic(
   () =>
     import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton"),
-  { ssr: false }
+  { ssr: false },
 )
 
 type Props = {
@@ -72,14 +72,14 @@ const Page = ({
   const guildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformGuildData?.chain === chain &&
-      gp.platformGuildData?.contractAddress?.toLowerCase() === address
+      gp.platformGuildData?.contractAddress?.toLowerCase() === address,
   )
 
   const role = roles?.find((r) =>
-    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform?.id)
+    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform?.id),
   )
   const rolePlatformId = role?.rolePlatforms?.find(
-    (rp) => rp.guildPlatformId === guildPlatform?.id
+    (rp) => rp.guildPlatformId === guildPlatform?.id,
   )?.id
 
   const isMobile = useBreakpointValue({ base: true, md: false })

@@ -1,6 +1,5 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { Check, Question, Warning } from "@phosphor-icons/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -8,6 +7,7 @@ import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
 import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
@@ -77,8 +77,8 @@ const PurchaseAllowanceButton = (): JSX.Element => {
           isPriceLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         onClick={onClick}
         w="full"

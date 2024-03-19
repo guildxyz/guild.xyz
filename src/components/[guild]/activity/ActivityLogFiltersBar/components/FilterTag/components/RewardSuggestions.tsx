@@ -28,7 +28,7 @@ const RewardSuggestions = ({
             .map((rp) => {
               const role = roles.find((r) => r.id === rp.roleId)
               const guildPlatform = guildPlatforms.find(
-                (gp) => gp.id === rp.guildPlatformId
+                (gp) => gp.id === rp.guildPlatformId,
               )
               const name =
                 guildPlatform?.platformGuildName ??
@@ -46,7 +46,7 @@ const RewardSuggestions = ({
                 roleId: role.id,
               }
             }),
-    [roles]
+    [roles],
   )
 
   const rewardSuggestions = useMemo(
@@ -57,11 +57,11 @@ const RewardSuggestions = ({
         if (!lowerCaseInputValue) return true
 
         return (
-          reward.name.toLowerCase().includes(lowerCaseInputValue) ||
+          reward.name?.toLowerCase()?.includes(lowerCaseInputValue) ||
           "reward".includes(lowerCaseInputValue)
         )
       }) ?? [],
-    [allRewardSuggestions, inputValue]
+    [allRewardSuggestions, inputValue],
   )
 
   return (

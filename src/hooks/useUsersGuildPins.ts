@@ -1,6 +1,6 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import guildPinAbi from "static/abis/guildPin"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
@@ -8,25 +8,40 @@ import {
   GUILD_PIN_CONTRACTS,
   GuildPinsSupportedChain,
 } from "utils/guildCheckout/constants"
-import { PublicClient, createPublicClient, http } from "viem"
+import {
+  PublicClient,
+  createPublicClient,
+  http,
+  type Chain as ViemChain,
+} from "viem"
+import { wagmiConfig } from "wagmiConfig"
+import { Chains } from "wagmiConfig/chains"
 
 const getUsersGuildPinIdsOnChain = async (
   balance: bigint,
   chain: GuildPinsSupportedChain,
   address: `0x${string}`,
-  client: PublicClient
+  client: PublicClient,
 ) => {
   const contracts = Array.from({ length: Number(balance) }, (_, i) => ({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
+    abi: guildPinAbi,
+    address: GUILD_PIN_CONTRACTS[chain],
     functionName: "tokenOfOwnerByIndex",
     args: [address, BigInt(i)],
   }))
 
   const results =
     contracts.length > 0
-      ? await client.multicall({
-          contracts: contracts,
+      ? /**
+         * We need to @ts-ignore this line, since we get a "Type instantiation is
+         * excessively deep and possibly infinite" error here until strictNullChecks is set
+         * to false in our tsconfig. We should set it to true & sort out the related issues
+         * in another PR.
+         */
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        await client.multicall({
+          contracts,
         })
       : []
 
@@ -50,11 +65,11 @@ type TokenInfo = {
 const getPinTokenURIsForPinIds = async (
   pinIds: bigint[],
   chain: GuildPinsSupportedChain,
-  client: PublicClient
+  client: PublicClient,
 ) => {
   const contractCalls = pinIds.map((tokenId) => ({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
+    abi: guildPinAbi,
+    address: GUILD_PIN_CONTRACTS[chain],
     functionName: "tokenURI",
     args: [tokenId],
   }))
@@ -62,6 +77,14 @@ const getPinTokenURIsForPinIds = async (
   const results =
     contractCalls.length > 0
       ? await client.multicall({
+          /**
+           * We need to @ts-ignore this line, since we get a "Type instantiation is
+           * excessively deep and possibly infinite" error here until
+           * strictNullChecks is set to false in our tsconfig. We should set it to
+           * true & sort out the related issues in another PR.
+           */
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           contracts: contractCalls,
         })
       : []
@@ -105,18 +128,17 @@ const getTokenWithMetadata = (tokenInfo: {
 
 const fetchGuildPinsOnChain = async (
   address: `0x${string}`,
-  chain: GuildPinsSupportedChain
+  chain: GuildPinsSupportedChain,
 ) => {
   const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[chain],
+    chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain) as ViemChain,
     transport: http(),
   })
-
   let balance = null
   try {
     balance = await publicClient.readContract({
-      abi: GUILD_PIN_CONTRACTS[chain].abi,
-      address: GUILD_PIN_CONTRACTS[chain].address,
+      abi: guildPinAbi,
+      address: GUILD_PIN_CONTRACTS[chain],
       functionName: "balanceOf",
       args: [address],
     })
@@ -128,13 +150,13 @@ const fetchGuildPinsOnChain = async (
     balance,
     chain,
     address,
-    publicClient
+    publicClient,
   )
 
   const { tokenInfo, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
     pinIds,
     chain,
-    publicClient
+    publicClient,
   )
 
   const { tokenMetadata, errors: metadataTransformationErrors } = tokenInfo.reduce(
@@ -151,7 +173,7 @@ const fetchGuildPinsOnChain = async (
       }
       return acc
     },
-    { tokenMetadata: [] as TokenWithMetadata[], errors: [] as Error[] }
+    { tokenMetadata: [] as TokenWithMetadata[], errors: [] as Error[] },
   )
 
   const errors = [
@@ -165,19 +187,19 @@ const fetchGuildPinsOnChain = async (
 const fetchGuildPins = async ([_, addresses, includeTestnets]: [
   string,
   User["addresses"],
-  boolean
+  boolean,
 ]) => {
   const TESTNET_KEYS: GuildPinsSupportedChain[] = ["POLYGON_MUMBAI"]
   const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>
-    includeTestnets ? true : !TESTNET_KEYS.includes(key as GuildPinsSupportedChain)
+    includeTestnets ? true : !TESTNET_KEYS.includes(key as GuildPinsSupportedChain),
   ) as GuildPinsSupportedChain[]
 
   const responseArray = await Promise.all(
     guildPinChains.flatMap((chain) =>
       addresses.flatMap((addressData) =>
-        fetchGuildPinsOnChain(addressData?.address, chain)
-      )
-    )
+        fetchGuildPinsOnChain(addressData?.address, chain),
+      ),
+    ),
   )
 
   const { allUsersPins, allErrors } = responseArray.reduce(
@@ -190,7 +212,7 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
       }
       return acc
     },
-    { allUsersPins: [] as TokenWithMetadata[], allErrors: [] as Error[] }
+    { allUsersPins: [] as TokenWithMetadata[], allErrors: [] as Error[] },
   )
 
   return { usersPins: allUsersPins, errors: allErrors }
@@ -206,7 +228,7 @@ const useUsersGuildPins = (disabled = false, includeTestnets = false) => {
 
   const swrData = useSWRImmutable(
     shouldFetch ? ["guildPins", evmAddresses, includeTestnets] : null,
-    fetchGuildPins
+    fetchGuildPins,
   )
 
   return {

@@ -65,13 +65,15 @@ const RoleTags = ({ roles, column }: Props) => {
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
-                {moreRoles?.slice(0, 15).map(({ roleId, requirementId, amount }) => (
-                  <CrmRoleTag
-                    key={requirementId ?? roleId}
-                    roleId={roleId}
-                    amount={amount}
-                  />
-                ))}
+                {moreRoles
+                  ?.slice(0, 15)
+                  .map(({ roleId, requirementId, amount }) => (
+                    <CrmRoleTag
+                      key={requirementId ?? roleId}
+                      roleId={roleId}
+                      amount={amount}
+                    />
+                  ))}
               </Wrap>
             </PopoverBody>
           </PopoverContent>
@@ -139,7 +141,7 @@ const CrmTbodyRoleTag = forwardRef<RoleTagProps, "span">(
         </Box>
       </Box>
     )
-  }
+  },
 )
 
 const CrmRoleTag = forwardRef<RoleTagProps, "span">(
@@ -161,7 +163,7 @@ const CrmRoleTag = forwardRef<RoleTagProps, "span">(
         {...rest}
       />
     )
-  }
+  },
 )
 
 export const ClickableCrmRoleTag = ({
@@ -178,6 +180,7 @@ export const ClickableCrmRoleTag = ({
         <ViewRole roleId={roleId} />
       </>
     }
+    shouldRenderPortal={false}
   >
     <CrmRoleTag roleId={roleId} cursor="pointer" {...tagProps} />
   </ClickableTagPopover>

@@ -1,12 +1,11 @@
 import { Tooltip } from "@chakra-ui/react"
-import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useNftBalance from "hooks/useNftBalance"
 import Link from "next/link"
 import { GuildPlatform } from "types"
-import { useAccount } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 
 type Props = {
   platform: GuildPlatform
@@ -20,12 +19,10 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   const { chain, contractAddress } = platform.platformGuildData
 
   const role = roles.find((r) =>
-    r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
+    r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id),
   )
 
-  const { address } = useAccount()
   const { data: nftBalance } = useNftBalance({
-    address,
     nftAddress: contractAddress,
     chainId: Chains[chain],
   })
@@ -48,7 +45,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
       onClick={() => {
         captureEvent(
           "Click on collect page link (ContractCallRewardCardButton)",
-          postHogOptions
+          postHogOptions,
         )
       }}
     >

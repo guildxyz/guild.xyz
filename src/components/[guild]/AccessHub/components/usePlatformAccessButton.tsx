@@ -2,11 +2,11 @@ import { ButtonProps, LinkProps } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 
 const usePlatformAccessButton = (
-  platform: GuildPlatform
+  platform: GuildPlatform,
 ): { label: string } & LinkProps & ButtonProps => {
   const { platformUsers } = useUser()
   const platformName: PlatformName = PlatformType[
@@ -16,18 +16,18 @@ const usePlatformAccessButton = (
   const toast = useToast()
   const onSuccess = () =>
     toast({
-      title: `Successfully connected ${platforms[platformName].name}`,
-      description: `You can now go to ${platforms[platformName].name} and enjoy your access(es)`,
+      title: `Successfully connected ${rewards[platformName].name}`,
+      description: `You can now go to ${rewards[platformName].name} and enjoy your access(es)`,
       status: "success",
     })
 
   const { onConnect, isLoading, loadingText, response } = useConnectPlatform(
     platformName,
-    onSuccess
+    onSuccess,
   )
 
   const platformFromDb = platformUsers?.some(
-    (platformAccount) => platformAccount.platformName === platformName
+    (platformAccount) => platformAccount.platformName === platformName,
   )
 
   if (!platformFromDb && !response)
@@ -40,7 +40,7 @@ const usePlatformAccessButton = (
 
   if (platform.invite)
     return {
-      label: `Go to ${platforms[platformName].gatedEntity}`,
+      label: `Go to ${rewards[platformName].gatedEntity}`,
       as: "a",
       target: "_blank",
       href: platform.invite,

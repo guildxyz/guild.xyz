@@ -30,7 +30,7 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
   const removeReq = (index: number) => {
     setValue(
       `requirements`,
-      watchFieldArray.filter((_, i) => i !== index)
+      watchFieldArray.filter((_, i) => i !== index),
     )
   }
 
@@ -68,9 +68,6 @@ const SetHiddenRoleRequirements = (): JSX.Element => {
           <AddRequirement onAdd={append} />
         </AnimatePresence>
       </Stack>
-      {/* <FormErrorMessage id="requirements-error-message">
-        {errors.requirements?.message as string}
-      </FormErrorMessage> */}
     </Stack>
   )
 }

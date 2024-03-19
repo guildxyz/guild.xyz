@@ -6,7 +6,7 @@ import Button from "components/common/Button"
 import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import REQUIREMENTS from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
@@ -22,11 +22,12 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const toast = useToast()
 
   const isReconnection = reqAccesses?.some(
-    (req) => req.requirementId === id && req.errorType === "PLATFORM_CONNECT_INVALID"
+    (req) =>
+      req.requirementId === id && req.errorType === "PLATFORM_CONNECT_INVALID",
   )
 
   const platformFromDb = platformUsers?.some(
-    (platformAccount) => platformAccount.platformName === platform
+    (platformAccount) => platformAccount.platformName === platform,
   )
 
   if (
@@ -39,7 +40,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
   const onSuccess = () => {
     triggerMembershipUpdate()
     toast({
-      title: `Successfully connected ${platforms[platform].name}`,
+      title: `Successfully connected ${rewards[platform].name}`,
       description: `Your access is being re-checked...`,
       status: "success",
     })
@@ -53,7 +54,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
     <ButtonComponent
       isReconnection={isReconnection}
       onSuccess={onSuccess}
-      leftIcon={<Icon as={platforms[platform]?.icon} />}
+      leftIcon={<Icon as={rewards[platform]?.icon} />}
       size="xs"
       iconSpacing="1"
       {...props}
@@ -73,7 +74,7 @@ const ConnectRequirementPlatformButton = ({
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,
     onSuccess,
-    isReconnection
+    isReconnection,
   )
 
   return (
@@ -81,11 +82,11 @@ const ConnectRequirementPlatformButton = ({
       onClick={onConnect}
       isLoading={isLoading}
       loadingText={loadingText}
-      colorScheme={platforms[platform]?.colorScheme}
+      colorScheme={rewards[platform]?.colorScheme}
       {...props}
     >
       {`${isReconnection ? "Reconnect" : "Connect"} ${
-        platforms[platform]?.name === "X" ? "" : platforms[platform]?.name
+        rewards[platform]?.name === "X" ? "" : rewards[platform]?.name
       }`}
     </Button>
   )

@@ -1,15 +1,22 @@
-import { Tooltip } from "@chakra-ui/react"
+import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
+import { useClaimedReward } from "hooks/useClaimedReward"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
 import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
+import UploadMintLinksModal from "./UploadMintLinksModal"
+
+const DynamicShowMintLinkButton = dynamic(() => import("./ShowMintLinkButton"), {
+  ssr: false,
+})
 
 type Props = {
   platform: GuildPlatform
@@ -17,40 +24,54 @@ type Props = {
 
 const PoapCardButton = ({ platform }: Props) => {
   const { urlName, roles } = useGuild()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const { isAdmin } = useGuildPermission()
 
   const rolePlatform = roles
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
-  const { isAvailable: isButtonEnabled } = getRolePlatformTimeframeInfo(rolePlatform)
-
-  const buttonLabel =
-    !rolePlatform?.capacity && isAdmin ? "Upload mint links" : "Claim POAP"
-
-  const buttonProps = {
-    isDisabled: !isButtonEnabled,
-    w: "full",
-    colorScheme: platforms.POAP.colorScheme,
-  }
+  const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
+  const { claimed } = useClaimedReward(rolePlatform.id)
 
   return (
     <>
       <Tooltip
-        isDisabled={isButtonEnabled}
+        isDisabled={isAvailable || claimed}
         label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >
-        {!isButtonEnabled ? (
-          <Button {...buttonProps}>{buttonLabel}</Button>
+        {claimed ? (
+          <DynamicShowMintLinkButton
+            rolePlatformId={rolePlatform.id}
+            w="full"
+            colorScheme={rewards.POAP.colorScheme}
+          >
+            Show mint link
+          </DynamicShowMintLinkButton>
+        ) : !rolePlatform?.capacity && isAdmin ? (
+          <>
+            <Button w="full" colorScheme={rewards.POAP.colorScheme} onClick={onOpen}>
+              Upload mint links
+            </Button>
+            <UploadMintLinksModal
+              isOpen={isOpen}
+              onClose={onClose}
+              guildPlatformId={platform?.id}
+              platformGuildData={platform?.platformGuildData}
+            />
+          </>
         ) : (
           <Button
             as={Link}
             href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
-            {...buttonProps}
+            isDisabled={!isAvailable}
+            w="full"
+            colorScheme={rewards.POAP.colorScheme}
           >
-            {buttonLabel}
+            Claim POAP
           </Button>
         )}
       </Tooltip>

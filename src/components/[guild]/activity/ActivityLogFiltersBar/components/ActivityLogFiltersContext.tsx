@@ -20,6 +20,7 @@ export const SUPPORTED_SEARCH_OPTIONS = [
   "guildId",
   "roleId",
   "rolePlatformId",
+  "formId",
   "action",
 ] as const
 export type SupportedSearchOption = (typeof SUPPORTED_SEARCH_OPTIONS)[number]
@@ -29,6 +30,7 @@ export const FILTER_NAMES: Record<SupportedSearchOption, string> = {
   guildId: "Guild",
   roleId: "Role",
   rolePlatformId: "Reward",
+  formId: "Form",
   action: "Action",
 }
 
@@ -44,6 +46,7 @@ export const SUPPORTED_QUERY_PARAMS = [
   "roleId",
   "userId",
   "rolePlatformId",
+  "formId",
 ] as const
 export type SupportedQueryParam = (typeof SUPPORTED_QUERY_PARAMS)[number]
 
@@ -125,7 +128,7 @@ const ActivityLogFiltersProvider = ({
 
   const removeFilter = (filter: Filter) =>
     setActiveFilters((prevActiveFilters) =>
-      prevActiveFilters.filter((f) => f.id !== filter?.id)
+      prevActiveFilters.filter((f) => f.id !== filter?.id),
     )
 
   const clearFilters = (filterTypesToClear: SupportedQueryParam[]) => {
@@ -136,7 +139,7 @@ const ActivityLogFiltersProvider = ({
 
     setActiveFilters((prevActiveFilters) => [
       ...prevActiveFilters.filter(
-        ({ filter }) => !filterTypesToClear.includes(filter)
+        ({ filter }) => !filterTypesToClear.includes(filter),
       ),
     ])
   }

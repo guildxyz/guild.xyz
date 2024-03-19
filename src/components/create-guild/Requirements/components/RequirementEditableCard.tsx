@@ -1,33 +1,28 @@
-import {
-  Button,
-  CloseButton,
-  Icon,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { Warning } from "@phosphor-icons/react"
-import Requirement from "components/[guild]/Requirements/components/Requirement"
+import { Button, useDisclosure } from "@chakra-ui/react"
 import { RequirementProvider } from "components/[guild]/Requirements/components/RequirementContext"
 import { InvalidRequirementErrorBoundary } from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import RequirementImageEditor from "components/[guild]/Requirements/components/RequirementImageEditor"
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
-import Card from "components/common/Card"
-import DataBlock from "components/common/DataBlock"
-import DiscardAlert from "components/common/DiscardAlert"
-import { Modal } from "components/common/Modal"
-import { useCallback, useRef } from "react"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import REQUIREMENTS from "requirements"
-import useDeleteRequirement from "../hooks/useDeleteRequirement"
+import SetVisibility from "components/[guild]/SetVisibility"
+import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
+import { PropsWithChildren, memo, useRef } from "react"
+import { FormProvider, useForm, useFormContext } from "react-hook-form"
+import REQUIREMENTS, { RequirementType } from "requirements"
+import { Requirement, RoleFormType } from "types"
 import BalancyFooter from "./BalancyFooter"
-import ConfirmationAlert from "./ConfirmaionAlert"
-import IsNegatedPicker from "./IsNegatedPicker"
+import RemoveRequirementButton from "./RemoveRequirementButton"
+import RequirementBaseCard from "./RequirementBaseCard"
+import RequirementEditModal from "./RequirementEditModal"
+import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
+
+type Props = {
+  index: number
+  type: RequirementType
+  field: Requirement
+  removeRequirement: (index: number) => void
+  updateRequirement: (index: number, data: Requirement) => void
+  isEditDisabled?: boolean
+}
 
 const RequirementEditableCard = ({
   index,
@@ -36,179 +31,125 @@ const RequirementEditableCard = ({
   removeRequirement,
   updateRequirement,
   isEditDisabled = false,
-}) => {
-  const { formState } = useFormContext()
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const {
-    isOpen: isRequirementDeleteOpen,
-    onOpen: onRequirementDeleteOpen,
-    onClose: onRequirementDeleteClose,
-  } = useDisclosure()
   const RequirementComponent = REQUIREMENTS[type]?.displayComponent
-  const FormComponent = REQUIREMENTS[type]?.formComponent
-  const ref = useRef()
-  const closeButtonRef = useRef()
-  const removeButtonColor = useColorModeValue("gray.700", "gray.400")
+  const editButtonRef = useRef()
+
+  const { setValue } = useFormContext<RoleFormType>()
   const methods = useForm({ mode: "all", defaultValues: field })
-  const requirementId = useWatch({ name: `requirements.${index}.id` })
-
-  const isRole = !!formState?.defaultValues?.id
-  const roleId = formState?.defaultValues?.id
-
-  const isPoap = !!formState?.defaultValues?.poapId
 
   const showViewOriginal = field?.data?.customName || field?.data?.customImage
 
-  const {
-    onSubmit: onDeleteRequirement,
-    isLoading: isRequirementDeleteLoading,
-    isSigning: isRequirementDeleteSigning,
-  } = useDeleteRequirement(roleId, requirementId)
-
-  const {
-    isOpen: isAlertOpen,
-    onOpen: onAlertOpen,
-    onClose: onAlertClose,
-  } = useDisclosure()
-
-  const onCloseAndClear = () => {
-    methods.reset()
-    onAlertClose()
-    onClose()
-  }
-
   const onSubmit = methods.handleSubmit((data) => {
     updateRequirement(index, data)
-    methods.reset(undefined, { keepValues: true })
     onClose()
   })
 
-  // temporary to set values for balancy so it works without opening the edit modal
-  const { setValue } = useFormContext()
-  const setValueForBalancy = useCallback(
-    (path, data) => {
-      setValue(`requirements.${index}.${path}`, data)
-    },
-    [index, setValue]
-  )
-  const onRemove = () => {
-    if ((isRole || isPoap) && !!requirementId) {
-      onRequirementDeleteOpen()
-    } else {
-      removeRequirement(index)
-    }
-  }
+  const onRemove = () => removeRequirement(index)
 
-  const requirementDeleteConfitmationAlert = (
-    <ConfirmationAlert
-      finalFocusRef={closeButtonRef}
-      isLoading={isRequirementDeleteLoading || isRequirementDeleteSigning}
-      isOpen={isRequirementDeleteOpen}
-      onClose={onRequirementDeleteClose}
-      onConfirm={() => onDeleteRequirement()}
-      title="Delete requirement"
-      description="Are you sure you want to delete this requirement?"
-      confirmationText="Delete requirement"
-    />
-  )
-
-  if (!RequirementComponent || !FormComponent)
+  if (!RequirementComponent)
     return (
-      <>
-        <Card px="6" py="4" pr="8" pos="relative">
-          <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
-            {`Unsupported requirement type: `}
-            <DataBlock>{type}</DataBlock>
-          </Requirement>
-          <CloseButton
-            ref={closeButtonRef}
-            position="absolute"
-            top={2}
-            right={2}
-            color={removeButtonColor}
-            borderRadius={"full"}
-            size="sm"
-            onClick={() => onRemove()}
-            aria-label="Remove requirement"
-          />
-        </Card>
-        {requirementId && requirementDeleteConfitmationAlert}
-      </>
+      <UnsupportedRequirementTypeCard type={type}>
+        <RemoveRequirementButton onClick={() => onRemove()} />
+      </UnsupportedRequirementTypeCard>
     )
 
   const rightElement = !isEditDisabled && (
-    <Button ref={ref} size="sm" onClick={onOpen}>
+    <Button ref={editButtonRef} size="sm" onClick={onOpen}>
       Edit
     </Button>
   )
 
+  const RequirementImageEditorWithSetValue = memo(
+    ({ children }: PropsWithChildren<unknown>) => (
+      <RequirementImageEditor
+        onSave={(customImage) =>
+          setValue?.(`requirements.${index}.data.customImage`, customImage, {
+            shouldDirty: true,
+          })
+        }
+      >
+        {children}
+      </RequirementImageEditor>
+    ),
+  )
+
+  const RequirementNameEditorWithSetValue = memo(
+    ({ children }: PropsWithChildren<unknown>) => {
+      const setVisibilityModalProps = useVisibilityModalProps()
+
+      return (
+        <RequirementNameEditor
+          onSave={(customName) => {
+            setValue(`requirements.${index}.data.customName`, customName, {
+              shouldDirty: true,
+            })
+          }}
+          rightElement={
+            <SetVisibility
+              entityType="requirement"
+              mt={-0.5}
+              defaultValues={{
+                visibility: field.visibility,
+                visibilityRoleId: field.visibilityRoleId,
+              }}
+              onSave={({ visibility, visibilityRoleId }) => {
+                setValue(`requirements.${index}.visibility`, visibility, {
+                  shouldDirty: true,
+                })
+                setValue(
+                  `requirements.${index}.visibilityRoleId`,
+                  visibilityRoleId,
+                  {
+                    shouldDirty: true,
+                  },
+                )
+                setVisibilityModalProps.onClose()
+              }}
+              {...setVisibilityModalProps}
+            />
+          }
+        >
+          {children}
+        </RequirementNameEditor>
+      )
+    },
+  )
+
   return (
     <>
-      <Card px="6" py="4" pr="8" pos="relative">
+      <RequirementBaseCard>
         <RequirementProvider requirement={field}>
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
-              fieldRoot={`requirements.${index}`}
-              footer={<BalancyFooter baseFieldPath={`requirements.${index}`} />}
-              setValueForBalancy={setValueForBalancy}
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
-              imageWrapper={RequirementImageEditor}
-              childrenWrapper={RequirementNameEditor}
+              imageWrapper={RequirementImageEditorWithSetValue}
+              childrenWrapper={RequirementNameEditorWithSetValue}
             />
           </InvalidRequirementErrorBoundary>
         </RequirementProvider>
 
-        <CloseButton
-          ref={closeButtonRef}
-          position="absolute"
-          top={2}
-          right={2}
-          color={removeButtonColor}
-          borderRadius={"full"}
-          size="sm"
-          onClick={onRemove}
-          aria-label="Remove requirement"
-        />
-      </Card>
-      <Modal
-        isOpen={isOpen}
-        onClose={methods.formState.isDirty ? onAlertOpen : onClose}
-        scrollBehavior="inside"
-        finalFocusRef={ref}
-        // colorScheme={"dark"}
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <FormProvider {...methods}>
-            <ModalCloseButton
-              onClick={(e) => {
-                e.preventDefault()
-                onCloseAndClear()
-              }}
-            />
-            <ModalHeader>{`Edit ${REQUIREMENTS[type].name} requirement`}</ModalHeader>
-            <ModalBody>
-              {REQUIREMENTS[type].isNegatable && (
-                <IsNegatedPicker baseFieldPath={``} />
-              )}
-              <FormComponent baseFieldPath={``} field={field} />
-            </ModalBody>
-            <ModalFooter gap="3">
+        <RemoveRequirementButton onClick={() => onRemove()} />
+      </RequirementBaseCard>
+
+      <FormProvider {...methods}>
+        <RequirementEditModal
+          requirementField={field}
+          isOpen={isOpen}
+          onClose={onClose}
+          finalFocusRef={editButtonRef}
+          footer={
+            <>
               <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme={"green"} onClick={onSubmit} ml="auto">
+              <Button colorScheme="green" onClick={onSubmit} ml="auto">
                 Done
               </Button>
-            </ModalFooter>
-          </FormProvider>
-        </ModalContent>
-      </Modal>
-      <DiscardAlert
-        isOpen={isAlertOpen}
-        onClose={onAlertClose}
-        onDiscard={onCloseAndClear}
-      />
-      {requirementId && requirementDeleteConfitmationAlert}
+            </>
+          }
+        />
+      </FormProvider>
     </>
   )
 }

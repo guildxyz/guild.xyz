@@ -7,7 +7,6 @@ describe("payment requirement", () => {
     cy.clearIndexedDB()
     cy.visit(`/${Cypress.env("GUILD_CHECKOUT_TEST_GUILD_URL_NAME")}`)
     cy.connectWallet()
-    cy.waitForAccessCheck()
   })
 
   it("can create a payment requirement", () => {
@@ -86,7 +85,7 @@ describe("payment requirement", () => {
       cy.getByDataTest("withdraw-button").should("be.enabled")
       cy.getByDataTest("withdraw-button").should(
         "contain",
-        "Switch to Polygon Mumbai to withdraw"
+        "Switch to Polygon Mumbai to withdraw",
       )
       cy.getByDataTest("withdraw-button").click()
 

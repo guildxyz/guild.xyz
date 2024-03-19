@@ -2,46 +2,60 @@ import { useDisclosure } from "@chakra-ui/react"
 import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import { publicClient } from "connectors"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useState } from "react"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
-import type { CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
+import {
+  WAAS_CONNECTOR_ID,
+  WaaSConnector,
+  WaasActionFailed,
+} from "wagmiConfig/waasConnector"
 import useLinkAddress from "../../../hooks/useLinkAddress"
 import {
+  DriveRequestFailed,
   getDriveFileAppProperties,
   listWalletsOnDrive,
   uploadBackupDataToDrive,
 } from "../utils/googleDrive"
 import useDriveOAuth from "./useDriveOAuth"
 
-export class DriveRequestFailed extends Error {
-  constructor(error: unknown) {
-    super("Google Drive request failed")
-    this.cause = error
-  }
-}
-
-export class WaasActionFailed extends Error {
-  constructor(error: unknown) {
-    super("Coinbase WaaS action failed")
-    this.cause = error
-  }
-}
-
 const useLoginWithGoogle = () => {
   const addressLinkParams = useAtomValue(addressLinkParamsAtom)
   const { onOpen, onClose, isOpen } = useDisclosure()
   const toast = useToast()
-  const { captureEvent } = usePostHogContext()
-  const { connectors, connectAsync } = useConnect()
+  const { captureEvent: capture } = usePostHogContext()
+  const captureEvent = (message: string, options?: Record<string, any>) => {
+    let finalOptions = options
+    if (options?.error instanceof Error) {
+      finalOptions = {
+        ...finalOptions,
+        errorMessage: options.error.message,
+        errorName: options.error.name,
+        errorStack: options.error.stack,
+        errorCause: options.error.cause,
+      }
+
+      if (options.error.cause instanceof Error) {
+        finalOptions = {
+          ...finalOptions,
+          causeMessage: options.error.cause.message,
+          causeName: options.error.cause.name,
+          causeStack: options.error.cause.stack,
+          causeCause: options.error.cause.cause,
+        }
+      }
+    }
+
+    capture(message, finalOptions)
+  }
+  const { connectAsync, connectors } = useConnect()
   const cwaasConnector = connectors.find(
-    ({ id }) => id === "cwaasWallet",
-  ) as CWaaSConnector
+    ({ id }) => id === WAAS_CONNECTOR_ID,
+  ) as WaaSConnector
 
   const [isNewWallet, setIsNewWallet] = useState(false)
 
@@ -69,9 +83,7 @@ const useLoginWithGoogle = () => {
   const { onSubmit: onLinkAddress } = useLinkAddress()
 
   const createOrRestoreWallet = async (accessToken: string) => {
-    const { files } = await listWalletsOnDrive(accessToken).catch((err) => {
-      throw new DriveRequestFailed(err)
-    })
+    const { files } = await listWalletsOnDrive(accessToken)
 
     if (files.length <= 0) {
       setIsNewWallet(true)
@@ -80,30 +92,17 @@ const useLoginWithGoogle = () => {
     onOpen()
 
     if (files.length <= 0) {
-      const { wallet, account } = await cwaasConnector
-        .createWallet()
-        .catch((err) => {
-          throw new WaasActionFailed(err)
-        })
-      await uploadBackupDataToDrive(
-        wallet.backup,
-        account.address,
-        accessToken,
-      ).catch((err) => {
-        throw new DriveRequestFailed(err)
-      })
+      const { wallet, account } = await cwaasConnector.createWallet()
+
+      await uploadBackupDataToDrive(wallet.backup, account.address, accessToken)
       return true
     } else {
       const {
         appProperties: { backupData },
-      } = await getDriveFileAppProperties(files[0].id, accessToken).catch((err) => {
-        throw new DriveRequestFailed(err)
-      })
+      } = await getDriveFileAppProperties(files[0].id, accessToken)
 
       // TODO: Check if the current wallet (if there is one) is the same. If so, don't call restore
-      await cwaasConnector.restoreWallet(backupData).catch((err) => {
-        throw new WaasActionFailed(err)
-      })
+      await cwaasConnector.restoreWallet(backupData)
       return false
     }
   }
@@ -132,7 +131,7 @@ const useLoginWithGoogle = () => {
       ).catch((err) => {
         captureEvent("[WaaS] Wallet creation / restoration failed", {
           error: err,
-          hasOauthFailed: err instanceof DriveRequestFailed,
+          hasDriveFailed: err instanceof DriveRequestFailed,
           hasWaasFailed: err instanceof WaasActionFailed,
           cause: err instanceof Error ? err.cause : undefined,
         })
@@ -146,7 +145,7 @@ const useLoginWithGoogle = () => {
       captureEvent("[WaaS] Wallet successfully initialized", { isNew })
 
       // 3) Verify a keypair, or link address to main user
-      const walletClient = await cwaasConnector.getWalletClient()
+      const walletClient: any = await cwaasConnector.getClient()
 
       const signProps = {
         walletClient,
@@ -165,7 +164,6 @@ const useLoginWithGoogle = () => {
       await onConnectGoogleSubmit({
         signOptions: {
           keyPair: keyPair.keyPair,
-          publicClient: publicClient({}),
           ...signProps,
         },
         platformName: "GOOGLE",

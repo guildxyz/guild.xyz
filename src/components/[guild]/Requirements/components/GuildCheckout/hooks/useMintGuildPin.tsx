@@ -1,7 +1,7 @@
-import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import { Chains } from "wagmiConfig/chains"
 
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useSubmit from "hooks/useSubmit"
@@ -16,7 +16,7 @@ import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
-import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 import useGuildPinFee from "./useGuildPinFee"
@@ -47,8 +47,7 @@ const useMintGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -57,7 +56,7 @@ const useMintGuildPin = () => {
 
   const [loadingText, setLoadingText] = useState<string>("")
 
-  const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]?.address
+  const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]
 
   const { guildPinFee } = useGuildPinFee()
 
@@ -133,7 +132,7 @@ const useMintGuildPin = () => {
     setTxHash?.(hash)
 
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
-      { hash }
+      { hash },
     )
 
     if (receipt.status !== "success") {
@@ -177,7 +176,7 @@ const useMintGuildPin = () => {
           ...metadata,
           image: metadata.image.replace(
             "ipfs://",
-            process.env.NEXT_PUBLIC_IPFS_GATEWAY
+            process.env.NEXT_PUBLIC_IPFS_GATEWAY,
           ),
         }
 
@@ -195,7 +194,7 @@ const useMintGuildPin = () => {
         (req) =>
           req.type === "ERC721" &&
           req.chain === Chains[chainId] &&
-          req.address.toLowerCase() === contractAddress.toLowerCase()
+          req.address.toLowerCase() === contractAddress.toLowerCase(),
       )
 
     if (hasGuildPinRequirement) {

@@ -17,7 +17,6 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { Plus } from "@phosphor-icons/react"
-import { Chain } from "chains"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -32,6 +31,7 @@ import {
 import { RequirementFormProps } from "requirements"
 import capitalize from "utils/capitalize"
 import parseFromObject from "utils/parseFromObject"
+import { Chain } from "wagmiConfig/chains"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"
@@ -97,7 +97,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   const { nftType, isLoading: isNftTypeLoading } = useNftType(
     addressFieldValue,
-    chain
+    chain,
   )
 
   useEffect(() => {
@@ -122,7 +122,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
         value: nft.address,
         slug: nft.slug,
       })),
-    [nfts]
+    [nfts],
   )
 
   const pickedNft = mappedNfts?.find((nft) => nft.value === addressFieldValue)
@@ -133,7 +133,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const { isLoading: isMetadataLoading, metadata } = useNftMetadataWithTraits(
     chain,
     addressFieldValue,
-    pickedNftSlug
+    pickedNftSlug,
   )
 
   const nftCustomAttributeNames = useMemo(
@@ -144,7 +144,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
           label: capitalize(attributeName) || "Any attribute",
           value: attributeName,
         })),
-    [metadata]
+    [metadata],
   )
 
   const mappedNftRequirementTypeOptions =
@@ -176,7 +176,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const resetDetails = (newType?: NftRequirementTypeOption["value"]) => {
     setValue(
       `${baseFieldPath}.data.attributes`,
-      newType === "ATTRIBUTE" ? [] : undefined
+      newType === "ATTRIBUTE" ? [] : undefined,
     )
     setValue(`${baseFieldPath}.data.id`, null)
     setValue(`${baseFieldPath}.data.minAmount`, undefined)
@@ -223,6 +223,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
               },
             }}
             isClearable
+            isCopyable
             isLoading={isLoading}
             placeholder={
               chain === "ETHEREUM" ? "Search or paste address" : "Paste NFT address"

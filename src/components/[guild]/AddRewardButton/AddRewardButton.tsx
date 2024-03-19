@@ -19,10 +19,10 @@ import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
+import { Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -35,7 +35,15 @@ import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 
-const defaultValues = {
+type AddRewardForm = {
+  // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
+  rolePlatforms: RoleFormType["rolePlatforms"][number][]
+  requirements?: Requirement[]
+  roleIds?: number[]
+  visibility: Visibility
+}
+
+const defaultValues: AddRewardForm = {
   rolePlatforms: [],
   requirements: [],
   roleIds: [],
@@ -58,15 +66,16 @@ const AddRewardButton = (): JSX.Element => {
     isBackButtonDisabled,
   } = useAddRewardContext()
 
-  const methods = useForm({
+  const methods = useForm<AddRewardForm>({
     defaultValues,
   })
+  const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const goBack = () => {
-    if (step === "SELECT_ROLE" && !platforms[selection].autoPlatformSetup) {
+    if (step === "SELECT_ROLE" && !rewards[selection].autoRewardSetup) {
       methods.reset(defaultValues)
     } else {
       setSelection(null)
@@ -102,15 +111,19 @@ const AddRewardButton = (): JSX.Element => {
 
   const onSubmit = (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (data.requirements?.length > 0) {
-      const visibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+      const roleVisibility =
+        saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
         ...data,
-        name: data.name || `New ${platforms[selection].name} role`,
+        name: data.name || `New ${rewards[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
-        visibility,
-        rolePlatforms: data.rolePlatforms.map((rp) => ({ ...rp, visibility })),
+        roleVisibility,
+        rolePlatforms: data.rolePlatforms.map((rp) => ({
+          ...rp,
+          visibility: roleVisibility,
+        })),
       })
-    } else if (data.roleIds?.length) {
+    } else {
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         rolePlatforms: data.roleIds
@@ -133,7 +146,7 @@ const AddRewardButton = (): JSX.Element => {
     }
   }
 
-  const { AddPlatformPanel, PlatformPreview } = platforms[selection] ?? {}
+  const { AddRewardPanel, RewardPreview } = rewards[selection] ?? {}
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
@@ -194,13 +207,13 @@ const AddRewardButton = (): JSX.Element => {
                   )}
                   <Text>
                     {selection
-                      ? `Add ${platforms[selection].name} reward`
+                      ? `Add ${rewards[selection].name} reward`
                       : "Add reward"}
                   </Text>
                 </HStack>
 
                 {step === "SELECT_ROLE" && (
-                  <PlatformPreview>
+                  <RewardPreview>
                     <AvailabilitySetup
                       platformType={rolePlatform?.guildPlatform?.platformName}
                       rolePlatform={rolePlatform}
@@ -223,7 +236,7 @@ const AddRewardButton = (): JSX.Element => {
                         methods.setValue(`rolePlatforms.0.endTime`, endTime)
                       }}
                     />
-                  </PlatformPreview>
+                  </RewardPreview>
                 )}
               </Stack>
             </ModalHeader>
@@ -236,9 +249,15 @@ const AddRewardButton = (): JSX.Element => {
             >
               {selection && step === "SELECT_ROLE" ? (
                 <SelectRoleOrSetRequirements selectedPlatform={selection} />
-              ) : AddPlatformPanel ? (
-                <AddPlatformPanel
-                  onSuccess={() => setStep("SELECT_ROLE")}
+              ) : AddRewardPanel ? (
+                <AddRewardPanel
+                  onAdd={(createdRolePlatform) => {
+                    methods.setValue("rolePlatforms.0", {
+                      ...createdRolePlatform,
+                      visibility,
+                    })
+                    setStep("SELECT_ROLE")
+                  }}
                   skipSettings
                 />
               ) : (

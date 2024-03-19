@@ -11,12 +11,12 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react"
-import { Chain, supportedChains } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
+import { Chain, supportedChains } from "wagmiConfig/chains"
 import SpaceSelect from "../SpaceSelect"
 import SingleStrategy from "./components/SingleStrategy"
 
@@ -36,7 +36,7 @@ const Strategy = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       <ChainPicker
         controlName={`${baseFieldPath}.chain`}
         supportedChains={supportedChains.filter(
-          (c) => !unsupportedChains.includes(c)
+          (c) => !unsupportedChains.includes(c),
         )}
         showDivider={false}
       />
@@ -59,7 +59,7 @@ const Strategy = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
               clearErrors(`${baseFieldPath}.data.block`)
               setValue(
                 `${baseFieldPath}.data.block`,
-                e.target.checked ? "latest" : ""
+                e.target.checked ? "latest" : "",
               )
             }}
             isInvalid={false}

@@ -1,7 +1,7 @@
 import useSetRoleImageAndNameFromPlatformData from "components/[guild]/AddRewardButton/hooks/useSetRoleImageAndNameFromPlatformData"
 import useServerData from "hooks/useServerData"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const DiscordPreview = (): JSX.Element => {
   const serverId = useWatch({
@@ -12,7 +12,7 @@ const DiscordPreview = (): JSX.Element => {
   useSetRoleImageAndNameFromPlatformData(data?.serverIcon, data?.serverName)
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="DISCORD"
       isLoading={isValidating}
       name={data?.serverName}

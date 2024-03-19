@@ -52,7 +52,7 @@ const useCreateGuild = () => {
             urlName: response_.urlName,
           },
         ],
-        { revalidate: false }
+        { revalidate: false },
       )
 
       toast({
@@ -71,12 +71,6 @@ const useCreateGuild = () => {
             },
           },
         ])
-
-      if (response_.guildPlatforms[0]?.platformId === PlatformType.CONTRACT_CALL) {
-        captureEvent("Created NFT reward", {
-          hook: "useCreateGuild",
-        })
-      }
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)

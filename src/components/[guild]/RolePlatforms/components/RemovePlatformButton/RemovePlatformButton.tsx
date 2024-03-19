@@ -1,50 +1,66 @@
-import { CloseButton, Tooltip, useDisclosure } from "@chakra-ui/react"
-import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
-import platforms from "platforms/platforms"
-import { GuildPlatform, PlatformType } from "types"
+import {
+  CloseButton,
+  Divider,
+  Icon,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react"
+import { Info } from "@phosphor-icons/react"
+import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
   removeButtonColor: string
-  guildPlatform: GuildPlatform
+  isPlatform: boolean
 }
 
 const RemovePlatformButton = ({
   removeButtonColor,
-  guildPlatform,
+  isPlatform,
 }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { onSubmit, isLoading } = useRemovePlatform(onClose)
 
   return (
     <>
-      <Tooltip label={"Remove reward..."}>
+      <Tooltip label="Remove reward...">
         <CloseButton
           size="sm"
           color={removeButtonColor}
           rounded="full"
           aria-label="Remove reward"
           zIndex="1"
-          onClick={
-            platforms[PlatformType[guildPlatform.platformId]]
-              .shouldShowKeepAccessesModal
-              ? onOpen
-              : () => onSubmit()
-          }
+          onClick={onOpen}
         />
       </Tooltip>
 
-      <RemovePlatformAlert
-        guildPlatform={guildPlatform}
-        keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this role won’t be managed anymore"
-        revokeAccessDescription="Existing members will lose their accesses on the platform granted by this role"
+      <ConfirmationAlert
+        isLoading={isLoading}
         isOpen={isOpen}
         onClose={onClose}
-        onSubmit={onSubmit}
-        isLoading={isLoading}
+        onConfirm={onSubmit}
+        title="Remove reward"
+        description={
+          <>
+            Are you sure you want to remove this reward?
+            {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
+          </>
+        }
+        confirmationText="Remove"
       />
     </>
   )
 }
+
+export const AlreadyGrantedAccessesWillRemainInfo = () => (
+  <>
+    <Divider mb="4" mt="6" />
+    <Text colorScheme="gray" display="flex">
+      <Icon as={Info} mt="3px" mr="1.5" />
+      Already granted accesses will remain as is on the platform.
+    </Text>
+  </>
+)
 
 export default RemovePlatformButton

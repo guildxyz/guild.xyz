@@ -15,14 +15,19 @@ import {
   CircleWavyCheck,
   Code,
   DiscordLogo,
+  File,
   House,
   Info,
   List,
-  MagnifyingGlass,
+  Palette,
   Plus,
+  Shield,
 } from "@phosphor-icons/react"
 import Button from "components/common/Button"
+import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
+import { explorerScrollRestorationAtom } from "pages/explorer"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
 import NavGroup from "./components/NavGroup"
@@ -35,6 +40,8 @@ const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
 
 const NavMenu = (): JSX.Element => {
   const darkBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const setExplorerScrollRestoration = useSetAtom(explorerScrollRestorationAtom)
+  const router = useRouter()
 
   return (
     <Popover placement="bottom-start">
@@ -68,10 +75,15 @@ const NavMenu = (): JSX.Element => {
             gap={{ base: 2, sm: 12 }}
           >
             <NavGroup title="Navigation">
-              <NavButton leftIcon={<House />} href="/">
-                About Guild.xyz
-              </NavButton>
-              <NavButton leftIcon={<MagnifyingGlass />} href="/explorer">
+              <NavButton
+                leftIcon={<House />}
+                href="/explorer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setExplorerScrollRestoration(false)
+                  router.push("/explorer")
+                }}
+              >
                 Explore all guilds
               </NavButton>
               <NavButton leftIcon={<Plus />} href="/create-guild">
@@ -79,6 +91,12 @@ const NavMenu = (): JSX.Element => {
               </NavButton>
               <NavButton leftIcon={<CircleWavyCheck />} href="/leaderboard">
                 Guild Pins leaderboard
+              </NavButton>
+              <NavButton leftIcon={<Shield />} href="/privacy-policy">
+                Privacy Policy
+              </NavButton>
+              <NavButton leftIcon={<File />} href="/terms-of-use">
+                Terms of Use
               </NavButton>
             </NavGroup>
             <NavGroup title="Other">
@@ -113,6 +131,14 @@ const NavMenu = (): JSX.Element => {
                 leftIcon={<Info />}
               >
                 Guide
+              </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://guild.xyz/guild-xyz-brand-kit.zip"
+                rel="noopener"
+                leftIcon={<Palette />}
+              >
+                Brand kit
               </NavButton>
             </NavGroup>
           </Grid>

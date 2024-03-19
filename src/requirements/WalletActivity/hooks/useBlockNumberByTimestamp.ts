@@ -1,11 +1,11 @@
-import { Chain } from "chains"
 import { SWRResponse } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { getBlockByTime } from "utils/getBlockByTime"
+import { Chain } from "wagmiConfig/chains"
 
 const useBlockNumberByTimestamp = (
   chain: Chain,
-  timestamp: number
+  timestamp: number,
 ): SWRResponse<number> => {
   const shouldFetch = chain && timestamp
 
@@ -15,7 +15,7 @@ const useBlockNumberByTimestamp = (
     {
       shouldRetryOnError: true,
       errorRetryCount: 3,
-    }
+    },
   )
 
   return {

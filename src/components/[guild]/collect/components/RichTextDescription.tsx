@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react"
 import { forwardRef } from "react"
 import ReactMarkdown, { type Components } from "react-markdown"
+import { ensureUrlProtocol } from "utils/ensureUrlProtocol"
 
 export const reactMarkdownComponents: Components = {
-  a: ({ ref, href, children, ...props }) => (
+  a: ({ href, children, ...props }) => (
     <Link
-      ref={ref as any}
-      href={href}
+      href={ensureUrlProtocol(href)}
       isExternal
       colorScheme="blue"
       whiteSpace={"pre-wrap"}

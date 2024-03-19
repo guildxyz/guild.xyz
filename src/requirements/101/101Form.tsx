@@ -1,10 +1,10 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import use101Courses from "./hooks/use101Courses"
 
 const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
@@ -45,7 +45,7 @@ const HundredNOneForm = ({ baseFieldPath }: RequirementFormProps) => {
           value={
             options?.find(
               (option) =>
-                option.value === badgeId && option.chainId === Chains[badgeChain]
+                option.value === badgeId && option.chainId === Chains[badgeChain],
             ) ?? null
           }
           afterOnChange={(newValue) => {

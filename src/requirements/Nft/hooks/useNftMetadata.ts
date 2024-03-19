@@ -1,6 +1,6 @@
 import { ImageData } from "@nouns/assets"
-import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
+import { Chain } from "wagmiConfig/chains"
 import { nounsAddresses } from "./useNftType"
 
 export type NftMetadata = {
@@ -17,14 +17,14 @@ const NOUNS_BACKGROUNDS = ["cool", "warm"]
 const useNftMetadata = (
   chain: Chain,
   address: string,
-  tokenId: string
+  tokenId: string,
 ): { isLoading: boolean; metadata: Omit<NftMetadata, "traits" | "slug"> } => {
   const shouldFetch = chain && address && tokenId
   const { isLoading, data } = useSWRImmutable(
     shouldFetch ? `${baseUrl}/nft/${chain}/${address}/${tokenId}` : null,
     {
       shouldRetryOnError: false,
-    }
+    },
   )
 
   return { isLoading, metadata: data }
@@ -34,7 +34,7 @@ const useNftMetadata = (
 const useNftMetadataWithTraits = (
   chain: Chain,
   address: string,
-  slug?: string
+  slug?: string,
 ): { isLoading: boolean; metadata: NftMetadata } => {
   const isNounsContract =
     chain === "ETHEREUM" &&
@@ -47,7 +47,7 @@ const useNftMetadataWithTraits = (
       : null,
     {
       shouldRetryOnError: false,
-    }
+    },
   )
 
   if (isNounsContract) {

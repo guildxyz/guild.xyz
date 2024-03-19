@@ -7,7 +7,7 @@ import {
   TagRightIcon,
 } from "@chakra-ui/react"
 import { DotsThreeVertical, type IconProps } from "@phosphor-icons/react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { ForwardRefExoticComponent, RefAttributes } from "react"
 import { PlatformName, PlatformType } from "types"
 import { useActivityLog } from "../../ActivityLogContext"
@@ -23,7 +23,7 @@ type Props = ClickableRewardTagProps & {
 const RewardTag = forwardRef<Props, "span">(
   (
     { roleId, rolePlatformId, label, platformType, rightIcon, ...rest },
-    ref
+    ref,
   ): JSX.Element => {
     const { data } = useActivityLog()
 
@@ -36,8 +36,8 @@ const RewardTag = forwardRef<Props, "span">(
         ? `${role?.name ?? "Unknown role"} - ${rewardName}`
         : rewardName) ?? label
 
-    const icon = platforms[reward?.platformName || platformType]?.icon
-    const colorScheme = platforms[reward?.platformName || platformType]?.colorScheme
+    const icon = rewards[reward?.platformName || platformType]?.icon
+    const colorScheme = rewards[reward?.platformName || platformType]?.colorScheme
 
     return (
       <Tag
@@ -55,7 +55,7 @@ const RewardTag = forwardRef<Props, "span">(
         {rightIcon && <TagRightIcon as={rightIcon} />}
       </Tag>
     )
-  }
+  },
 )
 
 type ClickableRewardTagProps = {

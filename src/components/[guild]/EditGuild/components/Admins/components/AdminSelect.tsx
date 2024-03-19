@@ -11,7 +11,8 @@ import StyledSelect from "components/common/StyledSelect"
 import CustomMenuList from "components/common/StyledSelect/components/CustomMenuList"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { mainnet, useEnsAddress } from "wagmi"
+import { useEnsAddress } from "wagmi"
+import { mainnet } from "wagmi/chains"
 import { isValidAddress } from "../Admins"
 
 type PropsHelper = MultiValueGenericProps<unknown, boolean, GroupBase<unknown>>
@@ -39,8 +40,8 @@ const CustomMultiValueContainer = ({
       setValue(
         "admins",
         admins.map((admin) =>
-          admin.address === domain ? { address: resolvedAddress } : admin
-        )
+          admin.address === domain ? { address: resolvedAddress } : admin,
+        ),
       )
 
       trigger("admins")

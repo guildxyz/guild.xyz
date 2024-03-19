@@ -3,14 +3,14 @@ const CONTEXT = {
 }
 
 const URL_NAME = `${Cypress.env("platformlessGuildUrlName")}-${Cypress.env(
-  "RUN_ID"
+  "RUN_ID",
 )}`
 
-describe.skip("edit guild", () => {
+describe("edit guild", () => {
   beforeEach(() => {
     cy.intercept(
       "GET",
-      `${Cypress.env("guildApiUrl")}/guilds/guild-page/${URL_NAME}`
+      `${Cypress.env("guildApiUrl")}/guilds/guild-page/${URL_NAME}`,
     ).as("fetchGuild")
     cy.visit(URL_NAME)
   })
@@ -32,7 +32,7 @@ describe.skip("edit guild", () => {
   it("can edit general guild data as a guild admin", () => {
     cy.intercept(
       "PUT",
-      `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}`
+      `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}`,
     ).as("editGuildApiCall")
 
     cy.clearIndexedDB()

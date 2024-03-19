@@ -19,26 +19,13 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import { useEffect, useMemo, useState } from "react"
-import { UseFormSetValue } from "react-hook-form"
+import { useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 
-type Props = RequirementProps & {
-  setValueForBalancy: UseFormSetValue<any>
-}
-
-const AllowlistRequirement = ({
-  setValueForBalancy,
-  ...rest
-}: Props): JSX.Element => {
+const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   const { addresses, hideAllowlist } = requirement.data
-
-  useEffect(() => {
-    if (setValueForBalancy && addresses)
-      setValueForBalancy("data.validAddresses", addresses)
-  }, [setValueForBalancy, addresses])
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [search, setSearch] = useState("")
@@ -47,9 +34,9 @@ const AllowlistRequirement = ({
   const filteredAllowlist = useMemo(
     () =>
       addresses?.filter((address) =>
-        address?.toLowerCase()?.includes(search?.toLowerCase())
+        address?.toLowerCase()?.includes(search?.toLowerCase()),
       ),
-    [search, addresses]
+    [search, addresses],
   )
 
   const Row = ({ index, style }) => (

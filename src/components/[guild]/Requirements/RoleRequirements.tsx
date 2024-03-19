@@ -55,7 +55,7 @@ const RoleRequirements = ({
 
   const shadowColor = useColorModeValue(
     "var(--chakra-colors-gray-300)",
-    "var(--chakra-colors-gray-900)"
+    "var(--chakra-colors-gray-900)",
   )
 
   return (
@@ -65,7 +65,7 @@ const RoleRequirements = ({
      */
     <SlideFade
       in={isOpen}
-      {...(!isOpen && { inert: "true" })}
+      {...(!isOpen && { inert: true })}
       style={{ width: "100%" }}
     >
       <VStack spacing="0">
@@ -212,7 +212,7 @@ const VirtualRequirements = memo(
         </VariableSizeList>
       </Box>
     )
-  }
+  },
 )
 
 const RoleRequirementsSkeleton = () => (

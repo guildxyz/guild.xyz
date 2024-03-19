@@ -13,7 +13,7 @@ import ClientOnly from "components/common/ClientOnly"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
@@ -24,7 +24,7 @@ import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
 
 const DynamicGuildPinRewardCard = dynamic(
-  () => import("./components/GuildPinRewardCard")
+  () => import("./components/GuildPinRewardCard"),
 )
 
 export const useAccessedGuildPlatforms = (groupId?: number) => {
@@ -37,18 +37,18 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
     : roles.filter((role) => !role.groupId)
 
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
-    role.rolePlatforms.map((rp) => rp.guildPlatformId)
+    role.rolePlatforms.map((rp) => rp.guildPlatformId),
   )
   const relevantGuildPlatforms = guildPlatforms.filter(
     (gp) =>
       relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.POINTS
+      gp.platformId !== PlatformType.POINTS,
   )
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
   const contractCallGuildPlatforms =
     relevantGuildPlatforms?.filter(
-      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL
+      (guildPlatform) => guildPlatform.platformId === PlatformType.CONTRACT_CALL,
     ) ?? []
 
   if (isAdmin) return relevantGuildPlatforms
@@ -62,13 +62,13 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
     .filter((rolePlatform) => !!rolePlatform)
   const accessedGuildPlatformIds = [
     ...new Set(
-      accessedRolePlatforms.map((rolePlatform) => rolePlatform.guildPlatformId)
+      accessedRolePlatforms.map((rolePlatform) => rolePlatform.guildPlatformId),
     ),
   ]
   const accessedGuildPlatforms = relevantGuildPlatforms?.filter(
     (guildPlatform) =>
       accessedGuildPlatformIds.includes(guildPlatform.id) ||
-      guildPlatform.platformId === PlatformType.CONTRACT_CALL
+      guildPlatform.platformId === PlatformType.CONTRACT_CALL,
   )
 
   return accessedGuildPlatforms
@@ -111,22 +111,22 @@ const AccessHub = (): JSX.Element => {
           gap={4}
           mb={10}
         >
-          {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
+          <CampaignCards />
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
 
           {accessedGuildPlatforms?.map((platform) => {
-            if (!platforms[PlatformType[platform.platformId]]) return null
+            if (!rewards[PlatformType[platform.platformId]]) return null
 
             const {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
               cardWarningComponent: PlatformCardWarning,
               cardButton: PlatformCardButton,
-            } = platforms[PlatformType[platform.platformId] as PlatformName]
+            } = rewards[PlatformType[platform.platformId] as PlatformName]
 
             return (
               <PlatformCard
-                usePlatformProps={useCardProps}
+                usePlatformCardProps={useCardProps}
                 guildPlatform={platform}
                 key={platform.id}
                 cornerButton={

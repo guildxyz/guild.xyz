@@ -1,7 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { CAPACITY_TIME_PLATFORMS } from "platforms/platforms"
+import { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
@@ -34,12 +34,12 @@ const useEditGuildPlatform = ({
             return gp
           }),
           roles: CAPACITY_TIME_PLATFORMS.includes(
-            PlatformType[response.platformId] as PlatformName
+            PlatformType[response.platformId] as PlatformName,
           )
             ? prevGuild.roles.map((role) => {
                 if (
                   !role.rolePlatforms?.some(
-                    (rp) => rp.guildPlatformId === guildPlatformId
+                    (rp) => rp.guildPlatformId === guildPlatformId,
                   )
                 )
                   return role
@@ -59,7 +59,7 @@ const useEditGuildPlatform = ({
               })
             : prevGuild.roles,
         }),
-        { revalidate: false }
+        { revalidate: false },
       )
     },
     onError: (error) => showErrorToast(error),

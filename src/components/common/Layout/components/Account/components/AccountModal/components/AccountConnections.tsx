@@ -18,7 +18,7 @@ import { Question } from "@phosphor-icons/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { SectionProps } from "components/common/Section"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformName } from "types"
 import useDelegateVaults from "../../delegate/useDelegateVaults"
@@ -36,25 +36,11 @@ const AccountConnections = () => {
   const orderedSocials = useMemo(() => {
     const connectedPlatforms =
       platformUsers?.map((platformUser) => platformUser.platformName as string) ?? []
-    const notConnectedPlatforms = Object.keys(platforms).filter(
-      (platform) =>
-        ![
-          "POAP",
-          "TWITTER_V1",
-          "CONTRACT_CALL",
-          "EMAIL",
-          "UNIQUE_TEXT",
-          "TEXT",
-          "POINTS",
-          "POLYGON_ID",
-          "FORM",
-        ].includes(platform) && !connectedPlatforms?.includes(platform),
+    const notConnectedPlatforms = Object.keys(rewards).filter(
+      (platform: PlatformName) =>
+        rewards[platform].isPlatform && !connectedPlatforms?.includes(platform),
     )
-    return [
-      ...connectedPlatforms,
-      "EMAIL",
-      ...notConnectedPlatforms,
-    ] as PlatformName[]
+    return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
 
   const linkedAddresses = addresses?.filter(
@@ -141,7 +127,7 @@ const AccountConnections = () => {
   )
 }
 
-const AccountSection = ({ children, ...rest }) => {
+export const AccountSection = ({ children, ...rest }) => {
   const bg = useColorModeValue("gray.50", "blackAlpha.200")
 
   return (

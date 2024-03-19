@@ -1,4 +1,3 @@
-import { Chain, Chains } from "chains"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
@@ -6,6 +5,7 @@ import useSWR from "swr"
 import { Requirement } from "types"
 import fetcher from "utils/fetcher"
 import { parseUnits } from "viem"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 type BalancyResponse = {
   addresses: string[]
@@ -51,9 +51,9 @@ const fetchHolders = async ([_, logic, requirements]): Promise<BalancyResponse> 
             requirements: requirements[chain],
             limit: 0,
           },
-        }
-      ).then(({ addresses }) => addresses as string[])
-    )
+        },
+      ).then(({ addresses }) => addresses as string[]),
+    ),
   )
 
   const finalAddressesList =
@@ -64,7 +64,7 @@ const fetchHolders = async ([_, logic, requirements]): Promise<BalancyResponse> 
             .slice(1)
             .reduce(
               (acc, curr) => new Set(curr.filter((addr) => acc.has(addr))),
-              new Set<string>(holdersArrays[0])
+              new Set<string>(holdersArrays[0]),
             ),
         ]
 
@@ -80,7 +80,7 @@ const fetchHolders = async ([_, logic, requirements]): Promise<BalancyResponse> 
  * single and multiple requirements too and hacky solutions, should refactor
  */
 const useBalancy = (
-  baseFieldPath?: string
+  baseFieldPath?: string,
 ): {
   addresses: string[]
   holders: number
@@ -106,7 +106,7 @@ const useBalancy = (
           ? [debouncedRequirement]
           : []
         : debouncedRequirements) ?? [],
-    [debouncedRequirements, baseFieldPath, debouncedRequirement]
+    [debouncedRequirements, baseFieldPath, debouncedRequirement],
   )
 
   const mappedRequirements = useMemo(() => {
@@ -120,7 +120,7 @@ const useBalancy = (
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
             NUMBER_REGEX.test(data?.minAmount?.toString()) &&
-            data?.minAmount > 0
+            data?.minAmount > 0,
         )
         ?.map(
           ({
@@ -145,7 +145,7 @@ const useBalancy = (
                 try {
                   const wei = parseUnits(
                     balancyMaxAmount,
-                    balancyDecimals
+                    balancyDecimals,
                   ).toString()
                   balancyMaxAmount = wei
                 } catch {}
@@ -158,7 +158,7 @@ const useBalancy = (
               minAmount: balancyMinAmount,
               maxAmount: balancyMaxAmount,
             } as BalancyRequirement
-          }
+          },
         ) ?? []
 
     const obj: Record<SupportedChain | string, BalancyRequirement[]> = {}
@@ -182,7 +182,7 @@ const useBalancy = (
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
-    }
+    },
   )
 
   useEffect(() => {
@@ -196,9 +196,9 @@ const useBalancy = (
       renderedRequirements
         ?.filter(({ type, isNegated }) => type === "ALLOWLIST" && !isNegated)
         ?.map(({ data: { addresses } }) =>
-          addresses?.map((addr) => addr.toLowerCase())
+          addresses?.map((addr) => addr.toLowerCase()),
         ) ?? [],
-    [renderedRequirements]
+    [renderedRequirements],
   )
 
   useEffect(() => {
@@ -225,7 +225,7 @@ const useBalancy = (
     const holdersList = (
       data?.addresses?.map((addr) => addr?.toLowerCase()) ?? []
     ).filter((address) =>
-      allowlists.filter((_) => !!_).every((list) => list.includes(address))
+      allowlists.filter((_) => !!_).every((list) => list.includes(address)),
     )
 
     setHolders({
@@ -237,7 +237,7 @@ const useBalancy = (
 
   const mappedRequirementsLength = Object.values(mappedRequirements).reduce(
     (acc, curr) => acc + curr.length,
-    0
+    0,
   )
 
   const addresses =
@@ -250,7 +250,7 @@ const useBalancy = (
                 allowlists
                   ?.flat()
                   ?.filter(Boolean)
-                  ?.map((addr) => addr.toLowerCase())
+                  ?.map((addr) => addr.toLowerCase()),
               ),
             ]
           : [
@@ -258,11 +258,13 @@ const useBalancy = (
                 (prev, curr) =>
                   new Set(
                     curr?.filter((addr) => !!addr && prev.has(addr.toLowerCase())) ??
-                      []
+                      [],
                   ),
                 new Set(
-                  allowlists?.[0]?.filter(Boolean)?.map((addr) => addr.toLowerCase())
-                )
+                  allowlists?.[0]
+                    ?.filter(Boolean)
+                    ?.map((addr) => addr.toLowerCase()),
+                ),
               ),
             ]) || undefined)
 

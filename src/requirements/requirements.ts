@@ -10,7 +10,7 @@ import {
 } from "@phosphor-icons/react"
 import { RequirementProps } from "components/[guild]/Requirements/components/Requirement"
 import dynamic from "next/dynamic"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { RequirementFormProps } from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import Star from "static/icons/star.svg"
@@ -95,16 +95,6 @@ export const REQUIREMENTS_DATA = [
     ),
     types: [
       "WALLET_ACTIVITY",
-      "ALCHEMY_FIRST_TX",
-      "ALCHEMY_FIRST_TX_RELATIVE",
-      "ALCHEMY_CONTRACT_DEPLOY",
-      "ALCHEMY_CONTRACT_DEPLOY_RELATIVE",
-      "ALCHEMY_TX_COUNT",
-      "ALCHEMY_TX_COUNT_RELATIVE",
-      "ALCHEMY_TX_VALUE",
-      "ALCHEMY_TX_VALUE_RELATIVE",
-
-      // Same types for covalent, except tx_value types
       "COVALENT_FIRST_TX",
       "COVALENT_FIRST_TX_RELATIVE",
       "COVALENT_CONTRACT_DEPLOY",
@@ -171,13 +161,14 @@ export const REQUIREMENTS_DATA = [
     customNameRules: {
       pattern: {
         value: VISIT_LINK_REGEX,
-        message: "The label has to contain the link as [link title]",
+        message:
+          "Your text must contain a link label in square brackets, e.g. [Link Label].",
       },
     },
   },
   {
-    icon: platforms.EMAIL.icon,
-    name: platforms.EMAIL.name,
+    icon: rewards.EMAIL.icon,
+    name: rewards.EMAIL.name,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Email/EmailRequirement"),
     ),
@@ -188,8 +179,8 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: platforms.FORM.icon,
-    name: platforms.FORM.name,
+    icon: rewards.FORM.icon,
+    name: rewards.FORM.name,
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Form/FormRequirement"),
     ),

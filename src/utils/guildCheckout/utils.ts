@@ -1,5 +1,5 @@
-import { Chains } from "chains"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
+import { Chains } from "wagmiConfig/chains"
 import {
   NULL_ADDRESS,
   PurchaseAssetData,
@@ -16,7 +16,7 @@ export type GeneratedGetAssetsParams =
           amount: bigint
         },
         `0x${string}`,
-        `0x${string}`[]
+        `0x${string}`[],
       ]
       value?: bigint
     }
@@ -27,7 +27,7 @@ export type GeneratedGetAssetsParams =
           amount: bigint
         },
         `0x${string}`,
-        `0x${string}`[]
+        `0x${string}`[],
       ]
       value?: bigint
     }
@@ -37,7 +37,7 @@ const generateGetAssetsParams = (
   account: string,
   chainId: number,
   pickedCurrency: `0x${string}`,
-  priceData: FetchPriceResponse<bigint>
+  priceData: FetchPriceResponse<bigint>,
 ): GeneratedGetAssetsParams => {
   if (!priceData || !purchaseSupportedChains.ERC20?.includes(Chains[chainId]))
     return undefined

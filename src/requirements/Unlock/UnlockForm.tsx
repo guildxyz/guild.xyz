@@ -5,7 +5,6 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
-import { Chains } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -13,11 +12,12 @@ import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import { Chains } from "wagmiConfig/chains"
 import ChainPicker from "../common/ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
 const supportedChains = Object.keys(CHAINS_ENDPOINTS).map(
-  (chainId) => Chains[chainId]
+  (chainId) => Chains[chainId],
 )
 
 const customFilterOption = (candidate, input) =>
@@ -41,7 +41,7 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         label: lock.name,
         value: lock.address,
       })),
-    [locks]
+    [locks],
   )
 
   const pickedLock = mappedLocks?.find((lock) => lock.value === address)

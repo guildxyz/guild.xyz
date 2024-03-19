@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG, Chains } from "chains"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 // import EIP1271_ABI from "static/abis/EIP1271.json"
 import gnosisSignMessageLibAbi from "static/abis/gnosisSignMessageLib"
 import { createPublicClient, hashMessage, http } from "viem"
@@ -7,13 +7,13 @@ import { createPublicClient, hashMessage, http } from "viem"
 export type MethodSignCallback = (
   message: string,
   address: `0x${string}`,
-  chainId: number
+  chainId: number,
 ) => Promise<void>
 
 const gnosisSafeSignCallback: MethodSignCallback = async (
   message,
   address,
-  chainId
+  chainId,
 ) => {
   try {
     const publicClient = createPublicClient({
@@ -46,7 +46,7 @@ const gnosisSafeSignCallback: MethodSignCallback = async (
           msgHash,
         },
         onLogs: () => resolve(),
-      })
+      }),
     )
   } catch (error) {
     console.error("Gnosis Safe signature error:", error)

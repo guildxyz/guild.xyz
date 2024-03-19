@@ -1,7 +1,7 @@
-import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import fetcher from "utils/fetcher"
+import { Chain } from "wagmiConfig/chains"
 
 const fetch1000Badges = (endpoint: string, skip: number) =>
   fetcher(endpoint, {
@@ -26,7 +26,7 @@ const fetch1000Badges = (endpoint: string, skip: number) =>
         value: badge.id,
         label: badge.metadata.name,
         img: badge.metadata.image.replace("ipfs://", "https://ipfs.fleek.co/ipfs/"),
-      }))
+      })),
   )
 
 // We can only fetch 1000 badges at once, so we need to fetch them in multiple requests

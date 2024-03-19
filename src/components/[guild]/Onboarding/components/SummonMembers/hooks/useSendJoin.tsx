@@ -7,7 +7,7 @@ import { PlatformGuildData, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import { SummonMembersForm } from "../SummonMembers"
 
-const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
+const useSendJoin = (onSuccess?: () => void) => {
   const { mutateGuild } = useGuild()
 
   const toast = useToast()
@@ -23,7 +23,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
       },
     ])
 
-  const useSubmitResponse = useSubmit(sendJoin, {
+  return useSubmit(sendJoin, {
     onError: (error) =>
       showErrorToast({
         error: processConnectorError(error.error) ?? error.error,
@@ -32,7 +32,7 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
     onSuccess: () => {
       toast({
         status: "success",
-        title: `${type === "JOIN" ? "Join" : "Claim"} button sent!`,
+        title: "Join button sent!",
       })
       mutateGuild(
         (prevGuild) => ({
@@ -57,15 +57,6 @@ const useSendJoin = (type: "JOIN" | "POAP", onSuccess?: () => void) => {
       onSuccess?.()
     },
   })
-
-  return {
-    ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit({
-        ...data,
-        isJoinButton: type === "JOIN",
-      }),
-  }
 }
 
 export default useSendJoin

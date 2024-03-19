@@ -1,4 +1,3 @@
-import { Link } from "@chakra-ui/next-js"
 import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
@@ -32,21 +31,21 @@ import parseDescription from "utils/parseDescription"
 const BATCH_SIZE = 10
 
 const DynamicEditCampaignButton = dynamic(
-  () => import("components/[guild]/[group]/EditCampaignButton")
+  () => import("components/[guild]/[group]/EditCampaignButton"),
 )
 const DynamicAddAndOrderRoles = dynamic(
-  () => import("components/[guild]/AddAndOrderRoles")
+  () => import("components/[guild]/AddAndOrderRoles"),
 )
 const DynamicAddRewardButton = dynamic(
-  () => import("components/[guild]/AddRewardButton")
+  () => import("components/[guild]/AddRewardButton"),
 )
 const DynamicRecheckAccessesButton = dynamic(() =>
   import("components/[guild]/RecheckAccessesButton").then(
-    (module) => module.TopRecheckAccessesButton
-  )
+    (module) => module.TopRecheckAccessesButton,
+  ),
 )
 const DynamicAddRoleCard = dynamic(
-  () => import("components/[guild]/[group]/AddRoleCard")
+  () => import("components/[guild]/[group]/AddRoleCard"),
 )
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
@@ -65,7 +64,7 @@ const GroupPage = (): JSX.Element => {
   const sortedRoles = useMemo(() => {
     if (groupRoles?.every((role) => role.position === null)) {
       const byMembers = groupRoles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
+        (role1, role2) => role2.memberCount - role1.memberCount,
       )
       return byMembers
     }
@@ -80,10 +79,10 @@ const GroupPage = (): JSX.Element => {
   }, [groupRoles])
 
   const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
+    (role) => role.visibility !== Visibility.HIDDEN,
   )
   const hiddenRoles = sortedRoles.filter(
-    (role) => role.visibility === Visibility.HIDDEN
+    (role) => role.visibility === Visibility.HIDDEN,
   )
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
@@ -182,7 +181,7 @@ const GroupPage = (): JSX.Element => {
             <DynamicNoRolesAlert type="GROUP" />
           )}
 
-          {groupRoles?.length > renderedRolesCount && (
+          {publicRoles?.length && groupRoles?.length > renderedRolesCount && (
             <Center pt={6}>
               <Spinner />
             </Center>
@@ -287,7 +286,7 @@ const getStaticPaths: GetStaticPaths = async () => {
       ? _.map(({ urlName: guild, groups }) =>
           groups?.map(({ id }) => ({
             params: { guild, group: id.toString() },
-          }))
+          })),
         )
           .flat()
           .filter(Boolean)

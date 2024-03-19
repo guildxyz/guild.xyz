@@ -8,9 +8,9 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import SetVisibility from "components/[guild]/SetVisibility"
 import Visibility from "components/[guild]/Visibility"
-import React, { PropsWithChildren } from "react"
+import React, { ComponentType, PropsWithChildren } from "react"
+import { useFormContext } from "react-hook-form"
 import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
@@ -18,13 +18,12 @@ import ResetRequirementButton from "./ResetRequirementButton"
 import ViewOriginalPopover from "./ViewOriginalPopover"
 
 export type RequirementProps = PropsWithChildren<{
-  fieldRoot?: string
   isImageLoading?: boolean
   image?: string | JSX.Element
   footer?: JSX.Element
   rightElement?: JSX.Element
-  imageWrapper?: React.FC<any>
-  childrenWrapper?: React.FC<any>
+  imageWrapper?: ComponentType<unknown>
+  childrenWrapper?: ComponentType<unknown>
   showViewOriginal?: boolean
 }>
 
@@ -34,17 +33,15 @@ const Requirement = ({
   footer,
   rightElement,
   children,
-  fieldRoot,
   imageWrapper,
   childrenWrapper,
   showViewOriginal,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+  const { setValue } = useFormContext() ?? {}
 
   const ChildrenWrapper = childrenWrapper ?? Box
   const ImageWrapper = imageWrapper ?? React.Fragment
-  const wrapperProps =
-    !!childrenWrapper && !!imageWrapper ? { baseFieldPath: fieldRoot } : {}
 
   return (
     <SimpleGrid
@@ -56,25 +53,23 @@ const Requirement = ({
     >
       <Box mt="3px" alignSelf={"start"}>
         <RequirementImageCircle isImageLoading={isImageLoading}>
-          <ImageWrapper {...wrapperProps}>
+          <ImageWrapper>
             <RequirementImage image={requirement?.data?.customImage || image} />
           </ImageWrapper>
         </RequirementImageCircle>
       </Box>
       <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-        <ChildrenWrapper {...wrapperProps} display="inline-block">
+        <ChildrenWrapper display="inline-block">
           {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
           {requirement?.type === "LINK_VISIT"
             ? children
             : requirement?.data?.customName || children}
-          {!fieldRoot ? (
+          {!setValue ? (
             <Visibility
               visibilityRoleId={requirement?.visibilityRoleId}
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"
             />
-          ) : !childrenWrapper ? (
-            <SetVisibility entityType="requirement" fieldBase={fieldRoot} />
           ) : null}
         </ChildrenWrapper>
 
@@ -93,7 +88,7 @@ const Requirement = ({
                   <Text wordBreak="break-word" flexGrow={1}>
                     {children}
                   </Text>
-                  {!!fieldRoot && <ResetRequirementButton />}
+                  {!!setValue && <ResetRequirementButton />}
                 </Stack>
               </HStack>
             </ViewOriginalPopover>

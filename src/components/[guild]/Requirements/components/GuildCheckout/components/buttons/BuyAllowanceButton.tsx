@@ -1,12 +1,13 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { Check, Question, Warning } from "@phosphor-icons/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useToken from "hooks/useToken"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useChainId, useToken } from "wagmi"
+import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import { useGuildCheckoutContext } from "../GuildCheckoutContext"
@@ -25,7 +26,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { data: tokenData } = useToken({
     address: pickedCurrency,
     chainId: Chains[requirement.chain],
-    enabled: Boolean(!isNativeCurrencyPicked && Chains[requirement.chain]),
+    shouldFetch: Boolean(!isNativeCurrencyPicked && Chains[requirement.chain]),
   })
 
   const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
@@ -38,7 +39,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { fee, isLoading: isVaultLoading } = useVault(
     requirement.address,
     requirement.data.id,
-    requirement.chain
+    requirement.chain,
   )
 
   const {
@@ -80,8 +81,8 @@ const BuyAllowanceButton = (): JSX.Element => {
           isVaultLoading || isAllowanceLoading
             ? "Checking allowance"
             : isAllowing
-            ? "Allowing"
-            : "Check your wallet"
+              ? "Allowing"
+              : "Check your wallet"
         }
         onClick={onClick}
         w="full"

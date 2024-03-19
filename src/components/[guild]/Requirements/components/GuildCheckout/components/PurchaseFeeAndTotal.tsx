@@ -1,9 +1,9 @@
 import { HStack, Icon, Skeleton, Td, Text, Tooltip, Tr } from "@chakra-ui/react"
 import { Info, Question } from "@phosphor-icons/react"
-import { CHAIN_CONFIG } from "chains"
 import useTokenData from "hooks/useTokenData"
 import { GUILD_FEE_PERCENTAGE, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import usePrice from "../hooks/usePrice"
 import usePurchaseAsset from "../hooks/usePurchaseAsset"
@@ -39,8 +39,8 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     ? parseFloat(
         formatUnits(
           estimatedGas,
-          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
-        )
+          CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals,
+        ),
       )
     : null
 
@@ -54,14 +54,14 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
       (estimatedPriceInSellToken ?? 0) +
       (estimatedGuildFeeInSellToken ?? 0) +
       (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
-    )?.toFixed(3)
+    )?.toFixed(3),
   )
   const maxPriceSum = Number(
     (
       (maxPriceInSellToken ?? 0) +
       (maxGuildFeeInSellToken ?? 0) +
       (isNativeCurrency ? estimatedGasInFloat ?? 0 : 0)
-    )?.toFixed(3)
+    )?.toFixed(3),
   )
 
   return (

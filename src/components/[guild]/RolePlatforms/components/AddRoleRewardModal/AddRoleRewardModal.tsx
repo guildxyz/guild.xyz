@@ -13,10 +13,16 @@ import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import platforms from "platforms/platforms"
+import rewards, { AddRewardPanelProps } from "platforms/rewards"
+import { useWatch } from "react-hook-form"
+import { RoleFormType } from "types"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
-const AddRoleRewardModal = () => {
+type Props = {
+  append: AddRewardPanelProps["onAdd"]
+}
+
+const AddRoleRewardModal = ({ append }: Props) => {
   const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
   const goBack = () => {
@@ -27,7 +33,9 @@ const AddRoleRewardModal = () => {
     }
   }
 
-  const { AddPlatformPanel } = platforms[selection] ?? {}
+  const { AddRewardPanel } = rewards[selection] ?? {}
+
+  const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
 
   return (
     <Modal
@@ -54,7 +62,7 @@ const AddRoleRewardModal = () => {
               />
             )}
             <Text>
-              {selection ? `Add ${platforms[selection].name} reward` : "Add reward"}
+              {selection ? `Add ${rewards[selection].name} reward` : "Add reward"}
             </Text>
           </HStack>
         </ModalHeader>
@@ -62,11 +70,20 @@ const AddRoleRewardModal = () => {
         <ModalBody ref={modalRef} className="custom-scrollbar">
           {selection && step === "SELECT_ROLE" ? (
             <SelectRoleOrSetRequirements selectedPlatform={selection} />
-          ) : AddPlatformPanel ? (
-            <AddPlatformPanel onSuccess={onClose} skipSettings />
+          ) : AddRewardPanel ? (
+            <AddRewardPanel
+              onAdd={(data) => {
+                append({ ...data, visibility: roleVisibility })
+                onClose()
+              }}
+              skipSettings
+            />
           ) : (
             <>
-              <SelectExistingPlatform onClose={onClose} />
+              <SelectExistingPlatform
+                onClose={onClose}
+                onSelect={(selectedRolePlatform) => append(selectedRolePlatform)}
+              />
               <Text fontWeight="bold" mb="3">
                 Add new reward
               </Text>

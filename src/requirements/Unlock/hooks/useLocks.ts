@@ -1,6 +1,6 @@
-import { Chain, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const CHAINS_ENDPOINTS = {
   1: "mainnet",
@@ -40,7 +40,7 @@ const fetch1000Locks = (endpoint: string, skip: number) =>
     data?.data?.locks?.map((lock) => ({
       ...lock,
       icon: `https://locksmith.unlock-protocol.com/lock/${lock.address}/icon`,
-    }))
+    })),
   )
 
 // We can only fetch 1000 locks at once, so we need to fetch them in multiple requests
@@ -65,7 +65,7 @@ const useLocks = (chain: Chain) => {
     chainId
       ? `https://api.thegraph.com/subgraphs/name/unlock-protocol/${CHAINS_ENDPOINTS[chainId]}-v2`
       : null,
-    fetchLocks
+    fetchLocks,
   )
 
   return { locks: data?.filter((lock) => !!lock), isLoading }

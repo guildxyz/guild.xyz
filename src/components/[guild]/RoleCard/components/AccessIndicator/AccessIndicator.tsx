@@ -41,15 +41,15 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const greenDividerColor = useColorModeValue("green.400", "whiteAlpha.400")
   const grayDividerColor = useColorModeValue("blackAlpha.400", "whiteAlpha.300")
 
-  const requirementsWithErrors = role?.requirements?.filter(
-    (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null,
+  const requirementsWithNoAccess = role?.requirements?.filter(
+    (req) => !reqAccesses?.find((r) => r.requirementId === req.id)?.access,
   )
   const errors = useRequirementErrorConfig()
-  const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
+  const firstRequirementWithErrorFromConfig = requirementsWithNoAccess.find(
     (req) => !!errors[req.type.split("_")[0]],
   )
   const errorTextFromConfig =
-    requirementsWithErrors.length > 0 &&
+    requirementsWithNoAccess.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isMember)
@@ -110,15 +110,6 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (isValidating)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  if (errorTextFromConfig)
-    return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label={errorTextFromConfig}
-        icon={Warning}
-      />
-    )
-
   if (reqAccesses?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
@@ -141,7 +132,16 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (requirementsWithErrors?.length > 0 || error)
+  if (errorTextFromConfig)
+    return (
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label={errorTextFromConfig}
+        icon={Warning}
+      />
+    )
+
+  if (requirementsWithNoAccess?.length > 0 || error)
     return (
       <HStack spacing="0" flexShrink={0}>
         <AccessIndicatorUI

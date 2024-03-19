@@ -39,17 +39,12 @@ const FormResponsesTable = ({ form }) => {
   )
 
   useEffect(() => {
-    /**
-     * Using native browser api, so it doesn't cause a rerender & trigger the general
-     * loading bar set up in _app.tsx. The downside is, if we filter for something,
-     * navigate to another page then click the back button, it won't work. We could
-     * add some logic to the _app.tsx effect to filter out query-only changes
-     * (https://stackoverflow.com/questions/62368109/update-router-query-without-firing-page-change-event-in-next-js),
-     * but I'm not sure the performance cost would worth handling this edge case, so
-     * left it this way for now
-     */
-    window.history.pushState("", "", `?${queryString}`)
-  }, [queryString])
+    if (!router.isReady || !queryString) return
+
+    const asPath = router.asPath.split("?")[0]
+    router.replace(`${asPath}?${queryString}`)
+  }, [queryString, router.isReady])
+
   const { data, error, isLoading, isValidating, setSize } = useFormSubmissions(
     form.id,
     queryString,

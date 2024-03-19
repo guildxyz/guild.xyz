@@ -1,4 +1,3 @@
-import { CHAIN_CONFIG } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import useSWR, { SWRResponse } from "swr"
@@ -9,27 +8,29 @@ import {
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 
-const fetchPrice = ([_, guildId, account, requirement, sellAddress]): Promise<
+const fetchPrice = ([, guildId, , requirement, sellAddress]): Promise<
   FetchPriceResponse<bigint>
-> =>
-  fetcher(`/api/fetchPrice`, {
-    method: "POST",
-    body: {
-      guildId,
-      account,
-      ...requirement,
-      sellToken: sellAddress,
-    },
-  }).then((data) => ({
+> => {
+  const queryParams = new URLSearchParams({
+    guildId,
+    minAmount: requirement.data.minAmount,
+    address: requirement.address,
+    type: requirement.type,
+    chain: requirement.chain,
+    sellToken: sellAddress,
+  }).toString()
+  return fetcher(`/api/fetchPrice?${queryParams}`).then((data) => ({
     ...data,
     buyAmountInWei: BigInt(data.buyAmountInWei),
     maxPriceInWei: BigInt(data.maxPriceInWei),
     estimatedGuildFeeInWei: BigInt(data.estimatedGuildFeeInWei),
     maxGuildFeeInWei: BigInt(data.maxGuildFeeInWei),
   }))
+}
 
 const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse<bigint>> => {
   const { address } = useAccount()
@@ -64,7 +65,7 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse<bigint>>
       revalidateOnFocus: false,
       refreshInterval: 30000,
       keepPreviousData: true,
-    }
+    },
   )
 
   return {

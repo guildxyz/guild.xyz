@@ -6,23 +6,15 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { useToastWithButton, useToastWithTweetButton } from "hooks/useToast"
-import { atom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { useState } from "react"
 import useMembershipUpdate from "./useMembershipUpdate"
-
-/**
- * Temporary to show "You might need to wait a few minutes to get your roles" on the
- * Discord reward card after join until we implement queues generally
- */
-export const isAfterJoinAtom = atom(false)
 
 const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const guild = useGuild()
   const user = useUser()
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
-  const setIsAfterJoin = useSetAtom(isAfterJoinAtom)
   // temporary because progress.mutate(undefined, { revalidate: false }) doesn't work for some reason
   const [isNoAccess, setIsNoAccess] = useState(false)
 
@@ -65,8 +57,6 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
 
         // mutate user in case they connected new platforms during the join flow
         user?.mutate?.()
-
-        setIsAfterJoin(true)
 
         onSuccess?.(response)
       },

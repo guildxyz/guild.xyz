@@ -1,10 +1,10 @@
 import { kv } from "@vercel/kv"
-import { Chain } from "chains"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 
 type Owner = {
   ownerAddress: string
@@ -85,7 +85,7 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
   do {
     try {
       const newOwners: { owners?: Owner[]; pageKey?: string } = await fetcher(
-        `${alchemyApiUrl[chain]}?${searchParams.toString()}`
+        `${alchemyApiUrl[chain]}?${searchParams.toString()}`,
       )
 
       if (newOwners.owners?.length) owners.push(...newOwners.owners)
@@ -110,7 +110,7 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
       }
     })
   const sortedOwners = ownersWithBalances.sort(
-    (ownerA, ownerB) => ownerB.tokenBalance - ownerA.tokenBalance
+    (ownerA, ownerB) => ownerB.tokenBalance - ownerA.tokenBalance,
   )
 
   const response: TopCollectorsResponse = {

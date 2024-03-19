@@ -7,17 +7,17 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react"
 import { Question } from "@phosphor-icons/react"
-import {
-  CHAIN_CONFIG,
-  Chain,
-  Chains,
-  supportedChains as defaultSupportedChains,
-} from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { useChainId } from "wagmi"
+import {
+  CHAIN_CONFIG,
+  Chain,
+  Chains,
+  supportedChains as defaultSupportedChains,
+} from "wagmiConfig/chains"
 
 const FUEL_ICON = "/walletLogos/fuel.svg"
 
@@ -76,7 +76,7 @@ const ChainPicker = ({
         controlName,
         supportedChains.includes(Chains[chainId] as Chain)
           ? Chains[chainId]
-          : supportedChains[0]
+          : supportedChains[0],
       )
     }, 0)
   }, [chainId])

@@ -13,9 +13,9 @@ import {
   Tr,
 } from "@chakra-ui/react"
 import { ArrowSquareOut, Question } from "@phosphor-icons/react"
-import { CHAIN_CONFIG } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { formatUnits } from "viem"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import useGuildPinFee from "../hooks/useGuildPinFee"
 import FeesTable from "./FeesTable"
 import PriceFallback from "./PriceFallback"

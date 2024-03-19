@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { LockSimple, Wallet } from "@phosphor-icons/react"
 import { useCardBg } from "components/common/Card"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PropsWithChildren } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"
@@ -73,7 +73,7 @@ export const IdentityTag = ({
   platformAccount: PlatformAccountDetails
   isOpen: boolean
 } & Rest) => {
-  const platform = platforms[PlatformType[platformAccount.platformId]]
+  const platform = rewards[PlatformType[platformAccount.platformId]]
   const username = platformAccount.username ?? platformAccount.platformUserId
   const borderColor = useCardBg()
 

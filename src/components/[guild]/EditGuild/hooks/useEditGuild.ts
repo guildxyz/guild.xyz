@@ -13,10 +13,13 @@ type Props = {
 }
 
 export const countFailed = (arr: Record<string, string>[]) =>
-  arr.filter((req) => !!req.error).length
+  arr.filter((res) => !!res.error).length
 
 export const getCorrelationId = (arr: Record<string, string>[]) =>
-  arr.filter((req) => !!req.error)[0]?.correlationId
+  arr.filter((res) => !!res.error)[0]?.correlationId
+
+const getError = (arr: Record<string, string>[]) =>
+  arr.filter((res) => !!res.error)[0]?.error
 
 const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const guild = useGuild(guildId)
@@ -40,8 +43,9 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           (admin) =>
             !existingAdmins.some(
               (existingAdmin) =>
-                existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
-            )
+                existingAdmin.address?.toLowerCase() ===
+                admin.address?.toLowerCase(),
+            ),
         )
       : []
 
@@ -51,8 +55,9 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
             !existingAdmin?.isOwner &&
             !admins.some(
               (admin) =>
-                existingAdmin.address?.toLowerCase() === admin.address?.toLowerCase()
-            )
+                existingAdmin.address?.toLowerCase() ===
+                admin.address?.toLowerCase(),
+            ),
         )
       : []
 
@@ -77,7 +82,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
     const contactsToDelete = contacts
       ? existingContacts.filter(
           (existingContact) =>
-            !contacts.some((contact) => contact.id === existingContact.id)
+            !contacts.some((contact) => contact.id === existingContact.id),
         )
       : []
 
@@ -86,7 +91,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       : []
     const featureFlagsToDelete = featureFlags
       ? existingFeatureFlags.filter(
-          (existingFlag) => !featureFlags.includes(existingFlag)
+          (existingFlag) => !featureFlags.includes(existingFlag),
         )
       : []
 
@@ -97,8 +102,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/admins`,
           { method: "POST", body: adminToCreate },
-        ]).catch((error) => error)
-      )
+        ]).catch((error) => error),
+      ),
     )
 
     const adminDeletions = Promise.all(
@@ -108,8 +113,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           { method: "DELETE" },
         ])
           .then(() => ({ id: adminToDelete.id }))
-          .catch((error) => error)
-      )
+          .catch((error) => error),
+      ),
     )
 
     const contactCreations = Promise.all(
@@ -117,8 +122,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/contacts`,
           { method: "POST", body: contactToCreate },
-        ]).catch((error) => error)
-      )
+        ]).catch((error) => error),
+      ),
     )
 
     const contactUpdates = Promise.all(
@@ -126,8 +131,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/contacts/${contactToUpdate.id}`,
           { method: "PUT", body: contactToUpdate },
-        ]).catch((error) => error)
-      )
+        ]).catch((error) => error),
+      ),
     )
 
     const contactDeletions = Promise.all(
@@ -137,8 +142,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           { method: "DELETE" },
         ])
           .then(() => ({ id: contactToDelete.id }))
-          .catch((error) => error)
-      )
+          .catch((error) => error),
+      ),
     )
 
     const featureFlagCreations = Promise.all(
@@ -146,8 +151,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         fetcherWithSign([
           `/v2/guilds/${id}/feature-flags`,
           { method: "POST", body: { featureType: featureFlagToCreate } },
-        ]).catch((error) => error)
-      )
+        ]).catch((error) => error),
+      ),
     )
 
     const featureFlagDeletions = Promise.all(
@@ -157,8 +162,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           { method: "DELETE" },
         ])
           .then(() => ({ flagType: featureFlagToDelete }))
-          .catch((error) => error)
-      )
+          .catch((error) => error),
+      ),
     )
 
     const baseGuildUpdate = shouldUpdateBaseGuild
@@ -194,11 +199,13 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           success: adminCreationResults.filter((res) => !res.error),
           failedCount: countFailed(adminCreationResults),
           correlationId: getCorrelationId(adminCreationResults),
+          error: getError(adminCreationResults),
         },
         deletions: {
           success: adminDeleteResults.filter((res) => !res.error),
           failedCount: countFailed(adminDeleteResults),
           correlationId: getCorrelationId(adminDeleteResults),
+          error: getError(adminDeleteResults),
         },
       },
 
@@ -207,16 +214,19 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           success: contactCreationResults.filter((res) => !res.error),
           failedCount: countFailed(contactCreationResults),
           correlationId: getCorrelationId(contactCreationResults),
+          error: getError(contactCreationResults),
         },
         updates: {
           success: contactUpdateResults.filter((res) => !res.error),
           failedCount: countFailed(contactUpdateResults),
           correlationId: getCorrelationId(contactUpdateResults),
+          error: getError(contactUpdateResults),
         },
         deletions: {
           success: contactDeleteResults.filter((res) => !res.error),
           failedCount: countFailed(contactDeleteResults),
           correlationId: getCorrelationId(contactDeleteResults),
+          error: getError(contactDeleteResults),
         },
       },
 
@@ -225,11 +235,13 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           success: featureFlagCreationResults.filter((res) => !res.error),
           failedCount: countFailed(featureFlagCreationResults),
           correlationId: getCorrelationId(featureFlagCreationResults),
+          error: getError(featureFlagCreationResults),
         },
         deletions: {
           success: featureFlagDeletionResults.filter((res) => !res.error),
           failedCount: countFailed(featureFlagDeletionResults),
           correlationId: getCorrelationId(featureFlagDeletionResults),
+          error: getError(featureFlagCreationResults),
         },
       },
 
@@ -254,52 +266,54 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       } else {
         if (admin.creations.failedCount > 0) {
           showErrorToast({
-            error: "Failed to create some admins",
+            error: admin.creations.error || "Failed to create some admins",
             correlationId: admin.creations.correlationId,
           })
         }
         if (admin.deletions.failedCount > 0) {
           showErrorToast({
-            error: "Failed to delete some admins",
+            error: admin.deletions.error || "Failed to delete some admins",
             correlationId: admin.deletions.correlationId,
           })
         }
 
         if (contacts.creations.failedCount > 0) {
           showErrorToast({
-            error: "Failed to create some contacts",
+            error: contacts.creations.error || "Failed to create some contacts",
             correlationId: contacts.creations.correlationId,
           })
         }
         if (contacts.updates.failedCount > 0) {
           showErrorToast({
-            error: "Failed to update some contacts",
+            error: contacts.updates.error || "Failed to update some contacts",
             correlationId: contacts.updates.correlationId,
           })
         }
         if (contacts.deletions.failedCount > 0) {
           showErrorToast({
-            error: "Failed to delete some contacts",
+            error: contacts.deletions.error || "Failed to delete some contacts",
             correlationId: contacts.deletions.correlationId,
           })
         }
 
         if (featureFlags.creations.failedCount > 0) {
           showErrorToast({
-            error: "Failed to create some feature flags",
+            error:
+              featureFlags.creations.error || "Failed to create some feature flags",
             correlationId: featureFlags.creations.correlationId,
           })
         }
         if (featureFlags.deletions.failedCount > 0) {
           showErrorToast({
-            error: "Failed to delete some feature flags",
+            error:
+              featureFlags.deletions.error || "Failed to delete some feature flags",
             correlationId: featureFlags.deletions.correlationId,
           })
         }
 
         if (guildUpdateResult?.error) {
           showErrorToast({
-            error: "Failed to update guild data",
+            error: guildUpdateResult.error || "Failed to update guild data",
             correlationId: guildUpdateResult.correlationId,
           })
         }
@@ -310,8 +324,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           const oldAdminsThatHaventBeenDeleted = (prev?.admins ?? []).filter(
             (prevAdmin) =>
               !admin.deletions.success.some(
-                (deletedAdmin) => deletedAdmin.id === prevAdmin.id
-              )
+                (deletedAdmin) => deletedAdmin.id === prevAdmin.id,
+              ),
           )
 
           const oldContactsThatHaventBeenDeletedNorUpdated = (
@@ -319,11 +333,11 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           ).filter(
             (prevContact) =>
               !contacts.deletions.success.some(
-                (deletedContact) => deletedContact.id === prevContact.id
+                (deletedContact) => deletedContact.id === prevContact.id,
               ) &&
               !contacts.updates.success.some(
-                (updatedContact) => updatedContact.id === prevContact.id
-              )
+                (updatedContact) => updatedContact.id === prevContact.id,
+              ),
           )
 
           const oldFeatureFlagsThatHaventBeenDeleted = (
@@ -331,8 +345,8 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
           ).filter(
             (prevFeatureFlag) =>
               !featureFlags.deletions.success.some(
-                (deletedFlag) => deletedFlag.featureType === prevFeatureFlag
-              )
+                (deletedFlag) => deletedFlag.featureType === prevFeatureFlag,
+              ),
           )
 
           return {
@@ -347,18 +361,18 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
             featureFlags: [
               ...oldFeatureFlagsThatHaventBeenDeleted,
               ...featureFlags.creations.success.map(
-                (createdFlag) => createdFlag.featureType
+                (createdFlag) => createdFlag.featureType,
               ),
             ],
           }
         },
         {
           revalidate: false,
-        }
+        },
       )
 
       const guildPinCacheKeysRegExp = new RegExp(
-        `^/assets/guildPins/image\\?guildId=${id}&guildAction=\\d`
+        `^/assets/guildPins/image\\?guildId=${id}&guildAction=\\d`,
       )
       matchMutate(guildPinCacheKeysRegExp)
 

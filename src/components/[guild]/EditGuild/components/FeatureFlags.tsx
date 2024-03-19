@@ -9,7 +9,6 @@ const FEATURE_FLAGS = [
   "GUILD_CREDENTIAL",
   "CRM",
   "GUILD_QUEUES",
-  "ROLE_GROUPS",
   "MESSAGING",
   "FORMS",
 ] as const
@@ -35,6 +34,7 @@ const FeatureFlags = (): JSX.Element => {
   return (
     <FormControl>
       <StyledSelect
+        menuPlacement={"top"}
         ref={ref}
         name={name}
         value={options.filter((option) => value?.includes(option.value))}
@@ -43,8 +43,8 @@ const FeatureFlags = (): JSX.Element => {
         onChange={(selectedOption: (SelectOption | string)[]) => {
           onChange(
             selectedOption.map((option) =>
-              typeof option === "string" ? option : option.value
-            )
+              typeof option === "string" ? option : option.value,
+            ),
           )
         }}
         onBlur={onBlur}

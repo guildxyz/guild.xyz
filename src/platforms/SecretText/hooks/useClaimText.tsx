@@ -9,7 +9,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { reactMarkdownComponents } from "components/[guild]/collect/components/RichTextDescription"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
@@ -17,7 +16,6 @@ import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { useUserRewards } from "hooks/useUserRewards"
 import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
@@ -38,11 +36,6 @@ const useClaimText = (rolePlatformId: number) => {
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId),
   )?.id
-
-  const { data: userRewards, isLoading: isUserRewardsLoading } = useUserRewards()
-  const hasUserReward = !!userRewards?.find(
-    (reward) => reward.rolePlatformId === rolePlatformId,
-  )
 
   const triggerConfetti = useJsConfetti()
   const showErrorToast = useShowErrorToast()
@@ -94,24 +87,11 @@ const useClaimText = (rolePlatformId: number) => {
     },
   )
 
-  const { isLoading: isMembershipUpdateLoading, triggerMembershipUpdate } =
-    useMembershipUpdate({
-      onSuccess: () => onClaimTextSubmit(),
-      onError: (error) =>
-        showErrorToast({
-          error: "Couldn't check eligibility",
-          correlationId: error.correlationId,
-        }),
-    })
-
   return {
     error: claim.error,
     response: uniqueValue ? { uniqueValue } : responseFromCache ?? claim.response,
-    isPreparing: isUserRewardsLoading,
-    isLoading: claim.isLoading || isMembershipUpdateLoading,
-    onSubmit: hasUserReward
-      ? () => onClaimTextSubmit()
-      : () => triggerMembershipUpdate(),
+    isLoading: claim.isLoading,
+    onSubmit: onClaimTextSubmit,
     modalProps: {
       isOpen,
       onOpen,
@@ -151,7 +131,10 @@ const ClaimTextModal = ({
             <Text>Getting your secret...</Text>
           </HStack>
         ) : response?.uniqueValue ? (
-          <ReactMarkdown components={reactMarkdownComponents}>
+          <ReactMarkdown
+            // transformLinkUri={false}
+            components={reactMarkdownComponents}
+          >
             {response.uniqueValue}
           </ReactMarkdown>
         ) : (

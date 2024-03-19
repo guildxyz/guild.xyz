@@ -1,6 +1,6 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 
 const getContractMethods = (abi) => {
   let parsedAbi
@@ -14,7 +14,7 @@ const getContractMethods = (abi) => {
         method.type === "function" &&
         (method.stateMutability === "view" ||
           method.stateMutability === "pure" ||
-          method.constant)
+          method.constant),
     ) ?? []
   )
 }
@@ -23,7 +23,7 @@ const fetchAbi = ([_, baseUrl, contract]) => {
   if (!baseUrl) return []
 
   return fetcher(
-    `${baseUrl}/api?module=contract&action=getsourcecode&address=${contract}`
+    `${baseUrl}/api?module=contract&action=getsourcecode&address=${contract}`,
   )
     .then(async (res) => {
       if (!res.result?.[0]?.Implementation)
@@ -33,7 +33,7 @@ const fetchAbi = ([_, baseUrl, contract]) => {
       await new Promise((resolve) => setTimeout(resolve, 5000))
 
       return fetcher(
-        `${baseUrl}/api?module=contract&action=getsourcecode&address=${res.result?.[0]?.Implementation}`
+        `${baseUrl}/api?module=contract&action=getsourcecode&address=${res.result?.[0]?.Implementation}`,
       ).then((implRes) => getContractMethods(implRes.result?.[0]?.ABI))
     })
     .catch(() => [])
@@ -44,7 +44,7 @@ const useAbi = (chain: Chains, address: string) => {
 
   return useSWRImmutable<any[]>(
     address ? ["getabi", baseUrl, address] : null,
-    fetchAbi
+    fetchAbi,
   )
 }
 

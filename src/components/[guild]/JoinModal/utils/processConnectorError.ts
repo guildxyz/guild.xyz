@@ -1,4 +1,4 @@
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 
@@ -12,7 +12,7 @@ const processConnectorError = (error: string): string | undefined => {
   try {
     const [matchedPlatformId] = error.match(/^"\d" /) ?? []
     const platformName = matchedPlatformId
-      ? platforms[PlatformType[parseInt(matchedPlatformId.replace('"', "").trim())]]
+      ? rewards[PlatformType[parseInt(matchedPlatformId.replace('"', "").trim())]]
           .name
       : null
     const cleanError = error.replaceAll("\\", "")
@@ -22,10 +22,10 @@ const processConnectorError = (error: string): string | undefined => {
 
     const parsedError = JSON.parse(
       matchedMsg ??
-        (matchedError ? `{${matchedError.replace("error", '"msg"').trim()}}` : "")
+        (matchedError ? `{${matchedError.replace("error", '"msg"').trim()}}` : ""),
     )
     return capitalize(
-      parsedError?.msg ? `${parsedError.msg} (${platformName} error)` : ""
+      parsedError?.msg ? `${parsedError.msg} (${platformName} error)` : "",
     )
   } catch {
     console.error("Unknown error:", error)

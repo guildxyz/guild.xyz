@@ -31,17 +31,16 @@ const getNounsRequirementType = (trait: Trait) =>
   !trait
     ? undefined
     : trait.trait_type === "background"
-    ? NOUNS_BACKGROUNDS?.[trait.value]
-    : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
-        ?.filename
+      ? NOUNS_BACKGROUNDS?.[trait.value]
+      : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
+          ?.filename
 
 const NftRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirement.chain]?.address ===
-    requirement.address.toLowerCase()
+    GUILD_PIN_CONTRACTS[requirement.chain] === requirement.address.toLowerCase()
 
   const guildIdAttribute =
     isGuildPin &&
@@ -51,7 +50,7 @@ const NftRequirement = (props: RequirementProps) => {
     isGuildPin
       ? // Fallback to "Our Guild" pin image
         `/v2/guilds/${guildIdAttribute ?? 1985}/pin?guildAction=0`
-      : null
+      : null,
   )
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
@@ -59,7 +58,7 @@ const NftRequirement = (props: RequirementProps) => {
     useNftMetadata(requirement.chain, requirement.address, requirement.data?.id)
   const { metadata, isLoading } = useNftMetadataWithTraits(
     requirement.chain,
-    requirement.address
+    requirement.address,
   )
 
   const nftDataLoading = isLoading || isMetadataWithTraitsLoading
@@ -114,10 +113,10 @@ const NftRequirement = (props: RequirementProps) => {
           ? "a(n) "
           : "the "
         : requirement.data?.maxAmount > 0
-        ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
-        : requirement.data?.minAmount > 1
-        ? `at least ${requirement.data?.minAmount} `
-        : "a(n) "}
+          ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
+          : requirement.data?.minAmount > 1
+            ? `at least ${requirement.data?.minAmount} `
+            : "a(n) "}
 
       {nftName ||
         (!requirement.name || requirement.name === "-"
@@ -146,12 +145,12 @@ const NftRequirement = (props: RequirementProps) => {
                       index < requirement.data.attributes.length - 1 ? ", " : ""
                     }`
                   : trait.minValue && trait.maxValue
-                  ? `${trait.minValue}-${trait.maxValue} ${trait.trait_type}`
-                  : trait.minValue
-                  ? `at least ${trait.minValue} ${trait.trait_type}`
-                  : trait.maxValue
-                  ? `at most ${trait.maxValue} ${trait.trait_type}`
-                  : ""}
+                    ? `${trait.minValue}-${trait.maxValue} ${trait.trait_type}`
+                    : trait.minValue
+                      ? `at least ${trait.minValue} ${trait.trait_type}`
+                      : trait.maxValue
+                        ? `at most ${trait.maxValue} ${trait.trait_type}`
+                        : ""}
               </Fragment>
             )
           })}

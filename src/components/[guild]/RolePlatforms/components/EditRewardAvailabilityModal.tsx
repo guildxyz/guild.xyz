@@ -20,7 +20,7 @@ import { Clock, Hash } from "@phosphor-icons/react"
 import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import { Modal } from "components/common/Modal"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -167,7 +167,7 @@ const EditRewardAvailabilityModal = ({
 
               <Tooltip
                 label={`Automatic by ${
-                  platforms[platformType]?.name ?? "reward"
+                  rewards[platformType]?.name ?? "reward"
                 } data`}
                 isDisabled={!AUTO_TIMEFRAME_PLATFORMS.includes(platformType)}
                 shouldWrapChildren

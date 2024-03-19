@@ -51,19 +51,19 @@ const Web3Inbox = () => {
 
   const { address } = useAccount()
   const { data: account } = useWeb3InboxAccount(
-    address ? `eip155:1:${address}` : undefined
+    address ? `eip155:1:${address}` : undefined,
   )
 
   const { data: subscription } = useSubscription(
     account,
-    WEB3_INBOX_INIT_PARAMS.domain
+    WEB3_INBOX_INIT_PARAMS.domain,
   )
 
   const { data: messages } = useNotifications(
     5,
     false,
     account,
-    WEB3_INBOX_INIT_PARAMS.domain
+    WEB3_INBOX_INIT_PARAMS.domain,
   )
 
   const inboxContainerRef = useRef(null)
@@ -141,7 +141,7 @@ const SubscribeToMessages = () => {
   const { address } = useAccount()
 
   const { data: account } = useWeb3InboxAccount(
-    address ? `eip155:1:${address}` : undefined
+    address ? `eip155:1:${address}` : undefined,
   )
 
   const [isSigning, setIsSigning] = useState(false)
@@ -150,7 +150,7 @@ const SubscribeToMessages = () => {
   const { register, isLoading: isRegistering } = useRegister()
   const { subscribe, isLoading: isSubscribing } = useSubscribe(
     account,
-    WEB3_INBOX_INIT_PARAMS.domain
+    WEB3_INBOX_INIT_PARAMS.domain,
   )
 
   const { signMessageAsync } = useSignMessage()
@@ -164,9 +164,10 @@ const SubscribeToMessages = () => {
     try {
       const { message, registerParams } = await prepareRegistration()
       setIsSigning(true)
-      const signature = await signMessageAsync({ message: message }).finally(() =>
-        setIsSigning(false)
-      )
+      const signature = await signMessageAsync({
+        account: address,
+        message: message,
+      }).finally(() => setIsSigning(false))
       await register({ registerParams, signature })
     } catch (web3InboxRegisterError) {
       console.error("web3InboxRegisterError", web3InboxRegisterError)

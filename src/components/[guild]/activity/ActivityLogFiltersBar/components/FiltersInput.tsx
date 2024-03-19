@@ -21,7 +21,7 @@ import FilterTag from "./FilterTag"
 import Suggestions from "./Suggestions"
 
 const getPositionerCSSVariables = (
-  element: HTMLDivElement
+  element: HTMLDivElement,
 ): Record<string, string> => {
   if (!element) return {}
   const style = getComputedStyle(element)
@@ -35,7 +35,7 @@ const FiltersInput = (): JSX.Element => {
   const { activeFilters, addFilter, removeLastFilter, clearFilters } =
     useActivityLogFilters()
   const renderedActiveFilters = activeFilters.filter((f) =>
-    SUPPORTED_SEARCH_OPTIONS.includes(f.filter as SupportedSearchOption)
+    SUPPORTED_SEARCH_OPTIONS.includes(f.filter as SupportedSearchOption),
   )
 
   const [state, send] = useMachine(
@@ -59,7 +59,7 @@ const FiltersInput = (): JSX.Element => {
       },
       openOnClick: true,
       loop: true,
-    })
+    }),
   )
 
   const {
@@ -157,10 +157,11 @@ const FiltersInput = (): JSX.Element => {
               onClick={() => {
                 clearFilters([
                   "userId",
+                  "guildId",
                   "roleId",
                   "rolePlatformId",
+                  "formId",
                   "action",
-                  "guildId",
                 ])
                 setInputValue("")
               }}

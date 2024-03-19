@@ -1,30 +1,22 @@
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
-
-type Props = {
-  onSuccess: () => void
-}
+import { AddRewardPanelProps } from "platforms/rewards"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddDiscordPanel = ({ onSuccess }: Props) => {
+const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  const rolePlatforms = useWatch({ name: "rolePlatforms" })
 
   const platformGuildId = useWatch({
     control: methods.control,
     name: `platformGuildId`,
   })
 
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
+  // TODO: we could somehow extract this piece of logis from here to make sure that AddDiscordPanel doesn't depend on the role form's state
+  const rolePlatforms = useWatch({ name: "rolePlatforms" })
 
   return (
     <FormProvider {...methods}>
@@ -33,15 +25,17 @@ const AddDiscordPanel = ({ onSuccess }: Props) => {
         fieldName={`platformGuildId`}
         selectedServer={platformGuildId}
         defaultValues={defaultValues}
-        onSubmit={() => {
-          append({
-            guildPlatform: { platformName: "DISCORD", platformGuildId },
+        onSubmit={() =>
+          onAdd({
+            guildPlatform: {
+              platformName: "DISCORD",
+              platformId: PlatformType.DISCORD,
+              platformGuildId,
+            },
             isNew: true,
             platformRoleId: null,
-            visibility: roleVisibility,
           })
-          onSuccess()
-        }}
+        }
       />
     </FormProvider>
   )

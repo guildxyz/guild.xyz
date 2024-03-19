@@ -20,6 +20,7 @@ const ControlledSelect = ({
   options,
   defaultValue,
   fallbackValue,
+  isCopyable,
   ...rest
 }: Props): JSX.Element => {
   const {
@@ -37,7 +38,7 @@ const ControlledSelect = ({
       name={name}
       options={options}
       defaultValue={options?.find(
-        (option: SelectOption) => option.value === defaultValue
+        (option: SelectOption) => option.value === defaultValue,
       )}
       value={
         options?.find((option: SelectOption) => option.value === value) ??
@@ -50,6 +51,7 @@ const ControlledSelect = ({
         afterOnChange?.(newValue)
       }}
       onBlur={onBlur}
+      isCopyable={isCopyable}
       {...rest}
     />
   )

@@ -1,22 +1,24 @@
-import { Chain, Chains } from "chains"
 import feeCollectorAbi from "static/abis/feeCollector"
-import { useAccount, useContractRead } from "wagmi"
+import { useAccount, useReadContract } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const useHasPaid = (
   contractAddress: `0x${string}`,
   vaultId: number,
-  chain?: Chain
+  chain?: Chain,
 ) => {
   const { address } = useAccount()
   const enabled = Boolean(contractAddress && address && vaultId)
 
-  return useContractRead({
+  return useReadContract({
     abi: feeCollectorAbi,
     address: contractAddress,
     functionName: "hasPaid",
     args: [BigInt(vaultId ?? 0), address],
     chainId: Chains[chain],
-    enabled,
+    query: {
+      enabled,
+    },
   })
 }
 

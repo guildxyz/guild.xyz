@@ -20,7 +20,7 @@ const TO_LOCALE_STRING_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
   timeZone: "Europe/Budapest",
 }
-const IGNORED_PATHS = ["/", "/oauth"]
+const IGNORED_PATHS = ["/", "/oauth", "/oauth-result"]
 
 const MaintenanceBanner = ({
   maintenanceFrom,
@@ -29,7 +29,7 @@ const MaintenanceBanner = ({
   const maintenanceFromDate = new Date(maintenanceFrom)
   const maintenanceFromPrettyDate = maintenanceFromDate.toLocaleDateString(
     LOCALE,
-    TO_LOCALE_STRING_OPTIONS
+    TO_LOCALE_STRING_OPTIONS,
   )
 
   const [maintenanceDate, maintenanceStart] = maintenanceFromPrettyDate.split(" at ")
@@ -37,14 +37,14 @@ const MaintenanceBanner = ({
   const maintenanceToDate = new Date(maintenanceTo)
   const maintenanceToPrettyDate = maintenanceToDate.toLocaleDateString(
     LOCALE,
-    TO_LOCALE_STRING_OPTIONS
+    TO_LOCALE_STRING_OPTIONS,
   )
 
   const [, maintenanceEnd] = maintenanceToPrettyDate.split(" at ")
 
   const [isBannerClosed, setIsBannerClosed] = useLocalStorage(
     `${maintenanceFrom}-${maintenanceTo}-maintenance-banner-closed`,
-    false
+    false,
   )
 
   const { pathname } = useRouter()

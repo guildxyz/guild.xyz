@@ -19,7 +19,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import { Alert } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { atom, useAtom } from "jotai"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useRef } from "react"
 import { PlatformName } from "types"
 import capitalize from "utils/capitalize"
@@ -37,7 +37,7 @@ const PlatformMergeErrorAlert = () => {
   const { addressOrDomain, platformName } = state || {}
   const onClose = () => setState(false)
 
-  const socialAccountName = platforms[platformName]?.name ?? "social"
+  const socialAccountName = rewards[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(
     platformName ?? "DISCORD",
     () => {

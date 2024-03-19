@@ -1,27 +1,20 @@
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
-import { Visibility } from "types"
-
-type Props = {
-  onSuccess: () => void
-  skipSettings?: boolean
-}
+import { AddRewardPanelProps } from "platforms/rewards"
+import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 
 const defaultValues = {
   platformGuildId: null,
 }
 
-const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
+const AddGooglePanel = ({
+  onAdd,
+  skipSettings,
+}: AddRewardPanelProps): JSX.Element => {
   const methods = useForm({
     mode: "all",
     defaultValues,
   })
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
-
-  const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
   return (
     <FormProvider {...methods}>
@@ -29,13 +22,15 @@ const AddGooglePanel = ({ onSuccess, skipSettings }: Props): JSX.Element => {
         defaultValues={defaultValues}
         onSelect={(newPlatform) => {
           const { platformRoleId, ...guildPlatformData } = newPlatform
-          append({
-            guildPlatform: { ...guildPlatformData, platformName: "GOOGLE" },
+          onAdd({
+            guildPlatform: {
+              ...guildPlatformData,
+              platformName: "GOOGLE",
+              platformId: PlatformType.GOOGLE,
+            },
             platformRoleId,
             isNew: true,
-            visibility: roleVisibility,
           })
-          onSuccess?.()
         }}
         skipSettings={skipSettings}
       />

@@ -1,7 +1,7 @@
 import { kv } from "@vercel/kv"
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
+import { OneOf } from "types"
 import {
   ADDRESS_REGEX,
   GUILD_FEE_PERCENTAGE,
@@ -13,8 +13,9 @@ import {
   getTokenBuyerContractData,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
-import { createPublicClient, formatUnits, http, parseUnits } from "viem"
-import { erc20ABI } from "wagmi"
+import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
+import { wagmiConfig } from "wagmiConfig"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
 export type FetchPriceResponse<T extends string | bigint = string> = {
@@ -51,12 +52,12 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
     return CHAIN_CONFIG[chain].nativeCurrency.decimals
 
   const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[chain],
+    chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain),
     transport: http(),
   })
   const decimals = await publicClient.readContract({
     address: tokenAddress as `0x${string}`,
-    abi: erc20ABI,
+    abi: erc20Abi,
     functionName: "decimals",
   })
 
@@ -72,7 +73,7 @@ const getGuildFee = async (
   estimatedPriceInUSD: number,
   maxPriceInSellToken: number,
   maxPriceInUSD: number,
-  sellTokenToEthRate: number
+  sellTokenToEthRate: number,
 ): Promise<{
   guildBaseFeeInSellToken: number
   estimatedGuildFeeInSellToken: number
@@ -86,7 +87,7 @@ const getGuildFee = async (
     return Promise.reject("Unsupported chain")
 
   const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[Chains[chainId]],
+    chain: wagmiConfig.chains.find((c) => c.id === chainId),
     transport: http(),
   })
   const guildBaseFeeInWei = await publicClient.readContract({
@@ -103,7 +104,7 @@ const getGuildFee = async (
   const sellTokenDecimals = await getDecimals(Chains[chainId] as Chain, sellToken)
 
   const guildBaseFeeInSellToken = parseFloat(
-    formatUnits(guildBaseFeeInWei as bigint, sellTokenDecimals)
+    formatUnits(guildBaseFeeInWei as bigint, sellTokenDecimals),
   )
   const guildBaseFeeInUSD =
     (nativeCurrencyPriceInUSD / sellTokenToEthRate) * guildBaseFeeInSellToken
@@ -128,16 +129,19 @@ const getGuildFee = async (
   }
 }
 
-const validateBody = (
-  obj: Record<string, any>
-): { isValid: boolean; error?: string } => {
+const validateParams = (
+  obj: Record<string, any>,
+): OneOf<
+  { isValid: boolean; error?: string },
+  { isValid: boolean; data: FetchPriceBodyParams }
+> => {
   if (!obj)
     return {
       isValid: false,
-      error: "You must provide a request body.",
+      error: "You must provide request params.",
     }
 
-  if (typeof obj.guildId !== "number")
+  if (!obj.guildId || typeof +obj.guildId !== "number")
     return {
       isValid: false,
       error: "Missing or invalid param: guildId",
@@ -176,21 +180,31 @@ const validateBody = (
       error: "Invalid requirement address.",
     }
 
-  if (
-    typeof obj.data?.minAmount !== "undefined" &&
-    isNaN(parseFloat(obj.data?.minAmount))
-  )
+  if (typeof obj.minAmount !== "undefined" && isNaN(parseFloat(obj.minAmount))) {
     return {
       isValid: false,
       error: "Invalid requirement amount.",
     }
+  }
 
-  return { isValid: true }
+  return {
+    isValid: true,
+    data: {
+      guildId: +obj.guildId,
+      type: obj.type as RequirementType,
+      chain: obj.chain as Chain,
+      sellToken: obj.sellToken,
+      address: obj.address,
+      data: {
+        minAmount: parseFloat(obj.minAmount),
+      },
+    },
+  }
 }
 
 export const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
   fetch(
-    `https://api.coinbase.com/v2/exchange-rates?currency=${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
+    `https://api.coinbase.com/v2/exchange-rates?currency=${CHAIN_CONFIG[chain].nativeCurrency.symbol}`,
   )
     .then((coinbaseRes) => coinbaseRes.json())
     .then((coinbaseData) => coinbaseData.data.rates.USD)
@@ -198,19 +212,18 @@ export const fetchNativeCurrencyPriceInUSD = async (chain: Chain) =>
 
 const handler: NextApiHandler<FetchPriceResponse> = async (
   req: NextApiRequest,
-  res: NextApiResponse<FetchPriceResponse | { error: string }>
+  res: NextApiResponse<FetchPriceResponse | { error: string }>,
 ) => {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST")
+  if (req.method !== "GET") {
+    res.setHeader("Allow", "GET")
     return res.status(405).json({ error: `Method ${req.method} is not allowed` })
   }
 
-  const { isValid, error } = validateBody(req.body)
+  const { isValid, error, data: validatedParams } = validateParams(req.query)
 
   if (!isValid) return res.status(400).json({ error })
 
-  const { guildId, type, chain, sellToken, address, data }: FetchPriceBodyParams =
-    req.body
+  const { guildId, type, chain, sellToken, address, data } = validatedParams
   const minAmount = parseFloat(data.minAmount ?? 1)
 
   if (type === "ERC20") {
@@ -246,7 +259,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         headers: {
           "0x-api-key": process.env.ZEROX_API_KEY,
         },
-      }
+      },
     )
 
     const responseData = await response.json()
@@ -264,7 +277,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
           await kv.lpush(
             `${NON_PURCHASABLE_ASSETS_KV_KEY}:${Chains[chain]}`,
-            address.toLowerCase()
+            address.toLowerCase(),
           )
         } else {
           errorMessage = responseData.validationErrors[0].description
@@ -278,7 +291,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const foundSource = responseData.sources.find(
       (source) =>
-        ZEROX_SUPPORTED_SOURCES.includes(source.name) && source.proportion === "1"
+        ZEROX_SUPPORTED_SOURCES.includes(source.name) && source.proportion === "1",
     )
 
     const relevantOrder =
@@ -312,7 +325,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
         estimatedPriceInUSD,
         maxPriceInSellToken,
         maxPriceInUSD,
-        responseData.sellTokenToEthRate
+        responseData.sellTokenToEthRate,
       )
     } catch (getGuildFeeError) {
       return res.status(500).json({ error: getGuildFeeError })
@@ -332,12 +345,12 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const estimatedGuildFeeInWei = parseUnits(
       estimatedGuildFeeInSellToken.toFixed(sellTokenDecimals),
-      sellTokenDecimals
+      sellTokenDecimals,
     )
 
     const maxGuildFeeInWei = parseUnits(
       maxGuildFeeInSellToken.toFixed(sellTokenDecimals),
-      sellTokenDecimals
+      sellTokenDecimals,
     )
 
     const source = foundSource.name as ZeroXSupportedSources
@@ -346,12 +359,13 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const maxPriceInWei =
       ((parseUnits(
         maxPriceInSellToken.toFixed(sellTokenDecimals),
-        sellTokenDecimals
+        sellTokenDecimals,
       ) -
         BigInt(100000)) /
         BigInt(100000)) *
       BigInt(100000)
 
+    res.setHeader("Cache-Control", "s-maxage=30")
     return res.json({
       buyAmount: minAmount,
       buyAmountInWei: buyAmountInWei.toString(),

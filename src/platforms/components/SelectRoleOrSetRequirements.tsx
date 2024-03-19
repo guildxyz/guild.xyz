@@ -7,7 +7,7 @@ import RoleSelector from "components/[guild]/RoleSelector"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -29,15 +29,21 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     ? roles.filter((role) => role.groupId === group.id)
     : roles.filter((role) => !role.groupId)
 
-  const { setValue, unregister } = useFormContext()
+  const { register, unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
 
-  const handleChange = (value) => {
-    unregister("requirements")
+  const handleChange = (value: RoleTypeToAddTo) => {
+    if (value === RoleTypeToAddTo.EXISTING_ROLE) {
+      unregister("requirements")
+    } else {
+      register("requirements", {
+        value: [{ type: "FREE" }],
+      })
+    }
     setActiveTab(value)
   }
 
-  const { asRewardRestriction } = platforms[selection]
+  const { asRewardRestriction } = rewards[selection]
 
   return (
     <Tabs

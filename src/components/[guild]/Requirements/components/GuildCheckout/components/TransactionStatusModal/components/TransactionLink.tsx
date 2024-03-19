@@ -1,7 +1,7 @@
 import { Icon, Link, Text } from "@chakra-ui/react"
 import { ArrowSquareOut } from "@phosphor-icons/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useTransactionStatusContext } from "../../TransactionStatusContext"
 
 const TransactionLink = (): JSX.Element => {
@@ -12,9 +12,7 @@ const TransactionLink = (): JSX.Element => {
     <Text mb={6} colorScheme="gray">
       <Link
         isExternal
-        href={`${
-          CHAIN_CONFIG[Chains[chainId]].blockExplorers.default.url
-        }/tx/${txHash}`}
+        href={`${CHAIN_CONFIG[Chains[chainId]].blockExplorerUrl}/tx/${txHash}`}
       >
         View on block explorer
         <Icon ml={1} as={ArrowSquareOut} />

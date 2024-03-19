@@ -1,6 +1,6 @@
-import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { Chain } from "wagmiConfig/chains"
 
 export type SismoBadgeChain = Extract<Chain, "GNOSIS" | "POLYGON" | "GOERLI">
 
@@ -19,14 +19,14 @@ const fetchSismoBadges = ([_, chain, isPlayGround]) =>
           label: badge.name,
           img: badge.image,
           value: badge.collectionId.toString(),
-        })) ?? []
+        })) ?? [],
     )
     .catch(() => [])
 
 const useSismoBadges = (chain: Chain, isPlayGround?: boolean) =>
   useSWRImmutable(
     chain ? ["sismoBadges", chain, isPlayGround] : null,
-    fetchSismoBadges
+    fetchSismoBadges,
   )
 
 export default useSismoBadges
