@@ -13,9 +13,17 @@ const useMirrorEdition = (
     address.match(ADDRESS_REGEX) &&
     (chain === "OPTIMISM" || chain === "ETHEREUM")
 
-  const contract = { abi: mirrorAbi, chainId: Chains[chain], address }
+  const contract = { abi: mirrorAbi, chainId: Chains[chain], address } as const
 
   const { data, isLoading, error } = useReadContracts({
+    /**
+     * We need to @ts-ignore this line, since we get a "Type instantiation is
+     * excessively deep and possibly infinite" error here until strictNullChecks is
+     * set to false in our tsconfig. We should set it to true & sort out the related
+     * issues in another PR.
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     contracts: [
       {
         ...contract,
