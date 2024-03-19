@@ -1,7 +1,6 @@
 import { Icon } from "@chakra-ui/react"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
-import { TwitterV1Tooltip } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/SocialAccount"
 import Script from "next/script"
 import rewards from "platforms/rewards"
 import { useEffect } from "react"
@@ -66,7 +65,6 @@ const ConnectPlatform = ({ platform }: Props) => {
         !isConnected &&
         "Connect wallet first"
       }
-      titleRightElement={platform === "TWITTER_V1" && <TwitterV1Tooltip />}
     >
       {platform === "TELEGRAM" && (
         <Script
