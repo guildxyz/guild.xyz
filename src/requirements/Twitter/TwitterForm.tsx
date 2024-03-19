@@ -129,20 +129,6 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: null })
   }
 
-  const tooltipMessage = ["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type) ? (
-    <>
-      Due to limitations with X's API{" "}
-      <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>, the requirement
-      check may be inconsistent.
-    </>
-  ) : (
-    <>
-      X <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span> authentication
-      limits to about 450 requests every 15 minutes. Users may need to wait if this
-      threshold is exceeded.
-    </>
-  )
-
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -163,12 +149,16 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         </FormErrorMessage>
       </FormControl>
 
-      {selected?.TwitterRequirement && (
+      {["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type) && (
         <>
           <Divider />
           <Alert>
             <AlertIcon />
-            <AlertDescription>{tooltipMessage}</AlertDescription>
+            <AlertDescription>
+              Due to limitations with X's API{" "}
+              <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>, the
+              requirement check may be inconsistent.
+            </AlertDescription>
           </Alert>
           <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
