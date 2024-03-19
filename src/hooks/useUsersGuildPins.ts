@@ -1,6 +1,6 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import guildPinAbi from "static/abis/guildPin"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata, User } from "types"
 import base64ToObject from "utils/base64ToObject"
@@ -8,7 +8,14 @@ import {
   GUILD_PIN_CONTRACTS,
   GuildPinsSupportedChain,
 } from "utils/guildCheckout/constants"
-import { PublicClient, createPublicClient, http } from "viem"
+import {
+  PublicClient,
+  createPublicClient,
+  http,
+  type Chain as ViemChain,
+} from "viem"
+import { wagmiConfig } from "wagmiConfig"
+import { Chains } from "wagmiConfig/chains"
 
 const getUsersGuildPinIdsOnChain = async (
   balance: bigint,
@@ -17,16 +24,24 @@ const getUsersGuildPinIdsOnChain = async (
   client: PublicClient
 ) => {
   const contracts = Array.from({ length: Number(balance) }, (_, i) => ({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
+    abi: guildPinAbi,
+    address: GUILD_PIN_CONTRACTS[chain],
     functionName: "tokenOfOwnerByIndex",
     args: [address, BigInt(i)],
   }))
 
   const results =
     contracts.length > 0
-      ? await client.multicall({
-          contracts: contracts,
+      ? /**
+         * We need to @ts-ignore this line, since we get a "Type instantiation is
+         * excessively deep and possibly infinite" error here until strictNullChecks is set
+         * to false in our tsconfig. We should set it to true & sort out the related issues
+         * in another PR.
+         */
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        await client.multicall({
+          contracts,
         })
       : []
 
@@ -53,8 +68,8 @@ const getPinTokenURIsForPinIds = async (
   client: PublicClient
 ) => {
   const contractCalls = pinIds.map((tokenId) => ({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
+    abi: guildPinAbi,
+    address: GUILD_PIN_CONTRACTS[chain],
     functionName: "tokenURI",
     args: [tokenId],
   }))
@@ -62,6 +77,14 @@ const getPinTokenURIsForPinIds = async (
   const results =
     contractCalls.length > 0
       ? await client.multicall({
+          /**
+           * We need to @ts-ignore this line, since we get a "Type instantiation is
+           * excessively deep and possibly infinite" error here until
+           * strictNullChecks is set to false in our tsconfig. We should set it to
+           * true & sort out the related issues in another PR.
+           */
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
           contracts: contractCalls,
         })
       : []
@@ -108,15 +131,14 @@ const fetchGuildPinsOnChain = async (
   chain: GuildPinsSupportedChain
 ) => {
   const publicClient = createPublicClient({
-    chain: CHAIN_CONFIG[chain],
+    chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain) as ViemChain,
     transport: http(),
   })
-
   let balance = null
   try {
     balance = await publicClient.readContract({
-      abi: GUILD_PIN_CONTRACTS[chain].abi,
-      address: GUILD_PIN_CONTRACTS[chain].address,
+      abi: guildPinAbi,
+      address: GUILD_PIN_CONTRACTS[chain],
       functionName: "balanceOf",
       args: [address],
     })

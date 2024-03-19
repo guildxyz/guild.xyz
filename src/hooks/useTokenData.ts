@@ -1,7 +1,7 @@
-import { Chain, CHAIN_CONFIG } from "chains"
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Token } from "types"
+import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
 import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"

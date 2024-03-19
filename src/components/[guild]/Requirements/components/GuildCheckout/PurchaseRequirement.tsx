@@ -11,13 +11,13 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { ShoppingCartSimple } from "phosphor-react"
-import { useAccount, useChainId } from "wagmi"
+import { useAccount } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import BlockExplorerUrl from "../BlockExplorerUrl"
 import { useRequirementContext } from "../RequirementContext"
 import ErrorCollapse from "./components/ErrorCollapse"
@@ -36,8 +36,7 @@ import usePrice from "./hooks/usePrice"
 const PurchaseRequirement = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
-  const { isConnected: isEvmConnected } = useAccount()
-  const chainId = useChainId()
+  const { isConnected: isEvmConnected, chainId } = useAccount()
 
   const requirement = useRequirementContext()
   const { isOpen, onOpen, onClose } = useGuildCheckoutContext()
