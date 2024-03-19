@@ -6,7 +6,7 @@ import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
 import ExplorerTabs from "components/explorer/ExplorerTabs"
 import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
 import YourGuilds, { useYourGuilds } from "components/explorer/YourGuilds"
-import useRestoreScroll from "components/explorer/hooks/useRestoreScroll"
+import useScrollRestoration from "components/explorer/hooks/useScrollRestoration"
 import { atom, useAtom } from "jotai"
 import { GetStaticProps } from "next"
 import { useRef } from "react"
@@ -32,7 +32,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
     explorerScrollRestorationAtom
   )
 
-  useRestoreScroll({
+  useScrollRestoration({
     active: shouldRestoreScroll,
     onRestore: () => setShouldRestoreScroll(true),
   })

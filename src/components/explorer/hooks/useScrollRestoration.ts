@@ -9,7 +9,7 @@ const scrollPositions = new Map()
  *
  * @param param0
  */
-const useRestoreScroll = ({
+const useScrollRestoration = ({
   active = true,
   onRestore,
 }: {
@@ -32,9 +32,9 @@ const useRestoreScroll = ({
         return
       }
       /**
-       * For some reason, without the delay, the scrolling is not executed. It
-       * might be caused by the default 'scrollRestoration', which probably
-       * overwrites our own scrolling, if not delayed.
+       * For some reason, without the delay, the scrolling is not executed. It might
+       * be caused by the default 'scrollRestoration', which probably overwrites our
+       * own scrolling, if not delayed.
        */
       setTimeout(() => {
         window.scrollTo({
@@ -55,4 +55,4 @@ const useRestoreScroll = ({
   }, [router, scrollPositions, active, onRestore])
 }
 
-export default useRestoreScroll
+export default useScrollRestoration
