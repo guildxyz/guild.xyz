@@ -13,7 +13,6 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -50,8 +49,6 @@ const RecheckAccessesButton = ({
   roleId,
   ...rest
 }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
-
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const [isFinished, setIsFinished] = useState(false)
@@ -97,14 +94,6 @@ const RecheckAccessesButton = ({
     onError: (error) => {
       const errorMsg = "Couldn't update accesses"
       const correlationId = error.correlationId
-
-      if (!correlationId) {
-        console.error(error)
-        captureEvent("RecheckAccessesButton - error without correlationId", {
-          error,
-        })
-      }
-
       showErrorToast(
         correlationId
           ? {
