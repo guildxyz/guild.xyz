@@ -12,7 +12,10 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
+import { useRouter } from "next/router"
+import { explorerScrollRestorationAtom } from "pages/explorer"
 import {
   CircleWavyCheck,
   Code,
@@ -37,6 +40,8 @@ const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
 
 const NavMenu = (): JSX.Element => {
   const darkBgColor = useColorModeValue("gray.50", "blackAlpha.300")
+  const setExplorerScrollRestoration = useSetAtom(explorerScrollRestorationAtom)
+  const router = useRouter()
 
   return (
     <Popover placement="bottom-start">
@@ -70,7 +75,15 @@ const NavMenu = (): JSX.Element => {
             gap={{ base: 2, sm: 12 }}
           >
             <NavGroup title="Navigation">
-              <NavButton leftIcon={<House />} href="/explorer">
+              <NavButton
+                leftIcon={<House />}
+                href="/explorer"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setExplorerScrollRestoration(false)
+                  router.push("/explorer")
+                }}
+              >
                 Explore all guilds
               </NavButton>
               <NavButton leftIcon={<Plus />} href="/create-guild">
