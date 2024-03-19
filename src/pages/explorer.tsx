@@ -17,7 +17,7 @@ type Props = {
   guilds: GuildBase[]
 }
 
-export const ExplorerScrollRestoration = atom(true)
+export const explorerScrollRestorationAtom = atom(true)
 
 const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const yourGuildsRef = useRef(null)
@@ -29,7 +29,7 @@ const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
   const bgOpacity = useColorModeValue(0.06, 0.1)
   const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
   const [shouldRestoreScroll, setShouldRestoreScroll] = useAtom(
-    ExplorerScrollRestoration
+    explorerScrollRestorationAtom
   )
 
   const scrollRestoration = useRestoreScroll({

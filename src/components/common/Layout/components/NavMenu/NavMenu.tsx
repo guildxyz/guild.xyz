@@ -15,7 +15,7 @@ import Button from "components/common/Button"
 import { useSetAtom } from "jotai"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
-import { ExplorerScrollRestoration } from "pages/explorer"
+import { explorerScrollRestorationAtom } from "pages/explorer"
 import {
   CircleWavyCheck,
   Code,
@@ -40,7 +40,7 @@ const AnimatedLogo = dynamic(() => import("components/explorer/AnimatedLogo"), {
 
 const NavMenu = (): JSX.Element => {
   const darkBgColor = useColorModeValue("gray.50", "blackAlpha.300")
-  const setExplorerScrollRestoration = useSetAtom(ExplorerScrollRestoration)
+  const setExplorerScrollRestoration = useSetAtom(explorerScrollRestorationAtom)
   const router = useRouter()
 
   return (
