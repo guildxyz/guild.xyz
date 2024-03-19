@@ -98,10 +98,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
     ) {
-      const activate = connector.connect()
-      if (typeof activate !== "undefined") {
-        activate.finally(() => onOpen())
-      }
+      onOpen()
     }
   }, [keyPair, router, id, publicUserError, connector])
 
