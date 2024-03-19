@@ -143,15 +143,7 @@ const RoleCard = memo(({ role }: Props) => {
               </HStack>
             </RoleHeader>
             {role.description && (
-              <SlideFade
-                offsetY={10}
-                in={isOpen}
-                /**
-                 * Spreading inert because it's not added to @types/react yet:
-                 * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-                 */
-                {...(!isOpen && { inert: true })}
-              >
+              <SlideFade offsetY={10} in={isOpen} inert={!isOpen}>
                 <RoleDescription
                   description={role.description}
                   {...{
@@ -178,11 +170,7 @@ const RoleCard = memo(({ role }: Props) => {
                       offsetY={10}
                       in={isOpen}
                       transition={{ enter: { delay: i * 0.1 } }}
-                      /**
-                       * Spreading inert because it's not added to @types/react yet:
-                       * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-                       */
-                      {...(!isOpen && { inert: true })}
+                      inert={!isOpen}
                     >
                       <Reward
                         platform={platform}

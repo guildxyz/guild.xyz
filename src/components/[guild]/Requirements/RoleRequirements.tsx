@@ -59,15 +59,7 @@ const RoleRequirements = ({
   )
 
   return (
-    /**
-     * Spreading inert because it's not added to @types/react yet:
-     * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
-     */
-    <SlideFade
-      in={isOpen}
-      {...(!isOpen && { inert: true })}
-      style={{ width: "100%" }}
-    >
+    <SlideFade in={isOpen} inert={!isOpen} style={{ width: "100%" }}>
       <VStack spacing="0">
         {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
