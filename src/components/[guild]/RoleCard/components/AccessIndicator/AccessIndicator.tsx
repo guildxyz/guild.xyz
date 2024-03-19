@@ -41,15 +41,16 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const greenDividerColor = useColorModeValue("green.400", "whiteAlpha.400")
   const grayDividerColor = useColorModeValue("blackAlpha.400", "whiteAlpha.300")
 
-  const requirementsWithNoAccess = role?.requirements?.filter(
-    (req) => !reqAccesses?.find((r) => r.requirementId === req.id)?.access
-  )
+  const requirementsWithErrors = role?.requirements?.filter((req) => {
+    const relevantReq = reqAccesses?.find((r) => r.requirementId === req.id)
+    return !relevantReq?.access && !!relevantReq.errorMsg
+  })
   const errors = useRequirementErrorConfig()
-  const firstRequirementWithErrorFromConfig = requirementsWithNoAccess.find(
+  const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
     (req) => !!errors[req.type.split("_")[0]]
   )
   const errorTextFromConfig =
-    requirementsWithNoAccess.length > 0 &&
+    requirementsWithErrors.length > 0 &&
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isMember)
@@ -141,7 +142,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       />
     )
 
-  if (requirementsWithNoAccess?.length > 0 || error)
+  if (requirementsWithErrors?.length > 0 || error)
     return (
       <HStack spacing="0" flexShrink={0}>
         <AccessIndicatorUI
