@@ -14,14 +14,34 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Info, UserSwitch } from "phosphor-react"
+import { useMemo } from "react"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
-import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
+import formatRelativeTimeFromNow, {
+  DAY_IN_MS,
+  MINUTE_IN_MS,
+} from "utils/formatRelativeTimeFromNow"
+
+const HOUR_IN_MS = MINUTE_IN_MS * 60
 
 const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
-  const date = new Date(lastSyncedAt)
-  const readableDate = lastSyncedAt
-    ? formatRelativeTimeFromNow(date.getTime() / 1000)
-    : "unknown"
+  const readableDate = useMemo(() => {
+    if (!lastSyncedAt) return "unknown"
+
+    const date = new Date(lastSyncedAt)
+    const timeDifference = Date.now() - date.getTime()
+
+    const sinceHours = timeDifference / HOUR_IN_MS
+    if (sinceHours < 1) return "less than an hour"
+
+    const sinceDays = timeDifference / DAY_IN_MS
+    if (sinceDays < 1) return "less than a day"
+
+    const sinceWeeks = timeDifference / (DAY_IN_MS * 7)
+    if (sinceWeeks >= 1) return "more than a week"
+
+    return formatRelativeTimeFromNow(timeDifference)
+  }, [lastSyncedAt])
+
   const { isSuperAdmin } = useUser()
 
   return (

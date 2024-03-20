@@ -23,6 +23,7 @@ import { Clock, Hash } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { useController, useForm, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
+import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
 
 export type RolePlatformAvailabilityForm = {
   capacity?: number
@@ -45,8 +46,6 @@ const AUTO_SUPPLY_PLATFORMS: Partial<Record<PlatformName, string>> = {
   POAP: "minting links",
 }
 const AUTO_TIMEFRAME_PLATFORMS: PlatformName[] = ["POAP"]
-
-export const DAY_IN_MS = 1000 * 60 * 60 * 24
 
 const getShortDate = (isoDate: string): string | undefined => {
   if (!isoDate) return undefined
