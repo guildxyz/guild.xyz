@@ -45,7 +45,12 @@ const SatisfyRequirementsJoinStep = ({
           ? joinState?.requirements?.checked
           : joinState?.requirements?.satisfied
       }
-      fallbackText={fallbackText || "Preparing access check"}
+      fallbackText={
+        fallbackText ||
+        (status === "ERROR"
+          ? "Requirements not satisfied"
+          : "Preparing access check")
+      }
       {...stackProps}
     />
   )

@@ -1,4 +1,4 @@
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformType } from "types"
 import capitalize from "utils/capitalize"
 
@@ -12,7 +12,7 @@ const processConnectorError = (error: string): string | undefined => {
   try {
     const [matchedPlatformId] = error.match(/^"\d" /) ?? []
     const platformName = matchedPlatformId
-      ? platforms[PlatformType[parseInt(matchedPlatformId.replace('"', "").trim())]]
+      ? rewards[PlatformType[parseInt(matchedPlatformId.replace('"', "").trim())]]
           .name
       : null
     const cleanError = error.replaceAll("\\", "")

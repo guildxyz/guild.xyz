@@ -1,6 +1,6 @@
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const FormPreview = (): JSX.Element => {
   const formId = useWatch({
@@ -8,7 +8,7 @@ const FormPreview = (): JSX.Element => {
   })
   const { form, isLoading } = useGuildForm(formId)
 
-  return <PlatformPreview type="FORM" isLoading={isLoading} name={form?.name} />
+  return <RewardPreview type="FORM" isLoading={isLoading} name={form?.name} />
 }
 
 export default FormPreview

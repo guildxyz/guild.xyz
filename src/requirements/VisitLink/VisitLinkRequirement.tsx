@@ -8,13 +8,16 @@ import {
   RequirementImage,
   RequirementImageCircle,
 } from "components/[guild]/Requirements/components/RequirementImage"
-import ResetRequirementButton from "components/[guild]/Requirements/components/ResetRequirementButton"
+import ResetRequirementButton, {
+  getDefaultVisitLinkCustomName,
+} from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useUser from "components/[guild]/hooks/useUser"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { Link as LinkIcon } from "phosphor-react"
+import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
 export const VISIT_LINK_REGEX = new RegExp(/^(.*)(\[)(.+?)(\])(.*)$/)
@@ -26,6 +29,8 @@ const visitLink = (signedValidation: SignedValidation) =>
   })
 
 const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
+  const formContext = useFormContext()
+
   const { id: requirementId, data, roleId } = useRequirementContext()
   const { id: userId } = useUser()
 
@@ -80,7 +85,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       {...props}
       showViewOriginal={false}
       footer={
-        !!link && (
+        (data?.customName !== getDefaultVisitLinkCustomName(data) ||
+          !!data?.customImage) && (
           <ViewOriginalPopover>
             <HStack p={3} gap={4}>
               <RequirementImageCircle>
@@ -94,7 +100,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
                 <Text wordBreak="break-word" flexGrow={1}>
                   <Original />
                 </Text>
-                {!!props.fieldRoot && <ResetRequirementButton />}
+                {/* We only need to show it in the edit drawer, hence the formContext check */}
+                {!!formContext && <ResetRequirementButton />}
               </Stack>
             </HStack>
           </ViewOriginalPopover>

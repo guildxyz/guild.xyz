@@ -1,14 +1,13 @@
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import Button from "components/common/Button"
 import useToast from "hooks/useToast"
-import platforms from "platforms/platforms"
 import { PlatformName } from "types"
 
-import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { HStack, useDisclosure } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
-import { Question } from "phosphor-react"
+import rewards from "platforms/rewards"
 import { memo } from "react"
 import useDisconnect from "../../hooks/useDisconnect"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
@@ -43,7 +42,6 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
       username={platformUser?.platformUserData?.username}
       isConnected={isConnected}
     >
-      {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
       {!isConnected ? (
         <ConnectPlatformButton type={type} />
       ) : (
@@ -55,16 +53,6 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
     </SocialAccountUI>
   )
 })
-
-export const TwitterV1Tooltip = () => (
-  <Tooltip
-    hasArrow
-    placement="top"
-    label="Some of our X requirements can only be checked if your X account is connected this way as well"
-  >
-    <Icon color="gray" as={Question} />
-  </Tooltip>
-)
 
 const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const toast = useToast()
@@ -78,7 +66,7 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
     triggerMembershipUpdate()
   }
 
-  const { onConnect, isLoading, response } = useConnectPlatform(
+  const { isLoading, response, onConnect } = useConnectPlatform(
     type as PlatformName,
     onSuccess,
     isReconnect
@@ -86,10 +74,10 @@ const ConnectPlatformButton = ({ type, isReconnect = false }) => {
 
   return (
     <Button
-      isLoading={isLoading}
       onClick={onConnect}
+      isLoading={isLoading}
       isDisabled={response}
-      colorScheme={isReconnect ? "orange" : platforms[type].colorScheme}
+      colorScheme={isReconnect ? "orange" : rewards[type].colorScheme}
       variant={isReconnect ? "subtle" : "solid"}
       size="sm"
     >
@@ -112,7 +100,7 @@ const DisconnectPlatformButton = ({ type }: { type: PlatformName }) => {
         isLoading,
         loadingText,
         onConfirm,
-        name: platforms[type].name,
+        name: rewards[type].name,
       }}
     />
   )

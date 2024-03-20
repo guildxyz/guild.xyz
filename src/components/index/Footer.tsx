@@ -59,7 +59,7 @@ const Footer = (): JSX.Element => (
               brand kit
             </Link>
             <Link href="/privacy-policy">privacy policy</Link>
-            <Link href="/terms-and-conditions">terms & conditions</Link>
+            <Link href="/terms-of-use">terms & conditions</Link>
           </Stack>
         </GridItem>
       </SimpleGrid>

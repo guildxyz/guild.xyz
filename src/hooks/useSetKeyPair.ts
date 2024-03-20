@@ -2,10 +2,11 @@ import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { createStore, del, get, set } from "idb-keyval"
-import { useAtomValue } from "jotai"
+import { useAtomValue, useSetAtom } from "jotai"
+import { useEffect } from "react"
 import { mutate } from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
-import { recaptchaAtom } from "utils/recaptcha"
+import { recaptchaAtom, shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import useSubmit from "./useSubmit"
 import { SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
 
@@ -68,7 +69,14 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
   const { address } = useWeb3ConnectionManager()
   const fetcherWithSign = useFetcherWithSign()
 
-  const { id, captchaVerifiedSince } = useUserPublic()
+  const { id, captchaVerifiedSince, error: publicUserError } = useUserPublic()
+  const setShouldUseReCAPTCHA = useSetAtom(shouldUseReCAPTCHAAtom)
+
+  useEffect(() => {
+    if (!!publicUserError || (id && !captchaVerifiedSince)) {
+      setShouldUseReCAPTCHA(true)
+    }
+  }, [id, publicUserError, captchaVerifiedSince, setShouldUseReCAPTCHA])
 
   const recaptcha = useAtomValue(recaptchaAtom)
 
@@ -79,9 +87,9 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       signProps?: Partial<SignProps>
     } = {}) => {
       const reCaptchaToken =
-        !recaptcha || !!captchaVerifiedSince
+        !recaptcha.ref || !!captchaVerifiedSince
           ? undefined
-          : await recaptcha.executeAsync()
+          : await recaptcha.ref.executeAsync()
 
       const generatedKeys = await generateKeyPair().catch((err) => {
         if (err?.code !== 4001) {
@@ -97,7 +105,7 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
       }
 
       if (reCaptchaToken) {
-        recaptcha.reset()
+        recaptcha.ref.reset()
         body.verificationParams = {
           reCaptcha: reCaptchaToken,
         }

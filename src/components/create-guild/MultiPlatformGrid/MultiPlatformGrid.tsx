@@ -1,5 +1,5 @@
 import { SimpleGrid, Stack } from "@chakra-ui/react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType, PlatformName } from "types"
 import MultiPlatformSelectButton from "./components/MultiPlatformSelectButton"
@@ -38,7 +38,7 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
           <MultiPlatformSelectButton
             key={platform}
             platform={platform}
-            title={platforms[platform].name}
+            title={rewards[platform].name}
             description={
               platform === "TWITTER"
                 ? twitterLink
@@ -46,8 +46,8 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
                     (guildPlatform) => guildPlatform.platformName === platform
                   )?.platformGuildData.name
             }
-            icon={platforms[platform].icon}
-            imageUrl={platforms[platform].imageUrl}
+            icon={rewards[platform].icon}
+            imageUrl={rewards[platform].imageUrl}
             onSelection={onSelection}
           />
         ))}

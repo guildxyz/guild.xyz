@@ -1,7 +1,9 @@
-import type { Chain, Chains } from "chains"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
+import type { Chain, Chains } from "wagmiConfig/chains"
+
+export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
 type Token = {
   address: `0x${string}`
@@ -89,6 +91,7 @@ type PlatformName =
   | "POLYGON_ID"
   | "POINTS"
   | "FORM"
+  | "GATHER_TOWN"
 
 type PlatformUserData = {
   acessToken?: string
@@ -208,6 +211,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -230,6 +237,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -251,6 +262,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -272,6 +287,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   TEXT: {
     text: string
@@ -293,10 +312,14 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   POAP: {
     text?: never
-    texts?: never
+    texts?: string[]
     name: string
     imageUrl: string
     chain?: never
@@ -314,6 +337,10 @@ type PlatformGuildData = {
     fancyId: string
     eventId: number
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   FORM: {
     text?: never
@@ -335,6 +362,60 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: number
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
+  }
+  GATHER: {
+    name: string
+    gatherSpaceId: string
+    gatherApiKey: string
+    gatherAffiliation: string
+    gatherRole: string
+    role?: never
+    text?: never
+    texts?: never
+    imageUrl?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
+  }
+  POINTS: {
+    text?: never
+    texts?: never
+    name?: string
+    imageUrl?: string
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    role?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
 }
 
@@ -351,13 +432,13 @@ type Requirement = {
   id: number
   type: RequirementType
   address?: `0x${string}`
-  chain: Chain
+  chain?: Chain
   data?: Record<string, any>
   roleId: number
   name: string
   symbol: string
   decimals?: number
-  isNegated: boolean
+  isNegated?: boolean
   visibility?: Visibility
   visibilityRoleId?: number | null
 
@@ -376,7 +457,7 @@ type RolePlatform = {
   platformRoleId?: string
   guildPlatformId?: number
   guildPlatform?: GuildPlatform
-  platformRoleData?: Record<string, string | boolean>
+  platformRoleData?: Record<string, string | number | boolean>
   index?: number
   isNew?: boolean
   roleId?: number
@@ -426,9 +507,11 @@ type GuildPlatform = {
   platformGuildId: string
   platformGuildData?: PlatformGuildData[keyof PlatformGuildData]
   invite?: string
-  platformGuildName: string
+  platformGuildName?: string
   permission?: string
 }
+
+type GuildPlatformWithOptionalId = Omit<GuildPlatform, "id"> & { id?: number }
 
 const supportedSocialLinks = [
   "TWITTER",
@@ -492,7 +575,12 @@ type Guild = {
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
     requirements: Array<Partial<Requirement>>
-    rolePlatforms: Array<Partial<RolePlatform> & { guildPlatformIndex: number }>
+    rolePlatforms: Array<
+      Partial<Omit<RolePlatform, "guildPlatform">> & {
+        guildPlatform?: GuildPlatformWithOptionalId
+        guildPlatformIndex?: number
+      }
+    >
   } & { name: string }
 >
 
@@ -569,6 +657,7 @@ export enum PlatformType {
   "POINTS" = 13,
   "POAP" = 14,
   "FORM" = 15,
+  "GATHER_TOWN" = 16,
 }
 type WalletConnectConnectionData = {
   connected: boolean
@@ -690,6 +779,7 @@ export type {
   GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
+  GuildPlatformWithOptionalId,
   GuildTags,
   LeaderboardPinData,
   Logic,

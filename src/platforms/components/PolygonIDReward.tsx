@@ -10,10 +10,10 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { ArrowSquareOut, LockSimple } from "phosphor-react"
+import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import { useMintPolygonIDProofContext } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
 import { useAccount } from "wagmi"
@@ -36,7 +36,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
   const { isLoading, data: connectedDID } = useConnectedDID()
 
   const state = useMemo(() => {
-    if (isMember && hasRoleAccess && connectedDID) {
+    if (hasRoleAccess && connectedDID) {
       return {
         tooltipLabel: "Mint proof",
         buttonProps: {
@@ -46,7 +46,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       }
     }
 
-    if (!isConnected || (!isMember && hasRoleAccess))
+    if (!isMember)
       return {
         tooltipLabel: (
           <>
@@ -87,14 +87,14 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
               isLoading || isValidating ? (
                 <Spinner boxSize="1em" />
               ) : (
-                <ArrowSquareOut />
+                <ArrowSquareIn />
               )
             }
             iconSpacing="1"
             maxW="full"
             {...state.buttonProps}
           >
-            {platforms[PlatformType[platformId]].name} proofs
+            {rewards[PlatformType[platformId]].name} proofs
           </Button>
         </Tooltip>
       }

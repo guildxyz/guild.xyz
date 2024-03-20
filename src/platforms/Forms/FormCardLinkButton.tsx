@@ -5,7 +5,7 @@ import Button from "components/common/Button"
 import { LinkButton } from "components/common/LinkMenuItem"
 import Link from "next/link"
 import { Check } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
 import { useUserFormSubmission } from "./hooks/useFormSubmissions"
 
@@ -42,7 +42,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
       prefetch={false}
       href={!!form && !userSubmission ? `/${urlName}/forms/${form?.id}` : "#"}
       w="full"
-      colorScheme={platforms.FORM.colorScheme}
+      colorScheme={rewards.FORM.colorScheme}
       leftIcon={userSubmission && <Check />}
     >
       {userSubmission ? "Already submitted" : "Fill form"}

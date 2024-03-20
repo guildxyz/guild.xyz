@@ -55,8 +55,9 @@ const RequirementAccessIndicator = () => {
     )
 
   if (
-    reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED" ||
-    reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID"
+    (reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED" ||
+      reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID") &&
+    reqAccessData?.errorMsg !== "EVM address not connected"
   )
     return (
       <RequirementAccessIndicatorUI
@@ -98,7 +99,12 @@ const RequirementAccessIndicator = () => {
           {reqAccessData?.errorMsg
             ? `Error: ${reqAccessData.errorMsg}`
             : `Couldn't check access`}
-          <RecheckAccessesButton size="sm" ml="2" variant={"outline"} />
+          <RecheckAccessesButton
+            roleId={roleId}
+            size="sm"
+            ml="2"
+            variant={"outline"}
+          />
         </PopoverHeader>
       </RequirementAccessIndicatorUI>
     )
@@ -136,7 +142,7 @@ const RequirementAccessIndicator = () => {
           >
             View connections
           </Button>
-          <RecheckAccessesButton />
+          <RecheckAccessesButton roleId={roleId} />
         </ButtonGroup>
       </PopoverFooter>
     </RequirementAccessIndicatorUI>

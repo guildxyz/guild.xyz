@@ -1,11 +1,7 @@
-import { Icon, Text } from "@chakra-ui/react"
-import { isAfterJoinAtom } from "components/[guild]/JoinModal/hooks/useJoin"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useAtom } from "jotai"
-import { Info } from "phosphor-react"
-import { GuildPlatform, PlatformName } from "types"
+import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
-const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
+const useDiscordCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { name: guildName, imageUrl } = useGuild()
   // const rolePlatform = useRolePlatform()
   // const { data } = useServerData(guildPlatform.platformGuildId, {
@@ -13,12 +9,6 @@ const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
   //     revalidateOnFocus: false,
   //   },
   // })
-
-  /**
-   * Temporary to show "You might need to wait a few minutes to get your roles" on
-   * the Discord reward card after join until we implement queues generally
-   */
-  const [isAfterJoin] = useAtom(isAfterJoinAtom)
 
   const roleName = undefined
   // const roleName = useMemo(() => {
@@ -40,14 +30,7 @@ const useDiscordCardProps = (guildPlatform: GuildPlatform) => {
       guildPlatform.platformGuildName ||
       guildPlatform.platformGuildData?.name ||
       guildName,
-    info:
-      roleName ??
-      (isAfterJoin && (
-        <Text>
-          <Icon as={Info} display="inline-block" mr="0.5" mb="-2px" />
-          You might need to wait a few minutes to get your roles
-        </Text>
-      )),
+    info: roleName,
   }
 }
 

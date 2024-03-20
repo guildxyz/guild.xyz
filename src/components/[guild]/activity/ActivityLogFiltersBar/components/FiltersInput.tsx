@@ -157,10 +157,11 @@ const FiltersInput = (): JSX.Element => {
               onClick={() => {
                 clearFilters([
                   "userId",
+                  "guildId",
                   "roleId",
                   "rolePlatformId",
+                  "formId",
                   "action",
-                  "guildId",
                 ])
                 setInputValue("")
               }}

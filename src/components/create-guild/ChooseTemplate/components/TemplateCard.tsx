@@ -23,11 +23,12 @@ import RoleRequirementsSection, {
 } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
 import { Check } from "phosphor-react"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { KeyboardEvent } from "react"
 import { useWatch } from "react-hook-form"
 import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
 import capitalize from "utils/capitalize"
+import slugify from "utils/slugify"
 import TemplateRequriements from "./TemplateRequriements"
 
 type Template = {
@@ -78,6 +79,7 @@ const TemplateCard = ({
 
   return (
     <Box
+      data-test={`role-${slugify(role.name)}`}
       shadow={part === 0 ? "sm" : "md"}
       tabIndex={0}
       onClick={() => onClick(name)}
@@ -140,7 +142,7 @@ const TemplateCard = ({
                 {guildPlatforms?.length ? (
                   guildPlatforms.map((platform, i) => {
                     const isDisabled =
-                      platforms[platform.platformName].asRewardRestriction ===
+                      rewards[platform.platformName].asRewardRestriction ===
                         PlatformAsRewardRestrictions.SINGLE_ROLE &&
                       roles
                         .filter((r) => r.name !== name)
@@ -156,7 +158,7 @@ const TemplateCard = ({
                         label={
                           isDisabled
                             ? `${
-                                platforms[platform.platformName].name
+                                rewards[platform.platformName].name
                               } rewards can only be added to one role`
                             : ""
                         }
@@ -241,6 +243,7 @@ const TemplateCard = ({
         >
           {selected ? (
             <Circle
+              data-test={`checked-role-${slugify(role.name)}`}
               bgColor="green.500"
               color="white"
               size={6}
@@ -251,8 +254,8 @@ const TemplateCard = ({
             </Circle>
           ) : (
             <Circle
-              borderColor={"gray"}
-              borderStyle={"solid"}
+              borderColor="gray"
+              borderStyle="solid"
               borderWidth={2}
               size={6}
             />
@@ -269,8 +272,8 @@ const getValueToDisplay = (
   }
 ): string =>
   platform.platformGuildData.name ??
-  `${platforms[platform.platformName].name} ${
-    platforms[platform.platformName].gatedEntity
+  `${rewards[platform.platformName].name} ${
+    rewards[platform.platformName].gatedEntity
   }`
 
 export default TemplateCard

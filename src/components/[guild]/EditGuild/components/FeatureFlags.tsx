@@ -9,7 +9,6 @@ const FEATURE_FLAGS = [
   "GUILD_CREDENTIAL",
   "CRM",
   "GUILD_QUEUES",
-  "ROLE_GROUPS",
   "MESSAGING",
   "FORMS",
 ] as const
@@ -35,6 +34,7 @@ const FeatureFlags = (): JSX.Element => {
   return (
     <FormControl>
       <StyledSelect
+        menuPlacement={"top"}
         ref={ref}
         name={name}
         value={options.filter((option) => value?.includes(option.value))}

@@ -1,9 +1,10 @@
-import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useTokenBalance from "hooks/useTokenBalance"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance, useChainId } from "wagmi"
+import { useAccount, useBalance } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
@@ -15,8 +16,7 @@ const PurchaseButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const { address, isConnected } = useAccount()
-  const chainId = useChainId()
+  const { isConnected, address, chainId } = useAccount()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
@@ -48,12 +48,12 @@ const PurchaseButton = (): JSX.Element => {
     address,
     chainId: Chains[requirement?.chain],
   })
-  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } = useBalance({
-    address,
-    token: pickedCurrency,
-    chainId: Chains[requirement?.chain],
-    enabled: !pickedCurrencyIsNative,
-  })
+  const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } =
+    useTokenBalance({
+      token: pickedCurrency,
+      chainId: Chains[requirement?.chain],
+      shouldFetch: !pickedCurrencyIsNative,
+    })
 
   const isBalanceLoading = isCoinBalanceLoading || isTokenBalanceLoading
 

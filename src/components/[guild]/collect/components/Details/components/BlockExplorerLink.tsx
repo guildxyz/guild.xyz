@@ -1,8 +1,8 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Skeleton, Text } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chain } from "chains"
 import { ArrowSquareOut } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain
@@ -29,7 +29,7 @@ const BlockExplorerLink = ({
         </Text>
       ) : (
         <Link
-          href={`${CHAIN_CONFIG[chain].blockExplorers.default.url}/${path}/${address}`}
+          href={`${CHAIN_CONFIG[chain].blockExplorerUrl}/${path}/${address}`}
           isExternal
         >
           <Text as="span" fontSize="md" mr={1.5} colorScheme="gray" noOfLines={1}>

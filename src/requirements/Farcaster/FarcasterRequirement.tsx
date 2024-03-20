@@ -1,20 +1,32 @@
+import { Icon, Link } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
 import useDebouncedState from "hooks/useDebouncedState"
+import { ArrowSquareOut } from "phosphor-react"
 import FarcasterCast from "./components/FarcasterCast"
 import useFarcasterCast from "./hooks/useFarcasterCast"
+import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
-  const { data: farcasterUser } = useFarcasterUser(requirement.data?.id)
+  const { data: farcasterUser } = useFarcasterUser(
+    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.type)
+      ? requirement.data?.id
+      : undefined
+  )
+  const { data: farcasterChannel } = useFarcasterChannel(
+    requirement.type === "FARCASTER_FOLLOW_CHANNEL"
+      ? requirement.data?.id
+      : undefined
+  )
+
   const debouncedHash = useDebouncedState(requirement.data?.hash)
   const debouncedUrl = useDebouncedState(requirement.data?.url)
-
   const {
     data: cast,
     isLoading: isCastLoading,
@@ -66,6 +78,22 @@ const FarcasterRequirement = (props: RequirementProps) => {
                     error={castError}
                   />
                 </>
+              </>
+            )
+          case "FARCASTER_FOLLOW_CHANNEL":
+            return (
+              <>
+                {`Follow the `}
+                <Link
+                  href={`https://warpcast.com/~/channel/${requirement.data.id}`}
+                  isExternal
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {farcasterChannel?.label ?? requirement.data.id}
+                  <Icon as={ArrowSquareOut} mx="1" />
+                </Link>
+                {` channel on Farcaster`}
               </>
             )
           default:

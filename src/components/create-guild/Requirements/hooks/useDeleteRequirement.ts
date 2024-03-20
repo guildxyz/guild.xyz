@@ -25,7 +25,7 @@ const useDeleteRequirement = (
   return useSubmitWithSign<any>(submit, {
     onSuccess: () => {
       toast({
-        title: `Requirement deleted!`,
+        title: "Requirement deleted!",
         status: "success",
       })
       onSuccess?.()

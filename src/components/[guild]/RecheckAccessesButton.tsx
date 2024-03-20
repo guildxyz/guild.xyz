@@ -10,27 +10,28 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  Text,
   VStack,
 } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { useAtom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
 import { ArrowsClockwise, Check } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import GetRewardsJoinStep from "./JoinModal/components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./JoinModal/components/progress/GetRolesJoinStep"
 import SatisfyRequirementsJoinStep from "./JoinModal/components/progress/SatisfyRequirementsJoinStep"
 import useMembershipUpdate from "./JoinModal/hooks/useMembershipUpdate"
 import { useIsTabsStuck } from "./Tabs/Tabs"
 import { useThemeContext } from "./ThemeContext"
-import useGuild from "./hooks/useGuild"
 
 const TIMEOUT = 60_000
 
 type Props = {
   tooltipLabel?: string
+  roleId?: number
 } & ButtonProps
 
 const POPOVER_HEADER_STYLES = {
@@ -41,57 +42,77 @@ const POPOVER_HEADER_STYLES = {
   px: "3",
 }
 
-const latestResendDateAtom = atomWithStorage("latestResendDate", -Infinity)
+const latestResendDateAtom = atomWithStorage("latestResendDate", 0)
 
 const RecheckAccessesButton = ({
-  tooltipLabel = "Re-check accesses",
+  tooltipLabel: tooltipLabelInitial,
+  roleId,
   ...rest
 }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
-
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const [isFinished, setIsFinished] = useState(false)
 
-  const { urlName } = useGuild()
+  const { reqAccesses } = useRoleMembership(roleId)
+  const [latestAllResendDate, setLatestAllResendDate] = useAtom(latestResendDateAtom)
 
-  const [latestResendDate, setLatestResendDate] = useAtom(latestResendDateAtom)
+  const lastCheckedAt = useMemo(
+    () => new Date(reqAccesses?.[0]?.lastCheckedAt ?? latestAllResendDate),
+    [reqAccesses, latestAllResendDate]
+  )
+
   const [dateNow, setDateNow] = useState(Date.now())
-  const canResend = dateNow - latestResendDate > TIMEOUT
-
-  const { triggerMembershipUpdate, isLoading, isFinished, joinProgress } =
-    useMembershipUpdate({
-      onSuccess: () => {
-        toast({
-          status: "success",
-          title: "Successfully updated accesses",
-        })
-        setLatestResendDate(Date.now())
-      },
-      onError: (error) => {
-        const errorMsg = "Couldn't update accesses"
-        const correlationId = error.correlationId
-        showErrorToast(
-          correlationId
-            ? {
-                error: errorMsg,
-                correlationId,
-              }
-            : errorMsg
-        )
-      },
-    })
-
   useEffect(() => {
     const interval = setInterval(() => setDateNow(Date.now()), TIMEOUT)
     return () => clearInterval(interval)
-  }, [])
+  }, [lastCheckedAt])
 
-  const onClick = () => {
-    triggerMembershipUpdate()
-    captureEvent("Click: ResendRewardButton", {
-      guild: urlName,
-    })
-  }
+  const canResend = dateNow - lastCheckedAt.getTime() > TIMEOUT
+
+  const tooltipLabel =
+    tooltipLabelInitial ||
+    (roleId ? "Re-check role access" : "Re-check all accesses")
+
+  const {
+    triggerMembershipUpdate,
+    isLoading,
+    joinProgress,
+    currentlyCheckedRoleIds,
+  } = useMembershipUpdate({
+    onSuccess: () => {
+      toast({
+        status: "success",
+        title: `Successfully updated ${roleId ? "role access" : "accesses"}`,
+      })
+      setIsFinished(true)
+
+      setTimeout(() => {
+        setIsFinished(false)
+      }, 3000)
+      if (!roleId) setLatestAllResendDate(Date.now())
+    },
+    onError: (error) => {
+      const errorMsg = "Couldn't update accesses"
+      const correlationId = error.correlationId
+      showErrorToast(
+        correlationId
+          ? {
+              error: errorMsg,
+              correlationId,
+            }
+          : errorMsg
+      )
+    },
+  })
+
+  const shouldBeLoading = useMemo(() => {
+    if (!currentlyCheckedRoleIds) return isLoading
+
+    if (roleId && currentlyCheckedRoleIds?.length)
+      return currentlyCheckedRoleIds.includes(roleId) && isLoading
+
+    return false
+  }, [isLoading, currentlyCheckedRoleIds, roleId])
 
   const isDisabled = isLoading || !!isFinished || !canResend
 
@@ -106,7 +127,7 @@ const RecheckAccessesButton = ({
             ) : (
               <Icon
                 as={ArrowsClockwise}
-                animation={isLoading ? "rotate 1s infinite linear" : undefined}
+                animation={shouldBeLoading ? "rotate 1s infinite linear" : undefined}
               />
             )
           }
@@ -120,7 +141,8 @@ const RecheckAccessesButton = ({
                 _active: { bg: undefined },
               }
             : {
-                onClick,
+                onClick: () =>
+                  triggerMembershipUpdate(roleId && { roleIds: [roleId] }),
               })}
           sx={{
             "@-webkit-keyframes rotate": {
@@ -144,25 +166,50 @@ const RecheckAccessesButton = ({
         />
       </PopoverTrigger>
       <Portal>
-        <PopoverContent {...(!isLoading ? { minW: "max-content", w: "unset" } : {})}>
+        <PopoverContent
+          {...(!shouldBeLoading ? { minW: "max-content", w: "unset" } : {})}
+        >
           <PopoverArrow />
           {isFinished ? (
             <PopoverHeader {...POPOVER_HEADER_STYLES}>
-              Successfully updated accesses
+              {`Successfully updated ${roleId ? "access" : "accesses"}`}
             </PopoverHeader>
           ) : isLoading ? (
-            <PopoverBody pb={3} px={4}>
-              <VStack spacing={2.5} alignItems={"flex-start"} divider={<Divider />}>
-                <SatisfyRequirementsJoinStep joinState={joinProgress} />
-                <GetRolesJoinStep joinState={joinProgress} />
-                <GetRewardsJoinStep joinState={joinProgress} />
-              </VStack>
-            </PopoverBody>
+            shouldBeLoading ? (
+              <PopoverBody pb={3} px={4}>
+                <VStack
+                  spacing={2.5}
+                  alignItems={"flex-start"}
+                  divider={<Divider />}
+                >
+                  <SatisfyRequirementsJoinStep joinState={joinProgress} />
+                  {!currentlyCheckedRoleIds?.length && (
+                    <GetRolesJoinStep joinState={joinProgress} />
+                  )}
+                  <GetRewardsJoinStep joinState={joinProgress} />
+                </VStack>
+              </PopoverBody>
+            ) : (
+              <PopoverHeader {...POPOVER_HEADER_STYLES}>
+                {`Checking ${
+                  roleId ? "another role" : "a specific role"
+                } is in progress`}
+              </PopoverHeader>
+            )
           ) : canResend ? (
             <PopoverHeader {...POPOVER_HEADER_STYLES}>{tooltipLabel}</PopoverHeader>
           ) : (
             <PopoverHeader {...POPOVER_HEADER_STYLES}>
               You can only use this function once per minute
+              <Text
+                colorScheme="gray"
+                w="full"
+                fontSize="sm"
+                fontWeight={"medium"}
+                mt="1"
+              >
+                Last checked at: {lastCheckedAt.toLocaleTimeString()}
+              </Text>
             </PopoverHeader>
           )}
         </PopoverContent>

@@ -13,7 +13,7 @@ import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
@@ -111,22 +111,22 @@ const AccessHub = (): JSX.Element => {
           gap={4}
           mb={10}
         >
-          {featureFlags.includes("ROLE_GROUPS") && <CampaignCards />}
+          <CampaignCards />
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
 
           {accessedGuildPlatforms?.map((platform) => {
-            if (!platforms[PlatformType[platform.platformId]]) return null
+            if (!rewards[PlatformType[platform.platformId]]) return null
 
             const {
               cardPropsHook: useCardProps,
               cardMenuComponent: PlatformCardMenu,
               cardWarningComponent: PlatformCardWarning,
               cardButton: PlatformCardButton,
-            } = platforms[PlatformType[platform.platformId] as PlatformName]
+            } = rewards[PlatformType[platform.platformId] as PlatformName]
 
             return (
               <PlatformCard
-                usePlatformProps={useCardProps}
+                usePlatformCardProps={useCardProps}
                 guildPlatform={platform}
                 key={platform.id}
                 cornerButton={

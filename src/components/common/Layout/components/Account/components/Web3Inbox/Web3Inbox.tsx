@@ -164,9 +164,10 @@ const SubscribeToMessages = () => {
     try {
       const { message, registerParams } = await prepareRegistration()
       setIsSigning(true)
-      const signature = await signMessageAsync({ message: message }).finally(() =>
-        setIsSigning(false)
-      )
+      const signature = await signMessageAsync({
+        account: address,
+        message: message,
+      }).finally(() => setIsSigning(false))
       await register({ registerParams, signature })
     } catch (web3InboxRegisterError) {
       console.error("web3InboxRegisterError", web3InboxRegisterError)

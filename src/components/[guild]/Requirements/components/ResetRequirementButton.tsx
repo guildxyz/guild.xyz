@@ -1,24 +1,38 @@
 import { Button } from "@chakra-ui/react"
-import { useFormContext, useWatch } from "react-hook-form"
+import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
+import { Requirement } from "types"
 import { useRequirementContext } from "./RequirementContext"
 
-const ResetRequirementButton = () => {
-  const { id } = useRequirementContext()
-  const { control, setValue } = useFormContext()
-  const requirements = useWatch({ name: "requirements", control })
-  const index = requirements.findIndex((requirement) => requirement.id === id)
+export const getDefaultVisitLinkCustomName = (
+  requirementData: Requirement["data"]
+) => {
+  return `Visit link: [${requirementData.id}]`
+}
 
-  const onReset = () => {
-    setValue(`requirements.${index}.data.customName`, "", {
-      shouldDirty: true,
-    })
-    setValue(`requirements.${index}.data.customImage`, "", {
-      shouldDirty: true,
-    })
-  }
+const ResetRequirementButton = () => {
+  const requirement = useRequirementContext()
+  const { onSubmit, isLoading } = useEditRequirement(requirement.roleId)
+
+  const resetCustomName =
+    requirement.type === "LINK_VISIT"
+      ? getDefaultVisitLinkCustomName(requirement.data)
+      : ""
 
   return (
-    <Button size={"sm"} onClick={onReset}>
+    <Button
+      size={"sm"}
+      isLoading={isLoading}
+      onClick={() =>
+        onSubmit({
+          ...requirement,
+          data: {
+            ...requirement.data,
+            customName: resetCustomName,
+            customImage: "",
+          },
+        })
+      }
+    >
       Reset to original
     </Button>
   )

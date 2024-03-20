@@ -1,9 +1,8 @@
-import { defineChain } from "viem"
+import { Chain } from "viem"
 
-export const bobaAvax = /*#__PURE__*/ defineChain({
+export const bobaAvax = {
   id: 43288,
   name: "Boba-Avax L2",
-  network: "bobaAvax",
   nativeCurrency: {
     decimals: 18,
     name: "Boba",
@@ -25,12 +24,11 @@ export const bobaAvax = /*#__PURE__*/ defineChain({
       blockCreated: 94846,
     },
   },
-})
+} as const satisfies Chain
 
-export const palm = /*#__PURE__*/ defineChain({
+export const palm = {
   id: 11297108109,
   name: "Palm",
-  network: "palm",
   nativeCurrency: {
     decimals: 18,
     name: "Palm",
@@ -56,12 +54,11 @@ export const palm = /*#__PURE__*/ defineChain({
       blockCreated: 13483902,
     },
   },
-})
+} as const satisfies Chain
 
-export const exosama = /*#__PURE__*/ defineChain({
+export const exosama = {
   id: 2109,
   name: "Exosama",
-  network: "exosama",
   nativeCurrency: {
     decimals: 18,
     name: "Moonsama",
@@ -81,12 +78,11 @@ export const exosama = /*#__PURE__*/ defineChain({
       url: "https://explorer.exosama.com",
     },
   },
-})
+} as const satisfies Chain
 
-export const scrollAlpha = /*#__PURE__*/ defineChain({
+export const scrollAlpha = {
   id: 534353,
   name: "Scroll Alpha",
-  network: "scrollAlpha",
   nativeCurrency: {
     decimals: 18,
     name: "Ether",
@@ -112,43 +108,11 @@ export const scrollAlpha = /*#__PURE__*/ defineChain({
       blockCreated: 47009,
     },
   },
-})
+} as const satisfies Chain
 
-export const pgn = /*#__PURE__*/ defineChain({
-  id: 424,
-  name: "PGN",
-  network: "pgn",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://rpc.publicgoods.network"],
-    },
-    public: {
-      http: ["https://rpc.publicgoods.network"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "BlockScout",
-      url: "https://explorer.publicgoods.network",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 3380209,
-    },
-  },
-})
-
-export const neonEVM = /*#__PURE__*/ defineChain({
+export const neonEVM = {
   id: 245022934,
   name: "Neon EVM",
-  network: "neonEVM",
   nativeCurrency: {
     decimals: 18,
     name: "Neon",
@@ -174,140 +138,11 @@ export const neonEVM = /*#__PURE__*/ defineChain({
       blockCreated: 206545524,
     },
   },
-})
+} as const satisfies Chain
 
-export const goerli = /*#__PURE__*/ defineChain({
-  id: 5,
-  name: "Görli",
-  network: "goerli",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://ethereum-goerli.publicnode.com"],
-    },
-    public: {
-      http: ["https://ethereum-goerli.publicnode.com"],
-    },
-  },
-  blockExplorers: {
-    etherscan: {
-      name: "Etherscan",
-      url: "https://goerli.etherscan.io",
-    },
-    default: {
-      name: "Etherscan",
-      url: "https://goerli.etherscan.io",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 6507670,
-    },
-  },
-})
-
-export const lukso = /*#__PURE__*/ defineChain({
-  id: 42,
-  name: "LUKSO Mainnet",
-  network: "lukso",
-  nativeCurrency: {
-    decimals: 18,
-    name: "LUKSO",
-    symbol: "LYX",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://rpc.mainnet.lukso.network"],
-    },
-    public: {
-      http: ["https://rpc.mainnet.lukso.network"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "BlockScout",
-      url: "https://explorer.execution.mainnet.lukso.network",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 468183,
-    },
-  },
-})
-
-export const shimmer = /*#__PURE__*/ defineChain({
-  id: 148,
-  name: "Shimmer EVM",
-  network: "shimmer-evm-mainnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Shimmer",
-    symbol: "SMR",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://json-rpc.evm.shimmer.network"],
-    },
-    public: {
-      http: ["https://json-rpc.evm.shimmer.network"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Shimmer",
-      url: "https://explorer.evm.shimmer.network/shimmer",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 1290,
-    },
-  },
-})
-
-export const kava = /*#__PURE__*/ defineChain({
-  id: 2222,
-  name: "Kava",
-  network: "kava",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Kava",
-    symbol: "KAVA",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://kava-evm.publicnode.com"],
-    },
-    public: {
-      http: ["https://kava-evm.publicnode.com"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "BlockScout",
-      url: "https://kavascan.com",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 3661165,
-    },
-  },
-})
-
-export const bitfinityTestnet = /*#__PURE__*/ defineChain({
+export const bitfinityTestnet = {
   id: 355113,
   name: "Bitfinity Testnet",
-  network: "bitfinity-testnet",
   nativeCurrency: {
     decimals: 18,
     name: "Bitfinity",
@@ -333,43 +168,11 @@ export const bitfinityTestnet = /*#__PURE__*/ defineChain({
       blockCreated: 7032,
     },
   },
-})
+} as const satisfies Chain
 
-export const x1Testnet = /*#__PURE__*/ defineChain({
-  id: 195,
-  name: "X1 Testnet",
-  network: "x1testnet",
-  nativeCurrency: {
-    decimals: 18,
-    name: "OKB",
-    symbol: "OKB",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://testrpc.x1.tech", "https://x1testrpc.okx.com"],
-    },
-    public: {
-      http: ["https://testrpc.x1.tech", "https://x1testrpc.okx.com"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "OKLink",
-      url: "https://www.oklink.com/x1-test",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 624344,
-    },
-  },
-})
-
-export const ontology = /*#__PURE__*/ defineChain({
+export const ontology = {
   id: 58,
   name: "Ontology EVM",
-  network: "ontology",
   nativeCurrency: {
     decimals: 18,
     name: "ONG",
@@ -405,12 +208,11 @@ export const ontology = /*#__PURE__*/ defineChain({
       blockCreated: 14244158,
     },
   },
-})
+} as const satisfies Chain
 
-export const beraTestnet = /*#__PURE__*/ defineChain({
+export const beraTestnet = {
   id: 2061,
   name: "Berachain Testnet",
-  network: "beratestnet",
   nativeCurrency: {
     decimals: 18,
     name: "BERA",
@@ -436,12 +238,11 @@ export const beraTestnet = /*#__PURE__*/ defineChain({
       blockCreated: 114673,
     },
   },
-})
+} as const satisfies Chain
 
-export const taikoKatlaTestnet = /*#__PURE__*/ defineChain({
+export const taikoKatlaTestnet = {
   id: 167008,
   name: "Taiko Katla Testnet",
-  network: "taikoKatlaTestnet",
   nativeCurrency: {
     decimals: 18,
     name: "ETH",
@@ -467,44 +268,11 @@ export const taikoKatlaTestnet = /*#__PURE__*/ defineChain({
       blockCreated: 77870,
     },
   },
-})
+} as const satisfies Chain
 
-export const blastSepolia = /*#__PURE__*/ defineChain({
-  id: 168587773,
-  name: "Blast Sepolia",
-  network: "blastsepolia",
-  nativeCurrency: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://sepolia.blast.io"],
-    },
-    public: {
-      http: ["https://sepolia.blast.io"],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: "Blastscan",
-      url: "https://testnet.blastscan.io",
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 756690,
-    },
-  },
-  testnet: true,
-})
-
-export const oasisSapphire = /*#__PURE__*/ defineChain({
+export const oasisSapphire = {
   id: 23294,
   name: "Oasis Sapphire",
-  network: "oasissapphire",
   nativeCurrency: {
     name: "Rose",
     symbol: "ROSE",
@@ -530,4 +298,4 @@ export const oasisSapphire = /*#__PURE__*/ defineChain({
       blockCreated: 734531,
     },
   },
-})
+} as const satisfies Chain

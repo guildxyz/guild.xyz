@@ -59,7 +59,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       reqAccesses
         ?.filter(
           (req) =>
-            !!req.access === null &&
+            !req.access &&
             !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
               req.errorType
@@ -77,7 +77,8 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       }
 
       const reqError = reqAccesses?.find(
-        (obj) => obj.requirementId === curr.requirementId && obj.access === null
+        (obj) =>
+          obj.requirementId === curr.requirementId && !obj.access && !!obj.errorMsg
       )
       if (!reqError) {
         acc.notAccessed += 1
@@ -120,6 +121,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -135,6 +137,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -150,6 +153,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
         <HiddenRequirementAccessIndicatorPopover
           count={count}
           errorMessages={hiddenReqsErrorMessages}
+          roleId={roleId}
         />
       </RequirementAccessIndicatorUI>
     )
@@ -164,6 +168,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       <HiddenRequirementAccessIndicatorPopover
         count={count}
         errorMessages={hiddenReqsErrorMessages}
+        roleId={roleId}
       />
     </RequirementAccessIndicatorUI>
   )
@@ -177,11 +182,13 @@ type HiddenRequirementAccessIndicatorPopoverProps = {
     errored: number
   }
   errorMessages: string[]
+  roleId: number
 }
 
 const HiddenRequirementAccessIndicatorPopover = ({
   count,
   errorMessages,
+  roleId,
 }: HiddenRequirementAccessIndicatorPopoverProps) => {
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
@@ -229,7 +236,7 @@ const HiddenRequirementAccessIndicatorPopover = ({
           >
             View connections
           </Button>
-          <RecheckAccessesButton />
+          <RecheckAccessesButton roleId={roleId} />
         </ButtonGroup>
       </PopoverFooter>
     </>

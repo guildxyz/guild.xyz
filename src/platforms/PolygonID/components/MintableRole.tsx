@@ -88,24 +88,29 @@ const MintableRole = ({ role }: Props) => {
     }
   )
 
-  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
-    useMembershipUpdate({
-      onSuccess: () =>
-        onClaimSubmit({
-          userId: userId,
-          data: {
-            guildId: guildId,
-            roleId: role.id,
-          },
-        }),
-      onError: (err) =>
-        showErrorToast({
-          error: "Couldn't check eligibility",
-          correlationId: err.correlationId,
-        }),
-    })
+  const {
+    triggerMembershipUpdate,
+    isLoading: isMembershipUpdateLoading,
+    currentlyCheckedRoleIds,
+  } = useMembershipUpdate({
+    onSuccess: () =>
+      onClaimSubmit({
+        userId: userId,
+        data: {
+          guildId: guildId,
+          roleId: role.id,
+        },
+      }),
+    onError: (err) =>
+      showErrorToast({
+        error: "Couldn't check eligibility",
+        correlationId: err.correlationId,
+      }),
+  })
 
-  const isLoading = isMembershipUpdateLoading || isClaimLoading
+  const isLoading =
+    (isMembershipUpdateLoading && currentlyCheckedRoleIds?.includes(role.id)) ||
+    isClaimLoading
 
   return (
     <Card p={4} mb="3" borderRadius="2xl">
@@ -138,7 +143,7 @@ const MintableRole = ({ role }: Props) => {
                 return
               }
 
-              triggerMembershipUpdate()
+              triggerMembershipUpdate({ roleIds: [role.id] })
             }}
           >
             {hasClaimed ? "Show QR code" : "Mint proof"}

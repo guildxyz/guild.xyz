@@ -1,7 +1,7 @@
-import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
 import fetcher from "utils/fetcher"
+import { Chain } from "wagmiConfig/chains"
 
 const fetch1000Badges = (endpoint: string, skip: number) =>
   fetcher(endpoint, {

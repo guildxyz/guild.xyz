@@ -16,15 +16,14 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { Error } from "components/common/Error"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import { ArrowRight, LockSimple } from "phosphor-react"
-import platforms from "platforms/platforms"
-import { ComponentType } from "react"
+import rewards from "platforms/rewards"
+import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -34,7 +33,6 @@ import GetRewardsJoinStep from "./components/progress/GetRewardsJoinStep"
 import GetRolesJoinStep from "./components/progress/GetRolesJoinStep"
 import SatisfyRequirementsJoinStep from "./components/progress/SatisfyRequirementsJoinStep"
 import useJoin from "./hooks/useJoin"
-import processJoinPlatformError from "./utils/processJoinPlatformError"
 
 type Props = {
   isOpen: boolean
@@ -76,27 +74,15 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
       return <ConnectComponent key={platform} />
     }
 
-    if (
-      !platforms[platform] ||
-      platform === "POINTS" ||
-      platform === "FORM" ||
-      platform === "POLYGON_ID"
-    )
-      return null
+    if (!rewards[platform]?.isPlatform) return null
 
     return <ConnectPlatform key={platform} platform={platform as PlatformName} />
   })
 
   const errorToast = useShowErrorToast()
 
-  const {
-    isLoading,
-    onSubmit,
-    error: joinError,
-    joinProgress,
-    reset,
-  } = useJoin({
-    onSuccess: (res) => {
+  const { isLoading, onSubmit, joinProgress, reset } = useJoin({
+    onSuccess: () => {
       methods.setValue("platforms", {})
       onClose()
     },
@@ -132,17 +118,17 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onClose()
     window.location.hash = `role-${roles[0]?.id}`
   }
+  // so we don't focus the TopRecheckAccessesButton button after join
+  const dummyFinalFocusRef = useRef(null)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} finalFocusRef={dummyFinalFocusRef}>
       <ModalOverlay />
       <ModalContent>
         <FormProvider {...methods}>
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Error error={joinError} processError={processJoinPlatformError} />
-
             <Collapse in={!isInDetailedProgressState}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
                 <WalletAuthButton />

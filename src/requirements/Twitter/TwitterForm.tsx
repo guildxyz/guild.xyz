@@ -1,9 +1,13 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Divider,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Stack,
+  chakra,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
@@ -148,6 +152,16 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
       {selected?.TwitterRequirement && (
         <>
           <Divider />
+          {["TWITTER_RETWEET_V2", "TWITTER_LIKE_V2"].includes(type) && (
+            <Alert>
+              <AlertIcon />
+              <AlertDescription>
+                Due to limitations with X's API{" "}
+                <chakra.span opacity={0.5}>(formerly Twitter)</chakra.span>, the
+                requirement check may be inconsistent.
+              </AlertDescription>
+            </Alert>
+          )}
           <selected.TwitterRequirement baseFieldPath={baseFieldPath} field={field} />
         </>
       )}

@@ -3,7 +3,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { motion } from "framer-motion"
-import { ArrowSquareOut } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
 import {
   RewardDisplay,
   RewardIconProps,
@@ -44,7 +44,7 @@ const ContractCallReward = ({
           <Button
             as={Link}
             variant="link"
-            rightIcon={<ArrowSquareOut />}
+            rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}

@@ -1,7 +1,7 @@
 import { kv } from "@vercel/kv"
-import { Chains } from "chains"
 import { NextApiRequest, NextApiResponse } from "next"
 import { allPurchaseSupportedChains } from "utils/guildCheckout/constants"
+import { Chains } from "wagmiConfig/chains"
 
 export const NON_PURCHASABLE_ASSETS_KV_KEY = "nonPurchasableAssets"
 

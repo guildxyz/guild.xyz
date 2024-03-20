@@ -20,7 +20,7 @@ const TO_LOCALE_STRING_OPTIONS: Intl.DateTimeFormatOptions = {
   minute: "2-digit",
   timeZone: "Europe/Budapest",
 }
-const IGNORED_PATHS = ["/", "/oauth"]
+const IGNORED_PATHS = ["/", "/oauth", "/oauth-result"]
 
 const MaintenanceBanner = ({
   maintenanceFrom,
