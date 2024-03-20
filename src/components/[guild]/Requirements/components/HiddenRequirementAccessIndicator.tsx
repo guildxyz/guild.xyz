@@ -59,7 +59,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       reqAccesses
         ?.filter(
           (req) =>
-            !!req.access === null &&
+            !req.access &&
             !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
               req.errorType
@@ -77,7 +77,8 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
       }
 
       const reqError = reqAccesses?.find(
-        (obj) => obj.requirementId === curr.requirementId && obj.access === null
+        (obj) =>
+          obj.requirementId === curr.requirementId && !obj.access && !!obj.errorMsg
       )
       if (!reqError) {
         acc.notAccessed += 1

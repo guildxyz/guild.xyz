@@ -40,12 +40,7 @@ const EventCard = ({ event, guildId }: Props): JSX.Element => {
               display="flex"
               flexDirection={"column"}
             >
-              <Heading
-                fontSize={"xl"}
-                fontFamily={"Dystopian"}
-                fontWeight={"bold"}
-                mb={3}
-              >
+              <Heading fontSize="xl" fontFamily="display" fontWeight="bold" mb={3}>
                 {title}
               </Heading>
               <EventInfo userCount={memberCount} startDate={start} mb="4" />
@@ -85,12 +80,7 @@ const EventCard = ({ event, guildId }: Props): JSX.Element => {
               altText={`${event.title} -  event cover`}
               mb="5"
             />
-            <Heading
-              fontSize={"xl"}
-              fontFamily={"Dystopian"}
-              fontWeight={"bold"}
-              mb={3}
-            >
+            <Heading fontSize="xl" fontFamily={"display"} fontWeight="bold" mb={3}>
               {title}
             </Heading>
             <EventInfo userCount={memberCount} startDate={start} mb="5" />

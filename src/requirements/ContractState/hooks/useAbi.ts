@@ -1,6 +1,6 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 
 const getContractMethods = (abi) => {
   let parsedAbi

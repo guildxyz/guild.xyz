@@ -1,8 +1,8 @@
-import { SimpleGrid, Text, Tooltip } from "@chakra-ui/react"
+import { SimpleGrid, Text } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
-import platforms, { PlatformAsRewardRestrictions } from "platforms/platforms"
+import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
+import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { PlatformType, RoleFormType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
@@ -27,9 +27,15 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
+      (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
+        PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
+        !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
+      // temporary until we have Edit button for points to set amount
+      guildPlatform.platformId !== PlatformType.POINTS &&
+      // not added to the role yet
       !rolePlatforms.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
-      ) && guildPlatform.platformId !== PlatformType.POINTS
+      )
   )
 
   if (!filteredPlatforms.length) return null
@@ -37,12 +43,12 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
   return (
     <>
       <Text fontWeight={"bold"} mb="3">
-        Give access to existing reward
+        Quick add existing reward type
       </Text>
 
       <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap={4}>
         {filteredPlatforms?.map((platform) => {
-          const platformData = platforms[PlatformType[platform.platformId]]
+          const platformData = rewards[PlatformType[platform.platformId]]
           if (!platformData) return null
 
           const useCardProps = platformData.cardPropsHook
@@ -52,46 +58,27 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
             platform.platformGuildData?.mimeType ===
             "application/vnd.google-apps.form"
 
-          const isAddButtonDisabled =
-            platformData.asRewardRestriction ===
-              PlatformAsRewardRestrictions.SINGLE_ROLE &&
-            alreadyUsedRolePlatforms?.includes(platform.id)
-
           return (
             <PlatformCard
               key={platform.id}
-              usePlatformProps={useCardProps}
+              usePlatformCardProps={useCardProps}
               guildPlatform={platform}
               colSpan={1}
-            >
-              <Tooltip
-                maxW="full"
-                isDisabled={!isAddButtonDisabled}
-                label={`You can use ${platformData.name} rewards for one role only`}
-                placement="bottom"
-                hasArrow
-              >
-                <Button
-                  h="10"
-                  isDisabled={isAddButtonDisabled}
-                  onClick={() => {
-                    onSelect({
-                      guildPlatformId: platform.id,
-                      isNew: true,
-                      platformRoleId: isGoogleReward
-                        ? isForm
-                          ? "writer"
-                          : "reader"
-                        : null,
-                      visibility: roleVisibility,
-                    })
-                    onClose()
-                  }}
-                >
-                  Add reward
-                </Button>
-              </Tooltip>
-            </PlatformCard>
+              onClick={() => {
+                onSelect({
+                  guildPlatformId: platform.id,
+                  isNew: true,
+                  platformRoleId: isGoogleReward
+                    ? isForm
+                      ? "writer"
+                      : "reader"
+                    : null,
+                  visibility: roleVisibility,
+                })
+                onClose()
+              }}
+              {...DISPLAY_CARD_INTERACTIVITY_STYLES}
+            ></PlatformCard>
           )
         })}
       </SimpleGrid>

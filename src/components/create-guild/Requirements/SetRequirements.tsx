@@ -67,7 +67,8 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
         {!freeEntry && <BalancyCounterWithPopover ml="auto !important" pl="5" />}
       </Wrap>
 
-      <Collapse in={!freeEntry}>
+      {/* negative margin with padding so LogicFormControl's input focus states doesn't get cut off */}
+      <Collapse in={!freeEntry} style={{ margin: "-2px", padding: "2px" }}>
         <LogicFormControl />
       </Collapse>
 

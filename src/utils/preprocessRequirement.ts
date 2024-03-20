@@ -1,28 +1,9 @@
-import { COVALENT_CHAINS } from "requirements/WalletActivity/WalletActivityForm"
-import { Requirement, RequirementType } from "types"
+import { Requirement } from "types"
 
 const preprocessRequirement = (requirement: Partial<Requirement>): Requirement => {
   const processedRequirement: Requirement = structuredClone(
     requirement
   ) as Requirement
-
-  if (
-    processedRequirement.type?.startsWith("ALCHEMY_") &&
-    COVALENT_CHAINS.has(processedRequirement.chain)
-  ) {
-    processedRequirement.type = processedRequirement.type.replace(
-      "ALCHEMY_",
-      "COVALENT_"
-    ) as RequirementType
-
-    if (processedRequirement?.data?.timestamps?.minAmount) {
-      processedRequirement.data.timestamps.minAmount *= 1000
-    }
-
-    if (processedRequirement?.data?.timestamps?.maxAmount) {
-      processedRequirement.data.timestamps.maxAmount *= 1000
-    }
-  }
 
   // So we don't send empty strings to the API
   if (
@@ -34,10 +15,10 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   // Make sure minAmount and maxAmount are in correct order
   if (
     processedRequirement.type?.includes("RELATIVE") &&
-    typeof processedRequirement.data?.minAmount === "number" &&
-    typeof processedRequirement.data?.maxAmount === "number" &&
-    typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
-    typeof processedRequirement.data?.timestamps?.maxAmount === "number"
+    ((typeof processedRequirement.data?.minAmount === "number" &&
+      typeof processedRequirement.data?.maxAmount === "number") ||
+      (typeof processedRequirement.data?.timestamps?.minAmount === "number" &&
+        typeof processedRequirement.data?.timestamps?.maxAmount === "number"))
   ) {
     const [tsUpperEnd, tsLowerEnd] = [
       processedRequirement.data.timestamps.minAmount,

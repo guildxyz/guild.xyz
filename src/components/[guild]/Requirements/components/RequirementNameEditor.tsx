@@ -5,23 +5,15 @@ import {
   IconButton,
   Text,
   Tooltip,
-  useEditableControls,
+  useEditableContext,
 } from "@chakra-ui/react"
 import { Check, PencilSimple } from "phosphor-react"
-import {
-  MutableRefObject,
-  PropsWithChildren,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import { MutableRefObject, PropsWithChildren, ReactNode, useRef } from "react"
 import {
   FormProvider,
   useController,
   useForm,
   useFormContext,
-  useWatch,
 } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import { useRequirementContext } from "./RequirementContext"
@@ -35,43 +27,50 @@ const RequirementNameEditor = ({
   isLoading,
   rightElement,
   children,
+  defaultValue,
 }: PropsWithChildren<{
   textRef: MutableRefObject<HTMLParagraphElement>
   isLoading?: boolean
   rightElement?: ReactNode
+  defaultValue?: string
 }>) => {
-  const { isEditing, getSubmitButtonProps, getEditButtonProps } =
-    useEditableControls()
+  const { isEditing, getInputProps, getSubmitButtonProps, getEditButtonProps } =
+    useEditableContext()
   const {
     resetField,
     formState: { errors },
   } = useFormContext<RequirementNameForm>()
 
-  const customName = useWatch({ name: "customName" })
-
   if (isEditing)
     return (
-      <Box
-        data-req-name-editor
-        borderWidth={1}
-        borderRadius="lg"
-        display={"flex"}
-        pl={2}
-        overflow={"hidden"}
+      <Tooltip
+        label={errors.customName?.message}
+        hasArrow
+        isOpen={!!errors.customName}
       >
-        <EditableInput
-          _focus={{
-            boxShadow: "none",
-          }}
-          p={0}
-          borderRadius={0}
-        />
-
-        <Tooltip
-          label={errors.customName?.message}
-          isDisabled={isEditing && !errors.customName}
-          hasArrow
+        <Box
+          data-req-name-editor
+          borderWidth={1}
+          borderRadius="lg"
+          display="flex"
+          pl={2}
+          overflow="hidden"
         >
+          <EditableInput
+            {...getInputProps({
+              onKeyDown: (e) => {
+                if (!!errors?.customName && e.key === "Enter") {
+                  e.preventDefault()
+                }
+              },
+            })}
+            _focus={{
+              boxShadow: "none",
+            }}
+            p={0}
+            borderRadius={0}
+          />
+
           <IconButton
             size="xs"
             variant="ghost"
@@ -79,11 +78,15 @@ const RequirementNameEditor = ({
             aria-label="Edit"
             icon={<Check />}
             colorScheme={"green"}
-            {...getSubmitButtonProps()}
+            {...getSubmitButtonProps({
+              onClick: (e) => {
+                if (!!errors.customName) e.preventDefault()
+              },
+            })}
             isDisabled={isEditing && !!errors.customName}
           />
-        </Tooltip>
-      </Box>
+        </Box>
+      </Tooltip>
     )
 
   return (
@@ -100,14 +103,10 @@ const RequirementNameEditor = ({
         color="gray"
         {...getEditButtonProps({
           onClick: () => {
-            /**
-             * The "LINK_VISIT" requirement will have a custom value by default, with
-             * a special variable ([link title]) in it, so we don't want to reset it
-             * to textRef.current.textContent
-             */
-            if (!!customName) return
             resetField("customName", {
-              defaultValue: textRef.current?.textContent,
+              defaultValue: !!defaultValue
+                ? defaultValue
+                : textRef.current?.textContent,
               keepDirty: true,
             })
           },
@@ -135,36 +134,38 @@ const RequirementNameEditorWrapper = ({
     mode: "all",
   })
   const requirement = useRequirementContext()
-  const { type } = requirement
+  const {
+    type,
+    data: { customName },
+  } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
-  const [originalValue, setOriginalValue] = useState("")
-  const { field } = useController({
+  const {
+    field,
+    formState: { errors },
+  } = useController({
     control: methods.control,
     name: "customName",
     rules: REQUIREMENTS[type].customNameRules,
     shouldUnregister: true,
   })
 
-  useEffect(() => {
-    if (!textRef.current) return
-
-    if (!!field.value && !originalValue) {
-      setOriginalValue(field.value)
-    } else {
-      setOriginalValue(textRef.current.textContent)
-    }
-  }, [textRef.current, originalValue, field.value])
-
   const { resetField } = useFormContext()
 
   const conditionallyResetToOriginal = (value) => {
-    if (value === originalValue || value.trim() === "") {
+    if (value === customName || value.trim() === "") {
       resetField("customName", {
-        defaultValue: originalValue,
+        defaultValue: customName,
         keepDirty: true,
       })
     }
+  }
+
+  const handleSubmit = (name: string) => {
+    if (!!errors?.customName) {
+      return
+    }
+    onSave(name)
   }
 
   return (
@@ -172,13 +173,15 @@ const RequirementNameEditorWrapper = ({
       <Editable
         size="sm"
         {...field}
-        onSubmit={onSave}
+        submitOnBlur={false}
+        onSubmit={handleSubmit}
         onCancel={conditionallyResetToOriginal}
       >
         <RequirementNameEditor
           textRef={textRef}
           isLoading={isLoading}
           rightElement={rightElement}
+          defaultValue={customName}
         >
           {children}
         </RequirementNameEditor>

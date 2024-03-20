@@ -55,8 +55,9 @@ const RequirementAccessIndicator = () => {
     )
 
   if (
-    reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED" ||
-    reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID"
+    (reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED" ||
+      reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID") &&
+    reqAccessData?.errorMsg !== "EVM address not connected"
   )
     return (
       <RequirementAccessIndicatorUI

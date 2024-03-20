@@ -1,9 +1,10 @@
 import { MenuItem, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import useRemoveGuildPlatform from "components/[guild]/AccessHub/hooks/useRemoveGuildPlatform"
+import { AlreadyGrantedAccessesWillRemainInfo } from "components/[guild]/RolePlatforms/components/RemovePlatformButton/RemovePlatformButton"
 import useGuild from "components/[guild]/hooks/useGuild"
-import RemovePlatformAlert from "components/[guild]/RemovePlatformAlert"
+import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import { TrashSimple } from "phosphor-react"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { useEffect } from "react"
 import { PlatformType } from "types"
 
@@ -19,11 +20,9 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
     (gp) => gp.platformGuildId === platformGuildId
   )
 
-  const {
-    onSubmit,
-    isLoading: isRemoveGuildPlatformLoading,
-    response,
-  } = useRemoveGuildPlatform(guildPlatform?.id)
+  const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
+
+  const { onSubmit, isLoading, response } = useRemoveGuildPlatform(guildPlatform?.id)
 
   useEffect(() => {
     if (!response) return
@@ -34,27 +33,23 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   return (
     <>
-      <MenuItem
-        icon={<TrashSimple />}
-        onClick={
-          platforms[PlatformType[guildPlatform.platformId]]
-            .shouldShowKeepAccessesModal
-            ? onOpen
-            : () => onSubmit()
-        }
-        color={color}
-      >
+      <MenuItem icon={<TrashSimple />} onClick={onOpen} color={color}>
         Remove reward...
       </MenuItem>
 
-      <RemovePlatformAlert
-        guildPlatform={guildPlatform}
-        keepAccessDescription="Everything on the platform will remain as is for existing members, but accesses by this Guild won’t be managed anymore"
-        revokeAccessDescription="Existing members will lose their accesses on the platform granted by this Guild"
+      <ConfirmationAlert
+        isLoading={isLoading}
         isOpen={isOpen}
         onClose={onClose}
-        onSubmit={onSubmit}
-        isLoading={isRemoveGuildPlatformLoading}
+        onConfirm={onSubmit}
+        title="Remove reward"
+        description={
+          <>
+            Are you sure you want to remove this reward?
+            {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
+          </>
+        }
+        confirmationText="Remove"
       />
     </>
   )

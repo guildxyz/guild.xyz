@@ -21,7 +21,8 @@ const EditRequirements = ({ requirements }: Props) => {
     <Stack spacing="5" w="full">
       <SectionTitle title="Requirements" />
 
-      <Collapse in={!freeEntry}>
+      {/* negative margin with padding so LogicFormControl's input focus states doesn't get cut off */}
+      <Collapse in={!freeEntry} style={{ margin: "-2px", padding: "2px" }}>
         <LogicFormControl />
       </Collapse>
 

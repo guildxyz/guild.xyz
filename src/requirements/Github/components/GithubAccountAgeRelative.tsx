@@ -1,14 +1,15 @@
-import RelativeMinMaxAmountFormControls from "./RelativeMinMaxAmountFormControls"
+import RelativeMinMaxTimeFormControls from "components/common/RelativeMinMaxTimeFormControls"
 
 type Props = {
   baseFieldPath: string
 }
 
 const GithubAccountAgeRelative = ({ baseFieldPath }: Props) => (
-  <RelativeMinMaxAmountFormControls
-    baseFieldPath={baseFieldPath}
-    minAmountLabel="Minimum account age"
-    maxAmountLabel="Maximum account age"
+  <RelativeMinMaxTimeFormControls
+    minTimeFieldName={`${baseFieldPath}.data.minAmount`}
+    maxTimeFieldName={`${baseFieldPath}.data.maxAmount`}
+    minTimeLabel="Minimum account age"
+    maxTimeLabel="Maximum account age"
   />
 )
 

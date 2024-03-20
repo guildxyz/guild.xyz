@@ -4,7 +4,7 @@ import { useController } from "react-hook-form"
 import { RoleEditFormData } from "../EditRole"
 
 const RoleGroupSelect = () => {
-  const { groups, featureFlags } = useGuild()
+  const { groups } = useGuild()
 
   const {
     field: { onChange, value, ...rest },
@@ -12,7 +12,7 @@ const RoleGroupSelect = () => {
     name: "groupId",
   })
 
-  if (!groups.length || !featureFlags.includes("ROLE_GROUPS")) return null
+  if (!groups.length) return null
 
   return (
     <FormControl>

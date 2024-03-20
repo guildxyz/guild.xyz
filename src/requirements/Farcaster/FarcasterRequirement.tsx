@@ -14,7 +14,7 @@ const FarcasterRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
   const { data: farcasterUser } = useFarcasterUser(
-    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.data?.id)
+    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.type)
       ? requirement.data?.id
       : undefined
   )

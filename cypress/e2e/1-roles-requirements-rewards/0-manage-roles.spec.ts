@@ -16,7 +16,6 @@ describe("roles", () => {
         "TEST_GUILD_URL_NAME"
       )}`
     ).as("fetchGuild")
-    cy.waitForAccessCheck()
   })
 
   it("can fetch guild id", () => {
@@ -47,11 +46,6 @@ describe("roles", () => {
         "input[name='name'] ~ .chakra-collapse .chakra-form__error-message"
       ).should("not.exist")
 
-      cy.getByDataTest("save-role-button").click()
-
-      cy.contains("Set some requirements, or make the role free").should("exist")
-
-      cy.get("#free-entry-checkbox").parent().click()
       cy.contains("Connect your Ethereum wallet").should("exist")
 
       cy.getByDataTest("save-role-button").click()
@@ -98,36 +92,34 @@ describe("roles", () => {
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
         CONTEXT.createdRoleId
       }/requirements`
-    ).as("editRoleApiCall")
+    ).as("createRequirementApiCall")
 
     cy.get(`#role-${CONTEXT.createdRoleId}`).should("exist")
     cy.get(`#role-${CONTEXT.createdRoleId} button[aria-label='Edit role']`).click()
 
     cy.get("div[role='dialog'].chakra-slide").should("exist")
 
-    cy.get("#free-entry-checkbox").parent().click()
-
     cy.getByDataTest("add-requirement-button").click()
     cy.getByDataTest("add-requirement-modal").within(() => {
       cy.contains("Allowlist").click()
       cy.get("textarea").type(Cypress.env("userAddress"))
       cy.contains("Add requirement").click()
+      cy.wait("@createRequirementApiCall")
+        .its("response.statusCode")
+        .should("eq", 201)
     })
 
     cy.getByDataTest("add-requirement-button").click()
     cy.getByDataTest("add-requirement-modal").within(() => {
       cy.contains("Captcha").click()
+      cy.get("input[name='.data.maxAmount']").type("1")
       cy.contains("Add requirement").click()
+      cy.wait("@createRequirementApiCall")
+        .its("response.statusCode")
+        .should("eq", 201)
     })
 
-    cy.getByDataTest("save-role-button").click()
-    cy.wait("@editRoleApiCall")
-      .then((intercept) => {
-        CONTEXT.createdRequirement = intercept.response.body
-        return intercept
-      })
-      .its("response.statusCode")
-      .should("eq", 201)
+    cy.contains("Connect your Ethereum wallet").should("not.exist")
   })
 
   it("can edit requirements list", () => {
@@ -146,7 +138,7 @@ describe("roles", () => {
       `${Cypress.env("guildApiUrl")}/guilds/*/roles/*/requirements/*`
     ).as("deleteRequirement")
 
-    cy.getByDataTest("delete-requirement-button").click()
+    cy.getByDataTest("delete-confirmation-button").click()
     cy.wait("@deleteRequirement")
     cy.contains("Requirement deleted!")
   })
@@ -166,7 +158,7 @@ describe("roles", () => {
       "deleteRole"
     )
 
-    cy.getByDataTest("delete-role-confirmation-button").click()
+    cy.getByDataTest("delete-confirmation-button").click()
     cy.wait("@deleteRole")
     cy.contains("Role deleted!")
   })

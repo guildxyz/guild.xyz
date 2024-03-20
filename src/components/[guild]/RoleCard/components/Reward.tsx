@@ -21,7 +21,7 @@ import useMembership, {
 import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { PropsWithChildren, ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
@@ -65,14 +65,15 @@ const Reward = ({
   )
 
   const state = useMemo(() => {
-    if (isMember && hasRoleAccess)
+    if (hasRoleAccess)
       return {
         tooltipLabel: label,
         buttonProps: isLinkColorful
           ? { ...accessButtonProps, colorScheme: "blue" }
           : accessButtonProps,
       }
-    if (!isConnected || (!isMember && hasRoleAccess))
+
+    if (!isMember)
       return {
         tooltipLabel: (
           <>
@@ -82,6 +83,7 @@ const Reward = ({
         ),
         buttonProps: { onClick: openJoinModal },
       }
+
     return {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
@@ -194,7 +196,7 @@ const RewardIcon = ({
   const props = {
     src:
       guildPlatform?.platformGuildData?.imageUrl ??
-      platforms[PlatformType[guildPlatform?.platformId]]?.imageUrl,
+      rewards[PlatformType[guildPlatform?.platformId]]?.imageUrl,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
     rounded: "full",
@@ -215,7 +217,7 @@ const RewardIcon = ({
       return (
         <MotionCircle {...motionElementProps} {...circleProps}>
           <Icon
-            as={platforms[PlatformType[guildPlatform?.platformId]]?.icon}
+            as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
             color="white"
             boxSize={3}
           />
@@ -225,7 +227,7 @@ const RewardIcon = ({
     return (
       <Circle {...circleProps}>
         <Icon
-          as={platforms[PlatformType[guildPlatform?.platformId]]?.icon}
+          as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
           color="white"
           boxSize={3}
         />
@@ -250,7 +252,7 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const platformWithGuildPlatform = { ...platform, guildPlatform }
 
   const Component =
-    platforms[PlatformType[guildPlatform?.platformId]].RoleCardComponent ?? Reward
+    rewards[PlatformType[guildPlatform?.platformId]].RoleCardComponent ?? Reward
 
   return <Component platform={platformWithGuildPlatform} {...props} />
 }

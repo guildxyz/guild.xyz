@@ -10,7 +10,6 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react"
-import { Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -18,6 +17,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import dynamic from "next/dynamic"
 import { useState } from "react"
+import { Chains } from "wagmiConfig/chains"
 import { useMintGuildPinContext } from "../MintGuildPinContext"
 import GuildPinFees from "../components/GuildPinFees"
 import GuildPinImage from "../components/GuildPinImage"

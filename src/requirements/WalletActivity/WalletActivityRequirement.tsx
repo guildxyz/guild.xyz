@@ -1,6 +1,4 @@
 import { Icon } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "chains"
-import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DataBlockWithDate from "components/[guild]/Requirements/components/DataBlockWithDate"
 import Requirement, {
   RequirementProps,
@@ -18,68 +16,97 @@ const requirementIcons: Record<
   string,
   ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>
 > = {
-  ALCHEMY_FIRST_TX: Wallet,
   COVALENT_FIRST_TX: Wallet,
-  ALCHEMY_FIRST_TX_RELATIVE: Wallet,
   COVALENT_FIRST_TX_RELATIVE: Wallet,
-  ALCHEMY_CONTRACT_DEPLOY: FileText,
   COVALENT_CONTRACT_DEPLOY: FileText,
-  ALCHEMY_CONTRACT_DEPLOY_RELATIVE: FileText,
   COVALENT_CONTRACT_DEPLOY_RELATIVE: FileText,
-  ALCHEMY_TX_COUNT: ArrowsLeftRight,
   COVALENT_TX_COUNT: ArrowsLeftRight,
-  ALCHEMY_TX_COUNT_RELATIVE: ArrowsLeftRight,
   COVALENT_TX_COUNT_RELATIVE: ArrowsLeftRight,
-  ALCHEMY_TX_VALUE: Coins,
   COVALENT_TX_VALUE: Coins,
-  ALCHEMY_TX_VALUE_RELATIVE: Coins,
   COVALENT_TX_VALUE_RELATIVE: Coins,
 }
 
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
+  const maxAmount = requirement.data?.timestamps?.maxAmount
+  const minAmount = requirement.data?.timestamps?.minAmount
+
+  const getFirstTxContent = () => {
+    if (maxAmount && minAmount === undefined)
+      return (
+        <>
+          {`Have a wallet created before `}
+          <DataBlockWithDate timestamp={maxAmount} />
+        </>
+      )
+
+    if (maxAmount === undefined && minAmount)
+      return (
+        <>
+          {`Have a wallet created after `}
+          <DataBlockWithDate timestamp={minAmount} />
+        </>
+      )
+
+    if (maxAmount && minAmount)
+      return (
+        <>
+          {`Have a wallet created between `}
+          <DataBlockWithDate timestamp={minAmount} />
+          {` and `}
+          <DataBlockWithDate timestamp={maxAmount} />
+        </>
+      )
+
+    return <>Have a wallet with at least one transaction</>
+  }
+
+  const getFirstTxRelativeContent = () => {
+    const formattedMin = formatRelativeTimeFromNow(minAmount)
+    const formattedMax = formatRelativeTimeFromNow(maxAmount)
+
+    if (maxAmount && !minAmount)
+      return (
+        <>
+          {`Have a wallet older than `}
+          <DataBlock>{formattedMax}</DataBlock>
+        </>
+      )
+
+    if (!maxAmount && minAmount)
+      return (
+        <>
+          {`Have a wallet younger than `}
+          <DataBlock>{formattedMin}</DataBlock>
+        </>
+      )
+
+    if (maxAmount && minAmount)
+      return (
+        <>
+          {`Have a wallet older than `}
+          <DataBlock>{formattedMax}</DataBlock>
+          {` and younger than `}
+          <DataBlock>{formattedMin}</DataBlock>
+        </>
+      )
+
+    return <>Have a wallet with at least one transaction</>
+  }
+
   return (
     <Requirement
       image={<Icon as={requirementIcons[requirement.type]} boxSize={6} />}
-      footer={
-        ["ALCHEMY_TX_VALUE", "ALCHEMY_TX_VALUE_RELATIVE"].includes(
-          requirement.type
-        ) ? (
-          <BlockExplorerUrl />
-        ) : (
-          <RequirementChainIndicator />
-        )
-      }
+      footer={<RequirementChainIndicator />}
       {...props}
     >
       {(() => {
         switch (requirement.type) {
-          case "ALCHEMY_FIRST_TX":
           case "COVALENT_FIRST_TX":
-            return (
-              <>
-                {"Have a wallet since at least "}
-                <DataBlockWithDate
-                  timestamp={requirement.data.timestamps.maxAmount}
-                />
-              </>
-            )
-          case "ALCHEMY_FIRST_TX_RELATIVE":
-          case "COVALENT_FIRST_TX_RELATIVE": {
-            const formattedWalletAge = formatRelativeTimeFromNow(
-              requirement.data.timestamps.maxAmount
-            )
-
-            return (
-              <>
-                {"Have a wallet older than "}
-                <DataBlock>{formattedWalletAge}</DataBlock>
-              </>
-            )
-          }
-
-          case "ALCHEMY_CONTRACT_DEPLOY":
+            return getFirstTxContent()
+          case "COVALENT_FIRST_TX_RELATIVE":
+            return getFirstTxRelativeContent()
           case "COVALENT_CONTRACT_DEPLOY":
             return (
               <>
@@ -108,7 +135,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 ) : null}
               </>
             )
-          case "ALCHEMY_CONTRACT_DEPLOY_RELATIVE":
           case "COVALENT_CONTRACT_DEPLOY_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
               requirement.data.timestamps.minAmount
@@ -139,7 +165,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
               </>
             )
           }
-          case "ALCHEMY_TX_COUNT":
           case "COVALENT_TX_COUNT":
             return (
               <>
@@ -178,7 +203,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 ) : null}
               </>
             )
-          case "ALCHEMY_TX_COUNT_RELATIVE":
           case "COVALENT_TX_COUNT_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
               requirement.data.timestamps.minAmount
@@ -193,74 +217,6 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                 {`Have ${
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
                 } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
-                {formattedMaxAmount && formattedMinAmount ? (
-                  <>
-                    {" between the last "}
-                    <DataBlock>{formattedMinAmount}</DataBlock>
-                    {" - "}
-                    <DataBlock>{formattedMaxAmount}</DataBlock>
-                  </>
-                ) : formattedMinAmount ? (
-                  <>
-                    {" in the last "}
-                    <DataBlock>{formattedMinAmount}</DataBlock>
-                  </>
-                ) : null}
-              </>
-            )
-          }
-          case "ALCHEMY_TX_VALUE":
-            return (
-              <>
-                {`Moved at least ${requirement.data.txValue} `}
-                <DataBlock>
-                  <>
-                    {requirement.symbol ??
-                      (requirement.address
-                        ? shortenHex(requirement.address, 3)
-                        : CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol)}
-                  </>
-                </DataBlock>
-                {requirement.data.timestamps.maxAmount &&
-                requirement.data.timestamps.minAmount ? (
-                  <>
-                    {" between "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.minAmount}
-                    />
-                    {" and "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.maxAmount}
-                    />
-                  </>
-                ) : requirement.data.timestamps.minAmount ? (
-                  <>
-                    {" before "}
-                    <DataBlockWithDate
-                      timestamp={requirement.data.timestamps.minAmount}
-                    />
-                  </>
-                ) : null}
-              </>
-            )
-          case "ALCHEMY_TX_VALUE_RELATIVE": {
-            const formattedMinAmount = formatRelativeTimeFromNow(
-              requirement.data.timestamps.minAmount
-            )
-
-            const formattedMaxAmount = formatRelativeTimeFromNow(
-              requirement.data.timestamps.maxAmount
-            )
-
-            return (
-              <>
-                {`Moved at least ${requirement.data.txValue} `}
-                <DataBlock>
-                  {requirement.symbol ??
-                    (requirement.address
-                      ? shortenHex(requirement.address, 3)
-                      : CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol)}
-                </DataBlock>
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
                     {" between the last "}

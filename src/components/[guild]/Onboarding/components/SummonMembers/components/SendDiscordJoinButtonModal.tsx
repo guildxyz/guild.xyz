@@ -30,7 +30,7 @@ const SendDiscordJoinButtonModal = ({
 }) => {
   const { captureEvent } = usePostHogContext()
 
-  const { isLoading, onSubmit } = useSendJoin("JOIN", () => {
+  const { isLoading, onSubmit } = useSendJoin(() => {
     onClose()
     onSuccess?.()
   })

@@ -1,10 +1,10 @@
-import { Chain, Chains } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"
 import { getBlockByTime } from "utils/getBlockByTime"
-import { useContractRead, useContractReads } from "wagmi"
+import { useReadContract, useReadContracts } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 type NftStandard = "ERC-721" | "ERC-1155" | "Unknown"
 
@@ -50,17 +50,19 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     address,
     abi: guildRewardNftAbi,
     chainId: Chains[chain],
-  }
+  } as const
 
   const {
     data: firstTotalSupplyToday,
     isLoading: isFirstTotalSupplyTodayLoadings,
     error,
-  } = useContractRead({
+  } = useReadContract({
     ...contract,
     functionName: "totalSupply",
     blockNumber: firstBlockNumberToday?.result,
-    enabled: Boolean(firstBlockNumberToday?.result),
+    query: {
+      enabled: Boolean(firstBlockNumberToday?.result),
+    },
   })
 
   const {
@@ -68,7 +70,15 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     isLoading: isMulticallLoading,
     error: multicallError,
     refetch,
-  } = useContractReads({
+  } = useReadContracts({
+    /**
+     * We need to @ts-ignore this line, since we get a "Type instantiation is
+     * excessively deep and possibly infinite" error here until strictNullChecks is
+     * set to false in our tsconfig. We should set it to true & sort out the related
+     * issues in another PR.
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     contracts: [
       {
         ...contract,
@@ -99,15 +109,21 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     ],
   })
 
-  // Haven't used data?.map(...) here in order to properly infer types from responses
-  const [owner, name, totalSupply, isERC1155, tokenURI, fee] = [
-    data?.[0]?.result,
-    data?.[1]?.result,
-    data?.[2]?.result,
-    data?.[3]?.result,
-    data?.[4]?.result,
-    data?.[5]?.result,
-  ]
+  const [
+    ownerResponse,
+    nameResponse,
+    totalSupplyResponse,
+    supportsInterfaceResponse,
+    tokenURResponseI,
+    feeResponse,
+  ] = data || []
+
+  const owner = ownerResponse?.result
+  const name = nameResponse?.result
+  const totalSupply = totalSupplyResponse?.result
+  const isERC1155 = supportsInterfaceResponse?.result
+  const tokenURI = tokenURResponseI?.result
+  const fee = feeResponse?.result
 
   const { data: metadata } = useSWRImmutable(
     tokenURI

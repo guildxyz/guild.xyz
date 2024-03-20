@@ -1,6 +1,6 @@
 import { ImageData } from "@nouns/assets"
-import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
+import { Chain } from "wagmiConfig/chains"
 import { nounsAddresses } from "./useNftType"
 
 export type NftMetadata = {

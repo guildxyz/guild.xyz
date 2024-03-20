@@ -1,7 +1,7 @@
-import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
 import useSetRoleImageAndNameFromPlatformData from "components/[guild]/AddRewardButton/hooks/useSetRoleImageAndNameFromPlatformData"
+import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
 import { useWatch } from "react-hook-form"
-import PlatformPreview from "./PlatformPreview"
+import RewardPreview from "./RewardPreview"
 
 const TelegramPreview = (): JSX.Element => {
   const groupId = useWatch({
@@ -12,7 +12,7 @@ const TelegramPreview = (): JSX.Element => {
   useSetRoleImageAndNameFromPlatformData(data?.groupIcon, data?.groupName)
 
   return (
-    <PlatformPreview
+    <RewardPreview
       type="TELEGRAM"
       isLoading={isValidating}
       name={data?.groupName}

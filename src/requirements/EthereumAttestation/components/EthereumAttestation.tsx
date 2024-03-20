@@ -1,11 +1,11 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
-import { Chain } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import parseFromObject from "utils/parseFromObject"
+import { Chain } from "wagmiConfig/chains"
 import { EAS_SCAN_BASE } from "./EthereumAttestationRequirementFooter"
 
 const HEX_STRING_REGEX = /^0x[A-F0-9]+$/i

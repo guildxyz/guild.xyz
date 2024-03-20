@@ -41,9 +41,10 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const greenDividerColor = useColorModeValue("green.400", "whiteAlpha.400")
   const grayDividerColor = useColorModeValue("blackAlpha.400", "whiteAlpha.300")
 
-  const requirementsWithErrors = role?.requirements?.filter(
-    (req) => reqAccesses?.find((r) => r.requirementId === req.id)?.access === null
-  )
+  const requirementsWithErrors = role?.requirements?.filter((req) => {
+    const relevantReq = reqAccesses?.find((r) => r.requirementId === req.id)
+    return !relevantReq?.access && !!relevantReq?.errorMsg
+  })
   const errors = useRequirementErrorConfig()
   const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
     (req) => !!errors[req.type.split("_")[0]]
@@ -110,15 +111,6 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   if (isValidating)
     return <AccessIndicatorUI colorScheme="gray" label="Checking access" isLoading />
 
-  if (errorTextFromConfig)
-    return (
-      <AccessIndicatorUI
-        colorScheme="orange"
-        label={errorTextFromConfig}
-        icon={Warning}
-      />
-    )
-
   if (reqAccesses?.some((err) => err.errorType === "PLATFORM_CONNECT_INVALID"))
     return (
       <AccessIndicatorUI
@@ -138,6 +130,15 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
         icon={LockSimple}
         onClick={() => setIsAccountModalOpen(true)}
         cursor="pointer"
+      />
+    )
+
+  if (errorTextFromConfig)
+    return (
+      <AccessIndicatorUI
+        colorScheme="orange"
+        label={errorTextFromConfig}
+        icon={Warning}
       />
     )
 

@@ -8,10 +8,10 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
+import RelativeMinMaxTimeFormControls from "components/common/RelativeMinMaxTimeFormControls"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import RelativeMinMaxAmountFormControls from "./RelativeMinMaxAmountFormControls"
 
 const GithubCommitCountRelative = ({ baseFieldPath }: RequirementFormProps) => {
   const { errors } = useFormState()
@@ -31,10 +31,11 @@ const GithubCommitCountRelative = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <>
-      <RelativeMinMaxAmountFormControls
-        baseFieldPath={baseFieldPath}
-        minAmountLabel="From"
-        maxAmountLabel="To"
+      <RelativeMinMaxTimeFormControls
+        minTimeFieldName={`${baseFieldPath}.data.minAmount`}
+        maxTimeFieldName={`${baseFieldPath}.data.maxAmount`}
+        minTimeLabel="From"
+        maxTimeLabel="To"
       />
 
       <FormControl

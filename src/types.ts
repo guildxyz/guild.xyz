@@ -1,7 +1,7 @@
-import type { Chain, Chains } from "chains"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
+import type { Chain, Chains } from "wagmiConfig/chains"
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
@@ -91,6 +91,7 @@ type PlatformName =
   | "POLYGON_ID"
   | "POINTS"
   | "FORM"
+  | "GATHER_TOWN"
 
 type PlatformUserData = {
   acessToken?: string
@@ -210,6 +211,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -232,6 +237,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -253,6 +262,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -274,6 +287,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   TEXT: {
     text: string
@@ -295,6 +312,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   POAP: {
     text?: never
@@ -316,6 +337,10 @@ type PlatformGuildData = {
     fancyId: string
     eventId: number
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
   FORM: {
     text?: never
@@ -337,6 +362,35 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: number
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
+  }
+  GATHER: {
+    name: string
+    gatherSpaceId: string
+    gatherApiKey: string
+    gatherAffiliation: string
+    gatherRole: string
+    role?: never
+    text?: never
+    texts?: never
+    imageUrl?: never
+    chain?: never
+    contractAddress?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    description?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
   }
   POINTS: {
     text?: never
@@ -358,6 +412,10 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
   }
 }
 
@@ -600,6 +658,7 @@ export enum PlatformType {
   "POINTS" = 13,
   "POAP" = 14,
   "FORM" = 15,
+  "GATHER_TOWN" = 16,
 }
 type WalletConnectConnectionData = {
   connected: boolean

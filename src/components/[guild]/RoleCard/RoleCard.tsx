@@ -15,7 +15,7 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
-import platforms from "platforms/platforms"
+import rewards from "platforms/rewards"
 import { memo, useEffect, useRef } from "react"
 import { PlatformType, Role, Visibility as VisibilityType } from "types"
 import RoleRequirements from "../Requirements"
@@ -179,7 +179,7 @@ const RoleCard = memo(({ role }: Props) => {
                     (gp) => gp.id === platform.guildPlatformId
                   )?.platformId
 
-                  if (!platforms[PlatformType[guildPlatformType]]) return
+                  if (!rewards[PlatformType[guildPlatformType]]) return
 
                   return (
                     <SlideFade
