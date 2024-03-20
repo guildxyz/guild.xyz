@@ -4,8 +4,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
+import { FetcherWithSignProvider } from "components/_app/FetcherWithSignProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
+import WalletSelectorModalWithPlatformMergeAlert from "components/_app/WalletSelectorModalWithPlatformMergeAlert"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
@@ -121,21 +123,25 @@ const App = ({
             >
               <QueryClientProvider client={queryClient}>
                 <FuelProvider>
-                  <PostHogProvider>
-                    <IntercomProvider>
-                      <ExplorerProvider>
-                        <AppErrorBoundary>
-                          <Component {...pageProps} />
-                        </AppErrorBoundary>
+                  <Web3ConnectionManager>
+                    <FetcherWithSignProvider>
+                      <PostHogProvider>
+                        <IntercomProvider>
+                          <ExplorerProvider>
+                            <AppErrorBoundary>
+                              <Component {...pageProps} />
+                            </AppErrorBoundary>
 
-                        <ClientOnly>
-                          <AccountModal />
-                        </ClientOnly>
-                      </ExplorerProvider>
-                    </IntercomProvider>
+                            <ClientOnly>
+                              <AccountModal />
+                            </ClientOnly>
+                          </ExplorerProvider>
 
-                    <Web3ConnectionManager />
-                  </PostHogProvider>
+                          <WalletSelectorModalWithPlatformMergeAlert />
+                        </IntercomProvider>
+                      </PostHogProvider>
+                    </FetcherWithSignProvider>
+                  </Web3ConnectionManager>
                 </FuelProvider>
               </QueryClientProvider>
             </WagmiProvider>

@@ -8,6 +8,7 @@ import {
 } from "hooks/useSetKeyPair"
 import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
+import { useCallback } from "react"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
@@ -98,17 +99,24 @@ const useUserPublic = (
     }
   )
 
+  const deleteKeys = useCallback(async () => {
+    await mutate((prev) => ({ ...prev, keyPair: undefined }), {
+      revalidate: false,
+    })
+  }, [mutate])
+
+  const setKeys = useCallback(
+    async (keyPair: StoredKeyPair) => {
+      await mutate((prev) => ({ ...prev, keyPair }), { revalidate: false })
+    },
+    [mutate]
+  )
+
   return {
     isLoading,
     ...data,
-    deleteKeys: async () => {
-      await mutate((prev) => ({ ...prev, keyPair: undefined }), {
-        revalidate: false,
-      })
-    },
-    setKeys: async (keyPair: StoredKeyPair) => {
-      await mutate((prev) => ({ ...prev, keyPair }), { revalidate: false })
-    },
+    deleteKeys,
+    setKeys,
     mutate,
     error,
   }
