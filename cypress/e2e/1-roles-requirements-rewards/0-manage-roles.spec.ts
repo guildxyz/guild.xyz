@@ -138,7 +138,7 @@ describe("roles", () => {
       `${Cypress.env("guildApiUrl")}/guilds/*/roles/*/requirements/*`
     ).as("deleteRequirement")
 
-    cy.getByDataTest("delete-confirmation-button").click()
+    cy.getByDataTest("delete-requirement-button").click()
     cy.wait("@deleteRequirement")
     cy.contains("Requirement deleted!")
   })
@@ -158,7 +158,7 @@ describe("roles", () => {
       "deleteRole"
     )
 
-    cy.getByDataTest("delete-confirmation-button").click()
+    cy.getByDataTest("delete-role-confirmation-button").click()
     cy.wait("@deleteRole")
     cy.contains("Role deleted!")
   })

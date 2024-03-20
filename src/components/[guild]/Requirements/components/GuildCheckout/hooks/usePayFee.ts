@@ -1,16 +1,15 @@
+import { Chains } from "chains"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
-import useTokenBalance from "hooks/useTokenBalance"
 import useHasPaid from "requirements/Payment/hooks/useHasPaid"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { useAccount, useBalance } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
@@ -20,7 +19,8 @@ const usePayFee = () => {
   const { urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
-  const { address, chainId } = useAccount()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const requirement = useRequirementContext()
   const { pickedCurrency, onClose } = useGuildCheckoutContext()
@@ -47,10 +47,11 @@ const usePayFee = () => {
     address,
     chainId: Chains[requirement.chain],
   })
-  const { data: tokenBalanceData } = useTokenBalance({
+  const { data: tokenBalanceData } = useBalance({
+    address,
     token: pickedCurrency as `0x${string}`,
     chainId: Chains[requirement.chain],
-    shouldFetch: !pickedCurrencyIsNative,
+    enabled: !pickedCurrencyIsNative,
   })
 
   const isSufficientBalance =
@@ -80,9 +81,7 @@ const usePayFee = () => {
     args: [BigInt(requirement.data.id)],
     value: pickedCurrencyIsNative ? fee : undefined,
     chainId: Chains[requirement.chain],
-    query: {
-      enabled,
-    },
+    enabled,
   } as const
 
   const { triggerMembershipUpdate } = useMembershipUpdate()

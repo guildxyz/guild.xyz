@@ -1,12 +1,12 @@
 import { ButtonProps } from "@chakra-ui/react"
+import { Chains } from "chains"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useNftBalance from "hooks/useNftBalance"
-import { useAccount, useBalance } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import useCollectNft from "../hooks/useCollectNft"
 import { useCollectNftContext } from "./CollectNftContext"
 
@@ -25,7 +25,7 @@ const CollectNftButton = ({
 
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
-  const { address, chainId } = useAccount()
+  const chainId = useChainId()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
   const {
@@ -36,7 +36,9 @@ const CollectNftButton = ({
 
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
+  const { address } = useAccount()
   const { isLoading: isNftBalanceLoading } = useNftBalance({
+    address,
     nftAddress,
     chainId: Chains[chain],
   })

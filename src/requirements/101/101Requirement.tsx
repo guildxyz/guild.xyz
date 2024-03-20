@@ -1,10 +1,10 @@
 import { Img, Link } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chains } from "chains"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import use101Courses from "./hooks/use101Courses"
 
 const HundredNOneRequirement = ({ ...rest }: RequirementProps) => {

@@ -1,4 +1,5 @@
 import { kv } from "@vercel/kv"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next"
 import { RequirementType } from "requirements"
 import { OneOf } from "types"
@@ -13,9 +14,8 @@ import {
   getTokenBuyerContractData,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
-import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
-import { wagmiConfig } from "wagmiConfig"
-import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+import { createPublicClient, formatUnits, http, parseUnits } from "viem"
+import { erc20ABI } from "wagmi"
 import { NON_PURCHASABLE_ASSETS_KV_KEY } from "./nonPurchasableAssets"
 
 export type FetchPriceResponse<T extends string | bigint = string> = {
@@ -52,12 +52,12 @@ const getDecimals = async (chain: Chain, tokenAddress: string) => {
     return CHAIN_CONFIG[chain].nativeCurrency.decimals
 
   const publicClient = createPublicClient({
-    chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain),
+    chain: CHAIN_CONFIG[chain],
     transport: http(),
   })
   const decimals = await publicClient.readContract({
     address: tokenAddress as `0x${string}`,
-    abi: erc20Abi,
+    abi: erc20ABI,
     functionName: "decimals",
   })
 
@@ -87,7 +87,7 @@ const getGuildFee = async (
     return Promise.reject("Unsupported chain")
 
   const publicClient = createPublicClient({
-    chain: wagmiConfig.chains.find((c) => c.id === chainId),
+    chain: CHAIN_CONFIG[Chains[chainId]],
     transport: http(),
   })
   const guildBaseFeeInWei = await publicClient.readContract({

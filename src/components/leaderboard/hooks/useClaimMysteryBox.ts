@@ -8,12 +8,11 @@ import {
 } from "pages/api/leaderboard/mystery-box"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
-import { useAccount, useSignMessage } from "wagmi"
+import { useSignMessage } from "wagmi"
 import { ClaimMysteryBoxForm } from "../MysteryBoxCard"
 import useHasAlreadyClaimedMysteryBox from "./useHasAlreadyClaimedMysteryBox"
 
 const useClaimMysteryBox = (onSuccess: () => void) => {
-  const { address } = useAccount()
   const { signMessageAsync } = useSignMessage()
 
   const [loadingText, setLoadingText] = useState<string>()
@@ -22,7 +21,6 @@ const useClaimMysteryBox = (onSuccess: () => void) => {
     setLoadingText("Check your wallet")
 
     const signedMessage = await signMessageAsync({
-      account: address,
       message: MYSTERY_BOX_MESSAGE_TO_SIGN,
     })
 

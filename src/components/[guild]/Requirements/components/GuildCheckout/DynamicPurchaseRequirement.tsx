@@ -1,3 +1,4 @@
+import { Chains } from "chains"
 import useNonPurchasableAssets from "components/[guild]/hooks/useNonPurchasableAssets"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
@@ -5,7 +6,6 @@ import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
-import { Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../RequirementContext"
 import { useGuildCheckoutContext } from "./components/GuildCheckoutContext"
 import { useTransactionStatusContext } from "./components/TransactionStatusContext"

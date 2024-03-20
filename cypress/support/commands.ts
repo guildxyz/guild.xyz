@@ -8,7 +8,7 @@ Cypress.Commands.add("connectWallet", () => {
   )
 
   cy.getByDataTest("connect-wallet-button").click()
-  cy.get("[data-wagmi-connector-id='mock']").click()
+  cy.contains("Mock").click()
 
   cy.getByDataTest("verify-address-button").should("be.visible")
   cy.getByDataTest("verify-address-button").click()

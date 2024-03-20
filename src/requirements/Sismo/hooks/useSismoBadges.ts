@@ -1,6 +1,6 @@
+import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
-import { Chain } from "wagmiConfig/chains"
 
 export type SismoBadgeChain = Extract<Chain, "GNOSIS" | "POLYGON" | "GOERLI">
 

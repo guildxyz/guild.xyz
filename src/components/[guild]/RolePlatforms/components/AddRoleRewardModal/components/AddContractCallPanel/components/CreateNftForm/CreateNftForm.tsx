@@ -26,6 +26,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
@@ -43,8 +44,7 @@ import {
 import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { useAccount } from "wagmi"
-import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+import { useAccount, useChainId } from "wagmi"
 import ImagePicker from "./components/ImagePicker"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
 import useCreateNft, { CreateNFTResponse } from "./hooks/useCreateNft"
@@ -81,7 +81,8 @@ export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
-  const { isConnected: isEvmConnected, address, chainId } = useAccount()
+  const { isConnected: isEvmConnected, address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useTriggerNetworkChange()
 

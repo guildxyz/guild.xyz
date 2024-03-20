@@ -1,4 +1,4 @@
-import { CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG } from "chains"
 import fetcher from "./fetcher"
 
 export const getBlockByTime = ([_, chain, timestamp]) => {

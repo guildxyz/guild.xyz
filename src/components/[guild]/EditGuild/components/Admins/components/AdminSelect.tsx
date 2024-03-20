@@ -11,8 +11,7 @@ import CustomMenuList from "components/common/StyledSelect/components/CustomMenu
 import { Bug } from "phosphor-react"
 import { PropsWithChildren, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { useEnsAddress } from "wagmi"
-import { mainnet } from "wagmi/chains"
+import { mainnet, useEnsAddress } from "wagmi"
 import { isValidAddress } from "../Admins"
 
 type PropsHelper = MultiValueGenericProps<unknown, boolean, GroupBase<unknown>>

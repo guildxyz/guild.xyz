@@ -1,30 +1,27 @@
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import { useEffect } from "react"
 import processViemContractError from "utils/processViemContractError"
+import { Abi, TransactionReceipt, decodeEventLog } from "viem"
 import {
-  Abi,
-  ContractFunctionArgs,
-  ContractFunctionName,
-  DecodeEventLogReturnType,
-  TransactionReceipt,
-  decodeEventLog,
-} from "viem"
-import {
-  UseSimulateContractParameters,
-  useSimulateContract,
-  useWaitForTransactionReceipt,
-  useWriteContract,
+  UsePrepareContractWriteConfig,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
 } from "wagmi"
 import useEstimateGas from "./useEstimateGas"
 
-const useSubmitTransaction = (
-  contractCallConfig: UseSimulateContractParameters,
+const useSubmitTransaction = <
+  TAbi extends Abi | readonly unknown[],
+  TFunctionName extends string,
+  TChainId extends number
+>(
+  contractCallConfig: UsePrepareContractWriteConfig<TAbi, TFunctionName, TChainId>,
   options?: {
     setContext?: boolean
-    customErrorsMap?: Record<string, string>
+    customErrorsMap?: Record<string, string> // TODO: maybe we can infer custom error names from the ABI too? We could experiment with it later.
     onSuccess?: (
       transactionReceipt: TransactionReceipt,
-      events: DecodeEventLogReturnType[]
+      events: any[] // TODO for later: we could properly type this & infer event names/arg types in the future
     ) => void
     onError?: (errorMessage: string, rawError: any) => void
   }
@@ -54,11 +51,14 @@ const useSubmitTransaction = (
     setTxSuccessInContext(newState)
   }
 
-  const { error: simulateContractError, isLoading: isSimulateContractLoading } =
-    useSimulateContract({
-      query: { enabled: contractCallConfig.query?.enabled ?? true },
-      ...contractCallConfig,
-    })
+  const {
+    config,
+    error: prepareError,
+    isLoading: isPrepareLoading,
+  } = usePrepareContractWrite<TAbi, TFunctionName, TChainId>({
+    enabled: contractCallConfig.enabled ?? true,
+    ...contractCallConfig,
+  })
 
   const {
     estimatedGas,
@@ -66,28 +66,28 @@ const useSubmitTransaction = (
     gasEstimationError,
     isLoading: isGasEstimationLoading,
   } = useEstimateGas({
-    abi: contractCallConfig.abi as Abi,
-    address: contractCallConfig.address as `0x${string}`,
-    functionName: contractCallConfig.functionName as ContractFunctionName,
-    args: contractCallConfig.args as ContractFunctionArgs,
-    value: contractCallConfig.value as bigint,
-    shouldFetch: contractCallConfig.query?.enabled ?? true,
+    abi: contractCallConfig.abi,
+    address: contractCallConfig.address,
+    functionName: contractCallConfig.functionName,
+    args: contractCallConfig.args as readonly unknown[],
+    value: contractCallConfig.value,
+    enabled: contractCallConfig.enabled ?? true,
   })
 
   const {
-    writeContract,
-    data: hash,
+    write,
+    data,
     error: contractWriteError,
     isError: isContractWriteError,
-    isPending: isContractWriteLoading,
+    isLoading: isContractWriteLoading,
     reset,
-  } = useWriteContract()
+  } = useContractWrite<TAbi, TFunctionName, "prepared">(config)
 
   useEffect(() => {
-    if (!txHash && hash) {
-      setTxHash(hash)
+    if (!txHash && data?.hash) {
+      setTxHash(data.hash)
     }
-  }, [hash])
+  }, [data])
 
   const {
     data: transactionReceipt,
@@ -95,12 +95,12 @@ const useSubmitTransaction = (
     isSuccess,
     isError: isWaitForTransactionError,
     isLoading: isWaitForTransactionLoading,
-  } = useWaitForTransactionReceipt({ hash })
+  } = useWaitForTransaction({ hash: data?.hash })
 
   const rawError =
     waitForTransactionError ||
     contractWriteError ||
-    simulateContractError ||
+    prepareError ||
     gasEstimationError
   const error = processViemContractError(rawError, (errorName) => {
     if (!options?.customErrorsMap || !(errorName in options.customErrorsMap))
@@ -121,9 +121,9 @@ const useSubmitTransaction = (
           .map((log) => {
             try {
               return decodeEventLog({
-                abi: contractCallConfig.abi as Abi,
+                abi: contractCallConfig.abi as TAbi,
                 data: log.data,
-                topics: log.topics,
+                topics: (log as any).topics,
               })
             } catch {
               return null
@@ -131,16 +131,10 @@ const useSubmitTransaction = (
           })
           .filter(Boolean)
 
-        onSuccess(
-          transactionReceipt as TransactionReceipt,
-          events as unknown as DecodeEventLogReturnType[]
-        )
+        onSuccess(transactionReceipt, events)
       }
-    }
-
-    if (error) {
+    } else {
       setTxError(true)
-
       onError?.(error, rawError)
       reset()
     }
@@ -152,7 +146,7 @@ const useSubmitTransaction = (
       setTxError(false)
       setTxSuccess(false)
 
-      if (!writeContract && error) {
+      if (!write && error) {
         onError?.(error, rawError)
         return
       }
@@ -166,9 +160,9 @@ const useSubmitTransaction = (
         return
       }
 
-      writeContract(contractCallConfig)
+      write?.()
     },
-    isPreparing: isSimulateContractLoading || isGasEstimationLoading,
+    isPreparing: isPrepareLoading || isGasEstimationLoading,
     isLoading: isWaitForTransactionLoading || isContractWriteLoading,
     estimatedGas,
     estimatedGasInUSD,

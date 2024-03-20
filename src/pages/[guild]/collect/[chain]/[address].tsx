@@ -8,6 +8,7 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import { Chain } from "chains"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import CollectNft from "components/[guild]/collect/components/CollectNft"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
@@ -43,7 +44,6 @@ import { ErrorBoundary } from "react-error-boundary"
 import { SWRConfig } from "swr"
 import { Guild } from "types"
 import fetcher from "utils/fetcher"
-import { Chain } from "wagmiConfig/chains"
 
 const EditNFTDescriptionModalButton = dynamic(
   () =>

@@ -7,6 +7,7 @@ import {
   Spinner,
   Text,
 } from "@chakra-ui/react"
+import { Chain } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -14,7 +15,6 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useMemo } from "react"
 import { UseControllerProps, useController, useFormContext } from "react-hook-form"
-import { Chain } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain

@@ -1,4 +1,5 @@
 import { Text } from "@chakra-ui/react"
+import { Chain, Chains } from "chains"
 import {
   TransactionStatusProvider,
   useTransactionStatusContext,
@@ -12,7 +13,7 @@ import {
 import useNftBalance from "hooks/useNftBalance"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { GuildPlatform } from "types"
-import { Chain, Chains } from "wagmiConfig/chains"
+import { useAccount } from "wagmi"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
@@ -35,7 +36,9 @@ const CollectNftProvider = ({
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
   // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
+  const { address } = useAccount()
   const { data: nftBalance } = useNftBalance({
+    address,
     nftAddress,
     chainId: Chains[chain],
   })

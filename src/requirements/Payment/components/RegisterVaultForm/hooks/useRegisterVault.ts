@@ -1,12 +1,11 @@
+import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
-import useToken from "hooks/useToken"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { Abi, ContractEventName, DecodeEventLogReturnType, parseUnits } from "viem"
-import { useChainId } from "wagmi"
-import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+import { parseUnits } from "viem"
+import { useChainId, useToken } from "wagmi"
 
 type RegisterVaultParams = {
   owner: `0x${string}`
@@ -14,15 +13,6 @@ type RegisterVaultParams = {
   fee: number
   chain: Chain
 }
-
-const findEvent = <TAbi extends Abi, TEventName extends ContractEventName<TAbi>>(
-  events: DecodeEventLogReturnType<TAbi, ContractEventName<TAbi>>[],
-  eventName: TEventName
-): DecodeEventLogReturnType<TAbi, TEventName> | undefined =>
-  events.find((event) => event.eventName === eventName) as DecodeEventLogReturnType<
-    TAbi,
-    TEventName
-  >
 
 const useRegisterVault = ({
   chain,
@@ -39,7 +29,7 @@ const useRegisterVault = ({
   const { data: tokenData } = useToken({
     address: token,
     chainId: Chains[chain],
-    shouldFetch: Boolean(token !== NULL_ADDRESS && chain),
+    enabled: Boolean(token !== NULL_ADDRESS && chain),
   })
   const tokenDecimals =
     token === NULL_ADDRESS
@@ -57,9 +47,7 @@ const useRegisterVault = ({
       functionName: "registerVault",
       args: registerVaultParams,
       chainId: Chains[chain],
-      query: {
-        enabled: Boolean(feeInWei && chainId === Chains[chain]),
-      },
+      enabled: Boolean(feeInWei && chainId === Chains[chain]),
     },
     {
       setContext: false,
@@ -75,10 +63,15 @@ const useRegisterVault = ({
           return
         }
 
-        const vaultRegisteredEvent = findEvent<
-          typeof feeCollectorAbi,
-          "VaultRegistered"
-        >(events as [], "VaultRegistered")
+        const vaultRegisteredEvent: {
+          eventName: "VaultRegistered"
+          args: {
+            fee: bigint
+            owner: `0x${string}`
+            token: `0x${string}`
+            vaultId: bigint
+          }
+        } = events.find((event) => event.eventName === "VaultRegistered")
 
         if (!vaultRegisteredEvent) {
           showErrorToast("Couldn't find 'VaultRegistered' event")

@@ -1,7 +1,7 @@
+import { Chains } from "chains"
 import useUser from "components/[guild]/hooks/useUser"
 import delegateRegistryAbi from "static/abis/delegateRegistry"
-import { useReadContracts } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { useContractReads } from "wagmi"
 
 enum DelegationType {
   NONE,
@@ -49,28 +49,18 @@ const useDelegateVaults = () => {
 
   const delegates = addresses?.map(({ address }) => address)
 
-  const { data } = useReadContracts({
-    /**
-     * We need to @ts-ignore this line, since we get a "Type instantiation is
-     * excessively deep and possibly infinite" error here until strictNullChecks is
-     * set to false in our tsconfig. We should set it to true & sort out the related
-     * issues in another PR.
-     */
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
+  const { data } = useContractReads({
     contracts: delegates
       ?.map((delegate) =>
         delegateContracts.map((contract) => ({ ...contract, args: [delegate] }))
       )
       .flat(),
-    query: {
-      enabled,
-    },
+    enabled,
   })
 
   const results = data
     ?.filter((res) => res.status === "success")
-    .flatMap((res) => res.result) as unknown as {
+    .flatMap((res) => res.result) as {
     contract_: `0x${string}`
     from: `0x${string}`
     type_: DelegationType

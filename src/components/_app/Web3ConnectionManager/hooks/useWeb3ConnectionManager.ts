@@ -69,7 +69,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
 
   const signMessage = (message: string) => {
     if (type === "EVM") {
-      return signMessageAsync({ account: evmAddress, message })
+      return signMessageAsync({ message })
     }
     return fuelWallet.signMessage(message)
   }

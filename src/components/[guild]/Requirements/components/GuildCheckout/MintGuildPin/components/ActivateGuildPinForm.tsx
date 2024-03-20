@@ -1,4 +1,5 @@
 import { Checkbox, Stack, useColorModeValue } from "@chakra-ui/react"
+import { Chain } from "chains"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -9,7 +10,6 @@ import { traitsSupportedChains } from "requirements/Nft/NftForm"
 import ChainPicker from "requirements/common/ChainPicker"
 import { Visibility } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
-import { Chain } from "wagmiConfig/chains"
 import { useMintGuildPinContext } from "../../MintGuildPinContext"
 
 type ActivatePinForm = {
@@ -62,7 +62,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
                   {
                     type: "ERC721",
                     chain,
-                    address: GUILD_PIN_CONTRACTS[chain],
+                    address: GUILD_PIN_CONTRACTS[chain].address,
                     data: {
                       attributes: [
                         {

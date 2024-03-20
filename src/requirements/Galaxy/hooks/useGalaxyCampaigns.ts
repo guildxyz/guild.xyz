@@ -1,5 +1,5 @@
+import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
-import { Chain } from "wagmiConfig/chains"
 
 type GalaxyCampaign = {
   id: string

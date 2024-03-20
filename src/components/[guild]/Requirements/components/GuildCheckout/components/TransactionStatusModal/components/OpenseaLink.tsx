@@ -1,10 +1,10 @@
 import { Link } from "@chakra-ui/next-js"
 import { Icon, Img, Text } from "@chakra-ui/react"
+import { Chains } from "chains"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { ArrowSquareOut } from "phosphor-react"
 import { openseaBaseUrl } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
 
 const OpenseaLink = (): JSX.Element => {
   const chainId = useChainId()

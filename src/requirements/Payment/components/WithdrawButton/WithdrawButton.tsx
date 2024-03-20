@@ -1,4 +1,5 @@
 import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
+import { CHAIN_CONFIG, Chains } from "chains"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
@@ -7,8 +8,7 @@ import { LinkBreak, Wallet } from "phosphor-react"
 import useVault from "requirements/Payment/hooks/useVault"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
-import { useAccount } from "wagmi"
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import { useAccount, useChainId } from "wagmi"
 import useWithdraw from "./hooks/useWithdraw"
 
 const WithdrawButton = (): JSX.Element => {
@@ -18,7 +18,8 @@ const WithdrawButton = (): JSX.Element => {
     data: { symbol, decimals },
   } = useTokenData(chain, token)
 
-  const { address, chainId } = useAccount()
+  const { address } = useAccount()
+  const chainId = useChainId()
   const { requestNetworkChange } = useTriggerNetworkChange()
 
   const isOnVaultsChain = Chains[chain] === chainId

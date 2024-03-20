@@ -1,8 +1,8 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
+import { CHAIN_CONFIG } from "chains"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { formatUnits } from "viem"
-import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import useGuildFee from "../hooks/useGuildFee"
 import useNftDetails from "../hooks/useNftDetails"
 

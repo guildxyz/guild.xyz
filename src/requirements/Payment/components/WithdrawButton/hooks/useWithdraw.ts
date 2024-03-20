@@ -1,10 +1,10 @@
+import { Chain, Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
 import useVault from "requirements/Payment/hooks/useVault"
 import feeCollectorAbi from "static/abis/feeCollector"
 import { useChainId } from "wagmi"
-import { Chain, Chains } from "wagmiConfig/chains"
 
 const useWithdraw = (
   contractAddress: `0x${string}`,
@@ -26,9 +26,7 @@ const useWithdraw = (
       address: contractAddress,
       functionName: "withdraw",
       args: [BigInt(vaultId), "guild"],
-      query: {
-        enabled: isOnVaultsChain,
-      },
+      enabled: isOnVaultsChain,
     },
     {
       setContext: false,

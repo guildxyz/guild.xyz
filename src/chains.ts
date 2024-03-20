@@ -1,16 +1,23 @@
 import {
   beraTestnet,
   bitfinityTestnet,
+  blastMainnet,
+  blastSepolia,
   bobaAvax,
   exosama,
+  kava,
+  lukso,
   neonEVM,
   oasisSapphire,
   ontology,
   palm,
+  pgn,
   scrollAlpha,
+  shimmer,
   taikoKatlaTestnet,
+  x1Testnet,
 } from "static/customChains"
-// import type { Chain as ViemChain } from "viem"
+import { Chain as ViemChain } from "viem"
 import {
   arbitrum,
   arbitrumNova,
@@ -18,8 +25,6 @@ import {
   base,
   baseGoerli,
   baseSepolia,
-  blast,
-  blastSepolia,
   boba,
   bsc,
   celo,
@@ -29,9 +34,7 @@ import {
   gnosis,
   goerli,
   harmonyOne,
-  kava,
   linea,
-  lukso,
   mainnet,
   manta,
   mantle,
@@ -39,7 +42,6 @@ import {
   moonbeam,
   moonriver,
   optimism,
-  pgn,
   polygon,
   polygonMumbai,
   polygonZkEvm,
@@ -47,20 +49,14 @@ import {
   scroll,
   scrollSepolia,
   sepolia,
-  shimmer,
-  x1Testnet,
   zetachainAthensTestnet,
   zkSync,
   zora,
-  type Chain as ViemChain,
-} from "wagmi/chains"
+} from "viem/chains"
 
-type GuildChain = {
-  id: number
-  name: string
+type GuildChain = ViemChain & {
   iconUrl: string
-  nativeCurrency: ViemChain["nativeCurrency"] & { iconUrl: string }
-  blockExplorerUrl: string
+  coinIconUrl: string
   blockExplorerIconUrl: {
     light: string
     dark: string
@@ -68,28 +64,14 @@ type GuildChain = {
   etherscanApiUrl?: string
 }
 
-const generateChainConfig = (
-  chain: ViemChain,
-  nativeCurrencyIconUrl: string
-): Omit<GuildChain, "iconUrl" | "blockExplorerIconUrl" | "etherscanApiUrl"> => ({
-  id: chain.id,
-  name: chain.name,
-  nativeCurrency: {
-    ...chain.nativeCurrency,
-    iconUrl: nativeCurrencyIconUrl,
-  },
-  blockExplorerUrl: chain.blockExplorers.default.url,
-})
-
 const ETH_ICON =
   "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880"
-const MATIC_ICON =
-  "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png"
 
 const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   ETHEREUM: {
-    ...generateChainConfig(mainnet, ETH_ICON),
+    ...mainnet,
     iconUrl: "/networkLogos/ethereum.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/explorerLogos/etherscan-light.svg",
       dark: "/explorerLogos/etherscan-dark.svg",
@@ -97,8 +79,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.etherscan.io",
   },
   SEPOLIA: {
-    ...generateChainConfig(sepolia, ETH_ICON),
+    ...sepolia,
     iconUrl: "/networkLogos/ethereum.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/explorerLogos/etherscan-light.svg",
       dark: "/explorerLogos/etherscan-dark.svg",
@@ -106,8 +89,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-sepolia.etherscan.io",
   },
   GOERLI: {
-    ...generateChainConfig(goerli, ETH_ICON),
+    ...goerli,
     iconUrl: "/networkLogos/ethereum.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/explorerLogos/etherscan-light.svg",
       dark: "/explorerLogos/etherscan-dark.svg",
@@ -115,11 +99,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-goerli.etherscan.io",
   },
   BSC: {
-    ...generateChainConfig(
-      bsc,
-      "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png"
-    ),
+    ...bsc,
     iconUrl: "/networkLogos/bsc.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png",
     blockExplorerIconUrl: {
       light: "/explorerLogos/bscscan-light.svg",
       dark: "/explorerLogos/bscscan-dark.svg",
@@ -127,8 +110,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.bscscan.com",
   },
   POLYGON: {
-    ...generateChainConfig(polygon, MATIC_ICON),
+    ...polygon,
     iconUrl: "/networkLogos/polygon.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/polygon.svg",
       dark: "/networkLogos/polygon.svg",
@@ -136,16 +121,20 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.polygonscan.com",
   },
   POLYGON_ZKEVM: {
-    ...generateChainConfig(polygonZkEvm, MATIC_ICON),
+    ...polygonZkEvm,
     iconUrl: "/networkLogos/polygon.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/polygon.svg",
       dark: "/networkLogos/polygon.svg",
     },
   },
   POLYGON_MUMBAI: {
-    ...generateChainConfig(polygonMumbai, MATIC_ICON),
+    ...polygonMumbai,
     iconUrl: "/networkLogos/polygon.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/polygon.svg",
       dark: "/networkLogos/polygon.svg",
@@ -153,11 +142,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-testnet.polygonscan.com",
   },
   AVALANCHE: {
-    ...generateChainConfig(
-      avalanche,
-      "https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png"
-    ),
+    ...avalanche,
     iconUrl: "/networkLogos/avalanche.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png",
     blockExplorerIconUrl: {
       light: "/explorerLogos/snowtrace.svg",
       dark: "/explorerLogos/snowtrace.svg",
@@ -165,11 +153,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.snowtrace.io",
   },
   GNOSIS: {
-    ...generateChainConfig(
-      gnosis,
-      "https://assets.coingecko.com/coins/images/11062/small/xdai.png"
-    ),
+    ...gnosis,
     iconUrl: "/networkLogos/gnosis.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/11062/small/xdai.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/gnosis.svg",
       dark: "/networkLogos/gnosis.svg",
@@ -177,11 +163,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.gnosisscan.io",
   },
   FANTOM: {
-    ...generateChainConfig(
-      fantom,
-      "https://assets.coingecko.com/coins/images/4001/small/Fantom.png"
-    ),
+    ...fantom,
     iconUrl: "/networkLogos/fantom.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/4001/small/Fantom.png",
     blockExplorerIconUrl: {
       light: "/explorerLogos/ftmscan.svg",
       dark: "/networkLogos/fantom.svg",
@@ -189,8 +173,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.ftmscan.com",
   },
   ARBITRUM: {
-    ...generateChainConfig(arbitrum, ETH_ICON),
+    ...arbitrum,
     iconUrl: "/networkLogos/arbitrum.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/arbitrum.svg",
       dark: "/networkLogos/arbitrum.svg",
@@ -198,8 +183,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.arbiscan.io",
   },
   NOVA: {
-    ...generateChainConfig(arbitrumNova, ETH_ICON),
+    ...arbitrumNova,
     iconUrl: "/networkLogos/nova.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/nova.svg",
       dark: "/networkLogos/nova.svg",
@@ -207,11 +193,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-nova.arbiscan.io",
   },
   CELO: {
-    ...generateChainConfig(
-      celo as ViemChain,
-      "https://assets.coingecko.com/coins/images/11090/small/icon-celo-CELO-color-500.png"
-    ),
+    ...celo,
     iconUrl: "/networkLogos/celo.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/11090/small/icon-celo-CELO-color-500.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/celo.svg",
       dark: "/networkLogos/celo.svg",
@@ -219,19 +204,18 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://explorer.celo.org",
   },
   HARMONY: {
-    ...generateChainConfig(
-      harmonyOne,
-      "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png"
-    ),
+    ...harmonyOne,
     iconUrl: "/networkLogos/harmony.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/4344/small/Y88JAze.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/harmony.svg",
       dark: "/networkLogos/harmony.svg",
     },
   },
   OPTIMISM: {
-    ...generateChainConfig(optimism as ViemChain, ETH_ICON),
+    ...optimism,
     iconUrl: "/networkLogos/optimism.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/optimism.svg",
       dark: "/networkLogos/optimism.svg",
@@ -239,11 +223,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-optimistic.etherscan.io",
   },
   MOONBEAM: {
-    ...generateChainConfig(
-      moonbeam,
-      "https://assets.coingecko.com/coins/images/22459/small/glmr.png"
-    ),
+    ...moonbeam,
     iconUrl: "/networkLogos/moonbeam.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/22459/small/glmr.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/moonbeam.svg",
       dark: "/networkLogos/moonbeam.svg",
@@ -251,11 +233,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-moonbeam.moonscan.io",
   },
   MOONRIVER: {
-    ...generateChainConfig(
-      moonriver,
-      "https://assets.coingecko.com/coins/images/17984/small/9285.png"
-    ),
+    ...moonriver,
     iconUrl: "/networkLogos/moonriver.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/17984/small/9285.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/moonriver.svg",
       dark: "/networkLogos/moonriver.svg",
@@ -263,11 +243,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-moonriver.moonscan.io",
   },
   METIS: {
-    ...generateChainConfig(
-      metis,
-      "https://assets.coingecko.com/coins/images/15595/small/metis.PNG"
-    ),
+    ...metis,
     iconUrl: "/networkLogos/metis.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/15595/small/metis.PNG",
     blockExplorerIconUrl: {
       light: "/networkLogos/metis.svg",
       dark: "/explorerLogos/metis-dark.svg",
@@ -275,11 +253,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://andromeda-explorer.metis.io",
   },
   CRONOS: {
-    ...generateChainConfig(
-      cronos,
-      "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg"
-    ),
+    ...cronos,
     iconUrl: "/networkLogos/cronos.svg",
+    coinIconUrl:
+      "https://assets.coingecko.com/coins/images/7310/small/oCw2s3GI_400x400.jpeg",
     blockExplorerIconUrl: {
       light: "/networkLogos/cronos.svg",
       dark: "/explorerLogos/cronos-dark.svg",
@@ -287,8 +264,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://cronos.org/explorer",
   },
   BOBA: {
-    ...generateChainConfig(boba, ETH_ICON),
+    ...boba,
     iconUrl: "/networkLogos/boba.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/explorerLogos/boba-light.svg",
       dark: "/networkLogos/boba.svg",
@@ -296,11 +274,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.bobascan.com",
   },
   BOBA_AVAX: {
-    ...generateChainConfig(
-      bobaAvax,
-      "https://assets.coingecko.com/coins/images/20285/small/BOBA.png"
-    ),
+    ...bobaAvax,
     iconUrl: "/networkLogos/boba.svg",
+    coinIconUrl: "https://assets.coingecko.com/coins/images/20285/small/BOBA.png",
     blockExplorerIconUrl: {
       light: "/explorerLogos/boba-light.svg",
       dark: "/networkLogos/boba.svg",
@@ -308,8 +284,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://blockexplorer.avax.boba.network",
   },
   PALM: {
-    ...generateChainConfig(palm, "/networkLogos/palm.png"),
+    ...palm,
     iconUrl: "/networkLogos/palm.png",
+    coinIconUrl: "/networkLogos/palm.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/palm.png",
       dark: "/networkLogos/palm.png",
@@ -317,8 +294,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://explorer.palm.io",
   },
   BASE_MAINNET: {
-    ...generateChainConfig(base as ViemChain, ETH_ICON),
+    ...base,
     iconUrl: "/networkLogos/base.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/base.svg",
       dark: "/networkLogos/base.svg",
@@ -326,8 +304,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.basescan.org",
   },
   BASE_GOERLI: {
-    ...generateChainConfig(baseGoerli as ViemChain, ETH_ICON),
+    ...baseGoerli,
     iconUrl: "/networkLogos/base.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/base.svg",
       dark: "/networkLogos/base.svg",
@@ -335,8 +314,9 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-goerli.basescan.org",
   },
   BASE_SEPOLIA: {
-    ...generateChainConfig(baseSepolia as ViemChain, ETH_ICON),
+    ...baseSepolia,
     iconUrl: "/networkLogos/base.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/base.svg",
       dark: "/networkLogos/base.svg",
@@ -344,11 +324,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-sepolia.basescan.org",
   },
   EXOSAMA: {
-    ...generateChainConfig(
-      exosama,
-      "https://raw.githubusercontent.com/nico-ma1/Exosama-Network-Brand/main/sama-token%403x.png"
-    ),
+    ...exosama,
     iconUrl: "/networkLogos/exosama.png",
+    coinIconUrl:
+      "https://raw.githubusercontent.com/nico-ma1/Exosama-Network-Brand/main/sama-token%403x.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/exosama.png",
       dark: "/networkLogos/exosama.png",
@@ -356,195 +335,224 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://explorer.exosama.com",
   },
   EVMOS: {
-    ...generateChainConfig(evmos, "/networkLogos/evmos.svg"),
+    ...evmos,
+    rpcUrls: {
+      default: {
+        http: ["https://evmos.lava.build"],
+      },
+      public: {
+        http: ["https://evmos.lava.build"],
+      },
+    },
     iconUrl: "/networkLogos/evmos.svg",
+    coinIconUrl: "/networkLogos/evmos.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/evmos.svg",
       dark: "/networkLogos/evmos.svg",
     },
   },
   ZETACHAIN_ATHENS: {
-    ...generateChainConfig(
-      zetachainAthensTestnet,
-      "https://explorer.zetachain.com/img/logos/zeta-logo.svg"
-    ),
+    ...zetachainAthensTestnet,
     iconUrl: "/networkLogos/zetachain.svg",
+    coinIconUrl: "https://explorer.zetachain.com/img/logos/zeta-logo.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/zetachain.svg",
       dark: "/networkLogos/zetachain.svg",
     },
   },
   SCROLL_ALPHA: {
-    ...generateChainConfig(scrollAlpha, ETH_ICON),
+    ...scrollAlpha,
     iconUrl: "/networkLogos/scroll.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/scroll.svg",
       dark: "/networkLogos/scroll.svg",
     },
   },
   SCROLL_SEPOLIA: {
-    ...generateChainConfig(scrollSepolia, ETH_ICON),
+    ...scrollSepolia,
     iconUrl: "/networkLogos/scroll.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/scroll.svg",
       dark: "/networkLogos/scroll.svg",
     },
   },
   SCROLL: {
-    ...generateChainConfig(scroll, ETH_ICON),
+    ...scroll,
     iconUrl: "/networkLogos/scroll.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/scroll.svg",
       dark: "/networkLogos/scroll.svg",
     },
   },
   ZKSYNC_ERA: {
-    ...generateChainConfig(zkSync as ViemChain, ETH_ICON),
+    ...zkSync,
     iconUrl: "/networkLogos/zksync-era.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/zksync-era.svg",
       dark: "/networkLogos/zksync-era.svg",
     },
   },
   ZORA: {
-    ...generateChainConfig(zora as ViemChain, ETH_ICON),
+    ...zora,
     iconUrl: "/networkLogos/zora.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/zora.svg",
       dark: "/networkLogos/zora.svg",
     },
   },
   PGN: {
-    ...generateChainConfig(pgn, ETH_ICON),
+    ...pgn,
     iconUrl: "/networkLogos/pgn.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/pgn-light.svg",
       dark: "/networkLogos/pgn.svg",
     },
   },
   NEON_EVM: {
-    ...generateChainConfig(neonEVM, ETH_ICON),
+    ...neonEVM,
     iconUrl: "/networkLogos/neon.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/explorerLogos/neonscan.svg",
       dark: "/explorerLogos/neonscan.svg",
     },
   },
   LINEA: {
-    ...generateChainConfig(linea, ETH_ICON),
+    ...linea,
     iconUrl: "/networkLogos/linea.png",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/linea.png",
       dark: "/networkLogos/linea.png",
     },
   },
   LUKSO: {
-    ...generateChainConfig(lukso, ETH_ICON),
+    ...lukso,
     iconUrl: "/networkLogos/lukso.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/lukso.svg",
       dark: "/networkLogos/lukso.svg",
     },
   },
   MANTLE: {
-    ...generateChainConfig(mantle, "/networkLogos/mantle.svg"),
+    ...mantle,
     iconUrl: "/networkLogos/mantle.svg",
+    coinIconUrl: "/networkLogos/mantle.svg",
     blockExplorerIconUrl: {
       light: "/explorerLogos/mantle-light.svg",
       dark: "/networkLogos/mantle.svg",
     },
   },
   RONIN: {
-    ...generateChainConfig(ronin, "/networkLogos/ronin.svg"),
+    ...ronin,
     iconUrl: "/networkLogos/ronin.svg",
+    coinIconUrl: "/networkLogos/ronin.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/ronin.svg",
       dark: "/networkLogos/ronin.svg",
     },
   },
   SHIMMER: {
-    ...generateChainConfig(shimmer, "/networkLogos/shimmer.svg"),
+    ...shimmer,
     iconUrl: "/networkLogos/shimmer.svg",
+    coinIconUrl: "/networkLogos/shimmer.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/shimmer.svg",
       dark: "/networkLogos/shimmer.svg",
     },
   },
   KAVA: {
-    ...generateChainConfig(kava, "/networkLogos/kava.svg"),
+    ...kava,
     iconUrl: "/networkLogos/kava.svg",
+    coinIconUrl: "/networkLogos/kava.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/kava.svg",
       dark: "/networkLogos/kava.svg",
     },
   },
   BITFINITY_TESTNET: {
-    ...generateChainConfig(bitfinityTestnet, "/networkLogos/bitfinity.svg"),
+    ...bitfinityTestnet,
     iconUrl: "/networkLogos/bitfinity.svg",
+    coinIconUrl: "/networkLogos/bitfinity.svg",
     blockExplorerIconUrl: {
       light: "/explorerLogos/bitfinity-light.svg",
       dark: "/explorerLogos/bitfinity.svg",
     },
   },
   X1_TESTNET: {
-    ...generateChainConfig(x1Testnet, "/walletLogos/okx.png"),
+    ...x1Testnet,
     iconUrl: "/walletLogos/okx.png",
+    coinIconUrl: "/walletLogos/okx.png",
     blockExplorerIconUrl: {
       light: "/walletLogos/okx.png",
       dark: "/walletLogos/okx.png",
     },
   },
   ONTOLOGY: {
-    ...generateChainConfig(ontology, "/networkLogos/ontology.svg"),
+    ...ontology,
     iconUrl: "/networkLogos/ontology.svg",
+    coinIconUrl: "/networkLogos/ontology.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/ontology.svg",
       dark: "/networkLogos/ontology.svg",
     },
   },
   BERA_TESTNET: {
-    ...generateChainConfig(beraTestnet, "/networkLogos/berachain.png"),
+    ...beraTestnet,
     iconUrl: "/networkLogos/berachain.png",
+    coinIconUrl: "/networkLogos/berachain.png",
     blockExplorerIconUrl: {
       light: "/networkLogos/berachain.png",
       dark: "/networkLogos/berachain.png",
     },
   },
   MANTA: {
-    ...generateChainConfig(manta, ETH_ICON),
+    ...manta,
     iconUrl: "/networkLogos/manta.png",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/manta.png",
       dark: "/networkLogos/manta.png",
     },
   },
   TAIKO_KATLA: {
-    ...generateChainConfig(taikoKatlaTestnet, ETH_ICON),
+    ...taikoKatlaTestnet,
     iconUrl: "/networkLogos/taiko-katla.svg",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/taiko-katla.svg",
       dark: "/networkLogos/taiko-katla.svg",
     },
   },
   BLAST_SEPOLIA: {
-    ...generateChainConfig(blastSepolia, ETH_ICON),
+    ...blastSepolia,
     iconUrl: "/networkLogos/blast.png",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/blast.png",
       dark: "/networkLogos/blast.png",
     },
   },
   BLAST_MAINNET: {
-    ...generateChainConfig(blast, ETH_ICON),
+    ...blastMainnet,
     iconUrl: "/networkLogos/blast.png",
+    coinIconUrl: ETH_ICON,
     blockExplorerIconUrl: {
       light: "/networkLogos/blast.png",
       dark: "/networkLogos/blast.png",
     },
   },
   OASIS_SAPPHIRE: {
-    ...generateChainConfig(oasisSapphire, "/networkLogos/oasis-sapphire.svg"),
+    ...oasisSapphire,
     iconUrl: "/networkLogos/oasis-sapphire.svg",
+    coinIconUrl: "/networkLogos/oasis-sapphire.svg",
     blockExplorerIconUrl: {
       light: "/networkLogos/oasis-sapphire.svg",
       dark: "/networkLogos/oasis-sapphire.svg",
@@ -601,7 +609,7 @@ enum Chains {
   MANTA = manta.id,
   TAIKO_KATLA = taikoKatlaTestnet.id,
   BLAST_SEPOLIA = blastSepolia.id,
-  BLAST_MAINNET = blast.id,
+  BLAST_MAINNET = blastMainnet.id,
   OASIS_SAPPHIRE = oasisSapphire.id,
 }
 

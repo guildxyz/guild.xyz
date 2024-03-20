@@ -1,17 +1,16 @@
 // import { BigNumber, BigNumberish } from "@ethersproject/bignumber"
 // import { Contract } from "@ethersproject/contracts"
+import { Chains } from "chains"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
-import useTokenBalance from "hooks/useTokenBalance"
 import { useMemo } from "react"
 import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
-import { useAccount, useBalance } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { useAccount, useBalance, useChainId } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
@@ -32,7 +31,8 @@ const usePurchaseAsset = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const { address, chainId } = useAccount()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const { data: priceData } = usePrice(pickedCurrency)
 
@@ -53,10 +53,11 @@ const usePurchaseAsset = () => {
     address,
     chainId: Chains[requirement?.chain],
   })
-  const { data: tokenBalanceData } = useTokenBalance({
+  const { data: tokenBalanceData } = useBalance({
+    address,
     token: pickedCurrency,
     chainId: Chains[requirement?.chain],
-    shouldFetch: pickedCurrency !== NULL_ADDRESS,
+    enabled: pickedCurrency !== NULL_ADDRESS,
   })
 
   const isSufficientBalance =
@@ -87,9 +88,7 @@ const usePurchaseAsset = () => {
     functionName: "getAssets",
     args: contractCallParams,
     value: generatedGetAssetsParams?.value,
-    query: {
-      enabled,
-    },
+    enabled,
   }
 
   return useSubmitTransaction(config, {

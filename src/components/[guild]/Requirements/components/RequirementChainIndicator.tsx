@@ -1,5 +1,5 @@
 import { Img, Tag, TagLabel, useColorModeValue } from "@chakra-ui/react"
-import { CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG } from "chains"
 import { useRequirementContext } from "./RequirementContext"
 
 const RequirementChainIndicator = () => {

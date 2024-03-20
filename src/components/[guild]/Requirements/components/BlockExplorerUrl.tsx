@@ -1,7 +1,7 @@
 import { useColorMode } from "@chakra-ui/react"
+import { Chain, CHAIN_CONFIG } from "chains"
 import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "./RequirementContext"
 
 type Props = {
@@ -20,7 +20,8 @@ const BlockExplorerUrl = ({
   const { colorMode } = useColorMode()
   const { chain, type, address, data } = useRequirementContext()
 
-  const blockExplorerUrl = CHAIN_CONFIG[chainProp ?? chain].blockExplorerUrl
+  const blockExplorerUrl =
+    CHAIN_CONFIG[chainProp ?? chain].blockExplorers.default.url
 
   if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorerUrl)
     return null

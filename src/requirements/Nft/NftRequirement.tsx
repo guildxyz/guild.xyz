@@ -40,7 +40,8 @@ const NftRequirement = (props: RequirementProps) => {
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirement.chain] === requirement.address.toLowerCase()
+    GUILD_PIN_CONTRACTS[requirement.chain]?.address ===
+    requirement.address.toLowerCase()
 
   const guildIdAttribute =
     isGuildPin &&

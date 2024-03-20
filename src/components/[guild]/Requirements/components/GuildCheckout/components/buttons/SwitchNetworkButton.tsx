@@ -1,7 +1,7 @@
 import { Collapse } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
-import { useAccount } from "wagmi"
+import { useAccount, useChainId } from "wagmi"
 
 type Props = {
   targetChainId: number
@@ -9,7 +9,8 @@ type Props = {
 }
 
 const SwitchNetworkButton = ({ targetChainId, hidden }: Props): JSX.Element => {
-  const { isConnected, chainId } = useAccount()
+  const { isConnected } = useAccount()
+  const chainId = useChainId()
 
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useTriggerNetworkChange()

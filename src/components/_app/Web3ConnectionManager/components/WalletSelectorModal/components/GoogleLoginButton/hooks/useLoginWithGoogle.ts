@@ -2,18 +2,15 @@ import { useDisclosure } from "@chakra-ui/react"
 import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
+import { publicClient } from "connectors"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useState } from "react"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
+import { WaasActionFailed, type CWaaSConnector } from "waasConnector"
 import { useConnect } from "wagmi"
-import {
-  WAAS_CONNECTOR_ID,
-  WaaSConnector,
-  WaasActionFailed,
-} from "wagmiConfig/waasConnector"
 import useLinkAddress from "../../../hooks/useLinkAddress"
 import {
   DriveRequestFailed,
@@ -52,10 +49,10 @@ const useLoginWithGoogle = () => {
 
     capture(message, finalOptions)
   }
-  const { connectAsync, connectors } = useConnect()
+  const { connectors, connectAsync } = useConnect()
   const cwaasConnector = connectors.find(
-    ({ id }) => id === WAAS_CONNECTOR_ID
-  ) as WaaSConnector
+    ({ id }) => id === "cwaasWallet"
+  ) as CWaaSConnector
 
   const [isNewWallet, setIsNewWallet] = useState(false)
 
@@ -145,7 +142,7 @@ const useLoginWithGoogle = () => {
       captureEvent("[WaaS] Wallet successfully initialized", { isNew })
 
       // 3) Verify a keypair, or link address to main user
-      const walletClient: any = await cwaasConnector.getClient()
+      const walletClient = await cwaasConnector.getWalletClient()
 
       const signProps = {
         walletClient,
@@ -164,6 +161,7 @@ const useLoginWithGoogle = () => {
       await onConnectGoogleSubmit({
         signOptions: {
           keyPair: keyPair.keyPair,
+          publicClient: publicClient({}),
           ...signProps,
         },
         platformName: "GOOGLE",

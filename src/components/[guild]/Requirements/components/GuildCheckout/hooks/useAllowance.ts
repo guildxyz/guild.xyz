@@ -1,15 +1,16 @@
+import { Chains } from "chains"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { erc20Abi, maxUint256 } from "viem"
-import { useAccount, useReadContract } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { maxUint256 } from "viem"
+import { erc20ABI, useAccount, useChainId, useContractRead } from "wagmi"
 import { useRequirementContext } from "../../RequirementContext"
 
 const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
   const showErrorToast = useShowErrorToast()
 
-  const { address, chainId } = useAccount()
+  const { address } = useAccount()
+  const chainId = useChainId()
 
   const requirement = useRequirementContext()
 
@@ -24,26 +25,22 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
     isLoading: isAllowanceLoading,
     error: allowanceError,
     refetch,
-  } = useReadContract({
-    abi: erc20Abi,
+  } = useContractRead({
+    abi: erc20ABI,
     address: tokenAddress,
     functionName: "allowance",
     args: [address, contract],
-    query: {
-      enabled,
-    },
+    enabled,
   })
 
   const { isLoading: isAllowing, onSubmitTransaction: allowSpendingTokens } =
     useSubmitTransaction(
       {
-        abi: erc20Abi,
+        abi: erc20ABI,
         address: tokenAddress,
         functionName: "approve",
         args: [contract, maxUint256],
-        query: {
-          enabled,
-        },
+        enabled,
       },
       {
         setContext: false,

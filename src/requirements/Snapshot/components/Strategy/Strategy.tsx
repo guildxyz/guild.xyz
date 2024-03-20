@@ -11,12 +11,12 @@ import {
   NumberInputStepper,
   Text,
 } from "@chakra-ui/react"
+import { Chain, supportedChains } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Controller, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
-import { Chain, supportedChains } from "wagmiConfig/chains"
 import SpaceSelect from "../SpaceSelect"
 import SingleStrategy from "./components/SingleStrategy"
 

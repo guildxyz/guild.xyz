@@ -31,7 +31,7 @@ describe("post-test cleanup", () => {
             cy.get(".chakra-slide h2").should("contain.text", "Edit guild")
 
             cy.get(".chakra-button[aria-label='Delete guild']").click()
-            cy.getByDataTest("delete-confirmation-button").click()
+            cy.getByDataTest("delete-guild-button").click()
 
             cy.wait("@deleteGuild")
           } else {
