@@ -1,11 +1,8 @@
-import { useWallet } from "@fuel-wallet/react"
-import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { FetcherWithSignContext } from "components/_app/FetcherWithSignProvider"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { sign } from "hooks/useSubmit"
 import { FuelSignProps, SignProps, fuelSign } from "hooks/useSubmit/useSubmit"
-import useTimeInaccuracy from "hooks/useTimeInaccuracy"
-import { useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useContext } from "react"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"
@@ -136,48 +133,7 @@ const fuelFetcherWithSign = async (
   return fetcher(resource, { signedPayload, validation, ...rest })
 }
 
-const useFetcherWithSign = () => {
-  const { keyPair } = useUserPublic()
-  const timeInaccuracy = useTimeInaccuracy()
+const useFetcherWithSign = () => useContext(FetcherWithSignContext)
 
-  const { type, address } = useWeb3ConnectionManager()
-
-  const chainId = useChainId()
-  const publicClient = usePublicClient()
-  const { data: walletClient } = useWalletClient()
-
-  const { wallet: fuelWallet } = useWallet()
-
-  return (props) => {
-    const [resource, { signOptions, ...options }] = props
-
-    return !!signOptions?.address || type === "EVM" // Currently an address override is only done for CWaaS wallets, and those are EVM
-      ? fetcherWithSign(
-          {
-            address,
-            chainId: chainId.toString(),
-            publicClient,
-            walletClient,
-            keyPair: keyPair?.keyPair,
-            ts: Date.now() + timeInaccuracy,
-            ...signOptions,
-          },
-          resource,
-          options
-        )
-      : fuelFetcherWithSign(
-          {
-            address,
-            wallet: fuelWallet,
-            keyPair: keyPair?.keyPair,
-            ts: Date.now() + timeInaccuracy,
-            ...signOptions,
-          },
-          resource,
-          options
-        )
-  }
-}
-
-export { fetcherForSWR, fetcherWithSign, useFetcherWithSign }
+export { fetcherForSWR, fetcherWithSign, fuelFetcherWithSign, useFetcherWithSign }
 export default fetcher
