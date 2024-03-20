@@ -498,6 +498,7 @@ type Role = SimpleRole & {
   hiddenRewards?: boolean
   createdAt?: string
   updatedAt?: string
+  lastSyncedAt?: string
 }
 
 type GuildPlatform = {

@@ -1,7 +1,7 @@
 import pluralize from "./pluralize"
 
-const DAY_IN_MS = 86400000
-const MINUTE_IN_MS = 60000
+export const DAY_IN_MS = 86400000
+export const MINUTE_IN_MS = 60000
 
 const formatRelativeTimeFromNow = (since: number) => {
   if (!since) return undefined

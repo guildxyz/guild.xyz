@@ -10,8 +10,9 @@ import {
 import { Clock } from "phosphor-react"
 import { PropsWithChildren, useState } from "react"
 import { RolePlatform } from "types"
-import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-import { DAY_IN_MS } from "../../EditRewardAvailabilityModal"
+import formatRelativeTimeFromNow, {
+  DAY_IN_MS,
+} from "utils/formatRelativeTimeFromNow"
 
 type Props = { rolePlatform: Omit<RolePlatform, "id" | "guildPlatform"> } & WrapProps
 

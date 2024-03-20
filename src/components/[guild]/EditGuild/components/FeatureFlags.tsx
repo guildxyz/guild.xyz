@@ -11,6 +11,7 @@ const FEATURE_FLAGS = [
   "GUILD_QUEUES",
   "MESSAGING",
   "FORMS",
+  "PERIODIC_SYNC",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
