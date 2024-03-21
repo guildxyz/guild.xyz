@@ -3,8 +3,8 @@ import getRandomInt from "utils/getRandomInt"
 
 export const TEMPLATES: Array<RoleTemplateType> = [
   {
-    name: "Member",
-    visibility: Visibility.PUBLIC,
+    name: "Everyone",
+    visibility: Visibility.HIDDEN,
     defaultSelected: true,
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,

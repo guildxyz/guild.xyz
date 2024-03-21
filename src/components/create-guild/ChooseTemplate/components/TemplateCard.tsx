@@ -7,7 +7,6 @@ import {
   HStack,
   Icon,
   SimpleGrid,
-  Tag,
   Text,
   Tooltip,
   useColorModeValue,
@@ -125,7 +124,7 @@ const TemplateCard = ({
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex direction="column">
             <RoleHeader role={role}>
-              {part === 0 && role.defaultSelected && <Tag mb="-2px">Default</Tag>}
+              {/* {part === 0 && role.defaultSelected && <Tag mb="-2px">Default</Tag>} */}
             </RoleHeader>
 
             <Collapse in={part === 0}>
