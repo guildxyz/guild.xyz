@@ -9,7 +9,14 @@ import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { createPublicClient, http, keccak256, stringToBytes, trim } from "viem"
+import {
+  UnauthorizedProviderError,
+  createPublicClient,
+  http,
+  keccak256,
+  stringToBytes,
+  trim,
+} from "viem"
 import {
   PublicClient,
   WalletClient,
@@ -380,10 +387,19 @@ export const sign = async ({
         message: getMessage(params),
       })
     } else {
-      sig = await walletClient.signMessage({
-        account: address,
-        message: getMessage(params),
-      })
+      sig = await walletClient
+        .signMessage({
+          account: address,
+          message: getMessage(params),
+        })
+        .catch((error) => {
+          if (error instanceof UnauthorizedProviderError) {
+            throw new Error(
+              "Your wallet is not connected. It might be because your browser locked it after a period of time."
+            )
+          }
+          throw error
+        })
     }
   }
 
