@@ -8,6 +8,7 @@ import {
 } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
+import { TEMPLATES } from "./templates"
 
 const CreateGuildContext = createContext<{
   prevStep: () => void
@@ -34,7 +35,7 @@ const CreateGuildProvider = ({
       theme: {
         color: "#71717a",
       },
-      roles: [],
+      roles: [TEMPLATES[0]],
     },
   })
 

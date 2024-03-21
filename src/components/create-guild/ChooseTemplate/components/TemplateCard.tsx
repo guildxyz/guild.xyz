@@ -7,6 +7,7 @@ import {
   HStack,
   Icon,
   SimpleGrid,
+  Tag,
   Text,
   Tooltip,
   useColorModeValue,
@@ -26,7 +27,7 @@ import { Check } from "phosphor-react"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { KeyboardEvent } from "react"
 import { useWatch } from "react-hook-form"
-import { GuildFormType, GuildPlatform, PlatformType, RoleFormType } from "types"
+import { GuildFormType, GuildPlatform, PlatformType, RoleTemplateType } from "types"
 import capitalize from "utils/capitalize"
 import slugify from "utils/slugify"
 import TemplateRequriements from "./TemplateRequriements"
@@ -34,7 +35,7 @@ import TemplateRequriements from "./TemplateRequriements"
 type Template = {
   name: string
   description?: string
-  role: RoleFormType
+  role: RoleTemplateType
 }
 
 type Props = Template & {
@@ -77,6 +78,8 @@ const TemplateCard = ({
     defaultIsOpen: false,
   })
 
+  const isInteractive = part === 0 && !role.defaultSelected
+
   return (
     <Box
       data-test={`role-${slugify(role.name)}`}
@@ -105,22 +108,25 @@ const TemplateCard = ({
       }}
       _hover={{
         _before: {
-          opacity: part === 0 ? 0.1 : 0,
+          opacity: isInteractive ? 0.1 : 0,
         },
       }}
       _active={{
         _before: {
-          opacity: part === 0 ? 0.17 : 0,
+          opacity: isInteractive ? 0.17 : 0,
         },
       }}
-      cursor={part === 0 ? "pointer" : "default"}
+      opacity={part === 0 && role.defaultSelected ? 0.6 : 1}
+      cursor={isInteractive ? "pointer" : "default"}
       h="max-content"
       w="full"
     >
       <Card overflow="hidden">
         <SimpleGrid columns={{ base: 1, md: 2 }}>
           <Flex direction="column">
-            <RoleHeader role={role} />
+            <RoleHeader role={role}>
+              {part === 0 && role.defaultSelected && <Tag mb="-2px">Default</Tag>}
+            </RoleHeader>
 
             <Collapse in={part === 0}>
               <Box pl={5} pb={5}>

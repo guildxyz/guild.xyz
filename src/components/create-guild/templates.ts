@@ -1,11 +1,11 @@
-import { RoleFormType, Visibility } from "types"
+import { RoleTemplateType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 
-export const TEMPLATES: Array<RoleFormType> = [
+export const TEMPLATES: Array<RoleTemplateType> = [
   {
     name: "Member",
     visibility: Visibility.PUBLIC,
-
+    defaultSelected: true,
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -17,7 +17,6 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Not a robot",
     visibility: Visibility.PUBLIC,
-
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
