@@ -5,9 +5,11 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Collapse,
   Divider,
   Flex,
   FormControl,
+  FormHelperText,
   FormLabel,
   Icon,
   Input,
@@ -15,6 +17,7 @@ import {
   InputLeftElement,
   Spinner,
   Stack,
+  Textarea,
 } from "@chakra-ui/react"
 import { Chain } from "chains"
 import Button from "components/common/Button"
@@ -37,6 +40,10 @@ import parseFromObject from "utils/parseFromObject"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"
+import UploadIDs, {
+  INVALID_TOKEN_IDS_ERROR,
+  validateNftIds,
+} from "./components/UploadIDs"
 import { useNftMetadataWithTraits } from "./hooks/useNftMetadata"
 import useNftType from "./hooks/useNftType"
 import useNfts from "./hooks/useNfts"
@@ -80,7 +87,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   >(
     field?.data?.attributes?.length
       ? "ATTRIBUTE"
-      : typeof field?.data?.id === "string"
+      : field?.data?.ids?.length > 0
       ? "CUSTOM_ID"
       : "AMOUNT"
   )
@@ -88,6 +95,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const {
     setValue,
     clearErrors,
+    setError,
     formState: { errors, touchedFields },
   } = useFormContext()
 
@@ -97,6 +105,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const ids = useWatch({ name: `${baseFieldPath}.data.ids` })
 
   const {
     fields: traitFields,
@@ -194,8 +203,6 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   const { field: requirementDataIdField } = useController({
     name: `${baseFieldPath}.data.id`,
     rules: {
-      required:
-        nftRequirementType === "CUSTOM_ID" ? "This field is required" : undefined,
       validate: (value) =>
         value && nftType === "ERC1155" && nftRequirementType === "AMOUNT"
           ? /^[0-9]*$/i.test(value) || "ID can only contain numbers"
@@ -364,14 +371,47 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
       )}
 
       {nftRequirementType === "CUSTOM_ID" && (
-        <FormControl
-          isRequired
-          isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-        >
-          <FormLabel>Custom ID:</FormLabel>
-          <Input {...requirementDataIdField} defaultValue={field?.data?.id} />
+        <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.ids}>
+          <FormLabel>Token IDs:</FormLabel>
+          <Stack>
+            <UploadIDs
+              onSuccess={(idsArray) => {
+                clearErrors(`${baseFieldPath}.data.ids`)
+                setValue(`${baseFieldPath}.data.ids`, idsArray, {
+                  shouldDirty: true,
+                })
+              }}
+              onError={(error) => setError(`${baseFieldPath}.data.ids`, error)}
+            />
+            <Textarea
+              value={ids?.join("\n")}
+              onChange={(e) => {
+                clearErrors(`${baseFieldPath}.data.ids`)
+
+                if (!e.target.value) {
+                  setValue(`${baseFieldPath}.data.ids`, [], { shouldDirty: true })
+                  return
+                }
+
+                const idsArray = e.target.value.split("\n")
+                setValue(`${baseFieldPath}.data.ids`, idsArray, {
+                  shouldDirty: true,
+                })
+
+                if (!validateNftIds(idsArray)) {
+                  setError(`${baseFieldPath}.data.ids`, INVALID_TOKEN_IDS_ERROR)
+                }
+              }}
+              placeholder="... or paste IDs here, each one in a new line"
+            />
+          </Stack>
+          <Collapse in={ids?.length > 0}>
+            <FormHelperText>{`${
+              ids?.filter(Boolean).length ?? 0
+            } different IDs`}</FormHelperText>
+          </Collapse>
           <FormErrorMessage>
-            {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.ids?.message}
           </FormErrorMessage>
         </FormControl>
       )}

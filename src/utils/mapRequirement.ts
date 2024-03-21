@@ -17,6 +17,15 @@ const mapRequirement = (requirement?: Requirement) => {
     )
   }
 
+  if (
+    (newRequirement.type === "ERC721" || newRequirement.type === "ERC1155") &&
+    !!newRequirement.data?.id &&
+    typeof newRequirement.data?.minAmount !== "number"
+  ) {
+    newRequirement.data.ids = [newRequirement.data.id]
+    delete newRequirement.data.id
+  }
+
   // Removing attributes which we don't need inside the form
   delete newRequirement.createdAt
   delete newRequirement.updatedAt
