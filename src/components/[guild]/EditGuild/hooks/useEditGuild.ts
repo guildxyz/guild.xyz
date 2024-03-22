@@ -366,9 +366,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
             ],
           }
         },
-        {
-          revalidate: false,
-        }
+        { revalidate: false }
       )
 
       if (guildUpdateResult?.id) {
@@ -378,9 +376,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         matchMutate<GuildBase[]>(
           /\/guilds\?order/,
           (prev) => mutateGuildsCache(prev, guildUpdateResult),
-          {
-            revalidate: false,
-          }
+          { revalidate: false }
         )
       }
 
