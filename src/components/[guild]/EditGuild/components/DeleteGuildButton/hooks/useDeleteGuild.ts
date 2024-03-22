@@ -1,10 +1,12 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { useFormContext } from "react-hook-form"
+import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 const useDeleteGuild = () => {
@@ -12,7 +14,9 @@ const useDeleteGuild = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const router = useRouter()
+
   const { mutate: mutateYourGuilds } = useYourGuilds()
+  const matchMutate = useMatchMutate()
 
   const guild = useGuild()
 
@@ -30,8 +34,12 @@ const useDeleteGuild = () => {
         status: "success",
       })
 
-      mutateYourGuilds(
-        (prev) => prev?.filter((yourGuild) => yourGuild.id !== guild.id) ?? [],
+      mutateYourGuilds((prev) => mutateGuildsCache(prev, guild.id), {
+        revalidate: false,
+      })
+      matchMutate<GuildBase[]>(
+        /\/guilds\?order/,
+        (prev) => mutateGuildsCache(prev, guild.id),
         { revalidate: false }
       )
 
@@ -43,5 +51,8 @@ const useDeleteGuild = () => {
     forcePrompt: true,
   })
 }
+
+const mutateGuildsCache = (prev: GuildBase[], deletedGuildId: number) =>
+  prev?.filter((guild) => guild.id !== deletedGuildId)
 
 export default useDeleteGuild
