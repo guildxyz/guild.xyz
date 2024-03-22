@@ -15,12 +15,12 @@ const useCreateGuild = () => {
   const { captureEvent } = usePostHogContext()
 
   const matchMutate = useMatchMutate()
+  const { mutate: mutateYourGuilds } = useYourGuilds()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const yourGuilds = useYourGuilds()
 
   const fetchData = async (signedValidation: SignedValidation): Promise<Guild> =>
     fetcher("/v2/guilds", signedValidation)
@@ -36,21 +36,26 @@ const useCreateGuild = () => {
 
       captureEvent("guild creation flow > guild successfully created")
 
-      yourGuilds.mutate(
-        (prev) => [
-          ...(prev ?? []),
-          {
-            hideFromExplorer: false,
-            id: response_.id,
-            imageUrl: response_.imageUrl,
-            memberCount: 1,
-            name: response_.name,
-            rolesCount: response_.roles.length,
-            tags: [],
-            urlName: response_.urlName,
-          },
-        ],
-        { revalidate: false }
+      mutateYourGuilds(
+        (prev) =>
+          !!prev
+            ? [
+                ...prev,
+                {
+                  id: response_.id,
+                  name: response_.name,
+                  urlName: response_.urlName,
+                  imageUrl: response_.imageUrl,
+                  memberCount: 1,
+                  rolesCount: response_.roles.length,
+                  tags: [],
+                  hideFromExplorer: false,
+                },
+              ]
+            : prev,
+        {
+          revalidate: false,
+        }
       )
 
       toast({
@@ -60,7 +65,6 @@ const useCreateGuild = () => {
       })
       router.push(`/${response_.urlName}`)
 
-      matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
     },
   })

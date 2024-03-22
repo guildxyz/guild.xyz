@@ -31,7 +31,8 @@ const useDeleteGuild = () => {
       })
 
       mutateYourGuilds(
-        (prev) => prev?.filter((yourGuild) => yourGuild.id !== guild.id) ?? []
+        (prev) => prev?.filter((yourGuild) => yourGuild.id !== guild.id) ?? [],
+        { revalidate: false }
       )
 
       reset()

@@ -150,11 +150,12 @@ type GuildBase = {
   name: string
   urlName: string
   imageUrl: string
-  roles: Array<string>
-  platforms: Array<PlatformName>
   memberCount: number
   rolesCount: number
   tags: Array<GuildTags>
+  hideFromExplorer: boolean
+  isAdmin?: boolean
+  isOwner?: boolean
 }
 
 type GuildPinConfig = {

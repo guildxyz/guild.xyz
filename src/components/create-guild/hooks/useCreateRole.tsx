@@ -2,10 +2,10 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { useSWRConfig } from "swr"
 import { GuildPlatform, Requirement, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
@@ -26,8 +26,8 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
 
-  const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
+  const { mutate: mutateYourGuilds } = useYourGuilds()
 
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
@@ -46,7 +46,20 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
     onSuccess: async (response_) => {
       triggerConfetti()
 
-      matchMutate(/^\/guild\/address\//)
+      mutateYourGuilds(
+        (prev) =>
+          prev?.map((guild) => {
+            if (guild.id !== id) return guild
+            return {
+              ...guild,
+              rolesCount: guild.rolesCount + 1,
+            }
+          }),
+        {
+          revalidate: false,
+        }
+      )
+
       matchMutate(/^\/guild\?order/)
 
       mutateGuild((curr) => ({

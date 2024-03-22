@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -23,6 +24,7 @@ const getError = (arr: Record<string, string>[]) =>
 
 const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const guild = useGuild(guildId)
+  const { mutate: mutateYourGuilds } = useYourGuilds()
 
   const matchMutate = useMatchMutate()
 
@@ -369,13 +371,27 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         }
       )
 
+      if (guildUpdateResult?.id)
+        mutateYourGuilds((prev) =>
+          prev?.map((_guild) => {
+            if (_guild.id !== guild.id) return _guild
+            return {
+              ..._guild,
+              name: guildUpdateResult.name,
+              imageUrl: guildUpdateResult.imageUrl,
+              urlName: guildUpdateResult.urlName,
+              hideFromExplorer: guildUpdateResult.hideFromExplorer,
+            }
+          })
+        )
+
       const guildPinCacheKeysRegExp = new RegExp(
         `^/assets/guildPins/image\\?guildId=${id}&guildAction=\\d`
       )
       matchMutate(guildPinCacheKeysRegExp)
 
-      matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
+
       if (
         guildUpdateResult?.urlName &&
         guildUpdateResult.urlName !== guild?.urlName
