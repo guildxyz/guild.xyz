@@ -1,10 +1,14 @@
-import { useSWRConfig } from "swr"
+import { MutatorOptions, useSWRConfig } from "swr"
 
 // Source: https://swr.vercel.app/docs/advanced/cache#mutate-multiple-keys-from-regex
 const useMatchMutate = () => {
   const { cache, mutate } = useSWRConfig()
 
-  return (matcher: RegExp, ...args: Array<any>) => {
+  return <Data>(
+    matcher: RegExp,
+    mutator?: (prevData: Data) => Data,
+    options?: MutatorOptions<Data>
+  ) => {
     if (!(cache instanceof Map)) {
       throw new Error("matchMutate requires the cache provider to be a Map instance")
     }
@@ -17,7 +21,7 @@ const useMatchMutate = () => {
       }
     }
 
-    const mutations = keys.map((key) => mutate(key, ...args))
+    const mutations = keys.map((key) => mutate<Data>(key, mutator, options))
     return Promise.all(mutations)
   }
 }
