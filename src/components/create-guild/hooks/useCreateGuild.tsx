@@ -61,21 +61,18 @@ const useCreateGuild = () => {
   }
 }
 
-const mutateGuildsCache = (prev: GuildBase[], createdGuild: Guild) =>
-  !!prev
-    ? [
-        ...prev,
-        {
-          id: createdGuild.id,
-          name: createdGuild.name,
-          urlName: createdGuild.urlName,
-          imageUrl: createdGuild.imageUrl,
-          memberCount: 1,
-          rolesCount: createdGuild.roles.length,
-          tags: [],
-          hideFromExplorer: false,
-        },
-      ]
-    : prev
+const mutateGuildsCache = (prev: GuildBase[], createdGuild: Guild) => [
+  ...prev,
+  {
+    id: createdGuild.id,
+    name: createdGuild.name,
+    urlName: createdGuild.urlName,
+    imageUrl: createdGuild.imageUrl,
+    memberCount: 1,
+    rolesCount: createdGuild.roles.length,
+    tags: [],
+    hideFromExplorer: false,
+  },
+]
 
 export default useCreateGuild
