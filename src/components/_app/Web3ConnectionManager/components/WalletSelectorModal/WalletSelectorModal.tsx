@@ -14,6 +14,7 @@ import {
 
 import { Link } from "@chakra-ui/next-js"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
@@ -71,8 +72,21 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
+  const { captureEvent } = usePostHogContext()
+
   const { keyPair, id, error: publicUserError } = useUserPublic()
-  const set = useSetKeyPair()
+  const set = useSetKeyPair({
+    onError: (err) => {
+      /**
+       * Needed temporarily for debugging WalletConnect issues (GUILD-2423) Checking
+       * for Error instance to filter out fetcher-thrown errors, which are irrelevant
+       * here
+       */
+      if (err instanceof Error) {
+        captureEvent("[verify] - failed", { error: err })
+      }
+    },
+  })
   const linkVaults = useLinkVaults()
 
   useEffect(() => {
