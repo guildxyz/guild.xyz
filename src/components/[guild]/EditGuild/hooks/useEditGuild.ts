@@ -4,7 +4,7 @@ import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { GuildFormType } from "types"
+import { GuildBase, GuildFormType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
@@ -371,30 +371,23 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
         }
       )
 
-      if (guildUpdateResult?.id)
-        mutateYourGuilds(
-          (prev) =>
-            prev?.map((_guild) => {
-              if (_guild.id !== guild.id) return _guild
-              return {
-                ..._guild,
-                name: guildUpdateResult.name,
-                imageUrl: guildUpdateResult.imageUrl,
-                urlName: guildUpdateResult.urlName,
-                hideFromExplorer: guildUpdateResult.hideFromExplorer,
-              }
-            }),
+      if (guildUpdateResult?.id) {
+        mutateYourGuilds((prev) => mutateGuildsCache(prev, guildUpdateResult), {
+          revalidate: false,
+        })
+        matchMutate<GuildBase[]>(
+          /\/guilds\?order/,
+          (prev) => mutateGuildsCache(prev, guildUpdateResult),
           {
             revalidate: false,
           }
         )
+      }
 
       const guildPinCacheKeysRegExp = new RegExp(
         `^/assets/guildPins/image\\?guildId=${id}&guildAction=\\d`
       )
       matchMutate(guildPinCacheKeysRegExp)
-
-      matchMutate(/^\/guild\?order/)
 
       if (
         guildUpdateResult?.urlName &&
@@ -412,5 +405,17 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
+
+const mutateGuildsCache = (prev: GuildBase[], editedGuild: GuildBase) =>
+  prev?.map((_guild) => {
+    if (_guild.id !== editedGuild.id) return _guild
+    return {
+      ..._guild,
+      name: editedGuild.name,
+      imageUrl: editedGuild.imageUrl,
+      urlName: editedGuild.urlName,
+      hideFromExplorer: editedGuild.hideFromExplorer,
+    }
+  })
 
 export default useEditGuild
