@@ -1,13 +1,16 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { GuildBase } from "types"
 import fetcher from "utils/fetcher"
 
 const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
   const { mutateGuild, id } = useGuild()
   const { mutate: mutateYourGuilds } = useYourGuilds()
+  const matchMutate = useMatchMutate()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -34,25 +37,27 @@ const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
         { revalidate: false }
       )
 
-      mutateYourGuilds(
-        (prev) =>
-          prev?.map((guild) => {
-            if (guild.id !== id) return guild
-            return {
-              ...guild,
-              rolesCount: guild.rolesCount - 1,
-            }
-          }),
-        {
-          revalidate: false,
-        }
+      mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
+        revalidate: false,
+      })
+      matchMutate<GuildBase[]>(
+        /\/guilds\?order/,
+        (prev) => mutateGuildsCache(prev, id),
+        { revalidate: false }
       )
-
-      // TODO: add mutateGuilds
     },
     onError: (error) => showErrorToast(error),
     forcePrompt: true,
   })
 }
+
+const mutateGuildsCache = (prev: GuildBase[], guildId: number) =>
+  prev?.map((guild) => {
+    if (guild.id !== guildId) return guild
+    return {
+      ...guild,
+      rolesCount: guild.rolesCount - 1,
+    }
+  })
 
 export default useDeleteRole
