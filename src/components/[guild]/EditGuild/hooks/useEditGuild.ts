@@ -372,17 +372,21 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       )
 
       if (guildUpdateResult?.id)
-        mutateYourGuilds((prev) =>
-          prev?.map((_guild) => {
-            if (_guild.id !== guild.id) return _guild
-            return {
-              ..._guild,
-              name: guildUpdateResult.name,
-              imageUrl: guildUpdateResult.imageUrl,
-              urlName: guildUpdateResult.urlName,
-              hideFromExplorer: guildUpdateResult.hideFromExplorer,
-            }
-          })
+        mutateYourGuilds(
+          (prev) =>
+            prev?.map((_guild) => {
+              if (_guild.id !== guild.id) return _guild
+              return {
+                ..._guild,
+                name: guildUpdateResult.name,
+                imageUrl: guildUpdateResult.imageUrl,
+                urlName: guildUpdateResult.urlName,
+                hideFromExplorer: guildUpdateResult.hideFromExplorer,
+              }
+            }),
+          {
+            revalidate: false,
+          }
         )
 
       const guildPinCacheKeysRegExp = new RegExp(
