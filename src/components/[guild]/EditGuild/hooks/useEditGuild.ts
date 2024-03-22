@@ -407,10 +407,7 @@ const mutateGuildsCache = (prev: GuildBase[], editedGuild: GuildBase) =>
     if (_guild.id !== editedGuild.id) return _guild
     return {
       ..._guild,
-      name: editedGuild.name,
-      imageUrl: editedGuild.imageUrl,
-      urlName: editedGuild.urlName,
-      hideFromExplorer: editedGuild.hideFromExplorer,
+      ...editedGuild,
     }
   })
 
