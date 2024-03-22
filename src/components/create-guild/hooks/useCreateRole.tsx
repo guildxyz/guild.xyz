@@ -6,7 +6,7 @@ import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { GuildPlatform, Requirement, Role } from "types"
+import { GuildBase, GuildPlatform, Requirement, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirement from "utils/preprocessRequirement"
@@ -26,8 +26,8 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
 
-  const matchMutate = useMatchMutate()
   const { mutate: mutateYourGuilds } = useYourGuilds()
+  const matchMutate = useMatchMutate()
 
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
@@ -46,21 +46,16 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
     onSuccess: async (response_) => {
       triggerConfetti()
 
-      mutateYourGuilds(
-        (prev) =>
-          prev?.map((guild) => {
-            if (guild.id !== id) return guild
-            return {
-              ...guild,
-              rolesCount: guild.rolesCount + 1,
-            }
-          }),
+      mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
+        revalidate: false,
+      })
+      matchMutate<GuildBase[]>(
+        /\/guilds\?order/,
+        (prev) => mutateGuildsCache(prev, id),
         {
           revalidate: false,
         }
       )
-
-      matchMutate(/^\/guild\?order/)
 
       mutateGuild((curr) => ({
         ...curr,
@@ -86,5 +81,14 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
     },
   }
 }
+
+const mutateGuildsCache = (prev: GuildBase[], guildId: number) =>
+  prev?.map((guild) => {
+    if (guild.id !== guildId) return guild
+    return {
+      ...guild,
+      rolesCount: guild.rolesCount + 1,
+    }
+  })
 
 export default useCreateRole
