@@ -7,15 +7,15 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild } from "types"
+import { Guild, GuildBase } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
 const useCreateGuild = () => {
   const { captureEvent } = usePostHogContext()
 
-  const matchMutate = useMatchMutate()
   const { mutate: mutateYourGuilds } = useYourGuilds()
+  const matchMutate = useMatchMutate()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -36,26 +36,13 @@ const useCreateGuild = () => {
 
       captureEvent("guild creation flow > guild successfully created")
 
-      mutateYourGuilds(
-        (prev) =>
-          !!prev
-            ? [
-                ...prev,
-                {
-                  id: response_.id,
-                  name: response_.name,
-                  urlName: response_.urlName,
-                  imageUrl: response_.imageUrl,
-                  memberCount: 1,
-                  rolesCount: response_.roles.length,
-                  tags: [],
-                  hideFromExplorer: false,
-                },
-              ]
-            : prev,
-        {
-          revalidate: false,
-        }
+      mutateYourGuilds((prev) => mutateGuildsCache(prev, response_), {
+        revalidate: false,
+      })
+      matchMutate<GuildBase[]>(
+        /\/guilds\?order/,
+        (prev) => mutateGuildsCache(prev, response_),
+        { revalidate: false }
       )
 
       toast({
@@ -64,8 +51,6 @@ const useCreateGuild = () => {
         status: "success",
       })
       router.push(`/${response_.urlName}`)
-
-      matchMutate(/^\/guild\?order/)
     },
   })
 
@@ -75,5 +60,22 @@ const useCreateGuild = () => {
       useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
+
+const mutateGuildsCache = (prev: GuildBase[], createdGuild: Guild) =>
+  !!prev
+    ? [
+        ...prev,
+        {
+          id: createdGuild.id,
+          name: createdGuild.name,
+          urlName: createdGuild.urlName,
+          imageUrl: createdGuild.imageUrl,
+          memberCount: 1,
+          rolesCount: createdGuild.roles.length,
+          tags: [],
+          hideFromExplorer: false,
+        },
+      ]
+    : prev
 
 export default useCreateGuild

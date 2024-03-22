@@ -52,9 +52,7 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
       matchMutate<GuildBase[]>(
         /\/guilds\?order/,
         (prev) => mutateGuildsCache(prev, id),
-        {
-          revalidate: false,
-        }
+        { revalidate: false }
       )
 
       mutateGuild((curr) => ({
