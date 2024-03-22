@@ -1,10 +1,8 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useMatchMutate from "hooks/useMatchMutate"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useSWRConfig } from "swr"
@@ -28,8 +26,6 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
 
-  const { address } = useWeb3ConnectionManager()
-
   const { mutate } = useSWRConfig()
   const matchMutate = useMatchMutate()
 
@@ -49,9 +45,6 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
       }),
     onSuccess: async (response_) => {
       triggerConfetti()
-
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
-      mutate(`/statusUpdate/guild/${id}`)
 
       matchMutate(/^\/guild\/address\//)
       matchMutate(/^\/guild\?order/)
