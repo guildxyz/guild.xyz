@@ -83,7 +83,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
        * here
        */
       if (err instanceof Error) {
-        captureEvent("[verify] - failed", { error: err })
+        captureEvent("[verify] - failed", {
+          errorMessage: err.message,
+          errorStack: err.stack,
+          errorCause: err.cause,
+        })
       }
     },
   })
