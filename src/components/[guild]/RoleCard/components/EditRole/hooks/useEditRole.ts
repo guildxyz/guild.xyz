@@ -158,7 +158,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       )
 
       triggerMembershipUpdate()
-      mutate(`/statusUpdate/guild/${id}`)
     },
     onError: (err) => showErrorToast(err),
   })

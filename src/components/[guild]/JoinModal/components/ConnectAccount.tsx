@@ -1,9 +1,9 @@
 import { ButtonProps } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
+import { OneOf } from "types"
 import JoinStep from "./JoinStep"
 
-type Props = {
-  account: string
+type Props = OneOf<{ account: string }, { title: string }> & {
   isRequired?: boolean
   icon: JSX.Element
   colorScheme: string
@@ -15,6 +15,7 @@ type Props = {
 
 const ConnectAccount = ({
   account,
+  title,
   isConnected,
   children,
   isReconnect,
@@ -24,14 +25,15 @@ const ConnectAccount = ({
   <JoinStep
     isDone={!isReconnect && !!isConnected}
     title={
-      isReconnect
+      title ??
+      (isReconnect
         ? `Reconnect ${account}`
         : isConnected
         ? `${account} connected`
-        : `Connect ${account}`
+        : `Connect ${account}`)
     }
     titleRightElement={titleRightElement}
-    buttonLabel={isReconnect ? "Reconnect" : isConnected || "Connect"}
+    buttonLabel={title ?? (isReconnect ? "Reconnect" : isConnected || "Connect")}
     {...rest}
   >
     {children}

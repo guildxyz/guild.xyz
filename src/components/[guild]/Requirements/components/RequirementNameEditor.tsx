@@ -176,6 +176,7 @@ const RequirementNameEditorWrapper = ({
         submitOnBlur={false}
         onSubmit={handleSubmit}
         onCancel={conditionallyResetToOriginal}
+        w="full"
       >
         <RequirementNameEditor
           textRef={textRef}

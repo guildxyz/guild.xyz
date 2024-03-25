@@ -59,28 +59,33 @@ const useActiveMembershipUpdate = ({
           }
         })
 
-        mutateMembership(
-          (prev) => ({
-            guildId: prev?.guildId,
-            isAdmin: prev?.isAdmin,
-            joinedAt: prev?.joinedAt || res?.done ? new Date().toISOString() : null,
-            roles: [
-              ...(prev?.roles?.filter(
-                (role) => !Object.keys(byRoleId).includes(role.roleId.toString())
-              ) ?? []),
-              ...newRoles,
-            ],
-          }),
-          { revalidate: false }
-        )
+        // delaying success a bit so the user has time percieving the last state
+        setTimeout(() => {
+          mutateMembership(
+            (prev) => ({
+              guildId: prev?.guildId,
+              isAdmin: prev?.isAdmin,
+              joinedAt:
+                prev?.joinedAt || res?.done ? new Date().toISOString() : null,
+              roles: [
+                ...(prev?.roles?.filter(
+                  (role) => !Object.keys(byRoleId).includes(role.roleId.toString())
+                ) ?? []),
+                ...newRoles,
+              ],
+            }),
+            { revalidate: false }
+          )
 
-        /**
-         * Instead of calling onSuccess here, we call it in triggerMembershipUpdate,
-         * when this event is catched. This is for making sure, the correct onSuccess
-         * runs (the same one where we call triggerMembershipUpdate)
-         */
-        window.postMessage({ type: SUCCESS_EVENT_NAME, res })
-        setShouldPoll(false)
+          /**
+           * Instead of calling onSuccess here, we call it in
+           * triggerMembershipUpdate, when this event is catched. This is for making
+           * sure, the correct onSuccess runs (the same one where we call
+           * triggerMembershipUpdate)
+           */
+          window.postMessage({ type: SUCCESS_EVENT_NAME, res })
+          setShouldPoll(false)
+        }, 2000)
       },
       onError: (err) => {
         window.postMessage({ type: ERROR_EVENT_NAME, err })
@@ -95,10 +100,10 @@ const useActiveMembershipUpdate = ({
     ...progress,
     isValidating: shouldPoll,
     triggerPoll: () => {
-      setShouldPoll(true)
-
       // this doesn't work for some reason, but leaving it here till we investigate
-      progress.mutate(undefined, { revalidate: false })
+      progress.mutate(null, { revalidate: false })
+
+      setShouldPoll(true)
 
       const listener = (event: MessageEvent<any>) => {
         if (event?.data?.type === SUCCESS_EVENT_NAME) {

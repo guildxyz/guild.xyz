@@ -34,7 +34,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
     resolver: zodResolver(FormCreationSchema),
     defaultValues: {
       ...form,
-      fields: form.fields.map((field) => {
+      fields: form.fields?.map((field) => {
         if (
           field.type === "SINGLE_CHOICE" ||
           field.type === "MULTIPLE_CHOICE" ||

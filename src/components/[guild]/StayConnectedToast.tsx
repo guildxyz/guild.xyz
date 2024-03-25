@@ -1,4 +1,5 @@
 import { ToastId, useToast } from "@chakra-ui/react"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useToastWithButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { ArrowRight } from "phosphor-react"
@@ -16,9 +17,13 @@ const useStayConnectedToast = (onClick: () => void) => {
   const { isAdmin } = useGuildPermission()
   const { id, urlName, contacts, isLoading } = useGuild()
 
+  const [hasSeenAddContactInfoToast, setHasSeenAddContactInfoToast] =
+    useLocalStorage(`hasSeenAddContactInfoToast-${id}`, false)
+
   useEffect(() => {
-    if (isAdmin && !contacts?.length && !isLoading) showAddContactInfoToast()
-  }, [isAdmin, contacts?.length, isLoading])
+    if (isAdmin && !contacts?.length && !isLoading && !hasSeenAddContactInfoToast)
+      showAddContactInfoToast()
+  }, [isAdmin, contacts?.length, isLoading, hasSeenAddContactInfoToast])
 
   useEffect(() => {
     const handleRouteChange = (url) => {
@@ -33,6 +38,7 @@ const useStayConnectedToast = (onClick: () => void) => {
   }, [router.events])
 
   const showAddContactInfoToast = () => {
+    setHasSeenAddContactInfoToast(true)
     toastIdRef.current = toastWithButton({
       id: CONTACT_TOAST_ID,
       status: "info",

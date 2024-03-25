@@ -1,6 +1,6 @@
-import { Chain } from "chains"
 import useSWRImmutable from "swr/immutable"
 import { NFT } from "types"
+import { Chain } from "wagmiConfig/chains"
 
 const useNfts = (chain: Chain): { nfts: Array<NFT>; isLoading: boolean } => {
   // TODO: don't retry on error

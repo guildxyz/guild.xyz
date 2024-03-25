@@ -1,5 +1,4 @@
 import { Stack } from "@chakra-ui/react"
-import { Schemas } from "@guildxyz/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
@@ -11,22 +10,8 @@ import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import { uuidv7 } from "uuidv7"
-
-type MapOptions<Variant> = Variant extends {
-  options?: (
-    | string
-    | number
-    | {
-        value?: string | number
-      }
-  )[]
-}
-  ? Omit<Variant, "options"> & { options: { value: string | number }[] }
-  : Variant
-
-export type CreateForm = Omit<Schemas["FormCreationPayload"], "fields"> & {
-  fields: MapOptions<Schemas["FormCreationPayload"]["fields"][number]>[]
-}
+import { CreateForm } from "."
+import ContinueWithExistingFormAlert from "./components/ContinueWithExistingFormAlert"
 
 const defaultValues: CreateForm = {
   name: "",
@@ -73,6 +58,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
   return (
     <FormProvider {...methods}>
       <Stack spacing={6}>
+        <ContinueWithExistingFormAlert {...{ onAdd }} />
         <CreateFormForm />
         <Button
           colorScheme="green"

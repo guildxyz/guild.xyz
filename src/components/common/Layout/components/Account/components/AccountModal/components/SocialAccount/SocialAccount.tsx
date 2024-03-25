@@ -3,11 +3,10 @@ import Button from "components/common/Button"
 import useToast from "hooks/useToast"
 import { PlatformName } from "types"
 
-import { HStack, Icon, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { HStack, useDisclosure } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
-import { Question } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { memo } from "react"
 import useDisconnect from "../../hooks/useDisconnect"
@@ -43,7 +42,6 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
       username={platformUser?.platformUserData?.username}
       isConnected={isConnected}
     >
-      {type === "TWITTER_V1" ? <TwitterV1Tooltip /> : null}
       {!isConnected ? (
         <ConnectPlatformButton type={type} />
       ) : (
@@ -55,16 +53,6 @@ const SocialAccount = memo(({ type }: Props): JSX.Element => {
     </SocialAccountUI>
   )
 })
-
-export const TwitterV1Tooltip = () => (
-  <Tooltip
-    hasArrow
-    placement="top"
-    label="Some of our X requirements can only be checked if your X account is connected this way as well"
-  >
-    <Icon color="gray" as={Question} />
-  </Tooltip>
-)
 
 const ConnectPlatformButton = ({ type, isReconnect = false }) => {
   const toast = useToast()

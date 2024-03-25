@@ -1,10 +1,10 @@
 import { kv } from "@vercel/kv"
-import { Chain } from "chains"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 
 type Owner = {
   ownerAddress: string

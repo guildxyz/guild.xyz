@@ -1,5 +1,6 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuel-wallet/react"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import ExplorerProvider from "components/_app/ExplorerProvider"
@@ -8,7 +9,6 @@ import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import AccountModal from "components/common/Layout/components/Account/components/AccountModal"
-import { connectors, publicClient } from "connectors"
 import { dystopian, inter } from "fonts"
 import useOAuthResultToast from "hooks/useOAuthResultToast"
 import { useAtomValue } from "jotai"
@@ -22,7 +22,8 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
-import { WagmiConfig, createConfig } from "wagmi"
+import { WagmiProvider } from "wagmi"
+import { wagmiConfig } from "wagmiConfig"
 
 /**
  * Polyfill HTML inert property for Firefox support:
@@ -30,11 +31,7 @@ import { WagmiConfig, createConfig } from "wagmi"
  */
 import "wicg-inert"
 
-const config = createConfig({
-  autoConnect: !process.env.NEXT_PUBLIC_MOCK_CONNECTOR,
-  publicClient,
-  connectors,
-})
+const queryClient = new QueryClient()
 
 const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
 
@@ -118,25 +115,30 @@ const App = ({
           }}
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <WagmiConfig config={config}>
-              <FuelProvider>
-                <PostHogProvider>
-                  <IntercomProvider>
-                    <ExplorerProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+            <WagmiProvider
+              config={wagmiConfig}
+              reconnectOnMount={!process.env.NEXT_PUBLIC_MOCK_CONNECTOR}
+            >
+              <QueryClientProvider client={queryClient}>
+                <FuelProvider>
+                  <PostHogProvider>
+                    <IntercomProvider>
+                      <ExplorerProvider>
+                        <AppErrorBoundary>
+                          <Component {...pageProps} />
+                        </AppErrorBoundary>
 
-                      <ClientOnly>
-                        <AccountModal />
-                      </ClientOnly>
-                    </ExplorerProvider>
-                  </IntercomProvider>
+                        <ClientOnly>
+                          <AccountModal />
+                        </ClientOnly>
+                      </ExplorerProvider>
+                    </IntercomProvider>
 
-                  <Web3ConnectionManager />
-                </PostHogProvider>
-              </FuelProvider>
-            </WagmiConfig>
+                    <Web3ConnectionManager />
+                  </PostHogProvider>
+                </FuelProvider>
+              </QueryClientProvider>
+            </WagmiProvider>
           </SWRConfig>
         </IconContext.Provider>
       </Chakra>
@@ -145,5 +147,4 @@ const App = ({
 }
 
 export { getServerSideProps } from "components/_app/Chakra"
-
 export default App

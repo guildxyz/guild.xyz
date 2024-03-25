@@ -27,10 +27,6 @@ const galaxyRequirementTypes = [
   },
 ]
 
-const customFilterOption = (candidate, input) =>
-  candidate.label.toLowerCase().includes(input?.toLowerCase()) ||
-  candidate.data?.galaxyId?.includes(input)
-
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
     register,
@@ -139,7 +135,8 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
               }
               setSearchText(text)
             }}
-            filterOption={customFilterOption}
+            // We don't filter campaigns client side, since we already get back a filtered list from the API
+            filterOption={() => true}
             noResultText={
               !debouncedSearchText.length ? "Start typing..." : undefined
             }

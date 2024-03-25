@@ -14,7 +14,10 @@ import { useRequirementContext } from "./RequirementContext"
 const RequirementConnectButton = (props: ButtonProps) => {
   const { platformUsers, emails } = useUser()
   const { type, roleId, id } = useRequirementContext()
-  const platform = REQUIREMENTS[type].types[0] as PlatformName
+  const platform =
+    REQUIREMENTS[type].types[0] === "TWITTER"
+      ? "TWITTER_V1"
+      : (REQUIREMENTS[type].types[0] as PlatformName)
 
   const { reqAccesses } = useRoleMembership(roleId)
   const { triggerMembershipUpdate } = useMembershipUpdate()
@@ -68,7 +71,10 @@ const ConnectRequirementPlatformButton = ({
 }: ButtonProps & { onSuccess: () => void; isReconnection?: boolean }) => {
   const { type } = useRequirementContext()
 
-  const platform = REQUIREMENTS[type].types[0] as PlatformName
+  const platform =
+    REQUIREMENTS[type].types[0] === "TWITTER"
+      ? "TWITTER_V1"
+      : (REQUIREMENTS[type].types[0] as PlatformName)
 
   const { onConnect, isLoading, loadingText } = useConnectPlatform(
     platform,

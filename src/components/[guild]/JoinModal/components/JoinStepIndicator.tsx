@@ -8,7 +8,7 @@ import {
 import { Check, X } from "phosphor-react"
 
 export type JoinStepIndicatorProps =
-  | { status: "INACTIVE" | "DONE" | "ERROR" | "LOADING" }
+  | { status: "INACTIVE" | "DONE" | "NO_ACCESS" | "LOADING" }
   | { status: "PROGRESS"; progress: number }
 
 const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
@@ -23,7 +23,7 @@ const JoinStepIndicator = (props: JoinStepIndicatorProps) => {
       )
     }
 
-    case "ERROR": {
+    case "NO_ACCESS": {
       return (
         <Circle size="5" bg="gray.500">
           <Icon weight="bold" color="white" as={X} boxSize="0.7em" />

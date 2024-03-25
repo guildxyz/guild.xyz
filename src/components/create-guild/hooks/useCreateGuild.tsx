@@ -7,22 +7,20 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, PlatformType } from "types"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import { Guild, GuildBase } from "types"
+import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
 const useCreateGuild = () => {
   const { captureEvent } = usePostHogContext()
 
+  const { mutate: mutateYourGuilds } = useYourGuilds()
   const matchMutate = useMatchMutate()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
   const router = useRouter()
-  const yourGuilds = useYourGuilds()
-
-  const fetcherWithSign = useFetcherWithSign()
 
   const fetchData = async (signedValidation: SignedValidation): Promise<Guild> =>
     fetcher("/v2/guilds", signedValidation)
@@ -38,20 +36,12 @@ const useCreateGuild = () => {
 
       captureEvent("guild creation flow > guild successfully created")
 
-      yourGuilds.mutate(
-        (prev) => [
-          ...(prev ?? []),
-          {
-            hideFromExplorer: false,
-            id: response_.id,
-            imageUrl: response_.imageUrl,
-            memberCount: 1,
-            name: response_.name,
-            rolesCount: response_.roles.length,
-            tags: [],
-            urlName: response_.urlName,
-          },
-        ],
+      mutateYourGuilds((prev) => mutateGuildsCache(prev, response_), {
+        revalidate: false,
+      })
+      matchMutate<GuildBase[]>(
+        /\/guilds\?order/,
+        (prev) => mutateGuildsCache(prev, response_),
         { revalidate: false }
       )
 
@@ -61,19 +51,6 @@ const useCreateGuild = () => {
         status: "success",
       })
       router.push(`/${response_.urlName}`)
-
-      if (response_.guildPlatforms[0]?.platformId === PlatformType.DISCORD)
-        fetcherWithSign([
-          `/statusUpdate/guildify/${response_.id}?force=true`,
-          {
-            body: {
-              notifyUsers: false,
-            },
-          },
-        ])
-
-      matchMutate(/^\/guild\/address\//)
-      matchMutate(/^\/guild\?order/)
     },
   })
 
@@ -83,5 +60,19 @@ const useCreateGuild = () => {
       useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
+
+const mutateGuildsCache = (prev: GuildBase[], createdGuild: Guild) => [
+  ...prev,
+  {
+    id: createdGuild.id,
+    name: createdGuild.name,
+    urlName: createdGuild.urlName,
+    imageUrl: createdGuild.imageUrl,
+    memberCount: 1,
+    rolesCount: createdGuild.roles.length,
+    tags: [],
+    hideFromExplorer: false,
+  },
+]
 
 export default useCreateGuild

@@ -23,7 +23,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
 import { ArrowRight, LockSimple } from "phosphor-react"
 import rewards from "platforms/rewards"
-import { ComponentType } from "react"
+import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
 import ConnectPlatform from "./components/ConnectPlatform"
@@ -118,9 +118,11 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     onClose()
     window.location.hash = `role-${roles[0]?.id}`
   }
+  // so we don't focus the TopRecheckAccessesButton button after join
+  const dummyFinalFocusRef = useRef(null)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} finalFocusRef={dummyFinalFocusRef}>
       <ModalOverlay />
       <ModalContent>
         <FormProvider {...methods}>

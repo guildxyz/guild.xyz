@@ -13,7 +13,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { Chain } from "chains"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import useFeeInUSD from "requirements/Payment/components/RegisterVaultForm/hooks/useFeeInUSD"
@@ -24,6 +23,7 @@ import {
   NULL_ADDRESS,
   paymentSupportedChains,
 } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 
 const coingeckoCoinIds: Partial<Record<Chain, string>> = {
   ETHEREUM: "ethereum",
