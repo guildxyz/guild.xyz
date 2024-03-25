@@ -1,4 +1,3 @@
-import { CHAIN_CONFIG, Chains } from "chains"
 import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -13,8 +12,10 @@ import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
-import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useAccount, usePublicClient } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
+import { useWalletClient } from "hooks/useWalletClient"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
   ContractCallSupportedChain,
@@ -59,8 +60,7 @@ const useCreateNft = (
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
-  const { address } = useAccount()
-  const chainId = useChainId()
+  const { address, chainId } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 

@@ -10,12 +10,10 @@ import { useSetAtom } from "jotai"
 import Link from "next/link"
 import { Plus, SignIn } from "phosphor-react"
 import { forwardRef } from "react"
+import { GuildBase } from "types"
 
 const useYourGuilds = () =>
-  useSWRWithOptionalAuth(`/v2/guilds`, {
-    dedupingInterval: 60000, // one minute
-    revalidateOnMount: true,
-  })
+  useSWRWithOptionalAuth<GuildBase[]>(`/v2/guilds`, undefined, false, true)
 
 const YourGuilds = forwardRef((_, ref: any) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()

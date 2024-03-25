@@ -119,7 +119,7 @@ const useMembershipUpdate = ({
     },
     reset: () => {
       useSubmitResponse.reset()
-      progress.mutate(undefined, { revalidate: false })
+      progress.mutate(null, { revalidate: false })
     },
   }
 }

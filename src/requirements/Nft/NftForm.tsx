@@ -19,7 +19,6 @@ import {
   Stack,
   Textarea,
 } from "@chakra-ui/react"
-import { Chain } from "chains"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -37,6 +36,7 @@ import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import capitalize from "utils/capitalize"
 import parseFromObject from "utils/parseFromObject"
+import { Chain } from "wagmiConfig/chains"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"

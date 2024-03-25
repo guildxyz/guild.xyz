@@ -8,7 +8,6 @@ import {
   InputLeftElement,
   Stack,
 } from "@chakra-ui/react"
-import { Chain } from "chains"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -17,6 +16,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import parseFromObject from "utils/parseFromObject"
+import { Chain } from "wagmiConfig/chains"
 import useSismoBadges, { SismoBadgeChain } from "./hooks/useSismoBadges"
 
 const sismoContracts: Record<SismoBadgeChain, string> = {

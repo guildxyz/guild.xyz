@@ -15,7 +15,6 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const user = useUser()
   const toastWithTweetButton = useToastWithTweetButton()
   const toastWithButton = useToastWithButton()
-  // temporary because progress.mutate(undefined, { revalidate: false }) doesn't work for some reason
   const [isNoAccess, setIsNoAccess] = useState(false)
 
   const mintGuildPinContext = useMintGuildPinContext()

@@ -1,5 +1,5 @@
-import { Chains } from "chains"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
+import { Chains } from "wagmiConfig/chains"
 import {
   NULL_ADDRESS,
   PurchaseAssetData,
