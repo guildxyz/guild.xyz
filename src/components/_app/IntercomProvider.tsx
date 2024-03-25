@@ -1,60 +1,37 @@
+import { Box } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import { useYourGuilds } from "components/explorer/YourGuilds"
-import { createContext, PropsWithChildren, useContext, useEffect } from "react"
+import { PropsWithChildren, useEffect, useRef, useState } from "react"
+import { Intercom, LiveChatLoaderProvider, useChat } from "react-live-chat-loader"
 import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
-const IntercomContext = createContext<{
-  addIntercomSettings: (newData: Record<string, string | number>) => void
-  triggerChat: () => void
-}>({
-  addIntercomSettings: () => {},
-  triggerChat: () => {},
-})
+const IntercomProvider = ({ children }: PropsWithChildren<unknown>) => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const _window = typeof window === "undefined" ? ({} as Window) : window
 
-export const addIntercomSettings = (
-  newData: Record<string, string | number | boolean>
-) => {
-  if (typeof window === "undefined" || !newData) return
-  const windowAsObject = window as Record<string, any>
+  /**
+   * We can store settings in window.intercomSettings using the addIntercomSettings
+   * function even before the chat widget loads, so we need to make sure that these
+   * settings are actually saved to Intercom
+   */
+  useEffect(() => {
+    if (!_window.Intercom) return
+    _window.Intercom?.("update", window.intercomSettings)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_window.Intercom])
 
-  if (!windowAsObject.intercomSettings) windowAsObject.intercomSettings = {}
+  useIntercomSettingSetup()
 
-  const shouldUpdate = Object.entries(newData).some(
-    ([key, value]) => windowAsObject.intercomSettings[key] !== value
+  return (
+    <LiveChatLoaderProvider providerKey="vo3n8mii" provider="intercom">
+      {children}
+      <Intercom color="#27272A" />
+    </LiveChatLoaderProvider>
   )
-
-  if (!shouldUpdate) return
-
-  windowAsObject.intercomSettings = {
-    ...windowAsObject.intercomSettings,
-    ...newData,
-  }
-
-  windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
 }
 
-export const pushToIntercomSetting = (settingName: string, value: string) => {
-  if (typeof window === "undefined") return
-  const windowAsObject = window as Record<string, any>
-
-  if (!windowAsObject.intercomSettings) windowAsObject.intercomSettings = {}
-
-  if (windowAsObject.intercomSettings[settingName]?.length)
-    windowAsObject.intercomSettings[settingName] += `,${value}`
-  else windowAsObject.intercomSettings[settingName] = value
-
-  windowAsObject.Intercom?.("update", windowAsObject.intercomSettings)
-}
-
-const triggerChat = () => {
-  if (typeof window === "undefined") return
-  const windowAsObject = window as Record<string, any>
-
-  windowAsObject.Intercom?.("show")
-}
-
-const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
+const useIntercomSettingSetup = () => {
   const { address, isWeb3Connected, type: walletType } = useWeb3ConnectionManager()
   const { connectorName } = useConnectorNameAndIcon()
   const user = useUser()
@@ -89,21 +66,90 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>): JSX.Element
         (guild1, guild2) => guild2.memberCount - guild1.memberCount
       )[0]?.memberCount,
     })
-  }, [address, isWeb3Connected, user, yourGuilds])
-
-  return (
-    <IntercomContext.Provider
-      value={{
-        addIntercomSettings,
-        triggerChat,
-      }}
-    >
-      {children}
-    </IntercomContext.Provider>
-  )
+  }, [address, isWeb3Connected, connectorName, walletType, user, yourGuilds])
 }
 
-const useIntercom = () => useContext(IntercomContext)
+type IntercomTriggerProps = {
+  "data-intercom-selector": string
+}
+
+const IntercomTrigger = (props: PropsWithChildren<IntercomTriggerProps>) => {
+  const ref = useRef<HTMLDivElement>(null)
+  const [hasClicked, setHasClicked] = useState(false)
+  const [state, loadChat] = useChat()
+
+  useEffect(() => {
+    if (!hasClicked || state !== "complete") return
+    ref.current?.click?.()
+    setHasClicked(false)
+  }, [hasClicked, state])
+
+  const onClick = () => {
+    if (!window.Intercom) {
+      setHasClicked(true)
+      loadChat({ open: false })
+    }
+  }
+
+  return <Box ref={ref} onClick={onClick} {...props} />
+}
+
+const triggerChat = () => {
+  if (typeof window === "undefined") return
+
+  if (window.Intercom) {
+    window.Intercom?.("show")
+    return
+  }
+
+  const facade: HTMLButtonElement = document.querySelector(
+    ".live-chat-loader-placeholder [role='button']"
+  )
+  facade?.click()
+}
+
+const addIntercomSettings = (newData: Window["intercomSettings"]) => {
+  if (typeof window === "undefined" || !newData) return
+
+  if (!window.intercomSettings) window.intercomSettings = {}
+
+  const shouldUpdate = Object.entries(newData).some(
+    ([key, value]) => window.intercomSettings[key] !== value
+  )
+
+  if (!shouldUpdate) return
+
+  window.intercomSettings = {
+    ...window.intercomSettings,
+    ...newData,
+  }
+
+  // In case Intercom is loaded, we update the setting
+  window.Intercom?.("update", window.intercomSettings)
+}
+
+const pushToIntercomSetting = (settingName: string, value: string) => {
+  if (typeof window === "undefined") return
+
+  if (!window.intercomSettings) window.intercomSettings = {}
+
+  if (window.intercomSettings[settingName]?.toString().length)
+    window.intercomSettings[settingName] += `,${value}`
+  else window.intercomSettings[settingName] = value
+
+  // In case Intercom is loaded, we update the setting
+  window.Intercom?.("update", window.intercomSettings)
+}
+
+declare global {
+  interface Window {
+    intercomSettings?: Record<string, string | number | boolean>
+    Intercom?: (
+      action: "show" | "update",
+      intercomSettings?: Window["intercomSettings"]
+    ) => void
+  }
+}
 
 export default IntercomProvider
-export { useIntercom }
+export { IntercomTrigger, addIntercomSettings, pushToIntercomSetting, triggerChat }

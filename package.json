@@ -74,6 +74,7 @@
     "react-google-recaptcha": "^3.1.0",
     "react-hook-form": "7.43.9",
     "react-intersection-observer": "^9.4.3",
+    "react-live-chat-loader": "^2.9.1",
     "react-markdown": "^8.0.7",
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",
