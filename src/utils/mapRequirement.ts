@@ -7,18 +7,6 @@ const mapRequirement = (requirement?: Requirement) => {
   if (requirement.type === "COIN")
     newRequirement.address = "0x0000000000000000000000000000000000000000"
 
-  // Handling NFT requirements (AMOUNT, ATTRIBUTE, CUSTOM_ID)
-  if (
-    newRequirement.type === "ERC721" ||
-    newRequirement.type === "ERC1155" ||
-    newRequirement.type === "NOUNS"
-  )
-    newRequirement.nftRequirementType = newRequirement.data?.attributes?.length
-      ? "ATTRIBUTE"
-      : typeof newRequirement?.data?.id === "string"
-      ? "CUSTOM_ID"
-      : "AMOUNT"
-
   if (newRequirement.type === "CONTRACT" && Array.isArray(requirement.data.params)) {
     newRequirement.data.params = requirement.data.params.map((param) =>
       typeof param === "string"
@@ -27,6 +15,15 @@ const mapRequirement = (requirement?: Requirement) => {
           }
         : param
     )
+  }
+
+  if (
+    (newRequirement.type === "ERC721" || newRequirement.type === "ERC1155") &&
+    !!newRequirement.data?.id &&
+    typeof newRequirement.data?.minAmount !== "number"
+  ) {
+    newRequirement.data.ids = [newRequirement.data.id]
+    delete newRequirement.data.id
   }
 
   // Removing attributes which we don't need inside the form
