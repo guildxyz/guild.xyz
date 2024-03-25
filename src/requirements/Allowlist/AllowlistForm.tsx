@@ -82,9 +82,7 @@ const AllowlistForm = ({
         ?.toString()
         ?.split("\n")
         ?.filter((line) => !!line)
-        ?.map((line) =>
-          type === "ALLOWLIST_EMAIL" ? line.trim() : line.slice(0, 42)
-        )
+        ?.map((line) => line.trim())
 
       setValue(`${baseFieldPath}.data.addresses`, lines, { shouldValidate: true })
     }
