@@ -5,7 +5,14 @@ import {
   Heading,
   HStack,
   Icon,
+  IconButton,
   Link,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Spinner,
   Stack,
   Tag,
@@ -29,10 +36,12 @@ import Members from "components/[guild]/Members"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import AddTokenPanel from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
@@ -46,7 +55,7 @@ import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import ErrorPage from "pages/_error"
-import { Info, Users } from "phosphor-react"
+import { ArrowLeft, Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { SWRConfig } from "swr"
@@ -157,6 +166,8 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
+  const [isOpen, setIsOpen] = useState(false)
+
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const stayConnectedToast = useStayConnectedToast(() => {
@@ -252,6 +263,8 @@ const GuildPage = (): JSX.Element => {
           />
         )}
 
+        <Button onClick={() => setIsOpen(true)}>Add Token Reward</Button>
+
         <AccessHub />
 
         <Section
@@ -337,6 +350,40 @@ const GuildPage = (): JSX.Element => {
             </Section>
           </>
         )}
+
+        <Modal
+          isOpen={isOpen}
+          onClose={() => {
+            setIsOpen(false)
+          }}
+          size={"2xl"}
+          scrollBehavior="inside"
+          colorScheme="dark"
+        >
+          <ModalOverlay />
+          <ModalContent minH="550px">
+            <ModalCloseButton />
+            <ModalHeader>
+              <Stack spacing={8}>
+                <HStack>
+                  <IconButton
+                    rounded="full"
+                    aria-label="Back"
+                    size="sm"
+                    mb="-3px"
+                    icon={<ArrowLeft size={20} />}
+                    variant="ghost"
+                  />
+                  <Text>Add token reward</Text>
+                </HStack>
+              </Stack>
+            </ModalHeader>
+
+            <ModalBody className="custom-scrollbar" display="flex" flexDir="column">
+              <AddTokenPanel onAdd={() => {}} />
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       </Layout>
 
       {isAdmin && <DynamicDiscordBotPermissionsChecker />}
