@@ -14,7 +14,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -45,7 +45,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       data: { guildPlatformId: existingPointsRewards?.[0]?.id },
     },
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const {
     control,

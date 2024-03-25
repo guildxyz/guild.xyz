@@ -14,7 +14,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
@@ -49,7 +49,7 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<ImportPoapForm>({
     defaultValues,
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const {
     control,

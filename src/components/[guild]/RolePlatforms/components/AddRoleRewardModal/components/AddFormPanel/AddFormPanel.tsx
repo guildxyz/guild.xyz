@@ -1,6 +1,6 @@
 import { Stack } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import CreateFormForm from "components/[guild]/CreateFormModal/components/CreateFormForm"
 import useCreateForm from "components/[guild]/CreateFormModal/hooks/useCreateForm"
 import { FormCreationSchema } from "components/[guild]/CreateFormModal/schemas"
@@ -25,7 +25,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
     resolver: zodResolver(FormCreationSchema),
     defaultValues,
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const fields = useWatch({ control: methods.control, name: "fields" })
 

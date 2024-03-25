@@ -26,7 +26,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
@@ -89,7 +89,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const methods = useForm<CreateNftFormType>({
     mode: "all",
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const {
     control,

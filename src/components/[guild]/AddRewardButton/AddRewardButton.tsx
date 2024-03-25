@@ -19,11 +19,10 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
-import { atom, useAtom, useSetAtom } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards from "platforms/rewards"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -37,15 +36,7 @@ import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
-
-export const isAddRewardPanelDirtyAtom = atom(false)
-export const useSyncIsAddRewardPanelDirtyAtom = (isDirty: boolean) => {
-  const setIsAddRewardPanelDirty = useSetAtom(isAddRewardPanelDirtyAtom)
-
-  useEffect(() => {
-    setIsAddRewardPanelDirty(isDirty)
-  }, [isDirty])
-}
+import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
 
 type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
@@ -64,9 +55,8 @@ const defaultValues: AddRewardForm = {
 
 const AddRewardButton = (): JSX.Element => {
   const { roles } = useGuild()
-  const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] = useAtom(
-    isAddRewardPanelDirtyAtom
-  )
+  const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
+    useAddRewardDiscardAlert()
   const {
     isOpen: isDiscardAlertOpen,
     onOpen: onDiscardAlertOpen,
@@ -95,6 +85,7 @@ const AddRewardButton = (): JSX.Element => {
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const goBack = () => {
+    setIsAddRewardPanelDirty(false)
     if (step === "SELECT_ROLE" && !rewards[selection].autoRewardSetup) {
       methods.reset(defaultValues)
     } else {
@@ -113,6 +104,7 @@ const AddRewardButton = (): JSX.Element => {
   const onCloseAndClear = () => {
     methods.reset(defaultValues)
     onAddRewardModalClose()
+    setIsAddRewardPanelDirty(false)
   }
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
