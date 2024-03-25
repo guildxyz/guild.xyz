@@ -4,6 +4,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import { useWalletClient } from "hooks/useWalletClient"
 import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
@@ -18,7 +19,7 @@ import {
   stringToBytes,
   trim,
 } from "viem"
-import { useChainId, usePublicClient, useWalletClient } from "wagmi"
+import { useChainId, usePublicClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 import { Chains, supportedChains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
