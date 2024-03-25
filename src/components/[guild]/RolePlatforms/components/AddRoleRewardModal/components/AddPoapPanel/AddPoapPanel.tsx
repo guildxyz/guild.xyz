@@ -14,6 +14,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
@@ -23,7 +24,6 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import { PlatformGuildData, PlatformType } from "types"
 import UploadMintLinks from "./components/UploadMintLinks"
-import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 
 export type ImportPoapForm = {
   eventId: string
@@ -49,7 +49,7 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<ImportPoapForm>({
     defaultValues,
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const {
     control,

@@ -25,7 +25,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
     resolver: zodResolver(FormCreationSchema),
     defaultValues,
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const fields = useWatch({ control: methods.control, name: "fields" })
 

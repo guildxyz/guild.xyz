@@ -10,7 +10,7 @@ const defaultValues = {
 
 const AddGithubPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   return (
     <FormProvider {...methods}>

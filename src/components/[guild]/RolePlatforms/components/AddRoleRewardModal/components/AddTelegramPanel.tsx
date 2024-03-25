@@ -12,7 +12,7 @@ const AddTelegramPanel = ({ onAdd }: AddRewardPanelProps) => {
       platformGuildId: null,
     },
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const platformGuildId = useWatch({
     name: "platformGuildId",

@@ -19,12 +19,12 @@ import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useToast from "hooks/useToast"
-import { atom, useAtom } from "jotai"
+import { atom, useAtom, useSetAtom } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards from "platforms/rewards"
 import { useEffect, useState } from "react"
-import { FormProvider, UseFormReturn, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
@@ -39,12 +39,12 @@ import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 
 export const isAddRewardPanelDirtyAtom = atom(false)
-export const useSyncIsAddRewardPanelDirtyAtom = (methods: UseFormReturn<any>) => {
-  const [, setIsAddRewardPanelDirty] = useAtom(isAddRewardPanelDirtyAtom)
+export const useSyncIsAddRewardPanelDirtyAtom = (isDirty: boolean) => {
+  const setIsAddRewardPanelDirty = useSetAtom(isAddRewardPanelDirtyAtom)
 
   useEffect(() => {
-    setIsAddRewardPanelDirty(methods.formState.isDirty)
-  }, [methods.formState.isDirty])
+    setIsAddRewardPanelDirty(isDirty)
+  }, [isDirty])
 }
 
 type AddRewardForm = {

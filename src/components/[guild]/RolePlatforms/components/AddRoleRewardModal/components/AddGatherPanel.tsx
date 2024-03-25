@@ -21,7 +21,7 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<AddGatherFormType>({
     mode: "all",
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const { append } = useFieldArray({
     name: "rolePlatforms",

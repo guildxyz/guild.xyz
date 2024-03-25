@@ -89,7 +89,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const methods = useForm<CreateNftFormType>({
     mode: "all",
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const {
     control,

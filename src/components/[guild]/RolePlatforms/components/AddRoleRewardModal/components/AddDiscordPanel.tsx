@@ -10,7 +10,7 @@ const defaultValues = {
 
 const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const platformGuildId = useWatch({
     control: methods.control,

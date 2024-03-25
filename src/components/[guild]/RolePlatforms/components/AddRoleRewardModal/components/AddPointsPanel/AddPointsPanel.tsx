@@ -14,6 +14,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -23,7 +24,6 @@ import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType } from "types"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
-import { useSyncIsAddRewardPanelDirtyAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
@@ -45,7 +45,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       data: { guildPlatformId: existingPointsRewards?.[0]?.id },
     },
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const {
     control,

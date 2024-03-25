@@ -16,7 +16,7 @@ const AddGooglePanel = ({
     mode: "all",
     defaultValues,
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   return (
     <FormProvider {...methods}>

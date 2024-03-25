@@ -24,7 +24,7 @@ const AddSecretTextPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<SecretTextRewardForm & UniqueTextRewardForm>({
     mode: "all",
   })
-  useSyncIsAddRewardPanelDirtyAtom(methods)
+  useSyncIsAddRewardPanelDirtyAtom(methods.formState.isDirty)
 
   const name = useWatch({ control: methods.control, name: "name" })
   const text = useWatch({ control: methods.control, name: "text" })
