@@ -1,4 +1,3 @@
-import { CHAIN_CONFIG } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { FetchPriceResponse } from "pages/api/fetchPrice"
 import useSWR, { SWRResponse } from "swr"
@@ -9,6 +8,7 @@ import {
   purchaseSupportedChains,
 } from "utils/guildCheckout/constants"
 import { useAccount } from "wagmi"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 

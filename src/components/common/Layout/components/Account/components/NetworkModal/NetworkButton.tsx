@@ -1,7 +1,7 @@
 import { Img, Tooltip } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import Button from "components/common/Button"
 import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain

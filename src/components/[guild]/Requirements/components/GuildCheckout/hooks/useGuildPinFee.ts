@@ -1,19 +1,24 @@
-import { CHAIN_CONFIG, Chain } from "chains"
 import useGuild from "components/[guild]/hooks/useGuild"
+import guildPinAbi from "static/abis/guildPin"
 import useSWR from "swr"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
-import { Chain as ViemChain, createPublicClient, http } from "viem"
+import { createPublicClient, http, type Chain as ViemChain } from "viem"
+import { wagmiConfig } from "wagmiConfig"
+import { Chains, type Chain } from "wagmiConfig/chains"
 
-/** TODO: check if the `useReadContract` works properly on Ontology EVM in wagmi 2.0 */
+/**
+ * For some reason, `useReadContract` didn't work on Ontology EVM, so we use the
+ * simple `publicClient.readContract` action instead
+ */
 const fetchFee = (chain: Chain) => {
   const publicClient = createPublicClient({
+    chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain) as ViemChain,
     transport: http(),
-    chain: CHAIN_CONFIG[chain] as ViemChain,
   })
 
   return publicClient.readContract({
-    abi: GUILD_PIN_CONTRACTS[chain].abi,
-    address: GUILD_PIN_CONTRACTS[chain].address,
+    abi: guildPinAbi,
+    address: GUILD_PIN_CONTRACTS[chain],
     functionName: "fee",
   })
 }
@@ -26,7 +31,7 @@ const useGuildPinFee = (): {
   const { guildPin } = useGuild()
 
   const {
-    data,
+    data: guildPinFee,
     isLoading: isGuildPinFeeLoading,
     error: guildPinFeeError,
   } = useSWR(["fee", guildPin.chain], ([_, c]) => fetchFee(c as Chain))
@@ -35,14 +40,15 @@ const useGuildPinFee = (): {
   //   data,
   //   isLoading: isGuildPinFeeLoading,
   //   error: guildPinFeeError,
-  // } = useContractRead({
-  //   abi: GUILD_PIN_CONTRACTS[guildPin.chain].abi,
-  //   address: GUILD_PIN_CONTRACTS[guildPin.chain].address,
+  // } = useReadContract({
+  //   abi: guildPinAbi,
+  //   address: GUILD_PIN_CONTRACTS[guildPin.chain],
   //   functionName: "fee",
+  //   chainId: Chains[guildPin.chain],
   // })
 
   return {
-    guildPinFee: data as unknown as bigint,
+    guildPinFee,
     isGuildPinFeeLoading,
     guildPinFeeError,
   }

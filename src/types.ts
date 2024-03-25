@@ -1,7 +1,7 @@
-import type { Chain, Chains } from "chains"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
+import type { Chain, Chains } from "wagmiConfig/chains"
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
