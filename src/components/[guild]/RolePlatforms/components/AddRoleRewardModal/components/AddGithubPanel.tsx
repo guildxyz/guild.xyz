@@ -1,3 +1,4 @@
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
@@ -9,6 +10,7 @@ const defaultValues = {
 
 const AddGithubPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm({ mode: "all", defaultValues })
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   return (
     <FormProvider {...methods}>
