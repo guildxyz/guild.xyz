@@ -44,7 +44,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         isOpen={isOpen}
         onClose={onClose}
         title={
-          requirement.type === "ALLOWLIST_EMAIL" ? "Email alllowlist" : "Allowlist"
+          requirement.type === "ALLOWLIST_EMAIL" ? "Email allowlist" : "Allowlist"
         }
       />
     </Requirement>
