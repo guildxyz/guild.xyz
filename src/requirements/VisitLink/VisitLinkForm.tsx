@@ -12,20 +12,31 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { LinkMetadata } from "pages/api/link-metadata"
 import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
 import parseFromObject from "utils/parseFromObject"
 
 const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
   const {
-    register,
     setValue,
     formState: { errors },
   } = useFormContext()
 
-  const link = useWatch({ name: `${baseFieldPath}.data.id` })
-  const debounceLink = useDebouncedState(link)
+  const {
+    field: { onChange, ...field },
+  } = useController({
+    name: `${baseFieldPath}.data.id`,
+    rules: {
+      required: "This field is required",
+      pattern: {
+        value: /^https:\/\/(.)+\.(.)+$/,
+        message: "Invalid URL",
+      },
+    },
+  })
+
+  const debounceLink = useDebouncedState(field.value)
 
   const error = !!parseFromObject(errors, baseFieldPath).data?.id
 
@@ -42,14 +53,16 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
     <FormControl isInvalid={error}>
       <FormLabel>Link user has to go to</FormLabel>
       <Input
-        {...register(`${baseFieldPath}.data.id`, {
-          required: "This field is required",
-          pattern: {
-            value: /^https:\/\/(.)+\.(.)+$/,
-            message: "Invalid URL",
-          },
-        })}
+        {...field}
         placeholder="https://guild.xyz"
+        onChange={(e) => {
+          const position = e.target.selectionStart
+          onChange(e.target.value.toLowerCase())
+          // The cursor's position was always set to e.target.value.length without timeout
+          setTimeout(() => {
+            e.target.setSelectionRange(position, position)
+          })
+        }}
       />
 
       <FormErrorMessage>
