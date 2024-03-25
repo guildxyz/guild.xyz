@@ -40,10 +40,7 @@ import { Chain } from "wagmiConfig/chains"
 import ChainPicker from "../common/ChainPicker"
 import MinMaxAmount from "../common/MinMaxAmount"
 import AttributePicker from "./components/AttributePicker"
-import UploadIDs, {
-  INVALID_TOKEN_IDS_ERROR,
-  validateNftIds,
-} from "./components/UploadIDs"
+import UploadIDs, { validateNftIds } from "./components/UploadIDs"
 import { useNftMetadataWithTraits } from "./hooks/useNftMetadata"
 import useNftType from "./hooks/useNftType"
 import useNfts from "./hooks/useNfts"
@@ -105,7 +102,17 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
-  const ids = useWatch({ name: `${baseFieldPath}.data.ids` })
+
+  const {
+    field: { value: ids, onChange: onIDsChange, ...idsField },
+  } = useController({
+    name: `${baseFieldPath}.data.ids`,
+    rules: {
+      validate: (value) =>
+        (value?.every(Boolean) && validateNftIds(value)) ||
+        "Each ID must be a valid number",
+    },
+  })
 
   const {
     fields: traitFields,
@@ -375,32 +382,20 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
           <FormLabel>Token IDs:</FormLabel>
           <Stack>
             <UploadIDs
-              onSuccess={(idsArray) => {
-                clearErrors(`${baseFieldPath}.data.ids`)
-                setValue(`${baseFieldPath}.data.ids`, idsArray, {
-                  shouldDirty: true,
-                })
-              }}
+              onSuccess={(idsArray) => onIDsChange(idsArray)}
               onError={(error) => setError(`${baseFieldPath}.data.ids`, error)}
             />
             <Textarea
+              {...idsField}
               value={ids?.join("\n")}
               onChange={(e) => {
-                clearErrors(`${baseFieldPath}.data.ids`)
-
                 if (!e.target.value) {
-                  setValue(`${baseFieldPath}.data.ids`, [], { shouldDirty: true })
+                  onIDsChange([])
                   return
                 }
 
                 const idsArray = e.target.value.split("\n")
-                setValue(`${baseFieldPath}.data.ids`, idsArray, {
-                  shouldDirty: true,
-                })
-
-                if (!validateNftIds(idsArray)) {
-                  setError(`${baseFieldPath}.data.ids`, INVALID_TOKEN_IDS_ERROR)
-                }
+                onIDsChange(idsArray)
               }}
               placeholder="... or paste IDs here, each one in a new line"
             />
