@@ -58,7 +58,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Allowlist/AllowlistForm")
     ),
-    types: ["ALLOWLIST"],
+    types: ["ALLOWLIST", "ALLOWLIST_EMAIL"],
     isNegatable: true,
   },
   {
