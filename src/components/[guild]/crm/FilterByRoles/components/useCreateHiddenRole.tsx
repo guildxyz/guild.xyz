@@ -3,7 +3,6 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -12,13 +11,11 @@ import { Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirement from "utils/preprocessRequirement"
-import { useAccount } from "wagmi"
 
 type RoleOrGuild = Role & { guildId: number }
 
 const useCreateHiddenRole = (onSuccess?: () => void) => {
   const toastIdRef = useRef<ToastId>()
-  const { address } = useAccount()
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -48,8 +45,6 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
           "It may take some time for all eligible members to get it. See the query status next to it!",
         status: "success",
       })
-
-      mutateOptionalAuthSWRKey(`/guild/access/${id}/${address}`)
 
       // Disabled temporarily, until we test it properly
       // await fetcherWithSign([
