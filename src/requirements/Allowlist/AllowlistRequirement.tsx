@@ -18,14 +18,15 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
+  const isEmail = requirement.type === "ALLOWLIST_EMAIL"
+
   return (
     <Requirement
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
         hideAllowlist && (
           <Text color="gray" fontSize="xs" fontWeight="normal">
-            Allowlisted{requirement.type === "ALLOWLIST_EMAIL" ? " email" : ""}{" "}
-            addresses are hidden
+            {`Allowlisted ${isEmail ? " email" : ""} addresses are hidden`}
           </Text>
         )
       }
@@ -33,19 +34,17 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     >
       {"Be included in "}
       {hideAllowlist ? (
-        `${requirement.type === "ALLOWLIST_EMAIL" ? "email " : ""}allowlist`
+        `${isEmail ? "email " : ""}allowlist`
       ) : (
         <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
-          {requirement.type === "ALLOWLIST_EMAIL" ? "email " : ""}allowlist
+          {`${isEmail ? "email " : ""}allowlist`}
         </Button>
       )}
       <SearchableVirtualListModal
         initialList={addresses}
         isOpen={isOpen}
         onClose={onClose}
-        title={
-          requirement.type === "ALLOWLIST_EMAIL" ? "Email allowlist" : "Allowlist"
-        }
+        title={isEmail ? "Email allowlist" : "Allowlist"}
       />
     </Requirement>
   )
