@@ -10,11 +10,7 @@ const IntercomProvider = ({ children }: PropsWithChildren<unknown>) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const _window = typeof window === "undefined" ? ({} as Window) : window
 
-  /**
-   * We can store settings in window.intercomSettings using the addIntercomSettings
-   * function even before the chat widget loads, so we need to make sure that these
-   * settings are actually saved to Intercom
-   */
+  /** Calling "update" here to make sure we save the user data to Intercom */
   useEffect(() => {
     if (!_window.Intercom) return
     _window.Intercom?.("update", window.intercomSettings)
@@ -80,7 +76,7 @@ const IntercomTrigger = (props: PropsWithChildren<IntercomTriggerProps>) => {
 
   useEffect(() => {
     if (!hasClicked || state !== "complete") return
-    ref.current?.click?.()
+    ref.current?.click()
     setHasClicked(false)
   }, [hasClicked, state])
 
