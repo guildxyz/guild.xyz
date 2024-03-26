@@ -189,18 +189,19 @@ const useMintGuildPin = () => {
       })
     } catch {}
 
-    const hasGuildPinRequirement = roles
-      .flatMap((r) => r.requirements)
-      .some(
-        (req) =>
-          req.type === "ERC721" &&
-          req.chain === Chains[chainId] &&
-          req.address.toLowerCase() === contractAddress.toLowerCase()
-      )
+    // TODO: should we just remove this? The user can trigger a membership update manually anyways. Alternatively, we can get only the cached requirements from the SWR cache & if we find a guild pin req, we can trigger the update
+    // const hasGuildPinRequirement = roles
+    //   .flatMap((r) => r.requirements)
+    //   .some(
+    //     (req) =>
+    //       req.type === "ERC721" &&
+    //       req.chain === Chains[chainId] &&
+    //       req.address.toLowerCase() === contractAddress.toLowerCase()
+    //   )
 
-    if (hasGuildPinRequirement) {
-      triggerMembershipUpdate()
-    }
+    // if (hasGuildPinRequirement) {
+    //   triggerMembershipUpdate()
+    // }
 
     toastWithTweetButton({
       title: "Successfully minted Guild Pin!",
