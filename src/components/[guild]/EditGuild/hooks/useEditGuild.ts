@@ -1,9 +1,10 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { GuildFormType } from "types"
+import { GuildBase, GuildFormType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
@@ -23,6 +24,7 @@ const getError = (arr: Record<string, string>[]) =>
 
 const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
   const guild = useGuild(guildId)
+  const { mutate: mutateYourGuilds } = useYourGuilds()
 
   const matchMutate = useMatchMutate()
 
@@ -364,18 +366,25 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
             ],
           }
         },
-        {
-          revalidate: false,
-        }
+        { revalidate: false }
       )
+
+      if (guildUpdateResult?.id) {
+        mutateYourGuilds((prev) => mutateGuildsCache(prev, guildUpdateResult), {
+          revalidate: false,
+        })
+        matchMutate<GuildBase[]>(
+          /\/guilds\?order/,
+          (prev) => mutateGuildsCache(prev, guildUpdateResult),
+          { revalidate: false }
+        )
+      }
 
       const guildPinCacheKeysRegExp = new RegExp(
         `^/assets/guildPins/image\\?guildId=${id}&guildAction=\\d`
       )
       matchMutate(guildPinCacheKeysRegExp)
 
-      matchMutate(/^\/guild\/address\//)
-      matchMutate(/^\/guild\?order/)
       if (
         guildUpdateResult?.urlName &&
         guildUpdateResult.urlName !== guild?.urlName
@@ -392,5 +401,14 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
   }
 }
+
+const mutateGuildsCache = (prev: GuildBase[], editedGuild: GuildBase) =>
+  prev?.map((_guild) => {
+    if (_guild.id !== editedGuild.id) return _guild
+    return {
+      ..._guild,
+      ...editedGuild,
+    }
+  })
 
 export default useEditGuild

@@ -11,7 +11,7 @@ const WalletAuthButton = (): JSX.Element => {
 
   return (
     <ConnectAccount
-      account={address ? "Wallet" : "wallet"}
+      title="Sign in"
       isRequired
       icon={<Wallet />}
       isConnected={address && shortenHex(address, 3)}

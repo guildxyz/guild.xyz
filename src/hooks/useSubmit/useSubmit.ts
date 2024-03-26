@@ -1,22 +1,27 @@
 import { useWallet } from "@fuel-wallet/react"
-import { CHAIN_CONFIG, Chains, supportedChains } from "chains"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
+import { useWalletClient } from "hooks/useWalletClient"
 import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
-import { createPublicClient, http, keccak256, stringToBytes, trim } from "viem"
 import {
   PublicClient,
+  UnauthorizedProviderError,
   WalletClient,
-  useChainId,
-  usePublicClient,
-  useWalletClient,
-} from "wagmi"
+  createPublicClient,
+  http,
+  keccak256,
+  stringToBytes,
+  trim,
+} from "viem"
+import { useChainId, usePublicClient } from "wagmi"
+import { wagmiConfig } from "wagmiConfig"
+import { Chains, supportedChains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -314,9 +319,10 @@ export const fuelSign = async ({
 
 const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
   Promise.all(
-    supportedChains.map(async (chain) => {
+    supportedChains.map(async (chainName) => {
+      const chain = wagmiConfig.chains.find((c) => Chains[c.id] === chainName)
       const publicClient = createPublicClient({
-        chain: CHAIN_CONFIG[chain],
+        chain,
         transport: http(),
       })
 
@@ -326,12 +332,14 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         })
         .catch(() => null)
 
-      return [chain, bytecode && trim(bytecode) !== "0x"] as const
+      return [chainName, bytecode && trim(bytecode) !== "0x"] as const
     })
   ).then(
     (results) =>
       new Set(
-        results.filter(([, hasContract]) => !!hasContract).map(([chain]) => chain)
+        results
+          .filter(([, hasContract]) => !!hasContract)
+          .map(([chainName]) => chainName)
       )
   )
 
@@ -380,10 +388,19 @@ export const sign = async ({
         message: getMessage(params),
       })
     } else {
-      sig = await walletClient.signMessage({
-        account: address,
-        message: getMessage(params),
-      })
+      sig = await walletClient
+        .signMessage({
+          account: address,
+          message: getMessage(params),
+        })
+        .catch((error) => {
+          if (error instanceof UnauthorizedProviderError) {
+            throw new Error(
+              "Your wallet is not connected. It might be because your browser locked it after a period of time."
+            )
+          }
+          throw error
+        })
     }
   }
 

@@ -4,12 +4,14 @@ import ProgressJoinStep from "./components/ProgressJoinStep"
 
 const GetRewardsJoinStep = ({ joinState }: { joinState: JoinState }) => {
   const status = useMemo(() => {
+    if (joinState?.state === "NO_ACCESS") return "NO_ACCESS"
+
+    if (joinState?.state === "MANAGING_REWARDS") return "LOADING"
+
     const hasAllRewards =
       !!joinState?.rewards && joinState?.rewards?.granted === joinState?.rewards?.all
 
     if (joinState?.state === "FINISHED" || hasAllRewards) return "DONE"
-
-    if (joinState?.state === "MANAGING_REWARDS") return "LOADING"
 
     return "INACTIVE"
   }, [joinState])
@@ -20,8 +22,12 @@ const GetRewardsJoinStep = ({ joinState }: { joinState: JoinState }) => {
       countLabel="rewards granted"
       status={status}
       total={joinState?.rewards?.all}
-      current={joinState?.rewards?.granted}
-      fallbackText="Evaluating which rewards you will get"
+      current={status === "NO_ACCESS" ? 0 : joinState?.rewards?.granted}
+      fallbackText={
+        status === "NO_ACCESS"
+          ? "No rewards will be granted"
+          : "Evaluating which rewards you will get"
+      }
     />
   )
 }

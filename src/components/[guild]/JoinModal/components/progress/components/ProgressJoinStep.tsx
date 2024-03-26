@@ -6,7 +6,7 @@ type Props = {
   title: string
   countLabel: string
   fallbackText: string | JSX.Element
-  status: "INACTIVE" | "LOADING" | "ERROR" | "DONE"
+  status: "INACTIVE" | "LOADING" | "NO_ACCESS" | "DONE"
   total?: number
   current?: number
   waitingPosition?: number

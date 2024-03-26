@@ -14,6 +14,8 @@ import {
 
 import { Link } from "@chakra-ui/next-js"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
@@ -24,7 +26,8 @@ import { useAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
-import { useAccount, useConnect } from "wagmi"
+import { useAccount, useConnect, type Connector } from "wagmi"
+import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
@@ -58,7 +61,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     delegateConnectionAtom
   )
 
-  const { connectors, error, connect, pendingConnector, isLoading } = useConnect()
+  const { connectors, error, connect, isPending } = useConnect()
+
   const { connector } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
@@ -71,8 +75,25 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     }, 200)
   }
 
+  const { captureEvent } = usePostHogContext()
+
   const { keyPair, id, error: publicUserError } = useUserPublic()
-  const set = useSetKeyPair()
+  const set = useSetKeyPair({
+    onError: (err) => {
+      /**
+       * Needed temporarily for debugging WalletConnect issues (GUILD-2423) Checking
+       * for Error instance to filter out fetcher-thrown errors, which are irrelevant
+       * here
+       */
+      if (err instanceof Error) {
+        captureEvent("[verify] - failed", {
+          errorMessage: err.message,
+          errorStack: err.stack,
+          errorCause: err.cause,
+        })
+      }
+    },
+  })
   const linkVaults = useLinkVaults()
 
   useEffect(() => {
@@ -95,10 +116,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       !ignoredRoutes.includes(router.route) &&
       !!connector?.connect
     ) {
-      const activate = connector.connect()
-      if (typeof activate !== "undefined") {
-        activate.finally(() => onOpen())
-      }
+      onOpen()
     }
   }, [keyPair, router, id, publicUserError, connector])
 
@@ -207,17 +225,22 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 .filter(
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== "cwaasWallet")
+                    (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
+                    conn.id !== "injected" &&
+                    // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
+                    conn.id !== "com.coinbase.wallet"
                 )
+                .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
                 .map((conn) => (
-                  <ConnectorButton
-                    key={conn.id}
-                    connector={conn}
-                    connect={connect}
-                    isLoading={isLoading}
-                    pendingConnector={pendingConnector}
-                    error={error}
-                  />
+                  <CardMotionWrapper key={conn.id}>
+                    <ConnectorButton
+                      connector={conn}
+                      connect={connect}
+                      isLoading={isPending}
+                      pendingConnector={null as Connector}
+                      error={error}
+                    />
+                  </CardMotionWrapper>
                 ))}
               {!isDelegateConnection && <DelegateCashButton />}
               <FuelConnectorButtons key="fuel" />

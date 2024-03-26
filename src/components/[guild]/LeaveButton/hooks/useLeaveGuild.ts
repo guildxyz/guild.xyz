@@ -1,3 +1,4 @@
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMembership from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -13,6 +14,12 @@ const useLeaveGuild = () => {
   const { mutate: mutateMembership } = useMembership()
   const { mutate: mutateYourGuilds } = useYourGuilds()
 
+  /**
+   * Since we have a leave button only on the guild page, it's safe to retrieve the
+   * Guild ID from the useGuild hook instead of the params passed to onSubmit
+   */
+  const { id } = useGuild()
+
   const submit = (signedValidation: SignedValidation): Promise<Response> =>
     fetcher(`/user/leaveGuild`, signedValidation)
 
@@ -26,7 +33,10 @@ const useLeaveGuild = () => {
       mutateMembership(undefined, {
         revalidate: false,
       })
-      mutateYourGuilds()
+      mutateYourGuilds(
+        (prevValue) => prevValue?.filter((guild) => guild.id !== id),
+        { revalidate: false }
+      )
     },
     onError: (error) => showErrorToast(error),
   })

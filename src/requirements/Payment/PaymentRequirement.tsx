@@ -1,5 +1,4 @@
 import { Icon, Text } from "@chakra-ui/react"
-import { CHAIN_CONFIG, Chains } from "chains"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import BuyPass from "components/[guild]/Requirements/components/GuildCheckout/BuyPass"
 import { GuildCheckoutProvider } from "components/[guild]/Requirements/components/GuildCheckout/components/GuildCheckoutContext"
@@ -10,10 +9,11 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import DataBlock from "components/common/DataBlock"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useToken from "hooks/useToken"
 import { Coins } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { useToken } from "wagmi"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import PaymentTransactionStatusModal from "../../components/[guild]/Requirements/components/GuildCheckout/components/PaymentTransactionStatusModal"
 import WithdrawButton from "./components/WithdrawButton"
 import useVault from "./hooks/useVault"
@@ -45,7 +45,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
   } = useToken({
     address: token,
     chainId: Chains[chain],
-    enabled: Boolean(!isNativeCurrency && chain),
+    shouldFetch: Boolean(!isNativeCurrency && chain),
   })
 
   const convertedFee = fee

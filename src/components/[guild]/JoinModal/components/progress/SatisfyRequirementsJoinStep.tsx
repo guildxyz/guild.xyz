@@ -15,7 +15,7 @@ const SatisfyRequirementsJoinStep = ({
   const status = useMemo(() => {
     switch (joinState?.state) {
       case "NO_ACCESS":
-        return "ERROR"
+        return "NO_ACCESS"
 
       case "MANAGING_ROLES":
       case "MANAGING_REWARDS":
@@ -39,7 +39,7 @@ const SatisfyRequirementsJoinStep = ({
       }
       status={status}
       // so we render the no access fallbackText from JoinModal in case of no access
-      total={status !== "ERROR" && joinState?.requirements?.all}
+      total={status !== "NO_ACCESS" && joinState?.requirements?.all}
       current={
         status === "LOADING"
           ? joinState?.requirements?.checked
@@ -47,7 +47,7 @@ const SatisfyRequirementsJoinStep = ({
       }
       fallbackText={
         fallbackText ||
-        (status === "ERROR"
+        (status === "NO_ACCESS"
           ? "Requirements not satisfied"
           : "Preparing access check")
       }

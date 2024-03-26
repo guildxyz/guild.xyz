@@ -1,11 +1,12 @@
-import { CHAIN_CONFIG, Chain, Chains } from "chains"
 import { createStore, del, get, set } from "idb-keyval"
 import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { PublicClient, createPublicClient, http } from "viem"
-import { mainnet } from "wagmi"
+import { mainnet } from "wagmi/chains"
+import { wagmiConfig } from "wagmiConfig"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 
@@ -161,12 +162,20 @@ const fetchUnstoppableName = async (address: `0x${string}`): Promise<string> => 
 
   for (const chain of Object.keys(UNSTOPPABLE_DOMAIN_CONTRACTS)) {
     providers[chain] = createPublicClient({
-      chain: CHAIN_CONFIG[chain],
+      chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain),
       transport: http(),
     })
   }
 
   const unstoppableNames = await Promise.all(
+    /**
+     * We need to @ts-ignore this line, since we get a "Type instantiation is
+     * excessively deep and possibly infinite" error here until strictNullChecks is
+     * set to false in our tsconfig. We should set it to true & sort out the related
+     * issues in another PR.
+     */
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     Object.values(providers).map((pc) =>
       pc
         .readContract({

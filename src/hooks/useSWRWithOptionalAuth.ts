@@ -1,6 +1,6 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import useSWR, { mutate, SWRResponse, unstable_serialize } from "swr"
+import useSWR, { mutate, MutatorOptions, SWRResponse, unstable_serialize } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { useFetcherWithSign } from "utils/fetcher"
 
@@ -52,8 +52,16 @@ const useSWRWithOptionalAuth = <Data = any, Error = any>(
  * We could do a mutate(url) here as well, but I removed it as it seemed unnecessary,
  * since the user is already authenticated, when we call this.
  */
-const mutateOptionalAuthSWRKey = (url: string) =>
-  mutate(unstable_serialize([url, { method: "GET", body: {} }]))
+const mutateOptionalAuthSWRKey = <Data>(
+  url: string,
+  mutator?: (prevData: Data) => Data,
+  options?: MutatorOptions<Data>
+) =>
+  mutate<Data>(
+    unstable_serialize([url, { method: "GET", body: {} }]),
+    mutator,
+    options
+  )
 
 export { mutateOptionalAuthSWRKey }
 export default useSWRWithOptionalAuth

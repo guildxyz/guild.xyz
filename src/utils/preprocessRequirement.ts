@@ -115,7 +115,6 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   delete (processedRequirement as any).logic
   delete (processedRequirement as any).balancyDecimals
   delete (processedRequirement as any).data?.validAddresses
-  delete processedRequirement.nftRequirementType
 
   // only used on the frontend
   delete (processedRequirement as any).formFieldId

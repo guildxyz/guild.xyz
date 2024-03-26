@@ -52,6 +52,8 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
   const address = useWatch({ name: `${baseFieldPath}.address` })
   const method = useWatch({ name: `${baseFieldPath}.data.id` })
   const resultIndex = useWatch({ name: `${baseFieldPath}.data.resultIndex` })
+  const resultMatch = useWatch({ name: `${baseFieldPath}.data.resultMatch` })
+  const expectedValue = useWatch({ name: `${baseFieldPath}.data.expected` })
 
   const resetFormWithoutAddress = () => {
     setValue(`${baseFieldPath}.data.id`, "")
@@ -113,11 +115,11 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
     if (isDisabled) setValue(`${baseFieldPath}.data.resultMatch`, "=")
 
     return [
-      { label: "=", value: "=" },
-      { label: "<", value: "<", isDisabled },
-      { label: ">", value: ">", isDisabled },
-      { label: "<=", value: "<=", isDisabled },
-      { label: ">=", value: ">=", isDisabled },
+      { label: "=", value: "=", text: "equal to" },
+      { label: "<", value: "<", text: "less than", isDisabled },
+      { label: ">", value: ">", text: "greater than", isDisabled },
+      { label: "<=", value: "<=", text: "less than or equal to", isDisabled },
+      { label: ">=", value: ">=", text: "greater than or equal to", isDisabled },
     ]
   }, [outputType])
 
@@ -350,6 +352,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
       <FormControl
         isDisabled={!method}
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.expected}
+        mt="-4"
       >
         <HStack>
           <ControlledSelect
@@ -374,6 +377,13 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
             )}
           />
         </HStack>
+        {resultMatch && (
+          <FormHelperText>
+            {`Satisfied when the method result for the user is ${
+              resultMatchOptions.find((option) => option.value === resultMatch).text
+            } ${expectedValue || "the provided value"}`}
+          </FormHelperText>
+        )}
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.expected?.message}
