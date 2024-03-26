@@ -15,8 +15,17 @@ const useGuild = (guildId?: string | number) => {
     false
   )
 
-  return {
+  // TODO: remove this once we don't return trequirements from the API
+  const filteredData: Guild = {
     ...data,
+    roles: data.roles.map((role) => ({
+      ...role,
+      requirements: undefined,
+    })),
+  }
+
+  return {
+    ...filteredData,
     isDetailed: isSigned,
     isLoading,
     error,
