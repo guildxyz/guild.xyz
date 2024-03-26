@@ -33,17 +33,23 @@ const mappedChains: Array<{
   img: string | JSX.Element
   label: string
   value: Chain | "FUEL"
+  isDisabled?: boolean
+  details?: string
 }> = defaultSupportedChains
   .map((chainName: Chain) => ({
     img: CHAIN_CONFIG[chainName].iconUrl || <Icon as={Question} boxSize={5} />,
     label: CHAIN_CONFIG[chainName].name,
     value: chainName,
+    isDisabled: CHAIN_CONFIG[chainName].deprecated,
+    details: CHAIN_CONFIG[chainName].deprecated ? "Deprecated" : undefined,
   }))
   .concat([
     {
       img: FUEL_ICON,
       label: "Fuel",
       value: "FUEL" as any,
+      isDisabled: false,
+      details: undefined,
     },
   ])
 
