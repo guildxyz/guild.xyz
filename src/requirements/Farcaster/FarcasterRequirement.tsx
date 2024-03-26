@@ -4,9 +4,10 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import DataBlockWithCopy from "components/common/DataBlockWithCopy"
+import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareOut } from "phosphor-react"
-import shortenHex from "utils/shortenHex"
+import FarcasterCast from "./components/FarcasterCast"
+import useFarcasterCast from "./hooks/useFarcasterCast"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
@@ -23,6 +24,14 @@ const FarcasterRequirement = (props: RequirementProps) => {
       ? requirement.data?.id
       : undefined
   )
+
+  const debouncedHash = useDebouncedState(requirement.data?.hash)
+  const debouncedUrl = useDebouncedState(requirement.data?.url)
+  const {
+    data: cast,
+    isLoading: isCastLoading,
+    error: castError,
+  } = useFarcasterCast(debouncedHash, debouncedUrl)
 
   return (
     <Requirement
@@ -59,11 +68,16 @@ const FarcasterRequirement = (props: RequirementProps) => {
           case "FARCASTER_RECAST":
             return (
               <>
-                {`${requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"} the `}
-                <DataBlockWithCopy text={requirement.data.hash}>
-                  {shortenHex(requirement.data.hash, 3)}
-                </DataBlockWithCopy>
-                {` cast`}
+                {requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"}
+                <>
+                  {" this cast: "}
+                  <FarcasterCast
+                    size="sm"
+                    cast={cast}
+                    loading={isCastLoading}
+                    error={castError}
+                  />
+                </>
               </>
             )
           case "FARCASTER_FOLLOW_CHANNEL":
