@@ -8,24 +8,61 @@ import {
 } from "@chakra-ui/react"
 import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import useDropzone from "hooks/useDropzone"
 import { useRouter } from "next/router"
 import { File } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
+import { z } from "zod"
 
-const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
+function validateEmailAllowlist(toValidate: string[]) {
+  if (!toValidate) return
+
+  const containsEmpty = toValidate.some((address) => address === "")
+
+  if (containsEmpty) {
+    return "Field contains empty line"
+  }
+
+  const invalidEmails = toValidate.filter(
+    (address) => !z.string().email().safeParse(address).success
+  )
+
+  if (invalidEmails.length > 0) {
+    return `Field contains invalid email address: ${invalidEmails[0]}`
+  }
+}
+
+const allowListTypeOptions = [
+  {
+    label: "EVM and Fuel addresses",
+    value: "ALLOWLIST",
+  },
+  {
+    label: "Email addresses",
+    value: "ALLOWLIST_EMAIL",
+  },
+] satisfies StyledSelectProps["options"]
+
+const AllowlistForm = ({
+  baseFieldPath,
+  field,
+}: RequirementFormProps): JSX.Element => {
   const {
     setValue,
     formState: { errors },
     control,
     register,
+    resetField,
   } = useFormContext()
   const router = useRouter()
 
   const isHidden = useWatch({ name: `${baseFieldPath}.data.hideAllowlist` })
+  const isEditMode = !!field?.id
 
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -35,6 +72,8 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
     },
   })
 
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+
   const parseFile = (file: File) => {
     const fileReader = new FileReader()
 
@@ -43,7 +82,7 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
         ?.toString()
         ?.split("\n")
         ?.filter((line) => !!line)
-        ?.map((line) => line.slice(0, 42))
+        ?.map((line) => line.trim())
 
       setValue(`${baseFieldPath}.data.addresses`, lines, { shouldValidate: true })
     }
@@ -51,8 +90,30 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
     fileReader.readAsText(file)
   }
 
+  const resetFields = () => {
+    resetField(`${baseFieldPath}.data.addresses`, { defaultValue: [] })
+  }
+
   return (
     <Stack spacing={4} alignItems="start" {...getRootProps()}>
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
+        <FormLabel>Type</FormLabel>
+
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          defaultValue={"ALLOWLIST"}
+          options={allowListTypeOptions}
+          beforeOnChange={resetFields}
+          isDisabled={isEditMode}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
+      </FormControl>
+
       <FormControl isInvalid={!!fileRejections?.[0]} textAlign="left">
         <FormLabel>Upload from file</FormLabel>
 
@@ -75,21 +136,24 @@ const AllowlistForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => 
           control={control}
           name={`${baseFieldPath}.data.addresses` as const}
           rules={{
-            validate: (value_) => {
-              if (!value_) return
+            validate:
+              type === "ALLOWLIST_EMAIL"
+                ? validateEmailAllowlist
+                : (value_) => {
+                    if (!value_) return
 
-              const validAddresses = value_.filter(
-                (address) => address !== "" && isValidAddress(address)
-              )
-              // for useBalancy
-              setValue(`${baseFieldPath}.data.validAddresses`, validAddresses)
+                    const validAddresses = value_.filter(
+                      (address) => address !== "" && isValidAddress(address)
+                    )
+                    // for useBalancy
+                    setValue(`${baseFieldPath}.data.validAddresses`, validAddresses)
 
-              if (validAddresses.length !== value_.length)
-                return "Field contains invalid addresses"
+                    if (validAddresses.length !== value_.length)
+                      return "Field contains invalid addresses"
 
-              if (router.route !== "/balancy" && value_.length > 50000)
-                return `You've added ${value_.length} addresses but the maximum is 50000`
-            },
+                    if (router.route !== "/balancy" && value_.length > 50000)
+                      return `You've added ${value_.length} addresses but the maximum is 50000`
+                  },
           }}
           render={({ field: { onChange, onBlur, value: textareaValue, ref } }) => (
             <Textarea
