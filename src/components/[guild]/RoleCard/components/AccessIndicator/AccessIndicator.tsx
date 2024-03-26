@@ -10,6 +10,7 @@ import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import { useRequirementErrorConfig } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import Button from "components/common/Button"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import useMembership, {
@@ -41,10 +42,12 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const greenDividerColor = useColorModeValue("green.400", "whiteAlpha.400")
   const grayDividerColor = useColorModeValue("blackAlpha.400", "whiteAlpha.300")
 
-  const requirementsWithErrors = role?.requirements?.filter((req) => {
-    const relevantReq = reqAccesses?.find((r) => r.requirementId === req.id)
-    return !relevantReq?.access && !!relevantReq?.errorMsg
-  })
+  const { data: requirements } = useRequirements(roleId)
+  const requirementsWithErrors =
+    requirements?.filter((req) => {
+      const relevantReq = reqAccesses?.find((r) => r.requirementId === req.id)
+      return !relevantReq?.access && !!relevantReq?.errorMsg
+    }) ?? []
   const errors = useRequirementErrorConfig()
   const firstRequirementWithErrorFromConfig = requirementsWithErrors.find(
     (req) => !!errors[req.type.split("_")[0]]

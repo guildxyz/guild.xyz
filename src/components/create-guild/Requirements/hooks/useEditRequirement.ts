@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -12,7 +13,9 @@ const useEditRequirement = (
   roleId: number,
   config?: { onSuccess?: (editedRequirement: EditedRequirement) => void }
 ) => {
-  const { id: guildId, mutateGuild } = useGuild()
+  const { id: guildId } = useGuild()
+  const { mutate: mutateRequirements } = useRequirements(roleId)
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -36,26 +39,15 @@ const useEditRequirement = (
         title: "Successfully updated requirement",
       })
 
-      mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
-            if (role.id !== roleId) return role
-
-            return {
-              ...role,
-              requirements: role.requirements.map((requirement) => {
-                if (requirement.id !== editedRequirement.id) return requirement
-                // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-                const { deletedRequirements: _, ...req } = editedRequirement
-                return req
-              }),
-            }
+      mutateRequirements(
+        (prevRequirements) =>
+          prevRequirements.map((requirement) => {
+            if (requirement.id !== editedRequirement.id) return requirement
+            // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+            const { deletedRequirements: _, ...req } = editedRequirement
+            return req
           }),
-        }),
-        {
-          revalidate: false,
-        }
+        { revalidate: false }
       )
 
       config?.onSuccess?.(editedRequirement)

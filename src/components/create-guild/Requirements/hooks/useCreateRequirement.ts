@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { Requirement } from "types"
@@ -9,7 +10,8 @@ const useCreateRequirement = (
   roleId: number,
   config?: { onSuccess?: () => void }
 ) => {
-  const { id: guildId, mutateGuild } = useGuild()
+  const { id: guildId } = useGuild()
+  const { mutate: mutateRequirements } = useRequirements(roleId)
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
@@ -27,25 +29,15 @@ const useCreateRequirement = (
     Requirement & { deletedRequirements?: number[] }
   >(createRequirement, {
     onSuccess: (response) => {
-      mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
-            if (role.id !== roleId) return role
-
-            return {
-              ...role,
-              requirements: [
-                ...role.requirements?.filter((req) =>
-                  Array.isArray(response.deletedRequirements)
-                    ? !response.deletedRequirements.includes(req.id)
-                    : true
-                ),
-                response,
-              ],
-            }
-          }),
-        }),
+      mutateRequirements(
+        (prevRequirements) => [
+          ...prevRequirements.filter((req) =>
+            Array.isArray(response.deletedRequirements)
+              ? !response.deletedRequirements.includes(req.id)
+              : true
+          ),
+          response,
+        ],
         { revalidate: false }
       )
 

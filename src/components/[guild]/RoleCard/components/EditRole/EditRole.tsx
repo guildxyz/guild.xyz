@@ -40,7 +40,6 @@ import { FormProvider, useForm } from "react-hook-form"
 import { Logic, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
-import mapRequirement from "utils/mapRequirement"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import RoleGroupSelect from "./components/RoleGroupSelect"
 import useEditRole from "./hooks/useEditRole"
@@ -79,7 +78,6 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     imageUrl,
     logic,
     anyOfNum,
-    requirements,
     rolePlatforms,
     visibility,
     visibilityRoleId,
@@ -277,7 +275,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                   <RoleGroupSelect />
                 </Section>
 
-                <EditRequirements requirements={requirements.map(mapRequirement)} />
+                <EditRequirements roleId={roleId} />
               </VStack>
             </FormProvider>
           </DrawerBody>
