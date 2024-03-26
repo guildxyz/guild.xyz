@@ -1,5 +1,6 @@
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
+import { useMemo } from "react"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
@@ -16,13 +17,16 @@ const useGuild = (guildId?: string | number) => {
   )
 
   // TODO: remove this once we don't return trequirements from the API
-  const filteredData: Guild = {
-    ...data,
-    roles: data.roles.map((role) => ({
-      ...role,
-      requirements: undefined,
-    })),
-  }
+  const filteredData = useMemo<Guild>(
+    () => ({
+      ...data,
+      roles: data?.roles.map((role) => ({
+        ...role,
+        requirements: undefined,
+      })),
+    }),
+    [data]
+  )
 
   return {
     ...filteredData,
