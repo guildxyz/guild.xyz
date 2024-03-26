@@ -1,6 +1,6 @@
 import { ButtonProps, IconButton, Tooltip } from "@chakra-ui/react"
+import { addIntercomSettings } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
-import { useIntercom } from "components/_app/IntercomProvider"
 import { Flag } from "phosphor-react"
 import { useEffect } from "react"
 import useGuild from "./hooks/useGuild"
@@ -17,7 +17,6 @@ const ReportGuildButton = ({
   ...buttonProps
 }: Props): JSX.Element => {
   const { id, name } = useGuild()
-  const { addIntercomSettings } = useIntercom()
 
   useEffect(() => {
     if (!id || !name) return
