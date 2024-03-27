@@ -10,6 +10,7 @@ import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useWalletClient } from "hooks/useWalletClient"
 import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
+import { useSWRConfig } from "swr"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
@@ -40,7 +41,10 @@ type MintData = {
 
 const useMintGuildPin = () => {
   const { captureEvent } = usePostHogContext()
-  const { id, name, urlName, roles } = useGuild()
+
+  const { id, name, urlName } = useGuild()
+  const { cache } = useSWRConfig()
+
   const postHogOptions = { guild: urlName }
 
   const { mutate } = useUsersGuildPins()
@@ -189,19 +193,8 @@ const useMintGuildPin = () => {
       })
     } catch {}
 
-    // TODO: should we just remove this? The user can trigger a membership update manually anyways. Alternatively, we can get only the cached requirements from the SWR cache & if we find a guild pin req, we can trigger the update
-    // const hasGuildPinRequirement = roles
-    //   .flatMap((r) => r.requirements)
-    //   .some(
-    //     (req) =>
-    //       req.type === "ERC721" &&
-    //       req.chain === Chains[chainId] &&
-    //       req.address.toLowerCase() === contractAddress.toLowerCase()
-    //   )
-
-    // if (hasGuildPinRequirement) {
-    //   triggerMembershipUpdate()
-    // }
+    // TODO: trigger membership update only for a specific role (once Guild Pin will be a real reward)
+    triggerMembershipUpdate()
 
     toastWithTweetButton({
       title: "Successfully minted Guild Pin!",
