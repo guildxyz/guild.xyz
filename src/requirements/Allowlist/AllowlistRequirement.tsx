@@ -1,5 +1,6 @@
 import { Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
+import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -24,10 +25,14 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     <Requirement
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
-        hideAllowlist && (
-          <Text color="gray" fontSize="xs" fontWeight="normal">
-            {`Allowlisted ${isEmail ? " email" : ""} addresses are hidden`}
-          </Text>
+        isEmail ? (
+          <RequirementConnectButton />
+        ) : (
+          hideAllowlist && (
+            <Text color="gray" fontSize="xs" fontWeight="normal">
+              {`Allowlisted ${isEmail ? " email" : ""} addresses are hidden`}
+            </Text>
+          )
         )
       }
       {...rest}
