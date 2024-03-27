@@ -64,7 +64,8 @@ const ChooseTemplate = (): JSX.Element => {
               selected={!!roles.find((r) => r.name === role.name)}
               {...role}
               onClick={(templateName) => {
-                if (stepPart === 0) toggleTemplate(templateName)
+                if (stepPart === 0 && !role.defaultSelected)
+                  toggleTemplate(templateName)
               }}
               onCheckReward={(rewradIndex) => {
                 toggleReward(role.name, rewradIndex)
