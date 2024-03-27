@@ -36,7 +36,7 @@ import Members from "components/[guild]/Members"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
-import AddTokenPanel from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel"
+import AddTokenPanel from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
@@ -361,7 +361,7 @@ const GuildPage = (): JSX.Element => {
           colorScheme="dark"
         >
           <ModalOverlay />
-          <ModalContent minH="550px">
+          <ModalContent>
             <ModalCloseButton />
             <ModalHeader>
               <Stack spacing={8}>

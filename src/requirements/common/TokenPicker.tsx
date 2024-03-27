@@ -20,6 +20,7 @@ type Props = {
   chain: Chain
   fieldName: string
   isDisabled?: boolean
+  customImage?: string
 } & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -32,6 +33,7 @@ const TokenPicker = ({
   chain,
   fieldName,
   isDisabled,
+  customImage,
   ...rest
 }: Props): JSX.Element => {
   const { trigger } = useFormContext()
@@ -87,6 +89,10 @@ const TokenPicker = ({
           (tokenImage ? (
             <InputLeftElement>
               <OptionImage img={tokenImage} alt={tokenName} />
+            </InputLeftElement>
+          ) : customImage ? (
+            <InputLeftElement>
+              <OptionImage img={customImage} alt={tokenName} />
             </InputLeftElement>
           ) : (
             <InputLeftAddon px={2} maxW={14}>
