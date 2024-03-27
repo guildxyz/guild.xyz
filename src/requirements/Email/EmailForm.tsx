@@ -4,6 +4,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import AllowlistFormInputs from "requirements/Allowlist/components/AllowlistFormInputs"
 import parseFromObject from "utils/parseFromObject"
 
 const guildRequirementTypes = [
@@ -14,6 +15,10 @@ const guildRequirementTypes = [
   {
     label: "Verify an email with domain",
     value: "EMAIL_DOMAIN",
+  },
+  {
+    label: "Be on listed emails",
+    value: "ALLOWLIST_EMAIL",
   },
 ] as const
 
@@ -50,6 +55,10 @@ const EmailForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
           {parseFromObject(errors, baseFieldPath)?.type?.message}
         </FormErrorMessage>
       </FormControl>
+
+      {selected?.value === "ALLOWLIST_EMAIL" && (
+        <AllowlistFormInputs baseFieldPath={baseFieldPath} />
+      )}
 
       {selected?.value === "EMAIL_DOMAIN" && (
         <>
