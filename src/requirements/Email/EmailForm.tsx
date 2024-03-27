@@ -17,7 +17,7 @@ const guildRequirementTypes = [
     value: "EMAIL_DOMAIN",
   },
   {
-    label: "Be on listed emails",
+    label: "Be included in email allowlist",
     value: "ALLOWLIST_EMAIL",
   },
 ] as const
