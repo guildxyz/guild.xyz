@@ -108,9 +108,12 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   } = useController({
     name: `${baseFieldPath}.data.ids`,
     rules: {
-      validate: (value) =>
-        (value?.every(Boolean) && validateNftIds(value)) ||
-        "Each ID must be a valid number",
+      validate:
+        nftRequirementType === "CUSTOM_ID"
+          ? (value) =>
+              (value?.every(Boolean) && validateNftIds(value)) ||
+              "Each ID must be a valid number"
+          : undefined,
     },
   })
 
