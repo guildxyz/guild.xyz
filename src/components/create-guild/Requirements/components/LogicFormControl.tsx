@@ -15,14 +15,24 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useEffect } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
+import { Requirement } from "types"
 
-const LogicFormControl = (): JSX.Element => {
+type Props = {
+  requirements?: Requirement[]
+}
+
+const LogicFormControl = ({
+  requirements: requirementsFromProps,
+}: Props): JSX.Element => {
   const {
     resetField,
     formState: { isDirty, errors },
   } = useFormContext()
 
-  const requirements = useWatch({ name: "requirements" })
+  const requirementsFromFormContext = useWatch({ name: "requirements" })
+
+  const requirements = requirementsFromProps || requirementsFromFormContext
+
   const requirementCount = requirements?.length ?? 0
   const prevRequirementCount = usePrevious(requirementCount)
 

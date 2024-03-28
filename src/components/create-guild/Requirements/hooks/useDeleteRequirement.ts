@@ -1,5 +1,6 @@
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -10,7 +11,8 @@ const useDeleteRequirement = (
   requirementId: number,
   onSuccess?: () => void
 ) => {
-  const { mutateGuild, id } = useGuild()
+  const { id } = useGuild()
+  const { mutate: mutateRequirements } = useRequirements(roleId)
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const toast = useToast()
@@ -30,23 +32,9 @@ const useDeleteRequirement = (
       })
       onSuccess?.()
 
-      // Remove requirement from guild data
-      mutateGuild(
-        (prev) => ({
-          ...prev,
-          roles:
-            prev?.roles?.map((role) =>
-              role.id !== roleId
-                ? role
-                : {
-                    ...role,
-                    requirements:
-                      role.requirements?.filter(
-                        (requirement) => requirement.id !== requirementId
-                      ) ?? [],
-                  }
-            ) ?? [],
-        }),
+      mutateRequirements(
+        (prevRequirements) =>
+          prevRequirements.filter((requirement) => requirement.id !== requirementId),
         { revalidate: false }
       )
 

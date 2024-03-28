@@ -492,7 +492,6 @@ type SimpleRole = {
 type Role = SimpleRole & {
   groupId?: number
   members: string[]
-  requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   hiddenRequirements?: boolean
   hiddenRewards?: boolean

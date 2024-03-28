@@ -9,12 +9,16 @@ import JoinStep from "./JoinStep"
 const CompleteCaptchaJoinStep = (): JSX.Element => {
   const { isConnected } = useAccount()
 
-  const { roles } = useGuild()
-  const requirements = roles?.flatMap((role) => role.requirements) ?? []
+  const { roles, requiredPlatforms } = useGuild()
+
+  // TODO: return CAPTCHA in requiredPlatforms if we need to show it here
+  // const requirements = roles?.flatMap((role) => role.requirements) ?? []
+  const requirements = []
   const captchaRequirements = requirements
     ?.filter((req) => req.type === "CAPTCHA")
     .map((req) => req.id)
 
+  // TODO: I think this logic won't work anymore...
   const { membership } = useMembership()
   const requirementAccesses = membership?.roles?.flatMap((role) => role.requirements)
 

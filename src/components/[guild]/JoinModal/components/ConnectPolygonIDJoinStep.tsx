@@ -8,12 +8,16 @@ import JoinStep from "./JoinStep"
 const ConnectPolygonIDJoinStep = (): JSX.Element => {
   const { isConnected } = useAccount()
 
-  const { roles } = useGuild()
-  const requirements = roles?.flatMap((role) => role.requirements) ?? []
+  const { roles, requiredPlatforms } = useGuild()
+
+  // TODO: return POLYGON_ID in requiredPlatforms if we need to show it here
+  // const requirements = roles?.flatMap((role) => role.requirements) ?? []
+  const requirements = []
   const polygonIDRequirements = requirements
     ?.filter((req) => req.type === "POLYGON_ID_BASIC")
     .map((req) => req.id)
 
+  // TODO: I think this logic won't work anymore...
   const { membership } = useMembership()
   const requirementAccesses = membership?.roles?.flatMap((role) =>
     role.requirements?.filter((req) => req.access)
