@@ -59,7 +59,10 @@ export default function AllowlistFormInputs({
         ?.filter((line) => !!line)
         ?.map((line) => line.trim())
 
-      setValue(`${baseFieldPath}.data.addresses`, lines, { shouldValidate: true })
+      setValue(`${baseFieldPath}.data.addresses`, lines, {
+        shouldValidate: true,
+        shouldDirty: true,
+      })
     }
 
     fileReader.readAsText(file)
