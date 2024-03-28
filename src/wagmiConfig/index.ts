@@ -38,6 +38,7 @@ import {
   harmonyOne,
   kava,
   linea,
+  liskSepolia,
   lukso,
   mainnet,
   manta,
@@ -125,6 +126,7 @@ export const wagmiConfig = createConfig({
     goerli,
     astarZkEVM,
     coreDao,
+    liskSepolia as Chain,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -180,6 +182,7 @@ export const wagmiConfig = createConfig({
     [goerli.id]: http(),
     [astarZkEVM.id]: http(),
     [coreDao.id]: http(),
+    [liskSepolia.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR

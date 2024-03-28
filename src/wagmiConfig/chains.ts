@@ -33,6 +33,7 @@ import {
   harmonyOne,
   kava,
   linea,
+  liskSepolia,
   lukso,
   mainnet,
   manta,
@@ -579,6 +580,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/coredao.png",
     },
   },
+  LISK_SEPOLIA: {
+    ...generateChainConfig(liskSepolia as ViemChain, "/networkLogos/lisk.svg"),
+    iconUrl: "/networkLogos/lisk.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/lisk.svg",
+      dark: "/networkLogos/lisk.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -635,6 +644,7 @@ enum Chains {
   OASIS_SAPPHIRE = oasisSapphire.id,
   ASTAR_ZKEVM = astarZkEVM.id,
   CORE_DAO = coreDao.id,
+  LISK_SEPOLIA = liskSepolia.id,
 }
 
 export type Chain = keyof typeof Chains
