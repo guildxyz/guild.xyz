@@ -1,13 +1,15 @@
-import useSWRImmutable from "swr/immutable"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Requirement } from "types"
 import useGuild from "./useGuild"
 
 const useRequirements = (roleId: number) => {
   const { id: guildId } = useGuild()
 
-  // TODO: authenticated request
-  return useSWRImmutable<Requirement[]>(
-    guildId && roleId ? `/v2/guilds/${guildId}/roles/${roleId}/requirements` : null
+  return useSWRWithOptionalAuth<Requirement[]>(
+    guildId && roleId ? `/v2/guilds/${guildId}/roles/${roleId}/requirements` : null,
+    undefined,
+    false,
+    false
   )
 }
 
