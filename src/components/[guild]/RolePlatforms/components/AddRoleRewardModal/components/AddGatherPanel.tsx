@@ -1,4 +1,5 @@
 import { Button, Flex } from "@chakra-ui/react"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import GatherForm from "platforms/Gather/GatherForm"
 import useGatherAccess from "platforms/Gather/hooks/useGatherAccess"
 import {
@@ -20,6 +21,7 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<AddGatherFormType>({
     mode: "all",
   })
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const { append } = useFieldArray({
     name: "rolePlatforms",

@@ -1,3 +1,4 @@
+import { IntercomTrigger } from "components/_app/IntercomProvider"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { PlatformType } from "types"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
@@ -99,9 +100,11 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
             Messages
           </TabButton>
         ) : (
-          <TabButton data-intercom-selector="messages-tab-button">
-            Messages
-          </TabButton>
+          <>
+            <IntercomTrigger data-intercom-selector="messages-tab-button">
+              <TabButton>Messages</TabButton>
+            </IntercomTrigger>
+          </>
         ))}
     </Tabs>
   )

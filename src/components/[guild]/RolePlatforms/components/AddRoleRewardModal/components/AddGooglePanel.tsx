@@ -1,3 +1,4 @@
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
@@ -15,6 +16,7 @@ const AddGooglePanel = ({
     mode: "all",
     defaultValues,
   })
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   return (
     <FormProvider {...methods}>

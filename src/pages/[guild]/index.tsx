@@ -41,6 +41,7 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { addIntercomSettings } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -62,7 +63,6 @@ import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
-import { addIntercomSettings } from "../../components/_app/IntercomProvider"
 
 const BATCH_SIZE = 10
 

@@ -63,7 +63,8 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
             !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
               req.errorType
-            )
+            ) &&
+            !!req.errorMsg
         )
         ?.map((req) => req.errorMsg)
     ),

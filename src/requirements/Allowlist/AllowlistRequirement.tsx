@@ -1,49 +1,24 @@
-import {
-  Icon,
-  ListItem,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  UnorderedList,
-  useBreakpointValue,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Icon, Text, useDisclosure } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
-import SearchBar from "components/explorer/SearchBar"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
-import { useMemo, useState } from "react"
-import { FixedSizeList } from "react-window"
+import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 
 const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext() as Extract<
+    Schemas["Requirement"],
+    { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
+  >
 
   const { addresses, hideAllowlist } = requirement.data
 
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [search, setSearch] = useState("")
-  const itemSize = useBreakpointValue({ base: 55, md: 25 })
 
-  const filteredAllowlist = useMemo(
-    () =>
-      addresses?.filter((address) =>
-        address?.toLowerCase()?.includes(search?.toLowerCase())
-      ),
-    [search, addresses]
-  )
-
-  const Row = ({ index, style }) => (
-    <ListItem style={style} fontSize={{ base: "md" }} ml="1em" pr="1em">
-      {filteredAllowlist[index]}
-    </ListItem>
-  )
+  const isEmail = requirement.type === "ALLOWLIST_EMAIL"
 
   return (
     <Requirement
@@ -51,7 +26,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       footer={
         hideAllowlist && (
           <Text color="gray" fontSize="xs" fontWeight="normal">
-            Allowlisted addresses are hidden
+            {`Allowlisted ${isEmail ? " email" : ""} addresses are hidden`}
           </Text>
         )
       }
@@ -59,42 +34,18 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     >
       {"Be included in "}
       {hideAllowlist ? (
-        "allowlist"
+        `${isEmail ? "email " : ""}allowlist`
       ) : (
         <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
-          allowlist
+          {`${isEmail ? "email " : ""}allowlist`}
         </Button>
       )}
-      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
-        <ModalOverlay />
-        <ModalContent maxW="540px">
-          <ModalHeader>Allowlist</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <SearchBar {...{ search, setSearch }} placeholder="Search address" />
-            <UnorderedList
-              mt="6"
-              ml="2"
-              sx={{ "> div": { overflow: "hidden scroll !important" } }}
-            >
-              {filteredAllowlist?.length ? (
-                <FixedSizeList
-                  height={350}
-                  itemCount={filteredAllowlist.length}
-                  itemSize={itemSize}
-                  className="custom-scrollbar"
-                >
-                  {Row}
-                </FixedSizeList>
-              ) : (
-                <Text colorScheme={"gray"} h="350">
-                  No results
-                </Text>
-              )}
-            </UnorderedList>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+      <SearchableVirtualListModal
+        initialList={addresses}
+        isOpen={isOpen}
+        onClose={onClose}
+        title={isEmail ? "Email allowlist" : "Allowlist"}
+      />
     </Requirement>
   )
 }
