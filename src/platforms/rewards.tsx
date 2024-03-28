@@ -113,7 +113,7 @@ const rewards: Record<PlatformName, RewardData> = {
   EMAIL: {
     icon: EnvelopeSimple,
     name: "Email",
-    colorScheme: "gray",
+    colorScheme: "blue",
     gatedEntity: "email",
     isPlatform: true,
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
