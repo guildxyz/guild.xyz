@@ -31,7 +31,8 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
   }
 
   const state =
-    progress?.roleAccesses && progress?.roleAccesses?.every((role) => !role.access)
+    progress?.roleAccesses?.length > 0 &&
+    progress?.roleAccesses?.every((role) => !role.access)
       ? "NO_ACCESS"
       : progress.done
       ? "FINISHED"
