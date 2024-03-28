@@ -9,11 +9,22 @@ import {
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { DotsThreeVertical, ListDashes, Plus } from "phosphor-react"
+import CreateSnapshotModal from "./CreateSnapshotModal"
 import ViewSnapshotsModal from "./ViewSnapshotsModal"
 
 const SnapshotsMenu = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: viewIsOpen,
+    onOpen: viewOnOpen,
+    onClose: viewOnClose,
+  } = useDisclosure()
   const { textColor, buttonColorScheme } = useThemeContext()
+
+  const {
+    isOpen: createIsOpen,
+    onOpen: createOnOpen,
+    onClose: createOnClose,
+  } = useDisclosure()
 
   return (
     <>
@@ -39,14 +50,24 @@ const SnapshotsMenu = () => {
           />
         </MenuButton>
         <MenuList>
-          <MenuItem icon={<Plus />}>Create snapshot</MenuItem>
-          <MenuItem icon={<ListDashes />} onClick={onOpen}>
+          <MenuItem icon={<Plus />} onClick={createOnOpen}>
+            Create snapshot
+          </MenuItem>
+          <MenuItem icon={<ListDashes />} onClick={viewOnOpen}>
             View snapshots
           </MenuItem>
         </MenuList>
       </Menu>
 
-      <ViewSnapshotsModal onClose={onClose} isOpen={isOpen} />
+      <ViewSnapshotsModal
+        onClose={viewOnClose}
+        isOpen={viewIsOpen}
+        onCreate={() => {
+          viewOnClose()
+          setTimeout(createOnOpen, 100)
+        }}
+      />
+      <CreateSnapshotModal onClose={createOnClose} isOpen={createIsOpen} />
     </>
   )
 }
