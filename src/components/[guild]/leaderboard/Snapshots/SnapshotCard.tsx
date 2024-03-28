@@ -1,4 +1,12 @@
-import { Circle, HStack, Heading, Icon, Stack, Text } from "@chakra-ui/react"
+import {
+  Circle,
+  HStack,
+  Heading,
+  Icon,
+  Stack,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import { CaretRight } from "phosphor-react"
 import Star from "static/icons/star.svg"
@@ -11,8 +19,10 @@ type Props = {
 }
 
 const SnapshotCard = ({ image, name, date, onClick }: Props) => {
+  const { colorMode } = useColorMode()
+
   return (
-    <DisplayCard bg="whiteAlpha.200" onClick={onClick}>
+    <DisplayCard onClick={onClick}>
       <HStack gap={3}>
         <Circle
           position="relative"
