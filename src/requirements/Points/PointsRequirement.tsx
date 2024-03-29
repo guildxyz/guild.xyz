@@ -12,7 +12,7 @@ const ExternalGuildLink = ({ name, urlName }) => (
   <>
     {` in the `}
     <Skeleton display="inline-block" isLoaded={!!name}>
-      <Link colorScheme={"blue"} href={urlName}>
+      <Link colorScheme={"blue"} fontWeight={"medium"} href={urlName}>
         {name ?? "Loading..."}
       </Link>
     </Skeleton>
@@ -40,6 +40,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
         : `Be in the top ${maxAmount} members on the `}
       <Link
         colorScheme={"blue"}
+        fontWeight={"medium"}
         href={`/${urlName}/leaderboard/${pointsReward.id}`}
       >{`${pointsReward.platformGuildData.name} leaderboard`}</Link>
       {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}

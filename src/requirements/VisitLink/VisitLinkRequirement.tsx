@@ -1,4 +1,19 @@
-import { HStack, Icon, Link, LinkProps, Stack, Text } from "@chakra-ui/react"
+import {
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Box,
+  Button,
+  HStack,
+  Icon,
+  Link,
+  Stack,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Requirement, {
   RequirementProps,
@@ -13,10 +28,13 @@ import ResetRequirementButton, {
 } from "components/[guild]/Requirements/components/ResetRequirementButton"
 import ViewOriginalPopover from "components/[guild]/Requirements/components/ViewOriginalPopover"
 import useUser from "components/[guild]/hooks/useUser"
+import { Alert } from "components/common/Modal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { Link as LinkIcon } from "phosphor-react"
+import NextLink from "next/link"
+import { ArrowSquareOut, Link as LinkIcon } from "phosphor-react"
+import { useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import fetcher from "utils/fetcher"
 
@@ -30,6 +48,7 @@ const visitLink = (signedValidation: SignedValidation) =>
 
 const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
   const formContext = useFormContext()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { id: requirementId, data, roleId } = useRequirementContext()
   const { id: userId } = useUser()
@@ -46,24 +65,19 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     onError: () => showErrorToast("Something went wrong"),
   })
 
-  const [, first, , link, , second] = !!data.customName
+  const isCustomName = data?.customName !== getDefaultVisitLinkCustomName(data)
+  const [, first, , link, , second] = isCustomName
     ? VISIT_LINK_REGEX.exec(data.customName) ?? []
     : []
 
-  const linkProps: LinkProps = {
-    display: "inline",
-    colorScheme: "blue",
-    href: data.id,
-    isExternal: true,
-    onClick: () => {
-      if (!userId || hasAccess) return
+  const onVisit = () => {
+    if (!userId || hasAccess) return
 
-      onSubmit({
-        requirementId,
-        id: data.id,
-        userId,
-      })
-    },
+    onSubmit({
+      requirementId,
+      id: data.id,
+      userId,
+    })
   }
 
   const Original = () => {
@@ -72,7 +86,13 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
     return (
       <>
         {"Visit link: "}
-        <Link {...linkProps} wordBreak={wordBreak}>
+        <Link
+          href={data.id}
+          isExternal={true}
+          colorScheme="blue"
+          wordBreak={wordBreak}
+          onClick={onVisit}
+        >
           {data.id}
         </Link>
       </>
@@ -85,8 +105,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       {...props}
       showViewOriginal={false}
       footer={
-        (data?.customName !== getDefaultVisitLinkCustomName(data) ||
-          !!data?.customImage) && (
+        (isCustomName || !!data?.customImage) && (
           <ViewOriginalPopover>
             <HStack p={3} gap={4}>
               <RequirementImageCircle>
@@ -108,17 +127,83 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
         )
       }
     >
-      {!!link ? (
+      {isCustomName ? (
         <Text as="span">
           {first}
-          <Link {...linkProps}>{link}</Link>
+          <Button
+            variant="link"
+            fontWeight="medium"
+            colorScheme="blue"
+            wordBreak="break-all"
+            whiteSpace="normal"
+            textAlign="start"
+            onClick={onOpen}
+          >
+            {link}
+          </Button>
 
           {second}
         </Text>
       ) : (
         <Original />
       )}
+
+      <LeaveGuildToExternalLinkAlert
+        {...{ isOpen, onClose, onVisit }}
+        url={data.id}
+      />
     </Requirement>
+  )
+}
+
+const LeaveGuildToExternalLinkAlert = ({ isOpen, onClose, onVisit, url }) => {
+  const cancelRef = useRef(null)
+  const bg = useColorModeValue("gray.50", "blackAlpha.50")
+
+  const urlObj = new URL(url)
+  const urlArray = url.split(urlObj.hostname)
+
+  return (
+    <Alert {...{ isOpen, onClose }} leastDestructiveRef={cancelRef}>
+      <AlertDialogOverlay />
+      <AlertDialogContent>
+        <AlertDialogHeader>Leaving Guild</AlertDialogHeader>
+        <AlertDialogBody pt="0">
+          <Text mb="4">
+            This link is taking you to the following website. Please confirm it's
+            safe before continuing!
+          </Text>
+          <Box p="4" borderRadius="xl" borderWidth="1px" bg={bg}>
+            <Text fontWeight={"medium"}>
+              <Text as="span" colorScheme="gray">
+                {urlArray[0]}
+              </Text>
+              <Text as="span">{urlObj.hostname}</Text>
+              <Text as="span" colorScheme="gray">
+                {urlArray[1]}
+              </Text>
+            </Text>
+          </Box>
+        </AlertDialogBody>
+        <AlertDialogFooter display={"flex"} gap={2}>
+          <Button ref={cancelRef} onClick={onClose} variant="ghost">
+            Cancel
+          </Button>
+          <Button
+            as={NextLink}
+            href={url}
+            onClick={() => {
+              onVisit()
+              onClose()
+            }}
+            colorScheme="indigo"
+            rightIcon={<ArrowSquareOut />}
+          >
+            Visit Site
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </Alert>
   )
 }
 
