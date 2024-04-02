@@ -33,7 +33,7 @@ const SatisfyRequirementsJoinStep = ({
 
   return (
     <ProgressJoinStep
-      title="Satisfy the requirements"
+      title="Meet the requirements"
       countLabel={
         status === "LOADING" ? "requirements checked" : "requirements satisfied"
       }
