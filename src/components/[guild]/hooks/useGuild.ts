@@ -3,7 +3,7 @@ import useSWRWithOptionalAuth, {
 } from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
 import { useEffect } from "react"
-import { useSWRConfig } from "swr"
+import { unstable_serialize, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
 
@@ -49,15 +49,16 @@ const useSimpleGuild = (guildId?: string | number) => {
   const id = guildId ?? router.query.guild
 
   const { cache } = useSWRConfig()
-  const guildFromCache = cache.get(`/v2/guilds/guild-page/${id}`)
-    ?.data as SimpleGuild
+  const guildPageFromCache = cache.get(
+    unstable_serialize([`/v2/guilds/guild-page/${id}`, { method: "GET", body: {} }])
+  )?.data as SimpleGuild
 
   const { data, ...swrProps } = useSWRImmutable<SimpleGuild>(
-    id && !guildFromCache ? `/v2/guilds/${id}` : null
+    id && !guildPageFromCache ? `/v2/guilds/${id}` : null
   )
 
   return {
-    ...(guildFromCache ?? data),
+    ...(guildPageFromCache ?? data),
     ...swrProps,
   }
 }
