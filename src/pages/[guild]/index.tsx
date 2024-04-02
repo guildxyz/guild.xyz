@@ -370,6 +370,7 @@ const GuildPage = (): JSX.Element => {
             background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, #F5E4A0, ${modalBg}) border-box`}
           >
             <Image
+              priority
               src={"/img/confetti_overlay.png"}
               alt="Confetti"
               fill
@@ -400,10 +401,11 @@ const GuildPage = (): JSX.Element => {
                 my={8}
               >
                 <Image
+                  priority
                   src={"/img/cup.png"}
                   alt="Cup"
                   width={175}
-                  height={400}
+                  height={155}
                   draggable={false}
                 />
 
@@ -411,8 +413,9 @@ const GuildPage = (): JSX.Element => {
                   <Image
                     src={"/img/ribbon.svg"}
                     alt="Ribbon"
+                    priority
                     width={300}
-                    height={400}
+                    height={70}
                     draggable={false}
                   />
                   <Heading
