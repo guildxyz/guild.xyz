@@ -7,17 +7,20 @@ import { ConnectEmailButton } from "components/common/Layout/components/Account/
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import rewards from "platforms/rewards"
-import REQUIREMENTS from "requirements"
+import REQUIREMENTS, { RequirementType } from "requirements"
 import { PlatformName } from "types"
 import { useRequirementContext } from "./RequirementContext"
+
+function requirementTypeToPlatformName(type: RequirementType): PlatformName {
+  if (type === "ALLOWLIST_EMAIL") return "EMAIL"
+  if (REQUIREMENTS[type].types[0] === "TWITTER") return "TWITTER_V1"
+  return REQUIREMENTS[type].types[0] as PlatformName
+}
 
 const RequirementConnectButton = (props: ButtonProps) => {
   const { platformUsers, emails } = useUser()
   const { type, roleId, id } = useRequirementContext()
-  const platform =
-    REQUIREMENTS[type].types[0] === "TWITTER"
-      ? "TWITTER_V1"
-      : (REQUIREMENTS[type].types[0] as PlatformName)
+  const platform = requirementTypeToPlatformName(type)
 
   const { reqAccesses } = useRoleMembership(roleId)
   const { triggerMembershipUpdate } = useMembershipUpdate()
@@ -33,7 +36,7 @@ const RequirementConnectButton = (props: ButtonProps) => {
   )
 
   if (
-    type?.startsWith("EMAIL")
+    platform === "EMAIL"
       ? !emails?.pending && emails?.emailAddress
       : !isReconnection && (!platformUsers || platformFromDb)
   )
@@ -48,9 +51,8 @@ const RequirementConnectButton = (props: ButtonProps) => {
     })
   }
 
-  const ButtonComponent = type?.startsWith("EMAIL")
-    ? ConnectEmailButton
-    : ConnectRequirementPlatformButton
+  const ButtonComponent =
+    platform === "EMAIL" ? ConnectEmailButton : ConnectRequirementPlatformButton
 
   return (
     <ButtonComponent
