@@ -42,11 +42,12 @@ const DynamicAmount = () => {
 
   const [conversionLocked, setConversionLocked] = useState(false)
   const [conversionAmounts, setConversionAmounts] = useState(["1", "1"])
+  const [conversionRate, setConversionRate] = useState(1.0)
 
   const { control } = useFormContext()
 
   const chain = useWatch({ name: `chain`, control })
-  const address = useWatch({ name: `address`, control })
+  const address = useWatch({ name: `contractAddress`, control })
 
   const selectedExistingId = useWatch({
     control,
@@ -142,6 +143,19 @@ const DynamicAmount = () => {
     },
   ]
 
+  const toggleConversionLock = () => {
+    if (conversionLocked) {
+      setConversionAmounts([
+        conversionAmounts[0],
+        (Number(conversionAmounts[0]) * conversionRate).toPrecision(5).toString(),
+      ])
+      setConversionLocked(false)
+    } else {
+      setConversionRate(Number(conversionAmounts[1]) / Number(conversionAmounts[0]))
+      setConversionLocked(true)
+    }
+  }
+
   return (
     <>
       <Text colorScheme="gray" mt={-2}>
@@ -168,11 +182,11 @@ const DynamicAmount = () => {
             rounded={"full"}
             variant={"ghost"}
             aria-label="Lock/unlock conversion"
-            onClick={() => setConversionLocked(!conversionLocked)}
+            onClick={toggleConversionLock}
           ></IconButton>
         </HStack>
 
-        <HStack w={"full"} opacity={selectedPointsReward ? 1 : 0.5}>
+        <HStack w={"full"}>
           <InputGroup>
             <InputLeftElement>
               {selectedPointsReward?.platformGuildData?.imageUrl ? (
@@ -196,6 +210,7 @@ const DynamicAmount = () => {
               }
               min={0.0001}
               step={0.0001}
+              precision={4}
               onBlur={() => {
                 if (Number(conversionAmounts[0]) < 0.0001)
                   setConversionAmounts(["1", conversionAmounts[1]])
@@ -220,19 +235,32 @@ const DynamicAmount = () => {
 
             <NumberInput
               w="full"
-              value={conversionAmounts[1]}
+              value={
+                conversionLocked
+                  ? (Number(conversionAmounts[0]) * conversionRate).toPrecision(5)
+                  : conversionAmounts[1]
+              }
               onChange={(valAsString, valueAsNumber) =>
                 setConversionAmounts([conversionAmounts[0], valAsString])
               }
               min={0.0001}
               step={0.0001}
+              precision={4}
               onBlur={() => {
                 if (Number(conversionAmounts[1]) < 0.0001)
                   setConversionAmounts([conversionAmounts[0], "1"])
               }}
+              isReadOnly={conversionLocked}
             >
-              <NumberInputField pl="10" pr={0} />
-              <NumberInputStepper padding={"0 !important"}>
+              <NumberInputField
+                pl="10"
+                pr={0}
+                cursor={conversionLocked && "default"}
+              />
+              <NumberInputStepper
+                padding={"0 !important"}
+                visibility={conversionLocked ? "hidden" : "visible"}
+              >
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />
               </NumberInputStepper>

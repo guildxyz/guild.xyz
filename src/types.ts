@@ -92,6 +92,7 @@ type PlatformName =
   | "POINTS"
   | "FORM"
   | "GATHER_TOWN"
+  | "ERC20"
 
 type PlatformUserData = {
   acessToken?: string
@@ -216,6 +217,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -242,6 +246,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -267,6 +274,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -292,6 +302,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   TEXT: {
     text: string
@@ -317,6 +330,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   POAP: {
     text?: never
@@ -342,6 +358,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   FORM: {
     text?: never
@@ -367,6 +386,9 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   GATHER: {
     name: string
@@ -392,6 +414,9 @@ type PlatformGuildData = {
     fancyId?: never
     eventId?: never
     formId?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
   }
   POINTS: {
     text?: never
@@ -417,6 +442,37 @@ type PlatformGuildData = {
     gatherApiKey?: never
     gatherAffiliation?: never
     gatherRole?: never
+    poolId?: never
+    multiplier?: never
+    tokenDecimals?: never
+  }
+  ERC20: {
+    poolId: number
+    multiplier: number
+    chain: Chain
+    contractAddress: `0x${string}`
+    name: string
+    description: string
+    imageUrl: string
+    tokenDecimals: number
+    gatherSpaceId?: never
+    gatherApiKey?: never
+    gatherAffiliation?: never
+    gatherRole?: never
+    role?: never
+    text?: never
+    texts?: never
+    function?: never
+    argsToSign?: never
+    symbol?: never
+    inviteChannel?: never
+    joinButton?: never
+    needCaptcha?: never
+    mimeType?: never
+    iconLink?: never
+    fancyId?: never
+    eventId?: never
+    formId?: never
   }
 }
 
@@ -658,7 +714,9 @@ export enum PlatformType {
   "POAP" = 14,
   "FORM" = 15,
   "GATHER_TOWN" = 16,
+  "ERC20" = 17,
 }
+
 type WalletConnectConnectionData = {
   connected: boolean
   accounts: string[]

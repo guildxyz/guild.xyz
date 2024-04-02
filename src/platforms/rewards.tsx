@@ -20,6 +20,7 @@ import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
+import Token from "static/icons/token.svg"
 import XLogo from "static/icons/x.svg"
 import { GuildPlatformWithOptionalId, PlatformName, RoleFormType } from "types"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
@@ -445,6 +446,33 @@ const rewards: Record<PlatformName, RewardData> = {
       () =>
         import(
           "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGatherPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddRewardPanelLoadingSpinner,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
+      ssr: false,
+    }),
+  },
+  ERC20: {
+    icon: Token,
+    name: "Token",
+    gatedEntity: "",
+    colorScheme: "primary",
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    cardPropsHook: useGatherCardProps,
+    cardButton: GatherCardButton,
+    cardMenuComponent: GatherCardMenu,
+    RewardPreview: dynamic(() => import("platforms/components/GatherPreview"), {
+      ssr: false,
+      loading: () => <RewardPreview isLoading />,
+    }),
+    AddRewardPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
         ),
       {
         ssr: false,

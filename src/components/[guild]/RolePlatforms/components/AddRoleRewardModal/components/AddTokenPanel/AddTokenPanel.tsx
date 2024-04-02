@@ -10,21 +10,26 @@ import {
   Stepper,
   useSteps,
 } from "@chakra-ui/react"
+import { Chain } from "@guildxyz/types"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"
 
-export type AddGatherFormType = {
-  gatherApiKey: string
-  gatherSpaceId: string
-  gatherRole: string
-  gatherAffiliation: string
+export type AddTokenFormType = {
+  poolId: number
+  multiplier: number
+  chain: Chain
+  contractAddress: `0x${string}`
+  name: string
+  description: string
+  imageUrl: string
+  tokenDecimals: number
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
-  const methods = useForm<AddGatherFormType>({
+  const methods = useForm<AddTokenFormType>({
     mode: "all",
   })
 

@@ -13,13 +13,14 @@ import useTokenData from "hooks/useTokenData"
 import { Upload, X } from "phosphor-react"
 import { useState } from "react"
 import { useDropzone } from "react-dropzone"
-import { useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
+import { AddTokenFormType } from "../AddTokenPanel"
 
 const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ name: `chain` })
-  const address = useWatch({ name: `address` })
+  const address = useWatch({ name: `contractAddress` })
 
   const isContinueDisabled = !address || !chain
 
@@ -33,9 +34,11 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
+  const { setValue } = useFormContext<AddTokenFormType>()
+
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) =>
-      setCustomImage(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
     onError: () => showErrorToast("Couldn't upload image"),
   })
 
@@ -59,7 +62,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
       <Stack gap={2}>
         <TokenPicker
           chain={chain}
-          fieldName={`address`}
+          fieldName={`contractAddress`}
           rules={{ required: "This field is required" }}
           customImage={customImage}
         />
@@ -98,14 +101,6 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
                   >
                     Remove custom image
                   </Button>
-                  <Text
-                    color={"GrayText"}
-                    fontSize={"small"}
-                    textDecor="underline"
-                    onClick={() => {
-                      setCustomImage(null)
-                    }}
-                  ></Text>
                 </>
               )}
             </HStack>

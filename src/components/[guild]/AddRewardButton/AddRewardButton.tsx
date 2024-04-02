@@ -24,7 +24,7 @@ import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetReq
 import rewards from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Requirement, RoleFormType, Visibility } from "types"
+import { PlatformName, Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -164,6 +164,15 @@ const AddRewardButton = (): JSX.Element => {
 
   const rolePlatform = methods.getValues("rolePlatforms.0")
 
+  const platformSize = (platform: PlatformName) => {
+    switch (platform) {
+      case "ERC20":
+        return "xl"
+      default:
+        return "4xl"
+    }
+  }
+
   return (
     <>
       <Button
@@ -190,7 +199,7 @@ const AddRewardButton = (): JSX.Element => {
               onAddRewardModalClose()
             }
           }}
-          size={step === "HOME" ? "4xl" : "2xl"}
+          size={step === "HOME" ? platformSize(selection) : "2xl"}
           scrollBehavior="inside"
           colorScheme="dark"
         >

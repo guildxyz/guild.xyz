@@ -53,7 +53,7 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
     <>
       <Box
         maxH={64}
-        overflowY={"scroll"}
+        overflowY={"auto"}
         border={"1px"}
         borderColor={colorMode === "dark" ? "gray.600" : "gray.200"}
         rounded={"md"}

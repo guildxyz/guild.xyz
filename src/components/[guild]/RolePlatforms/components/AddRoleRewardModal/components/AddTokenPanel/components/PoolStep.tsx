@@ -22,7 +22,7 @@ import { useWatch } from "react-hook-form"
 
 const PoolStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ name: `chain` })
-  const address = useWatch({ name: `address` })
+  const address = useWatch({ name: `contractAddress` })
 
   const [skip, setSkip] = useState(false)
 
