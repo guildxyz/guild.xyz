@@ -1,5 +1,8 @@
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import useSWRWithOptionalAuth, {
+  mutateOptionalAuthSWRKey,
+} from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
+import { useEffect } from "react"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
@@ -14,6 +17,23 @@ const useGuild = (guildId?: string | number) => {
     undefined,
     false
   )
+
+  // If we fetch guild by id, we populate the urlName cache too and vice versa
+  useEffect(() => {
+    if (!data) return
+
+    if (typeof id === "string") {
+      mutateOptionalAuthSWRKey(`/v2/guilds/guild-page/${data.id}`, () => data, {
+        revalidate: false,
+      })
+    }
+
+    if (typeof id === "number") {
+      mutateOptionalAuthSWRKey(`/v2/guilds/guild-page/${data.urlName}`, () => data, {
+        revalidate: false,
+      })
+    }
+  }, [data, id])
 
   return {
     ...data,
