@@ -192,6 +192,7 @@ const LeaveGuildToExternalLinkAlert = ({ isOpen, onClose, onVisit, url }) => {
           <Button
             as={NextLink}
             href={url}
+            target="_blank"
             onClick={() => {
               onVisit()
               onClose()
