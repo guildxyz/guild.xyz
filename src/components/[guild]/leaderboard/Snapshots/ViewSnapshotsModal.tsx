@@ -30,7 +30,7 @@ type Props = {
   isOpen: boolean
 }
 
-export const MOCK_SNAPSHOT = [
+export const MOCK_SNAPSHOT_DATA = [
   {
     rank: 3,
     address: "0xaef0c7d50e8d7bd4f2d9dd57c5ee31fffb76c1f2",
@@ -50,6 +50,23 @@ export const MOCK_SNAPSHOT = [
     rank: 4,
     address: "0xd2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1",
     points: 1348,
+  },
+]
+
+export const MOCK_SNAPSHOTS = [
+  {
+    id: 1,
+    pointsId: 29598,
+    name: "Uniswap Community Boost",
+    date: "2022.05.06. 6:00 PM",
+    data: MOCK_SNAPSHOT_DATA,
+  },
+  {
+    id: 2,
+    pointsId: 29598,
+    name: "Chainlink Oracle Airdrop",
+    date: "2022.05.05. 6:00 PM",
+    data: MOCK_SNAPSHOT_DATA,
   },
 ]
 
@@ -96,21 +113,6 @@ const ViewSnapshotsModal = ({ onClose, isOpen, onCreate }: Props) => {
     (points) => points.id === router.query.pointsId
   )
 
-  const snapshots = [
-    {
-      id: 1,
-      name: "Uniswap Community Boost",
-      date: "2022.05.06. 6:00 PM",
-      data: MOCK_SNAPSHOT,
-    },
-    {
-      id: 2,
-      name: "Chainlink Oracle Airdrop",
-      date: "2022.05.05. 6:00 PM",
-      data: MOCK_SNAPSHOT,
-    },
-  ]
-
   const handleClose = () => {
     setSelectedSnapshot(null)
     onClose()
@@ -128,7 +130,7 @@ const ViewSnapshotsModal = ({ onClose, isOpen, onCreate }: Props) => {
 
               <ModalBody>
                 <Stack>
-                  {snapshots.map((snapshot) => (
+                  {MOCK_SNAPSHOTS.map((snapshot) => (
                     <SnapshotCard
                       key={snapshot.id}
                       name={snapshot.name}

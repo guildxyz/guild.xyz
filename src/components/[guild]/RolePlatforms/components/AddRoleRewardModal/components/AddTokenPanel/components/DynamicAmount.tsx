@@ -16,8 +16,11 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import CreateSnapshotModal from "components/[guild]/leaderboard/Snapshots/CreateSnapshotModal"
+import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -29,7 +32,6 @@ import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
-import ExistingPointsTypeSelect from "../../AddPointsPanel/components/ExistingPointsTypeSelect"
 
 const DynamicAmount = () => {
   const { guildPlatforms } = useGuild()
@@ -81,6 +83,8 @@ const DynamicAmount = () => {
     onError: (error) => toast({ status: "error", title: error.message }),
   })
 
+  const { onClose, onOpen, isOpen } = useDisclosure()
+
   const dynamicOptions: Option[] = [
     {
       value: SnapshotOption.GUILD_POINTS,
@@ -93,11 +97,13 @@ const DynamicAmount = () => {
         </Circle>
       ),
       children: (
-        <ExistingPointsTypeSelect
-          p={5}
-          existingPointsRewards={existingPointsRewards}
-          selectedExistingId={selectedExistingId}
-        />
+        <Box w="full" p={5}>
+          <Button w="full" boxSizing="border" onClick={onOpen}>
+            Create snapshot
+          </Button>
+
+          <CreateSnapshotModal onClose={onClose} isOpen={isOpen} />
+        </Box>
       ),
     },
     {
