@@ -5,8 +5,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import { sign } from "hooks/useSubmit"
 import { FuelSignProps, SignProps, fuelSign } from "hooks/useSubmit/useSubmit"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
-import { useWalletClient } from "hooks/useWalletClient"
-import { useChainId, usePublicClient } from "wagmi"
+import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 
 const SIG_HEADER_NAME = "x-guild-sig"
 const PARAMS_HEADER_NAME = "x-guild-params"

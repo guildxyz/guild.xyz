@@ -31,7 +31,7 @@ const ResetNewRequirementButton = ({ requirement }) => {
   }
 
   return (
-    <Button size={"sm"} onClick={onReset}>
+    <Button size={"sm"} onClick={onReset} flexShrink={0}>
       Reset to original
     </Button>
   )
@@ -59,6 +59,7 @@ const ResetExistingRequirementButton = ({ requirement }) => {
           },
         })
       }
+      flexShrink={0}
     >
       Reset to original
     </Button>

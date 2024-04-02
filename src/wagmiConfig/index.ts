@@ -2,13 +2,11 @@ import { PublicUser } from "components/[guild]/hooks/useUser"
 import {
   beraTestnet,
   bitfinityTestnet,
-  bobaAvax,
   exosama,
   neonEVM,
   oasisSapphire,
   ontology,
   palm,
-  scrollAlpha,
   taikoKatlaTestnet,
 } from "static/customChains"
 import { mutate } from "swr"
@@ -19,23 +17,24 @@ import { createConfig, type Connector } from "wagmi"
 import {
   arbitrum,
   arbitrumNova,
+  astarZkEVM,
   avalanche,
   base,
-  baseGoerli,
   baseSepolia,
   blast,
   blastSepolia,
   boba,
   bsc,
   celo,
+  coreDao,
   cronos,
   evmos,
   fantom,
   gnosis,
-  goerli,
   harmonyOne,
   kava,
   linea,
+  liskSepolia,
   lukso,
   mainnet,
   manta,
@@ -54,6 +53,7 @@ import {
   sepolia,
   shimmer,
   x1Testnet,
+  zetachain,
   zetachainAthensTestnet,
   zkSync,
   zora,
@@ -61,6 +61,15 @@ import {
 import { coinbaseWallet, injected, safe, walletConnect } from "wagmi/connectors"
 import { mock } from "wagmiConfig/mockConnector"
 import waasConnector, { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
+
+const withCustomRPC = (chain: Chain, rpcUrl: string): Chain => ({
+  ...chain,
+  rpcUrls: {
+    default: {
+      http: [rpcUrl],
+    },
+  },
+})
 
 /**
  * We should consider adding only those chains here which we actually use for
@@ -74,7 +83,6 @@ export const wagmiConfig = createConfig({
     polygonMumbai,
     polygonZkEvm,
     base as Chain,
-    baseGoerli as Chain,
     baseSepolia as Chain,
     optimism as Chain,
     arbitrum,
@@ -90,13 +98,12 @@ export const wagmiConfig = createConfig({
     metis,
     cronos,
     boba,
-    bobaAvax,
     palm,
     exosama,
-    evmos,
+    withCustomRPC(evmos, "https://evmos.lava.build"),
+    zetachain,
     zetachainAthensTestnet,
     scroll,
-    scrollAlpha,
     scrollSepolia,
     zkSync as Chain,
     zora as Chain,
@@ -118,7 +125,9 @@ export const wagmiConfig = createConfig({
     blastSepolia,
     oasisSapphire,
     sepolia,
-    goerli,
+    astarZkEVM,
+    coreDao,
+    liskSepolia as Chain,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -126,7 +135,6 @@ export const wagmiConfig = createConfig({
     [polygonMumbai.id]: http(),
     [polygonZkEvm.id]: http(),
     [base.id]: http(),
-    [baseGoerli.id]: http(),
     [baseSepolia.id]: http(),
     [optimism.id]: http(),
     [arbitrum.id]: http(),
@@ -142,13 +150,12 @@ export const wagmiConfig = createConfig({
     [metis.id]: http(),
     [cronos.id]: http(),
     [boba.id]: http(),
-    [bobaAvax.id]: http(),
     [palm.id]: http(),
     [exosama.id]: http(),
-    [evmos.id]: http("https://evmos.lava.build"),
+    [evmos.id]: http(),
+    [zetachain.id]: http(),
     [zetachainAthensTestnet.id]: http(),
     [scroll.id]: http(),
-    [scrollAlpha.id]: http(),
     [scrollSepolia.id]: http(),
     [zkSync.id]: http(),
     [zora.id]: http(),
@@ -170,7 +177,9 @@ export const wagmiConfig = createConfig({
     [blastSepolia.id]: http(),
     [oasisSapphire.id]: http(),
     [sepolia.id]: http(),
-    [goerli.id]: http(),
+    [astarZkEVM.id]: http(),
+    [coreDao.id]: http(),
+    [liskSepolia.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR

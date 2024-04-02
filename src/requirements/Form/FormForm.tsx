@@ -1,4 +1,4 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
@@ -10,7 +10,7 @@ import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const { id, guildPlatforms } = useGuild()
+  const { id, guildPlatforms, featureFlags } = useGuild()
   const formRewardIds =
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
@@ -33,15 +33,25 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
         value: form.id,
       })) ?? []
 
+  const isDisabled = !featureFlags?.includes("FORMS")
+
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
+    <FormControl
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      isDisabled={isDisabled}
+    >
       <FormLabel>Fill form:</FormLabel>
       <ControlledSelect
         name={`${baseFieldPath}.data.id`}
-        isDisabled={!forms}
+        isDisabled={!forms || isDisabled}
         isLoading={isLoading}
         options={formOptions}
       />
+      <FormHelperText>
+        {isDisabled
+          ? "This feature is coming soon, it's not available in your guild yet"
+          : "You can create new forms in the add reward menu"}
+      </FormHelperText>
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>

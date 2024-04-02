@@ -134,10 +134,7 @@ const RequirementNameEditorWrapper = ({
     mode: "all",
   })
   const requirement = useRequirementContext()
-  const {
-    type,
-    data: { customName },
-  } = requirement
+  const { type, data } = requirement
 
   const textRef = useRef<HTMLParagraphElement>(null)
   const {
@@ -153,9 +150,9 @@ const RequirementNameEditorWrapper = ({
   const { resetField } = useFormContext()
 
   const conditionallyResetToOriginal = (value) => {
-    if (value === customName || value.trim() === "") {
+    if (value === data?.customName || value.trim() === "") {
       resetField("customName", {
-        defaultValue: customName,
+        defaultValue: data?.customName,
         keepDirty: true,
       })
     }
@@ -182,7 +179,7 @@ const RequirementNameEditorWrapper = ({
           textRef={textRef}
           isLoading={isLoading}
           rightElement={rightElement}
-          defaultValue={customName}
+          defaultValue={data?.customName}
         >
           {children}
         </RequirementNameEditor>

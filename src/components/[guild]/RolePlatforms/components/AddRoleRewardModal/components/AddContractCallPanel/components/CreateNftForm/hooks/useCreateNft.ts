@@ -12,10 +12,9 @@ import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
-import { useAccount, usePublicClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
-import { useWalletClient } from "hooks/useWalletClient"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
   ContractCallSupportedChain,
