@@ -69,6 +69,7 @@ type GuildChain = {
     dark: string
   }
   etherscanApiUrl?: string
+  deprecated?: boolean
 }
 
 const generateChainConfig = (
@@ -109,6 +110,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-sepolia.etherscan.io",
   },
   GOERLI: {
+    deprecated: true,
     ...generateChainConfig(goerli, ETH_ICON),
     iconUrl: "/networkLogos/ethereum.svg",
     blockExplorerIconUrl: {
@@ -299,6 +301,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.bobascan.com",
   },
   BOBA_AVAX: {
+    deprecated: true,
     ...generateChainConfig(
       bobaAvax,
       "https://assets.coingecko.com/coins/images/20285/small/BOBA.png"
@@ -329,6 +332,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api.basescan.org",
   },
   BASE_GOERLI: {
+    deprecated: true,
     ...generateChainConfig(baseGoerli as ViemChain, ETH_ICON),
     iconUrl: "/networkLogos/base.svg",
     blockExplorerIconUrl: {
@@ -389,6 +393,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     },
   },
   SCROLL_ALPHA: {
+    deprecated: true,
     ...generateChainConfig(scrollAlpha, ETH_ICON),
     iconUrl: "/networkLogos/scroll.svg",
     blockExplorerIconUrl: {

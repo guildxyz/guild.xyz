@@ -21,7 +21,7 @@ import {
 } from "viem"
 import { useChainId, usePublicClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
-import { Chains, supportedChains } from "wagmiConfig/chains"
+import { Chains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -319,8 +319,7 @@ export const fuelSign = async ({
 
 const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
   Promise.all(
-    supportedChains.map(async (chainName) => {
-      const chain = wagmiConfig.chains.find((c) => Chains[c.id] === chainName)
+    wagmiConfig.chains.map(async (chain) => {
       const publicClient = createPublicClient({
         chain,
         transport: http(),
@@ -332,7 +331,7 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         })
         .catch(() => null)
 
-      return [chainName, bytecode && trim(bytecode) !== "0x"] as const
+      return [Chains[chain.id], bytecode && trim(bytecode) !== "0x"] as const
     })
   ).then(
     (results) =>
