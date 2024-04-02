@@ -14,6 +14,7 @@ import {
 import {
   arbitrum,
   arbitrumNova,
+  astarZkEVM,
   avalanche,
   base,
   baseGoerli,
@@ -23,6 +24,7 @@ import {
   boba,
   bsc,
   celo,
+  coreDao,
   cronos,
   evmos,
   fantom,
@@ -31,6 +33,7 @@ import {
   harmonyOne,
   kava,
   linea,
+  liskSepolia,
   lukso,
   mainnet,
   manta,
@@ -49,12 +52,12 @@ import {
   sepolia,
   shimmer,
   x1Testnet,
+  zetachain,
   zetachainAthensTestnet,
   zkSync,
   zora,
   type Chain as ViemChain,
 } from "wagmi/chains"
-
 type GuildChain = {
   id: number
   name: string
@@ -367,6 +370,17 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/evmos.svg",
     },
   },
+  ZETACHAIN: {
+    ...generateChainConfig(
+      zetachain,
+      "https://explorer.zetachain.com/img/logos/zeta-logo.svg"
+    ),
+    iconUrl: "/networkLogos/zetachain.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/zetachain.svg",
+      dark: "/networkLogos/zetachain.svg",
+    },
+  },
   ZETACHAIN_ATHENS: {
     ...generateChainConfig(
       zetachainAthensTestnet,
@@ -555,6 +569,30 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/oasis-sapphire.svg",
     },
   },
+  ASTAR_ZKEVM: {
+    ...generateChainConfig(astarZkEVM, ETH_ICON),
+    iconUrl: "/networkLogos/astar-zkevm.png",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/astar-zkevm.png",
+      dark: "/networkLogos/astar-zkevm.png",
+    },
+  },
+  CORE_DAO: {
+    ...generateChainConfig(coreDao, "/networkLogos/coredao.png"),
+    iconUrl: "/networkLogos/coredao.png",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/coredao.png",
+      dark: "/networkLogos/coredao.png",
+    },
+  },
+  LISK_SEPOLIA: {
+    ...generateChainConfig(liskSepolia as ViemChain, "/networkLogos/lisk.svg"),
+    iconUrl: "/networkLogos/lisk.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/lisk.svg",
+      dark: "/networkLogos/lisk.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -580,6 +618,7 @@ enum Chains {
   BASE_SEPOLIA = baseSepolia.id,
   EXOSAMA = exosama.id,
   EVMOS = evmos.id,
+  ZETACHAIN = zetachain.id,
   ZETACHAIN_ATHENS = zetachainAthensTestnet.id,
   SCROLL_ALPHA = scrollAlpha.id,
   SCROLL_SEPOLIA = scrollSepolia.id,
@@ -608,6 +647,9 @@ enum Chains {
   BLAST_SEPOLIA = blastSepolia.id,
   BLAST_MAINNET = blast.id,
   OASIS_SAPPHIRE = oasisSapphire.id,
+  ASTAR_ZKEVM = astarZkEVM.id,
+  CORE_DAO = coreDao.id,
+  LISK_SEPOLIA = liskSepolia.id,
 }
 
 export type Chain = keyof typeof Chains

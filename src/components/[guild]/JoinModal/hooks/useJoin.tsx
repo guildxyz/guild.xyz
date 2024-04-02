@@ -25,7 +25,10 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
   const { triggerMembershipUpdate, joinProgress, isLoading, reset } =
     useMembershipUpdate({
       onSuccess: (response) => {
-        if (response?.roleAccesses?.every((role) => !role.access)) {
+        if (
+          response?.roleAccesses?.length > 0 &&
+          response.roleAccesses.every((role) => !role.access)
+        ) {
           setIsNoAccess(true)
           return
         }
