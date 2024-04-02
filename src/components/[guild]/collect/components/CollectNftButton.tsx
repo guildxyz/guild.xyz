@@ -1,10 +1,14 @@
 import { ButtonProps } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
 import useNftBalance from "hooks/useNftBalance"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import useCollectNft from "../hooks/useCollectNft"
@@ -34,6 +38,18 @@ const CollectNftButton = ({
     loadingText: mintLoadingText,
   } = useCollectNft()
 
+  const showErrorToast = useShowErrorToast()
+  const { isMember } = useMembership()
+  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
+    useMembershipUpdate({
+      onSuccess: () => onMintSubmit(),
+      onError: (err) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: err.correlationId,
+        }),
+    })
+
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
   const { isLoading: isNftBalanceLoading } = useNftBalance({
@@ -50,7 +66,11 @@ const CollectNftButton = ({
       : undefined
 
   const isLoading =
-    isAccessLoading || isMinting || isNftDetailsLoading || isBalanceLoading
+    isAccessLoading ||
+    isMembershipUpdateLoading ||
+    isMinting ||
+    isNftDetailsLoading ||
+    isBalanceLoading
   const loadingText = isNftBalanceLoading
     ? "Checking your balance"
     : isMinting
@@ -71,7 +91,12 @@ const CollectNftButton = ({
         captureEvent("Click: CollectNftButton (GuildCheckout)", {
           guild: urlName,
         })
-        onMintSubmit()
+
+        if (isMember) {
+          onMintSubmit()
+        } else {
+          triggerMembershipUpdate()
+        }
       }}
       {...rest}
       isDisabled={isDisabled || rest?.isDisabled}
