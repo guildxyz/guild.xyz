@@ -7,6 +7,7 @@ import {
   InputLeftElement,
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
+import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Question } from "phosphor-react"
 import { useEffect } from "react"
@@ -27,6 +28,7 @@ type Props = {
   onChange?: () => void
   isDisabled?: boolean
   showDivider?: boolean
+  menuPlacement?: StyledSelectProps["menuPlacement"]
 }
 
 const mappedChains: Array<{
@@ -59,6 +61,7 @@ const ChainPicker = ({
   onChange: onChangeHandler,
   isDisabled,
   showDivider = true,
+  menuPlacement = "bottom", // auto doesn't really work for some reason...
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
 
@@ -107,7 +110,7 @@ const ChainPicker = ({
             afterOnChange={onChangeHandler}
             isDisabled={isDisabled}
             data-test="chain-picker-input"
-            menuPlacement="top"
+            menuPlacement={menuPlacement}
           />
         </InputGroup>
       </FormControl>
