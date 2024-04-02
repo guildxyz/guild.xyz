@@ -24,7 +24,6 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
 import { AnimatePresence, AnimateSharedLayout, usePresence } from "framer-motion"
-import useDebouncedState from "hooks/useDebouncedState"
 import useToast from "hooks/useToast"
 import { ArrowLeft, CaretRight } from "phosphor-react"
 import {
@@ -146,10 +145,7 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
             maxHeight={height}
             transition={`transform ${TRANSITION_DURATION_MS}ms, min-height ${TRANSITION_DURATION_MS}ms, max-height ${TRANSITION_DURATION_MS}ms`}
           >
-            <AddRequirementHome
-              ref={homeRef}
-              {...{ selectedType, setSelectedType }}
-            />
+            <AddRequirementHome ref={homeRef} {...{ setSelectedType }} />
             <AnimatePresence>
               {selectedType && (
                 <AddRequirementForm
@@ -264,95 +260,83 @@ const AddRequirementForm = forwardRef(
   }
 )
 
-const AddRequirementHome = forwardRef(
-  ({ selectedType, setSelectedType }: any, ref: any) => {
-    const [search, setSearch] = useState("")
-    const filteredIntegrations = integrations?.filter((integration) =>
-      integration.name.toLowerCase().includes(search.toLowerCase())
-    )
+const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
+  const [search, setSearch] = useState("")
+  const filteredIntegrations = integrations?.filter((integration) =>
+    integration.name.toLowerCase().includes(search.toLowerCase())
+  )
 
-    const debouncedSelectedValue = useDebouncedState(
-      selectedType,
-      TRANSITION_DURATION_MS
-    )
+  return (
+    <ModalBody ref={ref} maxHeight={HOME_MAX_HEIGHT} className="custom-scrollbar">
+      <Heading size="sm" mb="3">
+        General
+      </Heading>
+      <SimpleGrid columns={2} gap={2}>
+        {general.map((requirementButton) => (
+          <Button
+            key={requirementButton.types[0]}
+            w="full"
+            py={11}
+            onClick={() => setSelectedType(requirementButton.types[0])}
+          >
+            <VStack w="full" whiteSpace="break-spaces">
+              <Icon as={requirementButton.icon as FC} boxSize={6} />
+              <Text as="span">{requirementButton.name}</Text>
+            </VStack>
+          </Button>
+        ))}
+      </SimpleGrid>
 
-    return (
-      <ModalBody
-        ref={ref}
-        minHeight={!debouncedSelectedValue ? HOME_MAX_HEIGHT : undefined}
-        maxHeight={HOME_MAX_HEIGHT}
-        className="custom-scrollbar"
-      >
-        <Heading size="sm" mb="3">
-          General
-        </Heading>
-        <SimpleGrid columns={2} gap={2}>
-          {general.map((requirementButton) => (
-            <Button
-              key={requirementButton.types[0]}
-              w="full"
-              py={11}
-              onClick={() => setSelectedType(requirementButton.types[0])}
-            >
-              <VStack w="full" whiteSpace="break-spaces">
-                <Icon as={requirementButton.icon as FC} boxSize={6} />
-                <Text as="span">{requirementButton.name}</Text>
-              </VStack>
-            </Button>
-          ))}
-        </SimpleGrid>
+      <Heading size="sm" mb="3" mt="8">
+        Integrations
+      </Heading>
+      <Stack>
+        <SearchBar {...{ search, setSearch }} placeholder="Search integrations" />
 
-        <Heading size="sm" mb="3" mt="8">
-          Integrations
-        </Heading>
-        <Stack>
-          <SearchBar {...{ search, setSearch }} placeholder="Search integrations" />
-
-          <AnimateSharedLayout>
-            <AnimatePresence>
-              {filteredIntegrations.length ? (
-                filteredIntegrations.map((requirementButton) => (
-                  <CardMotionWrapper key={requirementButton.types[0]}>
-                    <Tooltip
-                      isDisabled={!(requirementButton as any).isDisabled}
-                      label="Temporarily unavailable"
-                      hasArrow
+        <AnimateSharedLayout>
+          <AnimatePresence>
+            {filteredIntegrations.length ? (
+              filteredIntegrations.map((requirementButton) => (
+                <CardMotionWrapper key={requirementButton.types[0]}>
+                  <Tooltip
+                    isDisabled={!(requirementButton as any).isDisabled}
+                    label="Temporarily unavailable"
+                    hasArrow
+                  >
+                    <Button
+                      w="full"
+                      py="8"
+                      px="6"
+                      leftIcon={
+                        typeof requirementButton.icon === "string" ? (
+                          <Img src={requirementButton.icon} boxSize="6" />
+                        ) : (
+                          <Icon as={requirementButton.icon} boxSize={6} />
+                        )
+                      }
+                      rightIcon={<Icon as={CaretRight} />}
+                      iconSpacing={4}
+                      onClick={() => setSelectedType(requirementButton.types[0])}
+                      isDisabled={(requirementButton as any).isDisabled}
+                      sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
                     >
-                      <Button
-                        w="full"
-                        py="8"
-                        px="6"
-                        leftIcon={
-                          typeof requirementButton.icon === "string" ? (
-                            <Img src={requirementButton.icon} boxSize="6" />
-                          ) : (
-                            <Icon as={requirementButton.icon} boxSize={6} />
-                          )
-                        }
-                        rightIcon={<Icon as={CaretRight} />}
-                        iconSpacing={4}
-                        onClick={() => setSelectedType(requirementButton.types[0])}
-                        isDisabled={(requirementButton as any).isDisabled}
-                        sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
-                      >
-                        {requirementButton.name}
-                      </Button>
-                    </Tooltip>
-                  </CardMotionWrapper>
-                ))
-              ) : (
-                <CardMotionWrapper delay={0.4}>
-                  <Text colorScheme="gray" py={4} textAlign="center">
-                    Couldn't find any integrations
-                  </Text>
+                      {requirementButton.name}
+                    </Button>
+                  </Tooltip>
                 </CardMotionWrapper>
-              )}
-            </AnimatePresence>
-          </AnimateSharedLayout>
-        </Stack>
-      </ModalBody>
-    )
-  }
-)
+              ))
+            ) : (
+              <CardMotionWrapper delay={0.4}>
+                <Text colorScheme="gray" py={4} textAlign="center">
+                  Couldn't find any integrations
+                </Text>
+              </CardMotionWrapper>
+            )}
+          </AnimatePresence>
+        </AnimateSharedLayout>
+      </Stack>
+    </ModalBody>
+  )
+})
 
 export default AddRequirement
