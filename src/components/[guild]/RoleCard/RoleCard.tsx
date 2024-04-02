@@ -150,7 +150,7 @@ const RoleCard = memo(({ role }: Props) => {
                  * Spreading inert because it's not added to @types/react yet:
                  * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
                  */
-                {...(!isOpen && { inert: "true" })}
+                {...(!isOpen && ({ inert: "true" } as any))}
               >
                 <RoleDescription
                   description={role.description}
@@ -182,7 +182,7 @@ const RoleCard = memo(({ role }: Props) => {
                        * Spreading inert because it's not added to @types/react yet:
                        * https://github.com/DefinitelyTyped/DefinitelyTyped/pull/60822
                        */
-                      {...(!isOpen && { inert: "true" })}
+                      {...(!isOpen && ({ inert: "true" } as any))}
                     >
                       <Reward
                         platform={platform}

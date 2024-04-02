@@ -65,7 +65,7 @@ const RoleRequirements = ({
      */
     <SlideFade
       in={isOpen}
-      {...(!isOpen && { inert: "true" })}
+      {...(!isOpen && ({ inert: "true" } as any))}
       style={{ width: "100%" }}
     >
       <VStack spacing="0">
