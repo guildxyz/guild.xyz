@@ -63,10 +63,10 @@ const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
             px={3}
             fontSize={"sm"}
             fontWeight={"medium"}
-          >{`Last synced all member accesses ${readableDate} ago`}</PopoverHeader>
+          >{`Last updated all member accesses ${readableDate} ago`}</PopoverHeader>
           {isSuperAdmin && (
             <PopoverFooter
-              pt={0}
+              pt={0.5}
               pb={3}
               display="flex"
               justifyContent={"flex-end"}
@@ -94,7 +94,7 @@ const SyncRoleButton = ({ roleId }) => {
     onSuccess: () => {
       toast({
         status: "success",
-        title: "Successfully moved sync job to the start of the queue",
+        title: "Successfully moved job to the start of the queue",
       })
     },
     onError: (err) => {
@@ -105,8 +105,6 @@ const SyncRoleButton = ({ roleId }) => {
   return (
     <Button
       size="sm"
-      h="7"
-      fontSize="xs"
       variant="outline"
       leftIcon={<UserSwitch />}
       borderRadius="lg"
@@ -114,7 +112,7 @@ const SyncRoleButton = ({ roleId }) => {
       onClick={onSubmit}
       isLoading={isLoading}
     >
-      Sync all member accesses
+      Update all member accesses
     </Button>
   )
 }
