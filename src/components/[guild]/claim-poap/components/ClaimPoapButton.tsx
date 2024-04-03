@@ -1,8 +1,12 @@
 import { ButtonProps } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useClaimedReward } from "../../../../hooks/useClaimedReward"
 import { RolePlatform } from "../../../../types"
@@ -31,7 +35,23 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatform.id)
 
-  const isLoading = isAccessLoading || isClaimLoading || isClaimedLoading
+  const showErrorToast = useShowErrorToast()
+  const { isMember } = useMembership()
+  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
+    useMembershipUpdate({
+      onSuccess: () => onSubmit(),
+      onError: (err) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: err.correlationId,
+        }),
+    })
+
+  const isLoading =
+    isAccessLoading ||
+    isMembershipUpdateLoading ||
+    isClaimLoading ||
+    isClaimedLoading
 
   const isDisabled = rest?.isDisabled || !rolePlatform?.capacity
 
@@ -42,13 +62,26 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
         w="full"
         isLoading={isLoading}
         colorScheme={!rest.isDisabled || claimed ? "green" : "gray"}
-        loadingText={isAccessLoading ? "Checking access" : "Claiming POAP"}
+        loadingText={
+          isAccessLoading
+            ? "Checking access"
+            : isMembershipUpdateLoading
+            ? "Checking eligibility"
+            : "Claiming POAP"
+        }
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
             guild: urlName,
           })
           onOpen()
-          if (!response) onSubmit()
+
+          if (response) return
+
+          if (isMember) {
+            onSubmit()
+          } else {
+            triggerMembershipUpdate()
+          }
         }}
         {...rest}
         isDisabled={isDisabled}

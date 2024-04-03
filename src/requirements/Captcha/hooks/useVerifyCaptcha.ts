@@ -1,4 +1,3 @@
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
@@ -11,11 +10,9 @@ const verifyCaptcha = ({ callback, token }: { callback: string; token: string })
     },
   })
 
-const useVerifyCaptcha = () => {
+const useVerifyCaptcha = (onSuccess?: () => void) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
-
-  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   return useSubmit(verifyCaptcha, {
     onError: (error) => {
@@ -24,7 +21,7 @@ const useVerifyCaptcha = () => {
       showErrorToast(correlationId ? { error: errorMsg, correlationId } : errorMsg)
     },
     onSuccess: () => {
-      triggerMembershipUpdate()
+      onSuccess?.()
       toast({
         status: "success",
         title: "Successful verification",

@@ -11,12 +11,13 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
 import { useState } from "react"
+import { useEditGuildDrawer } from "../../EditGuildDrawerContext"
 import useTransferOwnership from "./hooks/useTransferOwnership"
 
 const TransferOwnership = () => {
@@ -39,35 +40,41 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
   const { mutateGuild } = useGuild()
   const toast = useToast()
 
+  const { onClose: onEditGuildDrawerClose } = useEditGuildDrawer()
+
   const handleClose = () => {
     setNewOwner("")
+    onEditGuildDrawerClose()
     onClose()
   }
 
-  const onSuccess = (res) => {
-    toast({
-      title: "Owner successfully changed!",
-      status: "success",
-    })
-    handleClose()
-    mutateGuild(
-      (oldData) => {
-        const newAdmins = oldData.admins.map((admin) => ({
-          ...admin,
-          isOwner: admin.id === res.id,
-        }))
-        if (newAdmins.every((admin) => admin.isOwner === false)) newAdmins.push(res)
-        return {
-          ...oldData,
-          admins: newAdmins,
-        }
-      },
-      { revalidate: false }
-    )
-  }
-
   const { onSubmit, isLoading } = useTransferOwnership({
-    onSuccess,
+    onSuccess: (res) => {
+      toast({
+        title: "Owner successfully changed!",
+        status: "success",
+      })
+      mutateGuild(
+        (oldData) => {
+          const newAdmins = oldData.admins.map((admin) => ({
+            ...admin,
+            isOwner: admin.id === res.userId,
+          }))
+          if (newAdmins.every((admin) => admin.isOwner === false))
+            newAdmins.push({
+              id: res.userId,
+              address: newOwner.toLowerCase(),
+              isOwner: res.isOwner,
+            })
+          return {
+            ...oldData,
+            admins: newAdmins,
+          }
+        },
+        { revalidate: false }
+      )
+      handleClose()
+    },
   })
 
   const isValidAddress = ADDRESS_REGEX.test(newOwner)

@@ -1,4 +1,5 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import SecretTextDataForm, {
@@ -23,6 +24,7 @@ const AddSecretTextPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<SecretTextRewardForm & UniqueTextRewardForm>({
     mode: "all",
   })
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const name = useWatch({ control: methods.control, name: "name" })
   const text = useWatch({ control: methods.control, name: "text" })

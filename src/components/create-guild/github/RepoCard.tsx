@@ -37,13 +37,7 @@ const RepoCard = ({
             <VStack spacing={0} alignItems="start">
               <RepoName />
 
-              <Text
-                color="gray"
-                maxW={"3xs"}
-                textOverflow="ellipsis"
-                overflow={"hidden"}
-                whiteSpace={"nowrap"}
-              >
+              <Text color="gray" noOfLines={1}>
                 {description}
               </Text>
             </VStack>

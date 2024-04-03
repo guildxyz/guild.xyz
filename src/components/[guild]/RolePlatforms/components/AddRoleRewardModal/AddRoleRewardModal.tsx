@@ -7,8 +7,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { ArrowLeft } from "phosphor-react"
@@ -25,7 +28,16 @@ type Props = {
 const AddRoleRewardModal = ({ append }: Props) => {
   const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
+  const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
+    useAddRewardDiscardAlert()
+  const {
+    isOpen: isDiscardAlertOpen,
+    onOpen: onDiscardAlertOpen,
+    onClose: onDiscardAlertClose,
+  } = useDisclosure()
+
   const goBack = () => {
+    setIsAddRewardPanelDirty(false)
     if (step === "SELECT_ROLE") {
       setStep("HOME")
     } else {
@@ -40,7 +52,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={isAddRewardPanelDirty ? onDiscardAlertOpen : onClose}
       size="4xl"
       scrollBehavior="inside"
       colorScheme="dark"
@@ -92,6 +104,15 @@ const AddRoleRewardModal = ({ append }: Props) => {
           )}
         </ModalBody>
       </ModalContent>
+      <DiscardAlert
+        isOpen={isDiscardAlertOpen}
+        onClose={onDiscardAlertClose}
+        onDiscard={() => {
+          onClose()
+          onDiscardAlertClose()
+          setIsAddRewardPanelDirty(false)
+        }}
+      />
     </Modal>
   )
 }

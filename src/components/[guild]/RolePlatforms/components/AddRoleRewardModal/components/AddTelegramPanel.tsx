@@ -1,3 +1,4 @@
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import Button from "components/common/Button"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import { AddRewardPanelProps } from "platforms/rewards"
@@ -11,6 +12,7 @@ const AddTelegramPanel = ({ onAdd }: AddRewardPanelProps) => {
       platformGuildId: null,
     },
   })
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const platformGuildId = useWatch({
     name: "platformGuildId",

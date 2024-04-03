@@ -1,6 +1,8 @@
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import useSWRWithOptionalAuth, {
+  mutateOptionalAuthSWRKey,
+} from "hooks/useSWRWithOptionalAuth"
 import { useRouter } from "next/router"
-import { useSWRConfig } from "swr"
+import { unstable_serialize, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { Guild, SimpleGuild } from "types"
 
@@ -10,7 +12,31 @@ const useGuild = (guildId?: string | number) => {
 
   const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
     id ? `/v2/guilds/guild-page/${id}` : null,
-    undefined,
+    {
+      onSuccess: (newData) => {
+        // If we fetch guild by id, we populate the urlName cache too and vice versa
+
+        if (typeof id === "string") {
+          mutateOptionalAuthSWRKey(
+            `/v2/guilds/guild-page/${data.id}`,
+            () => newData,
+            {
+              revalidate: false,
+            }
+          )
+        }
+
+        if (typeof id === "number") {
+          mutateOptionalAuthSWRKey(
+            `/v2/guilds/guild-page/${data.urlName}`,
+            () => newData,
+            {
+              revalidate: false,
+            }
+          )
+        }
+      },
+    },
     undefined,
     false
   )
@@ -29,15 +55,16 @@ const useSimpleGuild = (guildId?: string | number) => {
   const id = guildId ?? router.query.guild
 
   const { cache } = useSWRConfig()
-  const guildFromCache = cache.get(`/v2/guilds/guild-page/${id}`)
-    ?.data as SimpleGuild
+  const guildPageFromCache = cache.get(
+    unstable_serialize([`/v2/guilds/guild-page/${id}`, { method: "GET", body: {} }])
+  )?.data as SimpleGuild
 
   const { data, ...swrProps } = useSWRImmutable<SimpleGuild>(
-    id && !guildFromCache ? `/v2/guilds/${id}` : null
+    id && !guildPageFromCache ? `/v2/guilds/${id}` : null
   )
 
   return {
-    ...(guildFromCache ?? data),
+    ...(guildPageFromCache ?? data),
     ...swrProps,
   }
 }

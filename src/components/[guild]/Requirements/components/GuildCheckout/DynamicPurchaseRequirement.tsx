@@ -1,6 +1,6 @@
-import useNonPurchasableAssets from "components/[guild]/hooks/useNonPurchasableAssets"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
+import useSWRImmutable from "swr/immutable"
 import {
   PURCHASABLE_REQUIREMENT_TYPES,
   purchaseSupportedChains,
@@ -18,7 +18,9 @@ const DynamicallyLoadedPurchaseRequirement = dynamic(
 )
 
 const DynamicPurchaseRequirement = () => {
-  const { data } = useNonPurchasableAssets()
+  const { data } = useSWRImmutable<Record<number, string[]>>(
+    "/api/nonPurchasableAssets"
+  )
 
   const requirement = useRequirementContext()
   const { isOpen } = useGuildCheckoutContext()

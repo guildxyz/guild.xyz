@@ -1,8 +1,7 @@
 import {
-  Center,
+  Box,
   Collapse,
   Divider,
-  Icon,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -10,7 +9,6 @@ import {
   ModalOverlay,
   StackProps,
   Text,
-  Tooltip,
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -21,7 +19,7 @@ import ModalButton from "components/common/ModalButton"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import dynamic from "next/dynamic"
-import { ArrowRight, LockSimple } from "phosphor-react"
+import { ArrowRight } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -128,7 +126,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
         <FormProvider {...methods}>
           <ModalHeader>Join {name}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody pt="0">
             <Collapse in={!isInDetailedProgressState}>
               <VStack {...JOIN_STEP_VSTACK_PROPS}>
                 <WalletAuthButton />
@@ -136,40 +134,31 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               </VStack>
             </Collapse>
 
-            {!isInDetailedProgressState && <Divider mb={3} />}
-
-            <SatisfyRequirementsJoinStep
-              joinState={joinProgress}
-              mb={isInDetailedProgressState ? "2.5" : "8"}
-              spacing={isLoading || hasNoAccess ? "2.5" : "2"}
-              fallbackText={
-                hasNoAccess && (
-                  <Text color="initial">
-                    {`You're not eligible with your connected accounts. `}
-                    <Button
-                      variant="link"
-                      rightIcon={<ArrowRight />}
-                      onClick={onClick}
-                      iconSpacing={1.5}
-                    >
-                      See requirements
-                    </Button>
-                  </Text>
-                )
-              }
-              RightComponent={
-                !isLoading && !hasNoAccess ? (
-                  <Tooltip
-                    hasArrow
-                    label="Connect your accounts and check access below to see if you meet the requirements the guild owner has set"
-                  >
-                    <Center w={5} h={6}>
-                      <Icon as={LockSimple} weight="bold" />
-                    </Center>
-                  </Tooltip>
-                ) : null
-              }
-            />
+            {/* wrapper box to apply the margin when the collapse is `display: none` too */}
+            <Box mb={isInDetailedProgressState ? 2.5 : 8}>
+              <Collapse in={isLoading || hasNoAccess}>
+                {!isInDetailedProgressState && <Divider mb={3} />}
+                <SatisfyRequirementsJoinStep
+                  joinState={joinProgress}
+                  spacing={2.5}
+                  fallbackText={
+                    hasNoAccess && (
+                      <Text color="initial">
+                        {`You're not eligible with your connected accounts. `}
+                        <Button
+                          variant="link"
+                          rightIcon={<ArrowRight />}
+                          onClick={onClick}
+                          iconSpacing={1.5}
+                        >
+                          See requirements
+                        </Button>
+                      </Text>
+                    )
+                  }
+                />
+              </Collapse>
+            </Box>
 
             {isInDetailedProgressState && <Divider my={2.5} />}
 
@@ -181,7 +170,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               </VStack>
             </Collapse>
 
-            <Collapse in={!isLoading}>
+            <Collapse in={!(isLoading || hasNoAccess)}>
               {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
             </Collapse>
 

@@ -1,14 +1,13 @@
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { Chains } from "wagmiConfig/chains"
-
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
+import { useSWRConfig } from "swr"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
@@ -17,6 +16,7 @@ import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 import useGuildPinFee from "./useGuildPinFee"
@@ -39,7 +39,10 @@ type MintData = {
 
 const useMintGuildPin = () => {
   const { captureEvent } = usePostHogContext()
-  const { id, name, urlName, roles } = useGuild()
+
+  const { id, name, urlName } = useGuild()
+  const { cache } = useSWRConfig()
+
   const postHogOptions = { guild: urlName }
 
   const { mutate } = useUsersGuildPins()
@@ -188,18 +191,8 @@ const useMintGuildPin = () => {
       })
     } catch {}
 
-    const hasGuildPinRequirement = roles
-      .flatMap((r) => r.requirements)
-      .some(
-        (req) =>
-          req.type === "ERC721" &&
-          req.chain === Chains[chainId] &&
-          req.address.toLowerCase() === contractAddress.toLowerCase()
-      )
-
-    if (hasGuildPinRequirement) {
-      triggerMembershipUpdate()
-    }
+    // TODO: trigger membership update only for a specific role (once Guild Pin will be a real reward)
+    triggerMembershipUpdate()
 
     toastWithTweetButton({
       title: "Successfully minted Guild Pin!",
@@ -220,7 +213,8 @@ const useMintGuildPin = () => {
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,
-          error,
+          error: prettyError,
+          originalError: error,
         })
       },
       onSuccess: () => {

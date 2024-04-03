@@ -8,7 +8,7 @@ import RequirementImageEditor from "components/[guild]/Requirements/components/R
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
-import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import useToast from "hooks/useToast"
 import { PropsWithChildren, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -54,9 +54,8 @@ const ExistingRequirementEditableCard = ({
   const showViewOriginal =
     requirement.data?.customName || requirement.data?.customImage
 
-  const { roles } = useGuild()
-  const role = roles.find((r) => r.id === requirement.roleId)
-  const isLastRequirement = role.requirements.length === 1
+  const { data: requirements } = useRequirements(requirement.roleId)
+  const isLastRequirement = requirements?.length === 1
 
   const {
     onSubmit: onDeleteRequirementSubmit,

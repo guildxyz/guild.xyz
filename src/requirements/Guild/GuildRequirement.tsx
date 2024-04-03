@@ -83,6 +83,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
                 group ? `/${group.urlName}` : ""
               }#role-${roleId}`}
               colorScheme="blue"
+              isExternal={requirement.data.guildId !== id}
             >
               {`${roleName ?? "unknown"} role`}
               {id !== requirement.data.guildId &&
@@ -133,6 +134,7 @@ const Admin = (props: RequirementProps): JSX.Element => {
 
 const GuildMember = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+  const { id } = useSimpleGuild()
   const { name, urlName, imageUrl, isLoading } = useSimpleGuild(
     requirement.data.guildId
   )
@@ -141,7 +143,11 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
     <Requirement image={imageUrl} isImageLoading={isLoading} {...props}>
       <Text as="span">{"Be a member of the "}</Text>
       <Skeleton display="inline-block" isLoaded={!isLoading}>
-        <Link href={`/${urlName ?? requirement.data.guildId}`} colorScheme="blue">
+        <Link
+          href={`/${urlName ?? requirement.data.guildId}`}
+          colorScheme="blue"
+          isExternal={requirement.data.guildId !== id}
+        >
           {` ${name ?? `#${requirement.data.guildId}`} guild`}
         </Link>
       </Skeleton>

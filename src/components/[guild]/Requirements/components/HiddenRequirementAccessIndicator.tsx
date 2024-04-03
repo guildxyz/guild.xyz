@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import RecheckAccessesButton from "components/[guild]/RecheckAccessesButton"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import Button from "components/common/Button"
 import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
@@ -45,9 +46,11 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
   const role = roles.find((r) => r.id === roleId)
   const { reqAccesses, hasRoleAccess } = useRoleMembership(roleId)
-  if (!reqAccesses) return null
 
-  const publicReqIds = role.requirements.map((req) => req.id)
+  const { data: requirements } = useRequirements(roleId)
+  const publicReqIds = requirements?.map((req) => req.id) ?? []
+
+  if (!reqAccesses) return null
 
   const hiddenReqsAccessData =
     reqAccesses?.filter(
@@ -63,7 +66,8 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
             !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
               req.errorType
-            )
+            ) &&
+            !!req.errorMsg
         )
         ?.map((req) => req.errorMsg)
     ),

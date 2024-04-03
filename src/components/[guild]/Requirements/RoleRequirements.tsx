@@ -16,6 +16,7 @@ import React, {
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
 import useGuild from "../hooks/useGuild"
+import useRequirements from "../hooks/useRequirements"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
 import AnyOfHeader from "./components/AnyOfHeader"
@@ -40,12 +41,12 @@ const RoleRequirements = ({
   initialRequirementsRef,
 }: Props) => {
   const guild = useGuild()
+  const { data = [] } = useRequirements(role.id)
 
   const requirements =
-    role.hiddenRequirements ||
-    ((role.requirements ?? []).length === 0 && !(guild as any).isFallback)
-      ? [...role.requirements, { type: "HIDDEN", roleId: role.id } as Requirement]
-      : role.requirements
+    role.hiddenRequirements || (data.length === 0 && !(guild as any).isFallback)
+      ? [...data, { type: "HIDDEN", roleId: role.id } as Requirement]
+      : data
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3
@@ -65,7 +66,7 @@ const RoleRequirements = ({
      */
     <SlideFade
       in={isOpen}
-      {...(!isOpen && { inert: "true" })}
+      {...(!isOpen && ({ inert: "true" } as any))}
       style={{ width: "100%" }}
     >
       <VStack spacing="0">

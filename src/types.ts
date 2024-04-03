@@ -150,11 +150,12 @@ type GuildBase = {
   name: string
   urlName: string
   imageUrl: string
-  roles: Array<string>
-  platforms: Array<PlatformName>
   memberCount: number
   rolesCount: number
   tags: Array<GuildTags>
+  hideFromExplorer: boolean
+  isAdmin?: boolean
+  isOwner?: boolean
 }
 
 type GuildPinConfig = {
@@ -444,7 +445,6 @@ type Requirement = {
 
   // Props used inside the forms on the UI
   formFieldId?: number
-  nftRequirementType?: string
   balancyDecimals?: number
   createdAt?: string
   updatedAt?: string
@@ -492,7 +492,6 @@ type SimpleRole = {
 type Role = SimpleRole & {
   groupId?: number
   members: string[]
-  requirements: Requirement[]
   rolePlatforms: RolePlatform[]
   hiddenRequirements?: boolean
   hiddenRewards?: boolean

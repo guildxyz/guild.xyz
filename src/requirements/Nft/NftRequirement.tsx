@@ -1,4 +1,4 @@
-import { HStack, Text } from "@chakra-ui/react"
+import { HStack, Text, useDisclosure } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import DynamicPurchaseRequirement from "components/[guild]/Requirements/components/GuildCheckout/DynamicPurchaseRequirement"
@@ -9,8 +9,11 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import DataBlock from "components/common/DataBlock"
+import { ArrowSquareOut } from "phosphor-react"
 import { Fragment } from "react"
+import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 import useSWRImmutable from "swr/immutable"
 import { Trait } from "types"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
@@ -83,6 +86,8 @@ const NftRequirement = (props: RequirementProps) => {
     (nftName || (requirement.name && requirement.name !== "-")) &&
     (nftDataLoading || nftImage)
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <Requirement
       image={
@@ -112,6 +117,8 @@ const NftRequirement = (props: RequirementProps) => {
         ? requirement.type === "ERC1155"
           ? "a(n) "
           : "the "
+        : requirement.data?.ids?.length > 0
+        ? "a(n) "
         : requirement.data?.maxAmount > 0
         ? `${requirement.data?.minAmount}-${requirement.data?.maxAmount} `
         : requirement.data?.minAmount > 1
@@ -166,6 +173,24 @@ const NftRequirement = (props: RequirementProps) => {
         <>
           {" "}
           with id <DataBlock>{requirement.data?.id}</DataBlock>
+        </>
+      ) : requirement.data?.ids?.length > 0 ? (
+        <>
+          {` with a `}
+          <Button
+            variant="link"
+            rightIcon={<ArrowSquareOut />}
+            iconSpacing={0.5}
+            onClick={onOpen}
+          >
+            specific ID
+          </Button>
+          <SearchableVirtualListModal
+            initialList={requirement.data?.ids}
+            isOpen={isOpen}
+            onClose={onClose}
+            title="Token IDs"
+          />
         </>
       ) : null}
     </Requirement>

@@ -3,7 +3,7 @@ import {
   Center,
   HStack,
   Icon,
-  Link as LinkButton,
+  Link,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -42,7 +42,7 @@ export const MintLinkModal = ({ isOpen, onClose, isLoading, error, response }) =
               <Icon as={CheckCircle} color="green.500" boxSize="16" weight="light" />
               <Box pl="6" w="calc(100% - var(--chakra-sizes-16))">
                 <Text>You can mint your POAP on the link below:</Text>
-                <LinkButton
+                <Link
                   mt={2}
                   maxW="full"
                   href={`${httpsLink}?address=${address}`}
@@ -54,7 +54,7 @@ export const MintLinkModal = ({ isOpen, onClose, isLoading, error, response }) =
                     {httpsLink}
                   </Text>
                   <Icon as={ArrowSquareOut} />
-                </LinkButton>
+                </Link>
               </Box>
             </HStack>
           ) : (

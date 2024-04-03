@@ -10,6 +10,7 @@ import useSWR from "swr"
 import { ValidationMethod } from "types"
 import {
   PublicClient,
+  UnauthorizedProviderError,
   WalletClient,
   createPublicClient,
   http,
@@ -19,7 +20,7 @@ import {
 } from "viem"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
-import { Chains, supportedChains } from "wagmiConfig/chains"
+import { Chains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -317,8 +318,7 @@ export const fuelSign = async ({
 
 const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
   Promise.all(
-    supportedChains.map(async (chainName) => {
-      const chain = wagmiConfig.chains.find((c) => Chains[c.id] === chainName)
+    wagmiConfig.chains.map(async (chain) => {
       const publicClient = createPublicClient({
         chain,
         transport: http(),
@@ -330,7 +330,7 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         })
         .catch(() => null)
 
-      return [chainName, bytecode && trim(bytecode) !== "0x"] as const
+      return [Chains[chain.id], bytecode && trim(bytecode) !== "0x"] as const
     })
   ).then(
     (results) =>
@@ -386,10 +386,19 @@ export const sign = async ({
         message: getMessage(params),
       })
     } else {
-      sig = await walletClient.signMessage({
-        account: address,
-        message: getMessage(params),
-      })
+      sig = await walletClient
+        .signMessage({
+          account: address,
+          message: getMessage(params),
+        })
+        .catch((error) => {
+          if (error instanceof UnauthorizedProviderError) {
+            throw new Error(
+              "Your wallet is not connected. It might be because your browser locked it after a period of time."
+            )
+          }
+          throw error
+        })
     }
   }
 

@@ -29,6 +29,12 @@ const DynamicConnectRequirementPlatformButton = dynamic(
   () => import("./ConnectRequirementPlatformButton")
 )
 
+const NON_CONNECTABLE_PLATFORM_ERRORS = new Set([
+  "EVM address not connected",
+  "FUEL address not connected",
+  "Email address not found, please create one.",
+])
+
 const RequirementAccessIndicator = () => {
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const { id, roleId, type, data, isNegated } = useRequirementContext()
@@ -57,7 +63,7 @@ const RequirementAccessIndicator = () => {
   if (
     (reqAccessData?.errorType === "PLATFORM_NOT_CONNECTED" ||
       reqAccessData?.errorType === "PLATFORM_CONNECT_INVALID") &&
-    reqAccessData?.errorMsg !== "EVM address not connected"
+    !NON_CONNECTABLE_PLATFORM_ERRORS.has(reqAccessData?.errorMsg ?? "")
   )
     return (
       <RequirementAccessIndicatorUI

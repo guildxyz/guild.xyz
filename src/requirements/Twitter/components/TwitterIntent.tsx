@@ -50,7 +50,7 @@ const TwitterIntent = ({
 }: PropsWithChildren<Props>) => {
   const { id: userId, platformUsers } = useUser()
   const isTwitterConnected = platformUsers?.find(
-    (pu) => pu.platformId === PlatformType.TWITTER
+    (pu) => pu.platformId === PlatformType.TWITTER_V1
   )
   const {
     type: requirementType,

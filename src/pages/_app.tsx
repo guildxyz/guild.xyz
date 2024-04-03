@@ -15,7 +15,6 @@ import { useAtomValue } from "jotai"
 import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
-import Script from "next/script"
 import { IconContext } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
@@ -76,7 +75,6 @@ const App = ({
           }
         `}
       </style>
-      <Script src="/intercom.js" strategy="lazyOnload" />
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA

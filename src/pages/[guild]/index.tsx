@@ -33,6 +33,7 @@ import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
+import { addIntercomSettings } from "components/_app/IntercomProvider"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
@@ -53,7 +54,6 @@ import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey, Visibility } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
-import { addIntercomSettings } from "../../components/_app/IntercomProvider"
 
 const BATCH_SIZE = 10
 
@@ -298,7 +298,8 @@ const GuildPage = (): JSX.Element => {
             </CollapsibleRoleSection>
           )}
         </Section>
-        {(showMembers || isAdmin) && (
+        {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
+        {isAdmin && (
           <>
             <Divider my={10} />
             <Section
@@ -321,18 +322,13 @@ const GuildPage = (): JSX.Element => {
             >
               <Box>
                 {isAdmin && <DynamicActiveStatusUpdates />}
-                {showMembers ? (
-                  <>
-                    <Members members={members} />
-                    {/* Temporary until the BE returns members again  */}
-                    <Text mt="6" colorScheme={"gray"}>
-                      <Icon as={Info} mr="2" mb="-2px" />
-                      Members are temporarily hidden, only admins are shown
-                    </Text>
-                  </>
-                ) : (
-                  <Text>Members are hidden</Text>
-                )}
+
+                <Members members={members} />
+                <Text mt="6" colorScheme={"gray"}>
+                  <Icon as={Info} mr="2" mb="-2px" />
+                  Members section is only visible to admins and is under rework,
+                  until then only admins are shown
+                </Text>
               </Box>
             </Section>
           </>

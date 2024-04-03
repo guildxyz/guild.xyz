@@ -75,7 +75,7 @@ const PurchaseRequirement = (): JSX.Element => {
           <ModalHeader>Buy requirement</ModalHeader>
           <ModalCloseButton />
 
-          <ModalBody>
+          <ModalBody pt="0" pb="8">
             <PurchasedRequirementInfo
               rightElement={
                 isValidating ? (
