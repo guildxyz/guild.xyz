@@ -12,7 +12,7 @@ const ExternalGuildLink = ({ name, urlName }) => (
   <>
     {` in the `}
     <Skeleton display="inline-block" isLoaded={!!name}>
-      <Link colorScheme={"blue"} fontWeight={"medium"} href={urlName}>
+      <Link colorScheme="blue" fontWeight="medium" href={urlName} isExternal>
         {name ?? "Loading..."}
       </Link>
     </Skeleton>

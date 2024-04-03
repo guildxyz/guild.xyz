@@ -88,7 +88,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
         {"Visit link: "}
         <Link
           href={data.id}
-          isExternal={true}
+          isExternal
           colorScheme="blue"
           wordBreak={wordBreak}
           onClick={onVisit}
