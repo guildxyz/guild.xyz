@@ -44,6 +44,9 @@ const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
 
   const { isSuperAdmin } = useUser()
 
+  /* temporarily only showing for superAdmins when lastSyncedAt is null, until we know what to communicate to admins in this case */
+  if (!lastSyncedAt && !isSuperAdmin) return null
+
   return (
     <Popover trigger="hover" placement="bottom" isLazy>
       <PopoverTrigger>
