@@ -18,6 +18,9 @@ if (typeof window !== "undefined") {
     capture_pageleave: false,
     capture_pageview: false,
 
+    // We don't record every session, but we can start recording with the `startSessionRecording` function where we actually want to save videos
+    disable_session_recording: true,
+
     persistence: "memory",
 
     // Disable in development
@@ -33,8 +36,10 @@ if (typeof window !== "undefined") {
 
 const PostHogContext = createContext<{
   captureEvent: (event: string, options?: Record<string, any>) => void
+  startSessionRecording: () => void
 }>({
   captureEvent: () => {},
+  startSessionRecording: () => {},
 })
 
 const CustomPostHogProvider = ({
@@ -73,6 +78,7 @@ const CustomPostHogProvider = ({
             ...options,
           })
         },
+        startSessionRecording: () => ph.startSessionRecording(),
       }}
     >
       {children}

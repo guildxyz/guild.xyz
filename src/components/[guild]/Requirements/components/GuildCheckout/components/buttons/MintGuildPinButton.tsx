@@ -9,7 +9,7 @@ import useGuildPinFee from "../../hooks/useGuildPinFee"
 import useMintGuildPin from "../../hooks/useMintGuildPin"
 
 const MintGuildPinButton = (): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
+  const { captureEvent, startSessionRecording } = usePostHogContext()
   const { id, urlName, guildPin } = useGuild()
 
   const { error, isInvalidImage, isTooSmallImage } = useMintGuildPinContext()
@@ -66,6 +66,7 @@ const MintGuildPinButton = (): JSX.Element => {
         captureEvent("Click: MintGuildPinButton (GuildCheckout)", {
           guild: urlName,
         })
+        startSessionRecording()
         onSubmit()
       }}
     >
