@@ -16,7 +16,7 @@ const ActiveStatusUpdates = () => {
   return (
     <Collapse in={status === "STARTED"}>
       <Card mb="5" shadow="sm" borderRadius="xl">
-        <Alert status="info" pos="relative" pb="6">
+        <Alert status="info" pos="relative">
           <AlertIcon mt="2px" boxSize="5" as={Spinner} />
           <Stack spacing={0}>
             <AlertTitle>Syncing members</AlertTitle>

@@ -9,6 +9,8 @@ type Status = {
   guildId: number
   roleIds: number[]
   done: boolean
+  totalChunks: number
+  doneChunks: number
 }
 
 type Response = Status[]
@@ -53,7 +55,7 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
     : data?.filter((job) => !!job.roleIds)
 
   return {
-    data: dataToReturn ?? [],
+    data: dataToReturn?.[0],
     status:
       dataToReturn?.length > 0
         ? dataToReturn.every((job) => job.done)
