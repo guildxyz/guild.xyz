@@ -213,7 +213,8 @@ const useMintGuildPin = () => {
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,
-          error,
+          error: prettyError,
+          originalError: error,
         })
       },
       onSuccess: () => {
