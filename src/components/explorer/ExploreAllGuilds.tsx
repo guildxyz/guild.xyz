@@ -1,9 +1,11 @@
 import {
   Center,
   Divider,
+  Icon,
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useBreakpointValue,
   useColorModeValue,
   usePrevious,
@@ -25,6 +27,7 @@ import SearchBar from "components/explorer/SearchBar"
 import useIsStuck from "hooks/useIsStuck"
 import { useQueryState } from "hooks/useQueryState"
 import useScrollEffect from "hooks/useScrollEffect"
+import { Info } from "phosphor-react"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
@@ -77,7 +80,9 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
       revalidateFirstPage: false,
     }
   )
-  const renderedGuilds = filteredGuilds?.flat()
+  const renderedGuilds = filteredGuilds
+    ?.flat()
+    .filter((guild) => search || guild.tags?.includes("VERIFIED"))
 
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
@@ -100,7 +105,12 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     <Stack spacing={{ base: 8, md: 10 }}>
       <ClientOnly>{isWeb3Connected && <Divider />}</ClientOnly>
       <Section
-        title="Explore all guilds"
+        title="Explore guilds"
+        titleRightElement={
+          <Tooltip label="Only verified guilds are shown, unless you search for something specifically">
+            <Icon as={Info} opacity={0.6} aria-label="Info icon" />
+          </Tooltip>
+        }
         ref={ref}
         id="allGuilds"
         scrollMarginTop={20}
