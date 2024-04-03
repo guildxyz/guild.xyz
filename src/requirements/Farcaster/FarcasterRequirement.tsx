@@ -6,27 +6,56 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import DataBlock from "components/common/DataBlock"
 import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareOut } from "phosphor-react"
+import REQUIREMENTS from "requirements"
 import FarcasterCast from "./components/FarcasterCast"
 import useFarcasterCast from "./hooks/useFarcasterCast"
 import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
-const FarcasterRequirement = (props: RequirementProps) => {
-  const requirement = useRequirementContext()
+const FarcasterProfile = (props: RequirementProps) => (
+  <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    Have a Farcaster profile
+  </Requirement>
+)
+
+const FarcasterFollowUser = (props: RequirementProps) => {
+  const { data, type } = useRequirementContext()
 
   const { data: farcasterUser } = useFarcasterUser(
-    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(requirement.type)
-      ? requirement.data?.id
-      : undefined
-  )
-  const { data: farcasterChannel } = useFarcasterChannel(
-    requirement.type === "FARCASTER_FOLLOW_CHANNEL"
-      ? requirement.data?.id
+    ["FARCASTER_FOLLOW", "FARCASTER_FOLLOWED_BY"].includes(type)
+      ? data?.id
       : undefined
   )
 
-  const debouncedHash = useDebouncedState(requirement.data?.hash)
-  const debouncedUrl = useDebouncedState(requirement.data?.url)
+  return (
+    <Requirement
+      image={farcasterUser?.img || "/requirementLogos/farcaster.png"}
+      {...props}
+    >
+      {type === "FARCASTER_FOLLOW" ? "Follow " : "Be followed by "}
+      <DataBlock isLoading={!farcasterUser}>
+        {farcasterUser?.label ?? "Loading..."}
+      </DataBlock>
+      {" on Farcaster"}
+    </Requirement>
+  )
+}
+
+const FarcasterTotalFollowers = (props: RequirementProps) => {
+  const { data } = useRequirementContext()
+
+  return (
+    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+      {`Have at least ${data.min} followers on Farcaster`}
+    </Requirement>
+  )
+}
+
+const FarcasterLikeRecast = (props: RequirementProps) => {
+  const { data, type } = useRequirementContext()
+
+  const debouncedHash = useDebouncedState(data?.hash)
+  const debouncedUrl = useDebouncedState(data?.url)
   const {
     data: cast,
     isLoading: isCastLoading,
@@ -34,73 +63,56 @@ const FarcasterRequirement = (props: RequirementProps) => {
   } = useFarcasterCast(debouncedHash, debouncedUrl)
 
   return (
-    <Requirement
-      image={farcasterUser?.img || "/requirementLogos/farcaster.png"}
-      {...props}
-    >
-      {(() => {
-        switch (requirement.type) {
-          case "FARCASTER_FOLLOW":
-            return (
-              <>
-                {`Follow `}
-                <DataBlock isLoading={!farcasterUser}>
-                  {farcasterUser?.label ?? "Loading..."}
-                </DataBlock>
-                {` on Farcaster`}
-              </>
-            )
-          case "FARCASTER_FOLLOWED_BY":
-            return (
-              <>
-                {`Be followed by `}
-                <DataBlock isLoading={!farcasterUser}>
-                  {farcasterUser?.label ?? "Loading..."}
-                </DataBlock>
-                {` on Farcaster`}
-              </>
-            )
-          case "FARCASTER_TOTAL_FOLLOWERS":
-            return (
-              <>{`Have at least ${requirement.data.min} followers on Farcaster`}</>
-            )
-          case "FARCASTER_LIKE":
-          case "FARCASTER_RECAST":
-            return (
-              <>
-                {requirement.type === "FARCASTER_LIKE" ? "Like" : "Recast"}
-                <>
-                  {" this cast: "}
-                  <FarcasterCast
-                    size="sm"
-                    cast={cast}
-                    loading={isCastLoading}
-                    error={castError}
-                  />
-                </>
-              </>
-            )
-          case "FARCASTER_FOLLOW_CHANNEL":
-            return (
-              <>
-                {`Follow the `}
-                <Link
-                  href={`https://warpcast.com/~/channel/${requirement.data.id}`}
-                  isExternal
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {farcasterChannel?.label ?? requirement.data.id}
-                  <Icon as={ArrowSquareOut} mx="1" />
-                </Link>
-                {` channel on Farcaster`}
-              </>
-            )
-          default:
-            return <>Have a Farcaster profile</>
-        }
-      })()}
+    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+      {type === "FARCASTER_LIKE" ? "Like" : "Recast"}
+      <>
+        {" this cast: "}
+        <FarcasterCast
+          size="sm"
+          cast={cast}
+          loading={isCastLoading}
+          error={castError}
+        />
+      </>
     </Requirement>
   )
 }
+
+const FarcasterFollowChannel = (props: RequirementProps) => {
+  const { data } = useRequirementContext()
+  const { data: farcasterChannel } = useFarcasterChannel(data?.id)
+
+  return (
+    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+      {"Follow the "}
+      <Link
+        href={`https://warpcast.com/~/channel/${data.id}`}
+        isExternal
+        colorScheme="blue"
+        fontWeight="medium"
+      >
+        {farcasterChannel?.label ?? data.id}
+        <Icon as={ArrowSquareOut} mx="1" />
+      </Link>
+      {" channel on Farcaster"}
+    </Requirement>
+  )
+}
+
+const types = {
+  FARCASTER_PROFILE: FarcasterProfile,
+  FARCASTER_FOLLOW: FarcasterFollowUser,
+  FARCASTER_FOLLOWED_BY: FarcasterFollowUser,
+  FARCASTER_TOTAL_FOLLOWERS: FarcasterTotalFollowers,
+  FARCASTER_LIKE: FarcasterLikeRecast,
+  FARCASTER_RECAST: FarcasterLikeRecast,
+  FARCASTER_FOLLOW_CHANNEL: FarcasterFollowChannel,
+}
+
+const FarcasterRequirement = (props: RequirementProps) => {
+  const { type } = useRequirementContext()
+  const Component = types[type]
+  return <Component {...props} />
+}
+
 export default FarcasterRequirement
