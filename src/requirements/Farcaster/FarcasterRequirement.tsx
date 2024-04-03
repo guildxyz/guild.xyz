@@ -4,7 +4,6 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareOut } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import FarcasterCast from "./components/FarcasterCast"
@@ -54,13 +53,11 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
 const FarcasterLikeRecast = (props: RequirementProps) => {
   const { data, type } = useRequirementContext()
 
-  const debouncedHash = useDebouncedState(data?.hash)
-  const debouncedUrl = useDebouncedState(data?.url)
   const {
     data: cast,
     isLoading: isCastLoading,
     error: castError,
-  } = useFarcasterCast(debouncedHash, debouncedUrl)
+  } = useFarcasterCast(data?.hash, data?.url)
 
   return (
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
