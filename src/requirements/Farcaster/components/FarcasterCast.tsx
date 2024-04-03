@@ -10,7 +10,13 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { CaretRight, Chat, Heart, ShareNetwork, WarningCircle } from "phosphor-react"
+import {
+  ArrowSquareOut,
+  Chat,
+  Heart,
+  ShareNetwork,
+  WarningCircle,
+} from "phosphor-react"
 import { PropsWithChildren } from "react"
 import FarcasterCastSmall from "./FarcasterCastSmall"
 
@@ -112,7 +118,7 @@ const FarcasterCast = ({
         <Stat icon={ShareNetwork} value={cast.recasts} />
         <Stat icon={Chat} value={cast.replies} />
       </HStack>
-      <Icon as={CaretRight} />
+      <Icon as={ArrowSquareOut} />
     </CastWrapper>
   )
 }
