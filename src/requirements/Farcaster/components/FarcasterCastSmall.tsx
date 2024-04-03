@@ -62,7 +62,7 @@ const FarcasterCastSmall = ({
                   {" "}
                   <ShareNetwork weight="fill" size={10} />
                   <Text fontSize={"xs"} fontWeight={"bold"}>
-                    {cast.likes}
+                    {cast.recasts}
                   </Text>{" "}
                 </HStack>
                 <HStack gap={0.5}>
