@@ -55,7 +55,7 @@ const ExistingRequirementEditableCard = ({
     requirement.data?.customName || requirement.data?.customImage
 
   const { data: requirements } = useRequirements(requirement.roleId)
-  const isLastRequirement = requirements.length === 1
+  const isLastRequirement = requirements?.length === 1
 
   const {
     onSubmit: onDeleteRequirementSubmit,
