@@ -41,12 +41,11 @@ const RoleRequirements = ({
   initialRequirementsRef,
 }: Props) => {
   const guild = useGuild()
-  const { data } = useRequirements(role.id)
+  const { data = [] } = useRequirements(role.id)
 
   const requirements =
-    role.hiddenRequirements ||
-    ((data ?? []).length === 0 && !(guild as any).isFallback)
-      ? [...(data ?? []), { type: "HIDDEN", roleId: role.id } as Requirement]
+    role.hiddenRequirements || (data.length === 0 && !(guild as any).isFallback)
+      ? [...data, { type: "HIDDEN", roleId: role.id } as Requirement]
       : data
 
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
