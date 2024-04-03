@@ -19,7 +19,7 @@ const EditRequirements = ({ roleId }: Props) => {
   const logic = useWatch({ name: "logic" })
   const freeEntry = requirements.some(({ type }) => type === "FREE")
 
-  const mappedRequirements = requirements.map(mapRequirement)
+  const mappedRequirements = requirements?.map(mapRequirement)
 
   return (
     <Stack spacing="5" w="full">
