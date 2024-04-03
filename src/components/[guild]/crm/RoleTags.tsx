@@ -22,6 +22,7 @@ import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
 import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
 import useGuild from "../hooks/useGuild"
+import useRequirements from "../hooks/useRequirements"
 import RoleTag from "../RoleTag"
 import { CrmRole, Member } from "./useMembers"
 
@@ -147,9 +148,11 @@ const CrmRoleTag = forwardRef<RoleTagProps, "span">(
     const { roles } = useGuild()
     const role = roles.find((r) => r.id === roleId)
 
+    const { data: requirements } = useRequirements(role?.id)
+
     if (!role) return null
 
-    const amount = role.requirements.length === 1 ? amountProp : undefined
+    const amount = requirements?.length === 1 ? amountProp : undefined
 
     return (
       <RoleTag
