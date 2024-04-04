@@ -85,7 +85,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const onSetOrder = (value) => {
     setOrder(value)
     window.scrollTo({
-      top: window.scrollY + ref.current.getBoundingClientRect().top - 25,
+      top: window.scrollY + ref.current.getBoundingClientRect().top - 20,
       behavior: "smooth",
     })
   }
