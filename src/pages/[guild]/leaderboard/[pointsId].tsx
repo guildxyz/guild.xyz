@@ -148,11 +148,7 @@ const Leaderboard = () => {
           />
         )}
 
-        {airDropActive && (
-          <>
-            <LeaderboardAirdropCard />
-          </>
-        )}
+        {airDropActive && <LeaderboardAirdropCard />}
 
         <Section
           ref={wrapperRef}

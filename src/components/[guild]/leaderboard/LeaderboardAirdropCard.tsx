@@ -31,7 +31,6 @@ const LeaderboardAirdropCard = () => {
     <Card
       border={"2px solid transparent"}
       height={100}
-      overflow="hidden"
       position={"relative"}
       display="flex"
       flexDirection="row"
@@ -65,15 +64,6 @@ const LeaderboardAirdropCard = () => {
         zIndex: "0",
       }}
     >
-      {/* <Image priority
-                src={"/img/confetti_overlay.png"}
-                alt="Confetti"
-                width={300}
-                height={50}
-                draggable={false}
-                style={{ position: 'absolute', top: '0', left: '-30px' }}
-            /> */}
-
       <HStack
         spacing={1}
         pl={{ base: "85px", sm: "120px" }}
@@ -138,7 +128,6 @@ const LeaderboardAirdropCard = () => {
           flexShrink={0}
           colorScheme="primary"
           ml="auto"
-          px={8}
         >
           Claim
         </Button>
