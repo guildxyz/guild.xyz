@@ -1,19 +1,30 @@
+import { useEffect } from "react"
+import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 
 const BASE_URL =
   "https://api.neynar.com/v2/farcaster/cast?api_key=NEYNAR_API_DOCS&identifier="
 
-const useFarcasterCast = (hash?: string, url?: string) => {
-  const isHashValid = ADDRESS_REGEX.test(hash)
-  const isUrlValid = url?.startsWith("https://warpcast.com/")
+const useFarcasterCast = (hashOrUrl: string) => {
+  const isHash = ADDRESS_REGEX.test(hashOrUrl)
+  const isUrl = hashOrUrl?.startsWith("https://warpcast.com/")
 
-  const fetchUrl = hash
-    ? `${BASE_URL}${hash}&type=hash`
-    : `${BASE_URL}${url}&type=url`
+  const fetchUrl = `${BASE_URL}${hashOrUrl}&type=${isHash ? "hash" : "url"}`
   const { data, isLoading, error } = useSWRImmutable(
-    (hash && isHashValid) || (url && isUrlValid) ? fetchUrl : null
+    isHash || isUrl ? fetchUrl : null
   )
+
+  const { cache } = useSWRConfig()
+
+  // If we fetched data by url, we populate the hash cache too
+  useEffect(() => {
+    if (!isUrl || !data?.cast?.hash) return
+    cache.set(`${BASE_URL}${data.cast.hash}&type=hash`, {
+      data,
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hashOrUrl, isUrl, data?.cast?.hash])
 
   return {
     isLoading: isLoading,

@@ -57,7 +57,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
     data: cast,
     isLoading: isCastLoading,
     error: castError,
-  } = useFarcasterCast(data?.hash, data?.url)
+  } = useFarcasterCast(data?.hash)
 
   return (
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
