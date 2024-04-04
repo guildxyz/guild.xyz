@@ -24,6 +24,7 @@ import rewards from "platforms/rewards"
 import { ComponentType, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformName, RequirementType } from "types"
+import { useAccount } from "wagmi"
 import ConnectPlatform from "./components/ConnectPlatform"
 import ShareSocialsCheckbox from "./components/ShareSocialsCheckbox"
 import WalletAuthButton from "./components/WalletAuthButton"
@@ -51,11 +52,13 @@ const JOIN_STEP_VSTACK_PROPS: StackProps = {
 const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
   CAPTCHA: dynamic(() => import("./components/CompleteCaptchaJoinStep")),
+  EMAIL: dynamic(() => import("./components/ConnectEmailJoinStep")),
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
   const { name, requiredPlatforms, featureFlags } = useGuild()
+  const { connector } = useAccount()
 
   const methods = useForm({
     mode: "all",
@@ -68,6 +71,9 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
     if (platform in customJoinStep) {
+      // don't show email in case of google login, cause we already know it in that case and show that on the completed login button
+      if (platform === "EMAIL" && connector?.id === "coinbaseWalletSDK") return null
+
       const ConnectComponent = customJoinStep[platform]
       return <ConnectComponent key={platform} />
     }

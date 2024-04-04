@@ -3,17 +3,21 @@ import Button from "components/common/Button"
 import React, { PropsWithChildren } from "react"
 import JoinStepIndicator from "./JoinStepIndicator"
 
-type Props = {
+type JoinStepUIProps = {
   title: string
   titleRightElement?: JSX.Element
-  buttonLabel: string | JSX.Element
   isRequired?: boolean
+  isDone: boolean
+}
+
+type JoinStepProps = {
+  buttonLabel: string | JSX.Element
   isDisabled?: string
   icon: JSX.Element
   colorScheme: string
-  isDone: boolean
   addonButton?: JSX.Element
-} & Omit<ButtonProps, "isDisabled">
+} & JoinStepUIProps &
+  Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
   title,
@@ -26,25 +30,12 @@ const JoinStep = ({
   addonButton,
   children,
   ...buttonProps
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<JoinStepProps>) => {
   const ButtonWrapper = addonButton ? ButtonGroup : React.Fragment
   const buttonWrapperProps = addonButton ? { isAttached: true } : {}
 
   return (
-    <HStack>
-      <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
-
-      <HStack w="full">
-        <Text fontWeight="bold" noOfLines={1}>
-          {title}
-          {isRequired && (
-            <Text as="span" color="red.300">
-              {` *`}
-            </Text>
-          )}
-        </Text>
-        {titleRightElement}
-      </HStack>
+    <JoinStepUI {...{ isDone, title, titleRightElement, isRequired }}>
       <ButtonWrapper {...buttonWrapperProps}>
         <Tooltip
           isDisabled={!buttonProps.isDisabled}
@@ -67,9 +58,35 @@ const JoinStep = ({
 
         {addonButton}
       </ButtonWrapper>
+
       {children}
-    </HStack>
+    </JoinStepUI>
   )
 }
+
+export const JoinStepUI = ({
+  isDone,
+  title,
+  isRequired,
+  titleRightElement,
+  children,
+}: PropsWithChildren<JoinStepUIProps>) => (
+  <HStack>
+    <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
+
+    <HStack w="full">
+      <Text fontWeight="bold" noOfLines={1}>
+        {title}
+        {isRequired && (
+          <Text as="span" color="red.300">
+            {` *`}
+          </Text>
+        )}
+      </Text>
+      {titleRightElement}
+    </HStack>
+    {children}
+  </HStack>
+)
 
 export default JoinStep
