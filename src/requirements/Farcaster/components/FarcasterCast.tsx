@@ -43,7 +43,6 @@ const FarcasterCast = ({
   error: boolean
   size?: string
 }) => {
-  const bg = useColorModeValue("gray.50", "blackAlpha.200")
   const bgHover = useColorModeValue("gray.100", "blackAlpha.300")
 
   const url = `https://warpcast.com/${cast?.username}/${cast?.hash}`
