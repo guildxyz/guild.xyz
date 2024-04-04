@@ -19,13 +19,13 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Image from "next/image"
 import { Clock } from "phosphor-react"
-import { useThemeContext } from "../ThemeContext"
 
 const LeaderboardAirdropCard = () => {
   const { colorMode } = useColorMode()
   const modalBg = colorMode === "dark" ? "var(--chakra-colors-gray-700)" : "#FFFFFF"
-  const { textColor } = useThemeContext()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
+
+  const gradientColor = colorMode === "dark" ? "#705E47" : "#F6EBBA"
 
   return (
     <Card
@@ -56,7 +56,7 @@ const LeaderboardAirdropCard = () => {
         bottom: 0,
         left: 0,
         right: 0,
-        bg: `url('/img/confetti_overlay.png'), linear-gradient(to right, #705E47, transparent)`,
+        bg: `url('/img/confetti_overlay.png'), linear-gradient(to right, ${gradientColor}, transparent)`,
         bgSize: "250px",
         bgRepeat: "no-repeat",
         bgPosition: "top 0px left -20px",
@@ -104,9 +104,9 @@ const LeaderboardAirdropCard = () => {
             <Heading
               fontSize={{ base: "large", sm: "x-large" }}
               fontFamily="display"
-              color={textColor}
               mt={0}
               mb={"4px"}
+              color={colorMode === "light" && "#C0946B"}
             >
               5 UNI
             </Heading>
