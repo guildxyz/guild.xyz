@@ -1,21 +1,9 @@
-import {
-  Collapse,
-  FormControl,
-  FormLabel,
-  HStack,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Spinner,
-  Text,
-} from "@chakra-ui/react"
-import Button from "components/common/Button"
+import { Collapse, FormControl, FormLabel, Input } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useEffect, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useEffect } from "react"
+import { useController, useForm } from "react-hook-form"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
-import parseFromObject from "utils/parseFromObject"
 import useFarcasterCast from "../hooks/useFarcasterCast"
 import FarcasterCast from "./FarcasterCast"
 
@@ -23,118 +11,65 @@ type Props = {
   baseFieldPath: string
 }
 
+const URL_REGEX = /^https:\/\/(.)+\.(.)+$/
+
 const FarcasterCastHash = ({ baseFieldPath }: Props) => {
   const {
-    register,
-    setValue,
-    clearErrors,
-    formState: { errors },
-  } = useFormContext()
+    field: { onChange: onHashChange, value: hash },
+  } = useController({
+    name: `${baseFieldPath}.data.hash`,
+    rules: {
+      required: true,
+    },
+  })
 
-  const hash = useWatch({ name: `${baseFieldPath}.data.hash` })
-  const debouncedHash = useDebouncedState(hash)
+  /**
+   * Handling the combined URL & hash input in a separate form, so we can easily
+   * valide the input
+   */
+  const urlOrHashForm = useForm<{ urlOrHash: string }>({
+    mode: "all",
+  })
 
-  const [url, setUrl] = useState("")
-  const debouncedUrl = useDebouncedState(url)
+  const urlOrHashField = useController({
+    control: urlOrHashForm.control,
+    name: "urlOrHash",
+    defaultValue: hash ?? "",
+    rules: {
+      required: "This field is required.",
+      validate: (value) => {
+        if (ADDRESS_REGEX.test(value) || URL_REGEX.test(value)) return true
+        return "Please provide a valid Warpcast URL or hash"
+      },
+    },
+  })
 
-  const {
-    data: castByHash,
-    isLoading: isCastByHashLoading,
-    error: castByHashError,
-  } = useFarcasterCast(debouncedHash)
-  const {
-    data: castByUrl,
-    isLoading: isCastByUrlLoading,
-    error: castByUrlError,
-  } = useFarcasterCast(debouncedUrl)
+  const debouncedUrlOrHash = useDebouncedState(urlOrHashField.field.value)
+
+  const { data, isLoading, error } = useFarcasterCast(debouncedUrlOrHash)
 
   useEffect(() => {
-    if (!castByUrl?.hash) return
-    setValue(`${baseFieldPath}.data.hash`, castByUrl.hash)
-  }, [baseFieldPath, castByUrl?.hash, setValue])
-
-  const [showUrlInput, setShowUrlInput] = useState(hash?.length > 0 ? false : true)
-
-  const toggleUrlOrHash = () => {
-    setShowUrlInput((prev) => !prev)
-    setValue(`${baseFieldPath}.data.hash`, "")
-    clearErrors(`${baseFieldPath}.data.hash`)
-  }
+    if (hash === data?.hash) return
+    onHashChange(data?.hash)
+  }, [hash, onHashChange, data?.hash])
 
   return (
     <>
-      <FormControl
-        isRequired
-        isInvalid={
-          showUrlInput
-            ? !!castByUrlError
-            : !!parseFromObject(errors, baseFieldPath)?.data?.hash
-        }
-      >
-        <HStack justifyContent="space-between">
-          <FormLabel>{showUrlInput ? "Cast URL:" : "Cast hash:"}</FormLabel>
+      <FormControl isRequired isInvalid={urlOrHashField.fieldState.invalid}>
+        <FormLabel>Cast URL or hash:</FormLabel>
 
-          <Button
-            size="xs"
-            variant="ghost"
-            borderRadius="lg"
-            onClick={toggleUrlOrHash}
-          >
-            <Text colorScheme={"gray"}>
-              {showUrlInput ? "Paste hash" : "Paste URL"}
-            </Text>
-          </Button>
-        </HStack>
-
-        {showUrlInput ? (
-          <InputGroup>
-            <Input
-              onChange={(e) => {
-                const newValue = e.target.value
-                if (!/^https:\/\/(.)+\.(.)+$/.test(newValue)) return
-                setUrl(newValue)
-
-                if (!newValue.includes(debouncedHash?.slice(0, 8)))
-                  setValue(`${baseFieldPath}.data.hash`, "")
-              }}
-            />
-            {isCastByUrlLoading && (
-              <InputRightElement>
-                <Spinner size="sm" />
-              </InputRightElement>
-            )}
-          </InputGroup>
-        ) : (
-          <Input
-            {...register(`${baseFieldPath}.data.hash`, {
-              required: "This field is required.",
-              pattern: {
-                value: ADDRESS_REGEX,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal hash.",
-              },
-            })}
-          />
-        )}
+        <Input {...urlOrHashField.field} />
 
         <FormErrorMessage>
-          {showUrlInput && castByUrlError
-            ? "Couldn't fetch cast"
-            : parseFromObject(errors, baseFieldPath)?.data?.hash?.message}
+          {urlOrHashField.fieldState.error?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <Collapse
-        in={!!castByHash || !!isCastByHashLoading || !!castByHashError}
-        style={{ width: "100%" }}
-      >
-        <FarcasterCast
-          cast={castByHash}
-          loading={isCastByHashLoading}
-          error={!!castByHashError}
-        />
+      <Collapse in={data || isLoading || error} style={{ width: "100%" }}>
+        <FarcasterCast cast={data} loading={isLoading} error={!!error} />
       </Collapse>
     </>
   )
 }
+
 export default FarcasterCastHash
