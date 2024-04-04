@@ -13,7 +13,12 @@ import { forwardRef } from "react"
 import { GuildBase } from "types"
 
 const useYourGuilds = () =>
-  useSWRWithOptionalAuth<GuildBase[]>(`/v2/guilds`, undefined, false, true)
+  useSWRWithOptionalAuth<GuildBase[]>(
+    `/v2/guilds?yours=true`,
+    undefined,
+    false,
+    true
+  )
 
 const YourGuilds = forwardRef((_, ref: any) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()

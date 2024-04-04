@@ -11,6 +11,7 @@ import {
   usePrevious,
   VStack,
 } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
 import {
   TABS_HEIGHT,
   TABS_HEIGHT_SM,
@@ -31,10 +32,39 @@ import { Info } from "phosphor-react"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
 
 type Props = {
   guildsInitial: GuildBase[]
+}
+
+const useExploreGuilds = (query, guildsInitial) => {
+  const fetcherWithSign = useFetcherWithSign()
+  const { isSuperAdmin } = useUser()
+
+  const options = {
+    fallbackData: guildsInitial,
+    dedupingInterval: 60000, // one minute
+    revalidateFirstPage: false,
+  }
+
+  // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
+  return useSWRInfinite(
+    (pageIndex, previousPageData) => {
+      if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
+        return null
+
+      const url = `/v2/guilds?${query}&limit=${BATCH_SIZE}&offset=${
+        pageIndex * BATCH_SIZE
+      }`
+
+      if (isSuperAdmin) return [url, { method: "GET", body: {} }]
+      return url
+    },
+    isSuperAdmin ? fetcherWithSign : (options as any),
+    isSuperAdmin ? options : null
+  )
 }
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
@@ -69,20 +99,9 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     data: filteredGuilds,
     setSize,
     isValidating,
-  } = useSWRInfinite(
-    (pageIndex, previousPageData) =>
-      Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
-        ? null
-        : `/v2/guilds?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
-    {
-      fallbackData: guildsInitial,
-      dedupingInterval: 60000, // one minute
-      revalidateFirstPage: false,
-    }
-  )
-  const renderedGuilds = filteredGuilds
-    ?.flat()
-    .filter((guild) => search || guild.tags?.includes("VERIFIED"))
+  } = useExploreGuilds(query, guildsInitial)
+
+  const renderedGuilds = filteredGuilds?.flat()
 
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
