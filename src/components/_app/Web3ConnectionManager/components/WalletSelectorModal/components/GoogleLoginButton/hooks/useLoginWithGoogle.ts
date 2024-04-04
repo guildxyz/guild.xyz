@@ -168,6 +168,7 @@ const useLoginWithGoogle = () => {
         },
         platformName: "GOOGLE",
         authData,
+        disconnectFromExistingUser: true,
       })
 
       if (!isNew) {
