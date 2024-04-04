@@ -7,6 +7,7 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useState } from "react"
+import { mutate } from "swr"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { useConnect } from "wagmi"
 import {
@@ -152,16 +153,23 @@ const useLoginWithGoogle = () => {
         address: walletClient.account.address,
       }
 
+      let userId: number
+
       const keyPair = !!addressLinkParams?.userId
         ? await onLinkAddress({ ...addressLinkParams, signProps }).then(
             (result) => result?.keyPair
           )
         : await onSetKeypairSubmit({
             signProps,
-          }).then((result) => result?.keyPair)
+          }).then((result) => {
+            if (result?.user) {
+              userId = result.user?.id
+            }
+            return result?.keyPair
+          })
 
       // 4) Try to connect Google account
-      await onConnectGoogleSubmit({
+      const platformUser = await onConnectGoogleSubmit({
         signOptions: {
           keyPair: keyPair.keyPair,
           ...signProps,
@@ -170,6 +178,17 @@ const useLoginWithGoogle = () => {
         authData,
         disconnectFromExistingUser: true,
       })
+
+      if (userId && platformUser) {
+        await mutate(
+          [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
+          (prev) => ({
+            ...prev,
+            platformUsers: [...(prev?.platformUsers ?? []), platformUser],
+          }),
+          { revalidate: false }
+        )
+      }
 
       if (!isNew) {
         await connectAsync({ connector: cwaasConnector })
