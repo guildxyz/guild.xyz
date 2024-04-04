@@ -16,6 +16,7 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useUser from "components/[guild]/hooks/useUser"
+import LeaderboardAirdropCard from "components/[guild]/leaderboard/LeaderboardAirdropCard"
 import LeaderboardPointsSelector from "components/[guild]/leaderboard/LeaderboardPointsSelector"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
@@ -46,6 +47,8 @@ const Leaderboard = () => {
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
   const { isAdmin } = useGuildPermission()
+
+  const airDropActive = true
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId
@@ -132,7 +135,7 @@ const Leaderboard = () => {
         }
       />
       <Stack spacing={10}>
-        {userData && (
+        {!airDropActive && userData && (
           <LeaderboardUserCard
             address={
               userData.address ??
@@ -143,6 +146,12 @@ const Leaderboard = () => {
             isCurrentUser
             tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
           />
+        )}
+
+        {airDropActive && (
+          <>
+            <LeaderboardAirdropCard />
+          </>
         )}
 
         <Section
