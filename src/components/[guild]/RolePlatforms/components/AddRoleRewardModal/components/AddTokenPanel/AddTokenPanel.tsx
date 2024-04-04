@@ -1,5 +1,6 @@
 import {
   Box,
+  Collapse,
   Step,
   StepIcon,
   StepIndicator,
@@ -12,6 +13,7 @@ import {
 } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
 import { AddRewardPanelProps } from "platforms/rewards"
+import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
@@ -46,6 +48,20 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const color = "primary.500"
 
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const collapseAndExecute = (callback: Function) => {
+    setIsCollapsed(true)
+    setTimeout(() => {
+      callback()
+      setTimeout(() => setIsCollapsed(false), 100)
+    }, 250)
+  }
+
+  const stepTo = (index: number) => {
+    activeStep > index && collapseAndExecute(() => setActiveStep(index))
+  }
+
   return (
     <FormProvider {...methods}>
       <Stepper
@@ -56,11 +72,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         w="full"
       >
         {steps.map((step, index) => (
-          <Step
-            key={index}
-            style={{ width: "100%" }}
-            onClick={activeStep > index ? () => setActiveStep(index) : null}
-          >
+          <Step key={index} style={{ width: "100%" }} onClick={() => stepTo(index)}>
             <StepIndicator
               {...{
                 bg: activeStep > index ? `${color} !important` : undefined,
@@ -81,7 +93,15 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
               _hover={activeStep > index && { cursor: "pointer" }}
             >
               <StepTitle>{step.title}</StepTitle>
-              {activeStep === index && <step.content onContinue={goToNext} />}
+              <Collapse
+                in={!isCollapsed}
+                animateOpacity
+                transition={{ enter: { duration: 0.25 }, exit: { duration: 0.25 } }}
+              >
+                {activeStep === index && (
+                  <step.content onContinue={() => collapseAndExecute(goToNext)} />
+                )}
+              </Collapse>
             </Box>
 
             <StepSeparator />

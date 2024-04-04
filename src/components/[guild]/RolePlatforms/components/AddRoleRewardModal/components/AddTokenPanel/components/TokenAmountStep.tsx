@@ -1,4 +1,4 @@
-import { Flex, Stack } from "@chakra-ui/react"
+import { Collapse, Flex, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useState } from "react"
@@ -19,22 +19,37 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     },
   ]
 
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const collapseAndExecute = (callback: Function) => {
+    setIsCollapsed(true)
+    setTimeout(() => {
+      callback()
+      setTimeout(() => setIsCollapsed(false), 100)
+    }, 100)
+  }
+
   return (
     <Stack gap={5}>
       <RadioButtonGroup
         options={options}
         value={value}
-        onChange={(newValue) => setValue(newValue)}
+        onChange={(newValue) => collapseAndExecute(() => setValue(newValue))}
         chakraStyles={{
           spacing: 1.5,
           mt: 2,
           size: "sm",
           width: "full",
           colorScheme: "primary",
+          mb: -2,
         }}
       />
 
-      {value === "static" ? <StaticAmount /> : <DynamicAmount />}
+      <Collapse startingHeight={150} animateOpacity in={!isCollapsed}>
+        <Stack gap={5}>
+          {value === "static" ? <StaticAmount /> : <DynamicAmount />}
+        </Stack>
+      </Collapse>
 
       <Flex justifyContent={"flex-end"} mt="4">
         <Button isDisabled={false} colorScheme="primary" onClick={onContinue}>

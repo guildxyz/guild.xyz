@@ -28,9 +28,7 @@ const StaticAmount = () => {
 
   return (
     <>
-      <Text colorScheme="gray" mt={-2}>
-        Each user can claim the same amount of tokens.
-      </Text>
+      <Text colorScheme="gray">Each user can claim the same amount of tokens.</Text>
 
       <Stack gap={0}>
         <FormLabel>Amount to reward</FormLabel>

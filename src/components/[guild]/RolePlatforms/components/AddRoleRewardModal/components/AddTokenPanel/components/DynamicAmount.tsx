@@ -153,7 +153,7 @@ const DynamicAmount = () => {
 
   return (
     <>
-      <Text colorScheme="gray" mt={-2}>
+      <Text colorScheme="gray">
         Claimable amount is dynamic based on a snapshot containing each eligible user
         paired with a number.
       </Text>
