@@ -3,10 +3,25 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useFetcherWithSign } from "utils/fetcher"
 
-const useTransferOwnership = ({ onSuccess }) => {
+type DataType = {
+  to: string
+}
+
+type ResponseType = {
+  guildId: number
+  userId: number
+  isOwner: boolean
+}
+
+const useTransferOwnership = ({
+  onSuccess,
+}: {
+  onSuccess: (res: ResponseType) => void
+}) => {
   const { id } = useGuild()
   const fetcherWithSign = useFetcherWithSign()
-  const submit = async ({ to }: { to: string }) =>
+
+  const submit = async ({ to }: DataType) =>
     fetcherWithSign([
       `/v2/guilds/${id}/admins/${to}`,
       {
@@ -19,9 +34,10 @@ const useTransferOwnership = ({ onSuccess }) => {
         },
       },
     ])
+
   const showErrorToast = useShowErrorToast()
 
-  return useSubmit(submit, {
+  return useSubmit<DataType, ResponseType>(submit, {
     onSuccess: (res) => {
       if (onSuccess) onSuccess(res)
     },

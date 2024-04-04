@@ -4,9 +4,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useMembership, {
-  useRoleMembership,
-} from "components/explorer/hooks/useMembership"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAccount, useBalance } from "wagmi"
@@ -39,7 +37,6 @@ const CollectNftButton = ({
   } = useCollectNft()
 
   const showErrorToast = useShowErrorToast()
-  const { isMember } = useMembership()
   const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
     useMembershipUpdate({
       onSuccess: () => onMintSubmit(),
@@ -92,10 +89,12 @@ const CollectNftButton = ({
           guild: urlName,
         })
 
-        if (isMember) {
+        if (hasRoleAccess) {
           onMintSubmit()
         } else {
-          triggerMembershipUpdate()
+          triggerMembershipUpdate({
+            roleIds: [roleId],
+          })
         }
       }}
       {...rest}

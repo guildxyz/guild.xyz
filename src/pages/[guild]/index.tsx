@@ -298,7 +298,8 @@ const GuildPage = (): JSX.Element => {
             </CollapsibleRoleSection>
           )}
         </Section>
-        {(showMembers || isAdmin) && (
+        {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
+        {isAdmin && (
           <>
             <Divider my={10} />
             <Section
@@ -321,18 +322,13 @@ const GuildPage = (): JSX.Element => {
             >
               <Box>
                 {isAdmin && <DynamicActiveStatusUpdates />}
-                {showMembers ? (
-                  <>
-                    <Members members={members} />
-                    {/* Temporary until the BE returns members again  */}
-                    <Text mt="6" colorScheme={"gray"}>
-                      <Icon as={Info} mr="2" mb="-2px" />
-                      Members are temporarily hidden, only admins are shown
-                    </Text>
-                  </>
-                ) : (
-                  <Text>Members are hidden</Text>
-                )}
+
+                <Members members={members} />
+                <Text mt="6" colorScheme={"gray"}>
+                  <Icon as={Info} mr="2" mb="-2px" />
+                  Members section is only visible to admins and is under rework,
+                  until then only admins are shown
+                </Text>
               </Box>
             </Section>
           </>

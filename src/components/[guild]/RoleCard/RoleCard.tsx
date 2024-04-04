@@ -24,6 +24,7 @@ import useGuildPermission from "../hooks/useGuildPermission"
 import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
 import MemberCount from "./components/MemberCount"
+import MemberCountLastSyncTooltip from "./components/MemberCountLastSyncTooltip"
 import Reward, { RewardIcon } from "./components/Reward"
 import RoleDescription from "./components/RoleDescription"
 import RoleHeader from "./components/RoleHeader"
@@ -38,7 +39,7 @@ type Props = {
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
 const RoleCard = memo(({ role }: Props) => {
-  const { guildPlatforms, isDetailed } = useGuild()
+  const { guildPlatforms, isDetailed, featureFlags } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
   const { hasRoleAccess } = useRoleMembership(role.id)
@@ -76,6 +77,7 @@ const RoleCard = memo(({ role }: Props) => {
   return (
     <Card
       id={`role-${role.id}`}
+      role="group"
       scrollMarginTop={"calc(var(--chakra-space-12) + var(--chakra-space-6))"}
       // scrollMarginTop doesn't work with overflow="hidden"
       overflow="clip"
@@ -132,7 +134,14 @@ const RoleCard = memo(({ role }: Props) => {
                 sx={!isOpen && { display: "none" }}
                 animation="slideFadeIn .2s"
               >
-                <MemberCount memberCount={role.memberCount} roleId={role.id} />
+                <MemberCount memberCount={role.memberCount} roleId={role.id}>
+                  {isAdmin && featureFlags.includes("PERIODIC_SYNC") && (
+                    <MemberCountLastSyncTooltip
+                      lastSyncedAt={role.lastSyncedAt}
+                      roleId={role.id}
+                    />
+                  )}
+                </MemberCount>
 
                 {isAdmin && isDetailed && (
                   <>

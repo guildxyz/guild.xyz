@@ -3,9 +3,7 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useMembership, {
-  useRoleMembership,
-} from "components/explorer/hooks/useMembership"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
 import { useClaimedReward } from "../../../../hooks/useClaimedReward"
@@ -36,7 +34,6 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
   } = useClaimText(rolePlatform.id)
 
   const showErrorToast = useShowErrorToast()
-  const { isMember } = useMembership()
   const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
     useMembershipUpdate({
       onSuccess: () => onSubmit(),
@@ -77,10 +74,12 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
 
           if (response) return
 
-          if (isMember) {
+          if (hasRoleAccess) {
             onSubmit()
           } else {
-            triggerMembershipUpdate()
+            triggerMembershipUpdate({
+              roleIds: [roleId],
+            })
           }
         }}
         {...rest}
