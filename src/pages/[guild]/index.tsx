@@ -6,20 +6,12 @@ import {
   HStack,
   Icon,
   Link,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
   Spinner,
   Stack,
   Tag,
   TagLeftIcon,
   Text,
   useColorMode,
-  useDisclosure,
-  VStack,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -35,7 +27,6 @@ import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
-import GuildPinFees from "components/[guild]/Requirements/components/GuildCheckout/components/GuildPinFees"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
@@ -44,7 +35,6 @@ import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { addIntercomSettings } from "components/_app/IntercomProvider"
-import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
@@ -57,7 +47,6 @@ import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
-import Image from "next/image"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
@@ -169,14 +158,6 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
-  const [isOpen, setIsOpen] = useState(false)
-
-  const {
-    isOpen: claimIsOpen,
-    onOpen: claimOnOpen,
-    onClose: claimOnClose,
-  } = useDisclosure()
-
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
   const stayConnectedToast = useStayConnectedToast(() => {
@@ -188,7 +169,6 @@ const GuildPage = (): JSX.Element => {
   })
 
   const { colorMode } = useColorMode()
-  const modalBg = colorMode === "dark" ? "var(--chakra-colors-gray-700)" : "#FFFFFF"
 
   return (
     <>
@@ -275,8 +255,6 @@ const GuildPage = (): JSX.Element => {
           />
         )}
 
-        <Button onClick={claimOnOpen}>Claim reward</Button>
-
         <AccessHub />
 
         <Section
@@ -362,82 +340,6 @@ const GuildPage = (): JSX.Element => {
             </Section>
           </>
         )}
-
-        <Modal isOpen={claimIsOpen} onClose={claimOnClose} scrollBehavior="inside">
-          <ModalOverlay />
-          <ModalContent
-            border={"3px solid transparent"}
-            background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, #F5E4A0, ${modalBg}) border-box`}
-          >
-            <Image
-              priority
-              src={"/img/confetti_overlay.png"}
-              alt="Confetti"
-              fill
-              style={{ objectFit: "contain", objectPosition: "top" }}
-              draggable={false}
-            />
-
-            <ModalCloseButton />
-            <ModalHeader mb="0" pb={0}>
-              <Text textAlign={"center"}>Claim your tokens</Text>
-            </ModalHeader>
-
-            <ModalBody
-              className="custom-scrollbar"
-              display="flex"
-              flexDir="column"
-              border={"4px solid transparent"}
-              mt="0"
-            >
-              <Text textAlign={"center"} opacity={0.5}>
-                You are eligible to claim the following tokens.
-              </Text>
-
-              <Stack
-                justifyContent={"center"}
-                position={"relative"}
-                alignItems={"center"}
-                my={8}
-              >
-                <Image
-                  priority
-                  src={"/img/cup.png"}
-                  alt="Cup"
-                  width={175}
-                  height={155}
-                  draggable={false}
-                />
-
-                <VStack position={"relative"} mt="-80px">
-                  <Image
-                    src={"/img/ribbon.svg"}
-                    alt="Ribbon"
-                    priority
-                    width={300}
-                    height={70}
-                    draggable={false}
-                  />
-                  <Heading
-                    fontSize={"x-large"}
-                    fontFamily="display"
-                    color={textColor}
-                    position={"absolute"}
-                    top={"50%"}
-                    style={{ transform: "translateY(-25%)" }}
-                  >
-                    5 UNI
-                  </Heading>
-                </VStack>
-              </Stack>
-
-              <GuildPinFees />
-              <Button colorScheme="primary" mt={2}>
-                Claim
-              </Button>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
       </Layout>
 
       {isAdmin && <DynamicDiscordBotPermissionsChecker />}
