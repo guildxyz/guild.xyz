@@ -11,8 +11,6 @@ type Props = {
   baseFieldPath: string
 }
 
-const URL_REGEX = /^https:\/\/(.)+\.(.)+$/
-
 const FarcasterCastHash = ({ baseFieldPath }: Props) => {
   const {
     field: { onChange: onHashChange, value: hash },
@@ -38,7 +36,8 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
     rules: {
       required: "This field is required.",
       validate: (value) => {
-        if (ADDRESS_REGEX.test(value) || URL_REGEX.test(value)) return true
+        if (ADDRESS_REGEX.test(value) || value.startsWith("https://warpcast.com"))
+          return true
         return "Please provide a valid Warpcast URL or hash"
       },
     },
