@@ -37,7 +37,7 @@ const PoolStep = ({ onContinue }: { onContinue: () => void }) => {
         able to deposit more and withdraw from any time.
       </Text>
 
-      <Stack gap={0}>
+      <Stack gap={1}>
         <FormControl>
           <FormLabel>Amount to deposit</FormLabel>
           <InputGroup>

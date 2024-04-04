@@ -8,11 +8,6 @@ import {
   IconButton,
   InputGroup,
   InputLeftElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Stack,
   Text,
   useColorModeValue,
@@ -32,6 +27,7 @@ import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
+import ConversionNumberInput from "./ConversionNumberInput"
 
 const DynamicAmount = () => {
   const { guildPlatforms } = useGuild()
@@ -145,16 +141,15 @@ const DynamicAmount = () => {
 
   const toggleConversionLock = () => {
     if (conversionLocked) {
-      setConversionAmounts([
-        conversionAmounts[0],
-        (Number(conversionAmounts[0]) * conversionRate).toPrecision(5).toString(),
-      ])
       setConversionLocked(false)
     } else {
       setConversionRate(Number(conversionAmounts[1]) / Number(conversionAmounts[0]))
       setConversionLocked(true)
     }
   }
+
+  const calculatePreview = () =>
+    parseFloat((Number(conversionAmounts[0]) * conversionRate).toFixed(4)).toString()
 
   return (
     <>
@@ -202,26 +197,9 @@ const DynamicAmount = () => {
               )}
             </InputLeftElement>
 
-            <NumberInput
-              w="full"
-              value={conversionAmounts[0]}
-              onChange={(valAsString, valueAsNumber) =>
-                setConversionAmounts([valAsString, conversionAmounts[1]])
-              }
-              min={0.0001}
-              step={0.0001}
-              precision={4}
-              onBlur={() => {
-                if (Number(conversionAmounts[0]) < 0.0001)
-                  setConversionAmounts(["1", conversionAmounts[1]])
-              }}
-            >
-              <NumberInputField pl="10" pr={0} />
-              <NumberInputStepper padding={"0 !important"}>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            <ConversionNumberInput
+              onChange={(val) => setConversionAmounts([val, conversionAmounts[1]])}
+            />
           </InputGroup>
 
           <Circle background={"whiteAlpha.200"} p="1">
@@ -233,38 +211,11 @@ const DynamicAmount = () => {
               <OptionImage img={tokenLogo} alt={chain} />
             </InputLeftElement>
 
-            <NumberInput
-              w="full"
-              value={
-                conversionLocked
-                  ? (Number(conversionAmounts[0]) * conversionRate).toPrecision(5)
-                  : conversionAmounts[1]
-              }
-              onChange={(valAsString, valueAsNumber) =>
-                setConversionAmounts([conversionAmounts[0], valAsString])
-              }
-              min={0.0001}
-              step={0.0001}
-              precision={4}
-              onBlur={() => {
-                if (Number(conversionAmounts[1]) < 0.0001)
-                  setConversionAmounts([conversionAmounts[0], "1"])
-              }}
+            <ConversionNumberInput
+              controlledValue={conversionLocked ? calculatePreview() : null}
               isReadOnly={conversionLocked}
-            >
-              <NumberInputField
-                pl="10"
-                pr={0}
-                cursor={conversionLocked && "default"}
-              />
-              <NumberInputStepper
-                padding={"0 !important"}
-                visibility={conversionLocked ? "hidden" : "visible"}
-              >
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+              onChange={(val) => setConversionAmounts([conversionAmounts[0], val])}
+            />
           </InputGroup>
         </HStack>
       </Stack>

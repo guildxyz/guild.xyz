@@ -97,8 +97,14 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
                   selectedExistingId={selectedExistingId}
                 />
                 <FormControl>
-                  <FormLabel>Name</FormLabel>
-                  <Input />
+                  <FormLabel>Snapshot name</FormLabel>
+                  <Input
+                    defaultValue={new Date().toLocaleDateString("en-US", {
+                      month: "2-digit",
+                      day: "2-digit",
+                      year: "numeric",
+                    })}
+                  />
                 </FormControl>
               </Stack>
 

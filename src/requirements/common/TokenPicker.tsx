@@ -14,13 +14,14 @@ import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
 import { useMemo } from "react"
 import { UseControllerProps, useController, useFormContext } from "react-hook-form"
-import { Chain } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain
   fieldName: string
   isDisabled?: boolean
   customImage?: string
+  excludeCoins?: boolean
 } & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -34,6 +35,7 @@ const TokenPicker = ({
   fieldName,
   isDisabled,
   customImage,
+  excludeCoins,
   ...rest
 }: Props): JSX.Element => {
   const { trigger } = useFormContext()
@@ -56,16 +58,20 @@ const TokenPicker = ({
   })
 
   const { isLoading, tokens } = useTokens(chain)
-  const mappedTokens = useMemo(
-    () =>
-      tokens?.map((token) => ({
-        img: token.logoURI,
-        label: token.name,
-        value: token.address,
-        decimals: token.decimals,
-      })),
-    [tokens]
-  )
+
+  const isCoin = (addr: string) =>
+    addr === CHAIN_CONFIG[chain]?.nativeCurrency?.symbol ||
+    addr === "0x0000000000000000000000000000000000000000"
+
+  const mappedTokens = useMemo(() => {
+    const mapped = tokens?.map((token) => ({
+      img: token.logoURI,
+      label: token.name,
+      value: token.address,
+      decimals: token.decimals,
+    }))
+    return excludeCoins ? mapped?.filter((token) => !isCoin(token.value)) : mapped
+  }, [tokens])
 
   const {
     data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
@@ -117,7 +123,7 @@ const TokenPicker = ({
             validate: () => !tokenDataError || "Failed to fetch token data",
           }}
           isClearable
-          isCopyable={type !== "COIN"}
+          isCopyable={!isCoin(address)}
           isLoading={isLoading}
           options={mappedTokens}
           filterOption={customFilterOption}

@@ -1,6 +1,5 @@
 import {
   FormLabel,
-  Icon,
   InputGroup,
   InputLeftElement,
   NumberDecrementStepper,
@@ -13,24 +12,19 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Star } from "phosphor-react"
-import { useWatch } from "react-hook-form"
-import { PlatformType } from "types"
+import useTokenData from "hooks/useTokenData"
+import { useFormContext, useWatch } from "react-hook-form"
 
 const StaticAmount = () => {
   const { guildPlatforms } = useGuild()
 
-  const existingPointsRewards = guildPlatforms?.filter(
-    (gp) => gp.platformId === PlatformType.POINTS
-  )
+  const { control } = useFormContext()
+  const chain = useWatch({ name: `chain`, control })
+  const address = useWatch({ name: `contractAddress`, control })
 
-  const selectedExistingId = useWatch({
-    name: "data.guildPlatformId",
-  })
-
-  const selectedPointsReward = existingPointsRewards.find(
-    (gp) => gp.id === selectedExistingId
-  )
+  const {
+    data: { logoURI: tokenLogo },
+  } = useTokenData(chain, address)
 
   return (
     <>
@@ -42,16 +36,7 @@ const StaticAmount = () => {
         <FormLabel>Amount to reward</FormLabel>
         <InputGroup>
           <InputLeftElement>
-            {selectedPointsReward?.platformGuildData?.imageUrl ? (
-              <OptionImage
-                img={selectedPointsReward?.platformGuildData?.imageUrl}
-                alt={
-                  selectedPointsReward?.platformGuildData?.name ?? "Point type image"
-                }
-              />
-            ) : (
-              <Icon as={Star} />
-            )}
+            <OptionImage img={tokenLogo} alt={chain} />
           </InputLeftElement>
 
           <NumberInput w="full" min={0.0001} step={0.0001} value={1}>

@@ -21,6 +21,7 @@ import { AddTokenFormType } from "../AddTokenPanel"
 const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ name: `chain` })
   const address = useWatch({ name: `contractAddress` })
+  const imageUrl = useWatch({ name: `imageUrl` })
 
   const isContinueDisabled = !address || !chain
 
@@ -28,7 +29,6 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
     data: { logoURI: tokenLogo },
   } = useTokenData(chain, address)
 
-  const [customImage, setCustomImage] = useState(null)
   const [progress, setProgress] = useState<number>(0)
 
   const toast = useToast()
@@ -64,13 +64,13 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
           chain={chain}
           fieldName={`contractAddress`}
           rules={{ required: "This field is required" }}
-          customImage={customImage}
+          customImage={imageUrl}
         />
 
         {!!address && !tokenLogo && (
           <>
             <HStack justifyContent={"space-between"}>
-              {!customImage ? (
+              {!imageUrl ? (
                 <>
                   {!uploader.isUploading ? (
                     <>
@@ -96,7 +96,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
                   <Button
                     variant="link"
                     fontSize="small"
-                    onClick={() => setCustomImage(null)}
+                    onClick={() => setValue("imageUrl", null)}
                     leftIcon={<X />}
                   >
                     Remove custom image
