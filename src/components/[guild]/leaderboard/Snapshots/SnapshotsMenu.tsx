@@ -5,6 +5,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Portal,
   useDisclosure,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
@@ -49,14 +50,16 @@ const SnapshotsMenu = () => {
             justifyContent={"center"}
           />
         </MenuButton>
-        <MenuList>
-          <MenuItem icon={<Plus />} onClick={createOnOpen}>
-            Create snapshot
-          </MenuItem>
-          <MenuItem icon={<ListDashes />} onClick={viewOnOpen}>
-            View snapshots
-          </MenuItem>
-        </MenuList>
+        <Portal>
+          <MenuList zIndex={9999}>
+            <MenuItem icon={<Plus />} onClick={createOnOpen}>
+              Create snapshot
+            </MenuItem>
+            <MenuItem icon={<ListDashes />} onClick={viewOnOpen}>
+              View snapshots
+            </MenuItem>
+          </MenuList>
+        </Portal>
       </Menu>
 
       <ViewSnapshotsModal
