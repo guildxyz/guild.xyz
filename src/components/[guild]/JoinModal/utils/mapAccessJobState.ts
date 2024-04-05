@@ -88,6 +88,7 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
     requirements,
     roles,
     rewards,
+    roleIds: progress.roleIds,
   } as const
 }
 
