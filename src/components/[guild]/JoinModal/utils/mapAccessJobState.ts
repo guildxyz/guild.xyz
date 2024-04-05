@@ -1,4 +1,4 @@
-import type { JoinJob } from "@guildxyz/types"
+import type { AccessCheckJob, JoinJob } from "@guildxyz/types"
 
 // TODO: uncomment the properly typed groupBy once we fix our types in the queues package!
 
@@ -50,14 +50,18 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
       ? (progress as any).position
       : null
 
-  const requirements = progress["children:access-check:jobs"]
+  const requirementAccesses =
+    !!progress["completed-queue"] &&
+    !["access-preparation", "access-check"].includes(progress["completed-queue"])
+      ? ((progress as any)
+          .requirementAccesses as AccessCheckJob["children:access-check:jobs"])
+      : progress["children:access-check:jobs"]
+
+  const requirements = requirementAccesses
     ? {
-        all: progress["children:access-check:jobs"]?.length,
-        satisfied: progress["children:access-check:jobs"]?.filter(
-          (req) => req?.access
-        )?.length,
-        checked: progress["children:access-check:jobs"]?.filter((req) => req?.done)
-          ?.length,
+        all: requirementAccesses?.length,
+        satisfied: requirementAccesses?.filter((req) => req?.access)?.length,
+        checked: requirementAccesses?.filter((req) => req?.done)?.length,
       }
     : null
 
