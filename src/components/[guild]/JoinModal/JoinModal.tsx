@@ -71,7 +71,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
     if (platform in customJoinStep) {
-      // don't show email in case of google login, cause we already know it in that case and show that on the completed login button
+      // don't show email in case of google login, cause we already know it in that case and also show it on the completed login button
       if (platform === "EMAIL" && connector?.id === "coinbaseWalletSDK") return null
 
       const ConnectComponent = customJoinStep[platform]
