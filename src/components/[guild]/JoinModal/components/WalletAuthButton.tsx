@@ -13,6 +13,7 @@ const WalletAuthButton = (): JSX.Element => {
   const { connector } = useAccount()
   const { emails } = useUser()
 
+  console.log(connector, connector?.id)
   const isGoogleLogin = connector?.id === "coinbaseWalletSDK"
 
   return (
