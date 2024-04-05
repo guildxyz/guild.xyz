@@ -50,6 +50,11 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
       ? (progress as any).position
       : null
 
+  /**
+   * After the "access-check" step, we can use progress.requirementAccesses for live
+   * data, since that includes the final results (even if the guild has "chained"
+   * roles)
+   */
   const requirementAccesses =
     !!progress["completed-queue"] &&
     !["access-preparation", "access-check"].includes(progress["completed-queue"])
