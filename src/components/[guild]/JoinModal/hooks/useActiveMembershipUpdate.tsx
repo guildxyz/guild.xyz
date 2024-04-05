@@ -64,7 +64,7 @@ const useActiveMembershipUpdate = ({
                 errorMsg: reqAccess.userLevelErrors?.[0]?.msg,
                 errorType: reqAccess.userLevelErrors?.[0]?.errorType,
                 subType: reqAccess.userLevelErrors?.[0]?.subType,
-                lastCheckedAt: (res as any).createdAtTimestamp,
+                lastCheckedAt: new Date(res.createdAtTimestamp).toISOString(),
               })),
             }
           }
