@@ -80,8 +80,7 @@ const useActiveMembershipUpdate = ({
                 prev?.joinedAt || res?.done ? new Date().toISOString() : null,
               roles: [
                 ...(prev?.roles?.filter(
-                  (role) =>
-                    !Object.keys(reqJobsByRoleId).includes(role.roleId.toString())
+                  (role) => !(role.roleId.toString() in reqJobsByRoleId)
                 ) ?? []),
                 ...newRoles,
               ],
