@@ -55,12 +55,13 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
    * data, since that includes the final results (even if the guild has "chained"
    * roles)
    */
-  const requirementAccesses =
+  const isAccessCheckComplete =
     !!progress["completed-queue"] &&
     !["access-preparation", "access-check"].includes(progress["completed-queue"])
-      ? ((progress as any)
-          .requirementAccesses as AccessCheckJob["children:access-check:jobs"])
-      : progress["children:access-check:jobs"]
+  const requirementAccesses = isAccessCheckComplete
+    ? ((progress as any)
+        .requirementAccesses as AccessCheckJob["children:access-check:jobs"])
+    : progress["children:access-check:jobs"]
 
   const requirements = requirementAccesses
     ? {
