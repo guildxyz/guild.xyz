@@ -3,7 +3,6 @@ import { FuelProvider } from "@fuel-wallet/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
-import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
@@ -121,15 +120,13 @@ const App = ({
                 <FuelProvider>
                   <PostHogProvider>
                     <IntercomProvider>
-                      <ExplorerProvider>
-                        <AppErrorBoundary>
-                          <Component {...pageProps} />
-                        </AppErrorBoundary>
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
 
-                        <ClientOnly>
-                          <AccountModal />
-                        </ClientOnly>
-                      </ExplorerProvider>
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
                     </IntercomProvider>
 
                     <Web3ConnectionManager />
