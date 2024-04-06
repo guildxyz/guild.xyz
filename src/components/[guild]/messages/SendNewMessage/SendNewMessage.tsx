@@ -13,6 +13,7 @@ import {
   Stack,
   Text,
   Textarea,
+  Tooltip,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -21,8 +22,11 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
+import dynamic from "next/dynamic"
 import { Chat, PaperPlaneRight } from "phosphor-react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
+import useGuildMessages from "../hooks/useGuildMessages"
 import useReachableUsers from "../hooks/useReachableUsers"
 import useSendMessage from "../hooks/useSendMessage"
 import useTargetedCount from "../hooks/useTargetedCount"
@@ -37,7 +41,21 @@ type SendMessageForm = {
   message: string
 }
 
+const DynamicMessagingRateLimitAlert = dynamic(
+  () => import("./components/MessagingRateLimitAlert"),
+  {
+    ssr: false,
+  }
+)
+
 const SendNewMessage = (props: ButtonProps) => {
+  const { data: guildMessages } = useGuildMessages()
+  const latestMessageCreatedAt =
+    guildMessages?.length > 0
+      ? new Date(guildMessages[0].createdAt).getTime()
+      : undefined
+  const isSendDisabled = latestMessageCreatedAt > Date.now() - DAY_IN_MS
+
   const methods = useForm<SendMessageForm>({
     mode: "all",
     defaultValues: {
@@ -94,6 +112,12 @@ const SendNewMessage = (props: ButtonProps) => {
           <ModalBody>
             <FormProvider {...methods}>
               <Stack spacing={6}>
+                {isSendDisabled && (
+                  <DynamicMessagingRateLimitAlert
+                    latestMessageCreatedAt={latestMessageCreatedAt}
+                  />
+                )}
+
                 <Stack>
                   <FormControl isRequired isInvalid={!!errors.roleIds}>
                     <FormLabel>Recipient roles</FormLabel>
@@ -161,17 +185,23 @@ const SendNewMessage = (props: ButtonProps) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button
-              ml="auto"
-              h={10}
-              colorScheme="green"
-              rightIcon={<PaperPlaneRight />}
-              onClick={handleSubmit(onSubmit)}
-              isLoading={isLoading}
-              loadingText="Sending"
+            <Tooltip
+              label="You can send one message per day, please check back later!"
+              isDisabled={!isSendDisabled}
             >
-              Send
-            </Button>
+              <Button
+                ml="auto"
+                h={10}
+                colorScheme="green"
+                rightIcon={<PaperPlaneRight />}
+                onClick={handleSubmit(onSubmit)}
+                isLoading={isLoading}
+                loadingText="Sending"
+                isDisabled={isSendDisabled}
+              >
+                Send
+              </Button>
+            </Tooltip>
           </ModalFooter>
         </ModalContent>
       </Modal>
