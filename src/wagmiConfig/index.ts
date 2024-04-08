@@ -62,15 +62,6 @@ import { coinbaseWallet, injected, safe, walletConnect } from "wagmi/connectors"
 import { mock } from "wagmiConfig/mockConnector"
 import waasConnector, { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 
-const withCustomRPC = (chain: Chain, rpcUrl: string): Chain => ({
-  ...chain,
-  rpcUrls: {
-    default: {
-      http: [rpcUrl],
-    },
-  },
-})
-
 /**
  * We should consider adding only those chains here which we actually use for
  * client-side interactions (e.g. where users can mint Guild Pins, NFTs, buy tokens,
@@ -100,7 +91,7 @@ export const wagmiConfig = createConfig({
     boba,
     palm,
     exosama,
-    withCustomRPC(evmos, "https://evmos.lava.build"),
+    evmos,
     zetachain,
     zetachainAthensTestnet,
     scroll,
@@ -131,10 +122,10 @@ export const wagmiConfig = createConfig({
   ],
   transports: {
     [mainnet.id]: http(),
-    [polygon.id]: http(),
+    [polygon.id]: http("https://polygon-bor-rpc.publicnode.com"),
     [polygonMumbai.id]: http(),
     [polygonZkEvm.id]: http(),
-    [base.id]: http(),
+    [base.id]: http("https://base-rpc.publicnode.com"),
     [baseSepolia.id]: http(),
     [optimism.id]: http(),
     [arbitrum.id]: http(),
@@ -152,7 +143,7 @@ export const wagmiConfig = createConfig({
     [boba.id]: http(),
     [palm.id]: http(),
     [exosama.id]: http(),
-    [evmos.id]: http(),
+    [evmos.id]: http("https://evmos.lava.build"),
     [zetachain.id]: http(),
     [zetachainAthensTestnet.id]: http(),
     [scroll.id]: http(),
