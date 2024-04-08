@@ -275,7 +275,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           {!isConnectedAndKeyPairReady ? (
             <Stack textAlign="center" fontSize="sm" w="full">
               <Text colorScheme="gray">
-                New to Ethereum wallets?{" "}
+                <span>{"New to Ethereum wallets? "}</span>
                 <Link
                   colorScheme="blue"
                   href="https://ethereum.org/en/wallets/"
@@ -287,7 +287,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
 
               <Text colorScheme="gray">
-                By continuing, you agree to our{" "}
+                <span>{"By continuing, you agree to our "}</span>
                 <Link
                   href="/privacy-policy"
                   fontWeight={"semibold"}
@@ -295,7 +295,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 >
                   Privacy Policy
                 </Link>
-                {` and `}
+                <span>{" and "}</span>
                 <Link href="/terms-of-use" fontWeight={"semibold"} onClick={onClose}>
                   Terms & conditions
                 </Link>
@@ -303,11 +303,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
           ) : (
             <Stack textAlign="center" fontSize="sm" w="full">
-              <Text colorScheme={"gray"}>
+              <Text colorScheme="gray">
                 Signing the message doesn't cost any gas
               </Text>
               <Text colorScheme="gray">
-                This site is protected by reCAPTCHA, so the Google{" "}
+                <span>{"This site is protected by reCAPTCHA, so the Google "}</span>
                 <Link
                   href="https://policies.google.com/privacy"
                   isExternal
@@ -315,15 +315,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 >
                   Privacy Policy
                 </Link>{" "}
-                and{" "}
+                <span>{"and "}</span>
                 <Link
                   href="https://policies.google.com/terms"
                   isExternal
                   fontWeight={"semibold"}
                 >
                   Terms of Service
-                </Link>{" "}
-                apply
+                </Link>
+                <span>{" apply"}</span>
               </Text>
             </Stack>
           )}
