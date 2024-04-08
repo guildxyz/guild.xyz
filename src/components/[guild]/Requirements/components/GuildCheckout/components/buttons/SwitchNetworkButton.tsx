@@ -9,13 +9,13 @@ type Props = {
 }
 
 const SwitchNetworkButton = ({ targetChainId, hidden }: Props): JSX.Element => {
-  const { isConnected, chainId } = useAccount()
+  const { status, chainId } = useAccount()
 
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useTriggerNetworkChange()
 
   return (
-    <Collapse in={!hidden && isConnected && chainId !== targetChainId}>
+    <Collapse in={!hidden && status === "connected" && chainId !== targetChainId}>
       <Button
         data-test="switch-network-button"
         size="lg"
