@@ -12,9 +12,11 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"
@@ -22,17 +24,25 @@ import TokenAmountStep from "./components/TokenAmountStep"
 export type AddTokenFormType = {
   poolId: number
   multiplier: number
+  addition: number
   chain: Chain
   contractAddress: `0x${string}`
   name: string
   description: string
   imageUrl: string
   tokenDecimals: number
+  data: {
+    guildPlatformId: number
+  }
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
+  const { id: guildId } = useGuild()
   const methods = useForm<AddTokenFormType>({
     mode: "all",
+    defaultValues: {
+      addition: 1,
+    },
   })
 
   const steps = [
@@ -50,7 +60,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const [isCollapsed, setIsCollapsed] = useState(false)
 
-  const collapseAndExecute = (callback: Function) => {
+  const collapseAndExecute = (callback: () => void) => {
     setIsCollapsed(true)
     setTimeout(() => {
       callback()
@@ -58,9 +68,43 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     }, 250)
   }
 
-  const stepTo = (index: number) => {
-    activeStep > index && collapseAndExecute(() => setActiveStep(index))
+  const onSubmit = (_data) => {
+    onAdd({
+      guildPlatform: {
+        platformId: PlatformType.ERC20,
+        platformName: "ERC20",
+        // TODO: ez itt mi legyen pontosan?
+        platformGuildId: `${_data.chain}-${Date.now()}`,
+        platformGuildData: {
+          poolId: _data.poolId,
+          chain: _data.chain,
+          contractAddress: _data.contractAddress,
+          name: _data.name,
+          description: "",
+          imageUrl: _data.imageUrl ?? `/guildLogos/132.svg`,
+          tokenDecimals: _data.tokenDecimals,
+        },
+      },
+      dynamicAmount: {
+        operation: {
+          type: "LINEAR",
+          params: {
+            addition: _data.addition,
+            multiplier: _data.multiplier,
+          },
+          input: {
+            type: "ERC20",
+            guildPlatformId: PlatformType.ERC20,
+            guildId: guildId,
+          },
+        },
+      },
+      isNew: true,
+    })
   }
+
+  const stepTo = (index: number) =>
+    activeStep > index && collapseAndExecute(() => setActiveStep(index))
 
   return (
     <FormProvider {...methods}>
@@ -99,7 +143,10 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
                 transition={{ enter: { duration: 0.25 }, exit: { duration: 0.25 } }}
               >
                 {activeStep === index && (
-                  <step.content onContinue={() => collapseAndExecute(goToNext)} />
+                  <step.content
+                    onContinue={() => collapseAndExecute(goToNext)}
+                    onSubmit={methods.handleSubmit(onSubmit)}
+                  />
                 )}
               </Collapse>
             </Box>

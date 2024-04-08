@@ -19,16 +19,16 @@ import { useEffect, useState } from "react"
  * compliance with the field’s constraints.
  */
 const ConversionNumberInput = ({
-  controlledValue = null,
+  value = "",
   isReadOnly = false,
-  onChange,
+  setValue,
+  isDisabled = false,
 }: {
-  controlledValue?: string
+  value: string
   isReadOnly?: boolean
-  onChange: (val: string) => void
+  isDisabled?: boolean
+  setValue: (val: string) => void
 }) => {
-  const [value, setValue] = useState("1")
-
   const [stepSize, setStepSize] = useState(1)
 
   const handleChange = (stringValue: string, numberValue: number) => {
@@ -42,20 +42,8 @@ const ConversionNumberInput = ({
   }
 
   useEffect(() => {
-    if (controlledValue === null) return
-
-    if (Number(controlledValue) === 0) {
-      setValue("0.0001")
-    } else {
-      setValue(controlledValue)
-    }
-  }, [controlledValue])
-
-  useEffect(() => {
     const parts = value.split(".")
     setStepSize(parts.length === 1 ? 1 : 1 / Math.pow(10, parts[1].length))
-
-    onChange(value)
   }, [value])
 
   const handleBlur = () => {
@@ -67,12 +55,13 @@ const ConversionNumberInput = ({
   return (
     <NumberInput
       w="full"
-      value={controlledValue ?? value}
+      value={value}
       onChange={handleChange}
       min={0.0001}
       step={stepSize}
       onBlur={handleBlur}
       isReadOnly={isReadOnly}
+      isDisabled={isDisabled}
     >
       <NumberInputField pl="10" pr={0} cursor={isReadOnly && "default"} />
       <NumberInputStepper

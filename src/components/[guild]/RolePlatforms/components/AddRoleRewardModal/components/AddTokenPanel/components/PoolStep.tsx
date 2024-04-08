@@ -1,34 +1,101 @@
 import {
   Checkbox,
-  Flex,
   FormControl,
   FormLabel,
   HStack,
   InputGroup,
   InputLeftElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { canCloseAddRewardModalAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
+import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
-import { useState } from "react"
-import { useWatch } from "react-hook-form"
+import { useSetAtom } from "jotai"
+import useRegisterPool from "platforms/Token/hooks/useRegisterPool"
+import { useEffect, useState } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
+import Token from "static/icons/token.svg"
+import { ERC20_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { parseUnits } from "viem"
+import { useAccount, useBalance } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
+import { AddTokenFormType } from "../AddTokenPanel"
+import ConversionNumberInput from "./ConversionNumberInput"
+import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
 
-const PoolStep = ({ onContinue }: { onContinue: () => void }) => {
+const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
-  const address = useWatch({ name: `contractAddress` })
+  const tokenAddress = useWatch({ name: `contractAddress` })
 
+  const { chainId, address: userAddress } = useAccount()
+  const [amount, setAmount] = useState("1")
   const [skip, setSkip] = useState(false)
 
+  const setCanClose = useSetAtom(canCloseAddRewardModalAtom)
+
   const {
-    data: { logoURI: tokenLogo },
-  } = useTokenData(chain, address)
+    data: { logoURI: tokenLogo, decimals },
+  } = useTokenData(chain, tokenAddress)
+
+  const formattedAmount = parseUnits(amount, decimals)
+
+  const { data: coinBalanceData } = useBalance({
+    address: userAddress,
+  })
+
+  const { data: tokenBalanceData } = useTokenBalance({
+    token: tokenAddress,
+    chainId,
+    shouldFetch: tokenAddress !== NULL_ADDRESS,
+  })
+
+  const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
+
+  const isBalanceSufficient =
+    typeof formattedAmount === "bigint" &&
+    (coinBalanceData?.value || tokenBalanceData?.value) &&
+    (pickedCurrencyIsNative
+      ? coinBalanceData?.value >= formattedAmount
+      : tokenBalanceData?.value >= formattedAmount)
+
+  const isOnCorrectChain = Number(Chains[chain]) === chainId
+
+  const handlePoolCreation = () => {
+    onSubmitTransaction()
+  }
+
+  const { setValue } = useFormContext<AddTokenFormType>()
+
+  const { isLoading, onSubmitTransaction } = useRegisterPool(
+    userAddress,
+    tokenAddress,
+    formattedAmount,
+    (poolId: string) => {
+      setValue("poolId", Number(poolId))
+      onSubmit()
+    }
+  )
+
+  useEffect(() => {
+    setCanClose(!isLoading)
+  }, [isLoading])
+
+  const { allowance } = useAllowance(
+    tokenAddress,
+    `0x0d72BCDA1Ec6D0E195249519fb83BB5D559E895D`
+  )
+
+  const handleDepositLater = () => {
+    if (!skip) setAmount("0")
+    setSkip(!skip)
+  }
+
+  const imageUrl = useWatch({ name: `imageUrl` })
 
   return (
     <Stack gap={5}>
@@ -42,22 +109,18 @@ const PoolStep = ({ onContinue }: { onContinue: () => void }) => {
           <FormLabel>Amount to deposit</FormLabel>
           <InputGroup>
             <InputLeftElement>
-              <OptionImage img={tokenLogo} alt={chain} />
+              {tokenLogo || imageUrl ? (
+                <OptionImage img={tokenLogo ?? imageUrl} alt={chain} />
+              ) : (
+                <Token />
+              )}
             </InputLeftElement>
 
-            <NumberInput
-              w="full"
-              min={0.0001}
-              step={0.0001}
-              value={0}
+            <ConversionNumberInput
+              value={amount}
+              setValue={setAmount}
               isDisabled={skip}
-            >
-              <NumberInputField pl="10" pr={0} />
-              <NumberInputStepper padding={"0 !important"}>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            />
           </InputGroup>
         </FormControl>
 
@@ -68,24 +131,44 @@ const PoolStep = ({ onContinue }: { onContinue: () => void }) => {
           <Checkbox
             spacing={1.5}
             isChecked={skip}
-            onChange={() => setSkip(!skip)}
+            onChange={handleDepositLater}
           ></Checkbox>
           <Text
             fontWeight="medium"
             colorScheme="gray"
             _hover={{ cursor: "pointer" }}
-            onClick={() => setSkip(!skip)}
+            onClick={handleDepositLater}
           >
             deposit tokens later
           </Text>
         </HStack>
       </Stack>
 
-      <Flex justifyContent={"flex-end"} mt="4">
-        <Button isDisabled={false} colorScheme="primary" onClick={onContinue}>
-          Continue
-        </Button>
-      </Flex>
+      <Stack>
+        {!isOnCorrectChain && (
+          <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+        )}
+        {isOnCorrectChain && (
+          <GenericBuyAllowanceButton
+            chain={chain}
+            token={tokenAddress}
+            amount={formattedAmount}
+            contract={ERC20_CONTRACT}
+          />
+        )}
+        {(!!allowance || pickedCurrencyIsNative) && isOnCorrectChain && (
+          <Button
+            size="lg"
+            colorScheme="primary"
+            isDisabled={!isBalanceSufficient}
+            onClick={handlePoolCreation}
+            isLoading={isLoading}
+            loadingText="Creating pool..."
+          >
+            {isBalanceSufficient ? "Create pool" : "Insufficient balance"}
+          </Button>
+        )}
+      </Stack>
     </Stack>
   )
 }

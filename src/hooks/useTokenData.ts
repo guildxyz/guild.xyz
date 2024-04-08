@@ -11,7 +11,7 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
     address === CHAIN_CONFIG[chain]?.nativeCurrency?.symbol ||
     address === "0x0000000000000000000000000000000000000000"
 
-  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && chain && !isCoin
+  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && !!chain && !isCoin
 
   const tokensFromApi = useTokens(chain)
 

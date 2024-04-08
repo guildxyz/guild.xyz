@@ -2,14 +2,14 @@ import { RequirementType } from "requirements"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
 import { Abi, toBytes } from "viem"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import {
+  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
-  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -30,6 +30,9 @@ export const GUILD_FEE_PERCENTAGE = 0.01
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000"
+
+export const ERC20_CONTRACT: `0x${string}` =
+  "0x0d72BCDA1Ec6D0E195249519fb83BB5D559E895D"
 
 const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
   ETHEREUM: {

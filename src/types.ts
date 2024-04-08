@@ -448,7 +448,6 @@ type PlatformGuildData = {
   }
   ERC20: {
     poolId: number
-    multiplier: number
     chain: Chain
     contractAddress: `0x${string}`
     name: string
@@ -523,6 +522,20 @@ type RolePlatform = {
   claimedCount?: number
   startTime?: string
   endTime?: string
+  dynamicAmount?: {
+    operation: {
+      type: "LINEAR"
+      params: {
+        addition: number
+        multiplier: number
+      }
+      input: {
+        type: PlatformName
+        guildPlatformId: number
+        guildId: number
+      }
+    }
+  }
 }
 
 enum Visibility {

@@ -18,7 +18,9 @@ import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards from "platforms/rewards"
@@ -53,6 +55,8 @@ const defaultValues: AddRewardForm = {
   visibility: Visibility.PUBLIC,
 }
 
+export const canCloseAddRewardModalAtom = atom(true)
+
 const AddRewardButton = (): JSX.Element => {
   const { roles } = useGuild()
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
@@ -62,6 +66,8 @@ const AddRewardButton = (): JSX.Element => {
     onOpen: onDiscardAlertOpen,
     onClose: onDiscardAlertClose,
   } = useDisclosure()
+
+  const canClose = useAtomValue(canCloseAddRewardModalAtom)
 
   const {
     modalRef,
@@ -160,6 +166,8 @@ const AddRewardButton = (): JSX.Element => {
 
   const { AddRewardPanel, RewardPreview } = rewards[selection] ?? {}
 
+  const showErrorToast = useShowErrorToast()
+
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
   const rolePlatform = methods.getValues("rolePlatforms.0")
@@ -193,6 +201,12 @@ const AddRewardButton = (): JSX.Element => {
         <Modal
           isOpen={isOpen}
           onClose={() => {
+            if (!canClose) {
+              showErrorToast(
+                "You can't close the modal until the transaction finishes"
+              )
+              return
+            }
             if (isAddRewardPanelDirty) onDiscardAlertOpen()
             else {
               methods.reset(defaultValues)

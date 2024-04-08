@@ -21,7 +21,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
   const [isCollapsed, setIsCollapsed] = useState(false)
 
-  const collapseAndExecute = (callback: Function) => {
+  const collapseAndExecute = (callback: () => void) => {
     setIsCollapsed(true)
     setTimeout(() => {
       callback()

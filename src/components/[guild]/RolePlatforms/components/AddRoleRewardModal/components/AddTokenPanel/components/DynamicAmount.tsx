@@ -22,11 +22,12 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useToast from "hooks/useToast"
 import useTokenData from "hooks/useTokenData"
 import { ArrowRight, ListNumbers, Lock, LockOpen, Upload } from "phosphor-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformType } from "types"
+import { AddTokenFormType } from "../AddTokenPanel"
 import ConversionNumberInput from "./ConversionNumberInput"
 
 const DynamicAmount = () => {
@@ -40,7 +41,11 @@ const DynamicAmount = () => {
   const [conversionAmounts, setConversionAmounts] = useState(["1", "1"])
   const [conversionRate, setConversionRate] = useState(1.0)
 
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext<AddTokenFormType>()
+
+  useEffect(() => {
+    setValue("multiplier", conversionRate)
+  }, [conversionRate])
 
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `contractAddress`, control })
@@ -142,6 +147,7 @@ const DynamicAmount = () => {
   const toggleConversionLock = () => {
     if (conversionLocked) {
       setConversionLocked(false)
+      setConversionAmounts([conversionAmounts[0], calculatePreview()])
     } else {
       setConversionRate(Number(conversionAmounts[1]) / Number(conversionAmounts[0]))
       setConversionLocked(true)
@@ -198,7 +204,8 @@ const DynamicAmount = () => {
             </InputLeftElement>
 
             <ConversionNumberInput
-              onChange={(val) => setConversionAmounts([val, conversionAmounts[1]])}
+              value={conversionAmounts[0]}
+              setValue={(val) => setConversionAmounts([val, conversionAmounts[1]])}
             />
           </InputGroup>
 
@@ -212,9 +219,13 @@ const DynamicAmount = () => {
             </InputLeftElement>
 
             <ConversionNumberInput
-              controlledValue={conversionLocked ? calculatePreview() : null}
+              value={conversionLocked ? calculatePreview() : conversionAmounts[1]}
+              setValue={
+                conversionLocked
+                  ? (val) => {}
+                  : (val) => setConversionAmounts([conversionAmounts[0], val])
+              }
               isReadOnly={conversionLocked}
-              onChange={(val) => setConversionAmounts([conversionAmounts[0], val])}
             />
           </InputGroup>
         </HStack>

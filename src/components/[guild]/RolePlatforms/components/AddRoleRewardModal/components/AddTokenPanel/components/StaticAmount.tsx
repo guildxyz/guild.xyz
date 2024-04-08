@@ -2,25 +2,27 @@ import {
   FormLabel,
   InputGroup,
   InputLeftElement,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Stack,
   Text,
 } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import Token from "static/icons/token.svg"
+import { AddTokenFormType } from "../AddTokenPanel"
+import ConversionNumberInput from "./ConversionNumberInput"
 
 const StaticAmount = () => {
-  const { guildPlatforms } = useGuild()
-
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext<AddTokenFormType>()
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `contractAddress`, control })
+  const addition = useWatch({ name: `addition`, control })
+  const imageUrl = useWatch({ name: `imageUrl`, control })
+
+  useEffect(() => {
+    setValue("multiplier", 1)
+  }, [])
 
   const {
     data: { logoURI: tokenLogo },
@@ -34,16 +36,17 @@ const StaticAmount = () => {
         <FormLabel>Amount to reward</FormLabel>
         <InputGroup>
           <InputLeftElement>
-            <OptionImage img={tokenLogo} alt={chain} />
+            {tokenLogo || imageUrl ? (
+              <OptionImage img={tokenLogo ?? imageUrl} alt={chain} />
+            ) : (
+              <Token />
+            )}
           </InputLeftElement>
 
-          <NumberInput w="full" min={0.0001} step={0.0001} value={1}>
-            <NumberInputField pl="10" pr={0} />
-            <NumberInputStepper padding={"0 !important"}>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+          <ConversionNumberInput
+            value={`${addition}`}
+            setValue={(val) => setValue("addition", Number(val))}
+          />
         </InputGroup>
       </Stack>
     </>

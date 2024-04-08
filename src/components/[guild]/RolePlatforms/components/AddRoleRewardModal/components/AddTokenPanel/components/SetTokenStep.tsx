@@ -11,7 +11,7 @@ import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useTokenData from "hooks/useTokenData"
 import { Upload, X } from "phosphor-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -26,8 +26,13 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const isContinueDisabled = !address || !chain
 
   const {
-    data: { logoURI: tokenLogo },
+    data: { logoURI: tokenLogo, decimals: tokenDecimals, symbol: tokenSymbol },
   } = useTokenData(chain, address)
+
+  useEffect(() => {
+    setValue("tokenDecimals", tokenDecimals)
+    setValue("name", tokenSymbol)
+  }, [tokenDecimals, tokenSymbol])
 
   const [progress, setProgress] = useState<number>(0)
 
