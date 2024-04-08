@@ -7,7 +7,6 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
 import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
-import { useSWRConfig } from "swr"
 import { GuildPinMetadata } from "types"
 import base64ToObject from "utils/base64ToObject"
 import fetcher from "utils/fetcher"
@@ -41,8 +40,6 @@ const useMintGuildPin = () => {
   const { captureEvent } = usePostHogContext()
 
   const { id, name, urlName } = useGuild()
-  const { cache } = useSWRConfig()
-
   const postHogOptions = { guild: urlName }
 
   const { mutate } = useUsersGuildPins()
@@ -50,7 +47,7 @@ const useMintGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address, chainId } = useAccount()
+  const { address, chainId, status } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -215,6 +212,7 @@ const useMintGuildPin = () => {
           ...postHogOptions,
           error: prettyError,
           originalError: error,
+          wagmiAccountStatus: status,
         })
       },
       onSuccess: () => {
