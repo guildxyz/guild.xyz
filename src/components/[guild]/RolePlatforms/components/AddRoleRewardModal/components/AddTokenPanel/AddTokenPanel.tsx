@@ -12,7 +12,6 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -37,7 +36,6 @@ export type AddTokenFormType = {
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
-  const { id: guildId } = useGuild()
   const methods = useForm<AddTokenFormType>({
     mode: "all",
     defaultValues: {
@@ -73,8 +71,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
       guildPlatform: {
         platformId: PlatformType.ERC20,
         platformName: "ERC20",
-        // TODO: ez itt mi legyen pontosan?
-        platformGuildId: `${_data.chain}-${Date.now()}`,
+        platformGuildId: `${_data.chain}-${_data.poolId}-${Date.now()}`,
         platformGuildData: {
           poolId: _data.poolId,
           chain: _data.chain,
@@ -85,20 +82,21 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           tokenDecimals: _data.tokenDecimals,
         },
       },
-      dynamicAmount: {
-        operation: {
-          type: "LINEAR",
-          params: {
-            addition: _data.addition,
-            multiplier: _data.multiplier,
-          },
-          input: {
-            type: "ERC20",
-            guildPlatformId: PlatformType.ERC20,
-            guildId: guildId,
-          },
-        },
-      },
+
+      // TODO: make live when backend is ready
+
+      // dynamicAmount: {
+      //   operation: {
+      //     type: "LINEAR",
+      //     params: {
+      //       addition: _data.addition,
+      //       multiplier: _data.multiplier,
+      //     },
+      //     input: {
+      //       type: "STATIC"
+      //     },
+      //   },
+      // },
       isNew: true,
     })
   }

@@ -1,3 +1,4 @@
+import { Schemas } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
@@ -522,20 +523,7 @@ type RolePlatform = {
   claimedCount?: number
   startTime?: string
   endTime?: string
-  dynamicAmount?: {
-    operation: {
-      type: "LINEAR"
-      params: {
-        addition: number
-        multiplier: number
-      }
-      input: {
-        type: PlatformName
-        guildPlatformId: number
-        guildId: number
-      }
-    }
-  }
+  dynamicAmount?: Schemas["DynamicAmount"]
 }
 
 enum Visibility {

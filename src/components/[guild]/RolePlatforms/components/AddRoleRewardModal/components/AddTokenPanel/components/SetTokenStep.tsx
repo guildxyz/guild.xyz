@@ -26,13 +26,18 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const isContinueDisabled = !address || !chain
 
   const {
-    data: { logoURI: tokenLogo, decimals: tokenDecimals, symbol: tokenSymbol },
+    data: {
+      logoURI: tokenLogo,
+      decimals: tokenDecimals,
+      symbol: tokenSymbol,
+      name: tokenName,
+    },
   } = useTokenData(chain, address)
 
   useEffect(() => {
     setValue("tokenDecimals", tokenDecimals)
-    setValue("name", tokenSymbol)
-  }, [tokenDecimals, tokenSymbol])
+    setValue("name", `${tokenName}(${tokenSymbol})`)
+  }, [tokenDecimals, tokenSymbol, tokenName])
 
   const [progress, setProgress] = useState<number>(0)
 
