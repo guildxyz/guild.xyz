@@ -6,6 +6,7 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
+import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../../../hooks/useClaimedReward"
 import { RolePlatform } from "../../../../types"
 import { MintLinkModal } from "./MintLinkModal"
@@ -16,6 +17,9 @@ type Props = {
 
 const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
   const { captureEvent } = usePostHogContext()
+
+  const { status } = useAccount()
+
   const { claimed, isLoading: isClaimedLoading } = useClaimedReward(rolePlatform.id)
 
   const { urlName, roles } = useGuild()
@@ -50,7 +54,8 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
     isClaimLoading ||
     isClaimedLoading
 
-  const isDisabled = rest?.isDisabled || !rolePlatform?.capacity
+  const isDisabled =
+    status !== "connected" || rest?.isDisabled || !rolePlatform?.capacity
 
   return (
     <>
