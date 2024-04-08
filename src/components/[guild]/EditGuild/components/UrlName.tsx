@@ -5,11 +5,11 @@ import {
   InputGroup,
   InputLeftAddon,
 } from "@chakra-ui/react"
-import FormErrorMessage from "components/common/FormErrorMessage"
 import useGuild from "components/[guild]/hooks/useGuild"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useFormState } from "react-hook-form"
-import slugify from "slugify"
 import fetcher from "utils/fetcher"
+import slugify from "utils/slugify"
 
 const checkUrlName = (urlName: string) =>
   fetcher(`/v2/guilds/${urlName}`)
@@ -30,7 +30,7 @@ const UrlName = ({ maxWidth = "sm" }) => {
         <Input
           {...register("urlName")}
           onChange={(event) => {
-            setValue("urlName", slugify(event.target.value, { trim: false }), {
+            setValue("urlName", slugify(event.target.value), {
               shouldDirty: true,
             })
           }}

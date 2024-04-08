@@ -90,14 +90,12 @@ const GuildPage = (): JSX.Element => {
     description,
     imageUrl,
     admins,
-    showMembers,
     memberCount,
     roles: allRoles,
     isLoading,
     onboardingComplete,
     socialLinks,
     tags,
-    featureFlags,
     isDetailed,
   } = useGuild()
 
@@ -159,7 +157,8 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
-  const stayConnectedToast = useStayConnectedToast(() => {
+
+  useStayConnectedToast(() => {
     onOpen()
     setTimeout(() => {
       const addContactBtn = document.getElementById("add-contact-btn")
@@ -298,6 +297,7 @@ const GuildPage = (): JSX.Element => {
             </CollapsibleRoleSection>
           )}
         </Section>
+
         {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
         {isAdmin && (
           <>

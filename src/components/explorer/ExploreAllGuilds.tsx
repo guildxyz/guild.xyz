@@ -15,7 +15,6 @@ import {
   TABS_HEIGHT_SM,
   TABS_SM_BUTTONS_STYLES,
 } from "components/[guild]/Tabs/Tabs"
-import { BATCH_SIZE } from "components/_app/ExplorerProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
 import Section from "components/common/Section"
@@ -32,9 +31,7 @@ import { GuildBase } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
 
-type Props = {
-  guildsInitial: GuildBase[]
-}
+const BATCH_SIZE = 24
 
 const useExploreGuilds = (query, guildsInitial) => {
   const fetcherWithSign = useFetcherWithSign()
@@ -62,6 +59,10 @@ const useExploreGuilds = (query, guildsInitial) => {
     isSuperAdmin ? fetcherWithSign : (options as any),
     isSuperAdmin ? options : null
   )
+}
+
+type Props = {
+  guildsInitial: GuildBase[]
 }
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {

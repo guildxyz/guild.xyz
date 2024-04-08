@@ -54,6 +54,13 @@ const CustomPostHogProvider = ({
     <PostHogContext.Provider
       value={{
         captureEvent: (event, options) => {
+          const errorMessage =
+            typeof options?.error?.message === "string"
+              ? options.error.message
+              : typeof options?.error === "string"
+              ? options.error
+              : undefined
+
           if (
             /**
              * We're filtering out errors with correlationIds, because those errors
@@ -66,7 +73,7 @@ const CustomPostHogProvider = ({
              * not an error actually, the user can intentionally reject a
              * transaction
              */
-            options?.error?.message?.includes(USER_REJECTED_ERROR)
+            errorMessage?.includes(USER_REJECTED_ERROR)
           )
             return
 

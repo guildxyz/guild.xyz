@@ -20,7 +20,7 @@ const CollectNftButton = ({
   label = "Collect NFT",
   ...rest
 }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
+  const { captureEvent, startSessionRecording } = usePostHogContext()
 
   const { chain, nftAddress, alreadyCollected, roleId } = useCollectNftContext()
   const { urlName } = useGuild()
@@ -88,6 +88,7 @@ const CollectNftButton = ({
         captureEvent("Click: CollectNftButton (GuildCheckout)", {
           guild: urlName,
         })
+        startSessionRecording()
 
         if (hasRoleAccess) {
           onMintSubmit()
