@@ -161,7 +161,7 @@ const SendNewMessage = (props: ButtonProps) => {
                     <Link href="https://web3inbox.com" colorScheme="blue" isExternal>
                       Web3Inbox
                     </Link>
-                    {`. They can do it from the notifications menu easily!`}
+                    {` - they can do it from the top right bell icon!`}
                   </Text>
                 </Stack>
 
@@ -191,7 +191,6 @@ const SendNewMessage = (props: ButtonProps) => {
             >
               <Button
                 ml="auto"
-                h={10}
                 colorScheme="green"
                 rightIcon={<PaperPlaneRight />}
                 onClick={handleSubmit(onSubmit)}

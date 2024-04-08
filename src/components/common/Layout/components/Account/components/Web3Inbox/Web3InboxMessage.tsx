@@ -106,7 +106,7 @@ const Web3InboxMessage = ({
               <Text>{body}</Text>
             </Stack>
           </ModalBody>
-          <ModalFooter pt="0">
+          <ModalFooter pt="0" pb="8">
             <Text fontFamily="body" colorScheme="gray" fontSize="sm">
               {prettyDate}
             </Text>
