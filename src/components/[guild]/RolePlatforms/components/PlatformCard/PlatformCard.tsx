@@ -22,7 +22,9 @@ const PlatformCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
-  const { info, name, image, type } = usePlatformCardProps(guildPlatform)
+  const { info, name, image, type, shouldHide } = usePlatformCardProps(guildPlatform)
+
+  if (shouldHide) return null
 
   return (
     <RewardCard

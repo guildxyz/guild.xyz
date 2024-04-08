@@ -81,6 +81,7 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   image?: string | JSX.Element
   info?: string | JSX.Element
   link?: string
+  shouldHide?: boolean
 }
 
 type RewardData = {
