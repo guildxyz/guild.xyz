@@ -63,7 +63,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
 
   const { connectors, error, connect, isPending } = useConnect()
 
-  const { connector } = useAccount()
+  const { connector, status } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
@@ -90,6 +90,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           errorMessage: err.message,
           errorStack: err.stack,
           errorCause: err.cause,
+          wagmiAccountStatus: status,
         })
       }
     },
