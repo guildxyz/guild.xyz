@@ -48,7 +48,18 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       {hideAllowlist ? (
         `${isEmail ? "email " : ""}allowlist`
       ) : (
-        <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
+        <Button
+          variant="link"
+          rightIcon={<ArrowSquareIn />}
+          {...("ipfsHash" in requirement.data
+            ? {
+                as: "a",
+                target: "_blank",
+                // Intentionally not using the dedicated gateway for these big allowlists
+                href: `https://gateway.pinata.cloud/ipfs/${requirement.data.ipfsHash}`,
+              }
+            : { onClick: onOpen })}
+        >
           {`${isEmail ? "email " : ""}allowlist`}
         </Button>
       )}
