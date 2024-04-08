@@ -7,6 +7,8 @@ type Props = {
   width?: ResponsiveValue<string>
 }
 
+export const GUILD_NAME_REGEX = /.*[a-zA-Z].*/
+
 const Name = ({
   isDisabled,
   width = { base: "full", md: "sm" },
@@ -30,6 +32,10 @@ const Name = ({
           maxLength: {
             value: 50,
             message: "The maximum possible name length is 50 characters",
+          },
+          pattern: {
+            value: GUILD_NAME_REGEX,
+            message: "Guild name should include at least one letter",
           },
         })}
         isDisabled={isDisabled}
