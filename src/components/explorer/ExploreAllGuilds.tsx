@@ -9,6 +9,7 @@ import {
   usePrevious,
   VStack,
 } from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
 import {
   TABS_HEIGHT,
   TABS_HEIGHT_SM,
@@ -27,13 +28,42 @@ import useScrollEffect from "hooks/useScrollEffect"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
+import { useFetcherWithSign } from "utils/fetcher"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
+
+const BATCH_SIZE = 24
+
+const useExploreGuilds = (query, guildsInitial) => {
+  const fetcherWithSign = useFetcherWithSign()
+  const { isSuperAdmin } = useUser()
+
+  const options = {
+    fallbackData: guildsInitial,
+    dedupingInterval: 60000, // one minute
+    revalidateFirstPage: false,
+  }
+
+  // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
+  return useSWRInfinite(
+    (pageIndex, previousPageData) => {
+      if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
+        return null
+
+      const url = `/v2/guilds?${query}&limit=${BATCH_SIZE}&offset=${
+        pageIndex * BATCH_SIZE
+      }`
+
+      if (isSuperAdmin) return [url, { method: "GET", body: {} }]
+      return url
+    },
+    isSuperAdmin ? fetcherWithSign : (options as any),
+    isSuperAdmin ? options : null
+  )
+}
 
 type Props = {
   guildsInitial: GuildBase[]
 }
-
-const BATCH_SIZE = 24
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -56,7 +86,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const onSetOrder = (value) => {
     setOrder(value)
     window.scrollTo({
-      top: window.scrollY + ref.current.getBoundingClientRect().top - 25,
+      top: window.scrollY + ref.current.getBoundingClientRect().top - 20,
       behavior: "smooth",
     })
   }
@@ -67,17 +97,8 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     data: filteredGuilds,
     setSize,
     isValidating,
-  } = useSWRInfinite(
-    (pageIndex, previousPageData) =>
-      Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE
-        ? null
-        : `/v2/guilds?${query}&limit=${BATCH_SIZE}&offset=${pageIndex * BATCH_SIZE}`,
-    {
-      fallbackData: guildsInitial,
-      dedupingInterval: 60000, // one minute
-      revalidateFirstPage: false,
-    }
-  )
+  } = useExploreGuilds(query, guildsInitial)
+
   const renderedGuilds = filteredGuilds?.flat()
 
   useEffect(() => {
@@ -101,7 +122,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     <Stack spacing={{ base: 8, md: 10 }}>
       <ClientOnly>{isWeb3Connected && <Divider />}</ClientOnly>
       <Section
-        title="Explore all guilds"
+        title="Explore verified guilds"
         ref={ref}
         id="allGuilds"
         scrollMarginTop={20}
@@ -122,7 +143,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
             ${TABS_SM_BUTTONS_STYLES}`}</style>
           )}
           <SearchBar
-            placeholder="Search guilds"
+            placeholder="Search verified guilds"
             {...{ search, setSearch }}
             rightAddon={
               !isMobile && (

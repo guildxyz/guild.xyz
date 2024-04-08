@@ -10,7 +10,7 @@ const HideFromExplorerToggle = (): JSX.Element => {
       <Switch
         {...register("hideFromExplorer")}
         title="Hide from explorer"
-        description="Make guild private so only those will know about it who you share the link with"
+        description="Your guild is verified, thus it is shown by default on the Guild explorer homepage. You can opt out of that here"
       />
     </FormControl>
   )

@@ -297,7 +297,7 @@ const EditGuildDrawer = ({
                 <Divider />
 
                 <Section title="Security">
-                  <HideFromExplorerToggle />
+                  {savedTags?.includes("VERIFIED") && <HideFromExplorerToggle />}
 
                   <Admins />
                 </Section>
