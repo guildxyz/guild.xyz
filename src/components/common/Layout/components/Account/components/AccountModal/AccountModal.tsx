@@ -81,12 +81,7 @@ const AccountModal = () => {
   const { connectorName } = useConnectorNameAndIcon()
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      colorScheme="duotone"
-      scrollBehavior="inside"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pb="6">Account</ModalHeader>

@@ -109,7 +109,7 @@ const BuyPass = () => {
             <UnlockingRewards roleId={role.id} />
           </ModalBody>
 
-          <ModalFooter pt={10} flexDir="column">
+          <ModalFooter pt={8} flexDir="column">
             <PaymentMethodButtons />
 
             <Stack spacing={8} w="full">

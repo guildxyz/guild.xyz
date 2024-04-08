@@ -86,7 +86,6 @@ const SharedSocials = () => {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        colorScheme="duotone"
         scrollBehavior="inside"
         finalFocusRef={dummyRef}
       >
