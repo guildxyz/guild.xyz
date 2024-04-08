@@ -27,7 +27,7 @@ const CollectNftButton = ({
 
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
-  const { address, chainId } = useAccount()
+  const { address, chainId, status } = useAccount()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
   const {
@@ -74,7 +74,11 @@ const CollectNftButton = ({
     ? mintLoadingText
     : "Checking eligibility"
 
-  const isDisabled = shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
+  const isDisabled =
+    status !== "connected" ||
+    shouldSwitchNetwork ||
+    alreadyCollected ||
+    !isSufficientBalance
 
   return (
     <Button
