@@ -5,15 +5,16 @@ import {
   AlertTitle,
   Stack,
 } from "@chakra-ui/react"
+import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
 
 type Props = {
   latestMessageCreatedAt: number
 }
 
 const MessagingRateLimitAlert = ({ latestMessageCreatedAt }: Props) => {
-  const now = Date.now()
-  const timeDiff = now - latestMessageCreatedAt
-  const rateLimitEnd = new Date(now + timeDiff).toLocaleDateString("en-US", {
+  const rateLimitEnd = new Date(
+    latestMessageCreatedAt + DAY_IN_MS
+  ).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
