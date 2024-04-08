@@ -8,7 +8,6 @@ import { useAccount, type Connector } from "wagmi"
 type Props = {
   connector: Connector
   pendingConnector: Connector
-  isLoading: boolean
   connect: (args) => void
   error?: Error
 }
@@ -30,7 +29,6 @@ const connectorButtonProps: ButtonProps = {
 const ConnectorButton = ({
   connector,
   pendingConnector,
-  isLoading,
   connect,
   error,
 }: Props): JSX.Element => {
@@ -60,7 +58,7 @@ const ConnectorButton = ({
       }
       isDisabled={activeConnector?.id === connector.id}
       isLoading={
-        ((isLoading && pendingConnector?.id === connector.id) ||
+        (pendingConnector?.id === connector.id ||
           (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
         !error
       }

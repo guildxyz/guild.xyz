@@ -61,7 +61,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     delegateConnectionAtom
   )
 
-  const { connectors, error, connect, isPending } = useConnect()
+  const { connectors, error, connect, variables, isPending } = useConnect()
 
   const { connector, status } = useAccount()
 
@@ -237,8 +237,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     <ConnectorButton
                       connector={conn}
                       connect={connect}
-                      isLoading={isPending}
-                      pendingConnector={null as Connector}
+                      pendingConnector={
+                        isPending && (variables?.connector as Connector)
+                      }
                       error={error}
                     />
                   </CardMotionWrapper>
