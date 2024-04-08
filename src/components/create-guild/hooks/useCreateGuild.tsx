@@ -7,7 +7,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, GuildBase } from "types"
+import { Guild, GuildBase, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
@@ -35,6 +35,12 @@ const useCreateGuild = () => {
       triggerConfetti()
 
       captureEvent("guild creation flow > guild successfully created")
+
+      if (response_.guildPlatforms?.[0]?.platformId === PlatformType.CONTRACT_CALL) {
+        captureEvent("Created NFT reward", {
+          hook: "useCreateGuild",
+        })
+      }
 
       mutateYourGuilds((prev) => mutateGuildsCache(prev, response_), {
         revalidate: false,

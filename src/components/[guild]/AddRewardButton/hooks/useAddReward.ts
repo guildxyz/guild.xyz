@@ -3,7 +3,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { GuildPlatform } from "types"
+import { GuildPlatform, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 const useAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
@@ -23,7 +23,14 @@ const useAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
       showErrorToast(error)
       captureEvent("useAddReward error", { ...postHogOptions, error })
     },
-    onSuccess: () => {
+    onSuccess: (response) => {
+      if (response.platformId === PlatformType.CONTRACT_CALL) {
+        captureEvent("Created NFT reward", {
+          ...postHogOptions,
+          hook: "useAddReward",
+        })
+      }
+
       toast({ status: "success", title: "Reward successfully added" })
       mutateGuild()
       onSuccess?.()
