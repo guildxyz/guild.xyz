@@ -156,7 +156,8 @@ const useCollectNft = () => {
 
         captureEvent("Mint NFT error (GuildCheckout)", {
           ...postHogOptions,
-          error,
+          error: prettyError,
+          originalError: error,
         })
       },
     }),
