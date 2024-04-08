@@ -24,10 +24,10 @@ const MessagingRateLimitAlert = ({ latestMessageCreatedAt }: Props) => {
 
   return (
     <Alert status="info">
-      <AlertIcon />
-      <Stack position="relative" top={1} spacing={1}>
-        <AlertTitle>You can send 1 message per day</AlertTitle>
-        <AlertDescription>{`You'll be able to send your next message at ${rateLimitEnd}`}</AlertDescription>
+      <AlertIcon mt="-1px" />
+      <Stack spacing={1}>
+        <AlertTitle>You can only send one message per day</AlertTitle>
+        <AlertDescription>{`You'll be able to send your next message on ${rateLimitEnd}`}</AlertDescription>
       </Stack>
     </Alert>
   )

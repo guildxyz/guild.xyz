@@ -3,6 +3,7 @@ import {
   ButtonProps,
   FormControl,
   FormLabel,
+  HStack,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,7 +14,6 @@ import {
   Stack,
   Text,
   Textarea,
-  Tooltip,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -119,7 +119,11 @@ const SendNewMessage = (props: ButtonProps) => {
                 )}
 
                 <Stack>
-                  <FormControl isRequired isInvalid={!!errors.roleIds}>
+                  <FormControl
+                    isRequired
+                    isInvalid={!!errors.roleIds}
+                    isDisabled={isSendDisabled}
+                  >
                     <FormLabel>Recipient roles</FormLabel>
                     <RoleIdsSelect />
                     <FormErrorMessage>{errors.roleIds?.message}</FormErrorMessage>
@@ -165,7 +169,11 @@ const SendNewMessage = (props: ButtonProps) => {
                   </Text>
                 </Stack>
 
-                <FormControl isRequired isInvalid={!!errors.message}>
+                <FormControl
+                  isRequired
+                  isInvalid={!!errors.message}
+                  isDisabled={isSendDisabled}
+                >
                   <FormLabel>Message</FormLabel>
                   <Textarea
                     placeholder="Write your message here"
@@ -185,13 +193,13 @@ const SendNewMessage = (props: ButtonProps) => {
           </ModalBody>
 
           <ModalFooter>
-            <Tooltip
-              label="You can send one message per day, please check back later!"
-              isDisabled={!isSendDisabled}
-            >
+            <HStack justifyContent={"space-between"} w="full" gap="6">
+              <Text fontSize="sm" colorScheme={"gray"}>
+                You can only send one message per day
+              </Text>
               <Button
-                ml="auto"
                 colorScheme="green"
+                flexShrink={0}
                 rightIcon={<PaperPlaneRight />}
                 onClick={handleSubmit(onSubmit)}
                 isLoading={isLoading}
@@ -200,7 +208,7 @@ const SendNewMessage = (props: ButtonProps) => {
               >
                 Send
               </Button>
-            </Tooltip>
+            </HStack>
           </ModalFooter>
         </ModalContent>
       </Modal>
