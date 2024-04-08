@@ -30,11 +30,10 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
 
   const [isInSafeContext, setIsInSafeContext] = useAtom(safeContextAtom)
 
-  const {
-    isConnected: isEvmConnected,
-    connector: evmConnector,
-    address: evmAddress,
-  } = useAccount()
+  const { status, connector: evmConnector, address: evmAddress } = useAccount()
+  // wagmi's isConnected can be true, even if the wallet is still reconnecting, so it's safer to use the status variable
+  const isEvmConnected = status === "connected"
+
   const { signMessageAsync } = useSignMessage()
 
   useEffect(() => {
