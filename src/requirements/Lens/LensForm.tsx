@@ -188,7 +188,6 @@ const LensProfileSelect = ({
   const debouncedSearch = useDebouncedState(search)
 
   const { handles, isLoading } = useLensProfiles(debouncedSearch)
-  console.log("handles", handles)
 
   return (
     <FormControl

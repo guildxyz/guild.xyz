@@ -37,8 +37,8 @@ const useLensProfiles = (searchQuery: string) => {
 
   return {
     handles: data?.map(({ handle: { localName }, metadata }) => ({
-      label: localName,
-      value: localName,
+      label: `${localName}.lens`,
+      value: `${localName}.lens`,
       img: metadata?.picture?.optimized?.uri ?? (REQUIREMENTS.LENS.icon as string),
     })),
     isLoading,
