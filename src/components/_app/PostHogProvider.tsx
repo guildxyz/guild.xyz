@@ -55,11 +55,14 @@ const CustomPostHogProvider = ({
     <PostHogContext.Provider
       value={{
         captureEvent: (event, options) => {
+          // TODO: find a better approach here...
           const errorMessage =
             typeof options?.error?.message === "string"
               ? options.error.message
               : typeof options?.error === "string"
               ? options.error
+              : typeof options?.errorMessage === "string"
+              ? options.errorMessage
               : undefined
 
           if (
