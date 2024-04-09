@@ -1,15 +1,17 @@
-import { Tooltip } from "@chakra-ui/react"
+import { Tooltip, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import { GuildPlatform } from "types"
 import { getRolePlatformStatus } from "utils/rolePlatformHelpers"
+import ClaimTokenModal from "./ClaimTokenModal"
 
 type Props = {
   platform: GuildPlatform
 }
 
 const TokenCardButton = ({ platform }: Props) => {
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const claimed = false
 
   const { roles } = useGuild()
@@ -25,10 +27,17 @@ const TokenCardButton = ({ platform }: Props) => {
         shouldWrapChildren
         w="full"
       >
-        <Button colorScheme="GATHER_TOWN" w="full" isDisabled={claimed}>
+        <Button
+          colorScheme="GATHER_TOWN"
+          w="full"
+          isDisabled={claimed}
+          onClick={onOpen}
+        >
           Claim
         </Button>
       </Tooltip>
+
+      <ClaimTokenModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

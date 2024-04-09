@@ -11,10 +11,10 @@ import {
   VStack,
   useColorMode,
 } from "@chakra-ui/react"
-import GuildPinFees from "components/[guild]/Requirements/components/GuildCheckout/components/GuildPinFees"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import Image from "next/image"
+import ClaimFeeTable from "./ClaimFeeTable"
 
 type Props = {
   isOpen: boolean
@@ -95,7 +95,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             </VStack>
           </Stack>
 
-          <GuildPinFees />
+          <ClaimFeeTable />
           <Button colorScheme="primary" mt={2}>
             Claim
           </Button>
