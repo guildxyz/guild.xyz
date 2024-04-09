@@ -9,10 +9,10 @@ import {
   Stack,
   Text,
   VStack,
-  useColorMode,
 } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
+import { useCardBg } from "components/common/Card"
 import Image from "next/image"
 import ClaimFeeTable from "./ClaimFeeTable"
 
@@ -23,8 +23,7 @@ type Props = {
 
 const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
-  const { colorMode } = useColorMode()
-  const modalBg = colorMode === "dark" ? "var(--chakra-colors-gray-700)" : "#FFFFFF"
+  const modalBg = useCardBg()
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">

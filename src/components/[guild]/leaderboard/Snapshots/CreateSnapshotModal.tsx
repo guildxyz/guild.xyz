@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
@@ -81,17 +82,15 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
         <Modal size="lg" isOpen={isOpen} onClose={onClose} colorScheme="dark">
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>
-              <Text>Create snapshot</Text>
-            </ModalHeader>
+            <ModalHeader pb="4">Create snapshot</ModalHeader>
             <ModalCloseButton />
 
             <ModalBody>
-              <Stack justifyContent={"space-between"} gap={4} mb={5}>
-                <Text color={"GrayText"} fontWeight={"medium"}>
-                  Capture a snapshot of the current leaderboard state to use for
-                  token rewards or as a requirement for different roles
-                </Text>
+              <Text colorScheme={"gray"} fontWeight={"medium"} mb="6">
+                Capture a snapshot of the current leaderboard state to use for token
+                rewards, or as a requirement for roles
+              </Text>
+              <Stack gap={4}>
                 <ExistingPointsTypeSelect
                   existingPointsRewards={existingPointsRewards}
                   selectedExistingId={selectedExistingId}
@@ -106,19 +105,20 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
                     })}
                   />
                 </FormControl>
+                <Box>
+                  <Text fontWeight={"medium"} mb="2">
+                    Preview
+                  </Text>
+                  <SnapshotTable
+                    snapshotData={leaderboardToSnapshot}
+                    chakraProps={{ mt: 0 }}
+                  />
+                </Box>
               </Stack>
 
-              <Stack gap={3}>
-                <Text fontWeight={"medium"}>Preview</Text>
-                <SnapshotTable
-                  snapshotData={leaderboardToSnapshot}
-                  chakraProps={{ mt: 0 }}
-                />
-              </Stack>
-
-              <Stack mt={4}>
-                <Button colorScheme={"primary"}>Create</Button>
-              </Stack>
+              <Button mt={8} w="full" colorScheme={"green"}>
+                Create
+              </Button>
             </ModalBody>
           </ModalContent>
         </Modal>

@@ -11,7 +11,6 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  useColorMode,
   Wrap,
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
@@ -167,8 +166,6 @@ const GuildPage = (): JSX.Element => {
       if (addContactBtn) addContactBtn.focus()
     }, 200)
   })
-
-  const { colorMode } = useColorMode()
 
   return (
     <>
