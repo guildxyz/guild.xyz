@@ -1,4 +1,5 @@
 import { createStore, del, get, set } from "idb-keyval"
+import { LENS_API_URL } from "requirements/Lens/hooks/useLensProfiles"
 import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
@@ -81,18 +82,20 @@ const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
 }
 
 const fetchLensProtocolName = async (address: string): Promise<string> => {
-  const lens = await fetcher("https://api.lens.dev/", {
+  const lens = await fetcher(LENS_API_URL, {
     method: "POST",
     body: {
-      query: `query Profiles {
-        profiles(request: { ownedBy: ["${address}"] }) {
+      query: `query {
+        profiles(request: { where: { ownedBy: ["${address}"] } }) {
           items {
-            handle
+            handle {
+              localName
+            }
         }}
       }`,
     },
   })
-    .then((res) => res?.data?.profiles?.items?.[0]?.handle)
+    .then((res) => res?.data?.profiles?.items?.[0]?.handle?.localName)
     .catch(() => null)
 
   if (lens) {
@@ -225,7 +228,7 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
 
   // test address: 0xe055721b972d58f0bcf6370c357879fb3a37d2f3 - ladidaix.eth
   const lens = await fetchLensProtocolName(lowerCaseAddress)
-  if (lens) return lens
+  if (lens) return `${lens}.lens`
 
   // test address: 0x2e552e3ad9f7446e9cab378c008315e0c26c0398 - allen.bnb / 0x5206.arb
   const spaceId = await fetchSpaceIdName(lowerCaseAddress)
