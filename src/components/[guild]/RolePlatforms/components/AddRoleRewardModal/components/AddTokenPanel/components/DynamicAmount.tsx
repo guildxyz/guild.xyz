@@ -111,6 +111,7 @@ const DynamicAmount = () => {
     {
       value: SnapshotOption.CUSTOM,
       title: "Custom snapshot",
+      disabled: "Soon",
       description:
         "Upload a custom snapshot to assign unique numbers to users for reward calculation",
       leftComponent: (

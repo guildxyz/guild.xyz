@@ -7,6 +7,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Skeleton,
   Td,
   Text,
   Tr,
@@ -14,8 +15,14 @@ import {
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import PriceFallback from "components/[guild]/Requirements/components/GuildCheckout/components/PriceFallback"
 import { ArrowSquareOut, Question } from "phosphor-react"
+import { formatUnits } from "viem"
+import { useTokenRewardContext } from "./TokenRewardContext"
 
-const ClaimFeeTable = () => {
+const TokenClaimFeeTable = () => {
+  const { fee, feeIsLoading, token, tokenIsLoading } = useTokenRewardContext()
+  const formattedFee =
+    feeIsLoading || tokenIsLoading ? null : formatUnits(fee, token.decimals)
+
   return (
     <>
       <FeesTable
@@ -42,13 +49,17 @@ const ClaimFeeTable = () => {
               </Popover>
             </HStack>
 
-            <PriceFallback pickedCurrency={"UNI"} error={null}>
-              <Text as="span">
-                <Text as="span">2.0 UNI</Text>
-                <Text as="span" colorScheme="gray">
-                  {` + gas`}
+            <PriceFallback pickedCurrency={token.symbol} error={null}>
+              <Skeleton isLoaded={formattedFee !== null}>
+                <Text as="span">
+                  <Text as="span">
+                    {formattedFee} {token?.symbol}
+                  </Text>
+                  <Text as="span" colorScheme="gray">
+                    {` + gas`}
+                  </Text>
                 </Text>
-              </Text>
+              </Skeleton>
             </PriceFallback>
           </HStack>
         }
@@ -60,13 +71,15 @@ const ClaimFeeTable = () => {
 
         <Tr>
           <Td>Caliming fee</Td>
-          <Td isNumeric>2.0 UNI</Td>
+          <Td isNumeric>
+            {formattedFee} {token?.symbol}
+          </Td>
         </Tr>
 
         <Tr>
           <Td>Total</Td>
           <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
-            2.0 UNI + gas
+            {formattedFee} {token?.symbol} + gas
           </Td>
         </Tr>
       </FeesTable>
@@ -74,4 +87,4 @@ const ClaimFeeTable = () => {
   )
 }
 
-export default ClaimFeeTable
+export default TokenClaimFeeTable

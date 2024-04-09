@@ -11,10 +11,14 @@ import {
   VStack,
   useColorMode,
 } from "@chakra-ui/react"
+import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import Image from "next/image"
-import ClaimFeeTable from "./ClaimFeeTable"
+import { useAccount } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
+import TokenClaimFeeTable from "./ClaimFeeTable"
+import { useTokenRewardContext } from "./TokenRewardContext"
 
 type Props = {
   isOpen: boolean
@@ -25,6 +29,11 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
   const { colorMode } = useColorMode()
   const modalBg = colorMode === "dark" ? "var(--chakra-colors-gray-700)" : "#FFFFFF"
+
+  const { platformGuildData } = useTokenRewardContext()
+
+  const { chainId } = useAccount()
+  const isOnCorrectChain = Number(Chains[platformGuildData.chain]) === chainId
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -95,10 +104,16 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             </VStack>
           </Stack>
 
-          <ClaimFeeTable />
-          <Button colorScheme="primary" mt={2}>
-            Claim
-          </Button>
+          <TokenClaimFeeTable />
+          {!isOnCorrectChain ? (
+            <SwitchNetworkButton
+              targetChainId={Number(Chains[platformGuildData.chain])}
+            />
+          ) : (
+            <Button colorScheme="primary" mt={2}>
+              Claim
+            </Button>
+          )}
         </ModalBody>
       </ModalContent>
     </Modal>
