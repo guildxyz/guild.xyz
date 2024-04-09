@@ -4,7 +4,20 @@ import fetcher from "utils/fetcher"
 
 export const LENS_API_URL = "https://api-v2.lens.dev"
 
-const fetchProfiles = ([endpoint, searchQuery]) =>
+const fetchProfiles = ([endpoint, searchQuery]): Promise<
+  {
+    handle: {
+      localName: string
+    }
+    metadata?: {
+      picture?: {
+        optimized?: {
+          uri?: string
+        }
+      }
+    }
+  }[]
+> =>
   fetcher(endpoint, {
     headers: {
       Accept: "application/json",

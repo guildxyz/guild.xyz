@@ -38,9 +38,9 @@ const fetchLensProfile = ([endpoint, handle]) =>
   })
 
 const useLensProfile = (handle: string) =>
-  useSWRImmutable(
-    handle ? [LENS_API_URL, handle.replace(".lens", "")] : null,
-    fetchLensProfile
-  )
+  useSWRImmutable<{
+    handle: string
+    img?: string
+  }>(handle ? [LENS_API_URL, handle.replace(".lens", "")] : null, fetchLensProfile)
 
 export default useLensProfile
