@@ -1,4 +1,5 @@
 import { createStore, del, get, set } from "idb-keyval"
+import { LENS_API_URL } from "requirements/Lens/hooks/useLensProfiles"
 import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
@@ -81,7 +82,7 @@ const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
 }
 
 const fetchLensProtocolName = async (address: string): Promise<string> => {
-  const lens = await fetcher("https://api-v2.lens.dev", {
+  const lens = await fetcher(LENS_API_URL, {
     method: "POST",
     body: {
       query: `query {

@@ -2,6 +2,8 @@ import REQUIREMENTS from "requirements"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
+export const LENS_API_URL = "https://api-v2.lens.dev"
+
 const fetchProfiles = ([endpoint, searchQuery]) =>
   fetcher(endpoint, {
     headers: {
@@ -31,7 +33,7 @@ const fetchProfiles = ([endpoint, searchQuery]) =>
 
 const useLensProfiles = (searchQuery: string) => {
   const { data, isLoading } = useSWRImmutable(
-    searchQuery.length > 0 ? ["https://api-v2.lens.dev", searchQuery] : null,
+    searchQuery.length > 0 ? [LENS_API_URL, searchQuery] : null,
     fetchProfiles
   )
 
