@@ -13,6 +13,7 @@ import {
   MenuList,
   Skeleton,
   SkeletonCircle,
+  Spinner,
   Tag,
   Text,
   Tooltip,
@@ -29,6 +30,7 @@ import { useRef } from "react"
 import { User } from "types"
 import shortenHex from "utils/shortenHex"
 import { useDisconnectAddress } from "../hooks/useDisconnect"
+import useEditPrimaryAddress from "../hooks/useEditPrimaryAddress"
 import AddressTypeTag from "./AddressTypeTag"
 import PrimaryAddressTag from "./PrimaryAddressTag"
 
@@ -38,12 +40,22 @@ type Props = {
 
 const LinkedAddress = ({ addressData }: Props) => {
   const { address, isDelegated, isPrimary, walletType } = addressData ?? {}
+
+  const {
+    onSubmit: onEditPrimaryAddressSubmit,
+    isLoading: isEditPrimaryAddressLoading,
+  } = useEditPrimaryAddress()
+
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { onSubmit, isLoading, signLoadingText } = useDisconnectAddress(onClose)
+  const {
+    onSubmit: onDisconnectSubmit,
+    isLoading: isDisconnectLoading,
+    signLoadingText: disconnectSignLoadingText,
+  } = useDisconnectAddress(onClose)
   const alertCancelRef = useRef()
 
-  const removeAddress = () => onSubmit({ address })
+  const removeAddress = () => onDisconnectSubmit({ address })
   const removeMenuItemColor = useColorModeValue("red.600", "red.300")
 
   return (
@@ -73,7 +85,8 @@ const LinkedAddress = ({ addressData }: Props) => {
         {walletType !== "EVM" && <AddressTypeTag type={walletType} size="sm" />}
         {isPrimary && <PrimaryAddressTag size="sm" />}
 
-        <Menu>
+        {/* Using a custom key here so the menu closes when we successfully set a new primary address */}
+        <Menu key={`${address}${isPrimary ? "-primary" : ""}`} closeOnSelect={false}>
           <MenuButton
             as={IconButton}
             icon={<DotsThree />}
@@ -84,7 +97,26 @@ const LinkedAddress = ({ addressData }: Props) => {
             ml="auto !important"
           />
           <MenuList minW="none">
-            {!isPrimary && <MenuItem icon={<UserSwitch />}>Set as primary</MenuItem>}
+            {!isPrimary && (
+              <MenuItem
+                isDisabled={isEditPrimaryAddressLoading}
+                icon={
+                  isEditPrimaryAddressLoading ? (
+                    <Spinner size="xs" />
+                  ) : (
+                    <UserSwitch />
+                  )
+                }
+                onClick={() =>
+                  onEditPrimaryAddressSubmit({
+                    address,
+                    isPrimary: true,
+                  })
+                }
+              >
+                Set as primary
+              </MenuItem>
+            )}
             <MenuItem
               icon={<LinkBreak />}
               color={removeMenuItemColor}
@@ -117,8 +149,8 @@ const LinkedAddress = ({ addressData }: Props) => {
               <Button
                 colorScheme="red"
                 onClick={removeAddress}
-                isLoading={isLoading}
-                loadingText={signLoadingText || "Removing"}
+                isLoading={isDisconnectLoading}
+                loadingText={disconnectSignLoadingText || "Removing"}
                 ml={3}
               >
                 Disconnect

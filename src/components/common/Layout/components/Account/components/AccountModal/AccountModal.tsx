@@ -101,13 +101,8 @@ const AccountModal = () => {
                       decimals={5}
                       fontWeight="bold"
                     />
-                    {(typeof addresses?.[0] === "string"
-                      ? (addresses as any)?.indexOf(address.toLowerCase())
-                      : addresses?.findIndex(
-                          ({ address: a }) => a === address.toLowerCase()
-                        )) === 0 && addresses.length > 1 ? (
-                      <PrimaryAddressTag size="sm" />
-                    ) : null}
+                    {addresses?.find((a) => a.address === address.toLowerCase())
+                      ?.isPrimary && <PrimaryAddressTag size="sm" />}
                   </HStack>
                   <HStack spacing="1">
                     <Text
