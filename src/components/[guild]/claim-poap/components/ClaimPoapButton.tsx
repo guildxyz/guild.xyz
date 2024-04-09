@@ -18,7 +18,7 @@ type Props = {
 const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
   const { captureEvent } = usePostHogContext()
 
-  const { status } = useAccount()
+  const { isConnected } = useAccount()
 
   const { claimed, isLoading: isClaimedLoading } = useClaimedReward(rolePlatform.id)
 
@@ -54,8 +54,7 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
     isClaimLoading ||
     isClaimedLoading
 
-  const isDisabled =
-    status !== "connected" || rest?.isDisabled || !rolePlatform?.capacity
+  const isDisabled = !isConnected || rest?.isDisabled || !rolePlatform?.capacity
 
   return (
     <>
