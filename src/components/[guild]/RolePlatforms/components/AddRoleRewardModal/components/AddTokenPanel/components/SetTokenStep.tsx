@@ -37,7 +37,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   useEffect(() => {
     setValue("tokenDecimals", tokenDecimals)
     setValue("name", `${tokenName}(${tokenSymbol})`)
-  }, [tokenDecimals, tokenSymbol, tokenName])
+  }, [tokenDecimals, tokenSymbol, tokenName, tokenLogo])
 
   const [progress, setProgress] = useState<number>(0)
 

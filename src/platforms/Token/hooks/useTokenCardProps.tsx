@@ -21,7 +21,7 @@ const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
 
   return {
     type: "ERC20" as PlatformName,
-    image: imageUrl,
+    image: logoURI || imageUrl,
     name: `Claim ${symbol}`,
   }
 }
