@@ -112,10 +112,7 @@ const App = ({
           }}
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <WagmiProvider
-              config={wagmiConfig}
-              reconnectOnMount={!process.env.NEXT_PUBLIC_MOCK_CONNECTOR}
-            >
+            <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
               <QueryClientProvider client={queryClient}>
                 <FuelProvider>
                   <PostHogProvider>
