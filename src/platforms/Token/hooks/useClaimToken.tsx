@@ -14,7 +14,7 @@ const useClaimToken = (guildPlatform: GuildPlatform) => {
     role.rolePlatforms.find((rolePlatform) => rolePlatform.id === guildPlatform.id)
   )
 
-  const endpoint = `/v2/guilds/${guildId}/roles/${roleOfReward.id}/role-platforms/${guildPlatform.id}/claim`
+  const endpoint = `/v2/guilds/${guildId}/roles/${roleOfReward?.id}/role-platforms/${guildPlatform?.id}/claim`
   const { data: claimData } = useSWRWithOptionalAuth(endpoint)
 
   // const claimArgs = [

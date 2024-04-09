@@ -466,8 +466,7 @@ const rewards: Record<PlatformName, RewardData> = {
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     cardPropsHook: useTokenCardProps,
     cardButton: TokenCardButton,
-    cardMenuComponent: GatherCardMenu,
-    RewardPreview: dynamic(() => import("platforms/components/GatherPreview"), {
+    RewardPreview: dynamic(() => import("platforms/components/TokenPreview"), {
       ssr: false,
       loading: () => <RewardPreview isLoading />,
     }),
