@@ -1,8 +1,7 @@
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useRole from "components/[guild]/hooks/useRole"
+import useMembership from "components/explorer/hooks/useMembership"
 import useTokenData from "hooks/useTokenData"
-import { GuildPlatformWithOptionalId, PlatformName, PlatformType } from "types"
+import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const {
@@ -16,14 +15,9 @@ const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   } = useTokenData(chain, tokenAddress)
 
   const guildPlatforms = useAccessedGuildPlatforms()
-  const tokenRewards = guildPlatforms.filter(
-    (platform) => platform.platformId === PlatformType["ERC20"]
-  )
 
-  const { id: guildId } = useGuild()
-  const role = useRole(guildPlatform.platformGuildId, guildPlatform.platformId)
-
-  console.log(role)
+  const something = useMembership()
+  console.log(something)
 
   return {
     type: "ERC20" as PlatformName,
