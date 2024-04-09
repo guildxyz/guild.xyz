@@ -4,6 +4,7 @@ import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
 import WalletSelectorModal, {
   walletSelectorModalAtom,
 } from "./components/WalletSelectorModal"
+import useAutoReconnect from "./hooks/useAutoReconnect"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 
 const Web3ConnectionManager = () => {
@@ -11,6 +12,7 @@ const Web3ConnectionManager = () => {
     walletSelectorModalAtom
   )
 
+  useAutoReconnect()
   useConnectFromLocalStorage()
 
   return (
