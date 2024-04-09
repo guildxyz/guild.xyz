@@ -6,13 +6,17 @@ import {
   AlertDialogOverlay,
   Circle,
   HStack,
-  Icon,
   IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Skeleton,
   SkeletonCircle,
   Tag,
   Text,
   Tooltip,
+  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -20,7 +24,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Alert } from "components/common/Modal"
 import Image from "next/image"
-import { LinkBreak } from "phosphor-react"
+import { DotsThree, LinkBreak, UserSwitch } from "phosphor-react"
 import { useRef } from "react"
 import { User } from "types"
 import shortenHex from "utils/shortenHex"
@@ -40,6 +44,7 @@ const LinkedAddress = ({ addressData }: Props) => {
   const alertCancelRef = useRef()
 
   const removeAddress = () => onSubmit({ address })
+  const removeMenuItemColor = useColorModeValue("red.600", "red.300")
 
   return (
     <>
@@ -67,19 +72,30 @@ const LinkedAddress = ({ addressData }: Props) => {
         )}
         {walletType !== "EVM" && <AddressTypeTag type={walletType} size="sm" />}
         {isPrimary && <PrimaryAddressTag size="sm" />}
-        <Tooltip label="Disconnect address" placement="top" hasArrow>
-          <IconButton
+
+        <Menu>
+          <MenuButton
+            as={IconButton}
+            icon={<DotsThree />}
+            aria-label="Options"
             rounded="full"
             variant="ghost"
             size="sm"
-            icon={<Icon as={LinkBreak} />}
-            colorScheme="red"
             ml="auto !important"
-            onClick={onOpen}
-            aria-label="Disconnect address"
           />
-        </Tooltip>
+          <MenuList minW="none">
+            {!isPrimary && <MenuItem icon={<UserSwitch />}>Set as primary</MenuItem>}
+            <MenuItem
+              icon={<LinkBreak />}
+              color={removeMenuItemColor}
+              onClick={onOpen}
+            >
+              Disconnect
+            </MenuItem>
+          </MenuList>
+        </Menu>
       </HStack>
+
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
