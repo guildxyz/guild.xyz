@@ -357,7 +357,7 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/lens.png",
+    icon: "/requirementLogos/lens.svg",
     name: "Lens",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Lens/LensRequirement")

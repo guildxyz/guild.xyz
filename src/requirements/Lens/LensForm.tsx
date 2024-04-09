@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useDebouncedState from "hooks/useDebouncedState"
 import { useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -184,16 +185,10 @@ const LensProfileSelect = ({
   // provide default value so there's options data on role edit
   // split before "." because I couldn't get the graphql query to work with "." in it
   const [search, setSearch] = useState(field?.data?.id?.split(".")?.[0] ?? "")
+  const debouncedSearch = useDebouncedState(search)
 
-  const { handles, restCount, isLoading } = useLensProfiles(search)
-
-  const options = handles?.map((handle) => ({
-    label: handle,
-    value: handle,
-  }))
-
-  if (restCount > 0)
-    options.push({ label: `${restCount} more`, value: 0, isDisabled: true })
+  const { handles, isLoading } = useLensProfiles(debouncedSearch)
+  console.log("handles", handles)
 
   return (
     <FormControl
@@ -208,7 +203,7 @@ const LensProfileSelect = ({
           required: "This field is required.",
         }}
         isClearable
-        options={options}
+        options={handles}
         placeholder={placeholder}
         onInputChange={(inputValue) => setSearch(inputValue.split(".")[0])}
         isLoading={isLoading}

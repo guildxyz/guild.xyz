@@ -3,13 +3,14 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import REQUIREMENTS from "requirements"
 
 const LensRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
   requirement.chain = "POLYGON"
 
   return (
-    <Requirement image="/requirementLogos/lens.png" {...props}>
+    <Requirement image={REQUIREMENTS.LENS.icon as string} {...props}>
       {(() => {
         switch (requirement.type) {
           case "LENS_COLLECT":
