@@ -180,6 +180,7 @@ export type RewardIconProps = {
   guildPlatform?: GuildPlatform
   withMotionImg?: boolean
   transition?: Transition
+  owerwriteImg?: string
 }
 
 const MotionImg = motion(Img)
@@ -190,6 +191,7 @@ const RewardIcon = ({
   guildPlatform,
   withMotionImg = true,
   transition,
+  owerwriteImg = null,
 }: RewardIconProps) => {
   const circleBgColor = useColorModeValue("gray.700", "gray.600")
 
@@ -210,6 +212,10 @@ const RewardIcon = ({
   const motionElementProps = {
     layoutId: `${rolePlatformId}_reward_img`,
     transition: { type: "spring", duration: 0.5, ...transition },
+  }
+
+  if (owerwriteImg) {
+    return <Img {...props} src={owerwriteImg} />
   }
 
   if (!props.src) {

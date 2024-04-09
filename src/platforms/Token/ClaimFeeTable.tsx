@@ -19,9 +19,9 @@ import { formatUnits } from "viem"
 import { useTokenRewardContext } from "./TokenRewardContext"
 
 const TokenClaimFeeTable = () => {
-  const { fee, feeIsLoading, token, tokenIsLoading } = useTokenRewardContext()
+  const { fee, isFeeLoading, token, isTokenLoading } = useTokenRewardContext()
   const formattedFee =
-    feeIsLoading || tokenIsLoading ? null : formatUnits(fee, token.decimals)
+    isFeeLoading || isTokenLoading ? null : formatUnits(fee, token.decimals)
 
   return (
     <>

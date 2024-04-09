@@ -13,6 +13,7 @@ import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
+import { TokenRewardCard } from "platforms/Token/TokenRewardCard"
 import rewards from "platforms/rewards"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
@@ -22,6 +23,7 @@ import useRoleGroup from "../hooks/useRoleGroup"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
+import { useAccessedTokens } from "./hooks/useAccessedTokens"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -42,7 +44,8 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatforms = guildPlatforms.filter(
     (gp) =>
       relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.POINTS
+      gp.platformId !== PlatformType.POINTS &&
+      gp.platformId !== PlatformType.ERC20
   )
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
@@ -89,6 +92,7 @@ const AccessHub = (): JSX.Element => {
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const accessedGuildPoints = useAccessedGuildPoints("ACCESSED_ONLY")
+  const accessedGuildTokens = useAccessedTokens()
 
   const shouldShowGuildPin =
     !group &&
@@ -148,6 +152,13 @@ const AccessHub = (): JSX.Element => {
 
           {accessedGuildPoints?.map((pointPlatform) => (
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
+          ))}
+
+          {accessedGuildTokens?.map((tokenReward) => (
+            <TokenRewardCard
+              key={`${tokenReward.chain}/${tokenReward.address}`}
+              reward={tokenReward}
+            />
           ))}
 
           {(isMember || isAdmin) &&

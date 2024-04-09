@@ -20,7 +20,6 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Image from "next/image"
 import { Clock } from "phosphor-react"
-import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
 
 const LeaderboardAirdropCard = () => {
   const { colorMode } = useColorMode()
@@ -144,7 +143,7 @@ const LeaderboardAirdropCard = () => {
         </HStack>
       </Card>
 
-      <ClaimTokenModal isOpen={claimIsOpen} onClose={claimOnClose} />
+      {/* <ClaimTokenModal isOpen={claimIsOpen} onClose={claimOnClose} /> */}
     </>
   )
 }

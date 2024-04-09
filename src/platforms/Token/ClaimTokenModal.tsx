@@ -30,10 +30,9 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { colorMode } = useColorMode()
   const modalBg = colorMode === "dark" ? "var(--chakra-colors-gray-700)" : "#FFFFFF"
 
-  const { platformGuildData } = useTokenRewardContext()
-
+  const { chain } = useTokenRewardContext()
   const { chainId } = useAccount()
-  const isOnCorrectChain = Number(Chains[platformGuildData.chain]) === chainId
+  const isOnCorrectChain = Number(Chains[chain]) === chainId
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -106,9 +105,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
           <TokenClaimFeeTable />
           {!isOnCorrectChain ? (
-            <SwitchNetworkButton
-              targetChainId={Number(Chains[platformGuildData.chain])}
-            />
+            <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
           ) : (
             <Button colorScheme="primary" mt={2}>
               Claim

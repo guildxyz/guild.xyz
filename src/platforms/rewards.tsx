@@ -53,7 +53,7 @@ import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
-import { TokenCardButton } from "./Token/TokenCardButton"
+import TokenCardButton from "./Token/TokenCardButton"
 import useTokenCardProps from "./Token/hooks/useTokenCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
@@ -480,7 +480,7 @@ const rewards: Record<PlatformName, RewardData> = {
         loading: AddRewardPanelLoadingSpinner,
       }
     ),
-    RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
+    RoleCardComponent: dynamic(() => import("platforms/components/TokenReward"), {
       ssr: false,
     }),
   },

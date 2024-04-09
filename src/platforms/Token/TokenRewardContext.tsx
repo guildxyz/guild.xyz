@@ -1,50 +1,54 @@
-import useGuild from "components/[guild]/hooks/useGuild"
+import { Chain } from "@guildxyz/types"
+import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useTokenData from "hooks/useTokenData"
 import { ReactElement, createContext, useContext } from "react"
-import { GuildPlatform, PlatformGuildData, RolePlatform } from "types"
-import useClaimToken from "./hooks/useClaimToken"
+import { GuildPlatform } from "types"
 
 export type TokenRewardContextType = {
+  chain: Chain
   token: ReturnType<typeof useTokenData>["data"]
-  tokenIsLoading
-  rolePlatform: RolePlatform
+  isTokenLoading: boolean
   fee: bigint
-  feeIsLoading: boolean
-  platformGuildData: PlatformGuildData[keyof PlatformGuildData]
+  isFeeLoading: boolean
+  guildPlatforms: GuildPlatform[]
+  rewardImageUrl: string
 }
 
 const TokenRewardProvider = ({
   children,
-  guildPlatform,
+  tokenReward,
 }: {
   children: ReactElement
-  guildPlatform: GuildPlatform
+  tokenReward: TokenAccessHubData
 }): JSX.Element => {
-  const { roles } = useGuild()
-  const rolePlatform = roles
-    ?.find((r) =>
-      r.rolePlatforms.some((rp) => rp.guildPlatformId === guildPlatform.id)
-    )
-    ?.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform?.id)
+  // TODO: remove mock data
+  const fee = BigInt(0)
+  const isFeeLoading = false
 
-  const { fee, feeLoading: feeIsLoading } = useClaimToken(guildPlatform)
-  const {
-    platformGuildData: { chain, contractAddress: tokenAddress },
-  } = guildPlatform
-  const { data: token, isLoading: tokenIsLoading } = useTokenData(
-    chain,
-    tokenAddress
+  const { data: token, isLoading: isTokenLoading } = useTokenData(
+    tokenReward.chain,
+    tokenReward.address
   )
+
+  const rewardImageUrl =
+    token.logoURI ??
+    (tokenReward.guildPlatforms.find(
+      (gp) =>
+        !!gp.platformGuildData.imageUrl &&
+        gp.platformGuildData.imageUrl !== `/guildLogos/132.svg`
+    )?.platformGuildData?.imageUrl ||
+      `/guildLogos/132.svg`)
 
   return (
     <TokenRewardContext.Provider
       value={{
-        platformGuildData: guildPlatform.platformGuildData,
-        fee,
-        feeIsLoading,
+        chain: tokenReward.chain,
+        guildPlatforms: tokenReward.guildPlatforms,
         token,
-        tokenIsLoading,
-        rolePlatform,
+        isFeeLoading,
+        fee,
+        isTokenLoading,
+        rewardImageUrl,
       }}
     >
       {children}
