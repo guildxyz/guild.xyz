@@ -27,12 +27,7 @@ const TokenCardButton = ({ platform }: Props) => {
         shouldWrapChildren
         w="full"
       >
-        <Button
-          colorScheme="GATHER_TOWN"
-          w="full"
-          isDisabled={claimed}
-          onClick={onOpen}
-        >
+        <Button colorScheme="primary" w="full" isDisabled={claimed} onClick={onOpen}>
           Claim
         </Button>
       </Tooltip>
