@@ -98,14 +98,16 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
     .then((res) => res?.data?.profiles?.items?.[0]?.handle?.localName)
     .catch(() => null)
 
-  if (lens) {
+  const lensName = lens ? `${lens}.lens` : undefined
+
+  if (lensName) {
     await setResolvedAddressToIdb(address, {
-      resolvedAddress: lens,
+      resolvedAddress: lensName,
       createdAt: Date.now(),
     }).catch(() => {})
   }
 
-  return lens
+  return lensName
 }
 
 const fetchSpaceIdName = async (address: string): Promise<string> => {
@@ -228,7 +230,7 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
 
   // test address: 0xe055721b972d58f0bcf6370c357879fb3a37d2f3 - ladidaix.eth
   const lens = await fetchLensProtocolName(lowerCaseAddress)
-  if (lens) return `${lens}.lens`
+  if (lens) return lens
 
   // test address: 0x2e552e3ad9f7446e9cab378c008315e0c26c0398 - allen.bnb / 0x5206.arb
   const spaceId = await fetchSpaceIdName(lowerCaseAddress)
