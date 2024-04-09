@@ -48,7 +48,7 @@ const Leaderboard = () => {
   const wrapperRef = useRef(null)
   const { isAdmin } = useGuildPermission()
 
-  const airDropActive = true
+  const isAirdropActive = true
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId
@@ -135,7 +135,7 @@ const Leaderboard = () => {
         }
       />
       <Stack spacing={10}>
-        {!airDropActive && userData && (
+        {!isAirdropActive && userData && (
           <LeaderboardUserCard
             address={
               userData.address ??
@@ -148,7 +148,7 @@ const Leaderboard = () => {
           />
         )}
 
-        {airDropActive && <LeaderboardAirdropCard />}
+        {isAirdropActive && <LeaderboardAirdropCard />}
 
         <Section
           ref={wrapperRef}

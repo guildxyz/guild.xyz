@@ -9,11 +9,11 @@ import {
   Stack,
   Text,
   VStack,
-  useColorMode,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
+import { useCardBg } from "components/common/Card"
 import Image from "next/image"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -27,8 +27,7 @@ type Props = {
 
 const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
-  const { colorMode } = useColorMode()
-  const modalBg = colorMode === "dark" ? "var(--chakra-colors-gray-700)" : "#FFFFFF"
+  const modalBg = useCardBg()
 
   const { chain } = useTokenRewardContext()
   const { chainId } = useAccount()

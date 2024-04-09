@@ -1,6 +1,5 @@
 import {
-  Button,
-  Icon,
+  IconButton,
   Menu,
   MenuButton,
   MenuItem,
@@ -8,6 +7,7 @@ import {
   Portal,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useIsTabsStuck } from "components/[guild]/Tabs"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { DotsThreeVertical, ListDashes, Plus } from "phosphor-react"
 import CreateSnapshotModal from "./CreateSnapshotModal"
@@ -19,37 +19,29 @@ const SnapshotsMenu = () => {
     onOpen: viewOnOpen,
     onClose: viewOnClose,
   } = useDisclosure()
-  const { textColor, buttonColorScheme } = useThemeContext()
-
   const {
     isOpen: createIsOpen,
     onOpen: createOnOpen,
     onClose: createOnClose,
   } = useDisclosure()
 
+  const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext()
+
   return (
     <>
       <Menu placement="bottom-end">
         <MenuButton
-          as={Button}
+          as={IconButton}
+          icon={<DotsThreeVertical size="1.2em" />}
           data-test="add-reward-button"
-          onClick={() => {}}
           variant="ghost"
           size="sm"
-          lineHeight={0}
-          textAlign={"center"}
-          justifyContent={"center"}
-          sx={{ "*": { justifyContent: "center", display: "flex" } }}
-          color={textColor}
-          colorScheme={buttonColorScheme}
-        >
-          <Icon
-            as={DotsThreeVertical}
-            boxSize={5}
-            display={"flex"}
-            justifyContent={"center"}
-          />
-        </MenuButton>
+          {...(!isStuck && {
+            color: textColor,
+            colorScheme: buttonColorScheme,
+          })}
+        />
         <Portal>
           <MenuList zIndex={9999}>
             <MenuItem icon={<Plus />} onClick={createOnOpen}>

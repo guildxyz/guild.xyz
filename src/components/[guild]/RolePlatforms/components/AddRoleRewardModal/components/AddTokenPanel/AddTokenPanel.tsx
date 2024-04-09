@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
 import { AddRewardPanelProps } from "platforms/rewards"
-import { useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import PoolStep from "./components/PoolStep"
@@ -56,16 +55,6 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const color = "primary.500"
 
-  const [isCollapsed, setIsCollapsed] = useState(false)
-
-  const collapseAndExecute = (callback: () => void) => {
-    setIsCollapsed(true)
-    setTimeout(() => {
-      callback()
-      setTimeout(() => setIsCollapsed(false), 100)
-    }, 250)
-  }
-
   const onSubmit = (_data) => {
     onAdd({
       guildPlatform: {
@@ -101,9 +90,6 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     })
   }
 
-  const stepTo = (index: number) =>
-    activeStep > index && collapseAndExecute(() => setActiveStep(index))
-
   return (
     <FormProvider {...methods}>
       <Stepper
@@ -114,7 +100,11 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         w="full"
       >
         {steps.map((step, index) => (
-          <Step key={index} style={{ width: "100%" }} onClick={() => stepTo(index)}>
+          <Step
+            key={index}
+            style={{ width: "100%" }}
+            onClick={activeStep > index ? () => setActiveStep(index) : null}
+          >
             <StepIndicator
               {...{
                 bg: activeStep > index ? `${color} !important` : undefined,
@@ -135,17 +125,11 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
               _hover={activeStep > index && { cursor: "pointer" }}
             >
               <StepTitle>{step.title}</StepTitle>
-              <Collapse
-                in={!isCollapsed}
-                animateOpacity
-                transition={{ enter: { duration: 0.25 }, exit: { duration: 0.25 } }}
-              >
-                {activeStep === index && (
-                  <step.content
-                    onContinue={() => collapseAndExecute(goToNext)}
-                    onSubmit={methods.handleSubmit(onSubmit)}
-                  />
-                )}
+              <Collapse in={activeStep === index} animateOpacity>
+                <step.content
+                  onContinue={goToNext}
+                  onSubmit={methods.handleSubmit(onSubmit)}
+                />
               </Collapse>
             </Box>
 
