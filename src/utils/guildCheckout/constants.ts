@@ -2,14 +2,14 @@ import { RequirementType } from "requirements"
 import oldTokenBuyerAbi from "static/abis/oldTokenBuyer"
 import tokenBuyerAbi from "static/abis/tokenBuyer"
 import { Abi, toBytes } from "viem"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import {
+  UNIVERSAL_ROUTER_COMMANDS,
   encodePermit2Permit,
   encodeUnwrapEth,
   encodeV2SwapExactOut,
   encodeV3SwapExactOut,
   encodeWrapEth,
-  UNIVERSAL_ROUTER_COMMANDS,
 } from "./encoders"
 
 export type TokenBuyerContractConfig = Partial<
@@ -52,6 +52,10 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
     address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
     abi: tokenBuyerAbi,
   },
+  BASE_MAINNET: {
+    address: "0x44f26a7b2b58621d97240b09350b66803faa1e1a",
+    abi: tokenBuyerAbi,
+  },
 }
 
 const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = {
@@ -74,16 +78,14 @@ export const getTokenBuyerContractData = (
 ): TokenBuyerContractConfig =>
   SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
-export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
+export const ZEROX_API_URLS: Partial<
+  Record<keyof typeof DEFAULT_TOKEN_BUYER_CONTRACTS, string>
+> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
   POLYGON: "https://polygon.api.0x.org",
-  // BSC: "https://bsc.api.0x.org",
-  // OPTIMISM: "https://optimism.api.0x.org",
-  // FANTOM: "https://fantom.api.0x.org",
-  // CELO: "https://celo.api.0x.org",
-  // AVALANCHE: "https://avalanche.api.0x.org",
   ARBITRUM: "https://arbitrum.api.0x.org",
+  BASE_MAINNET: "https://base.api.0x.org",
 }
 
 export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
