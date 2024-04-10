@@ -12,6 +12,7 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
@@ -41,6 +42,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
       addition: 1,
     },
   })
+  useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const steps = [
     { title: "Set token", content: SetTokenStep },
