@@ -116,16 +116,18 @@ type SharedSocial = {
   isShared: boolean
 }
 
+type UserAddress = {
+  address: `0x${string}`
+  userId: number
+  isPrimary: boolean
+  isDelegated: boolean
+  createdAt: string
+  walletType: "EVM" | "FUEL"
+}
+
 type User = {
   id: number
-  addresses: Array<{
-    address: `0x${string}`
-    userId: number
-    isPrimary: boolean
-    isDelegated: boolean
-    createdAt: string
-    walletType: "EVM" | "FUEL"
-  }>
+  addresses: UserAddress[]
   platformUsers: PlatformAccountDetails[]
   sharedSocials: SharedSocial[]
   publicKey?: string
@@ -805,6 +807,7 @@ export type {
   Token,
   Trait,
   User,
+  UserAddress,
   WalletConnectConnectionData,
   WalletError,
 }
