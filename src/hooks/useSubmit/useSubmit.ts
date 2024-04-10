@@ -318,7 +318,7 @@ export const fuelSign = async ({
 const chainsOfAddressWithDeployedContract = async (
   address: `0x${string}`
 ): Promise<Chain[]> => {
-  const LOCALSTORAGE_KEY = "chainsWithByteCode"
+  const LOCALSTORAGE_KEY = `chainsWithByteCode_${address.toLowerCase()}`
   const chainsWithByteCodeFromLocalstorage = localStorage.getItem(LOCALSTORAGE_KEY)
 
   if (chainsWithByteCodeFromLocalstorage) {
