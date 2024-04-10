@@ -17,9 +17,11 @@ import {
   Tag,
   Text,
   Tooltip,
+  Wrap,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
@@ -40,6 +42,9 @@ type Props = {
 
 const LinkedAddress = ({ addressData }: Props) => {
   const { address, isDelegated, isPrimary, walletType } = addressData ?? {}
+  const { address: connectedAddress } = useWeb3ConnectionManager()
+
+  const isCurrent = address?.toLowerCase() === connectedAddress.toLowerCase()
 
   const {
     onSubmit: onEditPrimaryAddressSubmit,
@@ -64,26 +69,34 @@ const LinkedAddress = ({ addressData }: Props) => {
         <Circle size={7}>
           <GuildAvatar address={address} size={4} mt="-1" />
         </Circle>
-        <CopyableAddress
-          address={address}
-          decimals={5}
-          fontSize="sm"
-          fontWeight="bold"
-        />
-        {isDelegated && (
-          <Tooltip label="Delegate.cash" placement="top">
-            <Tag>
-              <Image
-                width={15}
-                height={15}
-                src={`/walletLogos/delegatecash.png`}
-                alt="Delegate cash logo"
-              />
+        <Wrap spacingY={0} spacingX={1}>
+          <CopyableAddress
+            address={address}
+            decimals={5}
+            fontSize="sm"
+            fontWeight="bold"
+            mr={0.5}
+          />
+          {isDelegated && (
+            <Tooltip label="Delegate.cash" placement="top">
+              <Tag>
+                <Image
+                  width={15}
+                  height={15}
+                  src={`/walletLogos/delegatecash.png`}
+                  alt="Delegate cash logo"
+                />
+              </Tag>
+            </Tooltip>
+          )}
+          {walletType !== "EVM" && <AddressTypeTag type={walletType} size="sm" />}
+          {isCurrent && (
+            <Tag size="sm" colorScheme="blue">
+              Current
             </Tag>
-          </Tooltip>
-        )}
-        {walletType !== "EVM" && <AddressTypeTag type={walletType} size="sm" />}
-        {isPrimary && <PrimaryAddressTag size="sm" />}
+          )}
+          {isPrimary && <PrimaryAddressTag size="sm" />}
+        </Wrap>
 
         {/* Using a custom key here so the menu closes when we successfully set a new primary address */}
         <Menu key={`${address}${isPrimary ? "-primary" : ""}`} closeOnSelect={false}>

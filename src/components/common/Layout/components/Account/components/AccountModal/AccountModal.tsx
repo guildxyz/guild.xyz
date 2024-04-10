@@ -36,7 +36,6 @@ import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
-import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
@@ -101,8 +100,6 @@ const AccountModal = () => {
                       decimals={5}
                       fontWeight="bold"
                     />
-                    {addresses?.find((a) => a.address === address.toLowerCase())
-                      ?.isPrimary && <PrimaryAddressTag size="sm" />}
                   </HStack>
                   <HStack spacing="1">
                     <Text
