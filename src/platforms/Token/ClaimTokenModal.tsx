@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Skeleton,
   Stack,
   Text,
   VStack,
@@ -14,11 +15,14 @@ import SwitchNetworkButton from "components/[guild]/Requirements/components/Guil
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
+import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "./ClaimFeeTable"
+import { calculateClaimableAmount } from "./TokenRewardCard"
 import { useTokenRewardContext } from "./TokenRewardContext"
+import useClaimToken from "./hooks/useClaimToken"
 
 type Props = {
   isOpen: boolean
@@ -29,21 +33,31 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
   const modalBg = useCardBg()
 
-  const { chain } = useTokenRewardContext()
+  const { chain, rewardsByRoles, token, isTokenLoading } = useTokenRewardContext()
+  const claimableAmount = calculateClaimableAmount(rewardsByRoles)
+
+  const { onSubmit } = useClaimToken(
+    chain,
+    rewardsByRoles[0].roleId,
+    rewardsByRoles[0].rewards[0].rolePlatform.id
+  )
+
   const { chainId } = useAccount()
   const isOnCorrectChain = Number(Chains[chain]) === chainId
+  const gold = useColorPalette("gold", "gold")
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent
         border={"3px solid transparent"}
-        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, #F5E4A0, ${modalBg}) border-box`}
+        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, ${gold["--gold-500"]}, ${modalBg}) border-box`}
       >
         <Image
           priority
           src={"/img/confetti_overlay.png"}
           alt="Confetti"
+          quality={100}
           fill
           style={{ objectFit: "contain", objectPosition: "top" }}
           draggable={false}
@@ -97,7 +111,9 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                 top={"50%"}
                 style={{ transform: "translateY(-25%)" }}
               >
-                5 UNI
+                <Skeleton isLoaded={!isTokenLoading}>
+                  {claimableAmount} {token.symbol}
+                </Skeleton>
               </Heading>
             </VStack>
           </Stack>
@@ -106,7 +122,12 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           {!isOnCorrectChain ? (
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
           ) : (
-            <Button colorScheme="primary" mt={2}>
+            <Button
+              colorScheme="gold"
+              mt={2}
+              isDisabled={isTokenLoading}
+              onClick={onSubmit}
+            >
               Claim
             </Button>
           )}

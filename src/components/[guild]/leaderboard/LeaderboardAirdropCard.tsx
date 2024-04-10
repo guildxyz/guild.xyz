@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card, { useCardBg } from "components/common/Card"
+import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
 import { Clock } from "phosphor-react"
 
@@ -25,8 +26,10 @@ const LeaderboardAirdropCard = () => {
   const { colorMode } = useColorMode()
   const modalBg = useCardBg()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
+  const gold = useColorPalette("gold", "gold")
 
-  const gradientColor = colorMode === "dark" ? "#705E47" : "#F6EBBA"
+  const gradientColor =
+    colorMode === "dark" ? `${gold["--gold-700"]}70` : gold["--gold-200"]
 
   const {
     isOpen: claimIsOpen,
@@ -43,7 +46,7 @@ const LeaderboardAirdropCard = () => {
         display="flex"
         flexDirection="row"
         alignItems="center"
-        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, #F5E4A0, ${modalBg}) border-box`}
+        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, ${gold["--gold-500"]}, ${modalBg}) border-box`}
         _before={{
           content: '""',
           position: "absolute",
@@ -115,7 +118,7 @@ const LeaderboardAirdropCard = () => {
                 fontFamily="display"
                 mt={0}
                 mb={"4px"}
-                color={colorMode === "light" && "#C0946B"}
+                color={colorMode === "light" && gold["--gold-500"]}
               >
                 5 UNI
               </Heading>
@@ -135,7 +138,7 @@ const LeaderboardAirdropCard = () => {
           <Button
             size={{ base: "sm", sm: "md" }}
             flexShrink={0}
-            colorScheme="primary"
+            colorScheme="gold"
             ml="auto"
             onClick={claimOnOpen}
           >

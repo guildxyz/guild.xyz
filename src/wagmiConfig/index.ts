@@ -165,7 +165,7 @@ export const wagmiConfig = createConfig({
     [blast.id]: http(),
     [blastSepolia.id]: http(),
     [oasisSapphire.id]: http(),
-    [sepolia.id]: http(),
+    [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
     [goerli.id]: http(),
   },
   ssr: true,

@@ -72,20 +72,20 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         },
       },
 
-      // TODO: make live when backend is ready
-
-      // dynamicAmount: {
-      //   operation: {
-      //     type: "LINEAR",
-      //     params: {
-      //       addition: _data.addition,
-      //       multiplier: _data.multiplier,
-      //     },
-      //     input: {
-      //       type: "STATIC"
-      //     },
-      //   },
-      // },
+      // TODO: allow for dynamic type as well
+      dynamicAmount: {
+        operation: {
+          type: "LINEAR",
+          // params: {
+          //   addition: _data.addition,
+          //   multiplier: _data.multiplier,
+          // },
+          input: {
+            type: "STATIC",
+            value: _data.addition,
+          },
+        },
+      },
       isNew: true,
     })
   }

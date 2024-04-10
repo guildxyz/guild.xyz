@@ -462,7 +462,7 @@ const rewards: Record<PlatformName, RewardData> = {
     icon: Token,
     name: "Token",
     gatedEntity: "",
-    colorScheme: "primary",
+    colorScheme: "gold",
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     cardPropsHook: useTokenCardProps,
     cardButton: TokenCardButton,

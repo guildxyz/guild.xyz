@@ -26,9 +26,14 @@ const TokenPreviewWrapper = () => {
   return (
     <TokenRewardProvider
       tokenReward={{
-        chain: guildPlatform.platformGuildData.chain,
-        address: guildPlatform.platformGuildData.contractAddress,
-        guildPlatforms: [guildPlatform],
+        chain: guildPlatform?.platformGuildData?.chain,
+        address: guildPlatform?.platformGuildData?.contractAddress,
+        rewardsByRoles: [
+          {
+            roleId: 0,
+            rewards: [{ guildPlatform: guildPlatform }],
+          },
+        ],
       }}
     >
       <TokenPreview />

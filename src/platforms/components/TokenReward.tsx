@@ -4,6 +4,7 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
+import { calculateFromDynamicAmount } from "platforms/Token/TokenRewardCard"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
@@ -12,6 +13,7 @@ import { RolePlatform } from "types"
 
 const TokenReward = ({ platform }: { platform: RolePlatform }) => {
   const { isTokenLoading, token, rewardImageUrl } = useTokenRewardContext()
+  const claimableAmount = calculateFromDynamicAmount(platform.dynamicAmount)
 
   return (
     <RewardDisplay
@@ -26,7 +28,7 @@ const TokenReward = ({ platform }: { platform: RolePlatform }) => {
           />
         )
       }
-      label={`Claim: ${token?.symbol || "tokens"}`}
+      label={`Claim: ${claimableAmount || ""} ${token?.symbol || "tokens"}`}
     />
   )
 }
@@ -35,9 +37,15 @@ const TokenRewardWrapper = ({ platform }: RewardProps) => {
   return (
     <TokenRewardProvider
       tokenReward={{
-        chain: platform.guildPlatform.platformGuildData.chain,
-        address: platform.guildPlatform.platformGuildData.contractAddress,
-        guildPlatforms: [platform.guildPlatform],
+        chain: platform?.guildPlatform?.platformGuildData?.chain,
+        address: platform?.guildPlatform?.platformGuildData?.contractAddress,
+        rewardsByRoles: [
+          {
+            rewards: [
+              { rolePlatform: platform, guildPlatform: platform?.guildPlatform },
+            ],
+          },
+        ],
       }}
     >
       <TokenReward platform={platform} />

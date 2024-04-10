@@ -42,7 +42,10 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     data: { logoURI: tokenLogo, decimals },
   } = useTokenData(chain, tokenAddress)
 
-  const formattedAmount = parseUnits(amount, decimals)
+  const formattedAmount = BigInt(1)
+  try {
+    parseUnits(amount, decimals)
+  } catch {}
 
   const { data: coinBalanceData } = useBalance({
     address: userAddress,
@@ -66,12 +69,13 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const isOnCorrectChain = Number(Chains[chain]) === chainId
 
   const handlePoolCreation = () => {
+    console.log("Creating pool...")
     onSubmitTransaction()
   }
 
   const { setValue } = useFormContext<AddTokenFormType>()
 
-  const { isLoading, onSubmitTransaction } = useRegisterPool(
+  const { isLoading, onSubmitTransaction, error } = useRegisterPool(
     userAddress,
     tokenAddress,
     formattedAmount,
@@ -85,10 +89,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     setCanClose(!isLoading)
   }, [isLoading])
 
-  const { allowance } = useAllowance(
-    tokenAddress,
-    `0x0d72BCDA1Ec6D0E195249519fb83BB5D559E895D`
-  )
+  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACT)
 
   const handleDepositLater = () => {
     if (!skip) setAmount("0")

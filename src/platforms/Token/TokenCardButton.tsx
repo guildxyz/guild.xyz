@@ -7,7 +7,7 @@ const TokenCardButton = () => {
 
   return (
     <>
-      <Button colorScheme="primary" w="full" isDisabled={false} onClick={onOpen}>
+      <Button colorScheme="gold" w="full" isDisabled={false} onClick={onOpen}>
         Claim
       </Button>
       <ClaimTokenModal isOpen={isOpen} onClose={onClose} />
