@@ -13,11 +13,10 @@ const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 
 type UnstoppableDomainsChains = Extract<
   Chain,
-  "ETHEREUM" | "GOERLI" | "POLYGON" | "POLYGON_MUMBAI"
+  "ETHEREUM" | "POLYGON" | "POLYGON_MUMBAI"
 >
 const UNSTOPPABLE_DOMAIN_CONTRACTS: Record<UnstoppableDomainsChains, string> = {
   ETHEREUM: "0x049aba7510f45ba5b64ea9e658e342f904db358d",
-  GOERLI: "0x070e83fced225184e67c86302493fffcdb953f71",
   POLYGON: "0xa9a6a3626993d487d2dbda3173cf58ca1a9d9e9f",
   POLYGON_MUMBAI: "0x2a93c52e7b6e7054870758e15a1446e769edfb93",
 }
@@ -218,6 +217,21 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
     return idbData.resolvedAddress
   } else if (!!idbData) {
     await deleteResolvedAddressFromIdb(lowerCaseAddress).catch(() => {})
+  } else {
+    // If there isn't any data in idb, but we fetched the name during the last 24h, we don't need to fetch it again
+
+    const localStorageKey = `resolveAddressTimestamp-${lowerCaseAddress}`
+    const lastFetchedAt = localStorage.getItem(localStorageKey)
+    const now = Date.now()
+
+    if (lastFetchedAt) {
+      try {
+        const shouldFetch = Number(lastFetchedAt) + ONE_DAY_IN_MS < now
+        if (!shouldFetch) return null
+      } catch {}
+    }
+
+    localStorage.setItem(localStorageKey, now.toString())
   }
 
   // test address: 0xe5358cab95014e2306815743793f16c93a8a5c70 - nnsregistry.⌐◨-◨
@@ -248,8 +262,9 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
 }
 
 const useResolveAddress = (accountParam: string): string => {
+  const shouldFetch = typeof window !== "undefined" && !!accountParam
   const { data } = useSWRImmutable(
-    !!accountParam ? ["domain", accountParam] : null,
+    shouldFetch ? ["domain", accountParam as `0x${string}`] : null,
     fetchDomains
   )
 
