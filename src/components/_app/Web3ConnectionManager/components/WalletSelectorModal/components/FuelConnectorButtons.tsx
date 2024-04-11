@@ -41,14 +41,21 @@ const FuelConnectorButtons = () => {
               })
               startSessionRecording()
               setActivatingConnector(connector.name)
-              try {
-                connector.connect()
-              } catch (error) {
-                captureEvent("Fuel connection error", {
-                  error: error,
-                  connectorName: connector?.name,
-                })
-              }
+
+              connector.connect().catch((error) => {
+                setActivatingConnector(null)
+                if (error?.message === "Connection rejected!") {
+                  captureEvent("Fuel connection rejected", {
+                    connectorName: connector?.name,
+                  })
+                } else {
+                  captureEvent("Fuel connection error", {
+                    error: error?.message,
+                    originalError: error,
+                    connectorName: connector?.name,
+                  })
+                }
+              })
             }}
             leftIcon={
               <Center boxSize={6}>
