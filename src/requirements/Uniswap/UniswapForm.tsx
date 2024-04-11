@@ -98,7 +98,7 @@ const UniswapForm = ({
             !!parseFromObject(errors, baseFieldPath)?.data?.lpVault || !!error
           }
         >
-          <FormLabel>LP Vault</FormLabel>
+          <FormLabel>LP Vault address or URL</FormLabel>
           <Input
             {...register(`${baseFieldPath}.data.lpVault`, {
               required: true,
