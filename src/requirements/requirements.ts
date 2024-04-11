@@ -276,6 +276,18 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
+    icon: "/requirementLogos/uniswap.svg",
+    name: "Uniswap",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Uniswap/UniswapRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Uniswap/UniswapForm")
+    ),
+    types: ["UNISWAP_V3_POSITIONS"],
+    isNegatable: true,
+  },
+  {
     icon: "/requirementLogos/polygonId.svg",
     name: "PolygonID",
     displayComponent: dynamic<RequirementProps>(
@@ -650,18 +662,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Cask/CaskForm")
     ),
     types: ["CASK"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/uniswap.svg",
-    name: "Uniswap",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Uniswap/UniswapRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Uniswap/UniswapForm")
-    ),
-    types: ["UNISWAP_V3_POSITIONS"],
     isNegatable: true,
   },
 ] as const
