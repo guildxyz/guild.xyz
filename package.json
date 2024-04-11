@@ -28,7 +28,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@fuel-wallet/react": "^0.16.0",
-    "@guildxyz/types": "1.7.31",
+    "@guildxyz/types": "1.8.4",
     "@hcaptcha/react-hcaptcha": "^1.4.4",
     "@hookform/resolvers": "^3.3.4",
     "@lexical/code": "^0.12.0",
