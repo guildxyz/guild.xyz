@@ -36,12 +36,15 @@ const FuelConnectorButtons = () => {
           <Button
             key={connector.name}
             onClick={() => {
+              captureEvent("Click on Connect Fuel", {
+                connectorName: connector?.name,
+              })
               startSessionRecording()
               setActivatingConnector(connector.name)
               try {
                 connector.connect()
               } catch (error) {
-                captureEvent("FUEL connection error", {
+                captureEvent("Fuel connection error", {
                   error: error,
                   connectorName: connector?.name,
                 })
