@@ -18,7 +18,6 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
@@ -31,9 +30,6 @@ import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
-import DelegateCashButton, {
-  delegateConnectionAtom,
-} from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
@@ -57,9 +53,6 @@ const ignoredRoutes = [
 
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
-  const [isDelegateConnection, setIsDelegateConnection] = useAtom(
-    delegateConnectionAtom
-  )
 
   const { connectors, error, connect, variables, isPending } = useConnect()
 
@@ -95,18 +88,10 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       }
     },
   })
-  const linkVaults = useLinkVaults()
-
-  useEffect(() => {
-    if (!!keyPair && isDelegateConnection) {
-      linkVaults.onSubmit()
-      setIsDelegateConnection(false)
-    }
-  }, [keyPair, isDelegateConnection])
 
   useEffect(() => {
     if (keyPair) onClose()
-  }, [keyPair])
+  }, [keyPair, onClose])
 
   const router = useRouter()
 
@@ -119,7 +104,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     ) {
       onOpen()
     }
-  }, [keyPair, router, id, publicUserError, connector])
+  }, [keyPair, router, id, publicUserError, connector, onOpen])
 
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
@@ -141,32 +126,21 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       <ModalOverlay />
       <ModalContent data-test="wallet-selector-modal">
         <ModalHeader display={"flex"}>
-          {((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection) && (
+          {isConnectedAndKeyPairReady && !keyPair && (
             <IconButton
-              rounded={"full"}
+              rounded="full"
               aria-label="Back"
               size="sm"
               icon={<ArrowLeft size={20} />}
               variant="ghost"
               onClick={() => {
-                if (
-                  isDelegateConnection &&
-                  !(isConnectedAndKeyPairReady && !keyPair)
-                ) {
-                  setIsDelegateConnection(false)
-                  return
-                }
                 set.reset()
                 disconnect()
               }}
             />
           )}
           <Text ml="1.5" mt="-1px">
-            {isAddressLink
-              ? "Link address"
-              : isDelegateConnection
-              ? "Connect hot wallet"
-              : "Connect to Guild"}
+            {isAddressLink ? "Link address" : "Connect to Guild"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
@@ -244,7 +218,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     />
                   </CardMotionWrapper>
                 ))}
-              {!isDelegateConnection && <DelegateCashButton />}
               <FuelConnectorButtons key="fuel" />
             </Stack>
           )}
