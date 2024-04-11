@@ -6,8 +6,12 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
+import dynamic from "next/dynamic"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
-import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
+
+const DynamicSearchableVirtualListModal = dynamic(
+  () => import("requirements/common/SearchableVirtualListModal")
+)
 
 function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
   return (
@@ -48,16 +52,30 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       {hideAllowlist ? (
         `${isEmail ? "email " : ""}allowlist`
       ) : (
-        <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
+        <Button
+          variant="link"
+          rightIcon={<ArrowSquareIn />}
+          {...("ipfsHash" in requirement.data
+            ? {
+                as: "a",
+                target: "_blank",
+                // Intentionally not using the dedicated gateway for these big allowlists
+                href: `https://gateway.pinata.cloud/ipfs/${requirement.data.ipfsHash}`,
+              }
+            : { onClick: onOpen })}
+        >
           {`${isEmail ? "email " : ""}allowlist`}
         </Button>
       )}
-      <SearchableVirtualListModal
-        initialList={addresses}
-        isOpen={isOpen}
-        onClose={onClose}
-        title={isEmail ? "Email allowlist" : "Allowlist"}
-      />
+
+      {!("ipfsHash" in requirement.data) && (
+        <DynamicSearchableVirtualListModal
+          initialList={addresses}
+          isOpen={isOpen}
+          onClose={onClose}
+          title={isEmail ? "Email allowlist" : "Allowlist"}
+        />
+      )}
     </Requirement>
   )
 }
