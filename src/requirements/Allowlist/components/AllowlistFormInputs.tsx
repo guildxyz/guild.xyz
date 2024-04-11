@@ -135,9 +135,9 @@ export default function AllowlistFormInputs({
           </Text>
         </Button>
 
-        {typeof uploadedLength === "number" && (
+        <Collapse in={typeof uploadedLength === "number"}>
           <FormHelperText>Uploaded {uploadedLength} addresses</FormHelperText>
-        )}
+        </Collapse>
 
         <FormErrorMessage>
           {fileRejections?.[0]?.errors?.[0]?.message}
