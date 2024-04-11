@@ -7,11 +7,9 @@ import Requirement, {
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
-import useToken from "hooks/useToken"
 import REQUIREMENTS from "requirements"
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
-
-const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
+import { Chains } from "wagmiConfig/chains"
+import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 
 const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const {
@@ -22,28 +20,11 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     { type: "UNISWAP_V3_POSITIONS" }
   >
 
-  const {
-    data: { symbol: token0Symbol },
-  } = useToken({
-    address: token0 as `0x${string}`,
-    chainId: Chains[chain],
-  })
-
-  const {
-    data: { symbol: token1Symbol },
-  } = useToken({
-    address: token1 as `0x${string}`,
-    chainId: Chains[chain],
-  })
-
-  const symbol0 =
-    token0 === ZERO_ADDRESS
-      ? CHAIN_CONFIG[chain].nativeCurrency.symbol
-      : token0Symbol
-  const symbol1 =
-    token1 === ZERO_ADDRESS
-      ? CHAIN_CONFIG[chain].nativeCurrency.symbol
-      : token1Symbol
+  const { symbol0, symbol1 } = useSymbolsOfPair(
+    Chains[chain],
+    token0 as `0x${string}`,
+    token1 as `0x${string}`
+  )
 
   return (
     <Requirement
