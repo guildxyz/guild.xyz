@@ -4,7 +4,7 @@ import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
-import { PublicClient, createPublicClient, http } from "viem"
+import { PublicClient, createPublicClient } from "viem"
 import { mainnet } from "wagmi/chains"
 import { wagmiConfig } from "wagmiConfig"
 import { Chain, Chains } from "wagmiConfig/chains"
@@ -36,7 +36,7 @@ const deleteResolvedAddressFromIdb = (address: string) => del(address, getStore(
 const fetchENSName = async (address: `0x${string}`): Promise<string> => {
   const publicClient = createPublicClient({
     chain: mainnet,
-    transport: http(),
+    transport: wagmiConfig._internal.transports[mainnet.id],
   })
 
   const ens = await publicClient
@@ -58,7 +58,7 @@ const fetchENSName = async (address: `0x${string}`): Promise<string> => {
 const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
   const publicClient = createPublicClient({
     chain: mainnet,
-    transport: http(),
+    transport: wagmiConfig._internal.transports[mainnet.id],
   })
 
   const nns = await publicClient
@@ -167,7 +167,7 @@ const fetchUnstoppableName = async (address: `0x${string}`): Promise<string> => 
   for (const chain of Object.keys(UNSTOPPABLE_DOMAIN_CONTRACTS)) {
     providers[chain] = createPublicClient({
       chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain),
-      transport: http(),
+      transport: wagmiConfig._internal.transports[Chains[chain]],
     })
   }
 
