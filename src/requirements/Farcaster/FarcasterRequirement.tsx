@@ -1,9 +1,10 @@
-import { Icon, Link } from "@chakra-ui/react"
+import { Icon, Link, Text } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { ArrowSquareOut } from "phosphor-react"
 import REQUIREMENTS from "requirements"
 import FarcasterCast from "./components/FarcasterCast"
@@ -96,6 +97,25 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
   )
 }
 
+const PROFILE_TARGETS = {
+  FARCASTER_USERNAME: "username",
+  FARCASTER_BIO: "bio",
+}
+
+const FarcasterIncludeText = (props: RequirementProps) => {
+  const { type, data } = useRequirementContext()
+
+  return (
+    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+      <Text as="span">{"Have "}</Text>
+      <DataBlockWithCopy text={data.id} />
+      <Text as="span">
+        {` in your ${REQUIREMENTS.FARCASTER.name} ${PROFILE_TARGETS[type]}`}
+      </Text>
+    </Requirement>
+  )
+}
+
 const types = {
   FARCASTER_PROFILE: FarcasterProfile,
   FARCASTER_FOLLOW: FarcasterFollowUser,
@@ -104,6 +124,8 @@ const types = {
   FARCASTER_LIKE: FarcasterLikeRecast,
   FARCASTER_RECAST: FarcasterLikeRecast,
   FARCASTER_FOLLOW_CHANNEL: FarcasterFollowChannel,
+  FARCASTER_USERNAME: FarcasterIncludeText,
+  FARCASTER_BIO: FarcasterIncludeText,
 }
 
 const FarcasterRequirement = (props: RequirementProps) => {

@@ -4,6 +4,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import FarcasterCastHash from "./components/FarcasterCastHash"
 import FarcasterChannel from "./components/FarcasterChannel"
+import FarcasterTextToInclude from "./components/FarcasterTextToInclude"
 import FarcasterTotalFollowers from "./components/FarcasterTotalFollowers"
 import FarcasterUser from "./components/FarcasterUser"
 
@@ -35,6 +36,14 @@ const typeOptions = [
   {
     value: "FARCASTER_RECAST",
     label: "Recast a cast",
+  },
+  {
+    value: "FARCASTER_USERNAME",
+    label: "Have specific text in username",
+  },
+  {
+    value: "FARCASTER_BIO",
+    label: "Have specific text in bio",
   },
 ]
 
@@ -81,6 +90,10 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
       {["FARCASTER_LIKE", "FARCASTER_RECAST"].includes(type) && (
         <FarcasterCastHash baseFieldPath={baseFieldPath} />
+      )}
+
+      {["FARCASTER_BIO", "FARCASTER_USERNAME"].includes(type) && (
+        <FarcasterTextToInclude baseFieldPath={baseFieldPath} />
       )}
     </Stack>
   )
