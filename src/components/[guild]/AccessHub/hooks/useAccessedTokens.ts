@@ -50,6 +50,8 @@ export const useAccessedTokens = () => {
       return relevantRolePlatforms.length > 0
     }) || []
 
+  console.log(accessedGuildTokens)
+
   const groupedByContractAndRole: TokenAccessHubData[] = Object.values(
     accessedGuildTokens.reduce((acc, item) => {
       const { contractAddress, chain } = item.platformGuildData
@@ -58,6 +60,13 @@ export const useAccessedTokens = () => {
       const roleOfReward = roles.find((role) =>
         role.rolePlatforms.some((rp) => rp.guildPlatformId === item.id)
       )
+
+      if (!roleOfReward) {
+        console.error(
+          "Unexpected error while grouping token rewards. No parent role found!"
+        )
+        return []
+      }
 
       const rolePlatform = roleOfReward.rolePlatforms.find(
         (rp) => rp.guildPlatformId === item.id

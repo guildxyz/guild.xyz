@@ -42,9 +42,9 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     data: { logoURI: tokenLogo, decimals },
   } = useTokenData(chain, tokenAddress)
 
-  const formattedAmount = BigInt(1)
+  let formattedAmount = BigInt(1)
   try {
-    parseUnits(amount, decimals)
+    formattedAmount = parseUnits(amount, decimals)
   } catch {}
 
   const { data: coinBalanceData } = useBalance({

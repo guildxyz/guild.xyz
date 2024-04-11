@@ -59,6 +59,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const onSubmit = (_data) => {
     onAdd({
+      requirements: _data.requirements,
       guildPlatform: {
         platformId: PlatformType.ERC20,
         platformName: "ERC20",
@@ -78,10 +79,10 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
       dynamicAmount: {
         operation: {
           type: "LINEAR",
-          // params: {
-          //   addition: _data.addition,
-          //   multiplier: _data.multiplier,
-          // },
+          params: {
+            addition: _data.addition,
+            multiplier: _data.multiplier,
+          },
           input: {
             type: "STATIC",
             value: _data.addition,

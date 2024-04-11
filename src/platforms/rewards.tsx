@@ -22,7 +22,12 @@ import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
 import Token from "static/icons/token.svg"
 import XLogo from "static/icons/x.svg"
-import { GuildPlatformWithOptionalId, PlatformName, RoleFormType } from "types"
+import {
+  GuildPlatformWithOptionalId,
+  PlatformName,
+  Requirement,
+  RoleFormType,
+} from "types"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -74,7 +79,9 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
 ]
 
 export type AddRewardPanelProps = {
-  onAdd: (data: RoleFormType["rolePlatforms"][number]) => void
+  onAdd: (
+    data: RoleFormType["rolePlatforms"][number] & { requirements?: Requirement[] }
+  ) => void
   skipSettings?: boolean
 }
 

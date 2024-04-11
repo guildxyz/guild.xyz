@@ -23,8 +23,8 @@ const TokenRewardProvider = ({
 }): JSX.Element => {
   const { fee, isFeeLoading } = useClaimToken(
     tokenReward.chain,
-    tokenReward.rewardsByRoles[0].roleId,
-    tokenReward.rewardsByRoles[0].rewards[0].rolePlatform.id
+    tokenReward?.rewardsByRoles?.[0]?.roleId,
+    tokenReward?.rewardsByRoles?.[0]?.rewards?.[0]?.rolePlatform?.id
   )
 
   const { data: token, isLoading: isTokenLoading } = useTokenData(

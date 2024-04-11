@@ -3,6 +3,7 @@ import {
   ButtonGroupProps,
   ButtonProps,
   Icon,
+  Tag,
   UseRadioGroupProps,
   UseRadioProps,
   useRadio,
@@ -72,13 +73,20 @@ type RadioButtonProps = {
 } & RadioButtonOptionProps &
   UseRadioProps
 
-export const RadioButton = (props: RadioButtonProps) => {
+export const RadioButton = (props: RadioButtonProps & { disabled?: string }) => {
   const { getInputProps, getCheckboxProps } = useRadio(props)
 
   const input = getInputProps()
   const checkbox = getCheckboxProps()
 
-  const { label, icon, isChecked, colorScheme = "indigo", borderRadius } = props
+  const {
+    label,
+    icon,
+    isChecked,
+    colorScheme = "indigo",
+    borderRadius,
+    disabled,
+  } = props
 
   return (
     <Button
@@ -90,9 +98,15 @@ export const RadioButton = (props: RadioButtonProps) => {
       borderRadius={borderRadius}
       w="full"
       colorScheme={isChecked ? colorScheme : "gray"}
+      isDisabled={!!disabled}
     >
       <input {...input} />
       {label}
+      {typeof disabled === "string" && (
+        <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
+          {disabled}
+        </Tag>
+      )}
     </Button>
   )
 }

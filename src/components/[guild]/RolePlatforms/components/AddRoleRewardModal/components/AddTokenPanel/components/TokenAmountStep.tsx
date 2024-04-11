@@ -6,16 +6,17 @@ import DynamicAmount from "./DynamicAmount"
 import StaticAmount from "./StaticAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
-  const [value, setValue] = useState("static")
+  const [value, setValue] = useState("dynamic")
 
   const options = [
     {
-      label: "Static amount",
-      value: "static",
-    },
-    {
       label: "Dynamic amount",
       value: "dynamic",
+    },
+    {
+      label: "Static amount",
+      value: "static",
+      disabled: "Soon",
     },
   ]
 
@@ -34,7 +35,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
       <RadioButtonGroup
         options={options}
         value={value}
-        onChange={(newValue) => collapseAndExecute(() => setValue(newValue))}
+        onChange={() => {}}
         chakraStyles={{
           spacing: 1.5,
           mt: 2,

@@ -17,8 +17,9 @@ import { AddPointsFormType } from "components/[guild]/RolePlatforms/components/A
 import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useCreateSnapshot } from "hooks/useSnapshot"
 import { useRouter } from "next/router"
-import { useEffect, useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import SnapshotTable from "./SnapshotTable"
@@ -30,6 +31,14 @@ type Props = {
 
 const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
   const router = useRouter()
+
+  const [name, setName] = useState(
+    new Date().toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    })
+  )
 
   const { guildPlatforms, id: guildId } = useGuild()
 
@@ -47,6 +56,12 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
     control,
     name: "data.guildPlatformId",
   })
+
+  const { submitCreate } = useCreateSnapshot(selectedExistingId)
+
+  const onSubmit = () => {
+    submitCreate({ shouldStatusUpdate: false, name: "MyNameIsJeff" })
+  }
 
   const { data, error, mutate } = useSWRWithOptionalAuth(
     guildId
@@ -97,13 +112,7 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
                 />
                 <FormControl>
                   <FormLabel>Snapshot name</FormLabel>
-                  <Input
-                    defaultValue={new Date().toLocaleDateString("en-US", {
-                      month: "2-digit",
-                      day: "2-digit",
-                      year: "numeric",
-                    })}
-                  />
+                  <Input value={name} onChange={(e) => setName(e.target.value)} />
                 </FormControl>
                 <Box>
                   <Text fontWeight={"medium"} mb="2">
@@ -116,7 +125,7 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
                 </Box>
               </Stack>
 
-              <Button mt={8} w="full" colorScheme={"green"}>
+              <Button mt={8} w="full" colorScheme={"green"} onClick={onSubmit}>
                 Create
               </Button>
             </ModalBody>

@@ -10,7 +10,7 @@ import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext
 export const calculateFromDynamicAmount = (
   dynamicAmount: Schemas["DynamicAmount"]
 ) => {
-  const rewardType = dynamicAmount.operation.input[0].type
+  const rewardType = dynamicAmount?.operation?.input?.[0]?.type
 
   switch (rewardType) {
     case "STATIC":

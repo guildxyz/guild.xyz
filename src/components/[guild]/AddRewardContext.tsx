@@ -7,6 +7,7 @@ import {
   PropsWithChildren,
   SetStateAction,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from "react"
@@ -59,6 +60,10 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [activeTab, setActiveTab] = useState<RoleTypeToAddTo>(
     RoleTypeToAddTo.EXISTING_ROLE
   )
+
+  useEffect(() => {
+    if (selection === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
+  }, [selection])
 
   const [shouldShowCloseAlert, setShouldShowCloseAlert] = useState(false)
   const {

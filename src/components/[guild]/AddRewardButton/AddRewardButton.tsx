@@ -16,7 +16,9 @@ import {
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
+import { SectionTitle } from "components/common/Section"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import RequirementBaseCard from "components/create-guild/Requirements/components/RequirementBaseCard"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -24,9 +26,17 @@ import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards from "platforms/rewards"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformName, Requirement, RoleFormType, Visibility } from "types"
+import FreeRequirement from "requirements/Free/FreeRequirement"
+import {
+  PlatformName,
+  PlatformType,
+  Requirement,
+  Role,
+  RoleFormType,
+  Visibility,
+} from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -40,7 +50,7 @@ import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
 
-type AddRewardForm = {
+export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
   requirements?: Requirement[]
@@ -85,6 +95,7 @@ const AddRewardButton = (): JSX.Element => {
   const methods = useForm<AddRewardForm>({
     defaultValues,
   })
+
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const { isStuck } = useIsTabsStuck()
@@ -104,6 +115,10 @@ const AddRewardButton = (): JSX.Element => {
   const roleIds = useWatch({ name: "roleIds", control: methods.control })
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
+
+  useEffect(() => {
+    console.log(requirements)
+  }, [requirements])
 
   const toast = useToast()
 
@@ -127,7 +142,62 @@ const AddRewardButton = (): JSX.Element => {
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const onSubmit = (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
+  const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
+    if (data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20) {
+      /**
+       * ERC20 rewards always create a new role.
+       *
+       * 1. Create role with the snapshot requirement
+       * 2. Add the reward, where the dynamicAmount should reference the new role and
+       *    snapshot requirement
+       */
+
+      const roleVisibility =
+        saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+
+      const createdRole: Role = await onCreateRoleSubmit({
+        ...data,
+        name:
+          data.name ||
+          `${data.rolePlatforms[0].guildPlatform.platformGuildData.name} role`,
+        imageUrl:
+          data.rolePlatforms[0].guildPlatform.platformGuildData?.imageUrl ||
+          `/guildLogos/${getRandomInt(286)}.svg`,
+        roleVisibility,
+        rolePlatforms: [], // Empty, we create it later with the roleId and reqId
+      })
+
+      console.log(createdRole)
+
+      const createdReward = await onAddRewardSubmit({
+        ...data.rolePlatforms[0].guildPlatform,
+        rolePlatforms: [
+          {
+            roleId: createdRole.id,
+            platformRoleId: `${createdRole.id}`,
+            guildPlatform: data.rolePlatforms[0].guildPlatform,
+            isNew: data.rolePlatforms[0].isNew,
+            dynamicAmount: {
+              operation: {
+                type: data.rolePlatforms[0].dynamicAmount.operation.type,
+                params: data.rolePlatforms[0].dynamicAmount.operation.params,
+                input: {
+                  type: "REQUIREMENT_AMOUNT",
+                  roleId: createdRole.id,
+                  requirementId: createdRole.requirements[0].id,
+                },
+              },
+            },
+            visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+          },
+        ],
+      })
+
+      console.log(createdReward)
+
+      return
+    }
+
     if (data.requirements?.length > 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
@@ -286,7 +356,28 @@ const AddRewardButton = (): JSX.Element => {
               flexDir="column"
             >
               {selection && step === "SELECT_ROLE" ? (
-                <SelectRoleOrSetRequirements selectedPlatform={selection} />
+                <>
+                  {selection === "ERC20" ? (
+                    <>
+                      <SectionTitle
+                        mt={6}
+                        mb={1}
+                        title={"Role information"}
+                      ></SectionTitle>
+                      <Text color={"GrayText"} mb={5}>
+                        A new role will be created for the token reward, with the
+                        following snapshot requirement, matching your previous
+                        snapshot selection.
+                      </Text>
+                      <RequirementBaseCard>
+                        {/*  TODO: Change to the snapshot req */}
+                        <FreeRequirement />
+                      </RequirementBaseCard>
+                    </>
+                  ) : (
+                    <SelectRoleOrSetRequirements selectedPlatform={selection} />
+                  )}
+                </>
               ) : AddRewardPanel ? (
                 <AddRewardPanel
                   onAdd={(createdRolePlatform) => {
@@ -294,6 +385,12 @@ const AddRewardButton = (): JSX.Element => {
                       ...createdRolePlatform,
                       visibility,
                     })
+                    if (createdRolePlatform?.requirements?.length > 0) {
+                      methods.setValue(
+                        "requirements",
+                        createdRolePlatform.requirements
+                      )
+                    }
                     setStep("SELECT_ROLE")
                   }}
                   skipSettings
