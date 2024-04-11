@@ -8,6 +8,7 @@ import {
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -17,7 +18,6 @@ import parseFromObject from "utils/parseFromObject"
 import { Chains } from "wagmiConfig/chains"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
 import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
-import { useEffect } from "react"
 
 const UniswapForm = ({
   baseFieldPath,
@@ -78,14 +78,14 @@ const UniswapForm = ({
       {isEditMode ? (
         <>
           <TokenPicker
-            label={"Pair 1"}
+            label={"Token 1"}
             chain={chain}
             fieldName={`${baseFieldPath}.data.token0`}
             rules={{ required: "This field is required" }}
           />
 
           <TokenPicker
-            label={"Pair 2"}
+            label={"Token 2"}
             chain={chain}
             fieldName={`${baseFieldPath}.data.token1`}
             rules={{ required: "This field is required" }}
