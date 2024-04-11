@@ -75,7 +75,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
         <>
           <Text as="span">{"Have the "}</Text>
           <Skeleton
-            display="inline-block"
+            display="inline"
             isLoaded={!isGuildLoading && !isRoleLoading && !isGroupLoading}
           >
             <Link
@@ -84,6 +84,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
               }#role-${roleId}`}
               colorScheme="blue"
               isExternal={requirement.data.guildId !== id}
+              wordBreak="break-word"
             >
               {`${roleName ?? "unknown"} role`}
               {id !== requirement.data.guildId &&
