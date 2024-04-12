@@ -28,7 +28,7 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -40,15 +40,16 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const toast = useToast()
 
-  const { onSubmit, isLoading, response, isSigning, signLoadingText } =
-    useCreateRole({
-      onSuccess: () => {
-        toast({
-          title: "Role successfully created",
-          status: "success",
-        })
-      },
-    })
+  const { onSubmit, isLoading, isSigning, signLoadingText } = useCreateRole({
+    onSuccess: () => {
+      toast({
+        title: "Role successfully created",
+        status: "success",
+      })
+      onClose()
+      methods.reset(defaultValues)
+    },
+  })
 
   const defaultValues: RoleToCreate = {
     guildId: id,
@@ -90,13 +91,6 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onAlertClose()
     onClose()
   }
-
-  useEffect(() => {
-    if (!response) return
-
-    onClose()
-    methods.reset(defaultValues)
-  }, [response])
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
