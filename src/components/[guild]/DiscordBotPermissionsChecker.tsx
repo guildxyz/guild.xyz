@@ -125,23 +125,24 @@ const DiscordBotPermissionsChecker = () => {
 
   const toastWithButton = useToastWithButton()
   const toastIdRef = useRef<ToastId>()
-  const toastOptions: ActionToastOptions = {
-    status: "warning",
-    duration: null,
-    isClosable: false,
-    buttonProps: {
-      children: "Fix problem",
-      leftIcon: <Info />,
-      onClick: onOpen,
-    },
-    secondButtonProps: {
-      children: "Later",
-      variant: "ghost",
-    },
-  }
 
   useEffect(() => {
     if (!data || !!toastIdRef.current) return
+
+    const toastOptions: ActionToastOptions = {
+      status: "warning",
+      duration: null,
+      isClosable: false,
+      buttonProps: {
+        children: "Fix problem",
+        leftIcon: <Info />,
+        onClick: onOpen,
+      },
+      secondButtonProps: {
+        children: "Later",
+        variant: "ghost",
+      },
+    }
 
     for (const [index, permissionInfo] of data.entries()) {
       const serverName = discordRewards[index].platformGuildName
@@ -193,7 +194,7 @@ const DiscordBotPermissionsChecker = () => {
         setErrorType("ROLE_ORDER")
       }
     }
-  }, [data])
+  }, [data, onOpen, discordRewards, relevantDiscordRoles, toastWithButton])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
