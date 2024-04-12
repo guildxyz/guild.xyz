@@ -37,7 +37,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   const { ref: addRoleButtonRef, isStuck } = useIsStuck()
   useEffect(() => {
     setIsStuck?.(isStuck)
-  }, [isStuck])
+  }, [isStuck, setIsStuck])
 
   return (
     <>
