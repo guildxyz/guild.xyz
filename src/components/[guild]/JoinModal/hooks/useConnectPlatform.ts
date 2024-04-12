@@ -187,7 +187,7 @@ const useConnectPlatform = (
     } else {
       onOpen(url)
     }
-  }, [url])
+  }, [url, listener, platformName, onOpen])
 
   return {
     onConnect: onClick,
