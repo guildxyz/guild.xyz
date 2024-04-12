@@ -122,7 +122,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const errorDescription = oauthState.error.errorDescription ?? ""
 
     toast({ status: "error", title, description: errorDescription })
-  }, [oauthState.error])
+  }, [oauthState.error, toast])
 
   return {
     ...oauthState,
