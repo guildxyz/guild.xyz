@@ -23,8 +23,6 @@ const FarcasterTextToInclude = ({ baseFieldPath }: Props) => {
       <Input
         {...register(`${baseFieldPath}.data.id`, {
           required: "This field is required",
-          validate: (input) =>
-            (typeof input === "string" && input.length > 0) || "Invalid value",
         })}
       />
 
