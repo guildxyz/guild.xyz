@@ -77,7 +77,7 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
         message: "POAP not found",
       })
     }
-  }, [poap, error])
+  }, [clearErrors, poap, error, setError])
 
   useEffect(() => {
     if (!poap) {
@@ -90,7 +90,7 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
     setValue("imageUrl", poap.image_url)
     setValue("startTime", new Date(poap.start_date).toISOString())
     setValue("endTime", new Date(poap.expiry_date).toISOString())
-  }, [poap])
+  }, [poap, reset, eventId, texts, setValue])
 
   const onContinue = (data: ImportPoapForm) =>
     onAdd({
