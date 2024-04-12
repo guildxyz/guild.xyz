@@ -93,7 +93,7 @@ const DownloadGuildPinImage = ({ pinUrl }: { pinUrl: string }): JSX.Element => {
 
   useEffect(() => {
     convertSVGToPNG(pinUrl).then((pngDataURL) => setImageAsPNG(pngDataURL))
-  }, [])
+  }, [pinUrl])
 
   if (!imageAsPNG) return null
 
