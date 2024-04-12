@@ -46,7 +46,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
         ...rowHeights.current,
         [index]: rowRef.current.clientHeight + 8,
       }
-    }, [rowRef.current])
+    }, [rowRef, index])
 
     const action = actions[index]
 
