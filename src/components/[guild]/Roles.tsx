@@ -10,7 +10,7 @@ import { Visibility } from "types"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useRoleGroup from "./hooks/useRoleGroup"
 
-const BATCH_SIZE = 10
+const BATCH_SIZE = 5
 
 const DynamicAddRoleCard = dynamic(
   () => import("components/[guild]/[group]/AddRoleCard")
