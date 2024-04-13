@@ -2,13 +2,13 @@ import { Box, Center, Flex, Heading, HStack, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
-import GroupRoles from "components/[guild]/GroupRoles"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
+import Roles from "components/[guild]/Roles"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
@@ -111,7 +111,7 @@ const GroupPage = (): JSX.Element => {
           }
           mb="10"
         >
-          <GroupRoles />
+          <Roles />
         </Section>
       </Layout>
     </>

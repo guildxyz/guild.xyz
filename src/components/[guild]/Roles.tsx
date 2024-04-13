@@ -1,20 +1,30 @@
 import { Center, Spinner, Stack } from "@chakra-ui/react"
 import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useScrollEffect from "hooks/useScrollEffect"
 import dynamic from "next/dynamic"
 import { useMemo, useRef, useState } from "react"
 import { Visibility } from "types"
+import useGuildPermission from "./hooks/useGuildPermission"
+import useRoleGroup from "./hooks/useRoleGroup"
 
 const BATCH_SIZE = 10
 
+const DynamicAddRoleCard = dynamic(
+  () => import("components/[guild]/[group]/AddRoleCard")
+)
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const Roles = () => {
   const { roles: allRoles } = useGuild()
-  const roles = allRoles.filter((role) => !role.groupId)
+  const { isAdmin } = useGuildPermission()
+
+  const group = useRoleGroup()
+  const roles = allRoles.filter((role) =>
+    !!group ? role.groupId === group.id : !role.groupId
+  )
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
@@ -66,6 +76,8 @@ const Roles = () => {
             })}
           </Stack>
         </RequirementErrorConfigProvider>
+      ) : !!group && isAdmin ? (
+        <DynamicAddRoleCard />
       ) : (
         <DynamicNoRolesAlert />
       )}
