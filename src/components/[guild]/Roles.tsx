@@ -82,7 +82,7 @@ const Roles = () => {
         <DynamicNoRolesAlert />
       )}
 
-      {publicRoles?.length && roles?.length > renderedRolesCount && (
+      {!!publicRoles?.length && roles?.length > renderedRolesCount && (
         <Center pt={6}>
           <Spinner />
         </Center>
