@@ -46,7 +46,7 @@ const RewardSuggestions = ({
                 roleId: role.id,
               }
             }),
-    [roles]
+    [roles, guildPlatforms]
   )
 
   const rewardSuggestions = useMemo(
