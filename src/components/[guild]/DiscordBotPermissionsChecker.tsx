@@ -14,7 +14,7 @@ import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
 import { Info } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -95,18 +95,11 @@ const MODAL_CONTENT: Record<
 const DiscordBotPermissionsChecker = () => {
   const { isAdmin } = useGuildPermission()
   const { id, guildPlatforms, roles } = useGuild()
-  const discordRewards =
-    guildPlatforms?.filter((gp) => gp.platformId === PlatformType.DISCORD) ?? []
-  const discordRewardIds = discordRewards.map((gp) => gp.id)
-  const relevantDiscordRoles =
-    roles
-      ?.filter((role) =>
-        role.rolePlatforms.some((rp) =>
-          discordRewardIds.includes(rp.guildPlatformId)
-        )
-      )
-      .flatMap((role) => role.rolePlatforms)
-      .map((rp) => rp.platformRoleId) ?? []
+  const discordRewards = useMemo(
+    () =>
+      guildPlatforms?.filter((gp) => gp.platformId === PlatformType.DISCORD) ?? [],
+    [guildPlatforms]
+  )
 
   const [errorType, setErrorType] = useState<PermissionModalType>()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -177,6 +170,16 @@ const DiscordBotPermissionsChecker = () => {
         return
       }
 
+      const discordRewardIds = discordRewards.map((gp) => gp.id)
+      const relevantDiscordRoles =
+        roles
+          ?.filter((role) =>
+            role.rolePlatforms.some((rp) =>
+              discordRewardIds.includes(rp.guildPlatformId)
+            )
+          )
+          .flatMap((role) => role.rolePlatforms)
+          .map((rp) => rp.platformRoleId) ?? []
       const rolesWithInvalidPosition = permissionInfo.roleOrders.filter(
         (r) =>
           relevantDiscordRoles.includes(r.discordRoleId) &&
@@ -194,7 +197,7 @@ const DiscordBotPermissionsChecker = () => {
         setErrorType("ROLE_ORDER")
       }
     }
-  }, [data, onOpen, discordRewards, relevantDiscordRoles, toastWithButton])
+  }, [data, onOpen, discordRewards, roles, toastWithButton])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
