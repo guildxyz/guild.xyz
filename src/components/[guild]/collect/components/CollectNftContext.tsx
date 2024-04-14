@@ -47,7 +47,7 @@ const CollectNftProvider = ({
   useEffect(() => {
     if (!txHash || isTxModalOpen) return
     onTxModalOpen()
-  }, [txHash])
+  }, [txHash, isTxModalOpen, onTxModalOpen])
 
   return (
     <CollectNftContext.Provider
