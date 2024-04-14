@@ -51,10 +51,22 @@ const ignoredRoutes = [
   "/oauth-result",
 ]
 
+const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
+
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
 
   const { connectors, error, connect, variables, isPending } = useConnect()
+
+  /**
+   * If we can't detect an EIP-6963 compatible wallet, we fallback to a general
+   * injected wallet option
+   */
+  const shouldShowInjected =
+    !!window.ethereum &&
+    connectors
+      .filter((c) => c.id !== COINBASE_INJECTED_WALLET_ID)
+      .filter((c) => c.type === "injected").length === 1
 
   const { connector, status } = useAccount()
 
@@ -201,9 +213,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
                     (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
-                    conn.id !== "injected" &&
+                    (shouldShowInjected || conn.id !== "injected") &&
                     // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
-                    conn.id !== "com.coinbase.wallet"
+                    conn.id !== COINBASE_INJECTED_WALLET_ID
                 )
                 .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
                 .map((conn) => (
