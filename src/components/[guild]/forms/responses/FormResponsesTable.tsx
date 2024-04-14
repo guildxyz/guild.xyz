@@ -43,7 +43,7 @@ const FormResponsesTable = ({ form }) => {
 
     const asPath = router.asPath.split("?")[0]
     router.replace(`${asPath}?${queryString}`)
-  }, [queryString, router.isReady])
+  }, [queryString, router])
 
   const { data, error, isLoading, isValidating, setSize } = useFormSubmissions(
     form.id,
@@ -102,7 +102,7 @@ const FormResponsesTable = ({ form }) => {
       ...form.fields.map((field) =>
         columnHelper.accessor("submissionAnswers", {
           id: `field_${field.id}`,
-          header: ({ column }) => (
+          header: () => (
             <HStack w="full" justifyContent={"space-between"}>
               <FormThText>{field.question}</FormThText>
               {/* field.type !== "MULTIPLE_CHOICE" && (
@@ -123,7 +123,7 @@ const FormResponsesTable = ({ form }) => {
       ),
       columnHelper.accessor("submittedAt", {
         size: 140,
-        header: ({ column }) => (
+        header: () => (
           <HStack w="full" justifyContent={"space-between"}>
             <FormThText>Submitted at</FormThText>
             {/* <OrderByColumn label="Submission date" column={column} /> */}
