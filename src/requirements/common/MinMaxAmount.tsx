@@ -48,7 +48,7 @@ const MinMaxAmount = ({
   useEffect(() => {
     if (showMax) return
     unregister(`${baseFieldPath}.data.maxAmount`)
-  }, [showMax])
+  }, [showMax, unregister, baseFieldPath])
 
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
