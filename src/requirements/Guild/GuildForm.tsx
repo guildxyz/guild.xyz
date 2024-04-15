@@ -54,13 +54,13 @@ const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
   const isEditMode = !!field?.id
 
   useEffect(() => {
-    if (!touchedFields?.data) return
+    if (!touchedFields.data) return
     resetField(`${baseFieldPath}.data.guildId`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.minAmount`)
     resetField(`${baseFieldPath}.data.maxAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
-  }, [type])
+  }, [touchedFields.data, resetField, baseFieldPath, type])
 
   return (
     <Stack spacing={4} alignItems="start">
