@@ -33,9 +33,9 @@ const EmailForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
   const isEditMode = !!field?.id
 
   useEffect(() => {
-    if (!touchedFields?.data) return
+    if (!touchedFields.data) return
     resetField(`${baseFieldPath}.data.domain`)
-  }, [type])
+  }, [touchedFields.data, resetField, baseFieldPath, type])
 
   return (
     <Stack spacing={4} alignItems="start">
