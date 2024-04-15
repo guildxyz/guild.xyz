@@ -23,7 +23,7 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
 
   useEffect(() => {
     setValue(`${baseFieldPath}.data.guildId`, id)
-  }, [id])
+  }, [setValue, baseFieldPath, id])
 
   const formOptions: SelectOption<number>[] =
     forms
