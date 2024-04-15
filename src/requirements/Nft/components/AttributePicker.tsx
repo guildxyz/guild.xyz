@@ -110,7 +110,13 @@ const AttributePicker = ({
     } else {
       setIsRangeValue(false)
     }
-  }, [nftCustomAttributeValues])
+  }, [
+    nftCustomAttributeNames,
+    nftCustomAttributeValues,
+    setValue,
+    baseFieldPath,
+    index,
+  ])
 
   const changeRange = () => {
     if (isRangeValue) {
