@@ -575,24 +575,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/shield.png",
-    name: "Shield",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Shield/ShieldRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Shield/ShieldForm")
-    ),
-    types: [
-      "SHIELD_ANOM_TX",
-      "SHIELD_UNVERIFIED_CONTRACT",
-      "SHIELD_EXPLOIT_INTERACTION",
-      "SHIELD_INDIRECT_DEPOSITS",
-      "SHIELD_TORNADO_CASH",
-    ],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/parallel.png",
     name: "Parallel",
     displayComponent: dynamic<RequirementProps>(
