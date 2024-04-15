@@ -8,27 +8,24 @@ import useToast from "./useToast"
 
 export default function useOAuthResultToast() {
   const toast = useToast()
-  const router = useRouter()
+  const { query, basePath, replace } = useRouter()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   useEffect(() => {
-    if (router.query["oauth-status"]) {
+    if (query["oauth-status"]) {
       const platformNameHumanReadable =
-        rewards[(router.query["oauth-platform"] as PlatformName) ?? ""]?.name ??
-        "Social"
+        rewards[(query["oauth-platform"] as PlatformName) ?? ""]?.name ?? "Social"
 
       const title =
-        router.query["oauth-status"] === "success"
+        query["oauth-status"] === "success"
           ? `${platformNameHumanReadable} successfully connected`
           : `Failed to connect ${platformNameHumanReadable}`
 
       if (
-        router.query["oauth-status"] === "error" &&
-        router.query["oauth-message"]
-          ?.toString()
-          ?.startsWith("Before connecting your")
+        query["oauth-status"] === "error" &&
+        query["oauth-message"]?.toString()?.startsWith("Before connecting your")
       ) {
-        const [, addressOrDomain] = router.query["oauth-message"]
+        const [, addressOrDomain] = query["oauth-message"]
           ?.toString()
           .match(
             /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
@@ -36,17 +33,17 @@ export default function useOAuthResultToast() {
 
         showPlatformMergeAlert({
           addressOrDomain,
-          platformName: router.query["oauth-platform"] as PlatformName,
+          platformName: query["oauth-platform"] as PlatformName,
         })
       } else {
         toast({
-          status: router.query["oauth-status"] as "success" | "error",
+          status: query["oauth-status"] as "success" | "error",
           title,
-          description: router.query["oauth-message"],
+          description: query["oauth-message"],
         })
       }
 
-      router.replace(router.basePath)
+      replace(basePath)
     }
-  }, [router.query])
+  }, [query, showPlatformMergeAlert, toast, replace, basePath])
 }
