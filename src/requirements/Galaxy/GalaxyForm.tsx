@@ -76,7 +76,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     if (publicCampaigns?.length) allCampaigns = allCampaigns.concat(publicCampaigns)
 
     return allCampaigns
-  }, [campaigns, campaign])
+  }, [campaign, isLoading, campaigns])
 
   return (
     <Stack spacing={8} alignItems="start">
