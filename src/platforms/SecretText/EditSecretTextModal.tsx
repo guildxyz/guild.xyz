@@ -46,7 +46,7 @@ const EditSecretTextModal = ({
     if (!initialSetup) return
     setInitialSetup(false)
     reset({ name, imageUrl, text })
-  }, [isDetailed, initialSetup, setInitialSetup, reset, name, imageUrl, text])
+  }, [isDetailed, initialSetup, reset, name, imageUrl, text])
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditGuildPlatform({

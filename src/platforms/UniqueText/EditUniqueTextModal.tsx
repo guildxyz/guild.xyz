@@ -5,10 +5,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -34,6 +34,7 @@ const EditUniqueTextModal = ({
   const methods = useForm<UniqueTextRewardForm>({
     mode: "all",
   })
+  const { reset, handleSubmit } = methods
 
   // TODO: find a cleaner, generalized solution for this, which will work for every reward in the future (Linear: GUILD-1391)
   const [initialSetup, setInitialSetup] = useState(true)
@@ -42,8 +43,8 @@ const EditUniqueTextModal = ({
     if (!initialSetup) return
     setInitialSetup(false)
     // Intentionally leaving the `texts` field empty - admins can't edit texts which are already uploaded
-    methods.reset({ name, imageUrl })
-  }, [isDetailed])
+    reset({ name, imageUrl })
+  }, [isDetailed, initialSetup, reset, name, imageUrl])
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditGuildPlatform({
@@ -75,7 +76,7 @@ const EditUniqueTextModal = ({
                 isDisabled={!name?.length}
                 w="max-content"
                 ml="auto"
-                onClick={methods.handleSubmit(onEditTextRewardSubmit)}
+                onClick={handleSubmit(onEditTextRewardSubmit)}
                 isLoading={isLoading}
                 loadingText="Saving reward"
               >
