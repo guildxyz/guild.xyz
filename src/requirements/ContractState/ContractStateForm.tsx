@@ -106,7 +106,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
   useEffect(() => {
     if (!touchedFields.data?.resultIndex) return
     setValue(`${baseFieldPath}.data.resultIndex`, 0)
-  }, [outputOptions])
+  }, [touchedFields.data?.resultIndex, setValue, baseFieldPath, outputOptions])
 
   const outputType = outputOptions?.[resultIndex ?? 0]?.type
 
@@ -121,7 +121,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
       { label: "<=", value: "<=", text: "less than or equal to", isDisabled },
       { label: ">=", value: ">=", text: "greater than or equal to", isDisabled },
     ]
-  }, [outputType])
+  }, [setValue, baseFieldPath, outputType])
 
   const shouldRenderSimpleInputs = Array.isArray(abi) && !abi.length
   const {
