@@ -83,7 +83,7 @@ const BasicInfo = (): JSX.Element => {
   useEffect(() => {
     if (name && !dirtyFields.urlName)
       setValue("urlName", slugify(name), { shouldValidate: true })
-  }, [name, dirtyFields])
+  }, [name, dirtyFields, setValue])
 
   const backgroundUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
