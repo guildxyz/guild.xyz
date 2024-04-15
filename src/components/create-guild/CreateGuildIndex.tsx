@@ -16,7 +16,7 @@ const CreateGuildIndex = (): JSX.Element => {
 
   useEffect(() => {
     setDisabled(!twitter && guildPlatforms.length === 0 && !whitoutPlatform)
-  }, [twitter, guildPlatforms.length, whitoutPlatform])
+  }, [setDisabled, twitter, guildPlatforms.length, whitoutPlatform])
 
   return (
     <ClientOnly>
