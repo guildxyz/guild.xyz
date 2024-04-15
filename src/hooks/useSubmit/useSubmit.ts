@@ -161,7 +161,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async ({
-      signProps,
+      signProps: _signProps,
       ...data
     }: (DataType | Record<string, unknown>) & { signProps?: SignProps } = {}) => {
       const payload = JSON.stringify(data ?? {})
