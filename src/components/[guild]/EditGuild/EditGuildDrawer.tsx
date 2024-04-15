@@ -32,7 +32,6 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -75,7 +74,6 @@ const EditGuildDrawer = ({
     hideFromExplorer,
     socialLinks,
     contacts,
-    isDetailed,
     featureFlags,
     eventSources,
     tags: savedTags,
@@ -117,12 +115,6 @@ const EditGuildDrawer = ({
   const { control, setValue, reset, formState } = methods
 
   const { onSubmit: onTagsSubmit } = useEditTags()
-
-  // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
-  useEffect(() => {
-    if (!isDetailed || formState.dirtyFields.contacts) return
-    setValue("contacts", contacts)
-  }, [isDetailed, formState, setValue, contacts])
 
   const toast = useToast()
 
