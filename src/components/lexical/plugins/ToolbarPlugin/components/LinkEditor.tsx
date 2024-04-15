@@ -91,7 +91,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
     }
 
     return true
-  }, [editor])
+  }, [editor, setValue])
 
   useEffect(
     () =>
