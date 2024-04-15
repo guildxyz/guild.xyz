@@ -247,9 +247,7 @@ const EditGuildDrawer = ({
                 <ButtonGroup>
                   {!isOwner && <LeaveButton disableColoring />}
                   {(isOwner || isSuperAdmin) && (
-                    <DeleteGuildButton
-                      beforeDelete={() => methods.reset(defaultValues)}
-                    />
+                    <DeleteGuildButton beforeDelete={() => reset(defaultValues)} />
                   )}
                 </ButtonGroup>
               </DrawerHeader>
