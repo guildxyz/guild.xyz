@@ -8,13 +8,14 @@ import {
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { useCallback } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
 import MinMaxAmount from "requirements/common/MinMaxAmount"
 import TokenPicker from "requirements/common/TokenPicker"
 import parseFromObject from "utils/parseFromObject"
-import { Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
 import { UNISWAP_POOL_URL, useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
@@ -36,8 +37,15 @@ const UniswapForm = ({
     name: `${baseFieldPath}.chain`,
   })
 
+  const onChainFromParam = useCallback(
+    (chainFromParam) => {
+      setValue(`${baseFieldPath}.chain`, chainFromParam, { shouldDirty: true })
+    },
+    [baseFieldPath, setValue]
+  )
+
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
-  const tokenId = useParsePoolTokenId(baseFieldPath)
+  const tokenId = useParsePoolTokenId(baseFieldPath, onChainFromParam)
 
   const {
     error,
@@ -127,7 +135,11 @@ const UniswapForm = ({
           {(isLoading || (symbol0 && symbol1) || isFetchingFromTokenId) && (
             <FormHelperText>
               <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
-                Pair: {symbol0 ?? "___"}/{symbol1 ?? "___"}
+                <strong>
+                  {symbol0 ?? "___"}/{symbol1 ?? "___"}
+                </strong>{" "}
+                pair detected on <strong>{CHAIN_CONFIG[chain]?.name}</strong>. If
+                this is not correct, ensure the correct chain is selected
               </Skeleton>
             </FormHelperText>
           )}
