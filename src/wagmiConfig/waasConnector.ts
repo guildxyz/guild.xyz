@@ -175,16 +175,16 @@ export default function waasConnector(options: InitializeWaasOptions) {
       return chain
     },
 
-    async onAccountsChanged(accounts) {
+    async onAccountsChanged(_accounts) {
       // if (accounts.length === 0) emitter.emit("disconnect")
       // else emitter.emit("change", { account: currentAddress.address })
     },
 
-    async onChainChanged(newChainId) {
+    async onChainChanged(_newChainId) {
       // emitter.emit("change", { chain: { id: +newChainId, unsupported: false } })
     },
 
-    async onDisconnect(error) {
+    async onDisconnect(_error) {
       emitter.emit("disconnect")
     },
 
