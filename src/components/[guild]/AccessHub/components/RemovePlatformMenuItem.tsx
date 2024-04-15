@@ -21,7 +21,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
 
-  const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id, onClose)
+  const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
 
   const color = useColorModeValue("red.600", "red.300")
 
