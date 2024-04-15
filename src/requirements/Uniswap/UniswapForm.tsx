@@ -8,7 +8,6 @@ import {
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -16,6 +15,8 @@ import MinMaxAmount from "requirements/common/MinMaxAmount"
 import TokenPicker from "requirements/common/TokenPicker"
 import parseFromObject from "utils/parseFromObject"
 import { Chains } from "wagmiConfig/chains"
+import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
+import { UNISWAP_POOL_URL, useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
 import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
 
@@ -36,17 +37,17 @@ const UniswapForm = ({
   })
 
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
+  const tokenId = useParsePoolTokenId(baseFieldPath)
 
-  const { error, isLoading, symbol0, symbol1, token0, token1 } =
-    useTokenSymbolsOfPoolVault(Chains[chain], lpVaultAddress)
-
-  useEffect(() => {
-    if (!token0 || !token1) {
-      return
-    }
-    setValue(`${baseFieldPath}.data.token0`, token0, { shouldDirty: true })
-    setValue(`${baseFieldPath}.data.token1`, token1, { shouldDirty: true })
-  }, [token0, token1])
+  const {
+    error,
+    isLoading,
+    symbol0: symbol0FromAddress,
+    symbol1: symbol1FromAddress,
+  } = useTokenSymbolsOfPoolVault(Chains[chain], lpVaultAddress, ([t0, t1]) => {
+    setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
+    setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })
+  })
 
   // Reset form on chain change
   const resetForm = () => {
@@ -62,6 +63,19 @@ const UniswapForm = ({
       `${baseFieldPath}.data.maxAmount`,
     ])
   }
+
+  const {
+    isLoading: isFetchingFromTokenId,
+    symbol0: symbol0FromTokenId,
+    symbol1: symbol1FromTokenId,
+    error: tokenIdError,
+  } = usePairOfTokenId(chain, tokenId, ([t0, t1]) => {
+    setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
+    setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })
+  })
+
+  const symbol0 = symbol0FromAddress ?? symbol0FromTokenId
+  const symbol1 = symbol1FromAddress ?? symbol1FromTokenId
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -95,19 +109,22 @@ const UniswapForm = ({
         <FormControl
           isRequired
           isInvalid={
-            !!parseFromObject(errors, baseFieldPath)?.data?.lpVault || !!error
+            !!parseFromObject(errors, baseFieldPath)?.data?.lpVault ||
+            !!error ||
+            !!tokenIdError
           }
         >
           <FormLabel>Pool address or URL</FormLabel>
           <Input
             {...register(`${baseFieldPath}.data.lpVault`, {
-              required: true,
+              required: "This field is required",
               validate: (value) =>
                 ADDRESS_REGEX.test(value) ||
-                "Field has to contain a valid EVM address",
+                UNISWAP_POOL_URL.test(value) ||
+                "Field must be a uniswap pool url, or has to contain a valid EVM address",
             })}
           />
-          {(isLoading || (symbol0 && symbol1)) && (
+          {(isLoading || (symbol0 && symbol1) || isFetchingFromTokenId) && (
             <FormHelperText>
               <Skeleton isLoaded={!!symbol0 && !!symbol1} display="inline">
                 Pair: {symbol0 ?? "___"}/{symbol1 ?? "___"}
@@ -116,7 +133,7 @@ const UniswapForm = ({
           )}
           <FormErrorMessage>
             {parseFromObject(errors, baseFieldPath)?.data?.lpVault?.message ??
-              "Invalid LP Vault address. Failed to get token pair"}
+              "Failed to identify pool. Make sure the correct chain is selected"}
           </FormErrorMessage>
         </FormControl>
       )}
