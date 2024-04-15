@@ -20,7 +20,10 @@ export type RoleToCreate = Omit<
   requirements: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
 }
 
-type CreateRoleResponse = Role & { createdGuildPlatforms?: GuildPlatform[] }
+type CreateRoleResponse = Role & {
+  createdGuildPlatforms?: GuildPlatform[]
+  requirements?: Requirement[]
+}
 
 const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
   const { id, mutateGuild } = useGuild()

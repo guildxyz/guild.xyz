@@ -25,6 +25,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/src/defikingdoms-default.tokenlist.json",
     "https://raw.githubusercontent.com/DefiKingdoms/community-token-list/main/build/defikingdoms-community.tokenlist.json",
   ],
+  ZETACHAIN: [],
   ZETACHAIN_ATHENS: [],
   SCROLL_ALPHA: [],
   SCROLL_SEPOLIA: [],
@@ -66,6 +67,9 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   BLAST_SEPOLIA: [],
   BLAST_MAINNET: [],
   OASIS_SAPPHIRE: [],
+  ASTAR_ZKEVM: [],
+  CORE_DAO: [],
+  LISK_SEPOLIA: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

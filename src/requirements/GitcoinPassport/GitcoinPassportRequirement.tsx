@@ -82,26 +82,28 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
                         borderBottomRadius="xl"
                       >
                         <Tbody fontWeight="normal" fontSize="xs">
-                          {Object.entries(requirement.data)?.map(([key, value]) => (
-                            <Tr key={key}>
-                              <Td>{nameByKey[key]}</Td>
-                              <Td>
-                                <Text
-                                  as="span"
-                                  maxW={key === "issuer" ? 36 : undefined}
-                                  noOfLines={1}
-                                >
-                                  {key === "minAmount" || key === "maxAmount"
-                                    ? new Date(value).toLocaleString("en-US", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                      })
-                                    : value}
-                                </Text>
-                              </Td>
-                            </Tr>
-                          ))}
+                          {Object.entries(requirement.data)?.map(
+                            ([key, value]: [string, any]) => (
+                              <Tr key={key}>
+                                <Td>{nameByKey[key]}</Td>
+                                <Td>
+                                  <Text
+                                    as="span"
+                                    maxW={key === "issuer" ? 36 : undefined}
+                                    noOfLines={1}
+                                  >
+                                    {key === "minAmount" || key === "maxAmount"
+                                      ? new Date(value).toLocaleString("en-US", {
+                                          year: "numeric",
+                                          month: "long",
+                                          day: "numeric",
+                                        })
+                                      : value}
+                                  </Text>
+                                </Td>
+                              </Tr>
+                            )
+                          )}
                         </Tbody>
                       </Table>
                     </PopoverBody>

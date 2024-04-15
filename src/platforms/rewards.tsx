@@ -91,6 +91,7 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   image?: string | JSX.Element
   info?: string | JSX.Element
   link?: string
+  shouldHide?: boolean
 }
 
 type RewardData = {
@@ -123,7 +124,7 @@ const rewards: Record<PlatformName, RewardData> = {
   EMAIL: {
     icon: EnvelopeSimple,
     name: "Email",
-    colorScheme: "gray",
+    colorScheme: "blue",
     gatedEntity: "email",
     isPlatform: true,
     asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,

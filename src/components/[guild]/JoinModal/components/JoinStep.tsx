@@ -1,6 +1,6 @@
-import { ButtonGroup, ButtonProps, HStack, Text, Tooltip } from "@chakra-ui/react"
+import { ButtonProps, HStack, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import React, { PropsWithChildren } from "react"
+import { PropsWithChildren } from "react"
 import JoinStepIndicator from "./JoinStepIndicator"
 
 type Props = {
@@ -12,7 +12,6 @@ type Props = {
   icon: JSX.Element
   colorScheme: string
   isDone: boolean
-  addonButton?: JSX.Element
 } & Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
@@ -23,53 +22,44 @@ const JoinStep = ({
   icon,
   colorScheme,
   isDone,
-  addonButton,
   children,
   ...buttonProps
-}: PropsWithChildren<Props>) => {
-  const ButtonWrapper = addonButton ? ButtonGroup : React.Fragment
-  const buttonWrapperProps = addonButton ? { isAttached: true } : {}
+}: PropsWithChildren<Props>) => (
+  <HStack>
+    <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
 
-  return (
-    <HStack>
-      <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
-
-      <HStack w="full">
-        <Text fontWeight="bold" noOfLines={1}>
-          {title}
-          {isRequired && (
-            <Text as="span" color="red.300">
-              {` *`}
-            </Text>
-          )}
-        </Text>
-        {titleRightElement}
-      </HStack>
-      <ButtonWrapper {...buttonWrapperProps}>
-        <Tooltip
-          isDisabled={!buttonProps.isDisabled}
-          label={buttonProps.isDisabled}
-          shouldWrapChildren
-        >
-          <Button
-            leftIcon={icon}
-            colorScheme={colorScheme}
-            flexShrink="0"
-            minW="max-content"
-            maxW={isDone && "40"}
-            {...buttonProps}
-            isDisabled={isDone || buttonProps.isDisabled}
-            borderRightRadius={!!addonButton && 0}
-          >
-            {buttonLabel}
-          </Button>
-        </Tooltip>
-
-        {addonButton}
-      </ButtonWrapper>
-      {children}
+    <HStack w="full">
+      <Text fontWeight="bold" noOfLines={1}>
+        {title}
+        {isRequired && (
+          <Text as="span" color="red.300">
+            {` *`}
+          </Text>
+        )}
+      </Text>
+      {titleRightElement}
     </HStack>
-  )
-}
+
+    <Tooltip
+      isDisabled={!buttonProps.isDisabled}
+      label={buttonProps.isDisabled}
+      shouldWrapChildren
+    >
+      <Button
+        leftIcon={icon}
+        colorScheme={colorScheme}
+        flexShrink="0"
+        minW="max-content"
+        maxW={isDone && "40"}
+        {...buttonProps}
+        isDisabled={isDone || buttonProps.isDisabled}
+      >
+        {buttonLabel}
+      </Button>
+    </Tooltip>
+
+    {children}
+  </HStack>
+)
 
 export default JoinStep

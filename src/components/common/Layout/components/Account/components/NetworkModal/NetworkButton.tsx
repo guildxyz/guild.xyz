@@ -15,8 +15,12 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
 
   return (
     <Tooltip
-      isDisabled={!isCurrentChain}
-      label={`${CHAIN_CONFIG[chain].name} is currently selected`}
+      isDisabled={!isCurrentChain && !CHAIN_CONFIG[chain].deprecated}
+      label={
+        isCurrentChain
+          ? `${CHAIN_CONFIG[chain].name} is currently selected`
+          : "Deprecated chain"
+      }
       shouldWrapChildren
     >
       <Button
@@ -30,7 +34,7 @@ const NetworkButton = ({ chain, requestNetworkChange }: Props) => {
         border={isCurrentChain && "2px"}
         borderColor="primary.500"
         borderRadius={"xl"}
-        isDisabled={isCurrentChain}
+        isDisabled={isCurrentChain || CHAIN_CONFIG[chain].deprecated}
         onClick={requestNetworkChange}
         w="full"
         size={"xl"}

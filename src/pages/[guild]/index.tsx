@@ -7,7 +7,6 @@ import {
   Icon,
   Link,
   Spinner,
-  Stack,
   Tag,
   TagLeftIcon,
   Text,
@@ -15,7 +14,6 @@ import {
 } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import {
   EditGuildDrawerProvider,
   useEditGuildDrawer,
@@ -27,8 +25,7 @@ import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
 import Members from "components/[guild]/Members"
 import { MintGuildPinProvider } from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPinContext"
-import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
-import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import Roles from "components/[guild]/Roles"
 import SocialIcon from "components/[guild]/SocialIcon"
 import useStayConnectedToast from "components/[guild]/StayConnectedToast"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
@@ -41,7 +38,6 @@ import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import VerifiedIcon from "components/common/VerifiedIcon"
 import useMembership from "components/explorer/hooks/useMembership"
-import useScrollEffect from "hooks/useScrollEffect"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -49,13 +45,11 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild, SocialLinkKey, Visibility } from "types"
+import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
-
-const BATCH_SIZE = 10
 
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
@@ -68,7 +62,6 @@ const DynamicMembersExporter = dynamic(
   () => import("components/[guild]/Members/components/MembersExporter")
 )
 const DynamicOnboarding = dynamic(() => import("components/[guild]/Onboarding"))
-const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 const DynamicActiveStatusUpdates = dynamic(
   () => import("components/[guild]/ActiveStatusUpdates")
 )
@@ -90,59 +83,14 @@ const GuildPage = (): JSX.Element => {
     description,
     imageUrl,
     admins,
-    showMembers,
     memberCount,
-    roles: allRoles,
+    roles,
     isLoading,
     onboardingComplete,
     socialLinks,
     tags,
-    featureFlags,
     isDetailed,
   } = useGuild()
-
-  const roles = allRoles.filter((role) => !role.groupId)
-
-  // temporary, will order roles already in the SQL query in the future
-  const sortedRoles = useMemo(() => {
-    if (roles?.every((role) => role.position === null)) {
-      const byMembers = roles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
-      )
-      return byMembers
-    }
-
-    return (
-      roles?.sort((role1, role2) => {
-        if (role1.position === null) return 1
-        if (role2.position === null) return -1
-        return role1.position - role2.position
-      }) ?? []
-    )
-  }, [roles])
-
-  const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
-  )
-  const hiddenRoles = sortedRoles.filter(
-    (role) => role.visibility === Visibility.HIDDEN
-  )
-
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
-  const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
-  const rolesEl = useRef(null)
-  useScrollEffect(() => {
-    if (
-      !rolesEl.current ||
-      rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      roles?.length <= renderedRolesCount
-    )
-      return
-
-    setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [roles, renderedRolesCount])
-
-  const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
@@ -159,7 +107,8 @@ const GuildPage = (): JSX.Element => {
 
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
-  const stayConnectedToast = useStayConnectedToast(() => {
+
+  useStayConnectedToast(() => {
     onOpen()
     setTimeout(() => {
       const addContactBtn = document.getElementById("add-contact-btn")
@@ -267,38 +216,11 @@ const GuildPage = (): JSX.Element => {
           }
           mb="10"
         >
-          {renderedRoles.length ? (
-            <RequirementErrorConfigProvider>
-              <Stack ref={rolesEl} spacing={4}>
-                {renderedRoles.map((role) => (
-                  <RoleCard key={role.id} role={role} />
-                ))}
-              </Stack>
-            </RequirementErrorConfigProvider>
-          ) : (
-            <DynamicNoRolesAlert />
-          )}
-
-          {publicRoles?.length && roles?.length > renderedRolesCount && (
-            <Center pt={6}>
-              <Spinner />
-            </Center>
-          )}
-
-          {!!hiddenRoles?.length && (
-            <CollapsibleRoleSection
-              id="hiddenRoles"
-              roleCount={hiddenRoles.length}
-              label="hidden"
-              defaultIsOpen
-            >
-              {hiddenRoles.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </CollapsibleRoleSection>
-          )}
+          <Roles />
         </Section>
-        {(showMembers || isAdmin) && (
+
+        {/* we'll remove Members section completely, just keeping it for admins for now because of the Members exporter */}
+        {isAdmin && (
           <>
             <Divider my={10} />
             <Section
@@ -321,18 +243,13 @@ const GuildPage = (): JSX.Element => {
             >
               <Box>
                 {isAdmin && <DynamicActiveStatusUpdates />}
-                {showMembers ? (
-                  <>
-                    <Members members={members} />
-                    {/* Temporary until the BE returns members again  */}
-                    <Text mt="6" colorScheme={"gray"}>
-                      <Icon as={Info} mr="2" mb="-2px" />
-                      Members are temporarily hidden, only admins are shown
-                    </Text>
-                  </>
-                ) : (
-                  <Text>Members are hidden</Text>
-                )}
+
+                <Members members={members} />
+                <Text mt="6" colorScheme={"gray"}>
+                  <Icon as={Info} mr="2" mb="-2px" />
+                  Members section is only visible to admins and is under rework,
+                  until then only admins are shown
+                </Text>
               </Box>
             </Section>
           </>

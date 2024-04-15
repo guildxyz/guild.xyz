@@ -124,7 +124,7 @@ const Admins = () => {
               <Tag>only editable by the Guild owner</Tag>
             )}
           </FormLabel>
-          {isOwner ? <TransferOwnership /> : null}
+          {isOwner || isSuperAdmin ? <TransferOwnership /> : null}
         </Flex>
 
         <AdminSelect

@@ -152,81 +152,83 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
         </FormErrorMessage>
       </FormControl>
       {selectedStrategyData?.properties ? (
-        Object.entries(selectedStrategyData?.properties ?? {}).map(([key, prop]) => (
-          <FormControl
-            key={key}
-            isRequired={selectedStrategyData.required.includes(key)}
-            isInvalid={
-              !!parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
-                ?.params?.[key]
-            }
-          >
-            <FormLabel>{prop.title}</FormLabel>
-            {(() => {
-              switch (prop.type) {
-                case "number":
-                  return (
-                    <Controller
-                      name={`${baseFieldPath}.data.strategies.${index}.params.${key}`}
-                      control={control}
-                      rules={{
-                        required: selectedStrategyData.required.includes(key)
-                          ? "This field is required."
-                          : false,
-                      }}
-                      render={({ field: { onChange, onBlur, value, ref } }) => (
-                        <NumberInput
-                          ref={ref}
-                          value={value ?? undefined}
-                          onChange={onChange}
-                          onBlur={onBlur}
-                        >
-                          <NumberInputField placeholder={prop.examples?.[0]} />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      )}
-                    />
-                  )
-                case "string":
-                  return (
-                    <Input
-                      {...register(
-                        `${baseFieldPath}.data.strategies.${index}.params.${key}`,
-                        {
+        Object.entries(selectedStrategyData?.properties ?? {}).map(
+          ([key, prop]: [string, any]) => (
+            <FormControl
+              key={key}
+              isRequired={selectedStrategyData.required.includes(key)}
+              isInvalid={
+                !!parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
+                  ?.params?.[key]
+              }
+            >
+              <FormLabel>{prop.title}</FormLabel>
+              {(() => {
+                switch (prop.type) {
+                  case "number":
+                    return (
+                      <Controller
+                        name={`${baseFieldPath}.data.strategies.${index}.params.${key}`}
+                        control={control}
+                        rules={{
                           required: selectedStrategyData.required.includes(key)
                             ? "This field is required."
                             : false,
-                          pattern: prop.pattern
-                            ? {
-                                value: prop.pattern,
-                                message: "Invalid value",
-                              }
-                            : undefined,
-                          minLength: prop.minLength,
-                          maxLength: prop.maxLength,
-                        }
-                      )}
-                      placeholder={prop.examples?.[0]}
-                    />
-                  )
-                // case "object":
-                //   return null
-                // Unsupported field
-                // e.g.: https://github.com/snapshot-labs/snapshot-strategies/blob/master/src/strategies/ctsi-staking/schema.json
-              }
-            })()}
+                        }}
+                        render={({ field: { onChange, onBlur, value, ref } }) => (
+                          <NumberInput
+                            ref={ref}
+                            value={value ?? undefined}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                          >
+                            <NumberInputField placeholder={prop.examples?.[0]} />
+                            <NumberInputStepper>
+                              <NumberIncrementStepper />
+                              <NumberDecrementStepper />
+                            </NumberInputStepper>
+                          </NumberInput>
+                        )}
+                      />
+                    )
+                  case "string":
+                    return (
+                      <Input
+                        {...register(
+                          `${baseFieldPath}.data.strategies.${index}.params.${key}`,
+                          {
+                            required: selectedStrategyData.required.includes(key)
+                              ? "This field is required."
+                              : false,
+                            pattern: prop.pattern
+                              ? {
+                                  value: prop.pattern,
+                                  message: "Invalid value",
+                                }
+                              : undefined,
+                            minLength: prop.minLength,
+                            maxLength: prop.maxLength,
+                          }
+                        )}
+                        placeholder={prop.examples?.[0]}
+                      />
+                    )
+                  // case "object":
+                  //   return null
+                  // Unsupported field
+                  // e.g.: https://github.com/snapshot-labs/snapshot-strategies/blob/master/src/strategies/ctsi-staking/schema.json
+                }
+              })()}
 
-            <FormErrorMessage>
-              {
-                parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
-                  ?.params?.[key]?.message
-              }
-            </FormErrorMessage>
-          </FormControl>
-        ))
+              <FormErrorMessage>
+                {
+                  parseFromObject(errors, baseFieldPath)?.data?.strategies?.[index]
+                    ?.params?.[key]?.message
+                }
+              </FormErrorMessage>
+            </FormControl>
+          )
+        )
       ) : strategyFieldValue ? (
         <FormControl
           isInvalid={

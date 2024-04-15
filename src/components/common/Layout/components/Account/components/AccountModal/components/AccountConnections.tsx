@@ -15,7 +15,6 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { SectionProps } from "components/common/Section"
 import { Question } from "phosphor-react"
 import rewards from "platforms/rewards"
@@ -30,7 +29,6 @@ import SocialAccount, { EmailAddress } from "./SocialAccount"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
-  const { address } = useWeb3ConnectionManager()
   const vaults = useDelegateVaults()
 
   const orderedSocials = useMemo(() => {
@@ -44,12 +42,6 @@ const AccountConnections = () => {
     )
     return [...connectedPlatforms, ...notConnectedPlatforms] as PlatformName[]
   }, [platformUsers])
-
-  const linkedAddresses = addresses?.filter(
-    (addr) =>
-      (typeof addr === "string" ? addr : addr?.address)?.toLowerCase() !==
-      address.toLowerCase()
-  )
 
   return (
     <>
@@ -95,7 +87,7 @@ const AccountConnections = () => {
       <AccountSection divider={<Divider />}>
         {isLoading ? (
           <LinkedAddressSkeleton />
-        ) : !linkedAddresses?.length ? (
+        ) : !(addresses?.length > 1) ? (
           <Stack
             {...(!vaults?.length && {
               direction: "row",
@@ -116,7 +108,7 @@ const AccountConnections = () => {
             )}
           </Stack>
         ) : (
-          linkedAddresses
+          addresses
             .map((addressData) => (
               <LinkedAddress key={addressData?.address} addressData={addressData} />
             ))

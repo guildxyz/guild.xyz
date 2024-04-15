@@ -14,6 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import HCaptcha from "@hcaptcha/react-hcaptcha"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
@@ -51,12 +52,28 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
         Complete CAPTCHA
       </Button>
 
-      <CompleteCaptchaModal onClose={onClose} isOpen={isOpen} />
+      <CompleteCaptchaModal
+        onClose={onClose}
+        isOpen={isOpen}
+        shouldTriggerMembershipUpdate
+      />
     </>
   )
 }
 
-const CompleteCaptchaModal = ({ isOpen, onClose }) => {
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  onComplete?: () => void
+  shouldTriggerMembershipUpdate?: boolean
+}
+
+const CompleteCaptchaModal = ({
+  isOpen,
+  onClose,
+  onComplete,
+  shouldTriggerMembershipUpdate,
+}: Props) => {
   const fetcherWithSign = useFetcherWithSign()
   const {
     data: getGateCallbackData,
@@ -68,8 +85,10 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
       : null,
     fetcherWithSign
   )
-
-  const { onSubmit, isLoading, response } = useVerifyCaptcha()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
+  const { onSubmit, isLoading, response } = useVerifyCaptcha(
+    shouldTriggerMembershipUpdate ? () => triggerMembershipUpdate() : undefined
+  )
 
   const onVerify = (token: string) =>
     onSubmit({
@@ -79,8 +98,9 @@ const CompleteCaptchaModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (!response) return
+    onComplete?.()
     onClose()
-  }, [response])
+  }, [response, onComplete, onClose])
 
   return (
     <Modal

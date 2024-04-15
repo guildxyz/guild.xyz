@@ -1,9 +1,12 @@
 import { ButtonProps } from "@chakra-ui/react"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useClaimText from "platforms/SecretText/hooks/useClaimText"
+import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../../../hooks/useClaimedReward"
 import { RolePlatform } from "../../../../types"
 import { MintLinkModal } from "./MintLinkModal"
@@ -14,6 +17,9 @@ type Props = {
 
 const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
   const { captureEvent } = usePostHogContext()
+
+  const { isConnected } = useAccount()
+
   const { claimed, isLoading: isClaimedLoading } = useClaimedReward(rolePlatform.id)
 
   const { urlName, roles } = useGuild()
@@ -31,9 +37,24 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatform.id)
 
-  const isLoading = isAccessLoading || isClaimLoading || isClaimedLoading
+  const showErrorToast = useShowErrorToast()
+  const { triggerMembershipUpdate, isLoading: isMembershipUpdateLoading } =
+    useMembershipUpdate({
+      onSuccess: () => onSubmit(),
+      onError: (err) =>
+        showErrorToast({
+          error: "Couldn't check eligibility",
+          correlationId: err.correlationId,
+        }),
+    })
 
-  const isDisabled = rest?.isDisabled || !rolePlatform?.capacity
+  const isLoading =
+    isAccessLoading ||
+    isMembershipUpdateLoading ||
+    isClaimLoading ||
+    isClaimedLoading
+
+  const isDisabled = !isConnected || rest?.isDisabled || !rolePlatform?.capacity
 
   return (
     <>
@@ -42,13 +63,28 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
         w="full"
         isLoading={isLoading}
         colorScheme={!rest.isDisabled || claimed ? "green" : "gray"}
-        loadingText={isAccessLoading ? "Checking access" : "Claiming POAP"}
+        loadingText={
+          isAccessLoading
+            ? "Checking access"
+            : isMembershipUpdateLoading
+            ? "Checking eligibility"
+            : "Claiming POAP"
+        }
         onClick={() => {
           captureEvent("Click: ClaimPoapButton", {
             guild: urlName,
           })
           onOpen()
-          if (!response) onSubmit()
+
+          if (response) return
+
+          if (hasRoleAccess) {
+            onSubmit()
+          } else {
+            triggerMembershipUpdate({
+              roleIds: [roleId],
+            })
+          }
         }}
         {...rest}
         isDisabled={isDisabled}

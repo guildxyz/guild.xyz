@@ -13,7 +13,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
-import MembersToggle from "components/[guild]/EditGuild/components/MembersToggle"
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
@@ -298,8 +297,7 @@ const EditGuildDrawer = ({
                 <Divider />
 
                 <Section title="Security">
-                  <MembersToggle />
-                  <HideFromExplorerToggle />
+                  {savedTags?.includes("VERIFIED") && <HideFromExplorerToggle />}
 
                   <Admins />
                 </Section>

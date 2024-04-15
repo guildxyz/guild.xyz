@@ -22,7 +22,7 @@ const LinkDelegateVaultButton = ({ vaults }) => {
       isLoading={linkDelegations.isLoading}
       loadingText="Check your wallet"
     >
-      Link {vaults.length > 1 ? vaults.length : ""} unlinked vault
+      Link {vaults.length > 1 ? vaults.length : ""} vault
       {vaults.length > 1 ? "s" : ""}
     </Button>
   )

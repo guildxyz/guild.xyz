@@ -55,6 +55,10 @@ const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
     address: "0x1eeaab336061d64f1d271eed529991f7ae7cc478",
     abi: tokenBuyerAbi,
   },
+  BASE_MAINNET: {
+    address: "0x44f26a7b2b58621d97240b09350b66803faa1e1a",
+    abi: tokenBuyerAbi,
+  },
 }
 
 const SPECIAL_TOKEN_BUYER_CONTRACTS: Record<number, TokenBuyerContractConfig> = {
@@ -77,16 +81,14 @@ export const getTokenBuyerContractData = (
 ): TokenBuyerContractConfig =>
   SPECIAL_TOKEN_BUYER_CONTRACTS[guildId] ?? DEFAULT_TOKEN_BUYER_CONTRACTS
 
-export const ZEROX_API_URLS: Partial<Record<Chain, string>> = {
+export const ZEROX_API_URLS: Partial<
+  Record<keyof typeof DEFAULT_TOKEN_BUYER_CONTRACTS, string>
+> = {
   ETHEREUM: "https://api.0x.org",
   GOERLI: "https://goerli.api.0x.org",
   POLYGON: "https://polygon.api.0x.org",
-  // BSC: "https://bsc.api.0x.org",
-  // OPTIMISM: "https://optimism.api.0x.org",
-  // FANTOM: "https://fantom.api.0x.org",
-  // CELO: "https://celo.api.0x.org",
-  // AVALANCHE: "https://avalanche.api.0x.org",
   ARBITRUM: "https://arbitrum.api.0x.org",
+  BASE_MAINNET: "https://base.api.0x.org",
 }
 
 export const RESERVOIR_API_URLS: Partial<Record<Chain, string>> = {
@@ -230,6 +232,7 @@ export const GUILD_PIN_CONTRACTS = {
   OPTIMISM: "0x6c2c223b84724c4b8fd41ae0142c2369dfa7e319",
   MANTLE: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
   ONTOLOGY: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
+  LINEA: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
 } as const
 
 export type GuildPinsSupportedChain = keyof typeof GUILD_PIN_CONTRACTS

@@ -2,7 +2,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import guildPinAbi from "static/abis/guildPin"
 import useSWR from "swr"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
-import { createPublicClient, http, type Chain as ViemChain } from "viem"
+import { createPublicClient, type Chain as ViemChain } from "viem"
 import { wagmiConfig } from "wagmiConfig"
 import { Chains, type Chain } from "wagmiConfig/chains"
 
@@ -13,7 +13,7 @@ import { Chains, type Chain } from "wagmiConfig/chains"
 const fetchFee = (chain: Chain) => {
   const publicClient = createPublicClient({
     chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain) as ViemChain,
-    transport: http(),
+    transport: wagmiConfig._internal.transports[Chains[chain]],
   })
 
   return publicClient.readContract({

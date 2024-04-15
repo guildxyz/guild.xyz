@@ -105,6 +105,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
             "FUEL",
           ]}
           showDivider={false}
+          menuPlacement="top"
         />
 
         <Checkbox

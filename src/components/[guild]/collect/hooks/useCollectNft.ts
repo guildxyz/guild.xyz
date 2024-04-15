@@ -8,13 +8,12 @@ import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
-import { useWalletClient } from "hooks/useWalletClient"
 import { useState } from "react"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import { useFetcherWithSign } from "utils/fetcher"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
-import { useAccount, usePublicClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
@@ -34,7 +33,7 @@ const useCollectNft = () => {
   const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address, chainId } = useAccount()
+  const { address, chainId, status } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -157,7 +156,9 @@ const useCollectNft = () => {
 
         captureEvent("Mint NFT error (GuildCheckout)", {
           ...postHogOptions,
-          error,
+          error: prettyError,
+          originalError: error,
+          wagmiAccountStatus: status,
         })
       },
     }),

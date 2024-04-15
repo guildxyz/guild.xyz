@@ -35,6 +35,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     connector: evmConnector,
     address: evmAddress,
   } = useAccount()
+
   const { signMessageAsync } = useSignMessage()
 
   useEffect(() => {

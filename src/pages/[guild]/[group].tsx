@@ -1,7 +1,6 @@
-import { Box, Center, Flex, Heading, HStack, Spinner, Stack } from "@chakra-ui/react"
+import { Box, Center, Flex, Heading, HStack, Spinner } from "@chakra-ui/react"
 import AccessHub from "components/[guild]/AccessHub"
 import { useAccessedGuildPlatforms } from "components/[guild]/AccessHub/AccessHub"
-import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -9,26 +8,22 @@ import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import JoinButton from "components/[guild]/JoinButton"
 import JoinModalProvider from "components/[guild]/JoinModal/JoinModalProvider"
 import LeaveButton from "components/[guild]/LeaveButton"
-import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
-import RoleCard from "components/[guild]/RoleCard/RoleCard"
+import Roles from "components/[guild]/Roles"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
 import useMembership from "components/explorer/hooks/useMembership"
-import useScrollEffect from "hooks/useScrollEffect"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
 import Head from "next/head"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
-import { useMemo, useRef, useState } from "react"
+import { useState } from "react"
 import { SWRConfig } from "swr"
-import { Guild, Visibility } from "types"
+import { Guild } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
-
-const BATCH_SIZE = 10
 
 const DynamicEditCampaignButton = dynamic(
   () => import("components/[guild]/[group]/EditCampaignButton")
@@ -44,62 +39,11 @@ const DynamicRecheckAccessesButton = dynamic(() =>
     (module) => module.TopRecheckAccessesButton
   )
 )
-const DynamicAddRoleCard = dynamic(
-  () => import("components/[guild]/[group]/AddRoleCard")
-)
-const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const GroupPage = (): JSX.Element => {
-  const {
-    roles,
-    name: guildName,
-    urlName: guildUrlName,
-    imageUrl: guildImageUrl,
-  } = useGuild()
+  const { imageUrl: guildImageUrl } = useGuild()
 
   const group = useRoleGroup()
-  const groupRoles = roles?.filter((role) => role.groupId === group.id)
-
-  // temporary, will order roles already in the SQL query in the future
-  const sortedRoles = useMemo(() => {
-    if (groupRoles?.every((role) => role.position === null)) {
-      const byMembers = groupRoles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
-      )
-      return byMembers
-    }
-
-    return (
-      groupRoles?.sort((role1, role2) => {
-        if (role1.position === null) return 1
-        if (role2.position === null) return -1
-        return role1.position - role2.position
-      }) ?? []
-    )
-  }, [groupRoles])
-
-  const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
-  )
-  const hiddenRoles = sortedRoles.filter(
-    (role) => role.visibility === Visibility.HIDDEN
-  )
-
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
-  const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
-  const rolesEl = useRef(null)
-  useScrollEffect(() => {
-    if (
-      !rolesEl.current ||
-      rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      groupRoles?.length <= renderedRolesCount
-    )
-      return
-
-    setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [groupRoles, renderedRolesCount])
-
-  const renderedRoles = publicRoles?.slice(0, renderedRolesCount) || []
 
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
@@ -167,38 +111,7 @@ const GroupPage = (): JSX.Element => {
           }
           mb="10"
         >
-          {renderedRoles.length ? (
-            <RequirementErrorConfigProvider>
-              <Stack ref={rolesEl} spacing={4}>
-                {renderedRoles.map((role) => (
-                  <RoleCard key={role.id} role={role} />
-                ))}
-              </Stack>
-            </RequirementErrorConfigProvider>
-          ) : isAdmin ? (
-            <DynamicAddRoleCard />
-          ) : (
-            <DynamicNoRolesAlert type="GROUP" />
-          )}
-
-          {publicRoles?.length && groupRoles?.length > renderedRolesCount && (
-            <Center pt={6}>
-              <Spinner />
-            </Center>
-          )}
-
-          {!!hiddenRoles?.length && (
-            <CollapsibleRoleSection
-              id="hiddenRoles"
-              roleCount={hiddenRoles.length}
-              label="hidden"
-              defaultIsOpen
-            >
-              {hiddenRoles.map((role) => (
-                <RoleCard key={role.id} role={role} />
-              ))}
-            </CollapsibleRoleSection>
-          )}
+          <Roles />
         </Section>
       </Layout>
     </>

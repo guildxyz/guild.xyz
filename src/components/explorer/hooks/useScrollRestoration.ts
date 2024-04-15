@@ -1,11 +1,19 @@
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 
 const scrollPositions = new Map()
 
 /**
- * Used for scroll restoration when navigating to the page. FOR ALL NAVIGATIONS, NOT
- * ONLY FOR BACKWARDS NAVIGATION!
+ * Used for scroll restoration when navigating to the page - works for "Back to
+ * explorer" button too, not just native back navigation.
+ *
+ * It's complex and doesn't work reliably tho, we should check if we can prevent the
+ * layout shift caused by the dynamically loaded Your guilds section, and just use
+ * native scroll restoration again. To keep the functionality for the "Back to
+ * explorer" button too, we could apply a logic there to not push the router but go
+ * back if the previous route was explorer. It would also be great because now if we
+ * search for something, then go back by the button, the scroll restoration takes us
+ * to a random place
  *
  * @param param0
  */
@@ -17,14 +25,22 @@ const useScrollRestoration = ({
   onRestore?: () => void
 }) => {
   const router = useRouter()
+  const previousPathname = useRef(null)
 
   useEffect(() => {
     const handleRouteChangeStart = (url: string) => {
-      if (router.asPath === url) return
-      scrollPositions.set(router.asPath, window.scrollY)
+      const pathname = url.split("?")[0]
+
+      if (previousPathname.current != pathname)
+        scrollPositions.set(router.asPath, window.scrollY)
+
+      previousPathname.current = pathname
     }
 
-    const handleRouteChangeComplete = () => {
+    const handleRouteChangeComplete = (url: string) => {
+      const pathname = url.split("?")[0]
+      if (previousPathname.current == pathname) return
+
       const savedPosition = scrollPositions.get(router.asPath) || 0
 
       if (!active) {

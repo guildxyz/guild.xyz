@@ -1,13 +1,10 @@
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { Chains } from "wagmiConfig/chains"
-
-import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import useUsersGuildPins from "hooks/useUsersGuildPins"
-import { useWalletClient } from "hooks/useWalletClient"
 import { useState } from "react"
 import guildPinAbi from "static/abis/guildPin"
 import { GuildPinMetadata } from "types"
@@ -17,7 +14,8 @@ import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
-import { useAccount, usePublicClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
+import { Chains } from "wagmiConfig/chains"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 import { useTransactionStatusContext } from "../components/TransactionStatusContext"
 import useGuildPinFee from "./useGuildPinFee"
@@ -40,7 +38,8 @@ type MintData = {
 
 const useMintGuildPin = () => {
   const { captureEvent } = usePostHogContext()
-  const { id, name, urlName, roles } = useGuild()
+
+  const { id, name, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
   const { mutate } = useUsersGuildPins()
@@ -48,7 +47,7 @@ const useMintGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address, chainId } = useAccount()
+  const { address, chainId, status } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -189,18 +188,8 @@ const useMintGuildPin = () => {
       })
     } catch {}
 
-    const hasGuildPinRequirement = roles
-      .flatMap((r) => r.requirements)
-      .some(
-        (req) =>
-          req.type === "ERC721" &&
-          req.chain === Chains[chainId] &&
-          req.address.toLowerCase() === contractAddress.toLowerCase()
-      )
-
-    if (hasGuildPinRequirement) {
-      triggerMembershipUpdate()
-    }
+    // TODO: trigger membership update only for a specific role (once Guild Pin will be a real reward)
+    triggerMembershipUpdate()
 
     toastWithTweetButton({
       title: "Successfully minted Guild Pin!",
@@ -221,7 +210,9 @@ const useMintGuildPin = () => {
 
         captureEvent("Mint Guild Pin error (GuildCheckout)", {
           ...postHogOptions,
-          error,
+          error: prettyError,
+          originalError: error,
+          wagmiAccountStatus: status,
         })
       },
       onSuccess: () => {

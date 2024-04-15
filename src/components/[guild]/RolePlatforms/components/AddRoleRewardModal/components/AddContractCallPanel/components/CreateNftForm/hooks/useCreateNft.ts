@@ -12,10 +12,9 @@ import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
-import { useAccount, usePublicClient } from "wagmi"
+import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
-import { useWalletClient } from "hooks/useWalletClient"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
   ContractCallSupportedChain,
@@ -30,6 +29,7 @@ export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
   POLYGON_MUMBAI: "0xf14249947c6de788c61f8ac5db0495ee2663ec1b",
   MANTLE: "0x326f14942f8899406e3224bd63E9f250D275a52e",
   ZKSYNC_ERA: "0x2a1eaf11a9753a871b15e2865d8a47cf17dd9450",
+  LINEA: "0x326f14942f8899406e3224bd63E9f250D275a52e",
 }
 
 type NftMetadata = {

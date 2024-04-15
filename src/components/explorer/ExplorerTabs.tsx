@@ -36,7 +36,7 @@ const ExplorerTabs = ({ yourGuildsRef, allGuildsRef, ...rest }) => {
           })
         }
       >
-        Explore all guilds
+        Explore guilds
       </TabButton>
     </Tabs>
   )

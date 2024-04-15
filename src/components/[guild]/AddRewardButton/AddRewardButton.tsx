@@ -33,7 +33,6 @@ import {
   PlatformName,
   PlatformType,
   Requirement,
-  Role,
   RoleFormType,
   Visibility,
 } from "types"
@@ -152,7 +151,7 @@ const AddRewardButton = (): JSX.Element => {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
 
-      const createdRole: Role = await onCreateRoleSubmit({
+      const createdRole = await onCreateRoleSubmit({
         ...data,
         name:
           data.name ||

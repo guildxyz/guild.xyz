@@ -18,7 +18,6 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { Error as ErrorComponent } from "components/common/Error"
 import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
-import useLinkVaults from "components/common/Layout/components/Account/components/AccountModal/hooks/useLinkVaults"
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
@@ -31,9 +30,6 @@ import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
-import DelegateCashButton, {
-  delegateConnectionAtom,
-} from "./components/DelegateCashButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
 import GoogleLoginButton from "./components/GoogleLoginButton"
 import useIsWalletConnectModalActive from "./hooks/useIsWalletConnectModalActive"
@@ -55,15 +51,24 @@ const ignoredRoutes = [
   "/oauth-result",
 ]
 
+const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
+
 const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
-  const [isDelegateConnection, setIsDelegateConnection] = useAtom(
-    delegateConnectionAtom
-  )
 
-  const { connectors, error, connect, isPending } = useConnect()
+  const { connectors, error, connect, variables, isPending } = useConnect()
 
-  const { connector } = useAccount()
+  /**
+   * If we can't detect an EIP-6963 compatible wallet, we fallback to a general
+   * injected wallet option
+   */
+  const shouldShowInjected =
+    !!window.ethereum &&
+    connectors
+      .filter((c) => c.id !== COINBASE_INJECTED_WALLET_ID)
+      .filter((c) => c.type === "injected").length === 1
+
+  const { connector, status } = useAccount()
 
   const [addressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
@@ -90,22 +95,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           errorMessage: err.message,
           errorStack: err.stack,
           errorCause: err.cause,
+          wagmiAccountStatus: status,
         })
       }
     },
   })
-  const linkVaults = useLinkVaults()
-
-  useEffect(() => {
-    if (!!keyPair && isDelegateConnection) {
-      linkVaults.onSubmit()
-      setIsDelegateConnection(false)
-    }
-  }, [keyPair, isDelegateConnection])
 
   useEffect(() => {
     if (keyPair) onClose()
-  }, [keyPair])
+  }, [keyPair, onClose])
 
   const router = useRouter()
 
@@ -118,7 +116,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
     ) {
       onOpen()
     }
-  }, [keyPair, router, id, publicUserError, connector])
+  }, [keyPair, router, id, publicUserError, connector, onOpen])
 
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 
@@ -140,32 +138,21 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
       <ModalOverlay />
       <ModalContent data-test="wallet-selector-modal">
         <ModalHeader display={"flex"}>
-          {((isConnectedAndKeyPairReady && !keyPair) || isDelegateConnection) && (
+          {isConnectedAndKeyPairReady && !keyPair && (
             <IconButton
-              rounded={"full"}
+              rounded="full"
               aria-label="Back"
               size="sm"
               icon={<ArrowLeft size={20} />}
               variant="ghost"
               onClick={() => {
-                if (
-                  isDelegateConnection &&
-                  !(isConnectedAndKeyPairReady && !keyPair)
-                ) {
-                  setIsDelegateConnection(false)
-                  return
-                }
                 set.reset()
                 disconnect()
               }}
             />
           )}
           <Text ml="1.5" mt="-1px">
-            {isAddressLink
-              ? "Link address"
-              : isDelegateConnection
-              ? "Connect hot wallet"
-              : "Connect to Guild"}
+            {isAddressLink ? "Link address" : "Connect to Guild"}
           </Text>
         </ModalHeader>
         <ModalCloseButton />
@@ -226,9 +213,9 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                   (conn) =>
                     (isInSafeContext || conn.id !== "safe") &&
                     (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
-                    conn.id !== "injected" &&
+                    (shouldShowInjected || conn.id !== "injected") &&
                     // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
-                    conn.id !== "com.coinbase.wallet"
+                    conn.id !== COINBASE_INJECTED_WALLET_ID
                 )
                 .sort((conn, _) => (conn.type === "injected" ? -1 : 0))
                 .map((conn) => (
@@ -236,13 +223,13 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                     <ConnectorButton
                       connector={conn}
                       connect={connect}
-                      isLoading={isPending}
-                      pendingConnector={null as Connector}
+                      pendingConnector={
+                        isPending && (variables?.connector as Connector)
+                      }
                       error={error}
                     />
                   </CardMotionWrapper>
                 ))}
-              {!isDelegateConnection && <DelegateCashButton />}
               <FuelConnectorButtons key="fuel" />
             </Stack>
           )}
@@ -275,7 +262,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
           {!isConnectedAndKeyPairReady ? (
             <Stack textAlign="center" fontSize="sm" w="full">
               <Text colorScheme="gray">
-                New to Ethereum wallets?{" "}
+                <span>{"New to Ethereum wallets? "}</span>
                 <Link
                   colorScheme="blue"
                   href="https://ethereum.org/en/wallets/"
@@ -287,7 +274,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
               </Text>
 
               <Text colorScheme="gray">
-                By continuing, you agree to our{" "}
+                <span>{"By continuing, you agree to our "}</span>
                 <Link
                   href="/privacy-policy"
                   fontWeight={"semibold"}
@@ -295,7 +282,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 >
                   Privacy Policy
                 </Link>
-                {` and `}
+                <span>{" and "}</span>
                 <Link href="/terms-of-use" fontWeight={"semibold"} onClick={onClose}>
                   Terms & conditions
                 </Link>
@@ -303,11 +290,11 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             </Stack>
           ) : (
             <Stack textAlign="center" fontSize="sm" w="full">
-              <Text colorScheme={"gray"}>
+              <Text colorScheme="gray">
                 Signing the message doesn't cost any gas
               </Text>
               <Text colorScheme="gray">
-                This site is protected by reCAPTCHA, so the Google{" "}
+                <span>{"This site is protected by reCAPTCHA, so the Google "}</span>
                 <Link
                   href="https://policies.google.com/privacy"
                   isExternal
@@ -315,15 +302,15 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
                 >
                   Privacy Policy
                 </Link>{" "}
-                and{" "}
+                <span>{"and "}</span>
                 <Link
                   href="https://policies.google.com/terms"
                   isExternal
                   fontWeight={"semibold"}
                 >
                   Terms of Service
-                </Link>{" "}
-                apply
+                </Link>
+                <span>{" apply"}</span>
               </Text>
             </Stack>
           )}

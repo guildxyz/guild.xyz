@@ -1,27 +1,18 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
-import useMembership from "components/explorer/hooks/useMembership"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Robot } from "phosphor-react"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
-import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
 
 const CompleteCaptchaJoinStep = (): JSX.Element => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
 
-  const { roles } = useGuild()
-  const requirements = roles?.flatMap((role) => role.requirements) ?? []
-  const captchaRequirements = requirements
-    ?.filter((req) => req.type === "CAPTCHA")
-    .map((req) => req.id)
-
-  const { membership } = useMembership()
-  const requirementAccesses = membership?.roles?.flatMap((role) => role.requirements)
-
-  const isDone = requirementAccesses?.some(
-    (reqAccess) =>
-      captchaRequirements.includes(reqAccess.requirementId) && reqAccess.access
-  )
+  const {
+    data: isDone,
+    isLoading,
+    mutate,
+  } = useSWRWithOptionalAuth(`/v2/util/gate-proof-existence/CAPTCHA`)
 
   const { onOpen, onClose, isOpen } = useDisclosure()
 
@@ -34,10 +25,15 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
         onClick={onOpen}
-        isDisabled={!isConnected && "Connect wallet first"}
+        isDisabled={!isWeb3Connected && "Connect wallet first"}
+        isLoading={isLoading}
       />
 
-      <CompleteCaptchaModal isOpen={isOpen} onClose={onClose} />
+      <CompleteCaptchaModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onComplete={() => mutate(() => true, { revalidate: false })}
+      />
     </>
   )
 }

@@ -14,10 +14,10 @@ import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/c
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { useWalletClient } from "hooks/useWalletClient"
 import { atom, useSetAtom } from "jotai"
 import { Plus, SignOut } from "phosphor-react"
 import { useState } from "react"
+import { useWalletClient } from "wagmi"
 
 export type AddressLinkParams = {
   userId?: number

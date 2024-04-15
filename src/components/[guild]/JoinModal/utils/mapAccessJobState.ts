@@ -1,4 +1,4 @@
-import type { JoinJob } from "@guildxyz/types"
+import type { AccessCheckJob, JoinJob } from "@guildxyz/types"
 
 // TODO: uncomment the properly typed groupBy once we fix our types in the queues package!
 
@@ -31,7 +31,8 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
   }
 
   const state =
-    progress?.roleAccesses && progress?.roleAccesses?.every((role) => !role.access)
+    progress?.roleAccesses?.length > 0 &&
+    progress.roleAccesses.every((role) => !role.access)
       ? "NO_ACCESS"
       : progress.done
       ? "FINISHED"
@@ -49,14 +50,24 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
       ? (progress as any).position
       : null
 
-  const requirements = progress["children:access-check:jobs"]
+  /**
+   * After the "access-check" step, we can use progress.requirementAccesses for live
+   * data, since that includes the final results (even if the guild has "chained"
+   * roles)
+   */
+  const isAccessCheckComplete =
+    !!progress["completed-queue"] &&
+    !["access-preparation", "access-check"].includes(progress["completed-queue"])
+  const requirementAccesses = isAccessCheckComplete
+    ? ((progress as any)
+        .requirementAccesses as AccessCheckJob["children:access-check:jobs"])
+    : progress["children:access-check:jobs"]
+
+  const requirements = requirementAccesses
     ? {
-        all: progress["children:access-check:jobs"]?.length,
-        satisfied: progress["children:access-check:jobs"]?.filter(
-          (req) => req?.access
-        )?.length,
-        checked: progress["children:access-check:jobs"]?.filter((req) => req?.done)
-          ?.length,
+        all: requirementAccesses?.length,
+        satisfied: requirementAccesses?.filter((req) => req?.access)?.length,
+        checked: requirementAccesses?.filter((req) => req?.done)?.length,
       }
     : null
 
@@ -87,6 +98,7 @@ const mapAccessJobState = (progress: JoinJob, isLoading: boolean) => {
     requirements,
     roles,
     rewards,
+    roleIds: progress.roleIds,
   } as const
 }
 

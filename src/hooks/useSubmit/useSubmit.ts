@@ -4,7 +4,6 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
-import { useWalletClient } from "hooks/useWalletClient"
 import randomBytes from "randombytes"
 import { useState } from "react"
 import useSWR from "swr"
@@ -14,14 +13,13 @@ import {
   UnauthorizedProviderError,
   WalletClient,
   createPublicClient,
-  http,
   keccak256,
   stringToBytes,
   trim,
 } from "viem"
-import { useChainId, usePublicClient } from "wagmi"
+import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
-import { Chains, supportedChains } from "wagmiConfig/chains"
+import { Chain, Chains, supportedChains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -317,13 +315,24 @@ export const fuelSign = async ({
   return [payload, { params, sig }]
 }
 
-const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
-  Promise.all(
-    supportedChains.map(async (chainName) => {
-      const chain = wagmiConfig.chains.find((c) => Chains[c.id] === chainName)
+const chainsOfAddressWithDeployedContract = async (
+  address: `0x${string}`
+): Promise<Chain[]> => {
+  const LOCALSTORAGE_KEY = `chainsWithByteCode_${address.toLowerCase()}`
+  const chainsWithByteCodeFromLocalstorage = localStorage.getItem(LOCALSTORAGE_KEY)
+
+  if (chainsWithByteCodeFromLocalstorage) {
+    const parsed = JSON.parse(chainsWithByteCodeFromLocalstorage)
+
+    if (Array.isArray(parsed))
+      return parsed.filter((c) => supportedChains.includes(c))
+  }
+
+  const res = await Promise.all(
+    wagmiConfig.chains.map(async (chain) => {
       const publicClient = createPublicClient({
         chain,
-        transport: http(),
+        transport: wagmiConfig._internal.transports[chain.id],
       })
 
       const bytecode = await publicClient
@@ -332,19 +341,22 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
         })
         .catch(() => null)
 
-      return [chainName, bytecode && trim(bytecode) !== "0x"] as const
+      return [Chains[chain.id], bytecode && trim(bytecode) !== "0x"] as const
     })
-  ).then(
-    (results) =>
-      new Set(
-        results
-          .filter(([, hasContract]) => !!hasContract)
-          .map(([chainName]) => chainName)
-      )
-  )
+  ).then((results) => [
+    ...new Set(
+      results
+        .filter(([, hasContract]) => !!hasContract)
+        .map(([chainName]) => chainName as Chain)
+    ),
+  ])
+
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(res))
+
+  return res
+}
 
 export const sign = async ({
-  publicClient,
   walletClient,
   address,
   payload,
@@ -361,9 +373,7 @@ export const sign = async ({
     params.method = ValidationMethod.KEYPAIR
     sig = await signWithKeyPair(keyPair, params)
   } else {
-    const walletChains = await chainsOfAddressWithDeployedContract(address).then(
-      (set) => [...set]
-    )
+    const walletChains = await chainsOfAddressWithDeployedContract(address)
     const walletChainId =
       walletChains.length > 0 ? Chains[walletChains[0]] : undefined
 

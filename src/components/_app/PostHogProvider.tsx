@@ -9,6 +9,7 @@ import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorN
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 const USER_REJECTED_ERROR = "User rejected the request"
+const REJECT_BY_THE_USER_ERROR = "Reject by the user"
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -17,6 +18,9 @@ if (typeof window !== "undefined") {
     autocapture: false,
     capture_pageleave: false,
     capture_pageview: false,
+
+    // We don't record every session, but we can start recording with the `startSessionRecording` function where we actually want to save videos
+    disable_session_recording: true,
 
     persistence: "memory",
 
@@ -33,8 +37,10 @@ if (typeof window !== "undefined") {
 
 const PostHogContext = createContext<{
   captureEvent: (event: string, options?: Record<string, any>) => void
+  startSessionRecording: () => void
 }>({
   captureEvent: () => {},
+  startSessionRecording: () => {},
 })
 
 const CustomPostHogProvider = ({
@@ -49,6 +55,16 @@ const CustomPostHogProvider = ({
     <PostHogContext.Provider
       value={{
         captureEvent: (event, options) => {
+          // TODO: find a better approach here...
+          const errorMessage =
+            typeof options?.error?.message === "string"
+              ? options.error.message
+              : typeof options?.error === "string"
+              ? options.error
+              : typeof options?.errorMessage === "string"
+              ? options.errorMessage
+              : undefined
+
           if (
             /**
              * We're filtering out errors with correlationIds, because those errors
@@ -56,12 +72,14 @@ const CustomPostHogProvider = ({
              * too
              */
             options?.error?.correlationId ||
+            options?.originalError?.correlationId ||
             /**
              * Also filtering the "User rejected the request" error, because that is
              * not an error actually, the user can intentionally reject a
              * transaction
              */
-            options?.error?.message?.includes(USER_REJECTED_ERROR)
+            errorMessage?.includes(USER_REJECTED_ERROR) ||
+            errorMessage?.includes(REJECT_BY_THE_USER_ERROR)
           )
             return
 
@@ -73,6 +91,7 @@ const CustomPostHogProvider = ({
             ...options,
           })
         },
+        startSessionRecording: () => ph.startSessionRecording(),
       }}
     >
       {children}

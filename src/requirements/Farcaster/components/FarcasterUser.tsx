@@ -63,6 +63,8 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
             IndicatorSeparator: () => null,
           }}
           fallbackValue={farcasterUser}
+          // We filter users on the API, so don't need to apply a filter client side too
+          filterOption={() => true}
         />
       </InputGroup>
 
