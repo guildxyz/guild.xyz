@@ -88,7 +88,7 @@ const ChainPicker = ({
           : supportedChains[0]
       )
     }, 0)
-  }, [chainId])
+  }, [chain, setValue, controlName, supportedChains, chainId])
 
   return (
     <>
