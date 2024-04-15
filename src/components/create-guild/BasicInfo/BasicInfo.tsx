@@ -51,7 +51,7 @@ const BasicInfo = (): JSX.Element => {
       !contacts[0].contact || errors.contacts ? "Contact email required!" : ""
     )
     return () => setContinueTooltipLabel("")
-  }, [name, errors, contacts, errors.contacts])
+  }, [setDisabled, name, errors, contacts, errors.contacts, setContinueTooltipLabel])
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
