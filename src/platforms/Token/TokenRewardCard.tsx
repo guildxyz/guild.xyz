@@ -1,4 +1,5 @@
 import { Schemas } from "@guildxyz/types"
+import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import RewardCard from "components/common/RewardCard"
@@ -51,6 +52,8 @@ const TokenRewardCard = () => {
     useTokenRewardContext()
   const claimableAmount = calculateClaimableAmount(rewardsByRoles)
 
+  const platformToRemove = rewardsByRoles[0].rewards[0].guildPlatform
+
   return (
     <>
       <RewardCard
@@ -63,6 +66,9 @@ const TokenRewardCard = () => {
           <>
             <PlatformCardMenu>
               {/* TODO: Add remove option (or maybe only allow it in the role edit panel?) */}
+              <RemovePlatformMenuItem
+                platformGuildId={`${platformToRemove.platformGuildId}`}
+              />
             </PlatformCardMenu>
           </>
         }

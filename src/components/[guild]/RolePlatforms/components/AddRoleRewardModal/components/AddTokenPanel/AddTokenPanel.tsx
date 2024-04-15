@@ -39,7 +39,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
   const methods = useForm<AddTokenFormType>({
     mode: "all",
     defaultValues: {
-      addition: 1,
+      addition: 0,
     },
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)

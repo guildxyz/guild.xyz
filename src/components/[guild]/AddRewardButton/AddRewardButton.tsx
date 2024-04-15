@@ -26,7 +26,7 @@ import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards from "platforms/rewards"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import FreeRequirement from "requirements/Free/FreeRequirement"
 import {
@@ -86,6 +86,7 @@ const AddRewardButton = (): JSX.Element => {
     step,
     setStep,
     activeTab,
+
     isOpen,
     onOpen,
     onClose: onAddRewardModalClose,
@@ -115,10 +116,6 @@ const AddRewardButton = (): JSX.Element => {
   const roleIds = useWatch({ name: "roleIds", control: methods.control })
   const isAddRewardButtonDisabled =
     activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
-
-  useEffect(() => {
-    console.log(requirements)
-  }, [requirements])
 
   const toast = useToast()
 
@@ -167,8 +164,6 @@ const AddRewardButton = (): JSX.Element => {
         rolePlatforms: [], // Empty, we create it later with the roleId and reqId
       })
 
-      console.log(createdRole)
-
       const createdReward = await onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         rolePlatforms: [
@@ -192,8 +187,6 @@ const AddRewardButton = (): JSX.Element => {
           },
         ],
       })
-
-      console.log(createdReward)
 
       return
     }

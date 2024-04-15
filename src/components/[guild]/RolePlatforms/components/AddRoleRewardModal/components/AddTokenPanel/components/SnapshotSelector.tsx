@@ -14,7 +14,7 @@ import CreateSnapshotModal from "components/[guild]/leaderboard/Snapshots/Create
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useSnapshots } from "hooks/useSnapshot"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType, SelectOption } from "types"
@@ -38,10 +38,6 @@ const SnapshotSelector = () => {
   const reqs = useWatch({ name: "requirements" })
 
   const { snapshots, isSnapshotsLoading } = useSnapshots(selectedPointId)
-
-  useEffect(() => {
-    console.log(reqs)
-  }, [reqs])
 
   const getPointPlatform = (guildPlatformId: number) => {
     return guildPlatforms.find((gp) => gp.id === guildPlatformId)

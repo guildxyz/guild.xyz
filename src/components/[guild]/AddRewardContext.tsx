@@ -7,7 +7,6 @@ import {
   PropsWithChildren,
   SetStateAction,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from "react"
@@ -45,11 +44,6 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
 
   const [selection, setSelectionOg] = useState<PlatformName>()
 
-  const setSelection = (newSelection: PlatformName) => {
-    setSelectionOg(newSelection)
-    scrollToTop()
-  }
-
   const [step, setStepOg] = useState<AddRewardStep>()
 
   const setStep = (newStep: AddRewardStep) => {
@@ -61,9 +55,11 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
     RoleTypeToAddTo.EXISTING_ROLE
   )
 
-  useEffect(() => {
-    if (selection === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
-  }, [selection])
+  const setSelection = (newSelection: PlatformName) => {
+    setSelectionOg(newSelection)
+    if (newSelection === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
+    scrollToTop()
+  }
 
   const [shouldShowCloseAlert, setShouldShowCloseAlert] = useState(false)
   const {

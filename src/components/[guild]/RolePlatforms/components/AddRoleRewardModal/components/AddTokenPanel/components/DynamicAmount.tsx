@@ -43,8 +43,9 @@ const DynamicAmount = () => {
   const { control, setValue } = useFormContext<AddTokenFormType>()
 
   useEffect(() => {
-    setValue("multiplier", conversionRate)
-  }, [conversionRate])
+    const convRate = Number(conversionAmounts[1]) / Number(conversionAmounts[0])
+    setValue("multiplier", convRate)
+  }, [conversionAmounts])
 
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `contractAddress`, control })

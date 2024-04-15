@@ -48,8 +48,6 @@ const useSnapshots = (guildPlatformId: number) => {
     error,
   } = useSWRWithOptionalAuth(endpoint)
 
-  console.log(snapshots2)
-
   return { snapshots: snapshots2, isSnapshotsLoading: false, error: null }
 }
 
