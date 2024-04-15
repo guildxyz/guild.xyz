@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonGroup,
   Divider,
   Drawer,
   DrawerBody,
@@ -243,11 +244,14 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                {isOwner || isSuperAdmin ? (
-                  <DeleteGuildButton beforeDelete={() => reset(defaultValues)} />
-                ) : (
-                  <LeaveButton disableColoring />
-                )}
+                <ButtonGroup>
+                  {!isOwner && <LeaveButton disableColoring />}
+                  {(isOwner || isSuperAdmin) && (
+                    <DeleteGuildButton
+                      beforeDelete={() => methods.reset(defaultValues)}
+                    />
+                  )}
+                </ButtonGroup>
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
                 <Section title="General">
