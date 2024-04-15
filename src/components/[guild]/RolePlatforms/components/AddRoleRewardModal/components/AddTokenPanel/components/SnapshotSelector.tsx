@@ -30,7 +30,9 @@ const SnapshotSelector = () => {
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const [selectedPointId, setSelectedPointId] = useState(existingPointsRewards[0].id)
+  const [selectedPointId, setSelectedPointId] = useState(
+    existingPointsRewards?.[0]?.id
+  )
 
   const { setValue: setRootValue } = useFormContext<AddRewardForm>()
   const setRequirement = (req: any) => setRootValue("requirements", [req])

@@ -2,11 +2,23 @@ import { Collapse, Flex, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useState } from "react"
+import { useWatch } from "react-hook-form"
 import DynamicAmount from "./DynamicAmount"
 import StaticAmount from "./StaticAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const [value, setValue] = useState("dynamic")
+
+  const snapshotId = useWatch({ name: `snapshotId` })
+  const multiplier = useWatch({ name: `multiplier` })
+  const addition = useWatch({ name: `addition` })
+
+  console.log(snapshotId)
+
+  const isContinueDisabled =
+    value === "dynamic"
+      ? snapshotId === undefined || multiplier === undefined
+      : addition === undefined
 
   const options = [
     {
@@ -53,7 +65,11 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
       </Collapse>
 
       <Flex justifyContent={"flex-end"} mt="4">
-        <Button isDisabled={false} colorScheme="primary" onClick={onContinue}>
+        <Button
+          isDisabled={isContinueDisabled}
+          colorScheme="primary"
+          onClick={onContinue}
+        >
           Continue
         </Button>
       </Flex>

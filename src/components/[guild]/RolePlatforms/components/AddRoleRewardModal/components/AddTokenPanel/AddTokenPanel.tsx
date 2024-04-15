@@ -33,6 +33,7 @@ export type AddTokenFormType = {
   data: {
     guildPlatformId: number
   }
+  snapshotId: number
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -40,6 +41,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     mode: "all",
     defaultValues: {
       addition: 0,
+      multiplier: 1,
     },
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
