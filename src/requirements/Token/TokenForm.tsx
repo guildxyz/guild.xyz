@@ -50,7 +50,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
     } catch {
       setValue(`${baseFieldPath}.balancyDecimals`, undefined)
     }
-  }, [decimals])
+  }, [setValue, baseFieldPath, decimals])
 
   return (
     <Stack spacing={4} alignItems="start">
