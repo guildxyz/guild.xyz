@@ -84,7 +84,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [claimed, isMember, hasRoleAccess, isConnected, platform])
+  }, [hasRoleAccess, platform, claimed, label, isMember, openJoinModal])
 
   return (
     <>
