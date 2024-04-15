@@ -47,7 +47,7 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
     if (!setValue) return
     setValue(`${baseFieldPath}.chain`, "BASE_MAINNET")
     setValue(`${baseFieldPath}.data.attester`, VERIFICATIONS_COINBASE_ETH)
-  }, [setValue])
+  }, [setValue, baseFieldPath])
 
   const schemaId = useWatch({ name: `${baseFieldPath}.data.schemaId` })
 
