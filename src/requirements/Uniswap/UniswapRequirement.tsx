@@ -48,7 +48,7 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
           {symbol0 ?? "___"}/{symbol1 ?? "___"}
         </DataBlock>
       </Skeleton>{" "}
-      LP tokens
+      Uniswap V3 Positions
     </Requirement>
   )
 }
