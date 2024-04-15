@@ -40,7 +40,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
   // close modal (and stop revalidating access) on successful connect
   useEffect(() => {
     if (!errorType) onClose()
-  }, [errorType])
+  }, [errorType, onClose])
 
   if (!userId || (!!reqAccess && !errorType)) return null
 
