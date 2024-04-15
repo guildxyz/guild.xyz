@@ -5,10 +5,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
 import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -36,6 +36,7 @@ const EditSecretTextModal = ({
   const methods = useForm<SecretTextRewardForm>({
     mode: "all",
   })
+  const { reset, handleSubmit } = methods
 
   // TODO: find a cleaner, generalized solution for this, which will work for every reward in the future (Linear: GUILD-1391)
   // `defaultValues` didn't work properly in useForm, so we're just resetting the form on mount instead
@@ -44,8 +45,8 @@ const EditSecretTextModal = ({
     if (!isDetailed) return
     if (!initialSetup) return
     setInitialSetup(false)
-    methods.reset({ name, imageUrl, text })
-  }, [isDetailed])
+    reset({ name, imageUrl, text })
+  }, [isDetailed, initialSetup, setInitialSetup, reset, name, imageUrl, text])
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditGuildPlatform({
@@ -77,7 +78,7 @@ const EditSecretTextModal = ({
                 isDisabled={!name?.length || !text?.length}
                 w="max-content"
                 ml="auto"
-                onClick={methods.handleSubmit(onEditTextRewardSubmit)}
+                onClick={handleSubmit(onEditTextRewardSubmit)}
                 isLoading={isLoading}
                 loadingText="Saving reward"
               >
