@@ -11,6 +11,7 @@ import { Modal } from "components/common/Modal"
 import { useAtom } from "jotai"
 import rewards from "platforms/rewards"
 import { useRef } from "react"
+import { useFormState } from "react-hook-form"
 import { PlatformType, RolePlatform } from "types"
 import { openRewardSettingsGuildPlatformIdAtom } from "../RolePlatforms"
 import { useRolePlatform } from "./RolePlatformProvider"
@@ -29,7 +30,8 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
     guildPlatform: { platformId },
   } = useRolePlatform()
 
-  console.log(rolePlatform)
+  const { errors } = useFormState()
+  const hasError = !!errors?.rolePlatforms?.[index]
 
   const rewardName =
     (rolePlatform as RolePlatform).guildPlatform?.platformGuildName ??
@@ -50,7 +52,9 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
         scrollBehavior="inside"
         colorScheme={"dark"}
         initialFocusRef={modalContentRef}
-        size="lg"
+        size="xl"
+        closeOnEsc={!hasError}
+        closeOnOverlayClick={!hasError}
       >
         <ModalOverlay />
         <ModalContent ref={modalContentRef}>
@@ -62,7 +66,7 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="green" onClick={onClose}>
+            <Button colorScheme="green" onClick={onClose} isDisabled={hasError}>
               Done
             </Button>
           </ModalFooter>

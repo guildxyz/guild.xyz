@@ -35,8 +35,6 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
       (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
         PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
         !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
-      // temporary until we have Edit button for points to set amount
-      guildPlatform.platformId !== PlatformType.POINTS &&
       // not added to the role yet
       !rolePlatforms.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
