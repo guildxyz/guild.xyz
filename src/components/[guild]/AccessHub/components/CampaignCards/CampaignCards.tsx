@@ -87,18 +87,20 @@ const CampaignCards = () => {
               {groupHasRoles ? (
                 <Button
                   as={Link}
-                  colorScheme={"primary"}
+                  colorScheme="primary"
                   href={`/${guildUrlName}/${urlName}`}
                   rightIcon={<ArrowRight />}
+                  prefetch={false}
                 >
                   View page
                 </Button>
               ) : (
                 <Button
                   as={Link}
-                  variant={"outline"}
+                  variant="outline"
                   href={`/${guildUrlName}/${urlName}`}
                   leftIcon={<Plus />}
+                  prefetch={false}
                 >
                   Add roles
                 </Button>
