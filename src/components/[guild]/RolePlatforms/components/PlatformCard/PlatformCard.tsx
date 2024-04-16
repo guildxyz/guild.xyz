@@ -31,7 +31,7 @@ const PlatformCard = ({
       label={rewards[type].name}
       title={name}
       titleRightElement={titleRightElement}
-      description={contentRow ?? info}
+      description={contentRow || info}
       image={image}
       colorScheme={rewards[type].colorScheme}
       {...{ actionRow, cornerButton }}
