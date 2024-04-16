@@ -1,7 +1,9 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { openRewardSettingsGuildPlatformIdAtom } from "components/[guild]/RolePlatforms/RolePlatforms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
+import { useSetAtom } from "jotai"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { PlatformType, RoleFormType, Visibility } from "types"
@@ -13,6 +15,9 @@ type Props = {
 }
 
 const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
+  const setOpenGuildPlatformSettingsId = useSetAtom(
+    openRewardSettingsGuildPlatformIdAtom
+  )
   const { guildPlatforms, roles } = useGuild()
   const alreadyUsedRolePlatforms = roles
     ?.flatMap((role) => role.rolePlatforms)
@@ -52,6 +57,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           if (!platformData) return null
 
           const useCardProps = platformData.cardPropsHook
+          const cardSettingsComponent = platformData.cardSettingsComponent
 
           const isGoogleReward = platform.platformId === PlatformType.GOOGLE
           const isForm =
@@ -67,6 +73,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
               onClick={() => {
                 onSelect({
                   guildPlatformId: platform.id,
+                  guildPlatform: platform,
                   isNew: true,
                   platformRoleId: isGoogleReward
                     ? isForm
@@ -75,6 +82,9 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                     : null,
                   visibility: roleVisibility,
                 })
+                if (cardSettingsComponent)
+                  setOpenGuildPlatformSettingsId(platform.id)
+
                 onClose()
               }}
               {...DISPLAY_CARD_INTERACTIVITY_STYLES}
