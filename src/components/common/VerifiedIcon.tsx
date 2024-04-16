@@ -13,18 +13,23 @@ type Props = {
 } & ChakraProps
 
 const VerifiedIcon = ({ size, ...chakraProps }: Props): JSX.Element => (
-  <Tooltip label="This guild is verified by Guild.xyz" hasArrow>
-    <Center position="relative" {...chakraProps}>
-      <Icon
-        as={CircleWavyCheck}
-        boxSize={size}
-        color={"blue.500"}
-        weight="fill"
-        zIndex={1}
-      />
-      <Box pos="absolute" bg="white" inset="1.5" />
-    </Center>
-  </Tooltip>
+  <Box as="span" {...chakraProps}>
+    <Tooltip label="This guild is verified by Guild.xyz" hasArrow>
+      {/* the check in the middle is transparent by default, we use this wrapper to make it white */}
+      <Center
+        position="relative"
+        _before={{ content: '""', bg: "white", pos: "absolute", inset: 1.5 }}
+      >
+        <Icon
+          as={CircleWavyCheck}
+          boxSize={size}
+          color={"blue.500"}
+          weight="fill"
+          zIndex={1}
+        />
+      </Center>
+    </Tooltip>
+  </Box>
 )
 
 export default VerifiedIcon
