@@ -50,7 +50,10 @@ const useActiveMembershipUpdate = ({
         const reqJobsByRoleId = groupBy(requirementAccesses ?? [], "roleId")
 
         const newRoles = Object.entries(reqJobsByRoleId).map(
-          ([roleIdStr, reqAccesses]) => {
+          ([roleIdStr, reqAccesses]: [
+            string,
+            AccessCheckJob["children:access-check:jobs"]
+          ]) => {
             const roleId = +roleIdStr
             return {
               access: res?.roleAccesses?.find(
@@ -61,9 +64,15 @@ const useActiveMembershipUpdate = ({
                 requirementId: reqAccess.requirementId,
                 access: reqAccess.access,
                 amount: reqAccess.amount,
-                errorMsg: reqAccess.userLevelErrors?.[0]?.msg,
-                errorType: reqAccess.userLevelErrors?.[0]?.errorType,
-                subType: reqAccess.userLevelErrors?.[0]?.subType,
+                errorMsg:
+                  reqAccess.userLevelErrors?.[0]?.msg ??
+                  reqAccess.requirementError?.msg,
+                errorType:
+                  reqAccess.userLevelErrors?.[0]?.errorType ??
+                  reqAccess.requirementError?.errorType,
+                subType:
+                  reqAccess.userLevelErrors?.[0]?.errorSubType ??
+                  reqAccess.requirementError?.errorSubType,
                 lastCheckedAt: new Date(res.createdAtTimestamp).toISOString(),
               })),
             }
