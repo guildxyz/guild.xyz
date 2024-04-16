@@ -4,16 +4,18 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
-import { calculateFromDynamicAmount } from "platforms/Token/TokenRewardCard"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
+import { useCalculateFromDynamic } from "platforms/Token/hooks/useCalculateToken"
 import { RolePlatform } from "types"
 
 const TokenReward = ({ platform }: { platform: RolePlatform }) => {
   const { isTokenLoading, token, rewardImageUrl } = useTokenRewardContext()
-  const claimableAmount = calculateFromDynamicAmount(platform.dynamicAmount)
+
+  const { getValue } = useCalculateFromDynamic(platform.dynamicAmount)
+  const claimableAmount = getValue()
 
   return (
     <RewardDisplay

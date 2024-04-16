@@ -124,7 +124,6 @@ const CreateGuildStepper = ({
         bg: cardBgColor,
       }}
       borderWidth="2px"
-      borderColor={color}
       {...rest}
     >
       <Stepper
@@ -161,14 +160,9 @@ const CreateGuildStepper = ({
                 alignItems: "center",
               }}
             >
-              <StepIndicator
-                {...{
-                  bg: activeStep > index ? `${color} !important` : undefined,
-                  borderColor: activeStep === index ? `${color} !important` : "none",
-                }}
-              >
+              <StepIndicator>
                 <StepStatus
-                  complete={<StepIcon color={textColor} />}
+                  complete={<StepIcon />}
                   incomplete={<StepNumber />}
                   active={<StepNumber />}
                 />

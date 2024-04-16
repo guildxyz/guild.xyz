@@ -116,7 +116,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
       <Flex justifyContent={"flex-end"} mt={4}>
         <Button
           isDisabled={isContinueDisabled}
-          colorScheme="primary"
+          colorScheme="indigo"
           onClick={onContinue}
         >
           Continue

@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  Collapse,
   FormControl,
   FormLabel,
   HStack,
@@ -61,7 +62,6 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
 
   const isBalanceSufficient =
     typeof formattedAmount === "bigint" &&
-    (coinBalanceData?.value || tokenBalanceData?.value) &&
     (pickedCurrencyIsNative
       ? coinBalanceData?.value >= formattedAmount
       : tokenBalanceData?.value >= formattedAmount)
@@ -147,9 +147,10 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
       </Stack>
 
       <Stack>
-        {!isOnCorrectChain && (
+        <Collapse in={!isOnCorrectChain}>
           <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
-        )}
+        </Collapse>
+
         {isOnCorrectChain && (
           <GenericBuyAllowanceButton
             chain={chain}
@@ -158,10 +159,12 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
             contract={ERC20_CONTRACTS[chain]}
           />
         )}
-        {(!!allowance || pickedCurrencyIsNative) && isOnCorrectChain && (
+
+        <Collapse in={(!!allowance || pickedCurrencyIsNative) && isOnCorrectChain}>
           <Button
             size="lg"
-            colorScheme="primary"
+            width="full"
+            colorScheme="indigo"
             isDisabled={!isBalanceSufficient}
             onClick={handlePoolCreation}
             isLoading={isLoading}
@@ -169,7 +172,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
           >
             {isBalanceSufficient ? "Create pool" : "Insufficient balance"}
           </Button>
-        )}
+        </Collapse>
       </Stack>
     </Stack>
   )

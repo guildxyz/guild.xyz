@@ -20,8 +20,8 @@ import Image from "next/image"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "./ClaimFeeTable"
-import { calculateClaimableAmount } from "./TokenRewardCard"
 import { useTokenRewardContext } from "./TokenRewardContext"
+import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
 import useClaimToken from "./hooks/useClaimToken"
 
 type Props = {
@@ -34,7 +34,9 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const modalBg = useCardBg()
 
   const { chain, rewardsByRoles, token, isTokenLoading } = useTokenRewardContext()
-  const claimableAmount = calculateClaimableAmount(rewardsByRoles)
+
+  const { getValue } = useCalculateClaimableTokens(rewardsByRoles)
+  const claimableAmount = getValue()
 
   const { onSubmit } = useClaimToken(
     chain,

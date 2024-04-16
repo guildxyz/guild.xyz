@@ -43,7 +43,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
           mt: 2,
           size: "sm",
           width: "full",
-          colorScheme: "primary",
+          colorScheme: "indigo",
           mb: -2,
         }}
       />
@@ -57,7 +57,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
       <Flex justifyContent={"flex-end"} mt="4">
         <Button
           isDisabled={isContinueDisabled}
-          colorScheme="primary"
+          colorScheme="indigo"
           onClick={onContinue}
         >
           Continue

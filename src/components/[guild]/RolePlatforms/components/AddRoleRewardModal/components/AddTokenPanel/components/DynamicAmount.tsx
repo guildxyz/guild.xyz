@@ -50,6 +50,7 @@ const DynamicAmount = () => {
 
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `tokenAddress`, control })
+  const imageUrl = useWatch({ name: `imageUrl`, control })
 
   const selectedExistingId = useWatch({
     control,
@@ -61,7 +62,7 @@ const DynamicAmount = () => {
   )
 
   const {
-    data: { logoURI: tokenLogo },
+    data: { logoURI: tokenLogo, symbol: tokenSymbol },
   } = useTokenData(chain, address)
 
   const circleBgColor = useColorModeValue("blackAlpha.200", "gray.600")
@@ -219,7 +220,10 @@ const DynamicAmount = () => {
 
           <InputGroup>
             <InputLeftElement>
-              <OptionImage img={tokenLogo} alt={chain} />
+              <OptionImage
+                img={tokenLogo ?? imageUrl ?? `/guildLogos/132.svg`}
+                alt={tokenSymbol}
+              />
             </InputLeftElement>
 
             <ConversionNumberInput

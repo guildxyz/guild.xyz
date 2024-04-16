@@ -9,7 +9,6 @@ import NumberInput from "./number-input"
 import Popover from "./popover"
 import Select from "./select"
 import Spinner from "./spinner"
-import Stepper from "./stepper"
 import Switch from "./switch"
 import Table from "./table"
 import Tabs from "./tabs"
@@ -37,7 +36,6 @@ const components = {
   Drawer,
   Spinner,
   Table,
-  Stepper,
 }
 
 export default components

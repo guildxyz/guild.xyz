@@ -1,9 +1,9 @@
-import { Icon, Tooltip } from "@chakra-ui/react"
+import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
-import { Check, Question, Warning } from "phosphor-react"
+import { Question, Warning } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 
 type Props = {
@@ -26,49 +26,37 @@ const GenericBuyAllowanceButton = ({ chain, token, amount, contract }: Props) =>
     allowSpendingTokens,
   } = useAllowance(token, contract)
 
-  const isEnoughAllowance =
-    typeof amount === "bigint" && typeof allowance === "bigint"
-      ? amount <= allowance
-      : false
-
   const tokenIsNative = token === NULL_ADDRESS
 
-  if (allowance || tokenIsNative) return <></>
-
   return (
-    <Button
-      size="lg"
-      onClick={allowSpendingTokens}
-      colorScheme={allowanceError ? "red" : "blue"}
-      isLoading={isAllowanceLoading || isAllowing}
-      loadingText={
-        isAllowanceLoading
-          ? "Checking allowance"
-          : isAllowing
-          ? "Allowing"
-          : "Check your wallet"
-      }
-      leftIcon={
-        allowanceError ? (
-          <Icon as={Warning} />
-        ) : isEnoughAllowance ? (
-          <Icon as={Check} />
-        ) : null
-      }
-      rightIcon={
-        !isEnoughAllowance && (
+    <Collapse in={!allowance && !tokenIsNative}>
+      <Button
+        width="full"
+        size="lg"
+        onClick={allowSpendingTokens}
+        colorScheme={allowanceError ? "red" : "blue"}
+        isLoading={isAllowanceLoading || isAllowing}
+        loadingText={
+          isAllowanceLoading
+            ? "Checking allowance"
+            : isAllowing
+            ? "Allowing"
+            : "Check your wallet"
+        }
+        leftIcon={allowanceError ? <Icon as={Warning} /> : null}
+        rightIcon={
           <Tooltip
             label={`You have to give the Guild smart contracts permission to use your ${tokenName}. You only have to do this once per token.`}
           >
             <Icon as={Question} />
           </Tooltip>
-        )
-      }
-    >
-      {allowanceError
-        ? "Couldn't fetch allowance"
-        : `Allow Guild to use your ${tokenSymbol}`}
-    </Button>
+        }
+      >
+        {allowanceError
+          ? "Couldn't fetch allowance"
+          : `Allow Guild to use your ${tokenSymbol}`}
+      </Button>
+    </Collapse>
   )
 }
 

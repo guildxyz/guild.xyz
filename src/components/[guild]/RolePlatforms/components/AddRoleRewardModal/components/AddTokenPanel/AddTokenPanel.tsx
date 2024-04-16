@@ -111,12 +111,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
             style={{ width: "100%" }}
             onClick={activeStep > index ? () => setActiveStep(index) : null}
           >
-            <StepIndicator
-              {...{
-                bg: activeStep > index ? `${color} !important` : undefined,
-                borderColor: activeStep === index ? `${color} !important` : "none",
-              }}
-            >
+            <StepIndicator>
               <StepStatus
                 complete={<StepIcon />}
                 incomplete={<StepNumber />}
