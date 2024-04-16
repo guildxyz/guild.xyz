@@ -353,6 +353,8 @@ export const REQUIREMENTS_DATA = [
       "FARCASTER_FOLLOWED_BY",
       "FARCASTER_LIKE",
       "FARCASTER_RECAST",
+      "FARCASTER_USERNAME",
+      "FARCASTER_BIO",
     ],
     isNegatable: true,
   },
