@@ -102,8 +102,8 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   })
 
   useEffect(() => {
-    if (keyPair) onClose()
-  }, [keyPair, onClose])
+    if (keyPair && !isAddressLink) onClose()
+  }, [keyPair, isAddressLink, onClose])
 
   const router = useRouter()
 
