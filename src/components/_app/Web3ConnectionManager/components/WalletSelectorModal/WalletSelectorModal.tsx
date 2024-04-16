@@ -21,13 +21,14 @@ import { addressLinkParamsAtom } from "components/common/Layout/components/Accou
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
-import { useAtom } from "jotai"
+import { useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
 import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
+import { walletLinkHelperModalAtom } from "../WalletLinkHelperModal"
 import AccountButton from "./components/AccountButton"
 import ConnectorButton from "./components/ConnectorButton"
 import FuelConnectorButtons from "./components/FuelConnectorButtons"
@@ -127,6 +128,12 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   const shouldShowVerify =
     isWeb3Connected && (!!publicUserError || (!!id && !keyPair))
 
+  const setIsWalletLinkHelperModalOpen = useSetAtom(walletLinkHelperModalAtom)
+  useEffect(() => {
+    if (!isWeb3Connected) return
+    setIsWalletLinkHelperModalOpen(false)
+  }, [isWeb3Connected, setIsWalletLinkHelperModalOpen])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -192,7 +199,7 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
             <AccountButton />
           ) : (
             <Stack spacing="0">
-              {!connector && (
+              {!connector && !addressLinkParams?.userId && (
                 <>
                   <GoogleLoginButton />
                   <Text
