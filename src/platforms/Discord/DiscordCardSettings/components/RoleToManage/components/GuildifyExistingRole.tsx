@@ -6,9 +6,9 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import useGuild from "components/[guild]/hooks/useGuild"
+import ControlledSelect from "components/common/ControlledSelect"
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
@@ -66,8 +66,7 @@ const GuildifyExistingRole = () => {
         </FormErrorMessage>
       </FormControl>
       <Text fontWeight={"normal"} colorScheme="gray" mt="6">
-        Existing members with the role but without Guild.xyz auth won't lose access.
-        You'll be able to remove them later (coming soon)
+        Existing members with the role but without Guild.xyz auth won't lose access
       </Text>
     </Box>
   )

@@ -1,6 +1,6 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
-import RadioSelect from "components/common/RadioSelect"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import RadioSelect from "components/common/RadioSelect"
 import { ShieldCheck, Sparkle } from "phosphor-react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
 import GuildifyExistingRole from "./components/GuildifyExistingRole"
@@ -26,6 +26,7 @@ const RoleToManage = () => {
 
   const { field } = useController({
     name: "roleType",
+    defaultValue: "NEW",
   })
 
   const handleChange = (value) => {
