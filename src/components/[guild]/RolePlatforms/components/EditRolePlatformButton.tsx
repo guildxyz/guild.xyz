@@ -43,7 +43,7 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
         size="sm"
         onClick={onOpen}
         ml={{ base: 0, md: 3 }}
-        mt={{ base: 3, md: 0 }}
+        mt={{ base: 5, md: 0 }}
       >
         Edit
       </Button>
