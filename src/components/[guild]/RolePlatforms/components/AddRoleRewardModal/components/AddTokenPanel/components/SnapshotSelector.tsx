@@ -3,18 +3,15 @@ import {
   Flex,
   FormControl,
   FormLabel,
-  Skeleton,
   Text,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { AddRewardForm } from "components/[guild]/AddRewardButton/AddRewardButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CreateSnapshotModal from "components/[guild]/leaderboard/Snapshots/CreateSnapshotModal"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
-import { useSnapshots } from "hooks/useSnapshot"
-import { useState } from "react"
+import { useSnapshot, useSnapshots } from "hooks/useSnapshot"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import { PlatformGuildData, PlatformType, SelectOption } from "types"
@@ -24,22 +21,55 @@ const SnapshotSelector = () => {
   const { onClose, onOpen, isOpen } = useDisclosure()
 
   const { guildPlatforms } = useGuild()
-  const bgColor = useColorModeValue("gray.700", "gray.600")
 
   const existingPointsRewards = guildPlatforms?.filter(
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const [selectedPointId, setSelectedPointId] = useState(
-    existingPointsRewards?.[0]?.id
-  )
-
-  const { setValue: setRootValue } = useFormContext<AddRewardForm>()
+  const { setValue: setRootValue } = useFormContext()
   const setRequirement = (req: any) => setRootValue("requirements", [req])
 
-  const reqs = useWatch({ name: "requirements" })
+  const selectedPointsId = useWatch({ name: "data.guildPlatformId" })
 
-  const { snapshots, isSnapshotsLoading } = useSnapshots(selectedPointId)
+  const {
+    snapshots,
+    isSnapshotsLoading,
+    mutate: refetchSnapshots,
+  } = useSnapshots(selectedPointsId)
+  const selectedSnapshotId = useWatch({ name: "snapshotId" })
+
+  const handleCreateSuccess = (createdId: number) => {
+    refetchSnapshots().then(() => {
+      setRootValue("snapshotId", createdId)
+    })
+    onClose()
+  }
+
+  const { snapshot, isSnapshotLoading } = useSnapshot(
+    selectedPointsId,
+    selectedSnapshotId
+  )
+
+  const transformSnapshotData = (
+    snapshotData: { address: string; value: number }[]
+  ) => {
+    return snapshotData.map((data) => {
+      return { key: data.address, value: data.value }
+    })
+  }
+
+  useEffect(() => {
+    if (!snapshot) return
+    const transformedData = transformSnapshotData(snapshot.data)
+
+    setRequirement({
+      type: "GUILD_SNAPSHOT",
+      data: {
+        snapshot: transformedData,
+        isHidden: false,
+      },
+    })
+  }, [snapshot])
 
   const getPointPlatform = (guildPlatformId: number) => {
     return guildPlatforms.find((gp) => gp.id === guildPlatformId)
@@ -47,13 +77,13 @@ const SnapshotSelector = () => {
   }
 
   const options: SelectOption<number>[] = !!snapshots
-    ? snapshots.map((snapshot) => {
+    ? snapshots.map((shot) => {
         return {
-          label: `${snapshot.name} (${
-            getPointPlatform(snapshot.guildPlatformId)?.name || "points"
+          label: `${shot.name} (${
+            getPointPlatform(shot.guildPlatformId)?.name || "points"
           })`,
-          value: snapshot.id,
-          img: getPointPlatform(snapshot.guildPlatformId)?.imageUrl || (
+          value: shot.id,
+          img: getPointPlatform(shot.guildPlatformId)?.imageUrl || (
             <Center boxSize={5}>
               <Star />
             </Center>
@@ -66,38 +96,53 @@ const SnapshotSelector = () => {
     <>
       <ExistingPointsTypeSelect
         existingPointsRewards={existingPointsRewards}
-        selectedExistingId={selectedPointId}
+        selectedExistingId={selectedPointsId}
+        mb={3}
       />
-
-      {(!snapshots || isSnapshotsLoading) && <Skeleton height={"40px"} />}
 
       {snapshots?.length === 0 ? (
         <>
-          <Button w="full" boxSizing="border" onClick={onOpen} mt={2}>
+          <Button
+            w="full"
+            boxSizing="border"
+            onClick={onOpen}
+            mt={2}
+            isDisabled={!selectedPointsId}
+          >
             Create snapshot
           </Button>
 
-          <CreateSnapshotModal onClose={onClose} isOpen={isOpen} />
+          <CreateSnapshotModal
+            onClose={onClose}
+            onSuccess={handleCreateSuccess}
+            isOpen={isOpen}
+          />
         </>
       ) : (
         <>
           <FormControl>
             <Flex justifyContent={"space-between"} w="full">
               <FormLabel>Select snapshot</FormLabel>
-              <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={onOpen}>
+              <Button
+                size="xs"
+                variant="ghost"
+                borderRadius={"lg"}
+                onClick={onOpen}
+                isDisabled={!selectedPointsId}
+              >
                 <Text colorScheme={"gray"}>Create new</Text>
               </Button>
             </Flex>
             <ControlledSelect
+              isDisabled={!selectedPointsId}
               name={`snapshotId`}
               options={options}
-              afterOnChange={() =>
-                setRequirement({
-                  type: "FREE",
-                })
-              }
             ></ControlledSelect>
-            <CreateSnapshotModal onClose={onClose} isOpen={isOpen} />
+            <CreateSnapshotModal
+              onClose={onClose}
+              onSuccess={handleCreateSuccess}
+              isOpen={isOpen}
+            />
           </FormControl>
         </>
       )}

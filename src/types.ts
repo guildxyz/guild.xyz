@@ -223,6 +223,7 @@ type PlatformGuildData = {
     poolId?: never
     multiplier?: never
     tokenDecimals?: never
+    tokenAddress?: never
   }
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
@@ -251,7 +252,7 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   CONTRACT_CALL: {
     chain: Chain
@@ -279,7 +280,7 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   UNIQUE_TEXT: {
     texts: string[]
@@ -307,7 +308,7 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   TEXT: {
     text: string
@@ -335,7 +336,7 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   POAP: {
     text?: never
@@ -363,7 +364,7 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   FORM: {
     text?: never
@@ -391,7 +392,7 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   GATHER: {
     name: string
@@ -419,7 +420,7 @@ type PlatformGuildData = {
     formId?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   POINTS: {
     text?: never
@@ -447,16 +448,16 @@ type PlatformGuildData = {
     gatherRole?: never
     poolId?: never
     multiplier?: never
-    tokenDecimals?: never
+    tokenAddress?: never
   }
   ERC20: {
     poolId: number
     chain: Chain
     contractAddress: `0x${string}`
+    tokenAddress: `0x${string}`
     name: string
     description: string
     imageUrl: string
-    tokenDecimals: number
     gatherSpaceId?: never
     gatherApiKey?: never
     gatherAffiliation?: never

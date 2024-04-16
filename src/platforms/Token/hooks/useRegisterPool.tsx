@@ -1,11 +1,13 @@
+import { Chain } from "@guildxyz/types"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
-import { ERC20_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { Abi, ContractEventName, DecodeEventLogReturnType } from "viem"
 
 const useRegisterPool = (
   owner: string,
+  chain: Chain,
   token: `0x${string}`,
   initialTokenAmount: bigint,
   onSuccess: (poolId: string) => void
@@ -16,14 +18,14 @@ const useRegisterPool = (
   const transactionConfig = tokenIsNative
     ? {
         abi: tokenRewardPoolAbi,
-        address: ERC20_CONTRACT,
+        address: ERC20_CONTRACTS[chain],
         functionName: "registerPool",
         args: [owner, token, initialTokenAmount],
         value: initialTokenAmount,
       }
     : {
         abi: tokenRewardPoolAbi,
-        address: ERC20_CONTRACT,
+        address: ERC20_CONTRACTS[chain],
         functionName: "registerPool",
         args: [owner, token, initialTokenAmount],
       }

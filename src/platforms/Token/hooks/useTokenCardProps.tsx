@@ -4,11 +4,7 @@ import useTokenData from "hooks/useTokenData"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
-  const {
-    chain,
-    imageUrl,
-    contractAddress: tokenAddress,
-  } = guildPlatform.platformGuildData
+  const { chain, imageUrl, tokenAddress } = guildPlatform.platformGuildData
 
   const {
     data: { name, symbol, decimals, logoURI },

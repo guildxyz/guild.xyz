@@ -20,7 +20,7 @@ import useRegisterPool from "platforms/Token/hooks/useRegisterPool"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Token from "static/icons/token.svg"
-import { ERC20_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -30,7 +30,7 @@ import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
 
 const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
-  const tokenAddress = useWatch({ name: `contractAddress` })
+  const tokenAddress = useWatch({ name: `tokenAddress` })
 
   const { chainId, address: userAddress } = useAccount()
   const [amount, setAmount] = useState("1")
@@ -77,6 +77,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
 
   const { isLoading, onSubmitTransaction, error } = useRegisterPool(
     userAddress,
+    chain,
     tokenAddress,
     formattedAmount,
     (poolId: string) => {
@@ -89,7 +90,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     setCanClose(!isLoading)
   }, [isLoading])
 
-  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACT)
+  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACTS[chain])
 
   const handleDepositLater = () => {
     if (!skip) setAmount("0")
@@ -154,7 +155,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
             chain={chain}
             token={tokenAddress}
             amount={formattedAmount}
-            contract={ERC20_CONTRACT}
+            contract={ERC20_CONTRACTS[chain]}
           />
         )}
         {(!!allowance || pickedCurrencyIsNative) && isOnCorrectChain && (

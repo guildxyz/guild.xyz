@@ -20,25 +20,19 @@ import { AddTokenFormType } from "../AddTokenPanel"
 
 const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ name: `chain` })
-  const address = useWatch({ name: `contractAddress` })
+  const address = useWatch({ name: `tokenAddress` })
   const imageUrl = useWatch({ name: `imageUrl` })
 
   const isContinueDisabled = !address || !chain
 
   const {
-    data: {
-      logoURI: tokenLogo,
-      decimals: tokenDecimals,
-      symbol: tokenSymbol,
-      name: tokenName,
-    },
+    data: { logoURI: tokenLogo, symbol: tokenSymbol, name: tokenName },
   } = useTokenData(chain, address)
 
   useEffect(() => {
-    setValue("tokenDecimals", tokenDecimals)
     setValue("name", `${tokenName} (${tokenSymbol})`)
     setValue("imageUrl", tokenLogo)
-  }, [tokenDecimals, tokenSymbol, tokenName, tokenLogo])
+  }, [tokenSymbol, tokenName, tokenLogo])
 
   const [progress, setProgress] = useState<number>(0)
 
@@ -73,7 +67,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
       <Stack gap={2}>
         <TokenPicker
           chain={chain}
-          fieldName={`contractAddress`}
+          fieldName={`tokenAddress`}
           rules={{ required: "This field is required" }}
           customImage={imageUrl}
         />

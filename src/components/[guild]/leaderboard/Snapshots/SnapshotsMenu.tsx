@@ -62,7 +62,11 @@ const SnapshotsMenu = () => {
           setTimeout(createOnOpen, 100)
         }}
       />
-      <CreateSnapshotModal onClose={createOnClose} isOpen={createIsOpen} />
+      <CreateSnapshotModal
+        onClose={createOnClose}
+        isOpen={createIsOpen}
+        onSuccess={createOnClose}
+      />
     </>
   )
 }

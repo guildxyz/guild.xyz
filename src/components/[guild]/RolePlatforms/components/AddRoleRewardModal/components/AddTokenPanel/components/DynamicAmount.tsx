@@ -13,7 +13,6 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  useDisclosure,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import RadioSelect from "components/common/RadioSelect"
@@ -50,7 +49,7 @@ const DynamicAmount = () => {
   }, [conversionAmounts])
 
   const chain = useWatch({ name: `chain`, control })
-  const address = useWatch({ name: `contractAddress`, control })
+  const address = useWatch({ name: `tokenAddress`, control })
 
   const selectedExistingId = useWatch({
     control,
@@ -73,8 +72,6 @@ const DynamicAmount = () => {
   }
 
   const [snapshotOption, setSnapshotOption] = useState(SnapshotOption.GUILD_POINTS)
-
-  const [progress, setProgress] = useState(0)
   const toast = useToast()
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -86,8 +83,6 @@ const DynamicAmount = () => {
     },
     onError: (error) => toast({ status: "error", title: error.message }),
   })
-
-  const { onClose, onOpen, isOpen } = useDisclosure()
 
   const dynamicOptions: Option[] = [
     {

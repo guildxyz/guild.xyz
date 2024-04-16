@@ -57,7 +57,13 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
 
   const setSelection = (newSelection: PlatformName) => {
     setSelectionOg(newSelection)
-    if (newSelection === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
+    // TODO: there must be a smarter solution then this
+    if (newSelection === "ERC20")
+      setActiveTab(
+        newSelection === "ERC20"
+          ? RoleTypeToAddTo.NEW_ROLE
+          : RoleTypeToAddTo.EXISTING_ROLE
+      )
     scrollToTop()
   }
 

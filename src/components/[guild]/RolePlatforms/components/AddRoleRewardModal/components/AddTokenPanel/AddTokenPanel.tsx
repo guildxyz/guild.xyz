@@ -16,6 +16,7 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
+import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"
@@ -26,10 +27,10 @@ export type AddTokenFormType = {
   addition: number
   chain: Chain
   contractAddress: `0x${string}`
+  tokenAddress: `0x${string}`
   name: string
   description: string
   imageUrl: string
-  tokenDecimals: number
   data: {
     guildPlatformId: number
   }
@@ -69,11 +70,11 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         platformGuildData: {
           poolId: _data.poolId,
           chain: _data.chain,
-          contractAddress: _data.contractAddress,
+          tokenAddress: _data.tokenAddress,
+          contractAddress: ERC20_CONTRACTS[_data.chain],
           name: _data.name,
           description: "",
           imageUrl: _data.imageUrl ?? `/guildLogos/132.svg`,
-          tokenDecimals: _data.tokenDecimals,
         },
       },
 

@@ -17,6 +17,7 @@ import { AddPointsFormType } from "components/[guild]/RolePlatforms/components/A
 import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useCreateSnapshot } from "hooks/useSnapshot"
 import { useRouter } from "next/router"
 import { useEffect, useMemo, useState } from "react"
@@ -27,10 +28,18 @@ import SnapshotTable from "./SnapshotTable"
 type Props = {
   onClose: () => void
   isOpen: boolean
+  onSuccess: (snapshotId: number) => void
+  defaultPointsId?: number
 }
 
-const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
+const CreateSnapshotModal = ({
+  onClose,
+  isOpen,
+  onSuccess,
+  defaultPointsId,
+}: Props) => {
   const router = useRouter()
+  const showErrorToast = useShowErrorToast()
 
   const [name, setName] = useState(
     new Date().toLocaleDateString("en-US", {
@@ -50,21 +59,33 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
     mode: "all",
   })
 
-  const { control, setValue } = methods
+  const { setValue } = methods
 
   const selectedExistingId = useWatch({
-    control,
     name: "data.guildPlatformId",
   })
 
-  const { submitCreate } = useCreateSnapshot(selectedExistingId)
+  const {
+    submitCreate,
+    isLoading: isSubmitLoading,
+    error: submitError,
+  } = useCreateSnapshot(selectedExistingId)
 
-  const onSubmit = () => {
-    submitCreate({ shouldStatusUpdate: false, name: "MyNameIsJeff" })
+  useEffect(() => {
+    if (!submitError) return
+    showErrorToast("Failed to create snapshot")
+    console.error(submitError)
+  }, [submitError])
+
+  const onSubmit = async () => {
+    const result = await submitCreate({ shouldStatusUpdate: false, name: name })
+    if (result) {
+      onSuccess(result?.id)
+    }
   }
 
-  const { data, error, mutate } = useSWRWithOptionalAuth(
-    guildId
+  const { data, mutate } = useSWRWithOptionalAuth(
+    !!guildId && !!selectedExistingId
       ? `/v2/guilds/${guildId}/points/${selectedExistingId}/leaderboard`
       : null,
     { revalidateOnMount: true },
@@ -125,7 +146,13 @@ const CreateSnapshotModal = ({ onClose, isOpen }: Props) => {
                 </Box>
               </Stack>
 
-              <Button mt={8} w="full" colorScheme={"green"} onClick={onSubmit}>
+              <Button
+                mt={8}
+                w="full"
+                colorScheme={"green"}
+                onClick={onSubmit}
+                isLoading={isSubmitLoading}
+              >
                 Create
               </Button>
             </ModalBody>

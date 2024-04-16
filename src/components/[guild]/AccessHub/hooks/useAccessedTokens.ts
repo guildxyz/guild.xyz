@@ -50,12 +50,10 @@ export const useAccessedTokens = () => {
       return relevantRolePlatforms.length > 0
     }) || []
 
-  console.log(accessedGuildTokens)
-
   const groupedByContractAndRole: TokenAccessHubData[] = Object.values(
     accessedGuildTokens.reduce((acc, item) => {
-      const { contractAddress, chain } = item.platformGuildData
-      const key = `${contractAddress}-${chain}`
+      const { tokenAddress, chain } = item.platformGuildData
+      const key = `${tokenAddress}-${chain}`
 
       const roleOfReward = roles.find((role) =>
         role.rolePlatforms.some((rp) => rp.guildPlatformId === item.id)
@@ -77,7 +75,7 @@ export const useAccessedTokens = () => {
       if (!acc[key]) {
         acc[key] = {
           chain: chain,
-          address: contractAddress,
+          address: tokenAddress,
           rewardsByRoles: {},
         }
       }

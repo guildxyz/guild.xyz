@@ -13,8 +13,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const multiplier = useWatch({ name: `multiplier` })
   const addition = useWatch({ name: `addition` })
 
-  console.log(snapshotId)
-
   const isContinueDisabled =
     value === "dynamic"
       ? snapshotId === undefined || multiplier === undefined
@@ -33,14 +31,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   ]
 
   const [isCollapsed, setIsCollapsed] = useState(false)
-
-  const collapseAndExecute = (callback: () => void) => {
-    setIsCollapsed(true)
-    setTimeout(() => {
-      callback()
-      setTimeout(() => setIsCollapsed(false), 100)
-    }, 100)
-  }
 
   return (
     <Stack gap={5}>

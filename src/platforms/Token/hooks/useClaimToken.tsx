@@ -6,7 +6,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import fetcher from "utils/fetcher"
-import { ERC20_CONTRACT } from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { useReadContract } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 
@@ -67,7 +67,7 @@ const useClaimToken = (chain: Chain, roleId?: number, rolePlatformId?: number) =
 
   const feeTransactionConfig = {
     abi: tokenRewardPoolAbi,
-    address: ERC20_CONTRACT,
+    address: ERC20_CONTRACTS[chain],
     functionName: "fee",
     chainId: Chains[chain],
   } as const

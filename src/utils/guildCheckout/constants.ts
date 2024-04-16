@@ -31,8 +31,9 @@ export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000"
 
-export const ERC20_CONTRACT: `0x${string}` =
-  "0x0d72BCDA1Ec6D0E195249519fb83BB5D559E895D"
+export const ERC20_CONTRACTS: Partial<Record<Chain, `0x${string}`>> = {
+  SEPOLIA: "0x0d72BCDA1Ec6D0E195249519fb83BB5D559E895D",
+}
 
 const DEFAULT_TOKEN_BUYER_CONTRACTS: TokenBuyerContractConfig = {
   ETHEREUM: {

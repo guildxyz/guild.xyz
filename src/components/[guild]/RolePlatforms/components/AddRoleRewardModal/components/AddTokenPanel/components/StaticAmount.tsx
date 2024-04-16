@@ -16,7 +16,7 @@ import ConversionNumberInput from "./ConversionNumberInput"
 const StaticAmount = () => {
   const { control, setValue } = useFormContext<AddTokenFormType>()
   const chain = useWatch({ name: `chain`, control })
-  const address = useWatch({ name: `contractAddress`, control })
+  const address = useWatch({ name: `tokenAddress`, control })
   const imageUrl = useWatch({ name: `imageUrl`, control })
 
   const [staticValue, setStaticValue] = useState("1")
