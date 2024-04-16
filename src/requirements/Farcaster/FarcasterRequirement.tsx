@@ -98,7 +98,7 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
 }
 
 const PROFILE_TARGETS = {
-  FARCASTER_USERNAME: "username",
+  FARCASTER_USERNAME: "Display Name",
   FARCASTER_BIO: "bio",
 }
 
