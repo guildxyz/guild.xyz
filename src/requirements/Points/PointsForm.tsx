@@ -35,7 +35,7 @@ const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
 
   const { errors } = useFormState()
   useController({
-    name: "data.guildId",
+    name: `${baseFieldPath}.data.guildId`,
     defaultValue: id,
   })
 
