@@ -85,6 +85,8 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   shouldHide?: boolean
 }
 
+export type CardSettingsComponent = () => JSX.Element
+
 type RewardData = {
   icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
@@ -94,7 +96,7 @@ type RewardData = {
   cardPropsHook?: CardPropsHook
   // true when the AddRewardPanel just automatically adds the platform without any user input
   autoRewardSetup?: boolean
-  cardSettingsComponent?: () => JSX.Element
+  cardSettingsComponent?: CardSettingsComponent
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element

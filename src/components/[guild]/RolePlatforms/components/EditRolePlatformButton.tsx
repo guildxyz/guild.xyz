@@ -9,14 +9,19 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useAtom } from "jotai"
-import rewards from "platforms/rewards"
+import rewards, { CardSettingsComponent } from "platforms/rewards"
 import { useRef } from "react"
 import { useFormState } from "react-hook-form"
-import { PlatformType, RolePlatform } from "types"
+import { PlatformType, RoleFormType } from "types"
 import { openRewardSettingsGuildPlatformIdAtom } from "../RolePlatforms"
 import { useRolePlatform } from "./RolePlatformProvider"
 
-const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
+type Props = {
+  SettingsComponent: CardSettingsComponent
+  rolePlatform: RoleFormType["rolePlatforms"][number]
+}
+
+const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }: Props) => {
   const [openGuildPlatformSettingsId, setOpenGuildPlatformSettingsId] = useAtom(
     openRewardSettingsGuildPlatformIdAtom
   )
@@ -34,7 +39,7 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
   const hasError = !!errors?.rolePlatforms?.[index]
 
   const rewardName =
-    (rolePlatform as RolePlatform).guildPlatform?.platformGuildName ??
+    rolePlatform.guildPlatform?.platformGuildName ??
     rewards[PlatformType[platformId]].name
 
   return (
@@ -61,7 +66,7 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }) => {
           <ModalHeader>{`${rewardName} reward settings`}</ModalHeader>
           <ModalBody>
             <VStack spacing={8} alignItems="start">
-              <SettingsComponent index={index} />
+              <SettingsComponent />
             </VStack>
           </ModalBody>
 
