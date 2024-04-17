@@ -33,8 +33,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
   const { data: group, isLoading: isGroupLoading } = useSWRImmutable<Group>(
     groupId ? `/v2/guilds/${id}/groups/${groupId}` : null
   )
-  // const maxAmount = new Date(requirement.data.maxAmount)
-  const maxAmount = undefined
+  const maxAmount = new Date(requirement.data.maxAmount)
   const filterLabel =
     requirement.type === "GUILD_ROLE_RELATIVE"
       ? ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
