@@ -54,8 +54,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           const platformData = rewards[PlatformType[platform.platformId]]
           if (!platformData) return null
 
-          const useCardProps = platformData.cardPropsHook
-          const cardSettingsComponent = platformData.cardSettingsComponent
+          const { cardPropsHook, cardSettingsComponent } = platformData
 
           const isGoogleReward = platform.platformId === PlatformType.GOOGLE
           const isForm =
@@ -65,7 +64,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           return (
             <PlatformCard
               key={platform.id}
-              usePlatformCardProps={useCardProps}
+              usePlatformCardProps={cardPropsHook}
               guildPlatform={platform}
               colSpan={1}
               onClick={() => {
