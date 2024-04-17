@@ -84,6 +84,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
                 onClose()
               }}
+              description={null}
               {...DISPLAY_CARD_INTERACTIVITY_STYLES}
             ></PlatformCard>
           )
