@@ -324,3 +324,29 @@ export const x1 = {
     },
   },
 } as const satisfies Chain
+
+export const formTestnet = {
+  id: 132902,
+  name: "Form",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Ether",
+    symbol: "ETH",
+  },
+  rpcUrls: {
+    default: { http: ["https://rpc.form.network/http"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://explorer.form.network",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xf2429187a6e6f2f7980dde17a856bd22e211d2a2",
+      blockCreated: 1118269,
+    },
+  },
+  testnet: true,
+} as const satisfies Chain

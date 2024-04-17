@@ -3,6 +3,7 @@ import {
   beraTestnet,
   bitfinityTestnet,
   exosama,
+  formTestnet,
   neonEVM,
   oasisSapphire,
   ontology,
@@ -123,6 +124,7 @@ export const wagmiConfig = createConfig({
     coreDao,
     liskSepolia as Chain,
     opBNB,
+    formTestnet,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -177,6 +179,7 @@ export const wagmiConfig = createConfig({
     [coreDao.id]: http(),
     [liskSepolia.id]: http(),
     [opBNB.id]: http(),
+    [formTestnet.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR

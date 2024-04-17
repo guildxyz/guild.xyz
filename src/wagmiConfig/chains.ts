@@ -3,6 +3,7 @@ import {
   bitfinityTestnet,
   bobaAvax,
   exosama,
+  formTestnet,
   neonEVM,
   oasisSapphire,
   ontology,
@@ -612,6 +613,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/opbnb.png",
     },
   },
+  FORM_TESTNET: {
+    ...generateChainConfig(formTestnet, ETH_ICON),
+    iconUrl: "/networkLogos/form.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/form.svg",
+      dark: "/networkLogos/form.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -671,6 +680,7 @@ enum Chains {
   CORE_DAO = coreDao.id,
   LISK_SEPOLIA = liskSepolia.id,
   OP_BNB = opBNB.id,
+  FORM_TESTNET = formTestnet.id,
 }
 
 export type Chain = keyof typeof Chains
