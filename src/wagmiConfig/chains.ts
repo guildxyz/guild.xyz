@@ -41,6 +41,7 @@ import {
   metis,
   moonbeam,
   moonriver,
+  opBNB,
   optimism,
   pgn,
   polygon,
@@ -89,6 +90,8 @@ const ETH_ICON =
   "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880"
 const MATIC_ICON =
   "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png"
+const BNB_ICON =
+  "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png"
 
 const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   ETHEREUM: {
@@ -120,10 +123,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-goerli.etherscan.io",
   },
   BSC: {
-    ...generateChainConfig(
-      bsc,
-      "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png"
-    ),
+    ...generateChainConfig(bsc, BNB_ICON),
     iconUrl: "/networkLogos/bsc.svg",
     blockExplorerIconUrl: {
       light: "/explorerLogos/bscscan-light.svg",
@@ -593,6 +593,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/lisk.svg",
     },
   },
+  OP_BNB: {
+    ...generateChainConfig(opBNB, BNB_ICON),
+    iconUrl: "/networkLogos/bsc.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/opbnb.png",
+      dark: "/explorerLogos/opbnb.png",
+    },
+  },
 }
 
 enum Chains {
@@ -650,6 +658,7 @@ enum Chains {
   ASTAR_ZKEVM = astarZkEVM.id,
   CORE_DAO = coreDao.id,
   LISK_SEPOLIA = liskSepolia.id,
+  OP_BNB = opBNB.id,
 }
 
 export type Chain = keyof typeof Chains

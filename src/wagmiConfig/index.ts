@@ -42,6 +42,7 @@ import {
   metis,
   moonbeam,
   moonriver,
+  opBNB,
   optimism,
   pgn,
   polygon,
@@ -119,6 +120,7 @@ export const wagmiConfig = createConfig({
     astarZkEVM,
     coreDao,
     liskSepolia as Chain,
+    opBNB,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -171,6 +173,7 @@ export const wagmiConfig = createConfig({
     [astarZkEVM.id]: http(),
     [coreDao.id]: http(),
     [liskSepolia.id]: http(),
+    [opBNB.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
