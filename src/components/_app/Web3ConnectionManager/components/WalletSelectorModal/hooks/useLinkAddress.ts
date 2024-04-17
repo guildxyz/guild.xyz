@@ -55,7 +55,7 @@ const useLinkAddress = () => {
       return
 
     checkAndDeleteKeys(currentUserId).then(() => deleteKeys())
-  }, [addressLinkParams, currentUserId])
+  }, [addressLinkParams, currentUserId, deleteKeys])
 
   return useSubmit(
     async ({

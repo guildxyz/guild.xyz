@@ -52,7 +52,7 @@ const CustomMultiValueContainer = ({
         message: "Reverse resolving failed",
       })
     }
-  }, [resolvedAddress, domain])
+  }, [domain, resolvedAddress, admins, setValue, trigger, setError])
 
   return (
     <chakraComponents.MultiValueContainer

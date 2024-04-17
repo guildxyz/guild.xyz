@@ -8,7 +8,7 @@ const useDebouncedState = (state: any, delayMs = 500) => {
     if (timeout.current) window.clearTimeout(timeout.current)
 
     timeout.current = setTimeout(() => setDelayedState(state), delayMs)
-  }, [state])
+  }, [state, delayMs])
 
   return delayedState
 }

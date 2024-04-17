@@ -1,4 +1,3 @@
-import { useEffect } from "react"
 import { SWRResponse, useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { SelectOption } from "types"
@@ -10,20 +9,19 @@ const SINGLE_CHANNEL_BASE_URL =
 
 const useFarcasterChannels = (search?: string): SWRResponse<SelectOption[]> => {
   const { mutate } = useSWRConfig()
-  const swrResponse = useSWRImmutable(search ? `${BASE_URL}${search}` : null)
-
-  useEffect(() => {
-    if (!swrResponse.data) return
-    swrResponse.data.channels?.forEach((channel) => {
-      mutate(
-        `${SINGLE_CHANNEL_BASE_URL}${channel.id}`,
-        { channel },
-        {
-          revalidate: false,
-        }
-      )
-    })
-  }, [swrResponse.data])
+  const swrResponse = useSWRImmutable(search ? `${BASE_URL}${search}` : null, {
+    onSuccess: (data, _key, _config) => {
+      data.channels?.forEach((channel) => {
+        mutate(
+          `${SINGLE_CHANNEL_BASE_URL}${channel.id}`,
+          { channel },
+          {
+            revalidate: false,
+          }
+        )
+      })
+    },
+  })
 
   return {
     ...swrResponse,

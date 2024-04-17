@@ -7,29 +7,26 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import Button from "components/common/Button"
 import PermissionSelection from "components/common/GoogleGuildSetup/components/PermissionSelection"
-import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
-import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useController } from "react-hook-form"
 
 const GoogleCardSettings = () => {
   const { guildPlatform, index } = useRolePlatform()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { register } = useFormContext()
-
-  useEffect(() => {
-    if (!register) return
-    register(`rolePlatforms.${index}.platformRoleId`, {
+  useController({
+    name: `rolePlatforms.${index}.platformRoleId`,
+    rules: {
       value:
         guildPlatform?.platformGuildData?.mimeType ===
         "application/vnd.google-apps.form"
           ? "writer"
           : "reader",
-    })
-  }, [register])
+    },
+  })
 
   return (
     <>

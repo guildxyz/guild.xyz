@@ -91,7 +91,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
     else {
       setParameterValue(JSON.stringify(example) ?? "")
     }
-  }, [selectedStrategy])
+  }, [selectedStrategy, defaultValues?.data?.strategies, index, example])
 
   useEffect(() => {
     try {
@@ -109,7 +109,7 @@ const SingleStrategy = ({ baseFieldPath, index }: Props): JSX.Element => {
         })
       }
     }
-  }, [parameterValue])
+  }, [parameterValue, setValue, baseFieldPath, index, clearErrors, setError])
 
   return (
     <Stack spacing={4} alignItems="start" w="full">

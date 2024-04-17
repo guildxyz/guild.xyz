@@ -81,6 +81,7 @@ const AccessHub = (): JSX.Element => {
     guildPin,
     groups,
     onboardingComplete,
+    isDetailed,
   } = useGuild()
 
   const group = useRoleGroup()
@@ -130,7 +131,7 @@ const AccessHub = (): JSX.Element => {
                 guildPlatform={platform}
                 key={platform.id}
                 cornerButton={
-                  isAdmin && PlatformCardMenu ? (
+                  isAdmin && isDetailed && PlatformCardMenu ? (
                     <PlatformCardMenu platformGuildId={platform.platformGuildId} />
                   ) : PlatformCardWarning ? (
                     <PlatformCardWarning guildPlatform={platform} />

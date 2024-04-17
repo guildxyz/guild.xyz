@@ -3,11 +3,11 @@ import Color from "color"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useColorPalette from "hooks/useColorPalette"
 import {
-  createContext,
   Dispatch,
-  memo,
   PropsWithChildren,
   SetStateAction,
+  createContext,
+  memo,
   useContext,
   useEffect,
   useMemo,
@@ -49,7 +49,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
     return color.luminosity() > 0.6 && saturation < 70
       ? "primary.800"
       : "whiteAlpha.900"
-  }, [colorMode, localThemeColor])
+  }, [colorMode, localBackgroundImage, localThemeColor])
 
   const buttonColorScheme =
     textColor === "whiteAlpha.900" ? "whiteAlpha" : "blackAlpha"

@@ -6,9 +6,9 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import useGuild from "components/[guild]/hooks/useGuild"
+import ControlledSelect from "components/common/ControlledSelect"
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
@@ -41,7 +41,7 @@ const GuildifyExistingRole = () => {
       value: role.id,
       details: pluralize(role.memberCount, "member"),
     }))
-  }, [discordRoles])
+  }, [discordRoles, guildRoles, guildPlatform.id])
 
   return (
     <Box px="5" py="4">

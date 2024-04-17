@@ -9,6 +9,6 @@ const useUniqueMembers = (roles: Role[], additionalMembers: string[] = []) =>
     const uniqueMembers = [...new Set(allMembers)]
     const r = uniqueMembers?.filter((member) => typeof member === "string")
     return r
-  }, [roles])
+  }, [roles, additionalMembers])
 
 export default useUniqueMembers

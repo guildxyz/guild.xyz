@@ -1,25 +1,19 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../common/ChainInfo"
 import useKycDAOContracts from "./hooks/useKycDAOContracts"
 
 const KycDAOForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext()
+  const { errors } = useFormState()
 
-  useEffect(() => {
-    if (!register) return
-    register(`${baseFieldPath}.chain`, {
-      value: "POLYGON",
-    })
-  }, [register])
+  useController({
+    name: `${baseFieldPath}.chain`,
+    defaultValue: "POLYGON",
+  })
 
   const { isLoading, kycDAOContracts } = useKycDAOContracts()
 

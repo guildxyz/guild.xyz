@@ -32,7 +32,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
   useEffect(() => {
     if (!CSS.supports("color", debouncedPickedColor)) return
     setLocalThemeColor(debouncedPickedColor)
-  }, [debouncedPickedColor])
+  }, [debouncedPickedColor, setLocalThemeColor])
 
   const borderColor = useColorModeValue("gray.300", "whiteAlpha.300")
 

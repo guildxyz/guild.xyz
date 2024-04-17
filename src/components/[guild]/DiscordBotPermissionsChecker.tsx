@@ -14,7 +14,7 @@ import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
 import { Info } from "phosphor-react"
-import { useEffect, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
@@ -95,18 +95,11 @@ const MODAL_CONTENT: Record<
 const DiscordBotPermissionsChecker = () => {
   const { isAdmin } = useGuildPermission()
   const { id, guildPlatforms, roles } = useGuild()
-  const discordRewards =
-    guildPlatforms?.filter((gp) => gp.platformId === PlatformType.DISCORD) ?? []
-  const discordRewardIds = discordRewards.map((gp) => gp.id)
-  const relevantDiscordRoles =
-    roles
-      ?.filter((role) =>
-        role.rolePlatforms.some((rp) =>
-          discordRewardIds.includes(rp.guildPlatformId)
-        )
-      )
-      .flatMap((role) => role.rolePlatforms)
-      .map((rp) => rp.platformRoleId) ?? []
+  const discordRewards = useMemo(
+    () =>
+      guildPlatforms?.filter((gp) => gp.platformId === PlatformType.DISCORD) ?? [],
+    [guildPlatforms]
+  )
 
   const [errorType, setErrorType] = useState<PermissionModalType>()
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -118,82 +111,94 @@ const DiscordBotPermissionsChecker = () => {
       )
     )
 
-  const { data } = useSWRImmutable<DiscordPermissions[]>(
-    discordRewards.length > 0 && isAdmin ? ["discordPermissions", id] : null,
-    fetchDiscordPermissions
-  )
-
   const toastWithButton = useToastWithButton()
   const toastIdRef = useRef<ToastId>()
-  const toastOptions: ActionToastOptions = {
-    status: "warning",
-    duration: null,
-    isClosable: false,
-    buttonProps: {
-      children: "Fix problem",
-      leftIcon: <Info />,
-      onClick: onOpen,
-    },
-    secondButtonProps: {
-      children: "Later",
-      variant: "ghost",
-    },
-  }
 
-  useEffect(() => {
-    if (!data || !!toastIdRef.current) return
+  useSWRImmutable<DiscordPermissions[]>(
+    discordRewards.length > 0 && isAdmin ? ["discordPermissions", id] : null,
+    fetchDiscordPermissions,
+    {
+      onSuccess: (data, _key, _config) => {
+        if (!!toastIdRef.current) return
 
-    for (const [index, permissionInfo] of data.entries()) {
-      const serverName = discordRewards[index].platformGuildName
+        const toastOptions: ActionToastOptions = {
+          status: "warning",
+          duration: null,
+          isClosable: false,
+          buttonProps: {
+            children: "Fix problem",
+            leftIcon: <Info />,
+            onClick: onOpen,
+          },
+          secondButtonProps: {
+            children: "Later",
+            variant: "ghost",
+          },
+        }
 
-      const permissionsNotGranted = Object.values(permissionInfo.permissions).filter(
-        (perm) => !perm.value && perm.name !== "Administrator"
-      )
+        for (const [index, permissionInfo] of data.entries()) {
+          const serverName = discordRewards[index].platformGuildName
 
-      if (permissionsNotGranted.length > 0) {
-        toastIdRef.current = toastWithButton({
-          title: "Missing permissions",
-          description: `We've noticed that the Guild.xyz bot is missing the following permissions on the ${serverName} Discord server: ${permissionsNotGranted
-            .map((perm) => perm.name)
-            .join(", ")}`,
-          ...toastOptions,
-        })
-        setErrorType("PERMISSIONS")
-        return
-      }
+          const permissionsNotGranted = Object.values(
+            permissionInfo.permissions
+          ).filter((perm) => !perm.value && perm.name !== "Administrator")
 
-      const discordBotsRole = permissionInfo.roleOrders.find(
-        (role) => role.roleName === GUILD_BOT_ROLE_NAME
-      )
+          if (permissionsNotGranted.length > 0) {
+            toastIdRef.current = toastWithButton({
+              title: "Missing permissions",
+              description: `We've noticed that the Guild.xyz bot is missing the following permissions on the ${serverName} Discord server: ${permissionsNotGranted
+                .map((perm) => perm.name)
+                .join(", ")}`,
+              ...toastOptions,
+            })
+            setErrorType("PERMISSIONS")
+            return
+          }
 
-      if (!discordBotsRole) {
-        toastIdRef.current = toastWithButton({
-          title: "Guild.xyz Discord bot is misconfigured",
-          description: `Seems like you've changed our bot's role name on the ${serverName} Discord server. It might not work properly unless you keep its original name.`,
-          ...toastOptions,
-        })
-        setErrorType("NAME")
-        return
-      }
+          const discordBotsRole = permissionInfo.roleOrders.find(
+            (role) => role.roleName === GUILD_BOT_ROLE_NAME
+          )
 
-      const rolesWithInvalidPosition = permissionInfo.roleOrders.filter(
-        (r) =>
-          relevantDiscordRoles.includes(r.discordRoleId) &&
-          r.rolePosition > discordBotsRole.rolePosition
-      )
+          if (!discordBotsRole) {
+            toastIdRef.current = toastWithButton({
+              title: "Guild.xyz Discord bot is misconfigured",
+              description: `Seems like you've changed our bot's role name on the ${serverName} Discord server. It might not work properly unless you keep its original name.`,
+              ...toastOptions,
+            })
+            setErrorType("NAME")
+            return
+          }
 
-      if (rolesWithInvalidPosition.length > 0) {
-        toastIdRef.current = toastWithButton({
-          title: "Guild.xyz Discord bot is misconfigured",
-          description: `Our bot won't be able to assign the following roles to your members on the ${serverName} Discord server, since they're above the Guild.xyz bot role: ${rolesWithInvalidPosition
-            .map((r) => r.roleName)
-            .join(", ")}`,
-          ...toastOptions,
-        })
-        setErrorType("ROLE_ORDER")
-      }
+          const discordRewardIds = discordRewards.map((gp) => gp.id)
+          const relevantDiscordRoles =
+            roles
+              ?.filter((role) =>
+                role.rolePlatforms.some((rp) =>
+                  discordRewardIds.includes(rp.guildPlatformId)
+                )
+              )
+              .flatMap((role) => role.rolePlatforms)
+              .map((rp) => rp.platformRoleId) ?? []
+          const rolesWithInvalidPosition = permissionInfo.roleOrders.filter(
+            (r) =>
+              relevantDiscordRoles.includes(r.discordRoleId) &&
+              r.rolePosition > discordBotsRole.rolePosition
+          )
+
+          if (rolesWithInvalidPosition.length > 0) {
+            toastIdRef.current = toastWithButton({
+              title: "Guild.xyz Discord bot is misconfigured",
+              description: `Our bot won't be able to assign the following roles to your members on the ${serverName} Discord server, since they're above the Guild.xyz bot role: ${rolesWithInvalidPosition
+                .map((r) => r.roleName)
+                .join(", ")}`,
+              ...toastOptions,
+            })
+            setErrorType("ROLE_ORDER")
+          }
+        }
+      },
     }
-  }, [data])
+  )
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

@@ -21,7 +21,7 @@ export type OAuthResultParams =
     }
 
 const OAuth: NextPage<OAuthResultParams> = (query) => {
-  const router = useRouter()
+  const { push } = useRouter()
   const [hasReceivedConfirmation, setHasReceivedConfirmation] = useState(false)
 
   useEffect(() => {
@@ -53,10 +53,10 @@ const OAuth: NextPage<OAuthResultParams> = (query) => {
           ...("message" in query ? { "oauth-message": query.message } : {}),
         }).toString()
 
-        router.push(`${query.path}?${params}`)
+        push(`${query.path}?${params}`)
       }, 1000)
     }
-  }, [])
+  }, [query, push])
 
   return (
     <Center flexDir={"column"} p="10" textAlign={"center"} h="90vh">

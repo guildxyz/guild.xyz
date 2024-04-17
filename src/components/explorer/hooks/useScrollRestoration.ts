@@ -68,7 +68,7 @@ const useScrollRestoration = ({
       router.events.off("routeChangeStart", handleRouteChangeStart)
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
-  }, [router, scrollPositions, active, onRestore])
+  }, [router, active, onRestore])
 }
 
 export default useScrollRestoration

@@ -1,8 +1,7 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import GuildSelect from "requirements/common/GuildSelect"
 import parseFromObject from "utils/parseFromObject"
@@ -47,21 +46,21 @@ const guildRequirementTypes = [
 const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
-  const { errors, touchedFields } = useFormState()
-  const { resetField } = useFormContext()
+  const {
+    resetField,
+    formState: { errors },
+  } = useFormContext()
 
   const selected = guildRequirementTypes.find((reqType) => reqType.value === type)
   const isEditMode = !!field?.id
 
-  useEffect(() => {
-    if (!touchedFields?.data) return
+  const resetDataFields = () => {
     resetField(`${baseFieldPath}.data.guildId`)
     resetField(`${baseFieldPath}.data.roleId`)
     resetField(`${baseFieldPath}.data.minAmount`)
     resetField(`${baseFieldPath}.data.maxAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
-  }, [type])
-
+  }
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -73,6 +72,7 @@ const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
           options={guildRequirementTypes}
+          afterOnChange={resetDataFields}
           isDisabled={isEditMode}
         />
 

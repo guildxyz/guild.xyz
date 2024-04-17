@@ -35,6 +35,7 @@ const useIsWalletConnectModalActive = () => {
     })
 
     return () => observer.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [w3mModalRef.current])
 
   return isWalletConnectModalActive

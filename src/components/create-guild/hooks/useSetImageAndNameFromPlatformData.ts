@@ -19,7 +19,7 @@ const useSetImageAndNameFromPlatformData = (
 
     setValue("name", platformName)
     setValue("urlName", slugify(platformName))
-  }, [platformName])
+  }, [platformName, touchedFields.name, onUpload, setValue])
 
   useEffect(() => {
     if (!onUpload) return
@@ -39,7 +39,7 @@ const useSetImageAndNameFromPlatformData = (
           data: [new File([blob], `${platformName}.png`, { type: "image/png" })],
         })
       )
-  }, [platformImage])
+  }, [onUpload, platformImage, setValue, platformName])
 }
 
 const getColorByImage = (imageUrl) =>

@@ -32,7 +32,6 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
-import { useEffect } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -75,7 +74,6 @@ const EditGuildDrawer = ({
     hideFromExplorer,
     socialLinks,
     contacts,
-    isDetailed,
     featureFlags,
     eventSources,
     tags: savedTags,
@@ -114,14 +112,9 @@ const EditGuildDrawer = ({
     mode: "all",
     defaultValues,
   })
+  const { control, setValue, reset, formState } = methods
 
   const { onSubmit: onTagsSubmit } = useEditTags()
-
-  // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
-  useEffect(() => {
-    if (!isDetailed || methods.formState.dirtyFields.contacts) return
-    methods.setValue("contacts", contacts)
-  }, [isDetailed])
 
   const toast = useToast()
 
@@ -132,7 +125,7 @@ const EditGuildDrawer = ({
     })
     onClose()
     mutateEvents()
-    methods.reset(undefined, { keepValues: true })
+    reset(undefined, { keepValues: true })
   }
 
   const { onSubmit, isLoading } = useEditGuild({
@@ -146,9 +139,7 @@ const EditGuildDrawer = ({
     setLocalBackgroundImage,
   } = useThemeContext()
 
-  useWarnIfUnsavedChanges(
-    methods.formState.isDirty && !methods.formState.isSubmitted
-  )
+  useWarnIfUnsavedChanges(formState.isDirty && !formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -168,21 +159,20 @@ const EditGuildDrawer = ({
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
-    methods.reset()
+    reset()
     onAlertClose()
     onClose()
   }
 
   const iconUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldTouch: true, shouldDirty: true }
-      )
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
+        shouldTouch: true,
+        shouldDirty: true,
+      })
     },
     onError: () => {
-      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
+      setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
         shouldTouch: true,
       })
     },
@@ -190,7 +180,7 @@ const EditGuildDrawer = ({
 
   const backgroundUploader = usePinata({
     onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
+      setValue(
         "theme.backgroundImage",
         `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
         { shouldDirty: true }
@@ -214,17 +204,17 @@ const EditGuildDrawer = ({
   const loadingText = uploadLoadingText || "Saving data"
 
   const isDirty =
-    !!Object.keys(methods.formState.dirtyFields).length ||
+    !!Object.keys(formState.dirtyFields).length ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
 
   const onSave = (e) => {
     if (
       guildPin?.isActive &&
-      (methods.formState.dirtyFields.name ||
-        methods.formState.dirtyFields.imageUrl ||
+      (formState.dirtyFields.name ||
+        formState.dirtyFields.imageUrl ||
         iconUploader.isUploading ||
-        methods.formState.dirtyFields.theme?.color)
+        formState.dirtyFields.theme?.color)
     ) {
       onSaveAlertOpen()
     } else {
@@ -249,9 +239,7 @@ const EditGuildDrawer = ({
                 <ButtonGroup>
                   {!isOwner && <LeaveButton disableColoring />}
                   {(isOwner || isSuperAdmin) && (
-                    <DeleteGuildButton
-                      beforeDelete={() => methods.reset(defaultValues)}
-                    />
+                    <DeleteGuildButton beforeDelete={() => reset(defaultValues)} />
                   )}
                 </ButtonGroup>
               </DrawerHeader>
@@ -330,7 +318,7 @@ const EditGuildDrawer = ({
               </Button>
               <Button
                 // isDisabled={!isDirty}
-                isDisabled={Object.keys(methods.formState?.errors ?? {}).length > 0}
+                isDisabled={Object.keys(formState?.errors ?? {}).length > 0}
                 data-test="save-guild-button"
                 isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
@@ -342,7 +330,7 @@ const EditGuildDrawer = ({
             </DrawerFooter>
           </DrawerContent>
         </FormProvider>
-        <DynamicDevTool control={methods.control} />
+        <DynamicDevTool control={control} />
       </Drawer>
 
       <DiscardAlert

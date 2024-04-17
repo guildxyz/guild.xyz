@@ -17,7 +17,7 @@ const Onboarding = (): JSX.Element => {
 
   useEffect(() => {
     setActiveStep(3)
-  }, [])
+  }, [setActiveStep])
 
   return (
     <>

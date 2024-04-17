@@ -36,6 +36,7 @@ const DiscordGuildSetup = ({
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.id === selectedServer),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedServer] // servers excluded on purpose
   )
 

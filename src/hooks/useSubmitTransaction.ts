@@ -1,5 +1,5 @@
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import processViemContractError from "utils/processViemContractError"
 import {
   Abi,
@@ -16,6 +16,24 @@ import {
   useWriteContract,
 } from "wagmi"
 import useEstimateGas from "./useEstimateGas"
+
+const getEvents = (
+  contractCallConfig: UseSimulateContractParameters,
+  transactionReceipt: TransactionReceipt | Record<string, any>
+) =>
+  transactionReceipt.logs
+    .map((log) => {
+      try {
+        return decodeEventLog({
+          abi: contractCallConfig.abi as Abi,
+          data: log.data,
+          topics: (log as any).topics,
+        })
+      } catch {
+        return null
+      }
+    })
+    .filter(Boolean)
 
 const useSubmitTransaction = (
   contractCallConfig: UseSimulateContractParameters,
@@ -36,23 +54,35 @@ const useSubmitTransaction = (
     setTxSuccess: setTxSuccessInContext,
   } = useTransactionStatusContext() ?? {}
 
-  const setTxHash = (newHash: string) => {
-    if (options?.setContext === false || typeof setTxHashInContext !== "function")
-      return
-    setTxHashInContext(newHash)
-  }
+  const setTxHash = useCallback(
+    (newHash: string) => {
+      if (options?.setContext === false || typeof setTxHashInContext !== "function")
+        return
+      setTxHashInContext(newHash)
+    },
+    [options?.setContext, setTxHashInContext]
+  )
 
-  const setTxError = (newState: boolean) => {
-    if (options?.setContext === false || typeof setTxErrorInContext !== "function")
-      return
-    setTxErrorInContext(newState)
-  }
+  const setTxError = useCallback(
+    (newState: boolean) => {
+      if (options?.setContext === false || typeof setTxErrorInContext !== "function")
+        return
+      setTxErrorInContext(newState)
+    },
+    [options?.setContext, setTxErrorInContext]
+  )
 
-  const setTxSuccess = (newState: boolean) => {
-    if (options?.setContext === false || typeof setTxSuccessInContext !== "function")
-      return
-    setTxSuccessInContext(newState)
-  }
+  const setTxSuccess = useCallback(
+    (newState: boolean) => {
+      if (
+        options?.setContext === false ||
+        typeof setTxSuccessInContext !== "function"
+      )
+        return
+      setTxSuccessInContext(newState)
+    },
+    [options?.setContext, setTxSuccessInContext]
+  )
 
   const { error: simulateContractError, isLoading: isSimulateContractLoading } =
     useSimulateContract({
@@ -87,7 +117,7 @@ const useSubmitTransaction = (
     if (!txHash && hash) {
       setTxHash(hash)
     }
-  }, [hash])
+  }, [txHash, hash, setTxHash])
 
   const {
     data: transactionReceipt,
@@ -117,19 +147,7 @@ const useSubmitTransaction = (
       setTxSuccess(true)
 
       if (typeof onSuccess === "function") {
-        const events = transactionReceipt.logs
-          .map((log) => {
-            try {
-              return decodeEventLog({
-                abi: contractCallConfig.abi as Abi,
-                data: log.data,
-                topics: log.topics,
-              })
-            } catch {
-              return null
-            }
-          })
-          .filter(Boolean)
+        const events = getEvents(contractCallConfig, transactionReceipt)
 
         onSuccess(
           transactionReceipt as TransactionReceipt,
@@ -144,7 +162,19 @@ const useSubmitTransaction = (
       onError?.(error, rawError)
       reset()
     }
-  }, [transactionReceipt, isSuccess, isError])
+  }, [
+    transactionReceipt,
+    isSuccess,
+    isError,
+    setTxSuccess,
+    onSuccess,
+    contractCallConfig,
+    error,
+    setTxError,
+    onError,
+    rawError,
+    reset,
+  ])
 
   return {
     onSubmitTransaction: () => {

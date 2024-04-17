@@ -3,7 +3,7 @@ import useLocalStorage from "hooks/useLocalStorage"
 import { useToastWithButton } from "hooks/useToast"
 import { useRouter } from "next/router"
 import { ArrowRight } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useCallback, useEffect, useRef } from "react"
 import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"
 
@@ -20,24 +20,7 @@ const useStayConnectedToast = (onClick: () => void) => {
   const [hasSeenAddContactInfoToast, setHasSeenAddContactInfoToast] =
     useLocalStorage(`hasSeenAddContactInfoToast-${id}`, false)
 
-  useEffect(() => {
-    if (isAdmin && !contacts?.length && !isLoading && !hasSeenAddContactInfoToast)
-      showAddContactInfoToast()
-  }, [isAdmin, contacts?.length, isLoading, hasSeenAddContactInfoToast])
-
-  useEffect(() => {
-    const handleRouteChange = (url) => {
-      if (url === `/${urlName}` || url === `/${id}`) return
-      toast.close(CONTACT_TOAST_ID)
-    }
-
-    router.events.on("routeChangeStart", handleRouteChange)
-    return () => {
-      router.events.off("routeChangeStart", handleRouteChange)
-    }
-  }, [router.events])
-
-  const showAddContactInfoToast = () => {
+  const showAddContactInfoToast = useCallback(() => {
     setHasSeenAddContactInfoToast(true)
     toastIdRef.current = toastWithButton({
       id: CONTACT_TOAST_ID,
@@ -53,7 +36,30 @@ const useStayConnectedToast = (onClick: () => void) => {
       duration: null,
       isClosable: true,
     })
-  }
+  }, [setHasSeenAddContactInfoToast, toastWithButton, onClick])
+
+  useEffect(() => {
+    if (isAdmin && !contacts?.length && !isLoading && !hasSeenAddContactInfoToast)
+      showAddContactInfoToast()
+  }, [
+    isAdmin,
+    contacts?.length,
+    isLoading,
+    hasSeenAddContactInfoToast,
+    showAddContactInfoToast,
+  ])
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (url === `/${urlName}` || url === `/${id}`) return
+      toast.close(CONTACT_TOAST_ID)
+    }
+
+    router.events.on("routeChangeStart", handleRouteChange)
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange)
+    }
+  }, [urlName, id, toast, router.events])
 }
 
 export default useStayConnectedToast

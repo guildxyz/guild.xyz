@@ -24,7 +24,7 @@ const TagManager = (): JSX.Element => {
       })
     })
     return () => subscription.unsubscribe()
-  }, [watch])
+  }, [watch, setValue])
 
   return (
     <HStack gap={7}>
