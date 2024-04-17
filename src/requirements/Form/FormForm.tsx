@@ -9,7 +9,7 @@ import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const { id, guildPlatforms, featureFlags } = useGuild(undefined)
+  const { id, guildPlatforms, featureFlags } = useGuild()
   const formRewardIds =
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
