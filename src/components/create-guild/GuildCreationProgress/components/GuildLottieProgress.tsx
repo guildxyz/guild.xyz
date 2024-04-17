@@ -38,7 +38,7 @@ const GuildLottieProgress = memo(({ progress }: Props) => {
       true
     )
     prevProgress.current = progress
-  }, [isLottiePlayerReady, progress])
+  }, [isLottiePlayerReady, progress, player])
 
   return (
     <Box position={"relative"} w={`${logoSize}px`} h={`${logoSize}px`}>

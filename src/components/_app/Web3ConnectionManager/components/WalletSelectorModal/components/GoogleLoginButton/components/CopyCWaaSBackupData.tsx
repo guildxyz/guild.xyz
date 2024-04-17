@@ -27,7 +27,7 @@ const CopyCWaaSBackupData = () => {
       title: "Copied!",
       description: "Backup data successfully copied to the clipboard",
     })
-  }, [hasCopied])
+  }, [hasCopied, toast])
 
   // This toast is needed, because we can't copy to clipboard immediately after the submit, due to browser limitations
   useEffect(() => {
@@ -44,7 +44,7 @@ const CopyCWaaSBackupData = () => {
         children: "Copy",
       },
     })
-  }, [backup])
+  }, [backup, toastWithButton, onCopy, hasCopied])
 
   const copyBackup = useSubmit(
     async () => {

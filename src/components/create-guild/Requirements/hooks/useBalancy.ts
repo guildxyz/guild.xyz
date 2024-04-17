@@ -233,6 +233,7 @@ const useBalancy = (
       count: holdersList.length,
       addresses: holdersList,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, renderedRequirements])
 
   const mappedRequirementsLength = Object.values(mappedRequirements).reduce(

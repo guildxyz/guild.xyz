@@ -12,8 +12,8 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { DownloadSimple } from "phosphor-react"
-import { useEffect, useState } from "react"
 import GuildGhost from "static/avatars/ghost.svg"
+import useSWRImmutable from "swr/immutable"
 import convertSVGToPNG from "utils/convertSVGToPNG"
 import { GuildAction, useMintGuildPinContext } from "../MintGuildPinContext"
 
@@ -89,11 +89,10 @@ const GuildPinImage = (): JSX.Element => {
 }
 
 const DownloadGuildPinImage = ({ pinUrl }: { pinUrl: string }): JSX.Element => {
-  const [imageAsPNG, setImageAsPNG] = useState("")
-
-  useEffect(() => {
-    convertSVGToPNG(pinUrl).then((pngDataURL) => setImageAsPNG(pngDataURL))
-  }, [])
+  const { data: imageAsPNG } = useSWRImmutable(
+    ["convertSVGToPNG", pinUrl],
+    ([_, url]) => convertSVGToPNG(url)
+  )
 
   if (!imageAsPNG) return null
 

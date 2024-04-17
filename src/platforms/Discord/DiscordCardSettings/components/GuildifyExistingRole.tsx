@@ -41,7 +41,7 @@ const GuildifyExistingRole = () => {
       value: role.id,
       details: pluralize(role.memberCount, "member"),
     }))
-  }, [discordRoles])
+  }, [discordRoles, guildRoles, guildPlatform.id])
 
   return (
     <Box px="5" py="4">

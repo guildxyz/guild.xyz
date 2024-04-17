@@ -89,30 +89,11 @@ const twitterRequirementTypes = [
     value: "TWITTER_BIO",
     TwitterRequirement: TwitterTextToInclude,
   },
-  // {
-  //   label: "Follow list",
-  //   value: "TWITTER_LIST_FOLLOW",
-  //   TwitterRequirement: TwitterListInput,
-  // },
   {
     label: "Be a member of list",
     value: "TWITTER_LIST_MEMBER",
     TwitterRequirement: TwitterListInput,
   },
-  // ...(featureFlags?.includes("TWITTER_EXTRA_REQUIREMENT")
-  //   ? [
-  //       {
-  //         label: "Like post (legacy)",
-  //         value: "TWITTER_LIKE",
-  //         TwitterRequirement: TwitterTweetInput,
-  //       },
-  //       {
-  //         label: "Repost (legacy)",
-  //         value: "TWITTER_RETWEET",
-  //         TwitterRequirement: TwitterTweetInput,
-  //       },
-  //     ]
-  //   : []),
 ]
 
 const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {

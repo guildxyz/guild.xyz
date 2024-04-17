@@ -2,6 +2,7 @@ import { HStack, Link, VStack, Wrap } from "@chakra-ui/react"
 import { EditGuildDrawerProvider } from "components/[guild]/EditGuild/EditGuildDrawerContext"
 import EventCard from "components/[guild]/Events/EventCard"
 import FallbackFrame from "components/[guild]/Events/FallbackFrame"
+import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -11,7 +12,6 @@ import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useGuildEvents, { GuildEvent } from "hooks/useGuildEvents"
 import { GetStaticPaths, GetStaticProps } from "next"
 import dynamic from "next/dynamic"
@@ -43,7 +43,7 @@ const GuildEvents = (): JSX.Element => {
 
   return (
     <Layout
-      title={name}
+      title={<GuildName {...{ name, tags }} />}
       textColor={textColor}
       ogTitle={`Events${name ? ` - ${name}` : ""}`}
       ogDescription={description}
@@ -89,11 +89,6 @@ const GuildEvents = (): JSX.Element => {
       backgroundImage={localBackgroundImage}
       action={isAdmin && isDetailed && <DynamicEditGuildButton />}
       backButton={<BackButton />}
-      titlePostfix={
-        tags?.includes("VERIFIED") && (
-          <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
-        )
-      }
     >
       <GuildTabs activeTab="EVENTS" />
       {(isValidating || data === undefined) && (

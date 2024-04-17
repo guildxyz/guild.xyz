@@ -91,7 +91,7 @@ type RoleTagProps = {
 } & TagProps
 
 const CrmTbodyRoleTag = forwardRef<RoleTagProps, "span">(
-  ({ roleId, amount, ...rest }, ref) => {
+  ({ roleId, amount, ...rest }, _ref) => {
     const { roles } = useGuild()
     const role = roles.find((r) => r.id === roleId)
     const tdBg = useColorModeValue(`gray.50`, "#3A3A40")

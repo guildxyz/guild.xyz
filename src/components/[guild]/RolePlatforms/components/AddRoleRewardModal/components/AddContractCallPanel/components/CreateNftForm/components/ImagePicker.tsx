@@ -34,6 +34,7 @@ const ImagePicker = () => {
   const { isDragActive, fileRejections, getRootProps, getInputProps } = useDropzone({
     multiple: false,
     noClick: false,
+    maxSizeMb: 50,
     onDrop: (acceptedFiles) => {
       setPreview(URL.createObjectURL(acceptedFiles[0]))
       setValue("image", acceptedFiles[0], {
@@ -68,7 +69,7 @@ const ImagePicker = () => {
       </AspectRatio>
 
       <FormHelperText display="flex" flexDir="column" gap={1.5} lineHeight={1.5}>
-        Please upload an image (max 5MB) in jpg, png, or gif format; while a 1:1
+        Please upload an image (max 50MB) in jpg, png, or gif format; while a 1:1
         aspect ratio is preferred, any aspect ratio is accepted.
       </FormHelperText>
 

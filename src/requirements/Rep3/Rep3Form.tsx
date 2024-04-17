@@ -10,7 +10,6 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -23,12 +22,10 @@ const Rep3Form = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    if (!register) return
-    register(`${baseFieldPath}.chain`, {
-      value: "POLYGON",
-    })
-  }, [register])
+  useController({
+    name: `${baseFieldPath}.chain`,
+    defaultValue: "POLYGON",
+  })
 
   const {
     field: { ref, name, value, onChange, onBlur },

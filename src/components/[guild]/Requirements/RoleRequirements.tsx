@@ -159,7 +159,7 @@ const VirtualRequirements = memo(
       const descriptionHeight =
         descriptionRef?.current?.getBoundingClientRect().height ?? 0
       return Math.max(descriptionHeight + 50, 500)
-    }, [descriptionRef?.current])
+    }, [descriptionRef])
 
     const Row = memo(({ index, style }: any) => {
       const rowRef = useRef<HTMLDivElement>(null)
@@ -181,7 +181,7 @@ const VirtualRequirements = memo(
         return () => {
           observer.disconnect()
         }
-      }, [rowRef])
+      }, [rowRef, index])
 
       return (
         <Box style={style}>

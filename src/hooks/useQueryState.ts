@@ -7,17 +7,17 @@ export const useQueryState = <State extends string>(
 ) => {
   const router = useRouter()
 
-  const getInitialState = () => {
+  const getInitialState = useCallback(() => {
     const queries = router.query[name]
     const query = Array.isArray(queries) ? queries[0] : queries
     return query ? (query as State) : defaultState
-  }
+  }, [router.query, name, defaultState])
 
   const [state, setState] = useState(getInitialState)
 
   useEffect(() => {
     if (router.isReady) setState(getInitialState)
-  }, [router.isReady])
+  }, [router.isReady, getInitialState])
 
   const toggle = useCallback(
     (newState: State) => {

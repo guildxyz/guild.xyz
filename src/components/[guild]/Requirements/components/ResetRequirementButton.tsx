@@ -6,9 +6,7 @@ import { useRequirementContext } from "./RequirementContext"
 
 export const getDefaultVisitLinkCustomName = (
   requirementData: Requirement["data"]
-) => {
-  return `Visit link: [${requirementData.id}]`
-}
+) => `Visit link: [${requirementData.id}]`
 
 const ResetNewRequirementButton = ({ requirement }) => {
   const { control, setValue } = useFormContext()

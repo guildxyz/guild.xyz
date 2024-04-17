@@ -7,7 +7,7 @@ import {
   gatherSpaceUrlToSpaceId,
 } from "platforms/Gather/useGatherCardProps"
 import { AddRewardPanelProps } from "platforms/rewards"
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 
 export type AddGatherFormType = {
@@ -22,10 +22,6 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
     mode: "all",
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
-
-  const { append } = useFieldArray({
-    name: "rolePlatforms",
-  })
 
   const {
     control,

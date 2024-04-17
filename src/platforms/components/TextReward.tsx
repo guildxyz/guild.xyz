@@ -23,7 +23,6 @@ import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
-import { useAccount } from "wagmi"
 import { useClaimedReward } from "../../hooks/useClaimedReward"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
@@ -47,7 +46,6 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
   const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
     role.id
   )
-  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const label = platformId === PlatformType.TEXT ? "Reveal secret" : "Claim"
@@ -84,7 +82,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [claimed, isMember, hasRoleAccess, isConnected, platform])
+  }, [hasRoleAccess, platform, claimed, label, isMember, openJoinModal])
 
   return (
     <>

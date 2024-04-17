@@ -51,6 +51,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   useEffect(() => {
     captureEvent("guild creation flow > start guild creation")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

@@ -25,7 +25,6 @@ import rewards from "platforms/rewards"
 import { PropsWithChildren, ReactNode, useMemo } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
-import { useAccount } from "wagmi"
 
 export type RewardProps = {
   role: Role // should change to just roleId when we won't need memberCount anymore
@@ -56,7 +55,6 @@ const Reward = ({
   isLinkColorful,
 }: RewardProps) => {
   const { isMember } = useMembership()
-  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const { hasRoleAccess, isValidating } = useRoleMembership(role.id)
@@ -88,7 +86,14 @@ const Reward = ({
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasRoleAccess, isConnected, accessButtonProps, isLinkColorful])
+  }, [
+    hasRoleAccess,
+    label,
+    isLinkColorful,
+    accessButtonProps,
+    isMember,
+    openJoinModal,
+  ])
 
   const name =
     platform.guildPlatform?.platformGuildName ||

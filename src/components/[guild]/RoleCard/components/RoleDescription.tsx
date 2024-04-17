@@ -59,7 +59,7 @@ const CollapsableRoleDescription = ({
     return () => {
       observer.disconnect()
     }
-  }, [initialRequirementsRef.current])
+  }, [initialRequirementsRef])
 
   const shadowColor = useColorModeValue(
     "var(--chakra-colors-gray-300)",

@@ -110,7 +110,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     }
 
     return options
-  }, [guildsPoaps, poaps, poap, isLoading])
+  }, [isLoading, guildsPoaps, poapDetails, poap, poaps])
 
   return (
     <Stack spacing={4} alignItems="start">

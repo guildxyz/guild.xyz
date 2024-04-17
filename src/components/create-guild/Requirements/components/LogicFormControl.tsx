@@ -78,7 +78,15 @@ const LogicFormControl = ({
 
     if (requirementCount < prevRequirementCount && requirementCount <= 2)
       logicOnChange("OR")
-  }, [logic, requirementCount, isDirty])
+  }, [
+    isDirty,
+    logic,
+    value,
+    requirementCount,
+    anyOfNumOnChange,
+    prevRequirementCount,
+    logicOnChange,
+  ])
 
   return (
     <Stack alignItems="start" direction={{ base: "column", sm: "row" }}>

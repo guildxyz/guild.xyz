@@ -10,8 +10,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Question } from "phosphor-react"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController } from "react-hook-form"
 import { useChainId } from "wagmi"
 import {
   CHAIN_CONFIG,
@@ -63,32 +62,20 @@ const ChainPicker = ({
   showDivider = true,
   menuPlacement = "bottom", // auto doesn't really work for some reason...
 }: Props): JSX.Element => {
-  const { setValue } = useFormContext()
-
   const chainId = useChainId()
-  const chain = useWatch({ name: controlName })
 
   const mappedSupportedChains = supportedChains
     ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
     : mappedChains
 
-  /**
-   * Timed out setValue on mount instead of defaultValue, because for some reason
-   * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
-   * undefined before selecting an option otherwise
-   */
-  useEffect(() => {
-    if (chain) return
-
-    setTimeout(() => {
-      setValue(
-        controlName,
-        supportedChains.includes(Chains[chainId] as Chain)
-          ? Chains[chainId]
-          : supportedChains[0]
-      )
-    }, 0)
-  }, [chainId])
+  const {
+    field: { value: chain },
+  } = useController({
+    name: controlName,
+    defaultValue: supportedChains.includes(Chains[chainId] as Chain)
+      ? Chains[chainId]
+      : supportedChains[0],
+  })
 
   return (
     <>

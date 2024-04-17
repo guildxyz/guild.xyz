@@ -68,7 +68,7 @@ const GuildSelect = ({ baseFieldPath }) => {
     }
 
     return options
-  }, [guildOptions, currentGuild])
+  }, [currentGuild, guildId, selectedGuild, guildOptions])
 
   return (
     <FormControl

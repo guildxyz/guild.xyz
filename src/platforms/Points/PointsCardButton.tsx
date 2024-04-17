@@ -15,7 +15,12 @@ const PointsCardButton = ({ platform }: Props) => {
 
   return (
     <>
-      <Button as={Link} href={`/${urlName}/leaderboard/${id}`} w="full">
+      <Button
+        as={Link}
+        href={`/${urlName}/leaderboard/${id}`}
+        w="full"
+        prefetch={false}
+      >
         View leaderboard <Icon as={ArrowRight} mb="-0.5" />
       </Button>
     </>
