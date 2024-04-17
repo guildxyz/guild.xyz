@@ -108,29 +108,28 @@ const DynamicAmount = () => {
               headersValid = true
               parser.resume()
             } else {
-              parser.abort()
               reject(
                 new Error(
                   "CSV headers are invalid. Required headers are exactly: ['key', 'value']."
                 )
               )
+              parser.abort()
               return
             }
           }
 
           if (!isValidCsvRow(row.data)) {
-            parser.abort()
             reject(
               new Error(
                 "Data type mismatch: 'key' should be a string and 'value' should be a number."
               )
             )
+            parser.abort()
             return
           }
           validatedData.push(row.data)
         },
         complete: () => {
-          setUploadedSnapshot(validatedData)
           resolve(validatedData as ValidCSVRow[])
         },
         error: (error) => {
@@ -169,9 +168,13 @@ const DynamicAmount = () => {
         const reader = new FileReader()
         reader.onload = function (e) {
           const text = e.target.result
-          parseAndValidateCSV(text as string).catch((error) => {
-            showErrorToast(error)
-          })
+          parseAndValidateCSV(text as string)
+            .then((validatedData) => {
+              setUploadedSnapshot(validatedData)
+            })
+            .catch((error) => {
+              showErrorToast(error)
+            })
         }
         reader.readAsText(accepted[0])
       }
