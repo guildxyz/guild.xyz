@@ -244,34 +244,35 @@ const EditGuildDrawer = ({
                 </ButtonGroup>
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
-                <Section title="General">
-                  <Stack
-                    w="full"
-                    spacing="5"
-                    direction={{ base: "column", md: "row" }}
-                  >
+                <Section title="General" spacing="4">
+                  <Stack spacing={5}>
+                    <Stack
+                      w="full"
+                      spacing="5"
+                      direction={{ base: "column", md: "row" }}
+                    >
+                      <Box>
+                        <FormLabel>Logo and name</FormLabel>
+                        <HStack spacing={2} alignItems="start">
+                          <IconSelector
+                            uploader={iconUploader}
+                            minW={512}
+                            minH={512}
+                          />
+                          <Name />
+                        </HStack>
+                      </Box>
+                      <UrlName />
+                    </Stack>
+                    <Description />
                     <Box>
-                      <FormLabel>Logo and name</FormLabel>
-                      <HStack spacing={2} alignItems="start">
-                        <IconSelector
-                          uploader={iconUploader}
-                          minW={512}
-                          minH={512}
-                        />
-                        <Name />
-                      </HStack>
+                      <FormLabel>Social links</FormLabel>
+                      <SocialLinks />
                     </Box>
-                    <UrlName />
                   </Stack>
-                  <Description />
-
-                  <Box>
-                    <FormLabel>Social links</FormLabel>
-                    <SocialLinks />
-                  </Box>
                 </Section>
 
-                <Section title="Appearance">
+                <Section title="Appearance" spacing="4">
                   <Stack direction={{ base: "column", md: "row" }} spacing="5">
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader uploader={backgroundUploader} />
@@ -280,13 +281,13 @@ const EditGuildDrawer = ({
 
                 <Divider />
 
-                <Section title="Events">
+                <Section title="Events" spacing="2">
                   <Events />
                 </Section>
 
                 <Divider />
 
-                <Section title="Security">
+                <Section title="Security" spacing="4">
                   {savedTags?.includes("VERIFIED") && <HideFromExplorerToggle />}
 
                   <Admins />
@@ -294,18 +295,20 @@ const EditGuildDrawer = ({
 
                 <Divider />
 
-                <Section title="Contact info" spacing="4">
+                <Section title="Contact info" spacing="2">
                   <ContactInfo />
                 </Section>
 
                 {isSuperAdmin && (
                   <>
                     <Divider />
-                    <Section title="Tag manager" spacing="4">
+
+                    <Section title="Superadmin" spacing="4">
                       <TagManager />
-                    </Section>
-                    <Section title="Enabled features" spacing="4">
-                      <DynamicFeatureFlags />
+                      <Box>
+                        <FormLabel>Enabled features</FormLabel>
+                        <DynamicFeatureFlags />
+                      </Box>
                     </Section>
                   </>
                 )}

@@ -80,7 +80,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
   const isValidAddress = ADDRESS_REGEX.test(newOwner)
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} colorScheme="dark">
+    <Modal isOpen={isOpen} onClose={onClose} colorScheme="dark">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pb="3">Transfer ownership</ModalHeader>

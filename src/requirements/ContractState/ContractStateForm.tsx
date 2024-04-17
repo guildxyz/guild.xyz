@@ -339,7 +339,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
               isLoading={isAbiValidating}
               options={outputOptions}
               placeholder="Choose output param"
-              chakraStyles={{ container: { mb: 2 } } as any}
+              chakraStyles={{ container: (base) => ({ ...base, mb: 2 }) }}
             />
           )
         )}
@@ -359,7 +359,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
             name={`${baseFieldPath}.data.resultMatch`}
             defaultValue={"="}
             options={resultMatchOptions}
-            chakraStyles={{ container: { w: "105px" } } as any}
+            chakraStyles={{ container: (base) => ({ ...base, w: "105px" }) }}
           />
           <Controller
             name={`${baseFieldPath}.data.expected` as const}
