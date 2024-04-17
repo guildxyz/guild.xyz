@@ -350,3 +350,29 @@ export const formTestnet = {
   },
   testnet: true,
 } as const satisfies Chain
+
+export const metisSepolia = {
+  id: 59902,
+  name: "Metis Sepolia",
+  nativeCurrency: {
+    decimals: 18,
+    name: "Metis",
+    symbol: "sMETIS",
+  },
+  rpcUrls: {
+    default: { http: ["https://sepolia.metisdevops.link"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "Blockscout",
+      url: "https://sepolia-explorer.metisdevops.link",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 224185,
+    },
+  },
+  testnet: true,
+} as const satisfies Chain

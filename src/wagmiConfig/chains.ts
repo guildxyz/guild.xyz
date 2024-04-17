@@ -4,6 +4,7 @@ import {
   bobaAvax,
   exosama,
   formTestnet,
+  metisSepolia,
   neonEVM,
   oasisSapphire,
   ontology,
@@ -280,6 +281,17 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/metis-dark.svg",
     },
     etherscanApiUrl: "https://andromeda-explorer.metis.io",
+  },
+  METIS_SEPOLIA: {
+    ...generateChainConfig(
+      metisSepolia,
+      "https://assets.coingecko.com/coins/images/15595/small/metis.PNG"
+    ),
+    iconUrl: "/networkLogos/metis.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/metis.svg",
+      dark: "/explorerLogos/metis-dark.svg",
+    },
   },
   CRONOS: {
     ...generateChainConfig(
@@ -638,6 +650,7 @@ enum Chains {
   MOONBEAM = moonbeam.id,
   MOONRIVER = moonriver.id,
   METIS = metis.id,
+  METIS_SEPOLIA = metisSepolia.id,
   CRONOS = cronos.id,
   BOBA = boba.id,
   BOBA_AVAX = bobaAvax.id,
