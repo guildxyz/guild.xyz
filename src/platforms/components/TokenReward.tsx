@@ -39,7 +39,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
     (r) => r.id === platform.dynamicAmount?.operation?.input?.[0]?.requirementId
   )
 
-  const pointsTypeId = req.data?.guildPlatformId
+  const pointsTypeId = req?.data?.guildPlatformId
 
   const accessedPoints = useAccessedGuildPoints("ALL")
 
