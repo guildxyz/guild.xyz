@@ -15,6 +15,7 @@ import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import { TokenRewardCard } from "platforms/Token/TokenRewardCard"
 import rewards from "platforms/rewards"
+import React from "react"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
@@ -154,11 +155,10 @@ const AccessHub = (): JSX.Element => {
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
           ))}
 
-          {accessedGuildTokens?.map((tokenReward) => (
-            <TokenRewardCard
-              key={`${tokenReward.chain}/${tokenReward.address}`}
-              reward={tokenReward}
-            />
+          {accessedGuildTokens?.map((tokenReward, idx) => (
+            <React.Fragment key={idx}>
+              <TokenRewardCard reward={tokenReward} />
+            </React.Fragment>
           ))}
 
           {(isMember || isAdmin) &&

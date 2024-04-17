@@ -76,6 +76,7 @@
     "react-intersection-observer": "^9.4.3",
     "react-live-chat-loader": "^2.9.1",
     "react-markdown": "^8.0.7",
+    "react-papaparse": "^4.4.0",
     "react-window": "^1.8.8",
     "slugify": "^1.6.5",
     "swr": "^2.2.4",

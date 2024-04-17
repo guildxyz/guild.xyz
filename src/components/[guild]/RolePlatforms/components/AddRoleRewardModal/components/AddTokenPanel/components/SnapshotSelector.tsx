@@ -67,6 +67,7 @@ const SnapshotSelector = () => {
       data: {
         snapshot: transformedData,
         isHidden: false,
+        guildPlatformId: selectedPointsId,
       },
     })
   }, [snapshot])

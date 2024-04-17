@@ -91,7 +91,8 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
   const modalBg = useCardBg()
 
-  const { chain, rewardsByRoles, token, isTokenLoading } = useTokenRewardContext()
+  const { chain, rewardsByRoles, token, isTokenLoading, rewardImageUrl } =
+    useTokenRewardContext()
 
   const { getValue, calcForRole } = useCalculateClaimableTokens(rewardsByRoles)
   const claimableAmount = getValue()
@@ -175,7 +176,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                   style={{ transform: "translateY(-33%)" }}
                   width={"full"}
                 >
-                  <GuildLogo imageUrl={token.logoURI} size={"26px"} />
+                  <GuildLogo imageUrl={rewardImageUrl} size={"26px"} />
                   <Heading
                     fontSize={"x-large"}
                     fontFamily="display"
@@ -195,7 +196,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
           ) : (
             <>
-              {rewardsByRoles.length === 0 ? (
+              {rewardsByRoles.length === 1 ? (
                 <Button
                   colorScheme="gold"
                   mt={2}

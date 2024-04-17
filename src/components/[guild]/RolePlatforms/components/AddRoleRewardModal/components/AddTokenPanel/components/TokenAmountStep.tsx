@@ -9,13 +9,13 @@ import StaticAmount from "./StaticAmount"
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const [value, setValue] = useState("dynamic")
 
-  const snapshotId = useWatch({ name: `snapshotId` })
+  const requirements = useWatch({ name: `requirements` })
   const multiplier = useWatch({ name: `multiplier` })
   const addition = useWatch({ name: `addition` })
 
   const isContinueDisabled =
     value === "dynamic"
-      ? snapshotId === undefined || multiplier === undefined
+      ? requirements === undefined || multiplier === undefined
       : addition === undefined
 
   const options = [
