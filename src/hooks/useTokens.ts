@@ -59,6 +59,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   SHIMMER: [],
   KAVA: [],
   BITFINITY_TESTNET: [],
+  X1: [],
   X1_TESTNET: [],
   ONTOLOGY: [],
   BERA_TESTNET: [],

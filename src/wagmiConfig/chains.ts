@@ -9,6 +9,7 @@ import {
   palm,
   scrollAlpha,
   taikoKatlaTestnet,
+  x1,
 } from "static/customChains"
 // import type { Chain as ViemChain } from "viem"
 import {
@@ -505,8 +506,18 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/bitfinity.svg",
     },
   },
+  X1: {
+    ...generateChainConfig(x1, "/walletLogos/okx.png"),
+    name: "X Layer mainnet",
+    iconUrl: "/walletLogos/okx.png",
+    blockExplorerIconUrl: {
+      light: "/walletLogos/okx.png",
+      dark: "/walletLogos/okx.png",
+    },
+  },
   X1_TESTNET: {
     ...generateChainConfig(x1Testnet, "/walletLogos/okx.png"),
+    name: "X Layer testnet",
     iconUrl: "/walletLogos/okx.png",
     blockExplorerIconUrl: {
       light: "/walletLogos/okx.png",
@@ -647,6 +658,7 @@ enum Chains {
   SHIMMER = shimmer.id,
   KAVA = kava.id,
   BITFINITY_TESTNET = bitfinityTestnet.id,
+  X1 = x1.id,
   X1_TESTNET = x1Testnet.id,
   ONTOLOGY = ontology.id,
   BERA_TESTNET = beraTestnet.id,

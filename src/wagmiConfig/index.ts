@@ -8,6 +8,7 @@ import {
   ontology,
   palm,
   taikoKatlaTestnet,
+  x1,
 } from "static/customChains"
 import { mutate } from "swr"
 import fetcher, { fetcherWithSign } from "utils/fetcher"
@@ -108,6 +109,7 @@ export const wagmiConfig = createConfig({
     shimmer,
     kava,
     bitfinityTestnet,
+    x1,
     x1Testnet,
     ontology,
     beraTestnet,
@@ -161,6 +163,7 @@ export const wagmiConfig = createConfig({
     [shimmer.id]: http(),
     [kava.id]: http(),
     [bitfinityTestnet.id]: http(),
+    [x1.id]: http(),
     [x1Testnet.id]: http(),
     [ontology.id]: http(),
     [beraTestnet.id]: http(),

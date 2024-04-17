@@ -299,3 +299,28 @@ export const oasisSapphire = {
     },
   },
 } as const satisfies Chain
+
+export const x1 = {
+  id: 196,
+  name: "X Layer mainnet",
+  nativeCurrency: {
+    decimals: 18,
+    name: "OKB",
+    symbol: "OKB",
+  },
+  rpcUrls: {
+    default: { http: ["https://xlayerrpc.okx.com"] },
+  },
+  blockExplorers: {
+    default: {
+      name: "OKLink",
+      url: "https://www.oklink.com/xlayer",
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xca11bde05977b3631167028862be2a173976ca11",
+      blockCreated: 47416,
+    },
+  },
+} as const satisfies Chain
