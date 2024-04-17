@@ -169,6 +169,14 @@ const nextConfig = {
           source: "/api/posthog/:path*",
           destination: "https://app.posthog.com/:path*",
         },
+        {
+          source: "/api/bugsnag/notify",
+          destination: "https://notify.bugsnag.com",
+        },
+        {
+          source: "/api/bugsnag/sessions",
+          destination: "https://sessions.bugsnag.com",
+        },
       ],
       fallback: [],
     }

@@ -37,6 +37,10 @@ const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
 Bugsnag.start({
   apiKey: "4bd5799ac2cb4a34887513b80b845554",
   plugins: [new BugsnagPluginReact()],
+  endpoints: {
+    notify: "/api/bugsnag/notify",
+    sessions: "/api/bugsnag/sessions",
+  },
 })
 const ErrorBoundary = Bugsnag.getPlugin("react").createErrorBoundary(React)
 
