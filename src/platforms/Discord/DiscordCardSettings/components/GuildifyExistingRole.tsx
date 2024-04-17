@@ -15,7 +15,7 @@ import { useFormContext, useFormState } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
 const GuildifyExistingRole = () => {
-  const { errors, dirtyFields } = useFormState()
+  const { errors, dirtyFields, defaultValues } = useFormState()
   const { setValue } = useFormContext()
   const { roles: guildRoles } = useGuild()
   const { guildPlatform, index } = useRolePlatform()
@@ -56,7 +56,7 @@ const GuildifyExistingRole = () => {
             isLoading={!options}
             options={options}
             beforeOnChange={(newValue) => {
-              if (dirtyFields.name) return
+              if (defaultValues.name || dirtyFields.name) return
               setValue("name", newValue?.label, { shouldDirty: false })
             }}
           />
