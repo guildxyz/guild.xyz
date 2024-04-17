@@ -20,10 +20,15 @@ const nextConfig = {
 
     if (!config.plugins) config.plugins = []
 
+    console.log(
+      "PUBLIC PATH: ",
+      `${process.env.VERCEL_URL ?? "https://guild.xyz"}/_next/`
+    )
     config.plugins.push(
       new BugsnagSourceMapUploaderPlugin({
         apiKey: "4bd5799ac2cb4a34887513b80b845554",
         overwrite: true,
+        publicPath: `${process.env.VERCEL_URL ?? "https://guild.xyz"}/_next/`,
       })
     )
 
