@@ -3,6 +3,28 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import { useAccount } from "wagmi"
 
+const calcRequirementAmount = (
+  requirement: any,
+  dynamicAmount: any,
+  address: `0x${string}`
+) => {
+  let leaderboardValue = 0
+  try {
+    leaderboardValue =
+      requirement.data.snapshot.find(
+        (entry) => entry.key.toLowerCase() === address.toLowerCase()
+      ).value || null
+  } catch {
+    leaderboardValue = 0
+  }
+  if (!leaderboardValue) return 0
+
+  return (
+    leaderboardValue * dynamicAmount?.operation?.params.multiplier +
+    dynamicAmount?.operation?.params.addition
+  )
+}
+
 const useCalculateFromDynamic = (dynamicAmount: any) => {
   const { address } = useAccount()
 
@@ -20,23 +42,8 @@ const useCalculateFromDynamic = (dynamicAmount: any) => {
       case "STATIC":
         return dynamicAmount.operation.input[0].value
       case "REQUIREMENT_AMOUNT":
-        let leaderboardValue = 0
-        try {
-          leaderboardValue =
-            req.data.snapshot.find(
-              (entry) => entry.key.toLowerCase() === address.toLowerCase()
-            ).value || null
-        } catch {
-          leaderboardValue = 0
-        }
-        if (!leaderboardValue) return 0
-
-        return (
-          leaderboardValue * dynamicAmount?.operation?.params.multiplier +
-          dynamicAmount?.operation?.params.addition
-        )
+        return calcRequirementAmount(req, dynamicAmount, address)
       case "REQUIREMENT_ACCESS":
-        // TODO
         return 0
       default:
         return 0
@@ -67,21 +74,7 @@ const useCalculateClaimableTokens = (
       case "STATIC":
         return dynamicAmount.operation.input[0].value
       case "REQUIREMENT_AMOUNT":
-        let leaderboardValue = 0
-        try {
-          leaderboardValue =
-            req.data.snapshot.find(
-              (entry) => entry.key.toLowerCase() === address.toLowerCase()
-            ).value || null
-        } catch {
-          leaderboardValue = 0
-        }
-        if (!leaderboardValue) return 0
-
-        return (
-          leaderboardValue * dynamicAmount?.operation?.params.multiplier +
-          dynamicAmount?.operation?.params.addition
-        )
+        return calcRequirementAmount(req, dynamicAmount, address)
       case "REQUIREMENT_ACCESS":
         // TODO
         return 0
@@ -90,7 +83,7 @@ const useCalculateClaimableTokens = (
     }
   }
 
-  const calculateClaimableForRole = (
+  const calcForRole = (
     roleRewards: TokenAccessHubData["rewardsByRoles"][0]["rewards"]
   ) => {
     const sum = roleRewards.reduce((acc, reward) => {
@@ -102,13 +95,13 @@ const useCalculateClaimableTokens = (
 
   const getValue = () => {
     const sum = rewardsByRoles.reduce((acc, rewardsByRole) => {
-      return acc + calculateClaimableForRole(rewardsByRole.rewards)
+      return acc + calcForRole(rewardsByRole.rewards)
     }, 0)
 
     return sum
   }
 
-  return { getValue }
+  return { getValue, calcForRole }
 }
 
 export { useCalculateClaimableTokens, useCalculateFromDynamic }

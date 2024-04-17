@@ -10,11 +10,13 @@ import {
   Stack,
   Wrap,
 } from "@chakra-ui/react"
+import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { LeaderboardAirdropCard } from "components/[guild]/leaderboard/LeaderboardAirdropCard"
 import LeaderboardPointsSelector from "components/[guild]/leaderboard/LeaderboardPointsSelector"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
@@ -43,6 +45,8 @@ const Leaderboard = () => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
+
+  const accessedGuildTokens = useAccessedTokens()
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId
@@ -124,6 +128,13 @@ const Leaderboard = () => {
         rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
+        {accessedGuildTokens.map((reward) => (
+          <LeaderboardAirdropCard
+            key={`${reward.address}-${reward.chain}`}
+            reward={reward}
+          />
+        ))}
+
         {userData && (
           <LeaderboardUserCard
             address={

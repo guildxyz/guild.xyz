@@ -101,7 +101,5 @@ export const useAccessedTokens = () => {
     rewardsByRoles: Object.values(item.rewardsByRoles),
   }))
 
-  console.log(groupedByContractAndRole)
-
   return groupedByContractAndRole
 }

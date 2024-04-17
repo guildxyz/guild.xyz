@@ -21,8 +21,17 @@ import Card, { useCardBg } from "components/common/Card"
 import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
 import { Clock } from "phosphor-react"
+import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
+import {
+  TokenRewardProvider,
+  useTokenRewardContext,
+} from "platforms/Token/TokenRewardContext"
+import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
+import { TokenAccessHubData } from "../AccessHub/hooks/useAccessedTokens"
 
 const LeaderboardAirdropCard = () => {
+  const { token, isTokenLoading, rewardImageUrl, rewardsByRoles } =
+    useTokenRewardContext()
   const { colorMode } = useColorMode()
   const modalBg = useCardBg()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
@@ -30,6 +39,9 @@ const LeaderboardAirdropCard = () => {
 
   const gradientColor =
     colorMode === "dark" ? `${gold["--gold-700"]}70` : gold["--gold-200"]
+
+  const { getValue } = useCalculateClaimableTokens(rewardsByRoles)
+  const claimableAmount = getValue()
 
   const {
     isOpen: claimIsOpen,
@@ -39,6 +51,7 @@ const LeaderboardAirdropCard = () => {
 
   return (
     <>
+      <ClaimTokenModal isOpen={claimIsOpen} onClose={claimOnClose} />
       <Card
         border={"2px solid transparent"}
         height={100}
@@ -120,7 +133,7 @@ const LeaderboardAirdropCard = () => {
                 mb={"4px"}
                 color={colorMode === "light" && gold["--gold-500"]}
               >
-                5 UNI
+                {claimableAmount} {token.symbol}
               </Heading>
               <HStack gap={1} display={{ lg: "inherit", base: "none" }}>
                 <Tag height={"fit-content"}>
@@ -182,5 +195,17 @@ const LeaderboardAirdopSkeleton = () => {
   )
 }
 
-export default LeaderboardAirdropCard
-export { LeaderboardAirdopSkeleton }
+const LeaderboardAirdropCardWrapper = ({
+  reward,
+}: {
+  reward: TokenAccessHubData
+}) => (
+  <TokenRewardProvider tokenReward={reward}>
+    <LeaderboardAirdropCard />
+  </TokenRewardProvider>
+)
+
+export {
+  LeaderboardAirdopSkeleton,
+  LeaderboardAirdropCardWrapper as LeaderboardAirdropCard,
+}
