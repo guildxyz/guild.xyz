@@ -120,8 +120,6 @@ const App = ({
                 <FuelProvider>
                   <PostHogProvider>
                     <IntercomProvider>
-                      {`Vercel env: ${process.env.VERCEL_ENV} - Node env: ${process.env.NODE_ENV}`}
-
                       <AppErrorBoundary>
                         <Component {...pageProps} />
                       </AppErrorBoundary>

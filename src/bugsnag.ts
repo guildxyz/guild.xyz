@@ -2,7 +2,11 @@ import Bugsnag from "@bugsnag/js"
 import BugsnagPluginReact from "@bugsnag/plugin-react"
 
 export const bugsnagStart = () => {
-  if (typeof window === "undefined" /*|| process.env.NODE_ENV !== "production"*/)
+  if (
+    typeof window === "undefined" ||
+    process.env.NODE_ENV !== "production" ||
+    window.location.host !== "guild.xyz"
+  )
     return
 
   Bugsnag.start({

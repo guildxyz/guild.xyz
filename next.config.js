@@ -18,16 +18,16 @@ const nextConfig = {
       ],
     })
 
-    // if (process.env.VERCEL_ENV === "production") {
-    if (!config.plugins) config.plugins = []
-    config.plugins.push(
-      new BugsnagSourceMapUploaderPlugin({
-        apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY ?? "",
-        overwrite: true,
-        publicPath: `https://${process.env.VERCEL_URL ?? "guild.xyz"}/_next/`,
-      })
-    )
-    // }
+    if (process.env.VERCEL_ENV === "production") {
+      if (!config.plugins) config.plugins = []
+      config.plugins.push(
+        new BugsnagSourceMapUploaderPlugin({
+          apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY ?? "",
+          overwrite: true,
+          publicPath: `https://${process.env.VERCEL_URL ?? "guild.xyz"}/_next/`,
+        })
+      )
+    }
 
     return config
   },
