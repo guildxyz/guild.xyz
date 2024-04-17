@@ -27,7 +27,8 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
   const { rewardImageUrl } = useTokenRewardContext()
 
   const calcDynamic = () => {
-    const params = platform.dynamicAmount.operation["params"]
+    const operation: any = platform.dynamicAmount.operation
+    const params = operation.params
     return params?.multiplier + params?.addition
   }
 

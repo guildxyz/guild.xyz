@@ -94,7 +94,7 @@ const DynamicAmount = () => {
   function parseAndValidateCSV(csvData: string): Promise<ValidCSVRow[]> {
     return new Promise((resolve, reject) => {
       let headersValid = false
-      let validatedData: ValidCSVRow[] = []
+      const validatedData: ValidCSVRow[] = []
 
       Papa.parse(csvData, {
         header: true,
@@ -103,9 +103,8 @@ const DynamicAmount = () => {
         step: function (row, parser) {
           if (!headersValid) {
             parser.pause()
-            let first_row_data: any = row.data
-
-            if ("key" in first_row_data && "value" in first_row_data) {
+            const rowData: any = row.data
+            if ("key" in rowData && "value" in rowData) {
               headersValid = true
               parser.resume()
             } else {

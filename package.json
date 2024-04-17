@@ -62,6 +62,7 @@
     "js-confetti": "^0.11.0",
     "lexical": "^0.12.0",
     "next": "14.0.1",
+    "papaparse": "^5.4.1",
     "phosphor-react": "^1.4.1",
     "posthog-js": "^1.113.2",
     "qrcode.react": "^3.1.0",
