@@ -1,7 +1,8 @@
+import Bugsnag from "@bugsnag/js"
+import BugsnagPluginReact from "@bugsnag/plugin-react"
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuel-wallet/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
@@ -15,7 +16,7 @@ import type { AppProps } from "next/app"
 import dynamic from "next/dynamic"
 import { useRouter } from "next/router"
 import { IconContext } from "phosphor-react"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
@@ -32,6 +33,12 @@ import "wicg-inert"
 const queryClient = new QueryClient()
 
 const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+
+Bugsnag.start({
+  apiKey: "4bd5799ac2cb4a34887513b80b845554",
+  plugins: [new BugsnagPluginReact()],
+})
+const ErrorBoundary = Bugsnag.getPlugin("react").createErrorBoundary(React)
 
 const App = ({
   Component,
@@ -65,7 +72,7 @@ const App = ({
   }, [router.events])
 
   return (
-    <>
+    <ErrorBoundary>
       <style jsx global>
         {`
           :root {
@@ -117,9 +124,9 @@ const App = ({
                 <FuelProvider>
                   <PostHogProvider>
                     <IntercomProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+                      {/* <AppErrorBoundary> */}
+                      <Component {...pageProps} />
+                      {/* </AppErrorBoundary> */}
 
                       <ClientOnly>
                         <AccountModal />
@@ -134,7 +141,7 @@ const App = ({
           </SWRConfig>
         </IconContext.Provider>
       </Chakra>
-    </>
+    </ErrorBoundary>
   )
 }
 

@@ -1,5 +1,7 @@
 // @ts-check
 
+const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
+
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   webpack(config, options) {
@@ -16,9 +18,19 @@ const nextConfig = {
       ],
     })
 
+    if (!config.plugins) config.plugins = []
+
+    config.plugins.push(
+      new BugsnagSourceMapUploaderPlugin({
+        apiKey: "4bd5799ac2cb4a34887513b80b845554",
+        overwrite: true,
+      })
+    )
+
     return config
   },
   productionBrowserSourceMaps: true,
+
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
