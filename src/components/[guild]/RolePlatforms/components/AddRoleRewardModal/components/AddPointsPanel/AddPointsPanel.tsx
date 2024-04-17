@@ -1,29 +1,13 @@
-import {
-  ButtonGroup,
-  Collapse,
-  Divider,
-  Flex,
-  FormControl,
-  FormLabel,
-  Img,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  Stack,
-  Text,
-} from "@chakra-ui/react"
+import { Collapse, Divider, Flex, Text } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import FormErrorMessage from "components/common/FormErrorMessage"
 import { AddRewardPanelProps } from "platforms/rewards"
-import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
-import Star from "static/icons/star.svg"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
+import SetPointsAmount from "./components/SetPointsAmount"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
@@ -47,13 +31,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
 
-  const {
-    control,
-    setValue,
-    formState: { errors },
-  } = methods
-
-  const amount = useWatch({ control, name: "amount" })
+  const { control } = methods
   const selectedExistingId = useWatch({
     control,
     name: "data.guildPlatformId",
@@ -124,62 +102,15 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
         />
         <Divider mt={8} mb={7} />
       </Collapse>
-      <FormControl isInvalid={!!errors?.amount} pt={{ md: 0.5 }}>
-        <FormLabel>{`How many ${name || "points"} to get?`}</FormLabel>
-        <Stack direction={{ base: "column", md: "row" }}>
-          <NumberInput
-            value={amount}
-            {...(methods.register("amount", {
-              required: "This field is required",
-            }) as any)}
-            onChange={(newValue) => {
-              setValue("amount", newValue)
-            }}
-          >
-            <NumberInputField placeholder="0" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <ButtonGroup flex="1" size={{ base: "sm", md: "md" }}>
-            <ShortcutButton amount={5} imageUrl={imageUrl} />
-            <ShortcutButton amount={10} imageUrl={imageUrl} />
-            <ShortcutButton amount={50} imageUrl={imageUrl} />
-            <ShortcutButton amount={100} imageUrl={imageUrl} />
-          </ButtonGroup>
-        </Stack>
-        <FormErrorMessage>{errors?.amount?.message as string}</FormErrorMessage>
-      </FormControl>
+
+      <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
+
       <Flex justifyContent={"flex-end"} mt="auto" pt="10">
         <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
           Continue
         </Button>
       </Flex>
     </FormProvider>
-  )
-}
-
-const ShortcutButton = ({ amount, imageUrl }) => {
-  const { setValue } = useFormContext()
-
-  return (
-    <Button
-      w="full"
-      leftIcon={
-        imageUrl ? (
-          <Img src={imageUrl} boxSize="4" borderRadius={"full"} />
-        ) : (
-          <Star />
-        )
-      }
-      h={{ md: "10" }}
-      onClick={() => {
-        setValue("amount", amount, { shouldValidate: true })
-      }}
-    >
-      {amount}
-    </Button>
   )
 }
 
