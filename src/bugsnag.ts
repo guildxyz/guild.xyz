@@ -1,5 +1,4 @@
 import Bugsnag from "@bugsnag/js"
-import BugsnagPluginReact from "@bugsnag/plugin-react"
 
 export const bugsnagStart = () => {
   if (
@@ -11,7 +10,7 @@ export const bugsnagStart = () => {
 
   Bugsnag.start({
     apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY,
-    plugins: [new BugsnagPluginReact()],
+    plugins: [],
     endpoints: {
       notify: "/api/bugsnag/notify",
       sessions: "/api/bugsnag/sessions",

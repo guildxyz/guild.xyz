@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "@bugsnag/js": "^7.22.4",
-    "@bugsnag/plugin-react": "^7.19.0",
     "@chakra-ui/anatomy": "^2.1.2",
     "@chakra-ui/next-js": "^2.2.0",
     "@chakra-ui/react": "^2.8.2",
@@ -82,8 +81,8 @@
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
     "uuidv7": "^0.6.3",
-    "viem": "^2.9.6",
-    "wagmi": "^2.5.17",
+    "viem": "2.9.6",
+    "wagmi": "2.5.17",
     "webpack-bugsnag-plugins": "^1.8.0",
     "wicg-inert": "^3.1.2",
     "zod": "^3.22.4"
