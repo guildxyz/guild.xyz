@@ -36,9 +36,10 @@ const GuildCheckoutProvider = ({
   const [agreeWithTOS, setAgreeWithTOS] = useState(false)
 
   useEffect(() => {
-    if (!txHash || !isOpen || isTxModalOpen) return
     onTxModalOpen()
-  }, [txHash, isOpen, isTxModalOpen, onTxModalOpen])
+    if (!txHash || !isOpen || isTxModalOpen) return
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txHash])
 
   return (
     <GuildCheckoutContext.Provider
