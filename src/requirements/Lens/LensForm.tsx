@@ -4,6 +4,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import LensPostInput from "./components/LensPostInput"
 import LensProfileSelect from "./components/LensProfileSelect"
+import LensReact from "./components/LensReact"
 import LensTotalInput from "./components/LensTotalInput"
 
 const typeOptions = [
@@ -15,6 +16,16 @@ const typeOptions = [
     value: "LENS_FOLLOW",
     label: "Follow a profile",
     LensRequirement: LensProfileSelect,
+  },
+  {
+    value: "LENS_FOLLOWED_BY",
+    label: "Be followed by",
+    LensRequirement: LensProfileSelect,
+  },
+  {
+    value: "LENS_REACT",
+    label: "React on a post",
+    LensRequirement: LensReact,
   },
   {
     value: "LENS_COLLECT",
@@ -35,11 +46,6 @@ const typeOptions = [
     value: "LENS_TOTAL_POSTS",
     label: "Have at least [x] posts",
     LensRequirement: LensTotalInput,
-  },
-  {
-    value: "LENS_FOLLOWED_BY",
-    label: "Be followed by",
-    LensRequirement: LensProfileSelect,
   },
 ]
 

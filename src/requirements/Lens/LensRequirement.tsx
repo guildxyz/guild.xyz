@@ -5,7 +5,19 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import REQUIREMENTS from "requirements"
+import { LensReaction } from "./components/LensReact"
 import useLensProfile from "./hooks/useLensProfile"
+
+const getReactionLabel = (lensReaction: LensReaction): string => {
+  switch (lensReaction) {
+    case "UPVOTE":
+      return "Upvote"
+    case "DOWNVOTE":
+      return "Downvote"
+    default:
+      return "React on"
+  }
+}
 
 const LensRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
@@ -18,6 +30,22 @@ const LensRequirement = (props: RequirementProps) => {
     <Requirement image={REQUIREMENTS.LENS.icon as string} {...props}>
       {(() => {
         switch (requirement.type) {
+          case "LENS_REACT":
+            return (
+              <>
+                {`${getReactionLabel(requirement.data.action)} the `}
+                <Link
+                  href={`https://hey.xyz/posts/${requirement.data.id}`}
+                  isExternal
+                  display="inline"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {requirement.data.id}
+                </Link>
+                {` post on Lens Protocol`}
+              </>
+            )
           case "LENS_COLLECT":
             return (
               <>
