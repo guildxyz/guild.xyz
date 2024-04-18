@@ -19,6 +19,7 @@ type Props = {
   onClose: () => void
   title: string
   initialList: string[]
+  maxW?: number
 }
 
 const SearchableVirtualListModal = ({
@@ -26,6 +27,7 @@ const SearchableVirtualListModal = ({
   onClose,
   title,
   initialList,
+  maxW = 540,
 }: Props) => {
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
@@ -47,7 +49,7 @@ const SearchableVirtualListModal = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
-      <ModalContent maxW="540px">
+      <ModalContent maxW={maxW}>
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
