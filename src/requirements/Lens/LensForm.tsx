@@ -2,6 +2,7 @@ import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
+import LensAction from "./components/LensAction"
 import LensPostInput from "./components/LensPostInput"
 import LensProfileSelect from "./components/LensProfileSelect"
 import LensReact from "./components/LensReact"
@@ -26,6 +27,11 @@ const typeOptions = [
     value: "LENS_REACT",
     label: "React on a post",
     LensRequirement: LensReact,
+  },
+  {
+    value: "LENS_ACTION",
+    label: "Lens activity",
+    LensRequirement: LensAction,
   },
   {
     value: "LENS_COLLECT",

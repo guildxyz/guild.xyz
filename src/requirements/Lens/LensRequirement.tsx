@@ -5,10 +5,11 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import REQUIREMENTS from "requirements"
+import { LensActionType } from "./components/LensAction"
 import { LensReaction } from "./components/LensReact"
 import useLensProfile from "./hooks/useLensProfile"
 
-const getReactionLabel = (lensReaction: LensReaction): string => {
+const getReactionLabel = (lensReaction: LensReaction) => {
   switch (lensReaction) {
     case "UPVOTE":
       return "Upvote"
@@ -16,6 +17,17 @@ const getReactionLabel = (lensReaction: LensReaction): string => {
       return "Downvote"
     default:
       return "React on"
+  }
+}
+
+const getActionLabel = (lensAction: LensActionType) => {
+  switch (lensAction) {
+    case "COMMENT":
+      return "Comment on"
+    case "QUOTE":
+      return "Quote"
+    default:
+      return "Mirror"
   }
 }
 
@@ -33,7 +45,23 @@ const LensRequirement = (props: RequirementProps) => {
           case "LENS_REACT":
             return (
               <>
-                {`${getReactionLabel(requirement.data.action)} the `}
+                {`${getReactionLabel(requirement.data.reaction)} the `}
+                <Link
+                  href={`https://hey.xyz/posts/${requirement.data.id}`}
+                  isExternal
+                  display="inline"
+                  colorScheme="blue"
+                  fontWeight="medium"
+                >
+                  {requirement.data.id}
+                </Link>
+                {` post on Lens Protocol`}
+              </>
+            )
+          case "LENS_ACTION":
+            return (
+              <>
+                {`${getActionLabel(requirement.data.action)} the `}
                 <Link
                   href={`https://hey.xyz/posts/${requirement.data.id}`}
                   isExternal
