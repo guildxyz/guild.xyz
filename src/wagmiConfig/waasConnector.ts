@@ -98,7 +98,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
 
       return {
         accounts: [this.currentAddress.address],
-        chainId: config?.chainId,
+        chainId,
       }
     },
 
@@ -169,7 +169,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
 
     async switchChain(parameters) {
       chainId = parameters.chainId
-      await this.getWalletClient({ chainId })
+      await this.getClient({ chainId })
       const chain = chains.find(({ id }) => id === chainId)
       this.onChainChanged(chainId)
       return chain
@@ -180,8 +180,8 @@ export default function waasConnector(options: InitializeWaasOptions) {
       // else emitter.emit("change", { account: currentAddress.address })
     },
 
-    async onChainChanged(_newChainId) {
-      // emitter.emit("change", { chain: { id: +newChainId, unsupported: false } })
+    async onChainChanged(newChainId) {
+      emitter.emit("change", { chainId: +newChainId })
     },
 
     async onDisconnect(_error) {
