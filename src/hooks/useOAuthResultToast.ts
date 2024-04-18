@@ -45,5 +45,7 @@ export default function useOAuthResultToast() {
 
       replace(basePath)
     }
-  }, [query, showPlatformMergeAlert, toast, replace, basePath])
+    /** Toast is intentionally left out, as it causes the toast to fire twice */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, showPlatformMergeAlert, replace, basePath])
 }
