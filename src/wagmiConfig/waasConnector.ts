@@ -98,7 +98,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
 
       return {
         accounts: [this.currentAddress.address],
-        chainId: config?.chainId,
+        chainId,
       }
     },
 
