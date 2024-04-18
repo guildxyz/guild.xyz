@@ -80,6 +80,7 @@ const AccessHub = (): JSX.Element => {
     featureFlags,
     guildPin,
     groups,
+    roles,
     onboardingComplete,
     isDetailed,
   } = useGuild()
@@ -96,10 +97,12 @@ const AccessHub = (): JSX.Element => {
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
+  const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
+
   const showAccessHub =
     (isAdmin ? !!onboardingComplete : isMember) ||
     (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
-    (!!groups?.length && !group)
+    (hasVisiblePages && !group)
 
   return (
     <ClientOnly>
