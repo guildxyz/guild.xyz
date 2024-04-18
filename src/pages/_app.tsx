@@ -1,6 +1,7 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuel-wallet/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
 import IntercomProvider from "components/_app/IntercomProvider"
@@ -29,9 +30,11 @@ import { wagmiConfig } from "wagmiConfig"
  */
 import "wicg-inert"
 
+const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+
 const queryClient = new QueryClient()
 
-const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+bugsnagStart()
 
 const App = ({
   Component,
