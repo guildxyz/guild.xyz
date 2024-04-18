@@ -28,7 +28,7 @@ import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetReq
 import rewards from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import FreeRequirement from "requirements/Free/FreeRequirement"
+import AirdropRequirement from "requirements/Airdrop/AirdropRequirement"
 import {
   PlatformName,
   PlatformType,
@@ -42,6 +42,7 @@ import {
   RoleTypeToAddTo,
   useAddRewardContext,
 } from "../AddRewardContext"
+import { RequirementProvider } from "../Requirements/components/RequirementContext"
 import { useIsTabsStuck } from "../Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
@@ -138,8 +139,21 @@ const AddRewardButton = (): JSX.Element => {
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
+  const isERC20 = (data) => {
+    if (
+      !!data.rolePlatforms[0].guildPlatformId &&
+      data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
+    )
+      return "EXISTING_GP"
+    if (data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20)
+      return "NEW_GP"
+    return null
+  }
+
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
-    if (data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20) {
+    const tokenReward = isERC20(data)
+
+    if (tokenReward) {
       /**
        * ERC20 rewards always create a new role.
        *
@@ -163,14 +177,34 @@ const AddRewardButton = (): JSX.Element => {
         rolePlatforms: [], // Empty, we create it later with the roleId and reqId
       })
 
-      const createdReward = await onAddRewardSubmit({
+      if (tokenReward === "EXISTING_GP") {
+        data.rolePlatforms[0].guildPlatform = {
+          platformId: PlatformType.ERC20,
+          platformName: "ERC20",
+          platformGuildId: "",
+          platformGuildData: {},
+        }
+      }
+
+      const test2 = await onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         rolePlatforms: [
           {
+            // We'll be able to send additional params here, like capacity & time
             roleId: createdRole.id,
-            platformRoleId: `${createdRole.id}`,
+            /**
+             * Temporary for POINTS rewards, because they can be added to multiple
+             * roles and this field has a unique constraint in the DB
+             */
+            ...(tokenReward === "EXISTING_GP" && {
+              guildPlatformId: data.rolePlatforms[0].guildPlatformId,
+            }),
+            platformRoleId:
+              data.rolePlatforms[0].guildPlatform.platformGuildId ||
+              `${createdRole.id}-${Date.now()}`,
             guildPlatform: data.rolePlatforms[0].guildPlatform,
             isNew: data.rolePlatforms[0].isNew,
+            visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
             dynamicAmount: {
               operation: {
                 type: data.rolePlatforms[0].dynamicAmount.operation.type,
@@ -182,10 +216,34 @@ const AddRewardButton = (): JSX.Element => {
                 },
               },
             },
-            visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
           },
         ],
       })
+
+      // const createdReward = await onAddRewardSubmit({
+      //   ...data.rolePlatforms[0].guildPlatform,
+      //   rolePlatforms: [
+      //     {
+      //       roleId: createdRole.id,
+      //       platformRoleId: data.rolePlatforms[0].guildPlatform.platformGuildId,
+      //       ...(tokenReward === "EXISTING_GP" && { guildPlatformId: data.rolePlatforms[0].guildPlatformId }),
+      //       guildPlatform: data.rolePlatforms[0].guildPlatform,
+      //       isNew: data.rolePlatforms[0].isNew,
+      //       dynamicAmount: {
+      //         operation: {
+      //           type: data.rolePlatforms[0].dynamicAmount.operation.type,
+      //           params: data.rolePlatforms[0].dynamicAmount.operation.params,
+      //           input: {
+      //             type: "REQUIREMENT_AMOUNT",
+      //             roleId: createdRole.id,
+      //             requirementId: createdRole.requirements[0].id,
+      //           },
+      //         },
+      //       },
+      //       visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+      //     },
+      //   ],
+      // })
 
       return
     }
@@ -363,7 +421,20 @@ const AddRewardButton = (): JSX.Element => {
                       </Text>
                       <RequirementBaseCard>
                         {/*  TODO: Change to the snapshot req */}
-                        <FreeRequirement />
+                        <RequirementProvider
+                          requirement={{
+                            id: 0,
+                            type: "GUILD_SNAPSHOT",
+                            roleId: 0,
+                            name: null,
+                            symbol: null,
+                            data: {
+                              snapshot: [{ key: "asdasd", value: 1 }],
+                            },
+                          }}
+                        >
+                          <AirdropRequirement />
+                        </RequirementProvider>
                       </RequirementBaseCard>
                     </>
                   ) : (

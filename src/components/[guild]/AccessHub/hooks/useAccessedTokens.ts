@@ -1,26 +1,23 @@
-import { Chain } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useMembership from "components/explorer/hooks/useMembership"
 import { GuildPlatform, PlatformType, RolePlatform } from "types"
 
 export type TokenAccessHubData = {
-  chain: Chain
-  address: `0x${string}`
-  rewardsByRoles: {
+  guildPlatform: GuildPlatform
+  rolePlatformsByRoles: {
     roleId?: number
-    rewards: { rolePlatform?: RolePlatform; guildPlatform: GuildPlatform }[]
+    rolePlatforms: RolePlatform[]
   }[]
 }
 
 type GroupEntry = {
-  chain: Chain
-  address: `0x${string}`
-  rewardsByRoles: Record<
+  guildPlatform: GuildPlatform
+  rolePlatformsByRoles: Record<
     number,
     {
       roleId: number
-      rewards: Array<{ rolePlatform?: RolePlatform; guildPlatform: GuildPlatform }>
+      rolePlatforms: RolePlatform[]
     }
   >
 }
@@ -52,53 +49,37 @@ export const useAccessedTokens = () => {
 
   const groupedByContractAndRole: TokenAccessHubData[] = Object.values(
     accessedGuildTokens.reduce((acc, item) => {
-      const { tokenAddress, chain } = item.platformGuildData
-      const key = `${tokenAddress}-${chain}`
-
-      const roleOfReward = roles.find((role) =>
+      const rolesForGuildPlatform = roles.filter((role) =>
         role.rolePlatforms.some((rp) => rp.guildPlatformId === item.id)
       )
 
-      if (!roleOfReward) {
-        console.error(
-          "Unexpected error while grouping token rewards. No parent role found!"
-        )
-        return []
-      }
+      const key = item.id
 
-      const rolePlatform = roleOfReward.rolePlatforms.find(
-        (rp) => rp.guildPlatformId === item.id
-      )
-      const roleId = roleOfReward.id
-
-      // Initialize the group for this key if it doesn't exist
       if (!acc[key]) {
         acc[key] = {
-          chain: chain,
-          address: tokenAddress,
-          rewardsByRoles: {},
+          guildPlatform: item,
+          rolePlatformsByRoles: {},
         }
       }
 
-      // Initialize the role entry if it doesn't exist
-      if (!acc[key].rewardsByRoles[roleId]) {
-        acc[key].rewardsByRoles[roleId] = {
-          roleId: roleId,
-          rewards: [],
-        }
-      }
+      rolesForGuildPlatform.forEach((role) => {
+        const rolePlatforms = role.rolePlatforms.filter(
+          (rp) => rp.guildPlatformId === item.id
+        )
 
-      // Add the current item's data to the rewards array
-      acc[key].rewardsByRoles[roleId].rewards.push({
-        rolePlatform: rolePlatform,
-        guildPlatform: item,
+        if (!acc[key].rolePlatformsByRoles[role.id]) {
+          acc[key].rolePlatformsByRoles[role.id] = {
+            roleId: role.id,
+            rolePlatforms: rolePlatforms,
+          }
+        }
       })
 
       return acc
     }, {} as Record<string, GroupEntry>)
   ).map((item) => ({
     ...item,
-    rewardsByRoles: Object.values(item.rewardsByRoles),
+    rolePlatformsByRoles: Object.values(item.rolePlatformsByRoles),
   }))
 
   return groupedByContractAndRole

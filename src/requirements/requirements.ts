@@ -6,6 +6,7 @@ import {
   ImageSquare,
   Link,
   ListChecks,
+  Parachute,
   Robot,
   Wallet,
   Wrench,
@@ -59,6 +60,15 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Allowlist/AllowlistForm")
     ),
     types: ["ALLOWLIST", "ALLOWLIST_EMAIL"],
+    isNegatable: true,
+  },
+  {
+    icon: Parachute,
+    name: "Airdrop",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Airdrop/AirdropRequirement")
+    ),
+    types: ["GUILD_SNAPSHOT"],
     isNegatable: true,
   },
   {

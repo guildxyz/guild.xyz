@@ -12,6 +12,7 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain } from "@guildxyz/types"
+import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
@@ -58,11 +59,34 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     count: steps.length,
   })
 
-  const color = "primary.500"
+  const accessedTokens = useAccessedTokens()
 
-  const onSubmit = (_data) => {
-    onAdd({
-      requirements: _data.requirements,
+  const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) => {
+    return accessedTokens.find(
+      (token) =>
+        token.guildPlatform.platformGuildData.chain === chain &&
+        token.guildPlatform.platformGuildData.tokenAddress === tokenAddress
+    )
+  }
+
+  const constructSubmitData = (_data) => {
+    const platform = platformForToken(_data.chain, _data.tokenAddress)
+
+    const rolePlatformPart = {
+      dynamicAmount: {
+        operation: {
+          type: "LINEAR",
+          params: {
+            addition: _data.addition,
+            multiplier: _data.multiplier,
+          },
+        },
+      },
+      isNew: true,
+    }
+
+    const guildPlatformPart = {
+      ...(platform && { guildPlatformId: platform.guildPlatform.id }),
       guildPlatform: {
         platformId: PlatformType.ERC20,
         platformName: "ERC20",
@@ -77,23 +101,17 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           imageUrl: _data.imageUrl ?? `/guildLogos/132.svg`,
         },
       },
+    }
 
-      // TODO: allow for dynamic type as well
-      dynamicAmount: {
-        operation: {
-          type: "LINEAR",
-          params: {
-            addition: _data.addition,
-            multiplier: _data.multiplier,
-          },
-          input: {
-            type: "STATIC",
-            value: _data.addition,
-          },
-        },
-      },
-      isNew: true,
-    })
+    return {
+      ...guildPlatformPart,
+      requirements: _data.requirements,
+      ...rolePlatformPart,
+    }
+  }
+
+  const onSubmit = (_data) => {
+    onAdd(constructSubmitData(_data) as unknown)
   }
 
   return (

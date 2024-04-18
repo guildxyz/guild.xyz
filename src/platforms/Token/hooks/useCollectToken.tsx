@@ -1,0 +1,130 @@
+import { Chain } from "@guildxyz/types"
+import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useShowErrorToast from "hooks/useShowErrorToast"
+import useSubmit from "hooks/useSubmit"
+import { useToastWithTweetButton } from "hooks/useToast"
+import { useState } from "react"
+import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
+import { useFetcherWithSign } from "utils/fetcher"
+import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { TransactionReceipt } from "viem"
+import { usePublicClient, useWalletClient } from "wagmi"
+import { useTokenRewardContext } from "../TokenRewardContext"
+
+type ClaimResponse = {
+  amount: string
+  poolId: number
+  rolePlatformId: number
+  signature: `0x${string}`
+  signedAt: number
+  userId: number
+}
+
+const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number) => {
+  const { id: guildId, urlName } = useGuild()
+
+  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
+
+  const {
+    token: { decimals },
+    tokenReward: {
+      guildPlatform: { platformGuildData: tokenAddress },
+    },
+  } = useTokenRewardContext()
+
+  const [loadingText, setLoadingText] = useState("")
+
+  const fetcherWithSign = useFetcherWithSign()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
+
+  const tokenIsNative = tokenAddress === NULL_ADDRESS
+
+  const collect = async () => {
+    setTxError(false)
+    setTxSuccess(false)
+
+    setLoadingText("Verifying signature...")
+
+    const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
+    const response = await fetcherWithSign([
+      endpoint,
+      {
+        method: "POST",
+        body: {},
+      },
+    ])
+    const data: ClaimResponse = response.data
+
+    const claimArgs = [
+      BigInt(data.poolId),
+      BigInt(data.rolePlatformId),
+      BigInt(data.amount),
+      BigInt(data.signedAt),
+      BigInt(data.userId),
+      data.signature,
+    ] as const
+
+    const claimTransactionConfig = {
+      abi: tokenRewardPoolAbi,
+      address: ERC20_CONTRACTS[chain],
+      functionName: "claim",
+      args: claimArgs,
+      value: 0,
+    } as const
+
+    setLoadingText("Claiming tokens...")
+
+    const { request } = await publicClient.simulateContract(claimTransactionConfig)
+
+    if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
+      return Promise.resolve({} as TransactionReceipt)
+    }
+
+    const hash = await walletClient.writeContract({
+      ...request,
+      account: walletClient.account,
+    })
+
+    setTxHash(hash)
+
+    const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
+      { hash }
+    )
+
+    if (receipt.status !== "success") {
+      throw new Error(`Transaction failed. Hash: ${hash}`)
+    }
+
+    setTxSuccess(true)
+
+    return receipt
+  }
+
+  const tweetToast = useToastWithTweetButton()
+  const showErrorToast = useShowErrorToast()
+
+  return {
+    ...useSubmit<undefined, TransactionReceipt>(collect, {
+      onSuccess: () => {
+        setLoadingText("")
+        tweetToast({
+          title: "Successfully claimed your tokens!",
+          tweetText: `Just collected my tokens!`,
+        })
+      },
+      onError: (error) => {
+        setLoadingText("")
+        setTxError(true)
+
+        console.error(error)
+
+        showErrorToast(error)
+      },
+    }),
+    loadingText,
+  }
+}
+
+export default useCollectToken

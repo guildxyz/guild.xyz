@@ -30,7 +30,7 @@ import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateT
 import { TokenAccessHubData } from "../AccessHub/hooks/useAccessedTokens"
 
 const LeaderboardAirdropCard = () => {
-  const { token, isTokenLoading, rewardImageUrl, rewardsByRoles } =
+  const { token, isTokenLoading, rewardImageUrl, tokenReward } =
     useTokenRewardContext()
   const { colorMode } = useColorMode()
   const modalBg = useCardBg()
@@ -40,7 +40,7 @@ const LeaderboardAirdropCard = () => {
   const gradientColor =
     colorMode === "dark" ? `${gold["--gold-700"]}70` : gold["--gold-200"]
 
-  const { getValue } = useCalculateClaimableTokens(rewardsByRoles)
+  const { getValue } = useCalculateClaimableTokens(tokenReward.rolePlatformsByRoles)
   const claimableAmount = getValue()
 
   const {

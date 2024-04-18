@@ -272,19 +272,21 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
         General
       </Heading>
       <SimpleGrid columns={2} gap={2}>
-        {general.map((requirementButton) => (
-          <Button
-            key={requirementButton.types[0]}
-            w="full"
-            py={11}
-            onClick={() => setSelectedType(requirementButton.types[0])}
-          >
-            <VStack w="full" whiteSpace="break-spaces">
-              <Icon as={requirementButton.icon as FC} boxSize={6} />
-              <Text as="span">{requirementButton.name}</Text>
-            </VStack>
-          </Button>
-        ))}
+        {general
+          .filter((req) => req.name !== "Airdrop")
+          .map((requirementButton) => (
+            <Button
+              key={requirementButton.types[0]}
+              w="full"
+              py={11}
+              onClick={() => setSelectedType(requirementButton.types[0])}
+            >
+              <VStack w="full" whiteSpace="break-spaces">
+                <Icon as={requirementButton.icon as FC} boxSize={6} />
+                <Text as="span">{requirementButton.name}</Text>
+              </VStack>
+            </Button>
+          ))}
       </SimpleGrid>
 
       <Heading size="sm" mb="3" mt="8">

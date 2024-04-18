@@ -57,7 +57,10 @@ const useRegisterPool = (
 
 export default useRegisterPool
 
-const findEvent = <TAbi extends Abi, TEventName extends ContractEventName<TAbi>>(
+export const findEvent = <
+  TAbi extends Abi,
+  TEventName extends ContractEventName<TAbi>
+>(
   events: DecodeEventLogReturnType<TAbi, ContractEventName<TAbi>>[],
   eventName: TEventName
 ): DecodeEventLogReturnType<TAbi, TEventName> | undefined =>

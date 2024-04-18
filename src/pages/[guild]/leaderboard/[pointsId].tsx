@@ -128,10 +128,10 @@ const Leaderboard = () => {
         rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
-        {accessedGuildTokens.map((reward) => (
+        {accessedGuildTokens.map((token) => (
           <LeaderboardAirdropCard
-            key={`${reward.address}-${reward.chain}`}
-            reward={reward}
+            key={`${token.guildPlatform.platformGuildData.tokenAddress}-${token.guildPlatform.platformGuildData.chain}`}
+            reward={token}
           />
         ))}
 

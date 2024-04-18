@@ -1,16 +1,14 @@
-import { Chain } from "@guildxyz/types"
 import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useTokenData from "hooks/useTokenData"
 import { ReactElement, createContext, useContext } from "react"
-import useClaimToken from "./hooks/useClaimToken"
+import useTokenClaimFee from "./hooks/useClaimToken"
 
 export type TokenRewardContextType = {
-  chain: Chain
+  tokenReward: TokenAccessHubData
   token: ReturnType<typeof useTokenData>["data"]
   isTokenLoading: boolean
   fee: bigint
   isFeeLoading: boolean
-  rewardsByRoles: TokenAccessHubData["rewardsByRoles"]
   rewardImageUrl: string
 }
 
@@ -21,42 +19,27 @@ const TokenRewardProvider = ({
   children: ReactElement
   tokenReward: TokenAccessHubData
 }): JSX.Element => {
-  const { fee, isFeeLoading } = useClaimToken(
-    tokenReward.chain,
-    tokenReward?.rewardsByRoles?.[0]?.roleId,
-    tokenReward?.rewardsByRoles?.[0]?.rewards?.[0]?.rolePlatform?.id
+  const { fee, isFeeLoading } = useTokenClaimFee(
+    tokenReward?.guildPlatform?.platformGuildData?.chain,
+    tokenReward?.rolePlatformsByRoles?.[0]?.roleId,
+    tokenReward?.rolePlatformsByRoles?.[0]?.rolePlatforms?.[0]?.id
   )
 
   const { data: token, isLoading: isTokenLoading } = useTokenData(
-    tokenReward.chain,
-    tokenReward.address
+    tokenReward?.guildPlatform?.platformGuildData?.chain,
+    tokenReward?.guildPlatform?.platformGuildData?.tokenAddress
   )
-
-  // TODO: change this default image, it should be shown as an icon in a circle instead
-  function findValidImageUrl(
-    data: TokenAccessHubData["rewardsByRoles"]
-  ): string | null {
-    for (const item of data) {
-      for (const reward of item.rewards) {
-        const imageUrl = reward?.guildPlatform?.platformGuildData?.imageUrl
-        if (imageUrl && imageUrl !== `/guildLogos/132.svg`) {
-          return imageUrl
-        }
-      }
-    }
-    return null
-  }
 
   const rewardImageUrl =
     token.logoURI ??
-    (findValidImageUrl(tokenReward.rewardsByRoles) || `/guildLogos/132.svg`)
+    (tokenReward?.guildPlatform?.platformGuildData?.imageUrl ||
+      `/guildLogos/132.svg`)
 
   return (
     <TokenRewardContext.Provider
       value={{
-        chain: tokenReward.chain,
-        rewardsByRoles: tokenReward.rewardsByRoles,
-        token,
+        tokenReward,
+        token: { ...token },
         isFeeLoading,
         fee,
         isTokenLoading,

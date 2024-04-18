@@ -14,7 +14,7 @@ import {
   VStack,
   useColorMode,
 } from "@chakra-ui/react"
-import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -24,40 +24,44 @@ import Card, { useCardBg } from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
+import { useMemo } from "react"
+import { RolePlatform } from "types"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "./ClaimFeeTable"
 import { useTokenRewardContext } from "./TokenRewardContext"
-import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
-import useClaimToken from "./hooks/useClaimToken"
+import {
+  useCalculateClaimableTokens,
+  useCalculateFromDynamic,
+} from "./hooks/useCalculateToken"
+import useCollectToken from "./hooks/useCollectToken"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
 }
 
-const RoleTokenClaimCard = ({
-  reward,
-  calc,
-}: {
-  reward: TokenAccessHubData["rewardsByRoles"][number]
-  calc: (roleRewards: TokenAccessHubData["rewardsByRoles"][0]["rewards"]) => number
-}) => {
-  const { chain, token } = useTokenRewardContext()
+const RolePlatformClaimCard = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
+  const { tokenReward, token } = useTokenRewardContext()
+  const { getValue } = useCalculateFromDynamic(rolePlatform.dynamicAmount)
 
-  const { onSubmit } = useClaimToken(
-    chain,
-    reward.roleId,
-    reward.rewards[0].rolePlatform.id
+  const {
+    onSubmit: onTokenClaimSubmit,
+    isLoading: isClaiming,
+    loadingText: claimLoadingText,
+  } = useCollectToken(
+    tokenReward.guildPlatform.platformGuildData.chain,
+    rolePlatform.roleId,
+    rolePlatform.id
   )
 
   const { id: guildId } = useGuild()
 
-  const { imageUrl, name } = useRole(guildId, reward.roleId)
+  const { imageUrl, name } = useRole(guildId, rolePlatform.roleId)
 
   const { colorMode } = useColorMode()
 
-  const claimable = calc(reward.rewards)
+  const claimable = getValue()
 
   return (
     <Card
@@ -91,21 +95,45 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
   const modalBg = useCardBg()
 
-  const { chain, rewardsByRoles, token, isTokenLoading, rewardImageUrl } =
+  const { tokenReward, token, isTokenLoading, rewardImageUrl } =
     useTokenRewardContext()
 
-  const { getValue, calcForRole } = useCalculateClaimableTokens(rewardsByRoles)
+  const { getValue } = useCalculateClaimableTokens(tokenReward.rolePlatformsByRoles)
   const claimableAmount = getValue()
 
-  const { onSubmit } = useClaimToken(
+  const chain = tokenReward.guildPlatform.platformGuildData.chain
+
+  const {
+    onSubmit,
+    isLoading: isClaiming,
+    loadingText: claimLoadingText,
+  } = useCollectToken(
     chain,
-    rewardsByRoles[0].roleId,
-    rewardsByRoles[0].rewards[0].rolePlatform.id
+    tokenReward.rolePlatformsByRoles[0]?.roleId,
+    tokenReward.rolePlatformsByRoles[0]?.rolePlatforms[0].id
   )
 
   const { chainId } = useAccount()
   const isOnCorrectChain = Number(Chains[chain]) === chainId
   const gold = useColorPalette("gold", "gold")
+
+  const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
+    useMembershipUpdate({
+      onSuccess: (reponse) => {
+        onSubmit()
+      },
+      onError: (error) => {
+        console.error(error)
+      },
+    })
+
+  const claimLoading = useMemo(() => {
+    return membershipLoading
+      ? "Checking access..."
+      : claimLoadingText
+      ? claimLoadingText
+      : null
+  }, [membershipLoading, claimLoadingText])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -196,23 +224,35 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
           ) : (
             <>
-              {rewardsByRoles.length === 1 ? (
+              {tokenReward.rolePlatformsByRoles.length === 1 ? (
                 <Button
                   colorScheme="gold"
                   mt={2}
                   isDisabled={isTokenLoading}
-                  onClick={onSubmit}
+                  isLoading={claimLoading}
+                  loadingText={claimLoading}
+                  onClick={() => {
+                    submitClaim({
+                      roleIds: [tokenReward.rolePlatformsByRoles[0].roleId],
+                      saveClaimData: true,
+                    })
+                  }}
                 >
                   Claim
                 </Button>
               ) : (
                 <Stack gap={2} mt={2}>
-                  {rewardsByRoles.map((reward) => (
-                    <RoleTokenClaimCard
-                      key={`${reward.roleId}`}
-                      reward={reward}
-                      calc={calcForRole}
-                    />
+                  {tokenReward.rolePlatformsByRoles.map((rolePlatformsByRole) => (
+                    <>
+                      {rolePlatformsByRole.rolePlatforms.map((rolePlatform) => (
+                        <>
+                          <RolePlatformClaimCard
+                            key={`${rolePlatform.roleId}`}
+                            rolePlatform={rolePlatform}
+                          />
+                        </>
+                      ))}
+                    </>
                   ))}
                 </Stack>
               )}

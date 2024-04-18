@@ -54,7 +54,7 @@ const useCalculateFromDynamic = (dynamicAmount: any) => {
 }
 
 const useCalculateClaimableTokens = (
-  rewardsByRoles: TokenAccessHubData["rewardsByRoles"]
+  rolePlatformsByRoles: TokenAccessHubData["rolePlatformsByRoles"]
 ) => {
   const { address } = useAccount()
   const { roles } = useGuild()
@@ -84,18 +84,18 @@ const useCalculateClaimableTokens = (
   }
 
   const calcForRole = (
-    roleRewards: TokenAccessHubData["rewardsByRoles"][0]["rewards"]
+    rolePlatforms: TokenAccessHubData["rolePlatformsByRoles"][0]["rolePlatforms"]
   ) => {
-    const sum = roleRewards.reduce((acc, reward) => {
-      return acc + calculateFromDynamicAmount(reward.rolePlatform.dynamicAmount)
+    const sum = rolePlatforms.reduce((acc, rolePlatform) => {
+      return acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount)
     }, 0)
 
     return sum
   }
 
   const getValue = () => {
-    const sum = rewardsByRoles.reduce((acc, rewardsByRole) => {
-      return acc + calcForRole(rewardsByRole.rewards)
+    const sum = rolePlatformsByRoles.reduce((acc, rolePlatformByRole) => {
+      return acc + calcForRole(rolePlatformByRole.rolePlatforms)
     }, 0)
 
     return sum
