@@ -83,7 +83,6 @@
     "uuidv7": "^0.6.3",
     "viem": "2.9.6",
     "wagmi": "2.5.17",
-    "webpack-bugsnag-plugins": "^1.8.0",
     "wicg-inert": "^3.1.2",
     "zod": "^3.22.4"
   },
@@ -106,7 +105,8 @@
     "lint-staged": "^13.0.0",
     "prettier": "^2.8.1",
     "prettier-plugin-jsdoc": "^0.4.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "webpack-bugsnag-plugins": "^1.8.0"
   },
   "lint-staged": {
     "./**/*.@(js|jsx|ts|tsx|css|md)": "prettier --write"
