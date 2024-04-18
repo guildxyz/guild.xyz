@@ -91,7 +91,7 @@ const App = ({
             direction="top"
             in={isRouteChangeInProgress}
             initial="0.3s"
-            style={{ zIndex: 10 }}
+            style={{ zIndex: 2000 }}
           >
             <Box position="relative" w="100%" h="5px" zIndex={2}>
               <Progress
