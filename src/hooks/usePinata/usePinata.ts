@@ -1,6 +1,5 @@
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { useState } from "react"
 import pinFileToIPFS, {
   PinataPinFileResponse,
   PinToIPFSProps,
@@ -12,7 +11,7 @@ type Props = Partial<{
 }>
 
 export type Uploader = {
-  onUpload: (data?: PinToIPFSProps) => Promise<PinataPinFileResponse>
+  onUpload: (data?: PinToIPFSProps) => void
   isUploading: boolean
 }
 
@@ -37,32 +36,4 @@ const usePinata = ({ onError, onSuccess }: Props = {}): Uploader => {
   return { isUploading, onUpload }
 }
 
-const usePinataWithProgress = (
-  props: Props = {}
-): Uploader & {
-  progress: number
-} => {
-  const [progress, setProgress] = useState(0)
-
-  const uploader = usePinata(props)
-
-  return {
-    isUploading: uploader.isUploading,
-    onUpload: (ipfsProps) =>
-      uploader
-        .onUpload({
-          ...ipfsProps,
-          onProgress(currentProgress) {
-            setProgress(currentProgress)
-            ipfsProps.onProgress?.(currentProgress)
-          },
-        })
-        .finally(() => {
-          setProgress(0)
-        }),
-    progress,
-  }
-}
-
-export { usePinataWithProgress }
 export default usePinata
