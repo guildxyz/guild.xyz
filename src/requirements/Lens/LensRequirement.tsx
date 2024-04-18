@@ -1,4 +1,5 @@
 import { Link } from "@chakra-ui/next-js"
+import { Skeleton } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
@@ -76,14 +77,16 @@ const LensFollowRequirement = (props: RequirementProps) => {
       {...props}
     >
       {type === "LENS_FOLLOW" ? "Follow " : "Be followed by "}
-      <Link
-        href={`https://lensfrens.xyz/${data.id.replace(".lens", "")}`}
-        isExternal
-        colorScheme="blue"
-        fontWeight="medium"
-      >
-        {data.id}
-      </Link>
+      <Skeleton isLoaded={!isLoading} display="inline">
+        <Link
+          href={`https://lensfrens.xyz/${lensProfile?.label?.replace(".lens", "")}`}
+          isExternal
+          colorScheme="blue"
+          fontWeight="medium"
+        >
+          {lensProfile?.label ?? "Loading..."}
+        </Link>
+      </Skeleton>
       {" on Lens protocol"}
     </Requirement>
   )
