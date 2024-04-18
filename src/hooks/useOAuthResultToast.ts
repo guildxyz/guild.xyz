@@ -8,24 +8,31 @@ import useToast from "./useToast"
 
 export default function useOAuthResultToast() {
   const toast = useToast()
-  const { query, basePath, replace } = useRouter()
+  const { query, replace, pathname } = useRouter()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
 
   useEffect(() => {
     if (query["oauth-status"]) {
+      const {
+        ["oauth-platform"]: oauthPlatform,
+        ["oauth-status"]: oauthStatus,
+        ["oauth-message"]: oauthMessage,
+        ...newQuery
+      } = query
+
       const platformNameHumanReadable =
-        rewards[(query["oauth-platform"] as PlatformName) ?? ""]?.name ?? "Social"
+        rewards[(oauthPlatform as PlatformName) ?? ""]?.name ?? "Social"
 
       const title =
-        query["oauth-status"] === "success"
+        oauthStatus === "success"
           ? `${platformNameHumanReadable} successfully connected`
           : `Failed to connect ${platformNameHumanReadable}`
 
       if (
-        query["oauth-status"] === "error" &&
-        query["oauth-message"]?.toString()?.startsWith("Before connecting your")
+        oauthStatus === "error" &&
+        oauthMessage?.toString()?.startsWith("Before connecting your")
       ) {
-        const [, addressOrDomain] = query["oauth-message"]
+        const [, addressOrDomain] = oauthMessage
           ?.toString()
           .match(
             /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
@@ -33,17 +40,19 @@ export default function useOAuthResultToast() {
 
         showPlatformMergeAlert({
           addressOrDomain,
-          platformName: query["oauth-platform"] as PlatformName,
+          platformName: oauthPlatform as PlatformName,
         })
       } else {
         toast({
-          status: query["oauth-status"] as "success" | "error",
+          status: oauthStatus as "success" | "error",
           title,
-          description: query["oauth-message"],
+          description: oauthMessage,
         })
       }
 
-      replace(basePath)
+      replace({ pathname, query: newQuery })
     }
-  }, [query, showPlatformMergeAlert, toast, replace, basePath])
+    /** Toast is intentionally left out, as it causes the toast to fire twice */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, showPlatformMergeAlert, replace, pathname])
 }
