@@ -15,7 +15,7 @@ export type Waas = any;
 export type Wallet = any
 export enum ProtocolFamily { EVM }
 export function InitializeWaas(_) {}
-export function Logout() {}
+export async function Logout() {}
 `
 
 const viemMock = `
