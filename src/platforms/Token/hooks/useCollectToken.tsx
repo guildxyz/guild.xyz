@@ -109,13 +109,13 @@ const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number)
           tweetText: `Just collected my tokens!`,
         })
       },
-      onError: (error) => {
+      onError: (err) => {
         setLoadingText("")
         setTxError(true)
 
-        console.error(error)
+        console.error(err)
 
-        showErrorToast(error)
+        showErrorToast(err)
       },
     }),
     loadingText,
