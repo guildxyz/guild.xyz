@@ -37,12 +37,14 @@ const FundPoolModal = ({
   owner,
   isOpen,
   onClose,
+  onSuccess,
 }: {
   poolId: bigint
   balance: number
   owner: `0x${string}`
   isOpen: boolean
   onClose: () => void
+  onSuccess: () => void
 }) => {
   const {
     token: { decimals, symbol },
@@ -75,7 +77,6 @@ const FundPoolModal = ({
   } catch {}
 
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
-
   const isOnCorrectChain = Chains[chain] === chainId
 
   const isBalanceSufficient =
@@ -86,14 +87,19 @@ const FundPoolModal = ({
 
   const { onSubmitTransaction: onSubmitFund, isLoading } = useFundPool(
     chain,
+    tokenAddress,
     poolId,
     formattedAmount,
-    () => {}
+    onSuccess
   )
+
+  const handleClose = () => {
+    onClose()
+  }
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={handleClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
