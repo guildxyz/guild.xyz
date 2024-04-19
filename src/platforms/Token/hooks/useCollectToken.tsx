@@ -7,10 +7,10 @@ import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { useFetcherWithSign } from "utils/fetcher"
-import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { TransactionReceipt } from "viem"
 import { usePublicClient, useWalletClient } from "wagmi"
-import { useTokenRewardContext } from "../TokenRewardContext"
+import useTokenClaimFee from "./useClaimToken"
 
 type ClaimResponse = {
   amount: string
@@ -23,23 +23,15 @@ type ClaimResponse = {
 
 const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number) => {
   const { id: guildId, urlName } = useGuild()
-
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
-  const {
-    token: { decimals },
-    tokenReward: {
-      guildPlatform: { platformGuildData: tokenAddress },
-    },
-  } = useTokenRewardContext()
+  const { fee, isFeeLoading, error } = useTokenClaimFee(chain)
 
   const [loadingText, setLoadingText] = useState("")
 
   const fetcherWithSign = useFetcherWithSign()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
-
-  const tokenIsNative = tokenAddress === NULL_ADDRESS
 
   const collect = async () => {
     setTxError(false)
@@ -71,12 +63,15 @@ const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number)
       address: ERC20_CONTRACTS[chain],
       functionName: "claim",
       args: claimArgs,
-      value: 0,
+      value: fee,
     } as const
 
     setLoadingText("Claiming tokens...")
 
-    const { request } = await publicClient.simulateContract(claimTransactionConfig)
+    const { request } = await publicClient.simulateContract({
+      ...claimTransactionConfig,
+      account: walletClient.account,
+    })
 
     if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
       return Promise.resolve({} as TransactionReceipt)
