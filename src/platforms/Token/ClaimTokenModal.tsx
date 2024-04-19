@@ -220,6 +220,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           </Stack>
 
           <TokenClaimFeeTable />
+
           {!isOnCorrectChain ? (
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
           ) : (
@@ -227,7 +228,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
               {tokenReward.rolePlatformsByRoles.length === 1 ? (
                 <Button
                   colorScheme="gold"
-                  mt={2}
                   isDisabled={isTokenLoading}
                   isLoading={claimLoading}
                   loadingText={claimLoading}
@@ -241,7 +241,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                   Claim
                 </Button>
               ) : (
-                <Stack gap={2} mt={2}>
+                <Stack gap={2}>
                   {tokenReward.rolePlatformsByRoles.map((rolePlatformsByRole) => (
                     <>
                       {rolePlatformsByRole.rolePlatforms.map((rolePlatform) => (
