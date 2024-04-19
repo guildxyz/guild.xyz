@@ -154,7 +154,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
         <ModalCloseButton />
         <ModalHeader mb="0" pb={0}>
-          <Text textAlign={"center"}>Claim your tokens</Text>
+          <Text>{`Claim your ${token.symbol}`}</Text>
         </ModalHeader>
 
         <ModalBody
@@ -164,10 +164,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           border={"4px solid transparent"}
           mt="0"
         >
-          <Text textAlign={"center"} opacity={0.5}>
-            You are eligible to claim the following tokens.
-          </Text>
-
           <Stack
             justifyContent={"center"}
             position={"relative"}
