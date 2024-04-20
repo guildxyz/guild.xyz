@@ -47,13 +47,12 @@ const FundPoolModal = ({
   onSuccess: () => void
 }) => {
   const {
-    token: { decimals, symbol },
-    isTokenLoading,
-    rewardImageUrl,
-    tokenReward: {
-      guildPlatform: {
-        platformGuildData: { chain, tokenAddress },
-      },
+    token: {
+      data: { decimals, symbol },
+    },
+    imageUrl,
+    guildPlatform: {
+      platformGuildData: { chain, tokenAddress },
     },
   } = useTokenRewardContext()
 
@@ -132,8 +131,8 @@ const FundPoolModal = ({
                 <FormLabel>Amount to deposit</FormLabel>
                 <InputGroup>
                   <InputLeftElement>
-                    {rewardImageUrl ? (
-                      <OptionImage img={rewardImageUrl} alt={chain} />
+                    {imageUrl ? (
+                      <OptionImage img={imageUrl} alt={chain} />
                     ) : (
                       <Token />
                     )}

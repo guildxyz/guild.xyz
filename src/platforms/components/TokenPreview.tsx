@@ -1,4 +1,3 @@
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
@@ -8,13 +7,13 @@ import { GuildPlatform } from "types"
 import RewardPreview from "./RewardPreview"
 
 const TokenPreview = () => {
-  const { token, rewardImageUrl } = useTokenRewardContext()
+  const { token, imageUrl } = useTokenRewardContext()
 
   return (
     <RewardPreview
       type="ERC20"
-      name={`Claim ${token.symbol}`}
-      image={rewardImageUrl}
+      name={`Claim ${token.data.symbol}`}
+      image={imageUrl}
     />
   )
 }
@@ -24,18 +23,8 @@ const TokenPreviewWrapper = () => {
     name: "rolePlatforms.0.guildPlatform",
   })
 
-  const accessedTokens = useAccessedTokens()
-  const res = accessedTokens.find(
-    (token) => token.guildPlatform.id === guildPlatform?.id
-  )
-
   return (
-    <TokenRewardProvider
-      tokenReward={{
-        guildPlatform: guildPlatform,
-        rolePlatformsByRoles: res?.rolePlatformsByRoles || [],
-      }}
-    >
+    <TokenRewardProvider guildPlatform={guildPlatform}>
       <TokenPreview />
     </TokenRewardProvider>
   )

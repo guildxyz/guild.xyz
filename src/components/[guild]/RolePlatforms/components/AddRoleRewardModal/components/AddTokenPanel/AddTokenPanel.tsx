@@ -71,9 +71,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) => {
     return accessedTokens.find(
-      (token) =>
-        token.guildPlatform.platformGuildData.chain === chain &&
-        token.guildPlatform.platformGuildData.tokenAddress === tokenAddress
+      (guildPlatform) =>
+        guildPlatform.platformGuildData.chain === chain &&
+        guildPlatform.platformGuildData.tokenAddress === tokenAddress
     )
   }
 
@@ -94,7 +94,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     }
 
     const guildPlatformPart = {
-      ...(platform && { guildPlatformId: platform.guildPlatform.id }),
+      ...(platform && { guildPlatformId: platform.id }),
       guildPlatform: {
         platformId: PlatformType.ERC20,
         platformName: "ERC20",

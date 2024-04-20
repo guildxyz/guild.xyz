@@ -19,9 +19,11 @@ import { formatUnits } from "viem"
 import { useTokenRewardContext } from "./TokenRewardContext"
 
 const TokenClaimFeeTable = () => {
-  const { fee, isFeeLoading, token, isTokenLoading } = useTokenRewardContext()
+  const { fee, token } = useTokenRewardContext()
   const formattedFee =
-    isFeeLoading || isTokenLoading ? null : formatUnits(fee, token.decimals)
+    fee.isLoading || token.isLoading
+      ? null
+      : formatUnits(fee.amount, token.data.decimals)
 
   return (
     <>
@@ -51,11 +53,11 @@ const TokenClaimFeeTable = () => {
               </Popover>
             </HStack>
 
-            <PriceFallback pickedCurrency={token.symbol} error={null}>
+            <PriceFallback pickedCurrency={token.data.symbol} error={null}>
               <Skeleton isLoaded={formattedFee !== null}>
                 <Text as="span">
                   <Text as="span">
-                    {formattedFee} {token?.symbol}
+                    {formattedFee} {token.data.symbol}
                   </Text>
                   <Text as="span" colorScheme="gray">
                     {` + gas`}
@@ -74,14 +76,14 @@ const TokenClaimFeeTable = () => {
         <Tr>
           <Td>Caliming fee</Td>
           <Td isNumeric>
-            {formattedFee} {token?.symbol}
+            {formattedFee} {token.data.symbol}
           </Td>
         </Tr>
 
         <Tr>
           <Td>Total</Td>
           <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
-            {formattedFee} {token?.symbol} + gas
+            {formattedFee} {token.data.symbol} + gas
           </Td>
         </Tr>
       </FeesTable>

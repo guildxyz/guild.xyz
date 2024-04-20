@@ -43,12 +43,14 @@ import { formatUnits } from "viem"
 
 const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   const {
-    token: { decimals },
-    isTokenLoading,
-    tokenReward,
+    token: {
+      data: { decimals },
+      isLoading: isTokenLoading,
+    },
+    guildPlatform,
   } = useTokenRewardContext()
 
-  const chain = tokenReward.guildPlatform.platformGuildData.chain
+  const chain = guildPlatform.platformGuildData.chain
 
   const { data, isLoading, error, refetch } = usePool(chain, poolId)
 
@@ -193,7 +195,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
 }
 
 const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
-  const { rewardImageUrl } = useTokenRewardContext()
+  const { imageUrl } = useTokenRewardContext()
 
   const calcDynamic = () => {
     const operation: any = platform.dynamicAmount.operation
@@ -232,60 +234,54 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
           </Circle>
         )}
         1 <Icon as={ArrowRight} boxSize={"10px"} ml={2} />{" "}
-        <GuildLogo imageUrl={rewardImageUrl} size={"16px"} mr={1} ml={2} />{" "}
-        {calcDynamic()}
+        <GuildLogo imageUrl={imageUrl} size={"16px"} mr={1} ml={2} /> {calcDynamic()}
       </Tag>
     </>
   )
 }
 
-const TokenReward = ({ platform }: { platform: RolePlatform }) => {
-  const { rewardImageUrl, isTokenLoading, token } = useTokenRewardContext()
+const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
+  const { imageUrl, token } = useTokenRewardContext()
 
-  const { getValue } = useCalculateFromDynamic(platform.dynamicAmount)
+  const { getValue } = useCalculateFromDynamic(rolePlatform.dynamicAmount)
   const claimableAmount = getValue()
 
-  const tokenRewardType = platform.dynamicAmount.operation.input[0].type
+  const tokenRewardType = rolePlatform.dynamicAmount.operation.input[0].type
 
   return (
     <Flex alignItems={"center"} gap={1} wrap={"wrap"}>
       <RewardDisplay
         icon={
-          isTokenLoading ? (
+          token.isLoading ? (
             <Spinner boxSize={6} />
           ) : (
             <RewardIcon
-              rolePlatformId={platform.id}
-              guildPlatform={platform?.guildPlatform}
-              owerwriteImg={rewardImageUrl}
+              rolePlatformId={rolePlatform.id}
+              guildPlatform={rolePlatform?.guildPlatform}
+              owerwriteImg={imageUrl}
             />
           )
         }
-        label={`Claim: ${claimableAmount || ""} ${token?.symbol || "tokens"}`}
+        label={`Claim: ${claimableAmount || ""} ${token?.data?.symbol || "tokens"}`}
         whiteSpace={"nowrap"}
         pt={0}
         mr={2}
       />
       {tokenRewardType === "REQUIREMENT_AMOUNT" && (
-        <TokenConversionTag platform={platform} />
+        <TokenConversionTag platform={rolePlatform} />
       )}
 
-      <PoolTag poolId={BigInt(platform.guildPlatform.platformGuildData.poolId)} />
+      <PoolTag
+        poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
+      />
     </Flex>
   )
 }
 
 const TokenRewardWrapper = ({ platform }: RewardProps) => {
   return (
-    <TokenRewardProvider
-      tokenReward={{
-        guildPlatform: platform.guildPlatform,
-        rolePlatformsByRoles: [
-          { roleId: platform.roleId, rolePlatforms: [platform] },
-        ],
-      }}
-    >
-      <TokenReward platform={platform} />
+    <TokenRewardProvider guildPlatform={platform.guildPlatform}>
+      <TokenReward rolePlatform={platform} />
     </TokenRewardProvider>
   )
 }

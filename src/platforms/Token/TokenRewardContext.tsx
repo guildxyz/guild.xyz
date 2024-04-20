@@ -1,49 +1,39 @@
-import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useTokenData from "hooks/useTokenData"
 import { ReactElement, createContext, useContext } from "react"
+import { GuildPlatform } from "types"
 import useTokenClaimFee from "./hooks/useClaimToken"
 
 export type TokenRewardContextType = {
-  tokenReward: TokenAccessHubData
-  token: ReturnType<typeof useTokenData>["data"]
-  isTokenLoading: boolean
-  fee: bigint
-  isFeeLoading: boolean
-  rewardImageUrl: string
+  guildPlatform: GuildPlatform
+  token: { data: ReturnType<typeof useTokenData>["data"]; isLoading: boolean }
+  fee: { amount: bigint; isLoading: boolean }
+  imageUrl: string
 }
 
 const TokenRewardProvider = ({
   children,
-  tokenReward,
+  guildPlatform,
 }: {
   children: ReactElement
-  tokenReward: TokenAccessHubData
+  guildPlatform: GuildPlatform
 }): JSX.Element => {
-  const { fee, isFeeLoading } = useTokenClaimFee(
-    tokenReward?.guildPlatform?.platformGuildData?.chain,
-    tokenReward?.rolePlatformsByRoles?.[0]?.roleId,
-    tokenReward?.rolePlatformsByRoles?.[0]?.rolePlatforms?.[0]?.id
-  )
-
+  const {
+    platformGuildData: { tokenAddress, chain, imageUrl },
+  } = guildPlatform
+  const { amount, isLoading: isFeeLoading } = useTokenClaimFee(chain)
   const { data: token, isLoading: isTokenLoading } = useTokenData(
-    tokenReward?.guildPlatform?.platformGuildData?.chain,
-    tokenReward?.guildPlatform?.platformGuildData?.tokenAddress
+    chain,
+    tokenAddress
   )
-
-  const rewardImageUrl =
-    token.logoURI ??
-    (tokenReward?.guildPlatform?.platformGuildData?.imageUrl ||
-      `/guildLogos/132.svg`)
+  const rewardImageUrl = token.logoURI ?? (imageUrl || `/guildLogos/132.svg`)
 
   return (
     <TokenRewardContext.Provider
       value={{
-        tokenReward,
-        token: { ...token },
-        isFeeLoading,
-        fee,
-        isTokenLoading,
-        rewardImageUrl,
+        guildPlatform,
+        token: { data: token, isLoading: isTokenLoading },
+        fee: { amount, isLoading: isFeeLoading },
+        imageUrl: rewardImageUrl,
       }}
     >
       {children}

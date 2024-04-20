@@ -155,9 +155,9 @@ const AccessHub = (): JSX.Element => {
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
           ))}
 
-          {accessedGuildTokens?.map((tokenReward, idx) => (
-            <React.Fragment key={idx}>
-              <TokenRewardCard reward={tokenReward} />
+          {accessedGuildTokens?.map((platform) => (
+            <React.Fragment key={platform.id}>
+              <TokenRewardCard platform={platform} />
             </React.Fragment>
           ))}
 

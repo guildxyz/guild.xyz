@@ -22,10 +22,10 @@ type ClaimResponse = {
 }
 
 const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number) => {
-  const { id: guildId, urlName } = useGuild()
+  const { id: guildId } = useGuild()
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
-  const { fee, isFeeLoading, error } = useTokenClaimFee(chain)
+  const { amount } = useTokenClaimFee(chain)
 
   const [loadingText, setLoadingText] = useState("")
 
@@ -63,7 +63,7 @@ const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number)
       address: ERC20_CONTRACTS[chain],
       functionName: "claim",
       args: claimArgs,
-      value: fee,
+      value: amount,
     } as const
 
     setLoadingText("Claiming tokens...")

@@ -1,6 +1,6 @@
-import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import { GuildPlatform } from "types"
 import { useAccount } from "wagmi"
 
 const calcRequirementAmount = (
@@ -53,9 +53,7 @@ const useCalculateFromDynamic = (dynamicAmount: any) => {
   return { getValue }
 }
 
-const useCalculateClaimableTokens = (
-  rolePlatformsByRoles: TokenAccessHubData["rolePlatformsByRoles"]
-) => {
+const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
   const { address } = useAccount()
   const { roles } = useGuild()
 
@@ -83,9 +81,19 @@ const useCalculateClaimableTokens = (
     }
   }
 
-  const calcForRole = (
-    rolePlatforms: TokenAccessHubData["rolePlatformsByRoles"][0]["rolePlatforms"]
-  ) => {
+  const getRolePlatforms = () => {
+    return roles
+      ?.flatMap((role) => role.rolePlatforms)
+      ?.filter(
+        (rp) =>
+          rp?.guildPlatformId === guildPlatform.id ||
+          rp?.guildPlatform?.id === guildPlatform.id
+      )
+  }
+
+  const getValue = () => {
+    const rolePlatforms = getRolePlatforms()
+
     const sum = rolePlatforms.reduce((acc, rolePlatform) => {
       return acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount)
     }, 0)
@@ -93,15 +101,7 @@ const useCalculateClaimableTokens = (
     return sum
   }
 
-  const getValue = () => {
-    const sum = rolePlatformsByRoles.reduce((acc, rolePlatformByRole) => {
-      return acc + calcForRole(rolePlatformByRole.rolePlatforms)
-    }, 0)
-
-    return sum
-  }
-
-  return { getValue, calcForRole }
+  return { getValue }
 }
 
 export { useCalculateClaimableTokens, useCalculateFromDynamic }

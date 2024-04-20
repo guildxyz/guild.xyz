@@ -13,23 +13,15 @@ type ClaimResponse = {
   userId: number
 }
 
-const useTokenClaimFee = (
-  chain: Chain,
-  roleId?: number,
-  rolePlatformId?: number
-) => {
+const useTokenClaimFee = (chain: Chain) => {
   const feeTransactionConfig = {
     abi: tokenRewardPoolAbi,
     address: ERC20_CONTRACTS[chain],
     functionName: "fee",
     chainId: Chains[chain],
   } as const
-  const {
-    data: fee,
-    isLoading: isFeeLoading,
-    error,
-  } = useReadContract(feeTransactionConfig)
-  return { fee, isFeeLoading, error }
+  const { data: amount, isLoading, error } = useReadContract(feeTransactionConfig)
+  return { amount, isLoading, error }
 }
 
 export default useTokenClaimFee

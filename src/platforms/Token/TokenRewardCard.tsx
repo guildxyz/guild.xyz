@@ -1,22 +1,17 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
-import { TokenAccessHubData } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import RewardCard from "components/common/RewardCard"
 import rewards from "platforms/rewards"
+import { GuildPlatform } from "types"
 import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
 
 const TokenRewardCard = () => {
-  const {
-    token,
-    isTokenLoading,
-    tokenReward: { guildPlatform, rolePlatformsByRoles },
-    rewardImageUrl,
-  } = useTokenRewardContext()
+  const { token, guildPlatform, imageUrl } = useTokenRewardContext()
 
-  const { getValue } = useCalculateClaimableTokens(rolePlatformsByRoles)
+  const { getValue } = useCalculateClaimableTokens(guildPlatform)
   const claimableAmount = getValue()
 
   const bgColor = useColorModeValue("gray.700", "gray.600")
@@ -25,15 +20,17 @@ const TokenRewardCard = () => {
     <>
       <RewardCard
         label={rewards.ERC20.name}
-        title={isTokenLoading ? null : `Claim ${claimableAmount} ${token.symbol}`}
+        title={
+          token.isLoading ? null : `Claim ${claimableAmount} ${token.data.symbol}`
+        }
         colorScheme={"gold"}
         image={
-          rewardImageUrl.match("guildLogos") ? (
+          imageUrl.match("guildLogos") ? (
             <Circle size={10} bgColor={bgColor}>
-              <Img src={rewardImageUrl} alt="Guild logo" boxSize="40%" />
+              <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
             </Circle>
           ) : (
-            rewardImageUrl
+            imageUrl
           )
         }
         cornerButton={
@@ -52,8 +49,8 @@ const TokenRewardCard = () => {
   )
 }
 
-const TokenRewardCardWrapper = ({ reward }: { reward: TokenAccessHubData }) => (
-  <TokenRewardProvider tokenReward={reward}>
+const TokenRewardCardWrapper = ({ platform }: { platform: GuildPlatform }) => (
+  <TokenRewardProvider guildPlatform={platform}>
     <TokenRewardCard />
   </TokenRewardProvider>
 )

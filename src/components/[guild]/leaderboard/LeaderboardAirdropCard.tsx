@@ -27,11 +27,10 @@ import {
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
 import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
-import { TokenAccessHubData } from "../AccessHub/hooks/useAccessedTokens"
+import { GuildPlatform } from "types"
 
 const LeaderboardAirdropCard = () => {
-  const { token, isTokenLoading, rewardImageUrl, tokenReward } =
-    useTokenRewardContext()
+  const { token, imageUrl, guildPlatform } = useTokenRewardContext()
   const { colorMode } = useColorMode()
   const modalBg = useCardBg()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
@@ -40,7 +39,7 @@ const LeaderboardAirdropCard = () => {
   const gradientColor =
     colorMode === "dark" ? `${gold["--gold-700"]}70` : gold["--gold-200"]
 
-  const { getValue } = useCalculateClaimableTokens(tokenReward.rolePlatformsByRoles)
+  const { getValue } = useCalculateClaimableTokens(guildPlatform)
   const claimableAmount = getValue()
 
   const {
@@ -133,7 +132,7 @@ const LeaderboardAirdropCard = () => {
                 mb={"4px"}
                 color={colorMode === "light" && gold["--gold-500"]}
               >
-                {claimableAmount} {token.symbol}
+                {claimableAmount} {token.data.symbol}
               </Heading>
               <HStack gap={1} display={{ lg: "inherit", base: "none" }}>
                 <Tag height={"fit-content"}>
@@ -196,11 +195,11 @@ const LeaderboardAirdopSkeleton = () => {
 }
 
 const LeaderboardAirdropCardWrapper = ({
-  reward,
+  guildPlatform,
 }: {
-  reward: TokenAccessHubData
+  guildPlatform: GuildPlatform
 }) => (
-  <TokenRewardProvider tokenReward={reward}>
+  <TokenRewardProvider guildPlatform={guildPlatform}>
     <LeaderboardAirdropCard />
   </TokenRewardProvider>
 )
