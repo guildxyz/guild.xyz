@@ -15,8 +15,23 @@ const reactionOptions: SelectOption<LensActionType>[] = [
     value: "QUOTE",
   },
   {
-    label: "Downvote",
+    label: "Mirror",
     value: "MIRROR",
+  },
+]
+
+const platformOptions: SelectOption[] = [
+  {
+    label: "Hey.xyz",
+    value: "hey",
+  },
+  {
+    label: "Lenster",
+    value: "lenster",
+  },
+  {
+    label: "Orb",
+    value: "orb",
   },
 ]
 
@@ -29,6 +44,14 @@ const LensAction = ({ baseFieldPath, field }: RequirementFormProps) => (
       <ControlledSelect
         name={`${baseFieldPath}.data.action`}
         options={reactionOptions}
+      />
+    </FormControl>
+
+    <FormControl>
+      <FormLabel>Platform:</FormLabel>
+      <ControlledSelect
+        name={`${baseFieldPath}.data.publishedOn`}
+        options={platformOptions}
       />
     </FormControl>
   </>
