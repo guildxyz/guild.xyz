@@ -1,12 +1,4 @@
-import {
-  Button,
-  Flex,
-  HStack,
-  Spinner,
-  Stack,
-  Text,
-  useToast,
-} from "@chakra-ui/react"
+import { Button, Flex, HStack, Stack, Text, useToast } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useTokenData from "hooks/useTokenData"
@@ -77,24 +69,21 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
             <HStack justifyContent={"space-between"}>
               {!imageUrl ? (
                 <>
-                  {!uploader.isUploading ? (
+                  {
                     <>
                       <Button
                         variant="link"
                         fontSize="small"
                         leftIcon={<Upload />}
                         {...getRootProps()}
+                        isLoading={uploader.isUploading}
+                        loadingText={`Uploading (${(progress * 100).toFixed()}%)`}
                       >
                         Upload custom image
                       </Button>
                       <input {...getInputProps()} accept="image/*" hidden />
                     </>
-                  ) : (
-                    <HStack>
-                      <Spinner size="sm" />
-                      <Text fontSize={"sm"}>{(progress * 100).toFixed()}%</Text>
-                    </HStack>
-                  )}
+                  }
                 </>
               ) : (
                 <>

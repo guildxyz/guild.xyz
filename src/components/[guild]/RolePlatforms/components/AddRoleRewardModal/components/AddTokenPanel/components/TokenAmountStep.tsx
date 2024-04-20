@@ -2,31 +2,44 @@ import { Collapse, Flex, Stack } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useState } from "react"
-import { useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
+import { TokenRewardType } from "../AddTokenPanel"
 import DynamicAmount from "./DynamicAmount"
 import StaticAmount from "./StaticAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
-  const [value, setValue] = useState("dynamic")
+  const { setValue } = useFormContext()
+
+  const type: TokenRewardType = useWatch({ name: `type` })
 
   const requirements = useWatch({ name: `requirements` })
   const multiplier = useWatch({ name: `multiplier` })
   const addition = useWatch({ name: `addition` })
 
-  const isContinueDisabled =
-    value === "dynamic"
-      ? requirements === undefined || multiplier === undefined
-      : addition === undefined
+  const getContinueDisabled = () => {
+    switch (type) {
+      case TokenRewardType.DYNAMIC_SNAPSHOT:
+        return requirements === undefined || multiplier === undefined
+      case TokenRewardType.STATIC:
+        return addition === undefined
+      case TokenRewardType.DYNAMIC_POINTS:
+        // TODO
+        return true
+      default:
+        return true
+    }
+  }
+
+  const isContinueDisabled = getContinueDisabled()
 
   const options = [
     {
       label: "Dynamic amount",
-      value: "dynamic",
+      value: TokenRewardType.DYNAMIC_SNAPSHOT,
     },
     {
       label: "Static amount",
-      value: "static",
-      disabled: "Soon",
+      value: TokenRewardType.STATIC,
     },
   ]
 
@@ -36,8 +49,10 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     <Stack gap={5}>
       <RadioButtonGroup
         options={options}
-        value={value}
-        onChange={() => {}}
+        value={type}
+        onChange={(val) => {
+          setValue("type", val)
+        }}
         chakraStyles={{
           spacing: 1.5,
           mt: 2,
@@ -50,7 +65,14 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
       <Collapse startingHeight={150} animateOpacity in={!isCollapsed}>
         <Stack gap={5}>
-          {value === "static" ? <StaticAmount /> : <DynamicAmount />}
+          {[
+            TokenRewardType.DYNAMIC_POINTS,
+            TokenRewardType.DYNAMIC_SNAPSHOT,
+          ].includes(type) ? (
+            <DynamicAmount />
+          ) : (
+            <StaticAmount />
+          )}
         </Stack>
       </Collapse>
 

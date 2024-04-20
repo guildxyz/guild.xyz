@@ -14,7 +14,6 @@ import SwitchNetworkButton from "components/[guild]/Requirements/components/Guil
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
 import { useSetAtom } from "jotai"
 import useRegisterPool from "platforms/Token/hooks/useRegisterPool"
@@ -23,15 +22,18 @@ import { useFormContext, useWatch } from "react-hook-form"
 import Token from "static/icons/token.svg"
 import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem"
-import { useAccount, useBalance } from "wagmi"
+import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import { AddTokenFormType } from "../AddTokenPanel"
+import { AddTokenFormType, TokenRewardType } from "../AddTokenPanel"
+import useIsBalanceSufficient from "../hooks/useIsBalanceSufficient"
 import ConversionNumberInput from "./ConversionNumberInput"
 import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
 
 const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
   const tokenAddress = useWatch({ name: `tokenAddress` })
+  const type: TokenRewardType = useWatch({ name: `type` })
+  const imageUrl = useWatch({ name: `imageUrl` })
 
   const { chainId, address: userAddress } = useAccount()
   const [amount, setAmount] = useState("1")
@@ -43,39 +45,25 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     data: { logoURI: tokenLogo, decimals },
   } = useTokenData(chain, tokenAddress)
 
+  const { isBalanceSufficient } = useIsBalanceSufficient({
+    address: tokenAddress,
+    chain: chain,
+    decimals: decimals,
+    amount: amount,
+  })
+
+  const { setValue } = useFormContext<AddTokenFormType>()
+
   let formattedAmount = BigInt(1)
   try {
     formattedAmount = parseUnits(amount, decimals)
   } catch {}
 
-  const { data: coinBalanceData } = useBalance({
-    address: userAddress,
-  })
-
-  const { data: tokenBalanceData } = useTokenBalance({
-    token: tokenAddress,
-    chainId,
-    shouldFetch: tokenAddress !== NULL_ADDRESS,
-  })
-
-  const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
-
-  const isBalanceSufficient =
-    typeof formattedAmount === "bigint" &&
-    (pickedCurrencyIsNative
-      ? coinBalanceData?.value >= formattedAmount
-      : tokenBalanceData?.value >= formattedAmount)
-
-  const isOnCorrectChain = Number(Chains[chain]) === chainId
-
-  const handlePoolCreation = () => {
-    console.log("Creating pool...")
-    onSubmitTransaction()
-  }
-
-  const { setValue } = useFormContext<AddTokenFormType>()
-
-  const { isLoading, onSubmitTransaction, error } = useRegisterPool(
+  const {
+    isLoading,
+    onSubmitTransaction: submitRegisterPool,
+    error,
+  } = useRegisterPool(
     userAddress,
     chain,
     tokenAddress,
@@ -86,18 +74,19 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     }
   )
 
+  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACTS[chain])
+
   useEffect(() => {
     setCanClose(!isLoading)
   }, [isLoading])
 
-  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACTS[chain])
+  const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
+  const isOnCorrectChain = Number(Chains[chain]) === chainId
 
   const handleDepositLater = () => {
     if (!skip) setAmount("0")
     setSkip(!skip)
   }
-
-  const imageUrl = useWatch({ name: `imageUrl` })
 
   return (
     <Stack gap={5}>
@@ -166,7 +155,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
             width="full"
             colorScheme="indigo"
             isDisabled={!isBalanceSufficient}
-            onClick={handlePoolCreation}
+            onClick={submitRegisterPool}
             isLoading={isLoading}
             loadingText="Creating pool..."
           >

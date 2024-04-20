@@ -22,6 +22,12 @@ import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"
 
+export enum TokenRewardType {
+  DYNAMIC_SNAPSHOT = "DYNAMIC_SNAPSHOT",
+  DYNAMIC_POINTS = "DYNAMIC_POINTS",
+  STATIC = "STATIC",
+}
+
 export type AddTokenFormType = {
   poolId: number
   multiplier: number
@@ -36,6 +42,7 @@ export type AddTokenFormType = {
     guildPlatformId: number
   }
   snapshotId: number
+  type: TokenRewardType
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -44,6 +51,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     defaultValues: {
       addition: 0,
       multiplier: 1,
+      type: TokenRewardType.DYNAMIC_SNAPSHOT,
     },
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
