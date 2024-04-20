@@ -90,22 +90,6 @@ const LensRequirement = (props: RequirementProps) => {
                 {` post on Lens Protocol`}
               </>
             )
-          case "LENS_MIRROR":
-            return (
-              <>
-                {`Mirror the `}
-                <Link
-                  href={`https://hey.xyz/posts/${requirement.data.id}`}
-                  isExternal
-                  display="inline"
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {requirement.data.id}
-                </Link>
-                {` post on Lens Protocol`}
-              </>
-            )
           case "LENS_TOTAL_FOLLOWERS":
             return (
               <>{`Have at least ${requirement.data.min} followers on Lens Protocol`}</>

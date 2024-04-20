@@ -39,11 +39,6 @@ const typeOptions = [
     LensRequirement: LensPostInput,
   },
   {
-    value: "LENS_MIRROR",
-    label: "Mirror a post",
-    LensRequirement: LensPostInput,
-  },
-  {
     value: "LENS_TOTAL_FOLLOWERS",
     label: "Have at least [x] followers",
     LensRequirement: LensTotalInput,

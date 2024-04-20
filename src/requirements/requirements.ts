@@ -373,7 +373,6 @@ export const REQUIREMENTS_DATA = [
       "LENS_REACT",
       "LENS_COLLECT",
       "LENS_ACTION",
-      "LENS_MIRROR",
       "LENS_TOTAL_FOLLOWERS",
       "LENS_TOTAL_POSTS",
       "LENS_FOLLOWED_BY",
