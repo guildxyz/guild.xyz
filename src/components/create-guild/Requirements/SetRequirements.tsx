@@ -1,4 +1,4 @@
-import { ChakraProps, Collapse, Stack, Wrap } from "@chakra-ui/react"
+import { ChakraProps, Collapse, Stack, Wrap, useToast } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
@@ -57,6 +57,8 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
     appendToFieldArray(req)
   }
 
+  const toast = useToast()
+
   return (
     <Stack spacing="5" w="full">
       <Wrap spacing="3">
@@ -91,7 +93,17 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                     type={type}
                     field={field as Requirement}
                     index={i}
-                    removeRequirement={removeReq}
+                    removeRequirement={(idx) => {
+                      if (type === "GUILD_SNAPSHOT") {
+                        toast({
+                          status: "info",
+                          title:
+                            "The snapshot requirement is necessary for dynamic token rewards, therefore cannot be removed.",
+                        })
+                        return
+                      }
+                      removeReq(idx)
+                    }}
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT" || type === "GUILD_SNAPSHOT"}
                   />

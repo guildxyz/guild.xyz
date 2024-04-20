@@ -136,8 +136,7 @@ const AddRewardButton = (): JSX.Element => {
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const { onSubmit: onRequirementSubmit, isLoading: creatingRequirement } =
-    useCreateRequirementForRole()
+  const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
 
   const isERC20 = (data) =>
     data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
@@ -153,7 +152,6 @@ const AddRewardButton = (): JSX.Element => {
       "REQUIREMENT_AMOUNT"
 
     const guildPlatfomrExists = !!data.rolePlatforms[0].guildPlatformId
-    console.log(guildPlatfomrExists)
 
     if (isRequirementBased) {
       /**
@@ -196,8 +194,6 @@ const AddRewardButton = (): JSX.Element => {
           requirement: data.requirements[0],
           roleId: data.roleIds[0],
           onSuccess: (req) => {
-            console.log(req)
-
             /**
              * Now the reward can be added, as we now have the requirementId that is
              * needed in the reward's rolePlatform's dynamicData field.
@@ -207,7 +203,7 @@ const AddRewardButton = (): JSX.Element => {
               ...data.rolePlatforms[0].guildPlatform,
               rolePlatforms: [
                 {
-                  roleId: data.roleIds[0],
+                  roleId: Number(data.roleIds[0]),
                   ...(guildPlatfomrExists && {
                     guildPlatformId: data.rolePlatforms[0].guildPlatformId,
                   }),
@@ -224,7 +220,7 @@ const AddRewardButton = (): JSX.Element => {
                       params: data.rolePlatforms[0].dynamicAmount.operation.params,
                       input: {
                         type: "REQUIREMENT_AMOUNT",
-                        roleId: data.roleIds[0],
+                        roleId: Number(data.roleIds[0]),
                         requirementId: req.id,
                       },
                     },
@@ -237,8 +233,6 @@ const AddRewardButton = (): JSX.Element => {
         })
         return
       }
-
-      console.log(data.roleIds)
 
       if (!data.roleIds || data.roleIds.length === 0) {
         /** Creating a new role */
@@ -271,12 +265,7 @@ const AddRewardButton = (): JSX.Element => {
           ...data.rolePlatforms[0].guildPlatform,
           rolePlatforms: [
             {
-              // We'll be able to send additional params here, like capacity & time
               roleId: createdRole.id,
-              /**
-               * Temporary for POINTS rewards, because they can be added to multiple
-               * roles and this field has a unique constraint in the DB
-               */
               ...(guildPlatfomrExists && {
                 guildPlatformId: data.rolePlatforms[0].guildPlatformId,
               }),
@@ -305,8 +294,14 @@ const AddRewardButton = (): JSX.Element => {
       return
     } else {
       /** If not requirement based, follow standard protocol. */
-
-      /** TODO: handle platform exists! */
+      if (guildPlatfomrExists) {
+        data.rolePlatforms[0].guildPlatform = {
+          platformId: PlatformType.ERC20,
+          platformName: "ERC20",
+          platformGuildId: "",
+          platformGuildData: {},
+        }
+      }
 
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,

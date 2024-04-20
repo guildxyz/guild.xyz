@@ -78,7 +78,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
     }
   }
 
-  const { data, mutate } = useSWRWithOptionalAuth(
+  const { data } = useSWRWithOptionalAuth(
     !!guildId && !!selectedExistingId
       ? `/v2/guilds/${guildId}/points/${selectedExistingId}/leaderboard`
       : null,

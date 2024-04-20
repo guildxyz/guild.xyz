@@ -44,7 +44,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     rolePlatforms?.find(
       (rp: any) => rp.dynamicAmount.operation.input[0].type === "REQUIREMENT_AMOUNT"
     ) || false
-  console.log(rolePlatforms)
 
   useEffect(() => {
     if (platformForToken) setValue("type", TokenRewardType.STATIC)
