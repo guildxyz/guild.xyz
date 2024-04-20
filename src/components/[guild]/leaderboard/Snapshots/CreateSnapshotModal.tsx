@@ -94,8 +94,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
       "data.guildPlatformId",
       currentPointsId ?? existingPointsRewards?.[0]?.id
     )
-    mutate()
-  }, [existingPointsRewards, router?.query?.pointsId, mutate, guildId, setValue])
+  }, [existingPointsRewards, router?.query?.pointsId, guildId, setValue])
 
   const leaderboardToSnapshot = useMemo(() => {
     if (!data?.leaderboard) return []

@@ -20,5 +20,6 @@ export const useAccessedTokens = () => {
       return relevantRolePlatforms.length > 0
     }) || []
 
+  console.log(accessedGuildTokens)
   return accessedGuildTokens
 }

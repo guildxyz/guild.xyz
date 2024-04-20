@@ -1,6 +1,7 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
@@ -9,6 +10,7 @@ import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
 
 const TokenRewardCard = () => {
+  const { isAdmin } = useGuildPermission()
   const { token, guildPlatform, imageUrl } = useTokenRewardContext()
 
   const { getValue } = useCalculateClaimableTokens(guildPlatform)
@@ -34,13 +36,15 @@ const TokenRewardCard = () => {
           )
         }
         cornerButton={
-          <>
-            <PlatformCardMenu>
-              <RemovePlatformMenuItem
-                platformGuildId={guildPlatform.platformGuildId}
-              />
-            </PlatformCardMenu>
-          </>
+          isAdmin && (
+            <>
+              <PlatformCardMenu>
+                <RemovePlatformMenuItem
+                  platformGuildId={guildPlatform.platformGuildId}
+                />
+              </PlatformCardMenu>
+            </>
+          )
         }
       >
         <TokenCardButton />

@@ -97,7 +97,7 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
     const rolePlatforms = getRolePlatforms()
 
     const sum = rolePlatforms
-      .filter((rp) => roleIds.includes(rp.roleId))
+      .filter((rp) => roleIds?.includes(rp.roleId) || false)
       .reduce(
         (acc, rolePlatform) =>
           acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),

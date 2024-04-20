@@ -1,5 +1,6 @@
 import { Collapse, Flex, Stack } from "@chakra-ui/react"
 import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useEffect, useState } from "react"
@@ -27,6 +28,24 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
       guildPlatform.platformGuildData.tokenAddress === address
   )
 
+  const { roles } = useGuild()
+
+  const rolePlatforms = platformForToken
+    ? roles
+        ?.flatMap((role) => role.rolePlatforms)
+        ?.filter(
+          (rp) =>
+            rp?.guildPlatformId === platformForToken.id ||
+            rp?.guildPlatform?.id === platformForToken.id
+        )
+    : null
+
+  const dynamicExists =
+    rolePlatforms?.find(
+      (rp: any) => rp.dynamicAmount.operation.input[0].type === "REQUIREMENT_AMOUNT"
+    ) || false
+  console.log(rolePlatforms)
+
   useEffect(() => {
     if (platformForToken) setValue("type", TokenRewardType.STATIC)
   }, [platformForToken, setValue])
@@ -51,7 +70,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     {
       label: "Dynamic amount",
       value: TokenRewardType.DYNAMIC_SNAPSHOT,
-      disabled: !!platformForToken,
+      disabled: dynamicExists,
     },
     {
       label: "Static amount",

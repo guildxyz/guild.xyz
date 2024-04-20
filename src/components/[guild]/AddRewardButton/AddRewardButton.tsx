@@ -17,6 +17,7 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
+import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -135,6 +136,9 @@ const AddRewardButton = (): JSX.Element => {
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
+  const { onSubmit: onRequirementSubmit, isLoading: creatingRequirement } =
+    useCreateRequirementForRole()
+
   const isERC20 = (data) =>
     data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
@@ -142,9 +146,14 @@ const AddRewardButton = (): JSX.Element => {
     data: any,
     saveAs: "DRAFT" | "PUBLIC" = "PUBLIC"
   ) => {
+    console.log("This is a token reward")
+
     const isRequirementBased =
       data.rolePlatforms[0].dynamicAmount.operation.input.type ===
-      "REQUIREMENT_BASED"
+      "REQUIREMENT_AMOUNT"
+
+    const guildPlatfomrExists = !!data.rolePlatforms[0].guildPlatformId
+    console.log(guildPlatfomrExists)
 
     if (isRequirementBased) {
       /**
@@ -153,9 +162,151 @@ const AddRewardButton = (): JSX.Element => {
        * platform.
        */
 
+      console.log("...that is req based")
+
+      if (data?.roleIds.length !== 0) {
+        /** Adding to already existing role. */
+
+        if (data.roleIds.length > 1) {
+          showErrorToast(
+            "Dynamic token rewards can be added to only one role at most."
+          )
+          console.error(
+            "Tried to add dynamic token reward to multiple roles. Role IDs:" +
+              data.roleIds
+          )
+          return
+        }
+
+        console.log("...adding to existing role")
+
+        /** Creating the requirement first */
+        if (data.requirements.length > 1) {
+          showErrorToast(
+            "You cannot set requirements to the role when adding this reward."
+          )
+          console.error(
+            "Tried to add an additional requirement to the role when adding token reward to it."
+          )
+        }
+
+        console.log("...with a new req")
+
+        await onRequirementSubmit({
+          requirement: data.requirements[0],
+          roleId: data.roleIds[0],
+          onSuccess: (req) => {
+            console.log(req)
+
+            /**
+             * Now the reward can be added, as we now have the requirementId that is
+             * needed in the reward's rolePlatform's dynamicData field.
+             */
+
+            onAddRewardSubmit({
+              ...data.rolePlatforms[0].guildPlatform,
+              rolePlatforms: [
+                {
+                  roleId: data.roleIds[0],
+                  ...(guildPlatfomrExists && {
+                    guildPlatformId: data.rolePlatforms[0].guildPlatformId,
+                  }),
+                  platformRoleId:
+                    data.rolePlatforms[0].guildPlatform.platformGuildId ||
+                    `${data.roleIds[0]}-${Date.now()}`,
+                  guildPlatform: data.rolePlatforms[0].guildPlatform,
+                  isNew: data.rolePlatforms[0].isNew,
+                  visibility:
+                    saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+                  dynamicAmount: {
+                    operation: {
+                      type: data.rolePlatforms[0].dynamicAmount.operation.type,
+                      params: data.rolePlatforms[0].dynamicAmount.operation.params,
+                      input: {
+                        type: "REQUIREMENT_AMOUNT",
+                        roleId: data.roleIds[0],
+                        requirementId: req.id,
+                      },
+                    },
+                  },
+                },
+              ],
+            })
+          },
+          onError: (error) => console.log(error),
+        })
+        return
+      }
+
+      console.log(data.roleIds)
+
+      if (!data.roleIds || data.roleIds.length === 0) {
+        /** Creating a new role */
+
+        const roleVisibility =
+          saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+
+        const createdRole = await onCreateRoleSubmit({
+          ...data,
+          name:
+            data.name ||
+            `${data.rolePlatforms[0].guildPlatform.platformGuildData.name} role`,
+          imageUrl:
+            data.rolePlatforms[0].guildPlatform.platformGuildData?.imageUrl ||
+            `/guildLogos/${getRandomInt(286)}.svg`,
+          roleVisibility,
+          rolePlatforms: [], // Empty, we create it later with the roleId and reqId
+        })
+
+        if (guildPlatfomrExists) {
+          data.rolePlatforms[0].guildPlatform = {
+            platformId: PlatformType.ERC20,
+            platformName: "ERC20",
+            platformGuildId: "",
+            platformGuildData: {},
+          }
+        }
+
+        await onAddRewardSubmit({
+          ...data.rolePlatforms[0].guildPlatform,
+          rolePlatforms: [
+            {
+              // We'll be able to send additional params here, like capacity & time
+              roleId: createdRole.id,
+              /**
+               * Temporary for POINTS rewards, because they can be added to multiple
+               * roles and this field has a unique constraint in the DB
+               */
+              ...(guildPlatfomrExists && {
+                guildPlatformId: data.rolePlatforms[0].guildPlatformId,
+              }),
+              platformRoleId:
+                data.rolePlatforms[0].guildPlatform.platformGuildId ||
+                `${createdRole.id}-${Date.now()}`,
+              guildPlatform: data.rolePlatforms[0].guildPlatform,
+              isNew: data.rolePlatforms[0].isNew,
+              visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+              dynamicAmount: {
+                operation: {
+                  type: data.rolePlatforms[0].dynamicAmount.operation.type,
+                  params: data.rolePlatforms[0].dynamicAmount.operation.params,
+                  input: {
+                    type: "REQUIREMENT_AMOUNT",
+                    roleId: createdRole.id,
+                    requirementId: createdRole.requirements[0].id,
+                  },
+                },
+              },
+            },
+          ],
+        })
+      }
+
       return
     } else {
       /** If not requirement based, follow standard protocol. */
+
+      /** TODO: handle platform exists! */
 
       onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
@@ -177,101 +328,6 @@ const AddRewardButton = (): JSX.Element => {
 
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
-
-    // if (tokenReward) {
-    //   /**
-    //    * ERC20 rewards always create a new role.
-    //    *
-    //    * 1. Create role with the snapshot requirement
-    //    * 2. Add the reward, where the dynamicAmount should reference the new role and
-    //    *    snapshot requirement
-    //    */
-
-    //   const roleVisibility =
-    //     saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
-
-    //   const createdRole = await onCreateRoleSubmit({
-    //     ...data,
-    //     name:
-    //       data.name ||
-    //       `${data.rolePlatforms[0].guildPlatform.platformGuildData.name} role`,
-    //     imageUrl:
-    //       data.rolePlatforms[0].guildPlatform.platformGuildData?.imageUrl ||
-    //       `/guildLogos/${getRandomInt(286)}.svg`,
-    //     roleVisibility,
-    //     rolePlatforms: [], // Empty, we create it later with the roleId and reqId
-    //   })
-
-    //   if (tokenReward === "EXISTING_GP") {
-    //     data.rolePlatforms[0].guildPlatform = {
-    //       platformId: PlatformType.ERC20,
-    //       platformName: "ERC20",
-    //       platformGuildId: "",
-    //       platformGuildData: {},
-    //     }
-    //   }
-
-    //   await onAddRewardSubmit({
-    //     ...data.rolePlatforms[0].guildPlatform,
-    //     rolePlatforms: [
-    //       {
-    //         // We'll be able to send additional params here, like capacity & time
-    //         roleId: createdRole.id,
-    //         /**
-    //          * Temporary for POINTS rewards, because they can be added to multiple
-    //          * roles and this field has a unique constraint in the DB
-    //          */
-    //         ...(tokenReward === "EXISTING_GP" && {
-    //           guildPlatformId: data.rolePlatforms[0].guildPlatformId,
-    //         }),
-    //         platformRoleId:
-    //           data.rolePlatforms[0].guildPlatform.platformGuildId ||
-    //           `${createdRole.id}-${Date.now()}`,
-    //         guildPlatform: data.rolePlatforms[0].guildPlatform,
-    //         isNew: data.rolePlatforms[0].isNew,
-    //         visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
-    //         dynamicAmount: {
-    //           operation: {
-    //             type: data.rolePlatforms[0].dynamicAmount.operation.type,
-    //             params: data.rolePlatforms[0].dynamicAmount.operation.params,
-    //             input: {
-    //               type: "REQUIREMENT_AMOUNT",
-    //               roleId: createdRole.id,
-    //               requirementId: createdRole.requirements[0].id,
-    //             },
-    //           },
-    //         },
-    //       },
-    //     ],
-    //   })
-
-    //   // const createdReward = await onAddRewardSubmit({
-    //   //   ...data.rolePlatforms[0].guildPlatform,
-    //   //   rolePlatforms: [
-    //   //     {
-    //   //       roleId: createdRole.id,
-    //   //       platformRoleId: data.rolePlatforms[0].guildPlatform.platformGuildId,
-    //   //       ...(tokenReward === "EXISTING_GP" && { guildPlatformId: data.rolePlatforms[0].guildPlatformId }),
-    //   //       guildPlatform: data.rolePlatforms[0].guildPlatform,
-    //   //       isNew: data.rolePlatforms[0].isNew,
-    //   //       dynamicAmount: {
-    //   //         operation: {
-    //   //           type: data.rolePlatforms[0].dynamicAmount.operation.type,
-    //   //           params: data.rolePlatforms[0].dynamicAmount.operation.params,
-    //   //           input: {
-    //   //             type: "REQUIREMENT_AMOUNT",
-    //   //             roleId: createdRole.id,
-    //   //             requirementId: createdRole.requirements[0].id,
-    //   //           },
-    //   //         },
-    //   //       },
-    //   //       visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
-    //   //     },
-    //   //   ],
-    //   // })
-
-    //   return
-    // }
 
     if (data.requirements?.length > 0) {
       const roleVisibility =
