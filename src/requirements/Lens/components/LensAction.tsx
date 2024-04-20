@@ -20,14 +20,10 @@ const reactionOptions: SelectOption<LensActionType>[] = [
   },
 ]
 
-const platformOptions: SelectOption[] = [
+export const lensPlatformOptions: SelectOption[] = [
   {
     label: "Hey",
     value: "hey",
-  },
-  {
-    label: "Lenster",
-    value: "lenster",
   },
   {
     label: "Orb",
@@ -51,7 +47,7 @@ const LensAction = ({ baseFieldPath, field }: RequirementFormProps) => (
       <FormLabel>Platform:</FormLabel>
       <ControlledSelect
         name={`${baseFieldPath}.data.publishedOn`}
-        options={platformOptions}
+        options={lensPlatformOptions}
       />
     </FormControl>
   </>

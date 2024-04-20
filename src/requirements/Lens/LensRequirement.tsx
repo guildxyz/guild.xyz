@@ -5,7 +5,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import REQUIREMENTS from "requirements"
-import { LensActionType } from "./components/LensAction"
+import { LensActionType, lensPlatformOptions } from "./components/LensAction"
 import { LensReaction } from "./components/LensReact"
 import useLensProfile from "./hooks/useLensProfile"
 
@@ -31,6 +31,18 @@ const getActionLabel = (lensAction: LensActionType) => {
   }
 }
 
+const getActionPlatform = (publishedOn?: string) =>
+  lensPlatformOptions.find((o) => o.value === publishedOn)?.label ?? "Lens protocol"
+
+const getPlatformBaseUrl = (publishedOn?: string) => {
+  switch (publishedOn) {
+    case "orb":
+      return "https://orb.club/p/"
+    default:
+      return "https://hey.xyz/posts/"
+  }
+}
+
 const LensRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
   requirement.chain = "POLYGON"
@@ -46,15 +58,7 @@ const LensRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`${getReactionLabel(requirement.data.reaction)} the `}
-                <Link
-                  href={`https://hey.xyz/posts/${requirement.data.id}`}
-                  isExternal
-                  display="inline"
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {requirement.data.id}
-                </Link>
+                <LensPostLink />
                 {` post on Lens Protocol`}
               </>
             )
@@ -62,31 +66,15 @@ const LensRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`${getActionLabel(requirement.data.action)} the `}
-                <Link
-                  href={`https://hey.xyz/posts/${requirement.data.id}`}
-                  isExternal
-                  display="inline"
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {requirement.data.id}
-                </Link>
-                {` post on Lens Protocol`}
+                <LensPostLink />
+                {` post on ${getActionPlatform(requirement.data.publishedOn)}`}
               </>
             )
           case "LENS_COLLECT":
             return (
               <>
                 {`Collect the `}
-                <Link
-                  href={`https://hey.xyz/posts/${requirement.data.id}`}
-                  isExternal
-                  display="inline"
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {requirement.data.id}
-                </Link>
+                <LensPostLink />
                 {` post on Lens Protocol`}
               </>
             )
@@ -129,6 +117,22 @@ const LensFollowRequirement = (props: RequirementProps) => {
       </Skeleton>
       {" on Lens protocol"}
     </Requirement>
+  )
+}
+
+const LensPostLink = () => {
+  const { data } = useRequirementContext()
+
+  return (
+    <Link
+      href={`${getPlatformBaseUrl(data.publishedOn)}${data.id}`}
+      isExternal
+      display="inline"
+      colorScheme="blue"
+      fontWeight="medium"
+    >
+      {data.id}
+    </Link>
   )
 }
 
