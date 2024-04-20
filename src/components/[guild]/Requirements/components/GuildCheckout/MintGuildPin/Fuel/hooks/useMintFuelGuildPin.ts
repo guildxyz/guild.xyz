@@ -109,7 +109,7 @@ const useMintFuelGuildPin = () => {
       },
     } as const
 
-    const contractCallRes = await contract.functions
+    await contract.functions
       .claim(contractCallParams, signature)
       .callParams({ forward: [fee.toNumber(), BaseAssetId] })
       .call()

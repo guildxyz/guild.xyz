@@ -39,6 +39,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   MOONRIVER: ["https://tokens.coingecko.com/moonriver/all.json"],
   MOONBEAM: ["https://tokens.coingecko.com/moonbeam/all.json"],
   METIS: ["https://tokens.coingecko.com/metis-andromeda/all.json"],
+  METIS_SEPOLIA: [],
   CRONOS: ["https://tokens.coingecko.com/cronos/all.json"],
   BOBA: ["https://tokens.coingecko.com/boba/all.json"],
   BOBA_AVAX: ["https://tokens.coingecko.com/boba/all.json"],
@@ -59,6 +60,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   SHIMMER: [],
   KAVA: [],
   BITFINITY_TESTNET: [],
+  X1: [],
   X1_TESTNET: [],
   ONTOLOGY: [],
   BERA_TESTNET: [],
@@ -70,6 +72,8 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   ASTAR_ZKEVM: [],
   CORE_DAO: [],
   LISK_SEPOLIA: [],
+  OP_BNB: [],
+  FORM_TESTNET: [],
 }
 
 const fetchTokens = async ([_, chain]) =>

@@ -6,16 +6,16 @@ import {
   HStack,
   Text,
 } from "@chakra-ui/react"
-import ControlledSelect from "components/common/ControlledSelect"
-import useGuild from "components/[guild]/hooks/useGuild"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
+import useGuild from "components/[guild]/hooks/useGuild"
+import ControlledSelect from "components/common/ControlledSelect"
 import useServerData from "hooks/useServerData"
 import { useMemo } from "react"
 import { useFormContext, useFormState } from "react-hook-form"
 import pluralize from "utils/pluralize"
 
 const GuildifyExistingRole = () => {
-  const { errors, dirtyFields } = useFormState()
+  const { errors, dirtyFields, defaultValues } = useFormState()
   const { setValue } = useFormContext()
   const { roles: guildRoles } = useGuild()
   const { guildPlatform, index } = useRolePlatform()
@@ -41,7 +41,7 @@ const GuildifyExistingRole = () => {
       value: role.id,
       details: pluralize(role.memberCount, "member"),
     }))
-  }, [discordRoles])
+  }, [discordRoles, guildRoles, guildPlatform.id])
 
   return (
     <Box px="5" py="4">
@@ -56,7 +56,7 @@ const GuildifyExistingRole = () => {
             isLoading={!options}
             options={options}
             beforeOnChange={(newValue) => {
-              if (dirtyFields.name) return
+              if (defaultValues.name || dirtyFields.name) return
               setValue("name", newValue?.label, { shouldDirty: false })
             }}
           />
@@ -66,8 +66,7 @@ const GuildifyExistingRole = () => {
         </FormErrorMessage>
       </FormControl>
       <Text fontWeight={"normal"} colorScheme="gray" mt="6">
-        Existing members with the role but without Guild.xyz auth won't lose access.
-        You'll be able to remove them later (coming soon)
+        Existing members with the role but without Guild.xyz auth won't lose access
       </Text>
     </Box>
   )

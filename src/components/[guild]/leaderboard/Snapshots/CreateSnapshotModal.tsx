@@ -29,15 +29,9 @@ type Props = {
   onClose: () => void
   isOpen: boolean
   onSuccess: (snapshotId: number) => void
-  defaultPointsId?: number
 }
 
-const CreateSnapshotModal = ({
-  onClose,
-  isOpen,
-  onSuccess,
-  defaultPointsId,
-}: Props) => {
+const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
   const router = useRouter()
   const showErrorToast = useShowErrorToast()
 
@@ -75,7 +69,7 @@ const CreateSnapshotModal = ({
     if (!submitError) return
     showErrorToast("Failed to create snapshot")
     console.error(submitError)
-  }, [submitError])
+  }, [submitError, showErrorToast])
 
   const onSubmit = async () => {
     const result = await submitCreate({ shouldStatusUpdate: false, name: name })
@@ -101,16 +95,18 @@ const CreateSnapshotModal = ({
       currentPointsId ?? existingPointsRewards?.[0]?.id
     )
     mutate()
-  }, [existingPointsRewards?.[0]?.id, router?.query?.pointsId])
+  }, [existingPointsRewards, router?.query?.pointsId, mutate, guildId, setValue])
 
   const leaderboardToSnapshot = useMemo(() => {
     if (!data?.leaderboard) return []
     const snapshot = data?.leaderboard
 
-    return snapshot.map((val, idx) => {
-      return { rank: idx + 1, address: val.address, points: val.totalPoints }
-    })
-  }, [data])
+    return snapshot.map((val, idx) => ({
+      rank: idx + 1,
+      address: val.address,
+      points: val.totalPoints,
+    }))
+  }, [data.leaderboard])
 
   return (
     <>

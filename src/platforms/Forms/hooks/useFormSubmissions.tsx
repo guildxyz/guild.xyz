@@ -60,8 +60,17 @@ const useFormSubmissions = (formId, queryString) => {
           platformUsers: user.platformUsers.sort(sortAccounts),
           isShared: user.isShared === true || user.isShared === null,
           submissionAnswers: user.submissionAnswers.map((response) => {
-            if (response.value?.startsWith("["))
-              return { ...response, value: JSON.parse(response.value) }
+            /**
+             * Parsing arrays here, but users can start their text responses with "["
+             * too, so added a try-catch here
+             */
+            if (response.value?.startsWith("[")) {
+              try {
+                return { ...response, value: JSON.parse(response.value) }
+              } catch {
+                return response
+              }
+            }
 
             return response
           }),

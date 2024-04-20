@@ -48,7 +48,7 @@ const FeatureFlags = (): JSX.Element => {
           )
         }}
         onBlur={onBlur}
-        chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
+        chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2, px: 3 }) }}
       />
     </FormControl>
   )

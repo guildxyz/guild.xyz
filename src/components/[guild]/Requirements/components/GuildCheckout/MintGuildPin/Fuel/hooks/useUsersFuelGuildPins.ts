@@ -20,14 +20,12 @@ const useUsersFuelGuildPins = (disabled = false) => {
 
   const shouldFetch = Boolean(!disabled && fuelAddresses?.length && !!wallet)
 
-  const fetchFuelGuildPins = async () => {
-    // const contract = GuildPinContractAbi__factory.connect(
-    //   FUEL_GUILD_PIN_CONTRACT_ID,
-    //   wallet
-    // )
-
-    return []
-  }
+  const fetchFuelGuildPins = async () => []
+  // TODO
+  // const contract = GuildPinContractAbi__factory.connect(
+  //   FUEL_GUILD_PIN_CONTRACT_ID,
+  //   wallet
+  // )
 
   return useSWRImmutable<
     ({ chainId: number; tokenId: number } & GuildPinMetadata)[]

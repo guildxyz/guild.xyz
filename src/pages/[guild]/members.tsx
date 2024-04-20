@@ -128,11 +128,11 @@ const GuildPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, imageUrl } = useGuild()
 
-  const router = useRouter()
+  const { isReady, query, asPath, replace } = useRouter()
   const [columnFilters, setColumnFilters] = useState(() =>
-    parseFiltersFromQuery(router.query)
+    parseFiltersFromQuery(query)
   )
-  const [sorting, setSorting] = useState(() => parseSortingFromQuery(router.query))
+  const [sorting, setSorting] = useState(() => parseSortingFromQuery(query))
   const [rowSelection, setRowSelection] = useState({})
 
   const queryString = useMemo(
@@ -141,11 +141,11 @@ const GuildPage = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (!router.isReady || !queryString) return
+    if (!isReady || !queryString) return
 
-    const asPath = router.asPath.split("?")[0]
-    router.replace(`${asPath}?${queryString}`)
-  }, [queryString, router.isReady])
+    const path = asPath.split("?")[0]
+    replace(`${path}?${queryString}`)
+  }, [isReady, queryString, asPath, replace])
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
@@ -195,7 +195,7 @@ const GuildPage = (): JSX.Element => {
       hiddenRolesColumn.toggleVisibility(false)
       hiddenRolesColumn.columnDef.enableHiding = false
     }
-  }, [hasHiddenRoles])
+  }, [table, hasHiddenRoles])
 
   return (
     <>

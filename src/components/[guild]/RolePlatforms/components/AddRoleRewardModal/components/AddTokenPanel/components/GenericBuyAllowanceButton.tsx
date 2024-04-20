@@ -9,11 +9,10 @@ import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 type Props = {
   chain: Chain
   token: `0x${string}`
-  amount: bigint
   contract: `0x${string}`
 }
 
-const GenericBuyAllowanceButton = ({ chain, token, amount, contract }: Props) => {
+const GenericBuyAllowanceButton = ({ chain, token, contract }: Props) => {
   const {
     data: { symbol: tokenSymbol, name: tokenName },
   } = useTokenData(chain, token)

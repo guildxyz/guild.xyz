@@ -1,3 +1,4 @@
+import Bugsnag from "@bugsnag/js"
 import { useDisclosure } from "@chakra-ui/react"
 import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -49,6 +50,11 @@ const useLoginWithGoogle = () => {
           causeCause: options.error.cause.cause,
         }
       }
+
+      Bugsnag.notify(options.error, (event) => {
+        event.severity = "error"
+        event.context = message
+      })
     }
 
     capture(message, finalOptions)

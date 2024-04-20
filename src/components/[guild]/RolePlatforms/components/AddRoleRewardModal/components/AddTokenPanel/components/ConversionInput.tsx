@@ -40,7 +40,7 @@ const ConversionInput = () => {
   useEffect(() => {
     const convRate = Number(conversionAmounts[1]) / Number(conversionAmounts[0])
     setValue("multiplier", convRate)
-  }, [conversionAmounts])
+  }, [conversionAmounts, setValue])
 
   const toggleConversionLock = () => {
     if (conversionLocked) {
@@ -108,7 +108,7 @@ const ConversionInput = () => {
             value={conversionLocked ? calculatePreview() : conversionAmounts[1]}
             setValue={
               conversionLocked
-                ? (val) => {}
+                ? () => {}
                 : (val) => setConversionAmounts([conversionAmounts[0], val])
             }
             isReadOnly={conversionLocked}

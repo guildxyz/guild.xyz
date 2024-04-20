@@ -1,8 +1,8 @@
-import { Chain } from "@guildxyz/types"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 
 const useWithdrawPool = (chain: Chain, poolId: bigint, onSuccess: () => void) => {
   const showErrorToast = useShowErrorToast()
@@ -19,7 +19,7 @@ const useWithdrawPool = (chain: Chain, poolId: bigint, onSuccess: () => void) =>
       showErrorToast("Failed to withdraw from pool! Please try again later.")
       console.error(error)
     },
-    onSuccess: (_, events) => {
+    onSuccess: () => {
       if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
         return
       }

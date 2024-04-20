@@ -3,7 +3,7 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { ArrowSquareOut, Check } from "phosphor-react"
-import { PropsWithChildren, useEffect } from "react"
+import { PropsWithChildren } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import parseFromObject from "utils/parseFromObject"
 import useIsTGBotIn from "./hooks/useIsTGBotIn"
@@ -26,11 +26,12 @@ const TelegramGroup = ({ fieldName, children }: PropsWithChildren<Props>) => {
   const {
     data: { ok: isIn, message: errorMessage },
     isValidating,
-  } = useIsTGBotIn(platformId, { refreshInterval: 5000 })
-
-  useEffect(() => {
-    if (isIn && !errorMessage) trigger(fieldName)
-  }, [isIn, errorMessage])
+  } = useIsTGBotIn(platformId, {
+    refreshInterval: 5000,
+    onSuccess: (data, _key, _config) => {
+      if (data?.isIn) trigger(fieldName)
+    },
+  })
 
   return (
     <>

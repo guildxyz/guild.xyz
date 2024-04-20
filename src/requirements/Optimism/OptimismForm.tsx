@@ -1,8 +1,7 @@
 import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import Attestation from "./components/Attestation"
@@ -24,17 +23,14 @@ const OptimismForm = ({
   field,
 }: RequirementFormProps): JSX.Element => {
   const {
-    register,
     resetField,
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    if (!register) return
-    register(`${baseFieldPath}.chain`, {
-      value: "OPTIMISM",
-    })
-  }, [register])
+  useController({
+    name: `${baseFieldPath}.chain`,
+    defaultValue: "OPTIMISM",
+  })
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
 

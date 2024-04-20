@@ -37,7 +37,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
       `${baseFieldPath}.type`,
       address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
     )
-  }, [address])
+  }, [setValue, baseFieldPath, address])
 
   // Fetching token name and symbol
   const {
@@ -50,7 +50,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
     } catch {
       setValue(`${baseFieldPath}.balancyDecimals`, undefined)
     }
-  }, [decimals])
+  }, [setValue, baseFieldPath, decimals])
 
   return (
     <Stack spacing={4} alignItems="start">

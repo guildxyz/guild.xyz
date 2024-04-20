@@ -58,7 +58,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
     )
       return
     setInitialAlreadyClaimed(alreadyClaimed)
-  }, [alreadyClaimed])
+  }, [alreadyClaimed, initialAlreadyClaimed])
 
   const showMysteryBox = mysteryBoxBalance > 0 && !initialAlreadyClaimed
 

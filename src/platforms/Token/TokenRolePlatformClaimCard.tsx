@@ -31,7 +31,7 @@ const TokenRolePlatformClaimCard = ({
 
   const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
     useMembershipUpdate({
-      onSuccess: (reponse) => {
+      onSuccess: () => {
         onSubmit()
       },
       onError: (error) => {
@@ -39,13 +39,15 @@ const TokenRolePlatformClaimCard = ({
       },
     })
 
-  const claimLoading = useMemo(() => {
-    return membershipLoading
-      ? "Checking access..."
-      : claimLoadingText
-      ? claimLoadingText
-      : null
-  }, [membershipLoading, claimLoadingText])
+  const claimLoading = useMemo(
+    () =>
+      membershipLoading
+        ? "Checking access..."
+        : claimLoadingText
+        ? claimLoadingText
+        : null,
+    [membershipLoading, claimLoadingText]
+  )
 
   const { id: guildId } = useGuild()
 

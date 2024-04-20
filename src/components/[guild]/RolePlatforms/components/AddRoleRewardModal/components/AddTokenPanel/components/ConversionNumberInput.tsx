@@ -31,7 +31,7 @@ const ConversionNumberInput = ({
 }) => {
   const [stepSize, setStepSize] = useState(1)
 
-  const handleChange = (stringValue: string, numberValue: number) => {
+  const handleChange = (stringValue: string) => {
     const parts = stringValue.split(".")
 
     if (parts?.[1] && parts[1].length > 4) {

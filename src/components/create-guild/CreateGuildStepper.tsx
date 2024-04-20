@@ -18,7 +18,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import SummonMembers from "components/[guild]/Onboarding/components/SummonMembers"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Card from "components/common/Card"
 import { CaretDown } from "phosphor-react"
 import { Fragment } from "react"
@@ -83,8 +82,6 @@ export const STEPS: {
 ]
 
 const CreateGuildStepper = ({
-  color,
-  textColor,
   activeStep,
   stepPart,
   setActiveStep,
@@ -92,7 +89,6 @@ const CreateGuildStepper = ({
   ...rest
 }) => {
   const { isOpen, onToggle } = useDisclosure()
-  const { captureEvent } = usePostHogContext()
 
   const cardBgColor = useColorModeValue("gray.50", "blackAlpha.300")
   const orientation = useBreakpointValue<StepperProps["orientation"]>({

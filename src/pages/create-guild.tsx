@@ -51,6 +51,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   useEffect(() => {
     captureEvent("guild creation flow > start guild creation")
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
@@ -74,9 +75,7 @@ const CreateGuildPage = (): JSX.Element => {
         imageUrl={imageUrl}
         showFooter={false}
       >
-        <CreateGuildStepper
-          {...{ color, activeStep, setActiveStep, textColor, stepPart }}
-        />
+        <CreateGuildStepper {...{ activeStep, setActiveStep, stepPart }} />
         <Stack w="full" spacing={4} pt={STEPS[activeStep].content ? 6 : 0} pb="24">
           {STEPS[activeStep].content}
         </Stack>

@@ -89,7 +89,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
     )
   if (error) return <Tag>Failed to load balance</Tag>
 
-  const [owner, poolToken, totalFunding, poolBalance] = data
+  const [owner, , totalFunding, poolBalance] = data
   const capacity = Number(formatUnits(totalFunding, decimals))
   const balance = Number(formatUnits(poolBalance, decimals))
 
@@ -278,12 +278,10 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   )
 }
 
-const TokenRewardWrapper = ({ platform }: RewardProps) => {
-  return (
-    <TokenRewardProvider guildPlatform={platform.guildPlatform}>
-      <TokenReward rolePlatform={platform} />
-    </TokenRewardProvider>
-  )
-}
+const TokenRewardWrapper = ({ platform }: RewardProps) => (
+  <TokenRewardProvider guildPlatform={platform.guildPlatform}>
+    <TokenReward rolePlatform={platform} />
+  </TokenRewardProvider>
+)
 
 export default TokenRewardWrapper

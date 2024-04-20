@@ -26,7 +26,7 @@ const useGameLogic = () => {
 
   useEffect(() => {
     setHighscore(savedHighscore)
-  }, [])
+  }, [savedHighscore])
 
   const addPoints = () => {
     const pointsToAdd =

@@ -19,9 +19,8 @@ const ChooseTemplate = (): JSX.Element => {
 
   useEffect(() => {
     if (isWeb3Connected || isWalletSelectorModalOpen) return
-
     setIsWalletSelectorModalOpen(true)
-  }, [isWeb3Connected, isWalletSelectorModalOpen])
+  }, [isWeb3Connected, isWalletSelectorModalOpen, setIsWalletSelectorModalOpen])
 
   const { setDisabled, stepPart, setPart } = useCreateGuildContext()
 
@@ -31,7 +30,7 @@ const ChooseTemplate = (): JSX.Element => {
 
   useEffect(() => {
     setDisabled(!roles.length)
-  }, [roles.length])
+  }, [setDisabled, roles.length])
 
   return (
     <>

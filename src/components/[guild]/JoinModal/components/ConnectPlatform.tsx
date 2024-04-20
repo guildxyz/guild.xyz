@@ -40,7 +40,7 @@ const ConnectPlatform = ({ platform }: Props) => {
 
   useEffect(() => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
-  }, [platformFromDb])
+  }, [platformFromDb, platform, setValue])
 
   const accountName = `${rewards[platform].name}${
     platform === "TWITTER_V1" ? " (v1)" : ""

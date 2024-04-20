@@ -43,7 +43,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     },
   ]
 
-  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isCollapsed, ,] = useState(false)
 
   return (
     <Stack gap={5}>

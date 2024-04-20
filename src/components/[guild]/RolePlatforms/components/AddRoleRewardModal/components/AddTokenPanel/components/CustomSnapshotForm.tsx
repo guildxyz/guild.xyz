@@ -14,9 +14,9 @@ const CustomSnapshotForm = () => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
-  const setRequirement = (req: any) => setValue("requirements", [req])
-
   useEffect(() => {
+    const setRequirement = (req: any) => setValue("requirements", [req])
+
     if (!uploadedSnapshot) {
       setRequirement(null)
       return
@@ -30,7 +30,7 @@ const CustomSnapshotForm = () => {
         isHidden: false,
       },
     })
-  }, [uploadedSnapshot])
+  }, [uploadedSnapshot, setValue])
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -151,13 +151,7 @@ function parseAndValidateCSV(csvData: string): Promise<ValidCSVRow[]> {
       complete: () => {
         resolve(validatedData as ValidCSVRow[])
       },
-      error: (error) => {
-        reject(
-          new Error(
-            "Data type mismatch: 'key' should be a string and 'value' should be a number."
-          )
-        )
-      },
+      error: (error) => reject(error),
     })
   })
 }

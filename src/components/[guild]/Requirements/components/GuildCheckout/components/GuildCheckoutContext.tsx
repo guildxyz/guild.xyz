@@ -38,6 +38,7 @@ const GuildCheckoutProvider = ({
   useEffect(() => {
     if (!txHash || !isOpen || isTxModalOpen) return
     onTxModalOpen()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txHash])
 
   return (

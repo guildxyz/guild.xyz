@@ -30,7 +30,7 @@ import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateT
 import { GuildPlatform } from "types"
 
 const LeaderboardAirdropCard = () => {
-  const { token, imageUrl, guildPlatform } = useTokenRewardContext()
+  const { token, guildPlatform } = useTokenRewardContext()
   const { colorMode } = useColorMode()
   const modalBg = useCardBg()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")

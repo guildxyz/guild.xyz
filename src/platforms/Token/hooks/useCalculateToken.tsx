@@ -81,22 +81,23 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
     }
   }
 
-  const getRolePlatforms = () => {
-    return roles
+  const getRolePlatforms = () =>
+    roles
       ?.flatMap((role) => role.rolePlatforms)
       ?.filter(
         (rp) =>
           rp?.guildPlatformId === guildPlatform.id ||
           rp?.guildPlatform?.id === guildPlatform.id
       )
-  }
 
   const getValue = () => {
     const rolePlatforms = getRolePlatforms()
 
-    const sum = rolePlatforms.reduce((acc, rolePlatform) => {
-      return acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount)
-    }, 0)
+    const sum = rolePlatforms.reduce(
+      (acc, rolePlatform) =>
+        acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),
+      0
+    )
 
     return sum
   }

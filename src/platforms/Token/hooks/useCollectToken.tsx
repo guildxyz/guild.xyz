@@ -1,4 +1,3 @@
-import { Chain } from "@guildxyz/types"
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -10,6 +9,7 @@ import { useFetcherWithSign } from "utils/fetcher"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { TransactionReceipt } from "viem"
 import { usePublicClient, useWalletClient } from "wagmi"
+import { Chain } from "wagmiConfig/chains"
 import useTokenClaimFee from "./useClaimToken"
 
 type ClaimResponse = {

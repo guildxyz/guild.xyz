@@ -35,12 +35,7 @@ const useSnapshots = (guildPlatformId: number) => {
   const endpoint = !!guildPlatformId
     ? `/v2/guilds/${guildId}/points/${guildPlatformId}/snapshots`
     : null
-  const {
-    data: snapshots,
-    isLoading: isSnapshotsLoading,
-    error,
-    mutate,
-  } = useSWRWithOptionalAuth(endpoint)
+  const { data: snapshots, mutate } = useSWRWithOptionalAuth(endpoint)
 
   return { snapshots: snapshots, isSnapshotsLoading: false, error: null, mutate }
 }

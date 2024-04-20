@@ -23,11 +23,11 @@ const StaticAmount = () => {
 
   useEffect(() => {
     setValue("addition", Number(staticValue) || null)
-  }, [staticValue])
+  }, [setValue, staticValue])
 
   useEffect(() => {
     setValue("multiplier", 1)
-  }, [])
+  }, [setValue])
 
   const {
     data: { logoURI: tokenLogo },

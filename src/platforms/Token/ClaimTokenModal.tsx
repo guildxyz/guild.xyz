@@ -49,11 +49,11 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const rolePlatforms = useRolePlatforms(guildPlatform.id)
 
-  const {
-    onSubmit,
-    isLoading: isClaiming,
-    loadingText: claimLoadingText,
-  } = useCollectToken(chain, rolePlatforms[0]?.roleId, rolePlatforms[0]?.id)
+  const { onSubmit, loadingText: claimLoadingText } = useCollectToken(
+    chain,
+    rolePlatforms[0]?.roleId,
+    rolePlatforms[0]?.id
+  )
 
   const { chainId } = useAccount()
   const isOnCorrectChain = Number(Chains[chain]) === chainId
@@ -61,7 +61,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
     useMembershipUpdate({
-      onSuccess: (reponse) => {
+      onSuccess: () => {
         onSubmit()
       },
       onError: (error) => {
@@ -69,13 +69,15 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
       },
     })
 
-  const claimLoading = useMemo(() => {
-    return membershipLoading
-      ? "Checking access..."
-      : claimLoadingText
-      ? claimLoadingText
-      : null
-  }, [membershipLoading, claimLoadingText])
+  const claimLoading = useMemo(
+    () =>
+      membershipLoading
+        ? "Checking access..."
+        : claimLoadingText
+        ? claimLoadingText
+        : null,
+    [membershipLoading, claimLoadingText]
+  )
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">

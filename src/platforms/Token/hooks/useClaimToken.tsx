@@ -1,17 +1,7 @@
-import { Chain } from "@guildxyz/types"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { useReadContract } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
-
-type ClaimResponse = {
-  amount: string
-  poolId: number
-  rolePlatfromId: number
-  signature: string
-  signedAt: number
-  userId: number
-}
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const useTokenClaimFee = (chain: Chain) => {
   const feeTransactionConfig = {

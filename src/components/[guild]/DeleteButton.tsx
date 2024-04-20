@@ -14,9 +14,8 @@ const DeleteButton = ({ label, onClick }: PropsWithChildren<Props>): JSX.Element
       icon={<Icon as={Trash} boxSize="1.1em" weight="bold" />}
       colorScheme="red"
       variant={"ghost"}
+      minW={"44px"}
       borderRadius={"full"}
-      maxW={10}
-      maxH={10}
       onClick={onClick}
     />
   </Tooltip>

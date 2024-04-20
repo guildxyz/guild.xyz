@@ -69,13 +69,12 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const accessedTokens = useAccessedTokens()
 
-  const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) => {
-    return accessedTokens.find(
+  const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) =>
+    accessedTokens.find(
       (guildPlatform) =>
         guildPlatform.platformGuildData.chain === chain &&
         guildPlatform.platformGuildData.tokenAddress === tokenAddress
     )
-  }
 
   const constructSubmitData = (_data) => {
     const platform = platformForToken(_data.chain, _data.tokenAddress)

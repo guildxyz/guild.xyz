@@ -43,6 +43,8 @@ const PaymentCurrencyPicker = (): JSX.Element => {
       c.chainId === Chains[requirement.chain] && c.address !== requirement.address
   )
 
+  // TODO: find a better solution for setting the default state
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
 
   const {

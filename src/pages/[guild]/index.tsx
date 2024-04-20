@@ -18,6 +18,7 @@ import {
   EditGuildDrawerProvider,
   useEditGuildDrawer,
 } from "components/[guild]/EditGuild/EditGuildDrawerContext"
+import GuildName from "components/[guild]/GuildName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import JoinButton from "components/[guild]/JoinButton"
@@ -36,7 +37,6 @@ import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useMembership from "components/explorer/hooks/useMembership"
 import useUniqueMembers from "hooks/useUniqueMembers"
 import { GetStaticPaths, GetStaticProps } from "next"
@@ -123,7 +123,8 @@ const GuildPage = (): JSX.Element => {
       </Head>
 
       <Layout
-        title={name}
+        title={<GuildName {...{ name, tags }} />}
+        ogTitle={name}
         textColor={textColor}
         ogDescription={description}
         description={
@@ -173,11 +174,6 @@ const GuildPage = (): JSX.Element => {
         backgroundImage={localBackgroundImage}
         action={isAdmin && isDetailed && <DynamicEditGuildButton />}
         backButton={<BackButton />}
-        titlePostfix={
-          tags?.includes("VERIFIED") && (
-            <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
-          )
-        }
       >
         {showOnboarding ? (
           <DynamicOnboarding />

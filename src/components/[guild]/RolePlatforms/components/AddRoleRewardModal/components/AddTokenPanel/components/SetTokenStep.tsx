@@ -21,17 +21,17 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
     data: { logoURI: tokenLogo, symbol: tokenSymbol, name: tokenName },
   } = useTokenData(chain, address)
 
+  const { setValue } = useFormContext<AddTokenFormType>()
+
   useEffect(() => {
     setValue("name", `${tokenName} (${tokenSymbol})`)
     setValue("imageUrl", tokenLogo)
-  }, [tokenSymbol, tokenName, tokenLogo])
+  }, [tokenSymbol, tokenName, tokenLogo, setValue])
 
   const [progress, setProgress] = useState<number>(0)
 
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
-
-  const { setValue } = useFormContext<AddTokenFormType>()
 
   const uploader = usePinata({
     onSuccess: ({ IpfsHash }) =>

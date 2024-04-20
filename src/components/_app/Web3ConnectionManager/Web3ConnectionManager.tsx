@@ -1,6 +1,7 @@
 import ClientOnly from "components/common/ClientOnly"
 import { useAtom } from "jotai"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
+import WalletLinkHelperModal from "./components/WalletLinkHelperModal"
 import WalletSelectorModal, {
   walletSelectorModalAtom,
 } from "./components/WalletSelectorModal"
@@ -22,6 +23,7 @@ const Web3ConnectionManager = () => {
         onOpen={() => setIsWalletSelectorModalOpen(true)}
         onClose={() => setIsWalletSelectorModalOpen(false)}
       />
+      <WalletLinkHelperModal />
       <PlatformMergeErrorAlert />
     </ClientOnly>
   )

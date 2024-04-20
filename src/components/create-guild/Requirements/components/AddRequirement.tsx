@@ -188,7 +188,7 @@ const AddRequirementForm = forwardRef(
     const [isPresent, safeToRemove] = usePresence()
     useEffect(() => {
       if (!isPresent) setTimeout(safeToRemove, TRANSITION_DURATION_MS)
-    }, [isPresent])
+    }, [isPresent, safeToRemove])
 
     const toast = useToast()
     const {

@@ -27,15 +27,10 @@ const SnapshotSelector = () => {
   )
 
   const { setValue: setRootValue } = useFormContext()
-  const setRequirement = (req: any) => setRootValue("requirements", [req])
 
   const selectedPointsId = useWatch({ name: "data.guildPlatformId" })
 
-  const {
-    snapshots,
-    isSnapshotsLoading,
-    mutate: refetchSnapshots,
-  } = useSnapshots(selectedPointsId)
+  const { snapshots, mutate: refetchSnapshots } = useSnapshots(selectedPointsId)
   const selectedSnapshotId = useWatch({ name: "snapshotId" })
 
   const handleCreateSuccess = (createdId: number) => {
@@ -45,22 +40,16 @@ const SnapshotSelector = () => {
     onClose()
   }
 
-  const { snapshot, isSnapshotLoading } = useSnapshot(
-    selectedPointsId,
-    selectedSnapshotId
-  )
+  const { snapshot } = useSnapshot(selectedPointsId, selectedSnapshotId)
 
   const transformSnapshotData = (
     snapshotData: { address: string; value: number }[]
-  ) => {
-    return snapshotData.map((data) => {
-      return { key: data.address, value: data.value }
-    })
-  }
+  ) => snapshotData.map((data) => ({ key: data.address, value: data.value }))
 
   useEffect(() => {
     if (!snapshot) return
     const transformedData = transformSnapshotData(snapshot.data)
+    const setRequirement = (req: any) => setRootValue("requirements", [req])
 
     setRequirement({
       type: "GUILD_SNAPSHOT",
@@ -70,27 +59,24 @@ const SnapshotSelector = () => {
         guildPlatformId: selectedPointsId,
       },
     })
-  }, [snapshot])
+  }, [snapshot, selectedPointsId, setRootValue])
 
-  const getPointPlatform = (guildPlatformId: number) => {
-    return guildPlatforms.find((gp) => gp.id === guildPlatformId)
+  const getPointPlatform = (guildPlatformId: number) =>
+    guildPlatforms.find((gp) => gp.id === guildPlatformId)
       ?.platformGuildData as PlatformGuildData["POINTS"]
-  }
 
   const options: SelectOption<number>[] = !!snapshots
-    ? snapshots.map((shot) => {
-        return {
-          label: `${shot.name} (${
-            getPointPlatform(shot.guildPlatformId)?.name || "points"
-          })`,
-          value: shot.id,
-          img: getPointPlatform(shot.guildPlatformId)?.imageUrl || (
-            <Center boxSize={5}>
-              <Star />
-            </Center>
-          ),
-        }
-      })
+    ? snapshots.map((shot) => ({
+        label: `${shot.name} (${
+          getPointPlatform(shot.guildPlatformId)?.name || "points"
+        })`,
+        value: shot.id,
+        img: getPointPlatform(shot.guildPlatformId)?.imageUrl || (
+          <Center boxSize={5}>
+            <Star />
+          </Center>
+        ),
+      }))
     : []
 
   return (

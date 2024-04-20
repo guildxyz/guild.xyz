@@ -1,12 +1,4 @@
-import {
-  Circle,
-  HStack,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-  useColorMode,
-} from "@chakra-ui/react"
+import { Circle, HStack, Heading, Icon, Stack, Text } from "@chakra-ui/react"
 import DisplayCard from "components/common/DisplayCard"
 import { CaretRight } from "phosphor-react"
 import Star from "static/icons/star.svg"
@@ -18,31 +10,27 @@ type Props = {
   onClick: () => void
 }
 
-const SnapshotCard = ({ image, name, date, onClick }: Props) => {
-  const { colorMode } = useColorMode()
+const SnapshotCard = ({ image, name, date, onClick }: Props) => (
+  <DisplayCard onClick={onClick}>
+    <HStack gap={3}>
+      <Circle
+        position="relative"
+        bgColor={"blackAlpha.300"}
+        size={12}
+        overflow="hidden"
+      >
+        {image ?? <Star />}
+      </Circle>
 
-  return (
-    <DisplayCard onClick={onClick}>
-      <HStack gap={3}>
-        <Circle
-          position="relative"
-          bgColor={"blackAlpha.300"}
-          size={12}
-          overflow="hidden"
-        >
-          {image ?? <Star />}
-        </Circle>
-
-        <Stack gap={0}>
-          <Heading size={"sm"}>{name}</Heading>
-          <Text size={"sm"} color="GrayText">
-            {date}
-          </Text>
-        </Stack>
-        <Icon as={CaretRight} boxSize={4} ml="auto" />
-      </HStack>
-    </DisplayCard>
-  )
-}
+      <Stack gap={0}>
+        <Heading size={"sm"}>{name}</Heading>
+        <Text size={"sm"} color="GrayText">
+          {date}
+        </Text>
+      </Stack>
+      <Icon as={CaretRight} boxSize={4} ml="auto" />
+    </HStack>
+  </DisplayCard>
+)
 
 export default SnapshotCard

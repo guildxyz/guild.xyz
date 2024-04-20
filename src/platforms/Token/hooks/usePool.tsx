@@ -1,8 +1,7 @@
-import { Chain } from "@guildxyz/types"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { useReadContract } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const usePool = (chain: Chain, poolId: bigint) => {
   const transactionConfig = {

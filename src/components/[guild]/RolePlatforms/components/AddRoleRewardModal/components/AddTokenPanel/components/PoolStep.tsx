@@ -24,7 +24,7 @@ import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import { AddTokenFormType, TokenRewardType } from "../AddTokenPanel"
+import { AddTokenFormType } from "../AddTokenPanel"
 import useIsBalanceSufficient from "../hooks/useIsBalanceSufficient"
 import ConversionNumberInput from "./ConversionNumberInput"
 import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
@@ -32,7 +32,6 @@ import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
 const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
   const tokenAddress = useWatch({ name: `tokenAddress` })
-  const type: TokenRewardType = useWatch({ name: `type` })
   const imageUrl = useWatch({ name: `imageUrl` })
 
   const { chainId, address: userAddress } = useAccount()
@@ -59,11 +58,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     formattedAmount = parseUnits(amount, decimals)
   } catch {}
 
-  const {
-    isLoading,
-    onSubmitTransaction: submitRegisterPool,
-    error,
-  } = useRegisterPool(
+  const { isLoading, onSubmitTransaction: submitRegisterPool } = useRegisterPool(
     userAddress,
     chain,
     tokenAddress,
@@ -78,7 +73,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
 
   useEffect(() => {
     setCanClose(!isLoading)
-  }, [isLoading])
+  }, [isLoading, setCanClose])
 
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
   const isOnCorrectChain = Number(Chains[chain]) === chainId
@@ -144,7 +139,6 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
           <GenericBuyAllowanceButton
             chain={chain}
             token={tokenAddress}
-            amount={formattedAmount}
             contract={ERC20_CONTRACTS[chain]}
           />
         )}

@@ -11,6 +11,7 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
@@ -27,7 +28,6 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
@@ -72,7 +72,7 @@ const Leaderboard = () => {
 
   return (
     <Layout
-      title={name}
+      title={<GuildName {...{ name, tags }} />}
       textColor={textColor}
       ogTitle={`Leaderboard${name ? ` - ${name}` : ""}`}
       ogDescription={description}
@@ -117,11 +117,6 @@ const Leaderboard = () => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
       backButton={<BackButton />}
-      titlePostfix={
-        tags?.includes("VERIFIED") && (
-          <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
-        )
-      }
     >
       <GuildTabs
         activeTab="LEADERBOARD"

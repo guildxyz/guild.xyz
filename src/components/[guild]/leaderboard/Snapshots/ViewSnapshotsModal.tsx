@@ -11,15 +11,12 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useColorMode,
 } from "@chakra-ui/react"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
-import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import useDebouncedState from "hooks/useDebouncedState"
 import { useRouter } from "next/router"
 import { ArrowLeft } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import Star from "static/icons/star.svg"
 import SnapshotCard from "./SnapshotCard"
 import SnapshotTable from "./SnapshotTable"
@@ -71,27 +68,8 @@ export const MOCK_SNAPSHOTS = [
 ]
 
 const ViewSnapshotsModal = ({ onClose, isOpen, onCreate }: Props) => {
-  const { colorMode } = useColorMode()
-
   const [selectedSnapshot, setSelectedSnapshot] = useState(null)
 
-  const [search, setSearch] = useState("")
-  const debouncedSearch = useDebouncedState(search)
-
-  const [searchResults, setSearchResults] = useState(selectedSnapshot?.data)
-
-  useEffect(() => {
-    if (!debouncedSearch) {
-      setSearchResults(selectedSnapshot?.data)
-      return
-    }
-    setSearchResults(
-      selectedSnapshot?.data?.filter((row) =>
-        row.address.includes(debouncedSearch.trim().toLowerCase())
-      )
-    )
-  }, [selectedSnapshot, debouncedSearch])
-  const { urlName } = useGuild()
   const router = useRouter()
 
   const pointsRewards = useAccessedGuildPoints("ALL")

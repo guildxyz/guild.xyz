@@ -186,7 +186,7 @@ const AddRewardButton = (): JSX.Element => {
         }
       }
 
-      const test2 = await onAddRewardSubmit({
+      await onAddRewardSubmit({
         ...data.rolePlatforms[0].guildPlatform,
         rolePlatforms: [
           {

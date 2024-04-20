@@ -107,7 +107,7 @@ const FilterTag = ({
     if (!isFocused || !!value) return
     // Opening the suggestions dropdown
     send({ type: "CLICK_INPUT" })
-  }, [isFocused])
+  }, [isFocused, value, send])
 
   const { size, ...filteredInputProps } = inputProps
 

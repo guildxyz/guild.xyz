@@ -1,8 +1,8 @@
-import { Chain } from "@guildxyz/types"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 import { findEvent } from "./useRegisterPool"
 
 const useFundPool = (

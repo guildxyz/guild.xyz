@@ -11,7 +11,6 @@ import {
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -42,11 +41,6 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
 
   const pickedBadge = data?.find((option) => option.value === badgeId)
 
-  useEffect(() => {
-    if (isPlayground) return
-    setValue(`${baseFieldPath}.address`, sismoContracts[chain])
-  }, [chain])
-
   if (isPlayground)
     return (
       <Alert status="info" mb="6" pb="5">
@@ -67,7 +61,12 @@ const SismoForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       <ChainPicker
         controlName={`${baseFieldPath}.chain`}
         supportedChains={Object.keys(sismoContracts) as Chain[]}
-        onChange={() => setValue(`${baseFieldPath}.data.id`, null)}
+        onChange={() => {
+          setValue(`${baseFieldPath}.data.id`, null)
+          if (!isPlayground) {
+            setValue(`${baseFieldPath}.address`, sismoContracts[chain])
+          }
+        }}
       />
 
       <FormControl

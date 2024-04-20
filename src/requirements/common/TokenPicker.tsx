@@ -12,7 +12,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { UseControllerProps, useController, useFormContext } from "react-hook-form"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
@@ -59,9 +59,12 @@ const TokenPicker = ({
 
   const { isLoading, tokens } = useTokens(chain)
 
-  const isCoin = (addr: string) =>
-    addr === CHAIN_CONFIG[chain]?.nativeCurrency?.symbol ||
-    addr === "0x0000000000000000000000000000000000000000"
+  const isCoin = useCallback(
+    (addr: string) =>
+      addr === CHAIN_CONFIG[chain]?.nativeCurrency?.symbol ||
+      addr === "0x0000000000000000000000000000000000000000",
+    [chain]
+  )
 
   const mappedTokens = useMemo(() => {
     const mapped = tokens?.map((token) => ({
@@ -71,7 +74,7 @@ const TokenPicker = ({
       decimals: token.decimals,
     }))
     return excludeCoins ? mapped?.filter((token) => !isCoin(token.value)) : mapped
-  }, [tokens])
+  }, [tokens, excludeCoins, isCoin])
 
   const {
     data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },
@@ -82,9 +85,6 @@ const TokenPicker = ({
   const tokenImage = mappedTokens?.find(
     (token) => token.value?.toLowerCase() === address?.toLowerCase()
   )?.img
-
-  const type =
-    address === "0x0000000000000000000000000000000000000000" ? "COIN" : "ERC20"
 
   return (
     <FormControl isRequired isInvalid={!!error}>

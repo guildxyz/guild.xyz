@@ -200,7 +200,7 @@ const RecheckAccessesButton = ({
             <PopoverHeader {...POPOVER_HEADER_STYLES}>{tooltipLabel}</PopoverHeader>
           ) : (
             <PopoverHeader {...POPOVER_HEADER_STYLES}>
-              You can only use this function once per minute
+              {tooltipLabel}
               <Text
                 colorScheme="gray"
                 w="full"
@@ -208,6 +208,8 @@ const RecheckAccessesButton = ({
                 fontWeight={"medium"}
                 mt="1"
               >
+                Only usable once per minute.
+                <br />
                 Last checked at: {lastCheckedAt.toLocaleTimeString()}
               </Text>
             </PopoverHeader>
