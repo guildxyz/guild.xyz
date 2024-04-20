@@ -67,7 +67,7 @@ const RecheckAccessesButton = ({
     return () => clearInterval(interval)
   }, [lastCheckedAt])
 
-  const canResend = dateNow - lastCheckedAt.getTime() > TIMEOUT
+  const canResend = true || dateNow - lastCheckedAt.getTime() > TIMEOUT
 
   const tooltipLabel =
     tooltipLabelInitial ||

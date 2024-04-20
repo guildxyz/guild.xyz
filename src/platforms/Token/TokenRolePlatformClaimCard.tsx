@@ -5,6 +5,7 @@ import useRole from "components/[guild]/hooks/useRole"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
+import useMembership from "components/explorer/hooks/useMembership"
 import { useMemo } from "react"
 import { RolePlatform } from "types"
 import { useTokenRewardContext } from "./TokenRewardContext"
@@ -18,6 +19,8 @@ const TokenRolePlatformClaimCard = ({
 }) => {
   const { guildPlatform, token } = useTokenRewardContext()
   const { getValue } = useCalculateFromDynamic(rolePlatform.dynamicAmount)
+
+  const { roleIds } = useMembership()
 
   const {
     onSubmit,
@@ -57,6 +60,8 @@ const TokenRolePlatformClaimCard = ({
 
   const claimable = getValue()
 
+  const hasAccess = roleIds.includes(rolePlatform.roleId)
+
   return (
     <Card
       px={4}
@@ -65,9 +70,13 @@ const TokenRolePlatformClaimCard = ({
       boxShadow={"none"}
     >
       <HStack gap={3}>
-        <GuildLogo imageUrl={imageUrl} size={{ base: "24px", md: "36px" }} />
+        <GuildLogo
+          imageUrl={imageUrl}
+          size={{ base: "24px", md: "36px" }}
+          opacity={hasAccess ? 1 : 0.5}
+        />
 
-        <Stack gap={0}>
+        <Stack gap={0} opacity={hasAccess ? 1 : 0.5}>
           <Text fontSize="sm" color="GrayText">
             {name}
           </Text>
@@ -77,22 +86,28 @@ const TokenRolePlatformClaimCard = ({
           </Heading>
         </Stack>
 
-        <Button
-          size="sm"
-          ml="auto"
-          colorScheme="gold"
-          isDisabled={token.isLoading}
-          isLoading={isClaiming}
-          loadingText={claimLoading}
-          onClick={() => {
-            submitClaim({
-              roleIds: [rolePlatform.roleId],
-              saveClaimData: true,
-            })
-          }}
-        >
-          Claim
-        </Button>
+        {hasAccess ? (
+          <Button
+            size="sm"
+            ml="auto"
+            colorScheme="gold"
+            isDisabled={token.isLoading}
+            isLoading={isClaiming}
+            loadingText={claimLoading}
+            onClick={() => {
+              submitClaim({
+                roleIds: [rolePlatform.roleId],
+                saveClaimData: true,
+              })
+            }}
+          >
+            Claim
+          </Button>
+        ) : (
+          <Button size="sm" ml="auto" colorScheme="gold" isDisabled={true}>
+            No access
+          </Button>
+        )}
       </HStack>
     </Card>
   )

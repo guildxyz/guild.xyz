@@ -1,5 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import useMembership from "components/explorer/hooks/useMembership"
 import { GuildPlatform } from "types"
 import { useAccount } from "wagmi"
 
@@ -81,6 +82,8 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
     }
   }
 
+  const { roleIds } = useMembership()
+
   const getRolePlatforms = () =>
     roles
       ?.flatMap((role) => role.rolePlatforms)
@@ -93,11 +96,13 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
   const getValue = () => {
     const rolePlatforms = getRolePlatforms()
 
-    const sum = rolePlatforms.reduce(
-      (acc, rolePlatform) =>
-        acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),
-      0
-    )
+    const sum = rolePlatforms
+      .filter((rp) => roleIds.includes(rp.roleId))
+      .reduce(
+        (acc, rolePlatform) =>
+          acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),
+        0
+      )
 
     return sum
   }

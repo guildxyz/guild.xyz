@@ -98,10 +98,6 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
       ...(_data.type === TokenRewardType.STATIC && {
         operation: {
           type: "LINEAR",
-          params: {
-            addition: _data.addition,
-            multiplier: _data.multiplier,
-          },
           input: {
             type: "STATIC",
             value: _data.staticValue,

@@ -181,8 +181,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
             width="full"
             colorScheme="indigo"
             isDisabled={!isBalanceSufficient}
-            // TODO: Change back to pool reg submit
-            onClick={onSubmit}
+            onClick={submitRegisterPool}
             isLoading={isLoading}
             loadingText="Creating pool..."
           >

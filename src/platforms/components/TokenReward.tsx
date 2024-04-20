@@ -249,7 +249,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const tokenRewardType = rolePlatform.dynamicAmount.operation.input[0].type
 
   return (
-    <Flex alignItems={"center"} gap={1} wrap={"wrap"}>
+    <Flex alignItems={"center"} gap={1} wrap={"wrap"} mt={2}>
       <RewardDisplay
         icon={
           token.isLoading ? (
