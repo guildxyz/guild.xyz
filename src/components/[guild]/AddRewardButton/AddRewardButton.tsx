@@ -338,7 +338,7 @@ const AddRewardButton = (): JSX.Element => {
           colorScheme="dark"
         >
           <ModalOverlay />
-          <ModalContent minH="550px">
+          <ModalContent minH={selection !== "ERC20" && "550px"}>
             <ModalCloseButton />
             <ModalHeader
               {...(step === "SELECT_ROLE"
@@ -407,7 +407,7 @@ const AddRewardButton = (): JSX.Element => {
             >
               {selection && step === "SELECT_ROLE" ? (
                 <>
-                  {selection === "ERC20" ? (
+                  {selection !== "ERC20" ? (
                     <>
                       <SectionTitle
                         mt={6}

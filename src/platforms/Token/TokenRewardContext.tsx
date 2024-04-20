@@ -19,7 +19,7 @@ const TokenRewardProvider = ({
 }): JSX.Element => {
   const {
     platformGuildData: { tokenAddress, chain, imageUrl },
-  } = guildPlatform
+  } = guildPlatform || { platformGuildData: {} }
   const { amount, isLoading: isFeeLoading } = useTokenClaimFee(chain)
   const { data: token, isLoading: isTokenLoading } = useTokenData(
     chain,

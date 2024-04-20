@@ -43,6 +43,7 @@ export type AddTokenFormType = {
   }
   snapshotId: number
   type: TokenRewardType
+  staticValue?: number
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -79,16 +80,40 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
   const constructSubmitData = (_data) => {
     const platform = platformForToken(_data.chain, _data.tokenAddress)
 
-    const rolePlatformPart = {
-      dynamicAmount: {
+    const dynamicAmount = {
+      ...(_data.type === TokenRewardType.DYNAMIC_SNAPSHOT && {
         operation: {
           type: "LINEAR",
           params: {
             addition: _data.addition,
             multiplier: _data.multiplier,
           },
+          input: {
+            type: "REQUIREMENT_AMOUNT",
+            // Will be filled after role creation
+          },
         },
-      },
+      }),
+
+      ...(_data.type === TokenRewardType.STATIC && {
+        operation: {
+          type: "LINEAR",
+          params: {
+            addition: _data.addition,
+            multiplier: _data.multiplier,
+          },
+          input: {
+            type: "STATIC",
+            value: _data.staticValue,
+          },
+        },
+      }),
+
+      ...(_data.type === TokenRewardType.DYNAMIC_POINTS && {}),
+    }
+
+    const rolePlatformPart = {
+      dynamicAmount: dynamicAmount,
       isNew: true,
     }
 
@@ -112,7 +137,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
     return {
       ...guildPlatformPart,
-      requirements: _data.requirements,
+      ...(_data.type !== TokenRewardType.STATIC && {
+        requirements: _data.requirements,
+      }),
       ...rolePlatformPart,
     }
   }
@@ -129,11 +156,12 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         orientation="vertical"
         gap="0"
         w="full"
+        height={"100%"}
       >
         {steps.map((step, index) => (
           <Step
             key={index}
-            style={{ width: "100%" }}
+            style={{ width: "100%", height: "100%" }}
             onClick={activeStep > index ? () => setActiveStep(index) : null}
           >
             <StepIndicator>

@@ -9,6 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
+import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import { canCloseAddRewardModalAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
@@ -74,6 +75,37 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   useEffect(() => {
     setCanClose(!isLoading)
   }, [isLoading, setCanClose])
+
+  const accessedTokens = useAccessedTokens()
+
+  const platformForToken = accessedTokens.find(
+    (guildPlatform) =>
+      guildPlatform.platformGuildData.chain === chain &&
+      guildPlatform.platformGuildData.tokenAddress === tokenAddress
+  )
+
+  const continuePoolExists = () => {
+    setValue("poolId", platformForToken.platformGuildData.poolId)
+    onSubmit()
+  }
+
+  if (!!platformForToken)
+    return (
+      <Stack>
+        <Text colorScheme="gray">
+          You're all set! You had already set up a pool for this token in your guild.
+        </Text>
+        <Button
+          size="lg"
+          width="full"
+          mt="3"
+          colorScheme="indigo"
+          onClick={continuePoolExists}
+        >
+          Create reward
+        </Button>
+      </Stack>
+    )
 
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
   const isOnCorrectChain = Number(Chains[chain]) === chainId
@@ -149,7 +181,8 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
             width="full"
             colorScheme="indigo"
             isDisabled={!isBalanceSufficient}
-            onClick={submitRegisterPool}
+            // TODO: Change back to pool reg submit
+            onClick={onSubmit}
             isLoading={isLoading}
             loadingText="Creating pool..."
           >

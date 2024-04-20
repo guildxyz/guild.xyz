@@ -106,7 +106,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
       address: val.address,
       points: val.totalPoints,
     }))
-  }, [data.leaderboard])
+  }, [data?.leaderboard])
 
   return (
     <>

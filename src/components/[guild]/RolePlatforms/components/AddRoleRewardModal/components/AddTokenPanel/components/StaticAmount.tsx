@@ -7,8 +7,7 @@ import {
 } from "@chakra-ui/react"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
-import { useEffect, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import Token from "static/icons/token.svg"
 import { AddTokenFormType } from "../AddTokenPanel"
 import ConversionNumberInput from "./ConversionNumberInput"
@@ -19,19 +18,16 @@ const StaticAmount = () => {
   const address = useWatch({ name: `tokenAddress`, control })
   const imageUrl = useWatch({ name: `imageUrl`, control })
 
-  const [staticValue, setStaticValue] = useState("1")
-
-  useEffect(() => {
-    setValue("addition", Number(staticValue) || null)
-  }, [setValue, staticValue])
-
-  useEffect(() => {
-    setValue("multiplier", 1)
-  }, [setValue])
-
   const {
     data: { logoURI: tokenLogo },
   } = useTokenData(chain, address)
+
+  const {
+    field: { value: staticValue },
+  } = useController({
+    name: "staticValue",
+    defaultValue: 1,
+  })
 
   return (
     <>
@@ -49,8 +45,8 @@ const StaticAmount = () => {
           </InputLeftElement>
 
           <ConversionNumberInput
-            value={staticValue}
-            setValue={(val) => setStaticValue(val)}
+            value={`${staticValue}`}
+            setValue={(val) => setValue("staticValue", Number(val))}
           />
         </InputGroup>
       </Stack>

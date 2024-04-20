@@ -1,7 +1,8 @@
 import { Collapse, Flex, Stack } from "@chakra-ui/react"
+import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import Button from "components/common/Button"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenRewardType } from "../AddTokenPanel"
 import DynamicAmount from "./DynamicAmount"
@@ -15,6 +16,20 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const requirements = useWatch({ name: `requirements` })
   const multiplier = useWatch({ name: `multiplier` })
   const addition = useWatch({ name: `addition` })
+  const chain = useWatch({ name: `chain` })
+  const address = useWatch({ name: `tokenAddress` })
+
+  const accessedTokens = useAccessedTokens()
+
+  const platformForToken = accessedTokens.find(
+    (guildPlatform) =>
+      guildPlatform.platformGuildData.chain === chain &&
+      guildPlatform.platformGuildData.tokenAddress === address
+  )
+
+  useEffect(() => {
+    if (platformForToken) setValue("type", TokenRewardType.STATIC)
+  }, [platformForToken, setValue])
 
   const getContinueDisabled = () => {
     switch (type) {
@@ -36,6 +51,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     {
       label: "Dynamic amount",
       value: TokenRewardType.DYNAMIC_SNAPSHOT,
+      disabled: !!platformForToken,
     },
     {
       label: "Static amount",
