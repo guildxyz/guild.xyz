@@ -22,7 +22,7 @@ const reactionOptions: SelectOption<LensActionType>[] = [
 
 const platformOptions: SelectOption[] = [
   {
-    label: "Hey.xyz",
+    label: "Hey",
     value: "hey",
   },
   {
