@@ -1,11 +1,11 @@
-const fs = require("fs")
-const path = require("path")
+import { mkdir, writeFileSync } from "fs"
+import { join } from "path"
 
-const WEB_ROOT = path.join(__dirname, "node_modules", "@coinbase", "waas-sdk-web")
-const VIEM_ROOT = path.join(__dirname, "node_modules", "@coinbase", "waas-sdk-viem")
+const WEB_ROOT = join(__dirname, "node_modules", "@coinbase", "waas-sdk-web")
+const VIEM_ROOT = join(__dirname, "node_modules", "@coinbase", "waas-sdk-viem")
 
-fs.mkdir(WEB_ROOT, () => {})
-fs.mkdir(VIEM_ROOT, () => {})
+mkdir(WEB_ROOT, () => {})
+mkdir(VIEM_ROOT, () => {})
 
 const webMockTypes = `
 export type Address<T> = any;
@@ -39,8 +39,8 @@ const viemPackage = `
 }
 `
 
-fs.writeFileSync(path.join(WEB_ROOT, "index.d.ts"), webMockTypes, { flag: "w+" })
-fs.writeFileSync(path.join(WEB_ROOT, "package.json"), webPackage, { flag: "w+" })
-fs.writeFileSync(path.join(WEB_ROOT, "index.js"), "", { flag: "w+" })
-fs.writeFileSync(path.join(VIEM_ROOT, "index.js"), viemMock, { flag: "w+" })
-fs.writeFileSync(path.join(VIEM_ROOT, "package.json"), viemPackage, { flag: "w+" })
+writeFileSync(join(WEB_ROOT, "index.d.ts"), webMockTypes, { flag: "w+" })
+writeFileSync(join(WEB_ROOT, "package.json"), webPackage, { flag: "w+" })
+writeFileSync(join(WEB_ROOT, "index.js"), "", { flag: "w+" })
+writeFileSync(join(VIEM_ROOT, "index.js"), viemMock, { flag: "w+" })
+writeFileSync(join(VIEM_ROOT, "package.json"), viemPackage, { flag: "w+" })

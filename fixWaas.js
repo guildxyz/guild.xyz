@@ -4,7 +4,7 @@
  * executed at postinstall. If you encounter ERR_IMPORT_ASSERTION_TYPE_MISSING
  * TypeError at build, you should probably run an 'npm install'
  */
-const { readFileSync, writeFileSync } = require("fs")
+import { readFileSync, writeFileSync } from "fs"
 
 const basePath = "./node_modules/@coinbase/waas-sdk-web/dist"
 
