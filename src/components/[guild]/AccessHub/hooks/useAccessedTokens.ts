@@ -15,6 +15,7 @@ export const useAccessedTokens = () => {
 
       const relevantRolePlatforms = roles
         ?.flatMap((role) => role.rolePlatforms)
+        ?.filter((rp) => rp.guildPlatformId === gp.id)
         ?.filter((rp) => roleIds?.includes(rp.roleId))
 
       return relevantRolePlatforms.length > 0

@@ -23,17 +23,27 @@ import {
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
 import ClickableTagPopover from "components/[guild]/activity/ActivityLogAction/components/ClickableTagPopover"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
-import { ArrowRight, Coin, DotsThreeVertical, Wallet } from "phosphor-react"
+import {
+  ArrowRight,
+  ArrowSquareIn,
+  Coin,
+  DotsThreeVertical,
+  Wallet,
+} from "phosphor-react"
+import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
 import FundPoolModal from "platforms/Token/FundPoolModal"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
-import { useCalculateFromDynamic } from "platforms/Token/hooks/useCalculateToken"
+import { useCalculateForRolePlatform } from "platforms/Token/hooks/useCalculateToken"
 import usePool from "platforms/Token/hooks/usePool"
 import useWithdrawPool from "platforms/Token/hooks/useWithdrawPool"
 import { useState } from "react"
@@ -243,10 +253,15 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
 const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { imageUrl, token } = useTokenRewardContext()
 
-  const { getValue } = useCalculateFromDynamic(rolePlatform.dynamicAmount)
-  const claimableAmount = getValue()
+  const claimableAmount = useCalculateForRolePlatform(rolePlatform)
+
+  const { isAdmin } = useGuildPermission()
+
+  const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
 
   const tokenRewardType = rolePlatform.dynamicAmount.operation.input[0].type
+
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Flex alignItems={"center"} gap={1} wrap={"wrap"} mt={2}>
@@ -262,7 +277,32 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
             />
           )
         }
-        label={`Claim: ${claimableAmount || ""} ${token?.data?.symbol || "tokens"}`}
+        label={
+          <>
+            {`Claim: `}
+            <Tooltip
+              label={
+                !hasRoleAccess ? (
+                  `You will be able to claim these tokens if you satisfy the requirements for this role.`
+                ) : (
+                  <>
+                    Claim reward <Icon as={ArrowSquareIn} mb="-0.5" />
+                  </>
+                )
+              }
+              shouldWrapChildren
+              hasArrow
+            >
+              <Button
+                variant="link"
+                onClick={() => onOpen()}
+                isDisabled={!hasRoleAccess}
+              >
+                {claimableAmount || 0} {token?.data?.symbol || "tokens"}
+              </Button>
+            </Tooltip>
+          </>
+        }
         whiteSpace={"nowrap"}
         pt={0}
         mr={2}
@@ -271,9 +311,13 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
         <TokenConversionTag platform={rolePlatform} />
       )}
 
-      <PoolTag
-        poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
-      />
+      {isAdmin && (
+        <PoolTag
+          poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
+        />
+      )}
+
+      <ClaimTokenModal isOpen={isOpen} onClose={onClose} />
     </Flex>
   )
 }

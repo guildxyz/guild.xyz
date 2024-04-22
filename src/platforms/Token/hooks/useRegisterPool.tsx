@@ -48,8 +48,6 @@ const useRegisterPool = (
       }
 
       const poolId = poolRegisteredEvent.args.poolId.toString()
-      console.log("Pool registered with poolId: " + poolId)
-
       onSuccess(poolId)
     },
   })

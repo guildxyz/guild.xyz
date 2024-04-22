@@ -1,8 +1,10 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import useMembership from "components/explorer/hooks/useMembership"
-import { GuildPlatform } from "types"
+import useTokenData from "hooks/useTokenData"
+import { GuildPlatform, RolePlatform } from "types"
 import { useAccount } from "wagmi"
+import useClaimedAmount from "./useTokenClaimedAmount"
 
 const calcRequirementAmount = (
   requirement: any,
@@ -26,8 +28,24 @@ const calcRequirementAmount = (
   )
 }
 
-const useCalculateFromDynamic = (dynamicAmount: any) => {
+const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
   const { address } = useAccount()
+
+  const dynamicAmount = rolePlatform.dynamicAmount
+
+  const { chain, poolId, tokenAddress } =
+    rolePlatform.guildPlatform.platformGuildData
+
+  const {
+    data: { decimals },
+  } = useTokenData(chain, tokenAddress)
+
+  const { data: alreadyClaimed } = useClaimedAmount(
+    chain,
+    poolId,
+    [rolePlatform.id],
+    decimals
+  )
 
   const { data: requirements } = useRequirements(
     dynamicAmount?.operation?.input?.[0]?.roleId
@@ -38,7 +56,7 @@ const useCalculateFromDynamic = (dynamicAmount: any) => {
 
   const rewardType = dynamicAmount?.operation?.input?.[0]?.type
 
-  const getValue = () => {
+  const getSum = () => {
     switch (rewardType) {
       case "STATIC":
         return dynamicAmount.operation.input[0].value
@@ -51,7 +69,7 @@ const useCalculateFromDynamic = (dynamicAmount: any) => {
     }
   }
 
-  return { getValue }
+  return getSum() - (alreadyClaimed?.[0] || 0)
 }
 
 const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
@@ -92,22 +110,38 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
           rp?.guildPlatformId === guildPlatform.id ||
           rp?.guildPlatform?.id === guildPlatform.id
       )
+      .filter((rp) => roleIds?.includes(rp.roleId) || false)
+
+  const {
+    data: { decimals },
+  } = useTokenData(
+    guildPlatform.platformGuildData.chain,
+    guildPlatform.platformGuildData.tokenAddress
+  )
+
+  const { data: alreadyClaimedAmounts } = useClaimedAmount(
+    guildPlatform.platformGuildData.chain,
+    guildPlatform.platformGuildData.poolId,
+    getRolePlatforms().map((rp) => rp.id),
+    decimals
+  )
 
   const getValue = () => {
     const rolePlatforms = getRolePlatforms()
 
-    const sum = rolePlatforms
-      .filter((rp) => roleIds?.includes(rp.roleId) || false)
-      .reduce(
-        (acc, rolePlatform) =>
-          acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),
-        0
-      )
+    const sum = rolePlatforms.reduce(
+      (acc, rolePlatform) =>
+        acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),
+      0
+    )
 
-    return sum
+    const alreadyClaimed =
+      alreadyClaimedAmounts?.reduce((acc, amount) => acc + amount) || 0
+
+    return sum - alreadyClaimed
   }
 
   return { getValue }
 }
 
-export { useCalculateClaimableTokens, useCalculateFromDynamic }
+export { useCalculateClaimableTokens, useCalculateForRolePlatform }

@@ -29,6 +29,7 @@ import { useTokenRewardContext } from "./TokenRewardContext"
 import TokenRolePlatformClaimCard from "./TokenRolePlatformClaimCard"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
 import useCollectToken from "./hooks/useCollectToken"
+import usePool from "./hooks/usePool"
 import useRolePlatforms from "./hooks/useRolePlatforms"
 
 type Props = {
@@ -45,6 +46,11 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { getValue } = useCalculateClaimableTokens(guildPlatform)
   const claimableAmount = getValue()
 
+  const { refetch } = usePool(
+    guildPlatform.platformGuildData.chain,
+    BigInt(guildPlatform.platformGuildData.poolId)
+  )
+
   const chain = guildPlatform.platformGuildData.chain
 
   const rolePlatforms = useRolePlatforms(guildPlatform.id)
@@ -52,7 +58,11 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { onSubmit, loadingText: claimLoadingText } = useCollectToken(
     chain,
     rolePlatforms[0]?.roleId,
-    rolePlatforms[0]?.id
+    rolePlatforms[0]?.id,
+    () => {
+      onClose()
+      refetch()
+    }
   )
 
   const { chainId } = useAccount()

@@ -9,7 +9,8 @@ import useMembership from "components/explorer/hooks/useMembership"
 import { useMemo } from "react"
 import { RolePlatform } from "types"
 import { useTokenRewardContext } from "./TokenRewardContext"
-import { useCalculateFromDynamic } from "./hooks/useCalculateToken"
+
+import { useCalculateForRolePlatform } from "./hooks/useCalculateToken"
 import useCollectToken from "./hooks/useCollectToken"
 
 const TokenRolePlatformClaimCard = ({
@@ -18,7 +19,7 @@ const TokenRolePlatformClaimCard = ({
   rolePlatform: RolePlatform
 }) => {
   const { guildPlatform, token } = useTokenRewardContext()
-  const { getValue } = useCalculateFromDynamic(rolePlatform.dynamicAmount)
+  const claimableAmount = useCalculateForRolePlatform(rolePlatform)
 
   const { roleIds } = useMembership()
 
@@ -58,8 +59,6 @@ const TokenRolePlatformClaimCard = ({
 
   const { colorMode } = useColorMode()
 
-  const claimable = getValue()
-
   const hasAccess = roleIds.includes(rolePlatform.roleId)
 
   return (
@@ -82,7 +81,7 @@ const TokenRolePlatformClaimCard = ({
           </Text>
           <Heading fontSize={"md"}>
             {" "}
-            {claimable} {token.data.symbol}{" "}
+            {claimableAmount} {token.data.symbol}{" "}
           </Heading>
         </Stack>
 

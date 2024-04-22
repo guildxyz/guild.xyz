@@ -7,6 +7,7 @@ import { useState } from "react"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { useFetcherWithSign } from "utils/fetcher"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
+import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { usePublicClient, useWalletClient } from "wagmi"
 import { Chain } from "wagmiConfig/chains"
@@ -21,7 +22,12 @@ type ClaimResponse = {
   userId: number
 }
 
-const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number) => {
+const useCollectToken = (
+  chain: Chain,
+  roleId?: number,
+  rolePlatformId?: number,
+  onSuccess?: () => void
+) => {
   const { id: guildId } = useGuild()
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
@@ -108,14 +114,23 @@ const useCollectToken = (chain: Chain, roleId?: number, rolePlatformId?: number)
           title: "Successfully claimed your tokens!",
           tweetText: `Just collected my tokens!`,
         })
+
+        onSuccess?.()
       },
       onError: (err) => {
         setLoadingText("")
         setTxError(true)
 
-        console.error(err)
+        const prettyError = err.correlationId
+          ? err
+          : processViemContractError(err, (errorName) => {
+              if (errorName === "Panic")
+                return "There aren’t enough tokens in the reward pool to fulfill your claim request"
+              if (errorName === "AlreadyClaimed")
+                return "You've already collected these tokens"
+            })
 
-        showErrorToast(err)
+        showErrorToast(prettyError)
       },
     }),
     loadingText,
