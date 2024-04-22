@@ -7,9 +7,6 @@ import {
   Skeleton,
   SkeletonCircle,
   Stack,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
   Text,
   VStack,
   useColorMode,
@@ -20,7 +17,6 @@ import Button from "components/common/Button"
 import Card, { useCardBg } from "components/common/Card"
 import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
-import { Clock } from "phosphor-react"
 import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
 import {
   TokenRewardProvider,
@@ -47,6 +43,8 @@ const LeaderboardAirdropCard = () => {
     onOpen: claimOnOpen,
     onClose: claimOnClose,
   } = useDisclosure()
+
+  if (claimableAmount <= 0) return <></>
 
   return (
     <>
@@ -134,16 +132,6 @@ const LeaderboardAirdropCard = () => {
               >
                 {claimableAmount} {token.data.symbol}
               </Heading>
-              <HStack gap={1} display={{ lg: "inherit", base: "none" }}>
-                <Tag height={"fit-content"}>
-                  <TagLeftIcon as={Clock} mr={1} />
-                  <TagLabel>Claim ends in 4 days</TagLabel>
-                </Tag>
-                <Tag height={"fit-content"}>
-                  <TagLeftIcon as={Clock} mr={1} />
-                  <TagLabel>75/100 available</TagLabel>
-                </Tag>
-              </HStack>
             </Flex>
           </Stack>
 

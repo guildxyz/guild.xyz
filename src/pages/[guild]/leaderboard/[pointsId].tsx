@@ -46,7 +46,7 @@ const Leaderboard = () => {
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
 
-  const accessedGuildTokens = useAccessedTokens()
+  const accessedGuildTokens = useAccessedTokens(Number(router.query.pointsId))
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId

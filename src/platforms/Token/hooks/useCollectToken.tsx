@@ -40,8 +40,8 @@ const useCollectToken = (
   const { data: walletClient } = useWalletClient()
 
   const collect = async () => {
-    setTxError(false)
-    setTxSuccess(false)
+    setTxError?.(false)
+    setTxSuccess?.(false)
 
     setLoadingText("Verifying signature...")
 
@@ -119,7 +119,7 @@ const useCollectToken = (
       },
       onError: (err) => {
         setLoadingText("")
-        setTxError(true)
+        setTxError?.(true)
 
         const prettyError = err.correlationId
           ? err
