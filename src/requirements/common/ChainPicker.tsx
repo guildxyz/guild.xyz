@@ -10,7 +10,8 @@ import ControlledSelect from "components/common/ControlledSelect"
 import { StyledSelectProps } from "components/common/StyledSelect/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Question } from "phosphor-react"
-import { useController } from "react-hook-form"
+import { useEffect } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import { useChainId } from "wagmi"
 import {
   CHAIN_CONFIG,
@@ -68,14 +69,30 @@ const ChainPicker = ({
     ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
     : mappedChains
 
-  const {
-    field: { value: chain },
-  } = useController({
-    name: controlName,
-    defaultValue: supportedChains.includes(Chains[chainId] as Chain)
-      ? Chains[chainId]
-      : supportedChains[0],
-  })
+  const { setValue } = useFormContext()
+  const chain = useWatch({ name: controlName })
+
+  /**
+   * Timed out setValue on mount instead of useController with defaultValue, because
+   * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
+   * undefined before selecting an option otherwise (it is the expected behavior -
+   * useWatch returns the value from defaultValues, which is undefined in most
+   * cases)
+   *
+   * https://github.com/react-hook-form/react-hook-form/issues/3758#issuecomment-751898038
+   */
+  useEffect(() => {
+    if (chain) return
+
+    setTimeout(() => {
+      setValue(
+        controlName,
+        supportedChains.includes(Chains[chainId] as Chain)
+          ? Chains[chainId]
+          : supportedChains[0]
+      )
+    }, 0)
+  }, [chain, setValue, controlName, supportedChains, chainId])
 
   return (
     <>
