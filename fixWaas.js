@@ -1,3 +1,9 @@
+/**
+ * This script is temporarily needed for making a small transformation on the WaaS
+ * SDK-s, which allows us to non-dynamically import these packages. This script is
+ * executed at postinstall. If you encounter ERR_IMPORT_ASSERTION_TYPE_MISSING
+ * TypeError at build, you should probably run an 'npm install'
+ */
 const { readFileSync, writeFileSync } = require("fs")
 
 const basePath = "./node_modules/@coinbase/waas-sdk-web/dist"
