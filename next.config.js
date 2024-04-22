@@ -1,6 +1,6 @@
 // @ts-check
 
-const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
+import { BugsnagSourceMapUploaderPlugin } from "webpack-bugsnag-plugins"
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
@@ -255,4 +255,4 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+export default nextConfig
