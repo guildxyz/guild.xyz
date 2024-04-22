@@ -29,12 +29,12 @@ const FarcasterFollowUser = (props: RequirementProps) => {
 
   return (
     <Requirement
-      image={farcasterUser?.img || "/requirementLogos/farcaster.png"}
+      image={farcasterUser?.pfp_url || "/requirementLogos/farcaster.png"}
       {...props}
     >
       {type === "FARCASTER_FOLLOW" ? "Follow " : "Be followed by "}
       <DataBlock isLoading={!farcasterUser}>
-        {farcasterUser?.label ?? "Loading..."}
+        {farcasterUser?.display_name ?? "Loading..."}
       </DataBlock>
       {" on Farcaster"}
     </Requirement>

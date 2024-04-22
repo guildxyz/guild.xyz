@@ -7,8 +7,18 @@ const DRIVE_FILES_LIST_URL = `https://www.googleapis.com/drive/v3/files?q=${enco
 )}`
 
 export class DriveRequestFailed extends Error {
+  isMissingScope = false
+
   constructor(error: unknown) {
     super("Google Drive request failed")
+
+    this.isMissingScope = (error as any)?.error?.status === "PERMISSION_DENIED"
+
+    if (this.isMissingScope) {
+      this.message =
+        "Missing permissions. Please try again, and make sure to give access to Google Drive"
+    }
+
     this.cause = error
   }
 }
