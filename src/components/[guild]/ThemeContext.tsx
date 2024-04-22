@@ -1,7 +1,6 @@
 import { useColorMode, useColorModeValue } from "@chakra-ui/react"
-import Color from "color"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useColorPalette from "hooks/useColorPalette"
+import useColorPalette, { createColor } from "hooks/useColorPalette"
 import {
   Dispatch,
   PropsWithChildren,
@@ -44,7 +43,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
 
   const textColor = useMemo(() => {
     if (colorMode === "dark" || localBackgroundImage) return "whiteAlpha.900"
-    const color = Color(localThemeColor || "white")
+    const color = createColor(localThemeColor || "white")
     const saturation = color.hsl().array()[1]
     return color.luminosity() > 0.6 && saturation < 70
       ? "primary.800"
