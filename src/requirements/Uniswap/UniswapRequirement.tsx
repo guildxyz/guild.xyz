@@ -1,9 +1,9 @@
 import { HStack, Skeleton } from "@chakra-ui/react"
 import { Schemas, consts } from "@guildxyz/types"
-import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
+import { RequirementLinkButton } from "components/[guild]/Requirements/components/RequirementButton"
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
@@ -11,10 +11,33 @@ import REQUIREMENTS from "requirements"
 import { Chains } from "wagmiConfig/chains"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 
+const UNISWAP_TESTNETS = new Set<(typeof consts.UniswapV3PositionsChains)[number]>([
+  "SEPOLIA",
+  "BASE_SEPOLIA",
+  "POLYGON_MUMBAI",
+])
+
+// These are the chains, which Uniswapp calls differently then us
+const UniswapQueryChainNames = {
+  BASE_MAINNET: "base",
+  BSC: "bnb",
+  BLAST_MAINNET: "blast",
+} as const satisfies Partial<
+  Record<(typeof consts.UniswapV3PositionsChains)[number], string>
+>
+
 const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const {
     chain,
-    data: { token0, token1, maxAmount, minAmount },
+    data: {
+      token0,
+      token1,
+      maxAmount,
+      minAmount,
+      baseCurrency,
+      countedPositions,
+      defaultFee,
+    },
   } = useRequirementContext() as Extract<
     Schemas["Requirement"],
     { type: "UNISWAP_V3_POSITIONS" }
@@ -26,13 +49,32 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     token1 as `0x${string}`
   )
 
+  const baseSymbol = baseCurrency === "token0" ? symbol0 : symbol1
+
+  const chainQueryParam = UniswapQueryChainNames[chain] ?? chain.toLowerCase()
+
   return (
     <Requirement
       image={REQUIREMENTS.UNISWAP_V3_POSITIONS.icon.toString()}
       footer={
         <HStack>
           <RequirementChainIndicator />
-          <BlockExplorerUrl address={consts.UniswapV3PositionsAddresses[chain]} />
+          {/* The Uniswap app didn't seem able to handle testnets in the query param */}
+          {!UNISWAP_TESTNETS.has(chain) && (
+            <RequirementLinkButton
+              href={`https://app.uniswap.org/add/${token0}/${token1}${
+                defaultFee ? `/${defaultFee}` : ""
+              }?chain=${chainQueryParam}`}
+              imageUrl={REQUIREMENTS.UNISWAP_V3_POSITIONS.icon.toString()}
+              leftIcon={null}
+              rightIcon={null}
+              colorScheme={"UNISWAP"}
+              color={"white"}
+              variant={"solid"}
+            >
+              Add Liquidity
+            </RequirementLinkButton>
+          )}
         </HStack>
       }
       {...rest}
@@ -43,12 +85,18 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         : minAmount > 0
         ? `at least ${minAmount}`
         : "any amount of"}{" "}
+      <Skeleton isLoaded={!!baseSymbol} display={"inline"}>
+        <DataBlock>{baseSymbol ?? "___"}</DataBlock>
+      </Skeleton>{" "}
+      value of
       <Skeleton isLoaded={!!symbol0 && !!symbol1} display={"inline"}>
         <DataBlock>
           {symbol0 ?? "___"}/{symbol1 ?? "___"}
         </DataBlock>
       </Skeleton>{" "}
-      Uniswap V3 Positions
+      {countedPositions === "IN_RANGE" ? "in-range " : ""}
+      {countedPositions === "FULL_RANGE" ? "full-range " : ""}
+      positions on Uniswap v3
     </Requirement>
   )
 }

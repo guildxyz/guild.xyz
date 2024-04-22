@@ -1,4 +1,6 @@
 import {
+  Box,
+  Collapse,
   FormControl,
   FormHelperText,
   FormLabel,
@@ -7,8 +9,10 @@ import {
   Stack,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
+import Button from "components/common/Button"
+import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -19,7 +23,14 @@ import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { usePairOfTokenId } from "./hooks/usePairOfTokenId"
 import { UNISWAP_POOL_URL, useParsePoolTokenId } from "./hooks/useParsePoolTokenId"
 import { ADDRESS_REGEX, useParseVaultAddress } from "./hooks/useParseVaultAddress"
+import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
+
+const COUNTED_POSITIONS_OPTIONS = [
+  { label: "Full range", value: "FULL_RANGE" },
+  { label: "In range", value: "IN_RANGE" },
+  { label: "All", value: "ALL" },
+]
 
 const UniswapForm = ({
   baseFieldPath,
@@ -32,6 +43,8 @@ const UniswapForm = ({
     register,
   } = useFormContext()
   const isEditMode = !!field?.id
+
+  const [shouldShowUrlInput, setShouldShowUrlInput] = useState(false)
 
   const chain: (typeof consts.UniswapV3PositionsChains)[number] = useWatch({
     name: `${baseFieldPath}.chain`,
@@ -47,15 +60,17 @@ const UniswapForm = ({
   const lpVaultAddress = useParseVaultAddress(baseFieldPath)
   const tokenId = useParsePoolTokenId(baseFieldPath, onChainFromParam)
 
-  const {
-    error,
-    isLoading,
-    symbol0: symbol0FromAddress,
-    symbol1: symbol1FromAddress,
-  } = useTokenSymbolsOfPoolVault(Chains[chain], lpVaultAddress, ([t0, t1]) => {
+  const setTokensAndFee = ([t0, t1, fee]) => {
     setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
     setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })
-  })
+    setValue(`${baseFieldPath}.data.defaultFee`, fee, { shouldDirty: true })
+  }
+
+  const { error, isLoading } = useTokenSymbolsOfPoolVault(
+    Chains[chain],
+    lpVaultAddress,
+    setTokensAndFee
+  )
 
   // Reset form on chain change
   const resetForm = () => {
@@ -72,18 +87,21 @@ const UniswapForm = ({
     ])
   }
 
-  const {
-    isLoading: isFetchingFromTokenId,
-    symbol0: symbol0FromTokenId,
-    symbol1: symbol1FromTokenId,
-    error: tokenIdError,
-  } = usePairOfTokenId(chain, tokenId, ([t0, t1]) => {
-    setValue(`${baseFieldPath}.data.token0`, t0, { shouldDirty: true })
-    setValue(`${baseFieldPath}.data.token1`, t1, { shouldDirty: true })
-  })
+  const { isLoading: isFetchingFromTokenId, error: tokenIdError } = usePairOfTokenId(
+    chain,
+    tokenId,
+    setTokensAndFee
+  )
 
-  const symbol0 = symbol0FromAddress ?? symbol0FromTokenId
-  const symbol1 = symbol1FromAddress ?? symbol1FromTokenId
+  const token0 = useWatch({ name: `${baseFieldPath}.data.token0` })
+  const token1 = useWatch({ name: `${baseFieldPath}.data.token1` })
+
+  const { symbol0, symbol1 } = useSymbolsOfPair(Chains[chain], token0, token1)
+
+  const baseCurrencyOptions = [
+    { value: "token0", label: symbol0 ?? "Token 0" },
+    { value: "token1", label: symbol1 ?? "Token 1" },
+  ]
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -97,10 +115,29 @@ const UniswapForm = ({
         onChange={resetForm}
       />
 
-      {isEditMode ? (
+      {isEditMode && !shouldShowUrlInput ? (
         <>
           <TokenPicker
-            label={"Token 1"}
+            label={
+              <>
+                Token 1
+                <Button
+                  // This Button feels somewhat hachy
+                  size={"xs"}
+                  variant={"ghost"}
+                  position="absolute"
+                  right={0}
+                  onClick={() => {
+                    setShouldShowUrlInput(true)
+                    setValue(`${baseFieldPath}.data.token0`, undefined)
+                    setValue(`${baseFieldPath}.data.token1`, undefined)
+                    setValue(`${baseFieldPath}.data.baseCurrency`, undefined)
+                  }}
+                >
+                  clear
+                </Button>
+              </>
+            }
             chain={chain}
             fieldName={`${baseFieldPath}.data.token0`}
             rules={{ required: "This field is required" }}
@@ -149,6 +186,30 @@ const UniswapForm = ({
           </FormErrorMessage>
         </FormControl>
       )}
+
+      <Box w="full">
+        <Collapse in={!!token0 && !!token1}>
+          <FormControl>
+            <FormLabel>Base currency</FormLabel>
+
+            <ControlledSelect
+              options={baseCurrencyOptions}
+              name={`${baseFieldPath}.data.baseCurrency`}
+              defaultValue={"token0"}
+            />
+          </FormControl>
+        </Collapse>
+      </Box>
+
+      <FormControl>
+        <FormLabel>Positions to count</FormLabel>
+
+        <ControlledSelect
+          options={COUNTED_POSITIONS_OPTIONS}
+          name={`${baseFieldPath}.data.countedPositions`}
+          defaultValue={"FULL_RANGE"}
+        />
+      </FormControl>
 
       <MinMaxAmount field={field} baseFieldPath={baseFieldPath} format="FLOAT" />
     </Stack>

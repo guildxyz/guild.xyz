@@ -16,6 +16,7 @@ export function useTokensOfPoolVault(
     data: [
       { result: token0 = null, error: token0Error = null } = {},
       { result: token1 = null, error: token1Error = null } = {},
+      { result: fee = null } = {},
     ] = [],
   } = useReadContracts({
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -23,12 +24,14 @@ export function useTokensOfPoolVault(
     contracts: [
       { ...vaultContract, functionName: "token0" },
       { ...vaultContract, functionName: "token1" },
+      { ...vaultContract, functionName: "fee" },
     ],
     query: { enabled: !!lpVaultAddress },
   })
   const tokenError = token0Error ?? token1Error
 
   return {
+    fee,
     token0,
     token1,
     tokenError,

@@ -12,7 +12,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useMemo } from "react"
+import { ReactNode, useMemo } from "react"
 import { UseControllerProps, useController, useFormContext } from "react-hook-form"
 import { Chain } from "wagmiConfig/chains"
 
@@ -20,7 +20,7 @@ type Props = {
   chain: Chain
   fieldName: string
   isDisabled?: boolean
-  label?: string
+  label?: ReactNode
 } & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -82,7 +82,10 @@ const TokenPicker = ({
 
   return (
     <FormControl isRequired isInvalid={!!error}>
-      <FormLabel>{label}:</FormLabel>
+      <FormLabel>
+        {label}
+        {typeof label === "string" ? ":" : null}
+      </FormLabel>
 
       <InputGroup>
         {address &&
