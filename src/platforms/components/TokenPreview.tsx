@@ -6,26 +6,24 @@ import { useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import RewardPreview from "./RewardPreview"
 
-const TokenPreview = () => {
+const TokenPreview = ({ children }): JSX.Element => {
   const { token, imageUrl } = useTokenRewardContext()
 
   return (
-    <RewardPreview
-      type="ERC20"
-      name={`Claim ${token.data.symbol}`}
-      image={imageUrl}
-    />
+    <RewardPreview type="ERC20" name={`Claim ${token.data.symbol}`} image={imageUrl}>
+      {children}
+    </RewardPreview>
   )
 }
 
-const TokenPreviewWrapper = () => {
+const TokenPreviewWrapper = ({ children }): JSX.Element => {
   const guildPlatform: GuildPlatform = useWatch({
     name: "rolePlatforms.0.guildPlatform",
   })
 
   return (
     <TokenRewardProvider guildPlatform={guildPlatform}>
-      <TokenPreview />
+      <TokenPreview>{children}</TokenPreview>
     </TokenRewardProvider>
   )
 }

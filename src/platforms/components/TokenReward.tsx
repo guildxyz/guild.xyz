@@ -22,6 +22,7 @@ import {
   RewardIcon,
   RewardProps,
 } from "components/[guild]/RoleCard/components/Reward"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import ClickableTagPopover from "components/[guild]/activity/ActivityLogAction/components/ClickableTagPopover"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
@@ -259,7 +260,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
 
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
 
-  const tokenRewardType = rolePlatform.dynamicAmount.operation.input[0].type
+  const tokenRewardType = rolePlatform?.dynamicAmount?.operation?.input?.[0]?.type
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -297,6 +298,8 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
                 variant="link"
                 onClick={() => onOpen()}
                 isDisabled={!hasRoleAccess}
+                rightIcon={<ArrowSquareIn />}
+                iconSpacing="1"
               >
                 {claimableAmount || 0} {token?.data?.symbol || "tokens"}
               </Button>
@@ -306,7 +309,9 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
         whiteSpace={"nowrap"}
         pt={0}
         mr={2}
-      />
+      >
+        <AvailabilityTags rolePlatform={rolePlatform} />
+      </RewardDisplay>
       {tokenRewardType === "REQUIREMENT_AMOUNT" && (
         <TokenConversionTag platform={rolePlatform} />
       )}

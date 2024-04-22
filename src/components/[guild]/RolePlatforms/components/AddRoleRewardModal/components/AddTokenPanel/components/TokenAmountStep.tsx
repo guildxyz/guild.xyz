@@ -1,8 +1,15 @@
-import { Collapse, Flex, Stack } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertIcon,
+  Collapse,
+  Flex,
+  HStack,
+  Stack,
+  Text,
+} from "@chakra-ui/react"
 import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenRewardType } from "../AddTokenPanel"
@@ -81,9 +88,24 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
   const [isCollapsed, ,] = useState(false)
 
+  if (dynamicExists)
+    return (
+      <>
+        <Alert status="warning" my={4}>
+          <AlertIcon mt={0} />{" "}
+          <HStack>
+            <Text>
+              <strong>Only one dynamic reward is allowed per token type.</strong> To
+              create a new one, you must first delete the existing reward.
+            </Text>
+          </HStack>
+        </Alert>
+      </>
+    )
+
   return (
     <Stack gap={5}>
-      <RadioButtonGroup
+      {/* <RadioButtonGroup
         options={options}
         value={type}
         onChange={(val) => {
@@ -97,7 +119,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
           colorScheme: "indigo",
           mb: -2,
         }}
-      />
+      /> */}
 
       <Collapse startingHeight={150} animateOpacity in={!isCollapsed}>
         <Stack gap={5}>

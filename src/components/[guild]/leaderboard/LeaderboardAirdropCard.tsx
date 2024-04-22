@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card, { useCardBg } from "components/common/Card"
+import useMembership from "components/explorer/hooks/useMembership"
 import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
 import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
@@ -24,6 +25,8 @@ import {
 } from "platforms/Token/TokenRewardContext"
 import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
 import { GuildPlatform } from "types"
+import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import useGuild from "../hooks/useGuild"
 
 const LeaderboardAirdropCard = () => {
   const { token, guildPlatform } = useTokenRewardContext()
@@ -37,6 +40,18 @@ const LeaderboardAirdropCard = () => {
 
   const { getValue } = useCalculateClaimableTokens(guildPlatform)
   const claimableAmount = getValue()
+
+  const { roles } = useGuild()
+  const { roleIds } = useMembership()
+  const rolePlatformIds = roles
+    ?.flatMap((role) => role.rolePlatforms)
+    ?.filter(
+      (rp) =>
+        rp?.guildPlatformId === guildPlatform.id ||
+        rp?.guildPlatform?.id === guildPlatform.id
+    )
+    .filter((rp) => roleIds?.includes(rp.roleId) || false)
+    .map((rp) => rp.id)
 
   const {
     isOpen: claimIsOpen,
@@ -132,6 +147,13 @@ const LeaderboardAirdropCard = () => {
               >
                 {claimableAmount} {token.data.symbol}
               </Heading>
+              <HStack gap={1} display={{ lg: "inherit", base: "none" }}>
+                <AvailabilityTags
+                  rolePlatform={roles
+                    .flatMap((role) => role.rolePlatforms)
+                    .find((rp) => rp.id === rolePlatformIds[0])}
+                />
+              </HStack>
             </Flex>
           </Stack>
 

@@ -6,6 +6,7 @@ import PlatformSelectButton from "./components/PlatformSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
+  skipList?: PlatformName[]
 } & StackProps
 
 type PlatformsGridData = {
@@ -14,7 +15,7 @@ type PlatformsGridData = {
   isGeneral?: boolean
 }
 
-const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
+const PlatformsGrid = ({ onSelection, skipList, ...rest }: Props) => {
   const { guildPlatforms, featureFlags } = useGuild()
 
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
@@ -87,7 +88,9 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
   return (
     <Stack spacing={7} {...rest}>
       <PlatformSelectButtons
-        platformsData={platformsData.filter((p) => !p.isGeneral)}
+        platformsData={platformsData.filter(
+          (p) => !p.isGeneral && (!!skipList ? !skipList.includes(p.platform) : true)
+        )}
         onSelection={onSelection}
       />
 
@@ -96,7 +99,10 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
           General
         </Heading>
         <PlatformSelectButtons
-          platformsData={platformsData.filter((p) => p.isGeneral)}
+          platformsData={platformsData.filter(
+            (p) =>
+              p.isGeneral && (!!skipList ? !skipList.includes(p.platform) : true)
+          )}
           onSelection={onSelection}
         />
       </Box>

@@ -212,6 +212,15 @@ const AddRewardButton = (): JSX.Element => {
                     `${data.roleIds[0]}-${Date.now()}`,
                   guildPlatform: data.rolePlatforms[0].guildPlatform,
                   isNew: data.rolePlatforms[0].isNew,
+                  ...(data.rolePlatforms[0].capacity && {
+                    capacity: data.rolePlatforms[0].capacity,
+                  }),
+                  ...(data.rolePlatforms[0].startTime && {
+                    capacity: data.rolePlatforms[0].startTime,
+                  }),
+                  ...(data.rolePlatforms[0].endTime && {
+                    capacity: data.rolePlatforms[0].endTime,
+                  }),
                   visibility:
                     saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
                   dynamicAmount: {
@@ -275,6 +284,15 @@ const AddRewardButton = (): JSX.Element => {
               guildPlatform: data.rolePlatforms[0].guildPlatform,
               isNew: data.rolePlatforms[0].isNew,
               visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+              ...(data.rolePlatforms[0].capacity && {
+                capacity: data.rolePlatforms[0].capacity,
+              }),
+              ...(data.rolePlatforms[0].startTime && {
+                capacity: data.rolePlatforms[0].startTime,
+              }),
+              ...(data.rolePlatforms[0].endTime && {
+                capacity: data.rolePlatforms[0].endTime,
+              }),
               dynamicAmount: {
                 operation: {
                   type: data.rolePlatforms[0].dynamicAmount.operation.type,
@@ -322,6 +340,7 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
+    console.log(data)
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
 
     if (data.requirements?.length > 0) {

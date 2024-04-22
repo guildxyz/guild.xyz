@@ -1,5 +1,6 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
@@ -65,11 +66,19 @@ const TokenRewardCard = () => {
           )
         }
         description={
-          alreadyClaimed === 0
-            ? ``
-            : claimableAmount > 0
-            ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
-            : `You have claimed all of your ${token.data.symbol} rewards`
+          <>
+            {alreadyClaimed === 0
+              ? ``
+              : claimableAmount > 0
+              ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
+              : `You have claimed all of your ${token.data.symbol} rewards`}
+            {/* TODO: This will not work if multiple rewards are set */}
+            <AvailabilityTags
+              rolePlatform={roles
+                .flatMap((role) => role.rolePlatforms)
+                .find((rp) => rp.id === rolePlatformIds[0])}
+            />
+          </>
         }
         cornerButton={
           isAdmin && (

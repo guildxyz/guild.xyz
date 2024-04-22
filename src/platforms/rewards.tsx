@@ -77,6 +77,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "UNIQUE_TEXT",
   "POAP",
   "GATHER_TOWN",
+  "ERC20",
 ]
 
 export type AddRewardPanelProps = {
