@@ -114,12 +114,24 @@ function parseAndValidateCSV(csvData: string): Promise<ValidCSVRow[]> {
   return new Promise((resolve, reject) => {
     let headersValid = false
     const validatedData: ValidCSVRow[] = []
+    const MAX_LINES = 50000
+    let currentLine = 0
 
     Papa.parse(csvData, {
       header: true,
       dynamicTyping: true, // Let PapaParse help with type conversion
       skipEmptyLines: true,
       step: function (row, parser) {
+        if (++currentLine > MAX_LINES) {
+          reject(
+            new Error(
+              "The selected CSV is too long. The maximum allowed line count is 50 000."
+            )
+          )
+          parser.abort()
+          return
+        }
+
         if (!headersValid) {
           parser.pause()
           const rowData: any = row.data
