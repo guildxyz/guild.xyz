@@ -29,6 +29,38 @@ export const lensPlatformOptions: SelectOption[] = [
     label: "Orb",
     value: "orb",
   },
+  {
+    label: "Phaver",
+    value: "phaver",
+  },
+  {
+    label: "Tape",
+    value: "tape",
+  },
+  {
+    label: "Buttrfly",
+    value: "buttrfly",
+  },
+  {
+    label: "BloomersTV",
+    value: "bloomers.tv",
+  },
+  {
+    label: "Kaira",
+    value: "kaira",
+  },
+  {
+    label: "Yup",
+    value: "yup",
+  },
+  {
+    label: "Orna",
+    value: "orna.art",
+  },
+  {
+    label: "Firefly",
+    value: "firefly",
+  },
 ]
 
 const LensAction = ({ baseFieldPath, field }: RequirementFormProps) => (
