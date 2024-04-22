@@ -6,7 +6,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
-import useMembership from "components/explorer/hooks/useMembership"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 
@@ -30,13 +30,11 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const isEmail = requirement.type === "ALLOWLIST_EMAIL"
 
-  const { membership } = useMembership()
+  const { reqAccesses } = useRoleMembership(requirement.roleId)
 
-  const hasAccess = membership?.roles
-    ?.find((role) => role?.roleId === requirement.roleId)
-    ?.requirements?.find(
-      ({ requirementId }) => requirementId === requirement.id
-    )?.access
+  const hasAccess = reqAccesses?.find(
+    ({ requirementId }) => requirementId === requirement.id
+  )?.access
 
   return (
     <Requirement
