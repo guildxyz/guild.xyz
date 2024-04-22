@@ -3,8 +3,8 @@ import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { LENS_API_URL, LensProfile } from "./useLensProfiles"
 
-const fetchLensProfile = ([endpoint, profileId]): Promise<LensProfile> =>
-  fetcher(endpoint, {
+const fetchLensProfile = ([_, profileId]): Promise<LensProfile> =>
+  fetcher(LENS_API_URL, {
     headers: {
       Accept: "application/json",
     },
@@ -33,7 +33,7 @@ const fetchLensProfile = ([endpoint, profileId]): Promise<LensProfile> =>
 
 const useLensProfile = (id: string) => {
   const { data, ...swrResponse } = useSWRImmutable<LensProfile>(
-    typeof id === "string" && id.startsWith("0x") ? [LENS_API_URL, id] : null,
+    typeof id === "string" && id.startsWith("0x") ? ["lensProfile", id] : null,
     fetchLensProfile
   )
 
@@ -44,7 +44,7 @@ const useLensProfile = (id: string) => {
           label: `${data.handle.localName}.lens`,
           value: data.id,
           img:
-            data.metadata.picture.optimized.uri ??
+            data.metadata?.picture?.optimized?.uri ??
             (REQUIREMENTS.LENS.icon as string),
         }
       : undefined,

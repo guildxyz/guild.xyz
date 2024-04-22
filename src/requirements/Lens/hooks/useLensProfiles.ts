@@ -19,8 +19,8 @@ export type LensProfile = {
   }
 }
 
-const fetchProfiles = ([endpoint, searchQuery]): Promise<LensProfile[]> =>
-  fetcher(endpoint, {
+const fetchProfiles = ([_, searchQuery]): Promise<LensProfile[]> =>
+  fetcher(LENS_API_URL, {
     headers: {
       Accept: "application/json",
     },
@@ -51,18 +51,16 @@ const useLensProfiles = (searchQuery: string) => {
   const { mutate } = useSWRConfig()
 
   const { data, isLoading } = useSWRImmutable(
-    searchQuery.length > 0 ? [LENS_API_URL, searchQuery] : null,
+    searchQuery.length > 0 ? ["lensProfiles", searchQuery] : null,
     fetchProfiles,
     {
       onSuccess: (newData, _key, _config) => {
         newData.forEach((profile) =>
-          mutate([LENS_API_URL, profile.id], profile, { revalidate: false })
+          mutate(["lensProfile", profile.id], profile, { revalidate: false })
         )
       },
     }
   )
-
-  console.log(data)
 
   return {
     handles: data?.map(({ id, handle: { localName }, metadata }) => ({
