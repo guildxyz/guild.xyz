@@ -69,7 +69,9 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     {
       label: "Dynamic amount",
       value: TokenRewardType.DYNAMIC_SNAPSHOT,
-      disabled: dynamicExists,
+      disabled:
+        dynamicExists &&
+        "Only one dynamic reward is permitted for each type of token.",
     },
     {
       label: "Static amount",

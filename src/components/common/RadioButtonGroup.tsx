@@ -3,7 +3,7 @@ import {
   ButtonGroupProps,
   ButtonProps,
   Icon,
-  Tag,
+  Tooltip,
   UseRadioGroupProps,
   UseRadioProps,
   useRadio,
@@ -15,6 +15,7 @@ interface RadioButtonOptionProps {
   label?: string
   icon?: React.ElementType
   value: string
+  disabled?: string
 }
 
 type RadioButtonGroupProps = {
@@ -58,6 +59,7 @@ const RadioButtonGroup = ({
             key={option.label}
             {...option}
             {...radioProps}
+            {...(!!option.disabled && { onChange: () => {} })}
             colorScheme={chakraStyles?.colorScheme}
             borderRadius={buttonBorderRadius}
           />
@@ -89,25 +91,22 @@ export const RadioButton = (props: RadioButtonProps & { disabled?: string }) => 
   } = props
 
   return (
-    <Button
-      leftIcon={icon && <Icon as={icon} boxSize={5} />}
-      as="label"
-      {...checkbox}
-      boxShadow="none !important"
-      cursor="pointer"
-      borderRadius={borderRadius}
-      w="full"
-      colorScheme={isChecked ? colorScheme : "gray"}
-      isDisabled={!!disabled}
-    >
-      <input {...input} />
-      {label}
-      {typeof disabled === "string" && (
-        <Tag colorScheme="gray" size="sm" ml="3" mt="-1px">
-          {disabled}
-        </Tag>
-      )}
-    </Button>
+    <Tooltip label={disabled} hasArrow>
+      <Button
+        leftIcon={icon && <Icon as={icon} boxSize={5} />}
+        as="label"
+        {...checkbox}
+        boxShadow="none !important"
+        cursor="pointer"
+        borderRadius={borderRadius}
+        w="full"
+        colorScheme={isChecked ? colorScheme : "gray"}
+        isDisabled={!!disabled}
+      >
+        <input {...input} />
+        {label}
+      </Button>
+    </Tooltip>
   )
 }
 
