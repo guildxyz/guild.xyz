@@ -1,18 +1,18 @@
 import {
   ButtonGroup,
-  // Divider,
-  // IconButton,
-  // Menu,
-  // MenuButton,
-  // MenuItem,
-  // MenuList,
-  // Portal,
+  Divider,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
   useDisclosure,
 } from "@chakra-ui/react"
 import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
 import useToast from "hooks/useToast"
-import { /* CaretDown, */ Export, Sliders } from "phosphor-react"
+import { CaretDown, Export, Sliders } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import CustomizeViewModal from "./CustomizeViewModal"
 import { Member } from "./useMembers"
@@ -20,11 +20,6 @@ import { Member } from "./useMembers"
 type Props = {
   table: Table<Member>
 }
-
-/**
- * CustomizeViewModal related stuff is disabled yet, we'll release it together with
- * the 'add roles as columns' feature
- */
 
 const CrmMenu = ({ table }: Props) => {
   const { isStuck } = useIsTabsStuck()
@@ -74,12 +69,10 @@ const CrmMenu = ({ table }: Props) => {
         <Button
           flexShrink={0}
           colorScheme={isStuck ? "gray" : "whiteAlpha"}
-          // borderRightRadius={0}
-          {
-            /* isExportDisabled ? customizeButtonProps :  */ ...exportButtonProps
-          }
+          borderRightRadius={0}
+          {...(isExportDisabled ? customizeButtonProps : exportButtonProps)}
         />
-        {/* <Divider orientation="vertical" h="8" />
+        <Divider orientation="vertical" h="8" />
         <Menu placement="bottom-end" strategy="fixed">
           <MenuButton
             as={IconButton}
@@ -95,7 +88,7 @@ const CrmMenu = ({ table }: Props) => {
               />
             </MenuList>
           </Portal>
-        </Menu> */}
+        </Menu>
       </ButtonGroup>
       <CustomizeViewModal {...{ isOpen, onClose, table }} />
     </>

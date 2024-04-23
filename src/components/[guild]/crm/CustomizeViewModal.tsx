@@ -11,10 +11,12 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react"
 import { Column, Table } from "@tanstack/react-table"
+import SimpleRoleTag from "components/analytics/MembersChart/components/SimpleRoleTag"
 import { Modal } from "components/common/Modal"
 import { Reorder } from "framer-motion"
 import { DotsSixVertical } from "phosphor-react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import useGuild from "../hooks/useGuild"
 import { Member } from "./useMembers"
 
 type Props = {
@@ -35,6 +37,10 @@ const CustomizeViewModal = ({ isOpen, onClose, table }: Props) => {
   const columns = table.getAllColumns()
   const [localOrder, setLocalOrder] = useState(() => transformToLocalOrder(table))
 
+  useEffect(() => {
+    setLocalOrder(transformToLocalOrder(table))
+  }, [columns])
+
   const setTableOrder = () => {
     const newOrder = transformToTableOrder(localOrder)
     /**
@@ -47,7 +53,7 @@ const CustomizeViewModal = ({ isOpen, onClose, table }: Props) => {
   }
 
   return (
-    <Modal {...{ isOpen, onClose }}>
+    <Modal {...{ isOpen, onClose }} /* colorScheme={"dark"} */>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Customize shown columns</ModalHeader>
@@ -65,7 +71,14 @@ const CustomizeViewModal = ({ isOpen, onClose, table }: Props) => {
                 onDragEnd={setTableOrder}
                 style={{ position: "relative" }} // needed for the auto-applied zIndex to work
               >
-                <ColumnSelector column={columns.find((col) => col.id === colId)} />
+                {colId.startsWith("role_") ? (
+                  <RoleColumnSelector
+                    column={columns.find((col) => col.id === colId)}
+                    roleId={parseInt(colId.split("_")[1])}
+                  />
+                ) : (
+                  <ColumnSelector column={columns.find((col) => col.id === colId)} />
+                )}
               </Reorder.Item>
             ))}
           </Reorder.Group>
@@ -87,6 +100,7 @@ const ColumnSelector = ({ column, isDisabled }: SelectorProps) => {
       mb="2"
       bg={bg}
       borderRadius="xl"
+      boxShadow={"xs"}
       cursor={!isDisabled && "grab"}
     >
       <HStack justifyContent={"space-between"}>
@@ -135,10 +149,41 @@ const ColumnSelector = ({ column, isDisabled }: SelectorProps) => {
   )
 }
 
+type RoleSelectorProps = { column: Column<Member>; roleId: number }
+
+const RoleColumnSelector = ({ column, roleId }: RoleSelectorProps) => {
+  const bg = useColorModeValue("white", "#343437")
+  const { roles } = useGuild()
+
+  const role = roles.find((r) => r.id === roleId)
+
+  return (
+    <Box
+      py="3"
+      px="4"
+      mb="2"
+      bg={bg}
+      borderRadius="xl"
+      cursor={"grab"}
+      boxShadow={"xs"}
+    >
+      <HStack justifyContent={"space-between"}>
+        <Checkbox
+          isChecked={column.getIsVisible()}
+          onChange={column.getToggleVisibilityHandler()}
+        >
+          <SimpleRoleTag roleData={role} />
+        </Checkbox>
+        <DotsSixVertical />
+      </HStack>
+    </Box>
+  )
+}
+
 const transformToLocalOrder = (table) => {
-  const columnOrder = table.getState().columnOrder
+  const res = [...table.getState().columnOrder]
   const columnIds = table.getAllLeafColumns().map((col) => col.id)
-  const res = columnOrder.length ? columnOrder : columnIds
+  columnIds.forEach((colId) => !res.includes(colId) && res.push(colId))
 
   // remove 'select' and 'identity'
   res.splice(0, 2)
