@@ -9,6 +9,7 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import useGateables from "hooks/useGateables"
 import {
@@ -27,6 +28,7 @@ type Props = {
 }
 
 const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
   const { control } = useFormContext<GuildFormType>()
   const { append } = useFieldArray({
     control,
@@ -87,6 +89,8 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
             colorScheme="green"
             isDisabled={!selectedServer}
             onClick={() => {
+              captureEvent("[discord setup] server added")
+
               append({
                 platformName: "DISCORD",
                 platformGuildId: discordMethods.getValues("discordServerId"),

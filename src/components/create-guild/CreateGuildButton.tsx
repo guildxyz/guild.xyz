@@ -11,10 +11,23 @@ type Props = {
 const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
   const { handleSubmit } = useFormContext<GuildFormType>()
   const roles = useWatch({ name: "roles" })
+  const guildPlatforms = useWatch({ name: "guildPlatforms" })
+  const hasDiscordReward = guildPlatforms?.some(
+    (guildPlatform) => guildPlatform?.platformName === "DISCORD"
+  )
   const { captureEvent } = usePostHogContext()
 
   const { onSubmit, isLoading, response, isSigning, signLoadingText } =
-    useCreateGuild()
+    useCreateGuild({
+      onSuccess: () => {
+        if (hasDiscordReward) {
+          captureEvent("[discord setup] guild creation successful")
+        }
+      },
+      onError: (err) => {
+        captureEvent("[discord setup] guild creation failed", { error: err })
+      },
+    })
 
   return (
     <Button
@@ -24,6 +37,9 @@ const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
       isLoading={isLoading || isSigning}
       loadingText={signLoadingText || "Saving data"}
       onClick={() => {
+        if (hasDiscordReward) {
+          captureEvent("[discord setup] clicked create guild button")
+        }
         captureEvent("guild creation flow > templates selected", {
           roles: roles.map((role) => role.name),
         })

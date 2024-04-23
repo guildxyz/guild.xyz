@@ -1,12 +1,29 @@
 import { Alert, AlertDescription, AlertIcon, HStack, Text } from "@chakra-ui/react"
 import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPlatform"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useGateables from "hooks/useGateables"
 import rewards from "platforms/rewards"
+import { useEffect } from "react"
 import { PlatformName, PlatformType } from "types"
 import Button from "./Button"
 
 const ReconnectAlert = ({ platformName }: { platformName: PlatformName }) => {
   const { mutate } = useGateables(PlatformType[platformName])
+  const { captureEvent } = usePostHogContext()
+
+  useEffect(() => {
+    if (platformName !== "DISCORD") {
+      return
+    }
+
+    captureEvent("[discord setup] reconnect alert is shown")
+
+    return () => {
+      captureEvent("[discord setup] reconnect alert is not shown")
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const {
     onConnect,
