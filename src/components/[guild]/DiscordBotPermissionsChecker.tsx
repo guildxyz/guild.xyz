@@ -13,7 +13,7 @@ import Button from "components/common/Button"
 import DiscordRoleVideo from "components/common/DiscordRoleVideo"
 import { Modal } from "components/common/Modal"
 import { ActionToastOptions, useToastWithButton } from "hooks/useToast"
-import { Info } from "phosphor-react"
+import { ArrowSquareOut, Info } from "phosphor-react"
 import { useMemo, useRef, useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { PlatformType } from "types"
@@ -118,6 +118,7 @@ const DiscordBotPermissionsChecker = () => {
     discordRewards.length > 0 && isAdmin ? ["discordPermissions", id] : null,
     fetchDiscordPermissions,
     {
+      shouldRetryOnError: false,
       onSuccess: (data, _key, _config) => {
         if (!!toastIdRef.current) return
 
@@ -200,6 +201,28 @@ const DiscordBotPermissionsChecker = () => {
             setErrorType("ROLE_ORDER")
           }
         }
+      },
+      onError: () => {
+        toastIdRef.current = toastWithButton({
+          status: "warning",
+          title: "Guild.xyz Discord bot is missing",
+          description:
+            "The Guild.xyz bot is not a member of your Discord server, so it won't be able to manage your roles.",
+          duration: null,
+          isClosable: false,
+          buttonProps: {
+            children: "Invite bot",
+            rightIcon: <ArrowSquareOut />,
+            onClick: () =>
+              window.open(
+                `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=268782673&scope=bot%20applications.commands`
+              ),
+          },
+          secondButtonProps: {
+            children: "Later",
+            variant: "ghost",
+          },
+        })
       },
     }
   )
