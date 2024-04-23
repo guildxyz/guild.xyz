@@ -162,19 +162,9 @@ const useSubmitTransaction = (
       onError?.(error, rawError)
       reset()
     }
-  }, [
-    transactionReceipt,
-    isSuccess,
-    isError,
-    setTxSuccess,
-    onSuccess,
-    contractCallConfig,
-    error,
-    setTxError,
-    onError,
-    rawError,
-    reset,
-  ])
+    // TODO: we should consider removing this useEffect, it causes some problems with our analytics
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transactionReceipt, isSuccess, isError])
 
   return {
     onSubmitTransaction: () => {

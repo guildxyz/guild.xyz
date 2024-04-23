@@ -33,7 +33,7 @@ const PanelButton = () => {
           <Icon as={LinkIcon} boxSize={5} />
           <EditablePreview />
           <EditableInput />
-          <EditableControls />
+          <EditableControls color="white" />
         </Editable>
       </Box>
       <HStack

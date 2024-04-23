@@ -1,11 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { toViem } from "@coinbase/waas-sdk-viem"
-// eslint-disable-next-line import/no-extraneous-dependencies
-import {
+import type {
   Address,
-  InitializeWaas,
   InitializeWaasOptions,
-  Logout,
   NewWallet,
   ProtocolFamily,
   Waas,
@@ -21,6 +18,15 @@ export class WaasActionFailed extends Error {
     super("Coinbase WaaS action failed")
     this.cause = error
   }
+}
+
+let cwaasModule: typeof import("@coinbase/waas-sdk-web")
+const cwaasImport = async () => {
+  if (cwaasModule) return cwaasModule
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const mod = await import("@coinbase/waas-sdk-web")
+  cwaasModule = mod
+  return mod
 }
 
 type WalletWithAccount<W extends NewWallet | Wallet> = {
@@ -39,6 +45,8 @@ export default function waasConnector(options: InitializeWaasOptions) {
   let waas: Waas
 
   async function getAllEvmAddresses() {
+    const { ProtocolFamily } = await cwaasImport()
+
     const allAddresses =
       (await waas.wallets.wallet.addresses.all()) as Address<ProtocolFamily>[]
 
@@ -60,6 +68,8 @@ export default function waasConnector(options: InitializeWaasOptions) {
   }
 
   async function withAccount<W extends Wallet>(wallet: W) {
+    const { ProtocolFamily } = await cwaasImport()
+
     const address = await waas.wallets.wallet.addresses.for(ProtocolFamily.EVM)
 
     const account = toViem(address)
@@ -95,6 +105,8 @@ export default function waasConnector(options: InitializeWaasOptions) {
     async getProvider() {
       try {
         if (!waas) {
+          const { InitializeWaas } = await cwaasImport()
+
           waas = await InitializeWaas(options)
         }
 
@@ -143,6 +155,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
       try {
         await this.getProvider()
         throwIfNoWallet()
+        const { ProtocolFamily } = await cwaasImport()
 
         await this.getProvider()
 
@@ -178,6 +191,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
     async createWallet() {
       try {
         await this.getProvider()
+        const { Logout, ProtocolFamily } = await cwaasImport()
 
         await Logout().catch(() => {})
 
@@ -194,6 +208,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
     async restoreWallet(backupData) {
       try {
         await this.getProvider()
+        const { Logout, ProtocolFamily } = await cwaasImport()
 
         await Logout().catch(() => {})
 

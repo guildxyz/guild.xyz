@@ -1,10 +1,47 @@
 import { Link } from "@chakra-ui/next-js"
+import { Skeleton } from "@chakra-ui/react"
 import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import REQUIREMENTS from "requirements"
+import { LensActionType, lensPlatformOptions } from "./components/LensAction"
+import { LensReaction } from "./components/LensReact"
 import useLensProfile from "./hooks/useLensProfile"
+
+const getReactionLabel = (lensReaction: LensReaction) => {
+  switch (lensReaction) {
+    case "UPVOTE":
+      return "Upvote"
+    case "DOWNVOTE":
+      return "Downvote"
+    default:
+      return "React on"
+  }
+}
+
+const getActionLabel = (lensAction: LensActionType) => {
+  switch (lensAction) {
+    case "COMMENT":
+      return "Comment on"
+    case "QUOTE":
+      return "Quote"
+    default:
+      return "Mirror"
+  }
+}
+
+const getActionPlatform = (publishedOn?: string) =>
+  lensPlatformOptions.find((o) => o.value === publishedOn)?.label ?? "Lens protocol"
+
+const getPlatformBaseUrl = (publishedOn?: string) => {
+  switch (publishedOn) {
+    case "orb":
+      return "https://orb.club/p/"
+    default:
+      return "https://hey.xyz/posts/"
+  }
+}
 
 const LensRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
@@ -17,35 +54,27 @@ const LensRequirement = (props: RequirementProps) => {
     <Requirement image={REQUIREMENTS.LENS.icon as string} {...props}>
       {(() => {
         switch (requirement.type) {
+          case "LENS_REACT":
+            return (
+              <>
+                {`${getReactionLabel(requirement.data.reaction)} the `}
+                <LensPostLink />
+                {` post on Lens Protocol`}
+              </>
+            )
+          case "LENS_ACTION":
+            return (
+              <>
+                {`${getActionLabel(requirement.data.action)} the `}
+                <LensPostLink />
+                {` post on ${getActionPlatform(requirement.data.publishedOn)}`}
+              </>
+            )
           case "LENS_COLLECT":
             return (
               <>
                 {`Collect the `}
-                <Link
-                  href={`https://hey.xyz/posts/${requirement.data.id}`}
-                  isExternal
-                  display="inline"
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {requirement.data.id}
-                </Link>
-                {` post on Lens Protocol`}
-              </>
-            )
-          case "LENS_MIRROR":
-            return (
-              <>
-                {`Mirror the `}
-                <Link
-                  href={`https://hey.xyz/posts/${requirement.data.id}`}
-                  isExternal
-                  display="inline"
-                  colorScheme="blue"
-                  fontWeight="medium"
-                >
-                  {requirement.data.id}
-                </Link>
+                <LensPostLink />
                 {` post on Lens Protocol`}
               </>
             )
@@ -76,16 +105,34 @@ const LensFollowRequirement = (props: RequirementProps) => {
       {...props}
     >
       {type === "LENS_FOLLOW" ? "Follow " : "Be followed by "}
-      <Link
-        href={`https://lensfrens.xyz/${data.id.replace(".lens", "")}`}
-        isExternal
-        colorScheme="blue"
-        fontWeight="medium"
-      >
-        {data.id}
-      </Link>
+      <Skeleton isLoaded={!isLoading} display="inline">
+        <Link
+          href={`https://lensfrens.xyz/${lensProfile?.label?.replace(".lens", "")}`}
+          isExternal
+          colorScheme="blue"
+          fontWeight="medium"
+        >
+          {lensProfile?.label ?? "Loading..."}
+        </Link>
+      </Skeleton>
       {" on Lens protocol"}
     </Requirement>
+  )
+}
+
+const LensPostLink = () => {
+  const { data } = useRequirementContext()
+
+  return (
+    <Link
+      href={`${getPlatformBaseUrl(data.publishedOn)}${data.id}`}
+      isExternal
+      display="inline"
+      colorScheme="blue"
+      fontWeight="medium"
+    >
+      {data.id}
+    </Link>
   )
 }
 

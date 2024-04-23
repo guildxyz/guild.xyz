@@ -154,6 +154,9 @@ const MultiPlatformSelectButton = ({
                       setValue("socialLinks.TWITTER", "")
                     } else {
                       removePlatform(platform)
+                      if (platform === "DISCORD") {
+                        captureEvent("[discord setup] remove selected server")
+                      }
                       captureEvent("guild creation flow > platform removed", {
                         platform,
                       })

@@ -1,4 +1,5 @@
 import { usePrevious } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
@@ -21,6 +22,7 @@ type Props = {
 }
 
 const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
       `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`
@@ -73,7 +75,10 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           <Button
             h={10}
             colorScheme="DISCORD"
-            onClick={openAddBotPopup}
+            onClick={() => {
+              captureEvent("[discord setup] opening add bot modal")
+              openAddBotPopup()
+            }}
             isLoading={!!activeAddBotPopup}
             rightIcon={<ArrowSquareIn />}
           >
@@ -83,7 +88,10 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           <Button
             h={10}
             colorScheme="green"
-            onClick={() => onSelect(serverData.id)}
+            onClick={() => {
+              captureEvent("[discord setup] selected server")
+              onSelect(serverData.id)
+            }}
             data-test="select-dc-server-button"
           >
             Select
