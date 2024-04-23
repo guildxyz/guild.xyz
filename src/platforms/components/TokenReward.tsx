@@ -301,7 +301,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
                 rightIcon={<ArrowSquareIn />}
                 iconSpacing="1"
               >
-                {claimableAmount || 0} {token?.data?.symbol || "tokens"}
+                {claimableAmount || ""} {token?.data?.symbol || "tokens"}
               </Button>
             </Tooltip>
           </>

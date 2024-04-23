@@ -31,6 +31,7 @@ import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
 import useCollectToken from "./hooks/useCollectToken"
 import usePool from "./hooks/usePool"
 import useRolePlatforms from "./hooks/useRolePlatforms"
+import useClaimedAmount from "./hooks/useTokenClaimedAmount"
 
 type Props = {
   isOpen: boolean
@@ -62,7 +63,15 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
     () => {
       onClose()
       refetch()
+      refetchClaimedAmount()
     }
+  )
+
+  const { refetch: refetchClaimedAmount } = useClaimedAmount(
+    guildPlatform.platformGuildData.chain,
+    guildPlatform.platformGuildData.poolId,
+    rolePlatforms.map((rp) => rp.id),
+    token.data.decimals
   )
 
   const { chainId } = useAccount()

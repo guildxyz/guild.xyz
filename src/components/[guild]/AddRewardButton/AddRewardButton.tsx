@@ -18,7 +18,6 @@ import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
@@ -47,6 +46,7 @@ import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
+import useCreateReqBasedTokenReward from "./useCreateTokenReward"
 
 export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
@@ -148,17 +148,21 @@ const AddRewardButton = (): JSX.Element => {
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
-
   const isERC20 = (data) =>
     data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
+
+  const { submitCreate: submitCreateReqBased } = useCreateReqBasedTokenReward({
+    onSuccess: () => {
+      toast({ status: "success", title: "Reward successfully added" })
+      onCloseAndClear()
+    },
+    onError: (err) => console.error(err),
+  })
 
   const submitERC20Reward = async (
     data: any,
     saveAs: "DRAFT" | "PUBLIC" = "PUBLIC"
   ) => {
-    console.log("This is a token reward")
-
     const isRequirementBased =
       data.rolePlatforms[0].dynamicAmount.operation.input.type ===
       "REQUIREMENT_AMOUNT"
@@ -166,164 +170,10 @@ const AddRewardButton = (): JSX.Element => {
     const guildPlatfomrExists = !!data.rolePlatforms[0].guildPlatformId
 
     if (isRequirementBased) {
-      /**
-       * For requirement based rewards, we need to create the requirement first, so
-       * that we can reference it in the dynamicAmount fields when creating the role
-       * platform.
-       */
-
-      console.log("...that is req based")
-
-      if (data?.roleIds.length !== 0) {
-        /** Adding to already existing role. */
-
-        if (data.roleIds.length > 1) {
-          showErrorToast(
-            "Dynamic token rewards can be added to only one role at most."
-          )
-          console.error(
-            "Tried to add dynamic token reward to multiple roles. Role IDs:" +
-              data.roleIds
-          )
-          return
-        }
-
-        console.log("...adding to existing role")
-
-        /** Creating the requirement first */
-        if (data.requirements.length > 1) {
-          showErrorToast(
-            "You cannot set requirements to the role when adding this reward."
-          )
-          console.error(
-            "Tried to add an additional requirement to the role when adding token reward to it."
-          )
-        }
-
-        console.log("...with a new req")
-
-        await onRequirementSubmit({
-          requirement: data.requirements[0],
-          roleId: data.roleIds[0],
-          onSuccess: (req) => {
-            /**
-             * Now the reward can be added, as we now have the requirementId that is
-             * needed in the reward's rolePlatform's dynamicData field.
-             */
-
-            onAddRewardSubmit({
-              ...data.rolePlatforms[0].guildPlatform,
-              rolePlatforms: [
-                {
-                  roleId: Number(data.roleIds[0]),
-                  ...(guildPlatfomrExists && {
-                    guildPlatformId: data.rolePlatforms[0].guildPlatformId,
-                  }),
-                  platformRoleId:
-                    data.rolePlatforms[0].guildPlatform.platformGuildId ||
-                    `${data.roleIds[0]}-${Date.now()}`,
-                  guildPlatform: data.rolePlatforms[0].guildPlatform,
-                  isNew: data.rolePlatforms[0].isNew,
-                  ...(data.rolePlatforms[0].capacity && {
-                    capacity: data.rolePlatforms[0].capacity,
-                  }),
-                  ...(data.rolePlatforms[0].startTime && {
-                    capacity: data.rolePlatforms[0].startTime,
-                  }),
-                  ...(data.rolePlatforms[0].endTime && {
-                    capacity: data.rolePlatforms[0].endTime,
-                  }),
-                  visibility:
-                    saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
-                  dynamicAmount: {
-                    operation: {
-                      type: data.rolePlatforms[0].dynamicAmount.operation.type,
-                      params: data.rolePlatforms[0].dynamicAmount.operation.params,
-                      input: {
-                        type: "REQUIREMENT_AMOUNT",
-                        roleId: Number(data.roleIds[0]),
-                        requirementId: req.id,
-                      },
-                    },
-                  },
-                },
-              ],
-            })
-          },
-          onError: (error) => console.log(error),
-        })
-        return
-      }
-
-      if (!data.roleIds || data.roleIds.length === 0) {
-        /** Creating a new role */
-
-        const roleVisibility =
-          saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
-
-        const createdRole = await onCreateRoleSubmit({
-          ...data,
-          name:
-            data.name ||
-            `${data.rolePlatforms[0].guildPlatform.platformGuildData.name} role`,
-          imageUrl:
-            data.rolePlatforms[0].guildPlatform.platformGuildData?.imageUrl ||
-            `/guildLogos/${getRandomInt(286)}.svg`,
-          roleVisibility,
-          rolePlatforms: [], // Empty, we create it later with the roleId and reqId
-        })
-
-        if (guildPlatfomrExists) {
-          data.rolePlatforms[0].guildPlatform = {
-            platformId: PlatformType.ERC20,
-            platformName: "ERC20",
-            platformGuildId: "",
-            platformGuildData: {},
-          }
-        }
-
-        await onAddRewardSubmit({
-          ...data.rolePlatforms[0].guildPlatform,
-          rolePlatforms: [
-            {
-              roleId: createdRole.id,
-              ...(guildPlatfomrExists && {
-                guildPlatformId: data.rolePlatforms[0].guildPlatformId,
-              }),
-              platformRoleId:
-                data.rolePlatforms[0].guildPlatform.platformGuildId ||
-                `${createdRole.id}-${Date.now()}`,
-              guildPlatform: data.rolePlatforms[0].guildPlatform,
-              isNew: data.rolePlatforms[0].isNew,
-              visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
-              ...(data.rolePlatforms[0].capacity && {
-                capacity: data.rolePlatforms[0].capacity,
-              }),
-              ...(data.rolePlatforms[0].startTime && {
-                capacity: data.rolePlatforms[0].startTime,
-              }),
-              ...(data.rolePlatforms[0].endTime && {
-                capacity: data.rolePlatforms[0].endTime,
-              }),
-              dynamicAmount: {
-                operation: {
-                  type: data.rolePlatforms[0].dynamicAmount.operation.type,
-                  params: data.rolePlatforms[0].dynamicAmount.operation.params,
-                  input: {
-                    type: "REQUIREMENT_AMOUNT",
-                    roleId: createdRole.id,
-                    requirementId: createdRole.requirements[0].id,
-                  },
-                },
-              },
-            },
-          ],
-        })
-      }
-
+      await submitCreateReqBased(data, saveAs)
       return
     } else {
-      /** If not requirement based, follow standard protocol. */
+      /** TODO: Write when static reward is needed */
       if (guildPlatfomrExists) {
         data.rolePlatforms[0].guildPlatform = {
           platformId: PlatformType.ERC20,
@@ -332,27 +182,11 @@ const AddRewardButton = (): JSX.Element => {
           platformGuildData: {},
         }
       }
-
-      onAddRewardSubmit({
-        ...data.rolePlatforms[0].guildPlatform,
-        rolePlatforms: data.roleIds
-          ?.filter((roleId) => !!roleId)
-          .map((roleId) => ({
-            roleId: +roleId,
-            platformRoleId: roleId,
-            ...data.rolePlatforms[0],
-            visibility:
-              saveAs === "DRAFT"
-                ? Visibility.HIDDEN
-                : roles.find((role) => role.id === +roleId).visibility,
-          })),
-      })
+      return
     }
-    return
   }
 
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
-    console.log(data)
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
 
     if (data.requirements?.length > 0) {
