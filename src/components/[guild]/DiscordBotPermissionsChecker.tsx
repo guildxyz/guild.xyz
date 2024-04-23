@@ -146,9 +146,13 @@ const DiscordBotPermissionsChecker = () => {
           if (permissionsNotGranted.length > 0) {
             toastIdRef.current = toastWithButton({
               title: "Missing permissions",
-              description: `We've noticed that the Guild.xyz bot is missing the following permissions on the ${serverName} Discord server: ${permissionsNotGranted
+              description: `${permissionsNotGranted
                 .map((perm) => perm.name)
-                .join(", ")}`,
+                .join(", ")} permission${
+                permissionsNotGranted.length > 1 ? "s are" : " is"
+              } missing for the Guild.xyz bot on ${
+                serverName ? `the ${serverName}` : "your"
+              } Discord server.`,
               ...toastOptions,
             })
             setErrorType("PERMISSIONS")
