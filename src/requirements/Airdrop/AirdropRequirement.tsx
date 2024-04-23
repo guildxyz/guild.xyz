@@ -4,10 +4,10 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
 import Button from "components/common/Button"
 import { ArrowSquareIn } from "phosphor-react"
 import REQUIREMENTS from "requirements"
-import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 
 const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext() as Extract<
@@ -15,7 +15,7 @@ const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     { type: "GUILD_SNAPSHOT" }
   >
 
-  const { snapshot, isHidden } = requirement?.data
+  const { isHidden } = requirement?.data
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -39,11 +39,11 @@ const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
           {"snapshot"}
         </Button>
       )}
-      <SearchableVirtualListModal
-        initialList={snapshot.map(({ key, value }) => `${key}: ${value}`)}
-        isOpen={isOpen}
+
+      <SnapshotModal
         onClose={onClose}
-        title={"Snapshot"}
+        isOpen={isOpen}
+        snapshotRequirement={requirement}
       />
     </Requirement>
   )

@@ -1,4 +1,4 @@
-import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
+import { Circle, Img, Text, useColorModeValue } from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
@@ -67,13 +67,16 @@ const TokenRewardCard = () => {
         }
         description={
           <>
-            {alreadyClaimed === 0
-              ? ``
-              : claimableAmount > 0
-              ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
-              : `You have claimed all of your ${token.data.symbol} rewards`}
+            <Text fontSize="sm" color="GrayText">
+              {alreadyClaimed === 0
+                ? ``
+                : claimableAmount > 0
+                ? `Already claimed: ${alreadyClaimed} ${token.data.symbol}`
+                : `You have claimed all of your ${token.data.symbol} rewards`}
+            </Text>
             {/* TODO: This will not work if multiple rewards are set */}
             <AvailabilityTags
+              mt={1}
               rolePlatform={roles
                 .flatMap((role) => role.rolePlatforms)
                 .find((rp) => rp.id === rolePlatformIds[0])}
