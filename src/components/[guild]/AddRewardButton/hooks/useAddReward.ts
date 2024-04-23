@@ -6,7 +6,13 @@ import useToast from "hooks/useToast"
 import { GuildPlatform, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
-const useAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
+const useAddReward = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void
+  onError?: (err: unknown) => void
+}) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
 
   const { captureEvent } = usePostHogContext()
@@ -22,6 +28,7 @@ const useAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
     onError: (error) => {
       showErrorToast(error)
       captureEvent("useAddReward error", { ...postHogOptions, error })
+      onError?.(error)
     },
     onSuccess: (response) => {
       if (response.platformId === PlatformType.CONTRACT_CALL) {
