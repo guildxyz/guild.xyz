@@ -52,7 +52,7 @@ const DiscordGuildSetup = ({
       captureEvent("[discord setup] gateables successful")
     },
     onError: () => {
-      captureEvent("[discord setup] gateables failed")
+      captureEvent("[discord setup] gateables failed, showing reconnect alert")
     },
   })
 
