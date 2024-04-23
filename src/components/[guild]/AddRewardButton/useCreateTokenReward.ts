@@ -3,6 +3,7 @@ import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { PlatformType, Requirement, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
+import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
 import useAddReward from "./hooks/useAddReward"
 
@@ -26,6 +27,7 @@ const useCreateReqBasedTokenReward = ({
 }) => {
   const showErrorToast = useShowErrorToast()
   const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { id: guildId } = useGuild()
 
@@ -42,7 +44,7 @@ const useCreateReqBasedTokenReward = ({
 
   const getRewardSubmitData = (
     data: any,
-    saveAs: "DRAFT" | "PUBLIC" = "PUBLIC",
+    saveAs: "DRAFT" | "PUBLIC",
     roleId: number
   ) => ({
     ...data.rolePlatforms[0].guildPlatform,
@@ -58,10 +60,7 @@ const useCreateReqBasedTokenReward = ({
     ],
   })
 
-  const addToExistingRole = async (
-    data: CreateData,
-    saveAs: "DRAFT" | "PUBLIC" = "PUBLIC"
-  ) => {
+  const addToExistingRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     if (data.roleIds.length > 1) {
       showErrorToast("Dynamic token rewards can be added to only one role at most.")
       return
@@ -78,8 +77,8 @@ const useCreateReqBasedTokenReward = ({
       roleId: data.roleIds[0],
       onSuccess: (req) => {
         /**
-         * Now the reward can be added, as we now have the requirementId that
-         * is needed in the reward's rolePlatform's dynamicData field.
+         * Now the reward can be added, as we now have the requirementId that is
+         * needed in the reward's rolePlatform's dynamicData field.
          */
 
         const modifiedData: any = { ...data }
@@ -107,16 +106,13 @@ const useCreateReqBasedTokenReward = ({
           saveAs,
           data.roleIds[0]
         )
-        onAddRewardSubmit(rewardSubmitData)
+        onAddRewardSubmit(rewardSubmitData).then(() => triggerMembershipUpdate())
       },
-      onError: (error) => console.log(error),
+      onError: (error) => console.error(error),
     })
   }
 
-  const createWithNewRole = async (
-    data: CreateData,
-    saveAs: "DRAFT" | "PUBLIC" = "PUBLIC"
-  ) => {
+  const createWithNewRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     const roleVisibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
 
     const createdRole = await onCreateRoleSubmit({
@@ -159,6 +155,7 @@ const useCreateReqBasedTokenReward = ({
       createdRole.id
     )
     await onAddRewardSubmit(rewardSubmitData)
+    triggerMembershipUpdate()
   }
 
   const submitCreate = (data: CreateData, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {

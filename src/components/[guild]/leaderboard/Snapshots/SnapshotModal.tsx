@@ -10,7 +10,6 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { Schemas } from "@guildxyz/types"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
 import { useEffect, useState } from "react"
 import Star from "static/icons/star.svg"
@@ -19,7 +18,7 @@ import SnapshotTable from "./SnapshotTable"
 type Props = {
   onClose: () => void
   isOpen: boolean
-  snapshotRequirement: Extract<Schemas["Requirement"], { type: "GUILD_SNAPSHOT" }>
+  snapshotRequirement: any
 }
 
 type SnapshotData = {
@@ -44,7 +43,7 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
 
   const pointsRewards = useAccessedGuildPoints("ALL")
   const pointsReward = pointsRewards.find(
-    (gp) => gp.id === snapshotRequirement.data["guildPlatformId"]
+    (gp) => gp.id === snapshotRequirement.data.guildPlatformId
   )
 
   const pointData = pointsReward

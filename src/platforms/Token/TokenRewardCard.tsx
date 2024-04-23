@@ -1,17 +1,31 @@
-import { Circle, Img, Text, useColorModeValue } from "@chakra-ui/react"
+import {
+  Circle,
+  Img,
+  MenuItem,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
+import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useMembership from "components/explorer/hooks/useMembership"
+import useToast from "hooks/useToast"
+import { Coin, Wallet } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
+import { formatUnits } from "viem"
+import FundPoolModal from "./FundPoolModal"
 import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
+import usePool from "./hooks/usePool"
 import useClaimedAmount from "./hooks/useTokenClaimedAmount"
+import useWithdrawPool from "./hooks/useWithdrawPool"
 
 const TokenRewardCard = () => {
   const { isAdmin } = useGuildPermission()
@@ -19,6 +33,18 @@ const TokenRewardCard = () => {
 
   const { getValue } = useCalculateClaimableTokens(guildPlatform)
   const claimableAmount = getValue()
+
+  const {
+    isOpen: fundIsOpen,
+    onOpen: fundOnOpen,
+    onClose: fundOnClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: withdrawIsOpen,
+    onOpen: withdrawOnOpen,
+    onClose: withdrawOnClose,
+  } = useDisclosure()
 
   const { roles } = useGuild()
 
@@ -49,6 +75,29 @@ const TokenRewardCard = () => {
     : claimableAmount > 0
     ? `Claim ${claimableAmount} ${token.data.symbol}`
     : `Claimed ${alreadyClaimed} ${token.data.symbol}`
+
+  const { data: poolData, refetch } = usePool(
+    guildPlatform.platformGuildData.chain,
+    BigInt(guildPlatform.platformGuildData.poolId)
+  )
+  const [owner, , , poolBalance] = poolData
+  const balance = Number(formatUnits(poolBalance, token.data.decimals))
+  const toast = useToast()
+
+  const { onSubmitTransaction: onSubmitWithdraw, isLoading: withdrawIsLoading } =
+    useWithdrawPool(
+      guildPlatform.platformGuildData.chain,
+      BigInt(guildPlatform.platformGuildData.poolId),
+      () => {
+        toast({
+          status: "success",
+          title: "Success",
+          description: "Successfully withdrawed all funds from the pool!",
+        })
+        withdrawOnClose()
+        refetch()
+      }
+    )
 
   return (
     <>
@@ -87,6 +136,12 @@ const TokenRewardCard = () => {
           isAdmin && (
             <>
               <PlatformCardMenu>
+                <MenuItem icon={<Coin />} onClick={fundOnOpen}>
+                  Fund pool
+                </MenuItem>
+                <MenuItem icon={<Wallet />} onClick={withdrawOnOpen}>
+                  Withdaw from pool
+                </MenuItem>
                 <RemovePlatformMenuItem
                   platformGuildId={guildPlatform.platformGuildId}
                 />
@@ -97,6 +152,38 @@ const TokenRewardCard = () => {
       >
         <TokenCardButton isDisabled={claimableAmount <= 0} />
       </RewardCard>
+
+      <ConfirmationAlert
+        isLoading={withdrawIsLoading}
+        isOpen={withdrawIsOpen}
+        onClose={withdrawOnClose}
+        onConfirm={onSubmitWithdraw}
+        title="Withdraw all funds"
+        description={
+          <>
+            Are you sure you want to withdraw all funds from the reward pool? No
+            further rewards can be claimed until funded again.
+          </>
+        }
+        confirmationText="Withdraw"
+      />
+
+      <FundPoolModal
+        poolId={BigInt(guildPlatform.platformGuildData.poolId)}
+        balance={balance}
+        owner={owner}
+        onClose={fundOnClose}
+        isOpen={fundIsOpen}
+        onSuccess={() => {
+          toast({
+            status: "success",
+            title: "Success",
+            description: "Successfully funded the token pool!",
+          })
+          fundOnClose()
+          refetch()
+        }}
+      />
     </>
   )
 }
