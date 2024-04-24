@@ -36,6 +36,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       gp.platformGuildData.chain === chain &&
       gp.platformGuildData.contractAddress?.toLowerCase() === address?.toLowerCase()
   )
+
   const guildPlatformData =
     relevantGuildPlatform?.platformGuildData as PlatformGuildData["CONTRACT_CALL"]
 
@@ -59,9 +60,12 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   } = useReadContract({
     ...contract,
     functionName: "totalSupply",
-    blockNumber: firstBlockNumberToday?.result,
+    blockNumber: firstBlockNumberToday?.result
+      ? BigInt(firstBlockNumberToday.result)
+      : undefined,
     query: {
       enabled: Boolean(firstBlockNumberToday?.result),
+      staleTime: 600_000,
     },
   })
 
@@ -107,6 +111,9 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
         functionName: "fee",
       },
     ],
+    query: {
+      staleTime: Infinity,
+    },
   })
 
   const [
@@ -114,7 +121,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     nameResponse,
     totalSupplyResponse,
     supportsInterfaceResponse,
-    tokenURResponseI,
+    tokenURIResponse,
     feeResponse,
   ] = data || []
 
@@ -122,7 +129,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const name = nameResponse?.result
   const totalSupply = totalSupplyResponse?.result
   const isERC1155 = supportsInterfaceResponse?.result
-  const tokenURI = tokenURResponseI?.result
+  const tokenURI = tokenURIResponse?.result
   const fee = feeResponse?.result
 
   const { data: metadata } = useSWRImmutable(
@@ -133,7 +140,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
 
   return {
     creator: owner,
-    name: name as string,
+    name: name ?? guildPlatformData?.name,
     totalCollectors:
       typeof totalSupply === "bigint" ? Number(totalSupply) : undefined,
     totalCollectorsToday:
