@@ -227,8 +227,7 @@ const getStaticProps = async ({ params }) => {
         }
       ),
     ])
-  } catch (err) {
-    console.log("FETCH GUILD ERROR", err)
+  } catch {
     return {
       notFound: true,
     }
@@ -247,19 +246,16 @@ const getStaticProps = async ({ params }) => {
 
   const nftRole = guild.roles.find((role) => role.id === nftRoleReward?.roleId)
 
-  if (!nftGuildReward || !nftRoleReward || !nftRole) {
-    console.log("REWARD NOT FOUND", nftGuildReward, nftRoleReward, nftRole)
+  if (!nftGuildReward || !nftRoleReward || !nftRole)
     return {
       notFound: true,
     }
-  }
 
   // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
 
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000"
-  console.log("nftDetails baseUrl: ", baseUrl)
   const nftDetails = await fetch(`${baseUrl}/api/nft/${chain}/${address}`)
     .then((res) => res.json())
     .catch(() => undefined)
