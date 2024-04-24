@@ -14,7 +14,6 @@ import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { TokenRewardType } from "../AddTokenPanel"
 import DynamicAmount from "./DynamicAmount"
-import StaticAmount from "./StaticAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const { setValue } = useFormContext()
@@ -123,14 +122,15 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
       <Collapse startingHeight={150} animateOpacity in={!isCollapsed}>
         <Stack gap={5}>
-          {[
+          {/* {[
             TokenRewardType.DYNAMIC_POINTS,
             TokenRewardType.DYNAMIC_SNAPSHOT,
           ].includes(type) ? (
             <DynamicAmount />
           ) : (
             <StaticAmount />
-          )}
+          )} */}
+          <DynamicAmount />
         </Stack>
       </Collapse>
 

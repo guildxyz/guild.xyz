@@ -1,3 +1,4 @@
+import useCreateReqBasedTokenReward from "components/[guild]/AddRewardButton/useCreateTokenReward"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -14,6 +15,11 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
 
   const { triggerMembershipUpdate } = useMembershipUpdate()
+
+  const { submitCreate: createTokenReward } = useCreateReqBasedTokenReward({
+    onSuccess: () => {},
+    onError: (err) => {},
+  })
 
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
@@ -51,15 +57,44 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         )
     )
 
+    const erc20RolePlatformsToCreate = (rolePlatforms ?? []).filter(
+      (rolePlatform) =>
+        rolePlatform.guildPlatform.platformName === "ERC20" &&
+        !("id" in rolePlatform)
+    )
+    const rolePlatformsToCreate = (rolePlatforms ?? []).filter(
+      (rolePlatform) =>
+        rolePlatform.guildPlatform.platformName !== "ERC20" &&
+        !("id" in rolePlatform)
+    )
+
+    if (erc20RolePlatformsToCreate.length > 1) {
+      showErrorToast("Only one token reward is allowed per role.")
+    }
+
+    if (erc20RolePlatformsToCreate[0]) {
+      const rolePlatform: any = erc20RolePlatformsToCreate[0]
+
+      const tokenRewardData = {
+        rolePlatforms: [
+          {
+            ...rolePlatform,
+          },
+        ],
+        requirements: rolePlatform.requirements,
+        roleIds: [roleId],
+      }
+
+      await createTokenReward(tokenRewardData, "PUBLIC")
+    }
+
     const rolePlatformCreations = Promise.all(
-      (rolePlatforms ?? [])
-        .filter((rolePlatform) => !("id" in rolePlatform))
-        .map((rolePlatform) =>
-          fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
-            { method: "POST", body: rolePlatform },
-          ]).catch((error) => error)
-        )
+      rolePlatformsToCreate.map((rolePlatform) =>
+        fetcherWithSign([
+          `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
+          { method: "POST", body: rolePlatform },
+        ]).catch((error) => error)
+      )
     )
 
     const [updatedRole, updatedRolePlatforms, createdRolePlatforms] =

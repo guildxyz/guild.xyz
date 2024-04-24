@@ -99,7 +99,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
               <Text fontWeight="bold" mb="3">
                 Add new reward
               </Text>
-              <PlatformsGrid onSelection={setSelection} skipList={["ERC20"]} />
+              <PlatformsGrid onSelection={setSelection} />
             </>
           )}
         </ModalBody>
