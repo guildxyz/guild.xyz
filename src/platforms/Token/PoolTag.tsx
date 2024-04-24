@@ -13,15 +13,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import ClickableTagPopover from "components/[guild]/activity/ActivityLogAction/components/ClickableTagPopover"
-import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useToast from "hooks/useToast"
 import { Coin, DotsThreeVertical, Wallet } from "phosphor-react"
 import FundPoolModal from "platforms/Token/FundPoolModal"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import usePool from "platforms/Token/hooks/usePool"
-import useWithdrawPool from "platforms/Token/hooks/useWithdrawPool"
 import { useState } from "react"
 import { formatUnits } from "viem"
+import WithdrawPoolModal from "./WithdrawPoolModal"
 
 const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   const {
@@ -34,20 +33,9 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
 
   const chain = guildPlatform.platformGuildData.chain
 
-  const { data, isLoading, error, refetch } = usePool(chain, poolId)
+  const { data, isLoading, error } = usePool(chain, poolId)
 
   const toast = useToast()
-
-  const { onSubmitTransaction: onSubmitWithdraw, isLoading: withdrawIsLoading } =
-    useWithdrawPool(chain, poolId, () => {
-      toast({
-        status: "success",
-        title: "Success",
-        description: "Successfully withdrawed all funds from the pool!",
-      })
-      withdrawOnClose()
-      refetch()
-    })
 
   const { colorMode } = useColorMode()
   const [showClaimed, setShowClaimed] = useState(false)
@@ -154,19 +142,10 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
         }}
       />
 
-      <ConfirmationAlert
-        isLoading={withdrawIsLoading}
+      <WithdrawPoolModal
         isOpen={withdrawIsOpen}
         onClose={withdrawOnClose}
-        onConfirm={onSubmitWithdraw}
-        title="Withdraw all funds"
-        description={
-          <>
-            Are you sure you want to withdraw all funds from the reward pool? No
-            further rewards can be claimed until funded again.
-          </>
-        }
-        confirmationText="Withdraw"
+        onSuccess={() => {}}
       />
     </>
   )

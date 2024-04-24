@@ -12,7 +12,6 @@ import PlatformCardMenu from "components/[guild]/RolePlatforms/components/Platfo
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
-import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import useMembership from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import { Coin, Wallet } from "phosphor-react"
@@ -21,10 +20,10 @@ import { GuildPlatform } from "types"
 import FundPoolModal from "./FundPoolModal"
 import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
+import WithdrawPoolModal from "./WithdrawPoolModal"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
 import usePool from "./hooks/usePool"
 import useClaimedAmount from "./hooks/useTokenClaimedAmount"
-import useWithdrawPool from "./hooks/useWithdrawPool"
 
 const TokenRewardCard = () => {
   const { isAdmin } = useGuildPermission()
@@ -82,21 +81,6 @@ const TokenRewardCard = () => {
 
   const toast = useToast()
 
-  const { onSubmitTransaction: onSubmitWithdraw, isLoading: withdrawIsLoading } =
-    useWithdrawPool(
-      guildPlatform.platformGuildData.chain,
-      BigInt(guildPlatform.platformGuildData.poolId),
-      () => {
-        toast({
-          status: "success",
-          title: "Success",
-          description: "Successfully withdrawed all funds from the pool!",
-        })
-        withdrawOnClose()
-        refetch()
-      }
-    )
-
   return (
     <>
       <RewardCard
@@ -151,19 +135,10 @@ const TokenRewardCard = () => {
         <TokenCardButton isDisabled={claimableAmount <= 0} />
       </RewardCard>
 
-      <ConfirmationAlert
-        isLoading={withdrawIsLoading}
+      <WithdrawPoolModal
         isOpen={withdrawIsOpen}
         onClose={withdrawOnClose}
-        onConfirm={onSubmitWithdraw}
-        title="Withdraw all funds"
-        description={
-          <>
-            Are you sure you want to withdraw all funds from the reward pool? No
-            further rewards can be claimed until funded again.
-          </>
-        }
-        confirmationText="Withdraw"
+        onSuccess={() => {}}
       />
 
       <FundPoolModal
