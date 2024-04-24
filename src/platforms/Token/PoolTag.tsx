@@ -71,7 +71,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
     )
   if (error) return <Tag>Failed to load balance</Tag>
 
-  const [owner, , totalFunding, poolBalance] = data
+  const [, , totalFunding, poolBalance] = data
   const capacity = Number(formatUnits(totalFunding, decimals))
   const balance = Number(formatUnits(poolBalance, decimals))
 
@@ -142,11 +142,8 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
       </Tag>
 
       <FundPoolModal
-        poolId={poolId}
-        balance={balance}
-        owner={owner}
-        onClose={fundOnClose}
         isOpen={fundIsOpen}
+        onClose={fundOnClose}
         onSuccess={() => {
           toast({
             status: "success",
@@ -154,7 +151,6 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
             description: "Successfully funded the token pool!",
           })
           fundOnClose()
-          refetch()
         }}
       />
 

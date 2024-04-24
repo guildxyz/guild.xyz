@@ -26,22 +26,17 @@ import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { useState } from "react"
 import Token from "static/icons/token.svg"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { parseUnits } from "viem"
+import { formatUnits, parseUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import useFundPool from "./hooks/useFundPool"
+import usePool from "./hooks/usePool"
 
 const FundPoolModal = ({
-  poolId,
-  balance,
-  owner,
   isOpen,
   onClose,
   onSuccess,
 }: {
-  poolId: bigint
-  balance: number
-  owner: `0x${string}`
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
@@ -52,9 +47,14 @@ const FundPoolModal = ({
     },
     imageUrl,
     guildPlatform: {
-      platformGuildData: { chain, tokenAddress },
+      platformGuildData: { chain, tokenAddress, poolId },
     },
   } = useTokenRewardContext()
+
+  const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
+
+  const [owner, , , poolBalance] = poolData || []
+  const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
   const [amount, setAmount] = useState("1")
 
@@ -87,9 +87,12 @@ const FundPoolModal = ({
   const { onSubmitTransaction: onSubmitFund, isLoading } = useFundPool(
     chain,
     tokenAddress,
-    poolId,
+    BigInt(poolId),
     formattedAmount,
-    onSuccess
+    () => {
+      refetch()
+      onSuccess()
+    }
   )
 
   const handleClose = () => {

@@ -18,7 +18,6 @@ import useToast from "hooks/useToast"
 import { Coin, Wallet } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
-import { formatUnits } from "viem"
 import FundPoolModal from "./FundPoolModal"
 import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
@@ -76,12 +75,11 @@ const TokenRewardCard = () => {
     ? `Claim ${claimableAmount} ${token.data.symbol}`
     : `Claimed ${alreadyClaimed} ${token.data.symbol}`
 
-  const { data: poolData, refetch } = usePool(
+  const { refetch } = usePool(
     guildPlatform.platformGuildData.chain,
     BigInt(guildPlatform.platformGuildData.poolId)
   )
-  const [owner, , , poolBalance] = poolData
-  const balance = Number(formatUnits(poolBalance, token.data.decimals))
+
   const toast = useToast()
 
   const { onSubmitTransaction: onSubmitWithdraw, isLoading: withdrawIsLoading } =
@@ -169,9 +167,6 @@ const TokenRewardCard = () => {
       />
 
       <FundPoolModal
-        poolId={BigInt(guildPlatform.platformGuildData.poolId)}
-        balance={balance}
-        owner={owner}
         onClose={fundOnClose}
         isOpen={fundIsOpen}
         onSuccess={() => {
@@ -181,7 +176,6 @@ const TokenRewardCard = () => {
             description: "Successfully funded the token pool!",
           })
           fundOnClose()
-          refetch()
         }}
       />
     </>
