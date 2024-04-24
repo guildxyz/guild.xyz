@@ -1,10 +1,10 @@
-import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { NFTDetailsAPIResponse } from "pages/api/nft/[chain]/[address]"
 import { useState } from "react"
 import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
@@ -182,7 +182,7 @@ const useCreateNft = (
           title: "Successfully deployed NFT contract",
         })
 
-        const { chain, contractAddress, name, imageUrl } =
+        const { chain, contractAddress, name } =
           response.guildPlatform.platformGuildData
 
         captureEvent("Successfully created NFT", {
@@ -191,16 +191,12 @@ const useCreateNft = (
           contractAddress,
         })
 
-        mutate<NFTDetails>(
+        mutate<NFTDetailsAPIResponse>(
           ["nftDetails", chain, contractAddress],
           {
             creator: address.toLowerCase(),
             name,
-            totalCollectors: 0,
-            totalCollectorsToday: 0,
             standard: "ERC-721", // TODO: we should use a dynamic value here
-            image: imageUrl,
-            description: response.formData.description,
             fee: parseUnits(
               response.formData.price.toString() ?? "0",
               CHAIN_CONFIG[response.formData.chain].nativeCurrency.decimals
