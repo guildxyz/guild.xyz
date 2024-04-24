@@ -27,15 +27,15 @@ export type NFTDetails = {
 }
 
 // Only returning data which we can cache infinitely, so we don't need to refetch it if the metadata/totalSupply changes
-export type NFTDetailsAPIResponse<FeeType = bigint> = OneOf<
+export type NFTDetailsAPIResponse = OneOf<
   Omit<
     NFTDetails,
     "totalCollectors" | "totalCollectorsToday" | "description" | "image" | "fee"
-  > & { fee: FeeType },
+  >,
   { error: string }
 >
 
-const handler: NextApiHandler<NFTDetailsAPIResponse<string>> = async (req, res) => {
+const handler: NextApiHandler<NFTDetailsAPIResponse> = async (req, res) => {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET")
     return res.status(405).json({ error: `Method ${req.method} is not allowed` })
@@ -95,10 +95,6 @@ const handler: NextApiHandler<NFTDetailsAPIResponse<string>> = async (req, res) 
         functionName: "supportsInterface",
         args: [ContractInterface.ERC1155],
       },
-      {
-        ...contract,
-        functionName: "fee",
-      },
     ],
   })
 
@@ -109,13 +105,11 @@ const handler: NextApiHandler<NFTDetailsAPIResponse<string>> = async (req, res) 
     return
   }
 
-  const [ownerResponse, nameResponse, supportsInterfaceResponse, feeResponse] =
-    data || []
+  const [ownerResponse, nameResponse, supportsInterfaceResponse] = data || []
 
   const creator = ownerResponse?.result
   const name = nameResponse?.result
   const isERC1155 = supportsInterfaceResponse?.result
-  const fee = feeResponse?.result
 
   // Caching for a year, because on-chain data won't change
   res.setHeader("Cache-Control", "s-maxage=31536000")
@@ -123,7 +117,6 @@ const handler: NextApiHandler<NFTDetailsAPIResponse<string>> = async (req, res) 
     creator,
     name,
     standard: isERC1155 ? "ERC-1155" : "ERC-721",
-    fee: fee.toString(),
   })
 }
 

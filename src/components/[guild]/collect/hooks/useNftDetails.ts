@@ -90,16 +90,21 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
         functionName: "tokenURI",
         args: [BigInt(1)],
       },
+      {
+        ...contract,
+        functionName: "fee",
+      },
     ],
     query: {
       staleTime: Infinity,
     },
   })
 
-  const [totalSupplyResponse, tokenURIResponse] = data || []
+  const [totalSupplyResponse, tokenURIResponse, feeResponse] = data || []
 
   const totalSupply = totalSupplyResponse?.result
   const tokenURI = tokenURIResponse?.result
+  const fee = feeResponse?.result
 
   const { data: metadata } = useSWRImmutable(
     tokenURI ? ipfsToGuildGateway(tokenURI) : null
@@ -107,7 +112,6 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
 
   return {
     ...nftDetails,
-    fee: nftDetails?.fee ? BigInt(nftDetails.fee) : undefined,
     name: nftDetails?.name ?? guildPlatformData?.name,
     totalCollectors:
       typeof totalSupply === "bigint" ? Number(totalSupply) : undefined,
@@ -117,6 +121,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
         : undefined,
     image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
     description: metadata?.description as string,
+    fee,
     isLoading:
       isNftDetailsLoading || isFirstTotalSupplyTodayLoadings || isMulticallLoading,
 

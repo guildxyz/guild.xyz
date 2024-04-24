@@ -197,10 +197,6 @@ const useCreateNft = (
             creator: address.toLowerCase(),
             name,
             standard: "ERC-721", // TODO: we should use a dynamic value here
-            fee: parseUnits(
-              response.formData.price.toString() ?? "0",
-              CHAIN_CONFIG[response.formData.chain].nativeCurrency.decimals
-            ),
           },
           {
             revalidate: false,
