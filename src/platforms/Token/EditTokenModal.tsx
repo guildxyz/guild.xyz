@@ -146,7 +146,7 @@ const EditTokenModal = ({
     modifiedRolePlatform.dynamicAmount.operation.params.multiplier = data.multiplier
     await submitEditRolePlatform(modifiedRolePlatform)
 
-    if (!changeSnapshot) {
+    if (!changeSnapshot || !data?.requirements?.[0]?.data) {
       mutateGuild()
       onClose()
       return
