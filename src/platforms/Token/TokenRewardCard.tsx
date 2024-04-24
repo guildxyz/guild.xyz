@@ -22,7 +22,6 @@ import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import WithdrawPoolModal from "./WithdrawPoolModal"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
-import usePool from "./hooks/usePool"
 import useClaimedAmount from "./hooks/useTokenClaimedAmount"
 
 const TokenRewardCard = () => {
@@ -73,11 +72,6 @@ const TokenRewardCard = () => {
     : claimableAmount > 0
     ? `Claim ${claimableAmount} ${token.data.symbol}`
     : `Claimed ${alreadyClaimed} ${token.data.symbol}`
-
-  const { refetch } = usePool(
-    guildPlatform.platformGuildData.chain,
-    BigInt(guildPlatform.platformGuildData.poolId)
-  )
 
   const toast = useToast()
 

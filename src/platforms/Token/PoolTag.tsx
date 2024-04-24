@@ -63,9 +63,9 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   const capacity = Number(formatUnits(totalFunding, decimals))
   const balance = Number(formatUnits(poolBalance, decimals))
 
-  const claimedCount = Number((capacity - balance).toFixed(4))
+  const claimedCount = Number((capacity - balance).toFixed(6))
   const available = Number(
-    (capacity - claimedCount < 0 ? 0 : capacity - claimedCount).toFixed(4)
+    (capacity - claimedCount < 0 ? 0 : capacity - claimedCount).toFixed(6)
   )
 
   const isWithdrawDisabled = balance === 0

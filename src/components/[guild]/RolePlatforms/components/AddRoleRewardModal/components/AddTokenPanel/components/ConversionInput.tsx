@@ -53,7 +53,7 @@ const ConversionInput = () => {
   }
 
   const calculatePreview = () =>
-    parseFloat((Number(conversionAmounts[0]) * conversionRate).toFixed(4)).toString()
+    parseFloat((Number(conversionAmounts[0]) * conversionRate).toFixed(6)).toString()
 
   return (
     <>

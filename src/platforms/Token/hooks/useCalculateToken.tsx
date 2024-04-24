@@ -22,9 +22,11 @@ const calcRequirementAmount = (
   }
   if (!leaderboardValue) return 0
 
-  return (
-    leaderboardValue * dynamicAmount?.operation?.params.multiplier +
-    dynamicAmount?.operation?.params.addition
+  return Number(
+    (
+      (leaderboardValue * dynamicAmount?.operation?.params.multiplier +
+        dynamicAmount?.operation?.params.addition) as number
+    ).toFixed(6)
   )
 }
 

@@ -169,7 +169,8 @@ const AccessHub = (): JSX.Element => {
             (!group ? !groups?.length : true) &&
             !shouldShowGuildPin &&
             !accessedGuildPlatforms?.length &&
-            !accessedGuildPoints?.length && (
+            !accessedGuildPoints?.length &&
+            !accessedGuildTokens?.length && (
               <Card>
                 <Alert status="info" h="full">
                   <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />
