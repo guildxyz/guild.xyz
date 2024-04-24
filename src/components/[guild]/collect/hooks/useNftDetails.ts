@@ -3,6 +3,7 @@ import guildRewardNftAbi from "static/abis/guildRewardNft"
 import useSWRImmutable from "swr/immutable"
 import { PlatformGuildData, PlatformType } from "types"
 import { getBlockByTime } from "utils/getBlockByTime"
+import ipfsToGuildGateway from "utils/ipfsToGuildGateway"
 import { useReadContract, useReadContracts } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
 
@@ -133,9 +134,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const fee = feeResponse?.result
 
   const { data: metadata } = useSWRImmutable(
-    tokenURI
-      ? (tokenURI as string).replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY)
-      : null
+    tokenURI ? ipfsToGuildGateway(tokenURI) : null
   )
 
   return {
@@ -148,9 +147,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
         ? Number(totalSupply - firstTotalSupplyToday)
         : undefined,
     standard: isERC1155 ? "ERC-1155" : "ERC-721",
-    image:
-      metadata?.image?.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY) ||
-      guildPlatformData?.imageUrl,
+    image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
     description: metadata?.description as string,
     fee: fee as bigint,
     isLoading: isFirstTotalSupplyTodayLoadings || isMulticallLoading,
