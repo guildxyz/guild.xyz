@@ -16,7 +16,7 @@ import ConversionInput from "./ConversionInput"
 import CustomSnapshotForm from "./CustomSnapshotForm"
 import GuildPointsSnapshotForm from "./GuildPointsSnapshotForm"
 
-enum SnapshotOption {
+export enum SnapshotOption {
   GUILD_POINTS = "GUILD_POINTS",
   CUSTOM = "CUSTOM",
 }

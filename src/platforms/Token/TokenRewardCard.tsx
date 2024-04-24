@@ -14,9 +14,10 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import useMembership from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
-import { Coin, Wallet } from "phosphor-react"
+import { Coin, Pencil, Wallet } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
+import EditTokenModal from "./EditTokenModal"
 import FundPoolModal from "./FundPoolModal"
 import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
@@ -41,6 +42,12 @@ const TokenRewardCard = () => {
     isOpen: withdrawIsOpen,
     onOpen: withdrawOnOpen,
     onClose: withdrawOnClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: editIsOpen,
+    onOpen: editOnOpen,
+    onClose: editOnClose,
   } = useDisclosure()
 
   const { roles } = useGuild()
@@ -112,6 +119,9 @@ const TokenRewardCard = () => {
           isAdmin && (
             <>
               <PlatformCardMenu>
+                <MenuItem icon={<Pencil />} onClick={editOnOpen}>
+                  Edit
+                </MenuItem>
                 <MenuItem icon={<Coin />} onClick={fundOnOpen}>
                   Fund pool
                 </MenuItem>
@@ -147,6 +157,8 @@ const TokenRewardCard = () => {
           fundOnClose()
         }}
       />
+
+      <EditTokenModal onClose={editOnClose} isOpen={editIsOpen} />
     </>
   )
 }

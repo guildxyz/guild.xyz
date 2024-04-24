@@ -29,6 +29,17 @@ const ConversionInput = () => {
   const imageUrl = useWatch({ name: `imageUrl`, control })
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `tokenAddress`, control })
+  const multiplier = useWatch({ name: `multiplier`, control })
+
+  useEffect(() => {
+    if (
+      multiplier !== 1 &&
+      conversionAmounts[0] === "1" &&
+      conversionAmounts[1] === "1"
+    ) {
+      setConversionAmounts([conversionAmounts[0], `${multiplier}`])
+    }
+  }, [multiplier, conversionAmounts])
 
   const selectedPointsPlatform = pointsPlatforms.find(
     (gp) => gp.id === pointsPlatformId
@@ -38,9 +49,10 @@ const ConversionInput = () => {
   } = useTokenData(chain, address)
 
   useEffect(() => {
+    if (conversionLocked) return
     const convRate = Number(conversionAmounts[1]) / Number(conversionAmounts[0])
     setValue("multiplier", convRate)
-  }, [conversionAmounts, setValue])
+  }, [conversionAmounts, setValue, conversionLocked])
 
   const toggleConversionLock = () => {
     if (conversionLocked) {
