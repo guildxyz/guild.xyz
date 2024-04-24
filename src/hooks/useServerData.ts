@@ -62,6 +62,7 @@ const useServerData = (
     {
       fallbackData,
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
       ...option?.swrOptions,
     }
   )
