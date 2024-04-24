@@ -1,22 +1,21 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import useTokenData from "hooks/useTokenData"
 import { GuildPlatform, RolePlatform } from "types"
-import { useAccount } from "wagmi"
 import useClaimedAmount from "./useTokenClaimedAmount"
 
 const calcRequirementAmount = (
   requirement: any,
   dynamicAmount: any,
-  address: `0x${string}`
+  addresses: `0x${string}`[]
 ) => {
   let leaderboardValue = 0
   try {
-    leaderboardValue =
-      requirement.data.snapshot.find(
-        (entry) => entry.key.toLowerCase() === address.toLowerCase()
-      ).value || null
+    leaderboardValue = requirement.data.snapshot
+      .filter((entry) => addresses.includes(entry.key.toLowerCase()))
+      .reduce((acc, entry) => acc + entry.value, 0)
   } catch {
     leaderboardValue = 0
   }
@@ -31,7 +30,7 @@ const calcRequirementAmount = (
 }
 
 const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
-  const { address } = useAccount()
+  const { addresses } = useUser()
 
   const dynamicAmount = rolePlatform.dynamicAmount
 
@@ -63,7 +62,11 @@ const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
       case "STATIC":
         return dynamicAmount.operation.input[0].value
       case "REQUIREMENT_AMOUNT":
-        return calcRequirementAmount(req, dynamicAmount, address)
+        return calcRequirementAmount(
+          req,
+          dynamicAmount,
+          addresses?.map((addr) => addr.address) || []
+        )
       case "REQUIREMENT_ACCESS":
         return 0
       default:
@@ -75,7 +78,7 @@ const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
 }
 
 const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
-  const { address } = useAccount()
+  const { addresses } = useUser()
   const { roles } = useGuild()
 
   const getRequirement = (roleId: number, requirementId: number) => {
@@ -93,7 +96,11 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
       case "STATIC":
         return dynamicAmount.operation.input[0].value
       case "REQUIREMENT_AMOUNT":
-        return calcRequirementAmount(req, dynamicAmount, address)
+        return calcRequirementAmount(
+          req,
+          dynamicAmount,
+          addresses?.map((addr) => addr.address) || []
+        )
       case "REQUIREMENT_ACCESS":
         // TODO
         return 0

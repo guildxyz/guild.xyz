@@ -18,7 +18,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
   const calcDynamic = () => {
     const operation: any = platform.dynamicAmount.operation
     const params = operation.params
-    return (params?.multiplier + params?.addition).toFixed(7)
+    return Number((params?.multiplier + params?.addition).toFixed(7))
   }
 
   const { data: requirements } = useRequirements(
