@@ -347,7 +347,10 @@ const AddRewardButton = (): JSX.Element => {
               flexDir="column"
             >
               {selection && step === "SELECT_ROLE" ? (
-                <SelectRoleOrSetRequirements selectedPlatform={selection} />
+                <SelectRoleOrSetRequirements
+                  selectedPlatform={selection}
+                  isRoleSelectorDisabled={selection === "ERC20"}
+                />
               ) : AddRewardPanel ? (
                 <AddRewardPanel
                   onAdd={(createdRolePlatform) => {

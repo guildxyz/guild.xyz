@@ -99,7 +99,15 @@ const AddRoleRewardModal = ({ append }: Props) => {
               <Text fontWeight="bold" mb="3">
                 Add new reward
               </Text>
-              <PlatformsGrid onSelection={setSelection} />
+              <PlatformsGrid
+                onSelection={setSelection}
+                disabledList={[
+                  {
+                    name: "ERC20",
+                    description: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
+                  },
+                ]}
+              />
             </>
           )}
         </ModalBody>

@@ -8,6 +8,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -32,6 +33,10 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { register, unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
   const data = useWatch({ name: `rolePlatforms.0` })
+
+  useEffect(() => {
+    setActiveTab(RoleTypeToAddTo.NEW_ROLE)
+  }, [isRoleSelectorDisabled, setActiveTab])
 
   const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
     selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
