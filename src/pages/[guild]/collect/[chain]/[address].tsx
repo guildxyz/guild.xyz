@@ -35,7 +35,7 @@ import {
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
 import { useRef } from "react"
-import { SWRConfig } from "swr"
+import { SWRConfig, unstable_serialize } from "swr"
 import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import { Chain } from "wagmiConfig/chains"
@@ -251,7 +251,15 @@ const getStaticProps = async ({ params }) => {
       notFound: true,
     }
 
-  // TODO: prepopulate the useNftDetails Tanstack Query cache too!
+  // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
+
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000"
+  const nftDetails = await fetch(`${baseUrl}/api/nft/${chain}/${address}`)
+    .then((res) => res.json())
+    .catch(() => undefined)
+
   return {
     revalidate: 600, // Revalidate at most once every 10 minutes
     props: {
@@ -266,6 +274,11 @@ const getStaticProps = async ({ params }) => {
         [guildPageEndpoint]: publicGuild,
         [`/v2/guilds/${publicGuild.id}/roles/${nftRole.id}/requirements`]:
           publicGuild.roles.find((r) => r.id === nftRole.id)?.requirements ?? [],
+        ...(!!nftDetails
+          ? {
+              [unstable_serialize(["nftDetails", chain, address])]: nftDetails,
+            }
+          : {}),
       },
     },
   }
