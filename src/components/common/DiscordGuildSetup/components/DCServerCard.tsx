@@ -5,6 +5,7 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
 import usePopupWindow from "hooks/usePopupWindow"
 import useServerData from "hooks/useServerData"
+import useSubmit from "hooks/useSubmit"
 import Link from "next/link"
 import { ArrowSquareIn } from "phosphor-react"
 import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
@@ -25,17 +26,20 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
   const { captureEvent } = usePostHogContext()
   const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
     usePopupWindow(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`,
+      undefined,
+      () => onCheckBot()
     )
 
   const {
     data: { isAdmin, channels },
     error,
-  } = useServerData(serverData.id, {
-    swrOptions: {
-      refreshInterval: !!activeAddBotPopup ? 2000 : 0,
-      refreshWhenHidden: true,
-    },
+    mutate,
+  } = useServerData(serverData.id)
+
+  // useSubmit is used here for the loading state
+  const { onSubmit: onCheckBot, isLoading: isCheckingBot } = useSubmit(async () => {
+    await mutate()
   })
 
   const prevActiveAddBotPopup = usePrevious(activeAddBotPopup)
@@ -69,8 +73,13 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
-        ) : isValidating ? (
-          <Button h={10} isLoading />
+        ) : isValidating || isCheckingBot ? (
+          <Button
+            h={10}
+            isLoading
+            colorScheme={isCheckingBot ? "DISCORD" : undefined}
+            loadingText={isCheckingBot ? "Checking Bot" : undefined}
+          />
         ) : !isAdmin || !!error ? (
           <Button
             h={10}
