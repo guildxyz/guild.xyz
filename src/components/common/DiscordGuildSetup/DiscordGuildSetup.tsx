@@ -47,7 +47,6 @@ const DiscordGuildSetup = ({
     isLoading,
     error: gateablesError,
   } = useGateables(PlatformType.DISCORD, {
-    refreshInterval: 10_000,
     onSuccess: () => {
       captureEvent("[discord setup] gateables successful")
     },
