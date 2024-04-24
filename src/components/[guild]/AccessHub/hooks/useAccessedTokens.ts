@@ -17,7 +17,7 @@ export const useAccessedTokens = (pointPlatformId?: number) => {
 
         if (pointPlatformId === undefined) return true
         const reqs: Requirement[] = role.requirements
-        return reqs.find((req) => req.data.guildPlatformId === pointPlatformId)
+        return reqs.find((req) => req.data?.guildPlatformId === pointPlatformId)
       })
 
       if (isAdmin) return relevantRoles.length > 0

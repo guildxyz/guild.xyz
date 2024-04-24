@@ -116,7 +116,7 @@ const TokenRewardCard = () => {
                   Fund pool
                 </MenuItem>
                 <MenuItem icon={<Wallet />} onClick={withdrawOnOpen}>
-                  Withdaw from pool
+                  Withdraw from pool
                 </MenuItem>
                 <RemovePlatformMenuItem
                   platformGuildId={guildPlatform.platformGuildId}
