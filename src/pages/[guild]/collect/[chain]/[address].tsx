@@ -47,6 +47,7 @@ type Props = {
   guildPlatformId: number
   roleId: number
   rolePlatformId: number
+  fallbackImage?: string
   fallback: { [x: string]: Guild }
 }
 
@@ -61,6 +62,7 @@ const CollectNftPageContent = ({
   address,
   guildPlatformId,
   roleId,
+  fallbackImage,
 }: Omit<Props, "urlName" | "fallback">) => {
   const { theme, guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
@@ -72,7 +74,12 @@ const CollectNftPageContent = ({
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const { name, image, totalCollectors } = useNftDetails(chain, address)
+  const {
+    name,
+    image: imageFromHook,
+    totalCollectors,
+  } = useNftDetails(chain, address)
+  const image = fallbackImage || imageFromHook
 
   return (
     <Layout
@@ -269,6 +276,7 @@ const getStaticProps = async ({ params }) => {
       guildPlatformId: nftGuildReward.id,
       rolePlatformId: nftRoleReward.id,
       roleId: nftRole.id,
+      fallbackImage: nftGuildReward.platformGuildData.imageUrl,
       // Pre-populating the public guild & requirements caches
       fallback: {
         [guildPageEndpoint]: publicGuild,

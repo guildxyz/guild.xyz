@@ -119,7 +119,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       typeof totalSupply === "bigint" && typeof firstTotalSupplyToday === "bigint"
         ? Number(totalSupply - firstTotalSupplyToday)
         : undefined,
-    image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
+    image: ipfsToGuildGateway(metadata?.image),
     description: metadata?.description as string,
     fee,
     isLoading:
