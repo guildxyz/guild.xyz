@@ -1,5 +1,6 @@
 import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { PlatformType, Requirement, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -106,6 +107,16 @@ const useCreateReqBasedTokenReward = ({
           saveAs,
           data.roleIds[0]
         )
+
+        mutateOptionalAuthSWRKey<Requirement[]>(
+          `/v2/guilds/${guildId}/roles/${req.roleId}/requirements`,
+          (prevRequirements) => [
+            ...prevRequirements.filter((r) => r.type === "FREE"),
+            req,
+          ],
+          { revalidate: false }
+        )
+
         onAddRewardSubmit(rewardSubmitData).then(() => triggerMembershipUpdate())
       },
       onError: (error) => console.error(error),
