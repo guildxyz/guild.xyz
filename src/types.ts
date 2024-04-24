@@ -500,6 +500,7 @@ type Role = SimpleRole & {
   createdAt?: string
   updatedAt?: string
   lastSyncedAt?: string
+  requirements: Requirement[]
 }
 
 type GuildPlatform = {
