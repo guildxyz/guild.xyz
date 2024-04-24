@@ -131,9 +131,9 @@ export const wagmiConfig = createConfig({
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http("https://polygon-bor-rpc.publicnode.com"),
-    [polygonMumbai.id]: http(),
+    [polygonMumbai.id]: http("https://polygon-mumbai-bor-rpc.publicnode.com"),
     [polygonZkEvm.id]: http(),
-    [base.id]: http("https://base-rpc.publicnode.com"),
+    [base.id]: http("https://base.llamarpc.com"),
     [baseSepolia.id]: http(),
     [optimism.id]: http(),
     [arbitrum.id]: http(),
