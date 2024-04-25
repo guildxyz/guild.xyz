@@ -1,9 +1,29 @@
-import { Alert, AlertIcon, Box, Icon, Text } from "@chakra-ui/react"
+import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Alert,
+  AlertIcon,
+  Box,
+  Flex,
+  Icon,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Thead,
+  Tr,
+} from "@chakra-ui/react"
+import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
+import CopyableAddress from "components/common/CopyableAddress"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import Papa from "papaparse"
-import { Upload } from "phosphor-react"
+import { Info, Upload } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext } from "react-hook-form"
@@ -13,6 +33,8 @@ const CustomSnapshotForm = () => {
   const [uploadedSnapshot, setUploadedSnapshot] = useState(null)
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
+
+  const { addresses } = useUser()
 
   useEffect(() => {
     const setRequirement = (req: any) => setValue("requirements", [req])
@@ -93,6 +115,47 @@ const CustomSnapshotForm = () => {
 
             <input {...getInputProps()} accept="csv" hidden />
           </Box>
+          <Accordion allowToggle>
+            <AccordionItem>
+              <AccordionButton>
+                <Flex w="full" px={2} color={"GrayText"} alignItems={"center"}>
+                  <Icon as={Info} mr={2} />
+                  <Text mr="auto" fontWeight={"semibold"} fontSize={"sm"}>
+                    Required format
+                  </Text>
+                  <AccordionIcon />
+                </Flex>
+              </AccordionButton>
+              <AccordionPanel px={6}>
+                <Text fontSize={"sm"} fontWeight={"normal"} color={"GrayText"}>
+                  The uploaded file must adhere to the structure shown in the example
+                  below, including matching column headers and data types.
+                </Text>
+                <TableContainer borderWidth={1} borderRadius="xl" mt={2}>
+                  <Table variant="simple" size="sm" color="gray">
+                    <Thead>
+                      <Tr>
+                        <Td>key</Td>
+                        <Td>value</Td>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      <Tr>
+                        <Td>
+                          <CopyableAddress
+                            address={addresses[0].address}
+                            decimals={5}
+                            fontSize="sm"
+                          />
+                        </Td>
+                        <Td>1000</Td>
+                      </Tr>
+                    </Tbody>
+                  </Table>
+                </TableContainer>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
         </>
       )}
     </>
@@ -161,6 +224,12 @@ function parseAndValidateCSV(csvData: string): Promise<ValidCSVRow[]> {
         validatedData.push(row.data)
       },
       complete: () => {
+        if (validatedData.length < 1)
+          reject(
+            new Error(
+              "Failed to parse file. Please ensure the selected file matches the required format."
+            )
+          )
         resolve(validatedData as ValidCSVRow[])
       },
       error: (error) => reject(error),
