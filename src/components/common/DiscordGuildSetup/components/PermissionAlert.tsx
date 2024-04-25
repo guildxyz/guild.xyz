@@ -20,7 +20,7 @@ export default function PermissionAlert(props: AlertProps) {
         <Alert status="warning" alignItems={"center"} {...props}>
           <AlertIcon />
           <AlertDescription>
-            Try adding the bot again, and make sure to allow all requested
+            Try adding the bot again, and make sure to grant all requested
             permissions
           </AlertDescription>
         </Alert>
