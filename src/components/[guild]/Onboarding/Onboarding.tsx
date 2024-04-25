@@ -26,7 +26,6 @@ const Onboarding = (): JSX.Element => {
           color={localThemeColor}
           stepPart={0}
           {...{ activeStep, setActiveStep, textColor }}
-          {...{ activeStep, setActiveStep }}
           enableGoingBack={false}
           mb="8"
         />
