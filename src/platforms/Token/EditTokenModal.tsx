@@ -101,7 +101,7 @@ const EditTokenModal = ({
     rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)
   )
   const { data: requirements } = useRequirements(role.id)
-  const snapshotRequirement = requirements?.find((req) => !!req.data.snapshot)
+  const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
 
   useEffect(() => {
     const rp: any = rolePlatforms[0]

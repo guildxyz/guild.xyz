@@ -57,36 +57,9 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         )
     )
 
-    const erc20RolePlatformsToCreate = (rolePlatforms ?? []).filter(
-      (rolePlatform) =>
-        rolePlatform.guildPlatform.platformName === "ERC20" &&
-        !("id" in rolePlatform)
-    )
     const rolePlatformsToCreate = (rolePlatforms ?? []).filter(
-      (rolePlatform) =>
-        rolePlatform.guildPlatform.platformName !== "ERC20" &&
-        !("id" in rolePlatform)
+      (rolePlatform) => !("id" in rolePlatform)
     )
-
-    if (erc20RolePlatformsToCreate.length > 1) {
-      showErrorToast("Only one token reward is allowed per role.")
-    }
-
-    if (erc20RolePlatformsToCreate[0]) {
-      const rolePlatform: any = erc20RolePlatformsToCreate[0]
-
-      const tokenRewardData = {
-        rolePlatforms: [
-          {
-            ...rolePlatform,
-          },
-        ],
-        requirements: rolePlatform.requirements,
-        roleIds: [roleId],
-      }
-
-      await createTokenReward(tokenRewardData, "PUBLIC")
-    }
 
     const rolePlatformCreations = Promise.all(
       rolePlatformsToCreate.map((rolePlatform) =>

@@ -1,5 +1,4 @@
 import {
-  Box,
   HStack,
   Icon,
   Skeleton,
@@ -25,7 +24,7 @@ import WithdrawPoolModal from "./WithdrawPoolModal"
 const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   const {
     token: {
-      data: { decimals },
+      data: { decimals, symbol },
       isLoading: isTokenLoading,
     },
     guildPlatform,
@@ -59,29 +58,27 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
     )
   if (error) return <Tag>Failed to load balance</Tag>
 
-  const [, , totalFunding, poolBalance] = data
-  const capacity = Number(formatUnits(totalFunding, decimals))
+  const [, , , poolBalance] = data
   const balance = Number(formatUnits(poolBalance, decimals))
-
-  const claimedCount = Number((capacity - balance).toFixed(6))
-  const available = Number(
-    (capacity - claimedCount < 0 ? 0 : capacity - claimedCount).toFixed(6)
-  )
-
   const isWithdrawDisabled = balance === 0
 
   return (
     <>
-      <Tag {...rest}>
+      <Tag
+        {...rest}
+        bg={"none"}
+        borderStyle={"dashed"}
+        borderWidth={"1px"}
+        borderColor={colorMode === "dark" ? "whiteAlpha.300" : "blackAlpha.300"}
+      >
         <Tooltip label={showClaimed ? "Show available" : "Show claimed"} hasArrow>
-          <Box
-            onClick={() => setShowClaimed((prevValue) => !prevValue)}
-            cursor="pointer"
-          >
-            {showClaimed
-              ? `${claimedCount} / ${capacity} claimed`
-              : `${available} / ${capacity} available`}
-          </Box>
+          <>
+            {" "}
+            <Text opacity={0.5} mr={1}>
+              Balance:
+            </Text>{" "}
+            {balance} {symbol}{" "}
+          </>
         </Tooltip>
 
         <ClickableTagPopover

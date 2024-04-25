@@ -132,7 +132,8 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             justifyContent={"center"}
             position={"relative"}
             alignItems={"center"}
-            my={8}
+            mt={8}
+            mb={4}
           >
             <Image
               priority

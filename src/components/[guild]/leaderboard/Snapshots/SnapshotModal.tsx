@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
 } from "@chakra-ui/react"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
@@ -81,26 +82,29 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
           <ModalCloseButton />
 
           <ModalBody>
-            <HStack justifyContent={"space-between"}>
-              <Text color={"GrayText"}>Snapshot type</Text>
-
-              <Text>{pointData ? "Point based" : "Custom upload"}</Text>
-            </HStack>
-            <HStack justifyContent={"space-between"}>
-              {pointData && (
-                <>
-                  <Text color={"GrayText"}>Point type</Text>
-                  <HStack>
-                    {pointData.image}
-                    <Text>{pointData.name}</Text>
-                  </HStack>
-                </>
-              )}
-            </HStack>
-            <HStack justifyContent={"space-between"}>
-              <Text color={"GrayText"}>Created at</Text>
-              <Text>{new Date(snapshotRequirement.createdAt).toLocaleString()}</Text>
-            </HStack>
+            <Stack gap={1}>
+              <HStack justifyContent={"space-between"}>
+                <Text color={"GrayText"}>Snapshot type</Text>
+                <Text>{pointData ? "Point based" : "Custom upload"}</Text>
+              </HStack>
+              <HStack justifyContent={"space-between"}>
+                {pointData && (
+                  <>
+                    <Text color={"GrayText"}>Point type</Text>
+                    <HStack>
+                      {pointData.image}
+                      <Text>{pointData.name}</Text>
+                    </HStack>
+                  </>
+                )}
+              </HStack>
+              <HStack justifyContent={"space-between"}>
+                <Text color={"GrayText"}>Created at</Text>
+                <Text>
+                  {new Date(snapshotRequirement.createdAt).toLocaleString()}
+                </Text>
+              </HStack>
+            </Stack>
 
             <SnapshotTable snapshotData={snapshotData} />
           </ModalBody>

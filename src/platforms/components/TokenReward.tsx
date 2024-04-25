@@ -1,4 +1,4 @@
-import { Flex, Icon, Spinner, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Flex, Icon, Spinner, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -10,8 +10,8 @@ import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareIn } from "phosphor-react"
 import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
+import DynamicTag from "platforms/Token/DynamicTag"
 import PoolTag from "platforms/Token/PoolTag"
-import TokenConversionTag from "platforms/Token/TokenConversionTag"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
@@ -78,17 +78,16 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
         pt={0}
         mr={2}
       >
-        <AvailabilityTags rolePlatform={rolePlatform} />
+        <Wrap spacing={1}>
+          <DynamicTag />
+          <AvailabilityTags rolePlatform={rolePlatform} />
+          {isAdmin && (
+            <PoolTag
+              poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
+            />
+          )}
+        </Wrap>
       </RewardDisplay>
-      {tokenRewardType === "REQUIREMENT_AMOUNT" && (
-        <TokenConversionTag platform={rolePlatform} />
-      )}
-
-      {isAdmin && (
-        <PoolTag
-          poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
-        />
-      )}
 
       <ClaimTokenModal isOpen={isOpen} onClose={onClose} />
     </Flex>
