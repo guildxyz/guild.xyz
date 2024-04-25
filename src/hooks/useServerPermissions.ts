@@ -19,7 +19,7 @@ type RoleOrderEntry = {
   rolePosition: number
 }
 
-type PermissionsResponse = {
+export type PermissionsResponse = {
   permissions: PermissionEntry[]
   roleOrders: RoleOrderEntry[]
 }
