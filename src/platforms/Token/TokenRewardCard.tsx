@@ -8,7 +8,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
-import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -16,11 +15,12 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import useMembership from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
-import { Coin, Pencil, Wallet } from "phosphor-react"
+import { Coin, Pencil, TrashSimple, Wallet } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
 import EditTokenModal from "./EditTokenModal"
 import FundPoolModal from "./FundPoolModal"
+import RemoveTokenRewardConfirmation from "./RemoveTokenRewardConfirmation"
 import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import WithdrawPoolModal from "./WithdrawPoolModal"
@@ -50,6 +50,12 @@ const TokenRewardCard = () => {
     isOpen: editIsOpen,
     onOpen: editOnOpen,
     onClose: editOnClose,
+  } = useDisclosure()
+
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOnOpen,
+    onClose: deleteOnClose,
   } = useDisclosure()
 
   const { roles } = useGuild()
@@ -135,9 +141,9 @@ const TokenRewardCard = () => {
                   Withdraw from pool
                 </MenuItem>
                 <MenuDivider />
-                <RemovePlatformMenuItem
-                  platformGuildId={guildPlatform.platformGuildId}
-                />
+                <MenuItem icon={<TrashSimple />} onClick={deleteOnOpen}>
+                  Remove reward
+                </MenuItem>
               </PlatformCardMenu>
             </>
           )
@@ -145,6 +151,12 @@ const TokenRewardCard = () => {
       >
         <TokenCardButton isDisabled={claimableAmount <= 0} />
       </RewardCard>
+
+      <RemoveTokenRewardConfirmation
+        isOpen={deleteIsOpen}
+        onClose={deleteOnClose}
+        guildPlatform={guildPlatform}
+      />
 
       <WithdrawPoolModal
         isOpen={withdrawIsOpen}

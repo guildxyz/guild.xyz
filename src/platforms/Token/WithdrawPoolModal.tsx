@@ -128,7 +128,7 @@ const WithdrawPoolModal = ({
                       isDisabled={!isOnCorrectChain}
                       onClick={onSubmitWithdraw}
                       isLoading={withdrawIsLoading}
-                      loadingText="Funding pool..."
+                      loadingText="Withdrawing funds..."
                     >
                       {"Withdraw"}
                     </Button>
