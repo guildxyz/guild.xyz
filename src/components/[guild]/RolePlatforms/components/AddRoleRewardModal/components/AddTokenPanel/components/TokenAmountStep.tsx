@@ -7,7 +7,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useAccessedTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"
@@ -26,7 +26,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ name: `chain` })
   const address = useWatch({ name: `tokenAddress` })
 
-  const accessedTokens = useAccessedTokens()
+  const accessedTokens = useAccessedTokenRewards()
 
   const platformForToken = accessedTokens.find(
     (guildPlatform) =>

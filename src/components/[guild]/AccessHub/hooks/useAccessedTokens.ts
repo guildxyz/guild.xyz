@@ -1,34 +1,37 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useMembership from "components/explorer/hooks/useMembership"
-import { PlatformType, Requirement } from "types"
+import { PlatformType } from "types"
 
-export const useAccessedTokens = (pointPlatformId?: number) => {
+export const useAccessedTokenRewards = (pointPlatformId?: number) => {
   const { guildPlatforms, roles } = useGuild()
   const { roleIds } = useMembership()
   const { isAdmin } = useGuildPermission()
 
-  const accessedGuildTokens =
-    guildPlatforms?.filter((gp) => {
-      if (gp.platformId !== PlatformType.ERC20) return false
+  const tokenRewards = guildPlatforms?.filter(
+    (gp) => gp.platformId === PlatformType.ERC20
+  )
 
-      const relevantRoles = roles?.filter((role: any) => {
-        // Optional filtering by point platform
+  if (!pointPlatformId && isAdmin) return tokenRewards
 
-        if (pointPlatformId === undefined) return true
-        const reqs: Requirement[] = role.requirements
-        return reqs.find((req) => req.data?.guildPlatformId === pointPlatformId)
-      })
+  const accessedTokenRewards =
+    tokenRewards?.filter((gp) => {
+      const relevantRoles = roles.filter((role) =>
+        role.rolePlatforms.find(
+          (rp) =>
+            rp.guildPlatformId === gp.id &&
+            (pointPlatformId
+              ? rp.platformRoleData?.pointGuildPlatformId == pointPlatformId
+              : true)
+        )
+      )
 
-      if (isAdmin) return relevantRoles.length > 0
+      const accessedRolesWithReward = relevantRoles.filter((role) =>
+        roleIds?.includes(role.id)
+      )
 
-      const relevantRolePlatforms = relevantRoles
-        ?.flatMap((role) => role.rolePlatforms)
-        ?.filter((rp) => rp.guildPlatformId === gp.id)
-        ?.filter((rp) => roleIds?.includes(rp.roleId))
-
-      return relevantRolePlatforms.length > 0
+      return accessedRolesWithReward.length
     }) || []
 
-  return accessedGuildTokens
+  return accessedTokenRewards
 }

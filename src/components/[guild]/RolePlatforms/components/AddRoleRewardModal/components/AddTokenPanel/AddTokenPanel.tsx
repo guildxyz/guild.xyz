@@ -12,7 +12,7 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain, Schemas } from "@guildxyz/types"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useAccessedTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
@@ -68,7 +68,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     count: steps.length,
   })
 
-  const accessedTokens = useAccessedTokens()
+  const accessedTokens = useAccessedTokenRewards()
 
   const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) =>
     accessedTokens.find(
@@ -110,6 +110,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
     const rolePlatformPart = {
       dynamicAmount: dynamicAmount,
+      platformRoleData: { pointGuildPlatformId: _data.data.guildPlatformId },
       isNew: true,
     }
 

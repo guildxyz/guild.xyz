@@ -10,7 +10,7 @@ import {
   Stack,
   Wrap,
 } from "@chakra-ui/react"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useAccessedTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
@@ -46,7 +46,7 @@ const Leaderboard = () => {
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
 
-  const accessedGuildTokens = useAccessedTokens(Number(router.query.pointsId))
+  const accessedGuildTokens = useAccessedTokenRewards(Number(router.query.pointsId))
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId
