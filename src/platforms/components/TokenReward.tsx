@@ -21,15 +21,9 @@ import { RolePlatform } from "types"
 
 const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { imageUrl, token } = useTokenRewardContext()
-
   const claimableAmount = useCalculateForRolePlatform(rolePlatform)
-
   const { isAdmin } = useGuildPermission()
-
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
-
-  const tokenRewardType = rolePlatform?.dynamicAmount?.operation?.input?.[0]?.type
-
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (

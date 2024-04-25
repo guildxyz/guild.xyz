@@ -7,7 +7,7 @@ import DynamicRewardModal from "./DynamicRewardModal"
 import { useTokenRewardContext } from "./TokenRewardContext"
 import useRolePlatforms from "./hooks/useRolePlatforms"
 
-const DynamicTag = ({}: {}) => {
+const DynamicTag = () => {
   const { isAdmin } = useGuildPermission()
 
   const { onOpen, isOpen, onClose } = useDisclosure()

@@ -1,11 +1,13 @@
 import {
   Circle,
   Img,
+  MenuDivider,
   MenuItem,
   Text,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import EditRewardAvailabilityMenuItem from "components/[guild]/AccessHub/components/EditRewardAvailabilityMenuItem"
 import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
@@ -120,14 +122,19 @@ const TokenRewardCard = () => {
             <>
               <PlatformCardMenu>
                 <MenuItem icon={<Pencil />} onClick={editOnOpen}>
-                  Edit
+                  Edit reward
                 </MenuItem>
+                <EditRewardAvailabilityMenuItem
+                  platformGuildId={guildPlatform.platformGuildId}
+                />
+                <MenuDivider />
                 <MenuItem icon={<Coin />} onClick={fundOnOpen}>
                   Fund pool
                 </MenuItem>
                 <MenuItem icon={<Wallet />} onClick={withdrawOnOpen}>
                   Withdraw from pool
                 </MenuItem>
+                <MenuDivider />
                 <RemovePlatformMenuItem
                   platformGuildId={guildPlatform.platformGuildId}
                 />

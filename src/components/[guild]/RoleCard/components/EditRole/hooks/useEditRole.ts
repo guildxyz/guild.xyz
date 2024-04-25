@@ -1,4 +1,3 @@
-import useCreateReqBasedTokenReward from "components/[guild]/AddRewardButton/useCreateTokenReward"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -13,13 +12,7 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
-
   const { triggerMembershipUpdate } = useMembershipUpdate()
-
-  const { submitCreate: createTokenReward } = useCreateReqBasedTokenReward({
-    onSuccess: () => {},
-    onError: (err) => {},
-  })
 
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()

@@ -21,6 +21,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
 import ConversionInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionInput"
 import CustomSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/CustomSnapshotForm"
@@ -33,8 +34,10 @@ import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
 import { SectionTitle } from "components/common/Section"
+import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { ArrowSquareIn, ListNumbers } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
@@ -116,6 +119,7 @@ const EditTokenModal = ({
   } = useDisclosure()
 
   const toast = useToast()
+  const showErrorToast = useShowErrorToast()
 
   const { onSubmit: submitEditRolePlatform, isLoading: rpIsLoading } =
     useEditRolePlatform({
@@ -138,15 +142,58 @@ const EditTokenModal = ({
       },
     })
 
+  const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
+
   const { mutateGuild } = useGuild()
 
+  const mutateRequirements = (
+    req: Requirement,
+    roleId: number,
+    idForGuild: number
+  ) => {
+    mutateOptionalAuthSWRKey<Requirement[]>(
+      `/v2/guilds/${idForGuild}/roles/${roleId}/requirements`,
+      (prevRequirements) => [
+        ...prevRequirements.filter((r) => r.type === "FREE"),
+        req,
+      ],
+      { revalidate: false }
+    )
+  }
+
+  const { triggerMembershipUpdate } = useMembershipUpdate()
+
   const onEditSubmit = async (data) => {
-    // Update conversion
     const modifiedRolePlatform: any = { ...rolePlatforms[0] }
+
+    // Create new snapshot if currently does not exist
+    if (!snapshotRequirement) {
+      await onRequirementSubmit({
+        requirement: data.requirements[0] as Requirement,
+        roleId: role.id,
+        onSuccess: (req) => {
+          toast({
+            status: "success",
+            title: "Snapshot successfully added!",
+          })
+
+          modifiedRolePlatform.dynamicAmount.operation.input[0].requirementId =
+            req.id
+          mutateRequirements(req, role.id, guildId)
+          triggerMembershipUpdate()
+        },
+        onError: (err) => {
+          showErrorToast("Failed to create snapshot!")
+          console.error(err)
+        },
+      })
+    }
+
+    // Update conversion
     modifiedRolePlatform.dynamicAmount.operation.params.multiplier = data.multiplier
     await submitEditRolePlatform(modifiedRolePlatform)
 
-    if (!changeSnapshot || !data?.requirements?.[0]?.data) {
+    if (!changeSnapshot || !data?.requirements?.[0]?.data || !snapshotRequirement) {
       mutateGuild()
       onClose()
       return
@@ -158,15 +205,9 @@ const EditTokenModal = ({
     })
 
     onClose()
-    mutateOptionalAuthSWRKey<Requirement[]>(
-      `/v2/guilds/${guildId}/roles/${role.id}/requirements`,
-      (prevRequirements) => [
-        ...prevRequirements.filter((r) => r.type === "FREE"),
-        req,
-      ],
-      { revalidate: false }
-    )
+    mutateRequirements(req, role.id, guildId)
     mutateGuild()
+    triggerMembershipUpdate()
     return
   }
 
@@ -188,13 +229,15 @@ const EditTokenModal = ({
                   <Text colorScheme="gray">
                     Change the snapshot that the reward amount is based on.
                   </Text>
-                  <Button
-                    rightIcon={<ArrowSquareIn />}
-                    variant="outline"
-                    onClick={snapshotOnOpen}
-                  >
-                    View current snapshot
-                  </Button>
+                  {snapshotRequirement && (
+                    <Button
+                      rightIcon={<ArrowSquareIn />}
+                      variant="outline"
+                      onClick={snapshotOnOpen}
+                    >
+                      View current snapshot
+                    </Button>
+                  )}
 
                   <Accordion
                     defaultIndex={changeSnapshot ? [0] : []}
@@ -209,7 +252,9 @@ const EditTokenModal = ({
                           rightIcon={<AccordionIcon />}
                         >
                           <HStack>
-                            <Text>Change snapshot</Text>
+                            <Text>
+                              {snapshotRequirement ? "Change" : "Set"} snapshot
+                            </Text>
                           </HStack>
                         </Button>
                       </AccordionButton>
