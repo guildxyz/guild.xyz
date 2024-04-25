@@ -4,7 +4,7 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
 import usePopupWindow from "hooks/usePopupWindow"
-import useServerData from "hooks/useServerData"
+import useServerPermissions from "hooks/useServerPermissions"
 import Link from "next/link"
 import { ArrowSquareIn } from "phosphor-react"
 import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
@@ -23,34 +23,45 @@ type Props = {
 
 const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
-  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
-    usePopupWindow(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`
-    )
 
   const {
-    data: { isAdmin, channels },
+    permissions,
     error,
-  } = useServerData(serverData.id, {
-    swrOptions: {
-      refreshInterval: !!activeAddBotPopup ? 2000 : 0,
-      refreshWhenHidden: true,
-    },
-  })
+    mutate,
+    isLoading,
+    isValidating: isPermissionsValidating,
+  } = useServerPermissions(serverData.id)
+  const canManageRoles = !!permissions?.find(({ name }) => name === "Manage Roles")
+    ?.value
+
+  const isCheckingBot = !isLoading && isPermissionsValidating
+
+  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
+    usePopupWindow(
+      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`,
+      undefined,
+      () => mutate()
+    )
 
   const prevActiveAddBotPopup = usePrevious(activeAddBotPopup)
 
   useEffect(() => {
-    if (!!prevActiveAddBotPopup && !activeAddBotPopup && isAdmin) {
+    if (!!prevActiveAddBotPopup && !activeAddBotPopup && canManageRoles) {
       onSelect(serverData.id)
     }
-  }, [prevActiveAddBotPopup, activeAddBotPopup, isAdmin, onSelect, serverData.id])
+  }, [
+    prevActiveAddBotPopup,
+    activeAddBotPopup,
+    canManageRoles,
+    onSelect,
+    serverData.id,
+  ])
 
   useEffect(() => {
-    if (channels?.length > 0 && activeAddBotPopup) {
+    if (canManageRoles && activeAddBotPopup) {
       activeAddBotPopup.close()
     }
-  }, [channels, activeAddBotPopup])
+  }, [activeAddBotPopup, canManageRoles])
 
   const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
     usePlatformUsageInfo("DISCORD", serverData.id)
@@ -69,9 +80,14 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
-        ) : isValidating ? (
-          <Button h={10} isLoading />
-        ) : !isAdmin || !!error ? (
+        ) : isValidating || isPermissionsValidating || isCheckingBot ? (
+          <Button
+            h={10}
+            isLoading
+            colorScheme={isCheckingBot ? "DISCORD" : undefined}
+            loadingText={isCheckingBot ? "Checking Bot" : undefined}
+          />
+        ) : !canManageRoles || !!error ? (
           <Button
             h={10}
             colorScheme="DISCORD"

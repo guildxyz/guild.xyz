@@ -50,7 +50,6 @@ const GoogleGuildSetup = ({
 
   const { isOpen, onClose, onOpen } = useDisclosure()
   const { gateables, isLoading } = useGateables(PlatformType.GOOGLE, {
-    refreshInterval: 10_000,
     onSuccess: (data, _key, _config) => {
       if (data?.length > gateables?.length) onClose()
     },
