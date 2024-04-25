@@ -11,12 +11,12 @@ import {
   Stepper,
   useSteps,
 } from "@chakra-ui/react"
-import { Chain } from "@guildxyz/types"
+import { Chain, Schemas } from "@guildxyz/types"
 import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType } from "types"
+import { PlatformGuildData, PlatformType } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
@@ -106,7 +106,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
       }),
 
       ...(_data.type === TokenRewardType.DYNAMIC_POINTS && {}),
-    }
+    } satisfies Schemas["DynamicAmount"]
 
     const rolePlatformPart = {
       dynamicAmount: dynamicAmount,
@@ -117,7 +117,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
       ...(platform && { guildPlatformId: platform.id }),
       guildPlatform: {
         platformId: PlatformType.ERC20,
-        platformName: "ERC20",
+        platformName: "ERC20" as const,
         platformGuildId: `${_data.chain}-${_data.poolId}-${Date.now()}`,
         platformGuildData: {
           poolId: _data.poolId,
@@ -127,7 +127,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           name: _data.name,
           description: "",
           imageUrl: _data.imageUrl ?? `/guildLogos/132.svg`,
-        },
+        } as PlatformGuildData["ERC20"],
       },
     }
 
@@ -141,18 +141,18 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
   }
 
   const onSubmit = (_data) => {
-    onAdd(constructSubmitData(_data) as unknown)
+    onAdd(constructSubmitData(_data))
   }
 
   return (
     <FormProvider {...methods}>
       <Stepper
-        colorScheme={"indigo"}
+        colorScheme="indigo"
         index={activeStep}
         orientation="vertical"
         gap="0"
         w="full"
-        height={"100%"}
+        height="100%"
       >
         {steps.map((step, index) => (
           <Step

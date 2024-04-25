@@ -75,7 +75,9 @@ const CreateGuildPage = (): JSX.Element => {
         imageUrl={imageUrl}
         showFooter={false}
       >
-        <CreateGuildStepper {...{ activeStep, setActiveStep, stepPart }} />
+        <CreateGuildStepper
+          {...{ color, activeStep, setActiveStep, textColor, stepPart }}
+        />
         <Stack w="full" spacing={4} pt={STEPS[activeStep].content ? 6 : 0} pb="24">
           {STEPS[activeStep].content}
         </Stack>

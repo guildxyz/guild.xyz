@@ -4,12 +4,14 @@ import CreateGuildStepper from "components/create-guild/CreateGuildStepper"
 import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
 import { atom, useAtom } from "jotai"
 import { useEffect } from "react"
+import { useThemeContext } from "../ThemeContext"
 import useGuild from "../hooks/useGuild"
 
 export const onboardingStepAtom = atom(0)
 
 const Onboarding = (): JSX.Element => {
   const { onboardingComplete } = useGuild()
+  const { localThemeColor, textColor } = useThemeContext()
   const [activeStep, setActiveStep] = useAtom(onboardingStepAtom)
   const { captureEvent } = usePostHogContext()
 
@@ -21,8 +23,9 @@ const Onboarding = (): JSX.Element => {
     <>
       <Collapse in={!onboardingComplete} unmountOnExit>
         <CreateGuildStepper
+          color={localThemeColor}
           stepPart={0}
-          {...{ activeStep, setActiveStep }}
+          {...{ activeStep, setActiveStep, textColor }}
           enableGoingBack={false}
           mb="8"
         />
