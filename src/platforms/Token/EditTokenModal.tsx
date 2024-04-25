@@ -30,6 +30,7 @@ import GuildPointsSnapshotForm from "components/[guild]/RolePlatforms/components
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import RadioSelect from "components/common/RadioSelect"
 import { Option } from "components/common/RadioSelect/RadioSelect"
@@ -96,7 +97,7 @@ const EditTokenModal = ({
 
   const { setValue } = methods
 
-  const { roles, id: guildId } = useGuild()
+  const { roles, id: guildId, urlName } = useGuild()
 
   const rolePlatforms = useRolePlatforms(id)
 
@@ -105,6 +106,12 @@ const EditTokenModal = ({
   )
   const { data: requirements } = useRequirements(role.id)
   const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    guild: urlName,
+    guildPlatformId: id,
+  }
 
   useEffect(() => {
     const rp: any = rolePlatforms[0]
@@ -125,6 +132,10 @@ const EditTokenModal = ({
     useEditRolePlatform({
       rolePlatformId: rolePlatforms[0].id,
       onSuccess: () => {
+        captureEvent("editToken(EditRolePlatform) Updated role platform", {
+          ...postHogOptions,
+          rolePlatformId: rolePlatforms[0].id,
+        })
         toast({
           status: "success",
           title: "Successfully updated the conversion rate!",
@@ -135,6 +146,10 @@ const EditTokenModal = ({
   const { onSubmit: submitEditRequirement, isLoading: reqIsLoading } =
     useEditRequirement(role.id, {
       onSuccess: () => {
+        captureEvent("editToken(EditRequirement) Updated requirement", {
+          ...postHogOptions,
+          roleId: role.id,
+        })
         toast({
           status: "success",
           title: "Successfully changed the snapshot!",
@@ -177,13 +192,22 @@ const EditTokenModal = ({
             title: "Snapshot successfully added!",
           })
 
+          captureEvent("editToken(CreateRequirement) Requirement created", {
+            ...postHogOptions,
+            requirementId: req.id,
+          })
+
           modifiedRolePlatform.dynamicAmount.operation.input[0].requirementId =
             req.id
           mutateRequirements(req, role.id, guildId)
           triggerMembershipUpdate()
         },
         onError: (err) => {
-          showErrorToast("Failed to create snapshot!")
+          showErrorToast("Failed to create snapshot requirement!")
+          captureEvent(
+            "editToken(CreateRequirement) Failed to create snapshot requirement",
+            { ...postHogOptions, err }
+          )
           console.error(err)
         },
       })

@@ -1,3 +1,4 @@
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
@@ -30,7 +31,13 @@ const useCreateReqBasedTokenReward = ({
   const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  const { id: guildId } = useGuild()
+  const { id: guildId, urlName } = useGuild()
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    guild: urlName,
+    hook: "useCreateReqBasedTokenReward",
+  }
 
   const { onSubmit: onAddRewardSubmit } = useAddReward({
     onSuccess: () => {
@@ -63,10 +70,18 @@ const useCreateReqBasedTokenReward = ({
 
   const addToExistingRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     if (data.roleIds.length > 1) {
+      captureEvent(
+        "Failed to add token reward (multiple roles selected)",
+        postHogOptions
+      )
       showErrorToast("Dynamic token rewards can be added to only one role at most.")
       return
     }
     if (data.requirements.length > 1) {
+      captureEvent(
+        "Failed to add token reward (multiple requirements set when adding to existing role)",
+        postHogOptions
+      )
       showErrorToast(
         "You cannot set requirements to the role when adding this reward."
       )
@@ -81,6 +96,11 @@ const useCreateReqBasedTokenReward = ({
          * Now the reward can be added, as we now have the requirementId that is
          * needed in the reward's rolePlatform's dynamicData field.
          */
+
+        captureEvent("createTokenReward(AddToExistingRole) Requirement created", {
+          ...postHogOptions,
+          requirementId: req.id,
+        })
 
         const modifiedData: any = { ...data }
         const tokenGuildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
@@ -117,9 +137,23 @@ const useCreateReqBasedTokenReward = ({
           { revalidate: false }
         )
 
-        onAddRewardSubmit(rewardSubmitData).then(() => triggerMembershipUpdate())
+        onAddRewardSubmit(rewardSubmitData).then(() => {
+          captureEvent(
+            "createTokenReward(AddToExistingRole) Reward created",
+            postHogOptions
+          )
+          triggerMembershipUpdate()
+        })
       },
-      onError: (error) => console.error(error),
+      onError: (error) => {
+        captureEvent(
+          "createTokenReward(AddToExistingRole) Failed to create requirement",
+          { ...postHogOptions, error }
+        )
+        showErrorToast(
+          "Failed to create the snapshot requirement, aborting reward creation."
+        )
+      },
     })
   }
 
@@ -138,6 +172,20 @@ const useCreateReqBasedTokenReward = ({
       rolePlatforms: [],
       logic: "AND",
       guildId,
+    }).catch((error) => {
+      captureEvent("createTokenReward(CreateWithNewRole) Failed to create role", {
+        ...postHogOptions,
+        error,
+      })
+      showErrorToast(
+        "Failed to create the role for the reward, aborting reward creation."
+      )
+    })
+
+    if (!createdRole) return
+    captureEvent("createTokenReward(CreateWithNewRole) Role created", {
+      postHogOptions,
+      roleId: createdRole.id,
     })
 
     const modifiedData: any = { ...data }
@@ -165,7 +213,21 @@ const useCreateReqBasedTokenReward = ({
       saveAs,
       createdRole.id
     )
-    await onAddRewardSubmit(rewardSubmitData)
+    const createdReward = await onAddRewardSubmit(rewardSubmitData).catch(
+      (error) => {
+        captureEvent(
+          "createTokenReward(CreateWithNewRole) Failed to create reward",
+          { ...postHogOptions, error }
+        )
+        showErrorToast("Failed to create reward")
+      }
+    )
+    if (!createdReward) return
+    captureEvent("createTokenReward(CreateWithNewRole) Reward created", {
+      postHogOptions,
+      guildPlatformId: createdReward.id,
+    })
+
     triggerMembershipUpdate()
   }
 

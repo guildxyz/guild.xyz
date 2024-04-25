@@ -1,5 +1,6 @@
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -28,10 +29,16 @@ const useCollectToken = (
   rolePlatformId?: number,
   onSuccess?: () => void
 ) => {
-  const { id: guildId } = useGuild()
+  const { id: guildId, urlName } = useGuild()
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
   const { amount } = useTokenClaimFee(chain)
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    guild: urlName,
+    chain: chain,
+  }
 
   const [loadingText, setLoadingText] = useState("")
 
@@ -52,7 +59,17 @@ const useCollectToken = (
         method: "POST",
         body: {},
       },
-    ])
+    ]).catch((error) => {
+      showErrorToast(
+        "Failed to prepare claim transaction. Please try signing in again, or contact our support team!"
+      )
+      captureEvent("Failed to get claim response", {
+        ...postHogOptions,
+        hook: "useCollectToken",
+        error,
+      })
+      return
+    })
     const data: ClaimResponse = response.data
 
     const claimArgs = [
@@ -115,6 +132,10 @@ const useCollectToken = (
           tweetText: `Just collected my tokens!`,
         })
 
+        captureEvent("Successful token claiming", {
+          ...postHogOptions,
+          hook: "useCollectToken",
+        })
         onSuccess?.()
       },
       onError: (err) => {
@@ -167,6 +188,12 @@ const useCollectToken = (
                   return "We encountered an issue with the upgrade identifier. Please contact our support team for further assistance."
               }
             })
+
+        captureEvent("Error while claiming token", {
+          ...postHogOptions,
+          hook: "useCollectToken",
+          err,
+        })
 
         showErrorToast(prettyError)
       },
