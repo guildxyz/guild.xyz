@@ -8,6 +8,8 @@ import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
+import { ERC20_SUPPORTED_CHAINS } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 import { AddTokenFormType } from "../AddTokenPanel"
 
 const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
@@ -54,7 +56,11 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
       <Text colorScheme="gray">
         Set the token you want to distribute as a reward.
       </Text>
-      <ChainPicker controlName="chain" showDivider={false} />
+      <ChainPicker
+        controlName="chain"
+        showDivider={false}
+        supportedChains={ERC20_SUPPORTED_CHAINS as Chain[]}
+      />
 
       <Stack gap={2}>
         <TokenPicker
