@@ -62,13 +62,21 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
       <ModalContent>
         <ModalHeader>Connect to Discord</ModalHeader>
         <ModalCloseButton />
-        <ModalBody display={"flex"} flexDir={"column"}>
+        <ModalBody display="flex" flexDir="column">
           <Text colorScheme="gray" fontWeight="semibold" mb={4}>
             Adding the bot and creating the Guild won't change anything on your
             server
           </Text>
           <PermissionAlert mb={4} />
-          <Box overflow={"auto"}>
+          <Box
+            overflow="auto"
+            className="invisible-scrollbar"
+            sx={{
+              maskImage:
+                "linear-gradient(to bottom, transparent 0px, black var(--chakra-sizes-4), black calc(100% - var(--chakra-sizes-4)), transparent)",
+            }}
+            py={4}
+          >
             <FormProvider {...discordMethods}>
               <DiscordGuildSetup
                 defaultValues={{
