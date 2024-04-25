@@ -24,7 +24,7 @@ import useRoleGroup from "../hooks/useRoleGroup"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
-import { useAccessedTokenRewards } from "./hooks/useAccessedTokens"
+import { useTokenRewards } from "./hooks/useAccessedTokens"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -95,7 +95,7 @@ const AccessHub = (): JSX.Element => {
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const accessedGuildPoints = useAccessedGuildPoints("ACCESSED_ONLY")
-  const accessedGuildTokens = useAccessedTokenRewards()
+  const accessedGuildTokens = useTokenRewards(!isAdmin)
 
   const shouldShowGuildPin =
     !group &&

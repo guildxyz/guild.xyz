@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useAccessedTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import { canCloseAddRewardModalAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
@@ -76,7 +76,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     setCanClose(!isLoading)
   }, [isLoading, setCanClose])
 
-  const accessedTokens = useAccessedTokenRewards()
+  const accessedTokens = useTokenRewards()
 
   const platformForToken = accessedTokens.find(
     (guildPlatform) =>

@@ -25,8 +25,10 @@ import {
 } from "platforms/Token/TokenRewardContext"
 import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
 import { GuildPlatform } from "types"
+import { useTokenRewards } from "../AccessHub/hooks/useAccessedTokens"
 import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "../hooks/useGuild"
+import LeaderboardAirdropFallbackCard from "./LeaderboardAirdropFallbackCard"
 
 const LeaderboardAirdropCard = () => {
   const { token, guildPlatform } = useTokenRewardContext()
@@ -208,11 +210,19 @@ const LeaderboardAirdropCardWrapper = ({
   guildPlatform,
 }: {
   guildPlatform: GuildPlatform
-}) => (
-  <TokenRewardProvider guildPlatform={guildPlatform}>
-    <LeaderboardAirdropCard />
-  </TokenRewardProvider>
-)
+}) => {
+  const accessedTokenRewards = useTokenRewards(true)
+  const isAccessed = accessedTokenRewards.find((gp) => gp.id === guildPlatform.id)
+
+  if (!isAccessed)
+    return <LeaderboardAirdropFallbackCard guildPlatform={guildPlatform} />
+
+  return (
+    <TokenRewardProvider guildPlatform={guildPlatform}>
+      <LeaderboardAirdropCard />
+    </TokenRewardProvider>
+  )
+}
 
 export {
   LeaderboardAirdopSkeleton,
