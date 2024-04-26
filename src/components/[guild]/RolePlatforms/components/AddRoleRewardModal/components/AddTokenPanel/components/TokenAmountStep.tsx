@@ -18,7 +18,7 @@ import DynamicAmount from "./DynamicAmount"
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const { control, setValue } = useFormContext<AddTokenFormType>()
 
-  const type: TokenRewardType = useWatch({ control, name: `type` })
+  const type = useWatch({ control, name: `type` })
 
   const requirements = useWatch({ control, name: `requirements` })
   const multiplier = useWatch({ control, name: `multiplier` })
