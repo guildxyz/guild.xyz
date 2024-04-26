@@ -1,4 +1,3 @@
-import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -26,7 +25,6 @@ const useCollectToken = (
   onSuccess?: () => void
 ) => {
   const { id: guildId, urlName, name } = useGuild()
-  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
   const { amount } = useTokenClaimFee(chain)
 
@@ -37,9 +35,6 @@ const useCollectToken = (
   const { data: walletClient } = useWalletClient()
 
   const collect = async () => {
-    setTxError?.(false)
-    setTxSuccess?.(false)
-
     setLoadingText("Verifying signature...")
 
     const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
@@ -89,8 +84,6 @@ const useCollectToken = (
       account: walletClient.account,
     })
 
-    setTxHash(hash)
-
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
       { hash }
     )
@@ -98,8 +91,6 @@ const useCollectToken = (
     if (receipt.status !== "success") {
       throw new Error(`Transaction failed. Hash: ${hash}`)
     }
-
-    setTxSuccess(true)
 
     return receipt
   }
@@ -120,7 +111,6 @@ const useCollectToken = (
       },
       onError: (err) => {
         setLoadingText("")
-        setTxError?.(true)
 
         const prettyError = err.correlationId
           ? err
