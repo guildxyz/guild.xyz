@@ -48,7 +48,7 @@ const BLOCKED_COUNTRY_CODES = [
 export const useIsFromGeogatedCountry = () => {
   const { data } = useSWRImmutable<IpGeodata>("/ip-geodata")
 
-  if (!data) return true
+  if (!data) return null
 
   return BLOCKED_COUNTRY_CODES?.includes(data.country)
 }
