@@ -102,17 +102,13 @@ const useCreateReqBasedTokenReward = ({
           isRequirementAmountOrAccess(
             modifiedData.rolePlatforms[0].dynamicAmount.operation.input
           )
-        )
+        ) {
           modifiedData.rolePlatforms[0].dynamicAmount.operation.input.roleId =
             Number(data.roleIds[0])
 
-        if (
-          isRequirementAmountOrAccess(
-            modifiedData.rolePlatforms[0].dynamicAmount.operation.input
-          )
-        )
           modifiedData.rolePlatforms[0].dynamicAmount.operation.input.requirementId =
             req.id
+        }
 
         if (tokenGuildPlatformExists) {
           // Removing guild platform data, as we add to an already existing one
@@ -162,7 +158,7 @@ const useCreateReqBasedTokenReward = ({
       guildId,
     })
 
-    const modifiedData: any = { ...data }
+    const modifiedData = { ...data }
     const tokenGuildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
 
     if (tokenGuildPlatformExists) {
@@ -176,11 +172,17 @@ const useCreateReqBasedTokenReward = ({
     }
 
     // Setting dynamic amount fields
-    modifiedData.rolePlatforms[0].dynamicAmount.operation.input.roleId = Number(
-      createdRole.id
-    )
-    modifiedData.rolePlatforms[0].dynamicAmount.operation.input.requirementId =
-      createdRole.requirements[0].id
+    if (
+      isRequirementAmountOrAccess(
+        modifiedData.rolePlatforms[0].dynamicAmount.operation.input
+      )
+    ) {
+      modifiedData.rolePlatforms[0].dynamicAmount.operation.input.roleId = Number(
+        createdRole.id
+      )
+      modifiedData.rolePlatforms[0].dynamicAmount.operation.input.requirementId =
+        createdRole.requirements[0].id
+    }
 
     const rewardSubmitData = getRewardSubmitData(
       modifiedData,
