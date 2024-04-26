@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import Card, { useCardBg } from "components/common/Card"
 import useMembership from "components/explorer/hooks/useMembership"
-import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
 import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
 import {
@@ -31,12 +30,11 @@ const LeaderboardAirdropCard = () => {
   const { token, guildPlatform } = useTokenRewardContext()
   const modalBg = useCardBg()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
-  const gold = useColorPalette("gold", "gold")
   const gradientColor = useColorModeValue(
-    gold["--gold-200"],
-    `${gold["--gold-700"]}70`
+    "var(--chakra-colors-gold-100)",
+    `var(--chakra-colors-gold-800)`
   )
-  const headingColor = useColorModeValue(gold["--gold-500"], "default")
+  const headingColor = useColorModeValue("var(--chakra-colors-gold-500)", "default")
   const claimableAmount = useClaimableTokens(guildPlatform)
 
   const { roles } = useGuild()
@@ -61,9 +59,9 @@ const LeaderboardAirdropCard = () => {
       display="flex"
       flexDirection="row"
       alignItems="center"
-      background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, ${gold["--gold-500"]}, ${modalBg}) border-box`}
+      background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, var(--chakra-colors-gold-400), ${modalBg}) border-box`}
       _before={{
-        content: '""',
+        content: { md: '""' },
         position: "absolute",
         top: 0,
         bottom: 0,
@@ -85,14 +83,14 @@ const LeaderboardAirdropCard = () => {
         bg: `url('/img/confetti_overlay.png'), linear-gradient(to right, ${gradientColor}, transparent)`,
         bgSize: "250px",
         bgRepeat: "no-repeat",
-        bgPosition: "top 0px left -20px",
+        bgPosition: { base: "top 0px left -140px", sm: "top 0px left -90px" },
         opacity: "1",
         zIndex: "0",
       }}
     >
       <HStack
         spacing={1}
-        pl={{ base: "85px", sm: "120px" }}
+        pl={{ base: "85px", sm: "120px", md: "130px" }}
         pr={6}
         alignItems={"center"}
         w="full"
@@ -120,7 +118,7 @@ const LeaderboardAirdropCard = () => {
           <Text
             colorScheme={"gray"}
             fontSize={{ base: "sm" }}
-            fontWeight={"medium"}
+            fontWeight={"semibold"}
             overflow={"hidden"}
             whiteSpace={"nowrap"}
             textOverflow={"ellipsis"}
