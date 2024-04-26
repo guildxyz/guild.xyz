@@ -1,4 +1,4 @@
-import { Flex, Icon, Spinner, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
+import { Icon, Spinner, Tooltip, Wrap } from "@chakra-ui/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
@@ -13,7 +13,6 @@ import useMembership, {
 } from "components/explorer/hooks/useMembership"
 import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
-import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
 import DynamicTag from "platforms/Token/DynamicTag"
 import { useIsFromGeogatedCountry } from "platforms/Token/GeogatedCountryAlert"
 import PoolTag from "platforms/Token/PoolTag"
@@ -30,7 +29,6 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const claimableAmount = useClaimableTokensForRolePlatform(rolePlatform)
   const { isAdmin } = useGuildPermission()
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const { isMember } = useMembership()
   const isFromGeogatedCountry = useIsFromGeogatedCountry()
   const openJoinModal = useOpenJoinModal()
@@ -62,54 +60,48 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   }, [hasRoleAccess, isMember, openJoinModal])
 
   return (
-    <Flex alignItems={"center"} gap={1} wrap={"wrap"} mt={2}>
-      <RewardDisplay
-        icon={
-          token.isLoading ? (
-            <Spinner boxSize={6} />
-          ) : (
-            <RewardIcon
-              rolePlatformId={rolePlatform.id}
-              guildPlatform={rolePlatform?.guildPlatform}
-              owerwriteImg={imageUrl}
-            />
-          )
-        }
-        sx={{ "[id^='popover-trigger']": { display: "inline" } }} // needed so the button stays inline when there's no tooltipLabel too
-        label={
-          <>
-            {`Claim: `}
-            <Tooltip label={state.tooltipLabel} shouldWrapChildren hasArrow>
-              <state.ButtonComponent
-                colorScheme="gray"
-                w="auto"
-                variant="link"
-                rightIcon={<ArrowSquareIn />}
-                iconSpacing="1"
-                {...state.buttonProps}
-              >
-                {claimableAmount || ""} {token?.data?.symbol || "tokens"}
-              </state.ButtonComponent>
-            </Tooltip>
-          </>
-        }
-        whiteSpace={"nowrap"}
-        pt={0}
-        mr={2}
-      >
-        <Wrap spacing={1}>
-          <DynamicTag />
-          <AvailabilityTags rolePlatform={rolePlatform} />
-          {isAdmin && (
-            <PoolTag
-              poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
-            />
-          )}
-        </Wrap>
-      </RewardDisplay>
-
-      <ClaimTokenModal isOpen={isOpen} onClose={onClose} />
-    </Flex>
+    <RewardDisplay
+      icon={
+        token.isLoading ? (
+          <Spinner boxSize={6} />
+        ) : (
+          <RewardIcon
+            rolePlatformId={rolePlatform.id}
+            guildPlatform={rolePlatform?.guildPlatform}
+            owerwriteImg={imageUrl}
+          />
+        )
+      }
+      sx={{ "[id^='popover-trigger']": { display: "inline" } }} // needed so the button stays inline when there's no tooltipLabel too
+      label={
+        <>
+          {`Claim: `}
+          <Tooltip label={state.tooltipLabel} shouldWrapChildren hasArrow>
+            <state.ButtonComponent
+              colorScheme="gray"
+              w="auto"
+              variant="link"
+              rightIcon={<ArrowSquareIn />}
+              iconSpacing="1"
+              {...state.buttonProps}
+            >
+              {claimableAmount || ""} {token?.data?.symbol || "tokens"}
+            </state.ButtonComponent>
+          </Tooltip>
+        </>
+      }
+      whiteSpace={"nowrap"}
+    >
+      <Wrap spacing={1}>
+        <DynamicTag />
+        <AvailabilityTags rolePlatform={rolePlatform} />
+        {isAdmin && (
+          <PoolTag
+            poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
+          />
+        )}
+      </Wrap>
+    </RewardDisplay>
   )
 }
 
