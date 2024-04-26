@@ -119,7 +119,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
         able to deposit more and withdraw from any time.
       </Text>
 
-      <Stack gap={1}>
+      <Stack gap={2}>
         <FormControl>
           <FormLabel>Amount to deposit</FormLabel>
           <InputGroup>
@@ -143,19 +143,11 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
           <Text fontWeight="semibold" colorScheme="gray">
             or
           </Text>
-          <Checkbox
-            spacing={1.5}
-            isChecked={skip}
-            onChange={handleDepositLater}
-          ></Checkbox>
-          <Text
-            fontWeight="medium"
-            colorScheme="gray"
-            _hover={{ cursor: "pointer" }}
-            onClick={handleDepositLater}
-          >
-            deposit tokens later
-          </Text>
+          <Checkbox spacing={1.5} isChecked={skip} onChange={handleDepositLater}>
+            <Text fontWeight="medium" colorScheme="gray">
+              deposit tokens later
+            </Text>
+          </Checkbox>
         </HStack>
       </Stack>
 
