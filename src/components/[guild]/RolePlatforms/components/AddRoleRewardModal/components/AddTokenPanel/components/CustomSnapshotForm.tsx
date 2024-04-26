@@ -105,7 +105,7 @@ const CustomSnapshotForm = () => {
             <input {...getInputProps()} accept="csv" hidden />
           </Box>
           <Accordion allowToggle>
-            <AccordionItem>
+            <AccordionItem borderBottom="0">
               <AccordionButton>
                 <Flex w="full" px={2} color={"GrayText"} alignItems={"center"}>
                   <Icon as={Info} mr={2} />
