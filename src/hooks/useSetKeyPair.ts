@@ -22,7 +22,7 @@ function getSiweMessage({
   const nonce = `${hash}${nonceRandom}${method ?? 1}`
 
   // Indentation is important inside the string, extra insentation would be extra whitespace in the string
-  return `guild-xyz-git-guild-1380-siwe-zgen.vercel.app wants you to sign in with your Ethereum account:
+  return `guild.xyz wants you to sign in with your Ethereum account:
 ${checksumAddress(addr as `0x${string}`)}
 
 Sign in Guild.xyz
