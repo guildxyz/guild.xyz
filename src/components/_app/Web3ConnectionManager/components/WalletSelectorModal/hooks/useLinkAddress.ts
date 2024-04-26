@@ -1,4 +1,5 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   AddressLinkParams,
@@ -38,12 +39,15 @@ const getAddressLinkProof = async (
 const checkAndDeleteKeys = async (userId: number) => {
   const keys = await getKeyPairFromIdb(userId)
   if (!keys) return
+
   await deleteKeyPairFromIdb(userId)
 }
 const useLinkAddress = () => {
   const { signMessage, address: addressToLink } = useWeb3ConnectionManager()
   const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const { id: currentUserId, deleteKeys } = useUserPublic()
+
+  const { captureEvent } = usePostHogContext()
 
   // When we link an address, that has a registered keypair, we need to delete that keypair to trigger the modal. Plus that keys are invalidated anyway, and would end up sitting in the indexeddb util they are manually deleted
   useEffect(() => {
@@ -54,6 +58,10 @@ const useLinkAddress = () => {
     )
       return
 
+    captureEvent("useLinkAddress - checkAndDeleteKeys called", {
+      addressLinkParamsUserId: addressLinkParams?.userId,
+      currentUserId,
+    })
     checkAndDeleteKeys(currentUserId).then(() => deleteKeys())
   }, [addressLinkParams, currentUserId, deleteKeys])
 
