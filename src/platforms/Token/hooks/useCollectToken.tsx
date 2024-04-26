@@ -8,19 +8,16 @@ import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { useFetcherWithSign } from "utils/fetcher"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt } from "viem"
+import { TransactionReceipt, WriteContractParameters } from "viem"
 import { usePublicClient, useWalletClient } from "wagmi"
 import { Chain } from "wagmiConfig/chains"
 import useTokenClaimFee from "./useClaimToken"
 
 type ClaimResponse = {
-  amount: string
-  poolId: number
-  rolePlatformId: number
-  signature: `0x${string}`
-  signedAt: number
-  userId: number
+  args: [number, number, string, number, number, `0x${string}`]
 }
+
+type Args = WriteContractParameters<typeof tokenRewardPoolAbi, "claim">["args"]
 
 const useCollectToken = (
   chain: Chain,
@@ -46,29 +43,33 @@ const useCollectToken = (
     setLoadingText("Verifying signature...")
 
     const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
-    const response = await fetcherWithSign([
+
+    const args: Args = await fetcherWithSign([
       endpoint,
       {
         method: "POST",
         body: {},
       },
-    ])
-    const data: ClaimResponse = response.data
-
-    const claimArgs = [
-      BigInt(data.poolId),
-      BigInt(data.rolePlatformId),
-      BigInt(data.amount),
-      BigInt(data.signedAt),
-      BigInt(data.userId),
-      data.signature,
-    ] as const
+    ]).then((res) => {
+      const data: ClaimResponse = res.data
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const [_poolId, _rolePlatformId, _amount, _signedAt, _userId, _signature] =
+        data.args
+      return [
+        BigInt(_poolId),
+        BigInt(_rolePlatformId),
+        BigInt(_amount),
+        BigInt(_signedAt),
+        BigInt(_userId),
+        _signature,
+      ] satisfies Args
+    })
 
     const claimTransactionConfig = {
       abi: tokenRewardPoolAbi,
       address: ERC20_CONTRACTS[chain],
       functionName: "claim",
-      args: claimArgs,
+      args,
       value: amount,
     } as const
 
