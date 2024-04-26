@@ -94,6 +94,13 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                     field={field as Requirement}
                     index={i}
                     removeRequirement={(idx) => {
+                      /**
+                       * TODO: check if the role has an ERC20 reward & only show this
+                       * toast in that case.
+                       *
+                       * We decided to leave it as is for now, because we can only
+                       * add this requirement type for ERC20 requirements.
+                       */
                       if (type === "GUILD_SNAPSHOT") {
                         toast({
                           status: "info",
