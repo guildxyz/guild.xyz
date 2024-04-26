@@ -10,6 +10,7 @@ const FEATURE_FLAGS = [
   "CRM",
   "GUILD_QUEUES",
   "FORMS",
+  "ERC20",
   "PERIODIC_SYNC",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]

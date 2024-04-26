@@ -6,7 +6,7 @@ import RewardCard from "components/common/RewardCard"
 import useMembership from "components/explorer/hooks/useMembership"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
-import TokenCardButton from "./TokenCardButton"
+import ClaimTokenButton from "./ClaimTokenButton"
 import TokenRewardCardEditMenu from "./TokenRewardCardEditMenu"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import { useClaimableTokens } from "./hooks/useCalculateToken"
@@ -83,7 +83,7 @@ const TokenRewardCard = () => {
           isAdmin && <TokenRewardCardEditMenu guildPlatform={guildPlatform} />
         }
       >
-        <TokenCardButton isDisabled={claimableAmount <= 0} />
+        <ClaimTokenButton isDisabled={claimableAmount <= 0} />
       </RewardCard>
     </>
   )

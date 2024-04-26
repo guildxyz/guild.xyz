@@ -69,11 +69,15 @@ const PlatformsGrid = ({ onSelection, disabledList, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
-    {
-      platform: "ERC20",
-      description: "Create airdrops, reward tokens",
-      isGeneral: true,
-    },
+    ...(featureFlags.includes("ERC20")
+      ? [
+          {
+            platform: "ERC20",
+            description: "Create airdrops, reward tokens",
+            isGeneral: true,
+          } as PlatformsGridData,
+        ]
+      : []),
     ...(featureFlags.includes("FORMS")
       ? [
           {

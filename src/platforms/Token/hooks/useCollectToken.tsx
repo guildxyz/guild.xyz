@@ -1,4 +1,3 @@
-import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -8,19 +7,16 @@ import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { useFetcherWithSign } from "utils/fetcher"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt } from "viem"
+import { TransactionReceipt, WriteContractParameters } from "viem"
 import { usePublicClient, useWalletClient } from "wagmi"
 import { Chain } from "wagmiConfig/chains"
 import useTokenClaimFee from "./useClaimToken"
 
 type ClaimResponse = {
-  amount: string
-  poolId: number
-  rolePlatformId: number
-  signature: `0x${string}`
-  signedAt: number
-  userId: number
+  args: [number, number, string, number, number, `0x${string}`]
 }
+
+type Args = WriteContractParameters<typeof tokenRewardPoolAbi, "claim">["args"]
 
 const useCollectToken = (
   chain: Chain,
@@ -28,8 +24,7 @@ const useCollectToken = (
   rolePlatformId?: number,
   onSuccess?: () => void
 ) => {
-  const { id: guildId } = useGuild()
-  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
+  const { id: guildId, urlName, name } = useGuild()
 
   const { amount } = useTokenClaimFee(chain)
 
@@ -40,35 +35,36 @@ const useCollectToken = (
   const { data: walletClient } = useWalletClient()
 
   const collect = async () => {
-    setTxError?.(false)
-    setTxSuccess?.(false)
-
     setLoadingText("Verifying signature...")
 
     const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
-    const response = await fetcherWithSign([
+
+    const args: Args = await fetcherWithSign([
       endpoint,
       {
         method: "POST",
         body: {},
       },
-    ])
-    const data: ClaimResponse = response.data
-
-    const claimArgs = [
-      BigInt(data.poolId),
-      BigInt(data.rolePlatformId),
-      BigInt(data.amount),
-      BigInt(data.signedAt),
-      BigInt(data.userId),
-      data.signature,
-    ] as const
+    ]).then((res) => {
+      const data: ClaimResponse = res.data
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const [_poolId, _rolePlatformId, _amount, _signedAt, _userId, _signature] =
+        data.args
+      return [
+        BigInt(_poolId),
+        BigInt(_rolePlatformId),
+        BigInt(_amount),
+        BigInt(_signedAt),
+        BigInt(_userId),
+        _signature,
+      ] satisfies Args
+    })
 
     const claimTransactionConfig = {
       abi: tokenRewardPoolAbi,
       address: ERC20_CONTRACTS[chain],
       functionName: "claim",
-      args: claimArgs,
+      args,
       value: amount,
     } as const
 
@@ -88,8 +84,6 @@ const useCollectToken = (
       account: walletClient.account,
     })
 
-    setTxHash(hash)
-
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
       { hash }
     )
@@ -97,8 +91,6 @@ const useCollectToken = (
     if (receipt.status !== "success") {
       throw new Error(`Transaction failed. Hash: ${hash}`)
     }
-
-    setTxSuccess(true)
 
     return receipt
   }
@@ -112,14 +104,13 @@ const useCollectToken = (
         setLoadingText("")
         tweetToast({
           title: "Successfully claimed your tokens!",
-          tweetText: `Just collected my tokens!`,
+          tweetText: `Just collected my tokens in the ${name} guild!\nguild.xyz/${urlName}`,
         })
 
         onSuccess?.()
       },
       onError: (err) => {
         setLoadingText("")
-        setTxError?.(true)
 
         const prettyError = err.correlationId
           ? err
