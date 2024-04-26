@@ -9,7 +9,6 @@ import {
   PopoverTrigger,
   Portal,
 } from "@chakra-ui/react"
-import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
 import { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import { IpGeodata } from "pages/api/ip-geodata"
@@ -65,7 +64,14 @@ export const GeogatedCountryPopover = ({ children, isDisabled }) => {
       <Portal>
         <PopoverContent w="md">
           <PopoverArrow />
-          <PopoverHeader {...POPOVER_HEADER_STYLES}>
+          <PopoverHeader
+            // same as POPOVER_HEADER_STYLES, but there's a build error for some reason if we import that here. This could be moved to theme config probably anyway
+            {...{
+              fontWeight: "semibold",
+              border: "0",
+              px: "3",
+            }}
+          >
             Claiming is not available in your country
           </PopoverHeader>
           <PopoverBody pt="0">
