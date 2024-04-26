@@ -8,6 +8,7 @@ import {
   GUILD_PIN_CONTRACTS,
   GuildPinsSupportedChain,
 } from "utils/guildCheckout/constants"
+import ipfsToGuildGateway from "utils/ipfsToGuildGateway"
 import {
   PublicClient,
   createPublicClient,
@@ -122,7 +123,7 @@ const getTokenWithMetadata = (tokenInfo: {
     ...metadata,
     chainId,
     tokenId,
-    image: metadata.image.replace("ipfs://", process.env.NEXT_PUBLIC_IPFS_GATEWAY),
+    image: ipfsToGuildGateway(metadata.image),
   }
 }
 
