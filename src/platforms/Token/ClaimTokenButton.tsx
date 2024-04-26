@@ -10,7 +10,7 @@ type Props = {
   isDisabled?: boolean
 } & ButtonProps
 
-const TokenCardButton = ({ isDisabled, children, ...rest }: Props) => {
+const ClaimTokenButton = ({ isDisabled, children, ...rest }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const isFromGeogatedCountry = useIsFromGeogatedCountry()
 
@@ -32,4 +32,4 @@ const TokenCardButton = ({ isDisabled, children, ...rest }: Props) => {
   )
 }
 
-export default TokenCardButton
+export default ClaimTokenButton

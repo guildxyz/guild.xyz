@@ -18,10 +18,10 @@ import useToast from "hooks/useToast"
 import { Coin, Pencil, TrashSimple, Wallet } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
+import ClaimTokenButton from "./ClaimTokenButton"
 import EditTokenModal from "./EditTokenModal"
 import FundPoolModal from "./FundPoolModal"
 import RemoveTokenRewardConfirmation from "./RemoveTokenRewardConfirmation"
-import TokenCardButton from "./TokenCardButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import WithdrawPoolModal from "./WithdrawPoolModal"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
@@ -149,7 +149,7 @@ const TokenRewardCard = () => {
           )
         }
       >
-        <TokenCardButton isDisabled={claimableAmount <= 0} />
+        <ClaimTokenButton isDisabled={claimableAmount <= 0} />
       </RewardCard>
 
       <RemoveTokenRewardConfirmation

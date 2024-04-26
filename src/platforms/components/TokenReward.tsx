@@ -12,11 +12,11 @@ import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
 import { ArrowSquareIn, LockSimple } from "phosphor-react"
+import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
 import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
 import DynamicTag from "platforms/Token/DynamicTag"
 import { useIsFromGeogatedCountry } from "platforms/Token/GeogatedCountryAlert"
 import PoolTag from "platforms/Token/PoolTag"
-import TokenCardButton from "platforms/Token/TokenCardButton"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
@@ -39,7 +39,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
     if (hasRoleAccess)
       return {
         tooltipLabel: !isFromGeogatedCountry && "Claim reward",
-        ButtonComponent: TokenCardButton,
+        ButtonComponent: ClaimTokenButton,
       }
 
     if (!isMember)

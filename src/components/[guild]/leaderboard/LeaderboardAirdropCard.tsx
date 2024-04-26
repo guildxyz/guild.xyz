@@ -16,7 +16,7 @@ import Card, { useCardBg } from "components/common/Card"
 import useMembership from "components/explorer/hooks/useMembership"
 import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
-import TokenCardButton from "platforms/Token/TokenCardButton"
+import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
@@ -149,7 +149,7 @@ const LeaderboardAirdropCard = () => {
           </Flex>
         </Stack>
 
-        <TokenCardButton
+        <ClaimTokenButton
           size={{ base: "sm", sm: "md" }}
           w="auto"
           flexShrink={0}

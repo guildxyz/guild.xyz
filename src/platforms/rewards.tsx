@@ -59,7 +59,7 @@ import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
-import TokenCardButton from "./Token/TokenCardButton"
+import ClaimTokenButton from "./Token/ClaimTokenButton"
 import useTokenCardProps from "./Token/hooks/useTokenCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
@@ -478,7 +478,7 @@ const rewards: Record<PlatformName, RewardData> = {
     colorScheme: "gold",
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     cardPropsHook: useTokenCardProps,
-    cardButton: TokenCardButton,
+    cardButton: ClaimTokenButton,
     RewardPreview: dynamic(() => import("platforms/components/TokenPreview"), {
       ssr: false,
       loading: () => <RewardPreview isLoading />,
