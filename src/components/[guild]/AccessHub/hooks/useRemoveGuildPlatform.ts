@@ -4,7 +4,11 @@ import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
-const useRemoveGuildPlatform = (guildPlatformId: number) => {
+const useRemoveGuildPlatform = (
+  guildPlatformId: number,
+  onSuccess?: () => void,
+  onError?: () => void
+) => {
   const { id, mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
@@ -42,8 +46,12 @@ const useRemoveGuildPlatform = (guildPlatformId: number) => {
         }),
         { revalidate: false }
       )
+      onSuccess?.()
     },
-    onError: (error) => showErrorToast(error),
+    onError: (error) => {
+      showErrorToast(error)
+      onError?.()
+    },
   })
 }
 

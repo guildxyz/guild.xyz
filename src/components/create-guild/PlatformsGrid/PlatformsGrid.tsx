@@ -130,7 +130,7 @@ const PlatformSelectButtons = ({
         icon={rewards[platform].icon}
         imageUrl={rewards[platform].imageUrl}
         onSelection={onSelection}
-        disabledText={disabledRewards[platform]}
+        disabledText={disabledRewards?.[platform]}
       />
     ))}
   </SimpleGrid>
