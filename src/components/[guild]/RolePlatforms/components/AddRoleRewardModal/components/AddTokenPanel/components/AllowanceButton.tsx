@@ -12,7 +12,7 @@ type Props = {
   contract: `0x${string}`
 }
 
-const GenericBuyAllowanceButton = ({ chain, token, contract }: Props) => {
+const AllowanceButton = ({ chain, token, contract }: Props) => {
   const {
     data: { symbol: tokenSymbol, name: tokenName },
   } = useTokenData(chain, token)
@@ -59,4 +59,4 @@ const GenericBuyAllowanceButton = ({ chain, token, contract }: Props) => {
   )
 }
 
-export default GenericBuyAllowanceButton
+export default AllowanceButton
