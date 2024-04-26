@@ -49,7 +49,7 @@ const DynamicTypeForm = () => {
     <FormControl>
       <RadioSelect
         options={dynamicOptions}
-        colorScheme="primary"
+        colorScheme="indigo"
         {...snapshotOption}
         onChange={(val) => {
           snapshotOption.onChange(val)
