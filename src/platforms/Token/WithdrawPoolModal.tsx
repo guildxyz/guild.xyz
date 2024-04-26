@@ -12,10 +12,12 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useToast from "hooks/useToast"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
+import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -43,10 +45,10 @@ const WithdrawPoolModal = ({
 
   const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
 
-  const [owner, , , poolBalance] = poolData || []
+  const { owner, balance: poolBalance } = poolData
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
-  const { chainId } = useAccount()
+  const { chainId, address } = useAccount()
   const isOnCorrectChain = Chains[chain] === chainId
 
   const toast = useToast()
@@ -62,6 +64,11 @@ const WithdrawPoolModal = ({
       refetch()
       onSuccess()
     })
+
+  const isDisabledLabel =
+    owner &&
+    owner !== address &&
+    `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -94,17 +101,19 @@ const WithdrawPoolModal = ({
                 <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
 
                 <Collapse in={isOnCorrectChain}>
-                  <Button
-                    size="lg"
-                    width="full"
-                    colorScheme="indigo"
-                    isDisabled={!isOnCorrectChain}
-                    onClick={onSubmitWithdraw}
-                    isLoading={withdrawIsLoading}
-                    loadingText="Withdrawing funds..."
-                  >
-                    {"Withdraw"}
-                  </Button>
+                  <Tooltip label={isDisabledLabel} hasArrow>
+                    <Button
+                      size="lg"
+                      width="full"
+                      colorScheme="indigo"
+                      isDisabled={!isOnCorrectChain || !!isDisabledLabel}
+                      onClick={onSubmitWithdraw}
+                      isLoading={withdrawIsLoading}
+                      loadingText="Withdrawing funds..."
+                    >
+                      {"Withdraw"}
+                    </Button>
+                  </Tooltip>
                 </Collapse>
               </>
             )}

@@ -20,7 +20,7 @@ const RemoveTokenRewardConfirmation = ({ isOpen, onClose, guildPlatform }) => {
     guildPlatform.platformGuildData.chain,
     BigInt(guildPlatform.platformGuildData.poolId)
   )
-  const [, , , poolBalance] = poolData || []
+  const { balance: poolBalance } = poolData
 
   const {
     isOpen: withdrawIsOpen,

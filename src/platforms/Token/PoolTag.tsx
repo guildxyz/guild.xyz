@@ -53,7 +53,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
     )
   if (error) return <Tag>Failed to load balance</Tag>
 
-  const [, , , poolBalance] = data
+  const { balance: poolBalance } = data
   const balance = Number(formatUnits(poolBalance, decimals))
   const isWithdrawDisabled = balance === 0
 

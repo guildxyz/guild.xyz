@@ -14,6 +14,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import ConversionNumberInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionNumberInput"
@@ -23,6 +24,7 @@ import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { useState } from "react"
 import Token from "static/icons/token.svg"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import shortenHex from "utils/shortenHex"
 import { formatUnits, parseUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -50,8 +52,7 @@ const FundPoolModal = ({
   } = useTokenRewardContext()
 
   const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
-
-  const [owner, , , poolBalance] = poolData || []
+  const { owner, balance: poolBalance } = poolData
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
   const [amount, setAmount] = useState("1")
@@ -94,6 +95,11 @@ const FundPoolModal = ({
     onClose()
   }
 
+  const isDisabledLabel =
+    owner &&
+    owner === userAddress &&
+    `Only the requirement's original creator can fund (${shortenHex(owner)})`
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={handleClose}>
@@ -126,17 +132,19 @@ const FundPoolModal = ({
               <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
 
               <Collapse in={isOnCorrectChain}>
-                <Button
-                  size="lg"
-                  width="full"
-                  colorScheme="indigo"
-                  isDisabled={!isBalanceSufficient}
-                  onClick={onSubmitFund}
-                  isLoading={isLoading}
-                  loadingText="Funding pool..."
-                >
-                  {isBalanceSufficient ? "Fund" : "Insufficient balance"}
-                </Button>
+                <Tooltip label={isDisabledLabel} hasArrow>
+                  <Button
+                    size="lg"
+                    width="full"
+                    colorScheme="indigo"
+                    isDisabled={!isBalanceSufficient || !!isDisabledLabel}
+                    onClick={onSubmitFund}
+                    isLoading={isLoading}
+                    loadingText="Funding pool..."
+                  >
+                    {isBalanceSufficient ? "Fund" : "Insufficient balance"}
+                  </Button>
+                </Tooltip>
               </Collapse>
             </Stack>
           </ModalBody>
