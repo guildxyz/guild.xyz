@@ -121,7 +121,12 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
         }}
       /> */}
 
-      <Collapse startingHeight={150} animateOpacity in={!isCollapsed}>
+      <Collapse
+        startingHeight={150}
+        animateOpacity
+        in={!isCollapsed}
+        style={{ padding: "2px", margin: "-2px" }}
+      >
         <Stack gap={5}>
           {/* {[
             TokenRewardType.DYNAMIC_POINTS,

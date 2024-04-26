@@ -174,7 +174,11 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
               _hover={activeStep > index && { cursor: "pointer" }}
             >
               <StepTitle>{step.title}</StepTitle>
-              <Collapse in={activeStep === index} animateOpacity>
+              <Collapse
+                in={activeStep === index}
+                animateOpacity
+                style={{ padding: "2px", margin: "-2px" }}
+              >
                 <step.content
                   onContinue={goToNext}
                   onSubmit={methods.handleSubmit(onSubmit)}
