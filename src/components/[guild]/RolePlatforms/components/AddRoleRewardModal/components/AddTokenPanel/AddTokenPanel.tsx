@@ -74,8 +74,10 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
   const constructSubmitData = (_data) => {
     const platform = accessedTokens.find(
       (guildPlatform) =>
+        guildPlatform.platformId === PlatformType.ERC20 &&
         guildPlatform.platformGuildData.chain === _data.chain &&
-        guildPlatform.platformGuildData.tokenAddress === _data.tokenAddress
+        guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+          _data.tokenAddress?.toLowerCase()
     )
 
     const dynamicAmount = {

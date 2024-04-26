@@ -31,7 +31,8 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const platformForToken = accessedTokens.find(
     (guildPlatform) =>
       guildPlatform.platformGuildData.chain === chain &&
-      guildPlatform.platformGuildData.tokenAddress === address
+      guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+        address?.toLowerCase()
   )
 
   const { roles } = useGuild()
