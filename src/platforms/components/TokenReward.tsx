@@ -1,4 +1,5 @@
 import { Flex, Icon, Spinner, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
+import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import {
   RewardDisplay,
   RewardIcon,
@@ -7,16 +8,21 @@ import {
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Button from "components/common/Button"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import { ArrowSquareIn } from "phosphor-react"
+import useMembership, {
+  useRoleMembership,
+} from "components/explorer/hooks/useMembership"
+import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import ClaimTokenModal from "platforms/Token/ClaimTokenModal"
 import DynamicTag from "platforms/Token/DynamicTag"
+import { useIsFromGeogatedCountry } from "platforms/Token/GeogatedCountryAlert"
 import PoolTag from "platforms/Token/PoolTag"
+import TokenCardButton from "platforms/Token/TokenCardButton"
 import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
 import { useCalculateForRolePlatform } from "platforms/Token/hooks/useCalculateToken"
+import { useMemo } from "react"
 import { RolePlatform } from "types"
 
 const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
@@ -25,6 +31,35 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { isAdmin } = useGuildPermission()
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isMember } = useMembership()
+  const isFromGeogatedCountry = useIsFromGeogatedCountry()
+  const openJoinModal = useOpenJoinModal()
+
+  const state = useMemo(() => {
+    if (hasRoleAccess)
+      return {
+        tooltipLabel: !isFromGeogatedCountry && "Claim reward",
+        ButtonComponent: TokenCardButton,
+      }
+
+    if (!isMember)
+      return {
+        tooltipLabel: (
+          <>
+            <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
+            Join guild to check access
+          </>
+        ),
+        ButtonComponent: Button,
+        buttonProps: { onClick: openJoinModal },
+      }
+
+    return {
+      tooltipLabel: "You don't satisfy the requirements to this role",
+      ButtonComponent: Button,
+      buttonProps: { isDisabled: true },
+    }
+  }, [hasRoleAccess, isMember, openJoinModal])
 
   return (
     <Flex alignItems={"center"} gap={1} wrap={"wrap"} mt={2}>
@@ -40,31 +75,21 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
             />
           )
         }
+        sx={{ "[id^='popover-trigger']": { display: "inline" } }} // needed so the button stays inline when there's no tooltipLabel too
         label={
           <>
             {`Claim: `}
-            <Tooltip
-              label={
-                !hasRoleAccess ? (
-                  `You will be able to claim these tokens if you satisfy the requirements for this role.`
-                ) : (
-                  <>
-                    Claim reward <Icon as={ArrowSquareIn} mb="-0.5" />
-                  </>
-                )
-              }
-              shouldWrapChildren
-              hasArrow
-            >
-              <Button
+            <Tooltip label={state.tooltipLabel} shouldWrapChildren hasArrow>
+              <state.ButtonComponent
+                colorScheme="gray"
+                w="auto"
                 variant="link"
-                onClick={() => onOpen()}
-                isDisabled={!hasRoleAccess}
                 rightIcon={<ArrowSquareIn />}
                 iconSpacing="1"
+                {...state.buttonProps}
               >
                 {claimableAmount || ""} {token?.data?.symbol || "tokens"}
-              </Button>
+              </state.ButtonComponent>
             </Tooltip>
           </>
         }

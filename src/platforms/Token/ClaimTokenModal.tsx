@@ -24,7 +24,6 @@ import { useMemo } from "react"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "./ClaimFeeTable"
-import { GeogatedCountryAlert } from "./GeogatedCountryAlert"
 import { useTokenRewardContext } from "./TokenRewardContext"
 import TokenRolePlatformClaimCard from "./TokenRolePlatformClaimCard"
 import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
@@ -127,7 +126,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           border={"4px solid transparent"}
           mt="0"
         >
-          <GeogatedCountryAlert />
           <Stack
             justifyContent={"center"}
             position={"relative"}

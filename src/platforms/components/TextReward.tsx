@@ -72,7 +72,7 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
         tooltipLabel: (
           <>
             <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
-            Join guild to get access
+            Join guild to check access
           </>
         ),
         buttonProps: { onClick: openJoinModal },
