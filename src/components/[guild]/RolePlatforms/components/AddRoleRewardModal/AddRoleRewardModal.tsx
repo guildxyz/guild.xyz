@@ -115,12 +115,9 @@ const AddRoleRewardModal = ({ append }: Props) => {
                   setSelection(selected)
                   if (selected === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
                 }}
-                disabledList={[
-                  {
-                    name: "ERC20",
-                    description: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
-                  },
-                ]}
+                disabledRewards={{
+                  ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
+                }}
               />
             </>
           )}
