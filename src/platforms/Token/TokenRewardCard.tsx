@@ -4,13 +4,17 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import RewardCard from "components/common/RewardCard"
 import useMembership from "components/explorer/hooks/useMembership"
+import dynamic from "next/dynamic"
 import rewards from "platforms/rewards"
 import { GuildPlatform } from "types"
 import ClaimTokenButton from "./ClaimTokenButton"
-import TokenRewardCardEditMenu from "./TokenRewardCardEditMenu"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import { useClaimableTokens } from "./hooks/useCalculateToken"
 import useTokenClaimedAmount from "./hooks/useTokenClaimedAmount"
+
+const DynamicTokenRewardCardEditMenu = dynamic(
+  () => import("./TokenRewardCardEditMenu")
+)
 
 const TokenRewardCard = () => {
   const { isAdmin } = useGuildPermission()
@@ -80,7 +84,7 @@ const TokenRewardCard = () => {
           </>
         }
         cornerButton={
-          isAdmin && <TokenRewardCardEditMenu guildPlatform={guildPlatform} />
+          isAdmin && <DynamicTokenRewardCardEditMenu guildPlatform={guildPlatform} />
         }
       >
         <ClaimTokenButton isDisabled={claimableAmount <= 0} />
