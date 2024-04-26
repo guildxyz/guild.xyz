@@ -16,6 +16,7 @@ import { Coin, DotsThreeVertical, Wallet } from "phosphor-react"
 import FundPoolModal from "platforms/Token/FundPoolModal"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import usePool from "platforms/Token/hooks/usePool"
+import { useRef } from "react"
 import { formatUnits } from "viem"
 import WithdrawPoolModal from "./WithdrawPoolModal"
 
@@ -32,6 +33,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   const { data, isLoading, error } = usePool(chain, poolId)
   const toast = useToast()
   const { colorMode } = useColorMode()
+  const finalFocusRef = useRef()
 
   const {
     isOpen: fundIsOpen,
@@ -111,6 +113,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
           }
         >
           <TagRightIcon
+            ref={finalFocusRef}
             as={DotsThreeVertical}
             opacity={0.5}
             _hover={{ opacity: 1, cursor: "pointer" }}
@@ -129,12 +132,14 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
           })
           fundOnClose()
         }}
+        finalFocusRef={finalFocusRef}
       />
 
       <WithdrawPoolModal
         isOpen={withdrawIsOpen}
         onClose={withdrawOnClose}
         onSuccess={() => {}}
+        finalFocusRef={finalFocusRef}
       />
     </>
   )

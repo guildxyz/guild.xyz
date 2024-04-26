@@ -23,7 +23,7 @@ import ConversionNumberInput from "components/[guild]/RolePlatforms/components/A
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenBalance from "hooks/useTokenBalance"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
-import { useState } from "react"
+import { RefObject, useState } from "react"
 import Token from "static/icons/token.svg"
 import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
@@ -38,10 +38,12 @@ const FundPoolModal = ({
   isOpen,
   onClose,
   onSuccess,
+  finalFocusRef,
 }: {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  finalFocusRef?: RefObject<any>
 }) => {
   const {
     token: {
@@ -106,7 +108,7 @@ const FundPoolModal = ({
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose}>
+      <Modal isOpen={isOpen} onClose={handleClose} finalFocusRef={finalFocusRef}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />

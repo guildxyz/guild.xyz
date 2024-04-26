@@ -18,6 +18,7 @@ import SwitchNetworkButton from "components/[guild]/Requirements/components/Guil
 import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import useToast from "hooks/useToast"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
+import { RefObject } from "react"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
@@ -31,10 +32,12 @@ const WithdrawPoolModal = ({
   isOpen,
   onClose,
   onSuccess,
+  finalFocusRef,
 }: {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  finalFocusRef?: RefObject<any>
 }) => {
   const {
     token: {
@@ -73,7 +76,7 @@ const WithdrawPoolModal = ({
     `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} finalFocusRef={finalFocusRef}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
