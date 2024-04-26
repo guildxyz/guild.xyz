@@ -72,6 +72,10 @@ const useCollectToken = (
 
     const { request } = await publicClient.simulateContract({
       ...claimTransactionConfig,
+      /**
+       * The contract's claim method uses the caller's address, so we need to pass
+       * the `walletClient.account` param here
+       */
       account: walletClient.account,
     })
 
