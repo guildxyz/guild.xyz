@@ -1,6 +1,6 @@
 import { ButtonProps, useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import ClaimTokenModal from "./ClaimTokenModal"
+import dynamic from "next/dynamic"
 import {
   GeogatedCountryPopover,
   useIsFromGeogatedCountry,
@@ -9,6 +9,8 @@ import {
 type Props = {
   isDisabled?: boolean
 } & ButtonProps
+
+const DynamicClaimTokenModal = dynamic(() => import("./ClaimTokenModal"))
 
 const ClaimTokenButton = ({ isDisabled, children, ...rest }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -27,7 +29,7 @@ const ClaimTokenButton = ({ isDisabled, children, ...rest }: Props) => {
           {children ?? "Claim"}
         </Button>
       </GeogatedCountryPopover>
-      <ClaimTokenModal isOpen={isOpen} onClose={onClose} />
+      {!isDisabled && <DynamicClaimTokenModal isOpen={isOpen} onClose={onClose} />}
     </>
   )
 }
