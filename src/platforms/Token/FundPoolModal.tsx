@@ -17,13 +17,15 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
+import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import ConversionNumberInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionNumberInput"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenBalance from "hooks/useTokenBalance"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { useState } from "react"
 import Token from "static/icons/token.svg"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { formatUnits, parseUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
@@ -95,9 +97,11 @@ const FundPoolModal = ({
     onClose()
   }
 
+  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACTS[chain])
+
   const isDisabledLabel =
     owner &&
-    owner === userAddress &&
+    owner !== userAddress &&
     `Only the requirement's original creator can fund (${shortenHex(owner)})`
 
   return (
@@ -129,23 +133,31 @@ const FundPoolModal = ({
                 </InputGroup>
               </FormControl>
 
-              <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+              <Stack>
+                <AllowanceButton
+                  chain={chain}
+                  token={tokenAddress}
+                  contract={ERC20_CONTRACTS[chain]}
+                />
 
-              <Collapse in={isOnCorrectChain}>
-                <Tooltip label={isDisabledLabel} hasArrow>
-                  <Button
-                    size="lg"
-                    width="full"
-                    colorScheme="indigo"
-                    isDisabled={!isBalanceSufficient || !!isDisabledLabel}
-                    onClick={onSubmitFund}
-                    isLoading={isLoading}
-                    loadingText="Funding pool..."
-                  >
-                    {isBalanceSufficient ? "Fund" : "Insufficient balance"}
-                  </Button>
-                </Tooltip>
-              </Collapse>
+                <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+
+                <Collapse in={isOnCorrectChain && !!allowance}>
+                  <Tooltip label={isDisabledLabel} hasArrow>
+                    <Button
+                      size="lg"
+                      width="full"
+                      colorScheme="indigo"
+                      isDisabled={!isBalanceSufficient || !!isDisabledLabel}
+                      onClick={onSubmitFund}
+                      isLoading={isLoading}
+                      loadingText="Funding pool..."
+                    >
+                      {isBalanceSufficient ? "Fund" : "Insufficient balance"}
+                    </Button>
+                  </Tooltip>
+                </Collapse>
+              </Stack>
             </Stack>
           </ModalBody>
         </ModalContent>

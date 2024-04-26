@@ -14,6 +14,7 @@ import { ArrowRight, Lock, LockOpen } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
+import Token from "static/icons/token.svg"
 import { AddTokenFormType } from "../AddTokenPanel"
 import ConversionNumberInput from "./ConversionNumberInput"
 
@@ -111,10 +112,11 @@ const ConversionInput = () => {
 
         <InputGroup>
           <InputLeftElement>
-            <OptionImage
-              img={tokenLogo ?? imageUrl ?? `/guildLogos/132.svg`}
-              alt={tokenSymbol}
-            />
+            {tokenLogo || imageUrl ? (
+              <OptionImage img={tokenLogo ?? imageUrl} alt={chain} />
+            ) : (
+              <Token />
+            )}
           </InputLeftElement>
 
           <ConversionNumberInput

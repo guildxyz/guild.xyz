@@ -15,8 +15,10 @@ import {
   Tooltip,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import useToast from "hooks/useToast"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
+import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
@@ -39,7 +41,7 @@ const WithdrawPoolModal = ({
       data: { decimals, symbol },
     },
     guildPlatform: {
-      platformGuildData: { chain, poolId },
+      platformGuildData: { chain, poolId, tokenAddress },
     },
   } = useTokenRewardContext()
 
@@ -97,6 +99,12 @@ const WithdrawPoolModal = ({
                   <AlertIcon mt={0} /> If you withdraw all funds, no further rewards
                   can be claimed until the pool is funded again.
                 </Alert>
+
+                <AllowanceButton
+                  chain={chain}
+                  token={tokenAddress}
+                  contract={ERC20_CONTRACTS[chain]}
+                />
 
                 <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
 

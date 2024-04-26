@@ -1,10 +1,10 @@
 import { Collapse, Icon, Tooltip } from "@chakra-ui/react"
-import { Chain } from "@guildxyz/types"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { Question, Warning } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain

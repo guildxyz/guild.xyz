@@ -78,7 +78,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     (guildPlatform) =>
       guildPlatform.platformGuildData.chain === chain &&
       guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
-        tokenAddress.toLowerCase()
+        tokenAddress?.toLowerCase()
   )
 
   const continuePoolExists = () => {
@@ -156,15 +156,17 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
           <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
         </Collapse>
 
-        {isOnCorrectChain && (
+        <Collapse in={isOnCorrectChain && !skip}>
           <AllowanceButton
             chain={chain}
             token={tokenAddress}
             contract={ERC20_CONTRACTS[chain]}
           />
-        )}
+        </Collapse>
 
-        <Collapse in={(!!allowance || pickedCurrencyIsNative) && isOnCorrectChain}>
+        <Collapse
+          in={(!!allowance || skip || pickedCurrencyIsNative) && isOnCorrectChain}
+        >
           <Button
             size="lg"
             width="full"
