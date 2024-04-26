@@ -25,7 +25,7 @@ const useCollectToken = (
   rolePlatformId?: number,
   onSuccess?: () => void
 ) => {
-  const { id: guildId } = useGuild()
+  const { id: guildId, urlName, name } = useGuild()
   const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
   const { amount } = useTokenClaimFee(chain)
@@ -113,7 +113,7 @@ const useCollectToken = (
         setLoadingText("")
         tweetToast({
           title: "Successfully claimed your tokens!",
-          tweetText: `Just collected my tokens!`,
+          tweetText: `Just collected my tokens in the ${name} guild!\nguild.xyz/${urlName}`,
         })
 
         onSuccess?.()
