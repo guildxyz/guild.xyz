@@ -25,6 +25,24 @@ const isRequirementAmountOrAccess = (
   "type" in input &&
   (input.type === "REQUIREMENT_AMOUNT" || input.type === "REQUIREMENT_ACCESS")
 
+const getRewardSubmitData = (
+  data: any,
+  saveAs: "DRAFT" | "PUBLIC",
+  roleId: number
+) => ({
+  ...data.rolePlatforms[0].guildPlatform,
+  rolePlatforms: [
+    {
+      ...data.rolePlatforms[0],
+      roleId: Number(roleId),
+      platformRoleId:
+        data.rolePlatforms[0].guildPlatform.platformGuildId ||
+        `${roleId}-${Date.now()}`,
+      visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+    },
+  ],
+})
+
 /**
  * For requirement based rewards, we need to create the requirement first, so that we
  * can reference it in the dynamicAmount fields when creating the role platform.
@@ -52,24 +70,6 @@ const useCreateReqBasedTokenReward = ({
   })
 
   const { onSubmit: onCreateRoleSubmit } = useCreateRole({})
-
-  const getRewardSubmitData = (
-    data: any,
-    saveAs: "DRAFT" | "PUBLIC",
-    roleId: number
-  ) => ({
-    ...data.rolePlatforms[0].guildPlatform,
-    rolePlatforms: [
-      {
-        ...data.rolePlatforms[0],
-        roleId: Number(roleId),
-        platformRoleId:
-          data.rolePlatforms[0].guildPlatform.platformGuildId ||
-          `${roleId}-${Date.now()}`,
-        visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
-      },
-    ],
-  })
 
   const addToExistingRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     if (data.roleIds.length > 1) {
