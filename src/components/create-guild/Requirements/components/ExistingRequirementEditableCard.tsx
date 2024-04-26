@@ -156,12 +156,14 @@ const ExistingRequirementEditableCard = ({
         />
       </RequirementBaseCard>
 
-      <ExistingRequirementEditModal
-        isOpen={isEditOpen}
-        onClose={onEditClose}
-        requirementField={requirement}
-        finalFocusRef={editButtonRef}
-      />
+      {!isEditDisabled && (
+        <ExistingRequirementEditModal
+          isOpen={isEditOpen}
+          onClose={onEditClose}
+          requirementField={requirement}
+          finalFocusRef={editButtonRef}
+        />
+      )}
 
       {DeleteConfirmationAlert}
     </>

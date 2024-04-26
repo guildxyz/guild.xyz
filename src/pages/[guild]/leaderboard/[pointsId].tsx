@@ -126,7 +126,7 @@ const Leaderboard = () => {
         <Stack spacing={3}>
           {relatedTokenRewards.map((guildPlatform) => (
             <LeaderboardAirdropCard
-              key={`${guildPlatform.platformGuildData.tokenAddress}-${guildPlatform.platformGuildData.chain}`}
+              key={guildPlatform.id}
               guildPlatform={guildPlatform}
             />
           ))}

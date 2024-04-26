@@ -27,8 +27,8 @@ import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import { AddTokenFormType } from "../AddTokenPanel"
 import useIsBalanceSufficient from "../hooks/useIsBalanceSufficient"
+import AllowanceButton from "./AllowanceButton"
 import ConversionNumberInput from "./ConversionNumberInput"
-import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
 
 const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
@@ -157,7 +157,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
         </Collapse>
 
         {isOnCorrectChain && (
-          <GenericBuyAllowanceButton
+          <AllowanceButton
             chain={chain}
             token={tokenAddress}
             contract={ERC20_CONTRACTS[chain]}
