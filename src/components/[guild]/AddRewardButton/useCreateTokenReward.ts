@@ -1,3 +1,4 @@
+import { Schemas } from "@guildxyz/types"
 import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
@@ -14,6 +15,15 @@ type CreateData = {
   requirements: Requirement[]
   name?: string
 }
+
+const isRequirementAmountOrAccess = (
+  input: Schemas["DynamicAmount"]["operation"]["input"]
+): input is Extract<
+  Schemas["DynamicAmount"]["operation"]["input"],
+  { type: "REQUIREMENT_AMOUNT" } | { type: "REQUIREMENT_ACCESS" }
+> =>
+  "type" in input &&
+  (input.type === "REQUIREMENT_AMOUNT" || input.type === "REQUIREMENT_ACCESS")
 
 /**
  * For requirement based rewards, we need to create the requirement first, so that we
@@ -81,16 +91,28 @@ const useCreateReqBasedTokenReward = ({
          * Now the reward can be added, as we now have the requirementId that is
          * needed in the reward's rolePlatform's dynamicData field.
          */
+        // We don't use "SUM" yet, so we can early return here in order to have proper types
+        if (data.rolePlatforms[0].dynamicAmount.operation.type !== "SUM") return
 
-        const modifiedData: any = { ...data }
+        const modifiedData = { ...data }
         const tokenGuildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
 
         // Setting dynamic amount fields
-        modifiedData.rolePlatforms[0].dynamicAmount.operation.input.roleId = Number(
-          data.roleIds[0]
+        if (
+          isRequirementAmountOrAccess(
+            modifiedData.rolePlatforms[0].dynamicAmount.operation.input
+          )
         )
-        modifiedData.rolePlatforms[0].dynamicAmount.operation.input.requirementId =
-          req.id
+          modifiedData.rolePlatforms[0].dynamicAmount.operation.input.roleId =
+            Number(data.roleIds[0])
+
+        if (
+          isRequirementAmountOrAccess(
+            modifiedData.rolePlatforms[0].dynamicAmount.operation.input
+          )
+        )
+          modifiedData.rolePlatforms[0].dynamicAmount.operation.input.requirementId =
+            req.id
 
         if (tokenGuildPlatformExists) {
           // Removing guild platform data, as we add to an already existing one

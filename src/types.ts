@@ -561,7 +561,7 @@ type Role = SimpleRole & {
 }
 
 type GuildPlatform = {
-  id: number
+  id?: number
   platformId: PlatformType
   platformName?: PlatformName
   platformGuildId: string
