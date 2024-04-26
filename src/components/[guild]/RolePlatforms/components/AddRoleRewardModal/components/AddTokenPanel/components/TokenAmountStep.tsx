@@ -12,19 +12,19 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { TokenRewardType } from "../AddTokenPanel"
+import { AddTokenFormType, TokenRewardType } from "../AddTokenPanel"
 import DynamicAmount from "./DynamicAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
-  const { setValue } = useFormContext()
+  const { control, setValue } = useFormContext<AddTokenFormType>()
 
-  const type: TokenRewardType = useWatch({ name: `type` })
+  const type: TokenRewardType = useWatch({ control, name: `type` })
 
-  const requirements = useWatch({ name: `requirements` })
-  const multiplier = useWatch({ name: `multiplier` })
-  const addition = useWatch({ name: `addition` })
-  const chain = useWatch({ name: `chain` })
-  const address = useWatch({ name: `tokenAddress` })
+  const requirements = useWatch({ control, name: `requirements` })
+  const multiplier = useWatch({ control, name: `multiplier` })
+  const addition = useWatch({ control, name: `addition` })
+  const chain = useWatch({ control, name: `chain` })
+  const address = useWatch({ control, name: `tokenAddress` })
 
   const accessedTokens = useTokenRewards()
 

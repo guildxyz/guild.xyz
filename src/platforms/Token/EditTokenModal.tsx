@@ -4,11 +4,8 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
-  Circle,
   Divider,
-  FormControl,
   HStack,
-  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,34 +14,28 @@ import {
   ModalOverlay,
   Stack,
   Text,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
 import ConversionInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionInput"
-import CustomSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/CustomSnapshotForm"
-import { SnapshotOption } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/DynamicAmount"
-import GuildPointsSnapshotForm from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/GuildPointsSnapshotForm"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
 import Button from "components/common/Button"
-import RadioSelect from "components/common/RadioSelect"
-import { Option } from "components/common/RadioSelect/RadioSelect"
 import { SectionTitle } from "components/common/Section"
 import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import { ArrowSquareIn, ListNumbers } from "phosphor-react"
+import { ArrowSquareIn } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import Star from "static/icons/star.svg"
 import { Requirement } from "types"
+import DynamicTypeForm from "./DynamicTypeForm"
 import useRolePlatforms from "./hooks/useRolePlatforms"
 
 const EditTokenModal = ({
@@ -59,36 +50,6 @@ const EditTokenModal = ({
   } = useTokenRewardContext()
 
   const [changeSnapshot, setChangeSnapshot] = useState(false)
-
-  const circleBgColor = useColorModeValue("blackAlpha.200", "gray.600")
-  const [snapshotOption, setSnapshotOption] = useState(SnapshotOption.GUILD_POINTS)
-
-  const dynamicOptions: Option[] = [
-    {
-      value: SnapshotOption.GUILD_POINTS,
-      title: "Guild points snapshot",
-      description:
-        "Calculate rewards based on users' Guild points at a specific time",
-      leftComponent: (
-        <Circle bg={circleBgColor} p={3}>
-          <Icon as={Star} />
-        </Circle>
-      ),
-      children: <GuildPointsSnapshotForm />,
-    },
-    {
-      value: SnapshotOption.CUSTOM,
-      title: "Custom snapshot",
-      description:
-        "Upload a custom snapshot to assign unique numbers to users for reward calculation",
-      leftComponent: (
-        <Circle bg={circleBgColor} p={3}>
-          <Icon as={ListNumbers} />
-        </Circle>
-      ),
-      children: <CustomSnapshotForm />,
-    },
-  ]
 
   const methods = useForm<AddTokenFormType>({
     mode: "all",
@@ -260,18 +221,7 @@ const EditTokenModal = ({
                       </AccordionButton>
 
                       <AccordionPanel p={0} mt={2}>
-                        <FormControl>
-                          <RadioSelect
-                            options={dynamicOptions}
-                            colorScheme="primary"
-                            onChange={(val) => {
-                              setSnapshotOption(SnapshotOption[val])
-                              if (val === SnapshotOption.CUSTOM)
-                                setValue("data.guildPlatformId", null)
-                            }}
-                            value={snapshotOption.toString()}
-                          />
-                        </FormControl>
+                        <DynamicTypeForm />
                       </AccordionPanel>
                     </AccordionItem>
                   </Accordion>

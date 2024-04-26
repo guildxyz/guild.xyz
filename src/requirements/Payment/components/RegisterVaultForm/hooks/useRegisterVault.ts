@@ -3,8 +3,9 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToken from "hooks/useToken"
 import feeCollectorAbi from "static/abis/feeCollector"
+import { findEvent } from "utils/findEventInTxResponse"
 import { FEE_COLLECTOR_CONTRACT, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { Abi, ContractEventName, DecodeEventLogReturnType, parseUnits } from "viem"
+import { parseUnits } from "viem"
 import { useChainId } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 
@@ -14,15 +15,6 @@ type RegisterVaultParams = {
   fee: number
   chain: Chain
 }
-
-const findEvent = <TAbi extends Abi, TEventName extends ContractEventName<TAbi>>(
-  events: DecodeEventLogReturnType<TAbi, ContractEventName<TAbi>>[],
-  eventName: TEventName
-): DecodeEventLogReturnType<TAbi, TEventName> | undefined =>
-  events.find((event) => event.eventName === eventName) as DecodeEventLogReturnType<
-    TAbi,
-    TEventName
-  >
 
 const useRegisterVault = ({
   chain,

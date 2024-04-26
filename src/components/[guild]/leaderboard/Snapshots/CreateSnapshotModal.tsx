@@ -16,12 +16,12 @@ import {
 import { AddPointsFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/AddPointsPanel"
 import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useCreateSnapshot from "hooks/useCreateSnapshot"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { useCreateSnapshot } from "hooks/useSnapshot"
 import { useRouter } from "next/router"
-import { useEffect, useMemo, useState } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { useMemo, useState } from "react"
+import { FormProvider, useController, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import SnapshotTable from "./SnapshotTable"
 
@@ -53,48 +53,34 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
     mode: "all",
   })
 
-  const { setValue } = methods
+  const { control } = methods
 
-  const selectedExistingId = useWatch({
+  const { field: selectedExistingId } = useController({
+    control,
     name: "data.guildPlatformId",
+    defaultValue: router?.query?.pointsId
+      ? Number(router?.query?.pointsId)
+      : existingPointsRewards?.[0]?.id,
   })
 
-  const {
-    submitCreate,
-    isLoading: isSubmitLoading,
-    error: submitError,
-  } = useCreateSnapshot(selectedExistingId)
-
-  useEffect(() => {
-    if (!submitError) return
-    showErrorToast("Failed to create snapshot")
-    console.error(submitError)
-  }, [submitError, showErrorToast])
-
-  const onSubmit = async () => {
-    const result = await submitCreate({ shouldStatusUpdate: false, name: name })
-    if (result) {
-      onSuccess(result?.id)
-    }
-  }
+  const { onSubmit: onCreateSnasphotSubmit, isLoading: isSubmitLoading } =
+    useCreateSnapshot({
+      guildPlatformId: Number(selectedExistingId.value),
+      onSuccess: (res) => onSuccess(res?.id),
+      onError: (err) => {
+        console.error(err)
+        showErrorToast("Failed to create snapshot")
+      },
+    })
 
   const { data } = useSWRWithOptionalAuth(
-    !!guildId && !!selectedExistingId
-      ? `/v2/guilds/${guildId}/points/${selectedExistingId}/leaderboard`
+    !!guildId && !!selectedExistingId.value
+      ? `/v2/guilds/${guildId}/points/${selectedExistingId.value}/leaderboard`
       : null,
     { revalidateOnMount: true },
     false,
     false
   )
-
-  useEffect(() => {
-    const currentPointsId =
-      router?.query?.pointsId && Number(router?.query?.pointsId)
-    setValue(
-      "data.guildPlatformId",
-      currentPointsId ?? existingPointsRewards?.[0]?.id
-    )
-  }, [existingPointsRewards, router?.query?.pointsId, guildId, setValue])
 
   const leaderboardToSnapshot = useMemo(() => {
     if (!data?.leaderboard) return []
@@ -108,53 +94,53 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
   }, [data?.leaderboard])
 
   return (
-    <>
-      <FormProvider {...methods}>
-        <Modal size="lg" isOpen={isOpen} onClose={onClose} colorScheme="dark">
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader pb="4">Create snapshot</ModalHeader>
-            <ModalCloseButton />
+    <FormProvider {...methods}>
+      <Modal size="lg" isOpen={isOpen} onClose={onClose} colorScheme="dark">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader pb="4">Create snapshot</ModalHeader>
+          <ModalCloseButton />
 
-            <ModalBody>
-              <Text colorScheme={"gray"} fontWeight={"medium"} mb="6">
-                Capture a snapshot of the current leaderboard state to use for token
-                rewards, or as a requirement for roles
-              </Text>
-              <Stack gap={4}>
-                <ExistingPointsTypeSelect
-                  existingPointsRewards={existingPointsRewards}
-                  selectedExistingId={selectedExistingId}
+          <ModalBody>
+            <Text colorScheme={"gray"} fontWeight={"medium"} mb="6">
+              Capture a snapshot of the current leaderboard state to use for token
+              rewards, or as a requirement for roles
+            </Text>
+            <Stack gap={4}>
+              <ExistingPointsTypeSelect
+                existingPointsRewards={existingPointsRewards}
+                selectedExistingId={selectedExistingId.value}
+              />
+              <FormControl>
+                <FormLabel>Snapshot name</FormLabel>
+                <Input value={name} onChange={(e) => setName(e.target.value)} />
+              </FormControl>
+              <Box>
+                <Text fontWeight={"medium"} mb="2">
+                  Preview
+                </Text>
+                <SnapshotTable
+                  snapshotData={leaderboardToSnapshot}
+                  chakraProps={{ mt: 0 }}
                 />
-                <FormControl>
-                  <FormLabel>Snapshot name</FormLabel>
-                  <Input value={name} onChange={(e) => setName(e.target.value)} />
-                </FormControl>
-                <Box>
-                  <Text fontWeight={"medium"} mb="2">
-                    Preview
-                  </Text>
-                  <SnapshotTable
-                    snapshotData={leaderboardToSnapshot}
-                    chakraProps={{ mt: 0 }}
-                  />
-                </Box>
-              </Stack>
+              </Box>
+            </Stack>
 
-              <Button
-                mt={8}
-                w="full"
-                colorScheme={"green"}
-                onClick={onSubmit}
-                isLoading={isSubmitLoading}
-              >
-                Create
-              </Button>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      </FormProvider>
-    </>
+            <Button
+              mt={8}
+              w="full"
+              colorScheme={"green"}
+              onClick={() =>
+                onCreateSnasphotSubmit({ shouldStatusUpdate: false, name: name })
+              }
+              isLoading={isSubmitLoading}
+            >
+              Create
+            </Button>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </FormProvider>
   )
 }
 

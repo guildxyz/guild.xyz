@@ -13,12 +13,12 @@ import {
   Th,
   Thead,
   Tr,
-  useColorMode,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import CopyableAddress from "components/common/CopyableAddress"
 import useDebouncedState from "hooks/useDebouncedState"
 import { MagnifyingGlass } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 
 type Props = {
   snapshotData: {
@@ -30,22 +30,17 @@ type Props = {
 }
 
 const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
-  const { colorMode } = useColorMode()
-
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebouncedState(search)
 
-  const [searchResults, setSearchResults] = useState(snapshotData)
+  const borderColor = useColorModeValue("gray.200", "gray.600")
+  const borderRightColor = useColorModeValue("blackAlpha.200", "whiteAlpha.200")
+  const bgColor = useColorModeValue("gray.200", "gray.700")
 
-  useEffect(() => {
-    if (!debouncedSearch) {
-      setSearchResults(snapshotData)
-      return
-    }
-    setSearchResults(
-      snapshotData.filter((row) =>
-        row.address.includes(debouncedSearch.trim().toLowerCase())
-      )
+  const searchResults = useMemo(() => {
+    if (!debouncedSearch) return snapshotData
+    return snapshotData.filter((row) =>
+      row.address.includes(debouncedSearch.trim().toLowerCase())
     )
   }, [snapshotData, debouncedSearch])
 
@@ -55,7 +50,7 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
         maxH={64}
         overflowY={"auto"}
         border={"1px"}
-        borderColor={colorMode === "dark" ? "gray.600" : "gray.200"}
+        borderColor={borderColor}
         rounded={"md"}
         mt={4}
         {...chakraProps}
@@ -70,10 +65,8 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
               <Th
                 position={"sticky"}
                 top={0}
-                borderRightColor={
-                  colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"
-                }
-                background={colorMode === "dark" ? "gray.700" : "gray.200"}
+                borderRightColor={borderRightColor}
+                background={bgColor}
                 zIndex={2}
               >
                 #
@@ -81,10 +74,8 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
               <Th
                 position={"sticky"}
                 top={0}
-                borderRightColor={
-                  colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"
-                }
-                background={colorMode === "dark" ? "gray.700" : "gray.200"}
+                borderRightColor={borderRightColor}
+                background={bgColor}
                 zIndex={2}
               >
                 <InputGroup>
@@ -119,7 +110,7 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
                 letterSpacing={"normal"}
                 position={"sticky"}
                 top={0}
-                background={colorMode === "dark" ? "gray.700" : "gray.200"}
+                background={bgColor}
                 zIndex={2}
               >
                 Points

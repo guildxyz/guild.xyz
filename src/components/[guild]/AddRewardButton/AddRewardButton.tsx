@@ -24,16 +24,10 @@ import useToast from "hooks/useToast"
 import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards from "platforms/rewards"
+import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import {
-  PlatformName,
-  PlatformType,
-  Requirement,
-  RoleFormType,
-  Visibility,
-} from "types"
+import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -85,6 +79,7 @@ const AddRewardButton = (): JSX.Element => {
     step,
     setStep,
     activeTab,
+    setActiveTab,
 
     isOpen,
     onOpen,
@@ -167,14 +162,14 @@ const AddRewardButton = (): JSX.Element => {
       data.rolePlatforms[0].dynamicAmount.operation.input.type ===
       "REQUIREMENT_AMOUNT"
 
-    const guildPlatfomrExists = !!data.rolePlatforms[0].guildPlatformId
+    const guildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
 
     if (isRequirementBased) {
-      await submitCreateReqBased(data, saveAs)
+      submitCreateReqBased(data, saveAs)
       return
     } else {
       /** TODO: Write when static reward is needed */
-      if (guildPlatfomrExists) {
+      if (guildPlatformExists) {
         data.rolePlatforms[0].guildPlatform = {
           platformId: PlatformType.ERC20,
           platformName: "ERC20",
@@ -226,21 +221,9 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const { AddRewardPanel, RewardPreview } = rewards[selection] ?? {}
-
   const showErrorToast = useShowErrorToast()
-
   const lightModalBgColor = useColorModeValue("white", "gray.700")
-
   const rolePlatform = methods.getValues("rolePlatforms.0")
-
-  const platformSize = (platform: PlatformName) => {
-    switch (platform) {
-      case "ERC20":
-        return "xl"
-      default:
-        return "4xl"
-    }
-  }
 
   return (
     <>
@@ -274,7 +257,7 @@ const AddRewardButton = (): JSX.Element => {
               onAddRewardModalClose()
             }
           }}
-          size={step === "HOME" ? platformSize(selection) : "2xl"}
+          size={step === "HOME" ? modalSizeForPlatform(selection) : "2xl"}
           scrollBehavior="inside"
           colorScheme="dark"
         >
@@ -375,6 +358,7 @@ const AddRewardButton = (): JSX.Element => {
                     startSessionRecording()
                     captureEvent("[discord setup] started in existing guild")
                     setSelection(selected)
+                    if (selected === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
                   }}
                   pb="4"
                 />

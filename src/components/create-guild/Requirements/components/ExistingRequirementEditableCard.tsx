@@ -99,17 +99,15 @@ const ExistingRequirementEditableCard = ({
       title="Delete requirement"
       description={
         requirement.type === "GUILD_SNAPSHOT" ? (
-          <>
-            <Alert status="warning">
-              <AlertIcon mt={0} />{" "}
-              <Text>
-                {" "}
-                <strong>This requirement may be linked to a token reward</strong> If
-                so, deleting this requirement will render the reward unclaimable
-                until it is configured with a new snapshot.
-              </Text>
-            </Alert>
-          </>
+          <Alert status="warning">
+            <AlertIcon mt={0} />{" "}
+            <Text>
+              {" "}
+              <strong>This requirement may be linked to a token reward</strong> If
+              so, deleting this requirement will render the reward unclaimable until
+              it is configured with a new snapshot.
+            </Text>
+          </Alert>
         ) : (
           <>Are you sure you want to delete this requirement?</>
         )

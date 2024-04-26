@@ -33,7 +33,7 @@ const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     >
       {"Be included in "}
       {isHidden ? (
-        "snapshot"
+        "this snapshot"
       ) : (
         <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
           {"snapshot"}

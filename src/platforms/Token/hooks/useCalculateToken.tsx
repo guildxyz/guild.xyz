@@ -4,7 +4,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import useTokenData from "hooks/useTokenData"
 import { GuildPlatform, RolePlatform } from "types"
-import useClaimedAmount from "./useTokenClaimedAmount"
+import useTokenClaimedAmount from "./useTokenClaimedAmount"
 
 const calcRequirementAmount = (
   requirement: any,
@@ -29,7 +29,7 @@ const calcRequirementAmount = (
   )
 }
 
-const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
+const useClaimableTokensForRolePlatform = (rolePlatform: RolePlatform) => {
   const { addresses } = useUser()
 
   const dynamicAmount = rolePlatform.dynamicAmount
@@ -41,7 +41,7 @@ const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
     data: { decimals },
   } = useTokenData(chain, tokenAddress)
 
-  const { data: alreadyClaimed } = useClaimedAmount(
+  const { data: alreadyClaimed } = useTokenClaimedAmount(
     chain,
     poolId,
     [rolePlatform.id],
@@ -77,7 +77,7 @@ const useCalculateForRolePlatform = (rolePlatform: RolePlatform) => {
   return getSum() - (alreadyClaimed?.[0] || 0)
 }
 
-const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
+const useClaimableTokens = (guildPlatform: GuildPlatform) => {
   const { addresses } = useUser()
   const { roles } = useGuild()
 
@@ -128,7 +128,7 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
     guildPlatform.platformGuildData.tokenAddress
   )
 
-  const { data: alreadyClaimedAmounts } = useClaimedAmount(
+  const { data: alreadyClaimedAmounts } = useTokenClaimedAmount(
     guildPlatform.platformGuildData.chain,
     guildPlatform.platformGuildData.poolId,
     getRolePlatforms().map((rp) => rp.id),
@@ -150,7 +150,7 @@ const useCalculateClaimableTokens = (guildPlatform: GuildPlatform) => {
     return sum - alreadyClaimed
   }
 
-  return { getValue }
+  return getValue()
 }
 
-export { useCalculateClaimableTokens, useCalculateForRolePlatform }
+export { useClaimableTokens, useClaimableTokensForRolePlatform }

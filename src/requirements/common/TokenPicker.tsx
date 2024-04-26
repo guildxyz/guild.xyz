@@ -21,7 +21,6 @@ type Props = {
   fieldName: string
   isDisabled?: boolean
   customImage?: string
-  excludeCoins?: boolean
 } & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -35,7 +34,6 @@ const TokenPicker = ({
   fieldName,
   isDisabled,
   customImage,
-  excludeCoins,
   ...rest
 }: Props): JSX.Element => {
   const { trigger } = useFormContext()
@@ -73,8 +71,8 @@ const TokenPicker = ({
       value: token.address,
       decimals: token.decimals,
     }))
-    return excludeCoins ? mapped?.filter((token) => !isCoin(token.value)) : mapped
-  }, [tokens, excludeCoins, isCoin])
+    return mapped
+  }, [tokens])
 
   const {
     data: { name: tokenName, symbol: tokenSymbol, decimals: tokenDecimals },

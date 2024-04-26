@@ -104,62 +104,55 @@ const DynamicRewardModal = ({
   }
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader>
-            <Text>
-              <Icon
-                color="green.500"
-                boxSize={"14px"}
-                weight="fill"
-                as={Lightning}
-              />{" "}
-              Dynamic Reward
-            </Text>
-          </ModalHeader>
+    <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader>
+          <Text>
+            <Icon color="green.500" boxSize={4} weight="fill" as={Lightning} />{" "}
+            Dynamic Reward
+          </Text>
+        </ModalHeader>
 
-          <ModalBody>
-            <Stack gap={5}>
-              <SnapshotRequirementDetails
-                rolePlatform={rolePlatform}
-                requirement={linkedRequirement}
-              />
+        <ModalBody>
+          <Stack gap={5}>
+            <SnapshotRequirementDetails
+              rolePlatform={rolePlatform}
+              requirement={linkedRequirement}
+            />
 
-              <Stack>
-                <Divider mb={1} mt={3} />
-                <Accordion allowToggle>
-                  <AccordionItem border={"none"}>
-                    <AccordionButton
-                      display={"flex"}
-                      rounded={"lg"}
-                      fontWeight={"semibold"}
-                      px={0}
-                      opacity={0.5}
-                      _hover={{ opacity: 1 }}
-                    >
-                      <Icon as={Question} mr={2} />
-                      What's a dynamic reward?
-                      <AccordionIcon ml={"auto"} />
-                    </AccordionButton>
-                    <AccordionPanel>
-                      <Text color={"GrayText"}>
-                        Dynamic rewards adjust the type or amount of rewards you can
-                        earn based on various factors, like completing specific
-                        requirements, accumulating points, or your activities within
-                        the guild.
-                      </Text>
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Stack>
+            <Stack>
+              <Divider mb={1} mt={3} />
+              <Accordion allowToggle>
+                <AccordionItem border={"none"}>
+                  <AccordionButton
+                    display={"flex"}
+                    rounded={"lg"}
+                    fontWeight={"semibold"}
+                    px={0}
+                    opacity={0.5}
+                    _hover={{ opacity: 1 }}
+                  >
+                    <Icon as={Question} mr={2} />
+                    What's a dynamic reward?
+                    <AccordionIcon ml={"auto"} />
+                  </AccordionButton>
+                  <AccordionPanel>
+                    <Text color={"GrayText"}>
+                      Dynamic rewards adjust the type or amount of rewards you can
+                      earn based on various factors, like completing specific
+                      requirements, accumulating points, or your activities within
+                      the guild.
+                    </Text>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
             </Stack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+          </Stack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 

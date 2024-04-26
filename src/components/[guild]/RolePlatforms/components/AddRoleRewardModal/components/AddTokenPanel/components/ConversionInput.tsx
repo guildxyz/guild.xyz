@@ -14,10 +14,11 @@ import { ArrowRight, Lock, LockOpen } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
+import { AddTokenFormType } from "../AddTokenPanel"
 import ConversionNumberInput from "./ConversionNumberInput"
 
 const ConversionInput = () => {
-  const { control, setValue } = useFormContext()
+  const { control, setValue } = useFormContext<AddTokenFormType>()
 
   const [conversionLocked, setConversionLocked] = useState(false)
   const [conversionAmounts, setConversionAmounts] = useState(["1", "1"])
@@ -79,7 +80,7 @@ const ConversionInput = () => {
           variant={"ghost"}
           aria-label="Lock/unlock conversion"
           onClick={toggleConversionLock}
-        ></IconButton>
+        />
       </HStack>
 
       <HStack w={"full"}>

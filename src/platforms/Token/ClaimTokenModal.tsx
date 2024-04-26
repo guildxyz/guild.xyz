@@ -27,11 +27,11 @@ import TokenClaimFeeTable from "./ClaimFeeTable"
 import { GeogatedCountryAlert } from "./GeogatedCountryAlert"
 import { useTokenRewardContext } from "./TokenRewardContext"
 import TokenRolePlatformClaimCard from "./TokenRolePlatformClaimCard"
-import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
+import { useClaimableTokens } from "./hooks/useCalculateToken"
 import useCollectToken from "./hooks/useCollectToken"
 import usePool from "./hooks/usePool"
 import useRolePlatforms from "./hooks/useRolePlatforms"
-import useClaimedAmount from "./hooks/useTokenClaimedAmount"
+import useTokenClaimedAmount from "./hooks/useTokenClaimedAmount"
 
 type Props = {
   isOpen: boolean
@@ -43,9 +43,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const modalBg = useCardBg()
 
   const { token, guildPlatform, imageUrl } = useTokenRewardContext()
-
-  const { getValue } = useCalculateClaimableTokens(guildPlatform)
-  const claimableAmount = getValue()
+  const claimableAmount = useClaimableTokens(guildPlatform)
 
   const { refetch } = usePool(
     guildPlatform.platformGuildData.chain,
@@ -67,7 +65,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
     }
   )
 
-  const { refetch: refetchClaimedAmount } = useClaimedAmount(
+  const { refetch: refetchClaimedAmount } = useTokenClaimedAmount(
     guildPlatform.platformGuildData.chain,
     guildPlatform.platformGuildData.poolId,
     rolePlatforms.map((rp) => rp.id),

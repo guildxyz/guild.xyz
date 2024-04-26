@@ -16,7 +16,7 @@ import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedT
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformGuildData, PlatformType } from "types"
+import { PlatformGuildData, PlatformType, Requirement } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
@@ -44,6 +44,7 @@ export type AddTokenFormType = {
   snapshotId: number
   type: TokenRewardType
   staticValue?: number
+  requirements?: Requirement[]
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -70,15 +71,12 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const accessedTokens = useTokenRewards()
 
-  const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) =>
-    accessedTokens.find(
-      (guildPlatform) =>
-        guildPlatform.platformGuildData.chain === chain &&
-        guildPlatform.platformGuildData.tokenAddress === tokenAddress
-    )
-
   const constructSubmitData = (_data) => {
-    const platform = platformForToken(_data.chain, _data.tokenAddress)
+    const platform = accessedTokens.find(
+      (guildPlatform) =>
+        guildPlatform.platformGuildData.chain === _data.chain &&
+        guildPlatform.platformGuildData.tokenAddress === _data.tokenAddress
+    )
 
     const dynamicAmount = {
       ...(_data.type === TokenRewardType.DYNAMIC_SNAPSHOT && {
@@ -104,8 +102,6 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           },
         },
       }),
-
-      ...(_data.type === TokenRewardType.DYNAMIC_POINTS && {}),
     } satisfies Schemas["DynamicAmount"]
 
     const rolePlatformPart = {

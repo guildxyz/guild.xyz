@@ -106,32 +106,30 @@ const SnapshotSelector = () => {
           />
         </>
       ) : (
-        <>
-          <FormControl>
-            <Flex justifyContent={"space-between"} w="full">
-              <FormLabel>Select snapshot</FormLabel>
-              <Button
-                size="xs"
-                variant="ghost"
-                borderRadius={"lg"}
-                onClick={onOpen}
-                isDisabled={!selectedPointsId}
-              >
-                <Text colorScheme={"gray"}>Create new</Text>
-              </Button>
-            </Flex>
-            <ControlledSelect
+        <FormControl>
+          <Flex justifyContent={"space-between"} w="full">
+            <FormLabel>Select snapshot</FormLabel>
+            <Button
+              size="xs"
+              variant="ghost"
+              borderRadius={"lg"}
+              onClick={onOpen}
               isDisabled={!selectedPointsId}
-              name={`snapshotId`}
-              options={options}
-            ></ControlledSelect>
-            <CreateSnapshotModal
-              onClose={onClose}
-              onSuccess={handleCreateSuccess}
-              isOpen={isOpen}
-            />
-          </FormControl>
-        </>
+            >
+              <Text colorScheme={"gray"}>Create new</Text>
+            </Button>
+          </Flex>
+          <ControlledSelect
+            isDisabled={!selectedPointsId}
+            name={`snapshotId`}
+            options={options}
+          />
+          <CreateSnapshotModal
+            onClose={onClose}
+            onSuccess={handleCreateSuccess}
+            isOpen={isOpen}
+          />
+        </FormControl>
       )}
     </>
   )

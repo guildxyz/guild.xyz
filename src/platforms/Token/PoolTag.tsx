@@ -7,7 +7,6 @@ import {
   TagProps,
   TagRightIcon,
   Text,
-  Tooltip,
   useColorMode,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -17,7 +16,6 @@ import { Coin, DotsThreeVertical, Wallet } from "phosphor-react"
 import FundPoolModal from "platforms/Token/FundPoolModal"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import usePool from "platforms/Token/hooks/usePool"
-import { useState } from "react"
 import { formatUnits } from "viem"
 import WithdrawPoolModal from "./WithdrawPoolModal"
 
@@ -31,13 +29,10 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   } = useTokenRewardContext()
 
   const chain = guildPlatform.platformGuildData.chain
-
   const { data, isLoading, error } = usePool(chain, poolId)
-
   const toast = useToast()
-
   const { colorMode } = useColorMode()
-  const [showClaimed, setShowClaimed] = useState(false)
+
   const {
     isOpen: fundIsOpen,
     onOpen: fundOnOpen,
@@ -71,15 +66,12 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
         borderWidth={"1px"}
         borderColor={colorMode === "dark" ? "whiteAlpha.300" : "blackAlpha.300"}
       >
-        <Tooltip label={showClaimed ? "Show available" : "Show claimed"} hasArrow>
-          <>
-            {" "}
-            <Text opacity={0.5} mr={1}>
-              Balance:
-            </Text>{" "}
-            {balance} {symbol}{" "}
-          </>
-        </Tooltip>
+        <Text opacity={0.5} mr={1}>
+          Balance:
+        </Text>
+        <Text>
+          {balance} {symbol}
+        </Text>
 
         <ClickableTagPopover
           options={

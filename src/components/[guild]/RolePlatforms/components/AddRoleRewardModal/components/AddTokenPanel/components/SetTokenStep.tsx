@@ -74,33 +74,27 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
             <HStack justifyContent={"space-between"}>
               {!imageUrl ? (
                 <>
-                  {
-                    <>
-                      <Button
-                        variant="link"
-                        fontSize="small"
-                        leftIcon={<Upload />}
-                        {...getRootProps()}
-                        isLoading={uploader.isUploading}
-                        loadingText={`Uploading (${(progress * 100).toFixed()}%)`}
-                      >
-                        Upload custom image
-                      </Button>
-                      <input {...getInputProps()} accept="image/*" hidden />
-                    </>
-                  }
-                </>
-              ) : (
-                <>
                   <Button
                     variant="link"
                     fontSize="small"
-                    onClick={() => setValue("imageUrl", null)}
-                    leftIcon={<X />}
+                    leftIcon={<Upload />}
+                    {...getRootProps()}
+                    isLoading={uploader.isUploading}
+                    loadingText={`Uploading (${(progress * 100).toFixed()}%)`}
                   >
-                    Remove custom image
+                    Upload custom image
                   </Button>
+                  <input {...getInputProps()} accept="image/*" hidden />
                 </>
+              ) : (
+                <Button
+                  variant="link"
+                  fontSize="small"
+                  onClick={() => setValue("imageUrl", null)}
+                  leftIcon={<X />}
+                >
+                  Remove custom image
+                </Button>
               )}
             </HStack>
           </>

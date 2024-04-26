@@ -4,6 +4,7 @@ import useRequirements from "components/[guild]/hooks/useRequirements"
 import GuildLogo from "components/common/GuildLogo"
 import { ArrowRight } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
+import { useMemo } from "react"
 import Star from "static/icons/star.svg"
 import { RolePlatform } from "types"
 
@@ -15,11 +16,11 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
     },
   } = useTokenRewardContext()
 
-  const calcDynamic = () => {
+  const amount = useMemo(() => {
     const operation: any = platform.dynamicAmount.operation
     const params = operation.params
     return Number((params?.multiplier + params?.addition).toFixed(7))
-  }
+  }, [platform])
 
   const { data: requirements } = useRequirements(
     platform.dynamicAmount?.operation?.input?.[0]?.roleId
@@ -38,7 +39,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
   return (
     <>
       <Tooltip
-        label={`You are rewarded ${calcDynamic()} ${symbol} for each of your ${
+        label={`You are rewarded ${amount} ${symbol} for each of your ${
           pointType?.platformGuildData.name || "points"
         }.`}
         hasArrow
@@ -62,8 +63,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
             </>
           )}
           1 <Icon as={ArrowRight} boxSize={"10px"} ml={2} />{" "}
-          <GuildLogo imageUrl={imageUrl} size={"16px"} mr={1} ml={2} />{" "}
-          {calcDynamic()}
+          <GuildLogo imageUrl={imageUrl} size={"16px"} mr={1} ml={2} /> {amount}
         </Tag>
       </Tooltip>
     </>

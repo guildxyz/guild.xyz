@@ -2,8 +2,8 @@ import { Chain } from "@guildxyz/types"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
+import { findEvent } from "utils/findEventInTxResponse"
 import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { Abi, ContractEventName, DecodeEventLogReturnType } from "viem"
 
 const useRegisterPool = (
   owner: string,
@@ -15,20 +15,13 @@ const useRegisterPool = (
   const showErrorToast = useShowErrorToast()
   const tokenIsNative = token === NULL_ADDRESS
 
-  const transactionConfig = tokenIsNative
-    ? {
-        abi: tokenRewardPoolAbi,
-        address: ERC20_CONTRACTS[chain],
-        functionName: "registerPool",
-        args: [owner, token, initialTokenAmount],
-        value: initialTokenAmount,
-      }
-    : {
-        abi: tokenRewardPoolAbi,
-        address: ERC20_CONTRACTS[chain],
-        functionName: "registerPool",
-        args: [owner, token, initialTokenAmount],
-      }
+  const transactionConfig = {
+    abi: tokenRewardPoolAbi,
+    address: ERC20_CONTRACTS[chain],
+    functionName: "registerPool",
+    args: [owner, token, initialTokenAmount],
+    ...(tokenIsNative && { value: initialTokenAmount }),
+  }
 
   return useSubmitTransaction(transactionConfig, {
     onError: (error) => console.error(error),
@@ -54,15 +47,3 @@ const useRegisterPool = (
 }
 
 export default useRegisterPool
-
-export const findEvent = <
-  TAbi extends Abi,
-  TEventName extends ContractEventName<TAbi>
->(
-  events: DecodeEventLogReturnType<TAbi, ContractEventName<TAbi>>[],
-  eventName: TEventName
-): DecodeEventLogReturnType<TAbi, TEventName> | undefined =>
-  events.find((event) => event.eventName === eventName) as DecodeEventLogReturnType<
-    TAbi,
-    TEventName
-  >

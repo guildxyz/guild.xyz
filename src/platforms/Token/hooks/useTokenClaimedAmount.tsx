@@ -5,7 +5,7 @@ import { formatUnits } from "viem"
 import { useReadContracts } from "wagmi"
 import { type Chain } from "wagmiConfig/chains"
 
-const useClaimedAmount = (
+const useTokenClaimedAmount = (
   chain: Chain,
   poolId: number,
   rolePlatformIds: number[],
@@ -37,4 +37,4 @@ const useClaimedAmount = (
   }
 }
 
-export default useClaimedAmount
+export default useTokenClaimedAmount

@@ -48,16 +48,12 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const { isBalanceSufficient } = useIsBalanceSufficient({
     address: tokenAddress,
     chain: chain,
-    decimals: decimals,
     amount: amount,
   })
 
   const { setValue } = useFormContext<AddTokenFormType>()
-
-  let formattedAmount = BigInt(1)
-  try {
-    formattedAmount = parseUnits(amount, decimals)
-  } catch {}
+  const formattedAmount =
+    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
 
   const { isLoading, onSubmitTransaction: submitRegisterPool } = useRegisterPool(
     userAddress,
@@ -81,7 +77,8 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const platformForToken = accessedTokens.find(
     (guildPlatform) =>
       guildPlatform.platformGuildData.chain === chain &&
-      guildPlatform.platformGuildData.tokenAddress === tokenAddress
+      guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+        tokenAddress.toLowerCase()
   )
 
   const continuePoolExists = () => {

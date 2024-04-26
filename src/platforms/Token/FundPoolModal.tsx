@@ -4,7 +4,6 @@ import {
   Divider,
   FormControl,
   FormLabel,
-  HStack,
   InputGroup,
   InputLeftElement,
   Modal,
@@ -18,8 +17,6 @@ import {
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import ConversionNumberInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionNumberInput"
-import { WalletTag } from "components/[guild]/crm/Identities"
-import CopyableAddress from "components/common/CopyableAddress"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenBalance from "hooks/useTokenBalance"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
@@ -29,6 +26,7 @@ import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits, parseUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
+import PoolInformation from "./PoolInformation"
 import useFundPool from "./hooks/useFundPool"
 import usePool from "./hooks/usePool"
 
@@ -70,11 +68,8 @@ const FundPoolModal = ({
     shouldFetch: tokenAddress !== NULL_ADDRESS,
   })
 
-  let formattedAmount = BigInt(1)
-  try {
-    formattedAmount = parseUnits(amount, decimals)
-  } catch {}
-
+  const formattedAmount =
+    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
   const isOnCorrectChain = Chains[chain] === chainId
 
@@ -111,24 +106,7 @@ const FundPoolModal = ({
 
           <ModalBody>
             <Stack gap={5}>
-              <Stack gap={1}>
-                <HStack>
-                  <Text fontWeight={"semibold"} fontSize="sm">
-                    Balance
-                  </Text>
-                  <Text ml={"auto"} fontSize="sm">
-                    {balance} {symbol}
-                  </Text>
-                </HStack>
-                <HStack>
-                  <Text fontWeight={"semibold"} fontSize={"sm"}>
-                    Owner
-                  </Text>{" "}
-                  <WalletTag ml={"auto"}>
-                    <CopyableAddress address={owner} fontSize="sm" />
-                  </WalletTag>
-                </HStack>
-              </Stack>
+              <PoolInformation balance={balance} owner={owner} symbol={symbol} />
               <Divider />
               <FormControl>
                 <FormLabel>Amount to deposit</FormLabel>
@@ -145,9 +123,7 @@ const FundPoolModal = ({
                 </InputGroup>
               </FormControl>
 
-              <Collapse in={!isOnCorrectChain}>
-                <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
-              </Collapse>
+              <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
 
               <Collapse in={isOnCorrectChain}>
                 <Button

@@ -16,12 +16,12 @@ import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
-import { useCalculateForRolePlatform } from "platforms/Token/hooks/useCalculateToken"
+import { useClaimableTokensForRolePlatform } from "platforms/Token/hooks/useCalculateToken"
 import { RolePlatform } from "types"
 
 const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { imageUrl, token } = useTokenRewardContext()
-  const claimableAmount = useCalculateForRolePlatform(rolePlatform)
+  const claimableAmount = useClaimableTokensForRolePlatform(rolePlatform)
   const { isAdmin } = useGuildPermission()
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
   const { isOpen, onOpen, onClose } = useDisclosure()

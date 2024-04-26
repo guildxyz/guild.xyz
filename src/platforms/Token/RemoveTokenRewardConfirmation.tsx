@@ -46,7 +46,8 @@ const RemoveTokenRewardConfirmation = ({ isOpen, onClose, guildPlatform }) => {
                     <Text fontWeight={"bold"}>Funds remaining in pool</Text>
                   </HStack>{" "}
                   <Text>
-                    Any funds not withdrawn will be permanently lost after deletion.
+                    After deletion, you will not be able to witdhraw the pool's funds
+                    through Guild.
                   </Text>
                   <Button colorScheme="orange" onClick={withdrawOnOpen}>
                     Withdraw

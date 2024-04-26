@@ -9,7 +9,6 @@ import {
   Stack,
   Text,
   VStack,
-  useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -23,7 +22,7 @@ import {
   TokenRewardProvider,
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
-import { useCalculateClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
+import { useClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
 import { GuildPlatform } from "types"
 import { useTokenRewards } from "../AccessHub/hooks/useAccessedTokens"
 import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"
@@ -32,16 +31,15 @@ import LeaderboardAirdropFallbackCard from "./LeaderboardAirdropFallbackCard"
 
 const LeaderboardAirdropCard = () => {
   const { token, guildPlatform } = useTokenRewardContext()
-  const { colorMode } = useColorMode()
   const modalBg = useCardBg()
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
   const gold = useColorPalette("gold", "gold")
-
-  const gradientColor =
-    colorMode === "dark" ? `${gold["--gold-700"]}70` : gold["--gold-200"]
-
-  const { getValue } = useCalculateClaimableTokens(guildPlatform)
-  const claimableAmount = getValue()
+  const gradientColor = useColorModeValue(
+    gold["--gold-200"],
+    `${gold["--gold-700"]}70`
+  )
+  const headingColor = useColorModeValue(gold["--gold-500"], "default")
+  const claimableAmount = useClaimableTokens(guildPlatform)
 
   const { roles } = useGuild()
   const { roleIds } = useMembership()
@@ -61,7 +59,7 @@ const LeaderboardAirdropCard = () => {
     onClose: claimOnClose,
   } = useDisclosure()
 
-  if (claimableAmount <= 0) return <></>
+  if (claimableAmount <= 0) return null
 
   return (
     <>
@@ -145,17 +143,15 @@ const LeaderboardAirdropCard = () => {
                 fontFamily="display"
                 mt={0}
                 mb={"4px"}
-                color={colorMode === "light" && gold["--gold-500"]}
+                color={headingColor}
               >
                 {claimableAmount} {token.data.symbol}
               </Heading>
-              <HStack gap={1} display={{ lg: "inherit", base: "none" }}>
-                <AvailabilityTags
-                  rolePlatform={roles
-                    .flatMap((role) => role.rolePlatforms)
-                    .find((rp) => rp.id === rolePlatformIds[0])}
-                />
-              </HStack>
+              <AvailabilityTags
+                rolePlatform={roles
+                  .flatMap((role) => role.rolePlatforms)
+                  .find((rp) => rp.id === rolePlatformIds[0])}
+              />
             </Flex>
           </Stack>
 
@@ -170,8 +166,6 @@ const LeaderboardAirdropCard = () => {
           </Button>
         </HStack>
       </Card>
-
-      {/* <ClaimTokenModal isOpen={claimIsOpen} onClose={claimOnClose} /> */}
     </>
   )
 }

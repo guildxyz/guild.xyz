@@ -10,7 +10,10 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import {
+  RoleTypeToAddTo,
+  useAddRewardContext,
+} from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
@@ -26,8 +29,16 @@ type Props = {
 }
 
 const AddRoleRewardModal = ({ append }: Props) => {
-  const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
-    useAddRewardContext()
+  const {
+    modalRef,
+    selection,
+    setSelection,
+    step,
+    setStep,
+    setActiveTab,
+    isOpen,
+    onClose,
+  } = useAddRewardContext()
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
     useAddRewardDiscardAlert()
   const {
@@ -100,7 +111,10 @@ const AddRoleRewardModal = ({ append }: Props) => {
                 Add new reward
               </Text>
               <PlatformsGrid
-                onSelection={setSelection}
+                onSelection={(selected) => {
+                  setSelection(selected)
+                  if (selected === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
+                }}
                 disabledList={[
                   {
                     name: "ERC20",

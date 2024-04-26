@@ -118,6 +118,15 @@ type RewardData = {
   asRewardRestriction: PlatformAsRewardRestrictions
 }
 
+export const modalSizeForPlatform = (platform: PlatformName) => {
+  switch (platform) {
+    case "ERC20":
+      return "xl"
+    default:
+      return "4xl"
+  }
+}
+
 const AddRewardPanelLoadingSpinner = () => (
   <Center w="full" h="51vh">
     <Spinner size="xl" thickness="4px" />
