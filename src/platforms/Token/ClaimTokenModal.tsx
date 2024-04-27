@@ -1,6 +1,10 @@
 import {
+  Checkbox,
+  Divider,
   Flex,
   Heading,
+  Icon,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -20,7 +24,8 @@ import { useCardBg } from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
 import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
-import { useMemo } from "react"
+import { ArrowSquareOut } from "phosphor-react"
+import { useMemo, useState } from "react"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "./ClaimFeeTable"
@@ -40,6 +45,7 @@ type Props = {
 const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { textColor } = useThemeContext()
   const modalBg = useCardBg()
+  const [isConfirmed, setIsConfirmed] = useState(false)
 
   const { token, guildPlatform, imageUrl } = useTokenRewardContext()
   const claimableAmount = useClaimableTokens(guildPlatform)
@@ -176,7 +182,36 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             </VStack>
           </Stack>
 
+          <Divider
+            mt="8"
+            mb="4"
+            borderColor="var(--chakra-colors-chakra-border-color)"
+          />
+
           <TokenClaimFeeTable />
+
+          <Checkbox
+            size="sm"
+            alignItems="start"
+            mt="6"
+            mb="5"
+            isChecked={isConfirmed}
+            onChange={(e) => setIsConfirmed(e.target.checked)}
+          >
+            <Text colorScheme="gray" mt="-5px">
+              {`I confirm that I am not a citizen of the U.S., Canada, or any other `}
+              <Link
+                // todo: add actual intercom link
+                href="#"
+                // isExternal
+                fontWeight={"semibold"}
+                onClick={(e) => e.stopPropagation()}
+              >
+                restricted countries
+                <Icon as={ArrowSquareOut} ml="0.5" />
+              </Link>
+            </Text>
+          </Checkbox>
 
           {!isOnCorrectChain ? (
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
@@ -185,7 +220,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
               {rolePlatforms.length === 1 ? (
                 <Button
                   colorScheme="gold"
-                  isDisabled={token.isLoading}
+                  isDisabled={token.isLoading || !isConfirmed}
                   isLoading={claimLoading}
                   loadingText={claimLoading}
                   onClick={() => {

@@ -15,8 +15,6 @@ const TokenClaimFeeTable = () => {
   return (
     <>
       <FeesTable
-        mb={3}
-        mt={6}
         buttonComponent={
           <HStack justifyContent={"space-between"} w="full">
             <HStack spacing={1}>
