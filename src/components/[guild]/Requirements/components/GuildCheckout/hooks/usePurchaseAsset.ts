@@ -6,6 +6,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
+import useToken from "hooks/useToken"
 import useTokenBalance from "hooks/useTokenBalance"
 import { useMemo } from "react"
 import {
@@ -60,6 +61,11 @@ const usePurchaseAsset = () => {
     shouldFetch: pickedCurrency !== NULL_ADDRESS,
   })
 
+  const { data: purchasedTokenData } = useToken({
+    address: requirement?.address,
+    chainId: Chains[requirement?.chain],
+  })
+
   const isSufficientBalance =
     priceData?.maxPriceInWei &&
     (coinBalanceData || tokenBalanceData) &&
@@ -109,7 +115,7 @@ const usePurchaseAsset = () => {
       toast({
         status: "success",
         title: "Your new asset:",
-        description: `${requirement.data.minAmount} ${tokenBalanceData?.symbol}`,
+        description: `${requirement.data.minAmount} ${purchasedTokenData?.symbol}`,
       })
     },
   })
