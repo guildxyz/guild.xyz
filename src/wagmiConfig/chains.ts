@@ -48,7 +48,6 @@ import {
   optimism,
   pgn,
   polygon,
-  polygonMumbai,
   polygonZkEvm,
   ronin,
   scroll,
@@ -150,15 +149,6 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       light: "/networkLogos/polygon.svg",
       dark: "/networkLogos/polygon.svg",
     },
-  },
-  POLYGON_MUMBAI: {
-    ...generateChainConfig(polygonMumbai, MATIC_ICON),
-    iconUrl: "/networkLogos/polygon.svg",
-    blockExplorerIconUrl: {
-      light: "/networkLogos/polygon.svg",
-      dark: "/networkLogos/polygon.svg",
-    },
-    etherscanApiUrl: "https://api-testnet.polygonscan.com",
   },
   AVALANCHE: {
     ...generateChainConfig(
@@ -667,7 +657,6 @@ enum Chains {
   ZKSYNC_ERA = zkSync.id,
   SEPOLIA = sepolia.id,
   GOERLI = goerli.id,
-  POLYGON_MUMBAI = polygonMumbai.id,
   BASE_MAINNET = base.id,
   ZORA = zora.id,
   POLYGON_ZKEVM = polygonZkEvm.id,

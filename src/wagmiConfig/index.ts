@@ -49,7 +49,6 @@ import {
   optimism,
   pgn,
   polygon,
-  polygonMumbai,
   polygonZkEvm,
   ronin,
   scroll,
@@ -75,7 +74,6 @@ export const wagmiConfig = createConfig({
   chains: [
     mainnet,
     polygon,
-    polygonMumbai,
     polygonZkEvm,
     base as Chain,
     baseSepolia as Chain,
@@ -131,7 +129,6 @@ export const wagmiConfig = createConfig({
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http("https://polygon-bor-rpc.publicnode.com"),
-    [polygonMumbai.id]: http("https://polygon-mumbai-bor-rpc.publicnode.com"),
     [polygonZkEvm.id]: http(),
     [base.id]: http("https://base.llamarpc.com"),
     [baseSepolia.id]: http(),
@@ -177,7 +174,7 @@ export const wagmiConfig = createConfig({
     [blast.id]: http(),
     [blastSepolia.id]: http(),
     [oasisSapphire.id]: http(),
-    [sepolia.id]: http(),
+    [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"),
     [astarZkEVM.id]: http(),
     [coreDao.id]: http(),
     [liskSepolia.id]: http(),

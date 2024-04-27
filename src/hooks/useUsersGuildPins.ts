@@ -190,7 +190,7 @@ const fetchGuildPins = async ([_, addresses, includeTestnets]: [
   User["addresses"],
   boolean
 ]) => {
-  const TESTNET_KEYS: GuildPinsSupportedChain[] = ["POLYGON_MUMBAI"]
+  const TESTNET_KEYS: GuildPinsSupportedChain[] = ["SEPOLIA"]
   const guildPinChains = Object.keys(GUILD_PIN_CONTRACTS).filter((key) =>
     includeTestnets ? true : !TESTNET_KEYS.includes(key as GuildPinsSupportedChain)
   ) as GuildPinsSupportedChain[]

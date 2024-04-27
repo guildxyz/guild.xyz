@@ -11,14 +11,10 @@ import { Chain, Chains } from "wagmiConfig/chains"
 
 const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 
-type UnstoppableDomainsChains = Extract<
-  Chain,
-  "ETHEREUM" | "POLYGON" | "POLYGON_MUMBAI"
->
+type UnstoppableDomainsChains = Extract<Chain, "ETHEREUM" | "POLYGON">
 const UNSTOPPABLE_DOMAIN_CONTRACTS: Record<UnstoppableDomainsChains, string> = {
   ETHEREUM: "0x049aba7510f45ba5b64ea9e658e342f904db358d",
   POLYGON: "0xa9a6a3626993d487d2dbda3173cf58ca1a9d9e9f",
-  POLYGON_MUMBAI: "0x2a93c52e7b6e7054870758e15a1446e769edfb93",
 }
 
 type IDBResolvedAddress = { resolvedAddress: string; createdAt: number }

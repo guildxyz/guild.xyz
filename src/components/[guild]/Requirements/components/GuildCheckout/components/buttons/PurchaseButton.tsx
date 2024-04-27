@@ -2,14 +2,13 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useTokenBalance from "hooks/useTokenBalance"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { NULL_ADDRESS, TOKEN_BUYER_CONTRACTS } from "utils/guildCheckout/constants"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import useAllowance from "../../hooks/useAllowance"
 import usePrice from "../../hooks/usePrice"
 import usePurchaseAsset from "../../hooks/usePurchaseAsset"
-import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContext"
 
 const PurchaseButton = (): JSX.Element => {
@@ -27,11 +26,9 @@ const PurchaseButton = (): JSX.Element => {
     error,
   } = usePrice()
 
-  const tokenBuyerContractData = useTokenBuyerContractData()
-
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
-    tokenBuyerContractData[Chains[chainId]]?.address
+    TOKEN_BUYER_CONTRACTS[Chains[chainId]]?.address
   )
 
   const { onSubmitTransaction, isLoading, isPreparing, estimatedGas } =

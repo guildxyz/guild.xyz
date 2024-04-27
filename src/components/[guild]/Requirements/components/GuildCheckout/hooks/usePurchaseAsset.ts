@@ -8,7 +8,11 @@ import useSubmitTransaction from "hooks/useSubmitTransaction"
 import useToast from "hooks/useToast"
 import useTokenBalance from "hooks/useTokenBalance"
 import { useMemo } from "react"
-import { ADDRESS_REGEX, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import {
+  ADDRESS_REGEX,
+  NULL_ADDRESS,
+  TOKEN_BUYER_CONTRACTS,
+} from "utils/guildCheckout/constants"
 import { generateGetAssetsParams } from "utils/guildCheckout/utils"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -16,7 +20,6 @@ import { useRequirementContext } from "../../RequirementContext"
 import { useGuildCheckoutContext } from "../components/GuildCheckoutContext"
 import useAllowance from "./useAllowance"
 import usePrice from "./usePrice"
-import useTokenBuyerContractData from "./useTokenBuyerContractData"
 
 const usePurchaseAsset = () => {
   const { captureEvent } = usePostHogContext()
@@ -36,8 +39,6 @@ const usePurchaseAsset = () => {
 
   const { data: priceData } = usePrice(pickedCurrency)
 
-  const tokenBuyerContractData = useTokenBuyerContractData()
-
   const generatedGetAssetsParams = useMemo(
     () =>
       generateGetAssetsParams(guildId, address, chainId, pickedCurrency, priceData),
@@ -46,7 +47,7 @@ const usePurchaseAsset = () => {
 
   const { allowance } = useAllowance(
     pickedCurrency,
-    tokenBuyerContractData[Chains[chainId]]?.address
+    TOKEN_BUYER_CONTRACTS[Chains[chainId]]?.address
   )
 
   const { data: coinBalanceData } = useBalance({
@@ -77,13 +78,13 @@ const usePurchaseAsset = () => {
       (pickedCurrency !== NULL_ADDRESS && ADDRESS_REGEX.test(pickedCurrency)
         ? typeof allowance === "bigint" && priceData.maxPriceInWei <= allowance
         : true) &&
-      tokenBuyerContractData[Chains[chainId]] &&
+      TOKEN_BUYER_CONTRACTS[Chains[chainId]] &&
       contractCallParams
   )
 
   const config = {
-    abi: tokenBuyerContractData[Chains[chainId]]?.abi,
-    address: tokenBuyerContractData[Chains[chainId]]?.address,
+    abi: TOKEN_BUYER_CONTRACTS[Chains[chainId]]?.abi,
+    address: TOKEN_BUYER_CONTRACTS[Chains[chainId]]?.address,
     functionName: "getAssets",
     args: contractCallParams,
     value: generatedGetAssetsParams?.value,
