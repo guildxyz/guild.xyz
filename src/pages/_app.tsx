@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
+import InfoBanner from "components/_app/InfoBanner"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
@@ -86,6 +87,8 @@ const App = ({
       )}
 
       <Chakra cookies={pageProps.cookies}>
+        <InfoBanner />
+
         {isRouteChangeInProgress ? (
           <Slide
             direction="top"
