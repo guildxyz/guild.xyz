@@ -359,7 +359,6 @@ const AddRewardButton = (): JSX.Element => {
                     startSessionRecording()
                     captureEvent("[discord setup] started in existing guild")
                     setSelection(selected)
-                    if (selected === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
                   }}
                   pb="4"
                 />

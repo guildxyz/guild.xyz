@@ -10,10 +10,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
-import {
-  RoleTypeToAddTo,
-  useAddRewardContext,
-} from "components/[guild]/AddRewardContext"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
@@ -29,16 +26,8 @@ type Props = {
 }
 
 const AddRoleRewardModal = ({ append }: Props) => {
-  const {
-    modalRef,
-    selection,
-    setSelection,
-    step,
-    setStep,
-    setActiveTab,
-    isOpen,
-    onClose,
-  } = useAddRewardContext()
+  const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
+    useAddRewardContext()
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
     useAddRewardDiscardAlert()
   const {
@@ -92,7 +81,10 @@ const AddRoleRewardModal = ({ append }: Props) => {
 
         <ModalBody ref={modalRef} className="custom-scrollbar">
           {selection && step === "SELECT_ROLE" ? (
-            <SelectRoleOrSetRequirements selectedPlatform={selection} />
+            <SelectRoleOrSetRequirements
+              selectedPlatform={selection}
+              isRoleSelectorDisabled={selection === "ERC20"}
+            />
           ) : AddRewardPanel ? (
             <AddRewardPanel
               onAdd={(data) => {
@@ -111,10 +103,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
                 Add new reward
               </Text>
               <PlatformsGrid
-                onSelection={(selected) => {
-                  setSelection(selected)
-                  if (selected === "ERC20") setActiveTab(RoleTypeToAddTo.NEW_ROLE)
-                }}
+                onSelection={setSelection}
                 disabledRewards={{
                   ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
                 }}
