@@ -13,7 +13,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { AddPointsFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/AddPointsPanel"
 import ExistingPointsTypeSelect from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPointsPanel/components/ExistingPointsTypeSelect"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useCreateSnapshot from "hooks/useCreateSnapshot"
@@ -21,7 +20,7 @@ import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/router"
 import { useMemo, useState } from "react"
-import { FormProvider, useController, useForm } from "react-hook-form"
+import { FormProvider, useController, useFormContext } from "react-hook-form"
 import { PlatformType } from "types"
 import SnapshotTable from "./SnapshotTable"
 
@@ -49,9 +48,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const methods = useForm<AddPointsFormType>({
-    mode: "all",
-  })
+  const methods = useFormContext()
 
   const { control } = methods
 
@@ -82,6 +79,14 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
     false
   )
 
+  const handleOnClose = () => {
+    if (isSubmitLoading) {
+      showErrorToast("You can't close the modal until the transaction finishes")
+      return
+    }
+    onClose()
+  }
+
   const leaderboardToSnapshot = useMemo(() => {
     if (!data?.leaderboard) return []
     const snapshot = data?.leaderboard
@@ -95,7 +100,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <Modal size="lg" isOpen={isOpen} onClose={onClose} colorScheme="dark">
+      <Modal size="lg" isOpen={isOpen} onClose={handleOnClose} colorScheme="dark">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb="4">Create snapshot</ModalHeader>
