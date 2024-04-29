@@ -57,11 +57,9 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   } = useReadContract({
     ...contract,
     functionName: "totalSupply",
-    blockNumber: firstBlockNumberToday?.result
-      ? BigInt(firstBlockNumberToday.result)
-      : undefined,
+    blockNumber: firstBlockNumberToday ? BigInt(firstBlockNumberToday) : undefined,
     query: {
-      enabled: Boolean(firstBlockNumberToday?.result),
+      enabled: !!firstBlockNumberToday,
       staleTime: 600_000,
     },
   })
