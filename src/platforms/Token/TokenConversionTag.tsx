@@ -44,7 +44,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
         }.`}
         hasArrow
       >
-        <Tag width={"fit-content"}>
+        <Tag width={"fit-content"} size="lg">
           {pointType !== undefined && (
             <>
               {pointType?.platformGuildData.imageUrl ? (
