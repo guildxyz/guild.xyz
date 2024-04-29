@@ -4,6 +4,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import useTokenData from "hooks/useTokenData"
 import { GuildPlatform, RolePlatform } from "types"
+import useRolePlatforms from "./useRolePlatforms"
 import useTokenClaimedAmount from "./useTokenClaimedAmount"
 
 const calcRequirementAmount = (
@@ -111,15 +112,9 @@ const useClaimableTokens = (guildPlatform: GuildPlatform) => {
 
   const { roleIds } = useMembership()
 
-  const getRolePlatforms = () =>
-    roles
-      ?.flatMap((role) => role.rolePlatforms)
-      ?.filter(
-        (rp) =>
-          rp?.guildPlatformId === guildPlatform.id ||
-          rp?.guildPlatform?.id === guildPlatform.id
-      )
-      .filter((rp) => roleIds?.includes(rp.roleId) || false)
+  const rolePlatforms = useRolePlatforms(guildPlatform.id).filter(
+    (rp) => roleIds?.includes(rp.roleId) || false
+  )
 
   const {
     data: { decimals },
@@ -131,13 +126,11 @@ const useClaimableTokens = (guildPlatform: GuildPlatform) => {
   const { data: alreadyClaimedAmounts } = useTokenClaimedAmount(
     guildPlatform.platformGuildData.chain,
     guildPlatform.platformGuildData.poolId,
-    getRolePlatforms().map((rp) => rp.id),
+    rolePlatforms.map((rp) => rp.id),
     decimals
   )
 
   const getValue = () => {
-    const rolePlatforms = getRolePlatforms()
-
     const sum = rolePlatforms.reduce(
       (acc, rolePlatform) =>
         acc + calculateFromDynamicAmount(rolePlatform.dynamicAmount),
