@@ -1,11 +1,12 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
+  AlertTitle,
+  Box,
   Collapse,
   Flex,
-  HStack,
   Stack,
-  Text,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -44,7 +45,8 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
 
   const dynamicExists =
     rolePlatforms?.find(
-      (rp: any) => rp.dynamicAmount.operation.input[0].type === "REQUIREMENT_AMOUNT"
+      (rp: any) =>
+        rp.dynamicAmount?.operation?.input?.[0]?.type === "REQUIREMENT_AMOUNT"
     ) || false
 
   useEffect(() => {
@@ -87,13 +89,13 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     return (
       <>
         <Alert status="warning" my={4}>
-          <AlertIcon mt={0} />{" "}
-          <HStack>
-            <Text>
-              <strong>Only one dynamic reward is allowed per token type.</strong> To
-              create a new one, you must first delete the existing reward.
-            </Text>
-          </HStack>
+          <AlertIcon mt={0} />
+          <Box>
+            <AlertTitle>Only one dynamic reward is allowed per token</AlertTitle>
+            <AlertDescription>
+              To create a new one, you must first delete the existing reward
+            </AlertDescription>
+          </Box>
         </Alert>
       </>
     )
