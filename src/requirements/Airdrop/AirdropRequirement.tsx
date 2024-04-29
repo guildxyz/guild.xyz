@@ -35,7 +35,12 @@ const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       {isHidden ? (
         "this snapshot"
       ) : (
-        <Button variant="link" rightIcon={<ArrowSquareIn />} onClick={onOpen}>
+        <Button
+          variant="link"
+          rightIcon={<ArrowSquareIn />}
+          iconSpacing={0.5}
+          onClick={onOpen}
+        >
           {"snapshot"}
         </Button>
       )}
