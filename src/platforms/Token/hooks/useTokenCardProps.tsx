@@ -1,6 +1,7 @@
 import useTokenData from "hooks/useTokenData"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
+// used in role edit drawer, for AccessHub we have TokenRewardCard
 const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { chain, imageUrl, tokenAddress } = guildPlatform.platformGuildData
 
