@@ -1,4 +1,5 @@
 import {
+  Center,
   Checkbox,
   Divider,
   Flex,
@@ -15,6 +16,7 @@ import {
   Stack,
   Text,
   VStack,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
@@ -22,7 +24,6 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
 import GuildLogo from "components/common/GuildLogo"
-import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"
@@ -79,7 +80,10 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const { chainId } = useAccount()
   const isOnCorrectChain = Number(Chains[chain]) === chainId
-  const gold = useColorPalette("gold", "gold")
+  const gradientColor = useColorModeValue(
+    "var(--chakra-colors-gold-100)",
+    `var(--chakra-colors-gold-800)`
+  )
 
   const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
     useMembershipUpdate({
@@ -106,7 +110,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
       <ModalOverlay />
       <ModalContent
         border={"3px solid transparent"}
-        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, ${gold["--gold-500"]}, ${modalBg}) border-box`}
+        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, var(--chakra-colors-gold-500), ${modalBg}) border-box`}
       >
         <Image
           priority
@@ -137,16 +141,32 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             mt={8}
             mb={4}
           >
-            <Image
-              priority
-              src={"/img/cup.png"}
-              alt="Cup"
-              width={175}
-              height={155}
-              draggable={false}
-            />
+            <Center
+              position="relative"
+              w="full"
+              background={`radial-gradient(circle at bottom, ${gradientColor}, transparent 50%) border-box`}
+            >
+              <Image
+                priority
+                src={"/img/cup_without_cup.png"}
+                alt="Cup"
+                width={175}
+                height={155}
+                draggable={false}
+              />
+              <GuildLogo
+                pos="absolute"
+                top="20px"
+                imageUrl={imageUrl}
+                size={"66px"}
+                borderWidth="5px"
+                borderColor="gold.400"
+                boxSizing="content-box"
+                boxShadow="lg"
+              />
+            </Center>
 
-            <VStack position={"relative"} mt="-80px">
+            <VStack position={"relative"} mt="-70px">
               <Image
                 src={"/img/ribbon.svg"}
                 alt="Ribbon"
@@ -167,7 +187,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                   style={{ transform: "translateY(-33%)" }}
                   width={"full"}
                 >
-                  <GuildLogo imageUrl={imageUrl} size={"26px"} />
                   <Heading
                     fontSize={"x-large"}
                     fontFamily="display"
