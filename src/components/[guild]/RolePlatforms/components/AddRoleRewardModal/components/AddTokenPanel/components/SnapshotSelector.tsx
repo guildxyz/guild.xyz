@@ -44,7 +44,10 @@ const SnapshotSelector = () => {
     onClose()
   }
 
-  const { snapshot } = useSnapshot(selectedPointsId, selectedSnapshotId)
+  const { snapshot, isSnapshotLoading } = useSnapshot(
+    selectedPointsId,
+    selectedSnapshotId
+  )
 
   const transformSnapshotData = (
     snapshotData: { address: string; value: number }[]
@@ -118,7 +121,7 @@ const SnapshotSelector = () => {
               variant="ghost"
               borderRadius={"lg"}
               onClick={onOpen}
-              isDisabled={!selectedPointsId}
+              isDisabled={!selectedPointsId || isSnapshotLoading}
             >
               <Text colorScheme={"gray"}>Create new</Text>
             </Button>
