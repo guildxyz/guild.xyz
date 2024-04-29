@@ -32,7 +32,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { ArrowSquareIn } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Requirement } from "types"
 import DynamicTypeForm from "./DynamicTypeForm"
@@ -67,11 +67,10 @@ const EditTokenModal = ({
   const { data: requirements } = useRequirements(role.id)
   const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
 
-  useEffect(() => {
+  const multiplier = useMemo(() => {
     const rp: any = rolePlatforms[0]
-    const multiplier = rp.dynamicAmount.operation.params.multiplier || 1
-    setValue("multiplier", multiplier)
-  }, [rolePlatforms, setValue])
+    return rp.dynamicAmount.operation.params.multiplier
+  }, [rolePlatforms])
 
   const {
     isOpen: snapshotIsOpen,
@@ -229,7 +228,7 @@ const EditTokenModal = ({
                 <Divider />
                 <Stack gap={0}>
                   <SectionTitle title={"Change conversion"} mb={2} />
-                  <ConversionInput />
+                  <ConversionInput defaultValue={multiplier.toString()} />
                 </Stack>
 
                 <Button

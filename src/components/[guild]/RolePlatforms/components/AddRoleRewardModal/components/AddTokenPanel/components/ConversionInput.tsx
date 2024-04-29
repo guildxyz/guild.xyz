@@ -18,11 +18,14 @@ import Token from "static/icons/token.svg"
 import { AddTokenFormType } from "../AddTokenPanel"
 import ConversionNumberInput from "./ConversionNumberInput"
 
-const ConversionInput = () => {
+const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   const { control, setValue } = useFormContext<AddTokenFormType>()
 
   const [conversionLocked, setConversionLocked] = useState(false)
-  const [conversionAmounts, setConversionAmounts] = useState(["1", "1"])
+  const [conversionAmounts, setConversionAmounts] = useState([
+    "1",
+    defaultValue || "1",
+  ])
   const [conversionRate, setConversionRate] = useState(1.0)
 
   const pointsPlatforms = useAccessedGuildPoints()
@@ -31,17 +34,6 @@ const ConversionInput = () => {
   const imageUrl = useWatch({ name: `imageUrl`, control })
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `tokenAddress`, control })
-  const multiplier = useWatch({ name: `multiplier`, control })
-
-  useEffect(() => {
-    if (
-      multiplier !== 1 &&
-      conversionAmounts[0] === "1" &&
-      conversionAmounts[1] === "1"
-    ) {
-      setConversionAmounts([conversionAmounts[0], `${multiplier}`])
-    }
-  }, [multiplier, conversionAmounts])
 
   const selectedPointsPlatform = pointsPlatforms.find(
     (gp) => gp.id === pointsPlatformId
