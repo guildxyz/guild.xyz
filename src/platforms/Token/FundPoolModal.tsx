@@ -144,7 +144,11 @@ const FundPoolModal = ({
 
                 <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
 
-                <Collapse in={isOnCorrectChain && !!allowance}>
+                <Collapse
+                  in={
+                    isOnCorrectChain && (pickedCurrencyIsNative ? true : !!allowance)
+                  }
+                >
                   <Tooltip label={isDisabledLabel} hasArrow>
                     <Button
                       size="lg"
