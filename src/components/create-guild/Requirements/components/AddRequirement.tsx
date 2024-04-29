@@ -273,7 +273,7 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
       </Heading>
       <SimpleGrid columns={2} gap={2}>
         {general
-          .filter((req) => req.types[0] === "GUILD_SNAPSHOT")
+          .filter((req) => req.types[0] !== "GUILD_SNAPSHOT")
           .map((requirementButton) => (
             <Button
               key={requirementButton.types[0]}
