@@ -19,6 +19,7 @@ import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useRoleGroup from "../hooks/useRoleGroup"
+import useUser from "../hooks/useUser"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
@@ -75,6 +76,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
+  const { id } = useUser()
   const {
     id: guildId,
     featureFlags,
@@ -105,7 +107,7 @@ const AccessHub = (): JSX.Element => {
     (hasVisiblePages && !group)
 
   return (
-    <ClientOnly>
+    <ClientOnly key={id}>
       <Collapse in={showAccessHub} unmountOnExit>
         <SimpleGrid
           templateColumns={{
