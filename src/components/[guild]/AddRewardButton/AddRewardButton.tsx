@@ -59,9 +59,6 @@ const defaultValues: AddRewardForm = {
 
 export const canCloseAddRewardModalAtom = atom(true)
 
-const isERC20 = (data) =>
-  data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
-
 const AddRewardButton = (): JSX.Element => {
   const { captureEvent, startSessionRecording } = usePostHogContext()
   const { roles } = useGuild()
@@ -83,6 +80,7 @@ const AddRewardButton = (): JSX.Element => {
     setStep,
     activeTab,
     setActiveTab,
+
     isOpen,
     onOpen,
     onClose: onAddRewardModalClose,
@@ -141,17 +139,21 @@ const AddRewardButton = (): JSX.Element => {
       },
     })
 
-  const isLoading = isAddRewardLoading || isCreateRoleLoading
-
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const { submitCreate: submitCreateReqBased } = useCreateReqBasedTokenReward({
-    onSuccess: () => {
-      toast({ status: "success", title: "Reward successfully added" })
-      onCloseAndClear()
-    },
-    onError: (err) => console.error(err),
-  })
+  const isERC20 = (data) =>
+    data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
+
+  const { submitCreate: submitCreateReqBased, isLoading: erc20Loading } =
+    useCreateReqBasedTokenReward({
+      onSuccess: () => {
+        toast({ status: "success", title: "Reward successfully added" })
+        onCloseAndClear()
+      },
+      onError: (err) => console.error(err),
+    })
+
+  const isLoading = isAddRewardLoading || isCreateRoleLoading || erc20Loading
 
   const submitERC20Reward = async (
     data: any,

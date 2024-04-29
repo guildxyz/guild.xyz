@@ -7,11 +7,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { PlatformType } from "types"
 import { AddTokenFormType, TokenRewardType } from "../AddTokenPanel"
 import DynamicAmount from "./DynamicAmount"
 
@@ -26,16 +26,18 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ control, name: `chain` })
   const address = useWatch({ control, name: `tokenAddress` })
 
-  const accessedTokens = useTokenRewards()
+  const { roles, guildPlatforms } = useGuild()
 
-  const platformForToken = accessedTokens.find(
+  const tokenPlatforms = guildPlatforms?.filter(
+    (gp) => gp.platformId === PlatformType.ERC20
+  )
+
+  const platformForToken = tokenPlatforms.find(
     (guildPlatform) =>
       guildPlatform.platformGuildData.chain === chain &&
       guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
         address?.toLowerCase()
   )
-
-  const { roles } = useGuild()
 
   const rolePlatforms = platformForToken
     ? roles

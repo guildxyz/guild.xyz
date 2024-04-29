@@ -55,12 +55,13 @@ const useCreateReqBasedTokenReward = ({
   onError: (err) => void
 }) => {
   const showErrorToast = useShowErrorToast()
-  const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
+  const { onSubmit: onRequirementSubmit, isLoading: creatingRequirement } =
+    useCreateRequirementForRole()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { id: guildId } = useGuild()
 
-  const { onSubmit: onAddRewardSubmit } = useAddReward({
+  const { onSubmit: onAddRewardSubmit, isLoading: creatingReward } = useAddReward({
     onSuccess: () => {
       onSuccess()
     },
@@ -69,7 +70,7 @@ const useCreateReqBasedTokenReward = ({
     },
   })
 
-  const { onSubmit: onCreateRoleSubmit } = useCreateRole({})
+  const { onSubmit: onCreateRoleSubmit, isLoading: creatingRole } = useCreateRole({})
 
   const addToExistingRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     if (data.roleIds.length > 1) {
@@ -200,7 +201,10 @@ const useCreateReqBasedTokenReward = ({
       : createWithNewRole(data, saveAs)
   }
 
-  return { submitCreate }
+  return {
+    submitCreate,
+    isLoading: creatingRequirement || creatingReward || creatingRole,
+  }
 }
 
 export default useCreateReqBasedTokenReward
