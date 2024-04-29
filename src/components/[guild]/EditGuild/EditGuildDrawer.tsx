@@ -41,11 +41,11 @@ import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
+import ChangingGuildPinDesignAlert from "./components/ChangingGuildPinDesignAlert"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import Events from "./components/Events/Events"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
-import SaveAlert from "./components/SaveAlert"
 import SocialLinks from "./components/SocialLinks"
 import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
@@ -342,7 +342,7 @@ const EditGuildDrawer = ({
         onDiscard={onCloseAndClear}
       />
 
-      <SaveAlert
+      <ChangingGuildPinDesignAlert
         isOpen={isSaveAlertOpen}
         onClose={onSaveAlertClose}
         onSave={handleSubmit}
