@@ -137,6 +137,12 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
             >
               Create
             </Button>
+            {isSubmitLoading && (
+              <Text mt={1} color={"GrayText"} fontSize={"sm"}>
+                Creating a snapshot of the leaderboard may take several minutes,
+                depending on its size.
+              </Text>
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

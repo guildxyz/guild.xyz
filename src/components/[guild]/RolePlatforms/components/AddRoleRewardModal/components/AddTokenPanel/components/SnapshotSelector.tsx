@@ -1,8 +1,11 @@
 import {
   Center,
+  Collapse,
   Flex,
   FormControl,
   FormLabel,
+  HStack,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -121,7 +124,7 @@ const SnapshotSelector = () => {
               variant="ghost"
               borderRadius={"lg"}
               onClick={onOpen}
-              isDisabled={!selectedPointsId || isSnapshotLoading}
+              isDisabled={!selectedPointsId || listIsLoading || isSnapshotLoading}
             >
               <Text colorScheme={"gray"}>Create new</Text>
             </Button>
@@ -132,6 +135,12 @@ const SnapshotSelector = () => {
             name={`snapshotId`}
             options={options}
           />
+          <Collapse in={isSnapshotLoading}>
+            <HStack mt={2}>
+              <Spinner size={"xs"} />{" "}
+              <Text color={"GrayText"}>Loading selected snapshot data...</Text>
+            </HStack>
+          </Collapse>
           <CreateSnapshotModal
             onClose={onClose}
             onSuccess={handleCreateSuccess}
