@@ -30,7 +30,11 @@ const SnapshotSelector = () => {
 
   const selectedPointsId = useWatch({ name: "data.guildPlatformId" })
 
-  const { snapshots, mutate: refetchSnapshots } = useSnapshots(selectedPointsId)
+  const {
+    snapshots,
+    mutate: refetchSnapshots,
+    isLoading: listIsLoading,
+  } = useSnapshots(selectedPointsId)
   const selectedSnapshotId = useWatch({ name: "snapshotId" })
 
   const handleCreateSuccess = (createdId: number) => {
@@ -120,6 +124,7 @@ const SnapshotSelector = () => {
             </Button>
           </Flex>
           <ControlledSelect
+            isLoading={listIsLoading}
             isDisabled={!selectedPointsId}
             name={`snapshotId`}
             options={options}

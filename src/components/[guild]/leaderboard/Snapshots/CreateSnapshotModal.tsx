@@ -66,7 +66,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
   const { onSubmit: onCreateSnasphotSubmit, isLoading: isSubmitLoading } =
     useCreateSnapshot({
       guildPlatformId: Number(selectedExistingId.value),
-      onSuccess: (res) => onSuccess(res?.id),
+      onSuccess: (res) => onSuccess(res),
       onError: (err) => {
         console.error(err)
         showErrorToast("Failed to create snapshot")
