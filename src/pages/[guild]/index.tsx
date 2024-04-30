@@ -51,6 +51,9 @@ import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
 import parseDescription from "utils/parseDescription"
 
+const DynamicOngoingIssuesBanner = dynamic(
+  () => import("components/[guild]/OngoingIssuesBanner")
+)
 const DynamicEditGuildButton = dynamic(() => import("components/[guild]/EditGuild"))
 const DynamicAddAndOrderRoles = dynamic(
   () => import("components/[guild]/AddAndOrderRoles")
@@ -89,6 +92,7 @@ const GuildPage = (): JSX.Element => {
     onboardingComplete,
     socialLinks,
     tags,
+    featureFlags,
     isDetailed,
   } = useGuild()
 
@@ -121,6 +125,8 @@ const GuildPage = (): JSX.Element => {
       <Head>
         <meta name="theme-color" content={localThemeColor} />
       </Head>
+
+      {featureFlags?.includes("ONGOING_ISSUES") && <DynamicOngoingIssuesBanner />}
 
       <Layout
         title={<GuildName {...{ name, tags }} />}
