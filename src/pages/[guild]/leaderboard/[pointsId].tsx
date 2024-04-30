@@ -10,7 +10,7 @@ import {
   Stack,
   Wrap,
 } from "@chakra-ui/react"
-import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"

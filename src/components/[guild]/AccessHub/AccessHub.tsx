@@ -23,7 +23,7 @@ import useRoleGroup from "../hooks/useRoleGroup"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
-import { useTokenRewards } from "./hooks/useAccessedTokens"
+import { useTokenRewards } from "./hooks/useTokenRewards"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")

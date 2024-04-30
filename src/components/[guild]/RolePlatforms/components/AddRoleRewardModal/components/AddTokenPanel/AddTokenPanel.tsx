@@ -12,7 +12,7 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain, Schemas } from "@guildxyz/types"
-import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"

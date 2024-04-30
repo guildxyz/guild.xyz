@@ -22,7 +22,7 @@ import {
 import { useClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
 import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
 import { GuildPlatform } from "types"
-import { useTokenRewards } from "../AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "../AccessHub/hooks/useTokenRewards"
 import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "../hooks/useGuild"
 import LeaderboardAirdropFallbackCard from "./LeaderboardAirdropFallbackCard"
