@@ -108,8 +108,12 @@ const AddRewardButton = (): JSX.Element => {
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
   const roleIds = useWatch({ name: "roleIds", control: methods.control })
+
+  const isRoleSelectorDisabled = selection === "ERC20"
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
+      ? !requirements?.length
+      : !roleIds?.length
 
   const toast = useToast()
 
@@ -333,7 +337,7 @@ const AddRewardButton = (): JSX.Element => {
               {selection && step === "SELECT_ROLE" ? (
                 <SelectRoleOrSetRequirements
                   selectedPlatform={selection}
-                  isRoleSelectorDisabled={selection === "ERC20"}
+                  isRoleSelectorDisabled={isRoleSelectorDisabled}
                 />
               ) : AddRewardPanel ? (
                 <AddRewardPanel
