@@ -26,7 +26,7 @@ import { useTokenRewardContext } from "../TokenRewardContext"
 import TokenRolePlatformClaimCard from "../TokenRolePlatformClaimCard"
 import useCollectToken from "../hooks/useCollectToken"
 import usePool from "../hooks/usePool"
-import useRolePlatforms from "../hooks/useRolePlatforms"
+import useRolePlatformsOfReward from "../hooks/useRolePlatformsOfReward"
 import useTokenClaimedAmount from "../hooks/useTokenClaimedAmount"
 import TokenRibbonIllustration from "./TokenRibbonIllustration"
 
@@ -48,7 +48,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const chain = guildPlatform.platformGuildData.chain
 
-  const rolePlatforms = useRolePlatforms(guildPlatform.id)
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
 
   const { onSubmit, loadingText: claimLoadingText } = useCollectToken(
     chain,

@@ -10,7 +10,7 @@ import { GuildPlatform } from "types"
 import ClaimTokenButton from "./ClaimTokenButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
 import { useClaimableTokens } from "./hooks/useCalculateToken"
-import useRolePlatforms from "./hooks/useRolePlatforms"
+import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 import useTokenClaimedAmount from "./hooks/useTokenClaimedAmount"
 
 const DynamicTokenRewardCardEditMenu = dynamic(
@@ -25,7 +25,7 @@ const TokenRewardCard = () => {
   const { roles } = useGuild()
   const { roleIds } = useMembership()
 
-  const rolePlatformIds = useRolePlatforms(guildPlatform.id)
+  const rolePlatformIds = useRolePlatformsOfReward(guildPlatform.id)
     .filter((rp) => roleIds?.includes(rp.roleId) || false)
     .map((rp) => rp.id)
 

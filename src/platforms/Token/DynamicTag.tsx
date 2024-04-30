@@ -5,7 +5,7 @@ import useRequirements from "components/[guild]/hooks/useRequirements"
 import { Lightning, Warning } from "phosphor-react"
 import DynamicRewardModal from "./DynamicRewardModal"
 import { useTokenRewardContext } from "./TokenRewardContext"
-import useRolePlatforms from "./hooks/useRolePlatforms"
+import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
 const DynamicTag = () => {
   const { isAdmin } = useGuildPermission()
@@ -17,7 +17,7 @@ const DynamicTag = () => {
   } = useTokenRewardContext()
 
   const { roles } = useGuild()
-  const rolePlatforms = useRolePlatforms(guildPlatformId)
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatformId)
   const role = roles.find((rl) =>
     rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)
   )

@@ -35,7 +35,7 @@ import { useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Requirement } from "types"
 import DynamicTypeForm from "./DynamicTypeForm"
-import useRolePlatforms from "./hooks/useRolePlatforms"
+import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
 const EditTokenModal = ({
   isOpen,
@@ -56,7 +56,7 @@ const EditTokenModal = ({
 
   const { roles, id: guildId } = useGuild()
 
-  const rolePlatforms = useRolePlatforms(id)
+  const rolePlatforms = useRolePlatformsOfReward(id)
 
   const role = roles.find((rl) =>
     rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)

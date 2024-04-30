@@ -1,6 +1,6 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 
-const useRolePlatforms = (guildPlatformId: number) => {
+const useRolePlatformsOfReward = (guildPlatformId: number) => {
   const { roles } = useGuild()
 
   return (
@@ -14,4 +14,4 @@ const useRolePlatforms = (guildPlatformId: number) => {
   )
 }
 
-export default useRolePlatforms
+export default useRolePlatformsOfReward

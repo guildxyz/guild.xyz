@@ -4,7 +4,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import useTokenData from "hooks/useTokenData"
 import { GuildPlatform, RolePlatform } from "types"
-import useRolePlatforms from "./useRolePlatforms"
+import useRolePlatformsOfReward from "./useRolePlatformsOfReward"
 import useTokenClaimedAmount from "./useTokenClaimedAmount"
 
 const calcRequirementAmount = (
@@ -112,7 +112,7 @@ const useClaimableTokens = (guildPlatform: GuildPlatform) => {
 
   const { roleIds } = useMembership()
 
-  const rolePlatforms = useRolePlatforms(guildPlatform.id).filter(
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id).filter(
     (rp) => roleIds?.includes(rp.roleId) || false
   )
 

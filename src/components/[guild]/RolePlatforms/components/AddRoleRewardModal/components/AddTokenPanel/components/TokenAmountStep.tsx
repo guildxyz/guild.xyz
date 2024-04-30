@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import useRolePlatforms from "platforms/Token/hooks/useRolePlatforms"
+import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
@@ -41,7 +41,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
         address?.toLowerCase()
   )
 
-  const rolePlatforms = useRolePlatforms(platformForToken?.id)
+  const rolePlatforms = useRolePlatformsOfReward(platformForToken?.id)
 
   const dynamicExists =
     rolePlatforms?.find(
