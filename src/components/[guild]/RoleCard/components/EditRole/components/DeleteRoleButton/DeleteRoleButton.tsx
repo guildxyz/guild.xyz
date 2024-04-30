@@ -21,6 +21,7 @@ type Props = {
 
 const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { id } = useGuild()
 
   const onSuccess = () => {
     onClose()
@@ -28,16 +29,6 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
   }
 
   const { onSubmit, isLoading } = useDeleteRole(roleId, onSuccess)
-
-  const handleDelete = async () => {
-    if (tokenRolePlatform) {
-      await deleteTokenReward()
-      return
-    }
-    onSubmit()
-  }
-
-  const { id } = useGuild()
 
   const roleResponse = useRole(id, roleId)
   const role = roleResponse as unknown as Role
@@ -47,6 +38,14 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
     useRemoveGuildPlatform(tokenRolePlatform?.guildPlatformId, {
       onSuccess: onSubmit,
     })
+
+  const handleDelete = async () => {
+    if (tokenRolePlatform) {
+      await deleteTokenReward()
+      return
+    }
+    onSubmit()
+  }
 
   return (
     <>
