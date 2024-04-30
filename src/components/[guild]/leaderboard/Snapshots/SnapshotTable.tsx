@@ -63,7 +63,7 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
   })
 
   return (
-    <Stack gap={0}>
+    <Stack gap={2}>
       <InputGroup>
         <InputLeftElement>
           <Icon boxSize={4} as={MagnifyingGlass} />

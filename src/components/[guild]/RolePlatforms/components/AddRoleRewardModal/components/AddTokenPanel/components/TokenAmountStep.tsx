@@ -46,7 +46,8 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const dynamicExists =
     rolePlatforms?.find(
       (rp: any) =>
-        rp.dynamicAmount?.operation?.input?.[0]?.type === "REQUIREMENT_AMOUNT"
+        rp.dynamicAmount?.operation?.input?.[0]?.type === "REQUIREMENT_AMOUNT" &&
+        rp?.guildPlatformId === platformForToken?.id
     ) || false
 
   useEffect(() => {
