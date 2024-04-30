@@ -30,7 +30,6 @@ import useEditRequirement from "components/create-guild/Requirements/hooks/useEd
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
-import { ArrowSquareIn } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -54,8 +53,6 @@ const EditTokenModal = ({
   const methods = useForm<AddTokenFormType>({
     mode: "all",
   })
-
-  const { setValue } = methods
 
   const { roles, id: guildId } = useGuild()
 
@@ -190,11 +187,7 @@ const EditTokenModal = ({
                     Change the snapshot that the reward amount is based on.
                   </Text>
                   {snapshotRequirement && (
-                    <Button
-                      rightIcon={<ArrowSquareIn />}
-                      variant="outline"
-                      onClick={snapshotOnOpen}
-                    >
+                    <Button variant="outline" onClick={snapshotOnOpen}>
                       View current snapshot
                     </Button>
                   )}
@@ -242,7 +235,7 @@ const EditTokenModal = ({
                   }
                   size="lg"
                   width="fill"
-                  colorScheme="indigo"
+                  colorScheme="green"
                   onClick={methods.handleSubmit(onEditSubmit)}
                 >
                   Save

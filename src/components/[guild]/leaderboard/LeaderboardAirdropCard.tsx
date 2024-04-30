@@ -20,6 +20,7 @@ import {
   useTokenRewardContext,
 } from "platforms/Token/TokenRewardContext"
 import { useClaimableTokens } from "platforms/Token/hooks/useCalculateToken"
+import useRolePlatforms from "platforms/Token/hooks/useRolePlatforms"
 import { GuildPlatform } from "types"
 import { useTokenRewards } from "../AccessHub/hooks/useAccessedTokens"
 import AvailabilityTags from "../RolePlatforms/components/PlatformCard/components/AvailabilityTags"
@@ -39,13 +40,7 @@ const LeaderboardAirdropCard = () => {
 
   const { roles } = useGuild()
   const { roleIds } = useMembership()
-  const rolePlatformIds = roles
-    ?.flatMap((role) => role.rolePlatforms)
-    ?.filter(
-      (rp) =>
-        rp?.guildPlatformId === guildPlatform.id ||
-        rp?.guildPlatform?.id === guildPlatform.id
-    )
+  const rolePlatformIds = useRolePlatforms(guildPlatform.id)
     .filter((rp) => roleIds?.includes(rp.roleId) || false)
     .map((rp) => rp.id)
 

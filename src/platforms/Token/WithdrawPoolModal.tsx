@@ -63,7 +63,7 @@ const WithdrawPoolModal = ({
       toast({
         status: "success",
         title: "Success",
-        description: "Successfully withdrawed all funds from the pool!",
+        description: "Successfully withdrawn all funds from the pool!",
       })
       onClose()
       refetch()

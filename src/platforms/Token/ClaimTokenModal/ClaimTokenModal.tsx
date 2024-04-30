@@ -1,9 +1,6 @@
 import {
-  Center,
   Checkbox,
   Divider,
-  Flex,
-  Heading,
   Icon,
   Link,
   Modal,
@@ -12,31 +9,26 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Skeleton,
   Stack,
   Text,
-  VStack,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
-import GuildLogo from "components/common/GuildLogo"
 import Image from "next/image"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import TokenClaimFeeTable from "./ClaimFeeTable"
-import { useTokenRewardContext } from "./TokenRewardContext"
-import TokenRolePlatformClaimCard from "./TokenRolePlatformClaimCard"
-import { useClaimableTokens } from "./hooks/useCalculateToken"
-import useCollectToken from "./hooks/useCollectToken"
-import usePool from "./hooks/usePool"
-import useRolePlatforms from "./hooks/useRolePlatforms"
-import useTokenClaimedAmount from "./hooks/useTokenClaimedAmount"
+import TokenClaimFeeTable from "../TokenClaimFeeTable"
+import { useTokenRewardContext } from "../TokenRewardContext"
+import TokenRolePlatformClaimCard from "../TokenRolePlatformClaimCard"
+import useCollectToken from "../hooks/useCollectToken"
+import usePool from "../hooks/usePool"
+import useRolePlatforms from "../hooks/useRolePlatforms"
+import useTokenClaimedAmount from "../hooks/useTokenClaimedAmount"
+import TokenRibbonIllustration from "./TokenRibbonIllustration"
 
 type Props = {
   isOpen: boolean
@@ -44,12 +36,10 @@ type Props = {
 }
 
 const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
-  const { textColor } = useThemeContext()
   const modalBg = useCardBg()
   const [isConfirmed, setIsConfirmed] = useState(false)
 
-  const { token, guildPlatform, imageUrl } = useTokenRewardContext()
-  const claimableAmount = useClaimableTokens(guildPlatform)
+  const { token, guildPlatform } = useTokenRewardContext()
 
   const { refetch } = usePool(
     guildPlatform.platformGuildData.chain,
@@ -80,10 +70,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const { chainId } = useAccount()
   const isOnCorrectChain = Number(Chains[chain]) === chainId
-  const gradientColor = useColorModeValue(
-    "var(--chakra-colors-gold-100)",
-    `var(--chakra-colors-gold-800)`
-  )
 
   const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
     useMembershipUpdate({
@@ -134,72 +120,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           border={"4px solid transparent"}
           mt="0"
         >
-          <Stack
-            justifyContent={"center"}
-            position={"relative"}
-            alignItems={"center"}
-            mt={8}
-            mb={4}
-          >
-            <Center
-              position="relative"
-              w="full"
-              background={`radial-gradient(circle at bottom, ${gradientColor}, transparent 50%) border-box`}
-            >
-              <Image
-                priority
-                src={"/img/cup_without_cup.png"}
-                alt="Cup"
-                width={175}
-                height={155}
-                draggable={false}
-              />
-              <GuildLogo
-                pos="absolute"
-                top="20px"
-                imageUrl={imageUrl}
-                size={"66px"}
-                borderWidth="5px"
-                borderColor="gold.400"
-                boxSizing="content-box"
-                boxShadow="lg"
-              />
-            </Center>
-
-            <VStack position={"relative"} mt="-70px">
-              <Image
-                src={"/img/ribbon.svg"}
-                alt="Ribbon"
-                priority
-                width={300}
-                height={70}
-                draggable={false}
-              />
-
-              <Skeleton isLoaded={!token.isLoading}>
-                <Flex
-                  alignItems={"center"}
-                  gap={2}
-                  position={"absolute"}
-                  top={"50%"}
-                  left={0}
-                  justifyContent={"center"}
-                  style={{ transform: "translateY(-33%)" }}
-                  width={"full"}
-                >
-                  <Heading
-                    fontSize={"x-large"}
-                    fontFamily="display"
-                    color={textColor}
-                    marginTop={"-3px"}
-                  >
-                    {" "}
-                    {claimableAmount} {token.data.symbol}
-                  </Heading>
-                </Flex>
-              </Skeleton>
-            </VStack>
-          </Stack>
+          <TokenRibbonIllustration />
 
           <Divider
             mt="8"
