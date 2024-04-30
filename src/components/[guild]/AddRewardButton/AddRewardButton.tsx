@@ -79,7 +79,6 @@ const AddRewardButton = (): JSX.Element => {
     step,
     setStep,
     activeTab,
-    setActiveTab,
 
     isOpen,
     onOpen,

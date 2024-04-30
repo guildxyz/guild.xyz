@@ -1,4 +1,5 @@
 import { Schemas } from "@guildxyz/types"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
@@ -59,25 +60,59 @@ const useCreateReqBasedTokenReward = ({
     useCreateRequirementForRole()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
-  const { id: guildId } = useGuild()
+  const { id: guildId, urlName } = useGuild()
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    guild: urlName,
+    hook: "useCreateReqBasedTokenReward",
+  }
 
   const { onSubmit: onAddRewardSubmit, isLoading: creatingReward } = useAddReward({
     onSuccess: () => {
+      captureEvent(
+        "createTokenReward(AddToExistingRole) Reward created",
+        postHogOptions
+      )
+      triggerMembershipUpdate()
       onSuccess()
     },
     onError: (err) => {
+      captureEvent("createTokenReward(CreateWithNewRole) Failed to create reward", {
+        ...postHogOptions,
+        err,
+      })
+      showErrorToast("Failed to create reward")
       onError(err)
     },
   })
 
-  const { onSubmit: onCreateRoleSubmit, isLoading: creatingRole } = useCreateRole({})
+  const { onSubmit: onCreateRoleSubmit, isLoading: creatingRole } = useCreateRole({
+    onError: (error) => {
+      captureEvent("createTokenReward(CreateWithNewRole) Failed to create role", {
+        ...postHogOptions,
+        error,
+      })
+      showErrorToast(
+        "Failed to create the role for the reward, aborting reward creation."
+      )
+    },
+  })
 
   const addToExistingRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     if (data.roleIds.length > 1) {
+      captureEvent("Failed to add token reward", {
+        ...postHogOptions,
+        reason: "Multiple roles selected",
+      })
       showErrorToast("Dynamic token rewards can be added to only one role at most.")
       return
     }
     if (data.requirements.length > 1) {
+      captureEvent("Failed to add token reward", {
+        ...postHogOptions,
+        reason: "Multiple requirements set when adding to existing role",
+      })
       showErrorToast(
         "You cannot set requirements to the role when adding this reward."
       )
@@ -136,9 +171,17 @@ const useCreateReqBasedTokenReward = ({
           { revalidate: false }
         )
 
-        onAddRewardSubmit(rewardSubmitData).then(() => triggerMembershipUpdate())
+        onAddRewardSubmit(rewardSubmitData)
       },
-      onError: (error) => console.error(error),
+      onError: (error) => {
+        captureEvent(
+          "createTokenReward(AddToExistingRole) Failed to create requirement",
+          { ...postHogOptions, error }
+        )
+        showErrorToast(
+          "Failed to create the snapshot requirement, aborting reward creation."
+        )
+      },
     })
   }
 
@@ -159,7 +202,13 @@ const useCreateReqBasedTokenReward = ({
       guildId,
     })
 
-    const modifiedData = { ...data }
+    if (!createdRole) return
+    captureEvent("createTokenReward(CreateWithNewRole) Role created", {
+      postHogOptions,
+      roleId: createdRole.id,
+    })
+
+    const modifiedData: any = { ...data }
     const tokenGuildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
 
     if (tokenGuildPlatformExists) {
@@ -190,7 +239,13 @@ const useCreateReqBasedTokenReward = ({
       saveAs,
       createdRole.id
     )
-    await onAddRewardSubmit(rewardSubmitData)
+    const createdReward = await onAddRewardSubmit(rewardSubmitData)
+    if (!createdReward) return
+    captureEvent("createTokenReward(CreateWithNewRole) Reward created", {
+      postHogOptions,
+      guildPlatformId: createdReward.id,
+    })
+
     triggerMembershipUpdate()
   }
 

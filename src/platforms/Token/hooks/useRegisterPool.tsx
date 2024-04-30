@@ -1,4 +1,5 @@
 import { Chain } from "@guildxyz/types"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
@@ -15,6 +16,12 @@ const useRegisterPool = (
   const showErrorToast = useShowErrorToast()
   const tokenIsNative = token === NULL_ADDRESS
 
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    chain: chain,
+    hook: "useRegisterPool",
+  }
+
   const transactionConfig = {
     abi: tokenRewardPoolAbi,
     address: ERC20_CONTRACTS[chain],
@@ -24,7 +31,10 @@ const useRegisterPool = (
   }
 
   return useSubmitTransaction(transactionConfig, {
-    onError: (error) => console.error(error),
+    onError: (error) => {
+      captureEvent("Failed to register pool", { ...postHogOptions, error })
+      console.error(error)
+    },
     onSuccess: (_, events) => {
       if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
         return
@@ -37,10 +47,12 @@ const useRegisterPool = (
 
       if (!poolRegisteredEvent) {
         // TODO: not so client friendly error message
+        captureEvent("Couldn't find 'PoolRegistered' event", { ...postHogOptions })
         showErrorToast("Couldn't find 'PoolRegistered' event")
       }
 
       const poolId = poolRegisteredEvent.args.poolId.toString()
+      captureEvent("Registered pool", { ...postHogOptions, poolId: poolId })
       onSuccess(poolId)
     },
   })

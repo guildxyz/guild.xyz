@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -25,8 +26,13 @@ const useCollectToken = (
   onSuccess?: () => void
 ) => {
   const { id: guildId, urlName, name } = useGuild()
-
   const { amount } = useTokenClaimFee(chain)
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    guild: urlName,
+    chain: chain,
+  }
 
   const [loadingText, setLoadingText] = useState("")
 
@@ -45,20 +51,32 @@ const useCollectToken = (
         method: "POST",
         body: {},
       },
-    ]).then((res) => {
-      const data: ClaimResponse = res.data
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const [_poolId, _rolePlatformId, _amount, _signedAt, _userId, _signature] =
-        data.args
-      return [
-        BigInt(_poolId),
-        BigInt(_rolePlatformId),
-        BigInt(_amount),
-        BigInt(_signedAt),
-        BigInt(_userId),
-        _signature,
-      ] satisfies Args
-    })
+    ])
+      .catch((error) => {
+        showErrorToast(
+          "Failed to prepare claim transaction. Please try signing in again, or contact our support team!"
+        )
+        captureEvent("Failed to get claim response", {
+          ...postHogOptions,
+          hook: "useCollectToken",
+          error,
+        })
+        return
+      })
+      .then((res) => {
+        const data: ClaimResponse = res.data
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        const [_poolId, _rolePlatformId, _amount, _signedAt, _userId, _signature] =
+          data.args
+        return [
+          BigInt(_poolId),
+          BigInt(_rolePlatformId),
+          BigInt(_amount),
+          BigInt(_signedAt),
+          BigInt(_userId),
+          _signature,
+        ] satisfies Args
+      })
 
     const claimTransactionConfig = {
       abi: tokenRewardPoolAbi,
@@ -111,6 +129,10 @@ const useCollectToken = (
           tweetText: `Just collected my tokens in the ${name} guild!\nguild.xyz/${urlName}`,
         })
 
+        captureEvent("Successful token claiming", {
+          ...postHogOptions,
+          hook: "useCollectToken",
+        })
         onSuccess?.()
       },
       onError: (err) => {
@@ -130,6 +152,12 @@ const useCollectToken = (
                   return "The reward pool does not have enough tokens. The guild admin needs to fund it."
               }
             })
+
+        captureEvent("Error while claiming token", {
+          ...postHogOptions,
+          hook: "useCollectToken",
+          err,
+        })
 
         showErrorToast(prettyError)
       },

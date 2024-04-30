@@ -39,7 +39,7 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
     (gp) => gp.id === pointsPlatformId
   )
   const {
-    data: { logoURI: tokenLogo, symbol: tokenSymbol },
+    data: { logoURI: tokenLogo },
   } = useTokenData(chain, address)
 
   useEffect(() => {

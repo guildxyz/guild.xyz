@@ -28,7 +28,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const chain = useWatch({ control, name: `chain` })
   const address = useWatch({ control, name: `tokenAddress` })
 
-  const { roles, guildPlatforms } = useGuild()
+  const { guildPlatforms } = useGuild()
 
   const tokenPlatforms = guildPlatforms?.filter(
     (gp) => gp.platformId === PlatformType.ERC20
