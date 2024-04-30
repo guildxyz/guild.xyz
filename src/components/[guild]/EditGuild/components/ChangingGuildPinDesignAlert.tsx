@@ -14,7 +14,11 @@ type Props = {
   onSave: (e: any) => void
 } & Omit<AlertDialogProps, "leastDestructiveRef" | "children">
 
-const SaveAlert = ({ onClose, onSave, ...rest }: Props): JSX.Element => {
+const ChangingGuildPinDesignAlert = ({
+  onClose,
+  onSave,
+  ...rest
+}: Props): JSX.Element => {
   const cancelRef = useRef()
 
   return (
@@ -33,7 +37,7 @@ const SaveAlert = ({ onClose, onSave, ...rest }: Props): JSX.Element => {
               Cancel
             </Button>
             <Button
-              colorScheme="red"
+              colorScheme="orange"
               ml={3}
               onClick={(e) => {
                 onSave(e)
@@ -49,4 +53,4 @@ const SaveAlert = ({ onClose, onSave, ...rest }: Props): JSX.Element => {
   )
 }
 
-export default SaveAlert
+export default ChangingGuildPinDesignAlert

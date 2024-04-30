@@ -11,13 +11,14 @@ import {
   Stepper,
   useSteps,
 } from "@chakra-ui/react"
-import { Chain, Schemas } from "@guildxyz/types"
+import { Schemas } from "@guildxyz/types"
 import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformGuildData, PlatformType, Requirement } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
+import { Chain } from "wagmiConfig/chains"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"

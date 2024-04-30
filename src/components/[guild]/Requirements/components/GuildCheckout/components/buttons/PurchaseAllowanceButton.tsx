@@ -5,12 +5,11 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { Check, Question, Warning } from "phosphor-react"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { NULL_ADDRESS, TOKEN_BUYER_CONTRACTS } from "utils/guildCheckout/constants"
 import { useChainId } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../../RequirementContext"
 import usePrice from "../../hooks/usePrice"
-import useTokenBuyerContractData from "../../hooks/useTokenBuyerContractData"
 import { useGuildCheckoutContext } from "../GuildCheckoutContext"
 
 const PurchaseAllowanceButton = (): JSX.Element => {
@@ -37,15 +36,13 @@ const PurchaseAllowanceButton = (): JSX.Element => {
     isValidating: isPriceLoading,
   } = usePrice()
 
-  const tokenBuyerContractData = useTokenBuyerContractData()
-
   const {
     allowance,
     isAllowanceLoading,
     isAllowing,
     allowanceError,
     allowSpendingTokens,
-  } = useAllowance(pickedCurrency, tokenBuyerContractData[Chains[chainId]]?.address)
+  } = useAllowance(pickedCurrency, TOKEN_BUYER_CONTRACTS[Chains[chainId]]?.address)
 
   const isEnoughAllowance =
     typeof maxPriceInWei === "bigint" && typeof allowance === "bigint"

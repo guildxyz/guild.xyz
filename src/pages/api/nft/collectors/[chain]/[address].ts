@@ -1,5 +1,5 @@
 import { kv } from "@vercel/kv"
-import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/CreateNftForm"
+import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"
@@ -21,7 +21,6 @@ export type TopCollectorsResponse = OneOf<
 
 export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${process.env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
-  POLYGON_MUMBAI: `https://polygon-mumbai.g.alchemy.com/nft/v3/${process.env.POLYGON_MUMBAI_ALCHEMY_KEY}/getOwnersForContract`,
   BASE_MAINNET: `https://base-mainnet.g.alchemy.com/nft/v3/${process.env.BASE_ALCHEMY_KEY}/getOwnersForContract`,
   ETHEREUM: `https://eth-mainnet.g.alchemy.com/nft/v3/${process.env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${process.env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
@@ -30,6 +29,7 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   MANTLE: "",
   ZKSYNC_ERA: "",
   LINEA: "",
+  SEPOLIA: "",
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
@@ -40,7 +40,7 @@ export const validateNftChain = (value: string | string[]): Chain => {
 export const validateNftAddress = (value: string | string[]): `0x${string}` => {
   const valueAsString = value?.toString()
   if (!ADDRESS_REGEX.test(valueAsString)) return null
-  return valueAsString as `0x${string}`
+  return valueAsString.toLowerCase() as `0x${string}`
 }
 
 const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {

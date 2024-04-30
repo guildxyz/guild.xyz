@@ -45,17 +45,21 @@ import ChainPicker from "requirements/common/ChainPicker"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
-import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import ImagePicker from "./components/ImagePicker"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
-import useCreateNft, { CreateNFTResponse } from "./hooks/useCreateNft"
+import useCreateNft, {
+  CONTRACT_CALL_SUPPORTED_CHAINS,
+  ContractCallSupportedChain,
+  CreateNFTResponse,
+} from "./hooks/useCreateNft"
 
 type Props = {
   onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
 }
 
 export type CreateNftFormType = {
-  chain: Chain
+  chain: ContractCallSupportedChain
   tokenTreasury: `0x${string}`
   name: string
   symbol: string
@@ -65,22 +69,6 @@ export type CreateNftFormType = {
   image: File
   attributes: { name: string; value: string }[]
 }
-
-const CONTRACT_CALL_SUPPORTED_CHAINS = [
-  "ETHEREUM",
-  "BASE_MAINNET",
-  "OPTIMISM",
-  "BSC",
-  "CRONOS",
-  "POLYGON",
-  "POLYGON_MUMBAI",
-  "MANTLE",
-  "ZKSYNC_ERA",
-  "LINEA",
-] as const
-
-export type ContractCallSupportedChain =
-  (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 const CreateNftForm = ({ onSuccess }: Props) => {
   const { isConnected: isEvmConnected, address, chainId } = useAccount()
@@ -297,7 +285,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
               <ChainPicker
                 controlName="chain"
-                supportedChains={[...CONTRACT_CALL_SUPPORTED_CHAINS]}
+                supportedChains={CONTRACT_CALL_SUPPORTED_CHAINS}
                 showDivider={false}
               />
 

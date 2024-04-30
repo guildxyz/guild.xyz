@@ -129,6 +129,8 @@ const useLoginWithGoogle = () => {
         // Ignore cases, when the user cancels the OAuth
         if (error?.error !== "access_denied") {
           captureEvent("[WaaS] Google OAuth failed", { error })
+        } else {
+          captureEvent("[WaaS] Google OAuth denied", { error })
         }
         return
       }

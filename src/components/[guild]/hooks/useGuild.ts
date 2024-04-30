@@ -13,12 +13,12 @@ const useGuild = (guildId?: string | number) => {
   const { data, mutate, isLoading, error, isSigned } = useSWRWithOptionalAuth<Guild>(
     id ? `/v2/guilds/guild-page/${id}` : null,
     {
-      onSuccess: (newData) => {
+      onSuccess: (newData: Guild) => {
         // If we fetch guild by id, we populate the urlName cache too and vice versa
 
         if (typeof id === "string") {
           mutateOptionalAuthSWRKey(
-            `/v2/guilds/guild-page/${data.id}`,
+            `/v2/guilds/guild-page/${newData.id}`,
             () => newData,
             {
               revalidate: false,
@@ -28,7 +28,7 @@ const useGuild = (guildId?: string | number) => {
 
         if (typeof id === "number") {
           mutateOptionalAuthSWRKey(
-            `/v2/guilds/guild-page/${data.urlName}`,
+            `/v2/guilds/guild-page/${newData.urlName}`,
             () => newData,
             {
               revalidate: false,

@@ -49,7 +49,6 @@ import {
   optimism,
   pgn,
   polygon,
-  polygonMumbai,
   polygonZkEvm,
   ronin,
   scroll,
@@ -75,7 +74,6 @@ export const wagmiConfig = createConfig({
   chains: [
     mainnet,
     polygon,
-    polygonMumbai,
     polygonZkEvm,
     base as Chain,
     baseSepolia as Chain,
@@ -131,9 +129,8 @@ export const wagmiConfig = createConfig({
   transports: {
     [mainnet.id]: http(),
     [polygon.id]: http("https://polygon-bor-rpc.publicnode.com"),
-    [polygonMumbai.id]: http(),
     [polygonZkEvm.id]: http(),
-    [base.id]: http("https://base-rpc.publicnode.com"),
+    [base.id]: http("https://base.llamarpc.com"),
     [baseSepolia.id]: http(),
     [optimism.id]: http(),
     [arbitrum.id]: http(),

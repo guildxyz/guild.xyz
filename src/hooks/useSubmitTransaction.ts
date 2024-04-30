@@ -117,7 +117,8 @@ const useSubmitTransaction = (
     if (!txHash && hash) {
       setTxHash(hash)
     }
-  }, [txHash, hash, setTxHash])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hash])
 
   const {
     data: transactionReceipt,

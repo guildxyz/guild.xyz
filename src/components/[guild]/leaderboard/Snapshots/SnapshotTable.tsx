@@ -85,6 +85,7 @@ const SnapshotTable = ({ snapshotData, chakraProps }: Props) => {
         ref={parentRef}
         position={"relative"}
         minH={"80px"}
+        height={"fit-content"}
         maxH={"400px"}
         overflowY={"auto"}
         border={"1px"}

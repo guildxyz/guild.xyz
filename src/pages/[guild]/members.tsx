@@ -124,7 +124,7 @@ const columns = [
   }),
 ]
 
-const GuildPage = (): JSX.Element => {
+const MembersPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, imageUrl } = useGuild()
 
@@ -235,8 +235,8 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-const GuildPageWrapper = (): JSX.Element => {
-  const { featureFlags, name, error } = useGuild()
+const MembersPageWrapper = (): JSX.Element => {
+  const { featureFlags, error } = useGuild()
   const router = useRouter()
 
   if (error) return <ErrorPage statusCode={404} />
@@ -247,12 +247,12 @@ const GuildPageWrapper = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>{`${name} members`}</title>
-        <meta property="og:title" content={`${name} members`} />
+        <title>Members</title>
+        <meta property="og:title" content="Members" />
       </Head>
-      <ThemeProvider>{router.isReady && <GuildPage />}</ThemeProvider>
+      <ThemeProvider>{router.isReady && <MembersPage />}</ThemeProvider>
     </>
   )
 }
 
-export default GuildPageWrapper
+export default MembersPageWrapper

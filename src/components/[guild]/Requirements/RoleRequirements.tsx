@@ -15,7 +15,6 @@ import React, {
 } from "react"
 import { VariableSizeList } from "react-window"
 import { Logic, Requirement, Role } from "types"
-import useGuild from "../hooks/useGuild"
 import useRequirements from "../hooks/useRequirements"
 import LogicDivider from "../LogicDivider"
 import { RoleCardCollapseProps } from "../RoleCard"
@@ -40,11 +39,10 @@ const RoleRequirements = ({
   descriptionRef,
   initialRequirementsRef,
 }: Props) => {
-  const guild = useGuild()
-  const { data } = useRequirements(role.id)
+  const { data, isLoading } = useRequirements(role?.id)
 
   const requirements =
-    role.hiddenRequirements || (data?.length === 0 && !(guild as any).isFallback)
+    role.hiddenRequirements || data?.length === 0
       ? [...(data ?? []), { type: "HIDDEN", roleId: role.id } as Requirement]
       : data
 
@@ -72,7 +70,8 @@ const RoleRequirements = ({
       <VStack spacing="0">
         {role.logic === "ANY_OF" && <AnyOfHeader anyOfNum={role.anyOfNum} />}
         <VStack ref={initialRequirementsRef} spacing={0} w="full" p={5} pt={0}>
-          {!requirements?.length ? (
+          {/* Checking !data here too, so we don't show a loading state when we have data from the public request, but the authenticated request is still loading */}
+          {isLoading && !data ? (
             <RoleRequirementsSkeleton />
           ) : isVirtualList ? (
             <VirtualRequirements

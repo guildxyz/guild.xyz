@@ -1,10 +1,9 @@
-import { Chain } from "@guildxyz/types"
 import useTokenBalance from "hooks/useTokenBalance"
 import useTokenData from "hooks/useTokenData"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem/utils"
 import { useAccount, useBalance } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 const useIsBalanceSufficient = ({
   address,

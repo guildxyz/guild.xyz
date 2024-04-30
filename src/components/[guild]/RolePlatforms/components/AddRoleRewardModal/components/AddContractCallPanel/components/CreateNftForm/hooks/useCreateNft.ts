@@ -1,10 +1,10 @@
-import { NFTDetails } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { NFTDetailsAPIResponse } from "pages/api/nft/[chain]/[address]"
 import { useState } from "react"
 import guildRewardNFTFacotryAbi from "static/abis/guildRewardNFTFactory"
 import { mutate } from "swr"
@@ -13,24 +13,27 @@ import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, parseUnits } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
-import { ContractCallSupportedChain, CreateNftFormType } from "../CreateNftForm"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
+import { CreateNftFormType } from "../CreateNftForm"
 
-export const GUILD_REWARD_NFT_FACTORY_ADDRESSES: Record<
-  ContractCallSupportedChain,
-  string
-> = {
+export const GUILD_REWARD_NFT_FACTORY_ADDRESSES = {
   ETHEREUM: "0x6ee2dd02fbfb71f518827042b6adca242f1ba0b2",
   BASE_MAINNET: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
   OPTIMISM: "0xe6e6b676f94a6207882ac92b6014a391766fa96e",
   BSC: "0xa445e7d3af54867d14467b44d5487352403d1e59",
   CRONOS: "0x6c2c223b84724c4b8fd41ae0142c2369dfa7e319",
   POLYGON: "0xc1c23618110277ffe6d529816eb23de42b24cc33",
-  POLYGON_MUMBAI: "0xf14249947c6de788c61f8ac5db0495ee2663ec1b",
   MANTLE: "0x326f14942f8899406e3224bd63E9f250D275a52e",
   ZKSYNC_ERA: "0x2a1eaf11a9753a871b15e2865d8a47cf17dd9450",
   LINEA: "0x326f14942f8899406e3224bd63E9f250D275a52e",
-}
+  SEPOLIA: "0xa9e8e62266d449b766d305075248790bdd46facb",
+} as const satisfies Partial<Record<Chain, `0x${string}`>>
+
+export const CONTRACT_CALL_SUPPORTED_CHAINS = Object.keys(
+  GUILD_REWARD_NFT_FACTORY_ADDRESSES
+) as (keyof typeof GUILD_REWARD_NFT_FACTORY_ADDRESSES)[]
+export type ContractCallSupportedChain =
+  (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
 type NftMetadata = {
   name: string
@@ -182,7 +185,7 @@ const useCreateNft = (
           title: "Successfully deployed NFT contract",
         })
 
-        const { chain, contractAddress, name, imageUrl } =
+        const { chain, contractAddress, name } =
           response.guildPlatform.platformGuildData
 
         captureEvent("Successfully created NFT", {
@@ -191,20 +194,12 @@ const useCreateNft = (
           contractAddress,
         })
 
-        mutate<NFTDetails>(
+        mutate<NFTDetailsAPIResponse>(
           ["nftDetails", chain, contractAddress],
           {
             creator: address.toLowerCase(),
             name,
-            totalCollectors: 0,
-            totalCollectorsToday: 0,
             standard: "ERC-721", // TODO: we should use a dynamic value here
-            image: imageUrl,
-            description: response.formData.description,
-            fee: parseUnits(
-              response.formData.price.toString() ?? "0",
-              CHAIN_CONFIG[response.formData.chain].nativeCurrency.decimals
-            ),
           },
           {
             revalidate: false,
