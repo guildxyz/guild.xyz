@@ -19,7 +19,7 @@ import useCreateSnapshot from "hooks/useCreateSnapshot"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/router"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { FormProvider, useController, useFormContext } from "react-hook-form"
 import { PlatformType } from "types"
 import SnapshotTable from "./SnapshotTable"
@@ -34,14 +34,6 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
   const router = useRouter()
   const showErrorToast = useShowErrorToast()
 
-  const [name, setName] = useState(
-    new Date().toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    })
-  )
-
   const { guildPlatforms, id: guildId } = useGuild()
 
   const existingPointsRewards = guildPlatforms?.filter(
@@ -50,7 +42,19 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
 
   const methods = useFormContext()
 
-  const { control } = methods
+  const { control, setValue } = methods
+
+  const {
+    field: { value: name },
+  } = useController({
+    control,
+    name: "name",
+    defaultValue: new Date().toLocaleDateString("en-US", {
+      month: "2-digit",
+      day: "2-digit",
+      year: "numeric",
+    }),
+  })
 
   const { field: selectedExistingId } = useController({
     control,
@@ -118,7 +122,10 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
               />
               <FormControl>
                 <FormLabel>Snapshot name</FormLabel>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
+                <Input
+                  value={name}
+                  onChange={(e) => setValue("name", e.target.value)}
+                />
               </FormControl>
               <Box>
                 <Text fontWeight={"medium"} mb="2">
