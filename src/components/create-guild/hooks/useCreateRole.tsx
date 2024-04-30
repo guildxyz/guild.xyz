@@ -25,7 +25,13 @@ type CreateRoleResponse = Role & {
   requirements?: Requirement[]
 }
 
-const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
+const useCreateRole = ({
+  onSuccess,
+  onError,
+}: {
+  onSuccess?: () => void
+  onError?: (error) => void
+}) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
 
@@ -41,11 +47,13 @@ const useCreateRole = ({ onSuccess }: { onSuccess?: () => void }) => {
     fetcher(`/v2/guilds/${id}/roles`, signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<CreateRoleResponse>(fetchData, {
-    onError: (error_) =>
+    onError: (error_) => {
       showErrorToast({
         error: processConnectorError(error_.error) ?? error_.error,
         correlationId: error_.correlationId,
-      }),
+      })
+      onError?.(error_)
+    },
     onSuccess: async (response_) => {
       triggerConfetti()
 
