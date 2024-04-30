@@ -1,13 +1,13 @@
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 const useRemoveGuildPlatform = (
   guildPlatformId: number,
-  onSuccess?: () => void,
-  onError?: () => void
+  { onSuccess, onError }: UseSubmitOptions<any> = {}
 ) => {
   const { id, mutateGuild } = useGuild()
   const toast = useToast()
@@ -21,7 +21,7 @@ const useRemoveGuildPlatform = (
 
   return useSubmitWithSign<any>(submit, {
     forcePrompt: true,
-    onSuccess: () => {
+    onSuccess: (res) => {
       toast({
         title: "Reward removed!",
         status: "success",
@@ -46,11 +46,11 @@ const useRemoveGuildPlatform = (
         }),
         { revalidate: false }
       )
-      onSuccess?.()
+      onSuccess?.(res)
     },
     onError: (error) => {
       showErrorToast(error)
-      onError?.()
+      onError?.(error)
     },
   })
 }
