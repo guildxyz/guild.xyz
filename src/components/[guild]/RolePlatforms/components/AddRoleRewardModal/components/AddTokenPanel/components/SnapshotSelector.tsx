@@ -59,16 +59,17 @@ const SnapshotSelector = () => {
   useEffect(() => {
     if (!snapshot) return
     const transformedData = transformSnapshotData(snapshot.data)
-    const setRequirement = (req: any) => setRootValue("requirements", [req])
 
-    setRequirement({
-      type: "GUILD_SNAPSHOT",
-      data: {
-        snapshot: transformedData,
-        isHidden: false,
-        guildPlatformId: selectedPointsId,
+    setRootValue("requirements", [
+      {
+        type: "GUILD_SNAPSHOT",
+        data: {
+          snapshot: transformedData,
+          isHidden: false,
+          guildPlatformId: selectedPointsId,
+        },
       },
-    })
+    ])
   }, [snapshot, selectedPointsId, setRootValue])
 
   const getPointPlatform = (guildPlatformId: number) =>
