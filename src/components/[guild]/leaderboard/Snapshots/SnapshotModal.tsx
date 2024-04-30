@@ -77,7 +77,7 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
           <ModalCloseButton />
 
           <ModalBody>
-            <Stack gap={1}>
+            <Stack gap={1} mb={3}>
               <HStack justifyContent={"space-between"}>
                 <Text color={"GrayText"}>Snapshot type</Text>
                 <Text>{pointData ? "Point based" : "Custom upload"}</Text>
@@ -93,12 +93,14 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
                   </>
                 )}
               </HStack>
-              <HStack justifyContent={"space-between"}>
-                <Text color={"GrayText"}>Created at</Text>
-                <Text>
-                  {new Date(snapshotRequirement.createdAt).toLocaleString()}
-                </Text>
-              </HStack>
+              {!!snapshotRequirement.createdAt && (
+                <HStack justifyContent={"space-between"}>
+                  <Text color={"GrayText"}>Created at</Text>
+                  <Text>
+                    {new Date(snapshotRequirement.createdAt).toLocaleString()}
+                  </Text>
+                </HStack>
+              )}
             </Stack>
 
             <SnapshotTable snapshotData={snapshotData} />
