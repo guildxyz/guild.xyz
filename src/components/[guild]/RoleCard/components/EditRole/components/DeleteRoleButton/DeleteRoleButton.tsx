@@ -1,9 +1,8 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
-  Collapse,
-  HStack,
-  Stack,
+  Box,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -59,34 +58,28 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
         onConfirm={handleDelete}
         title="Delete role"
         description={
-          <>
-            <Collapse in={!!tokenRolePlatform}>
-              <Alert status="warning">
-                <Stack>
-                  <HStack gap={0}>
-                    <AlertIcon mt={0} />
-                    <Text fontWeight={"bold"}>Token reward on role</Text>
-                  </HStack>{" "}
-                  <Text>
-                    You have a token reward set up on this role. If you delete the
-                    role, the token reward will also be deleted, and you will not be
-                    able to withdraw funds from the reward pool through Guild.{" "}
-                  </Text>{" "}
-                  <Text fontWeight={"semibold"}>
-                    {" "}
-                    Make sure to withdraw all funds before deletion if needed!{" "}
+          !!tokenRolePlatform ? (
+            <Alert status="warning">
+              <AlertIcon mt={0} />
+              <Box>
+                <Text fontWeight={"bold"}>Token reward on role</Text>
+                <AlertDescription>
+                  If you delete the role, the token reward will also be deleted, and
+                  you will not be able to withdraw funds from the reward pool through
+                  Guild.{" "}
+                  <Text fontWeight={"medium"} display="inline">
+                    Make sure to withdraw all funds before deletion if needed!
                   </Text>
-                </Stack>
-              </Alert>
-              <Text color={"GrayText"} fontSize={"sm"} mt={2}>
-                You will be asked for your verifying signature two times, to delete
-                both the reward and the role.
-              </Text>
-            </Collapse>
-            <Collapse in={!tokenRolePlatform}>
-              Are you sure you want to delete this role?
-            </Collapse>
-          </>
+                  <Text colorScheme={"gray"} fontSize={"sm"} mt={2}>
+                    You will be asked for your verifying signature two times, to
+                    delete both the reward and the role.
+                  </Text>
+                </AlertDescription>
+              </Box>
+            </Alert>
+          ) : (
+            "Are you sure you want to delete this role?"
+          )
         }
         confirmationText="Delete"
       />
