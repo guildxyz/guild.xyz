@@ -24,35 +24,16 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import Papa from "papaparse"
 import { Info, Upload } from "phosphor-react"
-import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 
 const CustomSnapshotForm = () => {
   const { setValue } = useFormContext()
-  const [uploadedSnapshot, setUploadedSnapshot] = useState(null)
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
+  const requirements = useWatch({ name: "requirements" })
   const { addresses } = useUser()
-
-  useEffect(() => {
-    const setRequirement = (req: any) => setValue("requirements", [req])
-
-    if (!uploadedSnapshot) {
-      setRequirement(null)
-      return
-    }
-    setValue("data.guildPlatformId", null)
-
-    setRequirement({
-      type: "GUILD_SNAPSHOT",
-      data: {
-        snapshot: uploadedSnapshot,
-        isHidden: false,
-      },
-    })
-  }, [uploadedSnapshot, setValue])
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
@@ -63,7 +44,15 @@ const CustomSnapshotForm = () => {
         reader.onload = function (e) {
           parseAndValidateCSV(e.target.result as string)
             .then((validatedData) => {
-              setUploadedSnapshot(validatedData)
+              setValue("requirements", [
+                {
+                  type: "GUILD_SNAPSHOT",
+                  data: {
+                    snapshot: validatedData,
+                    isHidden: false,
+                  },
+                },
+              ])
             })
             .catch((error) => {
               showErrorToast(error)
@@ -77,7 +66,7 @@ const CustomSnapshotForm = () => {
 
   return (
     <>
-      {uploadedSnapshot ? (
+      {requirements?.length > 0 ? (
         <Box padding={4}>
           <Alert status="success" alignItems={"center"}>
             <AlertIcon mt={0} /> Snapshot uploaded!{" "}
@@ -86,7 +75,7 @@ const CustomSnapshotForm = () => {
               variant="link"
               fontWeight="bold"
               fontSize="small"
-              onClick={() => setUploadedSnapshot(null)}
+              onClick={() => setValue("requirements", [])}
             >
               Remove
             </Button>
@@ -116,7 +105,7 @@ const CustomSnapshotForm = () => {
             <input {...getInputProps()} accept="csv" hidden />
           </Box>
           <Accordion allowToggle>
-            <AccordionItem>
+            <AccordionItem borderBottom="0">
               <AccordionButton>
                 <Flex w="full" px={2} color={"GrayText"} alignItems={"center"}>
                   <Icon as={Info} mr={2} />
@@ -230,7 +219,7 @@ function parseAndValidateCSV(csvData: string): Promise<ValidCSVRow[]> {
               "Failed to parse file. Please ensure the selected file matches the required format."
             )
           )
-        resolve(validatedData as ValidCSVRow[])
+        resolve(validatedData)
       },
       error: (error) => reject(error),
     })

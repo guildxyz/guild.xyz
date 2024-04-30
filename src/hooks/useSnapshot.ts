@@ -1,8 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { useState } from "react"
-import fetcher from "utils/fetcher"
 import useSWRWithOptionalAuth from "./useSWRWithOptionalAuth"
-import { SignedValidation, useSubmitWithSign } from "./useSubmit"
 
 export type Snapshot = {
   id: number
@@ -35,42 +32,14 @@ const useSnapshots = (guildPlatformId: number) => {
   const endpoint = !!guildPlatformId
     ? `/v2/guilds/${guildId}/points/${guildPlatformId}/snapshots`
     : null
-  const { data: snapshots, mutate } = useSWRWithOptionalAuth(endpoint)
+  const {
+    data: snapshots,
+    isLoading,
+    error,
+    mutate,
+  } = useSWRWithOptionalAuth(endpoint)
 
-  return { snapshots: snapshots, isSnapshotsLoading: false, error: null, mutate }
+  return { snapshots: snapshots, isLoading, error, mutate }
 }
 
-const useCreateSnapshot = (guildPlatformId: number) => {
-  const { id: guildId } = useGuild()
-
-  const endpoint = `/v2/guilds/${guildId}/points/${guildPlatformId}/snapshots`
-
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
-
-  const createSnapshotFetcher = (signedValidation: SignedValidation) =>
-    fetcher(endpoint, {
-      method: "POST",
-      ...signedValidation,
-    })
-
-  const handleSubmit = (data?: unknown) => {
-    setIsLoading(true)
-    return onSubmit(data)
-  }
-
-  const { onSubmit } = useSubmitWithSign(createSnapshotFetcher, {
-    onSuccess: (response) => {
-      setIsLoading(false)
-      return response
-    },
-    onError: (_error) => {
-      setError(_error)
-      setIsLoading(false)
-    },
-  })
-
-  return { submitCreate: handleSubmit, isLoading, error }
-}
-
-export { useCreateSnapshot, useSnapshot, useSnapshots }
+export { useSnapshot, useSnapshots }

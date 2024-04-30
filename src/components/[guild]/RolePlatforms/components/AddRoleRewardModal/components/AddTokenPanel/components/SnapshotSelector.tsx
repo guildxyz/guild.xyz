@@ -1,8 +1,11 @@
 import {
   Center,
+  Collapse,
   Flex,
   FormControl,
   FormLabel,
+  HStack,
+  Spinner,
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -30,7 +33,11 @@ const SnapshotSelector = () => {
 
   const selectedPointsId = useWatch({ name: "data.guildPlatformId" })
 
-  const { snapshots, mutate: refetchSnapshots } = useSnapshots(selectedPointsId)
+  const {
+    snapshots,
+    mutate: refetchSnapshots,
+    isLoading: listIsLoading,
+  } = useSnapshots(selectedPointsId)
   const selectedSnapshotId = useWatch({ name: "snapshotId" })
 
   const handleCreateSuccess = (createdId: number) => {
@@ -40,7 +47,10 @@ const SnapshotSelector = () => {
     onClose()
   }
 
-  const { snapshot } = useSnapshot(selectedPointsId, selectedSnapshotId)
+  const { snapshot, isSnapshotLoading } = useSnapshot(
+    selectedPointsId,
+    selectedSnapshotId
+  )
 
   const transformSnapshotData = (
     snapshotData: { address: string; value: number }[]
@@ -106,32 +116,37 @@ const SnapshotSelector = () => {
           />
         </>
       ) : (
-        <>
-          <FormControl>
-            <Flex justifyContent={"space-between"} w="full">
-              <FormLabel>Select snapshot</FormLabel>
-              <Button
-                size="xs"
-                variant="ghost"
-                borderRadius={"lg"}
-                onClick={onOpen}
-                isDisabled={!selectedPointsId}
-              >
-                <Text colorScheme={"gray"}>Create new</Text>
-              </Button>
-            </Flex>
-            <ControlledSelect
-              isDisabled={!selectedPointsId}
-              name={`snapshotId`}
-              options={options}
-            ></ControlledSelect>
-            <CreateSnapshotModal
-              onClose={onClose}
-              onSuccess={handleCreateSuccess}
-              isOpen={isOpen}
-            />
-          </FormControl>
-        </>
+        <FormControl>
+          <Flex justifyContent={"space-between"} w="full">
+            <FormLabel>Select snapshot</FormLabel>
+            <Button
+              size="xs"
+              variant="ghost"
+              borderRadius={"lg"}
+              onClick={onOpen}
+              isDisabled={!selectedPointsId || listIsLoading || isSnapshotLoading}
+            >
+              <Text colorScheme={"gray"}>Create new</Text>
+            </Button>
+          </Flex>
+          <ControlledSelect
+            isLoading={listIsLoading}
+            isDisabled={!selectedPointsId}
+            name={`snapshotId`}
+            options={options}
+          />
+          <Collapse in={isSnapshotLoading}>
+            <HStack mt={2}>
+              <Spinner size={"xs"} />{" "}
+              <Text color={"GrayText"}>Loading selected snapshot data...</Text>
+            </HStack>
+          </Collapse>
+          <CreateSnapshotModal
+            onClose={onClose}
+            onSuccess={handleCreateSuccess}
+            isOpen={isOpen}
+          />
+        </FormControl>
       )}
     </>
   )

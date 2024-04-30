@@ -1,5 +1,6 @@
 import { Chain } from "@guildxyz/types"
 import useTokenBalance from "hooks/useTokenBalance"
+import useTokenData from "hooks/useTokenData"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem/utils"
 import { useAccount, useBalance } from "wagmi"
@@ -8,15 +9,16 @@ import { Chains } from "wagmiConfig/chains"
 const useIsBalanceSufficient = ({
   address,
   chain,
-  decimals,
   amount,
 }: {
   address: `0x${string}`
   chain: Chain
-  decimals: number
   amount: number | string
 }) => {
   const { chainId, address: userAddress } = useAccount()
+  const {
+    data: { decimals },
+  } = useTokenData(chain, address)
 
   const {
     data: coinBalanceData,
@@ -37,11 +39,8 @@ const useIsBalanceSufficient = ({
   })
 
   const pickedCurrencyIsNative = address === NULL_ADDRESS
-
-  let formattedAmount = BigInt(1)
-  try {
-    formattedAmount = parseUnits(amount.toString(), decimals)
-  } catch {}
+  const formattedAmount =
+    !!amount && decimals ? parseUnits(amount.toString(), decimals) : BigInt(1)
 
   const isOnCorrectChain = Number(Chains[chain]) === chainId
   const error =

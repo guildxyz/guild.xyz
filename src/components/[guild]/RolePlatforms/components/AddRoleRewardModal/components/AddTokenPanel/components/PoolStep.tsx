@@ -9,7 +9,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import { canCloseAddRewardModalAtom } from "components/[guild]/AddRewardButton/AddRewardButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
@@ -27,8 +27,8 @@ import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import { AddTokenFormType } from "../AddTokenPanel"
 import useIsBalanceSufficient from "../hooks/useIsBalanceSufficient"
+import AllowanceButton from "./AllowanceButton"
 import ConversionNumberInput from "./ConversionNumberInput"
-import GenericBuyAllowanceButton from "./GenericBuyAllowanceButton"
 
 const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
@@ -48,16 +48,12 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const { isBalanceSufficient } = useIsBalanceSufficient({
     address: tokenAddress,
     chain: chain,
-    decimals: decimals,
     amount: amount,
   })
 
   const { setValue } = useFormContext<AddTokenFormType>()
-
-  let formattedAmount = BigInt(1)
-  try {
-    formattedAmount = parseUnits(amount, decimals)
-  } catch {}
+  const formattedAmount =
+    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
 
   const { isLoading, onSubmitTransaction: submitRegisterPool } = useRegisterPool(
     userAddress,
@@ -76,12 +72,13 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     setCanClose(!isLoading)
   }, [isLoading, setCanClose])
 
-  const accessedTokens = useAccessedTokens()
+  const accessedTokens = useTokenRewards()
 
   const platformForToken = accessedTokens.find(
     (guildPlatform) =>
       guildPlatform.platformGuildData.chain === chain &&
-      guildPlatform.platformGuildData.tokenAddress === tokenAddress
+      guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+        tokenAddress?.toLowerCase()
   )
 
   const continuePoolExists = () => {
@@ -122,7 +119,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
         able to deposit more and withdraw from any time.
       </Text>
 
-      <Stack gap={1}>
+      <Stack gap={2}>
         <FormControl>
           <FormLabel>Amount to deposit</FormLabel>
           <InputGroup>
@@ -146,19 +143,11 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
           <Text fontWeight="semibold" colorScheme="gray">
             or
           </Text>
-          <Checkbox
-            spacing={1.5}
-            isChecked={skip}
-            onChange={handleDepositLater}
-          ></Checkbox>
-          <Text
-            fontWeight="medium"
-            colorScheme="gray"
-            _hover={{ cursor: "pointer" }}
-            onClick={handleDepositLater}
-          >
-            deposit tokens later
-          </Text>
+          <Checkbox spacing={1.5} isChecked={skip} onChange={handleDepositLater}>
+            <Text fontWeight="medium" colorScheme="gray">
+              deposit tokens later
+            </Text>
+          </Checkbox>
         </HStack>
       </Stack>
 
@@ -167,15 +156,17 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
           <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
         </Collapse>
 
-        {isOnCorrectChain && (
-          <GenericBuyAllowanceButton
+        <Collapse in={isOnCorrectChain && !skip}>
+          <AllowanceButton
             chain={chain}
             token={tokenAddress}
             contract={ERC20_CONTRACTS[chain]}
           />
-        )}
+        </Collapse>
 
-        <Collapse in={(!!allowance || pickedCurrencyIsNative) && isOnCorrectChain}>
+        <Collapse
+          in={(!!allowance || skip || pickedCurrencyIsNative) && isOnCorrectChain}
+        >
           <Button
             size="lg"
             width="full"

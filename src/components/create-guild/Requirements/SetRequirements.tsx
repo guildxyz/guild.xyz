@@ -1,8 +1,9 @@
-import { ChakraProps, Collapse, Stack, Wrap, useToast } from "@chakra-ui/react"
+import { ChakraProps, Collapse, Stack, Wrap } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
 import { AnimatePresence } from "framer-motion"
+import useToast from "hooks/useToast"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
@@ -94,6 +95,13 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                     field={field as Requirement}
                     index={i}
                     removeRequirement={(idx) => {
+                      /**
+                       * TODO: check if the role has an ERC20 reward & only show this
+                       * toast in that case.
+                       *
+                       * We decided to leave it as is for now, because we can only
+                       * add this requirement type for ERC20 requirements.
+                       */
                       if (type === "GUILD_SNAPSHOT") {
                         toast({
                           status: "info",

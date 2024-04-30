@@ -10,7 +10,7 @@ import { useMemo } from "react"
 import { RolePlatform } from "types"
 import { useTokenRewardContext } from "./TokenRewardContext"
 
-import { useCalculateForRolePlatform } from "./hooks/useCalculateToken"
+import { useClaimableTokensForRolePlatform } from "./hooks/useCalculateToken"
 import useCollectToken from "./hooks/useCollectToken"
 
 const TokenRolePlatformClaimCard = ({
@@ -19,7 +19,7 @@ const TokenRolePlatformClaimCard = ({
   rolePlatform: RolePlatform
 }) => {
   const { guildPlatform, token } = useTokenRewardContext()
-  const claimableAmount = useCalculateForRolePlatform(rolePlatform)
+  const claimableAmount = useClaimableTokensForRolePlatform(rolePlatform)
 
   const { roleIds } = useMembership()
 

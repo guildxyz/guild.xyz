@@ -1,59 +1,103 @@
-import { Link } from "@chakra-ui/next-js"
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Collapse,
+  Box,
   Icon,
-  Stack,
+  Link,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
 } from "@chakra-ui/react"
+import { triggerChat } from "components/_app/IntercomProvider"
+import Button from "components/common/Button"
 import { IpGeodata } from "pages/api/ip-geodata"
-import { ArrowSquareOut } from "phosphor-react"
+import { Chat } from "phosphor-react"
 import useSWRImmutable from "swr/immutable"
 
-const BLOCKED_COUNTRY_CODES = ["US", "CA", "AF", "IR", "CU"]
+const BLOCKED_COUNTRY_CODES = [
+  "US",
+  "CA",
+  "AF",
+  "AO",
+  "CF",
+  "CG",
+  "CD",
+  "CU",
+  "CI",
+  "GW",
+  "IR",
+  "KP",
+  "LB",
+  "LR",
+  "LY",
+  "ML",
+  "MM",
+  "NI",
+  "SO",
+  "SS",
+  "SD",
+  "SY",
+  "VE",
+  "VI",
+  "YE",
+  "ZW",
+]
 
-const useIsFromGeogatedCountry = () => {
-  const { data } = useSWRImmutable<IpGeodata>("/ip-geodata")
+export const useIsFromGeogatedCountry = () => {
+  const { data } = useSWRImmutable<IpGeodata>("/api/ip-geodata")
 
   if (!data) return null
 
   return BLOCKED_COUNTRY_CODES?.includes(data.country)
 }
 
-export const GeogatedCountryAlert = () => {
-  const isFromGeogatedCountry = useIsFromGeogatedCountry()
+export const GeogatedCountryPopover = ({ children, isDisabled }) => {
+  if (isDisabled) return children
 
-  /**
-   * TODO: we probably shouldn't have this in this form, but showing it earlier like
-   * a popover when hovering over disabled claim button - hence I haven't disabled
-   * action buttons in the ClaimModal accordingly, this is just an initial version
-   */
   return (
-    <Collapse in={isFromGeogatedCountry}>
-      <Alert status="warning" mb="6" mt="3" pb="5">
-        <AlertIcon />
-        <Stack>
-          <AlertTitle position="relative" top={"3px"} fontWeight="semibold">
+    <Popover trigger="hover">
+      <PopoverTrigger>
+        <Box>{children}</Box>
+      </PopoverTrigger>
+
+      <Portal>
+        <PopoverContent w="md">
+          <PopoverArrow />
+          <PopoverHeader
+            // same as POPOVER_HEADER_STYLES, but there's a build error for some reason if we import that here. This could be moved to theme config probably anyway
+            {...{
+              fontWeight: "semibold",
+              border: "0",
+              px: "3",
+            }}
+          >
             Claiming is not available in your country
-          </AlertTitle>
-          <AlertDescription>
-            {`Your country has strict regulations for crypto, so claiming tokens on Guild is
-            not available. `}
-            {/* TODO: add intercom article about the restriction */}
+          </PopoverHeader>
+          <PopoverBody pt="0">
+            {`Sorry, but this feature is currently `}
             <Link
-              href="#"
-              // isExternal
+              href="https://help.guild.xyz/en/articles/9246601-restricted-countries"
+              isExternal
+              display="inline"
+              colorScheme="blue"
+            >
+              not available in your country.
+            </Link>
+            {` We understand your frustration and are working hard to make it legally accessible. If you have any questions, feel free to `}
+            <Button
+              variant="link"
               fontWeight={"semibold"}
+              onClick={triggerChat}
               opacity="0.8"
             >
-              Learn more
-              <Icon as={ArrowSquareOut} ml="0.5" />
-            </Link>
-          </AlertDescription>
-        </Stack>
-      </Alert>
-    </Collapse>
+              reach out to us
+              <Icon as={Chat} ml="1" mb="-0.5" />
+            </Button>
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
   )
 }

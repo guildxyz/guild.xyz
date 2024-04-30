@@ -12,11 +12,11 @@ import {
   useSteps,
 } from "@chakra-ui/react"
 import { Chain, Schemas } from "@guildxyz/types"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformGuildData, PlatformType } from "types"
+import { PlatformGuildData, PlatformType, Requirement } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
@@ -44,6 +44,7 @@ export type AddTokenFormType = {
   snapshotId: number
   type: TokenRewardType
   staticValue?: number
+  requirements?: Requirement[]
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -68,17 +69,16 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     count: steps.length,
   })
 
-  const accessedTokens = useAccessedTokens()
-
-  const platformForToken = (chain: Chain, tokenAddress: `0x${string}`) =>
-    accessedTokens.find(
-      (guildPlatform) =>
-        guildPlatform.platformGuildData.chain === chain &&
-        guildPlatform.platformGuildData.tokenAddress === tokenAddress
-    )
+  const accessedTokens = useTokenRewards()
 
   const constructSubmitData = (_data) => {
-    const platform = platformForToken(_data.chain, _data.tokenAddress)
+    const platform = accessedTokens.find(
+      (guildPlatform) =>
+        guildPlatform.platformId === PlatformType.ERC20 &&
+        guildPlatform.platformGuildData.chain === _data.chain &&
+        guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+          _data.tokenAddress?.toLowerCase()
+    )
 
     const dynamicAmount = {
       ...(_data.type === TokenRewardType.DYNAMIC_SNAPSHOT && {
@@ -104,12 +104,11 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           },
         },
       }),
-
-      ...(_data.type === TokenRewardType.DYNAMIC_POINTS && {}),
     } satisfies Schemas["DynamicAmount"]
 
     const rolePlatformPart = {
       dynamicAmount: dynamicAmount,
+      platformRoleData: { pointGuildPlatformId: _data.data.guildPlatformId },
       isNew: true,
     }
 
@@ -175,7 +174,11 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
               _hover={activeStep > index && { cursor: "pointer" }}
             >
               <StepTitle>{step.title}</StepTitle>
-              <Collapse in={activeStep === index} animateOpacity>
+              <Collapse
+                in={activeStep === index}
+                animateOpacity
+                style={{ padding: "2px", margin: "-2px" }}
+              >
                 <step.content
                   onContinue={goToNext}
                   onSubmit={methods.handleSubmit(onSubmit)}

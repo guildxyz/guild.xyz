@@ -9,7 +9,6 @@ import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
 import TokenPicker from "requirements/common/TokenPicker"
 import { ERC20_SUPPORTED_CHAINS } from "utils/guildCheckout/constants"
-import { Chain } from "wagmiConfig/chains"
 import { AddTokenFormType } from "../AddTokenPanel"
 
 const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
@@ -59,7 +58,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
       <ChainPicker
         controlName="chain"
         showDivider={false}
-        supportedChains={ERC20_SUPPORTED_CHAINS as Chain[]}
+        supportedChains={ERC20_SUPPORTED_CHAINS}
       />
 
       <Stack gap={2}>
@@ -75,33 +74,27 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
             <HStack justifyContent={"space-between"}>
               {!imageUrl ? (
                 <>
-                  {
-                    <>
-                      <Button
-                        variant="link"
-                        fontSize="small"
-                        leftIcon={<Upload />}
-                        {...getRootProps()}
-                        isLoading={uploader.isUploading}
-                        loadingText={`Uploading (${(progress * 100).toFixed()}%)`}
-                      >
-                        Upload custom image
-                      </Button>
-                      <input {...getInputProps()} accept="image/*" hidden />
-                    </>
-                  }
-                </>
-              ) : (
-                <>
                   <Button
                     variant="link"
                     fontSize="small"
-                    onClick={() => setValue("imageUrl", null)}
-                    leftIcon={<X />}
+                    leftIcon={<Upload />}
+                    {...getRootProps()}
+                    isLoading={uploader.isUploading}
+                    loadingText={`Uploading (${(progress * 100).toFixed()}%)`}
                   >
-                    Remove custom image
+                    Upload custom image
                   </Button>
+                  <input {...getInputProps()} accept="image/*" hidden />
                 </>
+              ) : (
+                <Button
+                  variant="link"
+                  fontSize="small"
+                  onClick={() => setValue("imageUrl", null)}
+                  leftIcon={<X />}
+                >
+                  Remove custom image
+                </Button>
               )}
             </HStack>
           </>

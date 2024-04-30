@@ -5,6 +5,7 @@ import RequirementImageEditor from "components/[guild]/Requirements/components/R
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
+import dynamic from "next/dynamic"
 import { PropsWithChildren, memo, useRef } from "react"
 import { FormProvider, useForm, useFormContext } from "react-hook-form"
 import REQUIREMENTS, { RequirementType } from "requirements"
@@ -12,8 +13,9 @@ import { Requirement, RoleFormType } from "types"
 import BalancyFooter from "./BalancyFooter"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
-import RequirementEditModal from "./RequirementEditModal"
 import UnsupportedRequirementTypeCard from "./UnsupportedRequirementTypeCard"
+
+const DynamicRequirementEditModal = dynamic(() => import("./RequirementEditModal"))
 
 type Props = {
   index: number
@@ -134,22 +136,24 @@ const RequirementEditableCard = ({
         <RemoveRequirementButton onClick={() => onRemove()} />
       </RequirementBaseCard>
 
-      <FormProvider {...methods}>
-        <RequirementEditModal
-          requirementField={field}
-          isOpen={isOpen}
-          onClose={onClose}
-          finalFocusRef={editButtonRef}
-          footer={
-            <>
-              <BalancyFooter baseFieldPath={null} />
-              <Button colorScheme="green" onClick={onSubmit} ml="auto">
-                Done
-              </Button>
-            </>
-          }
-        />
-      </FormProvider>
+      {!isEditDisabled && (
+        <FormProvider {...methods}>
+          <DynamicRequirementEditModal
+            requirementField={field}
+            isOpen={isOpen}
+            onClose={onClose}
+            finalFocusRef={editButtonRef}
+            footer={
+              <>
+                <BalancyFooter baseFieldPath={null} />
+                <Button colorScheme="green" onClick={onSubmit} ml="auto">
+                  Done
+                </Button>
+              </>
+            }
+          />
+        </FormProvider>
+      )}
     </>
   )
 }

@@ -24,16 +24,10 @@ import useToast from "hooks/useToast"
 import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards from "platforms/rewards"
+import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import {
-  PlatformName,
-  PlatformType,
-  Requirement,
-  RoleFormType,
-  Visibility,
-} from "types"
+import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -113,8 +107,12 @@ const AddRewardButton = (): JSX.Element => {
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
   const roleIds = useWatch({ name: "roleIds", control: methods.control })
+
+  const isRoleSelectorDisabled = selection === "ERC20"
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
+      ? !requirements?.length
+      : !roleIds?.length
 
   const toast = useToast()
 
@@ -144,20 +142,21 @@ const AddRewardButton = (): JSX.Element => {
       },
     })
 
-  const isLoading = isAddRewardLoading || isCreateRoleLoading
-
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
   const isERC20 = (data) =>
     data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
-  const { submitCreate: submitCreateReqBased } = useCreateReqBasedTokenReward({
-    onSuccess: () => {
-      toast({ status: "success", title: "Reward successfully added" })
-      onCloseAndClear()
-    },
-    onError: (err) => console.error(err),
-  })
+  const { submitCreate: submitCreateReqBased, isLoading: erc20Loading } =
+    useCreateReqBasedTokenReward({
+      onSuccess: () => {
+        toast({ status: "success", title: "Reward successfully added" })
+        onCloseAndClear()
+      },
+      onError: (err) => console.error(err),
+    })
+
+  const isLoading = isAddRewardLoading || isCreateRoleLoading || erc20Loading
 
   const submitERC20Reward = async (
     data: any,
@@ -167,14 +166,14 @@ const AddRewardButton = (): JSX.Element => {
       data.rolePlatforms[0].dynamicAmount.operation.input.type ===
       "REQUIREMENT_AMOUNT"
 
-    const guildPlatfomrExists = !!data.rolePlatforms[0].guildPlatformId
+    const guildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
 
     if (isRequirementBased) {
-      await submitCreateReqBased(data, saveAs)
+      submitCreateReqBased(data, saveAs)
       return
     } else {
       /** TODO: Write when static reward is needed */
-      if (guildPlatfomrExists) {
+      if (guildPlatformExists) {
         data.rolePlatforms[0].guildPlatform = {
           platformId: PlatformType.ERC20,
           platformName: "ERC20",
@@ -226,21 +225,9 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const { AddRewardPanel, RewardPreview } = rewards[selection] ?? {}
-
   const showErrorToast = useShowErrorToast()
-
   const lightModalBgColor = useColorModeValue("white", "gray.700")
-
   const rolePlatform = methods.getValues("rolePlatforms.0")
-
-  const platformSize = (platform: PlatformName) => {
-    switch (platform) {
-      case "ERC20":
-        return "xl"
-      default:
-        return "4xl"
-    }
-  }
 
   return (
     <>
@@ -274,7 +261,7 @@ const AddRewardButton = (): JSX.Element => {
               onAddRewardModalClose()
             }
           }}
-          size={step === "HOME" ? platformSize(selection) : "2xl"}
+          size={step === "HOME" ? modalSizeForPlatform(selection) : "2xl"}
           scrollBehavior="inside"
           colorScheme="dark"
         >
@@ -349,7 +336,7 @@ const AddRewardButton = (): JSX.Element => {
               {selection && step === "SELECT_ROLE" ? (
                 <SelectRoleOrSetRequirements
                   selectedPlatform={selection}
-                  isRoleSelectorDisabled={selection === "ERC20"}
+                  isRoleSelectorDisabled={isRoleSelectorDisabled}
                 />
               ) : AddRewardPanel ? (
                 <AddRewardPanel

@@ -81,7 +81,10 @@ const AddRoleRewardModal = ({ append }: Props) => {
 
         <ModalBody ref={modalRef} className="custom-scrollbar">
           {selection && step === "SELECT_ROLE" ? (
-            <SelectRoleOrSetRequirements selectedPlatform={selection} />
+            <SelectRoleOrSetRequirements
+              selectedPlatform={selection}
+              isRoleSelectorDisabled={selection === "ERC20"}
+            />
           ) : AddRewardPanel ? (
             <AddRewardPanel
               onAdd={(data) => {
@@ -101,12 +104,9 @@ const AddRoleRewardModal = ({ append }: Props) => {
               </Text>
               <PlatformsGrid
                 onSelection={setSelection}
-                disabledList={[
-                  {
-                    name: "ERC20",
-                    description: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
-                  },
-                ]}
+                disabledRewards={{
+                  ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
+                }}
               />
             </>
           )}

@@ -1,37 +1,34 @@
 import {
-  Flex,
-  Heading,
+  Checkbox,
+  Divider,
+  Icon,
+  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Skeleton,
   Stack,
   Text,
-  VStack,
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import { useThemeContext } from "components/[guild]/ThemeContext"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
-import GuildLogo from "components/common/GuildLogo"
-import useColorPalette from "hooks/useColorPalette"
 import Image from "next/image"
-import { useMemo } from "react"
+import { ArrowSquareOut } from "phosphor-react"
+import { useMemo, useState } from "react"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import TokenClaimFeeTable from "./ClaimFeeTable"
-import { GeogatedCountryAlert } from "./GeogatedCountryAlert"
-import { useTokenRewardContext } from "./TokenRewardContext"
-import TokenRolePlatformClaimCard from "./TokenRolePlatformClaimCard"
-import { useCalculateClaimableTokens } from "./hooks/useCalculateToken"
-import useCollectToken from "./hooks/useCollectToken"
-import usePool from "./hooks/usePool"
-import useRolePlatforms from "./hooks/useRolePlatforms"
-import useClaimedAmount from "./hooks/useTokenClaimedAmount"
+import TokenClaimFeeTable from "../TokenClaimFeeTable"
+import { useTokenRewardContext } from "../TokenRewardContext"
+import TokenRolePlatformClaimCard from "../TokenRolePlatformClaimCard"
+import useCollectToken from "../hooks/useCollectToken"
+import usePool from "../hooks/usePool"
+import useRolePlatformsOfReward from "../hooks/useRolePlatformsOfReward"
+import useTokenClaimedAmount from "../hooks/useTokenClaimedAmount"
+import TokenRibbonIllustration from "./TokenRibbonIllustration"
 
 type Props = {
   isOpen: boolean
@@ -39,13 +36,10 @@ type Props = {
 }
 
 const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
-  const { textColor } = useThemeContext()
   const modalBg = useCardBg()
+  const [isConfirmed, setIsConfirmed] = useState(false)
 
-  const { token, guildPlatform, imageUrl } = useTokenRewardContext()
-
-  const { getValue } = useCalculateClaimableTokens(guildPlatform)
-  const claimableAmount = getValue()
+  const { token, guildPlatform } = useTokenRewardContext()
 
   const { refetch } = usePool(
     guildPlatform.platformGuildData.chain,
@@ -54,7 +48,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const chain = guildPlatform.platformGuildData.chain
 
-  const rolePlatforms = useRolePlatforms(guildPlatform.id)
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
 
   const { onSubmit, loadingText: claimLoadingText } = useCollectToken(
     chain,
@@ -67,7 +61,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
     }
   )
 
-  const { refetch: refetchClaimedAmount } = useClaimedAmount(
+  const { refetch: refetchClaimedAmount } = useTokenClaimedAmount(
     guildPlatform.platformGuildData.chain,
     guildPlatform.platformGuildData.poolId,
     rolePlatforms.map((rp) => rp.id),
@@ -76,7 +70,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const { chainId } = useAccount()
   const isOnCorrectChain = Number(Chains[chain]) === chainId
-  const gold = useColorPalette("gold", "gold")
 
   const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
     useMembershipUpdate({
@@ -103,7 +96,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
       <ModalOverlay />
       <ModalContent
         border={"3px solid transparent"}
-        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, ${gold["--gold-500"]}, ${modalBg}) border-box`}
+        background={`linear-gradient(${modalBg}, ${modalBg}) padding-box, linear-gradient(to bottom, var(--chakra-colors-gold-500), ${modalBg}) border-box`}
       >
         <Image
           priority
@@ -127,60 +120,37 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           border={"4px solid transparent"}
           mt="0"
         >
-          <GeogatedCountryAlert />
-          <Stack
-            justifyContent={"center"}
-            position={"relative"}
-            alignItems={"center"}
-            mt={8}
-            mb={4}
-          >
-            <Image
-              priority
-              src={"/img/cup.png"}
-              alt="Cup"
-              width={175}
-              height={155}
-              draggable={false}
-            />
+          <TokenRibbonIllustration />
 
-            <VStack position={"relative"} mt="-80px">
-              <Image
-                src={"/img/ribbon.svg"}
-                alt="Ribbon"
-                priority
-                width={300}
-                height={70}
-                draggable={false}
-              />
-
-              <Skeleton isLoaded={!token.isLoading}>
-                <Flex
-                  alignItems={"center"}
-                  gap={2}
-                  position={"absolute"}
-                  top={"50%"}
-                  left={0}
-                  justifyContent={"center"}
-                  style={{ transform: "translateY(-33%)" }}
-                  width={"full"}
-                >
-                  <GuildLogo imageUrl={imageUrl} size={"26px"} />
-                  <Heading
-                    fontSize={"x-large"}
-                    fontFamily="display"
-                    color={textColor}
-                    marginTop={"-3px"}
-                  >
-                    {" "}
-                    {claimableAmount} {token.data.symbol}
-                  </Heading>
-                </Flex>
-              </Skeleton>
-            </VStack>
-          </Stack>
+          <Divider
+            mt="8"
+            mb="4"
+            borderColor="var(--chakra-colors-chakra-border-color)"
+          />
 
           <TokenClaimFeeTable />
+
+          <Checkbox
+            size="sm"
+            alignItems="start"
+            mt="6"
+            mb="5"
+            isChecked={isConfirmed}
+            onChange={(e) => setIsConfirmed(e.target.checked)}
+          >
+            <Text colorScheme="gray" mt="-5px">
+              {`I confirm that I am not a citizen of the U.S., Canada, or any other `}
+              <Link
+                href="https://help.guild.xyz/en/articles/9246601-restricted-countries"
+                isExternal
+                fontWeight={"semibold"}
+                onClick={(e) => e.stopPropagation()}
+              >
+                restricted countries
+                <Icon as={ArrowSquareOut} ml="0.5" />
+              </Link>
+            </Text>
+          </Checkbox>
 
           {!isOnCorrectChain ? (
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
@@ -189,7 +159,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
               {rolePlatforms.length === 1 ? (
                 <Button
                   colorScheme="gold"
-                  isDisabled={token.isLoading}
+                  isDisabled={token.isLoading || !isConfirmed}
                   isLoading={claimLoading}
                   loadingText={claimLoading}
                   onClick={() => {

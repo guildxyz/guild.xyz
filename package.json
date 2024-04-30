@@ -44,6 +44,7 @@
     "@snyk/protect": "latest",
     "@tanstack/react-query": "^5.26.3",
     "@tanstack/react-table": "^8.13.2",
+    "@tanstack/react-virtual": "^3.5.0",
     "@vercel/kv": "^1.0.1",
     "@vercel/postgres": "^0.7.2",
     "@visx/curve": "^3.3.0",

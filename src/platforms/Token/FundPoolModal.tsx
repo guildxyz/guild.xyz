@@ -4,7 +4,6 @@ import {
   Divider,
   FormControl,
   FormLabel,
-  HStack,
   InputGroup,
   InputLeftElement,
   Modal,
@@ -15,20 +14,23 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
+import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import ConversionNumberInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionNumberInput"
-import { WalletTag } from "components/[guild]/crm/Identities"
-import CopyableAddress from "components/common/CopyableAddress"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenBalance from "hooks/useTokenBalance"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
-import { useState } from "react"
+import { RefObject, useState } from "react"
 import Token from "static/icons/token.svg"
-import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import shortenHex from "utils/shortenHex"
 import { formatUnits, parseUnits } from "viem"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
+import PoolInformation from "./PoolInformation"
 import useFundPool from "./hooks/useFundPool"
 import usePool from "./hooks/usePool"
 
@@ -36,10 +38,12 @@ const FundPoolModal = ({
   isOpen,
   onClose,
   onSuccess,
+  finalFocusRef,
 }: {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  finalFocusRef?: RefObject<any>
 }) => {
   const {
     token: {
@@ -52,8 +56,7 @@ const FundPoolModal = ({
   } = useTokenRewardContext()
 
   const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
-
-  const [owner, , , poolBalance] = poolData || []
+  const { owner, balance: poolBalance } = poolData
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
   const [amount, setAmount] = useState("1")
@@ -70,11 +73,8 @@ const FundPoolModal = ({
     shouldFetch: tokenAddress !== NULL_ADDRESS,
   })
 
-  let formattedAmount = BigInt(1)
-  try {
-    formattedAmount = parseUnits(amount, decimals)
-  } catch {}
-
+  const formattedAmount =
+    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
   const isOnCorrectChain = Chains[chain] === chainId
 
@@ -99,9 +99,16 @@ const FundPoolModal = ({
     onClose()
   }
 
+  const { allowance } = useAllowance(tokenAddress, ERC20_CONTRACTS[chain])
+
+  const isDisabledLabel =
+    owner &&
+    owner !== userAddress &&
+    `Only the requirement's original creator can fund (${shortenHex(owner)})`
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={handleClose}>
+      <Modal isOpen={isOpen} onClose={handleClose} finalFocusRef={finalFocusRef}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
@@ -111,24 +118,7 @@ const FundPoolModal = ({
 
           <ModalBody>
             <Stack gap={5}>
-              <Stack gap={1}>
-                <HStack>
-                  <Text fontWeight={"semibold"} fontSize="sm">
-                    Balance
-                  </Text>
-                  <Text ml={"auto"} fontSize="sm">
-                    {balance} {symbol}
-                  </Text>
-                </HStack>
-                <HStack>
-                  <Text fontWeight={"semibold"} fontSize={"sm"}>
-                    Owner
-                  </Text>{" "}
-                  <WalletTag ml={"auto"}>
-                    <CopyableAddress address={owner} fontSize="sm" />
-                  </WalletTag>
-                </HStack>
-              </Stack>
+              <PoolInformation balance={balance} owner={owner} symbol={symbol} />
               <Divider />
               <FormControl>
                 <FormLabel>Amount to deposit</FormLabel>
@@ -145,23 +135,35 @@ const FundPoolModal = ({
                 </InputGroup>
               </FormControl>
 
-              <Collapse in={!isOnCorrectChain}>
-                <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
-              </Collapse>
+              <Stack>
+                <AllowanceButton
+                  chain={chain}
+                  token={tokenAddress}
+                  contract={ERC20_CONTRACTS[chain]}
+                />
 
-              <Collapse in={isOnCorrectChain}>
-                <Button
-                  size="lg"
-                  width="full"
-                  colorScheme="indigo"
-                  isDisabled={!isBalanceSufficient}
-                  onClick={onSubmitFund}
-                  isLoading={isLoading}
-                  loadingText="Funding pool..."
+                <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+
+                <Collapse
+                  in={
+                    isOnCorrectChain && (pickedCurrencyIsNative ? true : !!allowance)
+                  }
                 >
-                  {isBalanceSufficient ? "Fund" : "Insufficient balance"}
-                </Button>
-              </Collapse>
+                  <Tooltip label={isDisabledLabel} hasArrow>
+                    <Button
+                      size="lg"
+                      width="full"
+                      colorScheme="indigo"
+                      isDisabled={!isBalanceSufficient || !!isDisabledLabel}
+                      onClick={onSubmitFund}
+                      isLoading={isLoading}
+                      loadingText="Funding pool..."
+                    >
+                      {isBalanceSufficient ? "Fund" : "Insufficient balance"}
+                    </Button>
+                  </Tooltip>
+                </Collapse>
+              </Stack>
             </Stack>
           </ModalBody>
         </ModalContent>

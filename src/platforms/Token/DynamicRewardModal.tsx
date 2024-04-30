@@ -8,6 +8,7 @@ import {
   AlertIcon,
   Divider,
   HStack,
+  Heading,
   Icon,
   Modal,
   ModalBody,
@@ -21,7 +22,6 @@ import {
 } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
-import { SectionTitle } from "components/common/Section"
 import { Lightning, Question, X } from "phosphor-react"
 import { Requirement, RolePlatform } from "types"
 import TokenConversionTag from "./TokenConversionTag"
@@ -37,8 +37,8 @@ const SnapshotRequirementDetails = ({
 
   return (
     <>
-      <HStack>
-        <SectionTitle title="Linked to requirement" />{" "}
+      <HStack mb="3">
+        <Heading fontSize="md">Linked to requirement</Heading>
         <Tooltip
           label="Your received token amount is calculated from the points with your addresses on this snapshot. "
           placement="bottom"
@@ -61,9 +61,9 @@ const SnapshotRequirementDetails = ({
         )}
       </Stack>
 
-      <Stack mt={2}>
+      <Stack mt={8}>
         <HStack>
-          <SectionTitle title="Conversion" />{" "}
+          <Heading fontSize="md">With conversion</Heading>
           <Tooltip
             label="Your claimable token amount is determined by applying a conversion function to your points from the snapshot."
             placement="bottom"
@@ -74,14 +74,14 @@ const SnapshotRequirementDetails = ({
         </HStack>
 
         <HStack gap={1}>
-          <Text fontWeight={"semibold"} mr={"auto"} color={"GrayText"}>
+          <TokenConversionTag platform={rolePlatform} />
+          <Text fontWeight={"semibold"} ml="auto" colorScheme="gray" fontSize="sm">
             Multiplier:
           </Text>
           <Icon boxSize={3} as={X} />
-          <Text fontWeight={"semibold"} mr={2}>
+          <Text fontWeight={"semibold"} mr={2} fontSize="sm">
             {dynamicAmount.params.multiplier}
           </Text>
-          <TokenConversionTag platform={rolePlatform} />
         </HStack>
       </Stack>
     </>
@@ -104,62 +104,52 @@ const DynamicRewardModal = ({
   }
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader>
-            <Text>
-              <Icon
-                color="green.500"
-                boxSize={"14px"}
-                weight="fill"
-                as={Lightning}
-              />{" "}
-              Dynamic Reward
-            </Text>
-          </ModalHeader>
+    <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader>
+          <Text>
+            <Icon color="green.500" boxSize={4} weight="fill" as={Lightning} />{" "}
+            Dynamic Reward
+          </Text>
+        </ModalHeader>
 
-          <ModalBody>
-            <Stack gap={5}>
-              <SnapshotRequirementDetails
-                rolePlatform={rolePlatform}
-                requirement={linkedRequirement}
-              />
+        <ModalBody>
+          <SnapshotRequirementDetails
+            rolePlatform={rolePlatform}
+            requirement={linkedRequirement}
+          />
 
-              <Stack>
-                <Divider mb={1} mt={3} />
-                <Accordion allowToggle>
-                  <AccordionItem border={"none"}>
-                    <AccordionButton
-                      display={"flex"}
-                      rounded={"lg"}
-                      fontWeight={"semibold"}
-                      px={0}
-                      opacity={0.5}
-                      _hover={{ opacity: 1 }}
-                    >
-                      <Icon as={Question} mr={2} />
-                      What's a dynamic reward?
-                      <AccordionIcon ml={"auto"} />
-                    </AccordionButton>
-                    <AccordionPanel>
-                      <Text color={"GrayText"}>
-                        Dynamic rewards adjust the type or amount of rewards you can
-                        earn based on various factors, like completing specific
-                        requirements, accumulating points, or your activities within
-                        the guild.
-                      </Text>
-                    </AccordionPanel>
-                  </AccordionItem>
-                </Accordion>
-              </Stack>
-            </Stack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+          <Stack mt="8">
+            <Divider mb={1} mt={3} />
+            <Accordion allowToggle>
+              <AccordionItem border={"none"}>
+                <AccordionButton
+                  display={"flex"}
+                  rounded={"lg"}
+                  fontWeight={"semibold"}
+                  px={0}
+                  opacity={0.5}
+                  _hover={{ opacity: 1 }}
+                >
+                  <Icon as={Question} mr={2} />
+                  What's a dynamic reward?
+                  <AccordionIcon ml={"auto"} />
+                </AccordionButton>
+                <AccordionPanel>
+                  <Text color={"GrayText"}>
+                    Dynamic rewards adjust the amount of rewards you can earn based
+                    on various factors, like completing specific requirements,
+                    accumulating points, or your activities within the guild.
+                  </Text>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+          </Stack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 

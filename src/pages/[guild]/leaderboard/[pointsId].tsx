@@ -10,7 +10,7 @@ import {
   Stack,
   Wrap,
 } from "@chakra-ui/react"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
@@ -46,7 +46,7 @@ const Leaderboard = () => {
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
 
-  const accessedGuildTokens = useAccessedTokens(Number(router.query.pointsId))
+  const relatedTokenRewards = useTokenRewards(false, Number(router.query.pointsId))
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId
@@ -123,29 +123,31 @@ const Leaderboard = () => {
         rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
-        {accessedGuildTokens.map((guildPlatform) => (
-          <LeaderboardAirdropCard
-            key={`${guildPlatform.platformGuildData.tokenAddress}-${guildPlatform.platformGuildData.chain}`}
-            guildPlatform={guildPlatform}
-          />
-        ))}
+        <Stack spacing={3}>
+          {relatedTokenRewards.map((guildPlatform) => (
+            <LeaderboardAirdropCard
+              key={guildPlatform.id}
+              guildPlatform={guildPlatform}
+            />
+          ))}
 
-        {userData && (
-          <LeaderboardUserCard
-            address={
-              userData.address ??
-              addresses?.find((address) => address.isPrimary).address
-            }
-            score={userData.totalPoints}
-            position={userData.rank}
-            isCurrentUser
-            tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
-          />
-        )}
+          {userData && (
+            <LeaderboardUserCard
+              address={
+                userData.address ??
+                addresses?.find((address) => address.isPrimary).address
+              }
+              score={userData.totalPoints}
+              position={userData.rank}
+              isCurrentUser
+              tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
+            />
+          )}
+        </Stack>
 
         <Section
           ref={wrapperRef}
-          title={userData ? "Leaderboard" : undefined}
+          title={userData || relatedTokenRewards.length ? "Leaderboard" : undefined}
           spacing={3}
         >
           <>

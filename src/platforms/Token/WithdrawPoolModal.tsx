@@ -4,7 +4,6 @@ import {
   Button,
   Collapse,
   Divider,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,15 +12,19 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
-import { WalletTag } from "components/[guild]/crm/Identities"
-import CopyableAddress from "components/common/CopyableAddress"
+import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import useToast from "hooks/useToast"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
+import { RefObject } from "react"
+import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
+import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
+import PoolInformation from "./PoolInformation"
 import usePool from "./hooks/usePool"
 import useWithdrawPool from "./hooks/useWithdrawPool"
 
@@ -29,26 +32,28 @@ const WithdrawPoolModal = ({
   isOpen,
   onClose,
   onSuccess,
+  finalFocusRef,
 }: {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+  finalFocusRef?: RefObject<any>
 }) => {
   const {
     token: {
       data: { decimals, symbol },
     },
     guildPlatform: {
-      platformGuildData: { chain, poolId },
+      platformGuildData: { chain, poolId, tokenAddress },
     },
   } = useTokenRewardContext()
 
   const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
 
-  const [owner, , , poolBalance] = poolData || []
+  const { owner, balance: poolBalance } = poolData
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
-  const { chainId } = useAccount()
+  const { chainId, address } = useAccount()
   const isOnCorrectChain = Chains[chain] === chainId
 
   const toast = useToast()
@@ -58,88 +63,75 @@ const WithdrawPoolModal = ({
       toast({
         status: "success",
         title: "Success",
-        description: "Successfully withdrawed all funds from the pool!",
+        description: "Successfully withdrawn all funds from the pool!",
       })
       onClose()
       refetch()
       onSuccess()
     })
 
-  const handleClose = () => {
-    onClose()
-  }
+  const isDisabledLabel =
+    owner &&
+    owner !== address &&
+    `Only the requirement's original creator can withdraw (${shortenHex(owner)})`
 
   return (
-    <>
-      <Modal isOpen={isOpen} onClose={handleClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalHeader>
-            <Text>Withdraw pool</Text>
-          </ModalHeader>
+    <Modal isOpen={isOpen} onClose={onClose} finalFocusRef={finalFocusRef}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalHeader>
+          <Text>Withdraw pool</Text>
+        </ModalHeader>
 
-          <ModalBody>
-            <Stack gap={5}>
-              <Stack gap={1}>
-                <HStack>
-                  <Text fontWeight={"semibold"} fontSize="sm">
-                    Balance
-                  </Text>
-                  <Text ml={"auto"} fontSize="sm">
-                    {balance} {symbol}
-                  </Text>
-                </HStack>
-                <HStack>
-                  <Text fontWeight={"semibold"} fontSize={"sm"}>
-                    Owner
-                  </Text>{" "}
-                  <WalletTag ml={"auto"}>
-                    <CopyableAddress address={owner} fontSize="sm" />
-                  </WalletTag>
-                </HStack>
-              </Stack>
-              <Divider />
+        <ModalBody>
+          <Stack gap={5}>
+            <PoolInformation balance={balance} owner={owner} symbol={symbol} />
+            <Divider />
 
-              {balance === 0 ? (
-                <>
-                  <Alert status="info">
-                    <AlertIcon mt={0} /> There are currently no funds available to
-                    withdraw from the reward pool.
-                  </Alert>
-                </>
-              ) : (
-                <>
-                  <Alert status="warning">
-                    <AlertIcon mt={0} /> Are you sure you want to withdraw all funds
-                    from the reward pool? No further rewards can be claimed until
-                    funded again.
-                  </Alert>
+            {balance === 0 ? (
+              <>
+                <Alert status="info">
+                  <AlertIcon mt={0} /> There are currently no funds available to
+                  withdraw from the reward pool.
+                </Alert>
+              </>
+            ) : (
+              <>
+                <Alert status="warning">
+                  <AlertIcon mt={0} /> If you withdraw all funds, no further rewards
+                  can be claimed until the pool is funded again.
+                </Alert>
 
-                  <Collapse in={!isOnCorrectChain}>
-                    <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
-                  </Collapse>
+                <AllowanceButton
+                  chain={chain}
+                  token={tokenAddress}
+                  contract={ERC20_CONTRACTS[chain]}
+                />
 
-                  <Collapse in={isOnCorrectChain}>
+                <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+
+                <Collapse in={isOnCorrectChain}>
+                  <Tooltip label={isDisabledLabel} hasArrow>
                     <Button
                       size="lg"
                       width="full"
                       colorScheme="indigo"
-                      isDisabled={!isOnCorrectChain}
+                      isDisabled={!isOnCorrectChain || !!isDisabledLabel}
                       onClick={onSubmitWithdraw}
                       isLoading={withdrawIsLoading}
                       loadingText="Withdrawing funds..."
                     >
                       {"Withdraw"}
                     </Button>
-                  </Collapse>
-                </>
-              )}
-            </Stack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
+                  </Tooltip>
+                </Collapse>
+              </>
+            )}
+          </Stack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
 

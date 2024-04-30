@@ -15,7 +15,6 @@ import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
 import { TokenRewardCard } from "platforms/Token/TokenRewardCard"
 import rewards from "platforms/rewards"
-import React from "react"
 import { PlatformName, PlatformType } from "types"
 import PlatformCard from "../RolePlatforms/components/PlatformCard"
 import useGuild from "../hooks/useGuild"
@@ -24,7 +23,7 @@ import useRoleGroup from "../hooks/useRoleGroup"
 import CampaignCards from "./components/CampaignCards"
 import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
-import { useAccessedTokens } from "./hooks/useAccessedTokens"
+import { useTokenRewards } from "./hooks/useTokenRewards"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -95,7 +94,7 @@ const AccessHub = (): JSX.Element => {
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const accessedGuildPoints = useAccessedGuildPoints("ACCESSED_ONLY")
-  const accessedGuildTokens = useAccessedTokens()
+  const accessedGuildTokens = useTokenRewards(!isAdmin)
 
   const shouldShowGuildPin =
     !group &&
@@ -160,9 +159,7 @@ const AccessHub = (): JSX.Element => {
           ))}
 
           {accessedGuildTokens?.map((platform) => (
-            <React.Fragment key={platform.id}>
-              <TokenRewardCard platform={platform} />
-            </React.Fragment>
+            <TokenRewardCard platform={platform} key={platform.id} />
           ))}
 
           {(isMember || isAdmin) &&

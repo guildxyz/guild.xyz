@@ -12,7 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 import Star from "static/icons/star.svg"
 import SnapshotTable from "./SnapshotTable"
 
@@ -29,18 +29,17 @@ type SnapshotData = {
 }
 
 const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
-  const [snapshotData, setSnapshotData] = useState<SnapshotData[]>([])
-
-  useEffect(() => {
-    const formatted = snapshotRequirement.data.snapshot
-      .sort((a, b) => b.value - a.value)
-      .map((row, idx) => ({
-        rank: idx + 1,
-        address: row.key as `0x${string}`,
-        points: row.value,
-      }))
-    setSnapshotData(formatted)
-  }, [snapshotRequirement])
+  const snapshotData: SnapshotData[] = useMemo(
+    () =>
+      snapshotRequirement.data.snapshot
+        .sort((a, b) => b.value - a.value)
+        .map((row, idx) => ({
+          rank: idx + 1,
+          address: row.key as `0x${string}`,
+          points: row.value,
+        })),
+    [snapshotRequirement]
+  )
 
   const pointsRewards = useAccessedGuildPoints("ALL")
   const pointsReward = pointsRewards.find(
@@ -65,13 +64,9 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
       }
     : null
 
-  const handleClose = () => {
-    onClose()
-  }
-
   return (
     <>
-      <Modal size="lg" isOpen={isOpen} onClose={handleClose} colorScheme="dark">
+      <Modal size="lg" isOpen={isOpen} onClose={onClose} colorScheme="dark">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>
@@ -82,7 +77,7 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
           <ModalCloseButton />
 
           <ModalBody>
-            <Stack gap={1}>
+            <Stack gap={1} mb={3}>
               <HStack justifyContent={"space-between"}>
                 <Text color={"GrayText"}>Snapshot type</Text>
                 <Text>{pointData ? "Point based" : "Custom upload"}</Text>
@@ -98,12 +93,14 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
                   </>
                 )}
               </HStack>
-              <HStack justifyContent={"space-between"}>
-                <Text color={"GrayText"}>Created at</Text>
-                <Text>
-                  {new Date(snapshotRequirement.createdAt).toLocaleString()}
-                </Text>
-              </HStack>
+              {!!snapshotRequirement.createdAt && (
+                <HStack justifyContent={"space-between"}>
+                  <Text color={"GrayText"}>Created at</Text>
+                  <Text>
+                    {new Date(snapshotRequirement.createdAt).toLocaleString()}
+                  </Text>
+                </HStack>
+              )}
             </Stack>
 
             <SnapshotTable snapshotData={snapshotData} />

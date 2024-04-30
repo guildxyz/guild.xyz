@@ -1,54 +1,53 @@
 import {
   Alert,
+  AlertDescription,
   AlertIcon,
+  AlertTitle,
+  Box,
   Collapse,
   Flex,
-  HStack,
   Stack,
-  Text,
 } from "@chakra-ui/react"
-import { useAccessedTokens } from "components/[guild]/AccessHub/hooks/useAccessedTokens"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { TokenRewardType } from "../AddTokenPanel"
+import { PlatformType } from "types"
+import { AddTokenFormType, TokenRewardType } from "../AddTokenPanel"
 import DynamicAmount from "./DynamicAmount"
 
 const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
-  const { setValue } = useFormContext()
+  const { control, setValue } = useFormContext<AddTokenFormType>()
 
-  const type: TokenRewardType = useWatch({ name: `type` })
+  const type = useWatch({ control, name: `type` })
 
-  const requirements = useWatch({ name: `requirements` })
-  const multiplier = useWatch({ name: `multiplier` })
-  const addition = useWatch({ name: `addition` })
-  const chain = useWatch({ name: `chain` })
-  const address = useWatch({ name: `tokenAddress` })
+  const requirements = useWatch({ control, name: `requirements` })
+  const multiplier = useWatch({ control, name: `multiplier` })
+  const addition = useWatch({ control, name: `addition` })
+  const chain = useWatch({ control, name: `chain` })
+  const address = useWatch({ control, name: `tokenAddress` })
 
-  const accessedTokens = useAccessedTokens()
+  const { guildPlatforms } = useGuild()
 
-  const platformForToken = accessedTokens.find(
-    (guildPlatform) =>
-      guildPlatform.platformGuildData.chain === chain &&
-      guildPlatform.platformGuildData.tokenAddress === address
+  const tokenPlatforms = guildPlatforms?.filter(
+    (gp) => gp.platformId === PlatformType.ERC20
   )
 
-  const { roles } = useGuild()
+  const platformForToken = tokenPlatforms.find(
+    (guildPlatform) =>
+      guildPlatform.platformGuildData.chain === chain &&
+      guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
+        address?.toLowerCase()
+  )
 
-  const rolePlatforms = platformForToken
-    ? roles
-        ?.flatMap((role) => role.rolePlatforms)
-        ?.filter(
-          (rp) =>
-            rp?.guildPlatformId === platformForToken.id ||
-            rp?.guildPlatform?.id === platformForToken.id
-        )
-    : null
+  const rolePlatforms = useRolePlatformsOfReward(platformForToken?.id)
 
   const dynamicExists =
     rolePlatforms?.find(
-      (rp: any) => rp.dynamicAmount.operation.input[0].type === "REQUIREMENT_AMOUNT"
+      (rp: any) =>
+        rp.dynamicAmount?.operation?.input?.[0]?.type === "REQUIREMENT_AMOUNT" &&
+        rp?.guildPlatformId === platformForToken?.id
     ) || false
 
   useEffect(() => {
@@ -91,13 +90,13 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     return (
       <>
         <Alert status="warning" my={4}>
-          <AlertIcon mt={0} />{" "}
-          <HStack>
-            <Text>
-              <strong>Only one dynamic reward is allowed per token type.</strong> To
-              create a new one, you must first delete the existing reward.
-            </Text>
-          </HStack>
+          <AlertIcon mt={0} />
+          <Box>
+            <AlertTitle>Only one dynamic reward is allowed per token</AlertTitle>
+            <AlertDescription>
+              To create a new one, you must first delete the existing reward
+            </AlertDescription>
+          </Box>
         </Alert>
       </>
     )
@@ -120,7 +119,12 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
         }}
       /> */}
 
-      <Collapse startingHeight={150} animateOpacity in={!isCollapsed}>
+      <Collapse
+        startingHeight={150}
+        animateOpacity
+        in={!isCollapsed}
+        style={{ padding: "2px", margin: "-2px" }}
+      >
         <Stack gap={5}>
           {/* {[
             TokenRewardType.DYNAMIC_POINTS,

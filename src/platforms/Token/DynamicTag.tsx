@@ -1,11 +1,11 @@
-import { HStack, Icon, Tag, Text, Tooltip, useDisclosure } from "@chakra-ui/react"
+import { Icon, Tag, Tooltip, useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
-import { ArrowSquareIn, Lightning, Warning } from "phosphor-react"
+import { Lightning, Warning } from "phosphor-react"
 import DynamicRewardModal from "./DynamicRewardModal"
 import { useTokenRewardContext } from "./TokenRewardContext"
-import useRolePlatforms from "./hooks/useRolePlatforms"
+import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
 const DynamicTag = () => {
   const { isAdmin } = useGuildPermission()
@@ -17,7 +17,7 @@ const DynamicTag = () => {
   } = useTokenRewardContext()
 
   const { roles } = useGuild()
-  const rolePlatforms = useRolePlatforms(guildPlatformId)
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatformId)
   const role = roles.find((rl) =>
     rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)
   )
@@ -27,14 +27,7 @@ const DynamicTag = () => {
 
   return (
     <>
-      <Tooltip
-        label={
-          <HStack>
-            <Text>Show details</Text> <ArrowSquareIn />{" "}
-          </HStack>
-        }
-        hasArrow
-      >
+      <Tooltip label="Show details" hasArrow>
         <Tag fontWeight="semibold" _hover={{ cursor: "pointer" }} onClick={onOpen}>
           <Icon
             boxSize={"13px"}

@@ -11,21 +11,15 @@ const GuildPointsSnapshotForm = () => {
   )
 
   return (
-    <>
-      <Box w="full" p={5}>
-        {existingPointsRewards.length === 0 ? (
-          <>
-            <Alert status="error" display="flex" alignItems="center">
-              <AlertIcon mt={0} /> <p>You need to create a point reward first!</p>
-            </Alert>
-          </>
-        ) : (
-          <>
-            <SnapshotSelector />
-          </>
-        )}
-      </Box>
-    </>
+    <Box w="full" p={5}>
+      {existingPointsRewards.length === 0 ? (
+        <Alert status="error" display="flex" alignItems="center">
+          <AlertIcon mt={0} /> <p>You need to create a point reward first!</p>
+        </Alert>
+      ) : (
+        <SnapshotSelector />
+      )}
+    </Box>
   )
 }
 
