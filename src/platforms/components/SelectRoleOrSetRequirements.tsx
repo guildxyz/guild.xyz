@@ -37,6 +37,10 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
 
   const handleChange = (value: RoleTypeToAddTo) => {
+    /**
+     * This custom ERC20 condition might not be needed cause we've disabled the
+     * switcher since then, but maybe it will be in the future so leaving it now
+     */
     if (erc20Type !== "REQUIREMENT_AMOUNT") {
       if (value === RoleTypeToAddTo.EXISTING_ROLE) {
         unregister("requirements")
