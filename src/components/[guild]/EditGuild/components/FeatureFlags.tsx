@@ -12,6 +12,8 @@ const FEATURE_FLAGS = [
   "FORMS",
   "PERIODIC_SYNC",
   "ONGOING_ISSUES",
+  "PURCHASE_REQUIREMENT",
+  "PAYMENT_REQUIREMENT",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
