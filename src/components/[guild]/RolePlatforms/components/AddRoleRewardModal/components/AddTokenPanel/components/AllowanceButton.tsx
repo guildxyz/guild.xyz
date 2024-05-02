@@ -4,7 +4,8 @@ import Button from "components/common/Button"
 import useTokenData from "hooks/useTokenData"
 import { Question, Warning } from "phosphor-react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
-import { Chain } from "wagmiConfig/chains"
+import { useAccount } from "wagmi"
+import { Chain, Chains } from "wagmiConfig/chains"
 
 type Props = {
   chain: Chain
@@ -26,9 +27,12 @@ const AllowanceButton = ({ chain, token, contract }: Props) => {
   } = useAllowance(token, contract)
 
   const tokenIsNative = token === NULL_ADDRESS
+  const { chainId } = useAccount()
+
+  const isOnCorrectChain = Chains[chain] === chainId
 
   return (
-    <Collapse in={!allowance && !tokenIsNative}>
+    <Collapse in={!allowance && !tokenIsNative && isOnCorrectChain}>
       <Button
         width="full"
         size="lg"

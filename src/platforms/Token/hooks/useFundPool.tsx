@@ -1,3 +1,4 @@
+import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
@@ -18,6 +19,7 @@ const useFundPool = (
   const showErrorToast = useShowErrorToast()
   const {
     data: { decimals },
+    isLoading,
   } = useTokenData(chain, tokenAddress)
   const formattedAmount =
     !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
@@ -31,13 +33,24 @@ const useFundPool = (
 
   const tokenIsNative = tokenAddress === NULL_ADDRESS
 
+  const { isBalanceSufficient } = useIsBalanceSufficient({
+    address: tokenAddress,
+    chain: chain,
+    amount: amount,
+  })
+
+  const enabled = !!amount && !!poolId && !isLoading && !!isBalanceSufficient
+
   const transactionConfig = {
     abi: tokenRewardPoolAbi,
     address: ERC20_CONTRACTS[chain],
     functionName: "fundPool",
     args: [poolId, formattedAmount],
     ...(tokenIsNative && { value: formattedAmount }),
-  }
+    query: {
+      enabled,
+    },
+  } as const
 
   return useSubmitTransaction(transactionConfig, {
     onError: (error) => {
