@@ -1,19 +1,26 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmitTransaction from "hooks/useSubmitTransaction"
+import useTokenData from "hooks/useTokenData"
 import tokenRewardPoolAbi from "static/abis/tokenRewardPool"
 import { findEvent } from "utils/findEventInTxResponse"
 import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { parseUnits } from "viem/utils"
 import { Chain } from "wagmiConfig/chains"
 
 const useFundPool = (
   chain: Chain,
   tokenAddress: `0x${string}`,
   poolId: bigint,
-  amount: bigint,
+  amount: string,
   onSuccess: () => void
 ) => {
   const showErrorToast = useShowErrorToast()
+  const {
+    data: { decimals },
+  } = useTokenData(chain, tokenAddress)
+  const formattedAmount =
+    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {
@@ -28,8 +35,8 @@ const useFundPool = (
     abi: tokenRewardPoolAbi,
     address: ERC20_CONTRACTS[chain],
     functionName: "fundPool",
-    args: [poolId, amount],
-    ...(tokenIsNative && { value: amount }),
+    args: [poolId, formattedAmount],
+    ...(tokenIsNative && { value: formattedAmount }),
   }
 
   return useSubmitTransaction(transactionConfig, {

@@ -11,14 +11,18 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
 import Image from "next/image"
 import { ArrowSquareOut } from "phosphor-react"
 import { useMemo, useState } from "react"
+import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "../TokenClaimFeeTable"
@@ -39,7 +43,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const modalBg = useCardBg()
   const [isConfirmed, setIsConfirmed] = useState(false)
 
-  const { token, guildPlatform } = useTokenRewardContext()
+  const { fee, token, guildPlatform } = useTokenRewardContext()
 
   const { refetch } = usePool(
     guildPlatform.platformGuildData.chain,
@@ -47,6 +51,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   )
 
   const chain = guildPlatform.platformGuildData.chain
+  const tokenAddress = guildPlatform.platformGuildData.tokenAddress
 
   const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
 
@@ -90,6 +95,17 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
         : null,
     [membershipLoading, claimLoadingText]
   )
+
+  const formattedFee =
+    fee.isLoading || token.isLoading
+      ? null
+      : formatUnits(fee.amount, token.data.decimals)
+
+  const { isBalanceSufficient } = useIsBalanceSufficient({
+    address: NULL_ADDRESS,
+    chain: chain,
+    amount: formattedFee,
+  })
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -157,21 +173,31 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           ) : (
             <>
               {rolePlatforms.length === 1 ? (
-                <Button
-                  colorScheme="gold"
-                  isDisabled={token.isLoading || !isConfirmed}
-                  isLoading={claimLoading}
-                  loadingText={claimLoading}
-                  flexShrink={0}
-                  onClick={() => {
-                    submitClaim({
-                      roleIds: [rolePlatforms[0].roleId],
-                      saveClaimData: true,
-                    })
-                  }}
+                <Tooltip
+                  label={
+                    !isBalanceSufficient &&
+                    "You don't have enough balance to pay the guild fee!"
+                  }
+                  hasArrow
                 >
-                  Claim
-                </Button>
+                  <Button
+                    colorScheme="gold"
+                    isDisabled={
+                      token.isLoading || !isConfirmed || !isBalanceSufficient
+                    }
+                    isLoading={claimLoading}
+                    loadingText={claimLoading}
+                    flexShrink={0}
+                    onClick={() => {
+                      submitClaim({
+                        roleIds: [rolePlatforms[0].roleId],
+                        saveClaimData: true,
+                      })
+                    }}
+                  >
+                    {isBalanceSufficient ? "Claim" : "Insufficient balance"}
+                  </Button>
+                </Tooltip>
               ) : (
                 <Stack gap={2}>
                   {rolePlatforms.map((rolePlatform) => (

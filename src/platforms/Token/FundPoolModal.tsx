@@ -20,15 +20,15 @@ import SwitchNetworkButton from "components/[guild]/Requirements/components/Guil
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
 import ConversionNumberInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionNumberInput"
+import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useTokenBalance from "hooks/useTokenBalance"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { RefObject, useState } from "react"
 import Token from "static/icons/token.svg"
 import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
-import { formatUnits, parseUnits } from "viem"
-import { useAccount, useBalance } from "wagmi"
+import { formatUnits } from "viem"
+import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import PoolInformation from "./PoolInformation"
 import useFundPool from "./hooks/useFundPool"
@@ -60,35 +60,22 @@ const FundPoolModal = ({
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
   const [amount, setAmount] = useState("1")
-
   const { chainId, address: userAddress } = useAccount()
 
-  const { data: coinBalanceData } = useBalance({
-    address: userAddress,
+  const { isBalanceSufficient } = useIsBalanceSufficient({
+    address: tokenAddress,
+    chain: chain,
+    amount: amount,
   })
 
-  const { data: tokenBalanceData } = useTokenBalance({
-    token: tokenAddress,
-    chainId,
-    shouldFetch: tokenAddress !== NULL_ADDRESS,
-  })
-
-  const formattedAmount =
-    !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
   const isOnCorrectChain = Chains[chain] === chainId
-
-  const isBalanceSufficient =
-    typeof formattedAmount === "bigint" &&
-    (pickedCurrencyIsNative
-      ? coinBalanceData?.value >= formattedAmount
-      : tokenBalanceData?.value >= formattedAmount)
 
   const { onSubmitTransaction: onSubmitFund, isLoading } = useFundPool(
     chain,
     tokenAddress,
     BigInt(poolId),
-    formattedAmount,
+    amount,
     () => {
       refetch()
       onSuccess()
