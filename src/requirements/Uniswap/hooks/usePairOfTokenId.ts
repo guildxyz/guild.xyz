@@ -21,7 +21,7 @@ export function usePairOfTokenId(
     abi: UNISWAP_V3_POSITIONS_NFT_ABI,
     functionName: "positions",
     args: [enabled ? BigInt(tokenId) : undefined],
-    query: { enabled },
+    query: { enabled, staleTime: Infinity },
   })
 
   useEffect(() => {

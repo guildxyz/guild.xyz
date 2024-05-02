@@ -26,7 +26,7 @@ export function useTokensOfPoolVault(
       { ...vaultContract, functionName: "token1" },
       { ...vaultContract, functionName: "fee" },
     ],
-    query: { enabled: !!lpVaultAddress },
+    query: { enabled: !!lpVaultAddress, staleTime: Infinity },
   })
   const tokenError = token0Error ?? token1Error
 

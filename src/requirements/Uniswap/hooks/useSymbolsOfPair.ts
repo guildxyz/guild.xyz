@@ -22,7 +22,7 @@ export function useSymbolsOfPair(
       { ...tokenContract, address: token0 },
       { ...tokenContract, address: token1 },
     ],
-    query: { enabled: !!token0 && !!token1 },
+    query: { enabled: !!token0 && !!token1, staleTime: Infinity },
   })
 
   return {
