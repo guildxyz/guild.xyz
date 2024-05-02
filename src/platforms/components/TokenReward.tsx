@@ -93,7 +93,6 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
           <RewardIcon
             rolePlatformId={rolePlatform.id}
             guildPlatform={rolePlatform?.guildPlatform}
-            owerwriteImg={imageUrl}
           />
         )
       }
