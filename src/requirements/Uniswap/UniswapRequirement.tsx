@@ -14,7 +14,6 @@ import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
 const UNISWAP_TESTNETS = new Set<(typeof consts.UniswapV3PositionsChains)[number]>([
   "SEPOLIA",
   "BASE_SEPOLIA",
-  "POLYGON_MUMBAI",
 ])
 
 // These are the chains, which Uniswapp calls differently then us
