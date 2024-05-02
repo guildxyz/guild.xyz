@@ -41,7 +41,7 @@ const useCollectToken = (
   const { data: walletClient } = useWalletClient()
 
   const collect = async () => {
-    setLoadingText("Verifying signature...")
+    setLoadingText("Getting signature...")
 
     const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
 
