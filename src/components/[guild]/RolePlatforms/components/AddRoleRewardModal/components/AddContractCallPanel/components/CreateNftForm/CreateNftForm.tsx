@@ -62,7 +62,6 @@ export type CreateNftFormType = {
   chain: ContractCallSupportedChain
   tokenTreasury: `0x${string}`
   name: string
-  symbol: string
   price: number
   description?: string
   richTextDescription?: string
@@ -152,30 +151,15 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
           <GridItem colSpan={{ base: 3, sm: 2 }}>
             <Stack spacing={6}>
-              <HStack alignItems="start">
-                <FormControl isInvalid={!!errors?.name}>
-                  <FormLabel>Name</FormLabel>
+              <FormControl isInvalid={!!errors?.name}>
+                <FormLabel>Name</FormLabel>
 
-                  <Input
-                    {...register("name", { required: "This field is required" })}
-                  />
+                <Input
+                  {...register("name", { required: "This field is required" })}
+                />
 
-                  <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-                </FormControl>
-
-                <FormControl
-                  isInvalid={!!errors?.symbol}
-                  maxW={{ base: 24, md: 36 }}
-                >
-                  <FormLabel>Symbol</FormLabel>
-
-                  <Input
-                    {...register("symbol", { required: "This field is required" })}
-                  />
-
-                  <FormErrorMessage>{errors?.symbol?.message}</FormErrorMessage>
-                </FormControl>
-              </HStack>
+                <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+              </FormControl>
 
               <FormControl isInvalid={!!errors?.richTextDescription}>
                 <FormLabel>Reward description</FormLabel>

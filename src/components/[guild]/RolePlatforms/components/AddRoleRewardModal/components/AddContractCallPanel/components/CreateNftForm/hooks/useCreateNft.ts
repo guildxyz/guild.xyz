@@ -103,13 +103,13 @@ const useCreateNft = (
 
     setLoadingText("Deploying contract")
 
-    const { name, symbol, tokenTreasury, price } = data
+    const { name, tokenTreasury, price } = data
     const trimmedName = name.trim()
-    const trimmedSymbol = symbol.trim()
+
     // name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
     const contractCallParams = [
       trimmedName,
-      trimmedSymbol,
+      "",
       metadataCID,
       address,
       tokenTreasury,
@@ -167,7 +167,6 @@ const useCreateNft = (
           function: ContractCallFunction.SIMPLE_CLAIM,
           argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
           name: trimmedName,
-          symbol: trimmedSymbol,
           imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
           description: data.richTextDescription,
         },

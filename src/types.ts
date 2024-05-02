@@ -206,7 +206,6 @@ type PlatformGuildData = {
     function?: never
     argsToSign?: never
     name?: never
-    symbol?: never
     description?: never
     text?: never
     texts?: never
@@ -232,7 +231,6 @@ type PlatformGuildData = {
     function?: never
     argsToSign?: never
     name?: never
-    symbol?: never
     description?: never
     text?: never
     texts?: never
@@ -251,7 +249,6 @@ type PlatformGuildData = {
     function: ContractCallFunction
     argsToSign: string[]
     name: string
-    symbol: string
     imageUrl: string
     description: string
     inviteChannel?: never
@@ -279,7 +276,6 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
@@ -304,7 +300,6 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
@@ -329,7 +324,6 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
@@ -354,7 +348,6 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
@@ -384,7 +377,6 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
@@ -404,7 +396,6 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
     joinButton?: never
