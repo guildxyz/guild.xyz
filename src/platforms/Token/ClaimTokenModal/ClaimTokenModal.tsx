@@ -92,7 +92,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   )
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+    <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
         border={"3px solid transparent"}
@@ -162,6 +162,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                   isDisabled={token.isLoading || !isConfirmed}
                   isLoading={claimLoading}
                   loadingText={claimLoading}
+                  flexShrink={0}
                   onClick={() => {
                     submitClaim({
                       roleIds: [rolePlatforms[0].roleId],
