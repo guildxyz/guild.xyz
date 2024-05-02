@@ -18,6 +18,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -261,6 +262,7 @@ const AddRequirementForm = forwardRef(
 )
 
 const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
+  const { featureFlags } = useGuild()
   const [search, setSearch] = useState("")
   const filteredIntegrations = integrations?.filter((integration) =>
     integration.name.toLowerCase().includes(search.toLowerCase())
@@ -272,19 +274,25 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
         General
       </Heading>
       <SimpleGrid columns={2} gap={2}>
-        {general.map((requirementButton) => (
-          <Button
-            key={requirementButton.types[0]}
-            w="full"
-            py={11}
-            onClick={() => setSelectedType(requirementButton.types[0])}
-          >
-            <VStack w="full" whiteSpace="break-spaces">
-              <Icon as={requirementButton.icon as FC} boxSize={6} />
-              <Text as="span">{requirementButton.name}</Text>
-            </VStack>
-          </Button>
-        ))}
+        {general
+          .filter(
+            (req) =>
+              !!featureFlags.includes("PAYMENT_REQUIREMENT") ||
+              req.types[0] === "PAYMENT"
+          )
+          .map((requirementButton) => (
+            <Button
+              key={requirementButton.types[0]}
+              w="full"
+              py={11}
+              onClick={() => setSelectedType(requirementButton.types[0])}
+            >
+              <VStack w="full" whiteSpace="break-spaces">
+                <Icon as={requirementButton.icon as FC} boxSize={6} />
+                <Text as="span">{requirementButton.name}</Text>
+              </VStack>
+            </Button>
+          ))}
       </SimpleGrid>
 
       <Heading size="sm" mb="3" mt="8">
