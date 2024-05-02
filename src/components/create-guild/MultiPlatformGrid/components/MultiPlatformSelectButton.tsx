@@ -107,6 +107,7 @@ const MultiPlatformSelectButton = ({
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitterLink = useWatch({ name: "socialLinks.TWITTER" })
+  const socialLinks = useWatch({ name: "socialLinks" })
 
   const removePlatform = (platformName: PlatformName) => {
     methods.setValue(
@@ -151,7 +152,15 @@ const MultiPlatformSelectButton = ({
               ? isAdded
                 ? () => {
                     if (isTwitter) {
-                      setValue("socialLinks.TWITTER", "")
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                      const { TWITTER, ...socialsWithoutTwitter } = socialLinks
+                      const hasNoSocialLinks =
+                        Object.keys(socialsWithoutTwitter).length <= 0
+
+                      setValue(
+                        "socialLinks",
+                        hasNoSocialLinks ? undefined : socialsWithoutTwitter
+                      )
                     } else {
                       removePlatform(platform)
                       if (platform === "DISCORD") {

@@ -13,6 +13,8 @@ const FEATURE_FLAGS = [
   "ERC20",
   "PERIODIC_SYNC",
   "ONGOING_ISSUES",
+  "PURCHASE_REQUIREMENT",
+  "PAYMENT_REQUIREMENT",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 

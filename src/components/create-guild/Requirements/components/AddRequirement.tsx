@@ -18,6 +18,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
@@ -261,6 +262,7 @@ const AddRequirementForm = forwardRef(
 )
 
 const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
+  const { featureFlags } = useGuild()
   const [search, setSearch] = useState("")
   const filteredIntegrations = integrations?.filter((integration) =>
     integration.name.toLowerCase().includes(search.toLowerCase())
@@ -273,7 +275,12 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
       </Heading>
       <SimpleGrid columns={2} gap={2}>
         {general
-          .filter((req) => req.types[0] !== "GUILD_SNAPSHOT")
+          .filter(
+            (req) =>
+              req.types[0] !== "GUILD_SNAPSHOT" &&
+              (!!featureFlags.includes("PAYMENT_REQUIREMENT") ||
+                req.types[0] !== "PAYMENT")
+          )
           .map((requirementButton) => (
             <Button
               key={requirementButton.types[0]}

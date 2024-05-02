@@ -12,7 +12,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useTokenData from "hooks/useTokenData"
 import useTokens from "hooks/useTokens"
-import { useCallback, useMemo } from "react"
+import { ReactNode, useCallback, useMemo } from "react"
 import { UseControllerProps, useController, useFormContext } from "react-hook-form"
 import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 
@@ -21,6 +21,7 @@ type Props = {
   fieldName: string
   isDisabled?: boolean
   customImage?: string
+  label?: ReactNode
 } & Omit<UseControllerProps, "name">
 
 const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
@@ -34,6 +35,7 @@ const TokenPicker = ({
   fieldName,
   isDisabled,
   customImage,
+  label = "Token",
   ...rest
 }: Props): JSX.Element => {
   const { trigger } = useFormContext()
@@ -86,7 +88,10 @@ const TokenPicker = ({
 
   return (
     <FormControl isRequired isInvalid={!!error}>
-      <FormLabel>Token:</FormLabel>
+      <FormLabel>
+        {label}
+        {typeof label === "string" ? ":" : null}
+      </FormLabel>
 
       <InputGroup>
         {address &&

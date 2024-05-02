@@ -1,3 +1,4 @@
+import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import useSWRImmutable from "swr/immutable"
@@ -22,6 +23,8 @@ const DynamicPurchaseRequirement = () => {
     "/api/nonPurchasableAssets"
   )
 
+  const { featureFlags } = useGuild()
+
   const requirement = useRequirementContext()
   const { isOpen } = useGuildCheckoutContext()
   const { isTxModalOpen } = useTransactionStatusContext()
@@ -34,12 +37,13 @@ const DynamicPurchaseRequirement = () => {
   )?.access
 
   const shouldNotRenderComponent =
-    !isOpen &&
-    !isTxModalOpen &&
-    (isMembershipLoading ||
-      satisfiesRequirement ||
-      !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
-      !purchaseSupportedChains[requirement.type]?.includes(requirement.chain))
+    !featureFlags.includes("PURCHASE_REQUIREMENT") ||
+    (!isOpen &&
+      !isTxModalOpen &&
+      (isMembershipLoading ||
+        satisfiesRequirement ||
+        !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
+        !purchaseSupportedChains[requirement.type]?.includes(requirement.chain)))
 
   if (
     !data ||
