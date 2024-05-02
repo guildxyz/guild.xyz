@@ -144,12 +144,12 @@ const CreateNftForm = ({ onSuccess }: Props) => {
           a fancy auto-generated minting page!
         </Text>
 
-        <Grid w="full" templateColumns="repeat(3, 1fr)" gap={8}>
-          <GridItem colSpan={{ base: 3, sm: 1 }}>
+        <Grid w="full" templateColumns="repeat(5, 1fr)" gap={8}>
+          <GridItem colSpan={{ base: 5, sm: 2 }}>
             <ImagePicker />
           </GridItem>
 
-          <GridItem colSpan={{ base: 3, sm: 2 }}>
+          <GridItem colSpan={{ base: 5, sm: 3 }}>
             <Stack spacing={6}>
               <FormControl isInvalid={!!errors?.name}>
                 <FormLabel>Name</FormLabel>
