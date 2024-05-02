@@ -1,5 +1,6 @@
 import {
   Checkbox,
+  Collapse,
   Divider,
   Icon,
   Link,
@@ -34,7 +35,6 @@ import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import TokenClaimFeeTable from "../TokenClaimFeeTable"
 import { useTokenRewardContext } from "../TokenRewardContext"
-import TokenRolePlatformClaimCard from "../TokenRolePlatformClaimCard"
 import useCollectToken from "../hooks/useCollectToken"
 import usePool from "../hooks/usePool"
 import useRolePlatformsOfReward from "../hooks/useRolePlatformsOfReward"
@@ -122,7 +122,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   }, [isAvailable, isBalanceSufficient, rolePlatforms])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent
         border={"3px solid transparent"}
@@ -186,47 +186,43 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             </Text>
           </Checkbox>
 
-          {!isOnCorrectChain ? (
+          <Stack>
+            {/* Collapse components always have to be wrapped
+            by a component that allows overflow, because of some
+            weird issue:
+            https://github.com/chakra-ui/chakra-ui/issues/2966
+            */}
+
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
-          ) : (
-            <>
-              {rolePlatforms.length === 1 ? (
-                <Tooltip label={disabledTooltipLabel} hasArrow>
-                  <Button
-                    colorScheme="gold"
-                    isDisabled={
-                      token.isLoading ||
-                      !isConfirmed ||
-                      !isBalanceSufficient ||
-                      isAvailable
-                    }
-                    isLoading={claimLoading}
-                    loadingText={claimLoading}
-                    flexShrink={0}
-                    onClick={() => {
-                      submitClaim({
-                        roleIds: [rolePlatforms[0].roleId],
-                        saveClaimData: true,
-                      })
-                    }}
-                  >
-                    {isBalanceSufficient ? "Claim" : "Insufficient balance"}
-                  </Button>
-                </Tooltip>
-              ) : (
-                <Stack gap={2}>
-                  {rolePlatforms.map((rolePlatform) => (
-                    <>
-                      <TokenRolePlatformClaimCard
-                        key={`${rolePlatform.roleId}`}
-                        rolePlatform={rolePlatform}
-                      />
-                    </>
-                  ))}
-                </Stack>
-              )}
-            </>
-          )}
+            <Collapse
+              in={isOnCorrectChain}
+              style={{ overflow: "initial !important" }}
+            >
+              <Tooltip label={disabledTooltipLabel} hasArrow>
+                <Button
+                  colorScheme="gold"
+                  isDisabled={
+                    token.isLoading ||
+                    !isConfirmed ||
+                    !isBalanceSufficient ||
+                    isAvailable
+                  }
+                  isLoading={claimLoading}
+                  loadingText={claimLoading}
+                  flexShrink={0}
+                  w="full"
+                  onClick={() => {
+                    submitClaim({
+                      roleIds: [rolePlatforms[0].roleId],
+                      saveClaimData: true,
+                    })
+                  }}
+                >
+                  {isBalanceSufficient ? "Claim" : "Insufficient balance"}
+                </Button>
+              </Tooltip>
+            </Collapse>
+          </Stack>
         </ModalBody>
       </ModalContent>
     </Modal>
