@@ -18,7 +18,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
-import { delegateConnectionAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/DelegateCashButton"
 import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -28,7 +27,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
-import { useAtom, useSetAtom } from "jotai"
+import { useAtom } from "jotai"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -40,7 +39,6 @@ import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
   const { address, type, disconnect } = useWeb3ConnectionManager()
-  const setIsDelegateConnection = useSetAtom(delegateConnectionAtom)
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
   const onClose = () => setIsOpen(false)
 
@@ -51,7 +49,7 @@ const AccountModal = () => {
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
-  const { id, addresses } = useUser()
+  const { id } = useUser()
   const { deleteKeys } = useUserPublic()
 
   const handleLogout = () => {
@@ -66,7 +64,6 @@ const AccountModal = () => {
     deleteKeyPairFromIdb(id)
       ?.catch(() => {})
       .finally(() => {
-        setIsDelegateConnection(false)
         onClose()
         disconnect()
         deleteKeys()

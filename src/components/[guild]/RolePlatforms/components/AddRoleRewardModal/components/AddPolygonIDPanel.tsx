@@ -16,6 +16,7 @@ const AddPolygonIDPanel = ({ onAdd }: AddRewardPanelProps) => {
         },
         isNew: true,
       }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 

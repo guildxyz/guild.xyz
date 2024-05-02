@@ -11,6 +11,10 @@ export const getBlockByTime = ([_, chain, timestamp]) => {
       throw new Error("Rate limited, will try again in 5 seconds")
     if (json.message.includes("NOTOK")) throw new Error(json.result)
 
-    return json
+    /**
+     * The Etherscan API isn't consistent on every chain, the actual block number is
+     * sometimes in result.blockNumber, sometimes in result.
+     */
+    return json?.result?.blockNumber ?? json?.result
   })
 }

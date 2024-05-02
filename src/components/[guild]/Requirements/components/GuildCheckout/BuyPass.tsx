@@ -61,7 +61,7 @@ const BuyPass = () => {
     !isWeb3Connected ||
     isMembershipLoading ||
     requirement?.type !== "PAYMENT" ||
-    !paymentSupportedChains.includes(requirement?.chain)
+    !paymentSupportedChains.find((c) => c === requirement.chain)
   )
     return null
 

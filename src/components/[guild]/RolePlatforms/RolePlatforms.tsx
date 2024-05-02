@@ -3,6 +3,7 @@ import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/compone
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
+import { atom } from "jotai"
 import { Plus } from "phosphor-react"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useFieldArray, useFormContext } from "react-hook-form"
@@ -13,6 +14,7 @@ import SetVisibility from "../SetVisibility"
 import useVisibilityModalProps from "../SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
+import EditRolePlatformButton from "./components/EditRolePlatformButton"
 import PlatformCard from "./components/PlatformCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
@@ -20,6 +22,8 @@ import { RolePlatformProvider } from "./components/RolePlatformProvider"
 type Props = {
   roleId?: number
 }
+
+export const openRewardSettingsGuildPlatformIdAtom = atom(0)
 
 const RolePlatforms = ({ roleId }: Props) => {
   const { onOpen } = useAddRewardContext()
@@ -124,10 +128,6 @@ const RolePlatformCard = ({
     isPlatform,
   } = rewards[type]
 
-  let PlatformCardSettings = cardSettingsComponent
-  // only show Google access level settings and Discord role settings for new platforms
-  if (!rolePlatform.isNew) PlatformCardSettings = null
-
   return (
     <RolePlatformProvider
       key={rolePlatform.fieldId}
@@ -179,7 +179,15 @@ const RolePlatformCard = ({
             />
           )
         }
-        actionRow={PlatformCardSettings && <PlatformCardSettings />}
+        actionRow={
+          cardSettingsComponent &&
+          rolePlatform.isNew && (
+            <EditRolePlatformButton
+              SettingsComponent={cardSettingsComponent}
+              rolePlatform={rolePlatform}
+            />
+          )
+        }
         contentRow={
           CAPACITY_TIME_PLATFORMS.includes(type) && (
             <AvailabilitySetup

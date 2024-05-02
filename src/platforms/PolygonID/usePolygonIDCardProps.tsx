@@ -1,9 +1,11 @@
 import { Circle, Img, useColorModeValue } from "@chakra-ui/react"
+import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import rewards from "platforms/rewards"
 import { PlatformName } from "types"
 
 const usePolygonIDCardProps = () => {
   const bgColor = useColorModeValue("gray.700", "gray.600")
+  const rolePlatform = useRolePlatform()
 
   return {
     name: "PolygonID proofs",
@@ -13,7 +15,7 @@ const usePolygonIDCardProps = () => {
         <Img src={rewards.POLYGON_ID.imageUrl} boxSize={10} color="white" />
       </Circle>
     ),
-    info: "Onchain & zero-knowledge",
+    info: !rolePlatform && "Onchain & zero-knowledge",
   }
 }
 

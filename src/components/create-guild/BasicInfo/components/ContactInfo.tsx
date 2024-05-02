@@ -45,7 +45,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
 
   return (
     <>
-      <Text colorScheme="gray">
+      <Text colorScheme="gray" mb="3">
         Only visible to the Guild Team to reach you with support and partnership
         initiatives if needed.
       </Text>
@@ -72,9 +72,10 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                     }}
                     size="lg"
                     chakraStyles={{
-                      container: {
+                      container: (base) => ({
+                        ...base,
                         minWidth: "max-content",
-                      } as any,
+                      }),
                     }}
                   />
                 )}
@@ -128,6 +129,8 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
         {showAddButton && (
           <Button
             id="add-contact-btn"
+            variant="outline"
+            borderStyle="dashed"
             leftIcon={<Icon as={Plus} />}
             onClick={() =>
               append({

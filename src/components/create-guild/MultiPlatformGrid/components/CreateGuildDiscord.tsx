@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Modal,
   ModalBody,
@@ -9,7 +10,9 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
+import PermissionAlert from "components/common/DiscordGuildSetup/components/PermissionAlert"
 import useGateables from "hooks/useGateables"
 import {
   FormProvider,
@@ -27,6 +30,7 @@ type Props = {
 }
 
 const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
   const { control } = useFormContext<GuildFormType>()
   const { append } = useFieldArray({
     control,
@@ -58,35 +62,48 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
       <ModalContent>
         <ModalHeader>Connect to Discord</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody display="flex" flexDir="column">
           <Text colorScheme="gray" fontWeight="semibold" mb={4}>
             Adding the bot and creating the Guild won't change anything on your
             server
           </Text>
-          <FormProvider {...discordMethods}>
-            <DiscordGuildSetup
-              defaultValues={{
-                name: "",
-                description: "",
-                imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-                contacts: [{ type: "EMAIL", contact: "" }],
-                guildPlatforms: [
-                  {
-                    platformName: "DISCORD",
-                    platformGuildId: "",
-                  },
-                ],
-              }}
-              selectedServer={selectedServer}
-              fieldName={`discordServerId`}
-            />
-          </FormProvider>
+          <PermissionAlert mb={4} />
+          <Box
+            overflow="auto"
+            className="invisible-scrollbar"
+            sx={{
+              maskImage:
+                "linear-gradient(to bottom, transparent 0px, black var(--chakra-sizes-4), black calc(100% - var(--chakra-sizes-4)), transparent)",
+            }}
+            py={4}
+          >
+            <FormProvider {...discordMethods}>
+              <DiscordGuildSetup
+                defaultValues={{
+                  name: "",
+                  description: "",
+                  imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+                  contacts: [{ type: "EMAIL", contact: "" }],
+                  guildPlatforms: [
+                    {
+                      platformName: "DISCORD",
+                      platformGuildId: "",
+                    },
+                  ],
+                }}
+                selectedServer={selectedServer}
+                fieldName={`discordServerId`}
+              />
+            </FormProvider>
+          </Box>
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="green"
             isDisabled={!selectedServer}
             onClick={() => {
+              captureEvent("[discord setup] server added")
+
               append({
                 platformName: "DISCORD",
                 platformGuildId: discordMethods.getValues("discordServerId"),

@@ -2,7 +2,6 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { useSWRConfig } from "swr"
 import { OneOf } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
@@ -14,7 +13,6 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
 
-  const { mutate } = useSWRConfig()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()

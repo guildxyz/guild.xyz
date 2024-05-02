@@ -13,6 +13,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
@@ -54,6 +55,7 @@ const defaultValues: AddRewardForm = {
 }
 
 const AddRewardButton = (): JSX.Element => {
+  const { captureEvent, startSessionRecording } = usePostHogContext()
   const { roles } = useGuild()
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
     useAddRewardDiscardAlert()
@@ -108,7 +110,17 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
-    useAddReward({ onSuccess: onCloseAndClear })
+    useAddReward({
+      onSuccess: () => {
+        captureEvent("[discord setup] successfully added to existing guild")
+        onCloseAndClear()
+      },
+      onError: (err) => {
+        captureEvent("[discord setup] failed to add to existing guild", {
+          error: err,
+        })
+      },
+    })
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
     useCreateRole({
       onSuccess: () => {
@@ -276,7 +288,15 @@ const AddRewardButton = (): JSX.Element => {
                   skipSettings
                 />
               ) : (
-                <PlatformsGrid onSelection={setSelection} pb="4" />
+                <PlatformsGrid
+                  onSelection={(selected) => {
+                    // Should we add sampling here? Or is it sampled by default?
+                    startSessionRecording()
+                    captureEvent("[discord setup] started in existing guild")
+                    setSelection(selected)
+                  }}
+                  pb="4"
+                />
               )}
             </ModalBody>
 

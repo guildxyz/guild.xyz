@@ -4,21 +4,17 @@ import nnsReverseResolveAbi from "static/abis/nnsReverseResolve"
 import unsRegistryAbi from "static/abis/unsRegistry"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
-import { PublicClient, createPublicClient, http } from "viem"
+import { PublicClient, createPublicClient } from "viem"
 import { mainnet } from "wagmi/chains"
 import { wagmiConfig } from "wagmiConfig"
 import { Chain, Chains } from "wagmiConfig/chains"
 
 const NNS_REGISTRY = "0x849f92178950f6254db5d16d1ba265e70521ac1b"
 
-type UnstoppableDomainsChains = Extract<
-  Chain,
-  "ETHEREUM" | "POLYGON" | "POLYGON_MUMBAI"
->
+type UnstoppableDomainsChains = Extract<Chain, "ETHEREUM" | "POLYGON">
 const UNSTOPPABLE_DOMAIN_CONTRACTS: Record<UnstoppableDomainsChains, string> = {
   ETHEREUM: "0x049aba7510f45ba5b64ea9e658e342f904db358d",
   POLYGON: "0xa9a6a3626993d487d2dbda3173cf58ca1a9d9e9f",
-  POLYGON_MUMBAI: "0x2a93c52e7b6e7054870758e15a1446e769edfb93",
 }
 
 type IDBResolvedAddress = { resolvedAddress: string; createdAt: number }
@@ -36,7 +32,7 @@ const deleteResolvedAddressFromIdb = (address: string) => del(address, getStore(
 const fetchENSName = async (address: `0x${string}`): Promise<string> => {
   const publicClient = createPublicClient({
     chain: mainnet,
-    transport: http(),
+    transport: wagmiConfig._internal.transports[mainnet.id],
   })
 
   const ens = await publicClient
@@ -58,7 +54,7 @@ const fetchENSName = async (address: `0x${string}`): Promise<string> => {
 const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
   const publicClient = createPublicClient({
     chain: mainnet,
-    transport: http(),
+    transport: wagmiConfig._internal.transports[mainnet.id],
   })
 
   const nns = await publicClient
@@ -167,7 +163,7 @@ const fetchUnstoppableName = async (address: `0x${string}`): Promise<string> => 
   for (const chain of Object.keys(UNSTOPPABLE_DOMAIN_CONTRACTS)) {
     providers[chain] = createPublicClient({
       chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain),
-      transport: http(),
+      transport: wagmiConfig._internal.transports[Chains[chain]],
     })
   }
 

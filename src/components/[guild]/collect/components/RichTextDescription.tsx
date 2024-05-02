@@ -23,7 +23,8 @@ export const reactMarkdownComponents: Partial<
       href={ensureUrlProtocol(href)}
       isExternal
       colorScheme="blue"
-      whiteSpace={"pre-wrap"}
+      whiteSpace="pre-wrap"
+      wordBreak="break-word"
       {...props}
     >
       {children}

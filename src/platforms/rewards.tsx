@@ -43,6 +43,7 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import PoapCardButton from "./Poap/PoapCardButton"
 import PoapCardMenu from "./Poap/PoapCardMenu"
 import usePoapCardProps from "./Poap/usePoapCardProps"
+import PointsCardSettings from "./Points/PointsCardSettings"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
@@ -84,6 +85,8 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   shouldHide?: boolean
 }
 
+export type CardSettingsComponent = () => JSX.Element
+
 type RewardData = {
   icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
   imageUrl?: string
@@ -93,7 +96,7 @@ type RewardData = {
   cardPropsHook?: CardPropsHook
   // true when the AddRewardPanel just automatically adds the platform without any user input
   autoRewardSetup?: boolean
-  cardSettingsComponent?: () => JSX.Element
+  cardSettingsComponent?: CardSettingsComponent
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
@@ -383,6 +386,7 @@ const rewards: Record<PlatformName, RewardData> = {
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     cardPropsHook: usePointsCardProps,
+    cardSettingsComponent: PointsCardSettings,
     RewardPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
       loading: () => <RewardPreview isLoading />,

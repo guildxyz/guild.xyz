@@ -1,66 +1,51 @@
-import {
-  Flex,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-  VStack,
-} from "@chakra-ui/react"
-import Button from "components/common/Button"
-import { Modal } from "components/common/Modal"
+import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
-import { useRef } from "react"
-import RoleToManage from "./components/RoleToManage"
+import RadioSelect from "components/common/RadioSelect"
+import { ShieldCheck, Sparkle } from "phosphor-react"
+import { useController, useFormContext, useFormState } from "react-hook-form"
+import GuildifyExistingRole from "./components/GuildifyExistingRole"
+
+const roleOptions = [
+  {
+    value: "NEW",
+    title: "Create a new Discord role for me",
+    icon: Sparkle,
+  },
+  {
+    value: "EXISTING",
+    title: "Guildify an already existing role on my server",
+    icon: ShieldCheck,
+    children: <GuildifyExistingRole />,
+  },
+]
 
 const DiscordCardSettings = (): JSX.Element => {
-  const { isNew } = useRolePlatform()
-  const modalContentRef = useRef()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { errors } = useFormState()
+  const { setValue } = useFormContext()
+  const { index } = useRolePlatform()
+
+  const { field } = useController({
+    name: "roleType",
+    defaultValue: "NEW",
+  })
+
+  const handleChange = (value) => {
+    field.onChange(value)
+    if (value === "NEW") setValue(`rolePlatforms.${index}.platformRoleId`, null)
+  }
 
   return (
-    <Flex
-      flexDirection={{ base: "column", md: "row" }}
-      alignItems={{ base: "stretch", md: "center" }}
-    >
-      {/* <DiscordLabel /> */}
-
-      <Button
-        size="sm"
-        onClick={onOpen}
-        ml={{ base: 0, md: 3 }}
-        mt={{ base: 3, md: 0 }}
-      >
-        Edit
-      </Button>
-
-      <Modal
-        {...{ isOpen, onClose }}
-        scrollBehavior="inside"
-        colorScheme={"dark"}
-        initialFocusRef={modalContentRef}
-      >
-        <ModalOverlay />
-        <ModalContent minW={isNew ? { md: "xl" } : undefined} ref={modalContentRef}>
-          <ModalHeader>Discord settings</ModalHeader>
-          <ModalBody>
-            <VStack spacing={8} alignItems="start">
-              {/* {isNew &&  */}
-              <RoleToManage />
-              {/* } */}
-              {/* <ChannelsToGate /> */}
-            </VStack>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="green" onClick={onClose}>
-              Done
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Flex>
+    <FormControl isInvalid={!!errors?.platform}>
+      <FormLabel>Role to manage</FormLabel>
+      <RadioSelect
+        options={roleOptions}
+        colorScheme="DISCORD"
+        name="roleType"
+        onChange={handleChange}
+        value={field.value}
+      />
+      <FormErrorMessage>{errors?.platform?.message as string}</FormErrorMessage>
+    </FormControl>
   )
 }
 

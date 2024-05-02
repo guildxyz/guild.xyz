@@ -17,9 +17,6 @@ const Suggestions = ({ contentProps, getOptionProps }: Props) => {
   const { activityLogType } = useActivityLog()
   const { activeFilters } = useActivityLogFilters()
 
-  const isActiveFilter = (filter: SupportedQueryParam) =>
-    activeFilters?.some((af) => af.filter === filter)
-
   const shouldRenderSuggestions = useMemo((): {
     guild: boolean
     user: boolean
@@ -27,6 +24,9 @@ const Suggestions = ({ contentProps, getOptionProps }: Props) => {
     reward: boolean
     action: boolean
   } => {
+    const isActiveFilter = (filter: SupportedQueryParam) =>
+      activeFilters?.some((af) => af.filter === filter)
+
     switch (activityLogType) {
       case "all":
         return {
@@ -61,7 +61,7 @@ const Suggestions = ({ contentProps, getOptionProps }: Props) => {
           action: false,
         }
     }
-  }, [activityLogType, isActiveFilter])
+  }, [activeFilters, activityLogType])
 
   return (
     <Stack spacing={0} {...contentProps}>

@@ -11,7 +11,6 @@ import {
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
 import { LinkMetadata } from "pages/api/link-metadata"
-import { useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import useSWRImmutable from "swr/immutable"
@@ -41,13 +40,14 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
   const error = !!parseFromObject(errors, baseFieldPath).data?.id
 
   const { data: metadata, isValidating } = useSWRImmutable<LinkMetadata>(
-    debounceLink && !error ? `/api/link-metadata?url=${debounceLink}` : null
+    debounceLink && !error ? `/api/link-metadata?url=${debounceLink}` : null,
+    {
+      onSuccess: (data, _key, _config) => {
+        if (!data?.title) return
+        setValue(`${baseFieldPath}.data.customName`, `Visit link: [${data.title}]`)
+      },
+    }
   )
-
-  useEffect(() => {
-    if (!metadata?.title) return
-    setValue(`${baseFieldPath}.data.customName`, `Visit link: [${metadata.title}]`)
-  }, [metadata])
 
   return (
     <FormControl isInvalid={error}>

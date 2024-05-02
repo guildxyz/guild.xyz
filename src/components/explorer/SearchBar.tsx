@@ -42,7 +42,7 @@ const SearchBar = ({
   useEffect(() => {
     if (debouncedValue === undefined) return
     setSearch(debouncedValue)
-  }, [debouncedValue])
+  }, [debouncedValue, setSearch])
 
   const reset = () => {
     setLocalValue("")

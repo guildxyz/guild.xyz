@@ -1,16 +1,17 @@
 import {
   Box,
   Divider,
-  Heading,
   HStack,
+  Heading,
   SimpleGrid,
   Spacer,
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
-import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
+import { ThemeProvider } from "components/[guild]/ThemeContext"
 import CollectNft from "components/[guild]/collect/components/CollectNft"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
+import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import Details from "components/[guild]/collect/components/Details"
 import GuildImageAndName from "components/[guild]/collect/components/GuildImageAndName"
 import Links from "components/[guild]/collect/components/Links"
@@ -23,210 +24,191 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import { ThemeProvider } from "components/[guild]/ThemeContext"
-import { usePostHogContext } from "components/_app/PostHogProvider"
-import ClientOnly from "components/common/ClientOnly"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
-import { GetStaticPaths, GetStaticProps } from "next"
+import { GetStaticPaths } from "next"
 import dynamic from "next/dynamic"
-import { useRouter } from "next/router"
-import ErrorPage from "pages/_error"
 import {
   alchemyApiUrl,
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
 import { useRef } from "react"
-import { ErrorBoundary } from "react-error-boundary"
-import { SWRConfig } from "swr"
-import { Guild } from "types"
+import { SWRConfig, unstable_serialize } from "swr"
+import { Guild, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import { Chain } from "wagmiConfig/chains"
 
-const EditNFTDescriptionModalButton = dynamic(
+type Props = {
+  chain: Chain
+  address: `0x${string}`
+  urlName: string
+  guildPlatformId: number
+  roleId: number
+  rolePlatformId: number
+  fallbackImage?: string
+  fallback: { [x: string]: Guild }
+}
+
+const DynamicEditNFTDescriptionModalButton = dynamic(
   () =>
     import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton"),
   { ssr: false }
 )
 
-type Props = {
-  chain: Chain
-  address: `0x${string}`
-  fallback: { [x: string]: Guild }
-}
-const Page = ({
-  chain: chainFromProps,
-  address: addressFromProps,
-}: Omit<Props, "fallback">) => {
-  const router = useRouter()
-  const { chain: chainFromQuery, address: addressFromQuery } = router.query
-
-  const chain = chainFromProps ?? validateNftChain(chainFromQuery)
-  const address = addressFromProps ?? validateNftAddress(addressFromQuery)
-
-  const { theme, urlName, roles, guildPlatforms } = useGuild()
+const CollectNftPageContent = ({
+  chain,
+  address,
+  guildPlatformId,
+  roleId,
+  fallbackImage,
+}: Omit<Props, "urlName" | "fallback">) => {
+  const { theme, guildPlatforms, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const guildPlatform = guildPlatforms?.find(
-    (gp) =>
-      gp.platformGuildData?.chain === chain &&
-      gp.platformGuildData?.contractAddress?.toLowerCase() === address
-  )
-
-  const role = roles?.find((r) =>
-    r.rolePlatforms?.find((rp) => rp.guildPlatformId === guildPlatform?.id)
-  )
-  const rolePlatformId = role?.rolePlatforms?.find(
-    (rp) => rp.guildPlatformId === guildPlatform?.id
-  )?.id
+  const guildPlatform = guildPlatforms.find((gp) => gp.id === guildPlatformId)
+  const role = roles.find((r) => r.id === roleId)
 
   const isMobile = useBreakpointValue({ base: true, md: false })
-
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const { name, image, totalCollectors, isLoading } = useNftDetails(chain, address)
-
-  const { captureEvent } = usePostHogContext()
-
-  // We probably shouldn't display a 404 here?
-  // if (isDetailed && !guildPlatform) return <ErrorPage statusCode={404} />
+  const {
+    name,
+    image: imageFromHook,
+    totalCollectors,
+  } = useNftDetails(chain, address)
+  const image = fallbackImage || imageFromHook
 
   return (
-    <ErrorBoundary
-      onError={(error, info) => {
-        captureEvent("ErrorBoundary catched error", {
-          page: "[guild]/collect/[chain]/[address]",
-          guild: urlName,
-          nftAddress: address,
-          error,
-          info,
-        })
-      }}
-      fallback={<ErrorPage />}
+    <Layout
+      ogTitle="Collect NFT"
+      background={theme?.color ?? "gray.900"}
+      backgroundImage={theme?.backgroundImage}
+      maxWidth="container.xl"
     >
-      <ClientOnly>
-        <CollectNftProvider
-          roleId={role?.id}
-          rolePlatformId={rolePlatformId}
-          guildPlatform={guildPlatform}
-          chain={chain}
-          nftAddress={address}
+      <Stack spacing={4}>
+        <HStack justifyContent="space-between">
+          <GuildImageAndName />
+          <ShareAndReportButtons
+            isPulseMarkerHidden={totalCollectors > 0}
+            shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
+            shareText={`Check out and collect this awesome ${
+              name ? `${name} ` : " "
+            }NFT on Guild!`}
+          />
+        </HStack>
+
+        <SimpleGrid
+          templateColumns={{
+            base: "1fr",
+            md: "7fr 5fr",
+          }}
+          gap={{ base: 6, lg: 8 }}
         >
-          <Layout
-            ogTitle="Collect NFT"
-            background={theme?.color ?? "gray.900"}
-            backgroundImage={theme?.backgroundImage}
-            maxWidth="container.xl"
-          >
-            <Stack spacing={4}>
-              <HStack justifyContent="space-between">
-                <GuildImageAndName />
-                <ShareAndReportButtons
-                  isPulseMarkerHidden={totalCollectors > 0}
-                  shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
-                  shareText={`Check out and collect this awesome ${
-                    name ? `${name} ` : " "
-                  }NFT on Guild!`}
-                />
-              </HStack>
+          <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
+            <CollectibleImage src={image} isLoading={!image} />
 
-              <SimpleGrid
-                templateColumns={{
-                  base: "1fr",
-                  md: "7fr 5fr",
-                }}
-                gap={{ base: 6, lg: 8 }}
+            <Stack spacing={6}>
+              <Heading
+                as="h2"
+                fontFamily="display"
+                fontSize={{ base: "3xl", lg: "4xl" }}
               >
-                <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
-                  <CollectibleImage src={image} isLoading={isLoading} />
+                {name}
+              </Heading>
 
-                  <Stack spacing={6}>
-                    <Heading
-                      as="h2"
-                      fontFamily="display"
-                      fontSize={{ base: "3xl", lg: "4xl" }}
-                    >
-                      {name}
-                    </Heading>
+              {isMobile && (
+                <RequirementsCard role={role}>
+                  <CollectNft />
+                </RequirementsCard>
+              )}
 
-                    {isMobile && (
-                      <RequirementsCard role={role}>
-                        <CollectNft />
-                      </RequirementsCard>
-                    )}
-
-                    <Box ref={nftDescriptionRef} lineHeight={1.75}>
-                      <HStack alignItems="start" justifyContent="flex-end">
-                        <RichTextDescription
-                          text={guildPlatform?.platformGuildData?.description}
-                        />
-                        <Spacer m="0" />
-                        {isAdmin && (
-                          <EditNFTDescriptionModalButton
-                            guildPlatform={guildPlatform}
-                          />
-                        )}
-                      </HStack>
-                    </Box>
-                  </Stack>
-                  <Divider />
-                  <Links />
-                  <Divider />
-                  <Details />
-                  {!!alchemyApiUrl[chain] && (
-                    <>
-                      <Divider />
-                      <TopCollectors />
-                    </>
+              <Box ref={nftDescriptionRef} lineHeight={1.75}>
+                <HStack alignItems="start" justifyContent="flex-end">
+                  <RichTextDescription
+                    text={guildPlatform?.platformGuildData?.description}
+                  />
+                  <Spacer m="0" />
+                  {isAdmin && (
+                    <DynamicEditNFTDescriptionModalButton
+                      guildPlatform={guildPlatform}
+                    />
                   )}
-                </Stack>
-
-                {!isMobile && (
-                  <AnimatePresence>
-                    <Stack
-                      position="sticky"
-                      top={{ base: 4, md: 5 }}
-                      spacing={8}
-                      h="max-content"
-                    >
-                      {shouldShowSmallImage && (
-                        <SmallImageAndRoleName
-                          imageElement={
-                            <CollectibleImage src={image} isLoading={isLoading} />
-                          }
-                          name={name}
-                          role={role}
-                        />
-                      )}
-
-                      <RequirementsCard role={role}>
-                        <CollectNft />
-                      </RequirementsCard>
-                    </Stack>
-                  </AnimatePresence>
-                )}
-              </SimpleGrid>
+                </HStack>
+              </Box>
             </Stack>
-          </Layout>
-        </CollectNftProvider>
-      </ClientOnly>
-    </ErrorBoundary>
+            <Divider />
+            <Links />
+            <Divider />
+            <Details />
+            {!!alchemyApiUrl[chain] && (
+              <>
+                <Divider />
+                <TopCollectors />
+              </>
+            )}
+          </Stack>
+
+          {!isMobile && (
+            <AnimatePresence>
+              <Stack
+                position="sticky"
+                top={{ base: 4, md: 5 }}
+                spacing={8}
+                h="max-content"
+              >
+                {shouldShowSmallImage && (
+                  <SmallImageAndRoleName
+                    imageElement={
+                      <CollectibleImage src={image} isLoading={!image} />
+                    }
+                    name={name}
+                    role={role}
+                  />
+                )}
+
+                <RequirementsCard role={role}>
+                  <CollectNft />
+                </RequirementsCard>
+              </Stack>
+            </AnimatePresence>
+          )}
+        </SimpleGrid>
+      </Stack>
+    </Layout>
   )
 }
 
-const CollectNftPage = ({ fallback, ...rest }: Props) => (
+const CollectNftPageProviderWrapper = (
+  props: Omit<Props, "urlName" | "fallback">
+) => {
+  const { chain, address, guildPlatformId, rolePlatformId, roleId } = props
+  const { guildPlatforms } = useGuild()
+
+  return (
+    <CollectNftProvider
+      guildPlatform={guildPlatforms?.find((gp) => gp.id === guildPlatformId)}
+      roleId={roleId}
+      rolePlatformId={rolePlatformId}
+      chain={chain}
+      nftAddress={address}
+    >
+      <CollectNftPageContent {...props} />
+    </CollectNftProvider>
+  )
+}
+
+const CollectNftPage = ({ fallback, urlName, ...rest }: Props) => (
   <SWRConfig value={fallback && { fallback }}>
-    <LinkPreviewHead path={Object.values(fallback ?? {})[0]?.urlName ?? ""} />
+    <LinkPreviewHead path={urlName} />
     <ThemeProvider>
-      <Page {...rest} />
+      <CollectNftPageProviderWrapper {...rest} />
     </ThemeProvider>
   </SWRConfig>
 )
-
-const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+const getStaticProps = async ({ params }) => {
   const { chain: chainFromQuery, address: addressFromQuery, guild: urlName } = params
   const chain = validateNftChain(chainFromQuery)
   const address = validateNftAddress(addressFromQuery)
@@ -236,22 +218,75 @@ const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
       notFound: true,
     }
 
-  const endpoint = `/v2/guilds/guild-page/${urlName}`
-  const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
+  const guildPageEndpoint = `/v2/guilds/guild-page/${urlName}`
 
-  if (!guild?.id)
+  let publicGuild: Guild, guild: Guild
+  try {
+    ;[publicGuild, guild] = await Promise.all([
+      fetcher(guildPageEndpoint),
+      fetcher(
+        `${process.env.NEXT_PUBLIC_API.replace("/v1", "")}${guildPageEndpoint}`,
+        {
+          headers: {
+            "x-guild-service": "APP",
+            "x-guild-auth": process.env.GUILD_API_KEY,
+          },
+        }
+      ),
+    ])
+  } catch {
+    return {
+      notFound: true,
+    }
+  }
+
+  const nftGuildReward = guild.guildPlatforms.find(
+    (gp) =>
+      gp.platformId === PlatformType.CONTRACT_CALL &&
+      gp.platformGuildData.chain === chain &&
+      gp.platformGuildData.contractAddress.toLowerCase() === address
+  )
+
+  const nftRoleReward = guild.roles
+    .flatMap((role) => role.rolePlatforms)
+    .find((rp) => rp.guildPlatformId === nftGuildReward?.id)
+
+  const nftRole = guild.roles.find((role) => role.id === nftRoleReward?.roleId)
+
+  if (!nftGuildReward || !nftRoleReward || !nftRole)
     return {
       notFound: true,
     }
 
-  guild.isFallback = true
+  // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
+
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000"
+  const nftDetails = await fetch(`${baseUrl}/api/nft/${chain}/${address}`)
+    .then((res) => res.json())
+    .catch(() => undefined)
 
   return {
+    revalidate: 600, // Revalidate at most once every 10 minutes
     props: {
+      urlName: publicGuild.urlName,
       chain,
       address,
+      guildPlatformId: nftGuildReward.id,
+      rolePlatformId: nftRoleReward.id,
+      roleId: nftRole.id,
+      fallbackImage: nftGuildReward.platformGuildData.imageUrl,
+      // Pre-populating the public guild & requirements caches
       fallback: {
-        [endpoint]: guild,
+        [guildPageEndpoint]: publicGuild,
+        [`/v2/guilds/${publicGuild.id}/roles/${nftRole.id}/requirements`]:
+          publicGuild.roles.find((r) => r.id === nftRole.id)?.requirements ?? [],
+        ...(!!nftDetails
+          ? {
+              [unstable_serialize(["nftDetails", chain, address])]: nftDetails,
+            }
+          : {}),
       },
     },
   }

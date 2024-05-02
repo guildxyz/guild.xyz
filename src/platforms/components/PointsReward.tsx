@@ -44,7 +44,7 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
             <Link
               href={`/${urlName}/leaderboard/${platform.guildPlatform.id}`}
               fontWeight={"semibold"}
-            >{`${platform.platformRoleData?.score} ${name}`}</Link>
+            >{`${platform.platformRoleData?.score ?? 0} ${name}`}</Link>
             {hasRoleAccess && (
               <Icon as={Check} color={iconColor} ml="1.5" mb="-0.5" />
             )}

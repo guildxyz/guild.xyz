@@ -1,5 +1,7 @@
 // @ts-check
 
+const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
+
 /** @type {import("next").NextConfig} */
 const nextConfig = {
   webpack(config, options) {
@@ -16,9 +18,21 @@ const nextConfig = {
       ],
     })
 
+    if (process.env.VERCEL_ENV === "production") {
+      if (!config.plugins) config.plugins = []
+      config.plugins.push(
+        new BugsnagSourceMapUploaderPlugin({
+          apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY ?? "",
+          overwrite: true,
+          publicPath: `https://${process.env.VERCEL_URL ?? "guild.xyz"}/_next/`,
+        })
+      )
+    }
+
     return config
   },
   productionBrowserSourceMaps: true,
+
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
@@ -155,6 +169,14 @@ const nextConfig = {
         {
           source: "/api/posthog/:path*",
           destination: "https://app.posthog.com/:path*",
+        },
+        {
+          source: "/api/bugsnag/notify",
+          destination: "https://notify.bugsnag.com",
+        },
+        {
+          source: "/api/bugsnag/sessions",
+          destination: "https://sessions.bugsnag.com",
         },
       ],
       fallback: [],

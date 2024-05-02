@@ -104,7 +104,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   useEffect(() => {
     if (prevSearch === search || prevSearch === undefined) return
     setSize(1)
-  }, [search, prevSearch])
+  }, [search, prevSearch, setSize])
 
   // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   useScrollEffect(() => {

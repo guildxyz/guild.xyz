@@ -41,7 +41,10 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
     (isFuelConnected ? "/walletLogos/fuel.svg" : null)
 
   return {
-    connectorName: connector?.name || (isFuelConnected ? "Fuel" : ""),
+    connectorName:
+      connector?.name === "Injected"
+        ? "Injected Wallet"
+        : connector?.name || (isFuelConnected ? "Fuel" : ""),
     connectorIcon,
   }
 }

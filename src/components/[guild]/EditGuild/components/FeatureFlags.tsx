@@ -11,6 +11,7 @@ const FEATURE_FLAGS = [
   "GUILD_QUEUES",
   "FORMS",
   "PERIODIC_SYNC",
+  "ONGOING_ISSUES",
 ] as const
 export type FeatureFlag = (typeof FEATURE_FLAGS)[number]
 
@@ -48,7 +49,7 @@ const FeatureFlags = (): JSX.Element => {
           )
         }}
         onBlur={onBlur}
-        chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2 }) }}
+        chakraStyles={{ valueContainer: (base) => ({ ...base, py: 2, px: 3 }) }}
       />
     </FormControl>
   )

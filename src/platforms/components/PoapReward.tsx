@@ -77,6 +77,7 @@ const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
                 iconSpacing="1"
                 maxW="full"
                 isDisabled={!isAvailable}
+                prefetch={false}
               >
                 {platformGuildData.name ?? rewards[PlatformType[platformId]].name}
               </Button>

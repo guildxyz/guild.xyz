@@ -10,7 +10,7 @@ export const useAddRewardDiscardAlert = (isDirty?: boolean) => {
 
   useEffect(() => {
     if (isDirty) setIsAddRewardPanelDirty(isDirty)
-  }, [isDirty])
+  }, [isDirty, setIsAddRewardPanelDirty])
 
   return [isAddRewardPanelDirty, setIsAddRewardPanelDirty] as const
 }

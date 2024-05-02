@@ -6,6 +6,7 @@ const useScrollEffect = (
   listenerOptions?: AddEventListenerOptions,
   element = typeof document !== "undefined" && document
 ) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const listener = useCallback(callback, deps)
 
   useEffect(() => {
@@ -14,7 +15,7 @@ const useScrollEffect = (
     return () => {
       element.removeEventListener("scroll", listener, listenerOptions)
     }
-  }, [listener])
+  }, [element, listener, listenerOptions])
 }
 
 export default useScrollEffect

@@ -40,7 +40,7 @@ const TransactionStatusProvider = ({
   useEffect(() => {
     if (!txSuccess) return
     triggerConfetti()
-  }, [txSuccess])
+  }, [txSuccess, triggerConfetti])
 
   return (
     <TransactionStatusContext.Provider

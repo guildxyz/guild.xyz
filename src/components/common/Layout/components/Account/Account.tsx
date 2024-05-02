@@ -10,7 +10,6 @@ import shortenHex from "utils/shortenHex"
 import AccountButton from "./components/AccountButton"
 import { accountModalAtom } from "./components/AccountModal"
 import Notifications from "./components/Notifications/Notifications"
-import DelegatePopoverWrapper from "./components/delegate/DelegatePopoverWrapper"
 
 const Account = (): JSX.Element => {
   const { address } = useWeb3ConnectionManager()
@@ -47,34 +46,32 @@ const Account = (): JSX.Element => {
          */
         h="var(--chakra-space-11)"
       />
-      <DelegatePopoverWrapper>
-        <AccountButton onClick={() => setIsAccountModalOpen(true)}>
-          <HStack spacing={3}>
-            <VStack spacing={0} alignItems="flex-end">
+      <AccountButton onClick={() => setIsAccountModalOpen(true)}>
+        <HStack spacing={3}>
+          <VStack spacing={0} alignItems="flex-end">
+            <Text
+              as="span"
+              fontSize={linkedAddressesCount ? "sm" : "md"}
+              fontWeight={linkedAddressesCount ? "bold" : "semibold"}
+            >
+              {domainName || `${shortenHex(address, 3)}`}
+            </Text>
+            {linkedAddressesCount && (
               <Text
                 as="span"
-                fontSize={linkedAddressesCount ? "sm" : "md"}
-                fontWeight={linkedAddressesCount ? "bold" : "semibold"}
+                fontSize="xs"
+                fontWeight="medium"
+                color="whiteAlpha.600"
               >
-                {domainName || `${shortenHex(address, 3)}`}
+                {`+ ${linkedAddressesCount} address${
+                  linkedAddressesCount > 1 ? "es" : ""
+                }`}
               </Text>
-              {linkedAddressesCount && (
-                <Text
-                  as="span"
-                  fontSize="xs"
-                  fontWeight="medium"
-                  color="whiteAlpha.600"
-                >
-                  {`+ ${linkedAddressesCount} address${
-                    linkedAddressesCount > 1 ? "es" : ""
-                  }`}
-                </Text>
-              )}
-            </VStack>
-            <GuildAvatar address={address} size={4} />
-          </HStack>
-        </AccountButton>
-      </DelegatePopoverWrapper>
+            )}
+          </VStack>
+          <GuildAvatar address={address} size={4} />
+        </HStack>
+      </AccountButton>
     </ButtonGroup>
   )
 }

@@ -1,16 +1,35 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import ErrorAlert from "components/common/ErrorAlert"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
-import { useMemo } from "react"
+import { useEffect, useMemo } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformType } from "types"
 import { OptionSkeletonCard } from "../OptionCard"
 import ReconnectAlert from "../ReconnectAlert"
 import DCServerCard from "./components/DCServerCard"
 import ServerSetupCard from "./components/ServerSetupCard"
+
+function NotAdminError() {
+  const { captureEvent } = usePostHogContext()
+
+  useEffect(() => {
+    captureEvent("[discord setup] error shown")
+
+    return () => {
+      captureEvent("[discord setup] error not shown")
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
+  )
+}
 
 const DiscordGuildSetup = ({
   defaultValues,
@@ -21,12 +40,19 @@ const DiscordGuildSetup = ({
 }) => {
   const { reset, setValue } = useFormContext()
 
+  const { captureEvent } = usePostHogContext()
+
   const {
     gateables,
     isLoading,
     error: gateablesError,
   } = useGateables(PlatformType.DISCORD, {
-    refreshInterval: 10_000,
+    onSuccess: () => {
+      captureEvent("[discord setup] gateables successful")
+    },
+    onError: () => {
+      captureEvent("[discord setup] gateables failed, showing reconnect alert")
+    },
   })
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
@@ -36,6 +62,7 @@ const DiscordGuildSetup = ({
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.id === selectedServer),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedServer] // servers excluded on purpose
   )
 
@@ -69,9 +96,7 @@ const DiscordGuildSetup = ({
   }
 
   if (servers?.length <= 0) {
-    return (
-      <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
-    )
+    return <NotAdminError />
   }
 
   return (

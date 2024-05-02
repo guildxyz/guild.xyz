@@ -9,18 +9,28 @@ import MultiPlatformsGrid from "./MultiPlatformGrid"
 const CreateGuildIndex = (): JSX.Element => {
   const { setDisabled } = useCreateGuildContext()
   const [whitoutPlatform, setWhitoutPlatform] = useState(false)
-  const { captureEvent } = usePostHogContext()
+  const { captureEvent, startSessionRecording } = usePostHogContext()
 
   const guildPlatforms = useWatch({ name: "guildPlatforms" })
   const twitter = useWatch({ name: "socialLinks.TWITTER" })
 
   useEffect(() => {
     setDisabled(!twitter && guildPlatforms.length === 0 && !whitoutPlatform)
-  }, [twitter, guildPlatforms.length, whitoutPlatform])
+  }, [setDisabled, twitter, guildPlatforms.length, whitoutPlatform])
 
   return (
     <ClientOnly>
-      <MultiPlatformsGrid onSelection={() => setWhitoutPlatform(false)} />
+      <MultiPlatformsGrid
+        onSelection={(platformName) => {
+          if (platformName === "DISCORD") {
+            captureEvent("[discord setup] started through guild creation")
+
+            // Should we add sampling here? Or is it sampled by default?
+            startSessionRecording()
+          }
+          setWhitoutPlatform(false)
+        }}
+      />
 
       <HStack w="full" justifyContent={"left"} pt={{ base: 4, md: 5 }} spacing={3}>
         <Text fontWeight="semibold" colorScheme="gray">

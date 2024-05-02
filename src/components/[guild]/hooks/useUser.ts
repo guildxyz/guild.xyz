@@ -80,6 +80,7 @@ const useUserPublic = (
           captureEvent("Invalid keypair", {
             userId: user.id,
             pubKey: keys.pubKey,
+            savedPubKey: user.publicKey,
           })
 
           toast({

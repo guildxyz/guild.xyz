@@ -5,7 +5,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import { TrashSimple } from "phosphor-react"
 import rewards from "platforms/rewards"
-import { useEffect } from "react"
 import { PlatformType } from "types"
 
 type Props = {
@@ -22,12 +21,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
 
   const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
 
-  const { onSubmit, isLoading, response } = useRemoveGuildPlatform(guildPlatform?.id)
-
-  useEffect(() => {
-    if (!response) return
-    onClose()
-  }, [response])
+  const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
 
   const color = useColorModeValue("red.600", "red.300")
 

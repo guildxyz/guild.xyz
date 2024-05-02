@@ -25,7 +25,7 @@ const IdentitiesSearch = ({ column }: Props) => {
   useEffect(() => {
     if (debouncedValue === undefined) return
     column.setFilterValue(debouncedValue.toLowerCase())
-  }, [debouncedValue])
+  }, [debouncedValue, column])
 
   const reset = () => {
     setLocalValue("")

@@ -24,7 +24,7 @@ const FormRequirement = (props: RequirementProps) => {
         hasArrow
         placement="top"
       >
-        <Skeleton display="inline-block" isLoaded={!!form}>
+        <Skeleton display="inline" isLoaded={!!form}>
           <Link
             {...(!!userSubmission
               ? {

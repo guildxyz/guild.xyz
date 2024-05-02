@@ -13,14 +13,12 @@ import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
-import rewards from "platforms/rewards"
-import { PlatformName, PlatformType } from "types"
-import PlatformCard from "../RolePlatforms/components/PlatformCard"
+import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useRoleGroup from "../hooks/useRoleGroup"
+import AccessedGuildPlatformCard from "./components/AccessedGuildPlatformCard"
 import CampaignCards from "./components/CampaignCards"
-import PlatformAccessButton from "./components/PlatformAccessButton"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
 
 const DynamicGuildPinRewardCard = dynamic(
@@ -80,6 +78,7 @@ const AccessHub = (): JSX.Element => {
     featureFlags,
     guildPin,
     groups,
+    roles,
     onboardingComplete,
   } = useGuild()
 
@@ -95,10 +94,12 @@ const AccessHub = (): JSX.Element => {
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 
+  const hasVisiblePages = !!groups?.length && roles?.some((role) => !!role.groupId)
+
   const showAccessHub =
     (isAdmin ? !!onboardingComplete : isMember) ||
     (!!accessedGuildPlatforms?.length && !!onboardingComplete) ||
-    (!!groups?.length && !group)
+    (hasVisiblePages && !group)
 
   return (
     <ClientOnly>
@@ -114,37 +115,9 @@ const AccessHub = (): JSX.Element => {
           <CampaignCards />
           {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
 
-          {accessedGuildPlatforms?.map((platform) => {
-            if (!rewards[PlatformType[platform.platformId]]) return null
-
-            const {
-              cardPropsHook: useCardProps,
-              cardMenuComponent: PlatformCardMenu,
-              cardWarningComponent: PlatformCardWarning,
-              cardButton: PlatformCardButton,
-            } = rewards[PlatformType[platform.platformId] as PlatformName]
-
-            return (
-              <PlatformCard
-                usePlatformCardProps={useCardProps}
-                guildPlatform={platform}
-                key={platform.id}
-                cornerButton={
-                  isAdmin && PlatformCardMenu ? (
-                    <PlatformCardMenu platformGuildId={platform.platformGuildId} />
-                  ) : PlatformCardWarning ? (
-                    <PlatformCardWarning guildPlatform={platform} />
-                  ) : null
-                }
-              >
-                {PlatformCardButton ? (
-                  <PlatformCardButton platform={platform} />
-                ) : (
-                  <PlatformAccessButton platform={platform} />
-                )}
-              </PlatformCard>
-            )
-          })}
+          {accessedGuildPlatforms?.map((platform) => (
+            <AccessedGuildPlatformCard key={platform.id} platform={platform} />
+          ))}
 
           {accessedGuildPoints?.map((pointPlatform) => (
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />

@@ -50,7 +50,7 @@ const PolygonIDForm = ({
     <Stack spacing={4} alignItems="start">
       <ChainPicker
         controlName={`${baseFieldPath}.chain`}
-        supportedChains={["POLYGON", "POLYGON_MUMBAI"]}
+        supportedChains={["POLYGON"]}
         onChange={resetFields}
       />
       <FormControl

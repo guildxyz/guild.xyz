@@ -80,7 +80,7 @@ const FiltersInput = (): JSX.Element => {
     if (!isFocused) return
     // Opening the suggestions dropdown
     send({ type: "CLICK_INPUT" })
-  }, [isFocused])
+  }, [isFocused, send])
 
   const { size, ...filteredInputProps } = inputProps
 
@@ -108,6 +108,7 @@ const FiltersInput = (): JSX.Element => {
   useEffect(() => {
     if (rawPositionerStyle.transform !== "none")
       setPositionerStyle(rawPositionerStyle)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawPositionerStyle.transform])
 
   return (

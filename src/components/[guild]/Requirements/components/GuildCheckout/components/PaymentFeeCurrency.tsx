@@ -41,7 +41,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
   useEffect(() => {
     if (!token) return
     setPickedCurrency(token)
-  }, [token])
+  }, [token, setPickedCurrency])
 
   return (
     <Stack spacing={3}>

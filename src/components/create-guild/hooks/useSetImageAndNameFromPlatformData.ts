@@ -19,7 +19,10 @@ const useSetImageAndNameFromPlatformData = (
 
     setValue("name", platformName)
     setValue("urlName", slugify(platformName))
-  }, [platformName])
+
+    // TODO: check the usePinata hook, onUpload changed too many times and that's why this useEffect was buggy
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [platformName, touchedFields.name, setValue])
 
   useEffect(() => {
     if (!onUpload) return
@@ -39,7 +42,10 @@ const useSetImageAndNameFromPlatformData = (
           data: [new File([blob], `${platformName}.png`, { type: "image/png" })],
         })
       )
-  }, [platformImage])
+
+    // TODO: check the usePinata hook, onUpload changed too many times and that's why this useEffect was buggy
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [platformImage, setValue, platformName])
 }
 
 const getColorByImage = (imageUrl) =>
