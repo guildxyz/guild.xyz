@@ -54,7 +54,7 @@ const TokenClaimFeeTable = () => {
         </Tr>
 
         <Tr>
-          <Td>Caliming fee</Td>
+          <Td>Claiming fee</Td>
           <Td isNumeric>
             {formattedFee} {token.symbol}
           </Td>
