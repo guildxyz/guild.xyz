@@ -45,7 +45,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
   const { control, setValue } = methods
 
   const {
-    field: { value: name },
+    field: { value: name, onChange: onNameChange },
   } = useController({
     control,
     name: "name",
@@ -122,10 +122,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
               />
               <FormControl>
                 <FormLabel>Snapshot name</FormLabel>
-                <Input
-                  value={name}
-                  onChange={(e) => setValue("name", e.target.value)}
-                />
+                <Input value={name} onChange={onNameChange} />
               </FormControl>
               <Box>
                 <Text fontWeight={"medium"} mb="2">
