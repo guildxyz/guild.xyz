@@ -29,7 +29,7 @@ import { useTokenSymbolsOfPoolVault } from "./hooks/useTokenSymbolsOfPoolVault"
 const COUNTED_POSITIONS_OPTIONS = [
   { label: "Full range", value: "FULL_RANGE" },
   { label: "In range", value: "IN_RANGE" },
-  { label: "All", value: "ALL" },
+  { label: "Any range", value: "ALL" },
 ]
 
 const UniswapForm = ({
