@@ -21,7 +21,7 @@ function getSiweMessage({
 }: MessageParams) {
   const nonce = `${hash}${nonceRandom}${method ?? 1}`
 
-  // Indentation is important inside the string, extra insentation would be extra whitespace in the string
+  // Indentation is important inside the string, extra indentation would be extra whitespace in the string
   return `guild.xyz wants you to sign in with your Ethereum account:
 ${checksumAddress(addr as `0x${string}`)}
 
