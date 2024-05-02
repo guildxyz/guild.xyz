@@ -4,14 +4,18 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Icon,
   Input,
   Skeleton,
   Stack,
+  Text,
+  Tooltip,
 } from "@chakra-ui/react"
 import { consts } from "@guildxyz/types"
 import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { Question } from "phosphor-react"
 import { useCallback, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
@@ -202,7 +206,24 @@ const UniswapForm = ({
       </Box>
 
       <FormControl>
-        <FormLabel>Positions to count</FormLabel>
+        <FormLabel display={"flex"} alignItems={"center"} gap={1}>
+          Positions to count
+          <Tooltip
+            label={
+              <Text>
+                <strong>Full range:</strong> Count only full-range positions
+                <br />
+                <strong>In range:</strong> Count positions, which have a price-range
+                surrounding the current price
+                <br />
+                <strong>Any range:</strong> Count all the positions with any
+                price-range
+              </Text>
+            }
+          >
+            <Icon as={Question} boxSize={4} />
+          </Tooltip>
+        </FormLabel>
 
         <ControlledSelect
           options={COUNTED_POSITIONS_OPTIONS}
