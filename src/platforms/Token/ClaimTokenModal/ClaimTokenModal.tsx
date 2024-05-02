@@ -20,7 +20,6 @@ import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
-import { useClaimedReward } from "hooks/useClaimedReward"
 import Image from "next/image"
 import { ArrowSquareOut } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
@@ -114,15 +113,13 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   })
 
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatforms[0])
-  const { claimed } = useClaimedReward(rolePlatforms[0]?.id)
-  const isDisabledByAvailability = !isAvailable || claimed
 
   const disabledTooltipLabel = useMemo(() => {
-    if (isDisabledByAvailability)
+    if (!isAvailable)
       return claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatforms[0])]
     if (!isBalanceSufficient)
       return "You don't have enough balance to pay the guild fee!"
-  }, [isDisabledByAvailability, isBalanceSufficient, rolePlatforms])
+  }, [isAvailable, isBalanceSufficient, rolePlatforms])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -201,7 +198,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
                       token.isLoading ||
                       !isConfirmed ||
                       !isBalanceSufficient ||
-                      isDisabledByAvailability
+                      isAvailable
                     }
                     isLoading={claimLoading}
                     loadingText={claimLoading}

@@ -11,7 +11,6 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
-import { useClaimedReward } from "hooks/useClaimedReward"
 import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
@@ -40,11 +39,9 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const openJoinModal = useOpenJoinModal()
 
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
-  const { claimed } = useClaimedReward(rolePlatform?.id)
-  const isDisabledByAvailability = !isAvailable || claimed
 
   const state = useMemo(() => {
-    if (isDisabledByAvailability) {
+    if (!isAvailable) {
       return {
         tooltipLabel:
           claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)],
@@ -76,13 +73,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
       ButtonComponent: Button,
       buttonProps: { isDisabled: true },
     }
-  }, [
-    hasRoleAccess,
-    isMember,
-    openJoinModal,
-    isDisabledByAvailability,
-    rolePlatform,
-  ])
+  }, [hasRoleAccess, isMember, openJoinModal, isAvailable, rolePlatform])
 
   return (
     <RewardDisplay

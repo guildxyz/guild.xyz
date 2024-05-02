@@ -42,7 +42,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
 
   const methods = useFormContext()
 
-  const { control, setValue } = methods
+  const { control } = methods
 
   const {
     field: { value: name, onChange: onNameChange },
