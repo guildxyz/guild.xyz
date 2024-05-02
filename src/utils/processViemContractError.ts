@@ -1,4 +1,8 @@
-import { BaseError, ContractFunctionRevertedError } from "viem"
+import {
+  BaseError,
+  ContractFunctionRevertedError,
+  InsufficientFundsError,
+} from "viem"
 
 const processViemContractError = (
   error: Error,
@@ -23,6 +27,13 @@ const processViemContractError = (
     ) {
       const errorName = revertError.data?.errorName ?? ""
       mappedError = errorNameMapper(errorName)
+    }
+
+    const insufficientFundsError = error.walk(
+      (err) => err instanceof InsufficientFundsError
+    )
+    if (insufficientFundsError) {
+      return "Your current balance is insufficient to cover the guild fee and the transaction gas costs"
     }
 
     return (
