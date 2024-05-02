@@ -31,7 +31,7 @@ import {
 } from "utils/rolePlatformHelpers"
 
 const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
-  const { imageUrl, token } = useTokenRewardContext()
+  const { token } = useTokenRewardContext()
   const claimableAmount = useClaimableTokensForRolePlatform(rolePlatform)
   const { isAdmin } = useGuildPermission()
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
