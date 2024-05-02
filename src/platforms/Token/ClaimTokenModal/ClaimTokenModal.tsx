@@ -12,16 +12,24 @@ import {
   Stack,
   Text,
   Tooltip,
+  VStack,
 } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
+import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import Button from "components/common/Button"
 import { useCardBg } from "components/common/Card"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import Image from "next/image"
 import { ArrowSquareOut } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import { useMemo, useState } from "react"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -51,8 +59,6 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   )
 
   const chain = guildPlatform.platformGuildData.chain
-  const tokenAddress = guildPlatform.platformGuildData.tokenAddress
-
   const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
 
   const { onSubmit, loadingText: claimLoadingText } = useCollectToken(
@@ -107,6 +113,17 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
     amount: formattedFee,
   })
 
+  const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatforms[0])
+  const { claimed } = useClaimedReward(rolePlatforms[0]?.id)
+  const isDisabledByAvailability = !isAvailable || claimed
+
+  const disabledTooltipLabel = useMemo(() => {
+    if (isDisabledByAvailability)
+      return claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatforms[0])]
+    if (!isBalanceSufficient)
+      return "You don't have enough balance to pay the guild fee!"
+  }, [isDisabledByAvailability, isBalanceSufficient, rolePlatforms])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -137,6 +154,10 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           mt="0"
         >
           <TokenRibbonIllustration />
+
+          <VStack>
+            <AvailabilityTags rolePlatform={rolePlatforms[0]} />
+          </VStack>
 
           <Divider
             mt="8"
@@ -173,17 +194,14 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
           ) : (
             <>
               {rolePlatforms.length === 1 ? (
-                <Tooltip
-                  label={
-                    !isBalanceSufficient &&
-                    "You don't have enough balance to pay the guild fee!"
-                  }
-                  hasArrow
-                >
+                <Tooltip label={disabledTooltipLabel} hasArrow>
                   <Button
                     colorScheme="gold"
                     isDisabled={
-                      token.isLoading || !isConfirmed || !isBalanceSufficient
+                      token.isLoading ||
+                      !isConfirmed ||
+                      !isBalanceSufficient ||
+                      isDisabledByAvailability
                     }
                     isLoading={claimLoading}
                     loadingText={claimLoading}

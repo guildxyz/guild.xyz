@@ -6,6 +6,7 @@ import RewardCard from "components/common/RewardCard"
 import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import rewards from "platforms/rewards"
+import { useMemo } from "react"
 import { GuildPlatform } from "types"
 import ClaimTokenButton from "./ClaimTokenButton"
 import { TokenRewardProvider, useTokenRewardContext } from "./TokenRewardContext"
@@ -25,9 +26,14 @@ const TokenRewardCard = () => {
   const { roles } = useGuild()
   const { roleIds } = useMembership()
 
-  const rolePlatformIds = useRolePlatformsOfReward(guildPlatform.id)
-    .filter((rp) => roleIds?.includes(rp.roleId) || false)
-    .map((rp) => rp.id)
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
+  const rolePlatformIds = useMemo(
+    () =>
+      rolePlatforms
+        .filter((rp) => roleIds?.includes(rp.roleId) || false)
+        .map((rp) => rp.id),
+    [rolePlatforms, roleIds]
+  )
 
   const { data } = useTokenClaimedAmount(
     guildPlatform.platformGuildData.chain,
@@ -39,11 +45,15 @@ const TokenRewardCard = () => {
 
   const bgColor = useColorModeValue("gray.700", "gray.600")
 
-  const title = token.isLoading
-    ? null
-    : claimableAmount > 0
-    ? `Claim ${claimableAmount} ${token.data.symbol}`
-    : `Claimed ${alreadyClaimed} ${token.data.symbol}`
+  const title = useMemo(() => {
+    if (token.isLoading) return null
+    if (claimableAmount === 0) {
+      return alreadyClaimed === 0
+        ? `Claim ${token.data.symbol}`
+        : `Claimed ${alreadyClaimed} ${token.data.symbol}`
+    }
+    if (claimableAmount > 0) return `Claim ${claimableAmount} ${token.data.symbol}`
+  }, [claimableAmount, token, alreadyClaimed])
 
   return (
     <>
@@ -82,7 +92,10 @@ const TokenRewardCard = () => {
           isAdmin && <DynamicTokenRewardCardEditMenu guildPlatform={guildPlatform} />
         }
       >
-        <ClaimTokenButton isDisabled={claimableAmount <= 0} />
+        <ClaimTokenButton
+          isDisabled={claimableAmount <= 0}
+          rolePlatform={rolePlatforms[0]}
+        />
       </RewardCard>
     </>
   )

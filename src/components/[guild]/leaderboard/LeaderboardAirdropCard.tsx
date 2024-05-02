@@ -40,7 +40,8 @@ const LeaderboardAirdropCard = () => {
 
   const { roles } = useGuild()
   const { roleIds } = useMembership()
-  const rolePlatformIds = useRolePlatformsOfReward(guildPlatform.id)
+  const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
+  const rolePlatformIds = rolePlatforms
     .filter((rp) => roleIds?.includes(rp.roleId) || false)
     .map((rp) => rp.id)
 
@@ -109,7 +110,7 @@ const LeaderboardAirdropCard = () => {
             style={{ objectPosition: "-30px 0px" }}
           />
         </Box>
-        <Stack spacing={0} overflow={"hidden"}>
+        <Stack spacing={0} overflow={"hidden"} mr={"auto"}>
           <Text
             colorScheme={"gray"}
             fontSize={{ base: "sm" }}
@@ -144,7 +145,7 @@ const LeaderboardAirdropCard = () => {
           size={{ base: "sm", sm: "md" }}
           w="auto"
           flexShrink={0}
-          ml="auto"
+          rolePlatform={rolePlatforms[0]}
         />
       </HStack>
     </Card>

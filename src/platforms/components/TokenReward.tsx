@@ -11,7 +11,9 @@ import Button from "components/common/Button"
 import useMembership, {
   useRoleMembership,
 } from "components/explorer/hooks/useMembership"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import { ArrowSquareIn, LockSimple } from "phosphor-react"
+import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
 import DynamicTag from "platforms/Token/DynamicTag"
 import { useIsFromGeogatedCountry } from "platforms/Token/GeogatedCountryAlert"
@@ -23,6 +25,10 @@ import {
 import { useClaimableTokensForRolePlatform } from "platforms/Token/hooks/useCalculateToken"
 import { useMemo } from "react"
 import { RolePlatform } from "types"
+import {
+  getRolePlatformStatus,
+  getRolePlatformTimeframeInfo,
+} from "utils/rolePlatformHelpers"
 
 const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { imageUrl, token } = useTokenRewardContext()
@@ -33,7 +39,20 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const isFromGeogatedCountry = useIsFromGeogatedCountry()
   const openJoinModal = useOpenJoinModal()
 
+  const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
+  const { claimed } = useClaimedReward(rolePlatform?.id)
+  const isDisabledByAvailability = !isAvailable || claimed
+
   const state = useMemo(() => {
+    if (isDisabledByAvailability) {
+      return {
+        tooltipLabel:
+          claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)],
+        ButtonComponent: Button,
+        buttonProps: { isDisabled: true },
+      }
+    }
+
     if (hasRoleAccess)
       return {
         tooltipLabel: !isFromGeogatedCountry && "Claim reward",
@@ -57,7 +76,13 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
       ButtonComponent: Button,
       buttonProps: { isDisabled: true },
     }
-  }, [hasRoleAccess, isMember, openJoinModal])
+  }, [
+    hasRoleAccess,
+    isMember,
+    openJoinModal,
+    isDisabledByAvailability,
+    rolePlatform,
+  ])
 
   return (
     <RewardDisplay
@@ -83,6 +108,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
               variant="link"
               rightIcon={<ArrowSquareIn />}
               iconSpacing="1"
+              rolePlatform={rolePlatform}
               {...state.buttonProps}
             >
               {claimableAmount || ""} {token?.data?.symbol || "tokens"}
