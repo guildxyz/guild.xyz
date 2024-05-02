@@ -277,8 +277,9 @@ const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
         {general
           .filter(
             (req) =>
-              !!featureFlags.includes("PAYMENT_REQUIREMENT") ||
-              req.types[0] !== "PAYMENT"
+              req.types[0] !== "GUILD_SNAPSHOT" &&
+              (!!featureFlags.includes("PAYMENT_REQUIREMENT") ||
+                req.types[0] !== "PAYMENT")
           )
           .map((requirementButton) => (
             <Button

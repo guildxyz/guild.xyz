@@ -20,8 +20,14 @@ import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
+import Token from "static/icons/token.svg"
 import XLogo from "static/icons/x.svg"
-import { GuildPlatformWithOptionalId, PlatformName, RoleFormType } from "types"
+import {
+  GuildPlatformWithOptionalId,
+  PlatformName,
+  Requirement,
+  RoleFormType,
+} from "types"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -53,6 +59,8 @@ import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import ClaimTokenButton from "./Token/ClaimTokenButton"
+import useTokenCardProps from "./Token/hooks/useTokenCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 import RewardPreview from "./components/RewardPreview"
@@ -69,10 +77,13 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "UNIQUE_TEXT",
   "POAP",
   "GATHER_TOWN",
+  "ERC20",
 ]
 
 export type AddRewardPanelProps = {
-  onAdd: (data: RoleFormType["rolePlatforms"][number]) => void
+  onAdd: (
+    data: RoleFormType["rolePlatforms"][number] & { requirements?: Requirement[] }
+  ) => void
   skipSettings?: boolean
 }
 
@@ -105,6 +116,15 @@ type RewardData = {
   RoleCardComponent?: ComponentType<RewardProps>
   isPlatform?: boolean
   asRewardRestriction: PlatformAsRewardRestrictions
+}
+
+export const modalSizeForPlatform = (platform: PlatformName) => {
+  switch (platform) {
+    case "ERC20":
+      return "xl"
+    default:
+      return "4xl"
+  }
 }
 
 const AddRewardPanelLoadingSpinner = () => (
@@ -457,6 +477,32 @@ const rewards: Record<PlatformName, RewardData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
+      ssr: false,
+    }),
+  },
+  ERC20: {
+    icon: Token,
+    name: "Token",
+    gatedEntity: "",
+    colorScheme: "gold",
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    cardPropsHook: useTokenCardProps,
+    cardButton: ClaimTokenButton,
+    RewardPreview: dynamic(() => import("platforms/components/TokenPreview"), {
+      ssr: false,
+      loading: () => <RewardPreview isLoading />,
+    }),
+    AddRewardPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddRewardPanelLoadingSpinner,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/TokenReward"), {
       ssr: false,
     }),
   },

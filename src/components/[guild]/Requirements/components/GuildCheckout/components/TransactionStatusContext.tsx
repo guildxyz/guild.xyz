@@ -40,7 +40,8 @@ const TransactionStatusProvider = ({
   useEffect(() => {
     if (!txSuccess) return
     triggerConfetti()
-  }, [txSuccess, triggerConfetti])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [txSuccess])
 
   return (
     <TransactionStatusContext.Provider

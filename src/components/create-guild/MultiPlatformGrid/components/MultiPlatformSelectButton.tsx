@@ -54,6 +54,7 @@ const createGuildPlatformComponents: Record<
     | "POINTS"
     | "FORM"
     | "GATHER_TOWN"
+    | "ERC20"
   >,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {

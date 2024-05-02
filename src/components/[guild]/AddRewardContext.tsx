@@ -44,11 +44,6 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
 
   const [selection, setSelectionOg] = useState<PlatformName>()
 
-  const setSelection = (newSelection: PlatformName) => {
-    setSelectionOg(newSelection)
-    scrollToTop()
-  }
-
   const [step, setStepOg] = useState<AddRewardStep>()
 
   const setStep = (newStep: AddRewardStep) => {
@@ -59,6 +54,11 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [activeTab, setActiveTab] = useState<RoleTypeToAddTo>(
     RoleTypeToAddTo.EXISTING_ROLE
   )
+
+  const setSelection = (newSelection: PlatformName) => {
+    setSelectionOg(newSelection)
+    scrollToTop()
+  }
 
   const [shouldShowCloseAlert, setShouldShowCloseAlert] = useState(false)
   const {
