@@ -7,6 +7,7 @@ import { RequirementLinkButton } from "components/[guild]/Requirements/component
 import RequirementChainIndicator from "components/[guild]/Requirements/components/RequirementChainIndicator"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import DataBlock from "components/common/DataBlock"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import REQUIREMENTS from "requirements"
 import { Chains } from "wagmiConfig/chains"
 import { useSymbolsOfPair } from "./hooks/useSymbolsOfPair"
@@ -37,6 +38,8 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       countedPositions,
       defaultFee,
     },
+    roleId,
+    id,
   } = useRequirementContext() as Extract<
     Schemas["Requirement"],
     { type: "UNISWAP_V3_POSITIONS" }
@@ -52,6 +55,12 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const chainQueryParam = UniswapQueryChainNames[chain] ?? chain.toLowerCase()
 
+  const { reqAccesses } = useRoleMembership(roleId)
+
+  const hasAccess = reqAccesses?.find(
+    ({ requirementId }) => requirementId === id
+  )?.access
+
   return (
     <Requirement
       image={REQUIREMENTS.UNISWAP_V3_POSITIONS.icon.toString()}
@@ -59,7 +68,7 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         <HStack>
           <RequirementChainIndicator />
           {/* The Uniswap app didn't seem able to handle testnets in the query param */}
-          {!UNISWAP_TESTNETS.has(chain) && (
+          {!hasAccess && !UNISWAP_TESTNETS.has(chain) && (
             <RequirementLinkButton
               href={`https://app.uniswap.org/add/${token0}/${token1}${
                 defaultFee ? `/${defaultFee}` : ""
