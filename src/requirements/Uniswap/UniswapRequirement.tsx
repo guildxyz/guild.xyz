@@ -96,7 +96,7 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       <Skeleton isLoaded={!!baseSymbol} display={"inline"}>
         <DataBlock>{baseSymbol ?? "___"}</DataBlock>
       </Skeleton>{" "}
-      value of
+      value of{" "}
       <Skeleton isLoaded={!!symbol0 && !!symbol1} display={"inline"}>
         <DataBlock>
           {symbol0 ?? "___"}/{symbol1 ?? "___"}
