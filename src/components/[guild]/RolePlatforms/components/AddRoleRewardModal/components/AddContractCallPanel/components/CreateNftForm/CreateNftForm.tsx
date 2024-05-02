@@ -139,9 +139,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     <FormProvider {...methods}>
       <Stack spacing={8}>
         <Text colorScheme="gray" fontWeight="semibold">
-          Create an NFT that members will be able to mint if they satisfy the
-          requirements you'll set. Claiming can take place through your Guild page or
-          a fancy auto-generated minting page!
+          Create an NFT reward that members will be able to claim if they meet the
+          requirements.
         </Text>
 
         <Grid w="full" templateColumns="repeat(5, 1fr)" gap={8}>
@@ -162,7 +161,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
               </FormControl>
 
               <FormControl isInvalid={!!errors?.richTextDescription}>
-                <FormLabel>Reward description</FormLabel>
+                <FormLabel>Claiming page description</FormLabel>
 
                 <RichTextDescriptionEditor onChange={onDescriptionChange} />
 
@@ -171,8 +170,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 </FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be shown on the minting page. You can use
-                  markdown syntax here.
+                  This rich text description is only displayed on the claim page. It
+                  can contain images, links, and formatted text.
                 </FormHelperText>
               </FormControl>
 
@@ -184,12 +183,12 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be included in the NFT metadata.
+                  This text-only description will be part of the NFT metadata.
                 </FormHelperText>
               </FormControl>
 
               <FormControl>
-                <FormLabel>Metadata</FormLabel>
+                <FormLabel>Metadata values</FormLabel>
 
                 <Stack spacing={2}>
                   {fields?.map((field, index) => (
