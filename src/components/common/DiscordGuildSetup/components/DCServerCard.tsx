@@ -21,7 +21,7 @@ type Props = {
     img: string
     owner: boolean
   }
-  onSelect?: (id: string) => void
+  onSelect?: (id: string, data?: any) => void
   onCancel?: () => void
 }
 
@@ -70,14 +70,14 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
 
   useEffect(() => {
     if (!!prevActiveAddBotPopup && !activeAddBotPopup && hasAllPermissions) {
-      onSelect(serverData.id)
+      onSelect(serverData.id, serverData)
     }
   }, [
     prevActiveAddBotPopup,
     activeAddBotPopup,
     hasAllPermissions,
     onSelect,
-    serverData.id,
+    serverData,
   ])
 
   useEffect(() => {
@@ -129,7 +129,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
             colorScheme="green"
             onClick={() => {
               captureEvent("[discord setup] selected server")
-              onSelect(serverData.id)
+              onSelect(serverData.id, serverData)
             }}
             data-test="select-dc-server-button"
           >

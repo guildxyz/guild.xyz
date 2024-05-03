@@ -13,16 +13,9 @@ import {
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import PermissionAlert from "components/common/DiscordGuildSetup/components/PermissionAlert"
-import useGateables from "hooks/useGateables"
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-  useWatch,
-} from "react-hook-form"
+import { useState } from "react"
+import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, PlatformGuildData, PlatformType } from "types"
-import getRandomInt from "utils/getRandomInt"
 
 type Props = {
   isOpen: boolean
@@ -36,19 +29,12 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
     control,
     name: "guildPlatforms",
   })
-  const discordMethods = useForm({
-    defaultValues: { discordServerId: "", name: "", img: undefined },
-  })
-  const selectedServer = useWatch({
-    control: discordMethods.control,
-    name: `discordServerId`,
-  })
 
-  const discordServers = useGateables(PlatformType.DISCORD)
-
-  const selectedDiscordServerData = discordServers.gateables?.find(
-    (server) => server.id === discordMethods.getValues("discordServerId")
-  )
+  const [selectedServer, setSelectedServer] = useState<{
+    platformGuildId: string
+    img?: string
+    name?: string
+  }>()
 
   return (
     <Modal
@@ -77,40 +63,23 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
             }}
             py={4}
           >
-            <FormProvider {...discordMethods}>
-              <DiscordGuildSetup
-                defaultValues={{
-                  name: "",
-                  description: "",
-                  imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-                  contacts: [{ type: "EMAIL", contact: "" }],
-                  guildPlatforms: [
-                    {
-                      platformName: "DISCORD",
-                      platformGuildId: "",
-                    },
-                  ],
-                }}
-                selectedServer={selectedServer}
-                fieldName={`discordServerId`}
-              />
-            </FormProvider>
+            <DiscordGuildSetup onSubmit={setSelectedServer} shouldHideGotItButton />
           </Box>
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="green"
-            isDisabled={!selectedServer}
+            isDisabled={!selectedServer?.platformGuildId}
             onClick={() => {
               captureEvent("[discord setup] server added")
 
               append({
                 platformName: "DISCORD",
-                platformGuildId: discordMethods.getValues("discordServerId"),
+                platformGuildId: selectedServer?.platformGuildId,
                 platformId: PlatformType.DISCORD,
                 platformGuildData: {
-                  name: selectedDiscordServerData.name,
-                  imageUrl: selectedDiscordServerData.img,
+                  name: selectedServer?.name,
+                  imageUrl: selectedServer?.img,
                 } as PlatformGuildData["DISCORD"],
               })
               onClose()
