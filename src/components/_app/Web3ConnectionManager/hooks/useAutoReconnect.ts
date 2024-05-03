@@ -14,15 +14,10 @@ const useAutoReconnect = () => {
     let connected = false
 
     const safeConnector = connectors.find((connector) => connector.id === "safe")
-    console.log("safeConnector", safeConnector)
     const canConnectToSafe = await safeConnector
       .getProvider()
-      .then((provider) => {
-        console.log("Safe provider", provider)
-        return !!provider
-      })
+      .then((provider) => !!provider)
       .catch(() => false)
-    console.log("canConnectToSafe", canConnectToSafe)
 
     const recentConnectorId = await config.storage.getItem("recentConnectorId")
     if (!recentConnectorId && !canConnectToSafe) return

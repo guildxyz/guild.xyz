@@ -379,7 +379,6 @@ export const sign = async ({
 
     if (walletChainId) {
       if (walletClient.chain.id !== walletChainId) {
-        // TODO If Safe connector, just throw a toast
         await walletClient.switchChain({ id: walletChainId })
       }
       params.chainId = `${walletChainId}`
