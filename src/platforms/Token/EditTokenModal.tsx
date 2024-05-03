@@ -32,7 +32,6 @@ import useToast from "hooks/useToast"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { Requirement } from "types"
 import DynamicTypeForm from "./DynamicTypeForm"
 import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
@@ -111,8 +110,8 @@ const EditTokenModal = ({
       },
     })
 
-  const { onSubmit: onRequirementSubmit } = useCreateRequirement({
-    onSuccess: (resp) => {
+  const { onSubmit: onRequirementSubmit } = useCreateRequirement(role.id, {
+    onSuccess: () => {
       toast({
         status: "success",
         title: "Snapshot successfully added!",
@@ -120,7 +119,6 @@ const EditTokenModal = ({
 
       captureEvent("editToken(CreateRequirement) Requirement created", {
         ...postHogOptions,
-        requirementId: resp.id,
       })
       triggerMembershipUpdate()
     },
@@ -141,10 +139,7 @@ const EditTokenModal = ({
 
     // Create new snapshot if currently does not exist
     if (!snapshotRequirement) {
-      const createdReq = await onRequirementSubmit({
-        requirement: data.requirements[0] as Requirement,
-        roleId: role.id,
-      })
+      const createdReq = await onRequirementSubmit(data.requirements[0])
       if (createdReq)
         modifiedRolePlatform.dynamicAmount.operation.input[0].requirementId =
           createdReq.id

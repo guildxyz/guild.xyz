@@ -1,59 +1,47 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
+import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
-const useCreateRequirement = (config?: {
-  onSuccess?: (resp) => void
-  onError?: (err) => void
-}) => {
+const useCreateRequirement = (
+  roleId: number,
+  config?: { onSuccess?: () => void; onError?: (err) => void }
+) => {
   const { id: guildId } = useGuild()
+  const { mutate: mutateRequirements } = useRequirements(roleId)
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
-  const createRequirement = async ({
-    requirement,
-    roleId,
-  }: {
-    requirement: Requirement
-    roleId: number
-  }): Promise<Requirement> =>
+  const createRequirement = async (body: Requirement): Promise<Requirement> =>
     fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
       {
         method: "POST",
-        body: preprocessRequirement(requirement),
+        body: preprocessRequirement(body),
       },
     ])
 
-  const mutateRequirements = (
-    req: Requirement,
-    roleId: number,
-    idForGuild: number
-  ) => {
-    mutateOptionalAuthSWRKey<Requirement[]>(
-      `/v2/guilds/${idForGuild}/roles/${roleId}/requirements`,
-      (prevRequirements) => [
-        ...prevRequirements.filter((r) => r.type === "FREE"),
-        req,
-      ],
-      { revalidate: false }
-    )
-  }
-
   return useSubmit<
-    {
-      requirement: Omit<Requirement, "id" | "roleId" | "name" | "symbol">
-      roleId: number
-    },
+    Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
     Requirement & { deletedRequirements?: number[] }
   >(createRequirement, {
     onSuccess: (response) => {
-      mutateRequirements(response, response.roleId, guildId)
-      config?.onSuccess?.(response)
+      mutateRequirements(
+        (prevRequirements) => [
+          ...prevRequirements.filter((req) =>
+            Array.isArray(response.deletedRequirements)
+              ? !response.deletedRequirements.includes(req.id)
+              : true
+          ),
+          response,
+        ],
+        { revalidate: false }
+      )
+
+      config?.onSuccess?.()
     },
     onError: (error) => {
       showErrorToast(error)

@@ -75,10 +75,7 @@ const ExistingRequirementEditableCard = ({
   const onDeleteRequirement = () =>
     isLastRequirement
       ? onCreateRequirementSubmit({
-          requirement: {
-            type: "FREE",
-          },
-          roleId: requirement.roleId,
+          type: "FREE",
         })
       : onDeleteRequirementSubmit()
 
@@ -86,7 +83,7 @@ const ExistingRequirementEditableCard = ({
   const {
     onSubmit: onCreateRequirementSubmit,
     isLoading: isCreateRequirementLoading,
-  } = useCreateRequirement({
+  } = useCreateRequirement(requirement.roleId, {
     onSuccess: () => {
       /**
        * Showing a delete toast intentionally, because we call
