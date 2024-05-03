@@ -1,99 +1,65 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useRequirements from "components/[guild]/hooks/useRequirements"
+import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
-import { useState } from "react"
 import { Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
-const useCreateRequirement = (
-  roleId: number,
-  config?: { onSuccess?: () => void }
-) => {
+const useCreateRequirement = (config?: {
+  onSuccess?: (resp) => void
+  onError?: (err) => void
+}) => {
   const { id: guildId } = useGuild()
-  const { mutate: mutateRequirements } = useRequirements(roleId)
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
-  const createRequirement = async (body: Requirement): Promise<Requirement> =>
+  const createRequirement = async ({
+    requirement,
+    roleId,
+  }: {
+    requirement: Requirement
+    roleId: number
+  }): Promise<Requirement> =>
     fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
       {
         method: "POST",
-        body: preprocessRequirement(body),
+        body: preprocessRequirement(requirement),
       },
     ])
 
+  const mutateRequirements = (
+    req: Requirement,
+    roleId: number,
+    idForGuild: number
+  ) => {
+    mutateOptionalAuthSWRKey<Requirement[]>(
+      `/v2/guilds/${idForGuild}/roles/${roleId}/requirements`,
+      (prevRequirements) => [
+        ...prevRequirements.filter((r) => r.type === "FREE"),
+        req,
+      ],
+      { revalidate: false }
+    )
+  }
+
   return useSubmit<
-    Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
+    {
+      requirement: Omit<Requirement, "id" | "roleId" | "name" | "symbol">
+      roleId: number
+    },
     Requirement & { deletedRequirements?: number[] }
   >(createRequirement, {
     onSuccess: (response) => {
-      mutateRequirements(
-        (prevRequirements) => [
-          ...prevRequirements.filter((req) =>
-            Array.isArray(response.deletedRequirements)
-              ? !response.deletedRequirements.includes(req.id)
-              : true
-          ),
-          response,
-        ],
-        { revalidate: false }
-      )
-
-      config?.onSuccess?.()
+      mutateRequirements(response, response.roleId, guildId)
+      config?.onSuccess?.(response)
     },
-    onError: (error) => showErrorToast(error),
+    onError: (error) => {
+      showErrorToast(error)
+      config?.onError?.(error)
+    },
   })
 }
 
 export default useCreateRequirement
-
-const useCreateRequirementForRole = () => {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const { id: guildId } = useGuild()
-  const showErrorToast = useShowErrorToast()
-
-  const fetcherWithSign = useFetcherWithSign()
-
-  const onSubmit = async ({
-    requirement,
-    roleId,
-    onSuccess,
-    onError,
-  }: {
-    requirement: Requirement
-    roleId: number
-    onSuccess: (req: Requirement) => void
-    onError: (error: any) => void
-  }) => {
-    setIsLoading(true)
-
-    const submitCreate = async (): Promise<Requirement> =>
-      fetcherWithSign([
-        `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
-        {
-          method: "POST",
-          body: preprocessRequirement(requirement),
-        },
-      ])
-
-    return submitCreate()
-      .then((req) => {
-        setIsLoading(false)
-        onSuccess(req)
-      })
-      .catch((error) => {
-        setIsLoading(false)
-        showErrorToast(error)
-        onError(error)
-      })
-      .finally(() => setIsLoading(false))
-  }
-
-  return { onSubmit, isLoading }
-}
-
-export { useCreateRequirementForRole }
