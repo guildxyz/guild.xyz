@@ -122,6 +122,12 @@ const useConnectPlatform = (
                 .then((newPlatformUser) => {
                   mutateUser(
                     async (prev) => {
+                      /**
+                       * For GOOGLE, there is a chance, that the email address got
+                       * linked as EMAIL as well. Therefore if the user doesn't
+                       * already have an EMAIL, we revalidate
+                       */
+
                       const hasEmail = !!prev?.emails?.emailAddress
                       const isGoogleConnection = platformName === "GOOGLE"
 
