@@ -31,6 +31,8 @@ const useAutoReconnect = () => {
       ? safeConnector
       : connectors.find((connector) => connector.id === recentConnectorId)
 
+    if (!connectorToReconnect) return
+
     config.setState((prevState) => ({ ...prevState, status: "reconnecting" }))
 
     const provider = await connectorToReconnect.getProvider()
