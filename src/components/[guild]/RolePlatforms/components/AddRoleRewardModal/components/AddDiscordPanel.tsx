@@ -1,45 +1,31 @@
-import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { PlatformType } from "types"
-
-const defaultValues = {
-  platformGuildId: null,
-}
+import { useWatch } from "react-hook-form"
+import { PlatformGuildData, PlatformType } from "types"
 
 const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
-  const methods = useForm({ mode: "all", defaultValues })
-  useAddRewardDiscardAlert(methods.formState.isDirty)
-
-  const platformGuildId = useWatch({
-    control: methods.control,
-    name: `platformGuildId`,
-  })
-
   // TODO: we could somehow extract this piece of logis from here to make sure that AddDiscordPanel doesn't depend on the role form's state
   const rolePlatforms = useWatch({ name: "rolePlatforms" })
 
   return (
-    <FormProvider {...methods}>
-      <DiscordGuildSetup
-        rolePlatforms={rolePlatforms}
-        fieldName={`platformGuildId`}
-        selectedServer={platformGuildId}
-        defaultValues={defaultValues}
-        onSubmit={() =>
-          onAdd({
-            guildPlatform: {
-              platformName: "DISCORD",
-              platformId: PlatformType.DISCORD,
-              platformGuildId,
-            },
-            isNew: true,
-            platformRoleId: null,
-          })
-        }
-      />
-    </FormProvider>
+    <DiscordGuildSetup
+      rolePlatforms={rolePlatforms}
+      onSubmit={(data) => {
+        onAdd({
+          guildPlatform: {
+            platformName: "DISCORD",
+            platformId: PlatformType.DISCORD,
+            platformGuildId: data?.platformGuildId,
+            platformGuildData: {
+              name: data?.name,
+              imageUrl: data?.img,
+            } as PlatformGuildData["DISCORD"],
+          },
+          isNew: true,
+          platformRoleId: null,
+        })
+      }}
+    />
   )
 }
 
