@@ -125,12 +125,14 @@ const DiscordGuildSetup = ({
             <DCServerCard
               key={serverData.id}
               serverData={serverData}
-              onSelect={(newServerId, data) => {
-                setSelectedServer(newServerId)
+              onSelect={() => {
+                const { id, name, img } = serverData
 
-                setValue("platformGuildId", newServerId, { shouldDirty: true })
-                setValue("name", data?.name, { shouldDirty: true })
-                setValue("img", data?.img, { shouldDirty: true })
+                setSelectedServer(id)
+
+                setValue("platformGuildId", id, { shouldDirty: true })
+                setValue("name", name, { shouldDirty: true })
+                setValue("img", img, { shouldDirty: true })
 
                 // If the "Got It" button is not shown, the flow ends here, we call onSubmit with the new data
                 if (shouldHideGotItButton) {
