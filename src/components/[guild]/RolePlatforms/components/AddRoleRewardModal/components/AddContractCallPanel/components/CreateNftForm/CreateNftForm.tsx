@@ -145,8 +145,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     <FormProvider {...methods}>
       <Stack spacing={8}>
         <Text colorScheme="gray" fontWeight="semibold">
-          Create an NFT reward that members will be able to claim if they meet the
-          requirements.
+          Create an NFT that members will be able to claim if they meet the
+          requirements
         </Text>
 
         <Grid w="full" templateColumns="repeat(5, 1fr)" gap={8}>
@@ -177,7 +177,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
                 <FormHelperText>
                   This rich text description is only displayed on the claim page. It
-                  can contain images, links, and formatted text.
+                  can contain images, links, and formatted text
                 </FormHelperText>
               </FormControl>
 
@@ -189,7 +189,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
                 <FormHelperText>
-                  This text-only description will be part of the NFT metadata.
+                  This text-only description will be part of the NFT metadata
                 </FormHelperText>
               </FormControl>
 
@@ -367,7 +367,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
                 <FormHelperText>
                   When users pay for minting the NFT, you'll receive the funds on
-                  this wallet address.
+                  this wallet address
                 </FormHelperText>
 
                 <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
