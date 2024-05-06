@@ -22,6 +22,7 @@ const SwitchNetworkButton = ({ targetChainId, hidden }: Props): JSX.Element => {
         colorScheme="blue"
         isLoading={isNetworkChangeInProgress}
         loadingText="Check your wallet"
+        flexShrink={0}
         onClick={() => requestNetworkChange(targetChainId)}
         w="full"
       >

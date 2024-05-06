@@ -6,12 +6,16 @@ import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard
 import { useSetAtom } from "jotai"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
-import { PlatformType, RoleFormType, Visibility } from "types"
+import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
 type Props = {
   onClose: () => void
-  onSelect: (selectedRolePlatform: RoleFormType["rolePlatforms"][number]) => void
+  onSelect: (
+    selectedRolePlatform: RoleFormType["rolePlatforms"][number] & {
+      requirements?: Requirement[]
+    }
+  ) => void
 }
 
 const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {

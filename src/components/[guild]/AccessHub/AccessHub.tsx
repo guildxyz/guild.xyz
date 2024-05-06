@@ -13,6 +13,7 @@ import useMembership from "components/explorer/hooks/useMembership"
 import dynamic from "next/dynamic"
 import { StarHalf } from "phosphor-react"
 import PointsRewardCard from "platforms/Points/PointsRewardCard"
+import { TokenRewardCard } from "platforms/Token/TokenRewardCard"
 import { PlatformType } from "types"
 import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
@@ -20,6 +21,7 @@ import useRoleGroup from "../hooks/useRoleGroup"
 import AccessedGuildPlatformCard from "./components/AccessedGuildPlatformCard"
 import CampaignCards from "./components/CampaignCards"
 import { useAccessedGuildPoints } from "./hooks/useAccessedGuildPoints"
+import { useTokenRewards } from "./hooks/useTokenRewards"
 
 const DynamicGuildPinRewardCard = dynamic(
   () => import("./components/GuildPinRewardCard")
@@ -40,7 +42,8 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const relevantGuildPlatforms = guildPlatforms.filter(
     (gp) =>
       relevantGuildPlatformIds.includes(gp.id) &&
-      gp.platformId !== PlatformType.POINTS
+      gp.platformId !== PlatformType.POINTS &&
+      gp.platformId !== PlatformType.ERC20
   )
 
   // Displaying CONTRACT_CALL rewards for everyone, even for users who aren't members
@@ -88,6 +91,7 @@ const AccessHub = (): JSX.Element => {
 
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group?.id)
   const accessedGuildPoints = useAccessedGuildPoints("ACCESSED_ONLY")
+  const accessedGuildTokens = useTokenRewards(!isAdmin)
 
   const shouldShowGuildPin =
     !group &&
@@ -123,11 +127,16 @@ const AccessHub = (): JSX.Element => {
             <PointsRewardCard key={pointPlatform.id} guildPlatform={pointPlatform} />
           ))}
 
+          {accessedGuildTokens?.map((platform) => (
+            <TokenRewardCard platform={platform} key={platform.id} />
+          ))}
+
           {(isMember || isAdmin) &&
             (!group ? !groups?.length : true) &&
             !shouldShowGuildPin &&
             !accessedGuildPlatforms?.length &&
-            !accessedGuildPoints?.length && (
+            !accessedGuildPoints?.length &&
+            !accessedGuildTokens?.length && (
               <Card>
                 <Alert status="info" h="full">
                   <Icon as={StarHalf} boxSize="5" mr="2" mt="1px" weight="regular" />

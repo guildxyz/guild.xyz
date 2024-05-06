@@ -1,4 +1,12 @@
-import { Button, useDisclosure } from "@chakra-ui/react"
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react"
 import {
   RequirementProvider,
   useRequirementContext,
@@ -97,7 +105,24 @@ const ExistingRequirementEditableCard = ({
       onClose={onDeleteClose}
       onConfirm={() => onDeleteRequirement()}
       title="Delete requirement"
-      description="Are you sure you want to delete this requirement?"
+      description={
+        requirement.type === "GUILD_SNAPSHOT" ? (
+          <Alert status="warning">
+            <AlertIcon mt={0} />
+            <Box>
+              <AlertTitle>
+                This requirement may be linked to a token reward
+              </AlertTitle>
+              <AlertDescription>
+                Deleting this requirement will make the reward unclaimable until it
+                is configured with a new snapshot
+              </AlertDescription>
+            </Box>
+          </Alert>
+        ) : (
+          "Are you sure you want to delete this requirement?"
+        )
+      }
       confirmationText="Delete requirement"
     />
   )
@@ -142,12 +167,14 @@ const ExistingRequirementEditableCard = ({
         />
       </RequirementBaseCard>
 
-      <ExistingRequirementEditModal
-        isOpen={isEditOpen}
-        onClose={onEditClose}
-        requirementField={requirement}
-        finalFocusRef={editButtonRef}
-      />
+      {!isEditDisabled && (
+        <ExistingRequirementEditModal
+          isOpen={isEditOpen}
+          onClose={onEditClose}
+          requirementField={requirement}
+          finalFocusRef={editButtonRef}
+        />
+      )}
 
       {DeleteConfirmationAlert}
     </>

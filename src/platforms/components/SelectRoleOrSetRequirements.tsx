@@ -8,7 +8,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
 type Props = {
@@ -31,14 +31,24 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
 
   const { register, unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
+  const data = useWatch({ name: `rolePlatforms.0` })
+
+  const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
+    selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
 
   const handleChange = (value: RoleTypeToAddTo) => {
-    if (value === RoleTypeToAddTo.EXISTING_ROLE) {
-      unregister("requirements")
-    } else {
-      register("requirements", {
-        value: [{ type: "FREE" }],
-      })
+    /**
+     * This custom ERC20 condition might not be needed cause we've disabled the
+     * switcher since then, but maybe it will be in the future so leaving it now
+     */
+    if (erc20Type !== "REQUIREMENT_AMOUNT") {
+      if (value === RoleTypeToAddTo.EXISTING_ROLE) {
+        unregister("requirements")
+      } else {
+        register("requirements", {
+          value: [{ type: "FREE" }],
+        })
+      }
     }
     setActiveTab(value)
   }
@@ -70,7 +80,11 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
         <TabPanel>
           <RoleSelector
             allowMultiple={
-              asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
+              selection !== "ERC20"
+                ? asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
+                : erc20Type === "STATIC"
+                ? true
+                : false
             }
             roles={relevantRoles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}

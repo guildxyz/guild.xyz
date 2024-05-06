@@ -378,7 +378,9 @@ export const sign = async ({
       walletChains.length > 0 ? Chains[walletChains[0]] : undefined
 
     if (walletChainId) {
-      await walletClient.switchChain({ id: walletChainId })
+      if (walletClient.chain.id !== walletChainId) {
+        await walletClient.switchChain({ id: walletChainId })
+      }
       params.chainId = `${walletChainId}`
     }
 

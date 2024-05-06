@@ -2,6 +2,7 @@ import {
   Collapse,
   Icon,
   Stack,
+  StackProps,
   Table,
   TableContainer,
   Tbody,
@@ -14,17 +15,18 @@ import { PropsWithChildren } from "react"
 type Props = {
   buttonComponent: JSX.Element
   bgColor?: string
-}
+} & StackProps
 
 const FeesTable = ({
   buttonComponent,
   bgColor,
   children,
+  ...rest
 }: PropsWithChildren<Props>): JSX.Element => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Stack w="full" spacing={0} data-test="fees-table">
+    <Stack w="full" spacing={0} data-test="fees-table" {...rest}>
       <Button
         display="flex"
         w="full"
