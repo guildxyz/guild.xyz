@@ -17,7 +17,6 @@ import { useSetAtom } from "jotai"
 import { useCallback, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
-import getRandomInt from "utils/getRandomInt"
 import slugify from "utils/slugify"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Description from "../Description"
@@ -53,24 +52,9 @@ const BasicInfo = (): JSX.Element => {
     return () => setContinueTooltipLabel("")
   }, [setDisabled, name, errors, contacts, errors.contacts, setContinueTooltipLabel])
 
-  const onIconUploadSuccess = useCallback(
-    ({ IpfsHash }) => {
-      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
-        shouldTouch: true,
-      })
-    },
-    [setValue]
-  )
-
-  const onIconUploadError = useCallback(() => {
-    setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-      shouldTouch: true,
-    })
-  }, [setValue])
-
   const iconUploader = usePinata({
-    onSuccess: onIconUploadSuccess,
-    onError: onIconUploadError,
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
   })
 
   const discordPlatformData = guildPlatforms.find(
@@ -92,23 +76,12 @@ const BasicInfo = (): JSX.Element => {
       setValue("urlName", slugify(name), { shouldValidate: true })
   }, [name, dirtyFields, setValue])
 
-  const onBackgrondUploadSuccess = useCallback(
-    ({ IpfsHash }) => {
-      setValue(
-        "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldDirty: true }
-      )
-    },
-    [setValue]
-  )
-
   const onBackgrondUploadError = useCallback(() => {
     setLocalBackgroundImage(null)
   }, [setLocalBackgroundImage])
 
   const backgroundUploader = usePinata({
-    onSuccess: onBackgrondUploadSuccess,
+    fieldToSetOnSuccess: "theme.backgroundImage",
     onError: onBackgrondUploadError,
   })
 
