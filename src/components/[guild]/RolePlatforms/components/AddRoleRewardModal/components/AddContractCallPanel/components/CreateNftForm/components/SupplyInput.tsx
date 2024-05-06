@@ -49,7 +49,7 @@ const SupplyInput = () => {
   }, [maxSupplyFieldOnChange, supplyType])
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={4}>
+    <Grid templateColumns="repeat(3, 1fr)" columnGap={4} rowGap={2}>
       <GridItem as={FormControl} colSpan={{ base: 3, md: 2 }}>
         <FormLabel>Supply</FormLabel>
         <SegmentedControl

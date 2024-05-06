@@ -52,7 +52,7 @@ const MintPerAddressInput = () => {
   }, [mintableAmountPerUserOnChange, mintLimitType])
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={4}>
+    <Grid templateColumns="repeat(3, 1fr)" columnGap={4} rowGap={2}>
       <GridItem as={FormControl} colSpan={{ base: 3, md: 2 }}>
         <FormLabel>Claiming per address</FormLabel>
         <SegmentedControl
