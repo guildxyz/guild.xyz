@@ -40,7 +40,7 @@ const usePinata = ({
       })
       onError?.(error)
 
-      if (fieldToSetOnError) {
+      if (fieldToSetOnError && setValue) {
         setValue(fieldToSetOnError, `/guildLogos/${getRandomInt(286)}.svg`, {
           shouldTouch: true,
           shouldDirty: true,
