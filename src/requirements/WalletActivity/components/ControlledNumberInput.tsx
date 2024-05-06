@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react"
 import { useCallback, useEffect, useState } from "react"
 import { useController } from "react-hook-form"
+import getNumOfDecimals from "utils/getNumOfDecimals"
 
 type Props = {
   numberFormat?: "INT" | "FLOAT"
@@ -60,7 +61,7 @@ const ControlledNumberInput = ({
     (newValue) => {
       if (!adaptiveStepSize) return
 
-      const precision = getPrecision(newValue)
+      const precision = getNumOfDecimals(newValue)
       let newStepSize = 1 / Math.pow(10, precision)
 
       if (precision > decimalsLimit) {
@@ -85,16 +86,10 @@ const ControlledNumberInput = ({
     }
 
     const parsedValue = numberFormat === "INT" ? parseInt(newValue) : newValue
-
     const returnedValue = isNaN(parsedValue) ? "" : parsedValue
 
     props?.onChange?.(returnedValue, Number(returnedValue))
     return onChange(returnedValue)
-  }
-
-  const getPrecision = (value_: string | number) => {
-    const parts = value_?.toString().split(".")
-    return parts?.[1]?.length || 0
   }
 
   /**
@@ -123,8 +118,8 @@ const ControlledNumberInput = ({
   const replaceWithMin = (newValue) => {
     if (!props?.min) return newValue
     if (newValue < props.min) {
-      const inputPrecision = getPrecision(newValue)
-      const minPrecision = getPrecision(props.min)
+      const inputPrecision = getNumOfDecimals(newValue)
+      const minPrecision = getNumOfDecimals(props.min)
       return props.min.toFixed(Math.max(minPrecision, inputPrecision))
     }
     return newValue
@@ -134,8 +129,8 @@ const ControlledNumberInput = ({
   const replaceWithMax = (newValue) => {
     if (!props?.max) return newValue
     if (newValue > props.max) {
-      const inputPrecision = getPrecision(newValue)
-      const maxPrecision = getPrecision(props.max)
+      const inputPrecision = getNumOfDecimals(newValue)
+      const maxPrecision = getNumOfDecimals(props.max)
       return props.max.toFixed(Math.max(maxPrecision, inputPrecision))
     }
     return newValue
