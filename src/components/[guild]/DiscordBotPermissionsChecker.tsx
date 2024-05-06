@@ -67,13 +67,16 @@ const MODAL_CONTENT: Record<
     title: "Setup bot permissions",
     body: (
       <>
-        <Text>Our bot requires the</Text>
-        <UnorderedList>
-          {REQUIRED_PERMISSIONS.map((x) => (
-            <ListItem key={x}>{x}</ListItem>
-          ))}
-        </UnorderedList>
-        <Text>permissions in order to funcion properly</Text>
+        <Stack spacing={2} mb={4}>
+          <Text>
+            Our bot requires the following permissions in order to function properly:
+          </Text>
+          <UnorderedList>
+            {REQUIRED_PERMISSIONS.map((x) => (
+              <ListItem key={x}>{x}</ListItem>
+            ))}
+          </UnorderedList>
+        </Stack>
         <video src="/videos/dc-bot-permissions.webm" muted autoPlay loop>
           Your browser does not support the HTML5 video tag.
         </video>
