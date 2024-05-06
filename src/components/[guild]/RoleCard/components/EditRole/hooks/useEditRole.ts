@@ -12,7 +12,6 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
-
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()
@@ -51,15 +50,17 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         )
     )
 
+    const rolePlatformsToCreate = (rolePlatforms ?? []).filter(
+      (rolePlatform) => !("id" in rolePlatform)
+    )
+
     const rolePlatformCreations = Promise.all(
-      (rolePlatforms ?? [])
-        .filter((rolePlatform) => !("id" in rolePlatform))
-        .map((rolePlatform) =>
-          fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
-            { method: "POST", body: rolePlatform },
-          ]).catch((error) => error)
-        )
+      rolePlatformsToCreate.map((rolePlatform) =>
+        fetcherWithSign([
+          `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
+          { method: "POST", body: rolePlatform },
+        ]).catch((error) => error)
+      )
     )
 
     const [updatedRole, updatedRolePlatforms, createdRolePlatforms] =

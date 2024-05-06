@@ -126,6 +126,7 @@ const CreateGuildStepper = ({
       {...rest}
     >
       <Stepper
+        colorScheme="primary"
         index={activeStep}
         orientation={orientation}
         gap={{ base: 0, md: 2 }}

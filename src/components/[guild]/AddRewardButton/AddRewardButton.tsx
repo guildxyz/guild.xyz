@@ -19,13 +19,15 @@ import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards from "platforms/rewards"
+import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import { Requirement, RoleFormType, Visibility } from "types"
+import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import {
   AddRewardProvider,
@@ -38,8 +40,9 @@ import useGuild from "../hooks/useGuild"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useAddReward from "./hooks/useAddReward"
 import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
+import useCreateReqBasedTokenReward from "./useCreateTokenReward"
 
-type AddRewardForm = {
+export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
   requirements?: Requirement[]
@@ -54,6 +57,8 @@ const defaultValues: AddRewardForm = {
   visibility: Visibility.PUBLIC,
 }
 
+export const canCloseAddRewardModalAtom = atom(true)
+
 const AddRewardButton = (): JSX.Element => {
   const { captureEvent, startSessionRecording } = usePostHogContext()
   const { roles } = useGuild()
@@ -65,6 +70,8 @@ const AddRewardButton = (): JSX.Element => {
     onClose: onDiscardAlertClose,
   } = useDisclosure()
 
+  const canClose = useAtomValue(canCloseAddRewardModalAtom)
+
   const {
     modalRef,
     selection,
@@ -72,6 +79,7 @@ const AddRewardButton = (): JSX.Element => {
     step,
     setStep,
     activeTab,
+
     isOpen,
     onOpen,
     onClose: onAddRewardModalClose,
@@ -81,6 +89,7 @@ const AddRewardButton = (): JSX.Element => {
   const methods = useForm<AddRewardForm>({
     defaultValues,
   })
+
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const { isStuck } = useIsTabsStuck()
@@ -98,8 +107,12 @@ const AddRewardButton = (): JSX.Element => {
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
   const roleIds = useWatch({ name: "roleIds", control: methods.control })
+
+  const isRoleSelectorDisabled = selection === "ERC20"
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
+      ? !requirements?.length
+      : !roleIds?.length
 
   const toast = useToast()
 
@@ -129,11 +142,52 @@ const AddRewardButton = (): JSX.Element => {
       },
     })
 
-  const isLoading = isAddRewardLoading || isCreateRoleLoading
-
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const onSubmit = (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
+  const isERC20 = (data) =>
+    data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
+
+  const { submitCreate: submitCreateReqBased, isLoading: erc20Loading } =
+    useCreateReqBasedTokenReward({
+      onSuccess: () => {
+        toast({ status: "success", title: "Reward successfully added" })
+        onCloseAndClear()
+      },
+      onError: (err) => console.error(err),
+    })
+
+  const isLoading = isAddRewardLoading || isCreateRoleLoading || erc20Loading
+
+  const submitERC20Reward = async (
+    data: any,
+    saveAs: "DRAFT" | "PUBLIC" = "PUBLIC"
+  ) => {
+    const isRequirementBased =
+      data.rolePlatforms[0].dynamicAmount.operation.input.type ===
+      "REQUIREMENT_AMOUNT"
+
+    const guildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
+
+    if (isRequirementBased) {
+      submitCreateReqBased(data, saveAs)
+      return
+    } else {
+      /** TODO: Write when static reward is needed */
+      if (guildPlatformExists) {
+        data.rolePlatforms[0].guildPlatform = {
+          platformId: PlatformType.ERC20,
+          platformName: "ERC20",
+          platformGuildId: "",
+          platformGuildData: {},
+        }
+      }
+      return
+    }
+  }
+
+  const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
+    if (isERC20(data)) return submitERC20Reward(data, saveAs)
+
     if (data.requirements?.length > 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
@@ -171,9 +225,8 @@ const AddRewardButton = (): JSX.Element => {
   }
 
   const { AddRewardPanel, RewardPreview } = rewards[selection] ?? {}
-
+  const showErrorToast = useShowErrorToast()
   const lightModalBgColor = useColorModeValue("white", "gray.700")
-
   const rolePlatform = methods.getValues("rolePlatforms.0")
 
   return (
@@ -196,18 +249,24 @@ const AddRewardButton = (): JSX.Element => {
         <Modal
           isOpen={isOpen}
           onClose={() => {
+            if (!canClose) {
+              showErrorToast(
+                "You can't close the modal until the transaction finishes"
+              )
+              return
+            }
             if (isAddRewardPanelDirty) onDiscardAlertOpen()
             else {
               methods.reset(defaultValues)
               onAddRewardModalClose()
             }
           }}
-          size={step === "HOME" ? "4xl" : "2xl"}
+          size={step === "HOME" ? modalSizeForPlatform(selection) : "2xl"}
           scrollBehavior="inside"
           colorScheme="dark"
         >
           <ModalOverlay />
-          <ModalContent minH="550px">
+          <ModalContent minH={selection !== "ERC20" && "550px"}>
             <ModalCloseButton />
             <ModalHeader
               {...(step === "SELECT_ROLE"
@@ -275,7 +334,10 @@ const AddRewardButton = (): JSX.Element => {
               flexDir="column"
             >
               {selection && step === "SELECT_ROLE" ? (
-                <SelectRoleOrSetRequirements selectedPlatform={selection} />
+                <SelectRoleOrSetRequirements
+                  selectedPlatform={selection}
+                  isRoleSelectorDisabled={isRoleSelectorDisabled}
+                />
               ) : AddRewardPanel ? (
                 <AddRewardPanel
                   onAdd={(createdRolePlatform) => {
@@ -283,6 +345,12 @@ const AddRewardButton = (): JSX.Element => {
                       ...createdRolePlatform,
                       visibility,
                     })
+                    if (createdRolePlatform?.requirements?.length > 0) {
+                      methods.setValue(
+                        "requirements",
+                        createdRolePlatform.requirements
+                      )
+                    }
                     setStep("SELECT_ROLE")
                   }}
                   skipSettings

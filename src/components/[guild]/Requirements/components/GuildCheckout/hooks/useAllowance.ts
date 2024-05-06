@@ -15,7 +15,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
 
   const enabled = Boolean(
     tokenAddress &&
-      requirement?.chain === Chains[chainId] &&
+      (!requirement || requirement?.chain === Chains[chainId]) &&
       tokenAddress !== NULL_ADDRESS
   )
 
