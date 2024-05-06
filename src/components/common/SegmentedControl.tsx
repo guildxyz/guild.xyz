@@ -28,7 +28,8 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
   options,
   ...useRadioGroupProps
 }: Props<TOption>) => {
-  const bgColor = useColorModeValue("white", "blackAlpha")
+  const bgColor = useColorModeValue("white", "blackAlpha.300")
+  const borderWidth = useColorModeValue(1, 0)
 
   const { getRadioProps, getRootProps } = useRadioGroup({
     ...useRadioGroupProps,
@@ -41,7 +42,7 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
   return (
     <HStack
       width="full"
-      borderWidth={1}
+      borderWidth={borderWidth}
       bgColor={bgColor}
       borderRadius="lg"
       height={10}
