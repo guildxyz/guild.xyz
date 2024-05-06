@@ -15,10 +15,7 @@ const useSetRoleImageAndNameFromPlatformData = (
   const { setValue } = useFormContext()
 
   const { onUpload } = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      if (IpfsHash)
-        setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
-    },
+    fieldToSetOnSuccess: "imageUrl",
   })
 
   useEffect(() => {
