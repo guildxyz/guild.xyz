@@ -1,8 +1,9 @@
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useCallback } from "react"
 import pinFileToIPFS, {
-  PinataPinFileResponse,
   PinToIPFSProps,
+  PinataPinFileResponse,
 } from "./utils/pinataUpload"
 
 type Props = Partial<{
@@ -15,23 +16,28 @@ export type Uploader = {
   isUploading: boolean
 }
 
+const submit = (ipfsProps: PinToIPFSProps) => pinFileToIPFS(ipfsProps)
+
 const usePinata = ({ onError, onSuccess }: Props = {}): Uploader => {
   const toast = useToast()
 
-  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(
-    (ipfsProps: PinToIPFSProps) => pinFileToIPFS(ipfsProps),
-    {
-      onSuccess,
-      onError: (error) => {
-        toast({
-          status: "error",
-          title: "Failed to upload image",
-          description: error,
-        })
-        onError?.(error)
-      },
-    }
+  const wrappedOnError = useCallback(
+    (error) => {
+      toast({
+        status: "error",
+        title: "Failed to upload image",
+        description: error,
+      })
+      onError?.(error)
+    },
+    // toast is left out intentionally
+    [onError]
   )
+
+  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(submit, {
+    onSuccess,
+    onError: wrappedOnError,
+  })
 
   return { isUploading, onUpload }
 }
