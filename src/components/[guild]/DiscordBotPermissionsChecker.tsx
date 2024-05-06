@@ -72,8 +72,8 @@ const MODAL_CONTENT: Record<
             Our bot requires the following permissions in order to function properly:
           </Text>
           <UnorderedList>
-            {REQUIRED_PERMISSIONS.map((x) => (
-              <ListItem key={x}>{x}</ListItem>
+            {REQUIRED_PERMISSIONS.map((permission) => (
+              <ListItem key={permission}>{permission}</ListItem>
             ))}
           </UnorderedList>
         </Stack>
