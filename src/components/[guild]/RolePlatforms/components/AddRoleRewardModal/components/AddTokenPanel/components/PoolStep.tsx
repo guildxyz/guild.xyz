@@ -19,24 +19,31 @@ import useTokenData from "hooks/useTokenData"
 import { useSetAtom } from "jotai"
 import useRegisterPool from "platforms/Token/hooks/useRegisterPool"
 import { useEffect, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
+import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Token from "static/icons/token.svg"
-import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import {
+  ERC20_CONTRACTS,
+  MIN_TOKEN_AMOUNT,
+  NULL_ADDRESS,
+} from "utils/guildCheckout/constants"
 import { parseUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import { AddTokenFormType } from "../AddTokenPanel"
 import useIsBalanceSufficient from "../hooks/useIsBalanceSufficient"
 import AllowanceButton from "./AllowanceButton"
-import ConversionNumberInput from "./ConversionNumberInput"
 
 const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const chain = useWatch({ name: `chain` })
   const tokenAddress = useWatch({ name: `tokenAddress` })
   const imageUrl = useWatch({ name: `imageUrl` })
 
+  const { setValue } = useFormContext()
   const { chainId, address: userAddress } = useAccount()
-  const [amount, setAmount] = useState("1")
+  const {
+    field: { value: amount },
+  } = useController({ name: "amount" })
+
   const [skip, setSkip] = useState(false)
 
   const setCanClose = useSetAtom(canCloseAddRewardModalAtom)
@@ -51,7 +58,6 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     amount: amount,
   })
 
-  const { setValue } = useFormContext<AddTokenFormType>()
   const formattedAmount =
     !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
 
@@ -108,7 +114,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
   const isOnCorrectChain = Number(Chains[chain]) === chainId
 
   const handleDepositLater = () => {
-    if (!skip) setAmount("0")
+    if (!skip) setValue("amount", "0")
     setSkip(!skip)
   }
 
@@ -131,9 +137,10 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
               )}
             </InputLeftElement>
 
-            <ConversionNumberInput
-              value={amount}
-              setValue={setAmount}
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              name="amount"
+              min={MIN_TOKEN_AMOUNT}
               isDisabled={skip}
             />
           </InputGroup>

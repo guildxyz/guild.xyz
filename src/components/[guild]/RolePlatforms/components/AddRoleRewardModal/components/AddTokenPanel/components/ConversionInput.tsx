@@ -16,6 +16,7 @@ import { useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Star from "static/icons/star.svg"
 import Token from "static/icons/token.svg"
+import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
 
 const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   const { control, setValue } = useFormContext()
@@ -58,10 +59,12 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
     }
   }
 
-  const tokenPreviewChange = (valueAsString, valeAsNumber) => {
+  const tokenPreviewChange = (valueAsString, valueAsNumber) => {
     if (conversionLocked) {
       const pointPreviewValue = parseFloat(
-        (valeAsNumber * multiplier).toFixed(6)
+        (valueAsNumber * multiplier).toFixed(
+          MIN_TOKEN_AMOUNT.toString().split(".")[1]?.length || 0
+        )
       ).toString()
       setValue("pointPreview", pointPreviewValue)
     }
@@ -107,19 +110,21 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
 
           {conversionLocked ? (
             <ControlledNumberInput
+              numberFormat="FLOAT"
               onChange={tokenPreviewChange}
               name={"tokenPreview"}
               adaptiveStepSize
               numberInputFieldProps={{ pr: 0, pl: 10 }}
-              min={0.000001}
+              min={MIN_TOKEN_AMOUNT}
             />
           ) : (
             <ControlledNumberInput
+              numberFormat="FLOAT"
               onChange={(valString) => updateConversionRate(valString, "token")}
               name={"tokenAmount"}
               adaptiveStepSize
               numberInputFieldProps={{ pr: 0, pl: 10 }}
-              min={0.000001}
+              min={MIN_TOKEN_AMOUNT}
             />
           )}
         </InputGroup>
@@ -139,19 +144,21 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
 
           {conversionLocked ? (
             <ControlledNumberInput
+              numberFormat="FLOAT"
               name={"pointPreview"}
               adaptiveStepSize
               numberInputFieldProps={{ pr: 0, pl: 10 }}
-              min={0.000001}
+              min={MIN_TOKEN_AMOUNT}
               isReadOnly
             />
           ) : (
             <ControlledNumberInput
+              numberFormat="FLOAT"
               onChange={(valString) => updateConversionRate(valString, "point")}
               name={"pointAmount"}
               adaptiveStepSize
               numberInputFieldProps={{ pr: 0, pl: 10 }}
-              min={0.000001}
+              min={MIN_TOKEN_AMOUNT}
             />
           )}
         </InputGroup>

@@ -4,6 +4,7 @@ import useUser from "components/[guild]/hooks/useUser"
 import useMembership from "components/explorer/hooks/useMembership"
 import useTokenData from "hooks/useTokenData"
 import { GuildPlatform, RolePlatform } from "types"
+import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
 import useRolePlatformsOfReward from "./useRolePlatformsOfReward"
 import useTokenClaimedAmount from "./useTokenClaimedAmount"
 
@@ -26,7 +27,7 @@ const calcRequirementAmount = (
     (
       (leaderboardValue * dynamicAmount?.operation?.params.multiplier +
         dynamicAmount?.operation?.params.addition) as number
-    ).toFixed(6)
+    ).toFixed(MIN_TOKEN_AMOUNT.toString().split(".")[1]?.length || 0)
   )
 }
 

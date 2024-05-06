@@ -27,6 +27,8 @@ export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 
 export const GUILD_FEE_PERCENTAGE = 0.01
 
+export const MIN_TOKEN_AMOUNT = 0.000001
+
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000"

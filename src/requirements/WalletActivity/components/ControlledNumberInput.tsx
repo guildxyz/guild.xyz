@@ -7,7 +7,7 @@ import {
   NumberInputProps,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useController } from "react-hook-form"
 
 type Props = {
@@ -56,27 +56,28 @@ const ControlledNumberInput = ({
    * 1.001, the step size will be set to 0.001, therefore the next step up will be
    * 1.002.
    */
-  const updateStepSize = (newValue) => {
-    if (!adaptiveStepSize) return
+  const updateStepSize = useCallback(
+    (newValue) => {
+      if (!adaptiveStepSize) return
 
-    const precision = getPrecision(newValue)
-    let newStepSize = 1 / Math.pow(10, precision)
+      const precision = getPrecision(newValue)
+      let newStepSize = 1 / Math.pow(10, precision)
 
-    if (precision > decimalsLimit) {
-      newValue = Number(newValue).toFixed(decimalsLimit).toString()
-      newStepSize = 1 / Math.pow(10, precision - 1)
-    }
-    setStepSize(newStepSize)
-  }
+      if (precision > decimalsLimit) {
+        newValue = Number(newValue).toFixed(decimalsLimit).toString()
+        newStepSize = 1 / Math.pow(10, precision - 1)
+      }
+      setStepSize(newStepSize)
+    },
+    [decimalsLimit, adaptiveStepSize]
+  )
 
   useEffect(() => {
     updateStepSize(value)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [updateStepSize, value])
 
   const handleChange = (newValue) => {
-    updateStepSize(newValue)
-
     // We need this to allow typing in a decimal point
     if (/^[0-9]*\.[0-9]*0*$/i.test(newValue)) {
       props?.onChange?.(newValue, Number(newValue))
