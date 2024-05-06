@@ -13,27 +13,31 @@ import useTokenData from "hooks/useTokenData"
 import { ArrowRight, Lock, LockOpen } from "phosphor-react"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Star from "static/icons/star.svg"
 import Token from "static/icons/token.svg"
-import { AddTokenFormType } from "../AddTokenPanel"
-import ConversionNumberInput from "./ConversionNumberInput"
 
 const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
-  const { control, setValue } = useFormContext<AddTokenFormType>()
+  const { control, setValue } = useFormContext()
 
   const [conversionLocked, setConversionLocked] = useState(false)
-  const [conversionAmounts, setConversionAmounts] = useState([
-    "1",
-    defaultValue || "1",
-  ])
-  const [conversionRate, setConversionRate] = useState(1.0)
 
   const pointsPlatforms = useAccessedGuildPoints()
-
   const pointsPlatformId = useWatch({ name: "data.guildPlatformId", control })
   const imageUrl = useWatch({ name: `imageUrl`, control })
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `tokenAddress`, control })
+  const tokenAmount = useWatch({ name: `tokenAmount`, control })
+  const pointAmount = useWatch({ name: `pointAmount`, control })
+  const tokenPreview = useWatch({ name: `tokenPreview`, control })
+  const pointPreview = useWatch({ name: `pointPreview`, control })
+  const multiplier = useWatch({ name: `multiplier`, control })
+
+  useEffect(() => {
+    setValue("tokenAmount", "1")
+    setValue("pointAmount", defaultValue || "1")
+    setValue("multiplier", Number(defaultValue) || 1)
+  }, [defaultValue, setValue])
 
   const selectedPointsPlatform = pointsPlatforms.find(
     (gp) => gp.id === pointsPlatformId
@@ -42,24 +46,33 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
     data: { logoURI: tokenLogo },
   } = useTokenData(chain, address)
 
-  useEffect(() => {
-    if (conversionLocked) return
-    const convRate = Number(conversionAmounts[1]) / Number(conversionAmounts[0])
-    setValue("multiplier", convRate)
-  }, [conversionAmounts, setValue, conversionLocked])
-
   const toggleConversionLock = () => {
     if (conversionLocked) {
       setConversionLocked(false)
-      setConversionAmounts([conversionAmounts[0], calculatePreview()])
+      setValue("tokenAmount", tokenPreview)
+      setValue("pointAmount", pointPreview)
     } else {
-      setConversionRate(Number(conversionAmounts[1]) / Number(conversionAmounts[0]))
       setConversionLocked(true)
+      setValue("tokenPreview", tokenAmount)
+      setValue("pointPreview", pointAmount)
     }
   }
 
-  const calculatePreview = () =>
-    parseFloat((Number(conversionAmounts[0]) * conversionRate).toFixed(6)).toString()
+  const tokenPreviewChange = (valueAsString, valeAsNumber) => {
+    if (conversionLocked) {
+      const pointPreviewValue = parseFloat(
+        (valeAsNumber * multiplier).toFixed(6)
+      ).toString()
+      setValue("pointPreview", pointPreviewValue)
+    }
+  }
+
+  const updateConversionRate = (value: string, tokenOrPoint: "token" | "point") => {
+    if (conversionLocked) return
+    const pointValue = Number(tokenOrPoint === "point" ? value : pointAmount)
+    const tokenValue = Number(tokenOrPoint === "token" ? value : tokenAmount)
+    setValue("multiplier", pointValue / tokenValue)
+  }
 
   return (
     <>
@@ -92,10 +105,23 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
             )}
           </InputLeftElement>
 
-          <ConversionNumberInput
-            value={conversionAmounts[0]}
-            setValue={(val) => setConversionAmounts([val, conversionAmounts[1]])}
-          />
+          {conversionLocked ? (
+            <ControlledNumberInput
+              onChange={tokenPreviewChange}
+              name={"tokenPreview"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              min={0.000001}
+            />
+          ) : (
+            <ControlledNumberInput
+              onChange={(valString) => updateConversionRate(valString, "token")}
+              name={"tokenAmount"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              min={0.000001}
+            />
+          )}
         </InputGroup>
 
         <Circle background={"whiteAlpha.200"} p="1">
@@ -111,15 +137,23 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
             )}
           </InputLeftElement>
 
-          <ConversionNumberInput
-            value={conversionLocked ? calculatePreview() : conversionAmounts[1]}
-            setValue={
-              conversionLocked
-                ? () => {}
-                : (val) => setConversionAmounts([conversionAmounts[0], val])
-            }
-            isReadOnly={conversionLocked}
-          />
+          {conversionLocked ? (
+            <ControlledNumberInput
+              name={"pointPreview"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              min={0.000001}
+              isReadOnly
+            />
+          ) : (
+            <ControlledNumberInput
+              onChange={(valString) => updateConversionRate(valString, "point")}
+              name={"pointAmount"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              min={0.000001}
+            />
+          )}
         </InputGroup>
       </HStack>
     </>

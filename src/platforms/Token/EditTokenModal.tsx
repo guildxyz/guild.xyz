@@ -60,9 +60,9 @@ const EditTokenModal = ({
   const rolePlatforms = useRolePlatformsOfReward(id)
 
   const role = roles.find((rl) =>
-    rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)
+    rl.rolePlatforms.find((rp) => rp.id === rolePlatforms?.[0]?.id)
   )
-  const { data: requirements } = useRequirements(role.id)
+  const { data: requirements } = useRequirements(role?.id)
   const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
 
   const { captureEvent } = usePostHogContext()
@@ -72,8 +72,8 @@ const EditTokenModal = ({
   }
 
   const multiplier = useMemo(() => {
-    const rp: any = rolePlatforms[0]
-    return rp.dynamicAmount.operation.params.multiplier
+    const rp: any = rolePlatforms?.[0]
+    return rp ? rp.dynamicAmount.operation.params.multiplier : 1.0
   }, [rolePlatforms])
 
   const {
@@ -87,11 +87,11 @@ const EditTokenModal = ({
 
   const { onSubmit: submitEditRolePlatform, isLoading: rpIsLoading } =
     useEditRolePlatform({
-      rolePlatformId: rolePlatforms[0].id,
+      rolePlatformId: rolePlatforms?.[0]?.id,
       onSuccess: () => {
         captureEvent("editToken(EditRolePlatform) Updated role platform", {
           ...postHogOptions,
-          rolePlatformId: rolePlatforms[0].id,
+          rolePlatformId: rolePlatforms?.[0]?.id,
         })
         toast({
           status: "success",
@@ -101,11 +101,11 @@ const EditTokenModal = ({
     })
 
   const { onSubmit: submitEditRequirement, isLoading: reqIsLoading } =
-    useEditRequirement(role.id, {
+    useEditRequirement(role?.id, {
       onSuccess: () => {
         captureEvent("editToken(EditRequirement) Updated requirement", {
           ...postHogOptions,
-          roleId: role.id,
+          roleId: role?.id,
         })
         toast({
           status: "success",
@@ -136,7 +136,7 @@ const EditTokenModal = ({
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const onEditSubmit = async (data) => {
-    const modifiedRolePlatform: any = { ...rolePlatforms[0] }
+    const modifiedRolePlatform: any = { ...rolePlatforms?.[0] }
 
     // Create new snapshot if currently does not exist
     if (!snapshotRequirement) {
