@@ -47,7 +47,10 @@ import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import ImagePicker from "./components/ImagePicker"
+import MintPerAddressInput from "./components/MintPerAddressInput"
+import NftTypeInput from "./components/NftTypeInput"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
+import SupplyInput from "./components/SupplyInput"
 import useCreateNft, {
   CONTRACT_CALL_SUPPORTED_CHAINS,
   ContractCallSupportedChain,
@@ -67,6 +70,9 @@ export type CreateNftFormType = {
   richTextDescription?: string
   image: File
   attributes: { name: string; value: string }[]
+  maxSupply: number
+  mintableAmountPerUser: number
+  soulbound: "true" | "false" // Chakra's radio can only handle strings unfortunately
 }
 
 const CreateNftForm = ({ onSuccess }: Props) => {
@@ -263,6 +269,12 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   </Button>
                 </Stack>
               </FormControl>
+
+              <Divider />
+
+              <SupplyInput />
+              <MintPerAddressInput />
+              <NftTypeInput />
 
               <Divider />
 

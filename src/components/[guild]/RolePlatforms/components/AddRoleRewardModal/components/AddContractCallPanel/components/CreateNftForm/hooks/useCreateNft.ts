@@ -11,7 +11,7 @@ import { mutate } from "swr"
 import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt, parseUnits } from "viem"
+import { TransactionReceipt, WriteContractParameters, parseUnits } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 import { CreateNftFormType } from "../CreateNftForm"
@@ -106,23 +106,31 @@ const useCreateNft = (
     const { name, tokenTreasury, price } = data
     const trimmedName = name.trim()
 
-    // name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
+    // { string name; string symbol; string cid; address tokenOwner; address payable treasury; uint256 tokenFee; bool soulbound; uint256 mintableAmountPerUser; }
     const contractCallParams = [
-      trimmedName,
-      "",
-      metadataCID,
-      address,
-      tokenTreasury,
-      parseUnits(
-        price?.toString() ?? "0",
-        CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
-      ),
-    ] as const
+      {
+        name: trimmedName,
+        symbol: "",
+        cid: metadataCID,
+        tokenOwner: address,
+        treasury: tokenTreasury,
+        tokenFee: parseUnits(
+          price.toString(),
+          CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
+        ),
+        maxSupply: BigInt(data.maxSupply),
+        mintableAmountPerUser: BigInt(data.mintableAmountPerUser),
+        soulbound: data.soulbound === "true",
+      },
+    ] as const satisfies WriteContractParameters<
+      typeof guildRewardNFTFacotryAbi,
+      "deployConfigurableNFT"
+    >["args"]
 
     const { request } = await publicClient.simulateContract({
       abi: guildRewardNFTFacotryAbi,
       address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
-      functionName: "deployBasicNFT",
+      functionName: "deployConfigurableNFT",
       args: contractCallParams,
     })
 
@@ -132,7 +140,6 @@ const useCreateNft = (
 
     const hash = await walletClient.writeContract({
       ...request,
-      account: walletClient.account,
     })
 
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
