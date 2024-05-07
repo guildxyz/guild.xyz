@@ -21,7 +21,7 @@ import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import { Chains } from "wagmiConfig/chains"
 import useNftDetails from "../../hooks/useNftDetails"
 import CollectNftButton from "./components/CollectNftButton"
-import CollectNftFeesTable from "./components/CollectNftFeesTable"
+import NftFeesTable from "./components/NftFeesTable"
 
 const availibiltyTagStyleProps = {
   bgColor: "transparent",
@@ -50,7 +50,7 @@ const CollectNft = () => {
 
   return (
     <Stack p={padding} w="full" alignItems="center" spacing={4}>
-      <CollectNftFeesTable bgColor={tableBgColor} />
+      <NftFeesTable bgColor={tableBgColor} />
 
       <Stack w="full" spacing={2}>
         <ConnectWalletButton />

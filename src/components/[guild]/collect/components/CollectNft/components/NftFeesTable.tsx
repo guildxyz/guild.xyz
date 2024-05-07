@@ -10,7 +10,7 @@ type Props = {
   bgColor?: string
 }
 
-const CollectNftFeesTable = ({ bgColor }: Props) => {
+const NftFeesTable = ({ bgColor }: Props) => {
   const { chain, nftAddress } = useCollectNftContext()
 
   const { guildFee } = useGuildFee(chain)
@@ -96,4 +96,4 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
   )
 }
 
-export default CollectNftFeesTable
+export default NftFeesTable
