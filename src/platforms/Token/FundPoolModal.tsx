@@ -107,79 +107,76 @@ const FundPoolModal = ({
     `Only the requirement's original creator can fund (${shortenHex(owner)})`
 
   return (
-    <>
-      <FormProvider {...methods}>
-        <Modal isOpen={isOpen} onClose={handleClose} finalFocusRef={finalFocusRef}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalCloseButton />
-            <ModalHeader>
-              <Text>Fund pool</Text>
-            </ModalHeader>
+    <FormProvider {...methods}>
+      <Modal isOpen={isOpen} onClose={handleClose} finalFocusRef={finalFocusRef}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalCloseButton />
+          <ModalHeader>
+            <Text>Fund pool</Text>
+          </ModalHeader>
 
-            <ModalBody>
-              <Stack gap={5}>
-                <PoolInformation balance={balance} owner={owner} symbol={symbol} />
-                <Divider />
-                <FormControl>
-                  <FormLabel>Amount to deposit</FormLabel>
-                  <InputGroup>
-                    <InputLeftElement>
-                      {imageUrl ? (
-                        <OptionImage img={imageUrl} alt={chain} />
-                      ) : (
-                        <Token />
-                      )}
-                    </InputLeftElement>
+          <ModalBody>
+            <Stack gap={5}>
+              <PoolInformation balance={balance} owner={owner} symbol={symbol} />
+              <Divider />
+              <FormControl>
+                <FormLabel>Amount to deposit</FormLabel>
+                <InputGroup>
+                  <InputLeftElement>
+                    {imageUrl ? (
+                      <OptionImage img={imageUrl} alt={chain} />
+                    ) : (
+                      <Token />
+                    )}
+                  </InputLeftElement>
 
-                    <ControlledNumberInput
-                      defaultValue={"1"}
-                      name="amount"
-                      adaptiveStepSize
-                      w="full"
-                      numberFormat="FLOAT"
-                      numberInputFieldProps={{ pl: 10 }}
-                      min={MIN_TOKEN_AMOUNT}
-                    />
-                  </InputGroup>
-                </FormControl>
-
-                <Stack>
-                  <AllowanceButton
-                    chain={chain}
-                    token={tokenAddress}
-                    contract={ERC20_CONTRACTS[chain]}
+                  <ControlledNumberInput
+                    defaultValue={"1"}
+                    name="amount"
+                    adaptiveStepSize
+                    w="full"
+                    numberFormat="FLOAT"
+                    numberInputFieldProps={{ pl: 10 }}
+                    min={MIN_TOKEN_AMOUNT}
                   />
+                </InputGroup>
+              </FormControl>
 
-                  <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+              <Stack>
+                <AllowanceButton
+                  chain={chain}
+                  token={tokenAddress}
+                  contract={ERC20_CONTRACTS[chain]}
+                />
 
-                  <Collapse
-                    in={
-                      isOnCorrectChain &&
-                      (pickedCurrencyIsNative ? true : !!allowance)
-                    }
-                  >
-                    <Tooltip label={isDisabledLabel} hasArrow>
-                      <Button
-                        size="lg"
-                        width="full"
-                        colorScheme="indigo"
-                        isDisabled={!isBalanceSufficient || !!isDisabledLabel}
-                        onClick={onSubmitFund}
-                        isLoading={isLoading}
-                        loadingText="Funding pool..."
-                      >
-                        {isBalanceSufficient ? "Fund" : "Insufficient balance"}
-                      </Button>
-                    </Tooltip>
-                  </Collapse>
-                </Stack>
+                <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
+
+                <Collapse
+                  in={
+                    isOnCorrectChain && (pickedCurrencyIsNative ? true : !!allowance)
+                  }
+                >
+                  <Tooltip label={isDisabledLabel} hasArrow>
+                    <Button
+                      size="lg"
+                      width="full"
+                      colorScheme="indigo"
+                      isDisabled={!isBalanceSufficient || !!isDisabledLabel}
+                      onClick={onSubmitFund}
+                      isLoading={isLoading}
+                      loadingText="Funding pool..."
+                    >
+                      {isBalanceSufficient ? "Fund" : "Insufficient balance"}
+                    </Button>
+                  </Tooltip>
+                </Collapse>
               </Stack>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      </FormProvider>
-    </>
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </FormProvider>
   )
 }
 
