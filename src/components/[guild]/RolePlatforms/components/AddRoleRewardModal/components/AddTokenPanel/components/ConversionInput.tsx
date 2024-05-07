@@ -12,14 +12,31 @@ import OptionImage from "components/common/StyledSelect/components/CustomSelectO
 import useTokenData from "hooks/useTokenData"
 import { ArrowRight, Lock, LockOpen } from "phosphor-react"
 import { useEffect, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Star from "static/icons/star.svg"
 import Token from "static/icons/token.svg"
 import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
 
+type ConversionForm = {
+  tokenAmount: string
+  tokenPreview: string
+  pointAmount: string
+  pointPreview: string
+}
+
 const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   const { control, setValue } = useFormContext()
+
+  const methods = useForm<ConversionForm>({
+    mode: "all",
+    defaultValues: {
+      tokenAmount: "1",
+      pointAmount: defaultValue || "1",
+    },
+  })
+
+  const { control: subformControl, setValue: setSubformValue } = methods
 
   const [conversionLocked, setConversionLocked] = useState(false)
 
@@ -28,15 +45,14 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   const imageUrl = useWatch({ name: `imageUrl`, control })
   const chain = useWatch({ name: `chain`, control })
   const address = useWatch({ name: `tokenAddress`, control })
-  const tokenAmount = useWatch({ name: `tokenAmount`, control })
-  const pointAmount = useWatch({ name: `pointAmount`, control })
-  const tokenPreview = useWatch({ name: `tokenPreview`, control })
-  const pointPreview = useWatch({ name: `pointPreview`, control })
   const multiplier = useWatch({ name: `multiplier`, control })
 
+  const tokenAmount = useWatch({ name: `tokenAmount`, control: subformControl })
+  const pointAmount = useWatch({ name: `pointAmount`, control: subformControl })
+  const tokenPreview = useWatch({ name: `tokenPreview`, control: subformControl })
+  const pointPreview = useWatch({ name: `pointPreview`, control: subformControl })
+
   useEffect(() => {
-    setValue("tokenAmount", "1")
-    setValue("pointAmount", defaultValue || "1")
     setValue("multiplier", Number(defaultValue) || 1)
   }, [defaultValue, setValue])
 
@@ -50,12 +66,12 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   const toggleConversionLock = () => {
     if (conversionLocked) {
       setConversionLocked(false)
-      setValue("tokenAmount", tokenPreview)
-      setValue("pointAmount", pointPreview)
+      setSubformValue("tokenAmount", tokenPreview)
+      setSubformValue("pointAmount", pointPreview)
     } else {
       setConversionLocked(true)
-      setValue("tokenPreview", tokenAmount)
-      setValue("pointPreview", pointAmount)
+      setSubformValue("tokenPreview", tokenAmount)
+      setSubformValue("pointPreview", pointAmount)
     }
   }
 
@@ -66,7 +82,7 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
           MIN_TOKEN_AMOUNT.toString().split(".")[1]?.length || 0
         )
       ).toString()
-      setValue("pointPreview", pointPreviewValue)
+      setSubformValue("pointPreview", pointPreviewValue)
     }
   }
 
@@ -78,7 +94,7 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   }
 
   return (
-    <>
+    <FormProvider {...methods}>
       <HStack justifyContent={"space-between"}>
         <FormLabel>Conversion</FormLabel>
         <IconButton
@@ -163,7 +179,7 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
           )}
         </InputGroup>
       </HStack>
-    </>
+    </FormProvider>
   )
 }
 
