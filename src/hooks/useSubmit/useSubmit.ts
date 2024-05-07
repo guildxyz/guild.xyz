@@ -5,7 +5,7 @@ import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
 import {
@@ -46,8 +46,8 @@ const useSubmit = <DataType, ResponseType>(
   const [error, setError] = useState<any>(undefined)
   const [response, setResponse] = useState<ResponseType>(undefined)
 
-  const onSubmit = useCallback(
-    (data?: DataType): Promise<ResponseType> => {
+  return {
+    onSubmit: (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
       return fetch(data)
@@ -66,11 +66,6 @@ const useSubmit = <DataType, ResponseType>(
         })
         .finally(() => setIsLoading(false))
     },
-    [allowThrow, fetch, onError, onSuccess]
-  )
-
-  return {
-    onSubmit,
     response,
     isLoading,
     error,

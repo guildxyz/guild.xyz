@@ -10,16 +10,23 @@ import Button from "components/common/Button"
 import useDropzone from "hooks/useDropzone"
 import usePinata from "hooks/usePinata"
 import { useState } from "react"
-import { useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import Photo from "static/icons/photo.svg"
+import { SecretTextRewardForm } from "../SecretTextDataForm"
 
 const RewardImagePicker = ({ defaultIcon }) => {
+  const { setValue } = useFormContext<SecretTextRewardForm>()
+
   const iconButtonBgColor = useColorModeValue("gray.700", "blackAlpha.300")
   const iconButtonHoverBgColor = useColorModeValue("gray.600", "blackAlpha.200")
   const iconButtonActiveBgColor = useColorModeValue("gray.500", "blackAlpha.100")
   const spinnerBgColor = useColorModeValue("whiteAlpha.700", "blackAlpha.700")
 
-  const { onUpload, isUploading } = usePinata({ fieldToSetOnSuccess: "imageUrl" })
+  const { onUpload, isUploading } = usePinata({
+    onSuccess: ({ IpfsHash }) => {
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
+    },
+  })
 
   const imageUrl = useWatch({ name: "imageUrl" })
 

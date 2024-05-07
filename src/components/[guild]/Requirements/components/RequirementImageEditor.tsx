@@ -3,7 +3,7 @@ import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { Upload, X } from "phosphor-react"
-import { PropsWithChildren, useCallback, useState } from "react"
+import { PropsWithChildren, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useRequirementContext } from "./RequirementContext"
 
@@ -25,17 +25,11 @@ const RequirementImageEditor = ({
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const onSuccess = useCallback(
-    ({ IpfsHash }) => onSave(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
-    [onSave]
-  )
-
-  const onError = useCallback(
-    () => showErrorToast("Couldn't upload image"),
-    [showErrorToast]
-  )
-
-  const uploader = usePinata({ onSuccess, onError })
+  const uploader = usePinata({
+    onSuccess: ({ IpfsHash }) =>
+      onSave(`${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
+    onError: () => showErrorToast("Couldn't upload image"),
+  })
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,

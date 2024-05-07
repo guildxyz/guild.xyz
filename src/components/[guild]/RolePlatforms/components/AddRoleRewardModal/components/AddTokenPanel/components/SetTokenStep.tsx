@@ -3,7 +3,7 @@ import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useTokenData from "hooks/useTokenData"
 import { Upload, X } from "phosphor-react"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { useFormContext, useWatch } from "react-hook-form"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -34,14 +34,10 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const onError = useCallback(
-    () => showErrorToast("Couldn't upload image"),
-    [showErrorToast]
-  )
-
   const uploader = usePinata({
-    fieldToSetOnSuccess: "imageUrl",
-    onError,
+    onSuccess: ({ IpfsHash }) =>
+      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`),
+    onError: () => showErrorToast("Couldn't upload image"),
   })
 
   const { getRootProps, getInputProps } = useDropzone({
