@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Divider,
   HStack,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,6 +17,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
@@ -26,14 +28,17 @@ import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModa
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { SectionTitle } from "components/common/Section"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
+import { Star } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
-import { useMemo, useState } from "react"
+import { ReactNode, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import Token from "static/icons/token.svg"
 import { Requirement } from "types"
 import DynamicTypeForm from "./DynamicTypeForm"
 import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
@@ -46,7 +51,11 @@ const EditTokenModal = ({
   onClose: () => void
 }) => {
   const {
+    token: {
+      data: { symbol },
+    },
     guildPlatform: { id },
+    imageUrl,
   } = useTokenRewardContext()
 
   const [changeSnapshot, setChangeSnapshot] = useState(false)
@@ -64,6 +73,22 @@ const EditTokenModal = ({
   )
   const { data: requirements } = useRequirements(role?.id)
   const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
+  const pointsPlatformId: number = snapshotRequirement?.data?.guildPlatformId
+
+  const pointsPlatforms = useAccessedGuildPoints()
+  const selectedPointsPlatform = pointsPlatforms.find(
+    (gp) => gp.id === pointsPlatformId
+  )
+
+  const pointsPlatformImage: ReactNode = selectedPointsPlatform?.platformGuildData
+    ?.imageUrl ? (
+    <OptionImage
+      img={selectedPointsPlatform?.platformGuildData?.imageUrl}
+      alt={selectedPointsPlatform?.platformGuildData?.name ?? "Point type image"}
+    />
+  ) : (
+    <Icon as={Star} />
+  )
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {
@@ -245,7 +270,18 @@ const EditTokenModal = ({
                 <Divider />
                 <Stack gap={0}>
                   <SectionTitle title={"Change conversion"} mb={2} />
-                  <ConversionInput defaultValue={multiplier.toString()} />
+                  <ConversionInput
+                    name="multiplier"
+                    toImage={
+                      imageUrl ? (
+                        <OptionImage img={imageUrl} alt={symbol} />
+                      ) : (
+                        <Token />
+                      )
+                    }
+                    fromImage={pointsPlatformImage}
+                    defaultMultiplier={multiplier}
+                  />
                 </Stack>
 
                 <Button

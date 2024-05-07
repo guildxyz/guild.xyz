@@ -2,20 +2,14 @@ import {
   Circle,
   FormLabel,
   HStack,
-  Icon,
   IconButton,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useTokenData from "hooks/useTokenData"
 import { ArrowRight, Lock, LockOpen } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
-import Star from "static/icons/star.svg"
-import Token from "static/icons/token.svg"
 import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
 
 type ConversionForm = {
@@ -25,27 +19,33 @@ type ConversionForm = {
   pointPreview: string
 }
 
-const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
+type Props = {
+  name: string
+  fromImage: ReactNode
+  toImage: ReactNode
+  defaultMultiplier?: number
+}
+
+const ConversionInput = ({
+  name,
+  fromImage,
+  toImage,
+  defaultMultiplier = 1,
+}: Props) => {
   const { control, setValue } = useFormContext()
 
   const methods = useForm<ConversionForm>({
     mode: "all",
     defaultValues: {
       tokenAmount: "1",
-      pointAmount: defaultValue || "1",
+      pointAmount: defaultMultiplier.toString(),
     },
   })
 
   const { control: subformControl, setValue: setSubformValue } = methods
-
   const [conversionLocked, setConversionLocked] = useState(false)
 
-  const pointsPlatforms = useAccessedGuildPoints()
-  const pointsPlatformId = useWatch({ name: "data.guildPlatformId", control })
-  const imageUrl = useWatch({ name: `imageUrl`, control })
-  const chain = useWatch({ name: `chain`, control })
-  const address = useWatch({ name: `tokenAddress`, control })
-  const multiplier = useWatch({ name: `multiplier`, control })
+  const multiplier = useWatch({ name, control })
 
   const tokenAmount = useWatch({ name: `tokenAmount`, control: subformControl })
   const pointAmount = useWatch({ name: `pointAmount`, control: subformControl })
@@ -53,15 +53,8 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
   const pointPreview = useWatch({ name: `pointPreview`, control: subformControl })
 
   useEffect(() => {
-    setValue("multiplier", Number(defaultValue) || 1)
-  }, [defaultValue, setValue])
-
-  const selectedPointsPlatform = pointsPlatforms.find(
-    (gp) => gp.id === pointsPlatformId
-  )
-  const {
-    data: { logoURI: tokenLogo },
-  } = useTokenData(chain, address)
+    setValue(name, defaultMultiplier || 1)
+  }, [defaultMultiplier, setValue, name])
 
   const toggleConversionLock = () => {
     if (conversionLocked) {
@@ -110,19 +103,7 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
 
       <HStack w={"full"}>
         <InputGroup>
-          <InputLeftElement>
-            {selectedPointsPlatform?.platformGuildData?.imageUrl ? (
-              <OptionImage
-                img={selectedPointsPlatform?.platformGuildData?.imageUrl}
-                alt={
-                  selectedPointsPlatform?.platformGuildData?.name ??
-                  "Point type image"
-                }
-              />
-            ) : (
-              <Icon as={Star} />
-            )}
-          </InputLeftElement>
+          <InputLeftElement>{fromImage}</InputLeftElement>
 
           {conversionLocked ? (
             <ControlledNumberInput
@@ -150,14 +131,7 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
         </Circle>
 
         <InputGroup>
-          <InputLeftElement>
-            {tokenLogo || imageUrl ? (
-              <OptionImage img={tokenLogo ?? imageUrl} alt={chain} />
-            ) : (
-              <Token />
-            )}
-          </InputLeftElement>
-
+          <InputLeftElement>{toImage}</InputLeftElement>
           {conversionLocked ? (
             <ControlledNumberInput
               numberFormat="FLOAT"
