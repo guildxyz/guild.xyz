@@ -47,7 +47,10 @@ import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
 import ImagePicker from "./components/ImagePicker"
+import MintPerAddressInput from "./components/MintPerAddressInput"
+import NftTypeInput from "./components/NftTypeInput"
 import RichTextDescriptionEditor from "./components/RichTextDescriptionEditor"
+import SupplyInput from "./components/SupplyInput"
 import useCreateNft, {
   CONTRACT_CALL_SUPPORTED_CHAINS,
   ContractCallSupportedChain,
@@ -62,12 +65,14 @@ export type CreateNftFormType = {
   chain: ContractCallSupportedChain
   tokenTreasury: `0x${string}`
   name: string
-  symbol: string
   price: number
   description?: string
   richTextDescription?: string
   image: File
   attributes: { name: string; value: string }[]
+  maxSupply: number
+  mintableAmountPerUser: number
+  soulbound: "true" | "false" // Chakra's radio can only handle strings unfortunately
 }
 
 const CreateNftForm = ({ onSuccess }: Props) => {
@@ -140,45 +145,29 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     <FormProvider {...methods}>
       <Stack spacing={8}>
         <Text colorScheme="gray" fontWeight="semibold">
-          Create an NFT that members will be able to mint if they satisfy the
-          requirements you'll set. Claiming can take place through your Guild page or
-          a fancy auto-generated minting page!
+          Create an NFT that members will be able to claim if they meet the
+          requirements
         </Text>
 
-        <Grid w="full" templateColumns="repeat(3, 1fr)" gap={8}>
-          <GridItem colSpan={{ base: 3, sm: 1 }}>
+        <Grid w="full" templateColumns="repeat(5, 1fr)" gap={8}>
+          <GridItem colSpan={{ base: 5, sm: 2 }}>
             <ImagePicker />
           </GridItem>
 
-          <GridItem colSpan={{ base: 3, sm: 2 }}>
+          <GridItem colSpan={{ base: 5, sm: 3 }}>
             <Stack spacing={6}>
-              <HStack alignItems="start">
-                <FormControl isInvalid={!!errors?.name}>
-                  <FormLabel>Name</FormLabel>
+              <FormControl isInvalid={!!errors?.name}>
+                <FormLabel>Name</FormLabel>
 
-                  <Input
-                    {...register("name", { required: "This field is required" })}
-                  />
+                <Input
+                  {...register("name", { required: "This field is required" })}
+                />
 
-                  <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-                </FormControl>
-
-                <FormControl
-                  isInvalid={!!errors?.symbol}
-                  maxW={{ base: 24, md: 36 }}
-                >
-                  <FormLabel>Symbol</FormLabel>
-
-                  <Input
-                    {...register("symbol", { required: "This field is required" })}
-                  />
-
-                  <FormErrorMessage>{errors?.symbol?.message}</FormErrorMessage>
-                </FormControl>
-              </HStack>
+                <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+              </FormControl>
 
               <FormControl isInvalid={!!errors?.richTextDescription}>
-                <FormLabel>Reward description</FormLabel>
+                <FormLabel>Claiming page description</FormLabel>
 
                 <RichTextDescriptionEditor onChange={onDescriptionChange} />
 
@@ -187,8 +176,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 </FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be shown on the minting page. You can use
-                  markdown syntax here.
+                  This rich text description is only displayed on the claim page. It
+                  can contain images, links, and formatted text
                 </FormHelperText>
               </FormControl>
 
@@ -200,12 +189,12 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                 <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
 
                 <FormHelperText>
-                  This description will be included in the NFT metadata.
+                  This text-only description will be part of the NFT metadata
                 </FormHelperText>
               </FormControl>
 
               <FormControl>
-                <FormLabel>Metadata</FormLabel>
+                <FormLabel>Metadata values</FormLabel>
 
                 <Stack spacing={2}>
                   {fields?.map((field, index) => (
@@ -280,6 +269,12 @@ const CreateNftForm = ({ onSuccess }: Props) => {
                   </Button>
                 </Stack>
               </FormControl>
+
+              <Divider />
+
+              <SupplyInput />
+              <MintPerAddressInput />
+              <NftTypeInput />
 
               <Divider />
 
@@ -372,7 +367,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
                 <FormHelperText>
                   When users pay for minting the NFT, you'll receive the funds on
-                  this wallet address.
+                  this wallet address
                 </FormHelperText>
 
                 <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>

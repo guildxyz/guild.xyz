@@ -38,7 +38,7 @@ const TextCardButton = ({ platform }: Props) => {
     response,
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(rolePlatform?.id)
-  const { claimed } = useClaimedReward(rolePlatform.id)
+  const { claimed } = useClaimedReward(rolePlatform?.id)
 
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
   const isButtonDisabled = !isAvailable && !claimed
@@ -56,8 +56,8 @@ const TextCardButton = ({ platform }: Props) => {
             onOpen()
             if (!response) onSubmit()
           }}
-          isLoading={isLoading}
-          loadingText="Claiming secret..."
+          isLoading={!rolePlatform || isLoading}
+          loadingText={!rolePlatform ? "Loading..." : "Claiming secret..."}
           isDisabled={isButtonDisabled}
           w="full"
         >

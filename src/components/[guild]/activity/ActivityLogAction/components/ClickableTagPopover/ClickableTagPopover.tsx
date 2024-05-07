@@ -22,7 +22,11 @@ const ClickableTagPopover = ({
   const WrapperComponent = shouldRenderPortal ? Portal : React.Fragment
 
   return (
-    <Popover>
+    <Popover
+      eventListeners={{ scroll: false }}
+      computePositionOnMount={false}
+      isLazy
+    >
       <PopoverTrigger>{children}</PopoverTrigger>
 
       <WrapperComponent>

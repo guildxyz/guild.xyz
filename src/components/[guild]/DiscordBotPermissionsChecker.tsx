@@ -1,4 +1,5 @@
 import {
+  ListItem,
   ModalBody,
   ModalContent,
   ModalFooter,
@@ -7,6 +8,7 @@ import {
   Stack,
   Text,
   ToastId,
+  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -65,11 +67,16 @@ const MODAL_CONTENT: Record<
     title: "Setup bot permissions",
     body: (
       <>
-        <Text>
-          {`Our bot requires the ${REQUIRED_PERMISSIONS.join(
-            ", "
-          )} permissions in order to funcion properly`}
-        </Text>
+        <Stack spacing={2} mb={4}>
+          <Text>
+            Our bot requires the following permissions in order to function properly:
+          </Text>
+          <UnorderedList>
+            {REQUIRED_PERMISSIONS.map((permission) => (
+              <ListItem key={permission}>{permission}</ListItem>
+            ))}
+          </UnorderedList>
+        </Stack>
         <video src="/videos/dc-bot-permissions.webm" muted autoPlay loop>
           Your browser does not support the HTML5 video tag.
         </video>
