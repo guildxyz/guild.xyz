@@ -8,19 +8,20 @@ import {
 } from "@chakra-ui/react"
 import ConnectWalletButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/ConnectWalletButton"
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import {
   CapacityTag,
   EndTimeTag,
   StartTimeTag,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
-import CollectNftButton from "components/[guild]/collect/components/CollectNftButton"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
 import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import { Chains } from "wagmiConfig/chains"
-import useNftDetails from "../hooks/useNftDetails"
-import CollectNftFeesTable from "./CollectNftFeesTable"
+import useNftDetails from "../../hooks/useNftDetails"
+import CollectNftButton from "./components/CollectNftButton"
+import CollectNftFeesTable from "./components/CollectNftFeesTable"
 
 const availibiltyTagStyleProps = {
   bgColor: "transparent",
@@ -34,15 +35,13 @@ const CollectNft = () => {
   const tableBgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
   const { roles } = useGuild()
-  const { chain, nftAddress, alreadyCollected, rolePlatformId } =
+  const { chain, nftAddress, alreadyCollected, rolePlatformId, guildPlatform } =
     useCollectNftContext()
   const rolePlatform = roles
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
-  const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
-    chain,
-    nftAddress
-  )
+  const { totalCollectors, totalCollectorsToday, maxSupply, isLoading } =
+    useNftDetails(chain, nftAddress)
 
   const { isAvailable: isButtonEnabled, startTimeDiff } =
     getRolePlatformTimeframeInfo(rolePlatform)
@@ -87,11 +86,24 @@ const CollectNft = () => {
           "Loading collectors..."
         ) : (
           <Flex justifyContent="center" alignItems="center" wrap="wrap">
-            {typeof rolePlatform?.capacity === "number" && (
+            {guildPlatform?.platformGuildData?.function ===
+              ContractCallFunction.DEPRECATED_SIMPLE_CLAIM &&
+              typeof rolePlatform?.capacity === "number" && (
+                <>
+                  <CapacityTag
+                    capacity={rolePlatform.capacity}
+                    claimedCount={rolePlatform.claimedCount}
+                    {...availibiltyTagStyleProps}
+                  />
+                  <CircleDivider />
+                </>
+              )}
+
+            {typeof maxSupply === "number" && (
               <>
                 <CapacityTag
-                  capacity={rolePlatform.capacity}
-                  claimedCount={rolePlatform.claimedCount}
+                  capacity={maxSupply}
+                  claimedCount={totalCollectors}
                   {...availibiltyTagStyleProps}
                 />
                 <CircleDivider />

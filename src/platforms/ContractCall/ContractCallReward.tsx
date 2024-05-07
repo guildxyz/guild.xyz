@@ -10,10 +10,12 @@ import {
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/Reward"
 
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Link from "next/link"
 import { forwardRef } from "react"
+import NftAvailabilityTags from "./components/NftAvailabilityTags"
 
 const ContractCallReward = ({
   platform,
@@ -25,7 +27,11 @@ const ContractCallReward = ({
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
-  const { chain, contractAddress } = platform.guildPlatform.platformGuildData ?? {}
+  const {
+    chain,
+    contractAddress,
+    function: contractCallFunction,
+  } = platform.guildPlatform.platformGuildData ?? {}
   const { name, isLoading } = useNftDetails(chain, contractAddress)
 
   return (
@@ -61,7 +67,14 @@ const ContractCallReward = ({
         </>
       }
     >
-      <AvailabilityTags rolePlatform={platform} />
+      {contractCallFunction === ContractCallFunction.DEPRECATED_SIMPLE_CLAIM ? (
+        <AvailabilityTags rolePlatform={platform} />
+      ) : (
+        <NftAvailabilityTags
+          guildPlatform={platform.guildPlatform}
+          rolePlatform={platform}
+        />
+      )}
     </RewardDisplay>
   )
 }

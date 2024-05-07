@@ -9,8 +9,8 @@ import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import useCollectNft from "../hooks/useCollectNft"
-import { useCollectNftContext } from "./CollectNftContext"
+import useCollectNft from "../../../hooks/useCollectNft"
+import { useCollectNftContext } from "../../CollectNftContext"
 
 type Props = {
   label?: string

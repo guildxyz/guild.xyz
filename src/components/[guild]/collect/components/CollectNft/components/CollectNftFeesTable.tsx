@@ -3,8 +3,8 @@ import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
-import useGuildFee from "../hooks/useGuildFee"
-import useNftDetails from "../hooks/useNftDetails"
+import useGuildFee from "../../../hooks/useGuildFee"
+import useNftDetails from "../../../hooks/useNftDetails"
 
 type Props = {
   bgColor?: string

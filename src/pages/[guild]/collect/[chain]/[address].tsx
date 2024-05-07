@@ -9,7 +9,7 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
-import CollectNft from "components/[guild]/collect/components/CollectNft"
+import CollectNft from "components/[guild]/collect/components/CollectNft/CollectNft"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
 import CollectibleImage from "components/[guild]/collect/components/CollectibleImage"
 import Details from "components/[guild]/collect/components/Details"

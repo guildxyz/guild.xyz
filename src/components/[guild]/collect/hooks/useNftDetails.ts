@@ -85,6 +85,10 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       },
       {
         ...contract,
+        functionName: "maxSupply",
+      },
+      {
+        ...contract,
         functionName: "tokenURI",
         args: [BigInt(1)],
       },
@@ -98,9 +102,11 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     },
   })
 
-  const [totalSupplyResponse, tokenURIResponse, feeResponse] = data || []
+  const [totalSupplyResponse, maxSupplyResponse, tokenURIResponse, feeResponse] =
+    data || []
 
   const totalSupply = totalSupplyResponse?.result
+  const maxSupply = maxSupplyResponse?.result
   const tokenURI = tokenURIResponse?.result
   const fee = feeResponse?.result
 
@@ -117,6 +123,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       typeof totalSupply === "bigint" && typeof firstTotalSupplyToday === "bigint"
         ? Number(totalSupply - firstTotalSupplyToday)
         : undefined,
+    maxSupply: typeof maxSupply === "bigint" ? Number(maxSupply) : undefined,
     image: ipfsToGuildGateway(metadata?.image),
     description: metadata?.description as string,
     fee,
