@@ -30,8 +30,8 @@ const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) =>
 
   return {
     type: "CONTRACT_CALL" as PlatformName,
-    name: name || guildPlatform.platformGuildData?.name,
-    image: image || guildPlatform.platformGuildData?.imageUrl,
+    name,
+    image,
     info:
       rolePlatform &&
       (contractCallFunction === ContractCallFunction.DEPRECATED_SIMPLE_CLAIM ? (
