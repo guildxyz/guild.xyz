@@ -50,7 +50,7 @@ const ControlledNumberInput = ({
     },
   })
 
-  const decimalsLimit = decimalsMax < MAX_DECIMALS ? decimalsMax : MAX_DECIMALS
+  const decimalsLimit = Math.min(decimalsMax, MAX_DECIMALS)
 
   /**
    * Makes the step size adapt to the precision. E.g., if the entered number is
