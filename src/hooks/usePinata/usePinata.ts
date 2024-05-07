@@ -20,8 +20,6 @@ export type Uploader = {
   isUploading: boolean
 }
 
-const submit = (ipfsProps: PinToIPFSProps) => pinFileToIPFS(ipfsProps)
-
 const usePinata = ({
   onError,
   onSuccess,
@@ -69,7 +67,7 @@ const usePinata = ({
     [onSuccess, setValue, fieldToSetOnSuccess]
   )
 
-  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(submit, {
+  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(pinFileToIPFS, {
     onSuccess: wrappedOnSuccess,
     onError: wrappedOnError,
   })
