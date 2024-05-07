@@ -23,7 +23,7 @@ const NftAvailabilityTags = ({
 
   return (
     <Wrap spacing={1} {...wrapProps}>
-      {typeof maxSupply === "number" && typeof totalCollectors === "number" && (
+      {!!maxSupply && typeof totalCollectors === "number" && (
         <CapacityTag capacity={maxSupply} claimedCount={totalCollectors} />
       )}
 

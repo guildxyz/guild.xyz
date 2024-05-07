@@ -99,7 +99,7 @@ const CollectNft = () => {
                 </>
               )}
 
-            {typeof maxSupply === "number" && (
+            {!!maxSupply && (
               <>
                 <CapacityTag
                   capacity={maxSupply}
