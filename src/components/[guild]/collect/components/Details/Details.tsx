@@ -8,12 +8,7 @@ import InfoBlock from "./components/InfoBlock"
 
 const Details = () => {
   const { chain, nftAddress } = useCollectNftContext()
-  const {
-    standard,
-    creator,
-    isLoading,
-    error: nftDetailsError,
-  } = useNftDetails(chain, nftAddress)
+  const { standard, creator, isLoading } = useNftDetails(chain, nftAddress)
 
   return (
     <Section title="Details" spacing={3}>
@@ -21,7 +16,7 @@ const Details = () => {
         <InfoBlock label="Standard">
           <Skeleton isLoaded={!isLoading}>
             <Text as="span" fontSize="md" colorScheme="gray">
-              {nftDetailsError ? "Couldn't fetch" : standard ?? "Loading..."}
+              {standard ?? "Loading..."}
             </Text>
           </Skeleton>
         </InfoBlock>
@@ -37,7 +32,6 @@ const Details = () => {
             chain={chain}
             address={creator}
             isValidating={isLoading}
-            error={nftDetailsError}
           />
         </InfoBlock>
       </SimpleGrid>
