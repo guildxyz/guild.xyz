@@ -86,7 +86,7 @@ const useCollectNft = () => {
       abi: guildRewardNftAbi,
       address: nftAddress,
       functionName: "claim",
-      args: claimParams,
+      args: claimParams as any, // TODO: support both claim methods! (legacy vs new)
       value: claimFee,
     })
 

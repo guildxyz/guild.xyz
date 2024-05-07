@@ -43,11 +43,14 @@ type NftMetadata = {
 }
 
 export enum ContractCallFunction {
-  SIMPLE_CLAIM = "function claim(address payToken, address receiver, bytes calldata signature) payable",
+  // Kept the old one too, we can use it to determine if we need to show the old or the new UI for the availability-related features
+  DEPRECATED_SIMPLE_CLAIM = "function claim(address payToken, address receiver, bytes calldata signature) payable",
+  SIMPLE_CLAIM = "function claim(uint256 amount, address receiver, uint256 userId, uint256 signedAt, bytes calldata signature) payable",
 }
 
 export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> = {
-  [ContractCallFunction.SIMPLE_CLAIM]: [],
+  [ContractCallFunction.DEPRECATED_SIMPLE_CLAIM]: [],
+  [ContractCallFunction.SIMPLE_CLAIM]: ["uint256"],
 }
 
 export type CreateNFTResponse = {
