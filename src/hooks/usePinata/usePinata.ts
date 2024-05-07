@@ -1,13 +1,18 @@
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
+import { useCallback } from "react"
+import { useFormContext } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 import pinFileToIPFS, {
-  PinataPinFileResponse,
   PinToIPFSProps,
+  PinataPinFileResponse,
 } from "./utils/pinataUpload"
 
 type Props = Partial<{
   onSuccess: (data: PinataPinFileResponse) => void
   onError: (error: any) => void
+  fieldToSetOnSuccess: string
+  fieldToSetOnError: string
 }>
 
 export type Uploader = {
@@ -15,23 +20,57 @@ export type Uploader = {
   isUploading: boolean
 }
 
-const usePinata = ({ onError, onSuccess }: Props = {}): Uploader => {
+const usePinata = ({
+  onError,
+  onSuccess,
+  fieldToSetOnSuccess,
+  fieldToSetOnError,
+}: Props = {}): Uploader => {
   const toast = useToast()
+  const { setValue } = useFormContext() ?? {}
 
-  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(
-    (ipfsProps: PinToIPFSProps) => pinFileToIPFS(ipfsProps),
-    {
-      onSuccess,
-      onError: (error) => {
-        toast({
-          status: "error",
-          title: "Failed to upload image",
-          description: error,
+  const wrappedOnError = useCallback(
+    (error) => {
+      toast({
+        status: "error",
+        title: "Failed to upload image",
+        description: error,
+      })
+      onError?.(error)
+
+      if (fieldToSetOnError && setValue) {
+        setValue(fieldToSetOnError, `/guildLogos/${getRandomInt(286)}.svg`, {
+          shouldTouch: true,
+          shouldDirty: true,
         })
-        onError?.(error)
-      },
-    }
+      }
+    },
+    // toast is left out intentionally
+    [onError, fieldToSetOnError, setValue]
   )
+
+  const wrappedOnSuccess = useCallback(
+    (response: PinataPinFileResponse) => {
+      onSuccess?.(response)
+
+      if (fieldToSetOnSuccess) {
+        setValue(
+          fieldToSetOnSuccess,
+          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${response.IpfsHash}`,
+          {
+            shouldTouch: true,
+            shouldDirty: true,
+          }
+        )
+      }
+    },
+    [onSuccess, setValue, fieldToSetOnSuccess]
+  )
+
+  const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(pinFileToIPFS, {
+    onSuccess: wrappedOnSuccess,
+    onError: wrappedOnError,
+  })
 
   return { isUploading, onUpload }
 }
