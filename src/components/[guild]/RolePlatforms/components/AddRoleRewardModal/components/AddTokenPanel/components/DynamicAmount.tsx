@@ -1,5 +1,5 @@
 import { Icon, Stack, Text } from "@chakra-ui/react"
-import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
+import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { Star } from "phosphor-react"
 import DynamicTypeForm from "platforms/Token/DynamicTypeForm"
@@ -18,11 +18,9 @@ const DynamicAmount = ({
 }: {
   tokenData: { name: string; symbol: string; decimals: number; logoURI: string }
 }) => {
-  const pointsPlatforms = useAccessedGuildPoints()
   const pointsPlatformId = useWatch({ name: "data.guildPlatformId" })
-  const selectedPointsPlatform = pointsPlatforms.find(
-    (gp) => gp.id === pointsPlatformId
-  )
+  const { guildPlatform: selectedPointsPlatform } =
+    useGuildPlatform(pointsPlatformId)
 
   const pointsPlatformImage: ReactNode = selectedPointsPlatform?.platformGuildData
     ?.imageUrl ? (
