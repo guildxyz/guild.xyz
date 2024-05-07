@@ -4,11 +4,9 @@ import {
   EndTimeTag,
   StartTimeTag,
 } from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import { PropsWithChildren } from "react"
-import guildRewardNftAbi from "static/abis/guildRewardNft"
 import { GuildPlatform, RolePlatform } from "types"
-import { useReadContracts } from "wagmi"
-import { Chains } from "wagmiConfig/chains"
 
 type Props = { guildPlatform: GuildPlatform; rolePlatform: RolePlatform } & WrapProps
 
@@ -18,39 +16,15 @@ const NftAvailabilityTags = ({
   children,
   ...wrapProps
 }: PropsWithChildren<Props>) => {
-  const contract = {
-    abi: guildRewardNftAbi,
-    address: guildPlatform.platformGuildData.contractAddress,
-    chainId: Chains[guildPlatform.platformGuildData.chain],
-  } as const
-
-  const { data } = useReadContracts({
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    contracts: [
-      {
-        ...contract,
-        functionName: "maxSupply",
-      },
-      {
-        ...contract,
-        functionName: "totalSupply",
-      },
-    ],
-  })
-
-  const [maxSupplyResponse, totalSupplyResponse] = data ?? []
-
-  const maxSupply = maxSupplyResponse?.result
-  const totalSupply = totalSupplyResponse?.result
+  const { maxSupply, totalCollectors } = useNftDetails(
+    guildPlatform.platformGuildData.chain,
+    guildPlatform.platformGuildData.contractAddress
+  )
 
   return (
     <Wrap spacing={1} {...wrapProps}>
-      {typeof maxSupply === "bigint" && typeof totalSupply === "bigint" && (
-        <CapacityTag
-          capacity={Number(maxSupply)}
-          claimedCount={Number(totalSupply)}
-        />
+      {typeof maxSupply === "number" && typeof totalCollectors === "number" && (
+        <CapacityTag capacity={maxSupply} claimedCount={totalCollectors} />
       )}
 
       {rolePlatform?.startTime && (
