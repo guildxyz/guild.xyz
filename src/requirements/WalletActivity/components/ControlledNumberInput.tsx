@@ -7,7 +7,7 @@ import {
   NumberInputProps,
   NumberInputStepper,
 } from "@chakra-ui/react"
-import { useCallback, useEffect, useState } from "react"
+import { useMemo } from "react"
 import { useController } from "react-hook-form"
 import getNumOfDecimals from "utils/getNumOfDecimals"
 
@@ -31,8 +31,6 @@ const ControlledNumberInput = ({
   decimalsMax = MAX_DECIMALS,
   ...props
 }: Props): JSX.Element => {
-  const [stepSize, setStepSize] = useState(1)
-
   const {
     field: { ref, name, value, onChange, onBlur },
   } = useController({
@@ -57,26 +55,18 @@ const ControlledNumberInput = ({
    * 1.001, the step size will be set to 0.001, therefore the next step up will be
    * 1.002.
    */
-  const updateStepSize = useCallback(
-    (newValue) => {
-      if (!adaptiveStepSize) return
+  const stepSize = useMemo(() => {
+    if (!adaptiveStepSize) return 1
 
-      const precision = getNumOfDecimals(newValue)
-      let newStepSize = 1 / Math.pow(10, precision)
+    const precision = getNumOfDecimals(value)
+    let newStepSize = 1 / Math.pow(10, precision)
 
-      if (precision > decimalsLimit) {
-        newValue = Number(newValue).toFixed(decimalsLimit).toString()
-        newStepSize = 1 / Math.pow(10, precision - 1)
-      }
-      setStepSize(newStepSize)
-    },
-    [decimalsLimit, adaptiveStepSize]
-  )
-
-  useEffect(() => {
-    updateStepSize(value)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateStepSize, value])
+    if (precision > decimalsLimit) {
+      onChange(Number(value).toFixed(decimalsLimit).toString())
+      newStepSize = 1 / Math.pow(10, precision - 1)
+    }
+    return newStepSize
+  }, [adaptiveStepSize, value, decimalsLimit, onChange])
 
   const handleChange = (newValue) => {
     // We need this to allow typing in a decimal point
