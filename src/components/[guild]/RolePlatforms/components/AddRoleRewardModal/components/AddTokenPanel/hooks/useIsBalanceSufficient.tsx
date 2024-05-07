@@ -48,7 +48,7 @@ const useIsBalanceSufficient = ({
       : null
 
   const isBalanceSufficient = !isOnCorrectChain
-    ? null
+    ? false
     : typeof formattedAmount === "bigint" &&
       (pickedCurrencyIsNative
         ? coinBalanceData?.value >= formattedAmount
