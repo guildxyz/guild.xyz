@@ -6,6 +6,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import Star from "static/icons/star.svg"
 
 const ExternalGuildLink = ({ name, urlName }) => (
@@ -23,10 +24,9 @@ const ExternalGuildLink = ({ name, urlName }) => (
 const PointsRank = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildPlatformId, guildId, minAmount, maxAmount } = requirement.data
-  const { name, urlName, guildPlatforms } = useGuild(guildId)
+  const { name, urlName } = useGuild(guildId)
   const { id: currentGuildId } = useGuild()
-
-  const pointsReward = guildPlatforms?.find((gp) => gp.id === guildPlatformId)
+  const { guildPlatform: pointsReward } = useGuildPlatform(guildPlatformId)
 
   if (!pointsReward) return <RequirementSkeleton />
 
@@ -67,10 +67,9 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
 const PointsAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildPlatformId, guildId, minAmount, maxAmount } = requirement.data
-  const { name, urlName, guildPlatforms } = useGuild(guildId)
+  const { name, urlName } = useGuild(guildId)
   const { id: currentGuildId } = useGuild()
-
-  const pointsReward = guildPlatforms?.find((gp) => gp.id === guildPlatformId)
+  const { guildPlatform: pointsReward } = useGuildPlatform(guildPlatformId)
 
   if (!pointsReward) return <RequirementSkeleton />
 
