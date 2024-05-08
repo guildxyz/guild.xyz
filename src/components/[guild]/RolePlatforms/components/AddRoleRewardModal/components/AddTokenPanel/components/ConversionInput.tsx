@@ -2,67 +2,92 @@ import {
   Circle,
   FormLabel,
   HStack,
-  Icon,
   IconButton,
   InputGroup,
   InputLeftElement,
 } from "@chakra-ui/react"
-import { useAccessedGuildPoints } from "components/[guild]/AccessHub/hooks/useAccessedGuildPoints"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import useTokenData from "hooks/useTokenData"
 import { ArrowRight, Lock, LockOpen } from "phosphor-react"
-import { useEffect, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
-import Star from "static/icons/star.svg"
-import Token from "static/icons/token.svg"
-import { AddTokenFormType } from "../AddTokenPanel"
-import ConversionNumberInput from "./ConversionNumberInput"
+import { ReactNode, useEffect, useState } from "react"
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
+import { MIN_TOKEN_AMOUNT } from "utils/guildCheckout/constants"
 
-const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
-  const { control, setValue } = useFormContext<AddTokenFormType>()
+type ConversionForm = {
+  tokenAmount: string
+  tokenPreview: string
+  pointAmount: string
+  pointPreview: string
+}
 
+type Props = {
+  name: string
+  fromImage: ReactNode
+  toImage: ReactNode
+  defaultMultiplier?: number
+}
+
+const ConversionInput = ({
+  name,
+  fromImage,
+  toImage,
+  defaultMultiplier = 1,
+}: Props) => {
+  const { control, setValue } = useFormContext()
+
+  const methods = useForm<ConversionForm>({
+    mode: "all",
+    defaultValues: {
+      tokenAmount: "1",
+      pointAmount: defaultMultiplier.toString(),
+    },
+  })
+
+  const { control: subformControl, setValue: setSubformValue } = methods
   const [conversionLocked, setConversionLocked] = useState(false)
-  const [conversionAmounts, setConversionAmounts] = useState([
-    "1",
-    defaultValue || "1",
-  ])
-  const [conversionRate, setConversionRate] = useState(1.0)
 
-  const pointsPlatforms = useAccessedGuildPoints()
+  const multiplier = useWatch({ name, control })
 
-  const pointsPlatformId = useWatch({ name: "data.guildPlatformId", control })
-  const imageUrl = useWatch({ name: `imageUrl`, control })
-  const chain = useWatch({ name: `chain`, control })
-  const address = useWatch({ name: `tokenAddress`, control })
-
-  const selectedPointsPlatform = pointsPlatforms.find(
-    (gp) => gp.id === pointsPlatformId
-  )
-  const {
-    data: { logoURI: tokenLogo },
-  } = useTokenData(chain, address)
+  const tokenAmount = useWatch({ name: `tokenAmount`, control: subformControl })
+  const pointAmount = useWatch({ name: `pointAmount`, control: subformControl })
+  const tokenPreview = useWatch({ name: `tokenPreview`, control: subformControl })
+  const pointPreview = useWatch({ name: `pointPreview`, control: subformControl })
 
   useEffect(() => {
-    if (conversionLocked) return
-    const convRate = Number(conversionAmounts[1]) / Number(conversionAmounts[0])
-    setValue("multiplier", convRate)
-  }, [conversionAmounts, setValue, conversionLocked])
+    setValue(name, defaultMultiplier || 1)
+  }, [defaultMultiplier, setValue, name])
 
   const toggleConversionLock = () => {
     if (conversionLocked) {
       setConversionLocked(false)
-      setConversionAmounts([conversionAmounts[0], calculatePreview()])
+      setSubformValue("tokenAmount", tokenPreview)
+      setSubformValue("pointAmount", pointPreview)
     } else {
-      setConversionRate(Number(conversionAmounts[1]) / Number(conversionAmounts[0]))
       setConversionLocked(true)
+      setSubformValue("tokenPreview", tokenAmount)
+      setSubformValue("pointPreview", pointAmount)
     }
   }
 
-  const calculatePreview = () =>
-    parseFloat((Number(conversionAmounts[0]) * conversionRate).toFixed(6)).toString()
+  const tokenPreviewChange = (valueAsString, valueAsNumber) => {
+    if (conversionLocked) {
+      const pointPreviewValue = parseFloat(
+        (valueAsNumber * multiplier).toFixed(
+          MIN_TOKEN_AMOUNT.toString().split(".")[1]?.length || 0
+        )
+      ).toString()
+      setSubformValue("pointPreview", pointPreviewValue)
+    }
+  }
+
+  const updateConversionRate = (value: string, tokenOrPoint: "token" | "point") => {
+    if (conversionLocked) return
+    const pointValue = Number(tokenOrPoint === "point" ? value : pointAmount)
+    const tokenValue = Number(tokenOrPoint === "token" ? value : tokenAmount)
+    setValue("multiplier", pointValue / tokenValue)
+  }
 
   return (
-    <>
+    <FormProvider {...methods}>
       <HStack justifyContent={"space-between"}>
         <FormLabel>Conversion</FormLabel>
         <IconButton
@@ -78,24 +103,27 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
 
       <HStack w={"full"}>
         <InputGroup>
-          <InputLeftElement>
-            {selectedPointsPlatform?.platformGuildData?.imageUrl ? (
-              <OptionImage
-                img={selectedPointsPlatform?.platformGuildData?.imageUrl}
-                alt={
-                  selectedPointsPlatform?.platformGuildData?.name ??
-                  "Point type image"
-                }
-              />
-            ) : (
-              <Icon as={Star} />
-            )}
-          </InputLeftElement>
+          <InputLeftElement>{fromImage}</InputLeftElement>
 
-          <ConversionNumberInput
-            value={conversionAmounts[0]}
-            setValue={(val) => setConversionAmounts([val, conversionAmounts[1]])}
-          />
+          {conversionLocked ? (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              onChange={tokenPreviewChange}
+              name={"tokenPreview"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              min={MIN_TOKEN_AMOUNT}
+            />
+          ) : (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              onChange={(valString) => updateConversionRate(valString, "token")}
+              name={"tokenAmount"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              min={MIN_TOKEN_AMOUNT}
+            />
+          )}
         </InputGroup>
 
         <Circle background={"whiteAlpha.200"} p="1">
@@ -103,26 +131,29 @@ const ConversionInput = ({ defaultValue }: { defaultValue?: string }) => {
         </Circle>
 
         <InputGroup>
-          <InputLeftElement>
-            {tokenLogo || imageUrl ? (
-              <OptionImage img={tokenLogo ?? imageUrl} alt={chain} />
-            ) : (
-              <Token />
-            )}
-          </InputLeftElement>
-
-          <ConversionNumberInput
-            value={conversionLocked ? calculatePreview() : conversionAmounts[1]}
-            setValue={
-              conversionLocked
-                ? () => {}
-                : (val) => setConversionAmounts([conversionAmounts[0], val])
-            }
-            isReadOnly={conversionLocked}
-          />
+          <InputLeftElement>{toImage}</InputLeftElement>
+          {conversionLocked ? (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              name={"pointPreview"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              min={MIN_TOKEN_AMOUNT}
+              isReadOnly
+            />
+          ) : (
+            <ControlledNumberInput
+              numberFormat="FLOAT"
+              onChange={(valString) => updateConversionRate(valString, "point")}
+              name={"pointAmount"}
+              adaptiveStepSize
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              min={MIN_TOKEN_AMOUNT}
+            />
+          )}
         </InputGroup>
       </HStack>
-    </>
+    </FormProvider>
   )
 }
 

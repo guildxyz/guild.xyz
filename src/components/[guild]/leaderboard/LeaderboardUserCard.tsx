@@ -17,7 +17,7 @@ import useResolveAddress from "hooks/useResolveAddress"
 import { useRouter } from "next/router"
 import { Trophy } from "phosphor-react"
 import shortenHex from "utils/shortenHex"
-import useGuild from "../hooks/useGuild"
+import useGuildPlatform from "../hooks/useGuildPlatform"
 
 type Props = {
   address: string
@@ -45,7 +45,6 @@ const LeaderboardUserCard = ({
   isCurrentUser,
   tooltipLabel,
 }: Props) => {
-  const { guildPlatforms } = useGuild()
   const router = useRouter()
 
   const resolvedAddress = useResolveAddress(addressParam)
@@ -53,9 +52,10 @@ const LeaderboardUserCard = ({
   const positionBorderColor = useColorModeValue("gray.200", "gray.600")
   const guildAvatarBgColor = useColorModeValue("gray.700", "gray.600")
 
-  const pointsName =
-    guildPlatforms.find((gp) => gp.id.toString() === router.query.pointsId)
-      ?.platformGuildData?.name || "points"
+  const { guildPlatform: pointsPlatform } = useGuildPlatform(
+    Number(router.query.pointsId)
+  )
+  const pointsName = pointsPlatform?.platformGuildData?.name || "points"
 
   const TrophyIcon =
     position <= 3 ? (
