@@ -142,6 +142,9 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
               name="amount"
               min={MIN_TOKEN_AMOUNT}
               isDisabled={skip}
+              defaultValue={1}
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
+              width={"full"}
             />
           </InputGroup>
         </FormControl>

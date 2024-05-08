@@ -137,7 +137,7 @@ const FundPoolModal = ({
                     adaptiveStepSize
                     w="full"
                     numberFormat="FLOAT"
-                    numberInputFieldProps={{ pl: 10 }}
+                    numberInputFieldProps={{ pl: 10, pr: 7 }}
                     min={MIN_TOKEN_AMOUNT}
                   />
                 </InputGroup>

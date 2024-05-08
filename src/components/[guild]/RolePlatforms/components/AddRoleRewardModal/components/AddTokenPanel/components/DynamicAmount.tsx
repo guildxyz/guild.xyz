@@ -1,6 +1,7 @@
 import { Icon, Stack, Text } from "@chakra-ui/react"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
+import useTokenData from "hooks/useTokenData"
 import { Star } from "phosphor-react"
 import DynamicTypeForm from "platforms/Token/DynamicTypeForm"
 import { ReactNode } from "react"
@@ -13,14 +14,17 @@ export enum SnapshotOption {
   CUSTOM = "CUSTOM",
 }
 
-const DynamicAmount = ({
-  tokenData,
-}: {
-  tokenData: { name: string; symbol: string; decimals: number; logoURI: string }
-}) => {
+const DynamicAmount = () => {
   const pointsPlatformId = useWatch({ name: "data.guildPlatformId" })
+  const chain = useWatch({ name: `chain` })
+  const address = useWatch({ name: `tokenAddress` })
+
   const { guildPlatform: selectedPointsPlatform } =
     useGuildPlatform(pointsPlatformId)
+
+  const {
+    data: { symbol, logoURI },
+  } = useTokenData(chain, address)
 
   const pointsPlatformImage: ReactNode = selectedPointsPlatform?.platformGuildData
     ?.imageUrl ? (
@@ -44,13 +48,7 @@ const DynamicAmount = ({
       <Stack gap={0}>
         <ConversionInput
           name="multiplier"
-          toImage={
-            tokenData.logoURI ? (
-              <OptionImage img={tokenData.logoURI} alt={tokenData.symbol} />
-            ) : (
-              <Token />
-            )
-          }
+          toImage={logoURI ? <OptionImage img={logoURI} alt={symbol} /> : <Token />}
           fromImage={pointsPlatformImage}
           defaultMultiplier={1}
         />

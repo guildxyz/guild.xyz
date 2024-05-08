@@ -10,7 +10,6 @@ import {
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import useTokenData from "hooks/useTokenData"
 import useRolePlatformsOfReward from "platforms/Token/hooks/useRolePlatformsOfReward"
 import { useEffect, useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -28,8 +27,6 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
   const addition = useWatch({ control, name: `addition` })
   const chain = useWatch({ control, name: `chain` })
   const address = useWatch({ control, name: `tokenAddress` })
-
-  const { data: tokenData } = useTokenData(chain, address)
 
   const { guildPlatforms } = useGuild()
 
@@ -137,7 +134,7 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
           ) : (
             <StaticAmount />
           )} */}
-          <DynamicAmount tokenData={tokenData} />
+          <DynamicAmount />
         </Stack>
       </Collapse>
 

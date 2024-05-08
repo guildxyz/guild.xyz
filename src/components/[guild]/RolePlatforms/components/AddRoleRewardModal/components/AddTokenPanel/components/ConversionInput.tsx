@@ -111,7 +111,7 @@ const ConversionInput = ({
               onChange={tokenPreviewChange}
               name={"tokenPreview"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
             />
           ) : (
@@ -120,7 +120,7 @@ const ConversionInput = ({
               onChange={(valString) => updateConversionRate(valString, "token")}
               name={"tokenAmount"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
             />
           )}
@@ -137,7 +137,7 @@ const ConversionInput = ({
               numberFormat="FLOAT"
               name={"pointPreview"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
               isReadOnly
             />
@@ -147,7 +147,7 @@ const ConversionInput = ({
               onChange={(valString) => updateConversionRate(valString, "point")}
               name={"pointAmount"}
               adaptiveStepSize
-              numberInputFieldProps={{ pr: 0, pl: 10 }}
+              numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
             />
           )}
