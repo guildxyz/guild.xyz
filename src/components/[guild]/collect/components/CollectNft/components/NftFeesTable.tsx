@@ -1,10 +1,12 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import { useWatch } from "react-hook-form"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import useGuildFee from "../../../hooks/useGuildFee"
 import useNftDetails from "../../../hooks/useNftDetails"
+import { CollectNftForm } from "../CollectNft"
 
 type Props = {
   bgColor?: string
@@ -13,15 +15,22 @@ type Props = {
 const NftFeesTable = ({ bgColor }: Props) => {
   const { chain, nftAddress } = useCollectNftContext()
 
+  const claimAmountFromForm = useWatch<CollectNftForm, "amount">({
+    name: "amount",
+  })
+  const claimAmount = claimAmountFromForm ?? 1
+
   const { guildFee } = useGuildFee(chain)
   const formattedGuildFee = guildFee
-    ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
+    ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals)) *
+      claimAmount
     : undefined
 
   const { fee } = useNftDetails(chain, nftAddress)
   const formattedFee =
     typeof fee === "bigint"
-      ? Number(formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
+      ? Number(formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)) *
+        claimAmount
       : undefined
 
   const isFormattedGuildFeeLoaded = typeof formattedGuildFee === "number"

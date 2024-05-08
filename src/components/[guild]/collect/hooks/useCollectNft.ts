@@ -8,6 +8,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import legacyGuildRewardNftAbi from "static/abis/legacyGuildRewardNft"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -15,6 +16,7 @@ import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
+import { CollectNftForm } from "../components/CollectNft/CollectNft"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
 import useTopCollectors from "./useTopCollectors"
@@ -86,6 +88,12 @@ const useCollectNft = () => {
     chainId: Chains[chain],
   })
 
+  const { resetField } = useFormContext<CollectNftForm>()
+  const claimAmountFromForm = useWatch<CollectNftForm, "amount">({
+    name: "amount",
+  })
+  const claimAmount = claimAmountFromForm ?? 1
+
   const mint = async () => {
     setTxError(false)
     setTxSuccess(false)
@@ -99,19 +107,18 @@ const useCollectNft = () => {
       `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
       {
         body: {
-          // TODO: send amount specified by the user here
           args:
             guildPlatform?.platformGuildData?.function ===
             ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
               ? []
-              : [1],
+              : [claimAmount],
         },
       },
     ])
 
     const claimFee =
       typeof guildFee === "bigint" && typeof fee === "bigint"
-        ? guildFee + fee
+        ? (guildFee + fee) * BigInt(claimAmount)
         : BigInt(0)
 
     let request
@@ -167,6 +174,9 @@ const useCollectNft = () => {
   return {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
+        resetField("amount", {
+          defaultValue: 1,
+        })
         setLoadingText("")
 
         refetchBalance()

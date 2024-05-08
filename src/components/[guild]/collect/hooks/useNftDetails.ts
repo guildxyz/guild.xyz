@@ -13,6 +13,9 @@ const currentDate = new Date()
 currentDate.setUTCHours(0, 0, 0, 0)
 const noonUnixTimestamp = currentDate.getTime() / 1000
 
+const bigIntToNumber = (num?: bigint) =>
+  typeof num === "bigint" ? Number(num) : undefined
+
 const fetchNftDetails = ([_, chain, address]) =>
   fetcher(`/api/nft/${chain}/${address}`)
 
@@ -61,6 +64,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     query: {
       enabled: !!firstBlockNumberToday,
       staleTime: 600_000,
+      refetchOnWindowFocus: false,
     },
   })
 
@@ -89,6 +93,10 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       },
       {
         ...contract,
+        functionName: "mintableAmountPerUser",
+      },
+      {
+        ...contract,
         functionName: "tokenURI",
         args: [BigInt(1)],
       },
@@ -102,11 +110,17 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     },
   })
 
-  const [totalSupplyResponse, maxSupplyResponse, tokenURIResponse, feeResponse] =
-    data || []
+  const [
+    totalSupplyResponse,
+    maxSupplyResponse,
+    mintableAmountPerUserResponse,
+    tokenURIResponse,
+    feeResponse,
+  ] = data || []
 
   const totalSupply = totalSupplyResponse?.result
   const maxSupply = maxSupplyResponse?.result
+  const mintableAmountPerUser = mintableAmountPerUserResponse?.result
   const tokenURI = tokenURIResponse?.result
   const fee = feeResponse?.result
 
@@ -114,16 +128,17 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     tokenURI ? ipfsToGuildGateway(tokenURI) : null
   )
 
+  // TODO: maybe we shouldn't convert bigints to numbers here?...
   return {
     ...nftDetails,
     name: nftDetails?.name ?? guildPlatformData?.name,
-    totalCollectors:
-      typeof totalSupply === "bigint" ? Number(totalSupply) : undefined,
+    totalCollectors: bigIntToNumber(totalSupply),
     totalCollectorsToday:
       typeof totalSupply === "bigint" && typeof firstTotalSupplyToday === "bigint"
         ? Number(totalSupply - firstTotalSupplyToday)
         : undefined,
-    maxSupply: typeof maxSupply === "bigint" ? Number(maxSupply) : undefined,
+    maxSupply: bigIntToNumber(maxSupply),
+    mintableAmountPerUser: bigIntToNumber(mintableAmountPerUser),
     image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
     description: metadata?.description as string,
     fee,
