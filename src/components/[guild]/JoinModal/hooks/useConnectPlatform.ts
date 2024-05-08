@@ -14,6 +14,7 @@ import { useCallback, useMemo } from "react"
 import useSWR from "swr"
 import { PlatformName, PlatformType } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import useFetchUserEmail from "./useFetchUserEmail"
 
 type AuthLevel = "membership" | "creation"
 
@@ -74,6 +75,7 @@ const useConnectPlatform = (
 ) => {
   const { id, mutate: mutateUser } = useUser()
   const fetcherWithSign = useFetcherWithSign()
+  const fetchUserEmail = useFetchUserEmail()
   const toast = useToast()
   const showPlatformMergeAlert = useSetAtom(platformMergeAlertAtom)
   const { onOpen } = usePopupWindow()
@@ -117,21 +119,39 @@ const useConnectPlatform = (
                 `/v2/users/${id}/platform-users/${PlatformType[platformName]}`,
                 { method: "GET" },
               ])
-                .then((newPlatformUser) =>
+                .then((newPlatformUser) => {
                   mutateUser(
-                    (prev) => ({
-                      ...prev,
-                      platformUsers: [
-                        ...(prev?.platformUsers ?? []).filter(
-                          ({ platformId }) =>
-                            platformId !== newPlatformUser.platformId
-                        ),
-                        { ...newPlatformUser, platformName },
-                      ],
-                    }),
+                    async (prev) => {
+                      /**
+                       * For GOOGLE, there is a chance, that the email address got
+                       * linked as EMAIL as well. Therefore if the user doesn't
+                       * already have an EMAIL, we revalidate
+                       */
+
+                      const hasEmail = !!prev?.emails?.emailAddress
+                      const isGoogleConnection = platformName === "GOOGLE"
+
+                      const shouldRefetchEmail = !hasEmail && isGoogleConnection
+
+                      const email = shouldRefetchEmail
+                        ? await fetchUserEmail()
+                        : undefined
+
+                      return {
+                        ...prev,
+                        platformUsers: [
+                          ...(prev?.platformUsers ?? []).filter(
+                            ({ platformId }) =>
+                              platformId !== newPlatformUser.platformId
+                          ),
+                          { ...newPlatformUser, platformName },
+                        ],
+                        emails: email ?? prev?.emails,
+                      }
+                    },
                     { revalidate: false }
                   )
-                )
+                })
                 .then(() => resolve(true))
                 .catch(() => reject("Failed to get new platform connection"))
 

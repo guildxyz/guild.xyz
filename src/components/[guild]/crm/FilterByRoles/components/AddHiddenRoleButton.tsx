@@ -10,12 +10,12 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
-import useGuild from "components/[guild]/hooks/useGuild"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import { Plus } from "phosphor-react"
@@ -59,20 +59,9 @@ const AddHiddenRoleButton = (buttonProps) => {
   }
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        {
-          shouldTouch: true,
-        }
-      )
-    },
-    onError: () => {
-      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control: methods.control,
   })
 
   const onSuccess = () => {

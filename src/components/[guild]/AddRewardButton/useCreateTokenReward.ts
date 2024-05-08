@@ -1,8 +1,6 @@
 import { Schemas } from "@guildxyz/types"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { PlatformType, Requirement, RolePlatform, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
@@ -56,8 +54,6 @@ const useCreateReqBasedTokenReward = ({
   onError: (err) => void
 }) => {
   const showErrorToast = useShowErrorToast()
-  const { onSubmit: onRequirementSubmit, isLoading: creatingRequirement } =
-    useCreateRequirementForRole()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { id: guildId, urlName } = useGuild()
@@ -98,92 +94,6 @@ const useCreateReqBasedTokenReward = ({
       )
     },
   })
-
-  const addToExistingRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
-    if (data.roleIds.length > 1) {
-      captureEvent("Failed to add token reward", {
-        ...postHogOptions,
-        reason: "Multiple roles selected",
-      })
-      showErrorToast("Dynamic token rewards can be added to only one role at most.")
-      return
-    }
-    if (data.requirements.length > 1) {
-      captureEvent("Failed to add token reward", {
-        ...postHogOptions,
-        reason: "Multiple requirements set when adding to existing role",
-      })
-      showErrorToast(
-        "You cannot set requirements to the role when adding this reward."
-      )
-      return
-    }
-
-    await onRequirementSubmit({
-      requirement: data.requirements[0],
-      roleId: data.roleIds[0],
-      onSuccess: (req) => {
-        /**
-         * Now the reward can be added, as we now have the requirementId that is
-         * needed in the reward's rolePlatform's dynamicData field.
-         */
-        // We don't use "SUM" yet, so we can early return here in order to have proper types
-        if (data.rolePlatforms[0].dynamicAmount.operation.type !== "SUM") return
-
-        const modifiedData = { ...data }
-        const tokenGuildPlatformExists = !!data.rolePlatforms[0].guildPlatformId
-
-        // Setting dynamic amount fields
-        if (
-          isRequirementAmountOrAccess(
-            modifiedData.rolePlatforms[0].dynamicAmount.operation.input
-          )
-        ) {
-          modifiedData.rolePlatforms[0].dynamicAmount.operation.input.roleId =
-            Number(data.roleIds[0])
-
-          modifiedData.rolePlatforms[0].dynamicAmount.operation.input.requirementId =
-            req.id
-        }
-
-        if (tokenGuildPlatformExists) {
-          // Removing guild platform data, as we add to an already existing one
-          modifiedData.rolePlatforms[0].guildPlatform = {
-            platformId: PlatformType.ERC20,
-            platformName: "ERC20",
-            platformGuildId: "",
-            platformGuildData: {},
-          }
-        }
-
-        const rewardSubmitData = getRewardSubmitData(
-          modifiedData,
-          saveAs,
-          data.roleIds[0]
-        )
-
-        mutateOptionalAuthSWRKey<Requirement[]>(
-          `/v2/guilds/${guildId}/roles/${req.roleId}/requirements`,
-          (prevRequirements) => [
-            ...prevRequirements.filter((r) => r.type === "FREE"),
-            req,
-          ],
-          { revalidate: false }
-        )
-
-        onAddRewardSubmit(rewardSubmitData)
-      },
-      onError: (error) => {
-        captureEvent(
-          "createTokenReward(AddToExistingRole) Failed to create requirement",
-          { ...postHogOptions, error }
-        )
-        showErrorToast(
-          "Failed to create the snapshot requirement, aborting reward creation."
-        )
-      },
-    })
-  }
 
   const createWithNewRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
     const roleVisibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
@@ -249,16 +159,9 @@ const useCreateReqBasedTokenReward = ({
     triggerMembershipUpdate()
   }
 
-  const submitCreate = (data: CreateData, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
-    const shouldAddToExisting = data?.roleIds.length !== 0
-    return shouldAddToExisting
-      ? addToExistingRole(data, saveAs)
-      : createWithNewRole(data, saveAs)
-  }
-
   return {
-    submitCreate,
-    isLoading: creatingRequirement || creatingReward || creatingRole,
+    submitCreate: createWithNewRole,
+    isLoading: creatingReward || creatingRole,
   }
 }
 

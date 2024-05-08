@@ -15,7 +15,6 @@ type Props = OneOf<{ account: string }, { title: string }> & {
 
 const ConnectAccount = ({
   account,
-  title,
   isConnected,
   children,
   isReconnect,
@@ -25,15 +24,14 @@ const ConnectAccount = ({
   <JoinStep
     isDone={!isReconnect && !!isConnected}
     title={
-      title ??
-      (isReconnect
+      isReconnect
         ? `Reconnect ${account}`
         : isConnected
         ? `${account} connected`
-        : `Connect ${account}`)
+        : `Connect ${account}`
     }
     titleRightElement={titleRightElement}
-    buttonLabel={title ?? (isReconnect ? "Reconnect" : isConnected || "Connect")}
+    buttonLabel={isReconnect ? "Reconnect" : isConnected || "Connect"}
     {...rest}
   >
     {children}

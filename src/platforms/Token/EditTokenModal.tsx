@@ -29,17 +29,14 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { SectionTitle } from "components/common/Section"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useCreateRequirementForRole } from "components/create-guild/Requirements/hooks/useCreateRequirement"
+import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
-import { mutateOptionalAuthSWRKey } from "hooks/useSWRWithOptionalAuth"
-import useShowErrorToast from "hooks/useShowErrorToast"
 import useToast from "hooks/useToast"
 import { Star } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
 import { ReactNode, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import Token from "static/icons/token.svg"
-import { Requirement } from "types"
 import DynamicTypeForm from "./DynamicTypeForm"
 import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
@@ -64,7 +61,7 @@ const EditTokenModal = ({
     mode: "all",
   })
 
-  const { roles, id: guildId, urlName } = useGuild()
+  const { roles, urlName } = useGuild()
 
   const rolePlatforms = useRolePlatformsOfReward(id)
 
@@ -106,7 +103,6 @@ const EditTokenModal = ({
   } = useDisclosure()
 
   const toast = useToast()
-  const showErrorToast = useShowErrorToast()
 
   const { onSubmit: submitEditRolePlatform, isLoading: rpIsLoading } =
     useEditRolePlatform({
@@ -137,24 +133,27 @@ const EditTokenModal = ({
       },
     })
 
-  const { onSubmit: onRequirementSubmit } = useCreateRequirementForRole()
+  const { onSubmit: onRequirementSubmit } = useCreateRequirement(role.id, {
+    onSuccess: () => {
+      toast({
+        status: "success",
+        title: "Snapshot successfully added!",
+      })
+
+      captureEvent("editToken(CreateRequirement) Requirement created", {
+        ...postHogOptions,
+      })
+      triggerMembershipUpdate()
+    },
+    onError: (err) => {
+      captureEvent(
+        "editToken(CreateRequirement) Failed to create snapshot requirement",
+        { ...postHogOptions, err }
+      )
+    },
+  })
 
   const { mutateGuild } = useGuild()
-
-  const mutateRequirements = (
-    req: Requirement,
-    roleId: number,
-    idForGuild: number
-  ) => {
-    mutateOptionalAuthSWRKey<Requirement[]>(
-      `/v2/guilds/${idForGuild}/roles/${roleId}/requirements`,
-      (prevRequirements) => [
-        ...prevRequirements.filter((r) => r.type === "FREE"),
-        req,
-      ],
-      { revalidate: false }
-    )
-  }
 
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
@@ -163,34 +162,10 @@ const EditTokenModal = ({
 
     // Create new snapshot if currently does not exist
     if (!snapshotRequirement) {
-      await onRequirementSubmit({
-        requirement: data.requirements[0] as Requirement,
-        roleId: role.id,
-        onSuccess: (req) => {
-          toast({
-            status: "success",
-            title: "Snapshot successfully added!",
-          })
-
-          captureEvent("editToken(CreateRequirement) Requirement created", {
-            ...postHogOptions,
-            requirementId: req.id,
-          })
-
-          modifiedRolePlatform.dynamicAmount.operation.input[0].requirementId =
-            req.id
-          mutateRequirements(req, role.id, guildId)
-          triggerMembershipUpdate()
-        },
-        onError: (err) => {
-          showErrorToast("Failed to create snapshot requirement!")
-          captureEvent(
-            "editToken(CreateRequirement) Failed to create snapshot requirement",
-            { ...postHogOptions, err }
-          )
-          console.error(err)
-        },
-      })
+      const createdReq = await onRequirementSubmit(data.requirements[0])
+      if (createdReq)
+        modifiedRolePlatform.dynamicAmount.operation.input[0].requirementId =
+          createdReq.id
     }
 
     // Update conversion
@@ -203,13 +178,12 @@ const EditTokenModal = ({
       return
     }
 
-    const req = await submitEditRequirement({
+    await submitEditRequirement({
       ...snapshotRequirement,
       data: data.requirements[0].data,
     })
 
     onClose()
-    mutateRequirements(req, role.id, guildId)
     mutateGuild()
     triggerMembershipUpdate()
     return

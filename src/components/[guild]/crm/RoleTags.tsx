@@ -49,7 +49,14 @@ const RoleTags = ({ roles, column }: Props) => {
         />
       ))}
       {moreRolesCount > 0 && (
-        <Popover trigger="hover" openDelay={0} closeDelay={0}>
+        <Popover
+          trigger="hover"
+          openDelay={0}
+          closeDelay={0}
+          eventListeners={{ scroll: false }}
+          computePositionOnMount={false}
+          isLazy
+        >
           <PopoverTrigger>
             <Tag
               variant={"outline"}
