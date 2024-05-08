@@ -8,6 +8,7 @@ import { useRequirementContext } from "components/[guild]/Requirements/component
 import useRequirement from "components/[guild]/hooks/useRequirement"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useState } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
@@ -27,11 +28,15 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   >
 
   const [search, setSearch] = useState("")
-  // TODO: Debounce this search value
+  const debouncedSearch = useDebouncedState(search)
 
   const { addresses: initialAddresses, hideAllowlist } = requirement.data
 
-  const { data: req } = useRequirement(requirement?.roleId, requirement?.id, search)
+  const { data: req, isValidating: isSearchingAddresses } = useRequirement(
+    requirement?.roleId,
+    requirement?.id,
+    debouncedSearch
+  )
 
   const addresses = req?.data?.addresses ?? initialAddresses
 
