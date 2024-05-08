@@ -11,8 +11,8 @@ import pinFileToIPFS, {
 type Props<TFieldValues, TContext> = Partial<{
   onSuccess: (data: PinataPinFileResponse) => void
   onError: (error: any) => void
-  fieldToSetOnSuccess: Path<TFieldValues>
-  fieldToSetOnError: Path<TFieldValues>
+  fieldToSetOnSuccess?: Path<TFieldValues>
+  fieldToSetOnError?: Path<TFieldValues>
   control?: Control<TFieldValues, TContext>
 }>
 
@@ -24,8 +24,8 @@ export type Uploader = {
 const usePinata = <TFieldValues, TContext>({
   onError,
   onSuccess,
-  fieldToSetOnSuccess,
-  fieldToSetOnError,
+  fieldToSetOnSuccess = "" as Path<TFieldValues>,
+  fieldToSetOnError = "" as Path<TFieldValues>,
   control: controlFromProps,
 }: Props<TFieldValues, TContext> = {}): Uploader => {
   const toast = useToast()
