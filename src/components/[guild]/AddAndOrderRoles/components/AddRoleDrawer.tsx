@@ -95,6 +95,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
     fieldToSetOnError: "imageUrl",
+    setValue: methods.setValue,
   })
 
   const drawerBodyRef = useRef<HTMLDivElement>()

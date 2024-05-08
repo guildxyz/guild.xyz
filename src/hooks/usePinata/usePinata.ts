@@ -1,7 +1,7 @@
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useCallback } from "react"
-import { useFormContext } from "react-hook-form"
+import { UseFormSetValue, useFormContext } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import pinFileToIPFS, {
   PinToIPFSProps,
@@ -13,6 +13,7 @@ type Props = Partial<{
   onError: (error: any) => void
   fieldToSetOnSuccess: string
   fieldToSetOnError: string
+  setValue: UseFormSetValue<any>
 }>
 
 export type Uploader = {
@@ -25,9 +26,11 @@ const usePinata = ({
   onSuccess,
   fieldToSetOnSuccess,
   fieldToSetOnError,
+  setValue: setValueFromProp,
 }: Props = {}): Uploader => {
   const toast = useToast()
-  const { setValue } = useFormContext() ?? {}
+  const { setValue: setValueFromContext } = useFormContext() ?? {}
+  const setValue = setValueFromProp || setValueFromContext
 
   const wrappedOnError = useCallback(
     (error) => {
@@ -46,6 +49,7 @@ const usePinata = ({
       }
     },
     // toast is left out intentionally
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [onError, fieldToSetOnError, setValue]
   )
 

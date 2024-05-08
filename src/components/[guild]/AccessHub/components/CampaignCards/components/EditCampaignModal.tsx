@@ -40,6 +40,7 @@ const EditCampaignModal = ({ groupId, onSuccess, ...modalProps }: Props) => {
 
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
+    setValue: methods.setValue,
   })
 
   const { onSubmit, isLoading } = useEditRoleGroup(groupId, onSuccess)
