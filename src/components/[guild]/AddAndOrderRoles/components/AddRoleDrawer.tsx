@@ -93,20 +93,9 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   }
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        {
-          shouldTouch: true,
-        }
-      )
-    },
-    onError: () => {
-      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control: methods.control,
   })
 
   const drawerBodyRef = useRef<HTMLDivElement>()

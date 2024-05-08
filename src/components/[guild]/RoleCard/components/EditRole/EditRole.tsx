@@ -38,7 +38,6 @@ import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Logic, RolePlatform, Visibility } from "types"
-import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import RoleGroupSelect from "./components/RoleGroupSelect"
@@ -158,17 +157,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   }
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
-        shouldTouch: true,
-        shouldDirty: true,
-      })
-    },
-    onError: () => {
-      setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control,
   })
 
   const drawerBodyRef = useRef<HTMLDivElement>()
