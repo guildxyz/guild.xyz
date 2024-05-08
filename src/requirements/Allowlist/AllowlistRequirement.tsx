@@ -32,6 +32,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const { addresses: initialAddresses, hideAllowlist } = requirement.data
 
+  const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
     requirement?.roleId,
     requirement?.id,
@@ -79,6 +80,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         onClose={onClose}
         title={isEmail ? "Email allowlist" : "Allowlist"}
         onSearch={setSearch}
+        isSearching={isSearchingAddresses || willSearchAddresses}
       />
     </Requirement>
   )

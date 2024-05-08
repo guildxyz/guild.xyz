@@ -1,10 +1,12 @@
 import {
+  Center,
   ListItem,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   UnorderedList,
   useBreakpointValue,
@@ -20,6 +22,7 @@ type Props = {
   title: string
   initialList: string[]
   onSearch?: (search: string) => void
+  isSearching?: boolean
 }
 
 const SearchableVirtualListModal = ({
@@ -28,6 +31,7 @@ const SearchableVirtualListModal = ({
   title,
   initialList,
   onSearch,
+  isSearching = false,
 }: Props) => {
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
@@ -77,6 +81,10 @@ const SearchableVirtualListModal = ({
               >
                 {Row}
               </FixedSizeList>
+            ) : isSearching ? (
+              <Center h="350">
+                <Spinner />
+              </Center>
             ) : (
               <Text colorScheme={"gray"} h="350">
                 No results
