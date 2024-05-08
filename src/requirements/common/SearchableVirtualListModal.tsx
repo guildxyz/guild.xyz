@@ -19,6 +19,7 @@ type Props = {
   onClose: () => void
   title: string
   initialList: string[]
+  onSearch?: (search: string) => void
 }
 
 const SearchableVirtualListModal = ({
@@ -26,6 +27,7 @@ const SearchableVirtualListModal = ({
   onClose,
   title,
   initialList,
+  onSearch,
 }: Props) => {
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
@@ -51,11 +53,20 @@ const SearchableVirtualListModal = ({
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <SearchBar {...{ search, setSearch }} placeholder="Search address" />
+          <SearchBar
+            {...{
+              search,
+              setSearch: (value) => {
+                setSearch(value)
+                onSearch?.(value)
+              },
+            }}
+            placeholder="Search address"
+          />
           <UnorderedList
             mt="6"
             ml="2"
-            sx={{ "> div": { overflow: "hidden scroll !important" } }}
+            sx={{ "> div": { overflow: "hidden auto !important" } }}
           >
             {filteredList.length > 0 ? (
               <FixedSizeList
