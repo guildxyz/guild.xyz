@@ -34,10 +34,17 @@ const usePinata = ({
 
   const wrappedOnError = useCallback(
     (error) => {
+      const description =
+        typeof error === "string"
+          ? error
+          : error instanceof Error
+          ? error.message
+          : undefined
+
       toast({
         status: "error",
         title: "Failed to upload image",
-        description: error,
+        description,
       })
       onError?.(error)
 
