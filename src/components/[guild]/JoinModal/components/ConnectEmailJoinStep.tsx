@@ -19,7 +19,7 @@ const ConnectEmailJoinStep = (): JSX.Element => {
         shouldWrapChildren
       >
         <ConnectEmailButton
-          isDisabled={!isConnected}
+          isDisabled={!isConnected || isDone}
           size="md"
           leftIcon={<EnvelopeSimple />}
           flexShrink="0"
