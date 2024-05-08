@@ -34,14 +34,12 @@ const CollectNftProvider = ({
   nftAddress,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
-  // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
   const { data: nftBalance } = useNftBalance({
     nftAddress,
     chainId: Chains[chain],
   })
-  const alreadyCollected = nftBalance > 0
-
-  const { name } = useNftDetails(chain, nftAddress)
+  const { name, mintableAmountPerUser } = useNftDetails(chain, nftAddress)
+  const alreadyCollected = nftBalance >= mintableAmountPerUser
 
   const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
   useEffect(() => {
