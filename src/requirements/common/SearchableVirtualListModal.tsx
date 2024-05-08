@@ -74,7 +74,7 @@ const SearchableVirtualListModal = ({
           >
             {filteredList.length > 0 ? (
               <FixedSizeList
-                height={350}
+                height={250}
                 itemCount={filteredList.length}
                 itemSize={itemSize}
                 className="custom-scrollbar"
@@ -82,11 +82,11 @@ const SearchableVirtualListModal = ({
                 {Row}
               </FixedSizeList>
             ) : isSearching ? (
-              <Center h="350">
+              <Center h="250">
                 <Spinner />
               </Center>
             ) : (
-              <Text colorScheme={"gray"} h="350">
+              <Text colorScheme={"gray"} h="250">
                 No results
               </Text>
             )}
