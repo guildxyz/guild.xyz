@@ -7,11 +7,17 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
-import { Guild, GuildBase } from "types"
+import { Guild, GuildBase, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 
-const useCreateGuild = () => {
+const useCreateGuild = ({
+  onError,
+  onSuccess,
+}: {
+  onError?: (err: unknown) => void
+  onSuccess?: () => void
+} = {}) => {
   const { captureEvent } = usePostHogContext()
 
   const { mutate: mutateYourGuilds } = useYourGuilds()
@@ -26,15 +32,23 @@ const useCreateGuild = () => {
     fetcher("/v2/guilds", signedValidation)
 
   const useSubmitResponse = useSubmitWithSign<Guild>(fetchData, {
-    onError: (error_) =>
+    onError: (error_) => {
       showErrorToast({
         error: processConnectorError(error_.error) ?? error_.error,
         correlationId: error_.correlationId,
-      }),
+      })
+      onError?.(error_)
+    },
     onSuccess: (response_) => {
       triggerConfetti()
 
       captureEvent("guild creation flow > guild successfully created")
+
+      if (response_.guildPlatforms?.[0]?.platformId === PlatformType.CONTRACT_CALL) {
+        captureEvent("Created NFT reward", {
+          hook: "useCreateGuild",
+        })
+      }
 
       mutateYourGuilds((prev) => mutateGuildsCache(prev, response_), {
         revalidate: false,
@@ -50,6 +64,7 @@ const useCreateGuild = () => {
         description: "You're being redirected to its page",
         status: "success",
       })
+      onSuccess?.()
       router.push(`/${response_.urlName}`)
     },
   })

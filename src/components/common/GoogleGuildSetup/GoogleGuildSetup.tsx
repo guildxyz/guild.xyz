@@ -12,7 +12,6 @@ import {
   Text,
   useClipboard,
   useDisclosure,
-  usePrevious,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
@@ -49,21 +48,12 @@ const GoogleGuildSetup = ({
 }: Props): JSX.Element => {
   const fieldName = `${fieldNameBase}platformGuildId`
 
-  const { gateables, isLoading } = useGateables(PlatformType.GOOGLE, {
-    refreshInterval: 10_000,
-  })
-
   const { isOpen, onClose, onOpen } = useDisclosure()
-
-  const prevGateables = usePrevious(gateables)
-  useEffect(() => {
-    if (gateables?.length > prevGateables?.length) {
-      onClose()
-    }
-  }, [prevGateables, gateables])
-  useEffect(() => {
-    if (gateables?.length === 0) onOpen()
-  }, [gateables])
+  const { gateables, isLoading } = useGateables(PlatformType.GOOGLE, {
+    onSuccess: (data, _key, _config) => {
+      if (data?.length > gateables?.length) onClose()
+    },
+  })
 
   const { control, setValue, reset, handleSubmit } = useFormContext()
   const platformGuildId = useWatch({ control, name: fieldName })

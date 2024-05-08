@@ -22,14 +22,16 @@ const PlatformCard = ({
   children,
   ...rest
 }: PropsWithChildren<Props>) => {
-  const { info, name, image, type } = usePlatformCardProps(guildPlatform)
+  const { info, name, image, type, shouldHide } = usePlatformCardProps(guildPlatform)
+
+  if (shouldHide) return null
 
   return (
     <RewardCard
       label={rewards[type].name}
       title={name}
       titleRightElement={titleRightElement}
-      description={contentRow ?? info}
+      description={contentRow || info}
       image={image}
       colorScheme={rewards[type].colorScheme}
       {...{ actionRow, cornerButton }}

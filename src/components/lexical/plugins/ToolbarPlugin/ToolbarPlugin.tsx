@@ -354,7 +354,7 @@ const ToolbarPlugin = () => {
     } else {
       onLinkEditorClose()
     }
-  }, [editor, isLink])
+  }, [editor, isLink, onLinkEditorOpen, onLinkEditorClose])
 
   return (
     <ButtonGroup

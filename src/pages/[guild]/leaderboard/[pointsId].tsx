@@ -10,11 +10,14 @@ import {
   Stack,
   Wrap,
 } from "@chakra-ui/react"
+import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
+import GuildName from "components/[guild]/GuildName"
 import SocialIcon from "components/[guild]/SocialIcon"
 import GuildTabs from "components/[guild]/Tabs/GuildTabs"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import { LeaderboardAirdropCard } from "components/[guild]/leaderboard/LeaderboardAirdropCard"
 import LeaderboardPointsSelector from "components/[guild]/leaderboard/LeaderboardPointsSelector"
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
@@ -25,7 +28,6 @@ import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
@@ -43,6 +45,8 @@ const Leaderboard = () => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
   const wrapperRef = useRef(null)
+
+  const relatedTokenRewards = useTokenRewards(false, Number(router.query.pointsId))
 
   const { data, error } = useSWRWithOptionalAuth(
     guildId
@@ -68,7 +72,7 @@ const Leaderboard = () => {
 
   return (
     <Layout
-      title={name}
+      title={<GuildName {...{ name, tags }} />}
       textColor={textColor}
       ogTitle={`Leaderboard${name ? ` - ${name}` : ""}`}
       ogDescription={description}
@@ -113,33 +117,37 @@ const Leaderboard = () => {
       background={localThemeColor}
       backgroundImage={localBackgroundImage}
       backButton={<BackButton />}
-      titlePostfix={
-        tags?.includes("VERIFIED") && (
-          <VerifiedIcon size={{ base: 5, lg: 6 }} mt={-1} />
-        )
-      }
     >
       <GuildTabs
         activeTab="LEADERBOARD"
         rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
-        {userData && (
-          <LeaderboardUserCard
-            address={
-              userData.address ??
-              addresses?.find((address) => address.isPrimary).address
-            }
-            score={userData.totalPoints}
-            position={userData.rank}
-            isCurrentUser
-            tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
-          />
-        )}
+        <Stack spacing={3}>
+          {relatedTokenRewards.map((guildPlatform) => (
+            <LeaderboardAirdropCard
+              key={guildPlatform.id}
+              guildPlatform={guildPlatform}
+            />
+          ))}
+
+          {userData && (
+            <LeaderboardUserCard
+              address={
+                userData.address ??
+                addresses?.find((address) => address.isPrimary).address
+              }
+              score={userData.totalPoints}
+              position={userData.rank}
+              isCurrentUser
+              tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
+            />
+          )}
+        </Stack>
 
         <Section
           ref={wrapperRef}
-          title={userData ? "Leaderboard" : undefined}
+          title={userData || relatedTokenRewards.length ? "Leaderboard" : undefined}
           spacing={3}
         >
           <>

@@ -39,7 +39,7 @@ const CollectNft = () => {
   const rolePlatform = roles
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
-  const { totalCollectors, totalCollectorsToday, isLoading, error } = useNftDetails(
+  const { totalCollectors, totalCollectorsToday, isLoading } = useNftDetails(
     chain,
     nftAddress
   )

@@ -18,7 +18,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
-import { delegateConnectionAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/DelegateCashButton"
 import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -28,7 +27,7 @@ import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
 import { deleteKeyPairFromIdb } from "hooks/useSetKeyPair"
-import { useAtom, useSetAtom } from "jotai"
+import { useAtom } from "jotai"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
@@ -36,12 +35,10 @@ import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
-import PrimaryAddressTag from "./components/PrimaryAddressTag"
 import UsersGuildPins from "./components/UsersGuildCredentials"
 
 const AccountModal = () => {
   const { address, type, disconnect } = useWeb3ConnectionManager()
-  const setIsDelegateConnection = useSetAtom(delegateConnectionAtom)
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
   const onClose = () => setIsOpen(false)
 
@@ -52,7 +49,7 @@ const AccountModal = () => {
     onOpen: openNetworkModal,
     onClose: closeNetworkModal,
   } = useDisclosure()
-  const { id, addresses } = useUser()
+  const { id } = useUser()
   const { deleteKeys } = useUserPublic()
 
   const handleLogout = () => {
@@ -67,7 +64,6 @@ const AccountModal = () => {
     deleteKeyPairFromIdb(id)
       ?.catch(() => {})
       .finally(() => {
-        setIsDelegateConnection(false)
         onClose()
         disconnect()
         deleteKeys()
@@ -81,12 +77,7 @@ const AccountModal = () => {
   const { connectorName } = useConnectorNameAndIcon()
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      colorScheme="duotone"
-      scrollBehavior="inside"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pb="6">Account</ModalHeader>
@@ -106,13 +97,6 @@ const AccountModal = () => {
                       decimals={5}
                       fontWeight="bold"
                     />
-                    {(typeof addresses?.[0] === "string"
-                      ? (addresses as any)?.indexOf(address.toLowerCase())
-                      : addresses?.findIndex(
-                          ({ address: a }) => a === address.toLowerCase()
-                        )) === 0 && addresses.length > 1 ? (
-                      <PrimaryAddressTag size="sm" />
-                    ) : null}
                   </HStack>
                   <HStack spacing="1">
                     <Text

@@ -24,9 +24,7 @@ const GitHubGuildSetup = ({
 }: {
   onSelection?: (platformGuildId: string) => void
 }) => {
-  const { gateables, isLoading, error, mutate } = useGateables(PlatformType.GITHUB, {
-    refreshInterval: 10_000,
-  })
+  const { gateables, isLoading, error, mutate } = useGateables(PlatformType.GITHUB)
 
   /**
    * To have a clean loading state between a reauth and a gatealbes list, it is

@@ -1,9 +1,9 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelProvider } from "@fuel-wallet/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
 import Chakra from "components/_app/Chakra"
-import ExplorerProvider from "components/_app/ExplorerProvider"
 import IntercomProvider from "components/_app/IntercomProvider"
 import { PostHogProvider } from "components/_app/PostHogProvider"
 import Web3ConnectionManager from "components/_app/Web3ConnectionManager"
@@ -30,9 +30,11 @@ import { wagmiConfig } from "wagmiConfig"
  */
 import "wicg-inert"
 
+const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+
 const queryClient = new QueryClient()
 
-const DynamicReCAPTCHA = dynamic(() => import("components/common/ReCAPTCHA"))
+bugsnagStart()
 
 const App = ({
   Component,
@@ -63,7 +65,7 @@ const App = ({
       router.events.off("routeChangeStart", handleRouteChangeStart)
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
-  }, [])
+  }, [router.events])
 
   return (
     <>
@@ -89,7 +91,7 @@ const App = ({
             direction="top"
             in={isRouteChangeInProgress}
             initial="0.3s"
-            style={{ zIndex: 10 }}
+            style={{ zIndex: 2000 }}
           >
             <Box position="relative" w="100%" h="5px" zIndex={2}>
               <Progress
@@ -113,23 +115,18 @@ const App = ({
           }}
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <WagmiProvider
-              config={wagmiConfig}
-              reconnectOnMount={!process.env.NEXT_PUBLIC_MOCK_CONNECTOR}
-            >
+            <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
               <QueryClientProvider client={queryClient}>
                 <FuelProvider>
                   <PostHogProvider>
                     <IntercomProvider>
-                      <ExplorerProvider>
-                        <AppErrorBoundary>
-                          <Component {...pageProps} />
-                        </AppErrorBoundary>
+                      <AppErrorBoundary>
+                        <Component {...pageProps} />
+                      </AppErrorBoundary>
 
-                        <ClientOnly>
-                          <AccountModal />
-                        </ClientOnly>
-                      </ExplorerProvider>
+                      <ClientOnly>
+                        <AccountModal />
+                      </ClientOnly>
                     </IntercomProvider>
 
                     <Web3ConnectionManager />

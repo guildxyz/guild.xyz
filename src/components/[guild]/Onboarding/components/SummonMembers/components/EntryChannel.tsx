@@ -38,7 +38,7 @@ const EntryChannel = ({
     if (!channels?.some(({ id }) => id === channelId)) {
       setValue(fieldName, !showCreateOption ? channels?.[0]?.id : "0")
     }
-  }, [channelId, channels])
+  }, [channelId, channels, setValue, fieldName, showCreateOption])
 
   return (
     <FormControl isInvalid={!!errorMessage} defaultValue={channels?.[0]?.id}>

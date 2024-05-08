@@ -53,7 +53,7 @@ const useConnectFromLocalStorage = () => {
         }
       }
     })
-  }, [keyPair, platformUsers])
+  }, [keyPair, platformUsers, onSubmit, toast, captureEvent])
 }
 
 export default useConnectFromLocalStorage

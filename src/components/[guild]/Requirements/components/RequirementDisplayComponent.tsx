@@ -6,6 +6,7 @@ import { PropsWithChildren } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType, Rest } from "types"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import HiddenRequirementAccessIndicator from "./HiddenRequirementAccessIndicator"
 import Requirement from "./Requirement"
 import RequirementAccessIndicator from "./RequirementAccessIndicator"
@@ -34,6 +35,14 @@ const RequirementDisplayComponent = ({
     )
 
   const RequirementComponent = REQUIREMENTS[requirement.type]?.displayComponent
+
+  if (!!requirement.chain && !CHAIN_CONFIG[requirement.chain])
+    return (
+      <Requirement image={<Icon as={Warning} boxSize={5} color="orange.300" />}>
+        {`Unsupported requirement chain: `}
+        <DataBlock>{requirement.chain}</DataBlock>
+      </Requirement>
+    )
 
   if (!RequirementComponent)
     return (

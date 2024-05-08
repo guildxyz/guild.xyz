@@ -2,8 +2,7 @@ import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext, useFormState, useWatch } from "react-hook-form"
+import { useController, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import PointsAmount from "./components/PointsAmount"
@@ -34,12 +33,11 @@ const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const isEditMode = !!field?.id
 
-  const { setValue } = useFormContext()
   const { errors } = useFormState()
-
-  useEffect(() => {
-    setValue("data.guildId", id)
-  }, [type])
+  useController({
+    name: `${baseFieldPath}.data.guildId`,
+    defaultValue: id,
+  })
 
   const selected = pointRequirementTypes.find((reqType) => reqType.value === type)
 

@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Modal,
   ModalBody,
@@ -9,17 +10,12 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
-import useGateables from "hooks/useGateables"
-import {
-  FormProvider,
-  useFieldArray,
-  useForm,
-  useFormContext,
-  useWatch,
-} from "react-hook-form"
+import PermissionAlert from "components/common/DiscordGuildSetup/components/PermissionAlert"
+import { useState } from "react"
+import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, PlatformGuildData, PlatformType } from "types"
-import getRandomInt from "utils/getRandomInt"
 
 type Props = {
   isOpen: boolean
@@ -27,24 +23,18 @@ type Props = {
 }
 
 const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
+  const { captureEvent } = usePostHogContext()
   const { control } = useFormContext<GuildFormType>()
   const { append } = useFieldArray({
     control,
     name: "guildPlatforms",
   })
-  const discordMethods = useForm({
-    defaultValues: { discordServerId: "", name: "", img: undefined },
-  })
-  const selectedServer = useWatch({
-    control: discordMethods.control,
-    name: `discordServerId`,
-  })
 
-  const discordServers = useGateables(PlatformType.DISCORD)
-
-  const selectedDiscordServerData = discordServers.gateables?.find(
-    (server) => server.id === discordMethods.getValues("discordServerId")
-  )
+  const [selectedServer, setSelectedServer] = useState<{
+    platformGuildId: string
+    img?: string
+    name?: string
+  }>()
 
   return (
     <Modal
@@ -58,42 +48,38 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
       <ModalContent>
         <ModalHeader>Connect to Discord</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody display="flex" flexDir="column">
           <Text colorScheme="gray" fontWeight="semibold" mb={4}>
             Adding the bot and creating the Guild won't change anything on your
             server
           </Text>
-          <FormProvider {...discordMethods}>
-            <DiscordGuildSetup
-              defaultValues={{
-                name: "",
-                description: "",
-                imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
-                contacts: [{ type: "EMAIL", contact: "" }],
-                guildPlatforms: [
-                  {
-                    platformName: "DISCORD",
-                    platformGuildId: "",
-                  },
-                ],
-              }}
-              selectedServer={selectedServer}
-              fieldName={`discordServerId`}
-            />
-          </FormProvider>
+          <PermissionAlert mb={4} />
+          <Box
+            overflow="auto"
+            className="invisible-scrollbar"
+            sx={{
+              maskImage:
+                "linear-gradient(to bottom, transparent 0px, black var(--chakra-sizes-4), black calc(100% - var(--chakra-sizes-4)), transparent)",
+            }}
+            py={4}
+          >
+            <DiscordGuildSetup onSubmit={setSelectedServer} shouldHideGotItButton />
+          </Box>
         </ModalBody>
         <ModalFooter>
           <Button
             colorScheme="green"
-            isDisabled={!selectedServer}
+            isDisabled={!selectedServer?.platformGuildId}
             onClick={() => {
+              captureEvent("[discord setup] server added")
+
               append({
                 platformName: "DISCORD",
-                platformGuildId: discordMethods.getValues("discordServerId"),
+                platformGuildId: selectedServer?.platformGuildId,
                 platformId: PlatformType.DISCORD,
                 platformGuildData: {
-                  name: selectedDiscordServerData.name,
-                  imageUrl: selectedDiscordServerData.img,
+                  name: selectedServer?.name,
+                  imageUrl: selectedServer?.img,
                 } as PlatformGuildData["DISCORD"],
               })
               onClose()

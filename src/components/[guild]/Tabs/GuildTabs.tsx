@@ -1,4 +1,3 @@
-import { IntercomTrigger } from "components/_app/IntercomProvider"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { PlatformType } from "types"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
@@ -91,21 +90,11 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Analytics
         </TabButton>
       )}
-      {isAdmin &&
-        (featureFlags.includes("MESSAGING") ? (
-          <TabButton
-            href={`/${urlName}/messages`}
-            isActive={activeTab === "MESSAGES"}
-          >
-            Messages
-          </TabButton>
-        ) : (
-          <>
-            <IntercomTrigger data-intercom-selector="messages-tab-button">
-              <TabButton>Messages</TabButton>
-            </IntercomTrigger>
-          </>
-        ))}
+      {isAdmin && (
+        <TabButton href={`/${urlName}/messages`} isActive={activeTab === "MESSAGES"}>
+          Messages
+        </TabButton>
+      )}
     </Tabs>
   )
 }

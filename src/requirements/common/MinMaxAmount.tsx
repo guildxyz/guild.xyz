@@ -14,7 +14,7 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 import { Requirement } from "types"
 import capitalize from "utils/capitalize"
@@ -43,12 +43,12 @@ const MinMaxAmount = ({
 
   const [showMax, setShowMax] = useState(!isNaN(field?.data?.maxAmount))
 
-  const toggleShowMax = () => setShowMax(!showMax)
-
-  useEffect(() => {
-    if (showMax) return
-    unregister(`${baseFieldPath}.data.maxAmount`)
-  }, [showMax])
+  const toggleShowMax = () =>
+    setShowMax((prevValue) => {
+      const newValue = !prevValue
+      if (!newValue) unregister(`${baseFieldPath}.data.maxAmount`)
+      return newValue
+    })
 
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)

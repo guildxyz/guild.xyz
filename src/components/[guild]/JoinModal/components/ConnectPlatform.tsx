@@ -1,12 +1,12 @@
 import { Icon } from "@chakra-ui/react"
 import usePlatformsToReconnect from "components/[guild]/hooks/usePlatformsToReconnect"
 import useUser from "components/[guild]/hooks/useUser"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Script from "next/script"
 import rewards from "platforms/rewards"
 import { useEffect } from "react"
 import { useFormContext } from "react-hook-form"
 import { PlatformName } from "types"
-import { useAccount } from "wagmi"
 import useConnectPlatform from "../hooks/useConnectPlatform"
 import useMembershipUpdate from "../hooks/useMembershipUpdate"
 import ConnectAccount from "./ConnectAccount"
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const ConnectPlatform = ({ platform }: Props) => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
   const { platformUsers, isLoading: isLoadingUser } = useUser()
 
   const platformsToReconnect = usePlatformsToReconnect()
@@ -40,7 +40,7 @@ const ConnectPlatform = ({ platform }: Props) => {
 
   useEffect(() => {
     if (platformFromDb?.platformUserId) setValue(`platforms.${platform}`, null)
-  }, [platformFromDb])
+  }, [platformFromDb, platform, setValue])
 
   const accountName = `${rewards[platform].name}${
     platform === "TWITTER_V1" ? " (v1)" : ""
@@ -62,7 +62,7 @@ const ConnectPlatform = ({ platform }: Props) => {
         (platform === "TWITTER" ||
           platform === "TWITTER_V1" ||
           platform === "DISCORD") &&
-        !isConnected &&
+        !isWeb3Connected &&
         "Connect wallet first"
       }
     >

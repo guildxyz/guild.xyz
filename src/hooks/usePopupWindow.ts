@@ -20,7 +20,8 @@ const defaultWindowFeatures = {
 
 const usePopupWindow = (
   uri?: string,
-  windowFeatures: WindowFeatures = defaultWindowFeatures
+  windowFeatures: WindowFeatures = defaultWindowFeatures,
+  onClose?: () => void
 ) => {
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
@@ -60,6 +61,7 @@ const usePopupWindow = (
     const timer = setInterval(() => {
       if (windowInstance.closed) {
         setWindowInstance(null)
+        onClose?.()
       }
     }, 1000)
     return () => clearInterval(timer)

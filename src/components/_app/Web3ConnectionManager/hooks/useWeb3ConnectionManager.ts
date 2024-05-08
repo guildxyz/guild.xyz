@@ -35,12 +35,13 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     connector: evmConnector,
     address: evmAddress,
   } = useAccount()
+
   const { signMessageAsync } = useSignMessage()
 
   useEffect(() => {
     if (!isEvmConnected || evmConnector?.id !== "safe") return
     setIsInSafeContext(true)
-  }, [isEvmConnected, evmConnector])
+  }, [isEvmConnected, evmConnector, setIsInSafeContext])
 
   const { account: fuelAccount } = useFuelAccount()
   const fuelAddress = parseFuelAddress(fuelAccount)
@@ -52,7 +53,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   useEffect(() => {
     if (!isWeb3Connected && router.query.redirectUrl)
       setIsWalletSelectorModalOpen(true)
-  }, [isWeb3Connected, router.query])
+  }, [isWeb3Connected, router.query, setIsWalletSelectorModalOpen])
 
   const type = isEvmConnected ? "EVM" : isFuelConnected ? "FUEL" : null
 

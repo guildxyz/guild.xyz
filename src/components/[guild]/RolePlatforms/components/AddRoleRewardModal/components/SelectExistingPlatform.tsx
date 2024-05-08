@@ -1,18 +1,27 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { openRewardSettingsGuildPlatformIdAtom } from "components/[guild]/RolePlatforms/RolePlatforms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
+import { useSetAtom } from "jotai"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
-import { PlatformType, RoleFormType, Visibility } from "types"
+import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
 import PlatformCard from "../../PlatformCard"
 
 type Props = {
   onClose: () => void
-  onSelect: (selectedRolePlatform: RoleFormType["rolePlatforms"][number]) => void
+  onSelect: (
+    selectedRolePlatform: RoleFormType["rolePlatforms"][number] & {
+      requirements?: Requirement[]
+    }
+  ) => void
 }
 
 const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
+  const setOpenGuildPlatformSettingsId = useSetAtom(
+    openRewardSettingsGuildPlatformIdAtom
+  )
   const { guildPlatforms, roles } = useGuild()
   const alreadyUsedRolePlatforms = roles
     ?.flatMap((role) => role.rolePlatforms)
@@ -30,8 +39,6 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
       (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
         PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
         !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
-      // temporary until we have Edit button for points to set amount
-      guildPlatform.platformId !== PlatformType.POINTS &&
       // not added to the role yet
       !rolePlatforms.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
@@ -51,7 +58,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           const platformData = rewards[PlatformType[platform.platformId]]
           if (!platformData) return null
 
-          const useCardProps = platformData.cardPropsHook
+          const { cardPropsHook, cardSettingsComponent } = platformData
 
           const isGoogleReward = platform.platformId === PlatformType.GOOGLE
           const isForm =
@@ -61,12 +68,13 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           return (
             <PlatformCard
               key={platform.id}
-              usePlatformCardProps={useCardProps}
+              usePlatformCardProps={cardPropsHook}
               guildPlatform={platform}
               colSpan={1}
               onClick={() => {
                 onSelect({
                   guildPlatformId: platform.id,
+                  guildPlatform: platform,
                   isNew: true,
                   platformRoleId: isGoogleReward
                     ? isForm
@@ -75,8 +83,12 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                     : null,
                   visibility: roleVisibility,
                 })
+                if (cardSettingsComponent)
+                  setOpenGuildPlatformSettingsId(platform.id)
+
                 onClose()
               }}
+              description={null}
               {...DISPLAY_CARD_INTERACTIVITY_STYLES}
             ></PlatformCard>
           )

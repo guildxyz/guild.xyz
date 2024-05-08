@@ -8,7 +8,7 @@ import fetcher from "utils/fetcher"
 
 type Response = any
 
-const useLeaveGuild = () => {
+const useLeaveGuild = (onSuccess?: () => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { mutate: mutateMembership } = useMembership()
@@ -37,6 +37,8 @@ const useLeaveGuild = () => {
         (prevValue) => prevValue?.filter((guild) => guild.id !== id),
         { revalidate: false }
       )
+
+      onSuccess?.()
     },
     onError: (error) => showErrorToast(error),
   })

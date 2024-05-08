@@ -20,14 +20,14 @@ const CollectNftButton = ({
   label = "Collect NFT",
   ...rest
 }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
+  const { captureEvent, startSessionRecording } = usePostHogContext()
 
   const { chain, nftAddress, alreadyCollected, roleId } = useCollectNftContext()
   const { urlName } = useGuild()
 
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
-  const { address, chainId } = useAccount()
+  const { isConnected, address, chainId } = useAccount()
   const shouldSwitchNetwork = chainId !== Chains[chain]
 
   const {
@@ -74,7 +74,8 @@ const CollectNftButton = ({
     ? mintLoadingText
     : "Checking eligibility"
 
-  const isDisabled = shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
+  const isDisabled =
+    !isConnected || shouldSwitchNetwork || alreadyCollected || !isSufficientBalance
 
   return (
     <Button
@@ -88,6 +89,7 @@ const CollectNftButton = ({
         captureEvent("Click: CollectNftButton (GuildCheckout)", {
           guild: urlName,
         })
+        startSessionRecording()
 
         if (hasRoleAccess) {
           onMintSubmit()

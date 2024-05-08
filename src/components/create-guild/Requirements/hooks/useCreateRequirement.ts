@@ -8,7 +8,7 @@ import preprocessRequirement from "utils/preprocessRequirement"
 
 const useCreateRequirement = (
   roleId: number,
-  config?: { onSuccess?: () => void }
+  config?: { onSuccess?: () => void; onError?: (err) => void }
 ) => {
   const { id: guildId } = useGuild()
   const { mutate: mutateRequirements } = useRequirements(roleId)
@@ -43,7 +43,10 @@ const useCreateRequirement = (
 
       config?.onSuccess?.()
     },
-    onError: (error) => showErrorToast(error),
+    onError: (error) => {
+      showErrorToast(error)
+      config?.onError?.(error)
+    },
   })
 }
 

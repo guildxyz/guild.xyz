@@ -1,9 +1,11 @@
 import ClientOnly from "components/common/ClientOnly"
 import { useAtom } from "jotai"
 import PlatformMergeErrorAlert from "./components/PlatformMergeErrorAlert"
+import WalletLinkHelperModal from "./components/WalletLinkHelperModal"
 import WalletSelectorModal, {
   walletSelectorModalAtom,
 } from "./components/WalletSelectorModal"
+import useAutoReconnect from "./hooks/useAutoReconnect"
 import useConnectFromLocalStorage from "./hooks/useConnectFromLocalStorage"
 
 const Web3ConnectionManager = () => {
@@ -11,6 +13,7 @@ const Web3ConnectionManager = () => {
     walletSelectorModalAtom
   )
 
+  useAutoReconnect()
   useConnectFromLocalStorage()
 
   return (
@@ -20,6 +23,7 @@ const Web3ConnectionManager = () => {
         onOpen={() => setIsWalletSelectorModalOpen(true)}
         onClose={() => setIsWalletSelectorModalOpen(false)}
       />
+      <WalletLinkHelperModal />
       <PlatformMergeErrorAlert />
     </ClientOnly>
   )

@@ -18,9 +18,8 @@ import Header from "./components/Header"
 type Props = {
   image?: JSX.Element
   imageUrl?: string
+  title?: JSX.Element | string
   ogTitle?: string
-  title?: string
-  titlePostfix?: JSX.Element
   ogDescription?: string
   description?: JSX.Element
   textColor?: string
@@ -32,14 +31,13 @@ type Props = {
   backButton?: JSX.Element
   maxWidth?: string
   showFooter?: boolean
-} & BoxProps
+} & Omit<BoxProps, "title">
 
 const Layout = ({
   image,
   imageUrl,
   ogTitle,
   title,
-  titlePostfix,
   ogDescription,
   description,
   textColor,
@@ -162,7 +160,6 @@ const Layout = ({
                     >
                       {title}
                     </Heading>
-                    {titlePostfix}
                   </HStack>
                 </HStack>
                 {action}

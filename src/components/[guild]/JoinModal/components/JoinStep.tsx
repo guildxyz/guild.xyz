@@ -1,6 +1,6 @@
-import { ButtonGroup, ButtonProps, HStack, Text, Tooltip } from "@chakra-ui/react"
+import { ButtonProps, HStack, Text, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import React, { PropsWithChildren } from "react"
+import { PropsWithChildren } from "react"
 import JoinStepIndicator from "./JoinStepIndicator"
 
 type JoinStepUIProps = {
@@ -15,7 +15,6 @@ type JoinStepProps = {
   isDisabled?: string
   icon: JSX.Element
   colorScheme: string
-  addonButton?: JSX.Element
 } & JoinStepUIProps &
   Omit<ButtonProps, "isDisabled">
 
@@ -27,42 +26,30 @@ const JoinStep = ({
   icon,
   colorScheme,
   isDone,
-  addonButton,
   children,
   ...buttonProps
-}: PropsWithChildren<JoinStepProps>) => {
-  const ButtonWrapper = addonButton ? ButtonGroup : React.Fragment
-  const buttonWrapperProps = addonButton ? { isAttached: true } : {}
-
-  return (
-    <JoinStepUI {...{ isDone, title, titleRightElement, isRequired }}>
-      <ButtonWrapper {...buttonWrapperProps}>
-        <Tooltip
-          isDisabled={!buttonProps.isDisabled}
-          label={buttonProps.isDisabled}
-          shouldWrapChildren
-        >
-          <Button
-            leftIcon={icon}
-            colorScheme={colorScheme}
-            flexShrink="0"
-            minW="max-content"
-            maxW={isDone && "40"}
-            {...buttonProps}
-            isDisabled={isDone || buttonProps.isDisabled}
-            borderRightRadius={!!addonButton && 0}
-          >
-            {buttonLabel}
-          </Button>
-        </Tooltip>
-
-        {addonButton}
-      </ButtonWrapper>
-
-      {children}
-    </JoinStepUI>
-  )
-}
+}: PropsWithChildren<JoinStepProps>) => (
+  <JoinStepUI {...{ isDone, title, titleRightElement, isRequired }}>
+    <Tooltip
+      isDisabled={!buttonProps.isDisabled}
+      label={buttonProps.isDisabled}
+      shouldWrapChildren
+    >
+      <Button
+        leftIcon={icon}
+        colorScheme={colorScheme}
+        flexShrink="0"
+        minW="max-content"
+        maxW={isDone && "40"}
+        {...buttonProps}
+        isDisabled={isDone || buttonProps.isDisabled}
+      >
+        {buttonLabel}
+      </Button>
+    </Tooltip>
+    {children}
+  </JoinStepUI>
+)
 
 export const JoinStepUI = ({
   isDone,

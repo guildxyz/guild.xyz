@@ -20,7 +20,6 @@ import {
   getRolePlatformStatus,
   getRolePlatformTimeframeInfo,
 } from "utils/rolePlatformHelpers"
-import { useAccount } from "wagmi"
 
 const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId, platformGuildData } = platform.guildPlatform
@@ -38,7 +37,6 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
   )
 
   const { hasRoleAccess, isMember } = useRoleMembership(role.id)
-  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const state = useMemo(() => {
@@ -63,7 +61,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
         tooltipLabel: (
           <>
             <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
-            Join guild to get access
+            Join guild to check access
           </>
         ),
         buttonProps: { onClick: openJoinModal },
@@ -73,7 +71,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [claimed, isMember, hasRoleAccess, isConnected, platform])
+  }, [hasRoleAccess, platform, claimed, isMember, openJoinModal])
 
   const spaceUrl = `https://app.gather.town/app/${platform.guildPlatform.platformGuildId.replace(
     "\\",

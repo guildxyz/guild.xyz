@@ -2,7 +2,6 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { useSWRConfig } from "swr"
 import { OneOf } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
@@ -13,8 +12,6 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
-
-  const { mutate } = useSWRConfig()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()
@@ -53,15 +50,17 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         )
     )
 
+    const rolePlatformsToCreate = (rolePlatforms ?? []).filter(
+      (rolePlatform) => !("id" in rolePlatform)
+    )
+
     const rolePlatformCreations = Promise.all(
-      (rolePlatforms ?? [])
-        .filter((rolePlatform) => !("id" in rolePlatform))
-        .map((rolePlatform) =>
-          fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
-            { method: "POST", body: rolePlatform },
-          ]).catch((error) => error)
-        )
+      rolePlatformsToCreate.map((rolePlatform) =>
+        fetcherWithSign([
+          `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
+          { method: "POST", body: rolePlatform },
+        ]).catch((error) => error)
+      )
     )
 
     const [updatedRole, updatedRolePlatforms, createdRolePlatforms] =

@@ -7,7 +7,7 @@ type Props = {
   rules?: Record<string, any>
   beforeOnChange?: (newValue: SelectOption) => void
   afterOnChange?: (newValue: SelectOption) => void
-  fallbackValue?: SelectOption
+  fallbackValue?: SelectOption<any> // TODO: we could use a generic here & infer the type from the "options" prop
 } & StyledSelectProps &
   UseControllerProps
 

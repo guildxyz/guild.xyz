@@ -15,29 +15,17 @@ const useSetRoleImageAndNameFromPlatformData = (
   const { setValue } = useFormContext()
 
   const { onUpload } = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      if (IpfsHash)
-        setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`)
-    },
+    fieldToSetOnSuccess: "imageUrl",
   })
 
   useEffect(() => {
-    if (
-      activeTab !== RoleTypeToAddTo.NEW_ROLE ||
-      !(platformName?.length > 0) ||
-      !onUpload
-    )
-      return
+    if (activeTab !== RoleTypeToAddTo.NEW_ROLE || !(platformName?.length > 0)) return
 
     setValue("name", platformName)
-  }, [activeTab, platformName])
+  }, [activeTab, platformName, setValue])
 
   useEffect(() => {
-    if (
-      activeTab !== RoleTypeToAddTo.NEW_ROLE ||
-      !(platformImage?.length > 0) ||
-      !onUpload
-    )
+    if (activeTab !== RoleTypeToAddTo.NEW_ROLE || !(platformImage?.length > 0))
       return
 
     fetch(platformImage)
@@ -47,7 +35,7 @@ const useSetRoleImageAndNameFromPlatformData = (
           data: [new File([blob], `${platformName}.png`, { type: "image/png" })],
         })
       )
-  }, [activeTab, platformImage])
+  }, [activeTab, platformImage, platformName, onUpload])
 }
 
 export default useSetRoleImageAndNameFromPlatformData

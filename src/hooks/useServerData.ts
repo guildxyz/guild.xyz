@@ -3,12 +3,6 @@ import useSWR, { SWRConfiguration } from "swr"
 
 export type Channel = { id: string; name: string; roles: string[] }
 
-export type Category = {
-  id: string
-  name: string
-  channels: Channel[]
-}
-
 export type Role = {
   guild: string
   icon: string
@@ -29,7 +23,6 @@ type ServerData = {
   serverIcon: string
   serverName: string
   serverId: string
-  categories: Category[]
   isAdmin: boolean
   channels?: EntryChannel[]
   roles: Role[]
@@ -39,7 +32,6 @@ const fallbackData = {
   serverIcon: null,
   serverName: "",
   serverId: "",
-  categories: [],
   isAdmin: undefined,
   channels: [],
   roles: [],
@@ -53,7 +45,7 @@ const useServerData = (
   }
 ) => {
   const shouldFetch = serverId?.length >= 0
-  const { data, isValidating, error, mutate } = useSWR<ServerData>(
+  return useSWR<ServerData>(
     shouldFetch
       ? `/v2/discord/servers/${serverId}?memberCountDetails=${
           option?.memberCountDetails || false
@@ -62,19 +54,10 @@ const useServerData = (
     {
       fallbackData,
       revalidateOnFocus: false,
+      shouldRetryOnError: false,
       ...option?.swrOptions,
     }
   )
-
-  return {
-    data: {
-      ...data,
-      channels: data.categories?.map((category) => category.channels)?.flat(),
-    },
-    isValidating,
-    error,
-    mutate,
-  }
 }
 
 export default useServerData

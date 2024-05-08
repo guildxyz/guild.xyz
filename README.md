@@ -24,8 +24,10 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
   - wagmi for connection management
 - Deployment:
   - Vercel
-- Monitoring:
+- Product analytics:
   - PostHog
+- Error monitoring:
+  - BugSnag
 
 ## Development
 

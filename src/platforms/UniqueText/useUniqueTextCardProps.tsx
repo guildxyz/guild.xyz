@@ -1,6 +1,8 @@
 import { Circle, Icon, useColorModeValue } from "@chakra-ui/react"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import { useClaimedReward } from "hooks/useClaimedReward"
 import rewards from "platforms/rewards"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
@@ -14,6 +16,9 @@ const useUniqueTextCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
     .flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
 
+  const { isAdmin } = useGuildPermission()
+  const { claimed } = useClaimedReward(rolePlatform?.id)
+
   return {
     name: platformGuildData.name ?? "Unique secret",
     type: "UNIQUE_TEXT" as PlatformName,
@@ -23,6 +28,7 @@ const useUniqueTextCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
       </Circle>
     ),
     info: rolePlatform && <AvailabilityTags rolePlatform={rolePlatform} mt={1} />,
+    shouldHide: !isAdmin && claimed,
   }
 }
 

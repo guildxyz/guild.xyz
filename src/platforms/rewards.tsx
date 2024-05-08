@@ -20,8 +20,14 @@ import Box from "static/icons/box.svg"
 import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
+import Token from "static/icons/token.svg"
 import XLogo from "static/icons/x.svg"
-import { GuildPlatformWithOptionalId, PlatformName, RoleFormType } from "types"
+import {
+  GuildPlatformWithOptionalId,
+  PlatformName,
+  Requirement,
+  RoleFormType,
+} from "types"
 import ContractCallCardMenu from "./ContractCall/ContractCallCardMenu"
 import ContractCallRewardCardButton from "./ContractCall/ContractCallRewardCardButton"
 import useContractCallCardProps from "./ContractCall/useContractCallCardProps"
@@ -43,6 +49,7 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import PoapCardButton from "./Poap/PoapCardButton"
 import PoapCardMenu from "./Poap/PoapCardMenu"
 import usePoapCardProps from "./Poap/usePoapCardProps"
+import PointsCardSettings from "./Points/PointsCardSettings"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
@@ -52,6 +59,8 @@ import TextCardButton from "./SecretText/TextCardButton"
 import useSecretTextCardProps from "./SecretText/useSecretTextCardProps"
 import TelegramCardMenu from "./Telegram/TelegramCardMenu"
 import useTelegramCardProps from "./Telegram/useTelegramCardProps"
+import ClaimTokenButton from "./Token/ClaimTokenButton"
+import useTokenCardProps from "./Token/hooks/useTokenCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 import RewardPreview from "./components/RewardPreview"
@@ -68,10 +77,13 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "UNIQUE_TEXT",
   "POAP",
   "GATHER_TOWN",
+  "ERC20",
 ]
 
 export type AddRewardPanelProps = {
-  onAdd: (data: RoleFormType["rolePlatforms"][number]) => void
+  onAdd: (
+    data: RoleFormType["rolePlatforms"][number] & { requirements?: Requirement[] }
+  ) => void
   skipSettings?: boolean
 }
 
@@ -81,7 +93,10 @@ export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
   image?: string | JSX.Element
   info?: string | JSX.Element
   link?: string
+  shouldHide?: boolean
 }
+
+export type CardSettingsComponent = () => JSX.Element
 
 type RewardData = {
   icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
@@ -92,7 +107,7 @@ type RewardData = {
   cardPropsHook?: CardPropsHook
   // true when the AddRewardPanel just automatically adds the platform without any user input
   autoRewardSetup?: boolean
-  cardSettingsComponent?: () => JSX.Element
+  cardSettingsComponent?: CardSettingsComponent
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
@@ -101,6 +116,15 @@ type RewardData = {
   RoleCardComponent?: ComponentType<RewardProps>
   isPlatform?: boolean
   asRewardRestriction: PlatformAsRewardRestrictions
+}
+
+export const modalSizeForPlatform = (platform: PlatformName) => {
+  switch (platform) {
+    case "ERC20":
+      return "xl"
+    default:
+      return "4xl"
+  }
 }
 
 const AddRewardPanelLoadingSpinner = () => (
@@ -382,6 +406,7 @@ const rewards: Record<PlatformName, RewardData> = {
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     cardPropsHook: usePointsCardProps,
+    cardSettingsComponent: PointsCardSettings,
     RewardPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
       loading: () => <RewardPreview isLoading />,
@@ -452,6 +477,32 @@ const rewards: Record<PlatformName, RewardData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
+      ssr: false,
+    }),
+  },
+  ERC20: {
+    icon: Token,
+    name: "Token",
+    gatedEntity: "",
+    colorScheme: "gold",
+    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
+    cardPropsHook: useTokenCardProps,
+    cardButton: ClaimTokenButton,
+    RewardPreview: dynamic(() => import("platforms/components/TokenPreview"), {
+      ssr: false,
+      loading: () => <RewardPreview isLoading />,
+    }),
+    AddRewardPanel: dynamic(
+      () =>
+        import(
+          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
+        ),
+      {
+        ssr: false,
+        loading: AddRewardPanelLoadingSpinner,
+      }
+    ),
+    RoleCardComponent: dynamic(() => import("platforms/components/TokenReward"), {
       ssr: false,
     }),
   },

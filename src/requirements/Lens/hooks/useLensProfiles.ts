@@ -1,44 +1,73 @@
+import REQUIREMENTS from "requirements"
+import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
-const fetchProfiles = ([endpoint, searchQuery]) =>
-  fetcher(endpoint, {
+export const LENS_API_URL = "https://api-v2.lens.dev"
+
+export type LensProfile = {
+  id
+  handle: {
+    localName: string
+  }
+  metadata?: {
+    picture?: {
+      optimized?: {
+        uri?: string
+      }
+    }
+  }
+}
+
+const fetchProfiles = ([_, searchQuery]): Promise<LensProfile[]> =>
+  fetcher(LENS_API_URL, {
     headers: {
       Accept: "application/json",
     },
     body: {
       query: `{
-        search(request: {
-          query: "${searchQuery}",
-          type: PROFILE,
-          limit: 50
-        }) {
-          ... on ProfileSearchResult {
-            items {
-              ... on Profile {
-                profileId: id,
-                name
-                handle
+        searchProfiles(request: { query: "${searchQuery}", limit: TwentyFive}) {
+          items {
+            id,
+            handle {
+              localName
+            },
+            metadata {
+              picture {
+                ... on ImageSet {
+                  optimized {
+                    uri
+                  }
+                }
               }
-            }
-            pageInfo {
-              totalCount
             }
           }
         }
       }`,
     },
-  }).then((res) => res?.data?.search)
+  }).then((res) => res?.data?.searchProfiles?.items)
 
 const useLensProfiles = (searchQuery: string) => {
+  const { mutate } = useSWRConfig()
+
   const { data, isLoading } = useSWRImmutable(
-    searchQuery.length > 0 ? ["https://api.lens.dev", searchQuery] : null,
-    fetchProfiles
+    searchQuery.length > 0 ? ["lensProfiles", searchQuery] : null,
+    fetchProfiles,
+    {
+      onSuccess: (newData, _key, _config) => {
+        newData.forEach((profile) =>
+          mutate(["lensProfile", profile.id], profile, { revalidate: false })
+        )
+      },
+    }
   )
 
   return {
-    handles: data?.items?.map((profile) => profile.handle),
-    restCount: data?.pageInfo?.totalCount - 50,
+    handles: data?.map(({ id, handle: { localName }, metadata }) => ({
+      label: `${localName}.lens`,
+      value: id,
+      img: metadata?.picture?.optimized?.uri ?? (REQUIREMENTS.LENS.icon as string),
+    })),
     isLoading,
   }
 }

@@ -4,7 +4,7 @@ import { Message } from "components/[guild]/JoinModal/hooks/useOauthPopupWindow"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/dist/client/router"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { PlatformName } from "types"
 import timeoutPromise from "utils/timeoutPromise"
 
@@ -35,24 +35,24 @@ const getDataFromState = (
 }
 
 const OAuth = () => {
-  const router = useRouter()
+  const { push, query, isReady } = useRouter()
   const { captureEvent } = usePostHogContext()
   const errorToast = useShowErrorToast()
 
-  const handleOauthResponse = async () => {
-    if (!router.isReady || typeof window === "undefined") return null
+  const handleOauthResponse = useCallback(async () => {
+    if (!isReady || typeof window === "undefined") return null
 
     let params: OAuthResponse
     if (
-      typeof router.query?.state !== "string" &&
-      typeof router.query?.oauth_token !== "string" &&
-      typeof router.query?.denied !== "string"
+      typeof query?.state !== "string" &&
+      typeof query?.oauth_token !== "string" &&
+      typeof query?.denied !== "string"
     ) {
       const fragment = new URLSearchParams(window.location.hash.slice(1))
       const { state, ...rest } = Object.fromEntries(fragment.entries())
       params = { ...getDataFromState(state), ...rest }
     } else {
-      const { state, ...rest } = router.query
+      const { state, ...rest } = query
       params = { ...getDataFromState(state?.toString()), ...rest }
     }
 
@@ -64,7 +64,7 @@ const OAuth = () => {
       captureEvent("OAuth - No params found, or it is in invalid form", {
         params,
       })
-      await router.push("/")
+      await push("/")
       return
     }
 
@@ -85,7 +85,7 @@ const OAuth = () => {
         expected: localStorageInfo.csrfToken,
       })
       errorToast(`Failed to connect ${params.platformName}`)
-      await router.push(localStorageInfo.from)
+      await push(localStorageInfo.from)
       return
     }
 
@@ -140,9 +140,9 @@ const OAuth = () => {
         `${params.platformName ?? "TWITTER_V1"}_shouldConnect`,
         JSON.stringify(response)
       )
-      router.push(localStorageInfo.from)
+      push(localStorageInfo.from)
     }
-  }
+  }, [captureEvent, errorToast, push, isReady, query])
 
   useEffect(() => {
     handleOauthResponse().catch((error) => {
@@ -153,9 +153,9 @@ const OAuth = () => {
         trace: error?.stack,
       })
       errorToast(`An unexpected error happened while connecting a platform`)
-      router.push("/")
+      push("/")
     })
-  }, [router])
+  }, [captureEvent, errorToast, handleOauthResponse, push])
 
   return <AuthRedirect />
 }

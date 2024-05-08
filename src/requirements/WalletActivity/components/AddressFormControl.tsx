@@ -39,7 +39,9 @@ const AddressFormControl = ({
       isRequired={type === "ASSET"}
       isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
     >
-      <FormLabel>{`${type === "ADDRESS" ? "Wallet" : "Asset"} address`}</FormLabel>
+      <FormLabel>{`${
+        type === "ADDRESS" ? "Wallet or smart contract" : "Asset"
+      } address`}</FormLabel>
       <InputGroup>
         {address && (symbol || isValidating) && (
           <InputLeftAddon fontWeight="semibold">

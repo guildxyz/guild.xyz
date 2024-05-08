@@ -1,9 +1,9 @@
 import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import useToken from "hooks/useToken"
+import useTokenData from "hooks/useTokenData"
 import useVault from "requirements/Payment/hooks/useVault"
 import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { formatUnits } from "viem"
-import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
+import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import { useRequirementContext } from "../../RequirementContext"
 import usePayFee from "../hooks/usePayFee"
 import FeesTable from "./FeesTable"
@@ -20,11 +20,7 @@ const BuyTotal = (): JSX.Element => {
     requirement.chain
   )
 
-  const { data: tokenData } = useToken({
-    address: token,
-    chainId: Chains[requirement.chain],
-    shouldFetch: Boolean(token !== NULL_ADDRESS && Chains[requirement.chain]),
-  })
+  const { data: tokenData } = useTokenData(requirement.chain, token)
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
 

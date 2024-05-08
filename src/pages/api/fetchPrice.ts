@@ -7,10 +7,10 @@ import {
   GUILD_FEE_PERCENTAGE,
   NULL_ADDRESS,
   PURCHASABLE_REQUIREMENT_TYPES,
+  TOKEN_BUYER_CONTRACTS,
   ZEROX_API_URLS,
   ZEROX_SUPPORTED_SOURCES,
   ZeroXSupportedSources,
-  getTokenBuyerContractData,
 } from "utils/guildCheckout/constants"
 import { flipPath } from "utils/guildCheckout/utils"
 import { createPublicClient, erc20Abi, formatUnits, http, parseUnits } from "viem"
@@ -81,9 +81,7 @@ const getGuildFee = async (
   maxGuildFeeInSellToken: number
   maxGuildFeeInUSD: number
 }> => {
-  const tokenBuyerContractData = getTokenBuyerContractData(guildId)
-
-  if (!tokenBuyerContractData[Chains[chainId]])
+  if (!TOKEN_BUYER_CONTRACTS[Chains[chainId]])
     return Promise.reject("Unsupported chain")
 
   const publicClient = createPublicClient({
@@ -91,8 +89,8 @@ const getGuildFee = async (
     transport: http(),
   })
   const guildBaseFeeInWei = await publicClient.readContract({
-    address: tokenBuyerContractData[Chains[chainId]].address,
-    abi: tokenBuyerContractData[Chains[chainId]].abi,
+    address: TOKEN_BUYER_CONTRACTS[Chains[chainId]].address,
+    abi: TOKEN_BUYER_CONTRACTS[Chains[chainId]].abi,
     functionName: "baseFee",
     args: [
       sellToken === CHAIN_CONFIG[Chains[chainId]].nativeCurrency.symbol

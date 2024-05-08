@@ -1,12 +1,12 @@
 import { Icon, useDisclosure } from "@chakra-ui/react"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { Robot } from "phosphor-react"
 import { CompleteCaptchaModal } from "requirements/Captcha/components/CompleteCaptcha"
-import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
 
 const CompleteCaptchaJoinStep = (): JSX.Element => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
 
   const {
     data: isDone,
@@ -25,7 +25,7 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
         onClick={onOpen}
-        isDisabled={!isConnected && "Connect wallet first"}
+        isDisabled={!isWeb3Connected && "Connect wallet first"}
         isLoading={isLoading}
       />
 

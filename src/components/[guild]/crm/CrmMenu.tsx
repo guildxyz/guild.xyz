@@ -60,6 +60,7 @@ const CrmMenu = ({ table }: Props) => {
     children: `Export ${selectedAddresses.length || ""} selected`,
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const customizeButtonProps = {
     leftIcon: <Sliders />,
     icon: <Sliders />,

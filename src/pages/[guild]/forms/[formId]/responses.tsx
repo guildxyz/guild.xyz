@@ -58,8 +58,8 @@ const FormResponses = (): JSX.Element => {
   )
 }
 
-const GuildPageWrapper = (): JSX.Element => {
-  const { name, error } = useGuild()
+const FormResponsesPageWrapper = (): JSX.Element => {
+  const { error } = useGuild()
   const router = useRouter()
 
   if (error) return <ErrorPage statusCode={404} />
@@ -67,12 +67,12 @@ const GuildPageWrapper = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>{`${name} members`}</title>
-        <meta property="og:title" content={`${name} members`} />
+        <title>Form responses</title>
+        <meta property="og:title" content="Form responses" />
       </Head>
       <ThemeProvider>{router.isReady && <FormResponses />}</ThemeProvider>
     </>
   )
 }
 
-export default GuildPageWrapper
+export default FormResponsesPageWrapper

@@ -1,4 +1,4 @@
-import { Tooltip } from "@chakra-ui/react"
+import { Skeleton, Tooltip } from "@chakra-ui/react"
 import {
   RewardDisplay,
   RewardIcon,
@@ -10,12 +10,10 @@ import Button from "components/common/Button"
 import Link from "next/link"
 import { ArrowRight } from "phosphor-react"
 import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
-import rewards from "platforms/rewards"
-import { PlatformType } from "types"
 
 const FormReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
-  const { platformId, platformGuildData } = platform.guildPlatform
+  const { platformGuildData } = platform.guildPlatform
   const { form, isValidating: isFormsValidating } = useGuildForm(
     platformGuildData?.formId
   )
@@ -35,28 +33,32 @@ const FormReward = ({ platform, withMotionImg }: RewardProps) => {
       label={
         <>
           {"Fill form: "}
-          <Tooltip
-            label={!!userSubmission ? "Response already submitted" : "Go to form"}
-            hasArrow
-            shouldWrapChildren
+          <Skeleton
+            display="inline"
+            isLoaded={!isFormsValidating && !isUserSubmissionValidating}
           >
-            <Button
-              as={Link}
-              isLoading={isFormsValidating || isUserSubmissionValidating}
-              isDisabled={!!userSubmission}
-              href={
-                !userSubmission
-                  ? `/${urlName}/forms/${platformGuildData.formId}`
-                  : "#"
-              }
-              variant="link"
-              rightIcon={<ArrowRight />}
-              iconSpacing="1"
-              maxW="full"
+            <Tooltip
+              label={!!userSubmission ? "Response already submitted" : "Go to form"}
+              hasArrow
+              shouldWrapChildren
             >
-              {form?.name ?? rewards[PlatformType[platformId]].name}
-            </Button>
-          </Tooltip>
+              <Button
+                as={Link}
+                isDisabled={!!userSubmission}
+                href={
+                  !userSubmission
+                    ? `/${urlName}/forms/${platformGuildData.formId}`
+                    : "#"
+                }
+                variant="link"
+                rightIcon={<ArrowRight />}
+                iconSpacing="1"
+                maxW="full"
+              >
+                {form?.name ?? "Unknown form"}
+              </Button>
+            </Tooltip>
+          </Skeleton>
         </>
       }
     />

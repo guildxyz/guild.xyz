@@ -26,7 +26,7 @@ const PaymentForm = ({
   useEffect(() => {
     if (!chainId) return
     setValue(`${baseFieldPath}.address`, FEE_COLLECTOR_CONTRACT[Chains[chainId]])
-  }, [chainId])
+  }, [chainId, setValue, baseFieldPath])
 
   const vaultId = useWatch({ name: `${baseFieldPath}.data.id` })
 
@@ -42,7 +42,10 @@ const PaymentForm = ({
 
   const chain = useWatch({ control: registerVaultFormControl, name: "chain" })
 
-  useEffect(() => setValue(`${baseFieldPath}.chain`, chain), [chain])
+  useEffect(
+    () => setValue(`${baseFieldPath}.chain`, chain),
+    [chain, setValue, baseFieldPath]
+  )
 
   const isOnCorrectChain = chainId === Chains[chain]
 
@@ -62,7 +65,7 @@ const PaymentForm = ({
   useEffect(() => {
     if (!vaultId) return
     addRequirement()
-  }, [vaultId])
+  }, [vaultId, addRequirement])
 
   useEffect(() => {
     if (isLoading)
@@ -70,7 +73,7 @@ const PaymentForm = ({
         "You can't close the modal until the transaction finishes"
       )
     else setOnCloseAttemptToast(false)
-  }, [isLoading])
+  }, [isLoading, setOnCloseAttemptToast])
 
   return (
     <Stack spacing={4}>

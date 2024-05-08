@@ -72,7 +72,14 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
     mutateConnectedDID(connectedDID)
     onClose()
     onMintPolygonIDProofModalOpen()
-  }, [isOpen, connectedDID])
+  }, [
+    isOpen,
+    connectedDID,
+    toast,
+    mutateConnectedDID,
+    onClose,
+    onMintPolygonIDProofModalOpen,
+  ])
 
   const qrSize = useBreakpointValue({ base: 300, md: 400 })
 

@@ -14,11 +14,10 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import Section from "components/common/Section"
 import usePinata from "hooks/usePinata"
 import { useSetAtom } from "jotai"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import slugify from "slugify"
 import { GuildFormType } from "types"
-import getRandomInt from "utils/getRandomInt"
+import slugify from "utils/slugify"
 import { useCreateGuildContext } from "../CreateGuildContext"
 import Description from "../Description"
 import { ContinueBtnTooltipLabelAtom } from "../GuildCreationProgress/GuildCreationProgress"
@@ -51,19 +50,11 @@ const BasicInfo = (): JSX.Element => {
       !contacts[0].contact || errors.contacts ? "Contact email required!" : ""
     )
     return () => setContinueTooltipLabel("")
-  }, [name, errors, contacts, errors.contacts])
+  }, [setDisabled, name, errors, contacts, errors.contacts, setContinueTooltipLabel])
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
-        shouldTouch: true,
-      })
-    },
-    onError: () => {
-      setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
   })
 
   const discordPlatformData = guildPlatforms.find(
@@ -83,19 +74,15 @@ const BasicInfo = (): JSX.Element => {
   useEffect(() => {
     if (name && !dirtyFields.urlName)
       setValue("urlName", slugify(name), { shouldValidate: true })
-  }, [name, dirtyFields])
+  }, [name, dirtyFields, setValue])
+
+  const onBackgrondUploadError = useCallback(() => {
+    setLocalBackgroundImage(null)
+  }, [setLocalBackgroundImage])
 
   const backgroundUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue(
-        "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldDirty: true }
-      )
-    },
-    onError: () => {
-      setLocalBackgroundImage(null)
-    },
+    fieldToSetOnSuccess: "theme.backgroundImage",
+    onError: onBackgrondUploadError,
   })
 
   return (

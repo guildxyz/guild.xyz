@@ -139,7 +139,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
       setValue(`${baseFieldPath}.type`, "ERC721")
     if (nftType === "NOUNS" && type !== "NOUNS")
       setValue(`${baseFieldPath}.type`, "NOUNS")
-  }, [nftType, isNftTypeLoading])
+  }, [isNftTypeLoading, nftType, type, setValue, baseFieldPath])
 
   const [addressInput, setAddressInput] = useState("")
   const { nfts, isLoading } = useNfts(chain)

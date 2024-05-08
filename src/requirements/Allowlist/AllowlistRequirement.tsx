@@ -6,6 +6,7 @@ import Requirement, {
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
 import Button from "components/common/Button"
+import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 
@@ -29,13 +30,19 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const isEmail = requirement.type === "ALLOWLIST_EMAIL"
 
+  const { reqAccesses } = useRoleMembership(requirement.roleId)
+
+  const hasAccess = reqAccesses?.find(
+    ({ requirementId }) => requirementId === requirement.id
+  )?.access
+
   return (
     <Requirement
       image={<Icon as={ListPlus} boxSize={6} />}
       footer={
         isEmail ? (
           <HStack>
-            <RequirementConnectButton />
+            {!hasAccess && <RequirementConnectButton />}
             <HiddenAllowlistText isEmail={isEmail} />
           </HStack>
         ) : (
