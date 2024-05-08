@@ -3,12 +3,15 @@ import {
   bitfinityTestnet,
   bobaAvax,
   exosama,
+  formTestnet,
+  metisSepolia,
   neonEVM,
   oasisSapphire,
   ontology,
   palm,
   scrollAlpha,
   taikoKatlaTestnet,
+  x1,
 } from "static/customChains"
 // import type { Chain as ViemChain } from "viem"
 import {
@@ -41,10 +44,10 @@ import {
   metis,
   moonbeam,
   moonriver,
+  opBNB,
   optimism,
   pgn,
   polygon,
-  polygonMumbai,
   polygonZkEvm,
   ronin,
   scroll,
@@ -89,6 +92,8 @@ const ETH_ICON =
   "https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880"
 const MATIC_ICON =
   "https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png"
+const BNB_ICON =
+  "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png"
 
 const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   ETHEREUM: {
@@ -120,10 +125,7 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
     etherscanApiUrl: "https://api-goerli.etherscan.io",
   },
   BSC: {
-    ...generateChainConfig(
-      bsc,
-      "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png"
-    ),
+    ...generateChainConfig(bsc, BNB_ICON),
     iconUrl: "/networkLogos/bsc.svg",
     blockExplorerIconUrl: {
       light: "/explorerLogos/bscscan-light.svg",
@@ -147,15 +149,6 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       light: "/networkLogos/polygon.svg",
       dark: "/networkLogos/polygon.svg",
     },
-  },
-  POLYGON_MUMBAI: {
-    ...generateChainConfig(polygonMumbai, MATIC_ICON),
-    iconUrl: "/networkLogos/polygon.svg",
-    blockExplorerIconUrl: {
-      light: "/networkLogos/polygon.svg",
-      dark: "/networkLogos/polygon.svg",
-    },
-    etherscanApiUrl: "https://api-testnet.polygonscan.com",
   },
   AVALANCHE: {
     ...generateChainConfig(
@@ -278,6 +271,17 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/metis-dark.svg",
     },
     etherscanApiUrl: "https://andromeda-explorer.metis.io",
+  },
+  METIS_SEPOLIA: {
+    ...generateChainConfig(
+      metisSepolia,
+      "https://assets.coingecko.com/coins/images/15595/small/metis.PNG"
+    ),
+    iconUrl: "/networkLogos/metis.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/metis.svg",
+      dark: "/explorerLogos/metis-dark.svg",
+    },
   },
   CRONOS: {
     ...generateChainConfig(
@@ -505,8 +509,18 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/explorerLogos/bitfinity.svg",
     },
   },
+  X1: {
+    ...generateChainConfig(x1, "/walletLogos/okx.png"),
+    name: "X Layer mainnet",
+    iconUrl: "/walletLogos/okx.png",
+    blockExplorerIconUrl: {
+      light: "/walletLogos/okx.png",
+      dark: "/walletLogos/okx.png",
+    },
+  },
   X1_TESTNET: {
     ...generateChainConfig(x1Testnet, "/walletLogos/okx.png"),
+    name: "X Layer testnet",
     iconUrl: "/walletLogos/okx.png",
     blockExplorerIconUrl: {
       light: "/walletLogos/okx.png",
@@ -593,6 +607,22 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/lisk.svg",
     },
   },
+  OP_BNB: {
+    ...generateChainConfig(opBNB, BNB_ICON),
+    iconUrl: "/networkLogos/bsc.svg",
+    blockExplorerIconUrl: {
+      light: "/explorerLogos/opbnb.png",
+      dark: "/explorerLogos/opbnb.png",
+    },
+  },
+  FORM_TESTNET: {
+    ...generateChainConfig(formTestnet, ETH_ICON),
+    iconUrl: "/networkLogos/form.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/form.svg",
+      dark: "/networkLogos/form.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -610,6 +640,7 @@ enum Chains {
   MOONBEAM = moonbeam.id,
   MOONRIVER = moonriver.id,
   METIS = metis.id,
+  METIS_SEPOLIA = metisSepolia.id,
   CRONOS = cronos.id,
   BOBA = boba.id,
   BOBA_AVAX = bobaAvax.id,
@@ -626,7 +657,6 @@ enum Chains {
   ZKSYNC_ERA = zkSync.id,
   SEPOLIA = sepolia.id,
   GOERLI = goerli.id,
-  POLYGON_MUMBAI = polygonMumbai.id,
   BASE_MAINNET = base.id,
   ZORA = zora.id,
   POLYGON_ZKEVM = polygonZkEvm.id,
@@ -639,6 +669,7 @@ enum Chains {
   SHIMMER = shimmer.id,
   KAVA = kava.id,
   BITFINITY_TESTNET = bitfinityTestnet.id,
+  X1 = x1.id,
   X1_TESTNET = x1Testnet.id,
   ONTOLOGY = ontology.id,
   BERA_TESTNET = beraTestnet.id,
@@ -650,6 +681,8 @@ enum Chains {
   ASTAR_ZKEVM = astarZkEVM.id,
   CORE_DAO = coreDao.id,
   LISK_SEPOLIA = liskSepolia.id,
+  OP_BNB = opBNB.id,
+  FORM_TESTNET = formTestnet.id,
 }
 
 export type Chain = keyof typeof Chains

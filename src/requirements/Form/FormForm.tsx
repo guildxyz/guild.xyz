@@ -3,8 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -16,14 +15,12 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
       .map((gp) => gp.platformGuildData.formId) ?? []
   const { data: forms, isLoading } = useGuildForms()
-  const {
-    setValue,
-    formState: { errors },
-  } = useFormContext()
+  const { errors } = useFormState()
 
-  useEffect(() => {
-    setValue(`${baseFieldPath}.data.guildId`, id)
-  }, [id])
+  useController({
+    name: `${baseFieldPath}.data.guildId`,
+    defaultValue: id,
+  })
 
   const formOptions: SelectOption<number>[] =
     forms

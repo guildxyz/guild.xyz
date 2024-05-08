@@ -3,6 +3,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
 import { AnimatePresence } from "framer-motion"
+import useToast from "hooks/useToast"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
@@ -57,6 +58,8 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
     appendToFieldArray(req)
   }
 
+  const toast = useToast()
+
   return (
     <Stack spacing="5" w="full">
       <Wrap spacing="3">
@@ -91,9 +94,26 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                     type={type}
                     field={field as Requirement}
                     index={i}
-                    removeRequirement={removeReq}
+                    removeRequirement={(idx) => {
+                      /**
+                       * TODO: check if the role has an ERC20 reward & only show this
+                       * toast in that case.
+                       *
+                       * We decided to leave it as is for now, because we can only
+                       * add this requirement type for ERC20 requirements.
+                       */
+                      if (type === "GUILD_SNAPSHOT") {
+                        toast({
+                          status: "info",
+                          title:
+                            "The snapshot requirement is necessary for dynamic token rewards, therefore cannot be removed.",
+                        })
+                        return
+                      }
+                      removeReq(idx)
+                    }}
                     updateRequirement={update}
-                    isEditDisabled={type === "PAYMENT"}
+                    isEditDisabled={type === "PAYMENT" || type === "GUILD_SNAPSHOT"}
                   />
                   <LogicDivider logic={logic ?? "AND"} />
                 </CardMotionWrapper>

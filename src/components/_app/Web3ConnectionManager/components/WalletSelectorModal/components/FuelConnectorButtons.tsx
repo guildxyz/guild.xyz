@@ -1,5 +1,6 @@
 import { Center, Img, useColorModeValue } from "@chakra-ui/react"
 import { useConnectors, useIsConnected } from "@fuel-wallet/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"
 import { connectorButtonProps } from "./ConnectorButton"
@@ -25,6 +26,8 @@ const FuelConnectorButtons = () => {
     setActivatingConnector(null)
   }, [isConnected])
 
+  const { captureEvent, startSessionRecording } = usePostHogContext()
+
   return (
     <>
       {connectors
@@ -33,8 +36,26 @@ const FuelConnectorButtons = () => {
           <Button
             key={connector.name}
             onClick={() => {
+              captureEvent("Click on Connect Fuel", {
+                connectorName: connector?.name,
+              })
+              startSessionRecording()
               setActivatingConnector(connector.name)
-              connector.connect()
+
+              connector.connect().catch((error) => {
+                setActivatingConnector(null)
+                if (error?.message === "Connection rejected!") {
+                  captureEvent("Fuel connection rejected", {
+                    connectorName: connector?.name,
+                  })
+                } else {
+                  captureEvent("Fuel connection error", {
+                    error: error?.message,
+                    originalError: error,
+                    connectorName: connector?.name,
+                  })
+                }
+              })
             }}
             leftIcon={
               <Center boxSize={6}>

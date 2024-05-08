@@ -122,6 +122,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
     const errorDescription = oauthState.error.errorDescription ?? ""
 
     toast({ status: "error", title, description: errorDescription })
+
+    // toast is left out on purpose, it causes the toast to be shown twice
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [oauthState.error])
 
   return {

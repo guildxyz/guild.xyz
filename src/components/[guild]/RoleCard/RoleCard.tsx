@@ -62,12 +62,12 @@ const RoleCard = memo(({ role }: Props) => {
 
   useEffect(() => {
     if (!isOpen) onCloseExpanded()
-  }, [isOpen])
+  }, [isOpen, onCloseExpanded])
 
   useEffect(() => {
     if (isMember && hasRoleAccess && !isAdmin) onClose()
     else onOpen()
-  }, [hasRoleAccess, isMember])
+  }, [isMember, hasRoleAccess, isAdmin, onClose, onOpen])
 
   const isMobile = useBreakpointValue({ base: true, md: false }, { fallback: "md" })
 

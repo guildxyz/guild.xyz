@@ -13,7 +13,7 @@ import Button from "components/common/Button"
 import { Alert } from "components/common/Modal"
 import useMembership from "components/explorer/hooks/useMembership"
 import { SignOut } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import useLeaveGuild from "./hooks/useLeaveGuild"
@@ -24,11 +24,7 @@ const LeaveButton = ({ disableColoring = false }) => {
 
   const { id: guildId } = useGuild()
   const { isMember } = useMembership()
-  const { onSubmit, isLoading, response } = useLeaveGuild()
-
-  useEffect(() => {
-    if (response) onClose()
-  }, [response])
+  const { onSubmit, isLoading } = useLeaveGuild(onClose)
 
   const { isStuck } = useIsTabsStuck() ?? {}
   const { textColor, buttonColorScheme } = useThemeContext()
@@ -57,7 +53,7 @@ const LeaveButton = ({ disableColoring = false }) => {
         <AlertDialogOverlay />
 
         <AlertDialogContent>
-          <AlertDialogHeader>Leave guild</AlertDialogHeader>
+          <AlertDialogHeader pb="5">Leave guild</AlertDialogHeader>
           <AlertDialogBody>
             Are you sure? You'll be able to join again as long as you satisfy the
             requirements of at least one role in it.

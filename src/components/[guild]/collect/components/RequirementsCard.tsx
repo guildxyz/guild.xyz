@@ -1,9 +1,10 @@
-import { Box, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { Box, Icon, Stack, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import RoleRequirements from "components/[guild]/Requirements"
-import { RoleRequirementsSkeleton } from "components/[guild]/Requirements/RoleRequirements"
+import Requirement from "components/[guild]/Requirements/components/Requirement"
 import { RoleRequirementsSectionHeader } from "components/[guild]/RoleCard/components/RoleRequirementsSection"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
+import { Question } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import { Role } from "types"
 
@@ -29,9 +30,13 @@ const RequirementsCard = ({ role, children }: PropsWithChildren<Props>) => {
           borderColor={requirementsSectionBorderColor}
         >
           <RoleRequirementsSectionHeader />
+
+          {/* If the role is private, we can't display the requirements */}
           {!role ? (
-            <Box w="full" px={5} pb={5}>
-              <RoleRequirementsSkeleton />
+            <Box w="full" p={5} pt={0}>
+              <Requirement image={<Icon as={Question} boxSize={5} />}>
+                Some secret requirements
+              </Requirement>
             </Box>
           ) : (
             <RoleRequirements

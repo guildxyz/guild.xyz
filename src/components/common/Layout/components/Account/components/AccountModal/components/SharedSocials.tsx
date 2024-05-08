@@ -86,7 +86,6 @@ const SharedSocials = () => {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        colorScheme="duotone"
         scrollBehavior="inside"
         finalFocusRef={dummyRef}
       >
@@ -149,6 +148,7 @@ const ShareSocialsWithGuildSelect = ({ guildId, sharedSocials }) => {
    */
   useEffect(() => {
     if (isShared === null) submit(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const isSharedBoolean = isShared !== false

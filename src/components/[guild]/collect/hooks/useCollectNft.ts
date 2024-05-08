@@ -33,7 +33,7 @@ const useCollectNft = () => {
   const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address, chainId } = useAccount()
+  const { address, chainId, status } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -156,7 +156,9 @@ const useCollectNft = () => {
 
         captureEvent("Mint NFT error (GuildCheckout)", {
           ...postHogOptions,
-          error,
+          error: prettyError,
+          originalError: error,
+          wagmiAccountStatus: status,
         })
       },
     }),

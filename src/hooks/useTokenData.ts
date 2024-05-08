@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import { Token } from "types"
-import { Chain, CHAIN_CONFIG } from "wagmiConfig/chains"
+import { CHAIN_CONFIG, Chain } from "wagmiConfig/chains"
 import useTokens from "./useTokens"
 
 const ENS_ADDRESS = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
@@ -11,7 +11,7 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
     address === CHAIN_CONFIG[chain]?.nativeCurrency?.symbol ||
     address === "0x0000000000000000000000000000000000000000"
 
-  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && chain && !isCoin
+  const shouldFetch = /^0x[A-F0-9]{40}$/i.test(address) && !!chain && !isCoin
 
   const tokensFromApi = useTokens(chain)
 

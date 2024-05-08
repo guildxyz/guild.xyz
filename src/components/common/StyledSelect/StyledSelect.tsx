@@ -31,7 +31,6 @@ const StyledSelect = forwardRef(
         ref={ref}
         {...props}
         chakraStyles={{
-          ...props.chakraStyles,
           container: (provided) => ({
             ...provided,
             width: "full",
@@ -57,6 +56,7 @@ const StyledSelect = forwardRef(
             pr: 2,
             bgColor: "transparent",
           }),
+          ...props.chakraStyles,
         }}
         components={{
           Option: CustomSelectOption,

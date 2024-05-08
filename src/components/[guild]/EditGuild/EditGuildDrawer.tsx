@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonGroup,
   Divider,
   Drawer,
   DrawerBody,
@@ -31,21 +32,20 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
-import { useEffect } from "react"
+import { useCallback } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
-import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
 import Admins from "./components/Admins"
 import BackgroundImageUploader from "./components/BackgroundImageUploader"
+import ChangingGuildPinDesignAlert from "./components/ChangingGuildPinDesignAlert"
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import Events from "./components/Events/Events"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
-import SaveAlert from "./components/SaveAlert"
 import SocialLinks from "./components/SocialLinks"
 import TagManager from "./components/TagManager"
 import useEditGuild from "./hooks/useEditGuild"
@@ -74,7 +74,6 @@ const EditGuildDrawer = ({
     hideFromExplorer,
     socialLinks,
     contacts,
-    isDetailed,
     featureFlags,
     eventSources,
     tags: savedTags,
@@ -113,14 +112,9 @@ const EditGuildDrawer = ({
     mode: "all",
     defaultValues,
   })
+  const { control, setValue, reset, formState } = methods
 
   const { onSubmit: onTagsSubmit } = useEditTags()
-
-  // We'll only receive this info on client-side, so we're setting the default value of this field in a useEffect
-  useEffect(() => {
-    if (!isDetailed || methods.formState.dirtyFields.contacts) return
-    methods.setValue("contacts", contacts)
-  }, [isDetailed])
 
   const toast = useToast()
 
@@ -131,7 +125,7 @@ const EditGuildDrawer = ({
     })
     onClose()
     mutateEvents()
-    methods.reset(undefined, { keepValues: true })
+    reset(undefined, { keepValues: true })
   }
 
   const { onSubmit, isLoading } = useEditGuild({
@@ -145,9 +139,7 @@ const EditGuildDrawer = ({
     setLocalBackgroundImage,
   } = useThemeContext()
 
-  useWarnIfUnsavedChanges(
-    methods.formState.isDirty && !methods.formState.isSubmitted
-  )
+  useWarnIfUnsavedChanges(formState.isDirty && !formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -167,37 +159,25 @@ const EditGuildDrawer = ({
     if (themeColor !== localThemeColor) setLocalThemeColor(themeColor)
     if (backgroundImage !== localBackgroundImage)
       setLocalBackgroundImage(backgroundImage)
-    methods.reset()
+    reset()
     onAlertClose()
     onClose()
   }
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldTouch: true, shouldDirty: true }
-      )
-    },
-    onError: () => {
-      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control: methods.control,
   })
 
+  const onBackgroundUploadError = useCallback(() => {
+    setLocalBackgroundImage(null)
+  }, [setLocalBackgroundImage])
+
   const backgroundUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldDirty: true }
-      )
-    },
-    onError: () => {
-      setLocalBackgroundImage(null)
-    },
+    fieldToSetOnSuccess: "theme.backgroundImage",
+    onError: onBackgroundUploadError,
+    control: methods.control,
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
@@ -213,17 +193,17 @@ const EditGuildDrawer = ({
   const loadingText = uploadLoadingText || "Saving data"
 
   const isDirty =
-    !!Object.keys(methods.formState.dirtyFields).length ||
+    !!Object.keys(formState.dirtyFields).length ||
     backgroundUploader.isUploading ||
     iconUploader.isUploading
 
   const onSave = (e) => {
     if (
       guildPin?.isActive &&
-      (methods.formState.dirtyFields.name ||
-        methods.formState.dirtyFields.imageUrl ||
+      (formState.dirtyFields.name ||
+        formState.dirtyFields.imageUrl ||
         iconUploader.isUploading ||
-        methods.formState.dirtyFields.theme?.color)
+        formState.dirtyFields.theme?.color)
     ) {
       onSaveAlertOpen()
     } else {
@@ -245,43 +225,43 @@ const EditGuildDrawer = ({
           <DrawerContent>
             <DrawerBody className="custom-scrollbar">
               <DrawerHeader title="Edit guild">
-                {isOwner || isSuperAdmin ? (
-                  <DeleteGuildButton
-                    beforeDelete={() => methods.reset(defaultValues)}
-                  />
-                ) : (
-                  <LeaveButton disableColoring />
-                )}
+                <ButtonGroup>
+                  {!isOwner && <LeaveButton disableColoring />}
+                  {(isOwner || isSuperAdmin) && (
+                    <DeleteGuildButton beforeDelete={() => reset(defaultValues)} />
+                  )}
+                </ButtonGroup>
               </DrawerHeader>
               <VStack spacing={10} alignItems="start">
-                <Section title="General">
-                  <Stack
-                    w="full"
-                    spacing="5"
-                    direction={{ base: "column", md: "row" }}
-                  >
+                <Section title="General" spacing="4">
+                  <Stack spacing={5}>
+                    <Stack
+                      w="full"
+                      spacing="5"
+                      direction={{ base: "column", md: "row" }}
+                    >
+                      <Box>
+                        <FormLabel>Logo and name</FormLabel>
+                        <HStack spacing={2} alignItems="start">
+                          <IconSelector
+                            uploader={iconUploader}
+                            minW={512}
+                            minH={512}
+                          />
+                          <Name />
+                        </HStack>
+                      </Box>
+                      <UrlName />
+                    </Stack>
+                    <Description />
                     <Box>
-                      <FormLabel>Logo and name</FormLabel>
-                      <HStack spacing={2} alignItems="start">
-                        <IconSelector
-                          uploader={iconUploader}
-                          minW={512}
-                          minH={512}
-                        />
-                        <Name />
-                      </HStack>
+                      <FormLabel>Social links</FormLabel>
+                      <SocialLinks />
                     </Box>
-                    <UrlName />
                   </Stack>
-                  <Description />
-
-                  <Box>
-                    <FormLabel>Social links</FormLabel>
-                    <SocialLinks />
-                  </Box>
                 </Section>
 
-                <Section title="Appearance">
+                <Section title="Appearance" spacing="4">
                   <Stack direction={{ base: "column", md: "row" }} spacing="5">
                     <ColorPicker fieldName="theme.color" />
                     <BackgroundImageUploader uploader={backgroundUploader} />
@@ -290,32 +270,34 @@ const EditGuildDrawer = ({
 
                 <Divider />
 
-                <Section title="Events">
+                <Section title="Events" spacing="2">
                   <Events />
                 </Section>
 
                 <Divider />
 
-                <Section title="Security">
-                  <HideFromExplorerToggle />
+                <Section title="Security" spacing="4">
+                  {savedTags?.includes("VERIFIED") && <HideFromExplorerToggle />}
 
                   <Admins />
                 </Section>
 
                 <Divider />
 
-                <Section title="Contact info" spacing="4">
+                <Section title="Contact info" spacing="2">
                   <ContactInfo />
                 </Section>
 
                 {isSuperAdmin && (
                   <>
                     <Divider />
-                    <Section title="Tag manager" spacing="4">
+
+                    <Section title="Superadmin" spacing="4">
                       <TagManager />
-                    </Section>
-                    <Section title="Enabled features" spacing="4">
-                      <DynamicFeatureFlags />
+                      <Box>
+                        <FormLabel>Enabled features</FormLabel>
+                        <DynamicFeatureFlags />
+                      </Box>
                     </Section>
                   </>
                 )}
@@ -328,7 +310,7 @@ const EditGuildDrawer = ({
               </Button>
               <Button
                 // isDisabled={!isDirty}
-                isDisabled={Object.keys(methods.formState?.errors ?? {}).length > 0}
+                isDisabled={Object.keys(formState?.errors ?? {}).length > 0}
                 data-test="save-guild-button"
                 isLoading={isLoading || isUploadingShown}
                 colorScheme="green"
@@ -340,7 +322,7 @@ const EditGuildDrawer = ({
             </DrawerFooter>
           </DrawerContent>
         </FormProvider>
-        <DynamicDevTool control={methods.control} />
+        <DynamicDevTool control={control} />
       </Drawer>
 
       <DiscardAlert
@@ -349,7 +331,7 @@ const EditGuildDrawer = ({
         onDiscard={onCloseAndClear}
       />
 
-      <SaveAlert
+      <ChangingGuildPinDesignAlert
         isOpen={isSaveAlertOpen}
         onClose={onSaveAlertClose}
         onSave={handleSubmit}

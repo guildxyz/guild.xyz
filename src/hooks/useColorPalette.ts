@@ -15,17 +15,20 @@ const DARK_ROTATE_STEP = 1 / darkSteps
 const LIGHT_SATURATE_STEP = 1 / lightSteps
 const DARK_SATURATE_STEP = 1 / darkSteps
 
+export const createColor = (colorCode: string) => {
+  try {
+    return Color(colorCode)
+  } catch {
+    return Color("#000000")
+  }
+}
+
 const useColorPalette = (
   prefix: string,
   colorCode: string
 ): { [x: string]: string } =>
   useMemo(() => {
-    let color: Color
-    try {
-      color = Color(colorCode)
-    } catch {
-      color = Color("#000000")
-    }
+    let color = createColor(colorCode)
 
     const pickedHue = color.hue()
     const pickedSaturation = color.saturationl()

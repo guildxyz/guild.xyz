@@ -96,7 +96,7 @@ const PurchaseRequirement = (): JSX.Element => {
             />
           </ModalBody>
 
-          <ModalFooter pt={10} flexDir="column">
+          <ModalFooter pt={8} flexDir="column">
             <PaymentMethodButtons />
             <ErrorCollapse error={error?.error} />
 

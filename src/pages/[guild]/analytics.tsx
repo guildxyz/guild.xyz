@@ -9,7 +9,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 
-const GuildPage = (): JSX.Element => {
+const AnalyticsPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, imageUrl } = useGuild()
 
@@ -51,8 +51,8 @@ const GuildPage = (): JSX.Element => {
   )
 }
 
-const GuildPageWrapper = (): JSX.Element => {
-  const { name, error } = useGuild()
+const AnalyticsPageWrapper = (): JSX.Element => {
+  const { error } = useGuild()
   const router = useRouter()
 
   if (error) return <ErrorPage statusCode={404} />
@@ -60,12 +60,12 @@ const GuildPageWrapper = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>{`${name} analytics`}</title>
-        <meta property="og:title" content={`${name} analytics`} />
+        <title>Analytics</title>
+        <meta property="og:title" content="Analytics" />
       </Head>
-      <ThemeProvider>{router.isReady && <GuildPage />}</ThemeProvider>
+      <ThemeProvider>{router.isReady && <AnalyticsPage />}</ThemeProvider>
     </>
   )
 }
 
-export default GuildPageWrapper
+export default AnalyticsPageWrapper

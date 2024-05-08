@@ -1,4 +1,12 @@
-import { Center, Img, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
+import {
+  Center,
+  Img,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+} from "@chakra-ui/react"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import Link from "next/link"
@@ -43,19 +51,21 @@ const LeaderboardPointsSelector = () => {
         >
           {currentPoints.name}
         </MenuButton>
-        <MenuList>
-          {pointsRewardsData.map((points) => (
-            <Link
-              key={points.id}
-              passHref
-              href={`/${urlName}/leaderboard/${points.id}`}
-            >
-              <MenuItem as="a" icon={points.image}>
-                {points.name}
-              </MenuItem>
-            </Link>
-          ))}
-        </MenuList>
+        <Portal>
+          <MenuList zIndex={9999}>
+            {pointsRewardsData.map((points) => (
+              <Link
+                key={points.id}
+                passHref
+                href={`/${urlName}/leaderboard/${points.id}`}
+              >
+                <MenuItem as="a" icon={points.image}>
+                  {points.name}
+                </MenuItem>
+              </Link>
+            ))}
+          </MenuList>
+        </Portal>
       </Menu>
     </Card>
   )

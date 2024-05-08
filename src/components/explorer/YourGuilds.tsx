@@ -1,6 +1,7 @@
 import { Box, HStack, Img, Stack, Text } from "@chakra-ui/react"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import ActionCard from "components/common/ActionCard"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import GuildCard, { GuildSkeletonCard } from "components/explorer/GuildCard"
@@ -13,7 +14,12 @@ import { forwardRef } from "react"
 import { GuildBase } from "types"
 
 const useYourGuilds = () =>
-  useSWRWithOptionalAuth<GuildBase[]>(`/v2/guilds`, undefined, false, true)
+  useSWRWithOptionalAuth<GuildBase[]>(
+    `/v2/guilds?yours=true`,
+    undefined,
+    false,
+    true
+  )
 
 const YourGuilds = forwardRef((_, ref: any) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
@@ -30,19 +36,10 @@ const YourGuilds = forwardRef((_, ref: any) => {
       scrollMarginTop={20}
     >
       {!isWeb3Connected ? (
-        <Card p="6">
-          <Stack
-            direction={{ base: "column", sm: "row" }}
-            justifyContent="space-between"
-            alignItems="center"
-            spacing="5"
-          >
-            <HStack spacing="4">
-              <Img src="landing/robot.svg" boxSize={"2em"} alt="Guild Robot" />
-              <Text fontWeight={"semibold"}>
-                Sign in to view your guilds / create new ones
-              </Text>
-            </HStack>
+        <ActionCard
+          image={<Img src="landing/robot.svg" boxSize={"2em"} alt="Guild Robot" />}
+          title={"Sign in to view your guilds / create new ones"}
+          action={
             <Button
               w={{ base: "full", sm: "auto" }}
               flexShrink="0"
@@ -52,8 +49,8 @@ const YourGuilds = forwardRef((_, ref: any) => {
             >
               Sign in
             </Button>
-          </Stack>
-        </Card>
+          }
+        />
       ) : isGuildsLoading ? (
         <GuildCardsGrid>
           {[...Array(3)].map((_, i) => (

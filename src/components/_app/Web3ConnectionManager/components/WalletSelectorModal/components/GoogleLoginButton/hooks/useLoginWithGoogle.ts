@@ -1,3 +1,4 @@
+import Bugsnag from "@bugsnag/js"
 import { useDisclosure } from "@chakra-ui/react"
 import { useConnect as usePlatformConnect } from "components/[guild]/JoinModal/hooks/useConnectPlatform"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -7,6 +8,7 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useAtomValue, useSetAtom } from "jotai"
 import { useState } from "react"
+import { mutate } from "swr"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
 import { useConnect } from "wagmi"
 import {
@@ -48,6 +50,11 @@ const useLoginWithGoogle = () => {
           causeCause: options.error.cause.cause,
         }
       }
+
+      Bugsnag.notify(options.error, (event) => {
+        event.severity = "error"
+        event.context = message
+      })
     }
 
     capture(message, finalOptions)
@@ -119,7 +126,12 @@ const useLoginWithGoogle = () => {
       const { authData, error } = await googleAuth.onOpen()
 
       if (!authData || !!error) {
-        captureEvent("[WaaS] Google OAuth failed", { error })
+        // Ignore cases, when the user cancels the OAuth
+        if (error?.error !== "access_denied") {
+          captureEvent("[WaaS] Google OAuth failed", { error })
+        } else {
+          captureEvent("[WaaS] Google OAuth denied", { error })
+        }
         return
       }
 
@@ -129,17 +141,30 @@ const useLoginWithGoogle = () => {
       const isNew = await createOrRestoreWallet(
         (authData as any)?.access_token
       ).catch((err) => {
-        captureEvent("[WaaS] Wallet creation / restoration failed", {
-          error: err,
-          hasDriveFailed: err instanceof DriveRequestFailed,
-          hasWaasFailed: err instanceof WaasActionFailed,
-          cause: err instanceof Error ? err.cause : undefined,
-        })
+        const isMissingScope =
+          err instanceof DriveRequestFailed && err.isMissingScope
+
+        if (isMissingScope) {
+          captureEvent("[WaaS] Missing Drive permission", {
+            error: err,
+            cause: err instanceof Error ? err.cause : undefined,
+          })
+        } else {
+          captureEvent("[WaaS] Wallet creation / restoration failed", {
+            error: err,
+            hasDriveFailed: err instanceof DriveRequestFailed,
+            hasWaasFailed: err instanceof WaasActionFailed,
+            cause: err instanceof Error ? err.cause : undefined,
+          })
+        }
+
         toast({
           status: "error",
           title: "Error",
           description: err instanceof Error ? err.message : "Unknown error",
         })
+
+        throw err
       })
 
       captureEvent("[WaaS] Wallet successfully initialized", { isNew })
@@ -152,23 +177,42 @@ const useLoginWithGoogle = () => {
         address: walletClient.account.address,
       }
 
+      let userId: number
+
       const keyPair = !!addressLinkParams?.userId
         ? await onLinkAddress({ ...addressLinkParams, signProps }).then(
             (result) => result?.keyPair
           )
         : await onSetKeypairSubmit({
             signProps,
-          }).then((result) => result?.keyPair)
+          }).then((result) => {
+            if (result?.user) {
+              userId = result.user?.id
+            }
+            return result?.keyPair
+          })
 
       // 4) Try to connect Google account
-      await onConnectGoogleSubmit({
+      const platformUser = await onConnectGoogleSubmit({
         signOptions: {
           keyPair: keyPair.keyPair,
           ...signProps,
         },
         platformName: "GOOGLE",
         authData,
+        disconnectFromExistingUser: true,
       })
+
+      if (userId && platformUser) {
+        await mutate(
+          [`/v2/users/${userId}/profile`, { method: "GET", body: {} }],
+          (prev) => ({
+            ...prev,
+            platformUsers: [...(prev?.platformUsers ?? []), platformUser],
+          }),
+          { revalidate: false }
+        )
+      }
 
       if (!isNew) {
         await connectAsync({ connector: cwaasConnector })

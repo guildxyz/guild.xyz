@@ -38,7 +38,6 @@ import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { Logic, RolePlatform, Visibility } from "types"
-import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import DeleteRoleButton from "./components/DeleteRoleButton"
 import RoleGroupSelect from "./components/RoleGroupSelect"
@@ -100,22 +99,23 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     mode: "all",
     defaultValues,
   })
+  const { control, setValue, reset, formState } = methods
 
   useEffect(() => {
     const role = roles?.find((r) => r.id === roleId)
     if (!role) return
 
-    methods.reset({
+    reset({
       ...role,
       rolePlatforms: role.rolePlatforms ?? [],
       anyOfNum: role.anyOfNum ?? 1,
     })
-  }, [roles, roleId])
+  }, [roles, roleId, reset])
 
   const handleOpen = () => {
     onOpen()
     // needed for correct remove platform behavior after adding new platform -> saving -> opening edit again
-    methods.setValue("rolePlatforms", rolePlatforms ?? [])
+    setValue("rolePlatforms", rolePlatforms ?? [])
   }
 
   const toast = useToast()
@@ -128,7 +128,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     })
     setVisibilityModalProps.onClose()
     onClose()
-    methods.reset(undefined, { keepValues: true })
+    reset(undefined, { keepValues: true })
   }
 
   const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
@@ -141,8 +141,8 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
    * couldn't find the underlying problem, so used this workaround here, but we
    * should definitely find out what causes this strange behaviour!
    */
-  const isDirty = Object.values(methods.formState.dirtyFields).length > 0
-  useWarnIfUnsavedChanges(isDirty && !methods.formState.isSubmitted)
+  const isDirty = Object.values(formState.dirtyFields).length > 0
+  useWarnIfUnsavedChanges(isDirty && !formState.isSubmitted)
 
   const {
     isOpen: isAlertOpen,
@@ -151,27 +151,15 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   } = useDisclosure()
 
   const onCloseAndClear = () => {
-    methods.reset(defaultValues)
+    reset(defaultValues)
     onAlertClose()
     onClose()
   }
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      methods.setValue(
-        "imageUrl",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        {
-          shouldTouch: true,
-          shouldDirty: true,
-        }
-      )
-    },
-    onError: () => {
-      methods.setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control,
   })
 
   const drawerBodyRef = useRef<HTMLDivElement>()
@@ -186,10 +174,10 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     visibility: newVisibility,
     visibilityRoleId: newVisibilityRoleId,
   }: SetVisibilityForm) => {
-    methods.setValue("visibility", newVisibility, {
+    setValue("visibility", newVisibility, {
       shouldDirty: true,
     })
-    methods.setValue("visibilityRoleId", newVisibilityRoleId, {
+    setValue("visibilityRoleId", newVisibilityRoleId, {
       shouldDirty: true,
     })
     setVisibilityModalProps.onClose()
@@ -309,7 +297,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
             )}
           </AnimatePresence>
         </DrawerContent>
-        <DynamicDevTool control={methods.control} />
+        <DynamicDevTool control={control} />
       </Drawer>
 
       <DiscardAlert

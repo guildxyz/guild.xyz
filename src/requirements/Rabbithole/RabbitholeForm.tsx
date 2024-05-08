@@ -1,8 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 
@@ -13,16 +12,17 @@ const options = [
 ]
 
 const RabbitholeForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const {
-    setValue,
-    formState: { errors },
-  } = useFormContext()
+  const { errors } = useFormState()
 
-  useEffect(() => {
-    if (!setValue) return
-    setValue(`${baseFieldPath}.chain`, "ETHEREUM")
-    setValue(`${baseFieldPath}.data`, {})
-  }, [setValue])
+  useController({
+    name: `${baseFieldPath}.chain`,
+    defaultValue: "ETHEREUM",
+  })
+
+  useController({
+    name: `${baseFieldPath}.data`,
+    defaultValue: {},
+  })
 
   return (
     <>

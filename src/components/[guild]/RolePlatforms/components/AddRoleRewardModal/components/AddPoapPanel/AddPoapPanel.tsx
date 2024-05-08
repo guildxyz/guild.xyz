@@ -20,7 +20,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Question } from "phosphor-react"
 import rewards, { AddRewardPanelProps } from "platforms/rewards"
 import { useEffect } from "react"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import { PlatformGuildData, PlatformType } from "types"
 import UploadMintLinks from "./components/UploadMintLinks"
@@ -53,7 +53,6 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const {
     control,
-    register,
     setValue,
     reset,
     formState: { errors },
@@ -62,11 +61,15 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
     handleSubmit,
   } = methods
 
-  const eventId = useWatch({ control, name: "eventId" })
+  const { field: eventIdField } = useController({
+    control,
+    name: "eventId",
+  })
+
   const name = useWatch({ control, name: "name" })
   const texts = useWatch({ control, name: "texts" })
 
-  const { isPoapByIdLoading, poap, error } = usePoapById(eventId)
+  const { isPoapByIdLoading, poap, error } = usePoapById(eventIdField.value)
 
   useEffect(() => {
     clearErrors("eventId")
@@ -77,20 +80,17 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
         message: "POAP not found",
       })
     }
-  }, [poap, error])
+  }, [clearErrors, poap, error, setError])
 
   useEffect(() => {
-    if (!poap) {
-      reset({ ...defaultValues, eventId, texts })
-      return
-    }
+    if (!poap) return
 
     setValue("name", poap.name)
     setValue("fancyId", poap.fancy_id)
     setValue("imageUrl", poap.image_url)
     setValue("startTime", new Date(poap.start_date).toISOString())
     setValue("endTime", new Date(poap.expiry_date).toISOString())
-  }, [poap])
+  }, [poap, setValue])
 
   const onContinue = (data: ImportPoapForm) =>
     onAdd({
@@ -141,7 +141,14 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
           </FormLabel>
           <HStack>
             <InputGroup maxW={{ base: 40, sm: 52 }}>
-              <Input {...register("eventId")} placeholder="149863" />
+              <Input
+                {...eventIdField}
+                onChange={(e) => {
+                  if (!e.target.value) reset({ ...defaultValues, texts })
+                  eventIdField.onChange(e)
+                }}
+                placeholder="149863"
+              />
               {isPoapByIdLoading && (
                 <InputRightElement>
                   <Spinner size="sm" />
@@ -171,7 +178,7 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
 
         <Button
           colorScheme="indigo"
-          isDisabled={!eventId || !name?.length}
+          isDisabled={!eventIdField.value || !name?.length}
           w="max-content"
           ml="auto"
           onClick={handleSubmit(onContinue)}

@@ -1,11 +1,11 @@
 import { Img, useDisclosure } from "@chakra-ui/react"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { ConnectPolygonIDModal } from "requirements/PolygonID/components/ConnectPolygonID"
-import { useAccount } from "wagmi"
 import JoinStep from "./JoinStep"
 
 const ConnectPolygonIDJoinStep = (): JSX.Element => {
-  const { isConnected } = useAccount()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
 
   const { data: isDone, isLoading } = useSWRWithOptionalAuth(
     `/v2/util/gate-proof-existence/POLYGON_ID_BASIC_MAIN`
@@ -22,7 +22,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
         title="Connect PolygonID"
         buttonLabel={isDone ? "Connected" : "Connect"}
         onClick={onOpen}
-        isDisabled={!isConnected && "Connect wallet first"}
+        isDisabled={!isWeb3Connected && "Connect wallet first"}
         isLoading={isLoading}
       />
 

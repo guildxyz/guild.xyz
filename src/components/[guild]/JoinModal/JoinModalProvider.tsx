@@ -13,12 +13,12 @@ const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element =>
 
   useEffect(() => {
     if (typeof query.join === "string") onOpen()
-  }, [query.join])
+  }, [query.join, onOpen])
 
   // when you're not connected yet but is already a member and use the modal to connect
   useEffect(() => {
     if (isMember) onClose()
-  }, [isMember])
+  }, [isMember, onClose])
 
   return (
     <JoinModalContext.Provider value={onOpen}>

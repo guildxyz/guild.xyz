@@ -58,8 +58,8 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
     (processedRequirement.type === "ERC721" ||
       processedRequirement.type === "ERC1155" ||
       processedRequirement.type === "NOUNS") &&
-    processedRequirement.data?.attributes &&
-    !processedRequirement.data.attributes.length
+    !processedRequirement.data.attributes?.length &&
+    !processedRequirement.data?.ids?.length
   ) {
     processedRequirement.data.attributes = undefined
     if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0

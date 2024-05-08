@@ -6,6 +6,7 @@ import PlatformSelectButton from "./components/PlatformSelectButton"
 
 type Props = {
   onSelection: (platform: PlatformName) => void
+  disabledRewards?: Partial<Record<PlatformName, string>>
 } & StackProps
 
 type PlatformsGridData = {
@@ -14,7 +15,7 @@ type PlatformsGridData = {
   isGeneral?: boolean
 }
 
-const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
+const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
   const { guildPlatforms, featureFlags } = useGuild()
 
   // TODO: move back out of the component and remove optional POAP logic once it'll be a real reward
@@ -68,6 +69,15 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
+    ...(featureFlags.includes("ERC20")
+      ? [
+          {
+            platform: "ERC20",
+            description: "Create airdrops, reward tokens",
+            isGeneral: true,
+          } as PlatformsGridData,
+        ]
+      : []),
     ...(featureFlags.includes("FORMS")
       ? [
           {
@@ -84,6 +94,7 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
       <PlatformSelectButtons
         platformsData={platformsData.filter((p) => !p.isGeneral)}
         onSelection={onSelection}
+        disabledRewards={disabledRewards}
       />
 
       <Box>
@@ -93,6 +104,7 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
         <PlatformSelectButtons
           platformsData={platformsData.filter((p) => p.isGeneral)}
           onSelection={onSelection}
+          disabledRewards={disabledRewards}
         />
       </Box>
     </Stack>
@@ -102,9 +114,11 @@ const PlatformsGrid = ({ onSelection, ...rest }: Props) => {
 const PlatformSelectButtons = ({
   platformsData,
   onSelection,
+  disabledRewards,
 }: {
   platformsData: PlatformsGridData[]
   onSelection: Props["onSelection"]
+  disabledRewards?: Props["disabledRewards"]
 }) => (
   <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 4, md: 5 }}>
     {platformsData.map(({ platform, description }) => (
@@ -116,6 +130,7 @@ const PlatformSelectButtons = ({
         icon={rewards[platform].icon}
         imageUrl={rewards[platform].imageUrl}
         onSelection={onSelection}
+        disabledText={disabledRewards?.[platform]}
       />
     ))}
   </SimpleGrid>

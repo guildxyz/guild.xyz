@@ -5,12 +5,10 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react"
+import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useToast from "hooks/useToast"
-import { useEffect, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildPlatform } from "types"
 import SecretTextDataForm, {
@@ -30,22 +28,16 @@ const EditSecretTextModal = ({
   guildPlatformId,
   platformGuildData,
 }: Props) => {
-  const { isDetailed } = useGuild()
   const { name, imageUrl, text } = platformGuildData
 
   const methods = useForm<SecretTextRewardForm>({
     mode: "all",
+    defaultValues: {
+      name,
+      imageUrl,
+      text,
+    },
   })
-
-  // TODO: find a cleaner, generalized solution for this, which will work for every reward in the future (Linear: GUILD-1391)
-  // `defaultValues` didn't work properly in useForm, so we're just resetting the form on mount instead
-  const [initialSetup, setInitialSetup] = useState(true)
-  useEffect(() => {
-    if (!isDetailed) return
-    if (!initialSetup) return
-    setInitialSetup(false)
-    methods.reset({ name, imageUrl, text })
-  }, [isDetailed])
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditGuildPlatform({

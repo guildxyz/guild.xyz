@@ -53,7 +53,7 @@ const ThemeSwitcher = () => {
       setTimeout(() => {
         window.localStorage.removeItem("chakra-ui-color-mode")
       }, 3000)
-  }, [])
+  }, [local])
 
   const { getRootProps, getRadioProps } = useRadioGroup({
     onChange: (newValue: ColorModeWithSystem) => {

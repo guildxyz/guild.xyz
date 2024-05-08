@@ -182,13 +182,6 @@ const TwitterRequirement = (props: RequirementProps) => {
                 <TwitterListLink requirement={requirement} />
               </>
             )
-          case "TWITTER_LIST_FOLLOW":
-            return (
-              <>
-                {"Follow "}
-                <TwitterListLink requirement={requirement} />
-              </>
-            )
           case "TWITTER_ACCOUNT_AGE_RELATIVE":
             const formattedAccountAge = formatRelativeTimeFromNow(
               requirement.data.minAmount

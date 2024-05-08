@@ -16,7 +16,6 @@ import useConnectedDID from "platforms/PolygonID/hooks/useConnectedDID"
 import rewards from "platforms/rewards"
 import { useMemo } from "react"
 import { PlatformType } from "types"
-import { useAccount } from "wagmi"
 
 const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformId } = platform.guildPlatform
@@ -28,7 +27,6 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const { isMember } = useMembership()
   const { hasRoleAccess, isValidating } = useRoleMembership(role.id)
-  const { isConnected } = useAccount()
   const openJoinModal = useOpenJoinModal()
 
   const { onConnectDIDModalOpen, onMintPolygonIDProofModalOpen } =
@@ -51,7 +49,7 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
         tooltipLabel: (
           <>
             <Icon as={LockSimple} display="inline" mb="-2px" mr="1" />
-            Join guild to get access
+            Join guild to check access
           </>
         ),
         buttonProps: { onClick: openJoinModal },
@@ -67,7 +65,16 @@ const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
       tooltipLabel: "You don't satisfy the requirements to this role",
       buttonProps: { isDisabled: true },
     }
-  }, [isMember, hasRoleAccess, isConnected, platform])
+  }, [
+    hasRoleAccess,
+    connectedDID,
+    isLoading,
+    isValidating,
+    onMintPolygonIDProofModalOpen,
+    isMember,
+    openJoinModal,
+    onConnectDIDModalOpen,
+  ])
 
   return (
     <RewardDisplay

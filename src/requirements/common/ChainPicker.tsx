@@ -63,19 +63,23 @@ const ChainPicker = ({
   showDivider = true,
   menuPlacement = "bottom", // auto doesn't really work for some reason...
 }: Props): JSX.Element => {
-  const { setValue } = useFormContext()
-
   const chainId = useChainId()
-  const chain = useWatch({ name: controlName })
 
   const mappedSupportedChains = supportedChains
     ? mappedChains?.filter((_chain) => supportedChains.includes(_chain.value))
     : mappedChains
 
+  const { setValue } = useFormContext()
+  const chain = useWatch({ name: controlName })
+
   /**
-   * Timed out setValue on mount instead of defaultValue, because for some reason
+   * Timed out setValue on mount instead of useController with defaultValue, because
    * useWatch({ name: `${baseFieldPath}.chain` }) in other components returns
-   * undefined before selecting an option otherwise
+   * undefined before selecting an option otherwise (it is the expected behavior -
+   * useWatch returns the value from defaultValues, which is undefined in most
+   * cases)
+   *
+   * https://github.com/react-hook-form/react-hook-form/issues/3758#issuecomment-751898038
    */
   useEffect(() => {
     if (chain) return
@@ -88,7 +92,7 @@ const ChainPicker = ({
           : supportedChains[0]
       )
     }, 0)
-  }, [chainId])
+  }, [chain, setValue, controlName, supportedChains, chainId])
 
   return (
     <>

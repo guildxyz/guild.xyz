@@ -48,6 +48,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
           postHogOptions
         )
       }}
+      prefetch={false}
     >
       {alreadyCollected ? "View NFT details" : "Collect NFT"}
     </Button>

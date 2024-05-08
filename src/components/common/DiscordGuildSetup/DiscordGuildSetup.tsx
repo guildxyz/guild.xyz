@@ -1,32 +1,69 @@
 import { GridItem, SimpleGrid } from "@chakra-ui/react"
+import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import ErrorAlert from "components/common/ErrorAlert"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
 import useGateables from "hooks/useGateables"
-import { useMemo } from "react"
-import { useFormContext } from "react-hook-form"
+import { useEffect, useMemo, useState } from "react"
+import { useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import { OptionSkeletonCard } from "../OptionCard"
 import ReconnectAlert from "../ReconnectAlert"
 import DCServerCard from "./components/DCServerCard"
 import ServerSetupCard from "./components/ServerSetupCard"
 
+const defaultValues = {
+  platformGuildId: null,
+  img: null,
+  name: null,
+}
+
+function NotAdminError() {
+  const { captureEvent } = usePostHogContext()
+
+  useEffect(() => {
+    captureEvent("[discord setup] error shown")
+
+    return () => {
+      captureEvent("[discord setup] error not shown")
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (
+    <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
+  )
+}
+
 const DiscordGuildSetup = ({
-  defaultValues,
-  selectedServer,
-  fieldName,
   rolePlatforms = undefined,
   onSubmit = undefined,
+  shouldHideGotItButton = false,
 }) => {
-  const { reset, setValue } = useFormContext()
+  const { reset, setValue, handleSubmit, formState } = useForm({
+    mode: "all",
+    defaultValues,
+  })
+  useAddRewardDiscardAlert(formState.isDirty)
+
+  const [selectedServer, setSelectedServer] = useState<string>()
+
+  const { captureEvent } = usePostHogContext()
 
   const {
     gateables,
     isLoading,
     error: gateablesError,
   } = useGateables(PlatformType.DISCORD, {
-    refreshInterval: 10_000,
+    onSuccess: () => {
+      captureEvent("[discord setup] gateables successful")
+    },
+    onError: () => {
+      captureEvent("[discord setup] gateables failed, showing reconnect alert")
+    },
   })
 
   const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
@@ -36,6 +73,7 @@ const DiscordGuildSetup = ({
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.id === selectedServer),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedServer] // servers excluded on purpose
   )
 
@@ -43,7 +81,6 @@ const DiscordGuildSetup = ({
 
   const resetForm = () => {
     reset(defaultValues)
-    setValue(fieldName, null)
   }
 
   const guild = useGuild()
@@ -69,9 +106,7 @@ const DiscordGuildSetup = ({
   }
 
   if (servers?.length <= 0) {
-    return (
-      <ErrorAlert label="Seem like you're not an admin of any Discord server yet" />
-    )
+    return <NotAdminError />
   }
 
   return (
@@ -90,11 +125,20 @@ const DiscordGuildSetup = ({
             <DCServerCard
               key={serverData.id}
               serverData={serverData}
-              onSelect={
-                selectedServer
-                  ? undefined
-                  : (newServerId) => setValue(fieldName, newServerId)
-              }
+              onSelect={() => {
+                const { id, name, img } = serverData
+
+                setSelectedServer(id)
+
+                setValue("platformGuildId", id, { shouldDirty: true })
+                setValue("name", name, { shouldDirty: true })
+                setValue("img", img, { shouldDirty: true })
+
+                // If the "Got It" button is not shown, the flow ends here, we call onSubmit with the new data
+                if (shouldHideGotItButton) {
+                  handleSubmit(onSubmit)()
+                }
+              }}
               onCancel={
                 selectedServer !== serverData.id ? undefined : () => resetForm()
               }
@@ -103,7 +147,10 @@ const DiscordGuildSetup = ({
       </AnimatePresence>
       {debounceSelectedServer && (
         <GridItem>
-          <ServerSetupCard onSubmit={onSubmit} />
+          <ServerSetupCard
+            // If the "Got It" button is shown, we only call onSubmit when that is pressed
+            onSubmit={!shouldHideGotItButton ? handleSubmit(onSubmit) : undefined}
+          />
         </GridItem>
       )}
     </SimpleGrid>

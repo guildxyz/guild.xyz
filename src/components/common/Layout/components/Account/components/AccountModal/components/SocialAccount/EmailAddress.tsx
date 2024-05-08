@@ -141,7 +141,7 @@ const ConnectEmailButton = ({
     if (!emails?.pending) return
     setPendingEmailAddress(emails?.emailAddress)
     setValue("email", emails?.emailAddress)
-  }, [emails])
+  }, [emails, setValue])
 
   // Timer to decide if resend button is disabled
   const [dateNow, setDateNow] = useState(Date.now())

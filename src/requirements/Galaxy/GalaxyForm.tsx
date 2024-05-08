@@ -10,8 +10,8 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useDebouncedState from "hooks/useDebouncedState"
-import { useEffect, useMemo, useState } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useMemo, useState } from "react"
+import { useController, useFormContext } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import { useGalaxyCampaign, useGalaxyCampaigns } from "./hooks/useGalaxyCampaigns"
@@ -29,17 +29,13 @@ const galaxyRequirementTypes = [
 
 const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
   const {
-    register,
     setValue,
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    if (!register) return
-    register(`${baseFieldPath}.data.galaxyId`)
-  }, [register])
-
-  const selectedGalaxyId = useWatch({
+  const {
+    field: { value: selectedGalaxyId },
+  } = useController({
     name: `${baseFieldPath}.data.galaxyId`,
   })
 
@@ -80,7 +76,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
     if (publicCampaigns?.length) allCampaigns = allCampaigns.concat(publicCampaigns)
 
     return allCampaigns
-  }, [campaigns, campaign])
+  }, [campaign, isLoading, campaigns])
 
   return (
     <Stack spacing={8} alignItems="start">

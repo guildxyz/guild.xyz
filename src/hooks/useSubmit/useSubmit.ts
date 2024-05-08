@@ -5,7 +5,7 @@ import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
 import {
@@ -13,14 +13,13 @@ import {
   UnauthorizedProviderError,
   WalletClient,
   createPublicClient,
-  http,
   keccak256,
   stringToBytes,
   trim,
 } from "viem"
 import { useChainId, usePublicClient, useWalletClient } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
-import { Chains } from "wagmiConfig/chains"
+import { Chain, Chains, supportedChains } from "wagmiConfig/chains"
 import gnosisSafeSignCallback from "./utils/gnosisSafeSignCallback"
 
 export type UseSubmitOptions<ResponseType = void> = {
@@ -47,8 +46,8 @@ const useSubmit = <DataType, ResponseType>(
   const [error, setError] = useState<any>(undefined)
   const [response, setResponse] = useState<ResponseType>(undefined)
 
-  return {
-    onSubmit: (data?: DataType): Promise<ResponseType> => {
+  const onSubmit = useCallback(
+    (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
       return fetch(data)
@@ -67,6 +66,11 @@ const useSubmit = <DataType, ResponseType>(
         })
         .finally(() => setIsLoading(false))
     },
+    [allowThrow, fetch, onError, onSuccess]
+  )
+
+  return {
+    onSubmit,
     response,
     isLoading,
     error,
@@ -162,7 +166,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
     async ({
-      signProps,
+      signProps: _signProps,
       ...data
     }: (DataType | Record<string, unknown>) & { signProps?: SignProps } = {}) => {
       const payload = JSON.stringify(data ?? {})
@@ -316,12 +320,24 @@ export const fuelSign = async ({
   return [payload, { params, sig }]
 }
 
-const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
-  Promise.all(
+const chainsOfAddressWithDeployedContract = async (
+  address: `0x${string}`
+): Promise<Chain[]> => {
+  const LOCALSTORAGE_KEY = `chainsWithByteCode_${address.toLowerCase()}`
+  const chainsWithByteCodeFromLocalstorage = localStorage.getItem(LOCALSTORAGE_KEY)
+
+  if (chainsWithByteCodeFromLocalstorage) {
+    const parsed = JSON.parse(chainsWithByteCodeFromLocalstorage)
+
+    if (Array.isArray(parsed))
+      return parsed.filter((c) => supportedChains.includes(c))
+  }
+
+  const res = await Promise.all(
     wagmiConfig.chains.map(async (chain) => {
       const publicClient = createPublicClient({
         chain,
-        transport: http(),
+        transport: wagmiConfig._internal.transports[chain.id],
       })
 
       const bytecode = await publicClient
@@ -332,17 +348,20 @@ const chainsOfAddressWithDeployedContract = (address: `0x${string}`) =>
 
       return [Chains[chain.id], bytecode && trim(bytecode) !== "0x"] as const
     })
-  ).then(
-    (results) =>
-      new Set(
-        results
-          .filter(([, hasContract]) => !!hasContract)
-          .map(([chainName]) => chainName)
-      )
-  )
+  ).then((results) => [
+    ...new Set(
+      results
+        .filter(([, hasContract]) => !!hasContract)
+        .map(([chainName]) => chainName as Chain)
+    ),
+  ])
+
+  localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(res))
+
+  return res
+}
 
 export const sign = async ({
-  publicClient,
   walletClient,
   address,
   payload,
@@ -359,14 +378,14 @@ export const sign = async ({
     params.method = ValidationMethod.KEYPAIR
     sig = await signWithKeyPair(keyPair, params)
   } else {
-    const walletChains = await chainsOfAddressWithDeployedContract(address).then(
-      (set) => [...set]
-    )
+    const walletChains = await chainsOfAddressWithDeployedContract(address)
     const walletChainId =
       walletChains.length > 0 ? Chains[walletChains[0]] : undefined
 
     if (walletChainId) {
-      await walletClient.switchChain({ id: walletChainId })
+      if (walletClient.chain.id !== walletChainId) {
+        await walletClient.switchChain({ id: walletChainId })
+      }
       params.chainId = `${walletChainId}`
     }
 

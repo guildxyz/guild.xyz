@@ -10,8 +10,7 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
 import ChainInfo from "../common/ChainInfo"
@@ -27,12 +26,10 @@ const MirrorForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    if (!register) return
-    register(`${baseFieldPath}.chain`, {
-      value: "OPTIMISM",
-    })
-  }, [register])
+  useController({
+    name: `${baseFieldPath}.chain`,
+    defaultValue: "OPTIMISM",
+  })
 
   const {
     ref: addressInputRef,

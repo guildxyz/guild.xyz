@@ -1,4 +1,5 @@
 import {
+  Box,
   HStack,
   ModalBody,
   ModalCloseButton,
@@ -16,6 +17,7 @@ import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
+import { PropsWithChildren } from "react"
 import ReactMarkdown from "react-markdown"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
@@ -116,8 +118,9 @@ const ClaimTextModal = ({
   isLoading,
   response,
   error,
-}: ModalProps) => (
-  <Modal isOpen={isOpen} onClose={onClose}>
+  children,
+}: PropsWithChildren<ModalProps>) => (
+  <Modal isOpen={isOpen} onClose={onClose} colorScheme="duotone">
     <ModalOverlay />
     <ModalContent>
       <ModalCloseButton />
@@ -131,16 +134,19 @@ const ClaimTextModal = ({
             <Text>Getting your secret...</Text>
           </HStack>
         ) : response?.uniqueValue ? (
-          <ReactMarkdown
-            transformLinkUri={false}
-            components={reactMarkdownComponents}
-          >
-            {response.uniqueValue}
-          </ReactMarkdown>
+          <Box mb="-2">
+            <ReactMarkdown
+              transformLinkUri={false}
+              components={reactMarkdownComponents}
+            >
+              {response.uniqueValue}
+            </ReactMarkdown>
+          </Box>
         ) : (
           <ErrorAlert label={error?.error ?? "Something went wrong"} />
         )}
       </ModalBody>
+      {children}
     </ModalContent>
   </Modal>
 )

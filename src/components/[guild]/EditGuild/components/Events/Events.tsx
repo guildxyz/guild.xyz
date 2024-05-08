@@ -24,7 +24,7 @@ const Events = () => {
 
   return (
     <>
-      <Text colorScheme="gray">
+      <Text colorScheme="gray" mb="3">
         Guild can auto-import your events from different platforms to show them in
         one place.
       </Text>

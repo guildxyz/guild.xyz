@@ -19,14 +19,11 @@ type Props = { isOpen: boolean; onClose: () => void }
 
 const CreateCampaignModal = (props: Props) => {
   const methods = useForm<CampaignFormType>({ mode: "all" })
-  const { setValue, handleSubmit } = methods
+  const { handleSubmit } = methods
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    control: methods.control,
   })
 
   const { onSubmit, isLoading } = useCreateRoleGroup()

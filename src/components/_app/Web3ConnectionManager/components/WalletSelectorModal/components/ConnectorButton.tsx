@@ -2,13 +2,15 @@ import { ButtonProps, Center, Icon, Img } from "@chakra-ui/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import Button from "components/common/Button"
+import { addressLinkParamsAtom } from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
+import { useAtomValue, useSetAtom } from "jotai"
 import { Wallet } from "phosphor-react"
 import { useAccount, type Connector } from "wagmi"
+import { walletLinkHelperModalAtom } from "../../WalletLinkHelperModal"
 
 type Props = {
   connector: Connector
   pendingConnector: Connector
-  isLoading: boolean
   connect: (args) => void
   error?: Error
 }
@@ -30,7 +32,6 @@ const connectorButtonProps: ButtonProps = {
 const ConnectorButton = ({
   connector,
   pendingConnector,
-  isLoading,
   connect,
   error,
 }: Props): JSX.Element => {
@@ -40,10 +41,16 @@ const ConnectorButton = ({
 
   const { connectorName, connectorIcon } = useConnectorNameAndIcon(connector)
 
+  const addressLinkParams = useAtomValue(addressLinkParamsAtom)
+  const setIsWalletLinkHelperModalOpen = useSetAtom(walletLinkHelperModalAtom)
+
   return (
     <Button
       data-wagmi-connector-id={connector.id}
-      onClick={() => connect({ connector })}
+      onClick={() => {
+        if (addressLinkParams?.userId) setIsWalletLinkHelperModalOpen(true)
+        connect({ connector })
+      }}
       leftIcon={
         connectorIcon ? (
           <Center boxSize={6}>
@@ -60,7 +67,7 @@ const ConnectorButton = ({
       }
       isDisabled={activeConnector?.id === connector.id}
       isLoading={
-        ((isLoading && pendingConnector?.id === connector.id) ||
+        (pendingConnector?.id === connector.id ||
           (isConnected && activeConnector?.id === connector.id && !keyPair)) &&
         !error
       }

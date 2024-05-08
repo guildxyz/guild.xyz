@@ -15,7 +15,7 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Info, UserSwitch } from "phosphor-react"
 import { useMemo } from "react"
-import fetcher, { useFetcherWithSign } from "utils/fetcher"
+import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow, {
   DAY_IN_MS,
   MINUTE_IN_MS,
@@ -85,7 +85,6 @@ const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
 }
 
 const SyncRoleButton = ({ roleId }) => {
-  const fetcherWithSign = useFetcherWithSign()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 

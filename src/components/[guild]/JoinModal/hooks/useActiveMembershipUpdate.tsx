@@ -1,4 +1,4 @@
-import type { JoinJob } from "@guildxyz/types"
+import type { AccessCheckJob, JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useMembership from "components/explorer/hooks/useMembership"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
@@ -38,26 +38,46 @@ const useActiveMembershipUpdate = ({
       onSuccess: (res) => {
         if (!res.done) return
 
-        const byRoleId = groupBy(res?.["children:access-check:jobs"] ?? [], "roleId")
+        /**
+         * "children:access-check:jobs" are the jobs returned from gate, but in some
+         * cases the user may get access to additional requirements after the initial
+         * access check (e.g. if they get access to "role A" and that role is the
+         * requirement in "role B", then this latter will be included only in
+         * "res.requirementAccesses"), that's why we use this variable here
+         */
+        const requirementAccesses = (res as any)
+          ?.requirementAccesses as AccessCheckJob["children:access-check:jobs"][]
+        const reqJobsByRoleId = groupBy(requirementAccesses ?? [], "roleId")
 
-        const newRoles = Object.entries(byRoleId).map(([roleIdStr, reqJobs]) => {
-          const roleId = +roleIdStr
-          return {
-            access: res?.roleAccesses?.find(
-              (roleAccess) => roleAccess.roleId === +roleId
-            )?.access,
-            roleId,
-            requirements: reqJobs?.map((reqJob) => ({
-              requirementId: reqJob.requirementId,
-              access: reqJob.access,
-              amount: reqJob.amount,
-              errorMsg: reqJob.userLevelErrors?.[0]?.msg,
-              errorType: reqJob.userLevelErrors?.[0]?.errorType,
-              subType: reqJob.userLevelErrors?.[0]?.subType,
-              lastCheckedAt: (res as any).createdAtTimestamp,
-            })),
+        const newRoles = Object.entries(reqJobsByRoleId).map(
+          ([roleIdStr, reqAccesses]: [
+            string,
+            AccessCheckJob["children:access-check:jobs"]
+          ]) => {
+            const roleId = +roleIdStr
+            return {
+              access: res?.roleAccesses?.find(
+                (roleAccess) => roleAccess.roleId === +roleId
+              )?.access,
+              roleId,
+              requirements: reqAccesses?.map((reqAccess) => ({
+                requirementId: reqAccess.requirementId,
+                access: reqAccess.access,
+                amount: reqAccess.amount,
+                errorMsg:
+                  reqAccess.userLevelErrors?.[0]?.msg ??
+                  reqAccess.requirementError?.msg,
+                errorType:
+                  reqAccess.userLevelErrors?.[0]?.errorType ??
+                  reqAccess.requirementError?.errorType,
+                subType:
+                  reqAccess.userLevelErrors?.[0]?.errorSubType ??
+                  reqAccess.requirementError?.errorSubType,
+                lastCheckedAt: new Date(res.createdAtTimestamp).toISOString(),
+              })),
+            }
           }
-        })
+        )
 
         // delaying success a bit so the user has time percieving the last state
         setTimeout(() => {
@@ -69,7 +89,7 @@ const useActiveMembershipUpdate = ({
                 prev?.joinedAt || res?.done ? new Date().toISOString() : null,
               roles: [
                 ...(prev?.roles?.filter(
-                  (role) => !Object.keys(byRoleId).includes(role.roleId.toString())
+                  (role) => !(role.roleId.toString() in reqJobsByRoleId)
                 ) ?? []),
                 ...newRoles,
               ],

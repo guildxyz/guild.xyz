@@ -8,8 +8,7 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
+import { useController, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -43,11 +42,15 @@ const CoinbaseEASForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element =
     formState: { errors },
   } = useFormContext()
 
-  useEffect(() => {
-    if (!setValue) return
-    setValue(`${baseFieldPath}.chain`, "BASE_MAINNET")
-    setValue(`${baseFieldPath}.data.attester`, VERIFICATIONS_COINBASE_ETH)
-  }, [setValue])
+  useController({
+    name: `${baseFieldPath}.chain`,
+    defaultValue: "BASE_MAINNET",
+  })
+
+  useController({
+    name: `${baseFieldPath}.data.attester`,
+    defaultValue: VERIFICATIONS_COINBASE_ETH,
+  })
 
   const schemaId = useWatch({ name: `${baseFieldPath}.data.schemaId` })
 

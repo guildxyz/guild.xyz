@@ -1,7 +1,6 @@
 import {
   Box,
   ChakraProps,
-  Divider,
   Flex,
   HStack,
   Skeleton,
@@ -93,12 +92,7 @@ const RewardCard = ({
           )}
         </Stack>
       </HStack>
-      {actionRow && (
-        <>
-          <Divider my={3} display={{ md: "none" }} />
-          {actionRow}
-        </>
-      )}
+      {actionRow}
     </Flex>
     {children}
     <ColorCardLabel

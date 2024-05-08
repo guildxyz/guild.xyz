@@ -84,7 +84,7 @@ const NavMenu = (): JSX.Element => {
                   router.push("/explorer")
                 }}
               >
-                Explore all guilds
+                Explore guilds
               </NavButton>
               <NavButton leftIcon={<Plus />} href="/create-guild">
                 Create guild

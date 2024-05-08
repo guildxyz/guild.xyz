@@ -11,7 +11,7 @@ const useSubmitWithUpload = (
       setHasClicked(false)
       handleSubmit?.()
     }
-  }, [isLoading, hasClicked])
+  }, [hasClicked, isLoading, setHasClicked, handleSubmit])
 
   const wrappedHandleSubmit = useCallback(
     (event) => {

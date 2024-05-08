@@ -6,6 +6,7 @@ import {
   ImageSquare,
   Link,
   ListChecks,
+  Parachute,
   Robot,
   Wallet,
   Wrench,
@@ -59,6 +60,15 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Allowlist/AllowlistForm")
     ),
     types: ["ALLOWLIST", "ALLOWLIST_EMAIL"],
+    isNegatable: true,
+  },
+  {
+    icon: Parachute,
+    name: "Airdrop",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Airdrop/AirdropRequirement")
+    ),
+    types: ["GUILD_SNAPSHOT"],
     isNegatable: true,
   },
   {
@@ -214,7 +224,6 @@ export const REQUIREMENTS_DATA = [
       "TWITTER_LIKE",
       "TWITTER_LIKE_COUNT",
       "TWITTER_LIKE_V2",
-      "TWITTER_LIST_FOLLOW",
       "TWITTER_LIST_MEMBER",
       "TWITTER_NAME",
       "TWITTER_RETWEET",
@@ -273,6 +282,18 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/CoinbaseEAS/CoinbaseEASForm")
     ),
     types: ["COINBASE_EAS_ATTESTED_BY"],
+    isNegatable: true,
+  },
+  {
+    icon: "/requirementLogos/uniswap.svg",
+    name: "Uniswap",
+    displayComponent: dynamic<RequirementProps>(
+      () => import("requirements/Uniswap/UniswapRequirement")
+    ),
+    formComponent: dynamic<RequirementFormProps>(
+      () => import("requirements/Uniswap/UniswapForm")
+    ),
+    types: ["UNISWAP_V3_POSITIONS"],
     isNegatable: true,
   },
   {
@@ -353,11 +374,13 @@ export const REQUIREMENTS_DATA = [
       "FARCASTER_FOLLOWED_BY",
       "FARCASTER_LIKE",
       "FARCASTER_RECAST",
+      "FARCASTER_USERNAME",
+      "FARCASTER_BIO",
     ],
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/lens.png",
+    icon: "/requirementLogos/lens.svg",
     name: "Lens",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Lens/LensRequirement")
@@ -369,8 +392,9 @@ export const REQUIREMENTS_DATA = [
       "LENS",
       "LENS_PROFILE",
       "LENS_FOLLOW",
+      "LENS_REACT",
       "LENS_COLLECT",
-      "LENS_MIRROR",
+      "LENS_ACTION",
       "LENS_TOTAL_FOLLOWERS",
       "LENS_TOTAL_POSTS",
       "LENS_FOLLOWED_BY",
@@ -572,24 +596,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Rep3/Rep3Form")
     ),
     types: ["REP3"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/shield.png",
-    name: "Shield",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Shield/ShieldRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Shield/ShieldForm")
-    ),
-    types: [
-      "SHIELD_ANOM_TX",
-      "SHIELD_UNVERIFIED_CONTRACT",
-      "SHIELD_EXPLOIT_INTERACTION",
-      "SHIELD_INDIRECT_DEPOSITS",
-      "SHIELD_TORNADO_CASH",
-    ],
     isNegatable: true,
   },
   {

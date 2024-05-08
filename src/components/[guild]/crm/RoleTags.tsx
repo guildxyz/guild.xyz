@@ -49,7 +49,14 @@ const RoleTags = ({ roles, column }: Props) => {
         />
       ))}
       {moreRolesCount > 0 && (
-        <Popover trigger="hover" openDelay={0} closeDelay={0}>
+        <Popover
+          trigger="hover"
+          openDelay={0}
+          closeDelay={0}
+          eventListeners={{ scroll: false }}
+          computePositionOnMount={false}
+          isLazy
+        >
           <PopoverTrigger>
             <Tag
               variant={"outline"}
@@ -91,7 +98,7 @@ type RoleTagProps = {
 } & TagProps
 
 const CrmTbodyRoleTag = forwardRef<RoleTagProps, "span">(
-  ({ roleId, amount, ...rest }, ref) => {
+  ({ roleId, amount, ...rest }, _ref) => {
     const { roles } = useGuild()
     const role = roles.find((r) => r.id === roleId)
     const tdBg = useColorModeValue(`gray.50`, "#3A3A40")
