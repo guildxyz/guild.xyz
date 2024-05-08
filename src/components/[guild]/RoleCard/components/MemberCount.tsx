@@ -4,6 +4,7 @@ import {
   PopoverArrow,
   PopoverBody,
   PopoverContent,
+  PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
   Portal,
@@ -16,9 +17,15 @@ import {
   Text,
 } from "@chakra-ui/react"
 import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useUser from "components/[guild]/hooks/useUser"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { Users } from "phosphor-react"
 import { PropsWithChildren } from "react"
+import MemberCountLastSyncTooltip, {
+  SyncRoleButton,
+} from "./MemberCountLastSyncTooltip"
 
 type Props = {
   memberCount: number
@@ -96,6 +103,39 @@ const StatusProgress = ({ data, status }) => {
         {percentage.toFixed(0)}%
       </Text>
     </HStack>
+  )
+}
+
+export const RoleCardMemberCount = ({
+  memberCount,
+  roleId,
+  lastSyncedAt,
+}: PropsWithChildren<Props & { lastSyncedAt: string }>) => {
+  const { featureFlags } = useGuild()
+  const { isAdmin } = useGuildPermission()
+  const { isSuperAdmin } = useUser()
+
+  return (
+    <MemberCount memberCount={memberCount} roleId={roleId}>
+      {isSuperAdmin ? (
+        <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt}>
+          <PopoverFooter
+            pt={0.5}
+            pb={3}
+            display="flex"
+            justifyContent={"flex-end"}
+            border={0}
+          >
+            <SyncRoleButton roleId={roleId} />
+          </PopoverFooter>
+        </MemberCountLastSyncTooltip>
+      ) : isAdmin &&
+        featureFlags.includes("PERIODIC_SYNC") &&
+        /* temporarily only showing for superAdmins when lastSyncedAt is null, until we know what to communicate to admins in this case */
+        lastSyncedAt ? (
+        <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt} />
+      ) : null}
+    </MemberCount>
   )
 }
 

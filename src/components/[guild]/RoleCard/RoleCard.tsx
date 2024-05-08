@@ -23,8 +23,7 @@ import useGuild from "../hooks/useGuild"
 import useGuildPermission from "../hooks/useGuildPermission"
 import AccessIndicator from "./components/AccessIndicator"
 import HiddenRewards from "./components/HiddenRewards"
-import MemberCount from "./components/MemberCount"
-import MemberCountLastSyncTooltip from "./components/MemberCountLastSyncTooltip"
+import { RoleCardMemberCount } from "./components/MemberCount"
 import Reward, { RewardIcon } from "./components/Reward"
 import RoleDescription from "./components/RoleDescription"
 import RoleHeader from "./components/RoleHeader"
@@ -39,7 +38,7 @@ type Props = {
 const DynamicEditRole = dynamic(() => import("./components/EditRole"))
 
 const RoleCard = memo(({ role }: Props) => {
-  const { guildPlatforms, isDetailed, featureFlags } = useGuild()
+  const { guildPlatforms, isDetailed } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
   const { hasRoleAccess } = useRoleMembership(role.id)
@@ -134,14 +133,11 @@ const RoleCard = memo(({ role }: Props) => {
                 sx={!isOpen && { display: "none" }}
                 animation="slideFadeIn .2s"
               >
-                <MemberCount memberCount={role.memberCount} roleId={role.id}>
-                  {isAdmin && featureFlags.includes("PERIODIC_SYNC") && (
-                    <MemberCountLastSyncTooltip
-                      lastSyncedAt={role.lastSyncedAt}
-                      roleId={role.id}
-                    />
-                  )}
-                </MemberCount>
+                <RoleCardMemberCount
+                  memberCount={role.memberCount}
+                  lastSyncedAt={role.lastSyncedAt}
+                  roleId={role.id}
+                />
 
                 {isAdmin && isDetailed && (
                   <>
