@@ -167,7 +167,7 @@ const EditGuildDrawer = ({
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
     fieldToSetOnError: "imageUrl",
-    setValue,
+    control: methods.control,
   })
 
   const onBackgroundUploadError = useCallback(() => {
@@ -177,7 +177,7 @@ const EditGuildDrawer = ({
   const backgroundUploader = usePinata({
     fieldToSetOnSuccess: "theme.backgroundImage",
     onError: onBackgroundUploadError,
-    setValue,
+    control: methods.control,
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(

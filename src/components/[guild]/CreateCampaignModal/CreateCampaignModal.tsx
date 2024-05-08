@@ -23,7 +23,7 @@ const CreateCampaignModal = (props: Props) => {
 
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
-    setValue: methods.setValue,
+    control: methods.control,
   })
 
   const { onSubmit, isLoading } = useCreateRoleGroup()

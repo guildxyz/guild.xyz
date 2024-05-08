@@ -159,7 +159,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
     fieldToSetOnError: "imageUrl",
-    setValue,
+    control,
   })
 
   const drawerBodyRef = useRef<HTMLDivElement>()

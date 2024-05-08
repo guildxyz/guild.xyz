@@ -1,19 +1,19 @@
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useCallback } from "react"
-import { UseFormSetValue, useFormContext } from "react-hook-form"
+import { Control, Path, useController, useFormContext } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
 import pinFileToIPFS, {
   PinToIPFSProps,
   PinataPinFileResponse,
 } from "./utils/pinataUpload"
 
-type Props = Partial<{
+type Props<TFieldValues, TContext> = Partial<{
   onSuccess: (data: PinataPinFileResponse) => void
   onError: (error: any) => void
-  fieldToSetOnSuccess: string
-  fieldToSetOnError: string
-  setValue: UseFormSetValue<any>
+  fieldToSetOnSuccess: Path<TFieldValues>
+  fieldToSetOnError: Path<TFieldValues>
+  control?: Control<TFieldValues, TContext>
 }>
 
 export type Uploader = {
@@ -21,16 +21,30 @@ export type Uploader = {
   isUploading: boolean
 }
 
-const usePinata = ({
+const usePinata = <TFieldValues, TContext>({
   onError,
   onSuccess,
   fieldToSetOnSuccess,
   fieldToSetOnError,
-  setValue: setValueFromProp,
-}: Props = {}): Uploader => {
+  control: controlFromProps,
+}: Props<TFieldValues, TContext> = {}): Uploader => {
   const toast = useToast()
-  const { setValue: setValueFromContext } = useFormContext() ?? {}
-  const setValue = setValueFromProp || setValueFromContext
+  const { control: controlFromContext } = useFormContext<TFieldValues>() ?? {}
+  const control = controlFromContext ?? controlFromProps
+
+  const {
+    field: { onChange: successFieldOnChange },
+  } = useController<TFieldValues>({
+    control,
+    name: fieldToSetOnSuccess,
+  })
+
+  const {
+    field: { onChange: errorFieldOnChange },
+  } = useController({
+    control,
+    name: fieldToSetOnError,
+  })
 
   const wrappedOnError = useCallback(
     (error) => {
@@ -48,34 +62,26 @@ const usePinata = ({
       })
       onError?.(error)
 
-      if (fieldToSetOnError && setValue) {
-        setValue(fieldToSetOnError, `/guildLogos/${getRandomInt(286)}.svg`, {
-          shouldTouch: true,
-          shouldDirty: true,
-        })
+      if (fieldToSetOnError && errorFieldOnChange) {
+        errorFieldOnChange(`/guildLogos/${getRandomInt(286)}.svg`)
       }
     },
     // toast is left out intentionally
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [onError, fieldToSetOnError, setValue]
+    [onError, fieldToSetOnError, errorFieldOnChange]
   )
 
   const wrappedOnSuccess = useCallback(
     (response: PinataPinFileResponse) => {
       onSuccess?.(response)
 
-      if (fieldToSetOnSuccess) {
-        setValue(
-          fieldToSetOnSuccess,
-          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${response.IpfsHash}`,
-          {
-            shouldTouch: true,
-            shouldDirty: true,
-          }
+      if (fieldToSetOnSuccess && successFieldOnChange) {
+        successFieldOnChange(
+          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${response.IpfsHash}`
         )
       }
     },
-    [onSuccess, setValue, fieldToSetOnSuccess]
+    [onSuccess, fieldToSetOnSuccess, successFieldOnChange]
   )
 
   const { isLoading: isUploading, onSubmit: onUpload } = useSubmit(pinFileToIPFS, {

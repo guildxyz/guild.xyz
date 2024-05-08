@@ -61,7 +61,7 @@ const AddHiddenRoleButton = (buttonProps) => {
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
     fieldToSetOnError: "imageUrl",
-    setValue: methods.setValue,
+    control: methods.control,
   })
 
   const onSuccess = () => {
