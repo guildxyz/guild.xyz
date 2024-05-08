@@ -39,8 +39,8 @@ const NftFeesTable = ({ bgColor }: Props) => {
   return (
     <FeesTable
       buttonComponent={
-        <HStack justifyContent={"space-between"} w="full">
-          <Text fontWeight={"medium"}>Minting fee:</Text>
+        <HStack justifyContent="space-between" w="full">
+          <Text fontWeight="medium">Collecting fee:</Text>
 
           <Text as="span">
             <Skeleton
@@ -62,7 +62,7 @@ const NftFeesTable = ({ bgColor }: Props) => {
       bgColor={bgColor}
     >
       <Tr>
-        <Td>Price</Td>
+        <Td>NFT price</Td>
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedFeeLoaded}>
             {isFormattedFeeLoaded
@@ -73,7 +73,7 @@ const NftFeesTable = ({ bgColor }: Props) => {
       </Tr>
 
       <Tr>
-        <Td>Minting fee</Td>
+        <Td>Collecting fee</Td>
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedGuildFeeLoaded}>
             {isFormattedGuildFeeLoaded
