@@ -63,7 +63,9 @@ const CollectNftButton = ({
   })
 
   const isSufficientBalance =
-    typeof guildFee === "bigint" && typeof fee === "bigint" && coinBalanceData
+    typeof guildFee === "bigint" &&
+    typeof fee === "bigint" &&
+    typeof coinBalanceData?.value === "bigint"
       ? coinBalanceData.value > (fee + guildFee) * BigInt(amount)
       : undefined
 
