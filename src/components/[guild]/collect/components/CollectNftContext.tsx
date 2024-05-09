@@ -9,10 +9,10 @@ import {
   RewardDisplay,
   RewardIcon,
 } from "components/[guild]/RoleCard/components/Reward"
-import useNftBalance from "hooks/useNftBalance"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { GuildPlatform } from "types"
 import { Chain, Chains } from "wagmiConfig/chains"
+import useGuildRewardNftBalanceByUserId from "../hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
@@ -34,10 +34,11 @@ const CollectNftProvider = ({
   nftAddress,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
-  const { data: nftBalance } = useNftBalance({
+  const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress,
     chainId: Chains[chain],
   })
+
   const { name, mintableAmountPerUser } = useNftDetails(chain, nftAddress)
   const alreadyCollected = nftBalance >= mintableAmountPerUser
 

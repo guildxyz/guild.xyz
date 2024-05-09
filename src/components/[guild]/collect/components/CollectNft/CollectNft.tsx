@@ -49,7 +49,7 @@ const CollectNft = () => {
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
   const {
-    totalCollectors,
+    totalSupply,
     totalCollectorsToday,
     maxSupply,
     mintableAmountPerUser,
@@ -98,7 +98,7 @@ const CollectNft = () => {
           maxW="max-content"
           isLoaded={
             !isLoading &&
-            (typeof totalCollectors !== "undefined" ||
+            (typeof totalSupply !== "undefined" ||
               typeof totalCollectorsToday !== "undefined")
           }
         >
@@ -119,11 +119,11 @@ const CollectNft = () => {
                   </>
                 )}
 
-              {!!maxSupply && (
+              {!!maxSupply && typeof totalSupply === "bigint" && (
                 <>
                   <CapacityTag
-                    capacity={maxSupply}
-                    claimedCount={totalCollectors}
+                    capacity={Number(maxSupply)}
+                    claimedCount={Number(totalSupply)}
                     {...availibiltyTagStyleProps}
                   />
                   <CircleDivider />
@@ -153,23 +153,19 @@ const CollectNft = () => {
               {typeof rolePlatform?.capacity !== "number" && (
                 <>
                   <Tag {...availibiltyTagStyleProps} colorScheme="gray">
-                    {`${
-                      new Intl.NumberFormat("en", {
-                        notation: "standard",
-                      }).format(totalCollectors) ?? 0
-                    } collected`}
+                    {`${new Intl.NumberFormat("en", {
+                      notation: "standard",
+                    }).format(totalSupply ?? 0)} collected`}
                   </Tag>
-                  {typeof totalCollectorsToday === "number" && <CircleDivider />}
+                  {typeof totalCollectorsToday === "bigint" && <CircleDivider />}
                 </>
               )}
 
-              {typeof totalCollectorsToday === "number" && (
+              {typeof totalCollectorsToday === "bigint" && (
                 <Tag {...availibiltyTagStyleProps} colorScheme="gray">
-                  {`${
-                    new Intl.NumberFormat("en", {
-                      notation: "standard",
-                    }).format(totalCollectorsToday) ?? 0
-                  } collected today`}
+                  {`${new Intl.NumberFormat("en", {
+                    notation: "standard",
+                  }).format(totalCollectorsToday)} collected today`}
                 </Tag>
               )}
             </Flex>

@@ -16,15 +16,18 @@ const NftAvailabilityTags = ({
   children,
   ...wrapProps
 }: PropsWithChildren<Props>) => {
-  const { maxSupply, totalCollectors } = useNftDetails(
+  const { maxSupply, totalSupply } = useNftDetails(
     guildPlatform.platformGuildData.chain,
     guildPlatform.platformGuildData.contractAddress
   )
 
   return (
     <Wrap spacing={1} {...wrapProps}>
-      {!!maxSupply && typeof totalCollectors === "number" && (
-        <CapacityTag capacity={maxSupply} claimedCount={totalCollectors} />
+      {!!maxSupply && typeof totalSupply === "bigint" && (
+        <CapacityTag
+          capacity={Number(maxSupply)}
+          claimedCount={Number(totalSupply)}
+        />
       )}
 
       {rolePlatform?.startTime && (

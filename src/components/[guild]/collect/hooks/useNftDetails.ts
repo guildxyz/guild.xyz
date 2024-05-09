@@ -13,9 +13,6 @@ const currentDate = new Date()
 currentDate.setUTCHours(0, 0, 0, 0)
 const noonUnixTimestamp = currentDate.getTime() / 1000
 
-const bigIntToNumber = (num?: bigint) =>
-  typeof num === "bigint" ? Number(num) : undefined
-
 const fetchNftDetails = ([_, chain, address]) =>
   fetcher(`/api/nft/${chain}/${address}`)
 
@@ -65,6 +62,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       enabled: !!firstBlockNumberToday,
       staleTime: 600_000,
       refetchOnWindowFocus: false,
+      retry: false,
     },
   })
 
@@ -132,13 +130,13 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   return {
     ...nftDetails,
     name: nftDetails?.name ?? guildPlatformData?.name,
-    totalCollectors: bigIntToNumber(totalSupply),
+    totalSupply,
     totalCollectorsToday:
       typeof totalSupply === "bigint" && typeof firstTotalSupplyToday === "bigint"
-        ? Number(totalSupply - firstTotalSupplyToday)
+        ? totalSupply - firstTotalSupplyToday
         : undefined,
-    maxSupply: bigIntToNumber(maxSupply),
-    mintableAmountPerUser: bigIntToNumber(mintableAmountPerUser),
+    maxSupply: maxSupply,
+    mintableAmountPerUser,
     image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
     description: metadata?.description as string,
     fee,

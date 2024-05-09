@@ -1,9 +1,9 @@
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useNftBalance from "hooks/useNftBalance"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import { Chains } from "wagmiConfig/chains"
 import NftAvailabilityTags from "./components/NftAvailabilityTags"
@@ -18,7 +18,7 @@ const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) =>
   } = guildPlatform.platformGuildData
   const { name, image } = useNftDetails(chain, contractAddress)
 
-  const { data: nftBalance } = useNftBalance({
+  const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress: contractAddress,
     chainId: Chains[chain],
   })

@@ -13,13 +13,13 @@ import useNftDetails from "../hooks/useNftDetails"
 const Links = () => {
   const { colorMode } = useColorMode()
   const { chain, nftAddress } = useCollectNftContext()
-  const { totalCollectors } = useNftDetails(chain, nftAddress)
+  const { totalSupply } = useNftDetails(chain, nftAddress)
   const { socialLinks } = useGuild()
 
   return (
     <Section title="Links" spacing={3}>
       <Wrap spacingX={6} spacingY={3}>
-        {openseaBaseUrl[chain] && totalCollectors > 0 && (
+        {openseaBaseUrl[chain] && totalSupply > 0 && (
           <Link
             href={`${openseaBaseUrl[chain]}/${nftAddress}`}
             isExternal

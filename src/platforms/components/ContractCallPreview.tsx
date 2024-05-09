@@ -27,7 +27,7 @@ const ContractCallPreview = (): JSX.Element => {
       image={imageUrl}
     >
       <Wrap>
-        {!!maxSupply && <CapacityTag capacity={maxSupply} />}
+        {!!maxSupply && <CapacityTag capacity={Number(maxSupply)} />}
         <Text colorScheme="gray" fontSize="sm" fontWeight="normal">
           You'll be able to set up claim start/end date later
         </Text>

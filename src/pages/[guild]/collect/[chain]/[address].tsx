@@ -74,11 +74,7 @@ const CollectNftPageContent = ({
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const {
-    name,
-    image: imageFromHook,
-    totalCollectors,
-  } = useNftDetails(chain, address)
+  const { name, image: imageFromHook, totalSupply } = useNftDetails(chain, address)
   const image = fallbackImage || imageFromHook
 
   return (
@@ -92,7 +88,7 @@ const CollectNftPageContent = ({
         <HStack justifyContent="space-between">
           <GuildImageAndName />
           <ShareAndReportButtons
-            isPulseMarkerHidden={totalCollectors > 0}
+            isPulseMarkerHidden={totalSupply > 0}
             shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
             shareText={`Check out and collect this awesome ${
               name ? `${name} ` : " "

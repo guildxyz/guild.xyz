@@ -3,7 +3,6 @@ import { ContractCallFunction } from "components/[guild]/RolePlatforms/component
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -19,6 +18,7 @@ import { Chains } from "wagmiConfig/chains"
 import { CollectNftForm } from "../components/CollectNft/CollectNft"
 import { useCollectNftContext } from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
+import useGuildRewardNftBalanceByUserId from "./useGuildRewardNftBalanceByUserId"
 import useTopCollectors from "./useTopCollectors"
 
 // address, userId, signedAt, signature (signedAt isn't used actually)
@@ -76,17 +76,17 @@ const useCollectNft = () => {
 
   const { guildFee } = useGuildFee(chain)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
+
+  const { refetch: refetchBalance } = useGuildRewardNftBalanceByUserId({
+    nftAddress,
+    chainId: Chains[chain],
+  })
   const { mutate: mutateTopCollectors } = useTopCollectors()
 
   const shouldSwitchChain = chainId !== Chains[chain]
 
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
-
-  const { refetch: refetchBalance } = useNftBalance({
-    nftAddress,
-    chainId: Chains[chain],
-  })
 
   const { resetField } = useFormContext<CollectNftForm>()
   const claimAmountFromForm = useWatch<CollectNftForm, "amount">({

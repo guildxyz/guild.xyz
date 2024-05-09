@@ -11,11 +11,11 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useDebouncedState from "hooks/useDebouncedState"
-import useNftBalance from "hooks/useNftBalance"
 import { useEffect, useMemo, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { Chains } from "wagmiConfig/chains"
@@ -78,27 +78,29 @@ const AmountPicker = () => {
   const { chain, nftAddress } = useCollectNftContext()
   const {
     mintableAmountPerUser: mintableAmountPerUserFromContract,
-    totalCollectors,
+    totalSupply,
     maxSupply,
   } = useNftDetails(chain, nftAddress)
-  const { data: balance } = useNftBalance({
+  const { data: balance } = useGuildRewardNftBalanceByUserId({
     nftAddress,
     chainId: Chains[chain],
   })
 
   const mintableAmountPerUser =
+    typeof maxSupply === "bigint" &&
+    typeof totalSupply === "bigint" &&
     typeof balance === "bigint" &&
-    typeof mintableAmountPerUserFromContract === "number"
+    typeof mintableAmountPerUserFromContract === "bigint"
       ? Math.min(
-          maxSupply - totalCollectors,
-          mintableAmountPerUserFromContract - Number(balance)
+          Number(maxSupply - totalSupply),
+          Number(mintableAmountPerUserFromContract - balance)
         )
       : 0
 
   const ranges = useMemo(
     () =>
       mintableAmountPerUserFromContract
-        ? getMintingRanges(mintableAmountPerUserFromContract)
+        ? getMintingRanges(Number(mintableAmountPerUserFromContract))
         : undefined,
     [mintableAmountPerUserFromContract]
   )
@@ -159,7 +161,7 @@ const AmountPicker = () => {
           {ranges.map((range, index) => {
             const isDisabled =
               mintableAmountPerUser < range.min ||
-              maxSupply - totalCollectors < range.min
+              maxSupply - totalSupply < range.min
             return (
               <Button
                 key={range.name}
