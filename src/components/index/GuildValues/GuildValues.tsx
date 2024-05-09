@@ -5,7 +5,7 @@ import ValueText from "./components/ValueText"
 
 const valueCards = [
   {
-    link: "https://discord.gg/guildxyz",
+    link: "https://discord.gg/KUkghUdk2G",
     title: "Dedicated support",
     content: (
       <ValueText>
