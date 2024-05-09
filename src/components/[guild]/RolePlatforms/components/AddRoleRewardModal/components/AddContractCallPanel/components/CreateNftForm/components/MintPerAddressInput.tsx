@@ -21,7 +21,7 @@ const options = [
     value: "UNLIMITED",
   },
   {
-    label: "Custom amount",
+    label: "Limited",
     value: "LIMITED",
   },
 ] satisfies { label: string; value: MintLimitType }[]
