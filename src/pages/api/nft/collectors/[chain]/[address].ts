@@ -14,7 +14,10 @@ type Owner = {
 export type TopCollectorsResponse = OneOf<
   {
     uniqueCollectors: number
-    topCollectors: string[]
+    topCollectors: {
+      address: string
+      balance: number
+    }[]
   },
   { error: string }
 >
@@ -29,7 +32,7 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   MANTLE: "",
   ZKSYNC_ERA: "",
   LINEA: "",
-  SEPOLIA: "",
+  SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${process.env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
@@ -117,7 +120,10 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
   const response: TopCollectorsResponse = {
     topCollectors: sortedOwners
       .slice(0, 100)
-      .map(({ ownerAddress }) => ownerAddress),
+      .map(({ ownerAddress, tokenBalance }) => ({
+        address: ownerAddress,
+        balance: tokenBalance,
+      })),
     uniqueCollectors: owners.length,
   }
 

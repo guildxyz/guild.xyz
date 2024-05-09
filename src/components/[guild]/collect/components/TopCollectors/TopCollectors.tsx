@@ -59,8 +59,8 @@ const TopCollectors = () => {
             columnGap={2}
             rowGap={4}
           >
-            {shownCollectors.map((address) => (
-              <Collector key={address} address={address} />
+            {shownCollectors.map(({ address, balance }) => (
+              <Collector key={address} address={address} balance={balance} />
             ))}
           </SimpleGrid>
           {shownCollectors?.length > 39 && (

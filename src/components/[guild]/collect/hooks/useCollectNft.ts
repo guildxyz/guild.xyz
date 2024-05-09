@@ -174,6 +174,7 @@ const useCollectNft = () => {
   return {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
+        const claimedAmount = claimAmount
         resetField("amount", {
           defaultValue: 1,
         })
@@ -186,7 +187,10 @@ const useCollectNft = () => {
           (prevValue) => ({
             topCollectors: [
               ...(prevValue?.topCollectors ?? []),
-              userAddress?.toLowerCase(),
+              {
+                address: userAddress?.toLowerCase(),
+                balance: claimedAmount,
+              },
             ],
             uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
           }),
@@ -198,8 +202,12 @@ const useCollectNft = () => {
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
         tweetToast({
-          title: "Successfully collected NFT!",
-          tweetText: `Just collected my ${name} NFT!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
+          title: `Successfully ${claimedAmount} collected NFT${
+            claimedAmount > 1 ? "s" : ""
+          }!`,
+          tweetText: `Just collected my ${name} NFT${
+            claimedAmount > 1 ? "s" : ""
+          }!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
         })
       },
       onError: (error) => {
