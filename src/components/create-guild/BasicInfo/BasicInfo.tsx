@@ -1,5 +1,5 @@
 import {
-  Box,
+  FormControl,
   FormLabel,
   HStack,
   SimpleGrid,
@@ -93,13 +93,13 @@ const BasicInfo = (): JSX.Element => {
           spacing="5"
           templateColumns={{ base: "1fr", md: "1fr 1fr" }}
         >
-          <Box flex="1">
+          <FormControl isRequired>
             <FormLabel>Logo and name</FormLabel>
             <HStack alignItems="start">
               <IconSelector uploader={iconUploader} minW={512} minH={512} />
               <Name width={null} />
             </HStack>
-          </Box>
+          </FormControl>
           <UrlName maxWidth="unset" />
         </SimpleGrid>
         <Description />
