@@ -83,6 +83,10 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     contracts: [
       {
         ...contract,
+        functionName: "locked",
+      },
+      {
+        ...contract,
         functionName: "totalSupply",
       },
       {
@@ -109,6 +113,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   })
 
   const [
+    lockedResponse,
     totalSupplyResponse,
     maxSupplyResponse,
     mintableAmountPerUserResponse,
@@ -116,6 +121,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     feeResponse,
   ] = data || []
 
+  const soulbound = lockedResponse?.result !== false // undefined or true means that it is "locked"
   const totalSupply = totalSupplyResponse?.result
   const maxSupply = maxSupplyResponse?.result
   const mintableAmountPerUser = mintableAmountPerUserResponse?.result
@@ -129,6 +135,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   // TODO: maybe we shouldn't convert bigints to numbers here?...
   return {
     ...nftDetails,
+    soulbound,
     name: nftDetails?.name ?? guildPlatformData?.name,
     totalSupply,
     totalCollectorsToday:
