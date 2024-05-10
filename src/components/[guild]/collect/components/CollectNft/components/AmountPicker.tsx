@@ -38,11 +38,10 @@ const AmountPicker = () => {
   const mintableAmountPerUser =
     typeof maxSupply === "bigint" &&
     typeof totalSupply === "bigint" &&
-    typeof balance === "bigint" &&
     typeof mintableAmountPerUserFromContract === "bigint"
       ? Math.min(
           Number(maxSupply - totalSupply),
-          Number(mintableAmountPerUserFromContract - balance)
+          Number(mintableAmountPerUserFromContract - (balance ?? BigInt(0))) // Defined a fallback for balance here, so the amount picker works properly for logged out users too
         )
       : 0
 
