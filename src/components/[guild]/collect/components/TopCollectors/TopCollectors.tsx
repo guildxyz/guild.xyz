@@ -38,7 +38,7 @@ const TopCollectors = () => {
         <Text w="full" colorScheme="gray">
           Couldn't fetch top collectors
         </Text>
-      ) : !data || isValidating ? (
+      ) : isValidating ? (
         <SimpleGrid
           pt={2}
           w="full"
@@ -50,6 +50,10 @@ const TopCollectors = () => {
             <CollectorSkeleton key={i} />
           ))}
         </SimpleGrid>
+      ) : data && !data.topCollectors.length ? (
+        <Text w="full" colorScheme="gray">
+          No collectors yet
+        </Text>
       ) : (
         <>
           <SimpleGrid
