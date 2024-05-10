@@ -5,6 +5,7 @@ type PermissionEntry = {
     | "Administrator"
     | "Create Invite"
     | "Manage Roles"
+    | "Manage Server"
     | "Send Messages"
     | "Embed Links"
     | "Add Reactions"
