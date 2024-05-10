@@ -72,7 +72,8 @@ const useCollectNft = () => {
 
   const { chain, nftAddress, roleId, rolePlatformId, guildPlatform } =
     useCollectNftContext()
-  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
+  const { setTxHash, setTxError, setTxSuccess, assetAmount, setAssetAmount } =
+    useTransactionStatusContext() ?? {}
 
   const { guildFee } = useGuildFee(chain)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
@@ -174,7 +175,8 @@ const useCollectNft = () => {
   return {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
-        const claimedAmount = claimAmount
+        setAssetAmount(claimAmount)
+
         resetField("amount", {
           defaultValue: 1,
         })
@@ -189,7 +191,7 @@ const useCollectNft = () => {
               ...(prevValue?.topCollectors ?? []),
               {
                 address: userAddress?.toLowerCase(),
-                balance: claimedAmount,
+                balance: assetAmount,
               },
             ].sort((a, b) => b.balance - a.balance),
             uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
@@ -202,11 +204,11 @@ const useCollectNft = () => {
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
         tweetToast({
-          title: `Successfully ${claimedAmount} collected NFT${
-            claimedAmount > 1 ? "s" : ""
-          }!`,
+          title: `Successfully collected ${
+            assetAmount > 1 ? `${assetAmount} ` : ""
+          }NFT${assetAmount > 1 ? "s" : ""}!`,
           tweetText: `Just collected my ${name} NFT${
-            claimedAmount > 1 ? "s" : ""
+            assetAmount > 1 ? "s" : ""
           }!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
         })
       },

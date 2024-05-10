@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import {
   TransactionStatusProvider,
   useTransactionStatusContext,
@@ -42,7 +42,8 @@ const CollectNftProvider = ({
   const { name, mintableAmountPerUser } = useNftDetails(chain, nftAddress)
   const alreadyCollected = nftBalance >= mintableAmountPerUser
 
-  const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
+  const { txHash, isTxModalOpen, onTxModalOpen, assetAmount } =
+    useTransactionStatusContext()
   useEffect(() => {
     if (!txHash || isTxModalOpen) return
     onTxModalOpen()
@@ -65,12 +66,14 @@ const CollectNftProvider = ({
       <TransactionStatusModal
         title="Collect NFT"
         successTitle="Success"
-        successText="Successfully collected NFT!"
+        successText={`Successfully collected NFT${assetAmount > 1 ? "s" : ""}!`}
         successLinkComponent={<OpenseaLink />}
-        errorComponent={<Text mb={4}>Couldn't collect NFT</Text>}
+        errorComponent={
+          <Text mb={4}>{`Couldn't collect NFT${assetAmount > 1 ? "s" : ""}`}</Text>
+        }
         progressComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
+            <Text fontWeight="bold" mb="2">
               You'll get:
             </Text>
             <RewardDisplay
@@ -80,14 +83,27 @@ const CollectNftProvider = ({
                   rolePlatformId={rolePlatformId}
                 />
               }
-              label={name}
+              label={
+                assetAmount > 1 ? (
+                  name
+                ) : (
+                  <HStack>
+                    <Text as="span">{name}</Text>
+                    <Text
+                      as="span"
+                      colorScheme="gray"
+                      fontWeight="semibold"
+                    >{` x${assetAmount}`}</Text>
+                  </HStack>
+                )
+              }
             />
           </>
         }
         successComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
-              Your new asset:
+            <Text fontWeight="bold" mb="2">
+              {`Your new asset${assetAmount > 1 ? "s" : 0}:`}
             </Text>
             <RewardDisplay
               icon={
@@ -96,7 +112,20 @@ const CollectNftProvider = ({
                   rolePlatformId={rolePlatformId}
                 />
               }
-              label={name}
+              label={
+                assetAmount > 1 ? (
+                  name
+                ) : (
+                  <HStack>
+                    <Text as="span">{name}</Text>
+                    <Text
+                      as="span"
+                      colorScheme="gray"
+                      fontWeight="semibold"
+                    >{` x${assetAmount}`}</Text>
+                  </HStack>
+                )
+              }
             />
           </>
         }
