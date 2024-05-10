@@ -191,7 +191,7 @@ const useCollectNft = () => {
                 address: userAddress?.toLowerCase(),
                 balance: claimedAmount,
               },
-            ],
+            ].sort((a, b) => b.balance - a.balance),
             uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
           }),
           {
