@@ -148,17 +148,10 @@ const useCollectNft = () => {
       request = newClaimRequest
     }
 
-    console.log(
-      claimData.args,
-      isLegacyClaimArgs(claimData.args),
-      isClaimArgs(claimData.args)
-    )
-
     if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
       return Promise.resolve({} as TransactionReceipt)
     }
 
-    console.log("before write", request)
     const hash = await walletClient.writeContract({
       ...request,
       account: walletClient.account,
@@ -220,7 +213,6 @@ const useCollectNft = () => {
         })
       },
       onError: (error) => {
-        console.log(error)
         setLoadingText("")
         setTxError(true)
 
