@@ -56,6 +56,14 @@ const AmountPicker = () => {
     formState: { errors },
   } = useFormContext<CollectNftForm>()
 
+  const numberInputMax =
+    mintableAmountPerUser ||
+    (typeof maxSupply === "bigint" &&
+      typeof totalSupply === "bigint" &&
+      maxSupply !== BigInt(0))
+      ? Number(maxSupply - totalSupply)
+      : undefined
+
   const {
     field: { value: amount, onChange: onAmountChange, ...amountField },
   } = useController({
@@ -67,10 +75,12 @@ const AmountPicker = () => {
         value: 1,
         message: "Only positive numbers are accepted",
       },
-      max: {
-        value: mintableAmountPerUser,
-        message: `You can collect up to ${mintableAmountPerUser} NFTs`,
-      },
+      max: !!numberInputMax
+        ? {
+            value: numberInputMax,
+            message: `You can collect up to ${numberInputMax} NFTs`,
+          }
+        : undefined,
     },
   })
 
@@ -99,67 +109,70 @@ const AmountPicker = () => {
           Amount
         </Text>
 
-        <SimpleGrid columns={{ base: 2, sm: 4 }} gap={2}>
-          {ranges.map((range, index) => {
-            const isDisabled =
-              mintableAmountPerUser < range.min ||
-              maxSupply - totalSupply < range.min
-            return (
-              <Button
-                key={range.name}
-                variant="unstyled"
-                bgColor={rangeBgColor}
-                _hover={{
-                  bgColor: isDisabled ? rangeBgColor : undefined,
-                }}
-                py={4}
-                h="auto"
-                isDisabled={isDisabled}
-                onClick={() => {
-                  setActiveRange(index)
+        {/* Only show if maxSupply is not unlimited */}
+        {maxSupply > 0 && (
+          <SimpleGrid columns={{ base: 2, sm: 4 }} gap={2}>
+            {ranges.map((range, index) => {
+              const isDisabled =
+                mintableAmountPerUser < range.min ||
+                maxSupply - totalSupply < range.min
+              return (
+                <Button
+                  key={range.name}
+                  variant="unstyled"
+                  bgColor={rangeBgColor}
+                  _hover={{
+                    bgColor: isDisabled ? rangeBgColor : undefined,
+                  }}
+                  py={4}
+                  h="auto"
+                  isDisabled={isDisabled}
+                  onClick={() => {
+                    setActiveRange(index)
 
-                  if (ranges[index].min <= amount && ranges[index].max >= amount)
-                    return
+                    if (ranges[index].min <= amount && ranges[index].max >= amount)
+                      return
 
-                  onAmountChange(ranges[index].min)
-                }}
-                borderWidth={2}
-                borderColor={activeRange === index ? undefined : "transparent"}
-                transition="background 0.2s ease, border-color 0.2s ease"
-              >
-                <Stack
-                  direction="column"
-                  alignItems="center"
-                  justifyContent="center"
+                    onAmountChange(ranges[index].min)
+                  }}
+                  borderWidth={2}
+                  borderColor={activeRange === index ? undefined : "transparent"}
+                  transition="background 0.2s ease, border-color 0.2s ease"
                 >
-                  <Circle
-                    bgColor={circleBgColor}
-                    size={12}
-                    borderWidth={circleBorderWidth}
+                  <Stack
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
                   >
-                    <Text as="span" fontSize="lg">
-                      {range.icon}
-                    </Text>
-                  </Circle>
+                    <Circle
+                      bgColor={circleBgColor}
+                      size={12}
+                      borderWidth={circleBorderWidth}
+                    >
+                      <Text as="span" fontSize="lg">
+                        {range.icon}
+                      </Text>
+                    </Circle>
 
-                  <Stack spacing={0}>
-                    <Text as="span" fontSize="sm">
-                      {range.name}
-                    </Text>
+                    <Stack spacing={0}>
+                      <Text as="span" fontSize="sm">
+                        {range.name}
+                      </Text>
 
-                    <Text as="span" fontSize="sm" colorScheme="gray">
-                      {range.min === range.max
-                        ? range.min
-                        : index === ranges.length - 1
-                        ? `${range.min}+`
-                        : `${range.min} - ${range.max}`}
-                    </Text>
+                      <Text as="span" fontSize="sm" colorScheme="gray">
+                        {range.min === range.max
+                          ? range.min
+                          : index === ranges.length - 1
+                          ? `${range.min}+`
+                          : `${range.min} - ${range.max}`}
+                      </Text>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Button>
-            )
-          })}
-        </SimpleGrid>
+                </Button>
+              )
+            })}
+          </SimpleGrid>
+        )}
       </Stack>
 
       <FormControl isInvalid={!!errors?.amount}>
@@ -168,7 +181,7 @@ const AmountPicker = () => {
           onChange={onAmountChange}
           {...amountField}
           min={1}
-          max={mintableAmountPerUser}
+          max={numberInputMax}
         >
           <NumberInputField placeholder="Custom amount" />
           <NumberInputStepper>

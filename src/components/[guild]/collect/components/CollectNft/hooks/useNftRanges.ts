@@ -19,7 +19,7 @@ type MintingRange = {
 const getMintingRanges = (
   mintableAmountPerUser: number
 ): [MintingRange, MintingRange, MintingRange, MintingRange] => {
-  const cappedMintableAmountPerUser = Math.min(mintableAmountPerUser, 100)
+  const cappedMintableAmountPerUser = Math.min(mintableAmountPerUser || 100, 100)
   const [range1Max, range2Max, range3Max] = [
     Math.floor(cappedMintableAmountPerUser * 0.03),
     Math.floor(cappedMintableAmountPerUser * 0.32),
@@ -60,7 +60,7 @@ const useNftRanges = () => {
 
   return useMemo(
     () =>
-      mintableAmountPerUser
+      typeof mintableAmountPerUser === "bigint"
         ? getMintingRanges(Number(mintableAmountPerUser))
         : undefined,
     [mintableAmountPerUser]

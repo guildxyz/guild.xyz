@@ -68,7 +68,9 @@ const CollectNft = () => {
   return (
     <FormProvider {...methods}>
       <Stack p={padding} w="full" alignItems="center" spacing={4}>
-        {mintableAmountPerUser >= 10 && <AmountPicker />}
+        {(mintableAmountPerUser >= 10 || mintableAmountPerUser === BigInt(0)) && (
+          <AmountPicker />
+        )}
 
         <NftFeesTable bgColor={tableBgColor} />
 
