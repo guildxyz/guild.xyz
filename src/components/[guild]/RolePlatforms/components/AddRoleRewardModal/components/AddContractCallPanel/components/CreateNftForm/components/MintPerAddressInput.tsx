@@ -9,6 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import SegmentedControl from "components/common/SegmentedControl"
 import { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
@@ -31,6 +32,7 @@ const MintPerAddressInput = () => {
 
   const {
     control,
+    getValues,
     formState: { errors },
   } = useFormContext<CreateNftFormType>()
   const {
@@ -44,6 +46,12 @@ const MintPerAddressInput = () => {
     defaultValue: 1,
     rules: {
       min: mintLimitType === "LIMITED" ? 1 : 0,
+      max: !!getValues("maxSupply")
+        ? {
+            value: getValues("maxSupply"),
+            message: "Must be less than or equal to max supply",
+          }
+        : undefined,
     },
   })
 
@@ -52,7 +60,14 @@ const MintPerAddressInput = () => {
   }, [mintableAmountPerUserOnChange, mintLimitType])
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" columnGap={4} rowGap={2}>
+    <FormControl
+      as={Grid}
+      isInvalid={!!errors.mintableAmountPerUser}
+      isDisabled={mintLimitType === "UNLIMITED"}
+      templateColumns="repeat(3, 1fr)"
+      columnGap={4}
+      rowGap={2}
+    >
       <GridItem as={FormControl} colSpan={{ base: 3, md: 2 }}>
         <FormLabel>Claiming per address</FormLabel>
         <SegmentedControl
@@ -63,17 +78,13 @@ const MintPerAddressInput = () => {
         />
       </GridItem>
 
-      <GridItem
-        as={FormControl}
-        colSpan={{ base: 3, md: 1 }}
-        isInvalid={!!errors.mintableAmountPerUser}
-        isDisabled={mintLimitType === "UNLIMITED"}
-      >
+      <GridItem colSpan={{ base: 3, md: 1 }}>
         <FormLabel>Max</FormLabel>
         <NumberInput
           {...mintableAmountPerUserField}
           onChange={mintableAmountPerUserOnChange}
           min={mintLimitType === "LIMITED" ? 1 : 0}
+          max={getValues("maxSupply") || undefined}
         >
           <NumberInputField />
           <NumberInputStepper>
@@ -82,7 +93,11 @@ const MintPerAddressInput = () => {
           </NumberInputStepper>
         </NumberInput>
       </GridItem>
-    </Grid>
+
+      <GridItem colSpan={3}>
+        <FormErrorMessage>{errors.mintableAmountPerUser?.message}</FormErrorMessage>
+      </GridItem>
+    </FormControl>
   )
 }
 
