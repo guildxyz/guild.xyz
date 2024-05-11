@@ -1,5 +1,6 @@
 import { Wrap, WrapProps } from "@chakra-ui/react"
-import {
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import AvailabilityTags, {
   CapacityTag,
   EndTimeTag,
   StartTimeTag,
@@ -20,6 +21,12 @@ const NftAvailabilityTags = ({
     guildPlatform.platformGuildData.chain,
     guildPlatform.platformGuildData.contractAddress
   )
+
+  if (
+    guildPlatform.platformGuildData.function ===
+    ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
+  )
+    return <AvailabilityTags rolePlatform={rolePlatform} {...wrapProps} />
 
   return (
     <Wrap spacing={1} {...wrapProps}>
