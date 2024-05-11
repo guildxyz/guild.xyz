@@ -21,6 +21,7 @@ import {
   Code,
   DiscordLogo,
   File,
+  GameController,
   House,
   Info,
   List,
@@ -97,6 +98,9 @@ const NavMenu = (): JSX.Element => {
               </NavButton>
               <NavButton leftIcon={<File />} href="/terms-of-use">
                 Terms of Use
+              </NavButton>
+              <NavButton leftIcon={<GameController />} href="/guess-the-guild">
+                Guess the Guild
               </NavButton>
             </NavGroup>
             <NavGroup title="Other">

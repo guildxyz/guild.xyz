@@ -824,6 +824,10 @@ type DetailedPinLeaderboardUserData = {
   pins: LeaderboardPinData[]
 }
 
+type GameMode = "GuessTheGuild" | "PairTheGuild"
+
+type GameLevel = "Easy" | "Medium" | "Hard"
+
 export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
 export type {
   BaseUser,
@@ -833,6 +837,8 @@ export type {
   DiscordServerData,
   EventSources,
   EventSourcesKey,
+  GameLevel,
+  GameMode,
   GitPoap,
   GoogleFile,
   Group,
