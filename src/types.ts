@@ -826,7 +826,11 @@ type DetailedPinLeaderboardUserData = {
 
 type GameMode = "GuessTheGuild" | "PairTheGuild"
 
-type GameLevel = "Easy" | "Medium" | "Hard"
+export enum GameLevel {
+  "Easy" = 100,
+  "Medium" = 500,
+  "Hard" = 1000,
+}
 
 export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
 export type {
@@ -837,7 +841,6 @@ export type {
   DiscordServerData,
   EventSources,
   EventSourcesKey,
-  GameLevel,
   GameMode,
   GitPoap,
   GoogleFile,

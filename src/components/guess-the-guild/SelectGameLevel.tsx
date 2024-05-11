@@ -11,7 +11,7 @@ const SelectGameLevel = ({ selected, onSelect }: Props): JSX.Element => {
   const selectedBg = useColorModeValue("white", "gray.600")
   const selectedShadow = "0 0.5px 2px 0 rgba(0, 0, 0, 0.2)"
   const MotionBox = motion(Box)
-  const gameLevels: GameLevel[] = ["Easy", "Medium", "Hard"]
+  const gameLevels: GameLevel[] = [GameLevel.Easy, GameLevel.Medium, GameLevel.Hard]
 
   return (
     <>
@@ -26,7 +26,7 @@ const SelectGameLevel = ({ selected, onSelect }: Props): JSX.Element => {
               zIndex={1}
               {...(selected === level && { _hover: { bg: "transparent" } })}
             >
-              {level.toLowerCase()}
+              {level === 100 ? "Easy" : level === 500 ? "Medium" : "Hard"}
             </Button>
             {selected === level ? (
               <MotionBox
