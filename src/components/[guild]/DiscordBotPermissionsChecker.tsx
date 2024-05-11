@@ -112,7 +112,7 @@ const DiscordBotPermissionsChecker = () => {
   const fetchDiscordPermissions = () =>
     Promise.all(
       discordRewards?.map((gp) =>
-        fetcher(`/discord/permissions/${gp.platformGuildId}`)
+        fetcher(`/v2/discord/servers/${gp.platformGuildId}/permissions`)
       )
     )
 
