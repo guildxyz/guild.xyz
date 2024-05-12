@@ -72,9 +72,8 @@ const CollectNft = () => {
           <AmountPicker />
         )}
 
-        <NftFeesTable bgColor={tableBgColor} />
-
         <Stack w="full" spacing={2}>
+          <NftFeesTable bgColor={tableBgColor} mt="2" mb="1" />
           <ConnectWalletButton />
           <SwitchNetworkButton
             targetChainId={Chains[chain]}

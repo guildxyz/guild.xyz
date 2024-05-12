@@ -1,4 +1,4 @@
-import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
+import { HStack, Skeleton, StackProps, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
 import { useWatch } from "react-hook-form"
@@ -8,11 +8,7 @@ import useGuildFee from "../../../hooks/useGuildFee"
 import useNftDetails from "../../../hooks/useNftDetails"
 import { CollectNftForm } from "../CollectNft"
 
-type Props = {
-  bgColor?: string
-}
-
-const NftFeesTable = ({ bgColor }: Props) => {
+const NftFeesTable = ({ ...rest }: StackProps) => {
   const { chain, nftAddress } = useCollectNftContext()
 
   const claimAmountFromForm = useWatch<CollectNftForm, "amount">({
@@ -59,7 +55,7 @@ const NftFeesTable = ({ bgColor }: Props) => {
           </Text>
         </HStack>
       }
-      bgColor={bgColor}
+      {...rest}
     >
       <Tr>
         <Td>NFT price</Td>

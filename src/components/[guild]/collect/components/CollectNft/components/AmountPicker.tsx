@@ -111,7 +111,7 @@ const AmountPicker = () => {
 
         {/* Only show if maxSupply is not unlimited */}
         {maxSupply > 0 && (
-          <SimpleGrid columns={{ base: 2, sm: 4 }} gap={2}>
+          <SimpleGrid columns={4} gap={2}>
             {ranges.map((range, index) => {
               const isDisabled =
                 mintableAmountPerUser < range.min ||
@@ -124,7 +124,7 @@ const AmountPicker = () => {
                   _hover={{
                     bgColor: isDisabled ? rangeBgColor : undefined,
                   }}
-                  py={4}
+                  py={3}
                   h="auto"
                   isDisabled={isDisabled}
                   onClick={() => {
@@ -146,7 +146,7 @@ const AmountPicker = () => {
                   >
                     <Circle
                       bgColor={circleBgColor}
-                      size={12}
+                      size={10}
                       borderWidth={circleBorderWidth}
                     >
                       <Text as="span" fontSize="lg">
@@ -155,11 +155,11 @@ const AmountPicker = () => {
                     </Circle>
 
                     <Stack spacing={0}>
-                      <Text as="span" fontSize="sm">
+                      <Text as="span" fontSize="xs">
                         {range.name}
                       </Text>
 
-                      <Text as="span" fontSize="sm" colorScheme="gray">
+                      <Text as="span" fontSize="xs" colorScheme="gray">
                         {range.min === range.max
                           ? range.min
                           : index === ranges.length - 1
