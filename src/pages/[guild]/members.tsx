@@ -100,14 +100,20 @@ const columns = [
         id: "hiddenRoles",
         accessorFn: (row) => row.roles.hidden,
         cell: (info) => (
-          <RoleTags roles={info.getValue()} column={info.column.parent} />
+          <RoleTags
+            roles={info.getValue()}
+            setFilterValue={info.column.parent.setFilterValue}
+          />
         ),
       },
       {
         id: "publicRoles",
         accessorFn: (row) => row.roles.public,
         cell: (info) => (
-          <RoleTags roles={info.getValue()} column={info.column.parent} />
+          <RoleTags
+            roles={info.getValue()}
+            setFilterValue={info.column.parent.setFilterValue}
+          />
         ),
       },
     ],

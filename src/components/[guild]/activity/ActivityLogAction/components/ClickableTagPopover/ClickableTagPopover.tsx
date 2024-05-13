@@ -7,7 +7,7 @@ import {
   Portal,
   Stack,
 } from "@chakra-ui/react"
-import React, { PropsWithChildren } from "react"
+import React, { PropsWithChildren, useState } from "react"
 
 type Props = {
   options: JSX.Element
@@ -20,11 +20,15 @@ const ClickableTagPopover = ({
   children,
 }: PropsWithChildren<Props>): JSX.Element => {
   const WrapperComponent = shouldRenderPortal ? Portal : React.Fragment
+  const [trigger, setTrigger] = useState<"click" | "hover">("click")
 
   return (
     <Popover
       eventListeners={{ scroll: false }}
       computePositionOnMount={false}
+      trigger={trigger}
+      onOpen={() => setTrigger("hover")}
+      onClose={() => setTrigger("click")}
       isLazy
     >
       <PopoverTrigger>{children}</PopoverTrigger>
