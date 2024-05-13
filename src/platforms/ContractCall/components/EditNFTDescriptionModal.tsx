@@ -53,12 +53,12 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
         <FormControl isInvalid={!!formState.errors?.description}>
           <FormLabel>NFT description</FormLabel>
           <Controller
-            name={"description"}
+            name="description"
             control={control}
             rules={{ required: { value: true, message: "This field is required" } }}
             render={({ field }) => (
               <RichTextDescriptionEditor
-                minHeight={"100px"}
+                minHeight="100px"
                 defaultValue={field.value}
                 onChange={field.onChange}
               />
@@ -71,7 +71,7 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
       </ModalBody>
       <ModalFooter pt={0}>
         <Button
-          colorScheme={"green"}
+          colorScheme="green"
           isDisabled={!formState.isDirty || !formState.isValid}
           onClick={handleSubmit((data) => onSubmit({ platformGuildData: data }))}
           isLoading={isLoading}
