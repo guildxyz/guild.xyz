@@ -14,10 +14,11 @@ import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import GuildLogo from "components/common/GuildLogo"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import fetcher from "utils/fetcher"
 import useClaimedRoles from "../hooks/useClaimedRoles"
 import PolygonIDQRCodeModal from "./PolygonIDQRCodeModal"
@@ -29,6 +30,7 @@ type Props = {
 const MintableRole = ({ role }: Props) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const { rewardClaimed } = useCustomPosthogEvents()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { id: userId } = useUser()
@@ -54,6 +56,7 @@ const MintableRole = ({ role }: Props) => {
     claim,
     {
       onSuccess: () => {
+        rewardClaimed(PlatformType.POLYGON_ID)
         toast({
           status: "success",
           title: "Successfully minted proof",

@@ -2,10 +2,11 @@ import { Schemas } from "@guildxyz/types"
 import { sortAccounts } from "components/[guild]/crm/Identities"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import { useCallback, useMemo } from "react"
 import useSWRImmutable from "swr/immutable"
 import useSWRInfinite from "swr/infinite"
-import { PlatformAccountDetails } from "types"
+import { PlatformAccountDetails, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
 type SubmissionAnswer = {
@@ -94,6 +95,7 @@ const useFormSubmissions = (formId, queryString) => {
 const useUserFormSubmission = (form: Schemas["Form"]) => {
   const { id } = useUser()
   const fetcherWithSign = useFetcherWithSign()
+  const { rewardClaimed } = useCustomPosthogEvents()
 
   const { data, ...rest } = useSWRImmutable<FormSubmission>(
     !!form && !!id
@@ -105,6 +107,9 @@ const useUserFormSubmission = (form: Schemas["Form"]) => {
     fetcherWithSign,
     {
       shouldRetryOnError: false,
+      onSuccess: () => {
+        rewardClaimed(PlatformType.FORM)
+      },
     }
   )
 

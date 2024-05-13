@@ -24,5 +24,13 @@ export default function useCustomPosthogEvents() {
         userId: id,
       })
     },
+
+    rewardClaimed(platformId: number) {
+      captureEvent("reward claimed", {
+        platformName: PlatformType[platformId],
+        guild: urlName,
+        userId: id,
+      })
+    },
   } as const
 }
