@@ -3,6 +3,7 @@ import { Icon } from "phosphor-react"
 import { ComponentType } from "react"
 import { UseControllerProps } from "react-hook-form"
 import { Requirement } from "types"
+import useTokenProvidedValue from "./Token/hooks/useTokenProvidedValue"
 import REQUIREMENTS_DATA from "./requirements"
 
 // transform it to an object with types as keys so we don't have to use .find() every time
@@ -12,6 +13,14 @@ const REQUIREMENTS: Record<RequirementType, RequirementData> =
     {} as any
   )
 
+const DYNAMIC_REQUIREMENT_TYPES: Partial<
+  Record<RequirementType, RequirementDynamicData>
+> = {
+  ERC20: {
+    providedValueHook: useTokenProvidedValue,
+  },
+}
+
 const requirementTypes = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
 export type RequirementType = (typeof requirementTypes)[number] | "HIDDEN"
 
@@ -20,6 +29,16 @@ export type RequirementFormProps = {
   field?: Requirement
   addRequirement?: () => void
   setOnCloseAttemptToast?: (msg: string | boolean) => void
+}
+
+export type ProvidedValueHook = () => {
+  type: string
+  info: string
+  image: string | JSX.Element
+}
+
+export type RequirementDynamicData = {
+  providedValueHook: ProvidedValueHook
 }
 
 export type RequirementData = {
@@ -35,4 +54,4 @@ export type RequirementData = {
 }
 
 export default REQUIREMENTS
-export { REQUIREMENTS_DATA }
+export { DYNAMIC_REQUIREMENT_TYPES, REQUIREMENTS_DATA }
