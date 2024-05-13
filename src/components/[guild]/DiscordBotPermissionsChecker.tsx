@@ -24,8 +24,11 @@ import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"
 
 const GUILD_BOT_ROLE_NAME = "Guild.xyz bot"
-
-const REQUIRED_PERMISSIONS = [
+/**
+ * If this list changes, make sure to replace the public/discord_permissions.png
+ * image
+ */
+export const REQUIRED_PERMISSIONS = [
   "View Channels",
   "Manage Roles",
   "Manage Server",
@@ -35,7 +38,7 @@ const REQUIRED_PERMISSIONS = [
   "Add Reactions",
   "Use External Emoji",
   "Read Message History",
-]
+] as const
 
 type DiscordPermissions = {
   permissions: Record<
