@@ -2,12 +2,14 @@ import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useMembership from "components/explorer/hooks/useMembership"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { atom, useAtom } from "jotai"
 import useUsersPoints from "platforms/Points/useUsersPoints"
 import { useFetcherWithSign } from "utils/fetcher"
+import getGuildPlatformsOfRoles from "../utils/getGuildPlatformsOfRoles"
 import mapAccessJobState from "../utils/mapAccessJobState"
 import useActiveMembershipUpdate from "./useActiveMembershipUpdate"
 
@@ -53,6 +55,11 @@ const useMembershipUpdate = ({
     guild: guild.urlName,
   }
 
+  const { roleIds: accessedRoleIds } = useMembership()
+  const accessedGuildPlatformIds = new Set(
+    getGuildPlatformsOfRoles(accessedRoleIds, guild).map(({ id }) => id)
+  )
+
   const submit = async (data?): Promise<string> => {
     setIsGettingJob(true)
 
@@ -86,22 +93,16 @@ const useMembershipUpdate = ({
 
       if (res?.updateMembershipResult?.newMembershipRoleIds?.[0]) {
         try {
-          const newRoles = new Set(res.updateMembershipResult.newMembershipRoleIds)
-          const newRolePlatforms = guild.roles
-            .filter((role) => newRoles.has(role.id))
-            .flatMap((role) => role.rolePlatforms)
-
-          const newGuildPlatformIds = new Set(
-            newRolePlatforms.map(
-              (newRolePlatform) => newRolePlatform.guildPlatformId
-            )
+          const grantedGuildPlatforms = getGuildPlatformsOfRoles(
+            res.updateMembershipResult.newMembershipRoleIds,
+            guild
           )
 
-          const newGuildPlatforms = guild.guildPlatforms.filter((guildPlatform) =>
-            newGuildPlatformIds.has(guildPlatform.id)
+          const newGuildPlatforms = grantedGuildPlatforms.filter(
+            ({ id }) => !accessedGuildPlatformIds.has(id)
           )
 
-          if (newGuildPlatforms?.[0]) {
+          if (newGuildPlatforms.length > 0) {
             newGuildPlatforms.forEach((newGuildPlatform) => {
               rewardGranted(newGuildPlatform.platformId)
             })
