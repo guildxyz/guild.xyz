@@ -102,7 +102,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   )
 
   const formattedFee =
-    fee.isLoading || token.isLoading
+    fee.isLoading || token.isLoading || !fee?.amount || !token?.data?.decimals
       ? null
       : formatUnits(fee.amount, token.data.decimals)
 
