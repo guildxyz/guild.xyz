@@ -6,8 +6,10 @@ import { GuildBase } from "types"
 
 type Props = {
   guildData: GuildBase[]
+  onLevelSelectDisable: (levelSelectDisable: boolean) => void
 }
-const GuessTheGuild = ({ guildData }: Props): JSX.Element => {
+
+const GuessTheGuild = ({ guildData, onLevelSelectDisable }: Props): JSX.Element => {
   const [showResult, setShowResult] = useState<boolean>(false)
   const [correctAnswerId, setCorrectAnswerId] = useState<number>()
   const [wrongAnswerId, setWrongAnswerId] = useState<number>()
@@ -41,10 +43,9 @@ const GuessTheGuild = ({ guildData }: Props): JSX.Element => {
       setWrongAnswerId(guildId)
       setCorrectGuildName("???")
       setTitle(`Wrong answer! Your score: ${points}`)
+      onLevelSelectDisable(false)
     }
     setShowResult(true)
-    console.log("showRes", showResult)
-    console.log("point", points)
   }
 
   const onStartNewGame = () => {
@@ -55,6 +56,7 @@ const GuessTheGuild = ({ guildData }: Props): JSX.Element => {
     setWrongAnswerId(null)
     setShowResult(false)
     setPoints(0)
+    onLevelSelectDisable(true)
   }
 
   const nextRound = () => {

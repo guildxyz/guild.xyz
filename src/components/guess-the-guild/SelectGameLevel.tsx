@@ -4,10 +4,15 @@ import { GameLevel } from "types"
 
 type Props = {
   selected: GameLevel
+  levelSelectDisable: boolean
   onSelect: (level: GameLevel) => void
 }
 
-const SelectGameLevel = ({ selected, onSelect }: Props): JSX.Element => {
+const SelectGameLevel = ({
+  selected,
+  levelSelectDisable,
+  onSelect,
+}: Props): JSX.Element => {
   const selectedBg = useColorModeValue("white", "gray.600")
   const selectedShadow = "0 0.5px 2px 0 rgba(0, 0, 0, 0.2)"
   const MotionBox = motion(Box)
@@ -19,6 +24,7 @@ const SelectGameLevel = ({ selected, onSelect }: Props): JSX.Element => {
         {gameLevels.map((level) => (
           <Box key={level} position={"relative"}>
             <Button
+              isDisabled={levelSelectDisable}
               size="sm"
               variant="ghost"
               borderRadius="lg"

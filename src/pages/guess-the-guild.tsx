@@ -8,11 +8,6 @@ import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { GameLevel, GameMode, GuildBase } from "types"
 
-/*  const useGuilds = (limit) => {
-
-  return useSWRImmutable<GuildBase[]>(`/v2/guilds?order=FEATURED&limit=${limit}`) // TODO lekérést  megnézni
-} */
-
 const Page = (): JSX.Element => {
   const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#3f4044")
   const [gameInProgress, setGameInProgress] = useState<boolean>(false)
@@ -23,6 +18,7 @@ const Page = (): JSX.Element => {
   const [gameMode, setGameMode] = useState<GameMode>(getRandomGameMode())
 
   const [selectedLevel, setSelectedLevel] = useState<GameLevel>(GameLevel.Easy)
+  const [levelSelectDisable, setLevelSelectDisable] = useState<boolean>()
 
   const title: string = gameInProgress
     ? gameMode === "GuessTheGuild"
@@ -38,16 +34,9 @@ const Page = (): JSX.Element => {
   )
 
   const onStartGame = () => {
-    console.log("selectedLevel", selectedLevel)
-    console.log("guilds", data)
     setGameInProgress(true)
+    setLevelSelectDisable(true)
   }
-
-  /* 
-  const changeSelectedLevel = (newSelectedLevel) => {
-    // TODO useEffect?
-    setSelectedLevel(newSelectedLevel)
-  } */
 
   return (
     <>
@@ -60,8 +49,10 @@ const Page = (): JSX.Element => {
         textColor="white"
         maxWidth="container.sm"
       >
+        {levelSelectDisable}
         <SelectGameLevel
           selected={selectedLevel}
+          levelSelectDisable={levelSelectDisable}
           onSelect={setSelectedLevel}
         ></SelectGameLevel>
         <Card
@@ -77,7 +68,10 @@ const Page = (): JSX.Element => {
           {gameInProgress && (
             <>
               {gameMode === "GuessTheGuild" ? (
-                <GuessTheGuild guildData={data}></GuessTheGuild>
+                <GuessTheGuild
+                  guildData={data}
+                  onLevelSelectDisable={setLevelSelectDisable}
+                ></GuessTheGuild>
               ) : (
                 <PairTheGuild guildData={data}></PairTheGuild>
               )}
