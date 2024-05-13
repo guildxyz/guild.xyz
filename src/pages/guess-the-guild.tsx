@@ -14,7 +14,7 @@ import { GameLevel, GameMode, GuildBase } from "types"
 } */
 
 const Page = (): JSX.Element => {
-  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a")
+  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#3f4044")
   const [gameInProgress, setGameInProgress] = useState<boolean>(false)
 
   const getRandomGameMode = (): GameMode =>
@@ -22,7 +22,6 @@ const Page = (): JSX.Element => {
   const possibleGameModes: GameMode[] = ["GuessTheGuild", "PairTheGuild"]
   const [gameMode, setGameMode] = useState<GameMode>(getRandomGameMode())
 
-  // const limit = [100, 500, 1000]
   const [selectedLevel, setSelectedLevel] = useState<GameLevel>(GameLevel.Easy)
 
   const title: string = gameInProgress
@@ -59,7 +58,7 @@ const Page = (): JSX.Element => {
           opacity: 1,
         }}
         textColor="white"
-        maxWidth="container.md"
+        maxWidth="container.sm"
       >
         <SelectGameLevel
           selected={selectedLevel}
@@ -70,20 +69,29 @@ const Page = (): JSX.Element => {
           pos="relative"
           py="6"
           px={{ base: 5, md: 6 }}
+          bg="#37373a"
         >
           <Text as="span" fontSize="lg" fontWeight="bold" textAlign="center">
             {title}
           </Text>
-          {!gameInProgress && gameMode === "GuessTheGuild" ? (
-            <GuessTheGuild guildData={data}></GuessTheGuild>
-          ) : (
-            <PairTheGuild guildData={data}></PairTheGuild>
+          {gameInProgress && (
+            <>
+              {gameMode === "GuessTheGuild" ? (
+                <GuessTheGuild guildData={data}></GuessTheGuild>
+              ) : (
+                <PairTheGuild guildData={data}></PairTheGuild>
+              )}
+            </>
           )}
           <Center mt="6">
             {gameInProgress ? (
-              <Button colorScheme="green" onClick={onSubmit}>
-                Submit
-              </Button>
+              <>
+                {gameMode === "PairTheGuild" && (
+                  <Button colorScheme="green" onClick={onSubmit}>
+                    Submit
+                  </Button>
+                )}
+              </>
             ) : (
               <Button colorScheme="green" onClick={onStartGame}>
                 Start game
