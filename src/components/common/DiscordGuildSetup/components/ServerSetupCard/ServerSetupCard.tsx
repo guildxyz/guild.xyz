@@ -32,7 +32,7 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
   )
 
   const { onOpen: openAddBotPopup, windowInstance } = usePopupWindow(
-    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=268782673&scope=bot%20applications.commands`,
+    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=268782705&scope=bot%20applications.commands`,
     undefined,
     () => revalidatePermissions.onSubmit()
   )

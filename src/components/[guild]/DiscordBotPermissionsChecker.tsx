@@ -25,15 +25,13 @@ import useGuildPermission from "./hooks/useGuildPermission"
 
 const GUILD_BOT_ROLE_NAME = "Guild.xyz bot"
 /**
- * Mapping permission names which we get from our backend to actual permission names
- * which the user will be able to find on Discord
- *
  * If this list changes, make sure to replace the public/discord_permissions.png
  * image
  */
 export const REQUIRED_PERMISSIONS = [
   "View Channels",
   "Manage Roles",
+  "Manage Server",
   "Create Invite",
   "Send Messages",
   "Embed Links",
@@ -117,7 +115,7 @@ const DiscordBotPermissionsChecker = () => {
   const fetchDiscordPermissions = () =>
     Promise.all(
       discordRewards?.map((gp) =>
-        fetcher(`/discord/permissions/${gp.platformGuildId}`)
+        fetcher(`/v2/discord/servers/${gp.platformGuildId}/permissions`)
       )
     )
 
