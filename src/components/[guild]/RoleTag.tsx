@@ -42,7 +42,7 @@ const RoleTag = memo(
                 as={Img}
                 src={imageUrl}
                 borderRadius={"full"}
-                boxSize="4"
+                boxSize="3.5"
               />
             ))}
           <TagLabel>{name ?? "Unknown role"}</TagLabel>

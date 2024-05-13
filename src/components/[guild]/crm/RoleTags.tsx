@@ -119,18 +119,23 @@ const CrmTbodyRoleTag = memo(
         {/**
          * Dummy element to calculate the min space in the DOM (the actual tag is absolute so
          * it can expand). Used an actual CrmRoleTag for it before but was too expensive
-         * performance-wise, and we don't need it to be that accurate
+         * performance-wise
          */}
         <Box
           h="6"
-          px="3"
+          pl="7"
+          pr="2"
+          border="1px solid transparent"
+          fontWeight={"medium"}
           minW="65px"
           opacity={0}
           maxW="max-content"
           overflow="hidden"
           noOfLines={1}
         >
-          {role.name} {amount}
+          {`${role.name} ${
+            typeof amount === "number" ? `- ${Number(amount.toFixed(2))}` : ""
+          }`}
         </Box>
 
         <Box
