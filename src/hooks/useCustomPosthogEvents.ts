@@ -9,10 +9,11 @@ export default function useCustomPosthogEvents() {
   const { id } = useUser() ?? {}
 
   return {
-    rewardCreated(platformId: number, guild: string) {
+    rewardCreated(platformId: number, guild?: string) {
       captureEvent("reward created", {
         platformName: PlatformType[platformId],
-        guild,
+        guild: guild ?? urlName,
+        userId: id,
       })
     },
 

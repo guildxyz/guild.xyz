@@ -33,7 +33,7 @@ const useCreateRole = ({
   onSuccess?: () => void
   onError?: (error) => void
 }) => {
-  const { id, mutateGuild, urlName } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
 
   const { mutate: mutateYourGuilds } = useYourGuilds()
@@ -61,7 +61,7 @@ const useCreateRole = ({
 
       if (response_?.createdGuildPlatforms?.[0]) {
         response_.createdGuildPlatforms.forEach((guildPlatform) => {
-          rewardCreated(guildPlatform.platformId, urlName)
+          rewardCreated(guildPlatform.platformId)
         })
       }
 

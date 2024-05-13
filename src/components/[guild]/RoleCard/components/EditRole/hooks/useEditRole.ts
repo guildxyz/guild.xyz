@@ -12,7 +12,7 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
   Object.fromEntries(array.map((item) => [item[by], item]))
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, mutateGuild, urlName } = useGuild()
+  const { id, mutateGuild } = useGuild()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()
@@ -82,7 +82,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       if (createdRolePlatforms?.[0]) {
         createdRolePlatforms.forEach((rolePlatform) => {
           if (rolePlatform?.createdGuildPlatform) {
-            rewardCreated(rolePlatform.createdGuildPlatform.platformId, urlName)
+            rewardCreated(rolePlatform.createdGuildPlatform.platformId)
           }
         })
       }

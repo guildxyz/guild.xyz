@@ -33,7 +33,7 @@ const useAddReward = ({
       onError?.(error)
     },
     onSuccess: (response) => {
-      rewardCreated(response.platformId, urlName)
+      rewardCreated(response.platformId)
 
       if (response.platformId === PlatformType.CONTRACT_CALL) {
         captureEvent("Created NFT reward", {
