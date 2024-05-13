@@ -6,6 +6,7 @@ import OptionCard from "components/common/OptionCard"
 import { Gateables } from "hooks/useGateables"
 import useServerPermissions from "hooks/useServerPermissions"
 import Link from "next/link"
+import { ArrowSquareOut } from "phosphor-react"
 import { PlatformType } from "types"
 
 type Props = {
@@ -77,8 +78,10 @@ const DCServerCard = ({
             href={`/${serverData.guildId}`}
             h={10}
             colorScheme="gray"
+            target="_blank"
+            rightIcon={<ArrowSquareOut />}
           >
-            Go to guild
+            Linked guild
           </Button>
         ) : (
           <Button
