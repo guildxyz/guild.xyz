@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   Center,
+  Circle,
   HStack,
   SimpleGrid,
   Tag,
@@ -12,12 +13,17 @@ import {
   Wrap,
 } from "@chakra-ui/react"
 import GuildLogo from "components/common/GuildLogo"
-import VerifiedIcon from "components/common/VerifiedIcon"
 import useLocalStorage from "hooks/useLocalStorage"
 import { Users } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { GuildBase } from "types"
 import pluralize from "utils/pluralize"
+
+type GuildIdCompare = {
+  selectedGuildId?: number
+  dragabbleGuildId: number
+  dragabbleGuildImageUrl: string
+}
 
 type Props = {
   guildData: GuildBase[]
@@ -40,8 +46,40 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
     () => [...guildLogos.sort(() => Math.random() - Math.random())],
     [guildLogos]
   )
+  const [draggedGuilds, setDraggedGuilds] = useState<GuildIdCompare[]>([])
+  const [tempDraggedGuild, setTempDraggedGuild] = useState<GuildIdCompare>()
 
   const onSubmit = () => {}
+  const onClear = () => {
+    setDraggedGuilds([])
+  }
+
+  const handleDrag = (guild) => {
+    setTempDraggedGuild({
+      dragabbleGuildId: guild.id,
+      dragabbleGuildImageUrl: guild.imageUrl,
+    })
+    console.log("drag guild", guild)
+    console.log("drag draggedLogos", draggedGuilds)
+  }
+
+  const handleOnDrop = (guildId) => {
+    console.log("dropdropdropguildId", guildId)
+    console.log("dropdropdropdrop draggedLogos", draggedGuilds)
+
+    if (draggedGuilds.some((guild) => guild.selectedGuildId === guildId)) {
+      console.log("edit")
+    } else {
+      setDraggedGuilds([
+        ...draggedGuilds,
+        { ...tempDraggedGuild, selectedGuildId: guildId },
+      ])
+    }
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+  }
 
   const onStartNewGame = () => {
     setTitle(null)
@@ -62,9 +100,22 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
       </Text>
       <Center>
         <HStack position="relative" px={{ base: 5, sm: 6 }} my="6" gap="6">
-          {guildLogos.map((guild) => (
-            <GuildLogo key={guild.id} size="4rem" imageUrl={guild.imageUrl} />
-          ))}
+          {guildLogos
+            .filter(
+              (guild) =>
+                !draggedGuilds.some(
+                  (draggedGuild) => draggedGuild.dragabbleGuildId === guild.id
+                )
+            )
+            .map((guild) => (
+              <GuildLogo
+                draggable
+                onDragStart={(e) => handleDrag(guild)}
+                key={guild.id}
+                size="4rem"
+                imageUrl={guild.imageUrl}
+              />
+            ))}
         </HStack>
       </Center>
 
@@ -87,7 +138,24 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
             gap={4}
             alignItems="center"
           >
-            <GuildLogo size="4rem" imageUrl={guild.imageUrl} />
+            {draggedGuilds?.find((logo) => logo.selectedGuildId === guild.id) ? (
+              <GuildLogo
+                size="4rem"
+                imageUrl={
+                  draggedGuilds?.find((logo) => logo.selectedGuildId === guild.id)
+                    .dragabbleGuildImageUrl
+                }
+              />
+            ) : (
+              <Circle
+                borderWidth={2}
+                borderStyle="dashed"
+                size="4rem"
+                onDrop={() => handleOnDrop(guild.id)}
+                onDragOver={(e) => handleDragOver(e)}
+              ></Circle>
+            )}
+
             <VStack
               spacing={2}
               alignItems="start"
@@ -109,7 +177,6 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
                 >
                   {guild.name}
                 </Text>
-                {guild.tags?.includes("VERIFIED") && <VerifiedIcon size={5} />}
               </HStack>
 
               <Wrap zIndex="1">
@@ -133,11 +200,18 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
       <Text as="span" fontSize="lg" fontWeight="bold" textAlign="center" my="5">
         {title}
       </Text>
-      {showResult && (
-        <Button colorScheme="green" onClick={() => nextRound()}>
-          Next Round
+      <HStack justifyContent="end">
+        <Button
+          colorScheme="green"
+          onClick={onSubmit}
+          isDisabled={draggedGuilds.length !== 4}
+        >
+          Submit
         </Button>
-      )}
+        <Button onClick={onClear} isDisabled={draggedGuilds.length < 1}>
+          Clear
+        </Button>
+      </HStack>
     </>
   )
 }

@@ -78,15 +78,7 @@ const Page = (): JSX.Element => {
             </>
           )}
           <Center mt="6">
-            {gameInProgress ? (
-              <>
-                {gameMode === "PairTheGuild" && (
-                  <Button colorScheme="green" onClick={onSubmit}>
-                    Submit
-                  </Button>
-                )}
-              </>
-            ) : (
+            {!gameInProgress && (
               <Button colorScheme="green" onClick={onStartGame}>
                 Start game
               </Button>
