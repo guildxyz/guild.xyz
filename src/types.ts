@@ -228,6 +228,7 @@ type PlatformGuildData = {
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: string
@@ -264,6 +265,7 @@ type PlatformGuildData = {
     imageUrl: string
     description: string
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -294,6 +296,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -322,6 +325,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -350,6 +354,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -378,6 +383,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -411,6 +417,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: never
@@ -434,6 +441,7 @@ type PlatformGuildData = {
     symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -469,6 +477,7 @@ type PlatformGuildData = {
     argsToSign?: never
     symbol?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: never

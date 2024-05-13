@@ -23,16 +23,19 @@ import fetcher from "utils/fetcher"
 import useGuild from "./hooks/useGuild"
 import useGuildPermission from "./hooks/useGuildPermission"
 
+const MANAGE_ROLES_PERMISSION_NAME = "Manage Roles"
+const MANAGE_SERVER_PERMISSION_NAME = "Manage Server"
+const CREATE_INVITE_PERMISSION_NAME = "Create Invite"
 const GUILD_BOT_ROLE_NAME = "Guild.xyz bot"
 /**
  * If this list changes, make sure to replace the public/discord_permissions.png
  * image
  */
 export const REQUIRED_PERMISSIONS = [
+  MANAGE_ROLES_PERMISSION_NAME,
   "View Channels",
-  "Manage Roles",
-  "Manage Server",
-  "Create Invite",
+  MANAGE_SERVER_PERMISSION_NAME,
+  CREATE_INVITE_PERMISSION_NAME,
   "Send Messages",
   "Embed Links",
   "Add Reactions",
@@ -145,13 +148,28 @@ const DiscordBotPermissionsChecker = () => {
         }
 
         for (const [index, permissionInfo] of data.entries()) {
-          const serverName = discordRewards[index].platformGuildName
+          const {
+            platformGuildName: serverName,
+            platformGuildData: { invite },
+          } = discordRewards[index]
 
           const permissionsNotGranted = Object.values(
             permissionInfo.permissions
           ).filter((perm) => !perm.value && perm.name !== "Administrator")
 
-          if (permissionsNotGranted.length > 0) {
+          if (
+            // We always need the "Manage Roles" permissions
+            permissionsNotGranted.find(
+              (p) => p.name === MANAGE_ROLES_PERMISSION_NAME
+            ) ||
+            // We need the Manage Server & Create Invite permissions if there's no custom invite
+            (!invite &&
+              permissionsNotGranted.find(
+                (p) =>
+                  p.name === CREATE_INVITE_PERMISSION_NAME ||
+                  p.name === MANAGE_SERVER_PERMISSION_NAME
+              ))
+          ) {
             toastIdRef.current = toastWithButton({
               title: "Missing permissions",
               description: `${permissionsNotGranted
