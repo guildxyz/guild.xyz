@@ -1,9 +1,9 @@
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { OneOf, PlatformType } from "types"
+import { OneOf } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import { RoleEditFormData } from "../EditRole"
@@ -18,7 +18,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
-  const { captureEvent } = usePostHogContext()
+  const { rewardCreated } = useCustomPosthogEvents()
 
   const submit = async (data: RoleEditFormData) => {
     const {
@@ -82,12 +82,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       if (createdRolePlatforms?.[0]) {
         createdRolePlatforms.forEach((rolePlatform) => {
           if (rolePlatform?.createdGuildPlatform) {
-            captureEvent("reward created", {
-              platformName:
-                rolePlatform?.createdGuildPlatform?.platformName ??
-                PlatformType[rolePlatform?.createdGuildPlatform.platformId],
-              guild: urlName,
-            })
+            rewardCreated(rolePlatform.createdGuildPlatform.platformId, urlName)
           }
         })
       }

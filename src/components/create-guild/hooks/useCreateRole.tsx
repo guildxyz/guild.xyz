@@ -1,13 +1,13 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
-import { GuildBase, GuildPlatform, PlatformType, Requirement, Role } from "types"
+import { GuildBase, GuildPlatform, Requirement, Role } from "types"
 import fetcher from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import preprocessRequirement from "utils/preprocessRequirement"
@@ -38,7 +38,7 @@ const useCreateRole = ({
 
   const { mutate: mutateYourGuilds } = useYourGuilds()
   const matchMutate = useMatchMutate()
-  const { captureEvent } = usePostHogContext()
+  const { rewardCreated } = useCustomPosthogEvents()
 
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
@@ -61,11 +61,7 @@ const useCreateRole = ({
 
       if (response_?.createdGuildPlatforms?.[0]) {
         response_.createdGuildPlatforms.forEach((guildPlatform) => {
-          captureEvent("reward created", {
-            platformName:
-              guildPlatform?.platformName ?? PlatformType[guildPlatform.platformId],
-            guild: urlName,
-          })
+          rewardCreated(guildPlatform.platformId, urlName)
         })
       }
 
