@@ -30,7 +30,6 @@ type Props = {
 }
 
 const PairTheGuild = ({ guildData }: Props): JSX.Element => {
-  const [showResult, setShowResult] = useState<boolean>(false)
   const [title, setTitle] = useState<string>()
   const [points, setPoints] = useLocalStorage("guess-the-guild-points", 0)
 
@@ -50,25 +49,17 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
   const [tempDraggedGuild, setTempDraggedGuild] = useState<GuildIdCompare>()
 
   const onSubmit = () => {}
-  const onClear = () => {
-    setDraggedGuilds([])
-  }
+  const onClear = () => setDraggedGuilds([])
 
   const handleDrag = (guild) => {
     setTempDraggedGuild({
       dragabbleGuildId: guild.id,
       dragabbleGuildImageUrl: guild.imageUrl,
     })
-    console.log("drag guild", guild)
-    console.log("drag draggedLogos", draggedGuilds)
   }
 
   const handleOnDrop = (guildId) => {
-    console.log("dropdropdropguildId", guildId)
-    console.log("dropdropdropdrop draggedLogos", draggedGuilds)
-
     if (draggedGuilds.some((guild) => guild.selectedGuildId === guildId)) {
-      console.log("edit")
     } else {
       setDraggedGuilds([
         ...draggedGuilds,
@@ -79,18 +70,6 @@ const PairTheGuild = ({ guildData }: Props): JSX.Element => {
 
   const handleDragOver = (e) => {
     e.preventDefault()
-  }
-
-  const onStartNewGame = () => {
-    setTitle(null)
-
-    setShowResult(false)
-    setPoints(0)
-  }
-
-  const nextRound = () => {
-    setTitle(null)
-    setShowResult(false)
   }
 
   return (
