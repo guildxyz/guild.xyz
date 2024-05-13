@@ -36,7 +36,13 @@ const DCServerCard = ({
 
   const onSelect = async () => {
     try {
-      const permissions = error ? null : existingPermissions || (await mutate())
+      if (error) {
+        return
+      }
+      let permissions = existingPermissions
+      if (!permissions) {
+        permissions = await mutate()
+      }
 
       if (!permissions) return
       if (permissions.hasAllPermissions && permissions.isRoleOrderOk) {
