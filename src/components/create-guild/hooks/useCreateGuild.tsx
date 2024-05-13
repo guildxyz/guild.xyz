@@ -44,6 +44,16 @@ const useCreateGuild = ({
 
       captureEvent("guild creation flow > guild successfully created")
 
+      if (response_.guildPlatforms?.[0]) {
+        response_.guildPlatforms.forEach((guildPlatform) => {
+          captureEvent("reward created", {
+            platformName:
+              guildPlatform?.platformName ?? PlatformType[guildPlatform.platformId],
+            guild: response_?.urlName,
+          })
+        })
+      }
+
       if (response_.guildPlatforms?.[0]?.platformId === PlatformType.CONTRACT_CALL) {
         captureEvent("Created NFT reward", {
           hook: "useCreateGuild",

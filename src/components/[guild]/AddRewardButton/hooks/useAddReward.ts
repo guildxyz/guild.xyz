@@ -31,6 +31,11 @@ const useAddReward = ({
       onError?.(error)
     },
     onSuccess: (response) => {
+      captureEvent("reward created", {
+        platformName: response.platformName ?? PlatformType[response.platformId],
+        guild: urlName,
+      })
+
       if (response.platformId === PlatformType.CONTRACT_CALL) {
         captureEvent("Created NFT reward", {
           ...postHogOptions,

@@ -1,8 +1,9 @@
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
-import { OneOf } from "types"
+import { OneOf, PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
 import { RoleEditFormData } from "../EditRole"
@@ -11,12 +12,13 @@ const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =
   Object.fromEntries(array.map((item) => [item[by], item]))
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
-  const { id, mutateGuild } = useGuild()
+  const { id, mutateGuild, urlName } = useGuild()
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+  const { captureEvent } = usePostHogContext()
 
   const submit = async (data: RoleEditFormData) => {
     const {
@@ -76,6 +78,19 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const useSubmitResponse = useSubmit(submit, {
     onSuccess: (result) => {
       const { updatedRole, updatedRolePlatforms, createdRolePlatforms } = result
+
+      if (createdRolePlatforms?.[0]) {
+        createdRolePlatforms.forEach((rolePlatform) => {
+          if (rolePlatform?.createdGuildPlatform) {
+            captureEvent("reward created", {
+              platformName:
+                rolePlatform?.createdGuildPlatform?.platformName ??
+                PlatformType[rolePlatform?.createdGuildPlatform.platformId],
+              guild: urlName,
+            })
+          }
+        })
+      }
 
       const [failedRolePlatformUpdatesCount, failedRolePlatformCreationsCount] = [
         updatedRolePlatforms.filter((req) => !!req.error).length,
