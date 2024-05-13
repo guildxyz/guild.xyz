@@ -32,6 +32,7 @@ const ControlledNumberInput = ({
         message: `Maximum: ${props.max}`,
       },
     },
+    defaultValue: props.defaultValue,
   })
 
   const handleChange = (newValue) => {

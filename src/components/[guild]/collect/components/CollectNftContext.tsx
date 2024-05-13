@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import {
   TransactionStatusProvider,
   useTransactionStatusContext,
@@ -9,10 +9,10 @@ import {
   RewardDisplay,
   RewardIcon,
 } from "components/[guild]/RoleCard/components/Reward"
-import useNftBalance from "hooks/useNftBalance"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { GuildPlatform } from "types"
 import { Chain, Chains } from "wagmiConfig/chains"
+import useGuildRewardNftBalanceByUserId from "../hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
@@ -34,16 +34,16 @@ const CollectNftProvider = ({
   nftAddress,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
-  // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
-  const { data: nftBalance } = useNftBalance({
+  const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress,
     chainId: Chains[chain],
   })
-  const alreadyCollected = nftBalance > 0
 
-  const { name } = useNftDetails(chain, nftAddress)
+  const { name, mintableAmountPerUser } = useNftDetails(chain, nftAddress)
+  const alreadyCollected = nftBalance >= mintableAmountPerUser
 
-  const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
+  const { txHash, isTxModalOpen, onTxModalOpen, assetAmount } =
+    useTransactionStatusContext()
   useEffect(() => {
     if (!txHash || isTxModalOpen) return
     onTxModalOpen()
@@ -66,12 +66,14 @@ const CollectNftProvider = ({
       <TransactionStatusModal
         title="Collect NFT"
         successTitle="Success"
-        successText="Successfully collected NFT!"
+        successText={`Successfully collected NFT${assetAmount > 1 ? "s" : ""}!`}
         successLinkComponent={<OpenseaLink />}
-        errorComponent={<Text mb={4}>Couldn't collect NFT</Text>}
+        errorComponent={
+          <Text mb={4}>{`Couldn't collect NFT${assetAmount > 1 ? "s" : ""}`}</Text>
+        }
         progressComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
+            <Text fontWeight="bold" mb="2">
               You'll get:
             </Text>
             <RewardDisplay
@@ -81,14 +83,27 @@ const CollectNftProvider = ({
                   rolePlatformId={rolePlatformId}
                 />
               }
-              label={name}
+              label={
+                assetAmount > 1 ? (
+                  name
+                ) : (
+                  <HStack>
+                    <Text as="span">{name}</Text>
+                    <Text
+                      as="span"
+                      colorScheme="gray"
+                      fontWeight="semibold"
+                    >{` x${assetAmount}`}</Text>
+                  </HStack>
+                )
+              }
             />
           </>
         }
         successComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
-              Your new asset:
+            <Text fontWeight="bold" mb="2">
+              {`Your new asset${assetAmount > 1 ? "s" : 0}:`}
             </Text>
             <RewardDisplay
               icon={
@@ -97,7 +112,20 @@ const CollectNftProvider = ({
                   rolePlatformId={rolePlatformId}
                 />
               }
-              label={name}
+              label={
+                assetAmount > 1 ? (
+                  name
+                ) : (
+                  <HStack>
+                    <Text as="span">{name}</Text>
+                    <Text
+                      as="span"
+                      colorScheme="gray"
+                      fontWeight="semibold"
+                    >{` x${assetAmount}`}</Text>
+                  </HStack>
+                )
+              }
             />
           </>
         }

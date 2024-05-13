@@ -71,8 +71,11 @@ export enum PlatformAsRewardRestrictions {
   MULTIPLE_ROLES, // e.g. Discord
 }
 
+/**
+ * "CONTRACT_CALL" is left out intentionally, because we store its capacity in the
+ * contract, so it isn't handled the same way as other platforms with capacity/time
+ */
 export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
-  "CONTRACT_CALL",
   "TEXT",
   "UNIQUE_TEXT",
   "POAP",

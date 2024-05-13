@@ -61,6 +61,8 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     query: {
       enabled: !!firstBlockNumberToday,
       staleTime: 600_000,
+      refetchOnWindowFocus: false,
+      retry: false,
     },
   })
 
@@ -81,7 +83,19 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     contracts: [
       {
         ...contract,
+        functionName: "locked",
+      },
+      {
+        ...contract,
         functionName: "totalSupply",
+      },
+      {
+        ...contract,
+        functionName: "maxSupply",
+      },
+      {
+        ...contract,
+        functionName: "mintableAmountPerUser",
       },
       {
         ...contract,
@@ -98,9 +112,19 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     },
   })
 
-  const [totalSupplyResponse, tokenURIResponse, feeResponse] = data || []
+  const [
+    lockedResponse,
+    totalSupplyResponse,
+    maxSupplyResponse,
+    mintableAmountPerUserResponse,
+    tokenURIResponse,
+    feeResponse,
+  ] = data || []
 
+  const soulbound = lockedResponse?.result !== false // undefined or true means that it is "locked"
   const totalSupply = totalSupplyResponse?.result
+  const maxSupply = maxSupplyResponse?.result
+  const mintableAmountPerUser = mintableAmountPerUserResponse?.result
   const tokenURI = tokenURIResponse?.result
   const fee = feeResponse?.result
 
@@ -108,16 +132,19 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     tokenURI ? ipfsToGuildGateway(tokenURI) : null
   )
 
+  // TODO: maybe we shouldn't convert bigints to numbers here?...
   return {
     ...nftDetails,
+    soulbound,
     name: nftDetails?.name ?? guildPlatformData?.name,
-    totalCollectors:
-      typeof totalSupply === "bigint" ? Number(totalSupply) : undefined,
+    totalSupply,
     totalCollectorsToday:
       typeof totalSupply === "bigint" && typeof firstTotalSupplyToday === "bigint"
-        ? Number(totalSupply - firstTotalSupplyToday)
+        ? totalSupply - firstTotalSupplyToday
         : undefined,
-    image: ipfsToGuildGateway(metadata?.image),
+    maxSupply: maxSupply,
+    mintableAmountPerUser,
+    image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
     description: metadata?.description as string,
     fee,
     isLoading:

@@ -8,7 +8,7 @@ import InfoBlock from "./components/InfoBlock"
 
 const Details = () => {
   const { chain, nftAddress } = useCollectNftContext()
-  const { standard, creator, isLoading } = useNftDetails(chain, nftAddress)
+  const { standard, soulbound, isLoading } = useNftDetails(chain, nftAddress)
 
   return (
     <Section title="Details" spacing={3}>
@@ -27,13 +27,7 @@ const Details = () => {
           <BlockExplorerLink chain={chain} address={nftAddress} path="token" />
         </InfoBlock>
 
-        <InfoBlock label="Creator">
-          <BlockExplorerLink
-            chain={chain}
-            address={creator}
-            isValidating={isLoading}
-          />
-        </InfoBlock>
+        <InfoBlock label="Tradable">{soulbound ? "No" : "Yes"}</InfoBlock>
       </SimpleGrid>
     </Section>
   )

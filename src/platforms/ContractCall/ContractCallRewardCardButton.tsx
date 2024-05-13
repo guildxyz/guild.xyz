@@ -1,8 +1,8 @@
 import { Tooltip } from "@chakra-ui/react"
+import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import useNftBalance from "hooks/useNftBalance"
 import Link from "next/link"
 import { GuildPlatform } from "types"
 import { Chains } from "wagmiConfig/chains"
@@ -22,7 +22,7 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
     r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
   )
 
-  const { data: nftBalance } = useNftBalance({
+  const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress: contractAddress,
     chainId: Chains[chain],
   })
