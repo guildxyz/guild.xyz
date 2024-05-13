@@ -19,13 +19,18 @@ import {
 import SwitchNetworkButton from "components/[guild]/Requirements/components/GuildCheckout/components/buttons/SwitchNetworkButton"
 import useAllowance from "components/[guild]/Requirements/components/GuildCheckout/hooks/useAllowance"
 import AllowanceButton from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/AllowanceButton"
-import ConversionNumberInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionNumberInput"
 import useIsBalanceSufficient from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/hooks/useIsBalanceSufficient"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
-import { RefObject, useState } from "react"
+import { RefObject } from "react"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
+import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Token from "static/icons/token.svg"
-import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
+import {
+  ERC20_CONTRACTS,
+  MIN_TOKEN_AMOUNT,
+  NULL_ADDRESS,
+} from "utils/guildCheckout/constants"
 import shortenHex from "utils/shortenHex"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
@@ -59,7 +64,15 @@ const FundPoolModal = ({
   const { owner, balance: poolBalance } = poolData
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
-  const [amount, setAmount] = useState("1")
+  const methods = useForm<{ amount: string }>({
+    mode: "all",
+    defaultValues: {
+      amount: "1",
+    },
+  })
+  const { control } = methods
+  const amount = useWatch({ name: "amount", control })
+
   const { chainId, address: userAddress } = useAccount()
 
   const { isBalanceSufficient } = useIsBalanceSufficient({
@@ -94,7 +107,7 @@ const FundPoolModal = ({
     `Only the requirement's original creator can fund (${shortenHex(owner)})`
 
   return (
-    <>
+    <FormProvider {...methods}>
       <Modal isOpen={isOpen} onClose={handleClose} finalFocusRef={finalFocusRef}>
         <ModalOverlay />
         <ModalContent>
@@ -118,7 +131,15 @@ const FundPoolModal = ({
                     )}
                   </InputLeftElement>
 
-                  <ConversionNumberInput value={amount} setValue={setAmount} />
+                  <ControlledNumberInput
+                    defaultValue={"1"}
+                    name="amount"
+                    adaptiveStepSize
+                    w="full"
+                    numberFormat="FLOAT"
+                    numberInputFieldProps={{ pl: 10, pr: 7 }}
+                    min={MIN_TOKEN_AMOUNT}
+                  />
                 </InputGroup>
               </FormControl>
 
@@ -155,7 +176,7 @@ const FundPoolModal = ({
           </ModalBody>
         </ModalContent>
       </Modal>
-    </>
+    </FormProvider>
   )
 }
 

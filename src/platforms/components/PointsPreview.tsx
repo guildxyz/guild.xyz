@@ -1,10 +1,8 @@
-import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import { useWatch } from "react-hook-form"
 import RewardPreview from "./RewardPreview"
 
 const PointsPreview = (): JSX.Element => {
-  const { guildPlatforms } = useGuild()
-
   const guildPlatformId = useWatch({
     name: "rolePlatforms.0.guildPlatformId",
   })
@@ -15,8 +13,9 @@ const PointsPreview = (): JSX.Element => {
     name: "rolePlatforms.0.platformRoleData.score",
   })
 
+  const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { name, imageUrl } = guildPlatformId
-    ? guildPlatforms.find((gp) => gp.id === guildPlatformId).platformGuildData ?? {}
+    ? guildPlatform.platformGuildData ?? {}
     : platformGuildData ?? {}
 
   return (

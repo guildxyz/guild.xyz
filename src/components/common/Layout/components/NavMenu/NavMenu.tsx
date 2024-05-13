@@ -102,7 +102,7 @@ const NavMenu = (): JSX.Element => {
             <NavGroup title="Other">
               <NavButton
                 target="_blank"
-                href="https://discord.gg/guildxyz"
+                href="https://discord.gg/KUkghUdk2G"
                 rel="noopener"
                 leftIcon={<DiscordLogo />}
               >

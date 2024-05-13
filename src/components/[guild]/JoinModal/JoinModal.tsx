@@ -51,6 +51,7 @@ const JOIN_STEP_VSTACK_PROPS: StackProps = {
 const customJoinStep: Partial<Record<Joinable, ComponentType<unknown>>> = {
   POLYGON: dynamic(() => import("./components/ConnectPolygonIDJoinStep")),
   CAPTCHA: dynamic(() => import("./components/CompleteCaptchaJoinStep")),
+  EMAIL: dynamic(() => import("./components/ConnectEmailJoinStep")),
 }
 
 const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {

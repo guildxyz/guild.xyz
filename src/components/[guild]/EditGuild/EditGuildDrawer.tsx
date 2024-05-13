@@ -32,9 +32,9 @@ import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
+import { useCallback } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { GuildFormType } from "types"
-import getRandomInt from "utils/getRandomInt"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
@@ -165,30 +165,19 @@ const EditGuildDrawer = ({
   }
 
   const iconUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue("imageUrl", `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`, {
-        shouldTouch: true,
-        shouldDirty: true,
-      })
-    },
-    onError: () => {
-      setValue("imageUrl", `/guildLogos/${getRandomInt(286)}.svg`, {
-        shouldTouch: true,
-      })
-    },
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control: methods.control,
   })
 
+  const onBackgroundUploadError = useCallback(() => {
+    setLocalBackgroundImage(null)
+  }, [setLocalBackgroundImage])
+
   const backgroundUploader = usePinata({
-    onSuccess: ({ IpfsHash }) => {
-      setValue(
-        "theme.backgroundImage",
-        `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${IpfsHash}`,
-        { shouldDirty: true }
-      )
-    },
-    onError: () => {
-      setLocalBackgroundImage(null)
-    },
+    fieldToSetOnSuccess: "theme.backgroundImage",
+    onError: onBackgroundUploadError,
+    control: methods.control,
   })
 
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
