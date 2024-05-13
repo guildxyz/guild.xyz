@@ -48,7 +48,7 @@ const DiscordGuildSetup = ({
   const { captureEvent } = usePostHogContext()
 
   const {
-    gateables: servers,
+    gateables: unorderedServers,
     isLoading,
     error: gateablesError,
   } = useGateables(PlatformType.DISCORD, {
@@ -59,6 +59,7 @@ const DiscordGuildSetup = ({
       captureEvent("[discord setup] gateables failed, showing reconnect alert")
     },
   })
+  const servers = unorderedServers?.sort((a, b) => +a.isGuilded - +b.isGuilded)
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.id === selectedServer?.id),
