@@ -1,93 +1,53 @@
-import { usePrevious } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
-import usePopupWindow from "hooks/usePopupWindow"
-import useServerPermissions, {
-  PermissionsResponse,
-} from "hooks/useServerPermissions"
-import { useSetAtom } from "jotai"
+import { Gateables } from "hooks/useGateables"
+import useServerPermissions from "hooks/useServerPermissions"
 import Link from "next/link"
-import { ArrowSquareIn } from "phosphor-react"
-import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
-import { useEffect } from "react"
-import { shouldShowPermissionAlertAtom } from "./PermissionAlert"
+import { PlatformType } from "types"
 
 type Props = {
-  serverData: {
-    id: string
-    name: string
-    img: string
-    owner: boolean
-  }
+  serverData: Gateables[PlatformType.DISCORD][number]
   onSelect?: () => void
   onCancel?: () => void
+  onSubmit?: () => void
+  isLoading?: boolean
+  isSelected?: boolean
 }
 
-function checkPermissions(permissions: PermissionsResponse["permissions"]) {
-  return !!permissions?.every(
-    ({ value, name }) => name === "Administrator" || !!value
-  )
-}
-
-const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element => {
+const DCServerCard = ({
+  serverData,
+  onSelect: onSelectProp,
+  onCancel,
+  onSubmit,
+  isSelected = false,
+}: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
+  const { id } = useGuild() ?? {}
 
   const {
-    permissions,
-    error,
     mutate,
-    isLoading,
-    isValidating: isPermissionsValidating,
-  } = useServerPermissions(serverData.id)
-  const hasAllPermissions = checkPermissions(permissions)
+    isValidating,
+    permissions: existingPermissions,
+    error,
+  } = useServerPermissions(serverData?.id)
 
-  const isCheckingBot = !isLoading && isPermissionsValidating
-  const setShouldShowPermissionAlert = useSetAtom(shouldShowPermissionAlertAtom)
+  const onSelect = async () => {
+    try {
+      const permissions = error ? null : existingPermissions || (await mutate())
 
-  const { onOpen: openAddBotPopup, windowInstance: activeAddBotPopup } =
-    usePopupWindow(
-      `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverData.id}&permissions=268782673&scope=bot%20applications.commands`,
-      undefined,
-      () =>
-        mutate().then((newData) => {
-          const newPermissions = newData?.permissions
-            ? Object.values(newData.permissions)
-            : undefined
-
-          if (!newPermissions) {
-            // if the user didn't add the bot, we don't show the alert
-            return
-          }
-
-          const hasMissingPermissions = !checkPermissions(newPermissions)
-          setShouldShowPermissionAlert(hasMissingPermissions)
-        })
-    )
-
-  const prevActiveAddBotPopup = usePrevious(activeAddBotPopup)
-
-  useEffect(() => {
-    if (!!prevActiveAddBotPopup && !activeAddBotPopup && hasAllPermissions) {
-      onSelect()
+      if (!permissions) return
+      if (permissions.hasAllPermissions && permissions.isRoleOrderOk) {
+        onSubmit()
+      }
+    } finally {
+      onSelectProp()
     }
-  }, [
-    prevActiveAddBotPopup,
-    activeAddBotPopup,
-    hasAllPermissions,
-    onSelect,
-    serverData,
-  ])
+  }
 
-  useEffect(() => {
-    if (hasAllPermissions && activeAddBotPopup) {
-      activeAddBotPopup.close()
-    }
-  }, [activeAddBotPopup, hasAllPermissions])
-
-  const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
-    usePlatformUsageInfo("DISCORD", serverData.id)
+  const isUsedInCurrentGuild = serverData.isGuilded && serverData.guildId === id
 
   if (isUsedInCurrentGuild) return null
 
@@ -99,31 +59,22 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
         description={serverData.owner ? "Owner" : "Admin"}
         image={serverData.img || "/default_discord_icon.png"}
       >
-        {onCancel ? (
+        {isSelected ? (
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
-        ) : isValidating || isPermissionsValidating || isCheckingBot ? (
+        ) : isValidating ? (
+          <Button isLoading />
+        ) : serverData.isGuilded ? (
           <Button
+            as={Link}
+            href={`/${serverData.guildId}`}
             h={10}
-            isLoading
-            colorScheme={isCheckingBot ? "DISCORD" : undefined}
-            loadingText={isCheckingBot ? "Checking Bot" : undefined}
-          />
-        ) : !hasAllPermissions || !!error ? (
-          <Button
-            h={10}
-            colorScheme="DISCORD"
-            onClick={() => {
-              captureEvent("[discord setup] opening add bot modal")
-              openAddBotPopup()
-            }}
-            isLoading={!!activeAddBotPopup}
-            rightIcon={<ArrowSquareIn />}
+            colorScheme="gray"
           >
-            Add bot
+            Go to guild
           </Button>
-        ) : !isAlreadyInUse ? (
+        ) : (
           <Button
             h={10}
             colorScheme="green"
@@ -135,11 +86,7 @@ const DCServerCard = ({ serverData, onSelect, onCancel }: Props): JSX.Element =>
           >
             Select
           </Button>
-        ) : isAlreadyInUse ? (
-          <Button as={Link} href={`/${guildUrlName}`} h={10} colorScheme="gray">
-            Go to guild
-          </Button>
-        ) : null}
+        )}
       </OptionCard>
     </CardMotionWrapper>
   )

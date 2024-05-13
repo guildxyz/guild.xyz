@@ -5,19 +5,19 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import ErrorAlert from "components/common/ErrorAlert"
 import { AnimatePresence } from "framer-motion"
 import useDebouncedState from "hooks/useDebouncedState"
-import useGateables from "hooks/useGateables"
+import useGateables, { Gateables } from "hooks/useGateables"
 import { useEffect, useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import { OptionSkeletonCard } from "../OptionCard"
 import ReconnectAlert from "../ReconnectAlert"
 import DCServerCard from "./components/DCServerCard"
 import ServerSetupCard from "./components/ServerSetupCard"
 
-const defaultValues = {
-  platformGuildId: null,
-  img: null,
-  name: null,
+type DiscordGateable = Gateables[PlatformType.DISCORD][number]
+
+type Props = {
+  onSubmit: (selectedServer: DiscordGateable) => void
+  rolePlatforms?: any[] // Low prio todo: proper typing
 }
 
 function NotAdminError() {
@@ -41,20 +41,14 @@ function NotAdminError() {
 const DiscordGuildSetup = ({
   rolePlatforms = undefined,
   onSubmit = undefined,
-  shouldHideGotItButton = false,
-}) => {
-  const { reset, setValue, handleSubmit, formState } = useForm({
-    mode: "all",
-    defaultValues,
-  })
-  useAddRewardDiscardAlert(formState.isDirty)
-
-  const [selectedServer, setSelectedServer] = useState<string>()
+}: Props) => {
+  const [selectedServer, setSelectedServer] = useState<DiscordGateable>()
+  useAddRewardDiscardAlert(!!selectedServer)
 
   const { captureEvent } = usePostHogContext()
 
   const {
-    gateables,
+    gateables: servers,
     isLoading,
     error: gateablesError,
   } = useGateables(PlatformType.DISCORD, {
@@ -66,13 +60,8 @@ const DiscordGuildSetup = ({
     },
   })
 
-  const servers = Object.entries(gateables || {}).map(([id, serverData]) => ({
-    id,
-    ...serverData,
-  }))
-
   const selectedServerOption = useMemo(
-    () => servers?.find((server) => server.id === selectedServer),
+    () => servers?.find((server) => server.id === selectedServer?.id),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [selectedServer] // servers excluded on purpose
   )
@@ -80,7 +69,7 @@ const DiscordGuildSetup = ({
   const debounceSelectedServer = useDebouncedState(selectedServer, 300)
 
   const resetForm = () => {
-    reset(defaultValues)
+    setSelectedServer(undefined)
   }
 
   const guild = useGuild()
@@ -124,32 +113,19 @@ const DiscordGuildSetup = ({
           .map((serverData) => (
             <DCServerCard
               key={serverData.id}
+              isSelected={selectedServer?.id === serverData.id}
+              onCancel={resetForm}
+              onSelect={() => setSelectedServer(serverData)}
+              onSubmit={() => onSubmit(serverData)}
               serverData={serverData}
-              onSelect={() => {
-                const { id, name, img } = serverData
-
-                setSelectedServer(id)
-
-                setValue("platformGuildId", id, { shouldDirty: true })
-                setValue("name", name, { shouldDirty: true })
-                setValue("img", img, { shouldDirty: true })
-
-                // If the "Got It" button is not shown, the flow ends here, we call onSubmit with the new data
-                if (shouldHideGotItButton) {
-                  handleSubmit(onSubmit)()
-                }
-              }}
-              onCancel={
-                selectedServer !== serverData.id ? undefined : () => resetForm()
-              }
             />
           ))}
       </AnimatePresence>
       {debounceSelectedServer && (
         <GridItem>
           <ServerSetupCard
-            // If the "Got It" button is shown, we only call onSubmit when that is pressed
-            onSubmit={!shouldHideGotItButton ? handleSubmit(onSubmit) : undefined}
+            serverId={selectedServer?.id}
+            onSubmit={() => onSubmit(selectedServer)}
           />
         </GridItem>
       )}

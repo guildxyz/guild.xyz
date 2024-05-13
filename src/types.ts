@@ -760,14 +760,6 @@ type RequestMintLinksForm = {
   redeem_type: string
 }
 
-type GoogleFile = {
-  name: string
-  mimeType: string
-  webViewLink: string
-  iconLink: string
-  platformGuildId: string
-}
-
 type Without<First, Second> = {
   [P in Exclude<keyof First, keyof Second>]?: never
 }
@@ -834,7 +826,6 @@ export type {
   EventSources,
   EventSourcesKey,
   GitPoap,
-  GoogleFile,
   Group,
   Guild,
   GuildAdmin,

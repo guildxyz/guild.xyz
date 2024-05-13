@@ -27,8 +27,11 @@ const GUILD_BOT_ROLE_NAME = "Guild.xyz bot"
 /**
  * Mapping permission names which we get from our backend to actual permission names
  * which the user will be able to find on Discord
+ *
+ * If this list changes, make sure to replace the public/discord_permissions.png
+ * image
  */
-const REQUIRED_PERMISSIONS = [
+export const REQUIRED_PERMISSIONS = [
   "View Channels",
   "Manage Roles",
   "Create Invite",
@@ -37,7 +40,7 @@ const REQUIRED_PERMISSIONS = [
   "Add Reactions",
   "Use External Emoji",
   "Read Message History",
-]
+] as const
 
 type DiscordPermissions = {
   permissions: Record<
