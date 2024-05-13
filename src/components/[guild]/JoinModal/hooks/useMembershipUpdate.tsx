@@ -2,6 +2,7 @@ import type { JoinJob } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useSubmit from "hooks/useSubmit"
 import { UseSubmitOptions } from "hooks/useSubmit/useSubmit"
 import { atom, useAtom } from "jotai"
@@ -47,6 +48,7 @@ const useMembershipUpdate = ({
     currentlyCheckedRoleIdsAtom
   )
   const { captureEvent } = usePostHogContext()
+  const { rewardGranted } = useCustomPosthogEvents()
   const posthogOptions = {
     guild: guild.urlName,
   }
@@ -81,6 +83,31 @@ const useMembershipUpdate = ({
           error: res.failedErrorMsg,
           correlationId: res.correlationId,
         })
+
+      if (res?.updateMembershipResult?.newMembershipRoleIds?.[0]) {
+        try {
+          const newRoles = new Set(res.updateMembershipResult.newMembershipRoleIds)
+          const newRolePlatforms = guild.roles
+            .filter((role) => newRoles.has(role.id))
+            .flatMap((role) => role.rolePlatforms)
+
+          const newGuildPlatformIds = new Set(
+            newRolePlatforms.map(
+              (newRolePlatform) => newRolePlatform.guildPlatformId
+            )
+          )
+
+          const newGuildPlatforms = guild.guildPlatforms.filter((guildPlatform) =>
+            newGuildPlatformIds.has(guildPlatform.id)
+          )
+
+          if (newGuildPlatforms?.[0]) {
+            newGuildPlatforms.forEach((newGuildPlatform) => {
+              rewardGranted(newGuildPlatform.platformId)
+            })
+          }
+        } catch {}
+      }
 
       if (res?.roleAccesses?.some((role) => !!role.access)) {
         // mutate guild in case the user sees more entities due to visibilities
