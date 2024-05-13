@@ -24,7 +24,6 @@ import RequirementDisplayComponent from "components/[guild]/Requirements/compone
 import Card from "components/common/Card"
 import { Lightning, Question, X } from "phosphor-react"
 import { Requirement, RolePlatform } from "types"
-import TokenConversionTag from "./TokenConversionTag"
 
 const SnapshotRequirementDetails = ({
   requirement,
@@ -38,9 +37,9 @@ const SnapshotRequirementDetails = ({
   return (
     <>
       <HStack mb="3">
-        <Heading fontSize="md">Linked to requirement</Heading>
+        <Heading fontSize="md">Linked to value</Heading>
         <Tooltip
-          label="Your received token amount is calculated from the points with your addresses on this snapshot. "
+          label="For dynamic rewards, the reward amount is calculated from a base value, originated from a requirement. "
           placement="bottom"
           hasArrow
         >
@@ -50,7 +49,10 @@ const SnapshotRequirementDetails = ({
       <Stack>
         {requirement !== undefined && (
           <Card px={4} py={2}>
-            <RequirementDisplayComponent requirement={requirement as Requirement} />
+            <RequirementDisplayComponent
+              requirement={requirement as Requirement}
+              dynamicDisplay
+            />
           </Card>
         )}
         {!requirement && (
@@ -74,7 +76,6 @@ const SnapshotRequirementDetails = ({
         </HStack>
 
         <HStack gap={1}>
-          <TokenConversionTag platform={rolePlatform} />
           <Text fontWeight={"semibold"} ml="auto" colorScheme="gray" fontSize="sm">
             Multiplier:
           </Text>

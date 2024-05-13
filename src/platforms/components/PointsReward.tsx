@@ -1,5 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
-import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
+import { Icon, Tooltip, Wrap, useColorModeValue } from "@chakra-ui/react"
+import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import {
   RewardDisplay,
   RewardIcon,
@@ -51,7 +52,13 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
           </Tooltip>
         </>
       }
-    />
+    >
+      {!!platform.dynamicAmount && (
+        <Wrap spacing={1}>
+          <DynamicTag rolePlatform={platform} />
+        </Wrap>
+      )}
+    </RewardDisplay>
   )
 }
 export default PointsReward

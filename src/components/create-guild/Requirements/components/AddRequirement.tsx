@@ -39,11 +39,8 @@ import {
   useState,
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
-import REQUIREMENTS, {
-  DYNAMIC_REQUIREMENT_TYPES,
-  REQUIREMENTS_DATA,
-  RequirementType,
-} from "requirements"
+import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
+import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Requirement, Visibility } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
@@ -246,7 +243,7 @@ const AddRequirementForm = forwardRef(
               setOnCloseAttemptToast={setOnCloseAttemptToast}
             />
 
-            {!!DYNAMIC_REQUIREMENT_TYPES[selectedType] && (
+            {!!REQUIREMENT_PROVIDED_VALUES[selectedType] && (
               <>
                 {" "}
                 <Divider mt={5} mb={3} />

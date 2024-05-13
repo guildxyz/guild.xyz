@@ -1,29 +1,19 @@
 import { Icon, Tag, Tooltip, useDisclosure } from "@chakra-ui/react"
-import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import { Lightning, Warning } from "phosphor-react"
-import DynamicRewardModal from "./DynamicRewardModal"
-import { useTokenRewardContext } from "./TokenRewardContext"
-import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
+import DynamicRewardModal from "platforms/Token/DynamicRewardModal"
+import { RolePlatform } from "types"
 
-const DynamicTag = () => {
+const DynamicTag = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { isAdmin } = useGuildPermission()
 
   const { onOpen, isOpen, onClose } = useDisclosure()
 
-  const {
-    guildPlatform: { id: guildPlatformId },
-  } = useTokenRewardContext()
-
-  const { roles } = useGuild()
-  const rolePlatforms = useRolePlatformsOfReward(guildPlatformId)
-  const role = roles.find((rl) =>
-    rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)
+  const { data: requirements } = useRequirements(rolePlatform.roleId)
+  const linkedRequirement = requirements?.find(
+    (req) => req.id === rolePlatform.dynamicAmount?.operation.input[0].requirementId
   )
-
-  const { data: requirements } = useRequirements(role.id)
-  const linkedRequirement = requirements?.find((req) => !!req.data.snapshot)
 
   return (
     <>
@@ -41,9 +31,12 @@ const DynamicTag = () => {
       </Tooltip>
 
       {isAdmin && !linkedRequirement && (
-        <Tooltip hasArrow label="Add a snapshot by editing this reward">
+        <Tooltip
+          hasArrow
+          label="Dynamic rewards need a base value for reward amount calculation from a requirement. Edit the reward to set one!"
+        >
           <Tag colorScheme={"orange"}>
-            <Icon as={Warning} mr={1} /> Missing snapshot
+            <Icon as={Warning} mr={1} /> Missing linked requirement!
           </Tag>
         </Tooltip>
       )}
@@ -51,7 +44,7 @@ const DynamicTag = () => {
       <DynamicRewardModal
         onClose={onClose}
         isOpen={isOpen}
-        rolePlatform={rolePlatforms[0]}
+        rolePlatform={rolePlatform}
         linkedRequirement={linkedRequirement}
       ></DynamicRewardModal>
     </>

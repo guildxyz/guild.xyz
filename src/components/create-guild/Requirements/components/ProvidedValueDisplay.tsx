@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import { Info, Lightning, Question } from "phosphor-react"
-import { DYNAMIC_REQUIREMENT_TYPES } from "requirements"
+import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Requirement } from "types"
 
 const ProvidedValueDisplay = ({
@@ -24,7 +24,7 @@ const ProvidedValueDisplay = ({
 }) => {
   const bg = useColorModeValue("blackAlpha.100", "whiteAlpha.100")
 
-  const { info } = DYNAMIC_REQUIREMENT_TYPES[requirement.type].providedValueHook()
+  const ValueDisplayComponent = REQUIREMENT_PROVIDED_VALUES[requirement.type]
 
   return (
     <>
@@ -59,7 +59,7 @@ const ProvidedValueDisplay = ({
                     Dynamic value
                   </Text>
                   <Text fontWeight={"semibold"} mt={-0.5}>
-                    {info}
+                    <ValueDisplayComponent requirement={requirement} />
                   </Text>
                 </Stack>
 
