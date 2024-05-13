@@ -1,5 +1,4 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
@@ -25,7 +24,6 @@ const DCServerCard = ({
   onSubmit,
   isSelected = false,
 }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
   const { id } = useGuild() ?? {}
 
   const {
@@ -88,7 +86,6 @@ const DCServerCard = ({
             h={10}
             colorScheme="green"
             onClick={() => {
-              captureEvent("[discord setup] selected server")
               onSelect()
             }}
             data-test="select-dc-server-button"

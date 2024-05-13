@@ -8,7 +8,6 @@ import {
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import PermissionAlert from "components/common/DiscordGuildSetup/components/PermissionAlert"
 import { useFieldArray, useFormContext } from "react-hook-form"
@@ -20,7 +19,6 @@ type Props = {
 }
 
 const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
   const { control } = useFormContext<GuildFormType>()
   const { append } = useFieldArray({
     control,
@@ -56,8 +54,6 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
           >
             <DiscordGuildSetup
               onSubmit={(selected) => {
-                captureEvent("[discord setup] server added")
-
                 append({
                   platformName: "DISCORD",
                   platformGuildId: selected?.id,

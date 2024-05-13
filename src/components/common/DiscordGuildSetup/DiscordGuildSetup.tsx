@@ -116,8 +116,14 @@ const DiscordGuildSetup = ({
               key={serverData.id}
               isSelected={selectedServer?.id === serverData.id}
               onCancel={resetForm}
-              onSelect={() => setSelectedServer(serverData)}
-              onSubmit={() => onSubmit(serverData)}
+              onSelect={() => {
+                captureEvent("[discord setup] selected server")
+                setSelectedServer(serverData)
+              }}
+              onSubmit={() => {
+                captureEvent("[discord setup] server added")
+                onSubmit(serverData)
+              }}
               serverData={serverData}
             />
           ))}
@@ -126,7 +132,10 @@ const DiscordGuildSetup = ({
         <GridItem>
           <ServerSetupCard
             serverId={selectedServer?.id}
-            onSubmit={() => onSubmit(selectedServer)}
+            onSubmit={() => {
+              captureEvent("[discord setup] server added")
+              onSubmit(selectedServer)
+            }}
           />
         </GridItem>
       )}

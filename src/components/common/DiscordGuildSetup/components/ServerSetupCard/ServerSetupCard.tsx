@@ -73,7 +73,7 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
               isLoading={isBotAddPopupOpen}
               loadingText={"Complete Discord Popup"}
               onClick={() => {
-                captureEvent("[discord setup] opening add bot modal")
+                captureEvent("[discord setup] opening add bot modal", { isBotAdded })
                 openAddBotPopup()
               }}
             >
