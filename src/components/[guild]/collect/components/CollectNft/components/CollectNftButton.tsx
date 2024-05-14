@@ -12,8 +12,7 @@ import { useWatch } from "react-hook-form"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
 import useCollectNft from "../../../hooks/useCollectNft"
-import { useCollectNftContext } from "../../CollectNftContext"
-import { CollectNftForm } from "../CollectNft"
+import { CollectNftForm, useCollectNftContext } from "../../CollectNftContext"
 
 type Props = {
   label?: string

@@ -10,6 +10,7 @@ import {
   RewardIcon,
 } from "components/[guild]/RoleCard/components/Reward"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import { Chain, Chains } from "wagmiConfig/chains"
 import useGuildRewardNftBalanceByUserId from "../hooks/useGuildRewardNftBalanceByUserId"
@@ -22,6 +23,10 @@ type Props = {
   chain: Chain
   nftAddress: `0x${string}`
   alreadyCollected: boolean
+}
+
+export type CollectNftForm = {
+  amount: number
 }
 
 const CollectNftContext = createContext<Props>(undefined)
@@ -42,13 +47,21 @@ const CollectNftProvider = ({
   const { name, mintableAmountPerUser } = useNftDetails(chain, nftAddress)
   const alreadyCollected = nftBalance >= mintableAmountPerUser
 
-  const { txHash, isTxModalOpen, onTxModalOpen, assetAmount } =
-    useTransactionStatusContext()
+  const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
   useEffect(() => {
     if (!txHash || isTxModalOpen) return
     onTxModalOpen()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txHash])
+
+  const methods = useForm<CollectNftForm>({
+    mode: "all",
+  })
+
+  const amount = useWatch({
+    control: methods.control,
+    name: "amount",
+  })
 
   return (
     <CollectNftContext.Provider
@@ -61,15 +74,15 @@ const CollectNftProvider = ({
         alreadyCollected,
       }}
     >
-      {children}
+      <FormProvider {...methods}>{children}</FormProvider>
 
       <TransactionStatusModal
         title="Collect NFT"
         successTitle="Success"
-        successText={`Successfully collected NFT${assetAmount > 1 ? "s" : ""}!`}
+        successText={`Successfully collected NFT${amount > 1 ? "s" : ""}!`}
         successLinkComponent={<OpenseaLink />}
         errorComponent={
-          <Text mb={4}>{`Couldn't collect NFT${assetAmount > 1 ? "s" : ""}`}</Text>
+          <Text mb={4}>{`Couldn't collect NFT${amount > 1 ? "s" : ""}`}</Text>
         }
         progressComponent={
           <>
@@ -84,17 +97,17 @@ const CollectNftProvider = ({
                 />
               }
               label={
-                assetAmount > 1 ? (
-                  name
-                ) : (
+                amount > 1 ? (
                   <HStack>
                     <Text as="span">{name}</Text>
                     <Text
                       as="span"
                       colorScheme="gray"
                       fontWeight="semibold"
-                    >{` x${assetAmount}`}</Text>
+                    >{` x${amount}`}</Text>
                   </HStack>
+                ) : (
+                  name
                 )
               }
             />
@@ -103,7 +116,7 @@ const CollectNftProvider = ({
         successComponent={
           <>
             <Text fontWeight="bold" mb="2">
-              {`Your new asset${assetAmount > 1 ? "s" : 0}:`}
+              {`Your new asset${amount > 1 ? "s" : 0}:`}
             </Text>
             <RewardDisplay
               icon={
@@ -113,17 +126,17 @@ const CollectNftProvider = ({
                 />
               }
               label={
-                assetAmount > 1 ? (
-                  name
-                ) : (
+                amount > 1 ? (
                   <HStack>
                     <Text as="span">{name}</Text>
                     <Text
                       as="span"
                       colorScheme="gray"
                       fontWeight="semibold"
-                    >{` x${assetAmount}`}</Text>
+                    >{` x${amount}`}</Text>
                   </HStack>
+                ) : (
+                  name
                 )
               }
             />
