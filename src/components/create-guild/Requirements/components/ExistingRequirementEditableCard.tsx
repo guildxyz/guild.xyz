@@ -16,12 +16,14 @@ import RequirementImageEditor from "components/[guild]/Requirements/components/R
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
+import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
+import useRole from "components/[guild]/hooks/useRole"
 import useToast from "hooks/useToast"
 import { PropsWithChildren, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
-import { Requirement as RequirementType } from "types"
+import { Requirement as RequirementType, Role } from "types"
 import mapRequirement from "utils/mapRequirement"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import useDeleteRequirement from "../hooks/useDeleteRequirement"
@@ -97,6 +99,13 @@ const ExistingRequirementEditableCard = ({
     },
   })
 
+  const { id: guildId } = useGuild()
+  const roleResponse: Partial<Role> = useRole(guildId, requirement.roleId)
+  const linkedReward = roleResponse.rolePlatforms.find((rp) => {
+    const dynamicAmount: any = rp.dynamicAmount
+    return dynamicAmount?.operation.input[0].requirementId === requirement.id
+  })
+
   const DeleteConfirmationAlert = (
     <ConfirmationAlert
       finalFocusRef={removeButtonRef}
@@ -106,19 +115,21 @@ const ExistingRequirementEditableCard = ({
       onConfirm={() => onDeleteRequirement()}
       title="Delete requirement"
       description={
-        requirement.type === "GUILD_SNAPSHOT" ? (
-          <Alert status="warning">
-            <AlertIcon mt={0} />
-            <Box>
-              <AlertTitle>
-                This requirement may be linked to a token reward
-              </AlertTitle>
-              <AlertDescription>
-                Deleting this requirement will make the reward unclaimable until it
-                is configured with a new snapshot
-              </AlertDescription>
-            </Box>
-          </Alert>
+        !!linkedReward ? (
+          <>
+            <Alert status="warning">
+              <AlertIcon mt={0} />
+              <Box>
+                <AlertTitle>
+                  This requirement is linked to a dynamic reward!
+                </AlertTitle>
+                <AlertDescription>
+                  Deleting this requirement will make the reward unclaimable until it
+                  is configured with a new requirement.
+                </AlertDescription>
+              </Box>
+            </Alert>
+          </>
         ) : (
           "Are you sure you want to delete this requirement?"
         )
