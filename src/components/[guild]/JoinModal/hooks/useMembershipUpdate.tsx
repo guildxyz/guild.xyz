@@ -92,22 +92,20 @@ const useMembershipUpdate = ({
         })
 
       if (res?.updateMembershipResult?.newMembershipRoleIds?.[0]) {
-        try {
-          const grantedGuildPlatforms = getGuildPlatformsOfRoles(
-            res.updateMembershipResult.newMembershipRoleIds,
-            guild
-          )
+        const grantedGuildPlatforms = getGuildPlatformsOfRoles(
+          res.updateMembershipResult.newMembershipRoleIds,
+          guild
+        )
 
-          const newGuildPlatforms = grantedGuildPlatforms.filter(
-            ({ id }) => !accessedGuildPlatformIds.has(id)
-          )
+        const newGuildPlatforms = grantedGuildPlatforms.filter(
+          ({ id }) => !accessedGuildPlatformIds.has(id)
+        )
 
-          if (newGuildPlatforms.length > 0) {
-            newGuildPlatforms.forEach((newGuildPlatform) => {
-              rewardGranted(newGuildPlatform.platformId)
-            })
-          }
-        } catch {}
+        if (newGuildPlatforms.length > 0) {
+          newGuildPlatforms.forEach((newGuildPlatform) => {
+            rewardGranted(newGuildPlatform.platformId)
+          })
+        }
       }
 
       if (res?.roleAccesses?.some((role) => !!role.access)) {
