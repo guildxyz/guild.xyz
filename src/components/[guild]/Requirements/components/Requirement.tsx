@@ -99,7 +99,7 @@ const Requirement = ({
               </Text>
               <Text
                 fontWeight={"medium"}
-                sx={{ fontSize: "sm", "& *": { fontSize: "inherit" } }}
+                sx={{ fontSize: "sm !important", "& *": { fontSize: "inherit" } }}
               >
                 {requirement?.data?.customName || children}
               </Text>
