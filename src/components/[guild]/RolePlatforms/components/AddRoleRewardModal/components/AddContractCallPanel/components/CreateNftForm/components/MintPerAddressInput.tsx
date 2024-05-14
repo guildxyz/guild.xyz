@@ -53,7 +53,7 @@ const MintPerAddressInput = () => {
   })
 
   const mintLimitType: MintLimitType =
-    mintableAmountPerUserField.value > 1 ? "LIMITED" : "UNLIMITED"
+    mintableAmountPerUserField.value > 0 ? "LIMITED" : "UNLIMITED"
 
   return (
     <FormControl
