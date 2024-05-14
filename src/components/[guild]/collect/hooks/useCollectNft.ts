@@ -186,16 +186,41 @@ const useCollectNft = () => {
         refetchNftDetails()
 
         mutateTopCollectors(
-          (prevValue) => ({
-            topCollectors: [
-              ...(prevValue?.topCollectors ?? []),
-              {
-                address: userAddress?.toLowerCase(),
-                balance: assetAmount,
-              },
-            ].sort((a, b) => b.balance - a.balance),
-            uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
-          }),
+          (prevValue) => {
+            const lowerCaseUserAddress = userAddress.toLowerCase()
+            const alreadyCollected = !!prevValue?.topCollectors?.find(
+              (collector) => collector.address.toLowerCase() === lowerCaseUserAddress
+            )
+
+            if (alreadyCollected) {
+              return {
+                topCollectors: prevValue.topCollectors
+                  .map((collector) => {
+                    if (collector.address.toLowerCase() === lowerCaseUserAddress) {
+                      return {
+                        address: lowerCaseUserAddress,
+                        balance: collector.balance + 1,
+                      }
+                    }
+
+                    return collector
+                  })
+                  .sort((a, b) => b.balance - a.balance),
+                uniqueCollectors: prevValue.uniqueCollectors,
+              }
+            }
+
+            return {
+              topCollectors: [
+                ...(prevValue?.topCollectors ?? []),
+                {
+                  address: userAddress.toLowerCase(),
+                  balance: assetAmount,
+                },
+              ].sort((a, b) => b.balance - a.balance),
+              uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
+            }
+          },
           {
             revalidate: false,
           }
