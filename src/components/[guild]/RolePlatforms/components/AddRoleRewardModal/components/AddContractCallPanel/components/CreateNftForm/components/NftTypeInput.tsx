@@ -1,7 +1,7 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import SegmentedControl from "components/common/SegmentedControl"
 import { useController, useFormContext } from "react-hook-form"
-import { CreateNftFormType } from "../CreateNftForm"
+import { CreateNftFormType } from "./NftDataForm"
 
 const options = [
   {

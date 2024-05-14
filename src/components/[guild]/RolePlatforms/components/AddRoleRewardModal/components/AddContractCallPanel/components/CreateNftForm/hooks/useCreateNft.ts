@@ -1,3 +1,4 @@
+import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
@@ -14,7 +15,7 @@ import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt, WriteContractParameters, parseUnits } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
-import { CreateNftFormType } from "../CreateNftForm"
+import { CreateNftFormType } from "../components/NftDataForm"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES = {
   ETHEREUM: "0x6ee2dd02fbfb71f518827042b6adca242f1ba0b2",
@@ -34,13 +35,6 @@ export const CONTRACT_CALL_SUPPORTED_CHAINS = Object.keys(
 ) as (keyof typeof GUILD_REWARD_NFT_FACTORY_ADDRESSES)[]
 export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
-
-type NftMetadata = {
-  name: string
-  description?: string
-  image: string
-  attributes: { trait_type: string; value: string }[] // TODO: maybe add display_type too?
-}
 
 export enum ContractCallFunction {
   // Kept the old one too, we can use it to determine if we need to show the old or the new UI for the availability-related features
@@ -76,17 +70,14 @@ const useCreateNft = (
   const showErrorToast = useShowErrorToast()
 
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
-    setLoadingText("Uploading image")
-
-    const { IpfsHash: imageCID } = await pinFileToIPFS({
-      data: [data.image],
-    })
-
     setLoadingText("Uploading metadata")
 
-    const image = `ipfs://${imageCID}`
+    const image = data.image?.replace(
+      process.env.NEXT_PUBLIC_IPFS_GATEWAY,
+      "ipfs://"
+    )
 
-    const metadata: NftMetadata = {
+    const metadata = guildNftRewardMetadataSchema.parse({
       name: data.name,
       description: data.description,
       image,
@@ -95,7 +86,7 @@ const useCreateNft = (
           trait_type: attr.name,
           value: attr.value,
         })) ?? [],
-    }
+    })
 
     const metadataJSON = JSON.stringify(metadata)
 
@@ -177,7 +168,7 @@ const useCreateNft = (
           function: ContractCallFunction.SIMPLE_CLAIM,
           argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
           name: trimmedName,
-          imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
+          imageUrl: data.image,
           description: data.richTextDescription,
         },
       },
