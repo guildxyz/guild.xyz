@@ -15,7 +15,22 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformGuildData } = platform.guildPlatform
   const name = platformGuildData?.name || "points"
 
-  const { hasRoleAccess } = useRoleMembership(platform.roleId)
+  const { hasRoleAccess, membership } = useRoleMembership(platform.roleId)
+
+  const dynamicAmount: any = platform?.dynamicAmount
+  const { addition, multiplier } = dynamicAmount?.operation.params ?? {}
+
+  const linkedRequirementId: number = !!dynamicAmount
+    ? dynamicAmount.operation.input[0].requirementId
+    : null
+  const linkedRequirement =
+    membership?.requirements.find(
+      (req) => req.requirementId === linkedRequirementId
+    ) || null
+
+  const score = !!dynamicAmount
+    ? linkedRequirement.amount * multiplier + addition
+    : platform.platformRoleData?.score
 
   const iconColor = useColorModeValue("green.500", "green.300")
 
@@ -45,7 +60,7 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
             <Link
               href={`/${urlName}/leaderboard/${platform.guildPlatform.id}`}
               fontWeight={"semibold"}
-            >{`${platform.platformRoleData?.score ?? 0} ${name}`}</Link>
+            >{`${score ?? 0} ${name}`}</Link>
             {hasRoleAccess && (
               <Icon as={Check} color={iconColor} ml="1.5" mb="-0.5" />
             )}
