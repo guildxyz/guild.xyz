@@ -43,7 +43,9 @@ const FormResponsesTable = ({ form }) => {
 
     const asPath = router.asPath.split("?")[0]
     router.replace(`${asPath}?${queryString}`)
-  }, [queryString, router])
+    // router.replace is intentionally left out
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryString, router.isReady, router.asPath])
 
   const { data, error, isLoading, isValidating, setSize } = useFormSubmissions(
     form.id,

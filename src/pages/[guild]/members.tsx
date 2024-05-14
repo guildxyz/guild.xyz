@@ -151,7 +151,9 @@ const MembersPage = (): JSX.Element => {
 
     const path = asPath.split("?")[0]
     replace(`${path}?${queryString}`)
-  }, [isReady, queryString, asPath, replace])
+    // replace is intentionally left out
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReady, queryString, asPath])
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
