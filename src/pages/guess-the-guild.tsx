@@ -1,9 +1,10 @@
-import { Button, Center, Text, useColorModeValue } from "@chakra-ui/react"
+import { Button, Center, HStack, Text, useColorModeValue } from "@chakra-ui/react"
 import Card from "components/common/Card"
 import Layout from "components/common/Layout"
 import GuessTheGuild from "components/guess-the-guild/GuessTheGuild"
 import PairTheGuild from "components/guess-the-guild/PairTheGuild"
 import SelectGameLevel from "components/guess-the-guild/SelectGameLevel"
+import useLocalStorage from "hooks/useLocalStorage"
 import { useState } from "react"
 import useSWRImmutable from "swr/immutable"
 import { GameLevel, GameMode, GuildBase } from "types"
@@ -19,6 +20,8 @@ const Page = (): JSX.Element => {
 
   const [selectedLevel, setSelectedLevel] = useState<GameLevel>(GameLevel.Easy)
   const [levelSelectDisable, setLevelSelectDisable] = useState<boolean>()
+  const [record, setRecord] = useLocalStorage("guess-the-guild-record", 0)
+  const [points, setPoints] = useState<number>(0)
 
   const title: string = gameInProgress
     ? gameMode === "GuessTheGuild"
@@ -26,7 +29,9 @@ const Page = (): JSX.Element => {
       : "Pair the logos to their guilds"
     : "Choose a difficulty level and press the button"
 
-  const onSubmit = () => {
+  const onFinishedGuessTheGuildRound = (pointsReceived: number) => {
+    if (pointsReceived === 0 && record < points) setRecord(points)
+    setPoints(pointsReceived > 0 ? points + pointsReceived : pointsReceived)
     setGameMode(getRandomGameMode())
   }
   const { data } = useSWRImmutable<GuildBase[]>(
@@ -49,12 +54,16 @@ const Page = (): JSX.Element => {
         textColor="white"
         maxWidth="container.sm"
       >
-        {levelSelectDisable}
-        <SelectGameLevel
-          selected={selectedLevel}
-          levelSelectDisable={levelSelectDisable}
-          onSelect={setSelectedLevel}
-        ></SelectGameLevel>
+        <HStack justifyContent="space-between">
+          <Text as="span" fontWeight="bold">
+            Record: {record}
+          </Text>
+          <SelectGameLevel
+            selected={selectedLevel}
+            levelSelectDisable={levelSelectDisable}
+            onSelect={setSelectedLevel}
+          ></SelectGameLevel>
+        </HStack>
         <Card
           data-test="guess-the-guild"
           pos="relative"
@@ -66,24 +75,34 @@ const Page = (): JSX.Element => {
             {title}
           </Text>
           {gameInProgress && (
+            <Text as="span" fontWeight="bold" textAlign="center" my="5">
+              Current points: {points} {points > record && "(new high scrore!)"}
+            </Text>
+          )}
+          {gameInProgress && (
             <>
               {gameMode === "GuessTheGuild" ? (
                 <GuessTheGuild
                   guildData={data}
                   onLevelSelectDisable={setLevelSelectDisable}
+                  finishedRound={onFinishedGuessTheGuildRound}
                 ></GuessTheGuild>
               ) : (
-                <PairTheGuild guildData={data}></PairTheGuild>
+                <PairTheGuild
+                  guildData={data}
+                  finishedRound={onFinishedGuessTheGuildRound}
+                ></PairTheGuild>
               )}
             </>
           )}
-          <Center mt="6">
-            {!gameInProgress && (
-              <Button colorScheme="green" onClick={onStartGame}>
+
+          {!gameInProgress && (
+            <Center mt="6">
+              <Button colorScheme="green" onClick={onStartGame} isDisabled={!data}>
                 Start game
               </Button>
-            )}
-          </Center>
+            </Center>
+          )}
         </Card>
       </Layout>
     </>
