@@ -9,6 +9,7 @@ const DataProviderRequirement = ({
   image,
   isImageLoading,
   children,
+  rightElement,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
@@ -19,7 +20,7 @@ const DataProviderRequirement = ({
       spacing={4}
       w="full"
       py={2}
-      templateColumns={`auto 1fr`}
+      templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
       alignItems="center"
     >
       <Box mt="3px" alignSelf={"start"} position={"relative"}>
@@ -54,6 +55,7 @@ const DataProviderRequirement = ({
           </Text>
         </HStack>
       </Flex>
+      {rightElement}
     </SimpleGrid>
   )
 }

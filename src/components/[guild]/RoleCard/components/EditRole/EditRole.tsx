@@ -34,6 +34,7 @@ import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
+import { atom, useSetAtom } from "jotai"
 import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
@@ -60,6 +61,10 @@ export type RoleEditFormData = {
   groupId?: number
 }
 
+export const targetRoleAtom = atom(null, (get, set, update) =>
+  set(targetRoleAtom, update)
+)
+
 const MotionDrawerFooter = motion(DrawerFooter)
 // Footer is 76px high
 const FOOTER_OFFSET = 76
@@ -68,6 +73,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const { captureEvent } = usePostHogContext()
+
+  const setTargetRole = useSetAtom(targetRoleAtom)
+  setTargetRole(roleId)
 
   const { roles } = useGuild()
   const {
@@ -128,6 +136,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     })
     setVisibilityModalProps.onClose()
     onClose()
+    setTargetRole(null)
     reset(undefined, { keepValues: true })
   }
 
