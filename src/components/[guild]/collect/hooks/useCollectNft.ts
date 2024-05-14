@@ -4,12 +4,14 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
+import { PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
@@ -26,6 +28,7 @@ type ClaimData = {
 
 const useCollectNft = () => {
   const { captureEvent } = usePostHogContext()
+  const { rewardClaimed } = useCustomPosthogEvents()
   const { id: guildId, urlName } = useGuild()
   const { id: userId } = useUser()
   const postHogOptions = { guild: urlName }
@@ -117,6 +120,7 @@ const useCollectNft = () => {
   return {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
+        rewardClaimed(PlatformType.CONTRACT_CALL)
         setLoadingText("")
 
         refetchBalance()

@@ -3,6 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -37,6 +38,7 @@ const useCreateRole = ({
 
   const { mutate: mutateYourGuilds } = useYourGuilds()
   const matchMutate = useMatchMutate()
+  const { rewardCreated } = useCustomPosthogEvents()
 
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
@@ -56,6 +58,12 @@ const useCreateRole = ({
     },
     onSuccess: async (response_) => {
       triggerConfetti()
+
+      if (response_?.createdGuildPlatforms?.length > 0) {
+        response_.createdGuildPlatforms.forEach((guildPlatform) => {
+          rewardCreated(guildPlatform.platformId)
+        })
+      }
 
       mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
         revalidate: false,
