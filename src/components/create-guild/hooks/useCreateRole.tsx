@@ -59,7 +59,7 @@ const useCreateRole = ({
     onSuccess: async (response_) => {
       triggerConfetti()
 
-      if (response_?.createdGuildPlatforms?.[0]) {
+      if (response_?.createdGuildPlatforms?.length > 0) {
         response_.createdGuildPlatforms.forEach((guildPlatform) => {
           rewardCreated(guildPlatform.platformId)
         })

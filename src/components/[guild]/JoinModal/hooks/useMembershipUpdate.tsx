@@ -91,7 +91,7 @@ const useMembershipUpdate = ({
           correlationId: res.correlationId,
         })
 
-      if (res?.updateMembershipResult?.newMembershipRoleIds?.[0]) {
+      if (res?.updateMembershipResult?.newMembershipRoleIds?.length > 0) {
         const grantedGuildPlatforms = getGuildPlatformsOfRoles(
           res.updateMembershipResult.newMembershipRoleIds,
           guild

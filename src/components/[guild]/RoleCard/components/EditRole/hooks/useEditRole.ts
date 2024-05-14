@@ -79,7 +79,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     onSuccess: (result) => {
       const { updatedRole, updatedRolePlatforms, createdRolePlatforms } = result
 
-      if (createdRolePlatforms?.[0]) {
+      if (createdRolePlatforms?.length > 0) {
         createdRolePlatforms.forEach((rolePlatform) => {
           if (rolePlatform?.createdGuildPlatform) {
             rewardCreated(rolePlatform.createdGuildPlatform.platformId)

@@ -46,7 +46,7 @@ const useCreateGuild = ({
 
       captureEvent("guild creation flow > guild successfully created")
 
-      if (response_.guildPlatforms?.[0]) {
+      if (response_.guildPlatforms?.length > 0) {
         response_.guildPlatforms.forEach((guildPlatform) => {
           rewardCreated(guildPlatform.platformId, response_?.urlName)
         })
