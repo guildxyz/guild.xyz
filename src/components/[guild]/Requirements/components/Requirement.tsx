@@ -1,9 +1,6 @@
 import {
   Box,
-  Circle,
-  Flex,
   HStack,
-  Icon,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -12,15 +9,15 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Visibility from "components/[guild]/Visibility"
-import { Lightning } from "phosphor-react"
+import dynamic from "next/dynamic"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
-import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Visibility as VisibilityType } from "types"
 import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
 import ViewOriginalPopover from "./ViewOriginalPopover"
+const DataProviderRequirement = dynamic(() => import("./DataProviderRequirement"))
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
@@ -47,10 +44,15 @@ const Requirement = ({
   const requirement = useRequirementContext()
   const { setValue } = useFormContext() ?? {}
 
+  if (dynamicDisplay)
+    return (
+      <DataProviderRequirement
+        {...{ isImageLoading, image, rightElement, children }}
+      />
+    )
+
   const ChildrenWrapper = childrenWrapper ?? Box
   const ImageWrapper = imageWrapper ?? React.Fragment
-
-  const ProvidedValueDisplay = REQUIREMENT_PROVIDED_VALUES[requirement?.type]
 
   return (
     <SimpleGrid
@@ -60,95 +62,52 @@ const Requirement = ({
       templateColumns={`auto 1fr ${rightElement ? "auto" : ""}`}
       alignItems="center"
     >
-      <Box mt="3px" alignSelf={"start"} position={"relative"}>
+      <Box mt="3px" alignSelf={"start"}>
         <RequirementImageCircle isImageLoading={isImageLoading}>
           <ImageWrapper>
             <RequirementImage image={requirement?.data?.customImage || image} />
           </ImageWrapper>
         </RequirementImageCircle>
-
-        {dynamicDisplay && (
-          <Circle
-            position="absolute"
-            right={-1}
-            bottom={0}
-            bgColor={"white"}
-            size={5}
-            overflow="hidden"
-          >
-            <Icon boxSize={3} as={Lightning} weight="fill" color="green.500" />
-          </Circle>
-        )}
       </Box>
+      <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
+        <ChildrenWrapper display="inline-block">
+          {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
+          {requirement?.type === "LINK_VISIT"
+            ? children
+            : requirement?.data?.customName || children}
+          {!setValue ? (
+            <Visibility
+              visibilityRoleId={requirement?.visibilityRoleId}
+              entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
+              ml="1"
+            />
+          ) : null}
+        </ChildrenWrapper>
 
-      {dynamicDisplay ? (
-        <>
-          <Flex
-            alignSelf={"center"}
-            flexDir={"column"}
-            justifyContent={"center"}
-            ml={1}
-          >
-            {ProvidedValueDisplay && (
-              <ProvidedValueDisplay requirement={requirement} />
-            )}
-
-            <HStack gap={1} alignItems={"center"}>
-              <Text fontSize={"sm"} color={"GrayText"}>
-                Via:{" "}
-              </Text>
-              <Text
-                fontWeight={"medium"}
-                sx={{ fontSize: "sm !important", "& *": { fontSize: "inherit" } }}
-              >
-                {requirement?.data?.customName || children}
-              </Text>
-            </HStack>
-          </Flex>
-        </>
-      ) : (
-        <>
-          <VStack alignItems={"flex-start"} alignSelf="center" spacing={1.5}>
-            <ChildrenWrapper display="inline-block">
-              {requirement?.isNegated && <Tag mr="2">DON'T</Tag>}
-              {requirement?.type === "LINK_VISIT"
-                ? children
-                : requirement?.data?.customName || children}
-              {!setValue ? (
-                <Visibility
-                  visibilityRoleId={requirement?.visibilityRoleId}
-                  entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
-                  ml="1"
-                />
-              ) : null}
-            </ChildrenWrapper>
-
-            <HStack wrap={"wrap"}>
-              {showViewOriginal && (
-                <ViewOriginalPopover>
-                  <HStack p={3} gap={4}>
-                    <RequirementImageCircle isImageLoading={isImageLoading}>
-                      <RequirementImage image={image} />
-                    </RequirementImageCircle>
-                    <Stack
-                      direction={{ base: "column", md: "row" }}
-                      alignItems={{ base: "flex-start", md: "center" }}
-                      spacing={{ base: 2, md: 5 }}
-                    >
-                      <Text wordBreak="break-word" flexGrow={1}>
-                        {children}
-                      </Text>
-                      {!!setValue && <ResetRequirementButton />}
-                    </Stack>
-                  </HStack>
-                </ViewOriginalPopover>
-              )}
-              {footer}
-            </HStack>
-          </VStack>
-          {rightElement}
-        </>
-      )}
+        <HStack wrap={"wrap"}>
+          {showViewOriginal && (
+            <ViewOriginalPopover>
+              <HStack p={3} gap={4}>
+                <RequirementImageCircle isImageLoading={isImageLoading}>
+                  <RequirementImage image={image} />
+                </RequirementImageCircle>
+                <Stack
+                  direction={{ base: "column", md: "row" }}
+                  alignItems={{ base: "flex-start", md: "center" }}
+                  spacing={{ base: 2, md: 5 }}
+                >
+                  <Text wordBreak="break-word" flexGrow={1}>
+                    {children}
+                  </Text>
+                  {!!setValue && <ResetRequirementButton />}
+                </Stack>
+              </HStack>
+            </ViewOriginalPopover>
+          )}
+          {footer}
+        </HStack>
+      </VStack>
+      {rightElement}
     </SimpleGrid>
   )
 }

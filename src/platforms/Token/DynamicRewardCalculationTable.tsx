@@ -1,5 +1,4 @@
 import { HStack, Icon, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
-import FeePopover from "components/[guild]/Requirements/components/GuildCheckout/components/FeePopover"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
@@ -16,9 +15,8 @@ type Props = {
 const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => {
   const { membership } = useRoleMembership(rolePlatform.roleId)
   const { amount: reqProvidedValue } =
-    membership?.roles
-      .flatMap((role) => role.requirements)
-      .find((req) => req.requirementId === requirement.id) ?? {}
+    membership?.requirements.find((req) => req.requirementId === requirement.id) ??
+    {}
 
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
   const dynamicAmount: any = rolePlatform.dynamicAmount
@@ -39,7 +37,6 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
           <HStack w="full">
             <HStack spacing={1}>
               <Text fontWeight={"semibold"}>Claimable reward</Text>
-              <FeePopover />
             </HStack>
 
             <Skeleton
@@ -59,7 +56,9 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
         }
       >
         <Tr>
-          <Td sx={{ fontSize: "sm !important", "& *": { fontSize: "inherit" } }}>
+          <Td
+            sx={{ fontSize: "sm !important", "& *": { fontSize: "sm !important" } }}
+          >
             <ProvidedValueDisplay requirement={requirement} />
           </Td>
           <Td isNumeric>{reqProvidedValue}</Td>
