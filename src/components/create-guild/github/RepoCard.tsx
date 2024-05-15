@@ -1,23 +1,24 @@
 import { Link } from "@chakra-ui/next-js"
 import { HStack, Skeleton, Text, VStack } from "@chakra-ui/react"
+import { GitHubGateable } from "@guildxyz/types"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import NextLink from "next/link"
-import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
 
 const RepoCard = ({
   onSelection,
   platformGuildId,
+  isGuilded,
+  guildId,
   description,
 }: {
   onSelection: (platformGuildId: string) => void
-  platformGuildId: string
-  repositoryName: string
-  description?: string
-}) => {
-  const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
-    usePlatformUsageInfo("GITHUB", encodeURIComponent(platformGuildId))
+} & GitHubGateable) => {
+  const { id } = useGuild() ?? {}
+
+  const isUsedInCurrentGuild = isGuilded && guildId === id
 
   const RepoName = () => (
     <Link href={`https://github.com/${platformGuildId}`} isExternal>
@@ -45,12 +46,10 @@ const RepoCard = ({
             <RepoName />
           )}
 
-          {isValidating ? (
-            <Button isLoading />
-          ) : isAlreadyInUse ? (
+          {isGuilded ? (
             <Button
               as={NextLink}
-              href={`/${guildUrlName}`}
+              href={`/${guildId}`}
               colorScheme="gray"
               minW="max-content"
             >

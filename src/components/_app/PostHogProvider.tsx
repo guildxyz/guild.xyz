@@ -16,8 +16,10 @@ if (typeof window !== "undefined") {
     api_host: "/api/posthog",
     // Capture custom events only
     autocapture: false,
-    capture_pageleave: false,
-    capture_pageview: false,
+
+    // Turned on for PostHog Web Analytics
+    capture_pageleave: true,
+    capture_pageview: true,
 
     // We don't record every session, but we can start recording with the `startSessionRecording` function where we actually want to save videos
     disable_session_recording: true,

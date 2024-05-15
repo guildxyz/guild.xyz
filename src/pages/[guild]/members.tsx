@@ -100,14 +100,20 @@ const columns = [
         id: "hiddenRoles",
         accessorFn: (row) => row.roles.hidden,
         cell: (info) => (
-          <RoleTags roles={info.getValue()} column={info.column.parent} />
+          <RoleTags
+            roles={info.getValue()}
+            setFilterValue={info.column.parent.setFilterValue}
+          />
         ),
       },
       {
         id: "publicRoles",
         accessorFn: (row) => row.roles.public,
         cell: (info) => (
-          <RoleTags roles={info.getValue()} column={info.column.parent} />
+          <RoleTags
+            roles={info.getValue()}
+            setFilterValue={info.column.parent.setFilterValue}
+          />
         ),
       },
     ],
@@ -145,7 +151,9 @@ const MembersPage = (): JSX.Element => {
 
     const path = asPath.split("?")[0]
     replace(`${path}?${queryString}`)
-  }, [isReady, queryString, asPath, replace])
+    // replace is intentionally left out
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isReady, queryString, asPath])
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 

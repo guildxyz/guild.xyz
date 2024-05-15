@@ -3,6 +3,7 @@ import { ContractCallFunction } from "components/[guild]/RolePlatforms/component
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -10,13 +11,16 @@ import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import legacyGuildRewardNftAbi from "static/abis/legacyGuildRewardNft"
+import { PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import { CollectNftForm } from "../components/CollectNft/CollectNft"
-import { useCollectNftContext } from "../components/CollectNftContext"
+import {
+  CollectNftForm,
+  useCollectNftContext,
+} from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
 import useGuildRewardNftBalanceByUserId from "./useGuildRewardNftBalanceByUserId"
 import useTopCollectors from "./useTopCollectors"
@@ -60,6 +64,7 @@ const isClaimArgs = (args: ClaimData["data"]["args"]): args is ClaimArgs => {
 
 const useCollectNft = () => {
   const { captureEvent } = usePostHogContext()
+  const { rewardClaimed } = useCustomPosthogEvents()
   const { id: guildId, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
@@ -72,8 +77,7 @@ const useCollectNft = () => {
 
   const { chain, nftAddress, roleId, rolePlatformId, guildPlatform } =
     useCollectNftContext()
-  const { setTxHash, setTxError, setTxSuccess, assetAmount, setAssetAmount } =
-    useTransactionStatusContext() ?? {}
+  const { setTxHash, setTxError, setTxSuccess } = useTransactionStatusContext() ?? {}
 
   const { guildFee } = useGuildFee(chain)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
@@ -89,7 +93,7 @@ const useCollectNft = () => {
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
 
-  const { resetField } = useFormContext<CollectNftForm>()
+  const { getValues } = useFormContext<CollectNftForm>()
   const claimAmountFromForm = useWatch<CollectNftForm, "amount">({
     name: "amount",
   })
@@ -175,27 +179,51 @@ const useCollectNft = () => {
   return {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
-        setAssetAmount(claimAmount)
+        rewardClaimed(PlatformType.CONTRACT_CALL)
 
-        resetField("amount", {
-          defaultValue: 1,
-        })
+        const amount = getValues("amount")
+
         setLoadingText("")
 
         refetchBalance()
         refetchNftDetails()
 
         mutateTopCollectors(
-          (prevValue) => ({
-            topCollectors: [
-              ...(prevValue?.topCollectors ?? []),
-              {
-                address: userAddress?.toLowerCase(),
-                balance: assetAmount,
-              },
-            ].sort((a, b) => b.balance - a.balance),
-            uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
-          }),
+          (prevValue) => {
+            const lowerCaseUserAddress = userAddress.toLowerCase()
+            const alreadyCollected = !!prevValue?.topCollectors?.find(
+              (collector) => collector.address.toLowerCase() === lowerCaseUserAddress
+            )
+
+            if (alreadyCollected) {
+              return {
+                topCollectors: prevValue.topCollectors
+                  .map((collector) => {
+                    if (collector.address.toLowerCase() === lowerCaseUserAddress) {
+                      return {
+                        address: lowerCaseUserAddress,
+                        balance: collector.balance + Number(amount),
+                      }
+                    }
+
+                    return collector
+                  })
+                  .sort((a, b) => b.balance - a.balance),
+                uniqueCollectors: prevValue.uniqueCollectors,
+              }
+            }
+
+            return {
+              topCollectors: [
+                ...(prevValue?.topCollectors ?? []),
+                {
+                  address: userAddress.toLowerCase(),
+                  balance: Number(amount),
+                },
+              ].sort((a, b) => b.balance - a.balance),
+              uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
+            }
+          },
           {
             revalidate: false,
           }
@@ -204,11 +232,11 @@ const useCollectNft = () => {
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
         tweetToast({
-          title: `Successfully collected ${
-            assetAmount > 1 ? `${assetAmount} ` : ""
-          }NFT${assetAmount > 1 ? "s" : ""}!`,
+          title: `Successfully collected ${amount > 1 ? `${amount} ` : ""}NFT${
+            amount > 1 ? "s" : ""
+          }!`,
           tweetText: `Just collected my ${name} NFT${
-            assetAmount > 1 ? "s" : ""
+            amount > 1 ? "s" : ""
           }!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
         })
       },

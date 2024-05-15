@@ -18,7 +18,6 @@ import { useCollectNftContext } from "components/[guild]/collect/components/Coll
 import useGuild from "components/[guild]/hooks/useGuild"
 import CircleDivider from "components/common/CircleDivider"
 import dynamic from "next/dynamic"
-import { FormProvider, useForm } from "react-hook-form"
 import { getRolePlatformTimeframeInfo } from "utils/rolePlatformHelpers"
 import { Chains } from "wagmiConfig/chains"
 import useNftDetails from "../../hooks/useNftDetails"
@@ -31,10 +30,6 @@ const availibiltyTagStyleProps = {
   fontWeight: "medium",
   colorScheme: "purple",
   p: 0,
-}
-
-export type CollectNftForm = {
-  amount: number
 }
 
 const AmountPicker = dynamic(() => import("./components/AmountPicker"))
@@ -61,119 +56,113 @@ const CollectNft = () => {
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }
 
-  const methods = useForm<CollectNftForm>({
-    mode: "all",
-  })
-
   return (
-    <FormProvider {...methods}>
-      <Stack p={padding} w="full" alignItems="center" spacing={4}>
-        {(mintableAmountPerUser >= 10 || mintableAmountPerUser === BigInt(0)) && (
-          <AmountPicker />
-        )}
+    <Stack p={padding} w="full" alignItems="center" spacing={4}>
+      {(mintableAmountPerUser >= 10 || mintableAmountPerUser === BigInt(0)) && (
+        <AmountPicker />
+      )}
 
-        <Stack w="full" spacing={2}>
-          <NftFeesTable bgColor={tableBgColor} mt="2" mb="1" />
-          <ConnectWalletButton />
-          <SwitchNetworkButton
-            targetChainId={Chains[chain]}
-            hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
-          />
-          <Tooltip
-            isDisabled={isButtonEnabled}
-            label={
-              startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
-            }
-            hasArrow
-            shouldWrapChildren
-          >
-            <CollectNftButton
-              isDisabled={!isButtonEnabled}
-              label="Collect now"
-              colorScheme="green"
-            />
-          </Tooltip>
-        </Stack>
-
-        <Skeleton
-          maxW="max-content"
-          isLoaded={
-            !isLoading &&
-            (typeof totalSupply !== "undefined" ||
-              typeof totalCollectorsToday !== "undefined")
+      <Stack w="full" spacing={2}>
+        <NftFeesTable bgColor={tableBgColor} mt="2" mb="1" />
+        <ConnectWalletButton />
+        <SwitchNetworkButton
+          targetChainId={Chains[chain]}
+          hidden={typeof alreadyCollected === "undefined" || alreadyCollected}
+        />
+        <Tooltip
+          isDisabled={isButtonEnabled}
+          label={
+            startTimeDiff > 0 ? "Claim hasn't started yet" : "Claim already ended"
           }
+          hasArrow
+          shouldWrapChildren
         >
-          {isLoading ? (
-            "Loading collectors..."
-          ) : (
-            <Flex justifyContent="center" alignItems="center" wrap="wrap">
-              {guildPlatform?.platformGuildData?.function ===
-                ContractCallFunction.DEPRECATED_SIMPLE_CLAIM &&
-                typeof rolePlatform?.capacity === "number" && (
-                  <>
-                    <CapacityTag
-                      capacity={rolePlatform.capacity}
-                      claimedCount={rolePlatform.claimedCount}
-                      {...availibiltyTagStyleProps}
-                    />
-                    <CircleDivider />
-                  </>
-                )}
+          <CollectNftButton
+            isDisabled={!isButtonEnabled}
+            label="Collect now"
+            colorScheme="green"
+          />
+        </Tooltip>
+      </Stack>
 
-              {!!maxSupply && typeof totalSupply === "bigint" && (
+      <Skeleton
+        maxW="max-content"
+        isLoaded={
+          !isLoading &&
+          (typeof totalSupply !== "undefined" ||
+            typeof totalCollectorsToday !== "undefined")
+        }
+      >
+        {isLoading ? (
+          "Loading collectors..."
+        ) : (
+          <Flex justifyContent="center" alignItems="center" wrap="wrap">
+            {guildPlatform?.platformGuildData?.function ===
+              ContractCallFunction.DEPRECATED_SIMPLE_CLAIM &&
+              typeof rolePlatform?.capacity === "number" && (
                 <>
                   <CapacityTag
-                    capacity={Number(maxSupply)}
-                    claimedCount={Number(totalSupply)}
+                    capacity={rolePlatform.capacity}
+                    claimedCount={rolePlatform.claimedCount}
                     {...availibiltyTagStyleProps}
                   />
                   <CircleDivider />
                 </>
               )}
 
-              {rolePlatform?.startTime && startTimeDiff > 0 && (
-                <>
-                  <StartTimeTag
-                    startTime={rolePlatform?.startTime}
-                    {...availibiltyTagStyleProps}
-                  />
-                  <CircleDivider />
-                </>
-              )}
+            {!!maxSupply && typeof totalSupply === "bigint" && (
+              <>
+                <CapacityTag
+                  capacity={Number(maxSupply)}
+                  claimedCount={Number(totalSupply)}
+                  {...availibiltyTagStyleProps}
+                />
+                <CircleDivider />
+              </>
+            )}
 
-              {rolePlatform?.endTime && (
-                <>
-                  <EndTimeTag
-                    endTime={rolePlatform?.endTime}
-                    {...availibiltyTagStyleProps}
-                  />
-                  <CircleDivider />
-                </>
-              )}
+            {rolePlatform?.startTime && startTimeDiff > 0 && (
+              <>
+                <StartTimeTag
+                  startTime={rolePlatform?.startTime}
+                  {...availibiltyTagStyleProps}
+                />
+                <CircleDivider />
+              </>
+            )}
 
-              {typeof rolePlatform?.capacity !== "number" && (
-                <>
-                  <Tag {...availibiltyTagStyleProps} colorScheme="gray">
-                    {`${new Intl.NumberFormat("en", {
-                      notation: "standard",
-                    }).format(totalSupply ?? 0)} collected`}
-                  </Tag>
-                  {typeof totalCollectorsToday === "bigint" && <CircleDivider />}
-                </>
-              )}
+            {rolePlatform?.endTime && (
+              <>
+                <EndTimeTag
+                  endTime={rolePlatform?.endTime}
+                  {...availibiltyTagStyleProps}
+                />
+                <CircleDivider />
+              </>
+            )}
 
-              {typeof totalCollectorsToday === "bigint" && (
+            {typeof rolePlatform?.capacity !== "number" && (
+              <>
                 <Tag {...availibiltyTagStyleProps} colorScheme="gray">
                   {`${new Intl.NumberFormat("en", {
                     notation: "standard",
-                  }).format(totalCollectorsToday)} collected today`}
+                  }).format(totalSupply ?? 0)} collected`}
                 </Tag>
-              )}
-            </Flex>
-          )}
-        </Skeleton>
-      </Stack>
-    </FormProvider>
+                {typeof totalCollectorsToday === "bigint" && <CircleDivider />}
+              </>
+            )}
+
+            {typeof totalCollectorsToday === "bigint" && (
+              <Tag {...availibiltyTagStyleProps} colorScheme="gray">
+                {`${new Intl.NumberFormat("en", {
+                  notation: "standard",
+                }).format(totalCollectorsToday)} collected today`}
+              </Tag>
+            )}
+          </Flex>
+        )}
+      </Skeleton>
+    </Stack>
   )
 }
 

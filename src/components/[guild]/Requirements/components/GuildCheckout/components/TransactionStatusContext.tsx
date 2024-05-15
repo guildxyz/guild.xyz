@@ -20,8 +20,6 @@ const TransactionStatusContext = createContext<{
   setTxError: Dispatch<SetStateAction<boolean>>
   txSuccess: boolean
   setTxSuccess: Dispatch<SetStateAction<boolean>>
-  assetAmount: number
-  setAssetAmount: Dispatch<SetStateAction<number>>
 }>(undefined)
 
 const TransactionStatusProvider = ({
@@ -36,7 +34,6 @@ const TransactionStatusProvider = ({
   const [txHash, setTxHash] = useState("")
   const [txError, setTxError] = useState(false)
   const [txSuccess, setTxSuccess] = useState(false)
-  const [assetAmount, setAssetAmount] = useState(1)
 
   const triggerConfetti = useJsConfetti()
 
@@ -58,8 +55,6 @@ const TransactionStatusProvider = ({
         setTxError,
         txSuccess,
         setTxSuccess,
-        assetAmount,
-        setAssetAmount,
       }}
     >
       {children}

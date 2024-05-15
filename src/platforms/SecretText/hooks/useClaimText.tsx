@@ -15,6 +15,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
 import { Modal } from "components/common/Modal"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { PropsWithChildren } from "react"
@@ -31,13 +32,20 @@ type ClaimResponse = {
 const useClaimText = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
   const { uniqueValue } = useClaimedReward(rolePlatformId)
+  const { rewardClaimed } = useCustomPosthogEvents()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { id: guildId, roles, mutateGuild } = useGuild()
+  const { id: guildId, roles, mutateGuild, guildPlatforms } = useGuild()
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
+
+  const guildPlatformId = roles
+    .find((role) => role.id === roleId)
+    ?.rolePlatforms?.find(({ id }) => id === rolePlatformId)?.guildPlatformId
+
+  const guildPlatform = guildPlatforms.find(({ id }) => id === guildPlatformId)
 
   const triggerConfetti = useJsConfetti()
   const showErrorToast = useShowErrorToast()
@@ -58,6 +66,9 @@ const useClaimText = (rolePlatformId: number) => {
     claimFetcher,
     {
       onSuccess: (response) => {
+        if (guildPlatform) {
+          rewardClaimed(guildPlatform.platformId)
+        }
         triggerConfetti()
         /**
          * Saving in SWR cache so we don't need to re-claim the reward if the user

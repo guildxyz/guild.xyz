@@ -19,8 +19,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { Chains } from "wagmiConfig/chains"
-import { useCollectNftContext } from "../../CollectNftContext"
-import { CollectNftForm } from "../CollectNft"
+import { CollectNftForm, useCollectNftContext } from "../../CollectNftContext"
 import useNftRanges from "../hooks/useNftRanges"
 
 const AmountPicker = () => {

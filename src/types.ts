@@ -227,6 +227,7 @@ type PlatformGuildData = {
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: string
@@ -261,6 +262,7 @@ type PlatformGuildData = {
     imageUrl: string
     description: string
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -290,6 +292,7 @@ type PlatformGuildData = {
     argsToSign?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -317,6 +320,7 @@ type PlatformGuildData = {
     argsToSign?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -344,6 +348,7 @@ type PlatformGuildData = {
     argsToSign?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -371,6 +376,7 @@ type PlatformGuildData = {
     argsToSign?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -403,6 +409,7 @@ type PlatformGuildData = {
     argsToSign?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: never
@@ -425,6 +432,7 @@ type PlatformGuildData = {
     argsToSign?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -460,6 +468,7 @@ type PlatformGuildData = {
     argsToSign?: never
     symbol?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: never
@@ -751,14 +760,6 @@ type RequestMintLinksForm = {
   redeem_type: string
 }
 
-type GoogleFile = {
-  name: string
-  mimeType: string
-  webViewLink: string
-  iconLink: string
-  platformGuildId: string
-}
-
 type Without<First, Second> = {
   [P in Exclude<keyof First, keyof Second>]?: never
 }
@@ -825,7 +826,6 @@ export type {
   EventSources,
   EventSourcesKey,
   GitPoap,
-  GoogleFile,
   Group,
   Guild,
   GuildAdmin,

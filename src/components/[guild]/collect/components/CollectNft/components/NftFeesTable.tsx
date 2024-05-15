@@ -1,12 +1,14 @@
 import { HStack, Skeleton, StackProps, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import {
+  CollectNftForm,
+  useCollectNftContext,
+} from "components/[guild]/collect/components/CollectNftContext"
 import { useWatch } from "react-hook-form"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
 import useGuildFee from "../../../hooks/useGuildFee"
 import useNftDetails from "../../../hooks/useNftDetails"
-import { CollectNftForm } from "../CollectNft"
 
 const NftFeesTable = ({ ...rest }: StackProps) => {
   const { chain, nftAddress } = useCollectNftContext()
