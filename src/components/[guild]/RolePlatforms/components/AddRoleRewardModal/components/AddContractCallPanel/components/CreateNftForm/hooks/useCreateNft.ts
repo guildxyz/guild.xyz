@@ -1,3 +1,4 @@
+import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
@@ -51,10 +52,14 @@ export type CreateNFTResponse = {
   // returning the submitted form too, so we can easily populate the SWR cache with the NFT details (e.g. image, name, etc.)
   formData: CreateNftFormType
   guildPlatform: Omit<GuildPlatformWithOptionalId, "platformGuildName">
+  rolePlatform: {
+    startTime?: string
+    endTime?: string
+  }
 }
 
 const useCreateNft = (
-  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
+  onSuccess: (reward: Omit<CreateNFTResponse, "formData">) => void
 ) => {
   const { urlName } = useGuild()
   const { captureEvent } = usePostHogContext()
@@ -172,12 +177,16 @@ const useCreateNft = (
           description: data.richTextDescription,
         },
       },
+      rolePlatform: {
+        startTime: datetimeLocalToIsoString(data.startTime),
+        endTime: datetimeLocalToIsoString(data.endTime),
+      },
     }
   }
 
   return {
     ...useSubmit(createNft, {
-      onSuccess: (response) => {
+      onSuccess: ({ guildPlatform, rolePlatform }) => {
         setLoadingText(null)
 
         toast({
@@ -185,8 +194,7 @@ const useCreateNft = (
           title: "Successfully deployed NFT contract",
         })
 
-        const { chain, contractAddress, name } =
-          response.guildPlatform.platformGuildData
+        const { chain, contractAddress, name } = guildPlatform.platformGuildData
 
         captureEvent("Successfully created NFT", {
           ...postHogOptions,
@@ -206,7 +214,10 @@ const useCreateNft = (
           }
         )
 
-        onSuccess(response.guildPlatform)
+        onSuccess({
+          guildPlatform,
+          rolePlatform,
+        })
       },
       onError: (error) => {
         setLoadingText(null)

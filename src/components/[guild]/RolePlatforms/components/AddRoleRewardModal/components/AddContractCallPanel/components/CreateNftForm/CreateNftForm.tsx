@@ -14,7 +14,7 @@ import useCreateNft, {
 } from "./hooks/useCreateNft"
 
 type Props = {
-  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
+  onSuccess: (reward: Omit<CreateNFTResponse, "formData">) => void
 }
 
 const getDefaultChain = (chainId: number) =>
@@ -36,11 +36,13 @@ const CreateNftForm = ({ onSuccess }: Props) => {
       price: 0,
       description: "",
       richTextDescription: "",
-      image: null,
+      image: "",
       attributes: [],
       maxSupply: 0,
       mintableAmountPerUser: 1,
       soulbound: "true",
+      startTime: null,
+      endTime: null,
     },
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
@@ -53,9 +55,9 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
   const { setShouldShowCloseAlert, setIsBackButtonDisabled } =
     useAddRewardContext() ?? {}
-  const { onSubmit, isLoading, loadingText } = useCreateNft((newGuildPlatform) => {
+  const { onSubmit, isLoading, loadingText } = useCreateNft((reward) => {
     setShouldShowCloseAlert?.(false)
-    onSuccess(newGuildPlatform)
+    onSuccess(reward)
   })
 
   return (

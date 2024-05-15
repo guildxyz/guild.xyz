@@ -25,6 +25,7 @@ import {
   Textarea,
   useColorModeValue,
 } from "@chakra-ui/react"
+import StartEndTimeForm from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
@@ -63,7 +64,13 @@ export type CreateNftFormType = {
   attributes: { name: string; value: string }[]
   maxSupply: number
   mintableAmountPerUser: number
-  soulbound: "true" | "false" // Chakra's radio can only handle strings unfortunately
+
+  // Chakra's radio can only handle strings unfortunately
+  soulbound: "true" | "false"
+
+  // RolePlatform related
+  startTime?: string
+  endTime?: string
 }
 
 type Props = {
@@ -250,9 +257,15 @@ const NftDataForm = ({ isEditMode, children }: PropsWithChildren<Props>) => {
 
             <Divider />
 
+            <NftTypeInput />
             <SupplyInput />
             <MintPerAddressInput />
-            <NftTypeInput />
+            <StartEndTimeForm
+              platformType="CONTRACT_CALL"
+              control={control}
+              startTimeField="startTime"
+              endTimeField="endTime"
+            />
 
             <Divider />
 
