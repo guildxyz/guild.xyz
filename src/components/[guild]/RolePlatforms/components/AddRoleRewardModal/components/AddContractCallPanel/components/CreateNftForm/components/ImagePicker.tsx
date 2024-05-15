@@ -63,6 +63,7 @@ const ImagePicker = () => {
           sx={{
             "> div": {
               width: "100%",
+              height: "100%",
             },
           }}
         >
@@ -82,6 +83,7 @@ const ImagePicker = () => {
             <Img
               aspectRatio={1}
               objectFit="cover"
+              boxSize="full"
               src={imageField.value}
               alt="NFT image"
             />
