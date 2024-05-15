@@ -28,8 +28,8 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
   guildPlatform: { id, platformGuildData },
   onClose,
 }) => {
-  const { formState, control, handleSubmit } = useForm({
-    defaultValues: { ...platformGuildData },
+  const { formState, control, handleSubmit } = useForm<{ description: string }>({
+    defaultValues: { description: platformGuildData.description },
   })
 
   const toast = useToast()
