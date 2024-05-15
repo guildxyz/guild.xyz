@@ -147,17 +147,20 @@ const EditNftForm = ({
 
   return (
     <FormProvider {...methods}>
-      <NftDataForm isEditMode>
-        <Button
-          colorScheme="green"
-          isDisabled={shouldSwitchChain}
-          onClick={methods.handleSubmit(handleSubmitCallback)}
-          isLoading={isLoading}
-          loadingText="Saving"
-        >
-          Save
-        </Button>
-      </NftDataForm>
+      <NftDataForm
+        isEditMode
+        submitButton={
+          <Button
+            colorScheme="green"
+            isDisabled={shouldSwitchChain}
+            onClick={methods.handleSubmit(handleSubmitCallback)}
+            isLoading={isLoading}
+            loadingText="Saving"
+          >
+            Save
+          </Button>
+        }
+      />
     </FormProvider>
   )
 }

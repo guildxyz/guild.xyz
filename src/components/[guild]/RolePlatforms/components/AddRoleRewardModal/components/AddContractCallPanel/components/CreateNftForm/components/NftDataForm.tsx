@@ -23,6 +23,7 @@ import {
   Stack,
   Text,
   Textarea,
+  Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
 import StartEndTimeForm from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
@@ -31,7 +32,6 @@ import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
-import { PropsWithChildren } from "react"
 import {
   useController,
   useFieldArray,
@@ -75,9 +75,10 @@ export type CreateNftFormType = {
 
 type Props = {
   isEditMode?: boolean
+  submitButton: JSX.Element
 }
 
-const NftDataForm = ({ isEditMode, children }: PropsWithChildren<Props>) => {
+const NftDataForm = ({ isEditMode, submitButton }: Props) => {
   const { chainId, address } = useAccount()
   const { requestNetworkChange, isNetworkChangeInProgress } =
     useTriggerNetworkChange()
@@ -377,7 +378,17 @@ const NftDataForm = ({ isEditMode, children }: PropsWithChildren<Props>) => {
           >{`Switch to ${CHAIN_CONFIG[chain].name}`}</Button>
         )}
 
-        {children}
+        <Tooltip
+          label={
+            !!address
+              ? "Please switch to a supported chain"
+              : "Please connect an EVM wallet"
+          }
+          isDisabled={!!address && !shouldSwitchChain}
+          hasArrow
+        >
+          {submitButton}
+        </Tooltip>
       </HStack>
     </Stack>
   )

@@ -1,4 +1,3 @@
-import { Tooltip } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import Button from "components/common/Button"
@@ -62,16 +61,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
 
   return (
     <FormProvider {...methods}>
-      <NftDataForm>
-        <Tooltip
-          label={
-            isEvmConnected
-              ? "Please switch to a supported chain"
-              : "Please connect an EVM wallet"
-          }
-          isDisabled={isEvmConnected && !shouldSwitchChain}
-          hasArrow
-        >
+      <NftDataForm
+        submitButton={
           <Button
             data-test="create-nft-button"
             colorScheme="indigo"
@@ -86,8 +77,8 @@ const CreateNftForm = ({ onSuccess }: Props) => {
           >
             Create NFT & continue setup
           </Button>
-        </Tooltip>
-      </NftDataForm>
+        }
+      />
 
       <DynamicDevTool control={methods.control} />
     </FormProvider>
