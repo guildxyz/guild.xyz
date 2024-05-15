@@ -60,12 +60,14 @@ const ImagePicker = () => {
           variant="ghost"
           w="full"
           {...getRootProps()}
-          sx={{
-            "> div": {
-              width: "100%",
-              height: "100%",
-            },
-          }}
+          sx={
+            !!imageField.value && {
+              "> div": {
+                width: "100%",
+                height: "100%",
+              },
+            }
+          }
         >
           {isUploading ? (
             <VStack p={4}>
