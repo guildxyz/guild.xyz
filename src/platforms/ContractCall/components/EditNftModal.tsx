@@ -99,6 +99,7 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
                 startTime: getShortDate(rolePlatform.startTime),
                 endTime: getShortDate(rolePlatform.endTime),
               }}
+              onSuccess={onClose}
             />
           )}
         </ModalBody>
@@ -111,10 +112,12 @@ const EditNftForm = ({
   defaultValues,
   guildPlatformId,
   rolePlatformId,
+  onSuccess,
 }: {
   defaultValues: CreateNftFormType
   guildPlatformId: number
   rolePlatformId: number
+  onSuccess: () => void
 }) => {
   const methods = useForm<CreateNftFormType>({
     mode: "all",
@@ -128,7 +131,11 @@ const EditNftForm = ({
   })
   const shouldSwitchChain = Chains[chainId] !== chain
 
-  const { onSubmit, isLoading } = useEditNft(guildPlatformId, rolePlatformId)
+  const { onSubmit, isLoading } = useEditNft({
+    guildPlatformId,
+    rolePlatformId,
+    onSuccess,
+  })
 
   const handleSubmitCallback = useCallback(
     (data: CreateNftFormType) =>

@@ -6,7 +6,15 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useCallback } from "react"
 
-const useEditNft = (guildPlatformId: number, rolePlatformId: number) => {
+const useEditNft = ({
+  guildPlatformId,
+  rolePlatformId,
+  onSuccess,
+}: {
+  guildPlatformId: number
+  rolePlatformId: number
+  onSuccess: () => void
+}) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
   const showSuccessToast = useCallback(
@@ -51,22 +59,25 @@ const useEditNft = (guildPlatformId: number, rolePlatformId: number) => {
       const apiCalls = []
 
       if (Object.keys(apiData.rolePlatform).length > 0) {
-        console.log("TODO: edit rolePlatform")
-        // apiCalls.push(editRolePlatform.onSubmit(apiData.rolePlatform))
+        apiCalls.push(editRolePlatform.onSubmit(apiData.rolePlatform))
       }
 
       if (Object.keys(apiData.platformGuildData).length > 0) {
-        console.log("TODO: edit guildPlatform")
-        // apiCalls.push(
-        //   editGuildPlatform.onSubmit({
-        //     platformGuildData: apiData.platformGuildData,
-        //   })
-        // )
+        apiCalls.push(
+          editGuildPlatform.onSubmit({
+            platformGuildData: {
+              description: apiData.platformGuildData.richTextDescription,
+            },
+          })
+        )
       }
 
       // Handling the success/error state here, because we can't really "chain" these calls using our useEditGuildPlatform & useEditRolePlatform hooks
       Promise.all(apiCalls)
-        .then(() => showSuccessToast())
+        .then(() => {
+          showSuccessToast()
+          onSuccess()
+        })
         .catch((error) => showErrorToast(error))
     },
     onError: (error) => showErrorToast(error),
@@ -100,8 +111,7 @@ const separateContractAndAPIData = (data: Partial<CreateNftFormType>) => {
 
   for (const key of Object.keys(data)) {
     if (NFT_PLATFORM_GUILD_DATA_KEYS.includes(key as PlatformGuildDataKeys)) {
-      const keyToSet = key === "richTextDescription" ? "description" : key
-      apiData.platformGuildData[keyToSet] = data[key]
+      apiData.platformGuildData[key] = data[key]
     } else if (NFT_ROLE_PLATFORM_KEYS.includes(key as RolePlatformKeys)) {
       apiData.rolePlatform[key] = data[key]
     } else {
