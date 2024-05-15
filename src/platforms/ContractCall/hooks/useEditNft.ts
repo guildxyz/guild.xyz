@@ -1,11 +1,12 @@
 import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
+import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import { CreateNftFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/NftDataForm"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useCallback } from "react"
 
-const useEditNft = (guildPlatformId: number) => {
+const useEditNft = (guildPlatformId: number, rolePlatformId: number) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
   const showSuccessToast = useCallback(
@@ -19,7 +20,10 @@ const useEditNft = (guildPlatformId: number) => {
 
   const editGuildPlatform = useEditGuildPlatform({
     guildPlatformId,
-    onSuccess: showSuccessToast,
+  })
+
+  const editRolePlatform = useEditRolePlatform({
+    rolePlatformId,
   })
 
   const editNftContractCalls = async (data: Partial<CreateNftFormType>) => {
@@ -27,6 +31,7 @@ const useEditNft = (guildPlatformId: number) => {
 
     if (Object.keys(contractData).length > 0) {
       // TODO: multicall
+      console.log("TODO: multicall")
     }
 
     // Returning the data which we need to send to our API, so we can use it directly in editGuildPlatform.onSubmit
@@ -34,13 +39,35 @@ const useEditNft = (guildPlatformId: number) => {
   }
 
   const editNft = useSubmit(editNftContractCalls, {
-    onSuccess: (data) => {
-      const { apiData } = separateContractAndAPIData(data)
-      if (!Object.keys(apiData).length) {
+    onSuccess: (apiData) => {
+      if (
+        !Object.keys(apiData.rolePlatform).length &&
+        !Object.keys(apiData.platformGuildData).length
+      ) {
         showSuccessToast()
         return
       }
-      editGuildPlatform.onSubmit(apiData)
+
+      const apiCalls = []
+
+      if (Object.keys(apiData.rolePlatform).length > 0) {
+        console.log("TODO: edit rolePlatform")
+        // apiCalls.push(editRolePlatform.onSubmit(apiData.rolePlatform))
+      }
+
+      if (Object.keys(apiData.platformGuildData).length > 0) {
+        console.log("TODO: edit guildPlatform")
+        // apiCalls.push(
+        //   editGuildPlatform.onSubmit({
+        //     platformGuildData: apiData.platformGuildData,
+        //   })
+        // )
+      }
+
+      // Handling the success/error state here, because we can't really "chain" these calls using our useEditGuildPlatform & useEditRolePlatform hooks
+      Promise.all(apiCalls)
+        .then(() => showSuccessToast())
+        .catch((error) => showErrorToast(error))
     },
     onError: (error) => showErrorToast(error),
   })
@@ -51,17 +78,32 @@ const useEditNft = (guildPlatformId: number) => {
   }
 }
 
-const NFT_API_DATA_KEYS = [
+const NFT_PLATFORM_GUILD_DATA_KEYS = [
   "richTextDescription",
 ] as const satisfies (keyof CreateNftFormType)[]
-type APIDataKeys = (typeof NFT_API_DATA_KEYS)[number]
+const NFT_ROLE_PLATFORM_KEYS = [
+  "startTime",
+  "endTime",
+] as const satisfies (keyof CreateNftFormType)[]
+type PlatformGuildDataKeys = (typeof NFT_PLATFORM_GUILD_DATA_KEYS)[number]
+type RolePlatformKeys = (typeof NFT_ROLE_PLATFORM_KEYS)[number]
+
 const separateContractAndAPIData = (data: Partial<CreateNftFormType>) => {
-  const apiData: Partial<Pick<CreateNftFormType, APIDataKeys>> = {}
-  const contractData: Partial<Omit<CreateNftFormType, APIDataKeys>> = {}
+  const apiData: {
+    platformGuildData: Partial<Pick<CreateNftFormType, PlatformGuildDataKeys>>
+    rolePlatform: Partial<Pick<CreateNftFormType, RolePlatformKeys>>
+  } = { platformGuildData: {}, rolePlatform: {} }
+
+  const contractData: Partial<
+    Omit<CreateNftFormType, PlatformGuildDataKeys & RolePlatformKeys>
+  > = {}
 
   for (const key of Object.keys(data)) {
-    if (NFT_API_DATA_KEYS.includes(key as APIDataKeys)) {
-      apiData[key] = data[key]
+    if (NFT_PLATFORM_GUILD_DATA_KEYS.includes(key as PlatformGuildDataKeys)) {
+      const keyToSet = key === "richTextDescription" ? "description" : key
+      apiData.platformGuildData[keyToSet] = data[key]
+    } else if (NFT_ROLE_PLATFORM_KEYS.includes(key as RolePlatformKeys)) {
+      apiData.rolePlatform[key] = data[key]
     } else {
       contractData[key] = data[key]
     }
