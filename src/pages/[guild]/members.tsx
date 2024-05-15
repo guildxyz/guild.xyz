@@ -160,9 +160,9 @@ const MembersPage = (): JSX.Element => {
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
-  // TODO: keep row selection when the data changes. Right now we just reset the selection
   const handleSetColumnFilters = (props) => {
     setRowSelection({})
+    setSize(1)
     setColumnFilters(props)
   }
   const handleSetSorting = (props) => {
