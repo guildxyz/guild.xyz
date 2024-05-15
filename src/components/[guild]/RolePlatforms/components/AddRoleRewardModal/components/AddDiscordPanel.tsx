@@ -15,7 +15,7 @@ const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
           guildPlatform: {
             platformName: "DISCORD",
             platformId: PlatformType.DISCORD,
-            platformGuildId: data?.platformGuildId,
+            platformGuildId: data?.id,
             platformGuildData: {
               name: data?.name,
               imageUrl: data?.img,

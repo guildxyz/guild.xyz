@@ -3,6 +3,7 @@ import { ContractCallFunction } from "components/[guild]/RolePlatforms/component
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -10,6 +11,7 @@ import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
 import legacyGuildRewardNftAbi from "static/abis/legacyGuildRewardNft"
+import { PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
@@ -62,6 +64,7 @@ const isClaimArgs = (args: ClaimData["data"]["args"]): args is ClaimArgs => {
 
 const useCollectNft = () => {
   const { captureEvent } = usePostHogContext()
+  const { rewardClaimed } = useCustomPosthogEvents()
   const { id: guildId, urlName } = useGuild()
   const postHogOptions = { guild: urlName }
 
@@ -176,6 +179,8 @@ const useCollectNft = () => {
   return {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
+        rewardClaimed(PlatformType.CONTRACT_CALL)
+
         const amount = getValues("amount")
 
         setLoadingText("")

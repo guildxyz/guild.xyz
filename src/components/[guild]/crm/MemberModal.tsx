@@ -16,6 +16,7 @@ import CopyableAddress from "components/common/CopyableAddress"
 import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
 import useResolveAddress from "hooks/useResolveAddress"
+import useGuild from "../hooks/useGuild"
 import { WalletTag } from "./Identities"
 import { ClickableCrmRoleTag } from "./RoleTags"
 import { Member } from "./useMembers"
@@ -28,6 +29,7 @@ type Props = {
 }
 
 const MemberModal = ({ row, isOpen, onClose }: Props) => {
+  const { roles: rolesData } = useGuild()
   const { addresses, platformUsers, roles, joinedAt, isShared } = row.original
 
   const rolesColumn = row
@@ -89,9 +91,9 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
               .map(({ roleId, amount }) => (
                 <ClickableCrmRoleTag
                   key={roleId}
-                  roleId={roleId}
+                  role={rolesData.find((r) => r.id === roleId) as any}
                   amount={amount}
-                  column={rolesColumn}
+                  setFilterValue={rolesColumn.setFilterValue}
                   onFilter={onClose}
                 />
               ))}

@@ -76,14 +76,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 }
 
 const AccessHub = (): JSX.Element => {
-  const {
-    id: guildId,
-    featureFlags,
-    guildPin,
-    groups,
-    roles,
-    onboardingComplete,
-  } = useGuild()
+  const { featureFlags, guildPin, groups, roles, onboardingComplete } = useGuild()
 
   const group = useRoleGroup()
   const { isAdmin } = useGuildPermission()
@@ -117,7 +110,6 @@ const AccessHub = (): JSX.Element => {
           mb={10}
         >
           <CampaignCards />
-          {guildId === 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
 
           {accessedGuildPlatforms?.map((platform) => (
             <AccessedGuildPlatformCard key={platform.id} platform={platform} />
@@ -154,7 +146,7 @@ const AccessHub = (): JSX.Element => {
               </Card>
             )}
 
-          {guildId !== 1985 && shouldShowGuildPin && <DynamicGuildPinRewardCard />}
+          {shouldShowGuildPin && <DynamicGuildPinRewardCard />}
         </SimpleGrid>
       </Collapse>
     </ClientOnly>

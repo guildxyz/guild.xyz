@@ -7,17 +7,18 @@ import {
   Stack,
   useColorModeValue,
 } from "@chakra-ui/react"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import OptionCard from "components/common/OptionCard"
+import { Gateables } from "hooks/useGateables"
 import NextLink from "next/link"
 import { fileTypeNames } from "platforms/Google/useGoogleCardProps"
-import usePlatformUsageInfo from "platforms/hooks/usePlatformUsageInfo"
-import { GoogleFile } from "types"
+import { PlatformType } from "types"
 
 type Props = {
-  file: GoogleFile
+  file: Gateables[PlatformType.GOOGLE][number]
   onSelect?: (platformGuildId: string) => void
   onCancel?: () => void
 }
@@ -25,8 +26,9 @@ type Props = {
 const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
   const imageBgColor = useColorModeValue("gray.100", "gray.600")
 
-  const { isAlreadyInUse, isUsedInCurrentGuild, guildUrlName, isValidating } =
-    usePlatformUsageInfo("GOOGLE", file.platformGuildId)
+  const { id } = useGuild() ?? {}
+
+  const isUsedInCurrentGuild = file.isGuilded && file.guildId === id
 
   if (isUsedInCurrentGuild) return null
 
@@ -43,12 +45,10 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
         }
       >
         <Stack w="full" spacing={4} justifyContent="space-between" h="full">
-          {isValidating ? (
-            <Button isLoading />
-          ) : isAlreadyInUse ? (
+          {file.isGuilded ? (
             <Button
               as={NextLink}
-              href={`/${guildUrlName}`}
+              href={`/${file.guildId}`}
               colorScheme="gray"
               minW="max-content"
             >
