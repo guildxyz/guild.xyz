@@ -1,4 +1,4 @@
-import { Collapse, Divider, Flex, Text } from "@chakra-ui/react"
+import { Collapse, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -6,8 +6,8 @@ import Button from "components/common/Button"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
+import BaseValueModal from "../DynamicSetup/BaseValueModal"
 import DynamicSetupButton from "../DynamicSetup/DynamicSetupButton"
-import DynamicSetupFlow from "../DynamicSetup/DynamicSetupFlow"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
 import SetPointsAmount from "./components/SetPointsAmount"
@@ -79,6 +79,8 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       },
     })
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <FormProvider {...methods}>
       <Text colorScheme="gray" fontWeight="semibold" mb="8">
@@ -109,8 +111,9 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
 
       <LogicDivider logic="OR" my={3} />
-      <DynamicSetupButton onClick={() => {}} />
-      <DynamicSetupFlow />
+      <DynamicSetupButton onClick={onOpen} />
+
+      <BaseValueModal isOpen={isOpen} onClose={onClose} onSelect={() => {}} />
 
       <Flex justifyContent={"flex-end"} mt="auto" pt="10">
         <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>

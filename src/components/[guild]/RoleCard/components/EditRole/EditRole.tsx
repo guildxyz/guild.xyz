@@ -73,9 +73,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
   const { captureEvent } = usePostHogContext()
-
   const setTargetRole = useSetAtom(targetRoleAtom)
-  setTargetRole(roleId)
 
   const { roles } = useGuild()
   const {
@@ -122,6 +120,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   const handleOpen = () => {
     onOpen()
+    setTargetRole(roleId)
     // needed for correct remove platform behavior after adding new platform -> saving -> opening edit again
     setValue("rolePlatforms", rolePlatforms ?? [])
   }

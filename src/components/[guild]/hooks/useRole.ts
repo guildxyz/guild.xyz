@@ -14,38 +14,28 @@ const useRole = (guildId: number | string, roleId: number) => {
   const isFromCurrentGuild = guildId === id
   const shouldFetch = !!guildId && !!roleId && !isFromCurrentGuild
 
-  const {
-    data: unauthenticatedData,
-    isLoading: isUnauthenticatedRequestLoading,
-    mutate: mutateUnaunthenticated,
-  } = useSWRImmutable<Role>(shouldFetch ? url : null, {
-    shouldRetryOnError: false,
-  })
+  const { data: unauthenticatedData, isLoading: isUnauthenticatedRequestLoading } =
+    useSWRImmutable<Role>(shouldFetch ? url : null, {
+      shouldRetryOnError: false,
+    })
 
   const fetcherWithSign = useFetcherWithSign()
-  const {
-    data: authenticatedData,
-    isLoading: isAuthenticatedRequestLoading,
-    mutate: mutateAuthenticated,
-  } = useSWRImmutable<Role>(
-    shouldFetch && !isUnauthenticatedRequestLoading && !unauthenticatedData
-      ? [url, { method: "GET", body: {} }]
-      : null,
-    fetcherWithSign,
-    {
-      shouldRetryOnError: false,
-    }
-  )
+  const { data: authenticatedData, isLoading: isAuthenticatedRequestLoading } =
+    useSWRImmutable<Role>(
+      shouldFetch && !isUnauthenticatedRequestLoading && !unauthenticatedData
+        ? [url, { method: "GET", body: {} }]
+        : null,
+      fetcherWithSign,
+      {
+        shouldRetryOnError: false,
+      }
+    )
 
   return {
     ...(isFromCurrentGuild
       ? roles.find((role) => role.id === roleId)
       : unauthenticatedData || authenticatedData),
     isLoading: isUnauthenticatedRequestLoading || isAuthenticatedRequestLoading,
-    mutate: () => {
-      mutateUnaunthenticated()
-      mutateAuthenticated()
-    },
   }
 }
 
