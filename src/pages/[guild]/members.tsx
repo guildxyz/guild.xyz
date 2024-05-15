@@ -89,7 +89,10 @@ const columns = [
                 })`}
           </Text>
           <HStack spacing="0">
-            <FilterByRoles column={column} />
+            <FilterByRoles
+              getFilterValue={column.getFilterValue}
+              setFilterValue={column.setFilterValue}
+            />
             <OrderByColumn label="Number of roles" column={column} />
           </HStack>
         </HStack>
