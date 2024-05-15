@@ -49,7 +49,7 @@ const StartEndTimeForm = <TFieldValues, TContext>({
     >
       <FormControl>
         <FormLabel>
-          {"From "}
+          {"Available from "}
           <Text as="span" colorScheme="gray">
             (UTC)
           </Text>
