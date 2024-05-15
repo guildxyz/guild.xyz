@@ -26,13 +26,8 @@ const useEditNft = ({
     [toast]
   )
 
-  const editGuildPlatform = useEditGuildPlatform({
-    guildPlatformId,
-  })
-
-  const editRolePlatform = useEditRolePlatform({
-    rolePlatformId,
-  })
+  const editGuildPlatform = useEditGuildPlatform({ guildPlatformId })
+  const editRolePlatform = useEditRolePlatform({ rolePlatformId })
 
   const editNftContractCalls = async (data: Partial<CreateNftFormType>) => {
     const { contractData, apiData } = separateContractAndAPIData(data)
