@@ -60,7 +60,6 @@ const PoapCardButton = ({ platform }: Props) => {
               isOpen={isOpen}
               onClose={onClose}
               guildPlatformId={platform?.id}
-              platformGuildData={platform?.platformGuildData}
             />
           </>
         ) : (

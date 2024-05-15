@@ -89,7 +89,10 @@ const columns = [
                 })`}
           </Text>
           <HStack spacing="0">
-            <FilterByRoles column={column} />
+            <FilterByRoles
+              getFilterValue={column.getFilterValue}
+              setFilterValue={column.setFilterValue}
+            />
             <OrderByColumn label="Number of roles" column={column} />
           </HStack>
         </HStack>
@@ -157,9 +160,9 @@ const MembersPage = (): JSX.Element => {
 
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
-  // TODO: keep row selection when the data changes. Right now we just reset the selection
   const handleSetColumnFilters = (props) => {
     setRowSelection({})
+    setSize(1)
     setColumnFilters(props)
   }
   const handleSetSorting = (props) => {
