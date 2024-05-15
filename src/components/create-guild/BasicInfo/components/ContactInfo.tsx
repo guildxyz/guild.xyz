@@ -14,7 +14,6 @@ import {
 import Button from "components/common/Button"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
-import { useThrottledRegister } from "components/create-guild/hooks/useThrottledRegister"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import { Controller, useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, SelectOption } from "types"
@@ -37,7 +36,6 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
     resetField,
     formState: { errors },
   } = useFormContext<GuildFormType>()
-  const { throttledRegister } = useThrottledRegister(register, 300)
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -94,7 +92,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
                         ? `E-mail address`
                         : "Phone / Telegram username"
                     }
-                    {...throttledRegister(`contacts.${index}.contact`, {
+                    {...register(`contacts.${index}.contact`, {
                       required: "This field is required",
                       pattern:
                         getValues(`contacts.${index}.type`) === "EMAIL"

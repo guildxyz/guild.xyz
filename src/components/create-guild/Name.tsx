@@ -1,7 +1,6 @@
 import { FormControl, Input, ResponsiveValue } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext } from "react-hook-form"
-import { useThrottledRegister } from "./hooks/useThrottledRegister"
 
 type Props = {
   isDisabled?: boolean
@@ -18,7 +17,6 @@ const Name = ({
     register,
     formState: { errors },
   } = useFormContext()
-  const { throttledRegister } = useThrottledRegister(register, 300)
 
   return (
     <FormControl
@@ -29,7 +27,7 @@ const Name = ({
     >
       <Input
         size="lg"
-        {...throttledRegister("name", {
+        {...register("name", {
           required: "This field is required.",
           maxLength: {
             value: 50,
