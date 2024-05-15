@@ -16,7 +16,10 @@ const options = [
 
 const NftTypeInput = () => {
   const { control } = useFormContext<CreateNftFormType>()
-  const { field: soulboundField } = useController({
+  const {
+    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
+    field: { ref: _ref, ...soulboundField },
+  } = useController({
     control,
     name: "soulbound",
     defaultValue: "false",
