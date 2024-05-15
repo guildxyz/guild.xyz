@@ -11,9 +11,15 @@ import NftDataForm, {
   CreateNftFormType,
 } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/NftDataForm"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import {
+  datetimeLocalToIsoString,
+  getShortDate,
+} from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
+import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
+import { useCallback } from "react"
 import { FormProvider, FormState, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import { formatUnits } from "viem"
@@ -33,6 +39,12 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
     contractAddress,
     description: platformGuildDataDescription,
   } = guildPlatform.platformGuildData
+
+  const { roles } = useGuild()
+  const rolePlatform = roles
+    .flatMap((role) => role.rolePlatforms)
+    .find((rp) => rp.guildPlatformId === guildPlatform.id)
+
   const {
     maxSupply,
     mintableAmountPerUser,
@@ -66,6 +78,7 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
           ) : (
             <EditNftForm
               guildPlatformId={guildPlatform.id}
+              rolePlatformId={rolePlatform.id}
               defaultValues={{
                 chain: chain as ContractCallSupportedChain,
                 tokenTreasury: treasury,
@@ -83,6 +96,8 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
                 maxSupply: Number(maxSupply),
                 mintableAmountPerUser: Number(mintableAmountPerUser),
                 soulbound: soulbound ? "true" : "false",
+                startTime: getShortDate(rolePlatform.startTime),
+                endTime: getShortDate(rolePlatform.endTime),
               }}
             />
           )}
@@ -95,9 +110,11 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
 const EditNftForm = ({
   defaultValues,
   guildPlatformId,
+  rolePlatformId,
 }: {
   defaultValues: CreateNftFormType
   guildPlatformId: number
+  rolePlatformId: number
 }) => {
   const methods = useForm<CreateNftFormType>({
     mode: "all",
@@ -111,7 +128,22 @@ const EditNftForm = ({
   })
   const shouldSwitchChain = Chains[chainId] !== chain
 
-  const { onSubmit, isLoading } = useEditNft(guildPlatformId)
+  const { onSubmit, isLoading } = useEditNft(guildPlatformId, rolePlatformId)
+
+  const handleSubmitCallback = useCallback(
+    (data: CreateNftFormType) =>
+      onSubmit(
+        getNftDataFormDirtyFields(
+          {
+            ...data,
+            startTime: datetimeLocalToIsoString(data.startTime),
+            endTime: datetimeLocalToIsoString(data.endTime),
+          },
+          methods.formState.dirtyFields
+        )
+      ),
+    [methods.formState.dirtyFields, onSubmit]
+  )
 
   return (
     <FormProvider {...methods}>
@@ -119,9 +151,7 @@ const EditNftForm = ({
         <Button
           colorScheme="green"
           isDisabled={shouldSwitchChain}
-          onClick={methods.handleSubmit((data) =>
-            onSubmit(getNftDataFormDirtyFields(data, methods.formState.dirtyFields))
-          )}
+          onClick={methods.handleSubmit(handleSubmitCallback)}
           isLoading={isLoading}
           loadingText="Saving"
         >
@@ -144,6 +174,7 @@ const getNftDataFormDirtyFields = (
     attributes,
     ...rootFields
   } = data
+
   const { attributes: dirtyAttributes, ...dirtyRootFields } = dirtyFields
 
   const hasDirtyAttributes = dirtyAttributes?.some((attr) => attr.name || attr.value)
@@ -154,7 +185,7 @@ const getNftDataFormDirtyFields = (
     filteredData.attributes = attributes
   }
 
-  for (const key in Object.keys(dirtyRootFields)) {
+  for (const key of Object.keys(dirtyRootFields)) {
     filteredData[key] = rootFields[key]
   }
 
