@@ -5,6 +5,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
+import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import {
@@ -200,7 +201,7 @@ const RolePlatformCard = ({
           )
         }
         contentRow={
-          (CAPACITY_TIME_PLATFORMS.includes(type) || isLegacyContractCallReward) && (
+          CAPACITY_TIME_PLATFORMS.includes(type) || isLegacyContractCallReward ? (
             <AvailabilitySetup
               platformType={type}
               rolePlatform={rolePlatform}
@@ -221,7 +222,13 @@ const RolePlatformCard = ({
                 })
               }}
             />
-          )
+          ) : type === "CONTRACT_CALL" ? (
+            <NftAvailabilityTags
+              guildPlatform={guildPlatform}
+              rolePlatform={rolePlatform}
+              mt={1}
+            />
+          ) : null
         }
       />
     </RolePlatformProvider>

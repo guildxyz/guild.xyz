@@ -9,7 +9,10 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import { PropsWithChildren } from "react"
 import { GuildPlatform, RolePlatform } from "types"
 
-type Props = { guildPlatform: GuildPlatform; rolePlatform: RolePlatform } & WrapProps
+type Props = {
+  guildPlatform: GuildPlatform
+  rolePlatform: Omit<RolePlatform, "id" | "guildPlatform">
+} & WrapProps
 
 const NftAvailabilityTags = ({
   guildPlatform,
