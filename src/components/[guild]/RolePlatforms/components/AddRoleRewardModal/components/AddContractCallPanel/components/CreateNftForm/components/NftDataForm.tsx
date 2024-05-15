@@ -105,7 +105,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
   } = useController({
     control,
     name: "price",
-    defaultValue: 0, // TODO:
+    defaultValue: 0,
     rules: {
       min: {
         value: 0,
