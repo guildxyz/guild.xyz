@@ -153,7 +153,7 @@ const MembersPage = (): JSX.Element => {
     if (!isReady || !queryString) return
 
     const path = asPath.split("?")[0]
-    replace(`${path}?${queryString}`)
+    replace(`${path}?${queryString}`, null, { scroll: false })
     // replace is intentionally left out
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady, queryString, asPath])
