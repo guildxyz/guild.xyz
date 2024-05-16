@@ -39,6 +39,7 @@ const TxSuccess = ({
                 transform: "translate(-50%, -50%)",
                 width: "var(--chakra-sizes-80)",
                 height: "var(--chakra-sizes-80)",
+                pointerEvents: "none",
               }}
               src="/success_lottie.json"
               className="keep-colors"
