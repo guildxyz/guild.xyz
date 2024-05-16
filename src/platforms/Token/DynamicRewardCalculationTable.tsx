@@ -1,11 +1,11 @@
 import { HStack, Icon, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { X } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { PlatformType, Requirement, RolePlatform } from "types"
+import useDynamicRewardUserAmount from "./hooks/useDynamicRewardUserAmount"
 
 type Props = {
   requirement: Requirement
@@ -13,15 +13,10 @@ type Props = {
 }
 
 const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => {
-  const { reqAccesses } = useRoleMembership(rolePlatform.roleId)
-  const { amount: reqProvidedValue } =
-    reqAccesses?.find((req) => req.requirementId === requirement.id) ?? {}
+  const { rawProvidedUserAmount, dynamicUserAmount, isLoading } =
+    useDynamicRewardUserAmount(rolePlatform)
 
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
-  const dynamicAmount: any = rolePlatform.dynamicAmount
-  const { addition, multiplier } = dynamicAmount.operation.params
-
-  const total = reqProvidedValue * multiplier + addition
 
   const propsHook =
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
@@ -41,14 +36,14 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
             <Skeleton
               ml="auto"
               height={7}
-              isLoaded={!isNaN(total)}
+              isLoaded={!isLoading}
               display={"flex"}
               alignItems={"center"}
               gap={1}
             >
               <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />{" "}
               <Text>
-                {total} {rewardName}
+                {dynamicUserAmount ?? "some"} {rewardName}
               </Text>
             </Skeleton>
           </HStack>
@@ -60,20 +55,21 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
           >
             <ProvidedValueDisplay requirement={requirement} />
           </Td>
-          <Td isNumeric>{reqProvidedValue}</Td>
+          <Td isNumeric>{rawProvidedUserAmount}</Td>
         </Tr>
 
         <Tr>
           <Td>Multiplier</Td>
           <Td isNumeric>
-            <Icon boxSize={3} mb={"-1px"} as={X} /> {multiplier}
+            <Icon boxSize={3} mb={"-1px"} as={X} />{" "}
+            {(rolePlatform.dynamicAmount.operation as any).params.multiplier}
           </Td>
         </Tr>
 
         <Tr>
           <Td>Total</Td>
           <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
-            {total} {rewardName}
+            {dynamicUserAmount} {rewardName}
           </Td>
         </Tr>
       </FeesTable>

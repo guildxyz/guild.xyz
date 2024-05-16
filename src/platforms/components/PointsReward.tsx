@@ -9,29 +9,19 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowRight, Check } from "phosphor-react"
-import { useMemo } from "react"
+import useDynamicRewardUserAmount from "platforms/Token/hooks/useDynamicRewardUserAmount"
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
   const { platformGuildData } = platform.guildPlatform
   const name = platformGuildData?.name || "points"
 
-  const { hasRoleAccess, reqAccesses } = useRoleMembership(platform.roleId)
+  const { hasRoleAccess } = useRoleMembership(platform.roleId)
+  const { dynamicUserAmount } = useDynamicRewardUserAmount(platform)
 
-  const score = useMemo(() => {
-    const dynamicAmount: any = platform?.dynamicAmount
-    if (!dynamicAmount) return platform.platformRoleData?.score
-
-    const { addition, multiplier } = dynamicAmount.operation.params ?? {}
-    const linkedRequirementId = dynamicAmount.operation.input[0].requirementId
-    const linkedRequirement = reqAccesses?.find(
-      (req) => req.requirementId === linkedRequirementId
-    )
-
-    if (!linkedRequirement) return "some"
-
-    return linkedRequirement.amount * multiplier + addition
-  }, [platform, reqAccesses])
+  const score = platform?.dynamicAmount
+    ? dynamicUserAmount ?? "some"
+    : platform.platformRoleData?.score
 
   const iconColor = useColorModeValue("green.500", "green.300")
 
