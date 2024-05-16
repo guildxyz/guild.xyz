@@ -29,7 +29,7 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
     ) || null
 
   const score = !!dynamicAmount
-    ? linkedRequirement.amount * multiplier + addition
+    ? linkedRequirement?.amount * multiplier + addition
     : platform.platformRoleData?.score
 
   const iconColor = useColorModeValue("green.500", "green.300")
