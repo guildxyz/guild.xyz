@@ -99,6 +99,7 @@ const useEditNft = ({
         !Object.keys(apiData.platformGuildData).length
       ) {
         showSuccessToast()
+        onSuccess()
         return
       }
 
