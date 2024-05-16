@@ -238,8 +238,6 @@ const functionEncoders: Record<
   setFee: async ({ dirtyData, chain }) => {
     if (typeof dirtyData.price === "undefined") return undefined
 
-    console.log("functionEncoders:setFee")
-
     const fee = parseUnits(
       dirtyData.price.toString(),
       CHAIN_CONFIG[chain].nativeCurrency.decimals
@@ -254,8 +252,6 @@ const functionEncoders: Record<
   setLocked: async ({ dirtyData }) => {
     if (typeof dirtyData.soulbound === "undefined") return undefined
 
-    console.log("functionEncoders:setLocked")
-
     return encodeFunctionData({
       abi: guildRewardNftAbi,
       functionName: "setLocked",
@@ -264,8 +260,6 @@ const functionEncoders: Record<
   },
   setMaxSupply: async ({ dirtyData }) => {
     if (typeof dirtyData.maxSupply === "undefined") return undefined
-
-    console.log("functionEncoders:setMaxSupply")
 
     return encodeFunctionData({
       abi: guildRewardNftAbi,
@@ -276,8 +270,6 @@ const functionEncoders: Record<
   setMintableAmountPerUser: async ({ dirtyData }) => {
     if (typeof dirtyData.mintableAmountPerUser === "undefined") return undefined
 
-    console.log("functionEncoders:setMintableAmountPerUser")
-
     return encodeFunctionData({
       abi: guildRewardNftAbi,
       functionName: "setMintableAmountPerUser",
@@ -286,8 +278,6 @@ const functionEncoders: Record<
   },
   setTreasury: async ({ dirtyData }) => {
     if (typeof dirtyData.tokenTreasury === "undefined") return undefined
-
-    console.log("functionEncoders:setTreasury")
 
     return encodeFunctionData({
       abi: guildRewardNftAbi,
@@ -302,8 +292,6 @@ const functionEncoders: Record<
       typeof dirtyData.description === "undefined"
     )
       return undefined
-
-    console.log("functionEncoders:updateTokenURI")
 
     const metadata = generateGuildRewardNFTMetadata(data)
     const metadataJSON = JSON.stringify(metadata)
