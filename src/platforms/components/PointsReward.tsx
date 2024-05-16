@@ -16,7 +16,7 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { platformGuildData } = platform.guildPlatform
   const name = platformGuildData?.name || "points"
 
-  const { hasRoleAccess, membership } = useRoleMembership(platform.roleId)
+  const { hasRoleAccess, reqAccesses } = useRoleMembership(platform.roleId)
 
   const score = useMemo(() => {
     const dynamicAmount: any = platform?.dynamicAmount
@@ -24,14 +24,14 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
 
     const { addition, multiplier } = dynamicAmount.operation.params ?? {}
     const linkedRequirementId = dynamicAmount.operation.input[0].requirementId
-    const linkedRequirement = membership?.requirements.find(
+    const linkedRequirement = reqAccesses?.find(
       (req) => req.requirementId === linkedRequirementId
     )
 
     if (!linkedRequirement) return "some"
 
     return linkedRequirement.amount * multiplier + addition
-  }, [platform, membership?.requirements])
+  }, [platform, reqAccesses])
 
   const iconColor = useColorModeValue("green.500", "green.300")
 

@@ -13,10 +13,9 @@ type Props = {
 }
 
 const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => {
-  const { membership } = useRoleMembership(rolePlatform.roleId)
+  const { reqAccesses } = useRoleMembership(rolePlatform.roleId)
   const { amount: reqProvidedValue } =
-    membership?.requirements.find((req) => req.requirementId === requirement.id) ??
-    {}
+    reqAccesses?.find((req) => req.requirementId === requirement.id) ?? {}
 
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
   const dynamicAmount: any = rolePlatform.dynamicAmount
