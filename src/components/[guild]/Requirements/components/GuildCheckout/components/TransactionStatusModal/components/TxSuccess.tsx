@@ -31,13 +31,14 @@ const TxSuccess = ({
           <Center mb={10} position="relative" width="full" height={28}>
             <DotLottiePlayer
               autoplay
+              // The checkmark fills around 30% of the SVG, so we can scale it up here
               style={{
                 position: "absolute",
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "var(--chakra-sizes-56)",
-                height: "var(--chakra-sizes-56)",
+                width: "var(--chakra-sizes-80)",
+                height: "var(--chakra-sizes-80)",
               }}
               src="/success_lottie.json"
               className="keep-colors"
