@@ -24,12 +24,13 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
 
     const { addition, multiplier } = dynamicAmount.operation.params ?? {}
     const linkedRequirementId = dynamicAmount.operation.input[0].requirementId
-    const linkedRequirement =
-      membership?.requirements.find(
-        (req) => req.requirementId === linkedRequirementId
-      ) || null
+    const linkedRequirement = membership?.requirements.find(
+      (req) => req.requirementId === linkedRequirementId
+    )
 
-    return linkedRequirement?.amount * multiplier + addition
+    if (!linkedRequirement) return "some"
+
+    return linkedRequirement.amount * multiplier + addition
   }, [platform, membership?.requirements])
 
   const iconColor = useColorModeValue("green.500", "green.300")
