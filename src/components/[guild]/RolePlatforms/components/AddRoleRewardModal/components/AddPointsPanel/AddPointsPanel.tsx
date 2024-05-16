@@ -1,22 +1,22 @@
-import { Collapse, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
-import LogicDivider from "components/[guild]/LogicDivider"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import Button from "components/common/Button"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
-import BaseValueModal from "../DynamicSetup/BaseValueModal"
-import DynamicSetupButton from "../DynamicSetup/DynamicSetupButton"
-import AddNewPointsType from "./components/AddNewPointsType"
-import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
-import SetPointsAmount from "./components/SetPointsAmount"
+import ConversionSetup from "../DynamicSetup/ConversionSetup"
+import PointsRewardSetup from "./components/RewardSetup"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
   amount: string
   name: string
   imageUrl: string
+}
+
+const steps: Record<string, (onSubmit) => JSX.Element> = {
+  REWARD_SETUP: PointsRewardSetup,
+  CONVERSION_SETUP: ConversionSetup,
 }
 
 const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -39,15 +39,6 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
     control,
     name: "data.guildPlatformId",
   })
-  const localName = useWatch({ control, name: "name" })
-  const localImageUrl = useWatch({ control, name: "imageUrl" })
-
-  const { name: selectedName, imageUrl: selectedImageUrl } =
-    existingPointsRewards?.find((gp) => gp.id === selectedExistingId)
-      ?.platformGuildData ?? {}
-
-  const name = selectedName ?? localName
-  const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
   const onSubmit = (data: AddPointsFormType) =>
     onAdd({
@@ -79,47 +70,12 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       },
     })
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { step } = useAddRewardContext()
+  const SetupStep = steps[step]
 
   return (
     <FormProvider {...methods}>
-      <Text colorScheme="gray" fontWeight="semibold" mb="8">
-        Gamify your guild with a score system, so users can collect points / XP /
-        your custom branded score, and compete on a leaderboard. You’ll also be able
-        to set points based requirements for satisfying higher level roles!
-      </Text>
-      {!!existingPointsRewards.length && (
-        <ExistingPointsTypeSelect
-          existingPointsRewards={existingPointsRewards}
-          selectedExistingId={selectedExistingId}
-          showCreateNew
-          mb="5"
-        />
-      )}
-      <Collapse
-        in={!existingPointsRewards.length || selectedExistingId === null}
-        style={{ flexShrink: 0 }}
-      >
-        <AddNewPointsType
-          name={name}
-          imageUrl={imageUrl}
-          isOptional={!existingPointsRewards.length}
-        />
-        <Divider mt={8} mb={7} />
-      </Collapse>
-
-      <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
-
-      <LogicDivider logic="OR" my={3} />
-      <DynamicSetupButton onClick={onOpen} />
-
-      <BaseValueModal isOpen={isOpen} onClose={onClose} onSelect={() => {}} />
-
-      <Flex justifyContent={"flex-end"} mt="auto" pt="10">
-        <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
-          Continue
-        </Button>
-      </Flex>
+      <SetupStep onSubmit={onSubmit} />
     </FormProvider>
   )
 }

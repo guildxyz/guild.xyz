@@ -19,13 +19,14 @@ import AddRequirement from "components/create-guild/Requirements/components/AddR
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import { useAtomValue } from "jotai"
 import { CaretRight } from "phosphor-react"
+import { useFormContext } from "react-hook-form"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Requirement } from "types"
 
 type Props = {
   isOpen: boolean
   onClose: () => void
-  onSelect: (roleId: number) => void
+  onSelect: (reqId: number) => void
 }
 
 const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
@@ -58,6 +59,13 @@ const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
     </VStack>
   )
 
+  const { setValue } = useFormContext()
+
+  const handleSelect = (reqId: number) => {
+    setValue("dynamic.requirementId", reqId)
+    onSelect(reqId)
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -76,7 +84,12 @@ const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
                   ) : (
                     <>
                       {dynamicRequirements.map((req) => (
-                        <DisplayCard key={req.id} bg={optionBg} py={3}>
+                        <DisplayCard
+                          key={req.id}
+                          bg={optionBg}
+                          py={3}
+                          onClick={() => handleSelect(req.id)}
+                        >
                           <RequirementDisplayComponent
                             requirement={req}
                             dynamicDisplay
