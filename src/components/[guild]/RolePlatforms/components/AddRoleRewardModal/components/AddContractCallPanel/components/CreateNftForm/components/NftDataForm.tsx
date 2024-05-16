@@ -29,9 +29,11 @@ import {
 import StartEndTimeForm from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
+import CheckboxColorCard from "components/common/CheckboxColorCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import { SectionTitle } from "components/common/Section"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
-import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
+import { ArrowSquareOut, Clock, Hash, Plus, TrashSimple } from "phosphor-react"
 import {
   useController,
   useFieldArray,
@@ -86,7 +88,8 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
   const {
     control,
     register,
-    formState: { errors },
+    setValue,
+    formState: { errors, defaultValues },
   } = useFormContext<CreateNftFormType>()
 
   const chain = useWatch({
@@ -259,16 +262,6 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
             <Divider />
 
             <NftTypeInput />
-            <SupplyInput />
-            <MintPerAddressInput />
-            <StartEndTimeForm
-              platformType="CONTRACT_CALL"
-              control={control}
-              startTimeField="startTime"
-              endTimeField="endTime"
-            />
-
-            <Divider />
 
             <ChainPicker
               controlName="chain"
@@ -364,6 +357,58 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
 
               <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
             </FormControl>
+
+            <Divider />
+
+            <Stack spacing={2}>
+              <SectionTitle
+                title="Limit NFT availability"
+                fontSize="md"
+                fontWeight="medium"
+              />
+
+              <CheckboxColorCard
+                colorScheme="indigo"
+                icon={Hash}
+                title="Limit supply"
+                description="First come, first served. Max-cap the number of NFTs that can be minted (globally and per user)"
+                defaultChecked={
+                  defaultValues.maxSupply > 0 ||
+                  defaultValues.mintableAmountPerUser > 0
+                }
+                onChange={(e) => {
+                  if (e.target.checked) return
+                  setValue("maxSupply", 0, { shouldDirty: true })
+                  setValue("mintableAmountPerUser", 0, { shouldDirty: true })
+                }}
+              >
+                <Stack spacing={4}>
+                  <SupplyInput />
+                  <MintPerAddressInput />
+                </Stack>
+              </CheckboxColorCard>
+
+              <CheckboxColorCard
+                colorScheme="indigo"
+                icon={Clock}
+                title="Limit claiming time"
+                description="Set a time frame the NFT will be only claimable within"
+                defaultChecked={!!defaultValues.startTime || !!defaultValues.endTime}
+                onChange={(e) => {
+                  if (e.target.checked) return
+                  setValue("startTime", "", { shouldDirty: true })
+                  setValue("endTime", "", { shouldDirty: true })
+                }}
+              >
+                <StartEndTimeForm
+                  platformType="CONTRACT_CALL"
+                  control={control}
+                  startTimeField="startTime"
+                  endTimeField="endTime"
+                  direction="column"
+                />
+              </CheckboxColorCard>
+            </Stack>
           </Stack>
         </GridItem>
       </Grid>

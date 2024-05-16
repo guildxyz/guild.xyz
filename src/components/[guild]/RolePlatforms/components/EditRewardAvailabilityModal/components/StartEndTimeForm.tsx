@@ -1,4 +1,11 @@
-import { FormControl, FormLabel, Input, Stack, Text } from "@chakra-ui/react"
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  StackProps,
+  Text,
+} from "@chakra-ui/react"
 import { Control, Path, useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
@@ -9,7 +16,7 @@ type Props<TFieldValues, TContext> = {
   startTimeField: Path<TFieldValues>
   endTimeField: Path<TFieldValues>
   platformType: PlatformName
-}
+} & StackProps
 
 export const AUTO_TIMEFRAME_PLATFORMS: PlatformName[] = ["POAP"]
 
@@ -33,6 +40,7 @@ const StartEndTimeForm = <TFieldValues, TContext>({
   startTimeField,
   endTimeField,
   platformType,
+  ...stackProps
 }: Props<TFieldValues, TContext>) => {
   const { register } = useFormContext<TFieldValues>()
 
@@ -46,6 +54,7 @@ const StartEndTimeForm = <TFieldValues, TContext>({
       pb="px"
       w="calc(100% - 2px)"
       spacing={{ base: 4, md: 2 }}
+      {...stackProps}
     >
       <FormControl>
         <FormLabel>
