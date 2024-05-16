@@ -44,8 +44,16 @@ const CollectNftProvider = ({
     chainId: Chains[chain],
   })
 
-  const { name, mintableAmountPerUser } = useNftDetails(chain, nftAddress)
-  const alreadyCollected = nftBalance >= mintableAmountPerUser
+  const { name, mintableAmountPerUser, maxSupply, totalSupply } = useNftDetails(
+    chain,
+    nftAddress
+  )
+  const alreadyCollected =
+    !maxSupply && !mintableAmountPerUser
+      ? false
+      : mintableAmountPerUser > 0
+      ? nftBalance >= mintableAmountPerUser || totalSupply >= maxSupply
+      : totalSupply >= maxSupply
 
   const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
   useEffect(() => {
