@@ -76,7 +76,7 @@ const CollectNftPageContent = ({
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
   const { name, image: imageFromHook, totalSupply } = useNftDetails(chain, address)
-  const image = fallbackImage || imageFromHook
+  const image = imageFromHook || fallbackImage
 
   return (
     <Layout
