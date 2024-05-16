@@ -151,13 +151,13 @@ const fetchGuildPinsOnChain = async (
     balance,
     chain,
     address,
-    publicClient
+    publicClient as any
   )
 
   const { tokenInfo, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
     pinIds,
     chain,
-    publicClient
+    publicClient as any
   )
 
   const { tokenMetadata, errors: metadataTransformationErrors } = tokenInfo.reduce(
