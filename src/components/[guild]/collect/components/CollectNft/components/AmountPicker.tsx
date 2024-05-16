@@ -109,69 +109,68 @@ const AmountPicker = () => {
         </Text>
 
         {/* Only show if maxSupply is not unlimited */}
-        {maxSupply > 0 && (
-          <SimpleGrid columns={4} gap={2}>
-            {ranges.map((range, index) => {
-              const isDisabled =
-                mintableAmountPerUser < range.min ||
-                maxSupply - totalSupply < range.min
-              return (
-                <Button
-                  key={range.name}
-                  variant="unstyled"
-                  bgColor={rangeBgColor}
-                  _hover={{
-                    bgColor: isDisabled ? rangeBgColor : undefined,
-                  }}
-                  py={3}
-                  h="auto"
-                  isDisabled={isDisabled}
-                  onClick={() => {
-                    setActiveRange(index)
 
-                    if (ranges[index].min <= amount && ranges[index].max >= amount)
-                      return
+        <SimpleGrid columns={4} gap={2}>
+          {ranges.map((range, index) => {
+            const isDisabled =
+              (mintableAmountPerUser > 0 && mintableAmountPerUser < range.min) ||
+              (maxSupply > 0 && maxSupply - totalSupply < range.min)
+            return (
+              <Button
+                key={range.name}
+                variant="unstyled"
+                bgColor={rangeBgColor}
+                _hover={{
+                  bgColor: isDisabled ? rangeBgColor : undefined,
+                }}
+                py={3}
+                h="auto"
+                isDisabled={isDisabled}
+                onClick={() => {
+                  setActiveRange(index)
 
-                    onAmountChange(ranges[index].min)
-                  }}
-                  borderWidth={2}
-                  borderColor={activeRange === index ? undefined : "transparent"}
-                  transition="background 0.2s ease, border-color 0.2s ease"
+                  if (ranges[index].min <= amount && ranges[index].max >= amount)
+                    return
+
+                  onAmountChange(ranges[index].min)
+                }}
+                borderWidth={2}
+                borderColor={activeRange === index ? undefined : "transparent"}
+                transition="background 0.2s ease, border-color 0.2s ease"
+              >
+                <Stack
+                  direction="column"
+                  alignItems="center"
+                  justifyContent="center"
                 >
-                  <Stack
-                    direction="column"
-                    alignItems="center"
-                    justifyContent="center"
+                  <Circle
+                    bgColor={circleBgColor}
+                    size={10}
+                    borderWidth={circleBorderWidth}
                   >
-                    <Circle
-                      bgColor={circleBgColor}
-                      size={10}
-                      borderWidth={circleBorderWidth}
-                    >
-                      <Text as="span" fontSize="lg">
-                        {range.icon}
-                      </Text>
-                    </Circle>
+                    <Text as="span" fontSize="lg">
+                      {range.icon}
+                    </Text>
+                  </Circle>
 
-                    <Stack spacing={0}>
-                      <Text as="span" fontSize="xs">
-                        {range.name}
-                      </Text>
+                  <Stack spacing={0}>
+                    <Text as="span" fontSize="xs">
+                      {range.name}
+                    </Text>
 
-                      <Text as="span" fontSize="xs" colorScheme="gray">
-                        {range.min === range.max
-                          ? range.min
-                          : index === ranges.length - 1
-                          ? `${range.min}+`
-                          : `${range.min} - ${range.max}`}
-                      </Text>
-                    </Stack>
+                    <Text as="span" fontSize="xs" colorScheme="gray">
+                      {range.min === range.max
+                        ? range.min
+                        : index === ranges.length - 1
+                        ? `${range.min}+`
+                        : `${range.min} - ${range.max}`}
+                    </Text>
                   </Stack>
-                </Button>
-              )
-            })}
-          </SimpleGrid>
-        )}
+                </Stack>
+              </Button>
+            )
+          })}
+        </SimpleGrid>
       </Stack>
 
       <FormControl isInvalid={!!errors?.amount}>
