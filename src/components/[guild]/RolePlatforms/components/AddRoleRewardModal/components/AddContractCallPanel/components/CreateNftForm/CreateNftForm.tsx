@@ -38,7 +38,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
       image: "",
       attributes: [],
       maxSupply: 0,
-      mintableAmountPerUser: 1,
+      mintableAmountPerUser: 0,
       soulbound: "true",
       startTime: null,
       endTime: null,
