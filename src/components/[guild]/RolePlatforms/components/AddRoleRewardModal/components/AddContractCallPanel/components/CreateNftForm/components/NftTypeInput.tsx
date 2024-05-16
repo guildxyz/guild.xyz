@@ -5,11 +5,11 @@ import { CreateNftFormType } from "./NftDataForm"
 
 const options = [
   {
-    label: "Non-tradable",
+    label: "Non-transferable",
     value: "true",
   },
   {
-    label: "Tradable",
+    label: "Transferable",
     value: "false",
   },
 ] satisfies { label: string; value: CreateNftFormType["soulbound"] }[]
