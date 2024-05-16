@@ -1,7 +1,7 @@
 import { HStack, Icon, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { X } from "phosphor-react"
+import { LockSimple, X } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { PlatformType, Requirement, RolePlatform } from "types"
@@ -41,10 +41,16 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
               alignItems={"center"}
               gap={1}
             >
-              <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />{" "}
-              <Text>
-                {dynamicUserAmount ?? "some"} {rewardName}
-              </Text>
+              {dynamicUserAmount ? (
+                <>
+                  <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />{" "}
+                  <Text>
+                    {dynamicUserAmount} {rewardName}
+                  </Text>
+                </>
+              ) : (
+                <JoinToCalculate />
+              )}
             </Skeleton>
           </HStack>
         }
@@ -55,7 +61,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
           >
             <ProvidedValueDisplay requirement={requirement} />
           </Td>
-          <Td isNumeric>{rawProvidedUserAmount}</Td>
+          <Td isNumeric>{rawProvidedUserAmount ?? <JoinToCalculate />}</Td>
         </Tr>
 
         <Tr>
@@ -69,12 +75,23 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
         <Tr>
           <Td>Total</Td>
           <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
-            {dynamicUserAmount} {rewardName}
+            {dynamicUserAmount ? (
+              `${dynamicUserAmount} ${rewardName}`
+            ) : (
+              <JoinToCalculate />
+            )}
           </Td>
         </Tr>
       </FeesTable>
     </>
   )
 }
+
+const JoinToCalculate = () => (
+  <Text colorScheme={"gray"}>
+    <Icon as={LockSimple} mr="1" mb="-3px" />
+    Join to calculate
+  </Text>
+)
 
 export default DynamicRewardCalculationTable
