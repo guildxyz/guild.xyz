@@ -12,13 +12,11 @@ import rewards from "platforms/rewards"
 import { ReactNode } from "react"
 
 export const DefaultAddRewardPanelWrapper = ({
-  goBack,
   children,
 }: {
-  goBack: () => void
   children: ReactNode
 }) => {
-  const { modalRef, selection } = useAddRewardContext()
+  const { modalRef, selection, setStep } = useAddRewardContext()
 
   return (
     <>
@@ -32,7 +30,7 @@ export const DefaultAddRewardPanelWrapper = ({
             mb="-3px"
             icon={<ArrowLeft size={20} />}
             variant="ghost"
-            onClick={goBack}
+            onClick={() => setStep("HOME")}
           />
           <Text>{`Add ${rewards[selection].name} reward`}</Text>
         </HStack>

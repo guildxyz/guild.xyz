@@ -35,6 +35,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
   }
 
   const handleClose = () => {
+    alert("Calling on close")
     if (isAddRewardPanelDirty) {
       onDiscardAlertOpen()
     } else {
@@ -57,8 +58,8 @@ const AddRoleRewardModal = ({ append }: Props) => {
       colorScheme="dark"
     >
       <ModalOverlay />
-      <ModalContent minH="550px">
-        {step === "HOME" && <SelectRewardPanel append={append} />}
+      <ModalContent>
+        {step === "HOME" && <SelectRewardPanel append={append} showExisting />}
 
         {isRewardSetupStep && (
           <AddRewardPanel onAdd={handleAddReward} skipSettings />

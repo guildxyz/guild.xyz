@@ -5,6 +5,7 @@ import Button from "components/common/Button"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
 import SetPointsAmount from "./components/SetPointsAmount"
@@ -78,38 +79,40 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <Text colorScheme="gray" fontWeight="semibold" mb="8">
-        Gamify your guild with a score system, so users can collect points / XP /
-        your custom branded score, and compete on a leaderboard. You’ll also be able
-        to set points based requirements for satisfying higher level roles!
-      </Text>
-      {!!existingPointsRewards.length && (
-        <ExistingPointsTypeSelect
-          existingPointsRewards={existingPointsRewards}
-          selectedExistingId={selectedExistingId}
-          showCreateNew
-          mb="5"
-        />
-      )}
-      <Collapse
-        in={!existingPointsRewards.length || selectedExistingId === null}
-        style={{ flexShrink: 0 }}
-      >
-        <AddNewPointsType
-          name={name}
-          imageUrl={imageUrl}
-          isOptional={!existingPointsRewards.length}
-        />
-        <Divider mt={8} mb={7} />
-      </Collapse>
+      <DefaultAddRewardPanelWrapper>
+        <Text colorScheme="gray" fontWeight="semibold" mb="8">
+          Gamify your guild with a score system, so users can collect points / XP /
+          your custom branded score, and compete on a leaderboard. You’ll also be
+          able to set points based requirements for satisfying higher level roles!
+        </Text>
+        {!!existingPointsRewards.length && (
+          <ExistingPointsTypeSelect
+            existingPointsRewards={existingPointsRewards}
+            selectedExistingId={selectedExistingId}
+            showCreateNew
+            mb="5"
+          />
+        )}
+        <Collapse
+          in={!existingPointsRewards.length || selectedExistingId === null}
+          style={{ flexShrink: 0 }}
+        >
+          <AddNewPointsType
+            name={name}
+            imageUrl={imageUrl}
+            isOptional={!existingPointsRewards.length}
+          />
+          <Divider mt={8} mb={7} />
+        </Collapse>
 
-      <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
+        <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
 
-      <Flex justifyContent={"flex-end"} mt="auto" pt="10">
-        <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
-          Continue
-        </Button>
-      </Flex>
+        <Flex justifyContent={"flex-end"} mt="auto" pt="10">
+          <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
+            Continue
+          </Button>
+        </Flex>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

@@ -5,10 +5,11 @@ import { AddRewardPanelProps } from "platforms/rewards"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 type Props = {
-  append: AddRewardPanelProps["onAdd"]
+  append?: AddRewardPanelProps["onAdd"]
+  showExisting?: boolean
 }
 
-const SelectRewardPanel = ({ append }: Props) => {
+const SelectRewardPanel = ({ append, showExisting = false }: Props) => {
   const { modalRef, setSelection, setStep, onClose } = useAddRewardContext()
 
   return (
@@ -19,10 +20,12 @@ const SelectRewardPanel = ({ append }: Props) => {
       </ModalHeader>
 
       <ModalBody ref={modalRef} className="custom-scrollbar">
-        <SelectExistingPlatform
-          onClose={onClose}
-          onSelect={(selectedRolePlatform) => append(selectedRolePlatform)}
-        />
+        {showExisting && (
+          <SelectExistingPlatform
+            onClose={onClose}
+            onSelect={(selectedRolePlatform) => append?.(selectedRolePlatform)}
+          />
+        )}
         <Text fontWeight="bold" mb="3">
           Add new reward
         </Text>
