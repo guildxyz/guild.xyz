@@ -2,15 +2,14 @@ import {
   Center,
   Divider,
   Flex,
-  Icon,
   ModalBody,
   ModalFooter,
   Text,
 } from "@chakra-ui/react"
+import { DotLottiePlayer } from "@dotlottie/react-player"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import Button from "components/common/Button"
 import useMembership from "components/explorer/hooks/useMembership"
-import { CheckCircle } from "phosphor-react"
 import { PropsWithChildren } from "react"
 import TransactionLink from "./TransactionLink"
 import TransactionModalCloseButton from "./TransactionModalCloseButton"
@@ -29,16 +28,19 @@ const TxSuccess = ({
     <>
       <ModalBody>
         <Flex direction="column">
-          <Center mb={10}>
-            <Icon
-              as={CheckCircle}
-              boxSize={36}
-              color="green.500"
-              sx={{
-                "> *": {
-                  strokeWidth: "8px",
-                },
+          <Center mb={10} position="relative" width="full" height={28}>
+            <DotLottiePlayer
+              autoplay
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "var(--chakra-sizes-56)",
+                height: "var(--chakra-sizes-56)",
               }}
+              src="/success_lottie.json"
+              className="keep-colors"
             />
           </Center>
         </Flex>
