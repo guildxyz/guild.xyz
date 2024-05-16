@@ -33,6 +33,7 @@ import CheckboxColorCard from "components/common/CheckboxColorCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { SectionTitle } from "components/common/Section"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
+import { useRouter } from "next/router"
 import { ArrowSquareOut, Clock, Hash, Plus, TrashSimple } from "phosphor-react"
 import {
   useController,
@@ -133,6 +134,8 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
   } = useController({ control, name: "richTextDescription" })
 
   const metadataBgColor = useColorModeValue("white", "blackAlpha.300")
+
+  const { pathname } = useRouter()
 
   return (
     <Stack spacing={8}>
@@ -388,26 +391,36 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                 </Stack>
               </CheckboxColorCard>
 
-              <CheckboxColorCard
-                colorScheme="indigo"
-                icon={Clock}
-                title="Limit claiming time"
-                description="Set a time frame the NFT will be only claimable within"
-                defaultChecked={!!defaultValues.startTime || !!defaultValues.endTime}
-                onChange={(e) => {
-                  if (e.target.checked) return
-                  setValue("startTime", "", { shouldDirty: true })
-                  setValue("endTime", "", { shouldDirty: true })
-                }}
+              <Tooltip
+                label="You'll be able to limit claiming time after you added the NFT reward to a role"
+                shouldWrapChildren
+                hasArrow
+                isDisabled={pathname !== "/create-guild"}
               >
-                <StartEndTimeForm
-                  platformType="CONTRACT_CALL"
-                  control={control}
-                  startTimeField="startTime"
-                  endTimeField="endTime"
-                  direction="column"
-                />
-              </CheckboxColorCard>
+                <CheckboxColorCard
+                  isDisabled={pathname === "/create-guild"}
+                  colorScheme="indigo"
+                  icon={Clock}
+                  title="Limit claiming time"
+                  description="Set a time frame the NFT will be only claimable within"
+                  defaultChecked={
+                    !!defaultValues.startTime || !!defaultValues.endTime
+                  }
+                  onChange={(e) => {
+                    if (e.target.checked) return
+                    setValue("startTime", "", { shouldDirty: true })
+                    setValue("endTime", "", { shouldDirty: true })
+                  }}
+                >
+                  <StartEndTimeForm
+                    platformType="CONTRACT_CALL"
+                    control={control}
+                    startTimeField="startTime"
+                    endTimeField="endTime"
+                    direction="column"
+                  />
+                </CheckboxColorCard>
+              </Tooltip>
             </Stack>
           </Stack>
         </GridItem>
