@@ -37,10 +37,13 @@ const AmountPicker = () => {
   const mintableAmountPerUser =
     typeof maxSupply === "bigint" &&
     typeof totalSupply === "bigint" &&
-    typeof mintableAmountPerUserFromContract === "bigint"
+    mintableAmountPerUserFromContract > 0
       ? Math.min(
-          Number(maxSupply - totalSupply),
-          Number(mintableAmountPerUserFromContract - (balance ?? BigInt(0))) // Defined a fallback for balance here, so the amount picker works properly for logged out users too
+          Math.max(Number(maxSupply - totalSupply), 0),
+          Math.max(
+            Number(mintableAmountPerUserFromContract - (balance ?? BigInt(0))),
+            0
+          ) // Defined a fallback for balance here, so the amount picker works properly for logged out users too
         )
       : 0
 
@@ -58,10 +61,10 @@ const AmountPicker = () => {
   const numberInputMax =
     mintableAmountPerUser ||
     (typeof maxSupply === "bigint" &&
-      typeof totalSupply === "bigint" &&
-      maxSupply !== BigInt(0))
+    typeof totalSupply === "bigint" &&
+    maxSupply !== BigInt(0)
       ? Number(maxSupply - totalSupply)
-      : undefined
+      : undefined)
 
   const {
     field: { value: amount, onChange: onAmountChange, ...amountField },
@@ -108,69 +111,69 @@ const AmountPicker = () => {
           Amount
         </Text>
 
-        {/* Only show if maxSupply is not unlimited */}
+        {ranges?.at(-1).max >= 10 && (
+          <SimpleGrid columns={4} gap={2}>
+            {ranges.map((range, index) => {
+              const isDisabled =
+                (mintableAmountPerUser > 0 && mintableAmountPerUser < range.min) ||
+                (maxSupply > 0 && maxSupply - totalSupply < range.min)
+              return (
+                <Button
+                  key={range.name}
+                  variant="unstyled"
+                  bgColor={rangeBgColor}
+                  _hover={{
+                    bgColor: isDisabled ? rangeBgColor : undefined,
+                  }}
+                  py={3}
+                  h="auto"
+                  isDisabled={isDisabled}
+                  onClick={() => {
+                    setActiveRange(index)
 
-        <SimpleGrid columns={4} gap={2}>
-          {ranges.map((range, index) => {
-            const isDisabled =
-              (mintableAmountPerUser > 0 && mintableAmountPerUser < range.min) ||
-              (maxSupply > 0 && maxSupply - totalSupply < range.min)
-            return (
-              <Button
-                key={range.name}
-                variant="unstyled"
-                bgColor={rangeBgColor}
-                _hover={{
-                  bgColor: isDisabled ? rangeBgColor : undefined,
-                }}
-                py={3}
-                h="auto"
-                isDisabled={isDisabled}
-                onClick={() => {
-                  setActiveRange(index)
+                    if (ranges[index].min <= amount && ranges[index].max >= amount)
+                      return
 
-                  if (ranges[index].min <= amount && ranges[index].max >= amount)
-                    return
-
-                  onAmountChange(ranges[index].min)
-                }}
-                borderWidth={2}
-                borderColor={activeRange === index ? undefined : "transparent"}
-                transition="background 0.2s ease, border-color 0.2s ease"
-              >
-                <Stack
-                  direction="column"
-                  alignItems="center"
-                  justifyContent="center"
+                    onAmountChange(ranges[index].min)
+                  }}
+                  borderWidth={2}
+                  borderColor={activeRange === index ? undefined : "transparent"}
+                  transition="background 0.2s ease, border-color 0.2s ease"
                 >
-                  <Circle
-                    bgColor={circleBgColor}
-                    size={10}
-                    borderWidth={circleBorderWidth}
+                  <Stack
+                    direction="column"
+                    alignItems="center"
+                    justifyContent="center"
                   >
-                    <Text as="span" fontSize="lg">
-                      {range.icon}
-                    </Text>
-                  </Circle>
+                    <Circle
+                      bgColor={circleBgColor}
+                      size={10}
+                      borderWidth={circleBorderWidth}
+                    >
+                      <Text as="span" fontSize="lg">
+                        {range.icon}
+                      </Text>
+                    </Circle>
 
-                  <Stack spacing={0}>
-                    <Text as="span" fontSize="xs">
-                      {range.name}
-                    </Text>
+                    <Stack spacing={0}>
+                      <Text as="span" fontSize="xs">
+                        {range.name}
+                      </Text>
 
-                    <Text as="span" fontSize="xs" colorScheme="gray">
-                      {range.min === range.max
-                        ? range.min
-                        : index === ranges.length - 1
-                        ? `${range.min}+`
-                        : `${range.min} - ${range.max}`}
-                    </Text>
+                      <Text as="span" fontSize="xs" colorScheme="gray">
+                        {range.min === range.max
+                          ? range.min
+                          : index === ranges.length - 1
+                          ? `${range.min}+`
+                          : `${range.min} - ${range.max}`}
+                      </Text>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Button>
-            )
-          })}
-        </SimpleGrid>
+                </Button>
+              )
+            })}
+          </SimpleGrid>
+        )}
       </Stack>
 
       <FormControl isInvalid={!!errors?.amount}>
