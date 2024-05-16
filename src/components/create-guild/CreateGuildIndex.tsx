@@ -22,8 +22,7 @@ const CreateGuildIndex = (): JSX.Element => {
     <ClientOnly>
       <MultiPlatformsGrid
         onSelection={(platformName) => {
-          if (platformName === "CONTRACT_CALL" || platformName === "DISCORD")
-            startSessionRecording()
+          if (platformName === "CONTRACT_CALL") startSessionRecording()
           if (platformName === "DISCORD")
             captureEvent("[discord setup] started through guild creation")
 

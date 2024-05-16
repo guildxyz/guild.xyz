@@ -363,8 +363,7 @@ const AddRewardButton = (): JSX.Element => {
               ) : (
                 <PlatformsGrid
                   onSelection={(selected) => {
-                    if (selected === "DISCORD" || selected === "CONTRACT_CALL")
-                      startSessionRecording()
+                    if (selected === "CONTRACT_CALL") startSessionRecording()
                     if (selected === "DISCORD")
                       captureEvent("[discord setup] started in existing guild")
 
