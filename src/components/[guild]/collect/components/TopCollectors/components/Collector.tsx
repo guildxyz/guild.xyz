@@ -17,7 +17,7 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
   if (!address) return null
 
   const rangeIcon = !!ranges
-    ? `${ranges.find((r) => r.min <= balance && r.max >= balance).icon} `
+    ? `${ranges.find((r) => r.min <= balance && r.max >= balance)?.icon} `
     : ""
 
   return (
