@@ -31,7 +31,6 @@ import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
 import Button from "components/common/Button"
 import CheckboxColorCard from "components/common/CheckboxColorCard"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { SectionTitle } from "components/common/Section"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { useRouter } from "next/router"
 import { ArrowSquareOut, Clock, Hash, Plus, TrashSimple } from "phosphor-react"
@@ -269,12 +268,6 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
             <NftTypeInput />
 
             <Stack spacing={2}>
-              <SectionTitle
-                title="Limit NFT availability"
-                fontSize="md"
-                fontWeight="medium"
-              />
-
               <CheckboxColorCard
                 colorScheme="indigo"
                 variant="outline"
