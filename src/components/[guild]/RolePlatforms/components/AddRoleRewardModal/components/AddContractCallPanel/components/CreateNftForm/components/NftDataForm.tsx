@@ -141,7 +141,9 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
     <Stack spacing={8}>
       <Grid w="full" templateColumns="repeat(5, 1fr)" gap={8}>
         <GridItem colSpan={{ base: 5, sm: 2 }}>
-          <ImagePicker />
+          <Box position={{ base: "relative", sm: "sticky" }} top={0}>
+            <ImagePicker />
+          </Box>
         </GridItem>
 
         <GridItem colSpan={{ base: 5, sm: 3 }}>
@@ -266,6 +268,70 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
 
             <NftTypeInput />
 
+            <Stack spacing={2}>
+              <SectionTitle
+                title="Limit NFT availability"
+                fontSize="md"
+                fontWeight="medium"
+              />
+
+              <CheckboxColorCard
+                colorScheme="indigo"
+                variant="outline"
+                icon={Hash}
+                title="Limit supply"
+                description="First come, first served. Max-cap the number of NFTs that can be minted (globally and per user)"
+                defaultChecked={
+                  defaultValues.maxSupply > 0 ||
+                  defaultValues.mintableAmountPerUser > 0
+                }
+                onChange={(e) => {
+                  if (e.target.checked) return
+                  setValue("maxSupply", 0, { shouldDirty: true })
+                  setValue("mintableAmountPerUser", 0, { shouldDirty: true })
+                }}
+              >
+                <Stack spacing={4} w="calc(100% - 2px)">
+                  <SupplyInput />
+                  <MintPerAddressInput />
+                </Stack>
+              </CheckboxColorCard>
+
+              <Tooltip
+                label="You'll be able to limit claiming time after you added the NFT reward to a role"
+                shouldWrapChildren
+                hasArrow
+                isDisabled={pathname !== "/create-guild"}
+              >
+                <CheckboxColorCard
+                  isDisabled={pathname === "/create-guild"}
+                  colorScheme="indigo"
+                  variant="outline"
+                  icon={Clock}
+                  title="Limit claiming time"
+                  description="Set a time frame the NFT will be only claimable within"
+                  defaultChecked={
+                    !!defaultValues.startTime || !!defaultValues.endTime
+                  }
+                  onChange={(e) => {
+                    if (e.target.checked) return
+                    setValue("startTime", "", { shouldDirty: true })
+                    setValue("endTime", "", { shouldDirty: true })
+                  }}
+                >
+                  <StartEndTimeForm
+                    platformType="CONTRACT_CALL"
+                    control={control}
+                    startTimeField="startTime"
+                    endTimeField="endTime"
+                    direction="column"
+                  />
+                </CheckboxColorCard>
+              </Tooltip>
+            </Stack>
+
+            <Divider />
+
             <ChainPicker
               controlName="chain"
               supportedChains={CONTRACT_CALL_SUPPORTED_CHAINS}
@@ -360,68 +426,6 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
 
               <FormErrorMessage>{errors?.tokenTreasury?.message}</FormErrorMessage>
             </FormControl>
-
-            <Divider />
-
-            <Stack spacing={2}>
-              <SectionTitle
-                title="Limit NFT availability"
-                fontSize="md"
-                fontWeight="medium"
-              />
-
-              <CheckboxColorCard
-                colorScheme="indigo"
-                icon={Hash}
-                title="Limit supply"
-                description="First come, first served. Max-cap the number of NFTs that can be minted (globally and per user)"
-                defaultChecked={
-                  defaultValues.maxSupply > 0 ||
-                  defaultValues.mintableAmountPerUser > 0
-                }
-                onChange={(e) => {
-                  if (e.target.checked) return
-                  setValue("maxSupply", 0, { shouldDirty: true })
-                  setValue("mintableAmountPerUser", 0, { shouldDirty: true })
-                }}
-              >
-                <Stack spacing={4} w="calc(100% - 2px)">
-                  <SupplyInput />
-                  <MintPerAddressInput />
-                </Stack>
-              </CheckboxColorCard>
-
-              <Tooltip
-                label="You'll be able to limit claiming time after you added the NFT reward to a role"
-                shouldWrapChildren
-                hasArrow
-                isDisabled={pathname !== "/create-guild"}
-              >
-                <CheckboxColorCard
-                  isDisabled={pathname === "/create-guild"}
-                  colorScheme="indigo"
-                  icon={Clock}
-                  title="Limit claiming time"
-                  description="Set a time frame the NFT will be only claimable within"
-                  defaultChecked={
-                    !!defaultValues.startTime || !!defaultValues.endTime
-                  }
-                  onChange={(e) => {
-                    if (e.target.checked) return
-                    setValue("startTime", "", { shouldDirty: true })
-                    setValue("endTime", "", { shouldDirty: true })
-                  }}
-                >
-                  <StartEndTimeForm
-                    platformType="CONTRACT_CALL"
-                    control={control}
-                    startTimeField="startTime"
-                    endTimeField="endTime"
-                    direction="column"
-                  />
-                </CheckboxColorCard>
-              </Tooltip>
-            </Stack>
           </Stack>
         </GridItem>
       </Grid>
