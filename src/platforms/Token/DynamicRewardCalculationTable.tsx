@@ -41,7 +41,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
               alignItems={"center"}
               gap={1}
             >
-              {dynamicUserAmount ? (
+              {dynamicUserAmount !== undefined ? (
                 <>
                   <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />{" "}
                   <Text>
@@ -75,7 +75,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
         <Tr>
           <Td>Total</Td>
           <Td isNumeric color="var(--chakra-colors-chakra-body-text)">
-            {dynamicUserAmount ? (
+            {dynamicUserAmount !== undefined ? (
               `${dynamicUserAmount} ${rewardName}`
             ) : (
               <JoinToCalculate />

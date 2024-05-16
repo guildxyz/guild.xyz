@@ -5,13 +5,12 @@ const useDynamicRewardUserAmount = (rolePlatform: RolePlatform) => {
   const { reqAccesses, isLoading } = useRoleMembership(rolePlatform.roleId)
   const dynamicAmount = rolePlatform.dynamicAmount
 
-  if (!dynamicAmount) return {}
+  if (!dynamicAmount || !reqAccesses) return {}
 
-  const rawProvidedUserAmount = reqAccesses?.find(
-    (req) => req.requirementId === dynamicAmount.operation.input[0].requirementId
-  )?.amount
-
-  if (!rawProvidedUserAmount) return {}
+  const rawProvidedUserAmount =
+    reqAccesses.find(
+      (req) => req.requirementId === dynamicAmount.operation.input[0].requirementId
+    )?.amount ?? 0
 
   const { addition, multiplier } = (dynamicAmount.operation as any).params
 
