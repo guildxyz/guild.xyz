@@ -385,7 +385,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                   setValue("mintableAmountPerUser", 0, { shouldDirty: true })
                 }}
               >
-                <Stack spacing={4}>
+                <Stack spacing={4} w="calc(100% - 2px)">
                   <SupplyInput />
                   <MintPerAddressInput />
                 </Stack>
