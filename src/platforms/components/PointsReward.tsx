@@ -9,6 +9,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowRight, Check } from "phosphor-react"
+import { useMemo } from "react"
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
@@ -17,20 +18,19 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
 
   const { hasRoleAccess, membership } = useRoleMembership(platform.roleId)
 
-  const dynamicAmount: any = platform?.dynamicAmount
-  const { addition, multiplier } = dynamicAmount?.operation.params ?? {}
+  const score = useMemo(() => {
+    const dynamicAmount: any = platform?.dynamicAmount
+    if (!dynamicAmount) return platform.platformRoleData?.score
 
-  const linkedRequirementId: number = !!dynamicAmount
-    ? dynamicAmount.operation.input[0].requirementId
-    : null
-  const linkedRequirement =
-    membership?.requirements.find(
-      (req) => req.requirementId === linkedRequirementId
-    ) || null
+    const { addition, multiplier } = dynamicAmount.operation.params ?? {}
+    const linkedRequirementId = dynamicAmount.operation.input[0].requirementId
+    const linkedRequirement =
+      membership?.requirements.find(
+        (req) => req.requirementId === linkedRequirementId
+      ) || null
 
-  const score = !!dynamicAmount
-    ? linkedRequirement?.amount * multiplier + addition
-    : platform.platformRoleData?.score
+    return linkedRequirement?.amount * multiplier + addition
+  }, [platform, membership?.requirements])
 
   const iconColor = useColorModeValue("green.500", "green.300")
 
