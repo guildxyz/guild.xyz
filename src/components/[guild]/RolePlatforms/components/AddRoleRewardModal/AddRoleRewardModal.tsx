@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
@@ -26,6 +27,8 @@ type Props = {
 }
 
 const AddRoleRewardModal = ({ append }: Props) => {
+  const { startSessionRecording } = usePostHogContext()
+
   const { modalRef, selection, setSelection, step, setStep, isOpen, onClose } =
     useAddRewardContext()
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
@@ -103,7 +106,11 @@ const AddRoleRewardModal = ({ append }: Props) => {
                 Add new reward
               </Text>
               <PlatformsGrid
-                onSelection={setSelection}
+                onSelection={(newSelection) => {
+                  if (newSelection === "CONTRACT_CALL") startSessionRecording()
+
+                  setSelection(newSelection)
+                }}
                 disabledRewards={{
                   ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
                 }}
