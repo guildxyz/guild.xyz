@@ -58,9 +58,8 @@ const CollectNft = () => {
 
   return (
     <Stack p={padding} w="full" alignItems="center" spacing={4}>
-      {(mintableAmountPerUser >= 10 ||
-        mintableAmountPerUser === BigInt(0) ||
-        maxSupply === BigInt(0)) && <AmountPicker />}
+      {/* Only show the amount picker if the user can mint unlimited or more than 1 NFTs */}
+      {mintableAmountPerUser !== BigInt(1) && <AmountPicker />}
 
       <Stack w="full" spacing={2}>
         <NftFeesTable bgColor={tableBgColor} mt="2" mb="1" />

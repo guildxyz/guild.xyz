@@ -61,7 +61,7 @@ const useNftRanges = () => {
   return useMemo(
     () =>
       getMintingRanges(
-        mintableAmountPerUser === BigInt(0) ? Number(mintableAmountPerUser) : 100
+        mintableAmountPerUser !== BigInt(0) ? Number(mintableAmountPerUser) : 100
       ),
     [mintableAmountPerUser]
   )
