@@ -124,7 +124,7 @@ const CollectNftProvider = ({
         successComponent={
           <>
             <Text fontWeight="bold" mb="2">
-              {`Your new asset${amount > 1 ? "s" : 0}:`}
+              {`Your new asset${amount > 1 ? "s" : ""}:`}
             </Text>
             <RewardDisplay
               icon={
