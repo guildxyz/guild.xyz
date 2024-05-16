@@ -93,7 +93,7 @@ const DynamicRewardModal = ({
             />
           </Stack>
 
-          <Stack mt="3">
+          <Stack mt="8">
             <Divider mb={1} mt={3} />
             <Accordion allowToggle>
               <AccordionItem border={"none"}>
