@@ -58,6 +58,23 @@ export type CreateNFTResponse = {
   }
 }
 
+export const generateGuildRewardNFTMetadata = (
+  data: Pick<CreateNftFormType, "name" | "description" | "image" | "attributes">
+) => {
+  const image = data.image?.replace(process.env.NEXT_PUBLIC_IPFS_GATEWAY, "ipfs://")
+
+  return guildNftRewardMetadataSchema.parse({
+    name: data.name,
+    description: data.description,
+    image,
+    attributes:
+      data.attributes?.map((attr) => ({
+        trait_type: attr.name,
+        value: attr.value,
+      })) ?? [],
+  })
+}
+
 const useCreateNft = (
   onSuccess: (reward: Omit<CreateNFTResponse, "formData">) => void
 ) => {
@@ -77,21 +94,7 @@ const useCreateNft = (
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
     setLoadingText("Uploading metadata")
 
-    const image = data.image?.replace(
-      process.env.NEXT_PUBLIC_IPFS_GATEWAY,
-      "ipfs://"
-    )
-
-    const metadata = guildNftRewardMetadataSchema.parse({
-      name: data.name,
-      description: data.description,
-      image,
-      attributes:
-        data.attributes?.map((attr) => ({
-          trait_type: attr.name,
-          value: attr.value,
-        })) ?? [],
-    })
+    const metadata = generateGuildRewardNFTMetadata(data)
 
     const metadataJSON = JSON.stringify(metadata)
 

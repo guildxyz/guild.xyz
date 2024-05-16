@@ -20,7 +20,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { useCallback } from "react"
-import { FormProvider, FormState, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import { formatUnits } from "viem"
 import { useAccount } from "wagmi"
@@ -139,16 +139,14 @@ const EditNftForm = ({
 
   const handleSubmitCallback = useCallback(
     (data: CreateNftFormType) =>
-      onSubmit(
-        getNftDataFormDirtyFields(
-          {
-            ...data,
-            startTime: datetimeLocalToIsoString(data.startTime),
-            endTime: datetimeLocalToIsoString(data.endTime),
-          },
-          methods.formState.dirtyFields
-        )
-      ),
+      onSubmit({
+        fields: {
+          ...data,
+          startTime: datetimeLocalToIsoString(data.startTime),
+          endTime: datetimeLocalToIsoString(data.endTime),
+        },
+        dirtyFields: methods.formState.dirtyFields,
+      }),
     [methods.formState.dirtyFields, onSubmit]
   )
 
@@ -170,36 +168,6 @@ const EditNftForm = ({
       />
     </FormProvider>
   )
-}
-
-const getNftDataFormDirtyFields = (
-  data: CreateNftFormType,
-  dirtyFields: FormState<CreateNftFormType>["dirtyFields"]
-) => {
-  const {
-    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-    name: _name,
-    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-    chain: _chain,
-    attributes,
-    ...rootFields
-  } = data
-
-  const { attributes: dirtyAttributes, ...dirtyRootFields } = dirtyFields
-
-  const hasDirtyAttributes = dirtyAttributes?.some((attr) => attr.name || attr.value)
-
-  const filteredData: Partial<CreateNftFormType> = {}
-
-  if (hasDirtyAttributes) {
-    filteredData.attributes = attributes
-  }
-
-  for (const key of Object.keys(dirtyRootFields)) {
-    filteredData[key] = rootFields[key]
-  }
-
-  return filteredData
 }
 
 export default EditNftModal
