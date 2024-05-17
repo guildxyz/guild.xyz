@@ -96,6 +96,7 @@
     "@types/react": "^18.2.65",
     "@types/react-google-recaptcha": "^2.1.5",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "abitype": "^1.0.2",
     "cypress": "^13.3.2",
     "dotenv-cli": "^7.4.1",
     "eslint": "^8.57.0",

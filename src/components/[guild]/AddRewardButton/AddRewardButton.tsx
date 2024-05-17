@@ -24,7 +24,10 @@ import useToast from "hooks/useToast"
 import { atom, useAtomValue } from "jotai"
 import { ArrowLeft, Info, Plus } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards, { modalSizeForPlatform } from "platforms/rewards"
+import rewards, {
+  CAPACITY_TIME_PLATFORMS,
+  modalSizeForPlatform,
+} from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
@@ -300,28 +303,30 @@ const AddRewardButton = (): JSX.Element => {
 
                 {step === "SELECT_ROLE" && (
                   <RewardPreview>
-                    <AvailabilitySetup
-                      platformType={rolePlatform?.guildPlatform?.platformName}
-                      rolePlatform={rolePlatform}
-                      defaultValues={{
-                        /**
-                         * If the user doesn't upload mint links for a POAP, we
-                         * should fallback to undefined, since 0 is not a valid value
-                         * here
-                         */
-                        capacity:
-                          rolePlatform?.guildPlatform?.platformGuildData?.texts
-                            ?.length || undefined,
-                        /** POAPs have default startTime and endTime */
-                        startTime: rolePlatform?.startTime,
-                        endTime: rolePlatform?.endTime,
-                      }}
-                      onDone={({ capacity, startTime, endTime }) => {
-                        methods.setValue(`rolePlatforms.0.capacity`, capacity)
-                        methods.setValue(`rolePlatforms.0.startTime`, startTime)
-                        methods.setValue(`rolePlatforms.0.endTime`, endTime)
-                      }}
-                    />
+                    {CAPACITY_TIME_PLATFORMS.includes(selection) && (
+                      <AvailabilitySetup
+                        platformType={rolePlatform?.guildPlatform?.platformName}
+                        rolePlatform={rolePlatform}
+                        defaultValues={{
+                          /**
+                           * If the user doesn't upload mint links for a POAP, we
+                           * should fallback to undefined, since 0 is not a valid
+                           * value here
+                           */
+                          capacity:
+                            rolePlatform?.guildPlatform?.platformGuildData?.texts
+                              ?.length || undefined,
+                          /** POAPs have default startTime and endTime */
+                          startTime: rolePlatform?.startTime,
+                          endTime: rolePlatform?.endTime,
+                        }}
+                        onDone={({ capacity, startTime, endTime }) => {
+                          methods.setValue(`rolePlatforms.0.capacity`, capacity)
+                          methods.setValue(`rolePlatforms.0.startTime`, startTime)
+                          methods.setValue(`rolePlatforms.0.endTime`, endTime)
+                        }}
+                      />
+                    )}
                   </RewardPreview>
                 )}
               </Stack>
@@ -358,9 +363,10 @@ const AddRewardButton = (): JSX.Element => {
               ) : (
                 <PlatformsGrid
                   onSelection={(selected) => {
-                    // Should we add sampling here? Or is it sampled by default?
-                    startSessionRecording()
-                    captureEvent("[discord setup] started in existing guild")
+                    if (selected === "CONTRACT_CALL") startSessionRecording()
+                    if (selected === "DISCORD")
+                      captureEvent("[discord setup] started in existing guild")
+
                     setSelection(selected)
                   }}
                   pb="4"

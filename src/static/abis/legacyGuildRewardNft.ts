@@ -1,6 +1,5 @@
-const guildRewardNftAbi = [
+const legacyGuildRewardNftAbi = [
   { inputs: [], name: "AlreadyClaimed", type: "error" },
-  { inputs: [], name: "ExpiredSignature", type: "error" },
   {
     inputs: [{ internalType: "address", name: "recipient", type: "address" }],
     name: "FailedToSendEther",
@@ -17,11 +16,6 @@ const guildRewardNftAbi = [
   { inputs: [], name: "IncorrectSender", type: "error" },
   { inputs: [], name: "IncorrectSignature", type: "error" },
   {
-    inputs: [{ internalType: "uint256", name: "maxSupply", type: "uint256" }],
-    name: "MaxSupplyReached",
-    type: "error",
-  },
-  {
     inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
     name: "NonExistentToken",
     type: "error",
@@ -30,9 +24,24 @@ const guildRewardNftAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "owner", type: "address" },
-      { indexed: true, internalType: "address", name: "approved", type: "address" },
-      { indexed: true, internalType: "uint256", name: "tokenId", type: "uint256" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "approved",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
     ],
     name: "Approval",
     type: "event",
@@ -40,9 +49,24 @@ const guildRewardNftAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "owner", type: "address" },
-      { indexed: true, internalType: "address", name: "operator", type: "address" },
-      { indexed: false, internalType: "bool", name: "approved", type: "bool" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "operator",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
     ],
     name: "ApprovalForAll",
     type: "event",
@@ -50,8 +74,18 @@ const guildRewardNftAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "receiver", type: "address" },
-      { indexed: false, internalType: "uint256", name: "tokenId", type: "uint256" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "receiver",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
     ],
     name: "Claimed",
     type: "event",
@@ -59,7 +93,12 @@ const guildRewardNftAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "uint256", name: "newFee", type: "uint256" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newFee",
+        type: "uint256",
+      },
     ],
     name: "FeeChanged",
     type: "event",
@@ -67,46 +106,17 @@ const guildRewardNftAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: "uint8", name: "version", type: "uint8" },
+      {
+        indexed: false,
+        internalType: "uint8",
+        name: "version",
+        type: "uint8",
+      },
     ],
     name: "Initialized",
     type: "event",
   },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: false, internalType: "uint256", name: "tokenId", type: "uint256" },
-    ],
-    name: "Locked",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "newMaxSupply",
-        type: "uint256",
-      },
-    ],
-    name: "MaxSupplyChanged",
-    type: "event",
-  },
   { anonymous: false, inputs: [], name: "MetadataUpdate", type: "event" },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "newAmount",
-        type: "uint256",
-      },
-    ],
-    name: "MintableAmountPerUserChanged",
-    type: "event",
-  },
   {
     anonymous: false,
     inputs: [
@@ -116,7 +126,12 @@ const guildRewardNftAbi = [
         name: "previousOwner",
         type: "address",
       },
-      { indexed: true, internalType: "address", name: "newOwner", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
     ],
     name: "OwnershipTransferred",
     type: "event",
@@ -124,9 +139,24 @@ const guildRewardNftAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "from", type: "address" },
-      { indexed: true, internalType: "address", name: "to", type: "address" },
-      { indexed: true, internalType: "uint256", name: "tokenId", type: "uint256" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "from",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "to",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
     ],
     name: "Transfer",
     type: "event",
@@ -145,24 +175,9 @@ const guildRewardNftAbi = [
     type: "event",
   },
   {
-    anonymous: false,
     inputs: [
-      { indexed: false, internalType: "uint256", name: "tokenId", type: "uint256" },
-    ],
-    name: "Unlocked",
-    type: "event",
-  },
-  {
-    inputs: [],
-    name: "SIGNATURE_VALIDITY",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "to", type: "address" },
-      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
     ],
     name: "approve",
     outputs: [],
@@ -177,17 +192,9 @@ const guildRewardNftAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "userId", type: "uint256" }],
-    name: "balanceOf",
-    outputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
-      { internalType: "uint256[]", name: "tokenIds", type: "uint256[]" },
+      { internalType: "uint256", name: "tokenId", type: "uint256" },
       { internalType: "uint256", name: "userId", type: "uint256" },
-      { internalType: "uint256", name: "signedAt", type: "uint256" },
       { internalType: "bytes", name: "signature", type: "bytes" },
     ],
     name: "burn",
@@ -197,10 +204,8 @@ const guildRewardNftAbi = [
   },
   {
     inputs: [
-      { internalType: "uint256", name: "amount", type: "uint256" },
       { internalType: "address", name: "receiver", type: "address" },
       { internalType: "uint256", name: "userId", type: "uint256" },
-      { internalType: "uint256", name: "signedAt", type: "uint256" },
       { internalType: "bytes", name: "signature", type: "bytes" },
     ],
     name: "claim",
@@ -234,33 +239,37 @@ const guildRewardNftAbi = [
     name: "getFeeData",
     outputs: [
       { internalType: "uint256", name: "tokenFee", type: "uint256" },
-      { internalType: "address payable", name: "treasuryAddress", type: "address" },
+      {
+        internalType: "address payable",
+        name: "treasuryAddress",
+        type: "address",
+      },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "hasClaimed",
+    outputs: [{ internalType: "bool", name: "claimed", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "userId", type: "uint256" }],
+    name: "hasTheUserIdClaimed",
+    outputs: [{ internalType: "bool", name: "claimed", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
-      {
-        components: [
-          { internalType: "string", name: "name", type: "string" },
-          { internalType: "string", name: "symbol", type: "string" },
-          { internalType: "string", name: "cid", type: "string" },
-          { internalType: "address", name: "tokenOwner", type: "address" },
-          { internalType: "address payable", name: "treasury", type: "address" },
-          { internalType: "uint256", name: "tokenFee", type: "uint256" },
-          { internalType: "bool", name: "soulbound", type: "bool" },
-          { internalType: "uint256", name: "maxSupply", type: "uint256" },
-          {
-            internalType: "uint256",
-            name: "mintableAmountPerUser",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IGuildRewardNFTFactory.ConfigurableNFTConfig",
-        name: "nftConfig",
-        type: "tuple",
-      },
+      { internalType: "string", name: "name", type: "string" },
+      { internalType: "string", name: "symbol", type: "string" },
+      { internalType: "string", name: "_cid", type: "string" },
+      { internalType: "address", name: "tokenOwner", type: "address" },
+      { internalType: "address payable", name: "treasury", type: "address" },
+      { internalType: "uint256", name: "tokenFee", type: "uint256" },
       { internalType: "address", name: "factoryProxyAddress", type: "address" },
     ],
     name: "initialize",
@@ -270,47 +279,12 @@ const guildRewardNftAbi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "owner", type: "address" },
-      { internalType: "address", name: "operator", type: "address" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "address", name: "", type: "address" },
     ],
     name: "isApprovedForAll",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
-    name: "locked",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "locked",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "maxSupply",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "mintableAmountPerUser",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "bytes[]", name: "data", type: "bytes[]" }],
-    name: "multicall",
-    outputs: [{ internalType: "bytes[]", name: "results", type: "bytes[]" }],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -343,9 +317,9 @@ const guildRewardNftAbi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "from", type: "address" },
-      { internalType: "address", name: "to", type: "address" },
-      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
     ],
     name: "safeTransferFrom",
     outputs: [],
@@ -354,10 +328,10 @@ const guildRewardNftAbi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "from", type: "address" },
-      { internalType: "address", name: "to", type: "address" },
-      { internalType: "uint256", name: "tokenId", type: "uint256" },
-      { internalType: "bytes", name: "data", type: "bytes" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "bytes", name: "", type: "bytes" },
     ],
     name: "safeTransferFrom",
     outputs: [],
@@ -366,8 +340,8 @@ const guildRewardNftAbi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "operator", type: "address" },
-      { internalType: "bool", name: "approved", type: "bool" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "bool", name: "", type: "bool" },
     ],
     name: "setApprovalForAll",
     outputs: [],
@@ -377,27 +351,6 @@ const guildRewardNftAbi = [
   {
     inputs: [{ internalType: "uint256", name: "newFee", type: "uint256" }],
     name: "setFee",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "bool", name: "newLocked", type: "bool" }],
-    name: "setLocked",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "newMaxSupply", type: "uint256" }],
-    name: "setMaxSupply",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "newAmount", type: "uint256" }],
-    name: "setMintableAmountPerUser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -458,9 +411,9 @@ const guildRewardNftAbi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "from", type: "address" },
-      { internalType: "address", name: "to", type: "address" },
-      { internalType: "uint256", name: "tokenId", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "uint256", name: "", type: "uint256" },
     ],
     name: "transferFrom",
     outputs: [],
@@ -490,4 +443,4 @@ const guildRewardNftAbi = [
   },
 ] as const
 
-export default guildRewardNftAbi
+export default legacyGuildRewardNftAbi

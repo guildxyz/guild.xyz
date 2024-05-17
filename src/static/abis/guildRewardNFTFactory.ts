@@ -8,12 +8,7 @@ const guildRewardNFTFacotryAbi = [
         name: "previousAdmin",
         type: "address",
       },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "newAdmin",
-        type: "address",
-      },
+      { indexed: false, internalType: "address", name: "newAdmin", type: "address" },
     ],
     name: "AdminChanged",
     type: "event",
@@ -21,12 +16,7 @@ const guildRewardNFTFacotryAbi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "beacon",
-        type: "address",
-      },
+      { indexed: true, internalType: "address", name: "beacon", type: "address" },
     ],
     name: "BeaconUpgraded",
     type: "event",
@@ -34,12 +24,7 @@ const guildRewardNFTFacotryAbi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "newFee",
-        type: "uint256",
-      },
+      { indexed: false, internalType: "uint256", name: "newFee", type: "uint256" },
     ],
     name: "FeeChanged",
     type: "event",
@@ -53,12 +38,7 @@ const guildRewardNFTFacotryAbi = [
         name: "contractType",
         type: "uint8",
       },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "newNFT",
-        type: "address",
-      },
+      { indexed: false, internalType: "address", name: "newNFT", type: "address" },
     ],
     name: "ImplementationChanged",
     type: "event",
@@ -66,12 +46,7 @@ const guildRewardNFTFacotryAbi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "uint8",
-        name: "version",
-        type: "uint8",
-      },
+      { indexed: false, internalType: "uint8", name: "version", type: "uint8" },
     ],
     name: "Initialized",
     type: "event",
@@ -85,12 +60,7 @@ const guildRewardNFTFacotryAbi = [
         name: "previousOwner",
         type: "address",
       },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
+      { indexed: true, internalType: "address", name: "newOwner", type: "address" },
     ],
     name: "OwnershipTransferred",
     type: "event",
@@ -98,17 +68,18 @@ const guildRewardNFTFacotryAbi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "deployer",
-        type: "address",
-      },
+      { indexed: false, internalType: "address", name: "deployer", type: "address" },
       {
         indexed: false,
         internalType: "address",
         name: "tokenAddress",
         type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "enum IGuildRewardNFTFactory.ContractType",
+        name: "contractType",
+        type: "uint8",
       },
     ],
     name: "RewardNFTDeployed",
@@ -159,14 +130,38 @@ const guildRewardNFTFacotryAbi = [
       { internalType: "string", name: "symbol", type: "string" },
       { internalType: "string", name: "cid", type: "string" },
       { internalType: "address", name: "tokenOwner", type: "address" },
-      {
-        internalType: "address payable",
-        name: "tokenTreasury",
-        type: "address",
-      },
+      { internalType: "address payable", name: "tokenTreasury", type: "address" },
       { internalType: "uint256", name: "tokenFee", type: "uint256" },
     ],
     name: "deployBasicNFT",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          { internalType: "string", name: "name", type: "string" },
+          { internalType: "string", name: "symbol", type: "string" },
+          { internalType: "string", name: "cid", type: "string" },
+          { internalType: "address", name: "tokenOwner", type: "address" },
+          { internalType: "address payable", name: "treasury", type: "address" },
+          { internalType: "uint256", name: "tokenFee", type: "uint256" },
+          { internalType: "bool", name: "soulbound", type: "bool" },
+          { internalType: "uint256", name: "maxSupply", type: "uint256" },
+          {
+            internalType: "uint256",
+            name: "mintableAmountPerUser",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct IGuildRewardNFTFactory.ConfigurableNFTConfig",
+        name: "nftConfig",
+        type: "tuple",
+      },
+    ],
+    name: "deployConfigurableNFT",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -184,11 +179,7 @@ const guildRewardNFTFacotryAbi = [
     outputs: [
       {
         components: [
-          {
-            internalType: "address",
-            name: "contractAddress",
-            type: "address",
-          },
+          { internalType: "address", name: "contractAddress", type: "address" },
           {
             internalType: "enum IGuildRewardNFTFactory.ContractType",
             name: "contractType",
@@ -208,22 +199,14 @@ const guildRewardNFTFacotryAbi = [
     name: "getFeeData",
     outputs: [
       { internalType: "uint256", name: "tokenFee", type: "uint256" },
-      {
-        internalType: "address payable",
-        name: "treasuryAddress",
-        type: "address",
-      },
+      { internalType: "address payable", name: "treasuryAddress", type: "address" },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address payable",
-        name: "treasuryAddress",
-        type: "address",
-      },
+      { internalType: "address payable", name: "treasuryAddress", type: "address" },
       { internalType: "uint256", name: "fee", type: "uint256" },
       { internalType: "address", name: "validSignerAddress", type: "address" },
     ],

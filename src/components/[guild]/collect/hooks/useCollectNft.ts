@@ -1,42 +1,77 @@
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
-import { CONTRACT_CALL_ARGS_TO_SIGN } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
-import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
 import { useState } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import guildRewardNftAbi from "static/abis/guildRewardNft"
+import legacyGuildRewardNftAbi from "static/abis/legacyGuildRewardNft"
 import { PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import processViemContractError from "utils/processViemContractError"
 import { TransactionReceipt } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import { useCollectNftContext } from "../components/CollectNftContext"
+import {
+  CollectNftForm,
+  useCollectNftContext,
+} from "../components/CollectNftContext"
 import useGuildFee from "./useGuildFee"
+import useGuildRewardNftBalanceByUserId from "./useGuildRewardNftBalanceByUserId"
 import useTopCollectors from "./useTopCollectors"
+
+// address, userId, signedAt, signature (signedAt isn't used actually)
+type LegacyClaimArgs = [`0x${string}`, number, number, `0x${string}`]
+
+// amount, address, userId, signedAt, signature
+type ClaimArgs = [number, `0x${string}`, number, number, `0x${string}`]
 
 type ClaimData = {
   // signed value which we need to send in the contract call
   uniqueValue: `0x${string}`
+  data: {
+    args: LegacyClaimArgs | ClaimArgs
+  }
+}
+
+const validateDefaultClaimArgs = (args: any[]) => {
+  const [userAddress, userId, signedAt, signature] = args
+  return (
+    userAddress?.startsWith("0x") &&
+    typeof userId === "number" &&
+    typeof signedAt === "number" &&
+    signature?.startsWith("0x")
+  )
+}
+
+const isLegacyClaimArgs = (
+  args: ClaimData["data"]["args"]
+): args is LegacyClaimArgs => {
+  if (args.length !== 4) return false
+  return validateDefaultClaimArgs(args)
+}
+
+const isClaimArgs = (args: ClaimData["data"]["args"]): args is ClaimArgs => {
+  if (args.length !== 5) return false
+  const [amount, ...legacyClaimArgs] = args
+  return typeof +amount === "number" && validateDefaultClaimArgs(legacyClaimArgs)
 }
 
 const useCollectNft = () => {
   const { captureEvent } = usePostHogContext()
   const { rewardClaimed } = useCustomPosthogEvents()
   const { id: guildId, urlName } = useGuild()
-  const { id: userId } = useUser()
   const postHogOptions = { guild: urlName }
 
   const tweetToast = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
-  const { address, chainId, status } = useAccount()
+  const { address: userAddress, chainId, status } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
 
@@ -46,6 +81,11 @@ const useCollectNft = () => {
 
   const { guildFee } = useGuildFee(chain)
   const { fee, name, refetch: refetchNftDetails } = useNftDetails(chain, nftAddress)
+
+  const { refetch: refetchBalance } = useGuildRewardNftBalanceByUserId({
+    nftAddress,
+    chainId: Chains[chain],
+  })
   const { mutate: mutateTopCollectors } = useTopCollectors()
 
   const shouldSwitchChain = chainId !== Chains[chain]
@@ -53,10 +93,11 @@ const useCollectNft = () => {
   const [loadingText, setLoadingText] = useState("")
   const fetcherWithSign = useFetcherWithSign()
 
-  const { refetch: refetchBalance } = useNftBalance({
-    nftAddress,
-    chainId: Chains[chain],
+  const { getValues } = useFormContext<CollectNftForm>()
+  const claimAmountFromForm = useWatch<CollectNftForm, "amount">({
+    name: "amount",
   })
+  const claimAmount = claimAmountFromForm ?? 1
 
   const mint = async () => {
     setTxError(false)
@@ -67,31 +108,49 @@ const useCollectNft = () => {
 
     setLoadingText("Claiming NFT")
 
-    const { uniqueValue }: ClaimData = await fetcherWithSign([
+    const { data: claimData }: ClaimData = await fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`,
       {
         body: {
-          args: CONTRACT_CALL_ARGS_TO_SIGN[
-            guildPlatform?.platformGuildData?.function
-          ],
+          args:
+            guildPlatform?.platformGuildData?.function ===
+            ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
+              ? []
+              : [claimAmount],
         },
       },
     ])
 
     const claimFee =
       typeof guildFee === "bigint" && typeof fee === "bigint"
-        ? guildFee + fee
+        ? (guildFee + fee) * BigInt(claimAmount)
         : BigInt(0)
 
-    const claimParams = [address, BigInt(userId), uniqueValue] as const
+    let request
 
-    const { request } = await publicClient.simulateContract({
-      abi: guildRewardNftAbi,
-      address: nftAddress,
-      functionName: "claim",
-      args: claimParams,
-      value: claimFee,
-    })
+    if (isLegacyClaimArgs(claimData.args)) {
+      const [address, userId, , signature] = claimData.args
+      const { request: legacyClaimRequest } = await publicClient.simulateContract({
+        abi: legacyGuildRewardNftAbi,
+        address: nftAddress,
+        functionName: "claim",
+        args: [address, BigInt(userId), signature],
+        value: claimFee,
+      })
+      request = legacyClaimRequest
+    }
+
+    if (isClaimArgs(claimData.args)) {
+      const [amount, address, userId, signedAt, signature] = claimData.args
+      const { request: newClaimRequest } = await publicClient.simulateContract({
+        abi: guildRewardNftAbi,
+        address: nftAddress,
+        functionName: "claim",
+        args: [BigInt(amount), address, BigInt(userId), BigInt(signedAt), signature],
+        value: claimFee,
+      })
+      request = newClaimRequest
+    }
 
     if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
       return Promise.resolve({} as TransactionReceipt)
@@ -121,19 +180,50 @@ const useCollectNft = () => {
     ...useSubmit<undefined, TransactionReceipt>(mint, {
       onSuccess: () => {
         rewardClaimed(PlatformType.CONTRACT_CALL)
+
+        const amount = getValues("amount") ?? 1
+
         setLoadingText("")
 
         refetchBalance()
         refetchNftDetails()
 
         mutateTopCollectors(
-          (prevValue) => ({
-            topCollectors: [
-              ...(prevValue?.topCollectors ?? []),
-              address?.toLowerCase(),
-            ],
-            uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
-          }),
+          (prevValue) => {
+            const lowerCaseUserAddress = userAddress.toLowerCase()
+            const alreadyCollected = !!prevValue?.topCollectors?.find(
+              (collector) => collector.address.toLowerCase() === lowerCaseUserAddress
+            )
+
+            if (alreadyCollected) {
+              return {
+                topCollectors: prevValue.topCollectors
+                  .map((collector) => {
+                    if (collector.address.toLowerCase() === lowerCaseUserAddress) {
+                      return {
+                        address: lowerCaseUserAddress,
+                        balance: collector.balance + Number(amount),
+                      }
+                    }
+
+                    return collector
+                  })
+                  .sort((a, b) => b.balance - a.balance),
+                uniqueCollectors: prevValue.uniqueCollectors,
+              }
+            }
+
+            return {
+              topCollectors: [
+                ...(prevValue?.topCollectors ?? []),
+                {
+                  address: userAddress.toLowerCase(),
+                  balance: Number(amount),
+                },
+              ].sort((a, b) => b.balance - a.balance),
+              uniqueCollectors: (prevValue?.uniqueCollectors ?? 0) + 1,
+            }
+          },
           {
             revalidate: false,
           }
@@ -142,8 +232,12 @@ const useCollectNft = () => {
         captureEvent("Minted NFT (GuildCheckout)", postHogOptions)
 
         tweetToast({
-          title: "Successfully collected NFT!",
-          tweetText: `Just collected my ${name} NFT!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
+          title: `Successfully collected ${amount > 1 ? `${amount} ` : ""}NFT${
+            amount > 1 ? "s" : ""
+          }!`,
+          tweetText: `Just collected my ${name} NFT${
+            amount > 1 ? "s" : ""
+          }!\nguild.xyz/${urlName}/collect/${chain.toLowerCase()}/${nftAddress.toLowerCase()}`,
         })
       },
       onError: (error) => {
