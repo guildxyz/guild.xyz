@@ -4,7 +4,7 @@ import ClientOnly from "components/common/ClientOnly"
 import NavMenu from "../components/NavMenu"
 import Account from "./Account"
 
-const Header = (): JSX.Element => {
+export const Header = (): JSX.Element => {
   const colorContext = useThemeContext()
   const { colorMode } = useColorMode()
 
@@ -38,5 +38,3 @@ const Header = (): JSX.Element => {
     </Flex>
   )
 }
-
-export default Header

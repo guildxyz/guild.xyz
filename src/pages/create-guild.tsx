@@ -2,7 +2,7 @@ import { Stack } from "@chakra-ui/react"
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import { Layout } from "components/common/CompoundLayout"
 import CreateGuildButton from "components/create-guild/CreateGuildButton"
 import {
   CreateGuildProvider,
@@ -18,6 +18,26 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { GuildFormType } from "types"
 
 const CreateGuildPage = (): JSX.Element => {
+  return (
+    <>
+      <Layout.Root>
+        <Layout.Header />
+        <LocalizedHead />
+        <Layout.Background />
+        <Layout.HeadLine />
+        <LocalizedContent />
+      </Layout.Root>
+      <ProvidedDynamicDevTool />
+    </>
+  )
+}
+
+function ProvidedDynamicDevTool() {
+  const { control } = useFormContext<GuildFormType>()
+  return <DynamicDevTool control={control} />
+}
+
+function LocalizedContent() {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const {
     activeStep,
@@ -29,8 +49,8 @@ const CreateGuildPage = (): JSX.Element => {
   } = useCreateGuildContext()
   const { control } = useFormContext<GuildFormType>()
 
-  const name = useWatch({ name: "name" })
-  const imageUrl = useWatch({ name: "imageUrl" })
+  // const name = useWatch({ name: "name" })
+  // const imageUrl = useWatch({ name: "imageUrl" })
   const contacts = useWatch({ name: "contacts" })
   const { captureEvent } = usePostHogContext()
 
@@ -55,44 +75,80 @@ const CreateGuildPage = (): JSX.Element => {
   }, [])
 
   return (
-    <>
-      <Layout
-        title={name || "Create Guild"}
-        backgroundOffset={47}
-        textColor={textColor}
-        background={color}
-        backgroundImage={localBackgroundImage}
-        image={
-          imageUrl && (
-            <GuildLogo
-              imageUrl={imageUrl}
-              size={{ base: "56px", lg: "72px" }}
-              mt={{ base: 1, lg: 2 }}
-              bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-            />
-          )
-        }
-        imageUrl={imageUrl}
-        showFooter={false}
+    <Layout.Content>
+      <CreateGuildStepper
+        {...{ color, activeStep, setActiveStep, textColor, stepPart }}
+      />
+      <Stack w="full" spacing={4} pt={STEPS[activeStep].content ? 6 : 0} pb="24">
+        {STEPS[activeStep].content}
+      </Stack>
+      <GuildCreationProgress
+        next={isLastSubStep ? nextWithPostHog : () => setPart(stepPart + 1)}
+        progress={STEPS[activeStep].progress[stepPart]}
+        isDisabled={nextStepIsDisabled}
       >
-        <CreateGuildStepper
-          {...{ color, activeStep, setActiveStep, textColor, stepPart }}
-        />
-        <Stack w="full" spacing={4} pt={STEPS[activeStep].content ? 6 : 0} pb="24">
-          {STEPS[activeStep].content}
-        </Stack>
-        <GuildCreationProgress
-          next={isLastSubStep ? nextWithPostHog : () => setPart(stepPart + 1)}
-          progress={STEPS[activeStep].progress[stepPart]}
-          isDisabled={nextStepIsDisabled}
-        >
-          {stepPart === 1 ? <CreateGuildButton /> : null}
-        </GuildCreationProgress>
-      </Layout>
-      <DynamicDevTool control={control} />
-    </>
+        {stepPart === 1 ? <CreateGuildButton /> : null}
+      </GuildCreationProgress>
+    </Layout.Content>
   )
 }
+
+function LocalizedHead() {
+  const name = useWatch({ name: "name" })
+  const { textColor } = useThemeContext()
+  const imageUrl = useWatch({ name: "imageUrl" })
+
+  return (
+    <Layout.Head
+      title={name || "Create Guild"}
+      image={
+        imageUrl && (
+          <GuildLogo
+            imageUrl={imageUrl}
+            size={{ base: "56px", lg: "72px" }}
+            mt={{ base: 1, lg: 2 }}
+            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+          />
+        )
+      }
+      imageUrl={imageUrl}
+    />
+  )
+}
+
+// <Layout
+//   title={name || "Create Guild"}
+//   backgroundOffset={47}
+//   textColor={textColor}
+//   background={color}
+//   backgroundImage={localBackgroundImage}
+//   image={
+//     imageUrl && (
+//       <GuildLogo
+//         imageUrl={imageUrl}
+//         size={{ base: "56px", lg: "72px" }}
+//         mt={{ base: 1, lg: 2 }}
+//         bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
+//       />
+//     )
+//   }
+//   imageUrl={imageUrl}
+//   showFooter={false}
+// >
+//   <CreateGuildStepper
+//     {...{ color, activeStep, setActiveStep, textColor, stepPart }}
+//   />
+//   <Stack w="full" spacing={4} pt={STEPS[activeStep].content ? 6 : 0} pb="24">
+//     {STEPS[activeStep].content}
+//   </Stack>
+//   <GuildCreationProgress
+//     next={isLastSubStep ? nextWithPostHog : () => setPart(stepPart + 1)}
+//     progress={STEPS[activeStep].progress[stepPart]}
+//     isDisabled={nextStepIsDisabled}
+//   >
+//     {stepPart === 1 ? <CreateGuildButton /> : null}
+//   </GuildCreationProgress>
+// </Layout>
 
 const CreateGuildPageWrapper = (): JSX.Element => (
   <CreateGuildProvider>

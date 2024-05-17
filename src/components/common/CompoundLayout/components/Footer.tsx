@@ -2,7 +2,7 @@ import { Link } from "@chakra-ui/next-js"
 import { Box, Icon, Text } from "@chakra-ui/react"
 import { ArrowSquareOut } from "phosphor-react"
 
-const Footer = (): JSX.Element => (
+export const Footer = (): JSX.Element => (
   <Box as="footer" mt="auto" py="6">
     <Text textAlign="center" fontSize={"sm"}>
       <Text as="span" colorScheme="gray" lineHeight={2}>
@@ -22,5 +22,3 @@ const Footer = (): JSX.Element => (
     </Text>
   </Box>
 )
-
-export default Footer
