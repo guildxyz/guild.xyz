@@ -157,7 +157,6 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     fetchNftMetadata
   )
 
-  // TODO: maybe we shouldn't convert bigints to numbers here?...
   return {
     ...nftDetails,
     soulbound,

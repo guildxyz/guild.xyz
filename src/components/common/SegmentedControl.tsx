@@ -80,7 +80,6 @@ const SegmentedControlButton = ({
     <chakra.label {...htmlProps} cursor="pointer" position="relative" h={8} w="full">
       <input {...inputProps} hidden />
 
-      {/* TODO: this shouldn't animate vertically */}
       {state.isChecked && (
         <MotionBox
           position="absolute"

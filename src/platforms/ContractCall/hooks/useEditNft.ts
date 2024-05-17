@@ -1,5 +1,4 @@
 import type { ExtractAbiFunctions } from "abitype"
-import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import { CreateNftFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/NftDataForm"
 import { generateGuildRewardNFTMetadata } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
@@ -37,8 +36,13 @@ const useEditNft = ({
     [toast]
   )
 
-  const editGuildPlatform = useEditGuildPlatform({ guildPlatformId })
-  const editRolePlatform = useEditRolePlatform({ rolePlatformId })
+  const editRolePlatform = useEditRolePlatform({
+    rolePlatformId,
+    onSuccess: () => {
+      showSuccessToast()
+      onSuccess()
+    },
+  })
 
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { data: walletClient } = useWalletClient()
@@ -61,7 +65,6 @@ const useEditNft = ({
        * the modified data
        */
 
-      console.log("dirtyData", contractData)
       const transactions = (
         await Promise.all(
           Object.values(functionEncoders).map((encoder) =>
@@ -73,8 +76,6 @@ const useEditNft = ({
           )
         )
       ).filter(Boolean)
-
-      console.log("transactions", transactions)
 
       await walletClient.writeContract({
         account: walletClient.account,
@@ -100,19 +101,7 @@ const useEditNft = ({
         return
       }
 
-      const apiCalls = []
-
-      if (Object.keys(apiData.rolePlatform).length > 0) {
-        apiCalls.push(editRolePlatform.onSubmit(apiData.rolePlatform))
-      }
-
-      // Handling the success/error state here, because we can't really "chain" these calls using our useEditGuildPlatform & useEditRolePlatform hooks
-      Promise.all(apiCalls)
-        .then(() => {
-          showSuccessToast()
-          onSuccess()
-        })
-        .catch((error) => showErrorToast(error))
+      return editRolePlatform.onSubmit(apiData.rolePlatform)
     },
     onError: (error) => {
       const prettyError = processViemContractError(error)
