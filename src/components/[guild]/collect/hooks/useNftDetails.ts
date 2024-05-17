@@ -118,7 +118,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       {
         ...contract,
         functionName: "tokenURI",
-        args: [BigInt(1)],
+        args: [BigInt(0)],
       },
       {
         ...contract,
@@ -152,7 +152,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const fee = feeResponse?.result
   const treasury = treasuryResponse?.result
 
-  const { data: metadata } = useSWRImmutable(
+  const { data: metadata, isLoading: isMetadataLoading } = useSWRImmutable(
     tokenURI ? ipfsToGuildGateway(tokenURI) : null,
     fetchNftMetadata
   )
@@ -175,7 +175,10 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     treasury,
     attributes: metadata?.attributes,
     isLoading:
-      isNftDetailsLoading || isFirstTotalSupplyTodayLoadings || isMulticallLoading,
+      isNftDetailsLoading ||
+      isFirstTotalSupplyTodayLoadings ||
+      isMulticallLoading ||
+      isMetadataLoading,
 
     error: nftDetailsError || multicallError || error,
     refetch,

@@ -34,7 +34,6 @@ const CreateNftForm = ({ onSuccess }: Props) => {
       name: "",
       price: 0,
       description: "",
-      richTextDescription: "",
       image: "",
       attributes: [],
       maxSupply: 0,

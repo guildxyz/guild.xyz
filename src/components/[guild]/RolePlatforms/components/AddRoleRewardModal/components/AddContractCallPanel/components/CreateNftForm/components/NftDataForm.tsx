@@ -52,7 +52,6 @@ import {
 import ImagePicker from "./ImagePicker"
 import MintPerAddressInput from "./MintPerAddressInput"
 import NftTypeInput from "./NftTypeInput"
-import RichTextDescriptionEditor from "./RichTextDescriptionEditor"
 import SupplyInput from "./SupplyInput"
 
 export type CreateNftFormType = {
@@ -61,7 +60,6 @@ export type CreateNftFormType = {
   name: string
   price: number
   description?: string
-  richTextDescription?: string
   image: string
   attributes: { name: string; value: string }[]
   maxSupply: number
@@ -128,10 +126,6 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
     name: "attributes",
   })
 
-  const {
-    field: { onChange: onDescriptionChange, value: richTextDescription },
-  } = useController({ control, name: "richTextDescription" })
-
   const metadataBgColor = useColorModeValue("white", "blackAlpha.300")
 
   const { pathname } = useRouter()
@@ -156,24 +150,6 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
               />
 
               <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-            </FormControl>
-
-            <FormControl isInvalid={!!errors?.richTextDescription}>
-              <FormLabel>Claiming page description</FormLabel>
-
-              <RichTextDescriptionEditor
-                onChange={onDescriptionChange}
-                defaultValue={richTextDescription}
-              />
-
-              <FormErrorMessage>
-                {errors?.richTextDescription?.message}
-              </FormErrorMessage>
-
-              <FormHelperText>
-                This rich text description is only displayed on the claim page. It
-                can contain images, links, and formatted text
-              </FormHelperText>
             </FormControl>
 
             <FormControl isInvalid={!!errors?.description}>

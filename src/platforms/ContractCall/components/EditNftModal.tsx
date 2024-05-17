@@ -34,11 +34,7 @@ type Props = {
 }
 
 const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
-  const {
-    chain,
-    contractAddress,
-    description: platformGuildDataDescription,
-  } = guildPlatform.platformGuildData
+  const { chain, contractAddress } = guildPlatform.platformGuildData
 
   const { roles } = useGuild()
   const rolePlatform = roles
@@ -87,7 +83,6 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
                   formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
                 ),
                 description,
-                richTextDescription: platformGuildDataDescription,
                 image,
                 attributes: attributes?.map((attr) => ({
                   name: attr.trait_type,

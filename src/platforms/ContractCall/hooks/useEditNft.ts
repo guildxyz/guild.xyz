@@ -94,10 +94,7 @@ const useEditNft = ({
 
   const editNft = useSubmit(editNftContractCalls, {
     onSuccess: (apiData) => {
-      if (
-        !Object.keys(apiData.rolePlatform).length &&
-        !Object.keys(apiData.platformGuildData).length
-      ) {
+      if (!Object.keys(apiData.rolePlatform).length) {
         showSuccessToast()
         onSuccess()
         return
@@ -107,16 +104,6 @@ const useEditNft = ({
 
       if (Object.keys(apiData.rolePlatform).length > 0) {
         apiCalls.push(editRolePlatform.onSubmit(apiData.rolePlatform))
-      }
-
-      if (Object.keys(apiData.platformGuildData).length > 0) {
-        apiCalls.push(
-          editGuildPlatform.onSubmit({
-            platformGuildData: {
-              description: apiData.platformGuildData.richTextDescription,
-            },
-          })
-        )
       }
 
       // Handling the success/error state here, because we can't really "chain" these calls using our useEditGuildPlatform & useEditRolePlatform hooks
@@ -135,7 +122,7 @@ const useEditNft = ({
 
   return {
     onSubmit: editNft.onSubmit,
-    isLoading: editNft.isLoading || editGuildPlatform.isLoading,
+    isLoading: editNft.isLoading || editRolePlatform.isLoading,
   }
 }
 
@@ -143,7 +130,6 @@ const getNftDataFormDirtyFields = (
   data: CreateNftFormType,
   dirtyFields: FormState<CreateNftFormType>["dirtyFields"]
 ) => {
-  console.log("getNftDataFormDirtyFields called")
   const {
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
     name: _name,
@@ -170,30 +156,21 @@ const getNftDataFormDirtyFields = (
   return filteredData
 }
 
-const NFT_PLATFORM_GUILD_DATA_KEYS = [
-  "richTextDescription",
-] as const satisfies (keyof CreateNftFormType)[]
 const NFT_ROLE_PLATFORM_KEYS = [
   "startTime",
   "endTime",
 ] as const satisfies (keyof CreateNftFormType)[]
-type PlatformGuildDataKeys = (typeof NFT_PLATFORM_GUILD_DATA_KEYS)[number]
 type RolePlatformKeys = (typeof NFT_ROLE_PLATFORM_KEYS)[number]
 
 const separateContractAndAPIData = (data: Partial<CreateNftFormType>) => {
   const apiData: {
-    platformGuildData: Partial<Pick<CreateNftFormType, PlatformGuildDataKeys>>
     rolePlatform: Partial<Pick<CreateNftFormType, RolePlatformKeys>>
-  } = { platformGuildData: {}, rolePlatform: {} }
+  } = { rolePlatform: {} }
 
-  const contractData: Partial<
-    Omit<CreateNftFormType, PlatformGuildDataKeys | RolePlatformKeys>
-  > = {}
+  const contractData: Partial<Omit<CreateNftFormType, RolePlatformKeys>> = {}
 
   for (const key of Object.keys(data)) {
-    if (NFT_PLATFORM_GUILD_DATA_KEYS.includes(key as PlatformGuildDataKeys)) {
-      apiData.platformGuildData[key] = data[key]
-    } else if (NFT_ROLE_PLATFORM_KEYS.includes(key as RolePlatformKeys)) {
+    if (NFT_ROLE_PLATFORM_KEYS.includes(key as RolePlatformKeys)) {
       apiData.rolePlatform[key] = data[key]
     } else {
       contractData[key] = data[key]

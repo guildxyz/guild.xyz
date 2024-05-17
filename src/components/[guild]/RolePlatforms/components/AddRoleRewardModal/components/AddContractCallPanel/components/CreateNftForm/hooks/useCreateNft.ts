@@ -177,7 +177,7 @@ const useCreateNft = (
           argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
           name: trimmedName,
           imageUrl: data.image,
-          description: data.richTextDescription,
+          description: data.description,
         },
       },
       rolePlatform: {
