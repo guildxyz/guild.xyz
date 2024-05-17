@@ -1,0 +1,62 @@
+import { Alert, AlertIcon, Box, Flex, Text } from "@chakra-ui/react"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
+import useUsersGuildPins from "hooks/useUsersGuildPins"
+import { useAtomValue } from "jotai"
+import { AccountSectionTitle } from "../AccountConnections"
+import GuildPin from "./GuildPin"
+import GuildPinSkeleton from "./GuildPinSkeleton"
+
+const UsersGuildPins = () => {
+  const isAccountModalOpen = useAtomValue(accountModalAtom)
+  const { data, error, isValidating } = useUsersGuildPins(!isAccountModalOpen)
+
+  return (
+    <>
+      <AccountSectionTitle title="Guild Pins" />
+
+      {error && (
+        <>
+          <Alert status="warning" mb={3}>
+            <AlertIcon /> There was an error while fetching your pins, some may not
+            be visible.
+          </Alert>
+        </>
+      )}
+      <Box
+        minW="full"
+        overflowX="scroll"
+        position="relative"
+        mx={-4}
+        className="invisible-scrollbar"
+        sx={{
+          WebkitMaskImage:
+            "linear-gradient(to right, transparent 0px, black var(--chakra-space-4), black calc(100% - var(--chakra-space-4)), transparent)",
+        }}
+      >
+        <Flex minW="full" direction="row" px={4}>
+          {isValidating ? (
+            [...Array(3)].map((_, i) => <GuildPinSkeleton key={i} />)
+          ) : data?.length ? (
+            data.map((pin) => (
+              <GuildPin
+                key={pin.tokenId}
+                image={pin.image}
+                name={pin.name}
+                guild={pin.attributes
+                  .find((attribute) => attribute.trait_type === "guildId")
+                  .value.toString()}
+                rank={pin.attributes
+                  .find((attribute) => attribute.trait_type === "rank")
+                  .value.toString()}
+              />
+            ))
+          ) : (
+            <Text fontSize="sm">You haven't minted any Guild Pins yet</Text>
+          )}
+        </Flex>
+      </Box>
+    </>
+  )
+}
+
+export default UsersGuildPins
