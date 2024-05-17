@@ -73,6 +73,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   LISK_SEPOLIA: [],
   OP_BNB: [],
   FORM_TESTNET: [],
+  CYBER: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
