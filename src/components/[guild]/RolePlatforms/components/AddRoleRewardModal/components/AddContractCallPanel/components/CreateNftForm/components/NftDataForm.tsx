@@ -273,7 +273,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                 variant="outline"
                 icon={Hash}
                 title="Limit supply"
-                description="First come, first served. Max-cap the number of NFTs that can be minted (globally and per user)"
+                description="Limit the total number of NFTs and the number each user can collect. First come, first served."
                 defaultChecked={
                   defaultValues.maxSupply > 0 ||
                   defaultValues.mintableAmountPerUser > 0
@@ -302,7 +302,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                   variant="outline"
                   icon={Clock}
                   title="Limit claiming time"
-                  description="Set a time frame the NFT will be only claimable within"
+                  description="Set a claim period for the NFT."
                   defaultChecked={
                     !!defaultValues.startTime || !!defaultValues.endTime
                   }
