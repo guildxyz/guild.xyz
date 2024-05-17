@@ -20,14 +20,13 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
+import useSubmitAddReward from "./hooks/useSubmitAddReward"
 
-const SelectRolePanel = ({
-  onSubmit,
-}: {
-  onSubmit: (data: any, saveAs?: "DRAFT" | "PUBLIC") => void
-}) => {
+const SelectRolePanel = () => {
   const { modalRef, selection, activeTab, setStep, isBackButtonDisabled } =
     useAddRewardContext()
+
+  const { onSubmit, isLoading } = useSubmitAddReward()
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
@@ -44,8 +43,6 @@ const SelectRolePanel = ({
     activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
       ? !requirements?.length
       : !roleIds?.length
-
-  const isLoading = false
 
   const { RewardPreview } = rewards[selection] ?? {}
 
@@ -68,7 +65,6 @@ const SelectRolePanel = ({
               mb="-3px"
               icon={<ArrowLeft size={20} />}
               variant="ghost"
-              // TODO: form default value reset, panelDirty setting
               onClick={goBack}
             />
             <Text>{`Add ${rewards[selection].name} reward`}</Text>
