@@ -1,4 +1,4 @@
-import { Icon, Spinner, Tooltip, Wrap } from "@chakra-ui/react"
+import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import {
@@ -107,17 +107,18 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
         </>
       }
       whiteSpace={"nowrap"}
-    >
-      <Wrap spacing={1}>
-        <DynamicTag rolePlatform={rolePlatform} />
-        <AvailabilityTags rolePlatform={rolePlatform} />
-        {isAdmin && (
-          <PoolTag
-            poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
-          />
-        )}
-      </Wrap>
-    </RewardDisplay>
+      rightElement={
+        <>
+          <DynamicTag rolePlatform={rolePlatform} />
+          <AvailabilityTags rolePlatform={rolePlatform} />
+          {isAdmin && (
+            <PoolTag
+              poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
+            />
+          )}
+        </>
+      }
+    />
   )
 }
 
