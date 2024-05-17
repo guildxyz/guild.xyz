@@ -98,7 +98,12 @@ const AmountPicker = () => {
       const rangeIndex = ranges.findIndex(
         (r) => r.min <= debouncedAmount && r.max >= debouncedAmount
       )
-      setActiveRange(rangeIndex)
+
+      if (rangeIndex === -1 && debouncedAmount > ranges.at(-1).max) {
+        setActiveRange(ranges.length - 1)
+      } else {
+        setActiveRange(rangeIndex)
+      }
     }
   }, [ranges, debouncedAmount])
 
@@ -161,10 +166,12 @@ const AmountPicker = () => {
                       </Text>
 
                       <Text as="span" fontSize="xs" colorScheme="gray">
-                        {range.min === range.max
-                          ? range.min
-                          : index === ranges.length - 1
+                        {index === ranges.length - 1 &&
+                        (mintableAmountPerUserFromContract === BigInt(0) ||
+                          mintableAmountPerUserFromContract > range.max)
                           ? `${range.min}+`
+                          : range.min === range.max
+                          ? range.min
                           : `${range.min} - ${range.max}`}
                       </Text>
                     </Stack>
