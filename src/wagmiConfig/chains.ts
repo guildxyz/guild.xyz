@@ -29,6 +29,7 @@ import {
   celo,
   coreDao,
   cronos,
+  cyber,
   evmos,
   fantom,
   gnosis,
@@ -623,6 +624,14 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/form.svg",
     },
   },
+  CYBER: {
+    ...generateChainConfig(cyber as ViemChain, ETH_ICON),
+    iconUrl: "/networkLogos/cyber.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/cyber.svg",
+      dark: "/networkLogos/cyber.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -683,6 +692,7 @@ enum Chains {
   LISK_SEPOLIA = liskSepolia.id,
   OP_BNB = opBNB.id,
   FORM_TESTNET = formTestnet.id,
+  CYBER = cyber.id,
 }
 
 export type Chain = keyof typeof Chains
