@@ -22,7 +22,7 @@ import { ArrowLeft } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import ConversionInput from "../AddTokenPanel/components/ConversionInput"
 
-const ConversionSetup = () => {
+const ConversionSetup = ({ onSubmit }: { onSubmit: () => void }) => {
   const { control } = useFormContext()
   const requirementId = useWatch({ name: "dynamic.requirementId", control })
 
@@ -89,7 +89,9 @@ const ConversionSetup = () => {
         </Stack>
 
         <Flex justifyContent={"flex-end"} mt="auto" pt="10">
-          <Button colorScheme="green">Continue</Button>
+          <Button colorScheme="green" onClick={onSubmit}>
+            Continue
+          </Button>
         </Flex>
       </ModalBody>
     </>

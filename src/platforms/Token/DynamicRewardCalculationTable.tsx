@@ -59,7 +59,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
           <Td
             sx={{ fontSize: "sm !important", "& *": { fontSize: "sm !important" } }}
           >
-            <ProvidedValueDisplay requirement={requirement} />
+            {!!requirement && <ProvidedValueDisplay requirement={requirement} />}
           </Td>
           <Td isNumeric>{rawProvidedUserAmount ?? <JoinToCalculate />}</Td>
         </Tr>

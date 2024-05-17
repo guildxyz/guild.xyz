@@ -44,6 +44,7 @@ const LinkedRequirement = ({ requirement }: { requirement?: Requirement }) => (
           <RequirementDisplayComponent
             requirement={requirement as Requirement}
             dynamicDisplay
+            rightElement={null}
           />
         </Card>
       )}

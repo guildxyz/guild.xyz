@@ -1,6 +1,8 @@
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { useAtomValue } from "jotai"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
@@ -12,6 +14,10 @@ export type AddPointsFormType = {
   amount: string
   name: string
   imageUrl: string
+  dynamic?: {
+    multiplier: number
+    requirementId: number
+  }
 }
 
 const steps: Record<string, (onSubmit) => JSX.Element> = {
@@ -40,7 +46,26 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
     name: "data.guildPlatformId",
   })
 
-  const onSubmit = (data: AddPointsFormType) =>
+  const targetRoleId = useAtomValue<number>(targetRoleAtom)
+
+  const onSubmit = (data: AddPointsFormType) => {
+    const dynamicAmount = data?.dynamic?.multiplier
+      ? {
+          operation: {
+            type: "LINEAR",
+            params: {
+              addition: 0,
+              multiplier: data.dynamic.multiplier,
+            },
+            input: {
+              type: "REQUIREMENT_AMOUNT",
+              requirementId: data.dynamic.requirementId,
+              roleId: targetRoleId,
+            },
+          },
+        }
+      : {}
+
     onAdd({
       ...(selectedExistingId
         ? {
@@ -68,14 +93,16 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       platformRoleData: {
         score: parseInt(data.amount),
       },
+      dynamicAmount: dynamicAmount as any,
     })
+  }
 
   const { step } = useAddRewardContext()
   const SetupStep = steps[step]
 
   return (
     <FormProvider {...methods}>
-      <SetupStep onSubmit={onSubmit} />
+      <SetupStep onSubmit={methods.handleSubmit(onSubmit)} />
     </FormProvider>
   )
 }
