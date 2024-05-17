@@ -1,7 +1,9 @@
 import {
+  Circle,
   Flex,
   FormLabel,
   HStack,
+  Icon,
   IconButton,
   ModalBody,
   ModalCloseButton,
@@ -18,11 +20,17 @@ import useRequirements from "components/[guild]/hooks/useRequirements"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
 import { useAtomValue } from "jotai"
-import { ArrowLeft } from "phosphor-react"
+import { ArrowLeft, Lightning } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import ConversionInput from "../AddTokenPanel/components/ConversionInput"
 
-const ConversionSetup = ({ onSubmit }: { onSubmit: () => void }) => {
+const ConversionSetup = ({
+  onSubmit,
+  toImage,
+}: {
+  onSubmit: () => void
+  toImage: JSX.Element
+}) => {
   const { control } = useFormContext()
   const requirementId = useWatch({ name: "dynamic.requirementId", control })
 
@@ -33,6 +41,12 @@ const ConversionSetup = ({ onSubmit }: { onSubmit: () => void }) => {
   const baseValueBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100")
 
   const { setStep } = useAddRewardContext()
+
+  const fromImage = (
+    <Circle bgColor={"white"} size={5} overflow="hidden">
+      <Icon boxSize={3} as={Lightning} weight="fill" color="green.500" />
+    </Circle>
+  )
 
   return (
     <>
@@ -82,9 +96,12 @@ const ConversionSetup = ({ onSubmit }: { onSubmit: () => void }) => {
           <Stack gap={1}>
             <ConversionInput
               name={"dynamic.multiplier"}
-              fromImage={""}
-              toImage={""}
+              fromImage={fromImage}
+              toImage={toImage}
             />
+            <Text color={"GrayText"} fontSize={"sm"} textAlign={"right"}>
+              The received reward amount will be rounded down
+            </Text>
           </Stack>
         </Stack>
 

@@ -6,7 +6,6 @@ import {
   AccordionPanel,
   Alert,
   AlertIcon,
-  Divider,
   HStack,
   Heading,
   Icon,
@@ -14,11 +13,13 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
   Text,
   Tooltip,
+  useColorModeValue,
 } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
@@ -73,6 +74,8 @@ const DynamicRewardModal = ({
     onClose()
   }
 
+  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.700")
+
   return (
     <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
       <ModalOverlay />
@@ -93,34 +96,32 @@ const DynamicRewardModal = ({
               rolePlatform={rolePlatform}
             />
           </Stack>
-
-          <Stack mt="8">
-            <Divider mb={1} mt={3} />
-            <Accordion allowToggle>
-              <AccordionItem border={"none"}>
-                <AccordionButton
-                  display={"flex"}
-                  rounded={"lg"}
-                  fontWeight={"semibold"}
-                  px={0}
-                  opacity={0.5}
-                  _hover={{ opacity: 1 }}
-                >
-                  <Icon as={Question} mr={2} />
-                  What's a dynamic reward?
-                  <AccordionIcon ml={"auto"} />
-                </AccordionButton>
-                <AccordionPanel>
-                  <Text color={"GrayText"}>
-                    Dynamic rewards adjust the amount of rewards you can earn based
-                    on various factors, like completing specific requirements,
-                    accumulating points, or your activities within the guild.
-                  </Text>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </Stack>
         </ModalBody>
+        <ModalFooter pt={6} bg={footerBg} border={"none"}>
+          <Accordion allowToggle w="full">
+            <AccordionItem border={"none"}>
+              <AccordionButton
+                display={"flex"}
+                rounded={"lg"}
+                fontWeight={"semibold"}
+                px={0}
+                opacity={0.5}
+                _hover={{ opacity: 1 }}
+              >
+                <Icon as={Question} mr={2} />
+                What's a dynamic reward?
+                <AccordionIcon ml={"auto"} />
+              </AccordionButton>
+              <AccordionPanel>
+                <Text color={"GrayText"}>
+                  Dynamic rewards adjust the amount of rewards you can earn based on
+                  various factors, like completing specific requirements,
+                  accumulating points, or your activities within the guild.
+                </Text>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )

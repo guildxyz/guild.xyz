@@ -57,7 +57,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
       colorScheme="dark"
     >
       <ModalOverlay />
-      <ModalContent minH="550px">
+      <ModalContent>
         {step === "HOME" && <SelectRewardPanel append={append} />}
 
         {isRewardSetupStep && (
