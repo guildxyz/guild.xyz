@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
   Tooltip,
+  Wrap,
   useColorModeValue,
 } from "@chakra-ui/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
@@ -170,10 +171,10 @@ const RewardDisplay = ({
     {icon}
 
     <Stack w="full" spacing={0.5}>
-      <HStack spacing={0}>
+      <Wrap spacingY={0.5}>
         <Text maxW="calc(100% - var(--chakra-sizes-12))">{label}</Text>
         {rightElement}
-      </HStack>
+      </Wrap>
 
       {children}
     </Stack>

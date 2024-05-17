@@ -22,72 +22,40 @@ import {
 } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
 import Card from "components/common/Card"
-import { Lightning, Question, X } from "phosphor-react"
+import { Lightning, Question } from "phosphor-react"
 import { Requirement, RolePlatform } from "types"
+import DynamicRewardCalculationTable from "./DynamicRewardCalculationTable"
 
-const SnapshotRequirementDetails = ({
-  requirement,
-  rolePlatform,
-}: {
-  requirement?: Requirement
-  rolePlatform: RolePlatform
-}) => {
-  const dynamicAmount: any = rolePlatform.dynamicAmount.operation
-
-  return (
-    <>
-      <HStack mb="3">
-        <Heading fontSize="md">Linked to value</Heading>
-        <Tooltip
-          label="For dynamic rewards, the reward amount is calculated from a base value, originated from a requirement. "
-          placement="bottom"
-          hasArrow
-        >
-          <Icon as={Question} color="GrayText" />
-        </Tooltip>
-      </HStack>
-      <Stack>
-        {requirement !== undefined && (
-          <Card px={4} py={2}>
-            <RequirementDisplayComponent
-              requirement={requirement as Requirement}
-              dynamicDisplay
-            />
-          </Card>
-        )}
-        {!requirement && (
-          <Alert status="warning">
-            <AlertIcon mt={0} /> This reward is not linked to any specific
-            requirements and therefore will not distribute any tokens.
-          </Alert>
-        )}
-      </Stack>
-
-      <Stack mt={8}>
-        <HStack>
-          <Heading fontSize="md">With conversion</Heading>
-          <Tooltip
-            label="Your claimable token amount is determined by applying a conversion function to your points from the snapshot."
-            placement="bottom"
-            hasArrow
-          >
-            <Icon as={Question} color="GrayText" />
-          </Tooltip>
-        </HStack>
-
-        <HStack gap={1}>
-          <Text fontWeight={"semibold"} ml="auto" colorScheme="gray" fontSize="sm">
-            Multiplier:
-          </Text>
-          <Icon boxSize={3} as={X} />
-          <Text fontWeight={"semibold"} mr={2} fontSize="sm">
-            {dynamicAmount.params.multiplier}
-          </Text>
-        </HStack>
-      </Stack>
-    </>
-  )
-}
+const LinkedRequirement = ({ requirement }: { requirement?: Requirement }) => (
+  <Stack gap={0}>
+    <HStack mb="3">
+      <Heading fontSize="md">Linked to value</Heading>
+      <Tooltip
+        label="For dynamic rewards, the reward amount is calculated from a base value, originated from a requirement. "
+        placement="bottom"
+        hasArrow
+      >
+        <Icon as={Question} color="GrayText" />
+      </Tooltip>
+    </HStack>
+    <Stack>
+      {requirement !== undefined && (
+        <Card px={4} py={2}>
+          <RequirementDisplayComponent
+            requirement={requirement as Requirement}
+            dynamicDisplay
+          />
+        </Card>
+      )}
+      {!requirement && (
+        <Alert status="warning">
+          <AlertIcon mt={0} /> This reward is not linked to any specific requirements
+          and therefore will not distribute any tokens.
+        </Alert>
+      )}
+    </Stack>
+  </Stack>
+)
 
 const DynamicRewardModal = ({
   isOpen,
@@ -117,10 +85,13 @@ const DynamicRewardModal = ({
         </ModalHeader>
 
         <ModalBody>
-          <SnapshotRequirementDetails
-            rolePlatform={rolePlatform}
-            requirement={linkedRequirement}
-          />
+          <Stack spacing={6}>
+            <LinkedRequirement requirement={linkedRequirement} />
+            <DynamicRewardCalculationTable
+              requirement={linkedRequirement}
+              rolePlatform={rolePlatform}
+            />
+          </Stack>
 
           <Stack mt="8">
             <Divider mb={1} mt={3} />

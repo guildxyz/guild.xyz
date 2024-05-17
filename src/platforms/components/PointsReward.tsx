@@ -1,5 +1,5 @@
 import { Link } from "@chakra-ui/next-js"
-import { Icon, Tooltip, Wrap, useColorModeValue } from "@chakra-ui/react"
+import { Icon, Tooltip, useColorModeValue } from "@chakra-ui/react"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import {
   RewardDisplay,
@@ -9,6 +9,7 @@ import {
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import { ArrowRight, Check } from "phosphor-react"
+import useDynamicRewardUserAmount from "platforms/Token/hooks/useDynamicRewardUserAmount"
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
@@ -16,6 +17,11 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const name = platformGuildData?.name || "points"
 
   const { hasRoleAccess } = useRoleMembership(platform.roleId)
+  const { dynamicUserAmount } = useDynamicRewardUserAmount(platform)
+
+  const score = platform?.dynamicAmount
+    ? dynamicUserAmount ?? "some"
+    : platform.platformRoleData?.score
 
   const iconColor = useColorModeValue("green.500", "green.300")
 
@@ -45,20 +51,17 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
             <Link
               href={`/${urlName}/leaderboard/${platform.guildPlatform.id}`}
               fontWeight={"semibold"}
-            >{`${platform.platformRoleData?.score ?? 0} ${name}`}</Link>
+            >{`${score ?? 0} ${name}`}</Link>
             {hasRoleAccess && (
               <Icon as={Check} color={iconColor} ml="1.5" mb="-0.5" />
             )}
           </Tooltip>
         </>
       }
-    >
-      {!!platform.dynamicAmount && (
-        <Wrap spacing={1}>
-          <DynamicTag rolePlatform={platform} />
-        </Wrap>
-      )}
-    </RewardDisplay>
+      rightElement={
+        !!platform.dynamicAmount && <DynamicTag rolePlatform={platform} />
+      }
+    />
   )
 }
 export default PointsReward
