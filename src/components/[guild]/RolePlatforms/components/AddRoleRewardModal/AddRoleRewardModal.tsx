@@ -1,4 +1,4 @@
-import { ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { ModalContent, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -8,6 +8,7 @@ import rewards, { AddRewardPanelProps } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { RoleFormType } from "types"
 import SelectRewardPanel from "./SelectRewardPanel"
+import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 type Props = {
   append: AddRewardPanelProps["onAdd"]
@@ -60,12 +61,18 @@ const AddRoleRewardModal = ({ append }: Props) => {
       <ModalContent>
         {step === "HOME" && (
           <SelectRewardPanel
-            append={append}
-            showExisting
             disabledRewards={{
               ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
             }}
-          />
+          >
+            <SelectExistingPlatform
+              onClose={onClose}
+              onSelect={(selectedRolePlatform) => append?.(selectedRolePlatform)}
+            />
+            <Text fontWeight="bold" mb="3">
+              Add new reward
+            </Text>
+          </SelectRewardPanel>
         )}
 
         {isRewardSetupStep && (
