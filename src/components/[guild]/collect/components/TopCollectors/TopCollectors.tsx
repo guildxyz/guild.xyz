@@ -21,7 +21,7 @@ const TopCollectors = () => {
 
   return (
     <Section
-      title="Collectors"
+      title="Top collectors"
       titleRightElement={
         data && (
           <Tag minW="max-content" position="relative">
