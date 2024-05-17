@@ -36,7 +36,7 @@ const CreateGuildContractCall = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalBody>
           <CreateNftForm
             onSuccess={(newGuildPlatform) => {
-              append(newGuildPlatform)
+              append(newGuildPlatform.guildPlatform)
               onClose()
             }}
           />
