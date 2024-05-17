@@ -181,7 +181,7 @@ const useCollectNft = () => {
       onSuccess: () => {
         rewardClaimed(PlatformType.CONTRACT_CALL)
 
-        const amount = getValues("amount")
+        const amount = getValues("amount") ?? 1
 
         setLoadingText("")
 
