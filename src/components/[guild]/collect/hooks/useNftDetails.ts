@@ -8,6 +8,7 @@ import { getBlockByTime } from "utils/getBlockByTime"
 import ipfsToGuildGateway from "utils/ipfsToGuildGateway"
 import { useReadContract, useReadContracts } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
+import { z } from "zod"
 
 const currentDate = new Date()
 currentDate.setUTCHours(0, 0, 0, 0)
@@ -15,6 +16,23 @@ const noonUnixTimestamp = currentDate.getTime() / 1000
 
 const fetchNftDetails = ([_, chain, address]) =>
   fetcher(`/api/nft/${chain}/${address}`)
+
+export const guildNftRewardMetadataSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  image: z.string().min(1),
+  attributes: z
+    .array(
+      z.object({
+        trait_type: z.string().min(1),
+        value: z.string().min(1),
+      })
+    )
+    .default([]),
+})
+
+const fetchNftMetadata = (url: string) =>
+  fetcher(url).then((metadata) => guildNftRewardMetadataSchema.parse(metadata))
 
 const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const { guildPlatforms } = useGuild()
@@ -100,11 +118,15 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
       {
         ...contract,
         functionName: "tokenURI",
-        args: [BigInt(1)],
+        args: [BigInt(0)],
       },
       {
         ...contract,
         functionName: "fee",
+      },
+      {
+        ...contract,
+        functionName: "treasury",
       },
     ],
     query: {
@@ -119,6 +141,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     mintableAmountPerUserResponse,
     tokenURIResponse,
     feeResponse,
+    treasuryResponse,
   ] = data || []
 
   const soulbound = lockedResponse?.result !== false // undefined or true means that it is "locked"
@@ -127,9 +150,11 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const mintableAmountPerUser = mintableAmountPerUserResponse?.result
   const tokenURI = tokenURIResponse?.result
   const fee = feeResponse?.result
+  const treasury = treasuryResponse?.result
 
-  const { data: metadata } = useSWRImmutable(
-    tokenURI ? ipfsToGuildGateway(tokenURI) : null
+  const { data: metadata, isLoading: isMetadataLoading } = useSWRImmutable(
+    tokenURI ? ipfsToGuildGateway(tokenURI) : null,
+    fetchNftMetadata
   )
 
   // TODO: maybe we shouldn't convert bigints to numbers here?...
@@ -145,10 +170,15 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     maxSupply: maxSupply,
     mintableAmountPerUser,
     image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
-    description: metadata?.description as string,
+    description: metadata?.description,
     fee,
+    treasury,
+    attributes: metadata?.attributes,
     isLoading:
-      isNftDetailsLoading || isFirstTotalSupplyTodayLoadings || isMulticallLoading,
+      isNftDetailsLoading ||
+      isFirstTotalSupplyTodayLoadings ||
+      isMulticallLoading ||
+      isMetadataLoading,
 
     error: nftDetailsError || multicallError || error,
     refetch,

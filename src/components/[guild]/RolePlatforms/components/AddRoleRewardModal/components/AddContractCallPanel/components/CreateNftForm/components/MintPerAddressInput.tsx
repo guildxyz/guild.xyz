@@ -11,9 +11,8 @@ import {
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import SegmentedControl from "components/common/SegmentedControl"
-import { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { CreateNftFormType } from "../CreateNftForm"
+import { CreateNftFormType } from "./NftDataForm"
 
 type MintLimitType = "LIMITED" | "UNLIMITED"
 const options = [
@@ -28,8 +27,6 @@ const options = [
 ] satisfies { label: string; value: MintLimitType }[]
 
 const MintPerAddressInput = () => {
-  const [mintLimitType, setMintLimitType] = useState<MintLimitType>("UNLIMITED")
-
   const {
     control,
     getValues,
@@ -45,7 +42,7 @@ const MintPerAddressInput = () => {
     name: "mintableAmountPerUser",
     defaultValue: 1,
     rules: {
-      min: mintLimitType === "LIMITED" ? 1 : 0,
+      min: 0,
       max: !!getValues("maxSupply")
         ? {
             value: getValues("maxSupply"),
@@ -55,9 +52,8 @@ const MintPerAddressInput = () => {
     },
   })
 
-  useEffect(() => {
-    mintableAmountPerUserOnChange(mintLimitType === "LIMITED" ? 1 : 0)
-  }, [mintableAmountPerUserOnChange, mintLimitType])
+  const mintLimitType: MintLimitType =
+    mintableAmountPerUserField.value > 0 ? "LIMITED" : "UNLIMITED"
 
   return (
     <FormControl
@@ -72,8 +68,9 @@ const MintPerAddressInput = () => {
         <FormLabel>Claiming per address</FormLabel>
         <SegmentedControl
           options={options}
+          value={mintLimitType}
           onChange={(newSupplyType: MintLimitType) =>
-            setMintLimitType(newSupplyType)
+            mintableAmountPerUserOnChange(newSupplyType === "LIMITED" ? 1 : 0)
           }
         />
       </GridItem>

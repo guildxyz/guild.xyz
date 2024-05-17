@@ -363,9 +363,10 @@ const AddRewardButton = (): JSX.Element => {
               ) : (
                 <PlatformsGrid
                   onSelection={(selected) => {
-                    // Should we add sampling here? Or is it sampled by default?
-                    startSessionRecording()
-                    captureEvent("[discord setup] started in existing guild")
+                    if (selected === "CONTRACT_CALL") startSessionRecording()
+                    if (selected === "DISCORD")
+                      captureEvent("[discord setup] started in existing guild")
+
                     setSelection(selected)
                   }}
                   pb="4"

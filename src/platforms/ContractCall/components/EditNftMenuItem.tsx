@@ -1,17 +1,15 @@
 import { MenuItem, useDisclosure } from "@chakra-ui/react"
-import RemovePlatformMenuItem from "components/[guild]/AccessHub/components/RemovePlatformMenuItem"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
-import PlatformCardMenu from "components/[guild]/RolePlatforms/components/PlatformCard/components/PlatformCardMenu"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { PencilSimple } from "phosphor-react"
-import EditNFTDescriptionModal from "./components/EditNFTDescriptionModal"
-import EditNftModal from "./components/EditNftModal"
+import EditNFTDescriptionModal from "./EditNFTDescriptionModal"
+import EditNftModal from "./EditNftModal"
 
 type Props = {
   platformGuildId: string
 }
 
-const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
+const EditNftMenuItem = ({ platformGuildId }: Props) => {
   const { guildPlatforms } = useGuild()
   const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
@@ -30,12 +28,9 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
 
   return (
     <>
-      <PlatformCardMenu>
-        <MenuItem icon={<PencilSimple />} onClick={isLegacy ? legacyOnOpen : onOpen}>
-          {isLegacy ? "Edit NFT description" : "Edit NFT"}
-        </MenuItem>
-        <RemovePlatformMenuItem platformGuildId={platformGuildId} />
-      </PlatformCardMenu>
+      <MenuItem icon={<PencilSimple />} onClick={isLegacy ? legacyOnOpen : onOpen}>
+        {isLegacy ? "Edit NFT description" : "Edit NFT"}
+      </MenuItem>
 
       {isLegacy ? (
         <EditNFTDescriptionModal
@@ -54,4 +49,4 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   )
 }
 
-export default ContractCallCardMenu
+export default EditNftMenuItem

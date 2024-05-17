@@ -37,10 +37,13 @@ const AmountPicker = () => {
   const mintableAmountPerUser =
     typeof maxSupply === "bigint" &&
     typeof totalSupply === "bigint" &&
-    typeof mintableAmountPerUserFromContract === "bigint"
+    mintableAmountPerUserFromContract > 0
       ? Math.min(
-          Number(maxSupply - totalSupply),
-          Number(mintableAmountPerUserFromContract - (balance ?? BigInt(0))) // Defined a fallback for balance here, so the amount picker works properly for logged out users too
+          Math.max(Number(maxSupply - totalSupply), 0),
+          Math.max(
+            Number(mintableAmountPerUserFromContract - (balance ?? BigInt(0))),
+            0
+          ) // Defined a fallback for balance here, so the amount picker works properly for logged out users too
         )
       : 0
 
@@ -58,10 +61,10 @@ const AmountPicker = () => {
   const numberInputMax =
     mintableAmountPerUser ||
     (typeof maxSupply === "bigint" &&
-      typeof totalSupply === "bigint" &&
-      maxSupply !== BigInt(0))
+    typeof totalSupply === "bigint" &&
+    maxSupply !== BigInt(0)
       ? Number(maxSupply - totalSupply)
-      : undefined
+      : undefined)
 
   const {
     field: { value: amount, onChange: onAmountChange, ...amountField },
@@ -95,7 +98,12 @@ const AmountPicker = () => {
       const rangeIndex = ranges.findIndex(
         (r) => r.min <= debouncedAmount && r.max >= debouncedAmount
       )
-      setActiveRange(rangeIndex)
+
+      if (rangeIndex === -1 && debouncedAmount > ranges.at(-1).max) {
+        setActiveRange(ranges.length - 1)
+      } else {
+        setActiveRange(rangeIndex)
+      }
     }
   }, [ranges, debouncedAmount])
 
@@ -108,13 +116,12 @@ const AmountPicker = () => {
           Amount
         </Text>
 
-        {/* Only show if maxSupply is not unlimited */}
-        {maxSupply > 0 && (
+        {ranges?.at(-1).max >= 10 && (
           <SimpleGrid columns={4} gap={2}>
             {ranges.map((range, index) => {
               const isDisabled =
-                mintableAmountPerUser < range.min ||
-                maxSupply - totalSupply < range.min
+                (mintableAmountPerUser > 0 && mintableAmountPerUser < range.min) ||
+                (maxSupply > 0 && maxSupply - totalSupply < range.min)
               return (
                 <Button
                   key={range.name}
@@ -159,10 +166,12 @@ const AmountPicker = () => {
                       </Text>
 
                       <Text as="span" fontSize="xs" colorScheme="gray">
-                        {range.min === range.max
-                          ? range.min
-                          : index === ranges.length - 1
+                        {index === ranges.length - 1 &&
+                        (mintableAmountPerUserFromContract === BigInt(0) ||
+                          mintableAmountPerUserFromContract > range.max)
                           ? `${range.min}+`
+                          : range.min === range.max
+                          ? range.min
                           : `${range.min} - ${range.max}`}
                       </Text>
                     </Stack>

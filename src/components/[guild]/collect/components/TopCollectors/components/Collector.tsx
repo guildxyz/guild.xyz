@@ -16,9 +16,7 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
 
   if (!address) return null
 
-  const rangeIcon = !!ranges
-    ? `${ranges.find((r) => r.min <= balance && r.max >= balance).icon} `
-    : ""
+  const rangeIcon = ranges?.find((r) => r.min <= balance && r.max >= balance)?.icon
 
   return (
     <VStack spacing={1}>
@@ -47,7 +45,7 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
           noOfLines={1}
           color="GrayText"
         >
-          {`${rangeIcon}${pluralize(balance, "mint")}`}
+          {`${rangeIcon ? `${rangeIcon} ` : ""}${pluralize(balance, "mint")}`}
         </Text>
       </VStack>
     </VStack>

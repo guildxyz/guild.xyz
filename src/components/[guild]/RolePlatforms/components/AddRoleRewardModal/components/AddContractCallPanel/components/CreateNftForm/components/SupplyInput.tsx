@@ -10,9 +10,8 @@ import {
   NumberInputStepper,
 } from "@chakra-ui/react"
 import SegmentedControl from "components/common/SegmentedControl"
-import { useEffect, useState } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { CreateNftFormType } from "../CreateNftForm"
+import { CreateNftFormType } from "./NftDataForm"
 
 type SupplyType = "LIMITED" | "UNLIMITED"
 const options = [
@@ -27,26 +26,23 @@ const options = [
 ] satisfies { label: string; value: SupplyType }[]
 
 const SupplyInput = () => {
-  const [supplyType, setSupplyType] = useState<SupplyType>("UNLIMITED")
-
   const {
     control,
     formState: { errors },
   } = useFormContext<CreateNftFormType>()
+
   const {
     field: { onChange: maxSupplyFieldOnChange, ...maxSupplyField },
   } = useController({
     control,
     name: "maxSupply",
-    defaultValue: 0, // 0 = unlimited
+    defaultValue: 0,
     rules: {
-      min: supplyType === "LIMITED" ? 1 : 0,
+      min: 0,
     },
   })
 
-  useEffect(() => {
-    maxSupplyFieldOnChange(supplyType === "LIMITED" ? 1 : 0)
-  }, [maxSupplyFieldOnChange, supplyType])
+  const supplyType: SupplyType = maxSupplyField.value > 0 ? "LIMITED" : "UNLIMITED"
 
   return (
     <Grid templateColumns="repeat(3, 1fr)" columnGap={4} rowGap={2}>
@@ -54,7 +50,10 @@ const SupplyInput = () => {
         <FormLabel>Supply</FormLabel>
         <SegmentedControl
           options={options}
-          onChange={(newSupplyType) => setSupplyType(newSupplyType)}
+          value={supplyType}
+          onChange={(newSupplyType) =>
+            maxSupplyFieldOnChange(newSupplyType === "LIMITED" ? 1 : 0)
+          }
         />
       </GridItem>
 

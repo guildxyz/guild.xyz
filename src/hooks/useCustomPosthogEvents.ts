@@ -14,6 +14,13 @@ export default function useCustomPosthogEvents() {
         platformName: PlatformType[platformId],
         guild: guild ?? urlName,
         userId: id,
+        ...(platformId === PlatformType.CONTRACT_CALL
+          ? {
+              $set: {
+                createdNFT: true,
+              },
+            }
+          : {}),
       })
     },
 

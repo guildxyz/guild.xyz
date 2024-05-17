@@ -8,26 +8,30 @@ import InfoBlock from "./components/InfoBlock"
 
 const Details = () => {
   const { chain, nftAddress } = useCollectNftContext()
-  const { standard, soulbound, isLoading } = useNftDetails(chain, nftAddress)
+  const { maxSupply, soulbound, isLoading } = useNftDetails(chain, nftAddress)
 
   return (
     <Section title="Details" spacing={3}>
       <SimpleGrid spacing={3} columns={{ base: 2, sm: 4, md: 2, lg: 4 }}>
-        <InfoBlock label="Standard">
-          <Skeleton isLoaded={!isLoading}>
-            <Text as="span" fontSize="md" colorScheme="gray">
-              {standard ?? "Loading..."}
-            </Text>
-          </Skeleton>
-        </InfoBlock>
-
         <InfoBlock label="Network">{CHAIN_CONFIG[chain].name}</InfoBlock>
 
         <InfoBlock label="Contract">
           <BlockExplorerLink chain={chain} address={nftAddress} path="token" />
         </InfoBlock>
 
-        <InfoBlock label="Tradable">{soulbound ? "No" : "Yes"}</InfoBlock>
+        <InfoBlock label="Transferable">{soulbound ? "No" : "Yes"}</InfoBlock>
+
+        <InfoBlock label="Supply">
+          <Skeleton isLoaded={!isLoading}>
+            <Text as="span" fontSize="md" colorScheme="gray">
+              {typeof maxSupply !== "bigint"
+                ? "Loading..."
+                : maxSupply === BigInt(0)
+                ? "Unlimited"
+                : maxSupply.toString()}
+            </Text>
+          </Skeleton>
+        </InfoBlock>
       </SimpleGrid>
     </Section>
   )
