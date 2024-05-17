@@ -1,4 +1,4 @@
-import { ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { ModalContent, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -13,6 +13,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
+import LoadingModal from "../RolePlatforms/components/AddRoleRewardModal/LoadingModal"
 import SelectRewardPanel from "../RolePlatforms/components/AddRoleRewardModal/SelectRewardPanel"
 import { useIsTabsStuck } from "../Tabs"
 import { useThemeContext } from "../ThemeContext"
@@ -30,7 +31,7 @@ export type AddRewardForm = {
   visibility: Visibility
 }
 
-const defaultValues: AddRewardForm = {
+export const defaultValues: AddRewardForm = {
   rolePlatforms: [],
   requirements: [],
   roleIds: [],
@@ -182,7 +183,6 @@ const AddRewardButton = (): JSX.Element => {
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
 
   const handleClose = () => {
-    alert("Calling on close")
     if (!canClose) {
       showErrorToast("You can't close the modal until the transaction finishes")
       return
@@ -190,10 +190,11 @@ const AddRewardButton = (): JSX.Element => {
     if (isAddRewardPanelDirty) onDiscardAlertOpen()
     else {
       methods.reset(defaultValues)
-
       onAddRewardModalClose()
     }
   }
+
+  const isLoading = isAddRewardLoading || isCreateRoleLoading || erc20Loading
 
   return (
     <>
@@ -254,6 +255,10 @@ const AddRewardButton = (): JSX.Element => {
           setIsAddRewardPanelDirty(false)
         }}
       />
+
+      <LoadingModal isOpen={isLoading}>
+        <Text fontWeight={"semibold"}>Creating reward...</Text>
+      </LoadingModal>
     </>
   )
 }

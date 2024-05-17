@@ -35,7 +35,6 @@ const AddRoleRewardModal = ({ append }: Props) => {
   }
 
   const handleClose = () => {
-    alert("Calling on close")
     if (isAddRewardPanelDirty) {
       onDiscardAlertOpen()
     } else {
@@ -59,7 +58,15 @@ const AddRoleRewardModal = ({ append }: Props) => {
     >
       <ModalOverlay />
       <ModalContent>
-        {step === "HOME" && <SelectRewardPanel append={append} showExisting />}
+        {step === "HOME" && (
+          <SelectRewardPanel
+            append={append}
+            showExisting
+            disabledRewards={{
+              ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
+            }}
+          />
+        )}
 
         {isRewardSetupStep && (
           <AddRewardPanel onAdd={handleAddReward} skipSettings />

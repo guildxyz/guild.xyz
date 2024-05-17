@@ -18,6 +18,7 @@ import rewards from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
+import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 
 const SelectRolePanel = ({
@@ -48,6 +49,11 @@ const SelectRolePanel = ({
 
   const { RewardPreview } = rewards[selection] ?? {}
 
+  const goBack = () => {
+    if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)
+    setStep("HOME")
+  }
+
   return (
     <ModalContent>
       <ModalCloseButton />
@@ -62,7 +68,8 @@ const SelectRolePanel = ({
               mb="-3px"
               icon={<ArrowLeft size={20} />}
               variant="ghost"
-              onClick={() => setStep("HOME")}
+              // TODO: form default value reset, panelDirty setting
+              onClick={goBack}
             />
             <Text>{`Add ${rewards[selection].name} reward`}</Text>
           </HStack>
@@ -73,9 +80,8 @@ const SelectRolePanel = ({
               rolePlatform={rolePlatform}
               defaultValues={{
                 /**
-                 * If the user doesn't upload mint links for a POAP, we
-                 * should fallback to undefined, since 0 is not a valid
-                 * value here
+                 * If the user doesn't upload mint links for a POAP, we should
+                 * fallback to undefined, since 0 is not a valid value here
                  */
                 capacity:
                   rolePlatform?.guildPlatform?.platformGuildData?.texts?.length ||
