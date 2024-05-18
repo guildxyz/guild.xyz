@@ -70,6 +70,10 @@ const EditDynamicRewardModal = ({
               roleId={rolePlatform.roleId}
               requirementFieldName={`dynamicAmount.operation.input[0].requirementId`}
               multiplierFieldName={`dynamicAmount.operation.params.multiplier`}
+              shouldFloor={
+                (rolePlatform.dynamicAmount as any).operation.params
+                  .shouldFloorResult
+              }
             />
           </FormProvider>
         </ModalBody>

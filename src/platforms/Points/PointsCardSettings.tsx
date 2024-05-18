@@ -30,6 +30,7 @@ const PointsCardSettings = () => {
         toImage={pointImage}
         multiplierFieldName={`rolePlatforms.${index}.dynamicAmount.operation.params.multiplier`}
         requirementFieldName={`rolePlatforms.${index}.dynamicAmount.operation.input.requirementId`}
+        shouldFloor={true}
       />
     )
 

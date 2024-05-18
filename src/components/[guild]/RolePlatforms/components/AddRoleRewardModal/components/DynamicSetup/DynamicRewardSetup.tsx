@@ -23,12 +23,14 @@ const DynamicRewardSetup = ({
   roleId,
   requirementFieldName,
   multiplierFieldName,
+  shouldFloor,
 }: {
   toImage: JSX.Element
   fieldName?: string
   roleId: number
   requirementFieldName: string
-  multiplierFieldName
+  multiplierFieldName: string
+  shouldFloor?: boolean
 }) => {
   const { control, setValue } = useFormContext()
 
@@ -87,9 +89,11 @@ const DynamicRewardSetup = ({
             toImage={toImage}
             defaultMultiplier={multiplier}
           />
-          <Text color={"GrayText"} fontSize={"sm"} textAlign={"right"}>
-            The received reward amount will be rounded down
-          </Text>
+          {shouldFloor && (
+            <Text color={"GrayText"} fontSize={"sm"} textAlign={"right"}>
+              The received reward amount will be rounded down
+            </Text>
+          )}
         </Stack>
       </Stack>
 
