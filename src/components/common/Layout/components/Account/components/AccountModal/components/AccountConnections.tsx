@@ -87,7 +87,7 @@ const AccountConnections = () => {
       <AccountSection divider={<Divider />}>
         {isLoading ? (
           <LinkedAddressSkeleton />
-        ) : !(addresses?.length > 1) ? (
+        ) : !(addresses?.length > 0) ? (
           <Stack
             {...(!vaults?.length && {
               direction: "row",
