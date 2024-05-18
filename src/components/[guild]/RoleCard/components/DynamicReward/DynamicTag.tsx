@@ -11,9 +11,13 @@ const DynamicTag = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { onOpen, isOpen, onClose } = useDisclosure()
 
   const { data: requirements } = useRequirements(rolePlatform.roleId)
-  const linkedRequirement = requirements?.find(
-    (req) => req.id === rolePlatform.dynamicAmount?.operation.input[0].requirementId
-  )
+
+  const dynamicAmount: any = rolePlatform.dynamicAmount
+  const requirementId =
+    dynamicAmount?.operation?.input?.[0]?.requirementId ||
+    dynamicAmount?.operation?.input?.requirementId
+
+  const linkedRequirement = requirements?.find((req) => req.id === requirementId)
 
   return (
     <>

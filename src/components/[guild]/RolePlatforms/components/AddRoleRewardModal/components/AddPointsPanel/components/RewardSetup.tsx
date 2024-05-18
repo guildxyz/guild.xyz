@@ -2,8 +2,10 @@ import { Collapse, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
+import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import { useAtomValue } from "jotai"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../../DefaultAddRewardPanelWrapper"
@@ -34,6 +36,8 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
 
   const name = selectedName ?? localName
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
+
+  const targetRoleId = useAtomValue(targetRoleAtom)
 
   const {
     isOpen: baseValueModalIsOpen,
@@ -87,6 +91,7 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
       <DynamicSetupButton onClick={baseValueModalOnOpen} />
 
       <BaseValueModal
+        roleId={targetRoleId as number}
         isOpen={baseValueModalIsOpen}
         onClose={baseValueModalOnClose}
         onSelect={handleBaseValueSelection}

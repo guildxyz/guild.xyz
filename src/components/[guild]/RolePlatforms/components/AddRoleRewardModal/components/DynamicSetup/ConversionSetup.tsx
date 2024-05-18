@@ -38,7 +38,7 @@ const ConversionSetup = ({
   const { data: requirements } = useRequirements(targetRoleId)
   const selectedRequirement = requirements.find((req) => req.id === requirementId)
 
-  const baseValueBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100")
+  const baseValueBg = useColorModeValue("whiteAlpha.800", "whiteAlpha.100")
 
   const { setStep } = useAddRewardContext()
 

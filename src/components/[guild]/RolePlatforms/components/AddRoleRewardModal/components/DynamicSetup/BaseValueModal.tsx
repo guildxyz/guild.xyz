@@ -11,27 +11,25 @@ import {
 } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import DisplayCard from "components/common/DisplayCard"
 import { Modal } from "components/common/Modal"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
-import { useAtomValue } from "jotai"
 import { CaretRight } from "phosphor-react"
 import { useFormContext } from "react-hook-form"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Requirement } from "types"
 
 type Props = {
+  roleId: number
   isOpen: boolean
   onClose: () => void
   onSelect: (reqId: number) => void
 }
 
-const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
-  const targetRoleId = useAtomValue<number>(targetRoleAtom)
-  const { data: requirements, mutate, isLoading } = useRequirements(targetRoleId)
+const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
+  const { data: requirements, mutate, isLoading } = useRequirements(roleId)
 
   const dynamicRequirements =
     requirements?.filter((req) => !!REQUIREMENT_PROVIDED_VALUES[req.type]) || []
@@ -41,7 +39,7 @@ const BaseValueModal = ({ isOpen, onClose, onSelect }: Props) => {
   const {
     onSubmit: onCreateRequirementSubmit,
     isLoading: isCreateRequirementLoading,
-  } = useCreateRequirement(targetRoleId, {
+  } = useCreateRequirement(roleId, {
     onSuccess: () => {
       mutate()
     },
