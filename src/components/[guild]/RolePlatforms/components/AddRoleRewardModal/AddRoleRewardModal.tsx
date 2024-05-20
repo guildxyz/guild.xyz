@@ -3,7 +3,6 @@ import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hoo
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
-import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards, {
   AddRewardPanelProps,
   modalSizeForPlatform,
@@ -85,13 +84,6 @@ const AddRoleRewardModal = ({ append }: Props) => {
       )}
 
       {isRewardSetupStep && <AddRewardPanel onAdd={handleAddReward} skipSettings />}
-
-      {selection && step === "SELECT_ROLE" && (
-        <SelectRoleOrSetRequirements
-          selectedPlatform={selection}
-          isRoleSelectorDisabled={selection === "ERC20"}
-        />
-      )}
 
       <DiscardAlert
         isOpen={isDiscardAlertOpen}
