@@ -13,7 +13,7 @@ const Footer = (): JSX.Element => (
         <Icon as={ArrowSquareOut} ml="1" />
       </Link>
       <Text as="span" colorScheme="gray" lineHeight={2}>
-        {`, and built on the `}
+        {` and built on the `}
       </Text>
       <Link href="https://www.npmjs.com/package/@guildxyz/sdk" isExternal>
         Guild SDK
