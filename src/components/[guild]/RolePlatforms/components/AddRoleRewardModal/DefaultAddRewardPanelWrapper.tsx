@@ -3,6 +3,7 @@ import {
   IconButton,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
   ModalHeader,
   Text,
 } from "@chakra-ui/react"
@@ -19,7 +20,7 @@ export const DefaultAddRewardPanelWrapper = ({
   const { modalRef, selection, setStep } = useAddRewardContext()
 
   return (
-    <>
+    <ModalContent>
       <ModalCloseButton />
       <ModalHeader>
         <HStack>
@@ -39,7 +40,7 @@ export const DefaultAddRewardPanelWrapper = ({
       <ModalBody ref={modalRef} className="custom-scrollbar">
         {children}
       </ModalBody>
-    </>
+    </ModalContent>
   )
 }
 

@@ -1,11 +1,11 @@
-import { ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { ModalOverlay, useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
 import { Plus } from "phosphor-react"
-import rewards from "platforms/rewards"
+import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Requirement, RoleFormType, Visibility } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
@@ -98,35 +98,37 @@ const AddRewardButton = (): JSX.Element => {
         <Modal
           isOpen={isOpen}
           onClose={handleClose}
-          size={step === "SELECT_ROLE" ? "2xl" : "4xl"}
+          size={
+            step === "SELECT_ROLE"
+              ? "2xl"
+              : isRewardSetupStep
+              ? modalSizeForPlatform(selection)
+              : "4xl"
+          }
           scrollBehavior="inside"
           colorScheme="dark"
         >
           <ModalOverlay />
-          <ModalContent>
-            {step === "HOME" && <SelectRewardPanel />}
 
-            {isRewardSetupStep && (
-              <AddRewardPanel
-                onAdd={(createdRolePlatform) => {
-                  methods.setValue("rolePlatforms.0", {
-                    ...createdRolePlatform,
-                    visibility,
-                  })
-                  if (createdRolePlatform?.requirements?.length > 0) {
-                    methods.setValue(
-                      "requirements",
-                      createdRolePlatform.requirements
-                    )
-                  }
-                  setStep("SELECT_ROLE")
-                }}
-                skipSettings
-              />
-            )}
+          {step === "HOME" && <SelectRewardPanel />}
 
-            {step === "SELECT_ROLE" && <SelectRolePanel />}
-          </ModalContent>
+          {isRewardSetupStep && (
+            <AddRewardPanel
+              onAdd={(createdRolePlatform) => {
+                methods.setValue("rolePlatforms.0", {
+                  ...createdRolePlatform,
+                  visibility,
+                })
+                if (createdRolePlatform?.requirements?.length > 0) {
+                  methods.setValue("requirements", createdRolePlatform.requirements)
+                }
+                setStep("SELECT_ROLE")
+              }}
+              skipSettings
+            />
+          )}
+
+          {step === "SELECT_ROLE" && <SelectRolePanel />}
         </Modal>
       </FormProvider>
       <DiscardAlert

@@ -3,6 +3,7 @@ import {
   IconButton,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
   ModalFooter,
   ModalHeader,
   Stack,
@@ -51,7 +52,7 @@ const SelectRolePanel = () => {
   }
 
   return (
-    <>
+    <ModalContent>
       <ModalCloseButton />
       <ModalHeader bgColor={lightModalBgColor} boxShadow={"sm"} zIndex={1}>
         <Stack spacing={8}>
@@ -141,7 +142,7 @@ const SelectRolePanel = () => {
           Save
         </Button>
       </ModalFooter>
-    </>
+    </ModalContent>
   )
 }
 

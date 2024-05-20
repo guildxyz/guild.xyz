@@ -1,4 +1,10 @@
-import { ModalBody, ModalCloseButton, ModalHeader, Text } from "@chakra-ui/react"
+import {
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  Text,
+} from "@chakra-ui/react"
 import { PlatformName } from "@guildxyz/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
@@ -15,7 +21,7 @@ const SelectRewardPanel = ({
   const { modalRef, setSelection, setStep } = useAddRewardContext()
 
   return (
-    <>
+    <ModalContent>
       <ModalCloseButton />
       <ModalHeader>
         <Text>Add reward</Text>
@@ -31,7 +37,7 @@ const SelectRewardPanel = ({
           disabledRewards={disabledRewards}
         />
       </ModalBody>
-    </>
+    </ModalContent>
   )
 }
 

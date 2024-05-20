@@ -1,10 +1,13 @@
-import { ModalContent, ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
+import { ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards, { AddRewardPanelProps } from "platforms/rewards"
+import rewards, {
+  AddRewardPanelProps,
+  modalSizeForPlatform,
+} from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { RoleFormType } from "types"
 import SelectRewardPanel from "./SelectRewardPanel"
@@ -53,39 +56,43 @@ const AddRoleRewardModal = ({ append }: Props) => {
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      size="4xl"
+      size={
+        step === "SELECT_ROLE"
+          ? "2xl"
+          : isRewardSetupStep
+          ? modalSizeForPlatform(selection)
+          : "4xl"
+      }
       scrollBehavior="inside"
       colorScheme="dark"
     >
       <ModalOverlay />
-      <ModalContent>
-        {step === "HOME" && (
-          <SelectRewardPanel
-            disabledRewards={{
-              ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
-            }}
-          >
-            <SelectExistingPlatform
-              onClose={onClose}
-              onSelect={(selectedRolePlatform) => append?.(selectedRolePlatform)}
-            />
-            <Text fontWeight="bold" mb="3">
-              Add new reward
-            </Text>
-          </SelectRewardPanel>
-        )}
 
-        {isRewardSetupStep && (
-          <AddRewardPanel onAdd={handleAddReward} skipSettings />
-        )}
-
-        {selection && step === "SELECT_ROLE" && (
-          <SelectRoleOrSetRequirements
-            selectedPlatform={selection}
-            isRoleSelectorDisabled={selection === "ERC20"}
+      {step === "HOME" && (
+        <SelectRewardPanel
+          disabledRewards={{
+            ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
+          }}
+        >
+          <SelectExistingPlatform
+            onClose={onClose}
+            onSelect={(selectedRolePlatform) => append?.(selectedRolePlatform)}
           />
-        )}
-      </ModalContent>
+          <Text fontWeight="bold" mb="3">
+            Add new reward
+          </Text>
+        </SelectRewardPanel>
+      )}
+
+      {isRewardSetupStep && <AddRewardPanel onAdd={handleAddReward} skipSettings />}
+
+      {selection && step === "SELECT_ROLE" && (
+        <SelectRoleOrSetRequirements
+          selectedPlatform={selection}
+          isRoleSelectorDisabled={selection === "ERC20"}
+        />
+      )}
+
       <DiscardAlert
         isOpen={isDiscardAlertOpen}
         onClose={onDiscardAlertClose}
