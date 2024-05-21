@@ -7,6 +7,7 @@ import {
   IconButton,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
   ModalHeader,
   Skeleton,
   Stack,
@@ -49,7 +50,7 @@ const ConversionSetup = ({
   )
 
   return (
-    <>
+    <ModalContent>
       <ModalCloseButton />
       <ModalHeader pb={4}>
         <Stack spacing={8}>
@@ -111,7 +112,7 @@ const ConversionSetup = ({
           </Button>
         </Flex>
       </ModalBody>
-    </>
+    </ModalContent>
   )
 }
 

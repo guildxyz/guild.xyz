@@ -3,6 +3,7 @@ import {
   IconButton,
   ModalBody,
   ModalCloseButton,
+  ModalContent,
   ModalHeader,
   Text,
 } from "@chakra-ui/react"
@@ -12,16 +13,14 @@ import rewards from "platforms/rewards"
 import { ReactNode } from "react"
 
 export const DefaultAddRewardPanelWrapper = ({
-  goBack,
   children,
 }: {
-  goBack: () => void
   children: ReactNode
 }) => {
-  const { modalRef, selection } = useAddRewardContext()
+  const { modalRef, selection, setStep } = useAddRewardContext()
 
   return (
-    <>
+    <ModalContent>
       <ModalCloseButton />
       <ModalHeader>
         <HStack>
@@ -32,7 +31,7 @@ export const DefaultAddRewardPanelWrapper = ({
             mb="-3px"
             icon={<ArrowLeft size={20} />}
             variant="ghost"
-            onClick={goBack}
+            onClick={() => setStep("HOME")}
           />
           <Text>{`Add ${rewards[selection].name} reward`}</Text>
         </HStack>
@@ -41,7 +40,7 @@ export const DefaultAddRewardPanelWrapper = ({
       <ModalBody ref={modalRef} className="custom-scrollbar">
         {children}
       </ModalBody>
-    </>
+    </ModalContent>
   )
 }
 

@@ -10,10 +10,10 @@ import {
   RewardProps,
 } from "../../components/[guild]/RoleCard/components/Reward"
 
-import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Link from "next/link"
 import { forwardRef } from "react"
+import NftAvailabilityTags from "./components/NftAvailabilityTags"
 
 const ContractCallReward = ({
   platform,
@@ -61,7 +61,11 @@ const ContractCallReward = ({
         </>
       }
     >
-      <AvailabilityTags rolePlatform={platform} />
+      <NftAvailabilityTags
+        guildPlatform={platform.guildPlatform}
+        rolePlatform={platform}
+        mt={1}
+      />
     </RewardDisplay>
   )
 }

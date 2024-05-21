@@ -32,7 +32,7 @@ const PlatformCard = ({
       title={name}
       titleRightElement={titleRightElement}
       description={contentRow || info}
-      image={image}
+      image={image || guildPlatform.platformGuildData?.imageUrl}
       colorScheme={rewards[type].colorScheme}
       {...{ actionRow, cornerButton }}
       {...rest}

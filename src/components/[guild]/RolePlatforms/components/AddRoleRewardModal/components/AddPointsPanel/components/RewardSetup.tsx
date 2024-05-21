@@ -1,5 +1,4 @@
 import { Collapse, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react"
-import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
@@ -46,20 +45,13 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
   } = useDisclosure()
   const { setStep } = useAddRewardContext()
 
-  const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()
-
-  const handleBack = () => {
-    setIsAddRewardPanelDirty(false)
-    setStep("HOME")
-  }
-
   const handleBaseValueSelection = () => {
     baseValueModalOnClose()
     setStep("CONVERSION_SETUP")
   }
 
   return (
-    <DefaultAddRewardPanelWrapper goBack={handleBack}>
+    <DefaultAddRewardPanelWrapper>
       <Text colorScheme="gray" fontWeight="semibold" mb="8">
         Gamify your guild with a score system, so users can collect points / XP /
         your custom branded score, and compete on a leaderboard. You’ll also be able

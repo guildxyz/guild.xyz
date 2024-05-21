@@ -22,12 +22,10 @@ const CreateGuildIndex = (): JSX.Element => {
     <ClientOnly>
       <MultiPlatformsGrid
         onSelection={(platformName) => {
-          if (platformName === "DISCORD") {
+          if (platformName === "CONTRACT_CALL") startSessionRecording()
+          if (platformName === "DISCORD")
             captureEvent("[discord setup] started through guild creation")
 
-            // Should we add sampling here? Or is it sampled by default?
-            startSessionRecording()
-          }
           setWhitoutPlatform(false)
         }}
       />

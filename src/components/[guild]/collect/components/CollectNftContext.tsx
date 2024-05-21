@@ -1,4 +1,4 @@
-import { Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import {
   TransactionStatusProvider,
   useTransactionStatusContext,
@@ -9,10 +9,11 @@ import {
   RewardDisplay,
   RewardIcon,
 } from "components/[guild]/RoleCard/components/Reward"
-import useNftBalance from "hooks/useNftBalance"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import { Chain, Chains } from "wagmiConfig/chains"
+import useGuildRewardNftBalanceByUserId from "../hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "../hooks/useNftDetails"
 
 type Props = {
@@ -22,6 +23,10 @@ type Props = {
   chain: Chain
   nftAddress: `0x${string}`
   alreadyCollected: boolean
+}
+
+export type CollectNftForm = {
+  amount: number
 }
 
 const CollectNftContext = createContext<Props>(undefined)
@@ -34,14 +39,21 @@ const CollectNftProvider = ({
   nftAddress,
   children,
 }: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
-  // TODO: use `hasTheUserIdClaimed` instead of `balanceOf`, so it shows `Already claimed` for other addresses of the user too
-  const { data: nftBalance } = useNftBalance({
+  const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress,
     chainId: Chains[chain],
   })
-  const alreadyCollected = nftBalance > 0
 
-  const { name } = useNftDetails(chain, nftAddress)
+  const { name, mintableAmountPerUser, maxSupply, totalSupply } = useNftDetails(
+    chain,
+    nftAddress
+  )
+  const alreadyCollected =
+    !maxSupply && !mintableAmountPerUser
+      ? false
+      : mintableAmountPerUser > 0
+      ? nftBalance >= mintableAmountPerUser || totalSupply >= maxSupply
+      : totalSupply >= maxSupply
 
   const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
   useEffect(() => {
@@ -49,6 +61,15 @@ const CollectNftProvider = ({
     onTxModalOpen()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [txHash])
+
+  const methods = useForm<CollectNftForm>({
+    mode: "all",
+  })
+
+  const amount = useWatch({
+    control: methods.control,
+    name: "amount",
+  })
 
   return (
     <CollectNftContext.Provider
@@ -61,17 +82,19 @@ const CollectNftProvider = ({
         alreadyCollected,
       }}
     >
-      {children}
+      <FormProvider {...methods}>{children}</FormProvider>
 
       <TransactionStatusModal
         title="Collect NFT"
         successTitle="Success"
-        successText="Successfully collected NFT!"
+        successText={`Successfully collected NFT${amount > 1 ? "s" : ""}!`}
         successLinkComponent={<OpenseaLink />}
-        errorComponent={<Text mb={4}>Couldn't collect NFT</Text>}
+        errorComponent={
+          <Text mb={4}>{`Couldn't collect NFT${amount > 1 ? "s" : ""}`}</Text>
+        }
         progressComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
+            <Text fontWeight="bold" mb="2">
               You'll get:
             </Text>
             <RewardDisplay
@@ -81,14 +104,27 @@ const CollectNftProvider = ({
                   rolePlatformId={rolePlatformId}
                 />
               }
-              label={name}
+              label={
+                amount > 1 ? (
+                  <HStack>
+                    <Text as="span">{name}</Text>
+                    <Text
+                      as="span"
+                      colorScheme="gray"
+                      fontWeight="semibold"
+                    >{` x${amount}`}</Text>
+                  </HStack>
+                ) : (
+                  name
+                )
+              }
             />
           </>
         }
         successComponent={
           <>
-            <Text fontWeight={"bold"} mb="2">
-              Your new asset:
+            <Text fontWeight="bold" mb="2">
+              {`Your new asset${amount > 1 ? "s" : ""}:`}
             </Text>
             <RewardDisplay
               icon={
@@ -97,7 +133,20 @@ const CollectNftProvider = ({
                   rolePlatformId={rolePlatformId}
                 />
               }
-              label={name}
+              label={
+                amount > 1 ? (
+                  <HStack>
+                    <Text as="span">{name}</Text>
+                    <Text
+                      as="span"
+                      colorScheme="gray"
+                      fontWeight="semibold"
+                    >{` x${amount}`}</Text>
+                  </HStack>
+                ) : (
+                  name
+                )
+              }
             />
           </>
         }

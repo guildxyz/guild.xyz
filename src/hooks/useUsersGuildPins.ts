@@ -135,6 +135,7 @@ const fetchGuildPinsOnChain = async (
     chain: wagmiConfig.chains.find((c) => Chains[c.id] === chain) as ViemChain,
     transport: http(),
   })
+
   let balance = null
   try {
     balance = await publicClient.readContract({
@@ -151,13 +152,15 @@ const fetchGuildPinsOnChain = async (
     balance,
     chain,
     address,
-    publicClient
+    // We shouldn't cast here once we set strictNullChecks to true
+    publicClient as PublicClient
   )
 
   const { tokenInfo, errors: tokenURIFetchErrors } = await getPinTokenURIsForPinIds(
     pinIds,
     chain,
-    publicClient
+    // We shouldn't cast here once we set strictNullChecks to true
+    publicClient as PublicClient
   )
 
   const { tokenMetadata, errors: metadataTransformationErrors } = tokenInfo.reduce(

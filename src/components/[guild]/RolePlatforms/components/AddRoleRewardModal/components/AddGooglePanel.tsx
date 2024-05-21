@@ -3,6 +3,7 @@ import GoogleGuildSetup from "components/common/GoogleGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 
 const defaultValues = {
   platformGuildId: null,
@@ -20,22 +21,24 @@ const AddGooglePanel = ({
 
   return (
     <FormProvider {...methods}>
-      <GoogleGuildSetup
-        defaultValues={defaultValues}
-        onSelect={(newPlatform) => {
-          const { platformRoleId, ...guildPlatformData } = newPlatform
-          onAdd({
-            guildPlatform: {
-              ...guildPlatformData,
-              platformName: "GOOGLE",
-              platformId: PlatformType.GOOGLE,
-            },
-            platformRoleId,
-            isNew: true,
-          })
-        }}
-        skipSettings={skipSettings}
-      />
+      <DefaultAddRewardPanelWrapper>
+        <GoogleGuildSetup
+          defaultValues={defaultValues}
+          onSelect={(newPlatform) => {
+            const { platformRoleId, ...guildPlatformData } = newPlatform
+            onAdd({
+              guildPlatform: {
+                ...guildPlatformData,
+                platformName: "GOOGLE",
+                platformId: PlatformType.GOOGLE,
+              },
+              platformRoleId,
+              isNew: true,
+            })
+          }}
+          skipSettings={skipSettings}
+        />
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

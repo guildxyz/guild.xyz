@@ -11,16 +11,16 @@ const options = [
   },
 ]
 
-const FilterByRolesLogicSelector = ({ column }) => (
+const FilterByRolesLogicSelector = ({ getFilterValue, setFilterValue }) => (
   <RadioButtonGroup
     options={options}
     onChange={(newValue) => {
-      column.setFilterValue((prevValue) => ({
+      setFilterValue((prevValue) => ({
         ...prevValue,
         logic: newValue,
       }))
     }}
-    value={(column.getFilterValue() as any)?.logic}
+    value={getFilterValue()?.logic}
     defaultValue={"some"}
     chakraStyles={{ size: "xs", mb: "3", w: "full", spacing: 1.5 }}
   />

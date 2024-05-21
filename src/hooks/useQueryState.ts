@@ -27,7 +27,9 @@ export const useQueryState = <State extends string>(
         scroll: false,
       })
     },
-    [name, router]
+    // router is intentionally left out
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [name]
   )
 
   return [state, toggle] as const

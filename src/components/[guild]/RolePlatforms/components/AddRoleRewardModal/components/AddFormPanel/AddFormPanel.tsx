@@ -11,6 +11,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import { uuidv7 } from "uuidv7"
 import { CreateForm } from "."
+import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import ContinueWithExistingFormAlert from "./components/ContinueWithExistingFormAlert"
 
 const defaultValues: CreateForm = {
@@ -57,22 +58,24 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <Stack spacing={6}>
-        <ContinueWithExistingFormAlert {...{ onAdd }} />
-        <CreateFormForm />
-        <Button
-          colorScheme="green"
-          rightIcon={<ArrowRight />}
-          w="max-content"
-          ml="auto"
-          onClick={methods.handleSubmit(onSubmit, console.error)}
-          loadingText="Creating form"
-          isLoading={isLoading}
-          isDisabled={!fields?.length}
-        >
-          Create form & continue
-        </Button>
-      </Stack>
+      <DefaultAddRewardPanelWrapper>
+        <Stack spacing={6}>
+          <ContinueWithExistingFormAlert {...{ onAdd }} />
+          <CreateFormForm />
+          <Button
+            colorScheme="green"
+            rightIcon={<ArrowRight />}
+            w="max-content"
+            ml="auto"
+            onClick={methods.handleSubmit(onSubmit, console.error)}
+            loadingText="Creating form"
+            isLoading={isLoading}
+            isDisabled={!fields?.length}
+          >
+            Create form & continue
+          </Button>
+        </Stack>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

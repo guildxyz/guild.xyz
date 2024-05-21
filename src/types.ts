@@ -208,7 +208,6 @@ type PlatformGuildData = {
     function?: never
     argsToSign?: never
     name?: never
-    symbol?: never
     description?: never
     text?: never
     texts?: never
@@ -228,6 +227,7 @@ type PlatformGuildData = {
   GOOGLE: {
     role?: "reader" | "commenter" | "writer"
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: string
@@ -238,7 +238,6 @@ type PlatformGuildData = {
     function?: never
     argsToSign?: never
     name?: never
-    symbol?: never
     description?: never
     text?: never
     texts?: never
@@ -260,10 +259,10 @@ type PlatformGuildData = {
     function: ContractCallFunction
     argsToSign: string[]
     name: string
-    symbol: string
     imageUrl: string
     description: string
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -291,9 +290,9 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -319,9 +318,9 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -347,9 +346,9 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -375,9 +374,9 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -408,9 +407,9 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: never
@@ -431,9 +430,9 @@ type PlatformGuildData = {
     contractAddress?: never
     function?: never
     argsToSign?: never
-    symbol?: never
     description?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     role?: never
@@ -469,6 +468,7 @@ type PlatformGuildData = {
     argsToSign?: never
     symbol?: never
     inviteChannel?: never
+    invite?: never
     joinButton?: never
     needCaptcha?: never
     mimeType?: never
@@ -760,14 +760,6 @@ type RequestMintLinksForm = {
   redeem_type: string
 }
 
-type GoogleFile = {
-  name: string
-  mimeType: string
-  webViewLink: string
-  iconLink: string
-  platformGuildId: string
-}
-
 type Without<First, Second> = {
   [P in Exclude<keyof First, keyof Second>]?: never
 }
@@ -834,7 +826,6 @@ export type {
   EventSources,
   EventSourcesKey,
   GitPoap,
-  GoogleFile,
   Group,
   Guild,
   GuildAdmin,

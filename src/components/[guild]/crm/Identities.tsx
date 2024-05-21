@@ -9,7 +9,7 @@ import {
 import { useCardBg } from "components/common/Card"
 import { LockSimple, Wallet } from "phosphor-react"
 import rewards from "platforms/rewards"
-import { PropsWithChildren } from "react"
+import { PropsWithChildren, memo } from "react"
 import { PlatformAccountDetails, PlatformType, Rest } from "types"
 import shortenHex from "utils/shortenHex"
 import { Member } from "./useMembers"
@@ -41,59 +41,64 @@ export const deduplicateXPlatformUsers = (
   )
 }
 
-const Identities = ({ member }: Props) => {
-  const { addresses, platformUsers, isShared } = member
+const Identities = memo(
+  ({ member }: Props) => {
+    const { addresses, platformUsers, isShared } = member
 
-  const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
+    const filteredPlatformUsers = deduplicateXPlatformUsers(platformUsers)
 
-  return (
-    <HStack spacing={1}>
-      {filteredPlatformUsers?.map((platformAccount, i) => (
-        <IdentityTag
-          key={platformAccount.platformId}
-          platformAccount={platformAccount}
-          order={i}
-          zIndex={-1 * i}
-          isOpen={i === 0}
-        />
-      ))}
-      <WalletTag zIndex={!isShared && 1}>
-        {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
-      </WalletTag>
-      {!isShared && <PrivateSocialsTag />}
-    </HStack>
-  )
-}
+    return (
+      <HStack spacing={1}>
+        {filteredPlatformUsers?.map((platformAccount, i) => (
+          <IdentityTag
+            key={platformAccount.platformId}
+            platformAccount={platformAccount}
+            order={i}
+            zIndex={-1 * i}
+            isOpen={i === 0}
+          />
+        ))}
+        <WalletTag zIndex={!isShared && 1}>
+          {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
+        </WalletTag>
+        {!isShared && <PrivateSocialsTag />}
+      </HStack>
+    )
+  },
+  (prevProps, nextProps) => prevProps.member.userId === nextProps.member.userId
+)
 
-export const IdentityTag = ({
-  platformAccount,
-  isOpen,
-  ...rest
-}: {
-  platformAccount: PlatformAccountDetails
-  isOpen: boolean
-} & Rest) => {
-  const platform = rewards[PlatformType[platformAccount.platformId]]
-  const username = platformAccount.username ?? platformAccount.platformUserId
-  const borderColor = useCardBg()
+export const IdentityTag = memo(
+  ({
+    platformAccount,
+    isOpen,
+    ...rest
+  }: {
+    platformAccount: PlatformAccountDetails
+    isOpen: boolean
+  } & Rest) => {
+    const platform = rewards[PlatformType[platformAccount.platformId]]
+    const username = platformAccount.username ?? platformAccount.platformUserId
+    const borderColor = useCardBg()
 
-  return (
-    <Tag
-      colorScheme={platform.colorScheme as string}
-      bg={`${platform.colorScheme}.500`}
-      variant="solid"
-      px={!isOpen ? "1" : null}
-      className="identityTag"
-      sx={{ "--stacked-margin-left": "-24px" }}
-      transition={"margin .2s"}
-      boxShadow={`0 0 0 1px ${borderColor}`}
-      {...rest}
-    >
-      <TagLeftIcon as={platform.icon} /* size=".6em" */ mr="0" />
-      {isOpen && <TagLabel ml="1">{username}</TagLabel>}
-    </Tag>
-  )
-}
+    return (
+      <Tag
+        colorScheme={platform.colorScheme as string}
+        bg={`${platform.colorScheme}.500`}
+        variant="solid"
+        px={!isOpen ? "1" : null}
+        className="identityTag"
+        sx={{ "--stacked-margin-left": "-24px" }}
+        transition={"margin .2s"}
+        boxShadow={`0 0 0 1px ${borderColor}`}
+        {...rest}
+      >
+        <TagLeftIcon as={platform.icon} /* size=".6em" */ mr="0" />
+        {isOpen && <TagLabel ml="1">{username}</TagLabel>}
+      </Tag>
+    )
+  }
+)
 
 type WalletTagProps = {
   rightElement?: JSX.Element

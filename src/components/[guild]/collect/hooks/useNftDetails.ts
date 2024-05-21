@@ -8,6 +8,7 @@ import { getBlockByTime } from "utils/getBlockByTime"
 import ipfsToGuildGateway from "utils/ipfsToGuildGateway"
 import { useReadContract, useReadContracts } from "wagmi"
 import { Chain, Chains } from "wagmiConfig/chains"
+import { z } from "zod"
 
 const currentDate = new Date()
 currentDate.setUTCHours(0, 0, 0, 0)
@@ -15,6 +16,23 @@ const noonUnixTimestamp = currentDate.getTime() / 1000
 
 const fetchNftDetails = ([_, chain, address]) =>
   fetcher(`/api/nft/${chain}/${address}`)
+
+export const guildNftRewardMetadataSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  image: z.string().min(1),
+  attributes: z
+    .array(
+      z.object({
+        trait_type: z.string().min(1),
+        value: z.string().min(1),
+      })
+    )
+    .default([]),
+})
+
+const fetchNftMetadata = (url: string) =>
+  fetcher(url).then((metadata) => guildNftRewardMetadataSchema.parse(metadata))
 
 const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const { guildPlatforms } = useGuild()
@@ -61,6 +79,8 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     query: {
       enabled: !!firstBlockNumberToday,
       staleTime: 600_000,
+      refetchOnWindowFocus: false,
+      retry: false,
     },
   })
 
@@ -81,16 +101,32 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     contracts: [
       {
         ...contract,
+        functionName: "locked",
+      },
+      {
+        ...contract,
         functionName: "totalSupply",
       },
       {
         ...contract,
+        functionName: "maxSupply",
+      },
+      {
+        ...contract,
+        functionName: "mintableAmountPerUser",
+      },
+      {
+        ...contract,
         functionName: "tokenURI",
-        args: [BigInt(1)],
+        args: [BigInt(0)],
       },
       {
         ...contract,
         functionName: "fee",
+      },
+      {
+        ...contract,
+        functionName: "treasury",
       },
     ],
     query: {
@@ -98,30 +134,50 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     },
   })
 
-  const [totalSupplyResponse, tokenURIResponse, feeResponse] = data || []
+  const [
+    lockedResponse,
+    totalSupplyResponse,
+    maxSupplyResponse,
+    mintableAmountPerUserResponse,
+    tokenURIResponse,
+    feeResponse,
+    treasuryResponse,
+  ] = data || []
 
+  const soulbound = lockedResponse?.result !== false // undefined or true means that it is "locked"
   const totalSupply = totalSupplyResponse?.result
+  const maxSupply = maxSupplyResponse?.result
+  const mintableAmountPerUser = mintableAmountPerUserResponse?.result
   const tokenURI = tokenURIResponse?.result
   const fee = feeResponse?.result
+  const treasury = treasuryResponse?.result
 
-  const { data: metadata } = useSWRImmutable(
-    tokenURI ? ipfsToGuildGateway(tokenURI) : null
+  const { data: metadata, isLoading: isMetadataLoading } = useSWRImmutable(
+    tokenURI ? ipfsToGuildGateway(tokenURI) : null,
+    fetchNftMetadata
   )
 
   return {
     ...nftDetails,
+    soulbound,
     name: nftDetails?.name ?? guildPlatformData?.name,
-    totalCollectors:
-      typeof totalSupply === "bigint" ? Number(totalSupply) : undefined,
+    totalSupply,
     totalCollectorsToday:
       typeof totalSupply === "bigint" && typeof firstTotalSupplyToday === "bigint"
-        ? Number(totalSupply - firstTotalSupplyToday)
+        ? totalSupply - firstTotalSupplyToday
         : undefined,
-    image: ipfsToGuildGateway(metadata?.image),
-    description: metadata?.description as string,
+    maxSupply: maxSupply,
+    mintableAmountPerUser,
+    image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
+    description: metadata?.description,
     fee,
+    treasury,
+    attributes: metadata?.attributes,
     isLoading:
-      isNftDetailsLoading || isFirstTotalSupplyTodayLoadings || isMulticallLoading,
+      isNftDetailsLoading ||
+      isFirstTotalSupplyTodayLoadings ||
+      isMulticallLoading ||
+      isMetadataLoading,
 
     error: nftDetailsError || multicallError || error,
     refetch,

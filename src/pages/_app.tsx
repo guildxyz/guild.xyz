@@ -65,7 +65,8 @@ const App = ({
       router.events.off("routeChangeStart", handleRouteChangeStart)
       router.events.off("routeChangeComplete", handleRouteChangeComplete)
     }
-  }, [router.events])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <>

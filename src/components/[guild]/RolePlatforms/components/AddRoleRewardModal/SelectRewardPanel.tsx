@@ -1,42 +1,46 @@
-import { ModalBody, ModalCloseButton, ModalHeader, Text } from "@chakra-ui/react"
+import {
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  Text,
+} from "@chakra-ui/react"
+import { PlatformName } from "@guildxyz/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
-import { AddRewardPanelProps } from "platforms/rewards"
-import SelectExistingPlatform from "./components/SelectExistingPlatform"
+import { PropsWithChildren } from "react"
 
 type Props = {
-  append: AddRewardPanelProps["onAdd"]
+  disabledRewards?: Partial<Record<PlatformName, string>>
 }
 
-const SelectRewardPanel = ({ append }: Props) => {
-  const { modalRef, setSelection, setStep, onClose } = useAddRewardContext()
+const SelectRewardPanel = ({
+  disabledRewards = {},
+  children,
+}: PropsWithChildren<Props>) => {
+  const { modalRef, setSelection, setStep } = useAddRewardContext()
+  const { startSessionRecording } = usePostHogContext()
 
   return (
-    <>
+    <ModalContent>
       <ModalCloseButton />
       <ModalHeader>
         <Text>Add reward</Text>
       </ModalHeader>
 
       <ModalBody ref={modalRef} className="custom-scrollbar">
-        <SelectExistingPlatform
-          onClose={onClose}
-          onSelect={(selectedRolePlatform) => append(selectedRolePlatform)}
-        />
-        <Text fontWeight="bold" mb="3">
-          Add new reward
-        </Text>
+        {children}
         <PlatformsGrid
           onSelection={(platform) => {
+            if (platform === "CONTRACT_CALL") startSessionRecording()
             setSelection(platform)
             setStep("REWARD_SETUP")
           }}
-          disabledRewards={{
-            ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
-          }}
+          disabledRewards={disabledRewards}
         />
       </ModalBody>
-    </>
+    </ModalContent>
   )
 }
 
