@@ -64,7 +64,9 @@ const NftFeesTable = ({ ...rest }: StackProps) => {
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedFeeLoaded}>
             {isFormattedFeeLoaded
-              ? `${formattedFee} ${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
+              ? `${Number(formattedFee.toFixed(6))} ${
+                  CHAIN_CONFIG[chain].nativeCurrency.symbol
+                }`
               : "Loading"}
           </Skeleton>
         </Td>
@@ -75,7 +77,9 @@ const NftFeesTable = ({ ...rest }: StackProps) => {
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedGuildFeeLoaded}>
             {isFormattedGuildFeeLoaded
-              ? `${formattedGuildFee} ${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
+              ? `${Number(formattedGuildFee.toFixed(6))} ${
+                  CHAIN_CONFIG[chain].nativeCurrency.symbol
+                }`
               : "Loading"}
           </Skeleton>
         </Td>
