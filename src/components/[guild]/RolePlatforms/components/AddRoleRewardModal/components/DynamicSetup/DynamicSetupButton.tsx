@@ -10,11 +10,23 @@ import {
 import DisplayCard from "components/common/DisplayCard"
 import { CaretRight, Lightning } from "phosphor-react"
 
-const DynamicSetupButton = ({ onClick }: { onClick: () => void }) => {
+const DynamicSetupButton = ({
+  onClick,
+  isDisabled,
+}: {
+  onClick: () => void
+  isDisabled?: boolean
+}) => {
   const circleBgColor = useColorModeValue("blackAlpha.200", "gray.600")
 
   return (
-    <DisplayCard px={4} py={5} onClick={onClick}>
+    <DisplayCard
+      px={4}
+      py={5}
+      onClick={!isDisabled ? onClick : null}
+      _hover={isDisabled && { cursor: "default", opacity: 0.5 }}
+      opacity={isDisabled ? 0.5 : 1}
+    >
       <HStack spacing={3}>
         <Circle bg={circleBgColor} p={3}>
           <Icon as={Lightning} weight="fill" boxSize={5} />

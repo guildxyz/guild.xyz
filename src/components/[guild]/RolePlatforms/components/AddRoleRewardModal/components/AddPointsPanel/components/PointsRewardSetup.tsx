@@ -1,10 +1,16 @@
-import { Collapse, Divider, Flex, Text, useDisclosure } from "@chakra-ui/react"
+import {
+  Box,
+  Collapse,
+  Divider,
+  Flex,
+  Text,
+  Tooltip,
+  useDisclosure,
+} from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
-import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
-import { useAtomValue } from "jotai"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../../DefaultAddRewardPanelWrapper"
@@ -36,14 +42,12 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
   const name = selectedName ?? localName
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
-  const targetRoleId = useAtomValue(targetRoleAtom)
-
   const {
     isOpen: baseValueModalIsOpen,
     onOpen: baseValueModalOnOpen,
     onClose: baseValueModalOnClose,
   } = useDisclosure()
-  const { setStep } = useAddRewardContext()
+  const { setStep, targetRoleId } = useAddRewardContext()
 
   const handleBaseValueSelection = () => {
     baseValueModalOnClose()
@@ -80,7 +84,17 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
       <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
 
       <LogicDivider logic="OR" my={3} />
-      <DynamicSetupButton onClick={baseValueModalOnOpen} />
+      <Tooltip
+        label={!targetRoleId && "Dynamic rewards need to be set up on a role."}
+        hasArrow
+      >
+        <Box>
+          <DynamicSetupButton
+            onClick={baseValueModalOnOpen}
+            isDisabled={!targetRoleId}
+          />
+        </Box>
+      </Tooltip>
 
       <BaseValueModal
         roleId={targetRoleId as number}

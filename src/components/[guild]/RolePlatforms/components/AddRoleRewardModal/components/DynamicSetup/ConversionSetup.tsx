@@ -16,11 +16,9 @@ import {
 } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import { useAtomValue } from "jotai"
 import { ArrowLeft, Lightning } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import ConversionInput from "../AddTokenPanel/components/ConversionInput"
@@ -35,7 +33,7 @@ const ConversionSetup = ({
   const { control } = useFormContext()
   const requirementId = useWatch({ name: "dynamic.requirementId", control })
 
-  const targetRoleId = useAtomValue<number>(targetRoleAtom)
+  const { targetRoleId } = useAddRewardContext()
   const { data: requirements } = useRequirements(targetRoleId)
   const selectedRequirement = requirements.find((req) => req.id === requirementId)
 

@@ -1,10 +1,8 @@
 import { Icon } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import { targetRoleAtom } from "components/[guild]/RoleCard/components/EditRole/EditRole"
 import useGuild from "components/[guild]/hooks/useGuild"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { useAtomValue } from "jotai"
 import { Star } from "phosphor-react"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { ReactNode } from "react"
@@ -26,6 +24,8 @@ export type AddPointsFormType = {
 
 const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   const { id, guildPlatforms } = useGuild()
+
+  const { targetRoleId } = useAddRewardContext()
 
   const existingPointsRewards = guildPlatforms.filter(
     (gp) => gp.platformId === PlatformType.POINTS
@@ -50,8 +50,6 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       ?.platformGuildData?.imageUrl || null
   const formImageUrl = useWatch({ control, name: "imageUrl" })
   const imageUrl = selectedExistingId ? selectedImageUrl : formImageUrl
-
-  const targetRoleId = useAtomValue<number>(targetRoleAtom)
 
   const pointImage: ReactNode = imageUrl ? (
     <OptionImage img={imageUrl} alt={"Point type image"} />
