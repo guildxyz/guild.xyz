@@ -11,7 +11,7 @@ import { ReactNode } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import ConversionSetup from "../DynamicSetup/ConversionSetup"
-import PointsRewardSetup from "./components/RewardSetup"
+import PointsRewardSetup from "./components/PointsRewardSetup"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
