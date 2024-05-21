@@ -1,4 +1,3 @@
-import { kv } from "@vercel/kv"
 import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { NextApiHandler } from "next"
 import { OneOf } from "types"
@@ -14,7 +13,10 @@ type Owner = {
 export type TopCollectorsResponse = OneOf<
   {
     uniqueCollectors: number
-    topCollectors: string[]
+    topCollectors: {
+      address: string
+      balance: number
+    }[]
   },
   { error: string }
 >
@@ -29,7 +31,7 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   MANTLE: "",
   ZKSYNC_ERA: "",
   LINEA: "",
-  SEPOLIA: "",
+  SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${process.env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
 export const validateNftChain = (value: string | string[]): Chain => {
@@ -63,15 +65,6 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
       uniqueCollectors: 0,
     })
     return
-  }
-
-  const kvKey = `nftCollectors:${chain}:${address.toLowerCase()}`
-  const cachedResponse: TopCollectorsResponse = await kv.get(kvKey)
-
-  if (cachedResponse) {
-    // Cache the response for 5 minutes, so if the user refreshes the page, we don't need to fetch it from KV again, just send back the latest response
-    res.setHeader("Cache-Control", "s-maxage=300")
-    return res.json(cachedResponse)
   }
 
   let pageKey: string
@@ -117,14 +110,15 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
   const response: TopCollectorsResponse = {
     topCollectors: sortedOwners
       .slice(0, 100)
-      .map(({ ownerAddress }) => ownerAddress),
+      .map(({ ownerAddress, tokenBalance }) => ({
+        address: ownerAddress,
+        balance: tokenBalance,
+      })),
     uniqueCollectors: owners.length,
   }
 
-  // Store in cache for 30 minutes
-  await kv.set(kvKey, response, { ex: 60 * 30 })
-
-  res.setHeader("Cache-Control", "s-maxage=300")
+  // Cache the response for 3 minutes
+  res.setHeader("Cache-Control", "s-maxage=180")
   res.json(response)
 }
 

@@ -14,7 +14,7 @@ import {
 import Button from "components/common/Button"
 import { ArrowLeft, Info } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import rewards from "platforms/rewards"
+import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
@@ -71,27 +71,29 @@ const SelectRolePanel = () => {
           </HStack>
 
           <RewardPreview>
-            <AvailabilitySetup
-              platformType={rolePlatform?.guildPlatform?.platformName}
-              rolePlatform={rolePlatform}
-              defaultValues={{
-                /**
-                 * If the user doesn't upload mint links for a POAP, we should
-                 * fallback to undefined, since 0 is not a valid value here
-                 */
-                capacity:
-                  rolePlatform?.guildPlatform?.platformGuildData?.texts?.length ||
-                  undefined,
-                /** POAPs have default startTime and endTime */
-                startTime: rolePlatform?.startTime,
-                endTime: rolePlatform?.endTime,
-              }}
-              onDone={({ capacity, startTime, endTime }) => {
-                methods.setValue(`rolePlatforms.0.capacity`, capacity)
-                methods.setValue(`rolePlatforms.0.startTime`, startTime)
-                methods.setValue(`rolePlatforms.0.endTime`, endTime)
-              }}
-            />
+            {CAPACITY_TIME_PLATFORMS.includes(selection) && (
+              <AvailabilitySetup
+                platformType={rolePlatform?.guildPlatform?.platformName}
+                rolePlatform={rolePlatform}
+                defaultValues={{
+                  /**
+                   * If the user doesn't upload mint links for a POAP, we should
+                   * fallback to undefined, since 0 is not a valid value here
+                   */
+                  capacity:
+                    rolePlatform?.guildPlatform?.platformGuildData?.texts?.length ||
+                    undefined,
+                  /** POAPs have default startTime and endTime */
+                  startTime: rolePlatform?.startTime,
+                  endTime: rolePlatform?.endTime,
+                }}
+                onDone={({ capacity, startTime, endTime }) => {
+                  methods.setValue(`rolePlatforms.0.capacity`, capacity)
+                  methods.setValue(`rolePlatforms.0.startTime`, startTime)
+                  methods.setValue(`rolePlatforms.0.endTime`, endTime)
+                }}
+              />
+            )}
           </RewardPreview>
         </Stack>
       </ModalHeader>

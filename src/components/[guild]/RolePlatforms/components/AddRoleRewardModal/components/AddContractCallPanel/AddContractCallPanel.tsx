@@ -5,9 +5,10 @@ import CreateNftForm from "./components/CreateNftForm"
 const AddContractCallPanel = ({ onAdd }: AddRewardPanelProps) => (
   <DefaultAddRewardPanelWrapper>
     <CreateNftForm
-      onSuccess={(guildPlatform) =>
+      onSuccess={(reward) =>
         onAdd({
-          guildPlatform,
+          guildPlatform: reward.guildPlatform,
+          ...reward.rolePlatform,
           isNew: true,
         })
       }

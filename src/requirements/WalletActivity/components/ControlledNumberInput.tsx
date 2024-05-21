@@ -46,6 +46,7 @@ const ControlledNumberInput = ({
         message: `Maximum: ${props.max}`,
       },
     },
+    defaultValue: props.defaultValue,
   })
 
   const decimalsLimit = Math.min(decimalsMax, MAX_DECIMALS)

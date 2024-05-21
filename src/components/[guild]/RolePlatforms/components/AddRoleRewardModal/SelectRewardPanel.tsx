@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react"
 import { PlatformName } from "@guildxyz/types"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import PlatformsGrid from "components/create-guild/PlatformsGrid"
 import { PropsWithChildren } from "react"
 
@@ -19,6 +20,7 @@ const SelectRewardPanel = ({
   children,
 }: PropsWithChildren<Props>) => {
   const { modalRef, setSelection, setStep } = useAddRewardContext()
+  const { startSessionRecording } = usePostHogContext()
 
   return (
     <ModalContent>
@@ -31,6 +33,7 @@ const SelectRewardPanel = ({
         {children}
         <PlatformsGrid
           onSelection={(platform) => {
+            if (platform === "CONTRACT_CALL") startSessionRecording()
             setSelection(platform)
             setStep("REWARD_SETUP")
           }}

@@ -14,7 +14,6 @@ import { PropsWithChildren } from "react"
 
 type Props = {
   buttonComponent: JSX.Element
-  bgColor?: string
 } & StackProps
 
 const FeesTable = ({

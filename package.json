@@ -83,8 +83,8 @@
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
     "uuidv7": "^0.6.3",
-    "viem": "2.9.6",
-    "wagmi": "2.5.17",
+    "viem": "^2.10.9",
+    "wagmi": "^2.9.2",
     "wicg-inert": "^3.1.2",
     "zod": "^3.22.4"
   },
@@ -96,6 +96,7 @@
     "@types/react": "^18.2.65",
     "@types/react-google-recaptcha": "^2.1.5",
     "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "abitype": "^1.0.2",
     "cypress": "^13.3.2",
     "dotenv-cli": "^7.4.1",
     "eslint": "^8.57.0",

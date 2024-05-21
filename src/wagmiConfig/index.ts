@@ -31,6 +31,7 @@ import {
   celo,
   coreDao,
   cronos,
+  cyber,
   evmos,
   fantom,
   gnosis,
@@ -125,6 +126,7 @@ export const wagmiConfig = createConfig({
     liskSepolia as Chain,
     opBNB,
     formTestnet,
+    cyber,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -180,6 +182,7 @@ export const wagmiConfig = createConfig({
     [liskSepolia.id]: http(),
     [opBNB.id]: http(),
     [formTestnet.id]: http(),
+    [cyber.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
@@ -192,6 +195,8 @@ export const wagmiConfig = createConfig({
         injected(),
         coinbaseWallet({
           appName: "Guild.xyz",
+          appLogoUrl: "https://guild.xyz/guild-icon.png",
+          version: "3",
         }),
         walletConnect({
           projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
