@@ -11,6 +11,7 @@ import {
   ModalHeader,
   Stack,
   Text,
+  useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -28,6 +29,7 @@ export const DONT_SHOW_DYNAMIC_INFO_KEY = "dontShowDynamicRewardInfoModal"
 const InformationModal = () => {
   const { setStep } = useAddRewardContext()
   const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.700")
+  const figureBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
 
   const [checked, setChecked] = useState(false)
 
@@ -37,6 +39,8 @@ const InformationModal = () => {
   }
 
   const targetRoleId = useAtomValue(targetRoleAtom)
+
+  const { colorMode } = useColorMode()
 
   const {
     isOpen: baseValueModalIsOpen,
@@ -78,7 +82,7 @@ const InformationModal = () => {
             </Text>
 
             <Box
-              bg={"blackAlpha.400"}
+              bg={figureBg}
               px={6}
               py={8}
               position={"relative"}
@@ -91,7 +95,11 @@ const InformationModal = () => {
                 layout="responsive"
                 width={610}
                 height={166}
-                src={"/img/dynamic_illustration.svg"}
+                src={
+                  colorMode === "light"
+                    ? "/img/dynamic_illustration_light.svg"
+                    : "/img/dynamic_illustration.svg"
+                }
                 alt="Illustration for dynamic rewards"
               />
             </Box>
