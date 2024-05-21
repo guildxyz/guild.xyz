@@ -11,6 +11,7 @@ import { ReactNode } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
 import ConversionSetup from "../DynamicSetup/ConversionSetup"
+import InformationModal from "../DynamicSetup/InformationModal"
 import PointsRewardSetup from "./components/PointsRewardSetup"
 
 export type AddPointsFormType = {
@@ -111,6 +112,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const steps: Record<string, JSX.Element> = {
     REWARD_SETUP: <PointsRewardSetup onSubmit={methods.handleSubmit(onSubmit)} />,
+    INFO: <InformationModal />,
     CONVERSION_SETUP: (
       <ConversionSetup
         onSubmit={methods.handleSubmit(onSubmit)}

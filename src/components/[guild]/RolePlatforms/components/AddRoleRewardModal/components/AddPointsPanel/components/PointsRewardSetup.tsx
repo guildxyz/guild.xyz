@@ -10,6 +10,7 @@ import { PlatformType } from "types"
 import DefaultAddRewardPanelWrapper from "../../../DefaultAddRewardPanelWrapper"
 import BaseValueModal from "../../DynamicSetup/BaseValueModal"
 import DynamicSetupButton from "../../DynamicSetup/DynamicSetupButton"
+import { DONT_SHOW_DYNAMIC_INFO_KEY } from "../../DynamicSetup/InformationModal"
 import AddNewPointsType from "./AddNewPointsType"
 import ExistingPointsTypeSelect from "./ExistingPointsTypeSelect"
 import SetPointsAmount from "./SetPointsAmount"
@@ -50,6 +51,11 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
     setStep("CONVERSION_SETUP")
   }
 
+  const handleNext = () => {
+    const dontShowInfo = localStorage.getItem(DONT_SHOW_DYNAMIC_INFO_KEY) === "true"
+    dontShowInfo ? baseValueModalOnOpen() : setStep("INFO")
+  }
+
   return (
     <DefaultAddRewardPanelWrapper>
       <Text colorScheme="gray" fontWeight="semibold" mb="8">
@@ -80,7 +86,7 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
       <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
 
       <LogicDivider logic="OR" my={3} />
-      <DynamicSetupButton onClick={baseValueModalOnOpen} />
+      <DynamicSetupButton onClick={handleNext} />
 
       <BaseValueModal
         roleId={targetRoleId as number}
