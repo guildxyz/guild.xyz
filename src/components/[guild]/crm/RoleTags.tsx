@@ -169,11 +169,9 @@ const CrmTbodyRoleTag = memo(
 
 export const CrmRoleTag = memo(
   forwardRef<RoleTagProps, "span">(({ role, amount: amountProp, ...rest }, ref) => {
-    const { data: requirements } = useRequirements(role?.id)
-
     if (!role) return null
 
-    const amount = requirements?.length === 1 ? amountProp : undefined
+    const amount = role.requirements?.length === 1 ? amountProp : undefined
 
     return (
       <RoleTag
