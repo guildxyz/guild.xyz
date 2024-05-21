@@ -12,11 +12,8 @@ type Props = {
 
 const Collector = ({ address, balance }: Props): JSX.Element => {
   const domain = useResolveAddress(address)
-  const ranges = useNftRanges()
 
   if (!address) return null
-
-  const rangeIcon = ranges?.find((r) => r.min <= balance && r.max >= balance)?.icon
 
   return (
     <VStack spacing={1}>
@@ -37,18 +34,27 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
         >
           {domain ?? shortenHex(address, 3)}
         </Text>
-        <Text
-          as="span"
-          fontWeight="semibold"
-          fontSize="xs"
-          maxW="full"
-          noOfLines={1}
-          color="GrayText"
-        >
-          {`${rangeIcon ? `${rangeIcon} ` : ""}${pluralize(balance, "mint")}`}
-        </Text>
+        {balance && <CollectorBalance balance={balance} />}
       </VStack>
     </VStack>
+  )
+}
+
+const CollectorBalance = ({ balance }) => {
+  const ranges = useNftRanges()
+  const rangeIcon = ranges?.find((r) => r.min <= balance && r.max >= balance)?.icon
+
+  return (
+    <Text
+      as="span"
+      fontWeight="semibold"
+      fontSize="xs"
+      maxW="full"
+      noOfLines={1}
+      color="GrayText"
+    >
+      {`${rangeIcon ? `${rangeIcon} ` : ""}${pluralize(balance, "mint")}`}
+    </Text>
   )
 }
 

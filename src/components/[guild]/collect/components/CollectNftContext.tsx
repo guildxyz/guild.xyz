@@ -9,6 +9,7 @@ import {
   RewardDisplay,
   RewardIcon,
 } from "components/[guild]/RoleCard/components/Reward"
+import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
@@ -23,6 +24,7 @@ type Props = {
   chain: Chain
   nftAddress: `0x${string}`
   alreadyCollected: boolean
+  isLegacy: boolean
 }
 
 export type CollectNftForm = {
@@ -38,11 +40,15 @@ const CollectNftProvider = ({
   chain,
   nftAddress,
   children,
-}: PropsWithChildren<Omit<Props, "alreadyCollected">>) => {
+}: PropsWithChildren<Omit<Props, "alreadyCollected" | "isLegacy">>) => {
   const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress,
     chainId: Chains[chain],
   })
+
+  const isLegacy =
+    guildPlatform.platformGuildData.function ===
+    ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
   const { name, mintableAmountPerUser, maxSupply, totalSupply } = useNftDetails(
     chain,
@@ -80,6 +86,7 @@ const CollectNftProvider = ({
         chain,
         nftAddress,
         alreadyCollected,
+        isLegacy,
       }}
     >
       <FormProvider {...methods}>{children}</FormProvider>
@@ -158,7 +165,7 @@ const CollectNftProvider = ({
 const CollectNftProviderWrapper = ({
   children,
   ...props
-}: PropsWithChildren<Omit<Props, "alreadyCollected">>) => (
+}: PropsWithChildren<Omit<Props, "alreadyCollected" | "isLegacy">>) => (
   <TransactionStatusProvider>
     <CollectNftProvider {...props}>{children}</CollectNftProvider>
   </TransactionStatusProvider>

@@ -38,8 +38,14 @@ const CollectNft = () => {
   const tableBgColor = useColorModeValue("gray.50", "blackAlpha.300")
 
   const { roles } = useGuild()
-  const { chain, nftAddress, alreadyCollected, rolePlatformId, guildPlatform } =
-    useCollectNftContext()
+  const {
+    chain,
+    nftAddress,
+    alreadyCollected,
+    rolePlatformId,
+    guildPlatform,
+    isLegacy,
+  } = useCollectNftContext()
   const rolePlatform = roles
     ?.flatMap((r) => r.rolePlatforms)
     .find((rp) => rp.id === rolePlatformId)
@@ -59,7 +65,7 @@ const CollectNft = () => {
   return (
     <Stack p={padding} w="full" alignItems="center" spacing={4}>
       {/* Only show the amount picker if the user can mint unlimited or more than 1 NFTs */}
-      {mintableAmountPerUser !== BigInt(1) && <AmountPicker />}
+      {!isLegacy && mintableAmountPerUser !== BigInt(1) && <AmountPicker />}
 
       <Stack w="full" spacing={2}>
         <NftFeesTable bgColor={tableBgColor} mt="2" mb="1" />
