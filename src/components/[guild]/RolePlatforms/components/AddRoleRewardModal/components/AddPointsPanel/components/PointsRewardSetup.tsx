@@ -53,7 +53,11 @@ const PointsRewardSetup = ({ onSubmit }: { onSubmit }) => {
 
   const handleNext = () => {
     const dontShowInfo = localStorage.getItem(DONT_SHOW_DYNAMIC_INFO_KEY) === "true"
-    dontShowInfo ? baseValueModalOnOpen() : setStep("INFO")
+    if (dontShowInfo) {
+      baseValueModalOnOpen()
+    } else {
+      setStep("INFO")
+    }
   }
 
   return (
