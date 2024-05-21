@@ -47,7 +47,7 @@ const CollectNftProvider = ({
   })
 
   const isLegacy =
-    guildPlatform.platformGuildData.function ===
+    guildPlatform?.platformGuildData?.function ===
     ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
   const { name, mintableAmountPerUser, maxSupply, totalSupply } = useNftDetails(
