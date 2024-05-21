@@ -83,7 +83,7 @@ const ConversionInput = ({
     if (conversionLocked) return
     const pointValue = Number(tokenOrPoint === "point" ? value : pointAmount)
     const tokenValue = Number(tokenOrPoint === "token" ? value : tokenAmount)
-    setValue("multiplier", pointValue / tokenValue)
+    setValue(name, pointValue / tokenValue)
   }
 
   return (
@@ -113,6 +113,7 @@ const ConversionInput = ({
               adaptiveStepSize
               numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
+              w="full"
             />
           ) : (
             <ControlledNumberInput
@@ -122,6 +123,7 @@ const ConversionInput = ({
               adaptiveStepSize
               numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
+              w="full"
             />
           )}
         </InputGroup>
@@ -140,6 +142,7 @@ const ConversionInput = ({
               numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
               isReadOnly
+              w="full"
             />
           ) : (
             <ControlledNumberInput
@@ -149,6 +152,7 @@ const ConversionInput = ({
               adaptiveStepSize
               numberInputFieldProps={{ pr: 7, pl: 10 }}
               min={MIN_TOKEN_AMOUNT}
+              w="full"
             />
           )}
         </InputGroup>
