@@ -1,3 +1,5 @@
+import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
+import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
@@ -11,10 +13,10 @@ import { mutate } from "swr"
 import { GuildPlatformWithOptionalId, PlatformType } from "types"
 import getEventsFromViemTxReceipt from "utils/getEventsFromViemTxReceipt"
 import processViemContractError from "utils/processViemContractError"
-import { TransactionReceipt, parseUnits } from "viem"
+import { TransactionReceipt, WriteContractParameters, parseUnits } from "viem"
 import { useAccount, usePublicClient, useWalletClient } from "wagmi"
 import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
-import { CreateNftFormType } from "../CreateNftForm"
+import { CreateNftFormType } from "../components/NftDataForm"
 
 export const GUILD_REWARD_NFT_FACTORY_ADDRESSES = {
   ETHEREUM: "0x6ee2dd02fbfb71f518827042b6adca242f1ba0b2",
@@ -35,29 +37,46 @@ export const CONTRACT_CALL_SUPPORTED_CHAINS = Object.keys(
 export type ContractCallSupportedChain =
   (typeof CONTRACT_CALL_SUPPORTED_CHAINS)[number]
 
-type NftMetadata = {
-  name: string
-  description?: string
-  image: string
-  attributes: { trait_type: string; value: string }[] // TODO: maybe add display_type too?
-}
-
 export enum ContractCallFunction {
-  SIMPLE_CLAIM = "function claim(address payToken, address receiver, bytes calldata signature) payable",
+  // Kept the old one too, we can use it to determine if we need to show the old or the new UI for the availability-related features
+  DEPRECATED_SIMPLE_CLAIM = "function claim(address payToken, address receiver, bytes calldata signature) payable",
+  SIMPLE_CLAIM = "function claim(uint256 amount, address receiver, uint256 userId, uint256 signedAt, bytes calldata signature) payable",
 }
 
 export const CONTRACT_CALL_ARGS_TO_SIGN: Record<ContractCallFunction, string[]> = {
-  [ContractCallFunction.SIMPLE_CLAIM]: [],
+  [ContractCallFunction.DEPRECATED_SIMPLE_CLAIM]: [],
+  [ContractCallFunction.SIMPLE_CLAIM]: ["uint256"],
 }
 
 export type CreateNFTResponse = {
   // returning the submitted form too, so we can easily populate the SWR cache with the NFT details (e.g. image, name, etc.)
   formData: CreateNftFormType
   guildPlatform: Omit<GuildPlatformWithOptionalId, "platformGuildName">
+  rolePlatform: {
+    startTime?: string
+    endTime?: string
+  }
+}
+
+export const generateGuildRewardNFTMetadata = (
+  data: Pick<CreateNftFormType, "name" | "description" | "image" | "attributes">
+) => {
+  const image = data.image?.replace(process.env.NEXT_PUBLIC_IPFS_GATEWAY, "ipfs://")
+
+  return guildNftRewardMetadataSchema.parse({
+    name: data.name,
+    description: data.description,
+    image,
+    attributes:
+      data.attributes?.map((attr) => ({
+        trait_type: attr.name,
+        value: attr.value,
+      })) ?? [],
+  })
 }
 
 const useCreateNft = (
-  onSuccess: (newGuildPlatform: CreateNFTResponse["guildPlatform"]) => void
+  onSuccess: (reward: Omit<CreateNFTResponse, "formData">) => void
 ) => {
   const { urlName } = useGuild()
   const { captureEvent } = usePostHogContext()
@@ -73,26 +92,9 @@ const useCreateNft = (
   const showErrorToast = useShowErrorToast()
 
   const createNft = async (data: CreateNftFormType): Promise<CreateNFTResponse> => {
-    setLoadingText("Uploading image")
-
-    const { IpfsHash: imageCID } = await pinFileToIPFS({
-      data: [data.image],
-    })
-
     setLoadingText("Uploading metadata")
 
-    const image = `ipfs://${imageCID}`
-
-    const metadata: NftMetadata = {
-      name: data.name,
-      description: data.description,
-      image,
-      attributes:
-        data.attributes?.map((attr) => ({
-          trait_type: attr.name,
-          value: attr.value,
-        })) ?? [],
-    }
+    const metadata = generateGuildRewardNFTMetadata(data)
 
     const metadataJSON = JSON.stringify(metadata)
 
@@ -103,26 +105,34 @@ const useCreateNft = (
 
     setLoadingText("Deploying contract")
 
-    const { name, symbol, tokenTreasury, price } = data
+    const { name, tokenTreasury, price } = data
     const trimmedName = name.trim()
-    const trimmedSymbol = symbol.trim()
-    // name, symbol, cid, tokenOwner, tokenTreasury, tokenFee
+
+    // { string name; string symbol; string cid; address tokenOwner; address payable treasury; uint256 tokenFee; bool soulbound; uint256 mintableAmountPerUser; }
     const contractCallParams = [
-      trimmedName,
-      trimmedSymbol,
-      metadataCID,
-      address,
-      tokenTreasury,
-      parseUnits(
-        price?.toString() ?? "0",
-        CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
-      ),
-    ] as const
+      {
+        name: trimmedName,
+        symbol: "",
+        cid: metadataCID,
+        tokenOwner: address,
+        treasury: tokenTreasury,
+        tokenFee: parseUnits(
+          price.toString(),
+          CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
+        ),
+        maxSupply: BigInt(data.maxSupply),
+        mintableAmountPerUser: BigInt(data.mintableAmountPerUser),
+        soulbound: data.soulbound === "true",
+      },
+    ] as const satisfies WriteContractParameters<
+      typeof guildRewardNFTFacotryAbi,
+      "deployConfigurableNFT"
+    >["args"]
 
     const { request } = await publicClient.simulateContract({
       abi: guildRewardNFTFacotryAbi,
       address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
-      functionName: "deployBasicNFT",
+      functionName: "deployConfigurableNFT",
       args: contractCallParams,
     })
 
@@ -132,7 +142,6 @@ const useCreateNft = (
 
     const hash = await walletClient.writeContract({
       ...request,
-      account: walletClient.account,
     })
 
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
@@ -167,17 +176,20 @@ const useCreateNft = (
           function: ContractCallFunction.SIMPLE_CLAIM,
           argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
           name: trimmedName,
-          symbol: trimmedSymbol,
-          imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${imageCID}`,
-          description: data.richTextDescription,
+          imageUrl: data.image,
+          description: data.description,
         },
+      },
+      rolePlatform: {
+        startTime: datetimeLocalToIsoString(data.startTime),
+        endTime: datetimeLocalToIsoString(data.endTime),
       },
     }
   }
 
   return {
     ...useSubmit(createNft, {
-      onSuccess: (response) => {
+      onSuccess: ({ guildPlatform, rolePlatform }) => {
         setLoadingText(null)
 
         toast({
@@ -185,8 +197,7 @@ const useCreateNft = (
           title: "Successfully deployed NFT contract",
         })
 
-        const { chain, contractAddress, name } =
-          response.guildPlatform.platformGuildData
+        const { chain, contractAddress, name } = guildPlatform.platformGuildData
 
         captureEvent("Successfully created NFT", {
           ...postHogOptions,
@@ -206,7 +217,10 @@ const useCreateNft = (
           }
         )
 
-        onSuccess(response.guildPlatform)
+        onSuccess({
+          guildPlatform,
+          rolePlatform,
+        })
       },
       onError: (error) => {
         setLoadingText(null)

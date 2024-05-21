@@ -1,15 +1,15 @@
+import { BoxProps } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { Rest } from "types"
 import Card from "../Card"
 
 type Props = {
   color: string
-} & Rest
+} & BoxProps
 
 const ColorCard = ({
   color,
   children,
-  ...rest
+  ...boxProps
 }: PropsWithChildren<Props>): JSX.Element => (
   <Card
     role="group"
@@ -19,7 +19,7 @@ const ColorCard = ({
     borderWidth={2}
     borderColor={color}
     overflow="visible"
-    {...rest}
+    {...boxProps}
   >
     {children}
   </Card>

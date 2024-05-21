@@ -54,7 +54,7 @@ type Props = {
 
 const DynamicEditNFTDescriptionModalButton = dynamic(
   () =>
-    import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton"),
+    import("components/[guild]/collect/components/EditNFTDescriptionModalButton"),
   { ssr: false }
 )
 
@@ -75,12 +75,8 @@ const CollectNftPageContent = ({
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const {
-    name,
-    image: imageFromHook,
-    totalCollectors,
-  } = useNftDetails(chain, address)
-  const image = fallbackImage || imageFromHook
+  const { name, image: imageFromHook, totalSupply } = useNftDetails(chain, address)
+  const image = imageFromHook || fallbackImage
 
   return (
     <Layout
@@ -93,7 +89,7 @@ const CollectNftPageContent = ({
         <HStack justifyContent="space-between">
           <GuildImageAndName />
           <ShareAndReportButtons
-            isPulseMarkerHidden={totalCollectors > 0}
+            isPulseMarkerHidden={totalSupply > 0}
             shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
             shareText={`Check out and collect this awesome ${
               name ? `${name} ` : " "

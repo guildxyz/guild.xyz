@@ -11,6 +11,7 @@ import {
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import TelegramGroup from "components/create-guild/TelegramGroup"
 import useIsTGBotIn from "components/create-guild/TelegramGroup/hooks/useIsTGBotIn"
+import { modalSizeForPlatform } from "platforms/rewards"
 import {
   FormProvider,
   useFieldArray,
@@ -50,7 +51,7 @@ const CreateGuildTelegram = ({ isOpen, onClose }: Props): JSX.Element => {
       onClose={onClose}
       scrollBehavior="inside"
       colorScheme="dark"
-      size="3xl"
+      size={modalSizeForPlatform("TELEGRAM")}
     >
       <ModalOverlay />
       <ModalContent>

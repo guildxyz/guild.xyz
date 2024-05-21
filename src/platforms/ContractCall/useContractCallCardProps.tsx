@@ -1,10 +1,10 @@
-import AvailabilityTags from "components/[guild]/RolePlatforms/components/PlatformCard/components/AvailabilityTags"
+import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useNftBalance from "hooks/useNftBalance"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import { Chains } from "wagmiConfig/chains"
+import NftAvailabilityTags from "./components/NftAvailabilityTags"
 
 const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { roles } = useGuild()
@@ -12,7 +12,7 @@ const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) =>
   const { chain, contractAddress } = guildPlatform.platformGuildData
   const { name, image } = useNftDetails(chain, contractAddress)
 
-  const { data: nftBalance } = useNftBalance({
+  const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress: contractAddress,
     chainId: Chains[chain],
   })
@@ -24,9 +24,15 @@ const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) =>
 
   return {
     type: "CONTRACT_CALL" as PlatformName,
-    name: name || guildPlatform.platformGuildData?.name,
-    image: image || guildPlatform.platformGuildData?.imageUrl,
-    info: rolePlatform && <AvailabilityTags rolePlatform={rolePlatform} mt={1} />,
+    name,
+    image,
+    info: rolePlatform && (
+      <NftAvailabilityTags
+        guildPlatform={guildPlatform}
+        rolePlatform={rolePlatform}
+        mt={1}
+      />
+    ),
     shouldHide: !isAdmin && alreadyCollected,
   }
 }

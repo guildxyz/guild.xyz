@@ -12,6 +12,7 @@ import { AddRewardPanelProps } from "platforms/rewards"
 import { useState } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformName, PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 
 enum TextPlatformName {
   TEXT,
@@ -71,53 +72,55 @@ const AddSecretTextPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <Tabs
-        isLazy
-        size="sm"
-        isFitted
-        variant="solid"
-        colorScheme="indigo"
-        onChange={handleChange}
-      >
-        <TabList mb="7">
-          <Tab>Same content for everyone</Tab>
-          <Tab>Unique values (links, promo codes)</Tab>
-        </TabList>
+      <DefaultAddRewardPanelWrapper>
+        <Tabs
+          isLazy
+          size="sm"
+          isFitted
+          variant="solid"
+          colorScheme="indigo"
+          onChange={handleChange}
+        >
+          <TabList mb="7">
+            <Tab>Same content for everyone</Tab>
+            <Tab>Unique values (links, promo codes)</Tab>
+          </TabList>
 
-        <TabPanels>
-          <TabPanel>
-            <SecretTextDataForm
-              shouldValidate={TextPlatformName[tabIndex] === "TEXT"}
-            >
-              <Button
-                colorScheme="indigo"
-                isDisabled={!name?.length || !text?.length}
-                w="max-content"
-                ml="auto"
-                onClick={methods.handleSubmit(onContinue)}
+          <TabPanels>
+            <TabPanel>
+              <SecretTextDataForm
+                shouldValidate={TextPlatformName[tabIndex] === "TEXT"}
               >
-                Continue
-              </Button>
-            </SecretTextDataForm>
-          </TabPanel>
+                <Button
+                  colorScheme="indigo"
+                  isDisabled={!name?.length || !text?.length}
+                  w="max-content"
+                  ml="auto"
+                  onClick={methods.handleSubmit(onContinue)}
+                >
+                  Continue
+                </Button>
+              </SecretTextDataForm>
+            </TabPanel>
 
-          <TabPanel>
-            <UniqueTextDataForm
-              shouldValidate={TextPlatformName[tabIndex] === "UNIQUE_TEXT"}
-            >
-              <Button
-                colorScheme="indigo"
-                isDisabled={!name?.length}
-                w="max-content"
-                ml="auto"
-                onClick={methods.handleSubmit(onContinue)}
+            <TabPanel>
+              <UniqueTextDataForm
+                shouldValidate={TextPlatformName[tabIndex] === "UNIQUE_TEXT"}
               >
-                Continue
-              </Button>
-            </UniqueTextDataForm>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+                <Button
+                  colorScheme="indigo"
+                  isDisabled={!name?.length}
+                  w="max-content"
+                  ml="auto"
+                  onClick={methods.handleSubmit(onContinue)}
+                >
+                  Continue
+                </Button>
+              </UniqueTextDataForm>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

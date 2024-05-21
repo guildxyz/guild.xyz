@@ -2,10 +2,12 @@ import { useDisclosure } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useClaimedReward } from "hooks/useClaimedReward"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
+import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
 type ClaimResponse = {
@@ -24,6 +26,7 @@ const useClaimGather = (rolePlatformId: number) => {
 
   const triggerConfetti = useJsConfetti()
   const showErrorToast = useShowErrorToast()
+  const { rewardClaimed } = useCustomPosthogEvents()
 
   const endpoint = `/v2/guilds/${guildId}/roles/${roleId}/role-platforms/${rolePlatformId}/claim`
   const { data: responseFromCache, mutate: mutateCachedResponse } = useSWRImmutable(
@@ -40,6 +43,7 @@ const useClaimGather = (rolePlatformId: number) => {
   const { onSubmit: onClaimGatherSubmit, ...claim } =
     useSubmitWithSign<ClaimResponse>(claimFetcher, {
       onSuccess: (response) => {
+        rewardClaimed(PlatformType.GATHER_TOWN)
         triggerConfetti()
         /**
          * Saving in SWR cache so we don't need to re-claim the reward if the user

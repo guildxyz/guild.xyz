@@ -1,23 +1,13 @@
+import { DiscordGateable, GitHubGateable, GoogleGateable } from "@guildxyz/types"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
 import useSWR, { SWRConfiguration } from "swr"
-import { GoogleFile, PlatformType } from "types"
+import { PlatformType } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
-type Gateables = {
-  [PlatformType.DISCORD]: Array<{
-    img: string
-    name: string
-    owner: boolean
-    id: string
-  }>
-  [PlatformType.GITHUB]: Array<{
-    avatarUrl: string
-    description?: string
-    platformGuildId: string
-    repositoryName: string
-    url: string
-  }>
-  [PlatformType.GOOGLE]: Array<GoogleFile>
+export type Gateables = {
+  [PlatformType.DISCORD]: Array<DiscordGateable>
+  [PlatformType.GITHUB]: Array<GitHubGateable>
+  [PlatformType.GOOGLE]: Array<GoogleGateable>
 } & Record<PlatformType, unknown>
 
 const platformsWithoutGateables: PlatformType[] = [PlatformType.TELEGRAM]
@@ -41,7 +31,7 @@ const useGateables = <K extends keyof Gateables>(
     platformId &&
     !platformsWithoutGateables.includes(platformId)
 
-  const { data, isLoading, mutate, error } = useSWR<Gateables[K]>(
+  const { data, isLoading, mutate, error, isValidating } = useSWR<Gateables[K]>(
     shouldFetch
       ? [
           `/v2/users/${userId}/platforms/${PlatformType[platformId]}/gateables`,
@@ -58,6 +48,7 @@ const useGateables = <K extends keyof Gateables>(
     {
       revalidateOnFocus: false,
       shouldRetryOnError: false,
+      revalidateIfStale: false,
       ...swrConfig,
     }
   )
@@ -67,6 +58,7 @@ const useGateables = <K extends keyof Gateables>(
     isLoading,
     mutate,
     error,
+    isValidating,
   }
 }
 

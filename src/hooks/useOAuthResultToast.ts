@@ -52,7 +52,8 @@ export default function useOAuthResultToast() {
 
       replace({ pathname, query: newQuery })
     }
-    /** Toast is intentionally left out, as it causes the toast to fire twice */
+    // replace is intentionally left out
+    // toast is intentionally left out, as it causes the toast to fire twice
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, showPlatformMergeAlert, replace, pathname])
+  }, [query, showPlatformMergeAlert, pathname])
 }

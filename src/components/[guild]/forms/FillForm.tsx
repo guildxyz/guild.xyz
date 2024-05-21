@@ -6,11 +6,13 @@ import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import { Controller, FormProvider, useForm } from "react-hook-form"
+import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
 import useGuild from "../hooks/useGuild"
 import FillFormProgress from "./FillFormProgress"
@@ -38,6 +40,8 @@ const FillForm = ({ form }: Props) => {
 
   const { userSubmission, mutate: mutateSubmission } = useUserFormSubmission(form)
 
+  const { rewardClaimed } = useCustomPosthogEvents()
+
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const { onSubmit, isLoading } = useSubmitWithSign(
@@ -48,6 +52,7 @@ const FillForm = ({ form }: Props) => {
       }),
     {
       onSuccess: (res) => {
+        rewardClaimed(PlatformType.FORM)
         toast({
           status: "success",
           title: "Successfully submitted form",

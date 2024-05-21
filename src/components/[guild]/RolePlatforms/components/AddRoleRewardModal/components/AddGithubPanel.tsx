@@ -3,6 +3,7 @@ import GitHubGuildSetup from "components/common/GitHubGuildSetup"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 
 const defaultValues = {
   platformGuildId: null,
@@ -14,18 +15,20 @@ const AddGithubPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <GitHubGuildSetup
-        onSelection={(platformGuildId) =>
-          onAdd({
-            guildPlatform: {
-              platformName: "GITHUB",
-              platformId: PlatformType.GITHUB,
-              platformGuildId: encodeURIComponent(platformGuildId),
-            },
-            isNew: true,
-          })
-        }
-      />
+      <DefaultAddRewardPanelWrapper>
+        <GitHubGuildSetup
+          onSelection={(platformGuildId) =>
+            onAdd({
+              guildPlatform: {
+                platformName: "GITHUB",
+                platformId: PlatformType.GITHUB,
+                platformGuildId: encodeURIComponent(platformGuildId),
+              },
+              isNew: true,
+            })
+          }
+        />
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

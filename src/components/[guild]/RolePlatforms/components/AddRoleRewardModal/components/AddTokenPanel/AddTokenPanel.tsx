@@ -19,6 +19,7 @@ import { FormProvider, useForm } from "react-hook-form"
 import { PlatformGuildData, PlatformType, Requirement } from "types"
 import { ERC20_CONTRACTS } from "utils/guildCheckout/constants"
 import { Chain } from "wagmiConfig/chains"
+import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import PoolStep from "./components/PoolStep"
 import SetTokenStep from "./components/SetTokenStep"
 import TokenAmountStep from "./components/TokenAmountStep"
@@ -146,51 +147,53 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <Stepper
-        colorScheme="indigo"
-        index={activeStep}
-        orientation="vertical"
-        gap="0"
-        w="full"
-        height="100%"
-      >
-        {steps.map((step, index) => (
-          <Step
-            key={index}
-            style={{ width: "100%", height: "100%" }}
-            onClick={activeStep > index ? () => setActiveStep(index) : null}
-          >
-            <StepIndicator>
-              <StepStatus
-                complete={<StepIcon />}
-                incomplete={<StepNumber />}
-                active={<StepNumber />}
-              />
-            </StepIndicator>
-
-            <Box
-              w="full"
-              mt={1}
-              minH={index === steps.length - 1 ? 0 : 12}
-              _hover={activeStep > index && { cursor: "pointer" }}
+      <DefaultAddRewardPanelWrapper>
+        <Stepper
+          colorScheme="indigo"
+          index={activeStep}
+          orientation="vertical"
+          gap="0"
+          w="full"
+          height="100%"
+        >
+          {steps.map((step, index) => (
+            <Step
+              key={index}
+              style={{ width: "100%", height: "100%" }}
+              onClick={activeStep > index ? () => setActiveStep(index) : null}
             >
-              <StepTitle>{step.title}</StepTitle>
-              <Collapse
-                in={activeStep === index}
-                animateOpacity
-                style={{ padding: "2px", margin: "-2px" }}
-              >
-                <step.content
-                  onContinue={goToNext}
-                  onSubmit={methods.handleSubmit(onSubmit)}
+              <StepIndicator>
+                <StepStatus
+                  complete={<StepIcon />}
+                  incomplete={<StepNumber />}
+                  active={<StepNumber />}
                 />
-              </Collapse>
-            </Box>
+              </StepIndicator>
 
-            <StepSeparator />
-          </Step>
-        ))}
-      </Stepper>
+              <Box
+                w="full"
+                mt={1}
+                minH={index === steps.length - 1 ? 0 : 12}
+                _hover={activeStep > index && { cursor: "pointer" }}
+              >
+                <StepTitle>{step.title}</StepTitle>
+                <Collapse
+                  in={activeStep === index}
+                  animateOpacity
+                  style={{ padding: "2px", margin: "-2px" }}
+                >
+                  <step.content
+                    onContinue={goToNext}
+                    onSubmit={methods.handleSubmit(onSubmit)}
+                  />
+                </Collapse>
+              </Box>
+
+              <StepSeparator />
+            </Step>
+          ))}
+        </Stepper>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }
