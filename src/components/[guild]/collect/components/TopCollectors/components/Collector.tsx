@@ -17,13 +17,9 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
 
   return (
     <VStack spacing={1}>
-      <GuildAvatar
-        address={address}
-        size={{ base: 6, sm: 7, md: 8 }}
-        opacity={0.75}
-      />
+      <GuildAvatar address={address} size={{ base: 6, sm: 7 }} opacity={0.75} />
 
-      <VStack spacing={0}>
+      <VStack spacing={0} w="full">
         <Text
           as="span"
           fontWeight="semibold"
@@ -31,6 +27,7 @@ const Collector = ({ address, balance }: Props): JSX.Element => {
           maxW="full"
           noOfLines={1}
           opacity={0.75}
+          title={domain ?? address}
         >
           {domain ?? shortenHex(address, 3)}
         </Text>
