@@ -3,7 +3,10 @@ import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 
 type PermissionEntry = {
-  name: "Administrator" | (typeof REQUIRED_PERMISSIONS)[number]
+  name:
+    | "Administrator"
+    | "Read Message History"
+    | (typeof REQUIRED_PERMISSIONS)[number]
   value: true
 }
 
@@ -34,7 +37,8 @@ function mapPermissions(permissions: PermissionsResponse) {
     permissions: permissionsArray,
     isRoleOrderOk,
     hasAllPermissions: permissionsArray.every(
-      ({ name, value }) => name === "Administrator" || !!value
+      ({ name, value }) =>
+        name === "Administrator" || name === "Read Message History" || !!value
     ),
   }
 }
