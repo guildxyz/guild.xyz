@@ -89,7 +89,7 @@ const DynamicRewardModal = ({
     onClose: editOnClose,
     onOpen: editOnOpen,
   } = useDisclosure()
-  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.700")
+  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.600")
 
   return (
     <>
@@ -100,7 +100,7 @@ const DynamicRewardModal = ({
             <IconButton
               position={"absolute"}
               icon={<PencilSimple size={18} weight="regular" />}
-              aria-label="Edit page"
+              aria-label="Edit dynamic parameters"
               rounded="full"
               right={16}
               top={7}
@@ -129,7 +129,7 @@ const DynamicRewardModal = ({
               />
             </Stack>
           </ModalBody>
-          <ModalFooter pt={6} bg={footerBg} border={"none"}>
+          <ModalFooter pt={6} pb={6} bg={footerBg} border={"none"}>
             <Accordion allowToggle w="full">
               <AccordionItem border={"none"}>
                 <AccordionButton
