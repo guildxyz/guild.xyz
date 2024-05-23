@@ -49,14 +49,14 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
 
   if (isLoading)
     return (
-      <Tag>
-        <Skeleton isLoaded={!isLoading && !isTokenLoading}></Skeleton>
-      </Tag>
+      <Skeleton isLoaded={!isLoading && !isTokenLoading} rounded={"md"}>
+        Pool balance
+      </Skeleton>
     )
   if (error) return <Tag>Failed to load balance</Tag>
 
-  const { balance: poolBalance } = data
-  const balance = Number(formatUnits(poolBalance, decimals))
+  const poolBalance = data ? data.balance : undefined
+  const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
   const isWithdrawDisabled = balance === 0
 
   return (
