@@ -20,7 +20,7 @@ import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useRouter } from "next/router"
 import { useMemo } from "react"
-import { FormProvider, useController, useFormContext } from "react-hook-form"
+import { FormProvider, useController, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import SnapshotTable from "./SnapshotTable"
 
@@ -40,21 +40,9 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const methods = useFormContext()
+  const methods = useForm()
 
   const { control } = methods
-
-  const {
-    field: { value: name, onChange: onNameChange },
-  } = useController({
-    control,
-    name: "name",
-    defaultValue: new Date().toLocaleDateString("en-US", {
-      month: "2-digit",
-      day: "2-digit",
-      year: "numeric",
-    }),
-  })
 
   const { field: selectedExistingId } = useController({
     control,
@@ -62,6 +50,25 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
     defaultValue: router?.query?.pointsId
       ? Number(router?.query?.pointsId)
       : existingPointsRewards?.[0]?.id,
+  })
+
+  const selectedPointName =
+    existingPointsRewards?.find((gp) => gp.id === selectedExistingId.value)
+      ?.platformGuildData?.name || ""
+  const dateString = new Date().toLocaleDateString("en-US", {
+    month: "2-digit",
+    day: "2-digit",
+    year: "numeric",
+  })
+
+  const {
+    field: { value: name, onChange: onNameChange },
+  } = useController({
+    control,
+    name: "name",
+    defaultValue: `${
+      !!selectedPointName ? selectedPointName + " snapshot " : "Points snapshot"
+    } ${dateString}`,
   })
 
   const { onSubmit: onCreateSnasphotSubmit, isLoading: isSubmitLoading } =
