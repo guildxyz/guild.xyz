@@ -39,7 +39,7 @@ const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
         </>
       ),
       description:
-        "User-based amount sourced from a requirement, e.g. token balance",
+        "User-specific amount sourced from a requirement, e.g. token balance",
       value: "dynamic",
       disabled:
         optionsDisabled ||
