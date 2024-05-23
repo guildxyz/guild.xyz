@@ -9,6 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import Visibility from "components/[guild]/Visibility"
+import dynamic from "next/dynamic"
 import React, { ComponentType, PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
 import { Visibility as VisibilityType } from "types"
@@ -16,6 +17,7 @@ import { useRequirementContext } from "./RequirementContext"
 import { RequirementImage, RequirementImageCircle } from "./RequirementImage"
 import ResetRequirementButton from "./ResetRequirementButton"
 import ViewOriginalPopover from "./ViewOriginalPopover"
+const DataProviderRequirement = dynamic(() => import("./DataProviderRequirement"))
 
 export type RequirementProps = PropsWithChildren<{
   isImageLoading?: boolean
@@ -25,6 +27,7 @@ export type RequirementProps = PropsWithChildren<{
   imageWrapper?: ComponentType<unknown>
   childrenWrapper?: ComponentType<unknown>
   showViewOriginal?: boolean
+  dynamicDisplay?: boolean
 }>
 
 const Requirement = ({
@@ -36,9 +39,17 @@ const Requirement = ({
   imageWrapper,
   childrenWrapper,
   showViewOriginal,
+  dynamicDisplay,
 }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { setValue } = useFormContext() ?? {}
+
+  if (dynamicDisplay)
+    return (
+      <DataProviderRequirement
+        {...{ isImageLoading, image, rightElement, children }}
+      />
+    )
 
   const ChildrenWrapper = childrenWrapper ?? Box
   const ImageWrapper = imageWrapper ?? React.Fragment

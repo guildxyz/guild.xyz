@@ -1,12 +1,4 @@
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  Button,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Button, useDisclosure } from "@chakra-ui/react"
 import {
   RequirementProvider,
   useRequirementContext,
@@ -16,18 +8,14 @@ import RequirementImageEditor from "components/[guild]/Requirements/components/R
 import RequirementNameEditor from "components/[guild]/Requirements/components/RequirementNameEditor"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
-import useRequirements from "components/[guild]/hooks/useRequirements"
-import useToast from "hooks/useToast"
 import { PropsWithChildren, useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import REQUIREMENTS from "requirements"
 import { Requirement as RequirementType } from "types"
 import mapRequirement from "utils/mapRequirement"
-import useCreateRequirement from "../hooks/useCreateRequirement"
-import useDeleteRequirement from "../hooks/useDeleteRequirement"
 import useEditRequirement from "../hooks/useEditRequirement"
 import BalancyFooter from "./BalancyFooter"
-import ConfirmationAlert from "./ConfirmationAlert"
+import { ExistingRequirementDeleteAlert } from "./ExistingRequirementDeleteAlert"
 import RemoveRequirementButton from "./RemoveRequirementButton"
 import RequirementBaseCard from "./RequirementBaseCard"
 import RequirementEditModal, {
@@ -62,71 +50,14 @@ const ExistingRequirementEditableCard = ({
   const showViewOriginal =
     requirement.data?.customName || requirement.data?.customImage
 
-  const { data: requirements } = useRequirements(requirement.roleId)
-  const isLastRequirement = requirements?.length === 1
-
-  const {
-    onSubmit: onDeleteRequirementSubmit,
-    isLoading: isDeleteLoading,
-    isSigning: isDeleteSigning,
-  } = useDeleteRequirement(requirement.roleId, requirement.id)
-
-  // on FREE req creation, the BE automatically deletes other requirements, so we don't have to delete in that case
-  const onDeleteRequirement = () =>
-    isLastRequirement
-      ? onCreateRequirementSubmit({
-          type: "FREE",
-        })
-      : onDeleteRequirementSubmit()
-
-  const toast = useToast()
-  const {
-    onSubmit: onCreateRequirementSubmit,
-    isLoading: isCreateRequirementLoading,
-  } = useCreateRequirement(requirement.roleId, {
-    onSuccess: () => {
-      /**
-       * Showing a delete toast intentionally, because we call
-       * onCreateRequirementSubmit when the user removes the last requirement of the
-       * role
-       */
-      toast({
-        status: "success",
-        title: "Requirement deleted!",
-      })
-    },
-  })
-
   const DeleteConfirmationAlert = (
-    <ConfirmationAlert
+    <ExistingRequirementDeleteAlert
+      requirement={requirement}
       finalFocusRef={removeButtonRef}
-      isLoading={isDeleteLoading || isDeleteSigning || isCreateRequirementLoading}
       isOpen={isDeleteOpen}
       onClose={onDeleteClose}
-      onConfirm={() => onDeleteRequirement()}
-      title="Delete requirement"
-      description={
-        requirement.type === "GUILD_SNAPSHOT" ? (
-          <Alert status="warning">
-            <AlertIcon mt={0} />
-            <Box>
-              <AlertTitle>
-                This requirement may be linked to a token reward
-              </AlertTitle>
-              <AlertDescription>
-                Deleting this requirement will make the reward unclaimable until it
-                is configured with a new snapshot
-              </AlertDescription>
-            </Box>
-          </Alert>
-        ) : (
-          "Are you sure you want to delete this requirement?"
-        )
-      }
-      confirmationText="Delete requirement"
     />
   )
-
   if (!RequirementComponent)
     return (
       <>

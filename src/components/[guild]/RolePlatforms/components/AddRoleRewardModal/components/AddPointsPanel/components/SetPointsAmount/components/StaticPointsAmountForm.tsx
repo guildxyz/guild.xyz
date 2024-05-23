@@ -1,7 +1,6 @@
 import {
   ButtonGroup,
   FormControl,
-  FormLabel,
   Img,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -16,7 +15,8 @@ import { useFormContext, useWatch } from "react-hook-form"
 import Star from "static/icons/star.svg"
 import parseFromObject from "utils/parseFromObject"
 
-const SetPointsAmount = ({ imageUrl, name, fieldName }) => {
+const StaticPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
+  const fieldName = `${baseFieldPath}.platformRoleData.score`
   const {
     register,
     setValue,
@@ -26,8 +26,7 @@ const SetPointsAmount = ({ imageUrl, name, fieldName }) => {
   const amount = useWatch({ control, name: fieldName })
 
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, fieldName)} pt={{ md: 0.5 }}>
-      <FormLabel>{`How many ${name || "points"} to get?`}</FormLabel>
+    <FormControl isInvalid={!!parseFromObject(errors, fieldName)}>
       <Stack direction={{ base: "column", md: "row" }}>
         <NumberInput
           value={amount}
@@ -85,4 +84,4 @@ const ShortcutButton = ({ amount, imageUrl, fieldName }) => {
   )
 }
 
-export default SetPointsAmount
+export default StaticPointsAmountForm

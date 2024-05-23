@@ -12,6 +12,10 @@ const REQUIREMENTS: Record<RequirementType, RequirementData> =
     {} as any
   )
 
+export type ProvidedValueDisplayProps = {
+  requirement: Partial<Requirement>
+}
+
 const requirementTypes = REQUIREMENTS_DATA.flatMap((obj) => obj.types)
 export type RequirementType = (typeof requirementTypes)[number] | "HIDDEN"
 

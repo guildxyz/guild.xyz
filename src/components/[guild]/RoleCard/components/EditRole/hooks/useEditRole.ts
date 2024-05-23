@@ -135,7 +135,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       const updatedRolePlatformsById = mapToObject(successfulRolePlatformUpdates)
 
       const createdRolePlatformsToMutate = successfulRolePlatformCreations.map(
-        ({ createdGuildPlatform: _, ...rest }) => rest
+        ({ createdGuildPlatform: _, ...rest }) => ({ roleId: roleId, ...rest })
       )
 
       const createdGuildPlatforms = successfulRolePlatformCreations

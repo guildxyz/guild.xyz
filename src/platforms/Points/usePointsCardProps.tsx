@@ -1,3 +1,4 @@
+import useDynamicRewardUserAmount from "platforms/Token/hooks/useDynamicRewardUserAmount"
 import Star from "static/icons/star.svg"
 import { GuildPlatformWithOptionalId, PlatformName } from "types"
 import { useRolePlatform } from "../../components/[guild]/RolePlatforms/components/RolePlatformProvider"
@@ -5,14 +6,17 @@ import { useRolePlatform } from "../../components/[guild]/RolePlatforms/componen
 const usePointsCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const rolePlatform = useRolePlatform()
   const { name, imageUrl } = guildPlatform.platformGuildData
+  const { dynamicUserAmount } = useDynamicRewardUserAmount(rolePlatform)
+
+  const score = !!rolePlatform?.dynamicAmount
+    ? dynamicUserAmount ?? "some"
+    : rolePlatform?.platformRoleData?.score
 
   return {
     type: "POINTS" as PlatformName,
     image: imageUrl || <Star />,
     // if undefined at admin setup -> "some", if saved with no value (empty string) -> 0
-    name: `Get ${(rolePlatform?.platformRoleData?.score ?? "some") || 0} ${
-      name || "points"
-    }`,
+    name: `Get ${score ?? 0} ${name || "points"}`,
   }
 }
 

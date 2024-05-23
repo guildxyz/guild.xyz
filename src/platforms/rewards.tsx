@@ -49,7 +49,6 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import PoapCardButton from "./Poap/PoapCardButton"
 import PoapCardMenu from "./Poap/PoapCardMenu"
 import usePoapCardProps from "./Poap/usePoapCardProps"
-import PointsCardSettings from "./Points/PointsCardSettings"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
@@ -419,7 +418,10 @@ const rewards: Record<PlatformName, RewardData> = {
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     cardPropsHook: usePointsCardProps,
-    cardSettingsComponent: PointsCardSettings,
+    cardSettingsComponent: dynamic(
+      () => import("platforms/Points/PointsCardSettings"),
+      { ssr: false }
+    ) as CardSettingsComponent,
     RewardPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
       loading: () => <RewardPreview isLoading />,

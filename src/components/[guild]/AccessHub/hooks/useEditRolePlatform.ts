@@ -37,8 +37,8 @@ const useEditRolePlatform = ({
             return {
               ...role,
               rolePlatforms: role.rolePlatforms.map((rp) => {
-                if (rp.id !== rolePlatformId) return rp
-                return response
+                if (rp.id !== rolePlatformId) return { ...rp, roleId: role.id }
+                return { ...response, roleId: role.id }
               }),
             }
           }),

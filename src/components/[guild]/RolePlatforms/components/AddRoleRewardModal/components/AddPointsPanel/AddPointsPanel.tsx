@@ -1,5 +1,6 @@
-import { Collapse, Divider, Flex, Text } from "@chakra-ui/react"
+import { Collapse, Divider, Flex, Text, Tooltip } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { AddRewardPanelProps } from "platforms/rewards"
@@ -12,13 +13,21 @@ import SetPointsAmount from "./components/SetPointsAmount"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
-  amount: string
   name: string
   imageUrl: string
+  platformRoleData?: { score: string }
+  dynamicAmount?: {
+    operation: {
+      input: { requirementId: number }
+      params: { multiplier: number }
+    }
+  }
 }
 
 const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   const { id, guildPlatforms } = useGuild()
+
+  const { targetRoleId } = useAddRewardContext()
 
   const existingPointsRewards = guildPlatforms.filter(
     (gp) => gp.platformId === PlatformType.POINTS
@@ -47,7 +56,29 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   const name = selectedName ?? localName
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
-  const onSubmit = (data: AddPointsFormType) =>
+  const formDynamicAmount = useWatch({ control, name: "dynamicAmount" })
+  const isContinueDisabled =
+    !!formDynamicAmount && !formDynamicAmount?.operation.input?.requirementId
+
+  const onSubmit = (data: AddPointsFormType) => {
+    const dynamicAmount = data?.dynamicAmount
+      ? {
+          operation: {
+            type: "LINEAR",
+            params: {
+              addition: 0,
+              multiplier: data.dynamicAmount.operation.params.multiplier,
+              shouldFloorResult: true,
+            },
+            input: {
+              type: "REQUIREMENT_AMOUNT",
+              requirementId: data.dynamicAmount.operation.input.requirementId,
+              roleId: targetRoleId,
+            },
+          },
+        }
+      : null
+
     onAdd({
       ...(selectedExistingId
         ? {
@@ -72,10 +103,15 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
             },
           }),
       isNew: true,
-      platformRoleData: {
-        score: parseInt(data.amount),
-      },
+      ...(dynamicAmount
+        ? { dynamicAmount: dynamicAmount as any }
+        : {
+            platformRoleData: {
+              score: parseInt(data.platformRoleData.score),
+            },
+          }),
     })
+  }
 
   return (
     <FormProvider {...methods}>
@@ -102,15 +138,28 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
             imageUrl={imageUrl}
             isOptional={!existingPointsRewards.length}
           />
-          <Divider mt={8} mb={7} />
         </Collapse>
+        <Divider mt={8} mb={4} />
 
-        <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
+        <SetPointsAmount {...{ imageUrl, name }} baseFieldPath="" />
 
         <Flex justifyContent={"flex-end"} mt="auto" pt="10">
-          <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
-            Continue
-          </Button>
+          <Tooltip
+            label={
+              isContinueDisabled &&
+              "Please select a base value for dynamic reward calculation."
+            }
+            hasArrow
+            placement={"top"}
+          >
+            <Button
+              colorScheme="green"
+              isDisabled={isContinueDisabled}
+              onClick={methods.handleSubmit(onSubmit)}
+            >
+              Continue
+            </Button>
+          </Tooltip>
         </Flex>
       </DefaultAddRewardPanelWrapper>
     </FormProvider>

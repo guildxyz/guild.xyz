@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Heading,
   HStack,
   Icon,
@@ -39,10 +40,12 @@ import {
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
+import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Requirement, Visibility } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
+import ProvidedValueDisplay from "./ProvidedValueDisplay"
 
 const GENERAL_REQUIREMENTS_COUNT = 12
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
@@ -239,6 +242,14 @@ const AddRequirementForm = forwardRef(
               addRequirement={onSubmit}
               setOnCloseAttemptToast={setOnCloseAttemptToast}
             />
+
+            {!!REQUIREMENT_PROVIDED_VALUES[selectedType] && (
+              <>
+                {" "}
+                <Divider mt={5} mb={3} />
+                <ProvidedValueDisplay requirement={{ type: selectedType }} />
+              </>
+            )}
           </ModalBody>
           {selectedType !== "PAYMENT" && (
             <ModalFooter gap="3">
