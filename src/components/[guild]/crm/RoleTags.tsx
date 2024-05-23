@@ -7,6 +7,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Skeleton,
   Tag,
   TagLabel,
   TagProps,
@@ -22,7 +23,6 @@ import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
 import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
 import useGuild from "../hooks/useGuild"
-import useRequirements from "../hooks/useRequirements"
 import RoleTag from "../RoleTag"
 import { CrmRole } from "./useMembers"
 
@@ -32,7 +32,7 @@ type Props = {
 }
 
 const RoleTags = memo(({ roles, setFilterValue }: Props) => {
-  const { roles: rolesData } = useGuild()
+  const { roles: rolesData, isDetailed } = useGuild()
   const renderedRoles = roles?.slice(0, 3)
   const moreRolesCount = roles?.length - 3
   const moreRoles = moreRolesCount > 0 && roles?.slice(-moreRolesCount)
@@ -40,6 +40,7 @@ const RoleTags = memo(({ roles, setFilterValue }: Props) => {
   const moreRolesTagBorderColorVar = useColorModeValue("gray-300", "whiteAlpha-300")
 
   if (!renderedRoles?.length) return <Text>-</Text>
+  if (!rolesData || !isDetailed) return <Skeleton w="70%" h="5" />
 
   return (
     <HStack>
@@ -168,11 +169,9 @@ const CrmTbodyRoleTag = memo(
 
 export const CrmRoleTag = memo(
   forwardRef<RoleTagProps, "span">(({ role, amount: amountProp, ...rest }, ref) => {
-    const { data: requirements } = useRequirements(role?.id)
-
     if (!role) return null
 
-    const amount = requirements?.length === 1 ? amountProp : undefined
+    const amount = role.requirements?.length === 1 ? amountProp : undefined
 
     return (
       <RoleTag

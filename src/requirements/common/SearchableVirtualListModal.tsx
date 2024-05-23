@@ -1,10 +1,12 @@
 import {
+  Center,
   ListItem,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Text,
   UnorderedList,
   useBreakpointValue,
@@ -19,6 +21,8 @@ type Props = {
   onClose: () => void
   title: string
   initialList: string[]
+  onSearch?: (search: string) => void
+  isSearching?: boolean
 }
 
 const SearchableVirtualListModal = ({
@@ -26,6 +30,8 @@ const SearchableVirtualListModal = ({
   onClose,
   title,
   initialList,
+  onSearch,
+  isSearching = false,
 }: Props) => {
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
@@ -51,23 +57,36 @@ const SearchableVirtualListModal = ({
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <SearchBar {...{ search, setSearch }} placeholder="Search address" />
+          <SearchBar
+            {...{
+              search,
+              setSearch: (value) => {
+                setSearch(value)
+                onSearch?.(value)
+              },
+            }}
+            placeholder="Search address"
+          />
           <UnorderedList
             mt="6"
             ml="2"
-            sx={{ "> div": { overflow: "hidden scroll !important" } }}
+            sx={{ "> div": { overflow: "hidden auto !important" } }}
           >
             {filteredList.length > 0 ? (
               <FixedSizeList
-                height={350}
+                height={250}
                 itemCount={filteredList.length}
                 itemSize={itemSize}
                 className="custom-scrollbar"
               >
                 {Row}
               </FixedSizeList>
+            ) : isSearching ? (
+              <Center h="250">
+                <Spinner />
+              </Center>
             ) : (
-              <Text colorScheme={"gray"} h="350">
+              <Text colorScheme={"gray"} h="250">
                 No results
               </Text>
             )}

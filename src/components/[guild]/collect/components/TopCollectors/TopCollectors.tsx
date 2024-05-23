@@ -9,9 +9,11 @@ import {
 } from "@chakra-ui/react"
 import Section from "components/common/Section"
 import useTopCollectors from "../../hooks/useTopCollectors"
+import { useCollectNftContext } from "../CollectNftContext"
 import Collector, { CollectorSkeleton } from "./components/Collector"
 
 const TopCollectors = () => {
+  const { isLegacy } = useCollectNftContext()
   const { data, isValidating, error } = useTopCollectors()
   const shownCollectors = data?.topCollectors?.slice(0, 39)
   const bgColor = useColorModeValue(
@@ -43,8 +45,8 @@ const TopCollectors = () => {
           pt={2}
           w="full"
           columns={{ base: 3, sm: 4, lg: 6 }}
-          columnGap={2}
-          rowGap={4}
+          columnGap={4}
+          rowGap={5}
         >
           {[...Array(24)].map((_, i) => (
             <CollectorSkeleton key={i} />
@@ -60,11 +62,15 @@ const TopCollectors = () => {
             pt={2}
             w="full"
             columns={{ base: 3, sm: 4, lg: 6 }}
-            columnGap={2}
-            rowGap={4}
+            columnGap={4}
+            rowGap={5}
           >
             {shownCollectors.map(({ address, balance }) => (
-              <Collector key={address} address={address} balance={balance} />
+              <Collector
+                key={address}
+                address={address}
+                balance={!isLegacy && balance}
+              />
             ))}
           </SimpleGrid>
           {shownCollectors?.length > 39 && (
