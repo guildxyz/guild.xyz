@@ -11,7 +11,6 @@ type Props = {
 }
 
 const HEADER_HEIGHT = "61px"
-const CHECKBOX_COLUMN_WIDTH = 45
 
 const CrmTableWrapper = memo(
   ({ isValidating, setSize, children }: PropsWithChildren<Props>) => {
@@ -37,7 +36,7 @@ const CrmTableWrapper = memo(
         const { scrollLeft, scrollTop, scrollHeight, clientHeight } =
           scrollContainerRef.current
 
-        if (scrollLeft > CHECKBOX_COLUMN_WIDTH) setIsIdentityStuck(true)
+        if (scrollLeft > 0) setIsIdentityStuck(true)
         else setIsIdentityStuck(false)
 
         if (scrollTop + clientHeight >= scrollHeight - 300 && !isValidating) {
