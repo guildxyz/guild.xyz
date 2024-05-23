@@ -46,6 +46,15 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
     control,
     name: "data.guildPlatformId",
   })
+  const localName = useWatch({ control, name: "name" })
+  const localImageUrl = useWatch({ control, name: "imageUrl" })
+
+  const { name: selectedName, imageUrl: selectedImageUrl } =
+    existingPointsRewards?.find((gp) => gp.id === selectedExistingId)
+      ?.platformGuildData ?? {}
+
+  const name = selectedName ?? localName
+  const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
   const onSubmit = (data: AddPointsFormType) => {
     const dynamicAmount = data?.dynamicAmount
@@ -99,16 +108,6 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
           }),
     })
   }
-
-  const localName = useWatch({ control, name: "name" })
-  const localImageUrl = useWatch({ control, name: "imageUrl" })
-
-  const { name: selectedName, imageUrl: selectedImageUrl } =
-    existingPointsRewards?.find((gp) => gp.id === selectedExistingId)
-      ?.platformGuildData ?? {}
-
-  const name = selectedName ?? localName
-  const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
   return (
     <FormProvider {...methods}>
