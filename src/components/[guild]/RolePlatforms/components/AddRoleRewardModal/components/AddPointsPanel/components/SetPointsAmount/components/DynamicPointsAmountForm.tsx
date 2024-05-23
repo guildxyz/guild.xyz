@@ -24,8 +24,12 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
       <DynamicRewardSetup
         roleId={targetRoleId as number}
         toImage={pointImage}
-        multiplierFieldName={`${baseFieldPath}.dynamicAmount.operation.params.multiplier`}
-        requirementFieldName={`${baseFieldPath}.dynamicAmount.operation.input.requirementId`}
+        multiplierFieldName={`${
+          baseFieldPath ? baseFieldPath + "." : ""
+        }dynamicAmount.operation.params.multiplier`}
+        requirementFieldName={`${
+          baseFieldPath ? baseFieldPath + "." : ""
+        }dynamicAmount.operation.input.requirementId`}
         shouldFloor={true}
       />
     </>
