@@ -1,24 +1,26 @@
-import { Icon } from "@chakra-ui/react"
+import { Collapse, Divider, Flex, Text } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
-import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import { Star } from "phosphor-react"
+import Button from "components/common/Button"
 import { AddRewardPanelProps } from "platforms/rewards"
-import { ReactNode } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
-import ConversionSetup from "../DynamicSetup/ConversionSetup"
-import PointsRewardSetup from "./components/PointsRewardSetup"
+import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
+import AddNewPointsType from "./components/AddNewPointsType"
+import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
+import SetPointsAmount from "./components/SetPointsAmount"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
-  amount: string
   name: string
   imageUrl: string
-  dynamic?: {
-    multiplier: number
-    requirementId: number
+  platformRoleData?: { score: string }
+  dynamicAmount?: {
+    operation: {
+      input: { requirementId: number }
+      params: { multiplier: number }
+    }
   }
 }
 
@@ -45,31 +47,19 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
     name: "data.guildPlatformId",
   })
 
-  const selectedImageUrl =
-    existingPointsRewards?.find((gp) => gp.id === selectedExistingId)
-      ?.platformGuildData?.imageUrl || null
-  const formImageUrl = useWatch({ control, name: "imageUrl" })
-  const imageUrl = selectedExistingId ? selectedImageUrl : formImageUrl
-
-  const pointImage: ReactNode = imageUrl ? (
-    <OptionImage img={imageUrl} alt={"Point type image"} />
-  ) : (
-    <Icon as={Star} />
-  )
-
   const onSubmit = (data: AddPointsFormType) => {
-    const dynamicAmount = data?.dynamic?.multiplier
+    const dynamicAmount = data?.dynamicAmount
       ? {
           operation: {
             type: "LINEAR",
             params: {
               addition: 0,
-              multiplier: data.dynamic.multiplier,
+              multiplier: data.dynamicAmount.operation.params.multiplier,
               shouldFloorResult: true,
             },
             input: {
               type: "REQUIREMENT_AMOUNT",
-              requirementId: data.dynamic.requirementId,
+              requirementId: data.dynamicAmount.operation.input.requirementId,
               roleId: targetRoleId,
             },
           },
@@ -100,27 +90,64 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
             },
           }),
       isNew: true,
-      platformRoleData: {
-        score: parseInt(data.amount),
-      },
-      dynamicAmount: dynamicAmount as any,
+      ...(dynamicAmount
+        ? { dynamicAmount: dynamicAmount as any }
+        : {
+            platformRoleData: {
+              score: parseInt(data.platformRoleData.score),
+            },
+          }),
     })
   }
 
-  const steps: Record<string, JSX.Element> = {
-    REWARD_SETUP: <PointsRewardSetup onSubmit={methods.handleSubmit(onSubmit)} />,
-    CONVERSION_SETUP: (
-      <ConversionSetup
-        onSubmit={methods.handleSubmit(onSubmit)}
-        toImage={pointImage}
-      />
-    ),
-  }
+  const localName = useWatch({ control, name: "name" })
+  const localImageUrl = useWatch({ control, name: "imageUrl" })
 
-  const { step } = useAddRewardContext()
-  const SetupStep = steps[step]
+  const { name: selectedName, imageUrl: selectedImageUrl } =
+    existingPointsRewards?.find((gp) => gp.id === selectedExistingId)
+      ?.platformGuildData ?? {}
 
-  return <FormProvider {...methods}>{SetupStep}</FormProvider>
+  const name = selectedName ?? localName
+  const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
+
+  return (
+    <FormProvider {...methods}>
+      <DefaultAddRewardPanelWrapper>
+        <Text colorScheme="gray" fontWeight="semibold" mb="8">
+          Gamify your guild with a score system, so users can collect points / XP /
+          your custom branded score, and compete on a leaderboard. You’ll also be
+          able to set points based requirements for satisfying higher level roles!
+        </Text>
+        {!!existingPointsRewards.length && (
+          <ExistingPointsTypeSelect
+            existingPointsRewards={existingPointsRewards}
+            selectedExistingId={selectedExistingId}
+            showCreateNew
+            mb="5"
+          />
+        )}
+        <Collapse
+          in={!existingPointsRewards.length || selectedExistingId === null}
+          style={{ flexShrink: 0 }}
+        >
+          <AddNewPointsType
+            name={name}
+            imageUrl={imageUrl}
+            isOptional={!existingPointsRewards.length}
+          />
+        </Collapse>
+        <Divider mt={8} mb={4} />
+
+        <SetPointsAmount {...{ imageUrl, name }} baseFieldPath="" />
+
+        <Flex justifyContent={"flex-end"} mt="auto" pt="10">
+          <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
+            Continue
+          </Button>
+        </Flex>
+      </DefaultAddRewardPanelWrapper>
+    </FormProvider>
+  )
 }
 
 export default AddPointsPanel
