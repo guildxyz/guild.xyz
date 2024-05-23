@@ -20,7 +20,7 @@ const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
   const options = [
     {
       label: "Static",
-      description: "Each user will get the same amount",
+      description: "Each eligible user will get the same amount",
       value: "static",
       disabled: optionsDisabled,
     },
@@ -39,7 +39,7 @@ const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
         </>
       ),
       description:
-        "User-specific amount sourced from a requirement, e.g. token balance",
+        "User points will be calculated based on a dynamic value, e.g. token balance",
       value: "dynamic",
       disabled:
         optionsDisabled ||
