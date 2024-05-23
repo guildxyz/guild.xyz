@@ -23,7 +23,7 @@ const DynamicTag = () => {
   )
 
   const { data: requirements } = useRequirements(role.id)
-  const linkedRequirement = requirements?.find((req) => !!req.data.snapshot)
+  const linkedRequirement = requirements?.find((req) => !!req.data?.snapshot)
 
   return (
     <>
