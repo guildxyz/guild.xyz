@@ -7,7 +7,6 @@ import {
   Stack,
   Text,
   VStack,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import LogicDivider from "components/[guild]/LogicDivider"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
@@ -33,8 +32,6 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
 
   const dynamicRequirements =
     requirements?.filter((req) => !!REQUIREMENT_PROVIDED_VALUES[req.type]) || []
-
-  const optionBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100")
 
   const {
     onSubmit: onCreateRequirementSubmit,
@@ -66,10 +63,10 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader pb={0}>Select base value</ModalHeader>
+          <ModalHeader pb={4}>Select base value</ModalHeader>
           <ModalBody>
             {dynamicRequirements?.length > 0 ? (
               <>
@@ -84,9 +81,10 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                       {dynamicRequirements.map((req) => (
                         <DisplayCard
                           key={req.id}
-                          bg={optionBg}
                           py={3}
                           onClick={() => handleSelect(req.id)}
+                          boxShadow="none"
+                          borderWidth="1px"
                         >
                           <RequirementDisplayComponent
                             requirement={req}
@@ -99,7 +97,7 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                   )}
                 </Stack>
 
-                <LogicDivider logic="OR" my={3} />
+                <LogicDivider logic="OR" my={2} />
                 <AddRequirement onAdd={addRequirement} />
               </>
             ) : (

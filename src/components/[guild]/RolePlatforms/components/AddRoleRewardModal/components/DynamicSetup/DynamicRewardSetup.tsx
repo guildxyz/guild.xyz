@@ -1,11 +1,11 @@
 import {
+  Box,
   Circle,
-  Flex,
   FormLabel,
+  HStack,
   Icon,
   Stack,
   Text,
-  useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
@@ -39,7 +39,6 @@ const DynamicRewardSetup = ({
   const { data: requirements } = useRequirements(roleId)
   const selectedRequirement = requirements?.find((req) => req.id === requirementId)
 
-  const baseValueBg = useColorModeValue("whiteAlpha.800", "whiteAlpha.100")
   const multiplier = useWatch({ name: multiplierFieldName, control })
 
   const fromImage = (
@@ -52,10 +51,10 @@ const DynamicRewardSetup = ({
 
   return (
     <>
-      <Stack gap={5}>
-        <Stack gap={1}>
-          <Flex justifyContent={"space-between"} w="full">
-            <FormLabel>Base value</FormLabel>
+      <Stack gap={4}>
+        <Box>
+          <HStack justifyContent={"space-between"} w="full" mb="2">
+            <FormLabel mb="0">Base value</FormLabel>
             {!!selectedRequirement && (
               <Button
                 size="xs"
@@ -68,9 +67,9 @@ const DynamicRewardSetup = ({
                 <Text>Change</Text>
               </Button>
             )}
-          </Flex>
+          </HStack>
           {!!selectedRequirement ? (
-            <Card bg={baseValueBg} py={2} px={5}>
+            <Card py={2} px={5} boxShadow={"none"} borderWidth={"1px"}>
               <RequirementDisplayComponent
                 requirement={selectedRequirement}
                 dynamicDisplay
@@ -78,11 +77,11 @@ const DynamicRewardSetup = ({
               />
             </Card>
           ) : (
-            <AddCard title="Select base value" onClick={onOpen} />
+            <AddCard title="Select base value" onClick={onOpen} py="6" />
           )}
-        </Stack>
+        </Box>
 
-        <Stack gap={1}>
+        <Box>
           <ConversionInput
             name={multiplierFieldName}
             fromImage={fromImage}
@@ -90,11 +89,11 @@ const DynamicRewardSetup = ({
             defaultMultiplier={multiplier}
           />
           {shouldFloor && (
-            <Text color={"GrayText"} fontSize={"sm"} textAlign={"right"}>
+            <Text mt="1.5" colorScheme={"gray"} fontSize={"sm"} textAlign={"right"}>
               The received reward amount will be rounded down
             </Text>
           )}
-        </Stack>
+        </Box>
       </Stack>
 
       <BaseValueModal
