@@ -113,6 +113,10 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                 )}
               </>
             )}
+            <Text color={"GrayText"} fontSize={"sm"} mt={5}>
+              Note: Not all requirements provide a dynamic value. Newly added
+              requirements can also influence access to the role.
+            </Text>
           </ModalBody>
         </ModalContent>
       </Modal>
