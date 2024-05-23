@@ -119,7 +119,9 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
       return claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatforms[0])]
     if (!isBalanceSufficient)
       return "You don't have enough balance to pay the guild fee!"
-  }, [isAvailable, isBalanceSufficient, rolePlatforms])
+    if (!isConfirmed)
+      return "You need to confirm you're not a citizen of the restricted countries!"
+  }, [isAvailable, isBalanceSufficient, isConfirmed, rolePlatforms])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -201,13 +203,8 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
               <Tooltip label={disabledTooltipLabel} hasArrow>
                 <Button
                   colorScheme="gold"
-                  isDisabled={
-                    token.isLoading ||
-                    !isConfirmed ||
-                    !isBalanceSufficient ||
-                    !isAvailable
-                  }
-                  isLoading={claimLoading}
+                  isDisabled={!isConfirmed || !isBalanceSufficient || !isAvailable}
+                  isLoading={claimLoading || token.isLoading}
                   loadingText={claimLoading}
                   flexShrink={0}
                   w="full"
