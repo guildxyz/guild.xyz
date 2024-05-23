@@ -78,15 +78,11 @@ const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
           } as PlatformsGridData,
         ]
       : []),
-    ...(featureFlags.includes("FORMS")
-      ? [
-          {
-            platform: "FORM",
-            description: "Gather responses",
-            isGeneral: true,
-          } as PlatformsGridData,
-        ]
-      : []),
+    {
+      platform: "FORM",
+      description: "Gather responses",
+      isGeneral: true,
+    },
   ]
 
   return (
