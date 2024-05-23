@@ -7,7 +7,6 @@ import { atom } from "jotai"
 import { Plus } from "phosphor-react"
 import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
-import { useEffect } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import {
   GuildPlatformWithOptionalId,
@@ -34,11 +33,7 @@ type Props = {
 export const openRewardSettingsGuildPlatformIdAtom = atom(0)
 
 const RolePlatforms = ({ roleId }: Props) => {
-  const { onOpen, setTargetRoleId } = useAddRewardContext()
-
-  useEffect(() => {
-    setTargetRoleId(roleId)
-  }, [roleId])
+  const { onOpen } = useAddRewardContext()
 
   const { watch } = useFormContext<RoleFormType>()
 
@@ -96,7 +91,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 }
 
 const RolePlatformsWrapper = (props: Props): JSX.Element => (
-  <AddRewardProvider>
+  <AddRewardProvider targetRoleId={props.roleId}>
     <RolePlatforms {...props} />
   </AddRewardProvider>
 )

@@ -28,7 +28,6 @@ const AddRewardContext = createContext<{
   step: string
   setStep: (newStep: string) => void
   targetRoleId?: number
-  setTargetRoleId: (newTarget: number) => void
   activeTab: RoleTypeToAddTo
   setActiveTab: Dispatch<SetStateAction<RoleTypeToAddTo>>
   shouldShowCloseAlert: boolean
@@ -37,7 +36,10 @@ const AddRewardContext = createContext<{
   setIsBackButtonDisabled: Dispatch<SetStateAction<boolean>>
 }>(undefined)
 
-const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
+const AddRewardProvider = ({
+  targetRoleId,
+  children,
+}: PropsWithChildren<{ targetRoleId?: number }>) => {
   const modalRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
@@ -45,8 +47,6 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
   const [selection, setSelectionOg] = useState<PlatformName>()
 
   const [step, setStepOg] = useState<string>()
-
-  const [targetRoleId, setTargetRoleId] = useState<number>(null)
 
   const setStep = (newStep: string) => {
     setStepOg(newStep)
@@ -97,7 +97,6 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
         step,
         setStep,
         targetRoleId,
-        setTargetRoleId,
         activeTab,
         setActiveTab,
         shouldShowCloseAlert,

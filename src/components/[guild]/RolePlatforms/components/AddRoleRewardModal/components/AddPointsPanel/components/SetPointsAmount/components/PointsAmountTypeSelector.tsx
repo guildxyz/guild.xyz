@@ -44,7 +44,7 @@ const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
       disabled:
         optionsDisabled ||
         (!targetRoleId &&
-          "You can set up Dynamic points from editing or adding a role, as they depend on the role's requirements"),
+          "You can set up Dynamic points by editing an existing role, as they depend on the role's requirements"),
     },
   ]
 
