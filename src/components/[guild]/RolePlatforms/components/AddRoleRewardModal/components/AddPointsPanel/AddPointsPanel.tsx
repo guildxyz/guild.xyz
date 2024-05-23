@@ -56,9 +56,9 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   const name = selectedName ?? localName
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
-  const dynamicAmount = useWatch({ control, name: "dynamicAmount" })
+  const formDynamicAmount = useWatch({ control, name: "dynamicAmount" })
   const isContinueDisabled =
-    !!dynamicAmount && !dynamicAmount?.operation.input?.requirementId
+    !!formDynamicAmount && !formDynamicAmount?.operation.input?.requirementId
 
   const onSubmit = (data: AddPointsFormType) => {
     const dynamicAmount = data?.dynamicAmount

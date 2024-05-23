@@ -3,9 +3,12 @@ import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import { Lightning, Warning } from "phosphor-react"
 import DynamicRewardModal from "platforms/Token/DynamicRewardModal"
-import { RolePlatform } from "types"
+import { Rest, RolePlatform } from "types"
 
-const DynamicTag = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
+const DynamicTag = ({
+  rolePlatform,
+  ...rest
+}: { rolePlatform: RolePlatform } & Rest) => {
   const { isAdmin } = useGuildPermission()
 
   const { onOpen, isOpen, onClose } = useDisclosure()
@@ -22,7 +25,13 @@ const DynamicTag = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   return (
     <>
       <Tooltip label="Show details" hasArrow>
-        <Tag fontWeight="semibold" _hover={{ cursor: "pointer" }} onClick={onOpen}>
+        <Tag
+          fontWeight="semibold"
+          _hover={{ cursor: "pointer" }}
+          onClick={onOpen}
+          w="fit-content"
+          {...rest}
+        >
           <Icon
             boxSize={"13px"}
             weight="fill"
@@ -39,7 +48,7 @@ const DynamicTag = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
           hasArrow
           label="Dynamic rewards need a base value for reward amount calculation from a requirement. Edit the reward to set one!"
         >
-          <Tag colorScheme={"orange"}>
+          <Tag colorScheme={"orange"} w="fit-content">
             <Icon as={Warning} mr={1} /> Missing linked requirement!
           </Tag>
         </Tooltip>
