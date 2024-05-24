@@ -113,16 +113,6 @@ const nextConfig = {
           destination: "/lego/DarkGuildEmpireAssembly.pdf",
         },
         {
-          source: "/castle",
-          has: [
-            {
-              type: "host",
-              value: "lego.guild.xyz",
-            },
-          ],
-          destination: "/lego/GuildCastleAssembly.pdf",
-        },
-        {
           source: "/dude",
           has: [
             {
@@ -249,6 +239,17 @@ const nextConfig = {
       {
         source: "/sharded-minds/:path*",
         destination: "/enter-dao/:path*",
+        permanent: false,
+      },
+      {
+        source: "/castle",
+        has: [
+          {
+            type: "host",
+            value: "lego.guild.xyz",
+          },
+        ],
+        destination: "https://guild.xyz/lego/GuildCastleAssembly.pdf",
         permanent: false,
       },
     ]

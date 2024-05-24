@@ -103,6 +103,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
             },
           }),
       isNew: true,
+      roleId: targetRoleId,
       ...(dynamicAmount
         ? { dynamicAmount: dynamicAmount as any }
         : {

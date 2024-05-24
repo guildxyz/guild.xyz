@@ -24,6 +24,7 @@ export type RequirementFormProps = {
   field?: Requirement
   addRequirement?: () => void
   setOnCloseAttemptToast?: (msg: string | boolean) => void
+  providerTypesOnly?: boolean
 }
 
 export type RequirementData = {
