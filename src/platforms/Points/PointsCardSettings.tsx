@@ -10,7 +10,6 @@ const PointsCardSettings = () => {
       {...{ name, imageUrl }}
       baseFieldPath={`rolePlatforms.${index}`}
       defaultDynamicAmount={!!dynamicAmount}
-      optionsDisabled="Please add as a new reward to switch amount type"
     />
   )
 }
