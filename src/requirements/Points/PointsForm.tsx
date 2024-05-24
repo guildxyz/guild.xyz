@@ -3,7 +3,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormState, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import parseFromObject from "utils/parseFromObject"
 import PointsAmount from "./components/PointsAmount"
 import PointsRank from "./components/PointsRank"
@@ -27,7 +28,11 @@ const pointRequirementTypes = [
   },
 ]
 
-const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
+const PointsForm = ({
+  baseFieldPath,
+  field,
+  providerTypesOnly,
+}: RequirementFormProps): JSX.Element => {
   const { id } = useGuild()
 
   const type = useWatch({ name: `${baseFieldPath}.type` })
@@ -40,6 +45,9 @@ const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
   })
 
   const selected = pointRequirementTypes.find((reqType) => reqType.value === type)
+  const options = pointRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -51,7 +59,7 @@ const PointsForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={pointRequirementTypes}
+          options={options}
           isDisabled={isEditMode}
         />
 

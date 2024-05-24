@@ -98,7 +98,7 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                 </Stack>
 
                 <LogicDivider logic="OR" my={2} />
-                <AddRequirement onAdd={addRequirement} />
+                <AddRequirement onAdd={addRequirement} providerTypesOnly />
               </>
             ) : (
               <>

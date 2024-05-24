@@ -679,4 +679,8 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   ),
 }
 
+export const PROVIDER_TYPES = Object.keys(REQUIREMENT_PROVIDED_VALUES) as Array<
+  keyof typeof REQUIREMENT_PROVIDED_VALUES
+>
+
 export default REQUIREMENTS_DATA
