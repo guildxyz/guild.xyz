@@ -57,7 +57,11 @@ const VisitLinkForm = ({ baseFieldPath }: RequirementFormProps) => {
         placeholder="https://guild.xyz"
         onChange={(e) => {
           const position = e.target.selectionStart
-          onChange(e.target.value.toLowerCase())
+          onChange(
+            e.target.value.toLowerCase().includes("youtube")
+              ? e.target.value
+              : e.target.value.toLowerCase()
+          )
           // The cursor's position was always set to e.target.value.length without timeout
           setTimeout(() => {
             e.target.setSelectionRange(position, position)
