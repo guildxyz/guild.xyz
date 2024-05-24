@@ -120,7 +120,7 @@ const nextConfig = {
               value: "lego.guild.xyz",
             },
           ],
-          destination: "/lego/GuildCastleAssembly.pdf",
+          destination: "https://guild.xyz/lego/GuildCastleAssembly.pdf",
         },
         {
           source: "/dude",
