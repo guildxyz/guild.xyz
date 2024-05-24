@@ -677,6 +677,36 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   GUILD_SNAPSHOT: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/Airdrop/AirdropProvidedValue")
   ),
+  UNISWAP_V3_POSITIONS: null,
+
+  // NFTs
+  ERC721: null,
+  ERC1155: null,
+  NOUNS: null,
+
+  GUILD_MEMBER: null,
+
+  WALLET_ACTIVITY: null,
+  // ? deployed contract ?
+
+  POINTS_AMOUNT: null,
+  POINTS_TOTAL_AMOUNT: null,
+  POINTS_RANK: null,
+
+  TWITTER_FOLLOWER_COUNT: null,
+
+  FARCASTER_TOTAL_FOLLOWERS: null,
+
+  LENS_TOTAL_FOLLOWERS: null,
+  LENS_TOTAL_POSTS: null,
+
+  GITCOIN_SCORE: null,
+
+  SNAPSHOT_VOTES: null,
+  SNAPSHOT_PROPOSALS: null,
+
+  SOUND_TOP_COLLECTOR: null,
+  SOUND_COLLECTED: null,
 }
 
 export const PROVIDER_TYPES = Object.keys(REQUIREMENT_PROVIDED_VALUES) as Array<
