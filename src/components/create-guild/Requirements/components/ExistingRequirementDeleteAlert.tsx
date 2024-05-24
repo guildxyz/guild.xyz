@@ -29,6 +29,7 @@ export const ExistingRequirementDeleteAlert = ({
     isLoading: isCreateRequirementLoading,
   } = useCreateRequirement(requirement.roleId, {
     onSuccess: () => {
+      onClose()
       /**
        * Showing a delete toast intentionally, because we call
        * onCreateRequirementSubmit when the user removes the last requirement of the
@@ -45,7 +46,7 @@ export const ExistingRequirementDeleteAlert = ({
     onSubmit: onDeleteRequirementSubmit,
     isLoading: isDeleteLoading,
     isSigning: isDeleteSigning,
-  } = useDeleteRequirement(requirement.roleId, requirement.id)
+  } = useDeleteRequirement(requirement.roleId, requirement.id, onClose)
 
   // on FREE req creation, the BE automatically deletes other requirements, so we don't have to delete in that case
   const onDeleteRequirement = () =>
