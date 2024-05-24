@@ -115,7 +115,7 @@ const AddRequirement = ({
       <CardMotionWrapper>
         <AddCard
           ref={addCardRef}
-          title="Add requirement"
+          title={providerTypesOnly ? "Add provider requirement" : "Add requirement"}
           onClick={onOpen}
           data-test="add-requirement-button"
         />
@@ -142,9 +142,13 @@ const AddRequirement = ({
                   onClick={() => setSelectedType(null)}
                 />
               )}
-              <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
-                REQUIREMENTS[selectedType]?.name ?? ""
-              } requirement`}</Text>
+              <Text w="calc(100% - 70px)" noOfLines={1}>
+                {selectedType
+                  ? `Add ${REQUIREMENTS[selectedType]?.name} requirement`
+                  : providerTypesOnly
+                  ? "Add provider requirement"
+                  : "Add requirement"}
+              </Text>
             </HStack>
           </ModalHeader>
 
