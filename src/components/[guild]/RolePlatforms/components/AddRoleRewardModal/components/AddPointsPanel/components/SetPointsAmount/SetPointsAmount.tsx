@@ -11,13 +11,6 @@ const SetPointsAmount = ({
   name,
   baseFieldPath,
   defaultDynamicAmount = false,
-  /**
-   * Temporary disable switching at edit & when selecting as existing platform, as it
-   * would require some more changes to the form state management (mainly to prefill
-   * missing dynamicValue values as we do in the AddPointsPanel onSubmit). We should
-   * be able to enable it easily in the future
-   */
-  optionsDisabled = null,
 }) => {
   const [type, setType] = useState(defaultDynamicAmount ? "dynamic" : "static")
 
@@ -61,9 +54,7 @@ const SetPointsAmount = ({
           mb="0"
           fontWeight={type === "dynamic" ? "semibold" : "medium"}
         >{`How many ${name || "points"} to get?`}</FormLabel>
-        <PointsAmountTypeSelector
-          {...{ type, setType: handleTypeChange, optionsDisabled }}
-        />
+        <PointsAmountTypeSelector {...{ type, setType: handleTypeChange }} />
       </HStack>
       {type === "static" ? (
         <StaticPointsAmountForm {...{ imageUrl, baseFieldPath }} />
