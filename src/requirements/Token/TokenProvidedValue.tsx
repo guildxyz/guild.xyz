@@ -14,7 +14,7 @@ const TokenProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   return (
     <HStack wrap={"wrap"} gap={1}>
       <Text>{symbol ?? "Token"} balance</Text>
-      <RequirementChainIndicator bg={tagBg} customChain={requirement?.chain} />
+      <RequirementChainIndicator bg={tagBg} chain={requirement?.chain} />
     </HStack>
   )
 }
