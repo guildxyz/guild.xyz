@@ -109,7 +109,7 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
                 {isLoading || isCreateRequirementLoading ? (
                   <Loader />
                 ) : (
-                  <AddRequirement onAdd={addRequirement} />
+                  <AddRequirement onAdd={addRequirement} providerTypesOnly />
                 )}
               </>
             )}
