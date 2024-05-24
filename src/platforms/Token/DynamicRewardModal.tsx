@@ -60,7 +60,7 @@ const LinkedRequirement = ({ requirement }: { requirement?: Requirement }) => (
       {!requirement && (
         <Alert status="warning">
           <AlertIcon mt={0} /> This reward is not linked to any specific requirements
-          and therefore will not distribute any tokens.
+          and therefore it's amount will always be 0.
         </Alert>
       )}
     </Stack>
