@@ -322,44 +322,28 @@ const Page = (): JSX.Element => (
                 <b>Paid services</b>: The Service Provider offers both free and paid
                 Services. Unless indicated otherwise, the Services are offered for
                 free. However, certain transactions carried out via the Services may
-                be subject to a fee ("Transaction Fee") in accordance with the Fee
-                Schedule available on the Website. Also, as a Guild Admin, you may
-                order certain additional Services that are provided on a subscription
-                basis ("Subscription Services"). Subscription Services and their use
-                is governed by the Subscription Terms.
+                be subject to a fee ("Protocol Fee" and “Gas Fee”) in accordance with
+                the Fee Schedule available on the Website.
               </ListItem>
 
               <ListItem>
                 <b>Fees</b>: Customer is responsible for the payment of all fees,
                 payment method and in the currency quoted at the time of the
-                initiation of the transaction. Customer must provide current,
-                complete, accurate and authorized payment information. The Service
-                Provider may bill: (i) at the time of the transation; or (ii) shortly
-                after purchase. Transaction fees are final and are non-refundable.
-              </ListItem>
-
-              <ListItem>
-                <b>Payment</b>: Customer authorizes the Service Provider (i) to
-                charge Customer for all applicable Transaction Fees using Customer's
-                selected payment method, (ii) provide relevant information to third
-                party service providers to complete the payment, (iii) (where
-                required) issue an electronic invoice in accordance with the
-                information provided by the Customer.
-              </ListItem>
-
-              <ListItem>
-                <b>Taxes</b>: Fees are exclusive of taxes and Customer is responsible
-                for all taxes. The Service Provider will invoice Customer for such
-                taxes if the Service Provider believes that it has a legal obligation
-                to do so, and Customer agrees to pay such taxes if so invoiced.
+                initiation of the transaction. (i) Protocol Fee: This fee is for the
+                use of smart contracts that forward the transaction to the final
+                destination. These smart contracts are deployed by Guild.xyz. (ii)
+                Gas Fee: This fee is for the Ethereum nodes to validate the
+                transaction. It is not related to Guild. Read about it here:
+                https://www.investopedia.com/terms/g/gas-ethereum.asp Transaction
+                fees are final and are non-refundable.
               </ListItem>
 
               <ListItem>
                 <b>Changes of fees</b>: The Service Provider reserves the right to
-                revise and update the Fee Schedule, and the different Subscription
-                Plans available, at any time at its sole discretion. Any such
-                revision or updates to the fees will apply prospectively following
-                the effective date of the fee revision or update.
+                revise and update the Fee Schedule, at any time at its sole
+                discretion. Any such revision or updates to the fees will apply
+                prospectively following the effective date of the fee revision or
+                update.
               </ListItem>
             </OrderedList>
           </ListItem>

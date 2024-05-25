@@ -13,6 +13,7 @@ import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
 import { /* CaretDown, */ Export, Sliders } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
+import { useThemeContext } from "../ThemeContext"
 import CustomizeViewModal from "./CustomizeViewModal"
 import ExportMembersModal from "./ExportMembersModal"
 import { Member } from "./useMembers"
@@ -28,6 +29,7 @@ type Props = {
 
 const CrmMenu = ({ table }: Props) => {
   const { isStuck } = useIsTabsStuck()
+  const { textColor, buttonColorScheme } = useThemeContext()
   const {
     isOpen: isCustomizeOpen,
     onOpen: onCustomizeOpen,
@@ -59,7 +61,10 @@ const CrmMenu = ({ table }: Props) => {
       <ButtonGroup isAttached size="sm" variant="ghost">
         <Button
           flexShrink={0}
-          colorScheme={isStuck ? "gray" : "whiteAlpha"}
+          {...(!isStuck && {
+            color: textColor,
+            colorScheme: buttonColorScheme,
+          })}
           // borderRightRadius={0}
           {
             /* isExportDisabled ? customizeButtonProps :  */ ...exportButtonProps

@@ -20,7 +20,14 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
 
   const propsHook =
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
+
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
+  const ImageComponent =
+    typeof image === "string" ? (
+      <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />
+    ) : (
+      image
+    )
 
   const ProvidedValueDisplay = REQUIREMENT_PROVIDED_VALUES[requirement?.type]
 
@@ -43,7 +50,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
             >
               {dynamicUserAmount !== undefined ? (
                 <>
-                  <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />{" "}
+                  {ImageComponent}
                   <Text>
                     {dynamicUserAmount} {rewardName}
                   </Text>

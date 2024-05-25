@@ -15,8 +15,8 @@ import Image from "next/image"
 const InformationModal = ({ isOpen, onClose }) => {
   const figureBg = useColorModeValue("blackAlpha.100", "blackAlpha.400")
   const imageUrl = useColorModeValue(
-    "/img/dynamic_illustration_light.svg",
-    "/img/dynamic_illustration.svg"
+    "/img/dynamic_illustration_light.webp",
+    "/img/dynamic_illustration.webp"
   )
 
   return (
@@ -44,6 +44,7 @@ const InformationModal = ({ isOpen, onClose }) => {
             >
               <Image
                 priority
+                quality={100}
                 layout="responsive"
                 width={610}
                 height={166}
