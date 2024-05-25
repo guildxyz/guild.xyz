@@ -116,7 +116,6 @@ const MembersPage = (): JSX.Element => {
     parseFiltersFromQuery(query)
   )
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(query))
-  const [rowSelection, setRowSelection] = useState({})
 
   const queryString = useMemo(
     () => buildQueryStringFromState(columnFilters, sorting),
