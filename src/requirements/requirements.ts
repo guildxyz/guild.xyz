@@ -721,7 +721,9 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   SNAPSHOT_VOTES: null,
   SNAPSHOT_PROPOSALS: null,
 
-  SOUND_TOP_COLLECTOR: null,
+  SOUND_TOP_COLLECTOR: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Sound/hooks/TopCollectorProvidedValue")
+  ),
   SOUND_NFTS: () => "Songs owned",
 }
 
