@@ -5,13 +5,13 @@ const parseFiltersFromQuery = (query: ParsedUrlQuery): ColumnFiltersState => {
   const filtersArray = []
 
   if (query.search) filtersArray.push({ id: "identity", value: query.search })
-  if (query.roleId)
+  if (query.roleIds)
     filtersArray.push({
       id: "roles",
       value: {
-        roleIds: Array.isArray(query.roleId)
-          ? query.roleId.map((id) => parseInt(id))
-          : [parseInt(query.roleId)],
+        roleIds: Array.isArray(query.roleIds)
+          ? query.roleIds.map((id) => parseInt(id))
+          : [parseInt(query.roleIds)],
         logic: query.logic,
       },
     })
@@ -33,7 +33,7 @@ const buildQueryStringFromState = (columnFilters, sorting) => {
 
   if (identityFilter?.value) query.set("search", identityFilter.value)
   if (rolesFilter?.value?.roleIds?.length) {
-    rolesFilter.value.roleIds.forEach((roleId) => query.append("roleId", roleId))
+    rolesFilter.value.roleIds.forEach((roleId) => query.append("roleIds", roleId))
 
     if (rolesFilter?.value?.logic) query.set("logic", rolesFilter.value.logic)
   }
