@@ -692,6 +692,12 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   COVALENT_TX_COUNT_RELATIVE: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/WalletActivity/hooks/TxCountProvidedValue")
   ),
+  COVALENT_CONTRACT_DEPLOY: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/WalletActivity/hooks/ContractDeployProvidedValue")
+  ),
+  COVALENT_CONTRACT_DEPLOY_RELATIVE: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/WalletActivity/hooks/ContractDeployProvidedValue")
+  ),
 
   POINTS_AMOUNT: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/Points/hooks/PointsAmountProvidedValue")
