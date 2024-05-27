@@ -14,7 +14,7 @@ import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import Button from "components/common/Button"
 import { CaretDown, Lightning } from "phosphor-react"
 
-const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
+const PointsAmountTypeSelector = ({ type, setType }) => {
   const { targetRoleId } = useAddRewardContext()
 
   const options = [
@@ -22,7 +22,6 @@ const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
       label: "Static",
       description: "Each eligible user will get the same amount",
       value: "static",
-      disabled: optionsDisabled,
     },
     {
       label: (
@@ -42,9 +41,8 @@ const PointsAmountTypeSelector = ({ type, setType, optionsDisabled }) => {
         "User points will be calculated based on a dynamic value, e.g. token balance",
       value: "dynamic",
       disabled:
-        optionsDisabled ||
-        (!targetRoleId &&
-          "You can set up Dynamic points by editing an existing role, as they depend on the role's requirements"),
+        !targetRoleId &&
+        "You can set up Dynamic points by editing an existing role, as they depend on the role's requirements",
     },
   ]
 

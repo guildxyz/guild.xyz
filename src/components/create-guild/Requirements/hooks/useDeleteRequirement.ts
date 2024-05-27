@@ -32,11 +32,19 @@ const useDeleteRequirement = (
       })
       onSuccess?.()
 
-      mutateRequirements(
-        (prevRequirements) =>
-          prevRequirements.filter((requirement) => requirement.id !== requirementId),
-        { revalidate: false }
-      )
+      /**
+       * Delaying state change so we can close the modal and return focus to the
+       * delete button before the card unmounts, so the page doesn't jump to the top
+       */
+      setTimeout(() => {
+        mutateRequirements(
+          (prevRequirements) =>
+            prevRequirements.filter(
+              (requirement) => requirement.id !== requirementId
+            ),
+          { revalidate: false }
+        )
+      }, 200)
 
       triggerMembershipUpdate()
     },

@@ -61,24 +61,6 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
     !!formDynamicAmount && !formDynamicAmount?.operation.input?.requirementId
 
   const onSubmit = (data: AddPointsFormType) => {
-    const dynamicAmount = data?.dynamicAmount
-      ? {
-          operation: {
-            type: "LINEAR",
-            params: {
-              addition: 0,
-              multiplier: data.dynamicAmount.operation.params.multiplier,
-              shouldFloorResult: true,
-            },
-            input: {
-              type: "REQUIREMENT_AMOUNT",
-              requirementId: data.dynamicAmount.operation.input.requirementId,
-              roleId: targetRoleId,
-            },
-          },
-        }
-      : null
-
     onAdd({
       ...(selectedExistingId
         ? {
@@ -104,8 +86,8 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
           }),
       isNew: true,
       roleId: targetRoleId,
-      ...(dynamicAmount
-        ? { dynamicAmount: dynamicAmount as any }
+      ...(data?.dynamicAmount
+        ? { dynamicAmount: data?.dynamicAmount as any }
         : {
             platformRoleData: {
               score: parseInt(data.platformRoleData.score),
