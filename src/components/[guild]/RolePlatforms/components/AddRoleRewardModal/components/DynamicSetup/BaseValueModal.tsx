@@ -63,7 +63,12 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        colorScheme={"dark"}
+        scrollBehavior="inside"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb={4}>Select base value</ModalHeader>

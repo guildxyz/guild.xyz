@@ -684,7 +684,7 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   ERC1155: null,
   NOUNS: null,
 
-  GUILD_MEMBER: null,
+  GUILD_MINGUILDS: () => "Guild membership count",
 
   WALLET_ACTIVITY: null,
   // ? deployed contract ?
@@ -697,12 +697,12 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
     () => import("requirements/Points/hooks/PointsRankProvidedValue")
   ),
 
-  TWITTER_FOLLOWER_COUNT: null,
+  TWITTER_FOLLOWER_COUNT: () => "Followers on X",
 
-  FARCASTER_TOTAL_FOLLOWERS: null,
+  FARCASTER_TOTAL_FOLLOWERS: () => "Followers on Farcaster",
 
-  LENS_TOTAL_FOLLOWERS: null,
-  LENS_TOTAL_POSTS: null,
+  LENS_TOTAL_FOLLOWERS: () => "Followers on Lens Protocol",
+  LENS_TOTAL_POSTS: () => "Number of posts",
 
   GITCOIN_SCORE: null,
 
@@ -710,7 +710,7 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   SNAPSHOT_PROPOSALS: null,
 
   SOUND_TOP_COLLECTOR: null,
-  SOUND_COLLECTED: null,
+  SOUND_NFTS: () => "Songs owned",
 }
 
 export const PROVIDER_TYPES = Object.keys(REQUIREMENT_PROVIDED_VALUES) as Array<
