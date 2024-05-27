@@ -714,7 +714,9 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   LENS_TOTAL_FOLLOWERS: () => "Followers on Lens Protocol",
   LENS_TOTAL_POSTS: () => "Number of posts",
 
-  GITCOIN_SCORE: null,
+  GITCOIN_SCORE: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/GitcoinPassport/hooks/ContractDeployProvidedValue")
+  ),
 
   SNAPSHOT_VOTES: null,
   SNAPSHOT_PROPOSALS: null,
