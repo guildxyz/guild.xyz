@@ -15,7 +15,7 @@ import { /* CaretDown, */ Export, Sliders } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import CustomizeViewModal from "./CustomizeViewModal"
-import ExportMembersModal from "./ExportMembersModal"
+import ExportMembersModal from "./ExportMembers/ExportMembersModal"
 import { Member } from "./useMembers"
 
 type Props = {
