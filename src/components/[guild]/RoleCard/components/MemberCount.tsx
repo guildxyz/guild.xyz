@@ -13,6 +13,7 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  TagProps,
   TagRightIcon,
   Text,
 } from "@chakra-ui/react"
@@ -29,33 +30,54 @@ import MemberCountLastSyncTooltip, {
 
 type Props = {
   memberCount: number
-  roleId?: number
   size?: "sm" | "md"
-}
+} & TagProps
 
 const MemberCount = ({
   memberCount,
-  roleId,
   size = "md",
   children,
+  ...rest
 }: PropsWithChildren<Props>) => {
-  const { status, data } = useActiveStatusUpdates(roleId)
-
   const iconSize = size === "sm" ? "14px" : "16px"
+
+  return (
+    <Tag
+      bg="unset"
+      color="gray"
+      mt="3px !important"
+      flexShrink={0}
+      size={size}
+      {...rest}
+    >
+      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
+      <TagLabel mb="-1px">
+        {new Intl.NumberFormat("en", { notation: "compact" }).format(
+          memberCount ?? 0
+        )}
+      </TagLabel>
+      {children}
+    </Tag>
+  )
+}
+
+type WithSyncProps = Props & {
+  roleId?: number
+}
+
+export const MemberCountWithSyncIndicator = ({
+  roleId,
+  ...rest
+}: PropsWithChildren<WithSyncProps>) => {
+  const { status, data } = useActiveStatusUpdates(roleId)
 
   if (status === "STARTED")
     return (
       <Popover trigger="hover" placement="bottom" isLazy>
         <PopoverTrigger>
-          <Tag colorScheme="blue" mt="2px !important" flexShrink={0} size={size}>
-            <TagLeftIcon as={Users} boxSize={iconSize} />
-            <TagLabel mb="-1px">
-              {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                memberCount ?? 0
-              )}
-            </TagLabel>
+          <MemberCount colorScheme="blue" mt="2px !important" {...rest}>
             <TagRightIcon as={Spinner} />
-          </Tag>
+          </MemberCount>
         </PopoverTrigger>
         <Portal>
           <PopoverContent>
@@ -73,17 +95,7 @@ const MemberCount = ({
       </Popover>
     )
 
-  return (
-    <Tag bg="unset" color="gray" mt="3px !important" flexShrink={0} size={size}>
-      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
-      <TagLabel mb="-1px">
-        {new Intl.NumberFormat("en", { notation: "compact" }).format(
-          memberCount ?? 0
-        )}
-      </TagLabel>
-      {children}
-    </Tag>
-  )
+  return <MemberCount mt="3px !important" {...rest} />
 }
 
 const StatusProgress = ({ data, status }) => {
@@ -110,13 +122,13 @@ export const RoleCardMemberCount = ({
   memberCount,
   roleId,
   lastSyncedAt,
-}: PropsWithChildren<Props & { lastSyncedAt: string }>) => {
+}: PropsWithChildren<WithSyncProps & { lastSyncedAt: string }>) => {
   const { featureFlags } = useGuild()
   const { isAdmin } = useGuildPermission()
   const { isSuperAdmin } = useUser()
 
   return (
-    <MemberCount memberCount={memberCount} roleId={roleId}>
+    <MemberCountWithSyncIndicator memberCount={memberCount} roleId={roleId}>
       {isSuperAdmin ? (
         <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt}>
           <PopoverFooter
@@ -135,7 +147,7 @@ export const RoleCardMemberCount = ({
         lastSyncedAt ? (
         <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt} />
       ) : null}
-    </MemberCount>
+    </MemberCountWithSyncIndicator>
   )
 }
 

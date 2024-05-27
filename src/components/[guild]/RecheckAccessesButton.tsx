@@ -144,24 +144,6 @@ const RecheckAccessesButton = ({
                 onClick: () =>
                   triggerMembershipUpdate(roleId && { roleIds: [roleId] }),
               })}
-          sx={{
-            "@-webkit-keyframes rotate": {
-              from: {
-                transform: "rotate(0)",
-              },
-              to: {
-                transform: "rotate(360deg)",
-              },
-            },
-            "@keyframes rotate": {
-              from: {
-                transform: "rotate(0)",
-              },
-              to: {
-                transform: "rotate(360deg)",
-              },
-            },
-          }}
           {...rest}
         />
       </PopoverTrigger>
