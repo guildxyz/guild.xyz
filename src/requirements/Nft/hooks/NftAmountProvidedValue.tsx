@@ -5,7 +5,7 @@ import { ProvidedValueDisplayProps } from "requirements"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
 import useNftMetadata, { useNftMetadataWithTraits } from "./useNftMetadata"
 
-function hasOnlyTypeProperty(obj) {
+export function hasOnlyTypeProperty(obj) {
   const keys = Object.keys(obj)
   return keys.length === 1 && keys[0] === "type"
 }
@@ -29,6 +29,7 @@ const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
     requirement.chain,
     requirement.address
   )
+  console.log("Hello there")
 
   const nftName = isGuildPin ? (
     <>

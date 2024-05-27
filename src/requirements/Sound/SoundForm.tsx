@@ -7,7 +7,8 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import parseFromObject from "utils/parseFromObject"
 import SoundArtistCollector from "./components/SoundArtistCollector"
 import SoundMinAmount from "./components/SoundMinAmount"
@@ -41,7 +42,11 @@ const soundRequirementTypes = [
   },
 ]
 
-const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const SoundForm = ({
+  baseFieldPath,
+  field,
+  providerTypesOnly,
+}: RequirementFormProps) => {
   const { resetField } = useFormContext()
 
   const { errors } = useFormState()
@@ -49,6 +54,10 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const selected = soundRequirementTypes.find((reqType) => reqType.value === type)
   const isEditMode = !!field?.id
+
+  const options = soundRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
 
   return (
     <Stack spacing={4} alignItems="start">
@@ -60,7 +69,7 @@ const SoundForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={soundRequirementTypes}
+          options={options}
           beforeOnChange={() =>
             resetField(`${baseFieldPath}.data.id`, { defaultValue: "" })
           }

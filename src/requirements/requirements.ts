@@ -723,7 +723,7 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   LENS_TOTAL_POSTS: () => "Number of posts",
 
   GITCOIN_SCORE: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/GitcoinPassport/hooks/ContractDeployProvidedValue")
+    () => import("requirements/GitcoinPassport/hooks/GitcoinScoreProvidedValue")
   ),
 
   SNAPSHOT_VOTES: dynamic<ProvidedValueDisplayProps>(

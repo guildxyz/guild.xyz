@@ -6,9 +6,14 @@ import { useSymbolsOfPair } from "./useSymbolsOfPair"
 
 const PositionsProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const {
-    chain,
-    data: { token0, token1, baseCurrency, countedPositions },
-  } = requirement
+    chain = null,
+    data: {
+      token0 = null,
+      token1 = null,
+      baseCurrency = null,
+      countedPositions = null,
+    } = {},
+  } = requirement || {}
 
   const { symbol0, symbol1 } = useSymbolsOfPair(
     Chains[chain],
@@ -18,7 +23,7 @@ const PositionsProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
 
   const baseSymbol = baseCurrency === "token0" ? symbol0 : symbol1
 
-  return (
+  return baseSymbol ? (
     <HStack wrap={"wrap"} gap={1} display={"inline"}>
       <Text display={"inline"}>Amount of </Text>
       <Skeleton isLoaded={!!baseSymbol} display={"inline"}>
@@ -36,6 +41,8 @@ const PositionsProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
         positions on Uniswap v3{" "}
       </Text>
     </HStack>
+  ) : (
+    "Amount of liquidity provided on Uniswap v3"
   )
 }
 

@@ -14,7 +14,11 @@ const TopCollectorProvidedValue = ({ requirement }: ProvidedValueDisplayProps) =
     <HStack wrap={"wrap"} gap={1}>
       <Text>
         Rank on collectors' toplist for{" "}
-        <ArtistLink {...{ artistData, requirement }} />
+        {requirement?.data?.id ? (
+          <ArtistLink {...{ artistData, requirement }} />
+        ) : (
+          " artist"
+        )}
       </Text>{" "}
     </HStack>
   )

@@ -245,6 +245,8 @@ const AddRequirementForm = forwardRef(
       }
     }, console.error)
 
+    console.log(formType ?? selectedType)
+
     return (
       <Box
         ref={ref}
@@ -266,12 +268,14 @@ const AddRequirementForm = forwardRef(
               providerTypesOnly={providerTypesOnly}
             />
 
-            {!!REQUIREMENT_PROVIDED_VALUES[formType] && (
+            {!!REQUIREMENT_PROVIDED_VALUES[formType ?? selectedType] && (
               <>
                 {" "}
                 <Divider mt={5} mb={3} />
                 <ProvidedValueDisplay
-                  requirement={{ type: formType as RequirementType }}
+                  requirement={{
+                    type: formType ?? (selectedType as RequirementType),
+                  }}
                 />
               </>
             )}

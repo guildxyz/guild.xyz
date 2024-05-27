@@ -24,7 +24,6 @@ import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
-import ProvidedValueDisplay from "components/create-guild/Requirements/components/ProvidedValueDisplay"
 import { Plus } from "phosphor-react"
 import { useEffect, useMemo, useState } from "react"
 import {
@@ -222,210 +221,199 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
   })
 
   return (
-    <>
-      <Stack spacing={4} alignItems="start">
-        <ChainPicker controlName={`${baseFieldPath}.chain`} onChange={resetForm} />
+    <Stack spacing={4} alignItems="start">
+      <ChainPicker controlName={`${baseFieldPath}.chain`} onChange={resetForm} />
 
-        <FormControl
-          isRequired
-          isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
-        >
-          <FormLabel>NFT:</FormLabel>
-          <InputGroup>
-            {addressFieldValue && nftImage && (
-              <InputLeftElement>
-                <OptionImage img={nftImage} alt={nftName} />
-              </InputLeftElement>
-            )}
+      <FormControl
+        isRequired
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
+      >
+        <FormLabel>NFT:</FormLabel>
+        <InputGroup>
+          {addressFieldValue && nftImage && (
+            <InputLeftElement>
+              <OptionImage img={nftImage} alt={nftName} />
+            </InputLeftElement>
+          )}
 
-            <ControlledSelect
-              name={`${baseFieldPath}.address`}
-              rules={{
-                required: "This field is required.",
-                pattern: {
-                  value: ADDRESS_REGEX,
-                  message:
-                    "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-                },
-              }}
-              isClearable
-              isCopyable
-              isLoading={isLoading}
-              placeholder={
-                chain === "ETHEREUM"
-                  ? "Search or paste address"
-                  : "Paste NFT address"
+          <ControlledSelect
+            name={`${baseFieldPath}.address`}
+            rules={{
+              required: "This field is required.",
+              pattern: {
+                value: ADDRESS_REGEX,
+                message:
+                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
+              },
+            }}
+            isClearable
+            isCopyable
+            isLoading={isLoading}
+            placeholder={
+              chain === "ETHEREUM" ? "Search or paste address" : "Paste NFT address"
+            }
+            options={mappedNfts}
+            filterOption={customFilterOption}
+            fallbackValue={
+              addressFieldValue && {
+                label: nftName && nftName !== "-" ? nftName : addressFieldValue,
+                value: addressFieldValue,
               }
-              options={mappedNfts}
-              filterOption={customFilterOption}
-              fallbackValue={
-                addressFieldValue && {
-                  label: nftName && nftName !== "-" ? nftName : addressFieldValue,
-                  value: addressFieldValue,
+            }
+            afterOnChange={(newValue) => {
+              setPickedNftSlug(newValue?.slug)
+              setValue(`${baseFieldPath}.type`, "ERC721")
+              resetDetails()
+              setNftRequirementType("AMOUNT")
+            }}
+            onInputChange={(text, _) => {
+              if (ADDRESS_REGEX.test(text)) {
+                addressFieldOnChange(text)
+                setPickedNftSlug(null)
+              } else setAddressInput(text)
+            }}
+            menuIsOpen={
+              chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
+            }
+            // Hiding the dropdown arrow in some cases
+            components={
+              chain !== "ETHEREUM" && {
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+              }
+            }
+          />
+        </InputGroup>
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.address?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      <FormControl isRequired>
+        <FormLabel>Requirement type:</FormLabel>
+
+        <StyledSelect
+          isLoading={isMetadataLoading}
+          isDisabled={!addressFieldValue || isMetadataLoading}
+          options={mappedNftRequirementTypeOptions}
+          value={mappedNftRequirementTypeOptions.find(
+            ({ value }) => value === nftRequirementType
+          )}
+          onChange={(newValue: SelectOption<NftRequirementTypeOption["value"]>) => {
+            resetDetails()
+            setNftRequirementType(newValue.value)
+          }}
+        />
+      </FormControl>
+
+      {nftRequirementType === "ATTRIBUTE" && (
+        <Stack spacing={0} w="full">
+          <FormLabel>Metadata:</FormLabel>
+
+          {isMetadataLoading ? (
+            <Flex w="full" pt={4} justifyContent="center">
+              <Spinner />
+            </Flex>
+          ) : (
+            <Stack spacing={2}>
+              {traitFields?.map((traitField, traitFieldIndex) => (
+                <AttributePicker
+                  key={traitField.id}
+                  baseFieldPath={baseFieldPath}
+                  index={traitFieldIndex}
+                  isAttributesLoading={isMetadataLoading}
+                  attributes={metadata?.traits}
+                  nftCustomAttributeNames={nftCustomAttributeNames}
+                  onRemove={removeTrait}
+                />
+              ))}
+
+              <Button
+                leftIcon={<Icon as={Plus} />}
+                onClick={() =>
+                  appendTrait({
+                    trait_type: null,
+                    value: null,
+                  })
                 }
-              }
-              afterOnChange={(newValue) => {
-                setPickedNftSlug(newValue?.slug)
-                setValue(`${baseFieldPath}.type`, "ERC721")
-                resetDetails()
-                setNftRequirementType("AMOUNT")
-              }}
-              onInputChange={(text, _) => {
-                if (ADDRESS_REGEX.test(text)) {
-                  addressFieldOnChange(text)
-                  setPickedNftSlug(null)
-                } else setAddressInput(text)
-              }}
-              menuIsOpen={
-                chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
-              }
-              // Hiding the dropdown arrow in some cases
-              components={
-                chain !== "ETHEREUM" && {
-                  DropdownIndicator: () => null,
-                  IndicatorSeparator: () => null,
-                }
-              }
+              >
+                Define attribute
+              </Button>
+            </Stack>
+          )}
+        </Stack>
+      )}
+
+      {nftRequirementType === "AMOUNT" && (
+        <MinMaxAmount field={field} baseFieldPath={baseFieldPath} />
+      )}
+
+      {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
+        <>
+          <Divider />
+          <Accordion w="full" allowToggle>
+            <AccordionItem border="none">
+              <AccordionButton px={0} _hover={{ bgColor: null }}>
+                <Box mr="2" textAlign="left" fontWeight="medium" fontSize="md">
+                  Advanced
+                </Box>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel px={0} overflow="hidden">
+                <FormControl
+                  isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+                >
+                  <FormLabel>ID:</FormLabel>
+                  <Input
+                    {...requirementDataIdField}
+                    defaultValue={field?.data?.id}
+                    placeholder="Any index"
+                  />
+                  <FormErrorMessage>
+                    {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion>
+        </>
+      )}
+
+      {nftRequirementType === "CUSTOM_ID" && (
+        <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.ids}>
+          <FormLabel>Token IDs:</FormLabel>
+          <Stack>
+            <UploadIDs
+              onSuccess={(idsArray) => onIDsChange(idsArray)}
+              onError={(error) => setError(`${baseFieldPath}.data.ids`, error)}
             />
-          </InputGroup>
+            <Textarea
+              {...idsField}
+              value={ids?.join("\n")}
+              onChange={(e) => {
+                if (!e.target.value) {
+                  onIDsChange([])
+                  return
+                }
 
+                const idsArray = e.target.value.split("\n")
+                onIDsChange(idsArray)
+              }}
+              placeholder="... or paste IDs here, each one in a new line"
+            />
+          </Stack>
+          <Collapse in={ids?.length > 0}>
+            <FormHelperText>{`${
+              ids?.filter(Boolean).length ?? 0
+            } different IDs`}</FormHelperText>
+          </Collapse>
           <FormErrorMessage>
-            {parseFromObject(errors, baseFieldPath)?.address?.message}
+            {parseFromObject(errors, baseFieldPath)?.data?.ids?.message}
           </FormErrorMessage>
         </FormControl>
-
-        <FormControl isRequired>
-          <FormLabel>Requirement type:</FormLabel>
-
-          <StyledSelect
-            isLoading={isMetadataLoading}
-            isDisabled={!addressFieldValue || isMetadataLoading}
-            options={mappedNftRequirementTypeOptions}
-            value={mappedNftRequirementTypeOptions.find(
-              ({ value }) => value === nftRequirementType
-            )}
-            onChange={(
-              newValue: SelectOption<NftRequirementTypeOption["value"]>
-            ) => {
-              resetDetails()
-              setNftRequirementType(newValue.value)
-            }}
-          />
-        </FormControl>
-
-        {nftRequirementType === "ATTRIBUTE" && (
-          <Stack spacing={0} w="full">
-            <FormLabel>Metadata:</FormLabel>
-
-            {isMetadataLoading ? (
-              <Flex w="full" pt={4} justifyContent="center">
-                <Spinner />
-              </Flex>
-            ) : (
-              <Stack spacing={2}>
-                {traitFields?.map((traitField, traitFieldIndex) => (
-                  <AttributePicker
-                    key={traitField.id}
-                    baseFieldPath={baseFieldPath}
-                    index={traitFieldIndex}
-                    isAttributesLoading={isMetadataLoading}
-                    attributes={metadata?.traits}
-                    nftCustomAttributeNames={nftCustomAttributeNames}
-                    onRemove={removeTrait}
-                  />
-                ))}
-
-                <Button
-                  leftIcon={<Icon as={Plus} />}
-                  onClick={() =>
-                    appendTrait({
-                      trait_type: null,
-                      value: null,
-                    })
-                  }
-                >
-                  Define attribute
-                </Button>
-              </Stack>
-            )}
-          </Stack>
-        )}
-
-        {nftRequirementType === "AMOUNT" && (
-          <MinMaxAmount field={field} baseFieldPath={baseFieldPath} />
-        )}
-
-        {nftType === "ERC1155" && nftRequirementType === "AMOUNT" && (
-          <>
-            <Divider />
-            <Accordion w="full" allowToggle>
-              <AccordionItem border="none">
-                <AccordionButton px={0} _hover={{ bgColor: null }}>
-                  <Box mr="2" textAlign="left" fontWeight="medium" fontSize="md">
-                    Advanced
-                  </Box>
-                  <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel px={0} overflow="hidden">
-                  <FormControl
-                    isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-                  >
-                    <FormLabel>ID:</FormLabel>
-                    <Input
-                      {...requirementDataIdField}
-                      defaultValue={field?.data?.id}
-                      placeholder="Any index"
-                    />
-                    <FormErrorMessage>
-                      {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-                    </FormErrorMessage>
-                  </FormControl>
-                </AccordionPanel>
-              </AccordionItem>
-            </Accordion>
-          </>
-        )}
-
-        {nftRequirementType === "CUSTOM_ID" && (
-          <FormControl
-            isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.ids}
-          >
-            <FormLabel>Token IDs:</FormLabel>
-            <Stack>
-              <UploadIDs
-                onSuccess={(idsArray) => onIDsChange(idsArray)}
-                onError={(error) => setError(`${baseFieldPath}.data.ids`, error)}
-              />
-              <Textarea
-                {...idsField}
-                value={ids?.join("\n")}
-                onChange={(e) => {
-                  if (!e.target.value) {
-                    onIDsChange([])
-                    return
-                  }
-
-                  const idsArray = e.target.value.split("\n")
-                  onIDsChange(idsArray)
-                }}
-                placeholder="... or paste IDs here, each one in a new line"
-              />
-            </Stack>
-            <Collapse in={ids?.length > 0}>
-              <FormHelperText>{`${
-                ids?.filter(Boolean).length ?? 0
-              } different IDs`}</FormHelperText>
-            </Collapse>
-            <FormErrorMessage>
-              {parseFromObject(errors, baseFieldPath)?.data?.ids?.message}
-            </FormErrorMessage>
-          </FormControl>
-        )}
-      </Stack>
-
-      <Divider mt={5} mb={3} />
-      <ProvidedValueDisplay requirement={{ type: "ERC721" }} />
-    </>
+      )}
+    </Stack>
   )
 }
 
