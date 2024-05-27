@@ -677,7 +677,9 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   GUILD_SNAPSHOT: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/Airdrop/AirdropProvidedValue")
   ),
-  UNISWAP_V3_POSITIONS: null,
+  UNISWAP_V3_POSITIONS: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Uniswap/hooks/PositionsProvidedValue")
+  ),
 
   // NFTs
   ERC721: dynamic<ProvidedValueDisplayProps>(
