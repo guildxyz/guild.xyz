@@ -680,9 +680,15 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   UNISWAP_V3_POSITIONS: null,
 
   // NFTs
-  ERC721: null,
-  ERC1155: null,
-  NOUNS: null,
+  ERC721: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Nft/hooks/NftAmountProvidedValue")
+  ),
+  ERC1155: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Nft/hooks/NftAmountProvidedValue")
+  ),
+  NOUNS: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Nft/hooks/NftAmountProvidedValue")
+  ),
 
   GUILD_MINGUILDS: () => "Guild membership count",
 
