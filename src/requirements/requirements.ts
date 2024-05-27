@@ -686,8 +686,12 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
 
   GUILD_MINGUILDS: () => "Guild membership count",
 
-  WALLET_ACTIVITY: null,
-  // ? deployed contract ?
+  COVALENT_TX_COUNT: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/WalletActivity/hooks/TxCountProvidedValue")
+  ),
+  COVALENT_TX_COUNT_RELATIVE: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/WalletActivity/hooks/TxCountProvidedValue")
+  ),
 
   POINTS_AMOUNT: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/Points/hooks/PointsAmountProvidedValue")
