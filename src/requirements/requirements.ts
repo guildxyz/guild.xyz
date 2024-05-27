@@ -689,9 +689,13 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
   WALLET_ACTIVITY: null,
   // ? deployed contract ?
 
-  POINTS_AMOUNT: null,
-  POINTS_TOTAL_AMOUNT: null,
-  POINTS_RANK: null,
+  POINTS_AMOUNT: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Points/hooks/PointsAmountProvidedValue")
+  ),
+  POINTS_TOTAL_AMOUNT: () => "Total score summing all points",
+  POINTS_RANK: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Points/hooks/PointsRankProvidedValue")
+  ),
 
   TWITTER_FOLLOWER_COUNT: null,
 

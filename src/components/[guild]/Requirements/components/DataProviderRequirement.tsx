@@ -40,7 +40,14 @@ const DataProviderRequirement = ({
         </Circle>
       </Box>
 
-      <Flex alignSelf={"center"} flexDir={"column"} justifyContent={"center"} ml={1}>
+      <Flex
+        alignSelf={"center"}
+        flexDir={"column"}
+        justifyContent={"center"}
+        ml={1}
+        w={"100%"}
+        overflow={"hidden"}
+      >
         {ProvidedValueDisplay && <ProvidedValueDisplay requirement={requirement} />}
 
         <HStack gap={1} alignItems={"center"}>
@@ -50,6 +57,9 @@ const DataProviderRequirement = ({
           <Text
             fontWeight={"medium"}
             sx={{ fontSize: "sm", "& *": { fontSize: "inherit" } }}
+            whiteSpace={"nowrap"}
+            textOverflow={"ellipsis"}
+            overflow={"hidden"}
           >
             {requirement?.data?.customName || children}
           </Text>
