@@ -718,8 +718,12 @@ export const REQUIREMENT_PROVIDED_VALUES: Partial<
     () => import("requirements/GitcoinPassport/hooks/ContractDeployProvidedValue")
   ),
 
-  SNAPSHOT_VOTES: null,
-  SNAPSHOT_PROPOSALS: null,
+  SNAPSHOT_VOTES: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Snapshot/hooks/VotesProvidedValue")
+  ),
+  SNAPSHOT_PROPOSALS: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Snapshot/hooks/ProposalsProvidedValue")
+  ),
 
   SOUND_TOP_COLLECTOR: dynamic<ProvidedValueDisplayProps>(
     () => import("requirements/Sound/hooks/TopCollectorProvidedValue")
