@@ -11,10 +11,8 @@ function hasOnlyTypeProperty(obj) {
 }
 
 const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
-  if (hasOnlyTypeProperty(requirement)) return "Amount of NFT held"
-
   const isGuildPin =
-    GUILD_PIN_CONTRACTS[requirement.chain] === requirement.address.toLowerCase()
+    GUILD_PIN_CONTRACTS[requirement.chain] === requirement?.address?.toLowerCase()
   const guildIdAttribute =
     isGuildPin &&
     requirement.data?.attributes?.find((attr) => attr.trait_type === "guildId")
@@ -44,6 +42,8 @@ const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   ) : (
     metadataWithTraits?.name || metadata?.name
   )
+
+  if (hasOnlyTypeProperty(requirement)) return "Amount of NFT held"
 
   return (
     <HStack wrap={"wrap"} gap={1}>
