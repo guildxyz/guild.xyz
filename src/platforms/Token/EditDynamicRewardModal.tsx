@@ -52,10 +52,18 @@ const EditDynamicRewardModal = ({
     },
   })
 
+  const rewardName = rolePlatform.guildPlatform.platformGuildData.name
+
   const propsHook =
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
+
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
-  const rewardName = rolePlatform.guildPlatform.platformGuildData.name
+  const ImageComponent =
+    typeof image === "string" ? (
+      <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />
+    ) : (
+      image
+    )
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={"lg"} colorScheme={"dark"}>
@@ -66,7 +74,7 @@ const EditDynamicRewardModal = ({
         <ModalBody>
           <FormProvider {...methods}>
             <DynamicSetup
-              toImage={<OptionImage img={image} alt={`${rewardName} image`} />}
+              toImage={ImageComponent}
               roleId={rolePlatform.roleId}
               requirementFieldName={`dynamicAmount.operation.input[0].requirementId`}
               multiplierFieldName={`dynamicAmount.operation.params.multiplier`}

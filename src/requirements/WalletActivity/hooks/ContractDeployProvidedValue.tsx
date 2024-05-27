@@ -8,7 +8,11 @@ const ContractDeployProvidedValue = ({ requirement }: ProvidedValueDisplayProps)
   return (
     <HStack wrap={"wrap"} gap={1}>
       <Text>Deployed contracts</Text>
-      <RequirementChainIndicator bg={tagBg} chain={requirement?.chain} />
+      <RequirementChainIndicator
+        bg={tagBg}
+        chain={requirement?.chain}
+        display={"inline"}
+      />
     </HStack>
   )
 }
