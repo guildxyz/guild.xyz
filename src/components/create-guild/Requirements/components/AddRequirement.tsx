@@ -245,8 +245,6 @@ const AddRequirementForm = forwardRef(
       }
     }, console.error)
 
-    console.log(formType ?? selectedType)
-
     return (
       <Box
         ref={ref}
