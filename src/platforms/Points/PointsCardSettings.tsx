@@ -2,13 +2,14 @@ import SetPointsAmount from "components/[guild]/RolePlatforms/components/AddRole
 import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 
 const PointsCardSettings = () => {
-  const { guildPlatform, index } = useRolePlatform()
+  const { guildPlatform, index, dynamicAmount } = useRolePlatform()
   const { name, imageUrl } = guildPlatform.platformGuildData
 
   return (
     <SetPointsAmount
       {...{ name, imageUrl }}
-      fieldName={`rolePlatforms.${index}.platformRoleData.score`}
+      baseFieldPath={`rolePlatforms.${index}`}
+      defaultDynamicAmount={!!dynamicAmount}
     />
   )
 }

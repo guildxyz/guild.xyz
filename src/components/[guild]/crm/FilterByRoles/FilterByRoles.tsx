@@ -19,7 +19,7 @@ import {
   useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
-import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
+import { MemberCountWithSyncIndicator } from "components/[guild]/RoleCard/components/MemberCount"
 import { Funnel } from "phosphor-react"
 import { memo, useState } from "react"
 import { Role, Visibility } from "types"
@@ -229,7 +229,11 @@ const RoleCheckbox = memo(({ role, isChecked, onChange }: RoleCheckboxProps) => 
         <Text w="full" noOfLines={1}>
           {role.name}
         </Text>
-        <MemberCount roleId={role.id} memberCount={role.memberCount} size="sm" />
+        <MemberCountWithSyncIndicator
+          roleId={role.id}
+          memberCount={role.memberCount}
+          size="sm"
+        />
       </HStack>
     </Checkbox>
   )

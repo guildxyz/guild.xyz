@@ -1,5 +1,6 @@
-import { Icon, Spinner, Tooltip, Wrap } from "@chakra-ui/react"
+import { Icon, Spinner, Tooltip } from "@chakra-ui/react"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
+import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import {
   RewardDisplay,
   RewardIcon,
@@ -14,7 +15,6 @@ import useMembership, {
 import { ArrowSquareIn, LockSimple } from "phosphor-react"
 import { claimTextButtonTooltipLabel } from "platforms/SecretText/TextCardButton"
 import ClaimTokenButton from "platforms/Token/ClaimTokenButton"
-import DynamicTag from "platforms/Token/DynamicTag"
 import { useIsFromGeogatedCountry } from "platforms/Token/GeogatedCountryAlert"
 import PoolTag from "platforms/Token/PoolTag"
 import {
@@ -107,17 +107,18 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
         </>
       }
       whiteSpace={"nowrap"}
-    >
-      <Wrap spacing={1}>
-        <DynamicTag />
-        <AvailabilityTags rolePlatform={rolePlatform} />
-        {isAdmin && (
-          <PoolTag
-            poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
-          />
-        )}
-      </Wrap>
-    </RewardDisplay>
+      rightElement={
+        <>
+          <DynamicTag rolePlatform={rolePlatform} />
+          <AvailabilityTags rolePlatform={rolePlatform} />
+          {isAdmin && (
+            <PoolTag
+              poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
+            />
+          )}
+        </>
+      }
+    />
   )
 }
 

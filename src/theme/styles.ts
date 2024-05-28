@@ -60,6 +60,14 @@ const styles = {
       "0%": { opacity: 0, transform: "translateY(10px)" },
       "100%": { opacity: 1, transform: "translateY(0px)" },
     },
+    "@keyframes rotate": {
+      from: {
+        transform: "rotate(0)",
+      },
+      to: {
+        transform: "rotate(360deg)",
+      },
+    },
 
     "#walletconnect-wrapper": {
       color: "black",

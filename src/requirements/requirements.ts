@@ -12,7 +12,12 @@ import {
   Wrench,
 } from "phosphor-react"
 import rewards from "platforms/rewards"
-import { RequirementFormProps } from "requirements"
+import { ComponentType } from "react"
+import {
+  ProvidedValueDisplayProps,
+  RequirementFormProps,
+  RequirementType,
+} from "requirements"
 import { VISIT_LINK_REGEX } from "requirements/VisitLink/VisitLinkRequirement"
 import Star from "static/icons/star.svg"
 import GuildLogo from "static/logo.svg"
@@ -659,5 +664,23 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
 ] as const
+
+export const REQUIREMENT_PROVIDED_VALUES: Partial<
+  Record<RequirementType, ComponentType<ProvidedValueDisplayProps>>
+> = {
+  ERC20: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Token/TokenProvidedValue")
+  ),
+  COIN: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Token/TokenProvidedValue")
+  ),
+  GUILD_SNAPSHOT: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Airdrop/AirdropProvidedValue")
+  ),
+}
+
+export const PROVIDER_TYPES = Object.keys(REQUIREMENT_PROVIDED_VALUES) as Array<
+  keyof typeof REQUIREMENT_PROVIDED_VALUES
+>
 
 export default REQUIREMENTS_DATA

@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Heading,
   HStack,
   Icon,
@@ -39,10 +40,15 @@ import {
 } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import REQUIREMENTS, { REQUIREMENTS_DATA, RequirementType } from "requirements"
+import {
+  PROVIDER_TYPES,
+  REQUIREMENT_PROVIDED_VALUES,
+} from "requirements/requirements"
 import { Requirement, Visibility } from "types"
 import useCreateRequirement from "../hooks/useCreateRequirement"
 import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
+import ProvidedValueDisplay from "./ProvidedValueDisplay"
 
 const GENERAL_REQUIREMENTS_COUNT = 12
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
@@ -54,9 +60,15 @@ Object.values(REQUIREMENTS).forEach((a: any) => a.formComponent?.render?.preload
 const TRANSITION_DURATION_MS = 200
 const HOME_MAX_HEIGHT = "550px"
 
-type AddRequirementProps = { onAdd?: (req: Requirement) => void }
+type AddRequirementProps = {
+  onAdd?: (req: Requirement) => void
+  providerTypesOnly?: boolean
+}
 
-const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
+const AddRequirement = ({
+  onAdd,
+  providerTypesOnly,
+}: AddRequirementProps): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [onCloseAttemptToast, setOnCloseAttemptToast] = useState()
   const toast = useToast()
@@ -103,7 +115,7 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
       <CardMotionWrapper>
         <AddCard
           ref={addCardRef}
-          title="Add requirement"
+          title={providerTypesOnly ? "Add provider requirement" : "Add requirement"}
           onClick={onOpen}
           data-test="add-requirement-button"
         />
@@ -130,9 +142,13 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
                   onClick={() => setSelectedType(null)}
                 />
               )}
-              <Text w="calc(100% - 70px)" noOfLines={1}>{`Add ${
-                REQUIREMENTS[selectedType]?.name ?? ""
-              } requirement`}</Text>
+              <Text w="calc(100% - 70px)" noOfLines={1}>
+                {selectedType
+                  ? `Add ${REQUIREMENTS[selectedType]?.name} requirement`
+                  : providerTypesOnly
+                  ? "Add provider requirement"
+                  : "Add requirement"}
+              </Text>
             </HStack>
           </ModalHeader>
 
@@ -146,12 +162,17 @@ const AddRequirement = ({ onAdd }: AddRequirementProps): JSX.Element => {
             maxHeight={height}
             transition={`transform ${TRANSITION_DURATION_MS}ms, min-height ${TRANSITION_DURATION_MS}ms, max-height ${TRANSITION_DURATION_MS}ms`}
           >
-            <AddRequirementHome ref={homeRef} {...{ setSelectedType }} />
+            <AddRequirementHome
+              ref={homeRef}
+              {...{ setSelectedType }}
+              providerTypesOnly={providerTypesOnly}
+            />
             <AnimatePresence>
               {selectedType && (
                 <AddRequirementForm
                   ref={formRef}
                   {...{ onAdd, handleClose, selectedType, setOnCloseAttemptToast }}
+                  providerTypesOnly={providerTypesOnly}
                 />
               )}
             </AnimatePresence>
@@ -167,6 +188,7 @@ type AddRequirementFormProps = {
   handleClose: (forceClose?: boolean) => void
   selectedType?: RequirementType
   setOnCloseAttemptToast: Dispatch<SetStateAction<string | boolean>>
+  providerTypesOnly?: boolean
 }
 
 const AddRequirementForm = forwardRef(
@@ -176,6 +198,7 @@ const AddRequirementForm = forwardRef(
       handleClose,
       selectedType,
       setOnCloseAttemptToast,
+      providerTypesOnly,
     }: AddRequirementFormProps,
     ref: LegacyRef<HTMLDivElement>
   ) => {
@@ -238,7 +261,16 @@ const AddRequirementForm = forwardRef(
               baseFieldPath=""
               addRequirement={onSubmit}
               setOnCloseAttemptToast={setOnCloseAttemptToast}
+              providerTypesOnly={providerTypesOnly}
             />
+
+            {!!REQUIREMENT_PROVIDED_VALUES[selectedType] && (
+              <>
+                {" "}
+                <Divider mt={5} mb={3} />
+                <ProvidedValueDisplay requirement={{ type: selectedType }} />
+              </>
+            )}
           </ModalBody>
           {selectedType !== "PAYMENT" && (
             <ModalFooter gap="3">
@@ -261,91 +293,101 @@ const AddRequirementForm = forwardRef(
   }
 )
 
-const AddRequirementHome = forwardRef(({ setSelectedType }: any, ref: any) => {
-  const { featureFlags } = useGuild()
-  const [search, setSearch] = useState("")
-  const filteredIntegrations = integrations?.filter((integration) =>
-    integration.name.toLowerCase().includes(search.toLowerCase())
-  )
+const AddRequirementHome = forwardRef(
+  ({ setSelectedType, providerTypesOnly }: any, ref: any) => {
+    const { featureFlags } = useGuild()
+    const [search, setSearch] = useState("")
 
-  return (
-    <ModalBody ref={ref} maxHeight={HOME_MAX_HEIGHT} className="custom-scrollbar">
-      <Heading size="sm" mb="3">
-        General
-      </Heading>
-      <SimpleGrid columns={2} gap={2}>
-        {general
-          .filter(
-            (req) =>
-              req.types[0] !== "GUILD_SNAPSHOT" &&
-              (!!featureFlags.includes("PAYMENT_REQUIREMENT") ||
-                req.types[0] !== "PAYMENT")
-          )
-          .map((requirementButton) => (
-            <Button
-              key={requirementButton.types[0]}
-              w="full"
-              py={11}
-              onClick={() => setSelectedType(requirementButton.types[0])}
-            >
-              <VStack w="full" whiteSpace="break-spaces">
-                <Icon as={requirementButton.icon as FC} boxSize={6} />
-                <Text as="span">{requirementButton.name}</Text>
-              </VStack>
-            </Button>
-          ))}
-      </SimpleGrid>
+    const filteredIntegrations = integrations?.filter(
+      (integration) =>
+        integration.name.toLowerCase().includes(search.toLowerCase()) &&
+        (providerTypesOnly
+          ? integration.types.some((el) => PROVIDER_TYPES.includes(el))
+          : true)
+    )
 
-      <Heading size="sm" mb="3" mt="8">
-        Integrations
-      </Heading>
-      <Stack>
-        <SearchBar {...{ search, setSearch }} placeholder="Search integrations" />
+    return (
+      <ModalBody ref={ref} maxHeight={HOME_MAX_HEIGHT} className="custom-scrollbar">
+        <Heading size="sm" mb="3">
+          General
+        </Heading>
+        <SimpleGrid columns={2} gap={2}>
+          {general
+            .filter(
+              (req) =>
+                req.types[0] !== "GUILD_SNAPSHOT" &&
+                (!!featureFlags.includes("PAYMENT_REQUIREMENT") ||
+                  req.types[0] !== "PAYMENT") &&
+                (providerTypesOnly
+                  ? req.types.some((el) => PROVIDER_TYPES.includes(el))
+                  : true)
+            )
+            .map((requirementButton) => (
+              <Button
+                key={requirementButton.types[0]}
+                w="full"
+                py={11}
+                onClick={() => setSelectedType(requirementButton.types[0])}
+              >
+                <VStack w="full" whiteSpace="break-spaces">
+                  <Icon as={requirementButton.icon as FC} boxSize={6} />
+                  <Text as="span">{requirementButton.name}</Text>
+                </VStack>
+              </Button>
+            ))}
+        </SimpleGrid>
 
-        <AnimateSharedLayout>
-          <AnimatePresence>
-            {filteredIntegrations.length ? (
-              filteredIntegrations.map((requirementButton) => (
-                <CardMotionWrapper key={requirementButton.types[0]}>
-                  <Tooltip
-                    isDisabled={!(requirementButton as any).isDisabled}
-                    label="Temporarily unavailable"
-                    hasArrow
-                  >
-                    <Button
-                      w="full"
-                      py="8"
-                      px="6"
-                      leftIcon={
-                        typeof requirementButton.icon === "string" ? (
-                          <Img src={requirementButton.icon} boxSize="6" />
-                        ) : (
-                          <Icon as={requirementButton.icon} boxSize={6} />
-                        )
-                      }
-                      rightIcon={<Icon as={CaretRight} />}
-                      iconSpacing={4}
-                      onClick={() => setSelectedType(requirementButton.types[0])}
-                      isDisabled={(requirementButton as any).isDisabled}
-                      sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
+        <Heading size="sm" mb="3" mt="8">
+          Integrations
+        </Heading>
+        <Stack>
+          <SearchBar {...{ search, setSearch }} placeholder="Search integrations" />
+
+          <AnimateSharedLayout>
+            <AnimatePresence>
+              {filteredIntegrations.length ? (
+                filteredIntegrations.map((requirementButton) => (
+                  <CardMotionWrapper key={requirementButton.types[0]}>
+                    <Tooltip
+                      isDisabled={!(requirementButton as any).isDisabled}
+                      label="Temporarily unavailable"
+                      hasArrow
                     >
-                      {requirementButton.name}
-                    </Button>
-                  </Tooltip>
+                      <Button
+                        w="full"
+                        py="8"
+                        px="6"
+                        leftIcon={
+                          typeof requirementButton.icon === "string" ? (
+                            <Img src={requirementButton.icon} boxSize="6" />
+                          ) : (
+                            <Icon as={requirementButton.icon} boxSize={6} />
+                          )
+                        }
+                        rightIcon={<Icon as={CaretRight} />}
+                        iconSpacing={4}
+                        onClick={() => setSelectedType(requirementButton.types[0])}
+                        isDisabled={(requirementButton as any).isDisabled}
+                        sx={{ ".chakra-text": { w: "full", textAlign: "left" } }}
+                      >
+                        {requirementButton.name}
+                      </Button>
+                    </Tooltip>
+                  </CardMotionWrapper>
+                ))
+              ) : (
+                <CardMotionWrapper delay={0.4}>
+                  <Text colorScheme="gray" py={4} textAlign="center">
+                    Couldn't find any integrations
+                  </Text>
                 </CardMotionWrapper>
-              ))
-            ) : (
-              <CardMotionWrapper delay={0.4}>
-                <Text colorScheme="gray" py={4} textAlign="center">
-                  Couldn't find any integrations
-                </Text>
-              </CardMotionWrapper>
-            )}
-          </AnimatePresence>
-        </AnimateSharedLayout>
-      </Stack>
-    </ModalBody>
-  )
-})
+              )}
+            </AnimatePresence>
+          </AnimateSharedLayout>
+        </Stack>
+      </ModalBody>
+    )
+  }
+)
 
 export default AddRequirement

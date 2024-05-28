@@ -1,4 +1,5 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
 import { openRewardSettingsGuildPlatformIdAtom } from "components/[guild]/RolePlatforms/RolePlatforms"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -45,6 +46,8 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
       )
   )
 
+  const { targetRoleId } = useAddRewardContext()
+
   if (!filteredPlatforms.length) return null
 
   return (
@@ -76,6 +79,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                   guildPlatformId: platform.id,
                   guildPlatform: platform,
                   isNew: true,
+                  roleId: targetRoleId,
                   platformRoleId: isGoogleReward
                     ? isForm
                       ? "writer"

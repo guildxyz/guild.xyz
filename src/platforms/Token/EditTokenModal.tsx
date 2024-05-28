@@ -133,7 +133,7 @@ const EditTokenModal = ({
       },
     })
 
-  const { onSubmit: onRequirementSubmit } = useCreateRequirement(role.id, {
+  const { onSubmit: onRequirementSubmit } = useCreateRequirement(role?.id, {
     onSuccess: () => {
       toast({
         status: "success",

@@ -27,7 +27,9 @@ const PointsRewardCard = ({ guildPlatform }) => {
       <RewardCard
         label={rewards.POINTS.name}
         title={
-          isLoading ? null : `You have ${data?.totalPoints ?? 0} ${name || "points"}`
+          isLoading
+            ? null
+            : `You have ${Math.floor(data?.totalPoints ?? 0)} ${name || "points"}`
         }
         image={
           imageUrl || (
