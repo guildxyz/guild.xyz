@@ -33,7 +33,7 @@ export const DefaultAddRewardPanelWrapper = ({
             variant="ghost"
             onClick={() => setStep("HOME")}
           />
-          <Text>{`Add ${rewards[selection].name} reward`}</Text>
+          <Text>{`Add ${rewards[selection]?.name} reward`}</Text>
         </HStack>
       </ModalHeader>
 

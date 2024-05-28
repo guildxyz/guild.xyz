@@ -1,20 +1,13 @@
-import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
-  useDisclosure,
-} from "@chakra-ui/react"
-import { AddRewardProvider } from "components/[guild]/AddRewardContext"
+import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
-import Button from "components/common/Button"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import CreateFormModal from "./CreateFormModal"
+import AddFormButton from "./AddFormButton"
 
 const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { id, guildPlatforms } = useGuild()
@@ -38,8 +31,6 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
         value: form.id,
       })) ?? []
 
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
   return (
     <>
       <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
@@ -50,18 +41,17 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
           isLoading={isLoading}
           options={formOptions}
         />
+
+        <AddFormButton />
+
         <FormHelperText>
           You can create new forms in the add reward menu
         </FormHelperText>
-        <Button onClick={onOpen}>Create new</Button>
+
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
         </FormErrorMessage>
       </FormControl>
-
-      <AddRewardProvider>
-        <CreateFormModal onClose={onClose} isOpen={isOpen} />
-      </AddRewardProvider>
     </>
   )
 }

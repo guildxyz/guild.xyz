@@ -67,7 +67,7 @@ const SelectRolePanel = () => {
               variant="ghost"
               onClick={goBack}
             />
-            <Text>{`Add ${rewards[selection].name} reward`}</Text>
+            <Text>{`Add ${rewards[selection]?.name} reward`}</Text>
           </HStack>
 
           <RewardPreview>
