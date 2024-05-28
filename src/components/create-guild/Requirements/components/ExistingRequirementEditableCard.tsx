@@ -148,23 +148,24 @@ const ExistingRequirementEditModal = ({
             <Button
               colorScheme="green"
               onClick={methods.handleSubmit((editedReq) => {
-                const prevReqData = structuredClone(requirement.data)
+                /**
+                 * Keeping the old data too, because we don't mount e.g. the
+                 * `customName` & `customImage` inputs inside this form, so we would
+                 * overwrite those on every requirement edit
+                 */
+                const data = {
+                  ...requirement.data,
+                  ...editedReq.data,
+                }
 
+                // Only send fileId if it is dirty, as it would restart the file processing
                 if (!methods.formState.dirtyFields?.data?.fileId) {
-                  delete prevReqData?.fileId
+                  delete data?.fileId
                 }
 
                 onEditRequirementSubmit({
                   ...editedReq,
-                  /**
-                   * Keeping the old data too, because we don't mount e.g. the
-                   * `customName` & `customImage` inputs inside this form, so we
-                   * would overwrite those on every requirement edit
-                   */
-                  data: {
-                    ...prevReqData,
-                    ...editedReq.data,
-                  },
+                  data,
                 })
               })}
               ml="auto"
