@@ -4,8 +4,10 @@ import {
   FormControl,
   FormLabel,
   Stack,
+  Tag,
   Text,
   Textarea,
+  Tooltip,
 } from "@chakra-ui/react"
 import { isValidAddress } from "components/[guild]/EditGuild/components/Admins/Admins"
 import Button from "components/common/Button"
@@ -51,6 +53,9 @@ export default function AllowlistFormInputs({
   const router = useRouter()
 
   const isHidden = useWatch({ name: `${baseFieldPath}.data.hideAllowlist` })
+  const requirementFileId = useWatch({ name: `${baseFieldPath}.data.fileId` })
+  const addressCount = useWatch({ name: `${baseFieldPath}.data.addressCount` })
+  const status = useWatch({ name: `${baseFieldPath}.data.status` })
 
   const requirementType = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -112,7 +117,14 @@ export default function AllowlistFormInputs({
       <FormControl isInvalid={!!fileRejections?.[0]} textAlign="left">
         <FormLabel display={"flex"} gap={2}>
           Upload from file
-          {uploadFileToGcs.response ? (
+          {addressCount && (
+            <Tooltip
+              label={`Currently an address with ${addressCount} addresses is uploaded. Uploading a new file overwrites these addresses`}
+            >
+              <Tag>{addressCount}</Tag>
+            </Tooltip>
+          )}
+          {uploadFileToGcs.response && (
             <Button
               size="xs"
               variant="ghost"
@@ -128,35 +140,48 @@ export default function AllowlistFormInputs({
             >
               clear
             </Button>
-          ) : null}
+          )}
         </FormLabel>
 
-        <Button
-          as="label"
-          leftIcon={uploadFileToGcs.response ? <Check /> : <File />}
-          h={10}
-          maxW={56}
-          cursor="pointer"
-          isLoading={uploadFileToGcs.isLoading}
-          loadingText={"Uploading"}
-          isDisabled={uploadFileToGcs.response}
+        <Tooltip
+          isDisabled={status !== "IN-PROGRESS"}
+          label="The uploaded file is being processed. Please wait for it to finish before editing it"
         >
-          <input {...getInputProps()} hidden />
-          <Text as="span" display="block" maxW={44} noOfLines={1}>
-            {uploadFileToGcs.response
-              ? "File uploaded"
-              : isDragActive
-              ? "Drop the file here"
-              : "Choose .csv"}
-          </Text>
-        </Button>
+          <Button
+            as="label"
+            leftIcon={uploadFileToGcs.response ? <Check /> : <File />}
+            h={10}
+            maxW={56}
+            cursor="pointer"
+            isLoading={uploadFileToGcs.isLoading || status === "IN-PROGRESS"}
+            loadingText={
+              status === "IN-PROGRESS" ? "Processing allowlist" : "Uploading"
+            }
+            isDisabled={uploadFileToGcs.response}
+          >
+            <input {...getInputProps()} hidden />
+            <Text as="span" display="block" maxW={44} noOfLines={1}>
+              {uploadFileToGcs.response
+                ? "File uploaded"
+                : isDragActive
+                ? "Drop the file here"
+                : "Choose .csv"}
+            </Text>
+          </Button>
+        </Tooltip>
 
         <FormErrorMessage>
           {fileRejections?.[0]?.errors?.[0]?.message}
         </FormErrorMessage>
       </FormControl>
 
-      <Collapse in={!uploadFileToGcs.isLoading && !uploadFileToGcs.response}>
+      <Collapse
+        in={
+          !uploadFileToGcs.isLoading &&
+          !uploadFileToGcs.response &&
+          !requirementFileId
+        }
+      >
         <FormControl
           isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.addresses}
         >

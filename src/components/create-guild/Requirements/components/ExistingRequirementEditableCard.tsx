@@ -123,6 +123,15 @@ const ExistingRequirementEditModal = ({
   const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
     useEditRequirement(requirement.roleId, {
       onSuccess: (editedRequirement) => {
+        if (
+          (editedRequirement.type === "ALLOWLIST" ||
+            editedRequirement.type === "ALLOWLIST_EMAIL") &&
+          editedRequirement.data?.fileId
+        ) {
+          editedRequirement.data ??= {}
+          editedRequirement.data.status = "IN-PROGRESS"
+        }
+
         methods.reset(mapRequirement(editedRequirement))
         onClose()
       },
@@ -138,7 +147,13 @@ const ExistingRequirementEditModal = ({
             <BalancyFooter baseFieldPath={null} />
             <Button
               colorScheme="green"
-              onClick={methods.handleSubmit((editedReq) =>
+              onClick={methods.handleSubmit((editedReq) => {
+                const prevReqData = structuredClone(requirement.data)
+
+                if (!methods.formState.dirtyFields?.data?.fileId) {
+                  delete prevReqData?.fileId
+                }
+
                 onEditRequirementSubmit({
                   ...editedReq,
                   /**
@@ -147,11 +162,11 @@ const ExistingRequirementEditModal = ({
                    * would overwrite those on every requirement edit
                    */
                   data: {
-                    ...requirement.data,
+                    ...prevReqData,
                     ...editedReq.data,
                   },
                 })
-              )}
+              })}
               ml="auto"
               isLoading={isEditRequirementLoading}
               loadingText="Saving"
