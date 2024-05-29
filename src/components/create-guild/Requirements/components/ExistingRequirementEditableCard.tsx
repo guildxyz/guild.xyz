@@ -147,27 +147,20 @@ const ExistingRequirementEditModal = ({
             <BalancyFooter baseFieldPath={null} />
             <Button
               colorScheme="green"
-              onClick={methods.handleSubmit((editedReq) => {
-                /**
-                 * Keeping the old data too, because we don't mount e.g. the
-                 * `customName` & `customImage` inputs inside this form, so we would
-                 * overwrite those on every requirement edit
-                 */
-                const data = {
-                  ...requirement.data,
-                  ...editedReq.data,
-                }
-
-                // Only send fileId if it is dirty, as it would restart the file processing
-                if (!methods.formState.dirtyFields?.data?.fileId) {
-                  delete data?.fileId
-                }
-
+              onClick={methods.handleSubmit((editedReq) =>
                 onEditRequirementSubmit({
                   ...editedReq,
-                  data,
+                  /**
+                   * Keeping the old data too, because we don't mount e.g. the
+                   * `customName` & `customImage` inputs inside this form, so we
+                   * would overwrite those on every requirement edit
+                   */
+                  data: {
+                    ...requirement.data,
+                    ...editedReq.data,
+                  },
                 })
-              })}
+              )}
               ml="auto"
               isLoading={isEditRequirementLoading}
               loadingText="Saving"
