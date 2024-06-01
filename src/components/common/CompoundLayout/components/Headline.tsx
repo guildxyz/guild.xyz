@@ -19,7 +19,7 @@ type Props = {
   // showFooter?: boolean
 }
 
-export const HeadLine = ({ image, title, description, action }: Props) => {
+export const Headline = ({ image, title, description, action }: Props) => {
   const { textColor } = useThemeContext()
 
   return (

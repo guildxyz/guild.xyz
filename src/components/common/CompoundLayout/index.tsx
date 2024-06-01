@@ -1,11 +1,12 @@
-import { Footer } from "./components/Footer"
-import { Header } from "./components/Header"
-import { Root } from "./components/Root"
-import { Head } from "./components/Head"
-import { Background } from "./components/Background"
-import { Content } from "./components/Content"
 import BackButton from "./components/BackButton"
-import { HeadLine } from "./components/Headline"
+import { Background } from "./components/Background"
+import { Container } from "./components/Container"
+import { Content } from "./components/Content"
+import { Footer } from "./components/Footer"
+import { Head } from "./components/Head"
+import { Header } from "./components/Header"
+import { Headline } from "./components/Headline"
+import { Root } from "./components/Root"
 
 export const Layout = {
   Root,
@@ -15,5 +16,6 @@ export const Layout = {
   Background,
   Content,
   BackButton,
-  HeadLine,
+  Headline,
+  Container,
 }

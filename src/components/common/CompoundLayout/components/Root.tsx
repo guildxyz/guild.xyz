@@ -1,7 +1,5 @@
-import { Box, Container, useColorMode } from "@chakra-ui/react"
-import React, { PropsWithChildren, useMemo } from "react"
-import { Footer } from "./Footer"
-import { doesComponentExistIn } from "../doesComponentExistIn"
+import { Box, useColorMode } from "@chakra-ui/react"
+import { PropsWithChildren } from "react"
 
 type Props = PropsWithChildren<{
   // image?: JSX.Element
@@ -16,15 +14,11 @@ type Props = PropsWithChildren<{
   // backgroundImage?: string
   // backgroundOffset?: number
   // backButton?: JSX.Element
-  maxWidth?: string
+  // maxWidth?: string
   // showFooter?: boolean
 }>
 
-export function Root({ children, maxWidth = "container.lg", background }: Props) {
-  const showFooter = useMemo(
-    () => doesComponentExistIn(children, Footer),
-    [children]
-  )
+export function Root({ children, background }: Props) {
   const { colorMode } = useColorMode()
 
   return (
@@ -44,16 +38,7 @@ export function Root({ children, maxWidth = "container.lg", background }: Props)
       flexDir={"column"}
       color="var(--chakra-colors-chakra-body-text)"
     >
-      <Container
-        // to be above the absolutely positioned background box
-        position="relative"
-        maxW={maxWidth}
-        pt={{ base: 6, md: 9 }}
-        pb={showFooter && 24}
-        px={{ base: 4, sm: 6, md: 8, lg: 10 }}
-      >
-        {children}
-      </Container>
+      {children}
     </Box>
   )
 }
