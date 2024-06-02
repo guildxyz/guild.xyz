@@ -9,7 +9,7 @@ import { Root } from "./components/Root"
 import { HeaderSection, MainSection } from "./components/Section"
 
 /**
- * A polymorphic composite component that generically displays the base of a page
+ * A polymorphic compound component that generically displays the base of a page
  * route.
  *
  * This could include:
