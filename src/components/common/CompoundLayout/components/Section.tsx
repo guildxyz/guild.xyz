@@ -18,11 +18,11 @@ type Props = PropsWithChildren<{
   // showFooter?: boolean
 }>
 
-interface GenericContainer extends Props {
+interface GenericSection extends Props {
   variant: "main" | "header"
 }
 
-export function MainContainer({ children, maxWidth = "container.lg" }: Props) {
+export function MainSection({ children, maxWidth = "container.lg" }: Props) {
   return (
     <Container
       position="relative"
@@ -35,7 +35,7 @@ export function MainContainer({ children, maxWidth = "container.lg" }: Props) {
   )
 }
 
-export function HeaderContainer({ children, maxWidth = "container.lg" }: Props) {
+export function HeaderSection({ children, maxWidth = "container.lg" }: Props) {
   return (
     <VStack
       position="relative"
@@ -50,13 +50,13 @@ export function HeaderContainer({ children, maxWidth = "container.lg" }: Props) 
   )
 }
 
-export function Section({ variant, ...rest }: GenericContainer) {
+export function Section({ variant, ...rest }: GenericSection) {
   switch (variant) {
     case "header": {
-      return <HeaderContainer {...rest} />
+      return <HeaderSection {...rest} />
     }
     case "main": {
-      return <MainContainer {...rest} />
+      return <MainSection {...rest} />
     }
     default: {
       throw new Error("Unhandled case:", variant)
