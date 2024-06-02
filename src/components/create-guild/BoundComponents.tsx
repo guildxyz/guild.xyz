@@ -29,13 +29,8 @@ export function BoundContent() {
     nextStepIsDisabled,
     setPart,
   } = useCreateGuildContext()
-  // const { control } = useFormContext<GuildFormType>()
-
-  // const name = useWatch({ name: "name" })
-  // const imageUrl = useWatch({ name: "imageUrl" })
   const contacts = useWatch({ name: "contacts" })
   const { captureEvent } = usePostHogContext()
-
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
   const isLastSubStep = STEPS[activeStep].progress.length === stepPart + 1
