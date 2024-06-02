@@ -9,6 +9,7 @@ import {
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../DefaultAddRewardPanelWrapper"
 
 export type AddGatherFormType = {
   gatherApiKey: string
@@ -58,17 +59,19 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <GatherForm />
+      <DefaultAddRewardPanelWrapper>
+        <GatherForm />
 
-      <Flex justifyContent={"flex-end"} mt="auto" pt="10">
-        <Button
-          isDisabled={!accessSuccess}
-          colorScheme="green"
-          onClick={methods.handleSubmit(onSubmit)}
-        >
-          Continue
-        </Button>
-      </Flex>
+        <Flex justifyContent={"flex-end"} mt="auto" pt="10">
+          <Button
+            isDisabled={!accessSuccess}
+            colorScheme="green"
+            onClick={methods.handleSubmit(onSubmit)}
+          >
+            Continue
+          </Button>
+        </Flex>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

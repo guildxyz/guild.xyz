@@ -5,9 +5,12 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
+import useRequirement from "components/[guild]/hooks/useRequirement"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
+import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
+import { useState } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
 
 function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
@@ -24,7 +27,19 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
   >
 
-  const { addresses, hideAllowlist } = requirement.data
+  const [search, setSearch] = useState("")
+  const debouncedSearch = useDebouncedState(search)
+
+  const { addresses: initialAddresses, hideAllowlist } = requirement.data
+
+  const willSearchAddresses = search !== debouncedSearch
+  const { data: req, isValidating: isSearchingAddresses } = useRequirement(
+    requirement?.roleId,
+    requirement?.id,
+    debouncedSearch
+  )
+
+  const addresses = req?.data?.addresses ?? initialAddresses
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -64,6 +79,8 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         isOpen={isOpen}
         onClose={onClose}
         title={isEmail ? "Email allowlist" : "Allowlist"}
+        onSearch={setSearch}
+        isSearching={isSearchingAddresses || willSearchAddresses}
       />
     </Requirement>
   )

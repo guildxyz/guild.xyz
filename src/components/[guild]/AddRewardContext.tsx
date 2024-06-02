@@ -12,8 +12,6 @@ import {
 } from "react"
 import { PlatformName } from "types"
 
-type AddRewardStep = "HOME" | "SELECT_ROLE"
-
 export enum RoleTypeToAddTo {
   EXISTING_ROLE,
   NEW_ROLE,
@@ -27,8 +25,9 @@ const AddRewardContext = createContext<{
   scrollToTop: () => void
   selection: PlatformName
   setSelection: (newSelection: PlatformName) => void
-  step: AddRewardStep
-  setStep: (newStep: AddRewardStep) => void
+  step: string
+  setStep: (newStep: string) => void
+  targetRoleId?: number
   activeTab: RoleTypeToAddTo
   setActiveTab: Dispatch<SetStateAction<RoleTypeToAddTo>>
   shouldShowCloseAlert: boolean
@@ -37,16 +36,19 @@ const AddRewardContext = createContext<{
   setIsBackButtonDisabled: Dispatch<SetStateAction<boolean>>
 }>(undefined)
 
-const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
+const AddRewardProvider = ({
+  targetRoleId,
+  children,
+}: PropsWithChildren<{ targetRoleId?: number }>) => {
   const modalRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
 
   const [selection, setSelectionOg] = useState<PlatformName>()
 
-  const [step, setStepOg] = useState<AddRewardStep>()
+  const [step, setStepOg] = useState<string>()
 
-  const setStep = (newStep: AddRewardStep) => {
+  const setStep = (newStep: string) => {
     setStepOg(newStep)
     scrollToTop()
   }
@@ -94,6 +96,7 @@ const AddRewardProvider = ({ children }: PropsWithChildren<unknown>) => {
         setSelection,
         step,
         setStep,
+        targetRoleId,
         activeTab,
         setActiveTab,
         shouldShowCloseAlert,

@@ -2,6 +2,7 @@ import processConnectorError from "components/[guild]/JoinModal/utils/processCon
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useMatchMutate from "hooks/useMatchMutate"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -19,6 +20,7 @@ const useCreateGuild = ({
   onSuccess?: () => void
 } = {}) => {
   const { captureEvent } = usePostHogContext()
+  const { rewardCreated } = useCustomPosthogEvents()
 
   const { mutate: mutateYourGuilds } = useYourGuilds()
   const matchMutate = useMatchMutate()
@@ -43,6 +45,12 @@ const useCreateGuild = ({
       triggerConfetti()
 
       captureEvent("guild creation flow > guild successfully created")
+
+      if (response_.guildPlatforms?.length > 0) {
+        response_.guildPlatforms.forEach((guildPlatform) => {
+          rewardCreated(guildPlatform.platformId, response_?.urlName)
+        })
+      }
 
       if (response_.guildPlatforms?.[0]?.platformId === PlatformType.CONTRACT_CALL) {
         captureEvent("Created NFT reward", {

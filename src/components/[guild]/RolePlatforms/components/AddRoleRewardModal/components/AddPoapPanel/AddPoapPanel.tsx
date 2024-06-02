@@ -23,6 +23,7 @@ import { useEffect } from "react"
 import { FormProvider, useController, useForm, useWatch } from "react-hook-form"
 import usePoapById from "requirements/Poap/hooks/usePoapById"
 import { PlatformGuildData, PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import UploadMintLinks from "./components/UploadMintLinks"
 
 export type ImportPoapForm = {
@@ -113,79 +114,81 @@ const AddPoapPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   return (
     <FormProvider {...methods}>
-      <Stack spacing={6}>
-        <Text colorScheme="gray" fontWeight="semibold">
-          Please create a new drop and request mint links on{" "}
-          <Link
-            href="https://drops.poap.xyz/en-GB/drop/create"
-            isExternal
-            colorScheme={rewards.POAP.colorScheme}
-          >
-            POAP.xyz
-          </Link>
-          , then import it below to distribute it with Guild!
-        </Text>
+      <DefaultAddRewardPanelWrapper>
+        <Stack spacing={6}>
+          <Text colorScheme="gray" fontWeight="semibold">
+            Please create a new drop and request mint links on{" "}
+            <Link
+              href="https://drops.poap.xyz/en-GB/drop/create"
+              isExternal
+              colorScheme={rewards.POAP.colorScheme}
+            >
+              POAP.xyz
+            </Link>
+            , then import it below to distribute it with Guild!
+          </Text>
 
-        <FormControl isInvalid={!!errors?.eventId}>
-          <FormLabel>
+          <FormControl isInvalid={!!errors?.eventId}>
+            <FormLabel>
+              <HStack>
+                <Text as="span">Event ID:</Text>
+                <Tooltip
+                  label="You can find the event ID next to the POAP drop image in the confirmation email"
+                  placement="top"
+                  hasArrow
+                >
+                  <Icon as={Question} color="GrayText" />
+                </Tooltip>
+              </HStack>
+            </FormLabel>
             <HStack>
-              <Text as="span">Event ID:</Text>
-              <Tooltip
-                label="You can find the event ID next to the POAP drop image in the confirmation email"
-                placement="top"
-                hasArrow
-              >
-                <Icon as={Question} color="GrayText" />
-              </Tooltip>
+              <InputGroup maxW={{ base: 40, sm: 52 }}>
+                <Input
+                  {...eventIdField}
+                  onChange={(e) => {
+                    if (!e.target.value) reset({ ...defaultValues, texts })
+                    eventIdField.onChange(e)
+                  }}
+                  placeholder="149863"
+                />
+                {isPoapByIdLoading && (
+                  <InputRightElement>
+                    <Spinner size="sm" />
+                  </InputRightElement>
+                )}
+              </InputGroup>
             </HStack>
-          </FormLabel>
-          <HStack>
-            <InputGroup maxW={{ base: 40, sm: 52 }}>
-              <Input
-                {...eventIdField}
-                onChange={(e) => {
-                  if (!e.target.value) reset({ ...defaultValues, texts })
-                  eventIdField.onChange(e)
-                }}
-                placeholder="149863"
-              />
-              {isPoapByIdLoading && (
-                <InputRightElement>
-                  <Spinner size="sm" />
-                </InputRightElement>
-              )}
-            </InputGroup>
-          </HStack>
 
-          <FormErrorMessage>{errors?.eventId?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors?.eventId?.message}</FormErrorMessage>
 
-          <Collapse in={!!poap && !isPoapByIdLoading}>
-            <HStack pt={2}>
-              <Img
-                src={`${poap?.image_url}?size=small`}
-                alt={poap?.name}
-                boxSize={6}
-                rounded="full"
-              />
-              <Text as="span" fontSize="sm" fontWeight="semibold" color="gray">
-                {poap?.name}
-              </Text>
-            </HStack>
-          </Collapse>
-        </FormControl>
+            <Collapse in={!!poap && !isPoapByIdLoading}>
+              <HStack pt={2}>
+                <Img
+                  src={`${poap?.image_url}?size=small`}
+                  alt={poap?.name}
+                  boxSize={6}
+                  rounded="full"
+                />
+                <Text as="span" fontSize="sm" fontWeight="semibold" color="gray">
+                  {poap?.name}
+                </Text>
+              </HStack>
+            </Collapse>
+          </FormControl>
 
-        <UploadMintLinks isOptional />
+          <UploadMintLinks isOptional />
 
-        <Button
-          colorScheme="indigo"
-          isDisabled={!eventIdField.value || !name?.length}
-          w="max-content"
-          ml="auto"
-          onClick={handleSubmit(onContinue)}
-        >
-          Continue
-        </Button>
-      </Stack>
+          <Button
+            colorScheme="indigo"
+            isDisabled={!eventIdField.value || !name?.length}
+            w="max-content"
+            ml="auto"
+            onClick={handleSubmit(onContinue)}
+          >
+            Continue
+          </Button>
+        </Stack>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

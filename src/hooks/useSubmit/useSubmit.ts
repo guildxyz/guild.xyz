@@ -5,7 +5,7 @@ import { type WalletUnlocked } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import useSWR from "swr"
 import { ValidationMethod } from "types"
 import {
@@ -46,8 +46,8 @@ const useSubmit = <DataType, ResponseType>(
   const [error, setError] = useState<any>(undefined)
   const [response, setResponse] = useState<ResponseType>(undefined)
 
-  return {
-    onSubmit: (data?: DataType): Promise<ResponseType> => {
+  const onSubmit = useCallback(
+    (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
       return fetch(data)
@@ -66,6 +66,11 @@ const useSubmit = <DataType, ResponseType>(
         })
         .finally(() => setIsLoading(false))
     },
+    [allowThrow, fetch, onError, onSuccess]
+  )
+
+  return {
+    onSubmit,
     response,
     isLoading,
     error,
@@ -94,7 +99,7 @@ const signCallbacks = [
   },
 ]
 
-type MessageParams = {
+export type MessageParams = {
   msg: string
   addr: string
   method: ValidationMethod
@@ -259,6 +264,7 @@ type SignBaseProps = {
   keyPair?: CryptoKeyPair
   msg?: string
   ts?: number
+  getMessageToSign?: (params: MessageParams) => string
 }
 
 export type SignProps = SignBaseProps & {
@@ -275,7 +281,7 @@ const createMessageParams = (
   payload: string
 ): MessageParams => ({
   addr: address.toLowerCase(),
-  nonce: randomBytes(32).toString("base64"),
+  nonce: randomBytes(32).toString("hex"),
   ts: ts.toString(),
   hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
   method: null,
@@ -365,6 +371,7 @@ export const sign = async ({
   forcePrompt,
   msg = DEFAULT_MESSAGE,
   ts,
+  getMessageToSign = getMessage,
 }: SignProps): Promise<[string, Validation]> => {
   const params = createMessageParams(address, ts ?? Date.now(), msg, payload)
   let sig = null
@@ -397,13 +404,13 @@ export const sign = async ({
     if (walletClient?.account?.type === "local") {
       // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
       sig = await walletClient.account.signMessage({
-        message: getMessage(params),
+        message: getMessageToSign(params),
       })
     } else {
       sig = await walletClient
         .signMessage({
           account: address,
-          message: getMessage(params),
+          message: getMessageToSign(params),
         })
         .catch((error) => {
           if (error instanceof UnauthorizedProviderError) {

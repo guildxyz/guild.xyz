@@ -1,23 +1,33 @@
-import { Collapse, Divider, Flex, Text } from "@chakra-ui/react"
+import { Collapse, Divider, Flex, Text, Tooltip } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { PlatformGuildData, PlatformType } from "types"
+import DefaultAddRewardPanelWrapper from "../../DefaultAddRewardPanelWrapper"
 import AddNewPointsType from "./components/AddNewPointsType"
 import ExistingPointsTypeSelect from "./components/ExistingPointsTypeSelect"
 import SetPointsAmount from "./components/SetPointsAmount"
 
 export type AddPointsFormType = {
   data: { guildPlatformId: number }
-  amount: string
   name: string
   imageUrl: string
+  platformRoleData?: { score: string }
+  dynamicAmount?: {
+    operation: {
+      input: { requirementId: number }
+      params: { multiplier: number }
+    }
+  }
 }
 
 const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   const { id, guildPlatforms } = useGuild()
+
+  const { targetRoleId } = useAddRewardContext()
 
   const existingPointsRewards = guildPlatforms.filter(
     (gp) => gp.platformId === PlatformType.POINTS
@@ -46,7 +56,11 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
   const name = selectedName ?? localName
   const imageUrl = selectedExistingId ? selectedImageUrl : localImageUrl // not just ?? so it doesn't stay localImageUrl if we upload an image then switch to an existing type without image
 
-  const onSubmit = (data: AddPointsFormType) =>
+  const formDynamicAmount = useWatch({ control, name: "dynamicAmount" })
+  const isContinueDisabled =
+    !!formDynamicAmount && !formDynamicAmount?.operation.input?.requirementId
+
+  const onSubmit = (data: AddPointsFormType) => {
     onAdd({
       ...(selectedExistingId
         ? {
@@ -71,45 +85,66 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
             },
           }),
       isNew: true,
-      platformRoleData: {
-        score: parseInt(data.amount),
-      },
+      roleId: targetRoleId,
+      ...(data?.dynamicAmount
+        ? { dynamicAmount: data?.dynamicAmount as any }
+        : {
+            platformRoleData: {
+              score: parseInt(data.platformRoleData.score),
+            },
+          }),
     })
+  }
 
   return (
     <FormProvider {...methods}>
-      <Text colorScheme="gray" fontWeight="semibold" mb="8">
-        Gamify your guild with a score system, so users can collect points / XP /
-        your custom branded score, and compete on a leaderboard. You’ll also be able
-        to set points based requirements for satisfying higher level roles!
-      </Text>
-      {!!existingPointsRewards.length && (
-        <ExistingPointsTypeSelect
-          existingPointsRewards={existingPointsRewards}
-          selectedExistingId={selectedExistingId}
-          showCreateNew
-          mb="5"
-        />
-      )}
-      <Collapse
-        in={!existingPointsRewards.length || selectedExistingId === null}
-        style={{ flexShrink: 0 }}
-      >
-        <AddNewPointsType
-          name={name}
-          imageUrl={imageUrl}
-          isOptional={!existingPointsRewards.length}
-        />
-        <Divider mt={8} mb={7} />
-      </Collapse>
+      <DefaultAddRewardPanelWrapper>
+        <Text colorScheme="gray" fontWeight="semibold" mb="8">
+          Gamify your guild with a score system, so users can collect points / XP /
+          your custom branded score, and compete on a leaderboard. You’ll also be
+          able to set points based requirements for satisfying higher level roles!
+        </Text>
+        {!!existingPointsRewards.length && (
+          <ExistingPointsTypeSelect
+            existingPointsRewards={existingPointsRewards}
+            selectedExistingId={selectedExistingId}
+            showCreateNew
+            mb="5"
+          />
+        )}
+        <Collapse
+          in={!existingPointsRewards.length || selectedExistingId === null}
+          style={{ flexShrink: 0 }}
+        >
+          <AddNewPointsType
+            name={name}
+            imageUrl={imageUrl}
+            isOptional={!existingPointsRewards.length}
+          />
+        </Collapse>
+        <Divider mt={8} mb={4} />
 
-      <SetPointsAmount {...{ imageUrl, name }} fieldName={"amount"} />
+        <SetPointsAmount {...{ imageUrl, name }} baseFieldPath="" />
 
-      <Flex justifyContent={"flex-end"} mt="auto" pt="10">
-        <Button colorScheme="green" onClick={methods.handleSubmit(onSubmit)}>
-          Continue
-        </Button>
-      </Flex>
+        <Flex justifyContent={"flex-end"} mt="auto" pt="10">
+          <Tooltip
+            label={
+              isContinueDisabled &&
+              "Please select a base value for dynamic reward calculation."
+            }
+            hasArrow
+            placement={"top"}
+          >
+            <Button
+              colorScheme="green"
+              isDisabled={isContinueDisabled}
+              onClick={methods.handleSubmit(onSubmit)}
+            >
+              Continue
+            </Button>
+          </Tooltip>
+        </Flex>
+      </DefaultAddRewardPanelWrapper>
     </FormProvider>
   )
 }

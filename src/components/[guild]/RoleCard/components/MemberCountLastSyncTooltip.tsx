@@ -2,19 +2,17 @@ import {
   Popover,
   PopoverArrow,
   PopoverContent,
-  PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
   Portal,
   TagRightIcon,
 } from "@chakra-ui/react"
-import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Info, UserSwitch } from "phosphor-react"
-import { useMemo } from "react"
+import { PropsWithChildren, useMemo } from "react"
 import fetcher from "utils/fetcher"
 import formatRelativeTimeFromNow, {
   DAY_IN_MS,
@@ -23,7 +21,10 @@ import formatRelativeTimeFromNow, {
 
 const HOUR_IN_MS = MINUTE_IN_MS * 60
 
-const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
+const MemberCountLastSyncTooltip = ({
+  lastSyncedAt,
+  children,
+}: PropsWithChildren<{ lastSyncedAt: string }>) => {
   const readableDate = useMemo(() => {
     if (!lastSyncedAt) return "unknown"
 
@@ -41,11 +42,6 @@ const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
 
     return formatRelativeTimeFromNow(timeDifference)
   }, [lastSyncedAt])
-
-  const { isSuperAdmin } = useUser()
-
-  /* temporarily only showing for superAdmins when lastSyncedAt is null, until we know what to communicate to admins in this case */
-  if (!lastSyncedAt && !isSuperAdmin) return null
 
   return (
     <Popover trigger="hover" placement="bottom" isLazy>
@@ -67,24 +63,14 @@ const MemberCountLastSyncTooltip = ({ lastSyncedAt, roleId }) => {
             fontSize={"sm"}
             fontWeight={"medium"}
           >{`Last updated all member accesses ${readableDate} ago`}</PopoverHeader>
-          {isSuperAdmin && (
-            <PopoverFooter
-              pt={0.5}
-              pb={3}
-              display="flex"
-              justifyContent={"flex-end"}
-              border={0}
-            >
-              <SyncRoleButton roleId={roleId} />
-            </PopoverFooter>
-          )}
+          {children}
         </PopoverContent>
       </Portal>
     </Popover>
   )
 }
 
-const SyncRoleButton = ({ roleId }) => {
+export const SyncRoleButton = ({ roleId }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 

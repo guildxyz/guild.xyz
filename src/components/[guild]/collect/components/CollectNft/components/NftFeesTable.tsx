@@ -1,27 +1,34 @@
-import { HStack, Skeleton, Td, Text, Tr } from "@chakra-ui/react"
+import { HStack, Skeleton, StackProps, Td, Text, Tr } from "@chakra-ui/react"
 import FeesTable from "components/[guild]/Requirements/components/GuildCheckout/components/FeesTable"
-import { useCollectNftContext } from "components/[guild]/collect/components/CollectNftContext"
+import {
+  CollectNftForm,
+  useCollectNftContext,
+} from "components/[guild]/collect/components/CollectNftContext"
+import { useWatch } from "react-hook-form"
 import { formatUnits } from "viem"
 import { CHAIN_CONFIG } from "wagmiConfig/chains"
-import useGuildFee from "../hooks/useGuildFee"
-import useNftDetails from "../hooks/useNftDetails"
+import useGuildFee from "../../../hooks/useGuildFee"
+import useNftDetails from "../../../hooks/useNftDetails"
 
-type Props = {
-  bgColor?: string
-}
-
-const CollectNftFeesTable = ({ bgColor }: Props) => {
+const NftFeesTable = ({ ...rest }: StackProps) => {
   const { chain, nftAddress } = useCollectNftContext()
+
+  const claimAmountFromForm = useWatch<CollectNftForm, "amount">({
+    name: "amount",
+  })
+  const claimAmount = claimAmountFromForm ?? 1
 
   const { guildFee } = useGuildFee(chain)
   const formattedGuildFee = guildFee
-    ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
+    ? Number(formatUnits(guildFee, CHAIN_CONFIG[chain].nativeCurrency.decimals)) *
+      claimAmount
     : undefined
 
   const { fee } = useNftDetails(chain, nftAddress)
   const formattedFee =
     typeof fee === "bigint"
-      ? Number(formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals))
+      ? Number(formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)) *
+        claimAmount
       : undefined
 
   const isFormattedGuildFeeLoaded = typeof formattedGuildFee === "number"
@@ -30,8 +37,8 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
   return (
     <FeesTable
       buttonComponent={
-        <HStack justifyContent={"space-between"} w="full">
-          <Text fontWeight={"medium"}>Minting fee:</Text>
+        <HStack justifyContent="space-between" w="full">
+          <Text fontWeight="medium">Collecting fee:</Text>
 
           <Text as="span">
             <Skeleton
@@ -50,25 +57,29 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
           </Text>
         </HStack>
       }
-      bgColor={bgColor}
+      {...rest}
     >
       <Tr>
-        <Td>Price</Td>
+        <Td>NFT price</Td>
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedFeeLoaded}>
             {isFormattedFeeLoaded
-              ? `${formattedFee} ${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
+              ? `${Number(formattedFee.toFixed(6))} ${
+                  CHAIN_CONFIG[chain].nativeCurrency.symbol
+                }`
               : "Loading"}
           </Skeleton>
         </Td>
       </Tr>
 
       <Tr>
-        <Td>Minting fee</Td>
+        <Td>Collecting fee</Td>
         <Td isNumeric>
           <Skeleton display="inline" isLoaded={isFormattedGuildFeeLoaded}>
             {isFormattedGuildFeeLoaded
-              ? `${formattedGuildFee} ${CHAIN_CONFIG[chain].nativeCurrency.symbol}`
+              ? `${Number(formattedGuildFee.toFixed(6))} ${
+                  CHAIN_CONFIG[chain].nativeCurrency.symbol
+                }`
               : "Loading"}
           </Skeleton>
         </Td>
@@ -96,4 +107,4 @@ const CollectNftFeesTable = ({ bgColor }: Props) => {
   )
 }
 
-export default CollectNftFeesTable
+export default NftFeesTable

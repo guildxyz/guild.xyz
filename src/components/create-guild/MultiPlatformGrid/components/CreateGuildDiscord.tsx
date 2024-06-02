@@ -1,19 +1,15 @@
 import {
   Box,
-  Button,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
 } from "@chakra-ui/react"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscordGuildSetup from "components/common/DiscordGuildSetup"
 import PermissionAlert from "components/common/DiscordGuildSetup/components/PermissionAlert"
-import { useState } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 import { GuildFormType, PlatformGuildData, PlatformType } from "types"
 
@@ -23,18 +19,11 @@ type Props = {
 }
 
 const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { captureEvent } = usePostHogContext()
   const { control } = useFormContext<GuildFormType>()
   const { append } = useFieldArray({
     control,
     name: "guildPlatforms",
   })
-
-  const [selectedServer, setSelectedServer] = useState<{
-    platformGuildId: string
-    img?: string
-    name?: string
-  }>()
 
   return (
     <Modal
@@ -63,31 +52,22 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
             }}
             py={4}
           >
-            <DiscordGuildSetup onSubmit={setSelectedServer} shouldHideGotItButton />
+            <DiscordGuildSetup
+              onSubmit={(selected) => {
+                append({
+                  platformName: "DISCORD",
+                  platformGuildId: selected?.id,
+                  platformId: PlatformType.DISCORD,
+                  platformGuildData: {
+                    name: selected?.name,
+                    imageUrl: selected?.img,
+                  } as PlatformGuildData["DISCORD"],
+                })
+                onClose()
+              }}
+            />
           </Box>
         </ModalBody>
-        <ModalFooter>
-          <Button
-            colorScheme="green"
-            isDisabled={!selectedServer?.platformGuildId}
-            onClick={() => {
-              captureEvent("[discord setup] server added")
-
-              append({
-                platformName: "DISCORD",
-                platformGuildId: selectedServer?.platformGuildId,
-                platformId: PlatformType.DISCORD,
-                platformGuildData: {
-                  name: selectedServer?.name,
-                  imageUrl: selectedServer?.img,
-                } as PlatformGuildData["DISCORD"],
-              })
-              onClose()
-            }}
-          >
-            Add
-          </Button>
-        </ModalFooter>
       </ModalContent>
     </Modal>
   )

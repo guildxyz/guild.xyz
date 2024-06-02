@@ -27,6 +27,8 @@ export type ZeroXSupportedSources = (typeof ZEROX_SUPPORTED_SOURCES)[number]
 
 export const GUILD_FEE_PERCENTAGE = 0.01
 
+export const MIN_TOKEN_AMOUNT = 0.000001
+
 export const ADDRESS_REGEX = /^0x[A-F0-9]{40}$/i
 export const NULL_ADDRESS: `0x${string}` =
   "0x0000000000000000000000000000000000000000"
@@ -222,6 +224,7 @@ export const GUILD_PIN_CONTRACTS = {
   MANTLE: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
   ONTOLOGY: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
   LINEA: "0x4205e56a69a0130a9e0828d45d0c84e45340a196",
+  CYBER: "0x13ec6b98362e43add08f7cc4f6befd02fa52ee01",
   SEPOLIA: "0xac49ee0c3bda5f851eac9a3184a21041e9afe379",
 } as const satisfies Partial<Record<Chain, `0x${string}`>>
 

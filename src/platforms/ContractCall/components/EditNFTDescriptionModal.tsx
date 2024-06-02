@@ -10,14 +10,14 @@ import {
   ModalOverlay,
   ModalProps,
 } from "@chakra-ui/react"
-import { Modal } from "../../../common/Modal"
-import React from "react"
-import { GuildPlatform } from "types"
-import { Controller, useForm } from "react-hook-form"
+import useEditGuildPlatform from "components/[guild]/AccessHub/hooks/useEditGuildPlatform"
+import RichTextDescriptionEditor from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
+import Button from "components/common/Button"
+import { Modal } from "components/common/Modal"
 import useToast from "hooks/useToast"
-import useEditGuildPlatform from "../../AccessHub/hooks/useEditGuildPlatform"
-import RichTextDescriptionEditor from "../../RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/RichTextDescriptionEditor"
-import Button from "../../../common/Button"
+import React from "react"
+import { Controller, useForm } from "react-hook-form"
+import { GuildPlatform } from "types"
 
 type ContentProps = {
   guildPlatform: GuildPlatform
@@ -28,8 +28,8 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
   guildPlatform: { id, platformGuildData },
   onClose,
 }) => {
-  const { formState, control, handleSubmit } = useForm({
-    defaultValues: { ...platformGuildData },
+  const { formState, control, handleSubmit } = useForm<{ description: string }>({
+    defaultValues: { description: platformGuildData.description },
   })
 
   const toast = useToast()
@@ -53,12 +53,12 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
         <FormControl isInvalid={!!formState.errors?.description}>
           <FormLabel>NFT description</FormLabel>
           <Controller
-            name={"description"}
+            name="description"
             control={control}
             rules={{ required: { value: true, message: "This field is required" } }}
             render={({ field }) => (
               <RichTextDescriptionEditor
-                minHeight={"100px"}
+                minHeight="100px"
                 defaultValue={field.value}
                 onChange={field.onChange}
               />
@@ -71,7 +71,7 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
       </ModalBody>
       <ModalFooter pt={0}>
         <Button
-          colorScheme={"green"}
+          colorScheme="green"
           isDisabled={!formState.isDirty || !formState.isValid}
           onClick={handleSubmit((data) => onSubmit({ platformGuildData: data }))}
           isLoading={isLoading}

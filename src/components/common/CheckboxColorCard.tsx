@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import ColorCard from "components/common/ColorCard"
 import { IconProps } from "phosphor-react"
-import { forwardRef, PropsWithChildren, useState } from "react"
+import { PropsWithChildren, forwardRef, useState } from "react"
 
 type Props = {
   colorScheme: string
@@ -23,7 +23,10 @@ type Props = {
   title: JSX.Element | string
   description?: string
   disabledText?: string
+  variant?: CheckboxColorCardVariant
 } & Omit<CheckboxProps, "icon" | "colorScheme" | "title">
+
+type CheckboxColorCardVariant = "solid" | "outline"
 
 const CheckboxColorCard = forwardRef(
   (
@@ -33,12 +36,17 @@ const CheckboxColorCard = forwardRef(
       title,
       description,
       disabledText,
+      variant = "solid",
       children,
       ...rest
     }: PropsWithChildren<Props>,
     ref: any
   ) => {
-    const iconBgColor = useColorModeValue("gray.200", "gray.600")
+    const iconBgColor = useColorModeValue(
+      "blackAlpha.200",
+      variant === "outline" ? "blackAlpha.300" : "gray.600"
+    )
+    const outlineVariantBgColor = useColorModeValue("white", "gray.800")
 
     const [isChecked, setIsChecked] = useState(rest.defaultChecked)
 
@@ -48,6 +56,21 @@ const CheckboxColorCard = forwardRef(
       <ColorCard
         color={isChecked ? `${colorScheme}.500` : "transparent"}
         transition="border-color 0.24s ease"
+        {...(variant === "solid"
+          ? {
+              borderWidth: 2,
+            }
+          : {
+              boxShadow: "none",
+              borderWidth: isChecked ? 2 : 1,
+              borderColor: isChecked ? `${colorScheme}.500` : "border",
+              bg: outlineVariantBgColor,
+              sx: {
+                "> div": {
+                  margin: isChecked ? 0 : "1px",
+                },
+              },
+            })}
       >
         <Stack spacing={0}>
           <Checkbox

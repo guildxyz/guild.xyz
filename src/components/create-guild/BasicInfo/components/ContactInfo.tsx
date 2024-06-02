@@ -146,7 +146,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
         {!showAddButton && (
           <Text fontSize="sm" colorScheme="gray">
             Or{" "}
-            <Link isExternal href="https://discord.gg/guildxyz">
+            <Link isExternal href="https://discord.gg/KUkghUdk2G">
               <Text as="span">join our Discord</Text>
               <Icon ml={1} as={ArrowSquareOut} />
             </Link>

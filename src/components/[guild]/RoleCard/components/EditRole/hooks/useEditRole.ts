@@ -1,5 +1,6 @@
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import { OneOf } from "types"
@@ -17,6 +18,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+  const { rewardCreated } = useCustomPosthogEvents()
 
   const submit = async (data: RoleEditFormData) => {
     const {
@@ -77,6 +79,14 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
     onSuccess: (result) => {
       const { updatedRole, updatedRolePlatforms, createdRolePlatforms } = result
 
+      if (createdRolePlatforms?.length > 0) {
+        createdRolePlatforms.forEach((rolePlatform) => {
+          if (rolePlatform?.createdGuildPlatform) {
+            rewardCreated(rolePlatform.createdGuildPlatform.platformId)
+          }
+        })
+      }
+
       const [failedRolePlatformUpdatesCount, failedRolePlatformCreationsCount] = [
         updatedRolePlatforms.filter((req) => !!req.error).length,
         createdRolePlatforms.filter((req) => !!req.error).length,
@@ -125,7 +135,7 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
       const updatedRolePlatformsById = mapToObject(successfulRolePlatformUpdates)
 
       const createdRolePlatformsToMutate = successfulRolePlatformCreations.map(
-        ({ createdGuildPlatform: _, ...rest }) => rest
+        ({ createdGuildPlatform: _, ...rest }) => ({ roleId: roleId, ...rest })
       )
 
       const createdGuildPlatforms = successfulRolePlatformCreations

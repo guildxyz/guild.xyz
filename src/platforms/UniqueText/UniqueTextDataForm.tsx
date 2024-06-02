@@ -40,7 +40,7 @@ const UniqueTextDataForm = ({
     name: "texts",
     rules: {
       validate: (value) => {
-        if (!shouldValidate) return
+        if (!shouldValidate || !value) return
         if (1000 < value.length) return "You can upload up to 1000 lines."
 
         const wrongIndex = value.findIndex((line) => 100 < line.length)

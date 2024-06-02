@@ -27,7 +27,7 @@ const CreateGuildContractCall = ({ isOpen, onClose }: Props): JSX.Element => {
       onClose={onClose}
       scrollBehavior="inside"
       colorScheme="dark"
-      size="3xl"
+      size={"4xl"}
     >
       <ModalOverlay />
       <ModalContent>
@@ -36,7 +36,7 @@ const CreateGuildContractCall = ({ isOpen, onClose }: Props): JSX.Element => {
         <ModalBody>
           <CreateNftForm
             onSuccess={(newGuildPlatform) => {
-              append(newGuildPlatform)
+              append(newGuildPlatform.guildPlatform)
               onClose()
             }}
           />

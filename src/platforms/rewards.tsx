@@ -49,7 +49,6 @@ import useGoogleCardProps from "./Google/useGoogleCardProps"
 import PoapCardButton from "./Poap/PoapCardButton"
 import PoapCardMenu from "./Poap/PoapCardMenu"
 import usePoapCardProps from "./Poap/usePoapCardProps"
-import PointsCardSettings from "./Points/PointsCardSettings"
 import usePointsCardProps from "./Points/usePointsCardProps"
 import PolygonIDCardButton from "./PolygonID/PolygonIDCardButton"
 import PolygonIDCardMenu from "./PolygonID/PolygonIDCardMenu"
@@ -71,8 +70,11 @@ export enum PlatformAsRewardRestrictions {
   MULTIPLE_ROLES, // e.g. Discord
 }
 
+/**
+ * "CONTRACT_CALL" is left out intentionally, because we store its capacity in the
+ * contract, so it isn't handled the same way as other platforms with capacity/time
+ */
 export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
-  "CONTRACT_CALL",
   "TEXT",
   "UNIQUE_TEXT",
   "POAP",
@@ -121,14 +123,24 @@ type RewardData = {
 export const modalSizeForPlatform = (platform: PlatformName) => {
   switch (platform) {
     case "ERC20":
+    case "POINTS":
       return "xl"
-    default:
+    case "UNIQUE_TEXT":
+    case "TEXT":
+      return "2xl"
+    case "POAP":
+      return "lg"
+    case "TELEGRAM":
+      return "md"
+    case "CONTRACT_CALL":
       return "4xl"
+    default:
+      return "3xl"
   }
 }
 
-const AddRewardPanelLoadingSpinner = () => (
-  <Center w="full" h="51vh">
+const AddRewardPanelLoadingSpinner = ({ height = "51vh" }: any) => (
+  <Center w="full" h={height}>
     <Spinner size="xl" thickness="4px" />
   </Center>
 )
@@ -406,7 +418,13 @@ const rewards: Record<PlatformName, RewardData> = {
     gatedEntity: "",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     cardPropsHook: usePointsCardProps,
-    cardSettingsComponent: PointsCardSettings,
+    cardSettingsComponent: dynamic(
+      () => import("platforms/Points/PointsCardSettings"),
+      {
+        ssr: false,
+        loading: () => <AddRewardPanelLoadingSpinner height={20} />,
+      }
+    ) as CardSettingsComponent,
     RewardPreview: dynamic(() => import("platforms/components/PointsPreview"), {
       ssr: false,
       loading: () => <RewardPreview isLoading />,

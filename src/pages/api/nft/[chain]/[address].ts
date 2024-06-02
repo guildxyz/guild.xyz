@@ -18,8 +18,8 @@ enum ContractInterface {
 export type NFTDetails = {
   creator: string
   name: string
-  totalCollectors: number
-  totalCollectorsToday?: number
+  totalSupply: bigint
+  totalCollectorsToday?: bigint
   standard: NftStandard
   image?: string
   description?: string
@@ -30,7 +30,7 @@ export type NFTDetails = {
 export type NFTDetailsAPIResponse = OneOf<
   Omit<
     NFTDetails,
-    "totalCollectors" | "totalCollectorsToday" | "description" | "image" | "fee"
+    "totalSupply" | "totalCollectorsToday" | "description" | "image" | "fee"
   >,
   { error: string }
 >

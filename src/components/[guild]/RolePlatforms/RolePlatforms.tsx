@@ -5,15 +5,24 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
+import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { GuildPlatformWithOptionalId, PlatformType, RoleFormType } from "types"
+import {
+  GuildPlatformWithOptionalId,
+  PlatformName,
+  PlatformType,
+  RoleFormType,
+  RolePlatform,
+} from "types"
 import AvailabilitySetup from "../AddRewardButton/components/AvailabilitySetup"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
+import DynamicTag from "../RoleCard/components/DynamicReward/DynamicTag"
 import SetVisibility from "../SetVisibility"
 import useVisibilityModalProps from "../SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "../hooks/useGuild"
 import AddRoleRewardModal from "./components/AddRoleRewardModal"
+import { ContractCallFunction } from "./components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import EditRolePlatformButton from "./components/EditRolePlatformButton"
 import PlatformCard from "./components/PlatformCard"
 import RemovePlatformButton from "./components/RemovePlatformButton"
@@ -84,7 +93,7 @@ const RolePlatforms = ({ roleId }: Props) => {
 }
 
 const RolePlatformsWrapper = (props: Props): JSX.Element => (
-  <AddRewardProvider>
+  <AddRewardProvider targetRoleId={props.roleId}>
     <RolePlatforms {...props} />
   </AddRewardProvider>
 )
@@ -109,18 +118,23 @@ const RolePlatformCard = ({
 
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
 
-  let guildPlatform: GuildPlatformWithOptionalId, type
+  let guildPlatform: GuildPlatformWithOptionalId, type: PlatformName
   if (rolePlatform.guildPlatformId) {
     guildPlatform = guildPlatforms.find(
       (platform) => platform.id === rolePlatform.guildPlatformId
     )
-    type = PlatformType[guildPlatform?.platformId]
+    type = PlatformType[guildPlatform?.platformId] as PlatformName
   } else {
     guildPlatform = rolePlatform.guildPlatform
     type = guildPlatform?.platformName
   }
 
   if (!type) return null
+
+  const isLegacyContractCallReward =
+    type === "CONTRACT_CALL" &&
+    guildPlatform.platformGuildData.function ===
+      ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
   const {
     cardPropsHook: useCardProps,
@@ -189,28 +203,44 @@ const RolePlatformCard = ({
           )
         }
         contentRow={
-          CAPACITY_TIME_PLATFORMS.includes(type) && (
-            <AvailabilitySetup
-              platformType={type}
-              rolePlatform={rolePlatform}
-              defaultValues={{
-                capacity: rolePlatform.capacity,
-                startTime: rolePlatform.startTime,
-                endTime: rolePlatform.endTime,
-              }}
-              onDone={({ capacity, startTime, endTime }) => {
-                setValue(`rolePlatforms.${index}.capacity`, capacity, {
-                  shouldDirty: true,
-                })
-                setValue(`rolePlatforms.${index}.startTime`, startTime, {
-                  shouldDirty: true,
-                })
-                setValue(`rolePlatforms.${index}.endTime`, endTime, {
-                  shouldDirty: true,
-                })
-              }}
-            />
-          )
+          <>
+            {CAPACITY_TIME_PLATFORMS.includes(type) || isLegacyContractCallReward ? (
+              <AvailabilitySetup
+                platformType={type}
+                rolePlatform={rolePlatform}
+                defaultValues={{
+                  capacity: rolePlatform.capacity,
+                  startTime: rolePlatform.startTime,
+                  endTime: rolePlatform.endTime,
+                }}
+                onDone={({ capacity, startTime, endTime }) => {
+                  setValue(`rolePlatforms.${index}.capacity`, capacity, {
+                    shouldDirty: true,
+                  })
+                  setValue(`rolePlatforms.${index}.startTime`, startTime, {
+                    shouldDirty: true,
+                  })
+                  setValue(`rolePlatforms.${index}.endTime`, endTime, {
+                    shouldDirty: true,
+                  })
+                }}
+              />
+            ) : type === "CONTRACT_CALL" ? (
+              <NftAvailabilityTags
+                guildPlatform={guildPlatform}
+                rolePlatform={rolePlatform}
+                mt={1}
+              />
+            ) : null}
+            {!!rolePlatform.dynamicAmount && (
+              <DynamicTag
+                rolePlatform={
+                  { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
+                }
+                mt={1}
+              />
+            )}
+          </>
         }
       />
     </RolePlatformProvider>

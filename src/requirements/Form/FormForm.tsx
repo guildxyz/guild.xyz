@@ -9,7 +9,7 @@ import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 
 const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const { id, guildPlatforms, featureFlags } = useGuild()
+  const { id, guildPlatforms } = useGuild()
   const formRewardIds =
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
@@ -30,24 +30,17 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
         value: form.id,
       })) ?? []
 
-  const isDisabled = !featureFlags?.includes("FORMS")
-
   return (
-    <FormControl
-      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
-      isDisabled={isDisabled}
-    >
+    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
       <FormLabel>Fill form:</FormLabel>
       <ControlledSelect
         name={`${baseFieldPath}.data.id`}
-        isDisabled={!forms || isDisabled}
+        isDisabled={!forms}
         isLoading={isLoading}
         options={formOptions}
       />
       <FormHelperText>
-        {isDisabled
-          ? "This feature is coming soon, it's not available in your guild yet"
-          : "You can create new forms in the add reward menu"}
+        You can create new forms in the add reward menu
       </FormHelperText>
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.id?.message}

@@ -24,6 +24,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
@@ -53,7 +54,7 @@ type Props = {
 
 const DynamicEditNFTDescriptionModalButton = dynamic(
   () =>
-    import("components/[guild]/RoleCard/components/EditNFTDescriptionModalButton"),
+    import("components/[guild]/collect/components/EditNFTDescriptionModalButton"),
   { ssr: false }
 )
 
@@ -64,22 +65,18 @@ const CollectNftPageContent = ({
   roleId,
   fallbackImage,
 }: Omit<Props, "urlName" | "fallback">) => {
-  const { theme, guildPlatforms, roles } = useGuild()
+  const { theme, roles } = useGuild()
   const { isAdmin } = useGuildPermission()
 
-  const guildPlatform = guildPlatforms.find((gp) => gp.id === guildPlatformId)
+  const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const role = roles.find((r) => r.id === roleId)
 
   const isMobile = useBreakpointValue({ base: true, md: false })
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const {
-    name,
-    image: imageFromHook,
-    totalCollectors,
-  } = useNftDetails(chain, address)
-  const image = fallbackImage || imageFromHook
+  const { name, image: imageFromHook, totalSupply } = useNftDetails(chain, address)
+  const image = imageFromHook || fallbackImage
 
   return (
     <Layout
@@ -92,7 +89,7 @@ const CollectNftPageContent = ({
         <HStack justifyContent="space-between">
           <GuildImageAndName />
           <ShareAndReportButtons
-            isPulseMarkerHidden={totalCollectors > 0}
+            isPulseMarkerHidden={totalSupply > 0}
             shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
             shareText={`Check out and collect this awesome ${
               name ? `${name} ` : " "

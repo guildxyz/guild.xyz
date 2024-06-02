@@ -4,6 +4,7 @@ import {
   PopoverArrow,
   PopoverBody,
   PopoverContent,
+  PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
   Portal,
@@ -12,43 +13,71 @@ import {
   Tag,
   TagLabel,
   TagLeftIcon,
+  TagProps,
   TagRightIcon,
   Text,
 } from "@chakra-ui/react"
 import { POPOVER_HEADER_STYLES } from "components/[guild]/Requirements/components/RequirementAccessIndicator"
+import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
+import useUser from "components/[guild]/hooks/useUser"
 import useActiveStatusUpdates from "hooks/useActiveStatusUpdates"
 import { Users } from "phosphor-react"
 import { PropsWithChildren } from "react"
+import MemberCountLastSyncTooltip, {
+  SyncRoleButton,
+} from "./MemberCountLastSyncTooltip"
 
 type Props = {
   memberCount: number
-  roleId?: number
   size?: "sm" | "md"
-}
+} & TagProps
 
 const MemberCount = ({
   memberCount,
-  roleId,
   size = "md",
   children,
+  ...rest
 }: PropsWithChildren<Props>) => {
-  const { status, data } = useActiveStatusUpdates(roleId)
-
   const iconSize = size === "sm" ? "14px" : "16px"
+
+  return (
+    <Tag
+      bg="unset"
+      color="gray"
+      mt="3px !important"
+      flexShrink={0}
+      size={size}
+      {...rest}
+    >
+      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
+      <TagLabel mb="-1px">
+        {new Intl.NumberFormat("en", { notation: "compact" }).format(
+          memberCount ?? 0
+        )}
+      </TagLabel>
+      {children}
+    </Tag>
+  )
+}
+
+type WithSyncProps = Props & {
+  roleId?: number
+}
+
+export const MemberCountWithSyncIndicator = ({
+  roleId,
+  ...rest
+}: PropsWithChildren<WithSyncProps>) => {
+  const { status, data } = useActiveStatusUpdates(roleId)
 
   if (status === "STARTED")
     return (
       <Popover trigger="hover" placement="bottom" isLazy>
         <PopoverTrigger>
-          <Tag colorScheme="blue" mt="2px !important" flexShrink={0} size={size}>
-            <TagLeftIcon as={Users} boxSize={iconSize} />
-            <TagLabel mb="-1px">
-              {new Intl.NumberFormat("en", { notation: "compact" }).format(
-                memberCount ?? 0
-              )}
-            </TagLabel>
+          <MemberCount colorScheme="blue" mt="2px !important" {...rest}>
             <TagRightIcon as={Spinner} />
-          </Tag>
+          </MemberCount>
         </PopoverTrigger>
         <Portal>
           <PopoverContent>
@@ -66,17 +95,7 @@ const MemberCount = ({
       </Popover>
     )
 
-  return (
-    <Tag bg="unset" color="gray" mt="3px !important" flexShrink={0} size={size}>
-      <TagLeftIcon as={Users} boxSize={iconSize} mr="1.5" />
-      <TagLabel mb="-1px">
-        {new Intl.NumberFormat("en", { notation: "compact" }).format(
-          memberCount ?? 0
-        )}
-      </TagLabel>
-      {children}
-    </Tag>
-  )
+  return <MemberCount mt="3px !important" {...rest} />
 }
 
 const StatusProgress = ({ data, status }) => {
@@ -96,6 +115,39 @@ const StatusProgress = ({ data, status }) => {
         {percentage.toFixed(0)}%
       </Text>
     </HStack>
+  )
+}
+
+export const RoleCardMemberCount = ({
+  memberCount,
+  roleId,
+  lastSyncedAt,
+}: PropsWithChildren<WithSyncProps & { lastSyncedAt: string }>) => {
+  const { featureFlags } = useGuild()
+  const { isAdmin } = useGuildPermission()
+  const { isSuperAdmin } = useUser()
+
+  return (
+    <MemberCountWithSyncIndicator memberCount={memberCount} roleId={roleId}>
+      {isSuperAdmin ? (
+        <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt}>
+          <PopoverFooter
+            pt={0.5}
+            pb={3}
+            display="flex"
+            justifyContent={"flex-end"}
+            border={0}
+          >
+            <SyncRoleButton roleId={roleId} />
+          </PopoverFooter>
+        </MemberCountLastSyncTooltip>
+      ) : isAdmin &&
+        featureFlags.includes("PERIODIC_SYNC") &&
+        /* temporarily only showing for superAdmins when lastSyncedAt is null, until we know what to communicate to admins in this case */
+        lastSyncedAt ? (
+        <MemberCountLastSyncTooltip lastSyncedAt={lastSyncedAt} />
+      ) : null}
+    </MemberCountWithSyncIndicator>
   )
 }
 

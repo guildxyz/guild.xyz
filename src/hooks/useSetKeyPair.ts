@@ -7,8 +7,32 @@ import { useEffect } from "react"
 import { mutate } from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
 import { recaptchaAtom, shouldUseReCAPTCHAAtom } from "utils/recaptcha"
+import { checksumAddress } from "viem"
 import useSubmit from "./useSubmit"
-import { SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
+import { MessageParams, SignProps, UseSubmitOptions } from "./useSubmit/useSubmit"
+
+function getSiweMessage({
+  addr,
+  method,
+  nonce: nonceRandom,
+  ts,
+  chainId,
+  hash,
+}: MessageParams) {
+  const nonce = `${hash}${nonceRandom}${method ?? 1}`
+
+  // Indentation is important inside the string, extra indentation would be extra whitespace in the string
+  return `guild.xyz wants you to sign in with your Ethereum account:
+${checksumAddress(addr as `0x${string}`)}
+
+Sign in Guild.xyz
+
+URI: https://guild.xyz
+Version: 1
+Chain ID: ${chainId ?? 1}
+Nonce: ${nonce}
+Issued At: ${new Date(+ts).toISOString()}`
+}
 
 /**
  * This is a generic RPC internal error code, but we are only using it for testing
@@ -118,8 +142,9 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
           body,
           signOptions: {
             forcePrompt: true,
-            msg: "Please sign this message, so we can generate, and assign you a signing key pair. This is needed so you don't have to sign every Guild interaction.",
+            msg: "Sign in Guild.xyz",
             ...signProps,
+            getMessageToSign: getSiweMessage,
           },
         },
       ])

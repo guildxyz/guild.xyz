@@ -1,16 +1,18 @@
 import { ButtonProps } from "@chakra-ui/react"
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
+import useGuildFee from "components/[guild]/collect/hooks/useGuildFee"
+import useGuildRewardNftBalanceByUserId from "components/[guild]/collect/hooks/useGuildRewardNftBalanceByUserId"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
-import useNftBalance from "hooks/useNftBalance"
 import useShowErrorToast from "hooks/useShowErrorToast"
+import { useWatch } from "react-hook-form"
 import { useAccount, useBalance } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
-import useCollectNft from "../hooks/useCollectNft"
-import { useCollectNftContext } from "./CollectNftContext"
+import useCollectNft from "../../../hooks/useCollectNft"
+import { CollectNftForm, useCollectNftContext } from "../../CollectNftContext"
 
 type Props = {
   label?: string
@@ -47,9 +49,11 @@ const CollectNftButton = ({
         }),
     })
 
+  const amount = useWatch<CollectNftForm>({ name: "amount" })
+  const { guildFee } = useGuildFee(chain)
   const { fee, isLoading: isNftDetailsLoading } = useNftDetails(chain, nftAddress)
 
-  const { isLoading: isNftBalanceLoading } = useNftBalance({
+  const { isLoading: isNftBalanceLoading } = useGuildRewardNftBalanceByUserId({
     nftAddress,
     chainId: Chains[chain],
   })
@@ -58,8 +62,10 @@ const CollectNftButton = ({
   })
 
   const isSufficientBalance =
-    typeof fee === "bigint" && coinBalanceData
-      ? coinBalanceData.value > fee
+    typeof guildFee === "bigint" &&
+    typeof fee === "bigint" &&
+    typeof coinBalanceData?.value === "bigint"
+      ? coinBalanceData.value > (fee + guildFee) * BigInt(amount ?? 0)
       : undefined
 
   const isLoading =

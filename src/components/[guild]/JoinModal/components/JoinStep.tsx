@@ -3,16 +3,20 @@ import Button from "components/common/Button"
 import { PropsWithChildren } from "react"
 import JoinStepIndicator from "./JoinStepIndicator"
 
-type Props = {
+type JoinStepUIProps = {
   title: string
   titleRightElement?: JSX.Element
-  buttonLabel: string | JSX.Element
   isRequired?: boolean
+  isDone: boolean
+}
+
+type JoinStepProps = {
+  buttonLabel: string | JSX.Element
   isDisabled?: string
   icon: JSX.Element
   colorScheme: string
-  isDone: boolean
-} & Omit<ButtonProps, "isDisabled">
+} & JoinStepUIProps &
+  Omit<ButtonProps, "isDisabled">
 
 const JoinStep = ({
   title,
@@ -24,22 +28,8 @@ const JoinStep = ({
   isDone,
   children,
   ...buttonProps
-}: PropsWithChildren<Props>) => (
-  <HStack>
-    <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
-
-    <HStack w="full">
-      <Text fontWeight="bold" noOfLines={1}>
-        {title}
-        {isRequired && (
-          <Text as="span" color="red.300">
-            {` *`}
-          </Text>
-        )}
-      </Text>
-      {titleRightElement}
-    </HStack>
-
+}: PropsWithChildren<JoinStepProps>) => (
+  <JoinStepUI {...{ isDone, title, titleRightElement, isRequired }}>
     <Tooltip
       isDisabled={!buttonProps.isDisabled}
       label={buttonProps.isDisabled}
@@ -57,7 +47,31 @@ const JoinStep = ({
         {buttonLabel}
       </Button>
     </Tooltip>
+    {children}
+  </JoinStepUI>
+)
 
+export const JoinStepUI = ({
+  isDone,
+  title,
+  isRequired,
+  titleRightElement,
+  children,
+}: PropsWithChildren<JoinStepUIProps>) => (
+  <HStack>
+    <JoinStepIndicator status={isDone ? "DONE" : "INACTIVE"} />
+
+    <HStack w="full">
+      <Text fontWeight="bold" noOfLines={1}>
+        {title}
+        {isRequired && (
+          <Text as="span" color="red.300">
+            {` *`}
+          </Text>
+        )}
+      </Text>
+      {titleRightElement}
+    </HStack>
     {children}
   </HStack>
 )

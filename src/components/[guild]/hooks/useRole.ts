@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable"
-import { SimpleRole } from "types"
+import { Role } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import useGuild from "./useGuild"
 
@@ -15,13 +15,13 @@ const useRole = (guildId: number | string, roleId: number) => {
   const shouldFetch = !!guildId && !!roleId && !isFromCurrentGuild
 
   const { data: unauthenticatedData, isLoading: isUnauthenticatedRequestLoading } =
-    useSWRImmutable<SimpleRole>(shouldFetch ? url : null, {
+    useSWRImmutable<Role>(shouldFetch ? url : null, {
       shouldRetryOnError: false,
     })
 
   const fetcherWithSign = useFetcherWithSign()
   const { data: authenticatedData, isLoading: isAuthenticatedRequestLoading } =
-    useSWRImmutable<SimpleRole>(
+    useSWRImmutable<Role>(
       shouldFetch && !isUnauthenticatedRequestLoading && !unauthenticatedData
         ? [url, { method: "GET", body: {} }]
         : null,

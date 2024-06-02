@@ -6,87 +6,66 @@ import {
   AccordionPanel,
   Alert,
   AlertIcon,
-  Divider,
   HStack,
   Heading,
   Icon,
+  IconButton,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Stack,
   Text,
   Tooltip,
+  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
+import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import Card from "components/common/Card"
-import { Lightning, Question, X } from "phosphor-react"
+import dynamic from "next/dynamic"
+import { Lightning, PencilSimple, Question } from "phosphor-react"
 import { Requirement, RolePlatform } from "types"
-import TokenConversionTag from "./TokenConversionTag"
+import DynamicRewardCalculationTable from "./DynamicRewardCalculationTable"
 
-const SnapshotRequirementDetails = ({
-  requirement,
-  rolePlatform,
-}: {
-  requirement?: Requirement
-  rolePlatform: RolePlatform
-}) => {
-  const dynamicAmount: any = rolePlatform.dynamicAmount.operation
+const EditModalDynamic = dynamic(
+  () => import("platforms/Token/EditDynamicRewardModal")
+)
 
-  return (
-    <>
-      <HStack mb="3">
-        <Heading fontSize="md">Linked to requirement</Heading>
-        <Tooltip
-          label="Your received token amount is calculated from the points with your addresses on this snapshot. "
-          placement="bottom"
-          hasArrow
-        >
-          <Icon as={Question} color="GrayText" />
-        </Tooltip>
-      </HStack>
-      <Stack>
-        {requirement !== undefined && (
-          <Card px={4} py={2}>
-            <RequirementDisplayComponent requirement={requirement as Requirement} />
-          </Card>
-        )}
-        {!requirement && (
-          <Alert status="warning">
-            <AlertIcon mt={0} /> This reward is not linked to any specific
-            requirements and therefore will not distribute any tokens.
-          </Alert>
-        )}
-      </Stack>
-
-      <Stack mt={8}>
-        <HStack>
-          <Heading fontSize="md">With conversion</Heading>
-          <Tooltip
-            label="Your claimable token amount is determined by applying a conversion function to your points from the snapshot."
-            placement="bottom"
-            hasArrow
-          >
-            <Icon as={Question} color="GrayText" />
-          </Tooltip>
-        </HStack>
-
-        <HStack gap={1}>
-          <TokenConversionTag platform={rolePlatform} />
-          <Text fontWeight={"semibold"} ml="auto" colorScheme="gray" fontSize="sm">
-            Multiplier:
-          </Text>
-          <Icon boxSize={3} as={X} />
-          <Text fontWeight={"semibold"} mr={2} fontSize="sm">
-            {dynamicAmount.params.multiplier}
-          </Text>
-        </HStack>
-      </Stack>
-    </>
-  )
-}
+const LinkedRequirement = ({ requirement }: { requirement?: Requirement }) => (
+  <Stack gap={0}>
+    <HStack mb="3">
+      <Heading fontSize="md">Linked to value</Heading>
+      <Tooltip
+        label="For dynamic rewards, the reward amount is calculated from a base value, originated from a requirement. "
+        placement="bottom"
+        hasArrow
+      >
+        <Icon as={Question} color="GrayText" />
+      </Tooltip>
+    </HStack>
+    <Stack>
+      {requirement !== undefined && (
+        <Card px={4} py={2}>
+          <RequirementDisplayComponent
+            requirement={requirement as Requirement}
+            dynamicDisplay
+            rightElement={null}
+          />
+        </Card>
+      )}
+      {!requirement && (
+        <Alert status="warning">
+          <AlertIcon mt={0} /> This reward is not linked to any specific requirements
+          and therefore it's amount will always be 0.
+        </Alert>
+      )}
+    </Stack>
+  </Stack>
+)
 
 const DynamicRewardModal = ({
   isOpen,
@@ -99,31 +78,59 @@ const DynamicRewardModal = ({
   linkedRequirement?: Requirement
   rolePlatform: RolePlatform
 }) => {
+  const { isAdmin } = useGuildPermission()
+
   const handleClose = () => {
     onClose()
   }
 
+  const {
+    isOpen: editIsOpen,
+    onClose: editOnClose,
+    onOpen: editOnOpen,
+  } = useDisclosure()
+  const footerBg = useColorModeValue("blackAlpha.100", "blackAlpha.600")
+
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalCloseButton />
-        <ModalHeader>
-          <Text>
-            <Icon color="green.500" boxSize={4} weight="fill" as={Lightning} />{" "}
-            Dynamic Reward
-          </Text>
-        </ModalHeader>
+    <>
+      <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
+        <ModalOverlay />
+        <ModalContent>
+          {isAdmin && (
+            <IconButton
+              position={"absolute"}
+              icon={<PencilSimple size={18} weight="regular" />}
+              aria-label="Edit dynamic parameters"
+              rounded="full"
+              right={16}
+              top={7}
+              size={"sm"}
+              variant={"ghost"}
+              onClick={() => {
+                onClose()
+                editOnOpen()
+              }}
+            />
+          )}
+          <ModalCloseButton />
+          <ModalHeader>
+            <Text>
+              <Icon color="green.500" boxSize={4} weight="fill" as={Lightning} />{" "}
+              Dynamic Reward
+            </Text>
+          </ModalHeader>
 
-        <ModalBody>
-          <SnapshotRequirementDetails
-            rolePlatform={rolePlatform}
-            requirement={linkedRequirement}
-          />
-
-          <Stack mt="8">
-            <Divider mb={1} mt={3} />
-            <Accordion allowToggle>
+          <ModalBody>
+            <Stack spacing={6}>
+              <LinkedRequirement requirement={linkedRequirement} />
+              <DynamicRewardCalculationTable
+                requirement={linkedRequirement}
+                rolePlatform={rolePlatform}
+              />
+            </Stack>
+          </ModalBody>
+          <ModalFooter pt={6} pb={6} bg={footerBg} border={"none"}>
+            <Accordion allowToggle w="full">
               <AccordionItem border={"none"}>
                 <AccordionButton
                   display={"flex"}
@@ -146,10 +153,18 @@ const DynamicRewardModal = ({
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>
-          </Stack>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+      {isAdmin && (
+        <EditModalDynamic
+          isOpen={editIsOpen}
+          onClose={editOnClose}
+          rolePlatform={rolePlatform}
+        />
+      )}
+    </>
   )
 }
 

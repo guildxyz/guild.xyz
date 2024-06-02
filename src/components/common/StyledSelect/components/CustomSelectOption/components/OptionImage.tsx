@@ -11,7 +11,7 @@ const OptionImage = ({ img, alt, ...rest }: Props): JSX.Element => (
     <Image
       w="full"
       h="full"
-      {...(!img?.includes(".svg") && {
+      {...(!img?.includes?.(".svg") && {
         objectFit: "cover",
         rounded: "full",
       })}

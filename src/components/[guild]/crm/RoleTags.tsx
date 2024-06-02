@@ -7,6 +7,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Skeleton,
   Tag,
   TagLabel,
   TagProps,
@@ -14,24 +15,24 @@ import {
   useColorModeValue,
   Wrap,
 } from "@chakra-ui/react"
-import { Column } from "@tanstack/react-table"
 import Button from "components/common/Button"
 import { Funnel } from "phosphor-react"
-import { Visibility } from "types"
+import { memo } from "react"
+import { Role, Visibility } from "types"
 import pluralize from "utils/pluralize"
 import ClickableTagPopover from "../activity/ActivityLogAction/components/ClickableTagPopover"
 import ViewRole from "../activity/ActivityLogAction/components/ClickableTagPopover/components/ViewRole"
 import useGuild from "../hooks/useGuild"
-import useRequirements from "../hooks/useRequirements"
 import RoleTag from "../RoleTag"
-import { CrmRole, Member } from "./useMembers"
+import { CrmRole } from "./useMembers"
 
 type Props = {
   roles: CrmRole[]
-  column: Column<Member, CrmRole>
+  setFilterValue: () => void
 }
 
-const RoleTags = ({ roles, column }: Props) => {
+const RoleTags = memo(({ roles, setFilterValue }: Props) => {
+  const { roles: rolesData, isDetailed } = useGuild()
   const renderedRoles = roles?.slice(0, 3)
   const moreRolesCount = roles?.length - 3
   const moreRoles = moreRolesCount > 0 && roles?.slice(-moreRolesCount)
@@ -39,13 +40,15 @@ const RoleTags = ({ roles, column }: Props) => {
   const moreRolesTagBorderColorVar = useColorModeValue("gray-300", "whiteAlpha-300")
 
   if (!renderedRoles?.length) return <Text>-</Text>
+  if (!rolesData || !isDetailed) return <Skeleton w="70%" h="5" />
 
   return (
     <HStack>
       {renderedRoles.map(({ roleId, requirementId, amount }) => (
         <CrmTbodyRoleTag
           key={requirementId ?? roleId}
-          {...{ roleId, amount, column }}
+          role={rolesData.find((r) => r.id === roleId) as any}
+          {...{ amount, setFilterValue }}
         />
       ))}
       {moreRolesCount > 0 && (
@@ -76,7 +79,7 @@ const RoleTags = ({ roles, column }: Props) => {
                 {moreRoles?.slice(0, 15).map(({ roleId, requirementId, amount }) => (
                   <CrmRoleTag
                     key={requirementId ?? roleId}
-                    roleId={roleId}
+                    role={rolesData.find((r) => r.id === roleId) as any}
                     amount={amount}
                   />
                 ))}
@@ -87,24 +90,18 @@ const RoleTags = ({ roles, column }: Props) => {
       )}
     </HStack>
   )
-}
-
-// TODO: move child components to separate files
+})
 
 type RoleTagProps = {
-  roleId: number
+  role: Role
   amount?: number
-  column?: Column<Member, CrmRole>
+  setFilterValue?: (updater: any) => void
 } & TagProps
 
-const CrmTbodyRoleTag = forwardRef<RoleTagProps, "span">(
-  ({ roleId, amount, ...rest }, _ref) => {
-    const { roles } = useGuild()
-    const role = roles.find((r) => r.id === roleId)
+const CrmTbodyRoleTag = memo(
+  forwardRef<RoleTagProps, "span">(({ role, amount, ...rest }, _ref) => {
     const tdBg = useColorModeValue(`gray.50`, "#3A3A40")
     const borderColor = useColorModeValue(`white`, "gray.500")
-
-    if (!role) return null
 
     return (
       <Box
@@ -115,17 +112,32 @@ const CrmTbodyRoleTag = forwardRef<RoleTagProps, "span">(
             maxWidth: "300px",
             transition: "max-width .2s, opacity 0s 0s",
             boxShadow: "lg",
+            borderColor,
             zIndex: 2,
           },
         }}
       >
-        <CrmRoleTag
-          roleId={roleId}
-          amount={amount}
-          minW="70px"
+        {/**
+         * Dummy element to calculate the min space in the DOM (the actual tag is absolute so
+         * it can expand). Used an actual CrmRoleTag for it before but was too expensive
+         * performance-wise
+         */}
+        <Box
+          h="6"
+          pl="7"
+          pr="2"
+          border="1px solid transparent"
+          fontWeight={"medium"}
+          minW="65px"
+          opacity={0}
           maxW="max-content"
-          {...rest}
-        />
+          overflow="hidden"
+          noOfLines={1}
+        >
+          {`${role.name} ${
+            typeof amount === "number" ? `- ${Number(amount.toFixed(2))}` : ""
+          }`}
+        </Box>
 
         <Box
           className="roleTagOverlay"
@@ -133,33 +145,33 @@ const CrmTbodyRoleTag = forwardRef<RoleTagProps, "span">(
           top="-1px"
           left="-1px"
           zIndex="1"
-          opacity={0}
+          minW="65px"
           maxWidth="calc(100% + 2px)" // +2px for the border
           width="max-content"
           borderWidth={"1px"}
-          borderColor={borderColor}
+          borderColor="transparent"
           bg={tdBg}
           borderRadius={7}
           transition={"max-width .2s, opacity 0s .2s"}
           onClick={(e) => e.stopPropagation()}
         >
-          <ClickableCrmRoleTag roleId={roleId} amount={amount} {...rest} />
+          <ClickableCrmRoleTag
+            role={role}
+            amount={amount}
+            shouldRenderPortal
+            {...rest}
+          />
         </Box>
       </Box>
     )
-  }
+  })
 )
 
-const CrmRoleTag = forwardRef<RoleTagProps, "span">(
-  ({ roleId, amount: amountProp, ...rest }, ref) => {
-    const { roles } = useGuild()
-    const role = roles.find((r) => r.id === roleId)
-
-    const { data: requirements } = useRequirements(role?.id)
-
+export const CrmRoleTag = memo(
+  forwardRef<RoleTagProps, "span">(({ role, amount: amountProp, ...rest }, ref) => {
     if (!role) return null
 
-    const amount = requirements?.length === 1 ? amountProp : undefined
+    const amount = role.requirements?.length === 1 ? amountProp : undefined
 
     return (
       <RoleTag
@@ -171,33 +183,36 @@ const CrmRoleTag = forwardRef<RoleTagProps, "span">(
         {...rest}
       />
     )
-  }
+  })
 )
 
-export const ClickableCrmRoleTag = ({
-  roleId,
-  column,
-  onFilter,
-  ...tagProps
-}: RoleTagProps & { onFilter?: () => void }) => (
-  <ClickableTagPopover
-    options={
-      <>
-        <FilterByCrmRole {...{ roleId, column, onFilter }} />
-        <ViewRole roleId={roleId} page="activity" />
-        <ViewRole roleId={roleId} />
-      </>
-    }
-    shouldRenderPortal={false}
-  >
-    <CrmRoleTag roleId={roleId} cursor="pointer" {...tagProps} />
-  </ClickableTagPopover>
+export const ClickableCrmRoleTag = memo(
+  ({
+    role,
+    setFilterValue,
+    onFilter,
+    shouldRenderPortal = false,
+    ...tagProps
+  }: RoleTagProps & { onFilter?: () => void; shouldRenderPortal?: boolean }) => (
+    <ClickableTagPopover
+      options={
+        <>
+          <FilterByCrmRole roleId={role.id} {...{ setFilterValue, onFilter }} />
+          <ViewRole roleId={role.id} page="activity" />
+          <ViewRole roleId={role.id} />
+        </>
+      }
+      shouldRenderPortal={shouldRenderPortal}
+    >
+      <CrmRoleTag role={role} cursor="pointer" {...tagProps} />
+    </ClickableTagPopover>
+  )
 )
 
-const FilterByCrmRole = ({ roleId, column, onFilter }) => {
+const FilterByCrmRole = memo(({ roleId, setFilterValue, onFilter }: any) => {
   const onClick = () => {
     onFilter?.()
-    column.setFilterValue((prevValue) => ({
+    setFilterValue((prevValue) => ({
       ...prevValue,
       roleIds: [roleId],
     }))
@@ -215,6 +230,6 @@ const FilterByCrmRole = ({ roleId, column, onFilter }) => {
       Filter by role
     </Button>
   )
-}
+})
 
 export default RoleTags

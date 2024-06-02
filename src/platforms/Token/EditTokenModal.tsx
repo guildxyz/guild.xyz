@@ -6,6 +6,7 @@ import {
   AccordionPanel,
   Divider,
   HStack,
+  Icon,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -21,17 +22,21 @@ import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershi
 import { AddTokenFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
 import ConversionInput from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/components/ConversionInput"
 import useGuild from "components/[guild]/hooks/useGuild"
+import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import SnapshotModal from "components/[guild]/leaderboard/Snapshots/SnapshotModal"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { SectionTitle } from "components/common/Section"
+import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import useEditRequirement from "components/create-guild/Requirements/hooks/useEditRequirement"
 import useToast from "hooks/useToast"
+import { Star } from "phosphor-react"
 import { useTokenRewardContext } from "platforms/Token/TokenRewardContext"
-import { useMemo, useState } from "react"
+import { ReactNode, useMemo, useState } from "react"
 import { FormProvider, useForm } from "react-hook-form"
+import Token from "static/icons/token.svg"
 import DynamicTypeForm from "./DynamicTypeForm"
 import useRolePlatformsOfReward from "./hooks/useRolePlatformsOfReward"
 
@@ -43,7 +48,11 @@ const EditTokenModal = ({
   onClose: () => void
 }) => {
   const {
+    token: {
+      data: { symbol },
+    },
     guildPlatform: { id },
+    imageUrl,
   } = useTokenRewardContext()
 
   const [changeSnapshot, setChangeSnapshot] = useState(false)
@@ -57,10 +66,24 @@ const EditTokenModal = ({
   const rolePlatforms = useRolePlatformsOfReward(id)
 
   const role = roles.find((rl) =>
-    rl.rolePlatforms.find((rp) => rp.id === rolePlatforms[0].id)
+    rl.rolePlatforms.find((rp) => rp.id === rolePlatforms?.[0]?.id)
   )
-  const { data: requirements } = useRequirements(role.id)
+  const { data: requirements } = useRequirements(role?.id)
   const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
+  const pointsPlatformId: number = snapshotRequirement?.data?.guildPlatformId
+
+  const { guildPlatform: selectedPointsPlatform } =
+    useGuildPlatform(pointsPlatformId)
+
+  const pointsPlatformImage: ReactNode = selectedPointsPlatform?.platformGuildData
+    ?.imageUrl ? (
+    <OptionImage
+      img={selectedPointsPlatform?.platformGuildData?.imageUrl}
+      alt={selectedPointsPlatform?.platformGuildData?.name ?? "Point type image"}
+    />
+  ) : (
+    <Icon as={Star} />
+  )
 
   const { captureEvent } = usePostHogContext()
   const postHogOptions = {
@@ -69,8 +92,8 @@ const EditTokenModal = ({
   }
 
   const multiplier = useMemo(() => {
-    const rp: any = rolePlatforms[0]
-    return rp.dynamicAmount.operation.params.multiplier
+    const rp: any = rolePlatforms?.[0]
+    return rp ? rp.dynamicAmount.operation.params.multiplier : 1.0
   }, [rolePlatforms])
 
   const {
@@ -83,11 +106,11 @@ const EditTokenModal = ({
 
   const { onSubmit: submitEditRolePlatform, isLoading: rpIsLoading } =
     useEditRolePlatform({
-      rolePlatformId: rolePlatforms[0].id,
+      rolePlatformId: rolePlatforms?.[0]?.id,
       onSuccess: () => {
         captureEvent("editToken(EditRolePlatform) Updated role platform", {
           ...postHogOptions,
-          rolePlatformId: rolePlatforms[0].id,
+          rolePlatformId: rolePlatforms?.[0]?.id,
         })
         toast({
           status: "success",
@@ -97,11 +120,11 @@ const EditTokenModal = ({
     })
 
   const { onSubmit: submitEditRequirement, isLoading: reqIsLoading } =
-    useEditRequirement(role.id, {
+    useEditRequirement(role?.id, {
       onSuccess: () => {
         captureEvent("editToken(EditRequirement) Updated requirement", {
           ...postHogOptions,
-          roleId: role.id,
+          roleId: role?.id,
         })
         toast({
           status: "success",
@@ -110,7 +133,7 @@ const EditTokenModal = ({
       },
     })
 
-  const { onSubmit: onRequirementSubmit } = useCreateRequirement(role.id, {
+  const { onSubmit: onRequirementSubmit } = useCreateRequirement(role?.id, {
     onSuccess: () => {
       toast({
         status: "success",
@@ -135,7 +158,7 @@ const EditTokenModal = ({
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const onEditSubmit = async (data) => {
-    const modifiedRolePlatform: any = { ...rolePlatforms[0] }
+    const modifiedRolePlatform: any = { ...rolePlatforms?.[0] }
 
     // Create new snapshot if currently does not exist
     if (!snapshotRequirement) {
@@ -219,7 +242,18 @@ const EditTokenModal = ({
                 <Divider />
                 <Stack gap={0}>
                   <SectionTitle title={"Change conversion"} mb={2} />
-                  <ConversionInput defaultValue={multiplier.toString()} />
+                  <ConversionInput
+                    name="multiplier"
+                    toImage={
+                      imageUrl ? (
+                        <OptionImage img={imageUrl} alt={symbol} />
+                      ) : (
+                        <Token />
+                      )
+                    }
+                    fromImage={pointsPlatformImage}
+                    defaultMultiplier={multiplier}
+                  />
                 </Stack>
 
                 <Button
