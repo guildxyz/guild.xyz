@@ -9,22 +9,22 @@ import {
 } from "components/create-guild/BoundComponents"
 import { CreateGuildProvider } from "components/create-guild/CreateGuildContext"
 
-const CreateGuildPage = (): JSX.Element => {
-  return (
-    <>
-      <Layout.Root>
+const CreateGuildPage = (): JSX.Element => (
+  <>
+    <Layout.Root>
+      <BoundHead />
+      <Layout.Section variant="header">
+        <BoundBackground />
         <Layout.Header />
-        <Layout.Container>
-          <BoundHead />
-          <BoundBackground />
-          <BoundHeadline />
-          <BoundContent />
-        </Layout.Container>
-      </Layout.Root>
-      <BoundDynamicDevTool />
-    </>
-  )
-}
+        <BoundHeadline />
+      </Layout.Section>
+      <Layout.Section variant="main">
+        <BoundContent />
+      </Layout.Section>
+    </Layout.Root>
+    <BoundDynamicDevTool />
+  </>
+)
 
 // <Layout
 //   title={name || "Create Guild"}

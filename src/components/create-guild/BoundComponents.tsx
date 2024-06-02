@@ -20,7 +20,7 @@ export function BoundDynamicDevTool() {
 }
 
 export function BoundContent() {
-  const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
+  const { textColor, localThemeColor } = useThemeContext()
   const {
     activeStep,
     setActiveStep,

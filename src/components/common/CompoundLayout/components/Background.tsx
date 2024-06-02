@@ -1,8 +1,6 @@
-import { Box, BoxProps, useColorMode } from "@chakra-ui/react"
-import { ReactNode, useRef, useState } from "react"
-import Image from "next/image"
+import { Box, BoxProps } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
-import useIsomorphicLayoutEffect from "hooks/useIsomorphicLayoutEffect"
+import Image from "next/image"
 
 type Props = {
   image?: JSX.Element
@@ -27,8 +25,8 @@ export const Background = ({
   backgroundProps,
   backgroundOffset,
 }: Props) => {
-  const childrenWrapper = useRef(null)
-  const [bgHeight, setBgHeight] = useState("0")
+  // const childrenWrapper = useRef(null)
+  // const [bgHeight, setBgHeight] = useState("0")
   const colorContext = useThemeContext()
 
   // useIsomorphicLayoutEffect(() => {
@@ -55,7 +53,7 @@ export const Background = ({
         top={0}
         left={0}
         w="full"
-        h={bgHeight}
+        h={`calc(100% + ${backgroundOffset}px)`}
         background={"gray.900"}
       >
         {backgroundImage ? (

@@ -1,12 +1,12 @@
 import BackButton from "./components/BackButton"
 import { Background } from "./components/Background"
-import { Container } from "./components/Container"
 import { Content } from "./components/Content"
 import { Footer } from "./components/Footer"
 import { Head } from "./components/Head"
 import { Header } from "./components/Header"
 import { Headline } from "./components/Headline"
 import { Root } from "./components/Root"
+import { Section } from "./components/Section"
 
 export const Layout = {
   Root,
@@ -17,5 +17,5 @@ export const Layout = {
   Content,
   BackButton,
   Headline,
-  Container,
+  Section,
 }

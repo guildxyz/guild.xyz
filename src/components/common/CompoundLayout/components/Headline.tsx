@@ -15,16 +15,30 @@ type Props = {
   // backgroundImage?: string
   // backgroundOffset?: number
   // backButton?: JSX.Element
-  // maxWidth?: string
+  maxWidth?: string
   // showFooter?: boolean
 }
 
-export const Headline = ({ image, title, description, action }: Props) => {
+export const Headline = ({
+  image,
+  title,
+  description,
+  action,
+  maxWidth = "container.lg",
+}: Props) => {
   const { textColor } = useThemeContext()
 
   return (
     (image || title || description) && (
-      <VStack spacing={{ base: 7, md: 10 }} pb={{ base: 9, md: 14 }} w="full">
+      <VStack
+        spacing={{ base: 7, md: 10 }}
+        pb={{ base: 9, md: 14 }}
+        w="full"
+        maxWidth={maxWidth}
+        zIndex={1}
+        pt={{ base: 6, md: 9 }}
+        px={{ base: 4, sm: 6, md: 8, lg: 10 }}
+      >
         <HStack justify="space-between" w="full" spacing={3}>
           <HStack alignItems="center" spacing={{ base: 4, lg: 5 }}>
             {image}
