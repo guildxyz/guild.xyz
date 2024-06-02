@@ -77,25 +77,9 @@ export function BoundContent() {
 
 export function BoundHead() {
   const name = useWatch({ name: "name" })
-  const { textColor } = useThemeContext()
   const imageUrl = useWatch({ name: "imageUrl" })
 
-  return (
-    <Layout.Head
-      title={name || "Create Guild"}
-      image={
-        imageUrl && (
-          <GuildLogo
-            imageUrl={imageUrl}
-            size={{ base: "56px", lg: "72px" }}
-            mt={{ base: 1, lg: 2 }}
-            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-          />
-        )
-      }
-      imageUrl={imageUrl}
-    />
-  )
+  return <Layout.Head title={name || "Create Guild"} imageUrl={imageUrl} />
 }
 
 export function BoundHeadline() {
