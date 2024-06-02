@@ -15,7 +15,7 @@ export const Background = ({
   background,
   backgroundImage,
   backgroundProps,
-  backgroundOffset,
+  backgroundOffset = 128,
 }: Props) => {
   const colorContext = useThemeContext()
 

@@ -54,7 +54,7 @@ export const Layout = {
   /**
    * `HeaderSection` component that displays an adjustable background
    * 
-   * By default fills the area of `HeaderSection`
+   * Fills the area of `HeaderSection` + `backgroundOffset`
    */
   Background,
   /**
