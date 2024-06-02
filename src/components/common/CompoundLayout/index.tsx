@@ -9,7 +9,8 @@ import { Root } from "./components/Root"
 import { HeaderSection, MainSection } from "./components/Section"
 
 /**
- * A polymorphic composite component that generically displays the base of a page route.
+ * A polymorphic composite component that generically displays the base of a page
+ * route.
  *
  * This could include:
  *
@@ -19,29 +20,29 @@ import { HeaderSection, MainSection } from "./components/Section"
  * - Footer
  * - Page title, description
  * - HTML head elements
+ * - Margins and alignments
  *
  * ## Anatomy
- * 
+ *
  * @example
- * 
- * ```tsx
- *   <Layout.Root>
- *     <Layout.Head />
- *     <Layout.HeaderSection>
- *       <Layout.Background />
- *       <Layout.Header />
- *       <Layout.Headline />
- *     </Layout.HeaderSection>
- *     <Layout.MainSection>
- *       <Layout.Content />
- *     </Layout.MainSection>
- *   </Layout.Root>
- * ```
+ *   const Page = () => (
+ *     <Layout.Root>
+ *       <Layout.Head />
+ *       <Layout.HeaderSection>
+ *         <Layout.Background />
+ *         <Layout.Header />
+ *         <Layout.Headline />
+ *       </Layout.HeaderSection>
+ *       <Layout.MainSection>
+ *         <Layout.Content />
+ *       </Layout.MainSection>
+ *     </Layout.Root>
+ *   )
  */
 export const Layout = {
   /**
    * Top level component of `Layout`
-   * 
+   *
    * Intended to be used on an empty page route
    *
    * For specifing `maxWidth` property, use `sizes.container.<size>`
@@ -53,25 +54,20 @@ export const Layout = {
   Head,
   /**
    * `HeaderSection` component that displays an adjustable background
-   * 
+   *
    * Fills the area of `HeaderSection` + `backgroundOffset`
    */
   Background,
-  /**
-   * Main content of the page that `Layout` wraps around
-   */
+  /** Main content of the page that `Layout` wraps around */
   Content,
   BackButton,
   /**
-   * `HeaderSection` component that displays page title, description and other information
+   * `HeaderSection` component that displays page title, description and other
+   * information
    */
   Headline,
-  /**
-   * Wraps main page content
-   */
+  /** Wraps main page content */
   MainSection,
-  /**
-   * Wraps top-level page content
-   */
+  /** Wraps top-level page content */
   HeaderSection,
 }
