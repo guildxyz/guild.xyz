@@ -1,0 +1,1 @@
+export const LAYOUT_MAX_WIDTH_CSS_VAR = '--layout-max-width'

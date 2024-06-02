@@ -1,6 +1,8 @@
 import { Box, HStack, Heading, VStack } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { ReactNode } from "react"
+import { callCssVariable } from "../callCssVariable"
+import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 type Props = {
   image?: JSX.Element
@@ -15,17 +17,11 @@ type Props = {
   // backgroundImage?: string
   // backgroundOffset?: number
   // backButton?: JSX.Element
-  maxWidth?: string
+  // maxWidth?: string
   // showFooter?: boolean
 }
 
-export const Headline = ({
-  image,
-  title,
-  description,
-  action,
-  maxWidth = "container.lg",
-}: Props) => {
+export const Headline = ({ image, title, description, action }: Props) => {
   const { textColor } = useThemeContext()
 
   return (
@@ -34,7 +30,7 @@ export const Headline = ({
         spacing={{ base: 7, md: 10 }}
         pb={{ base: 9, md: 14 }}
         w="full"
-        maxWidth={maxWidth}
+        maxWidth={callCssVariable(LAYOUT_MAX_WIDTH_CSS_VAR)}
         zIndex={1}
         pt={{ base: 6, md: 9 }}
         px={{ base: 4, sm: 6, md: 8, lg: 10 }}
