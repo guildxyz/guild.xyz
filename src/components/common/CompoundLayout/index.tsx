@@ -6,7 +6,7 @@ import { Head } from "./components/Head"
 import { Header } from "./components/Header"
 import { Headline } from "./components/Headline"
 import { Root } from "./components/Root"
-import { Section } from "./components/Section"
+import { HeaderSection, MainSection } from "./components/Section"
 
 /**
  * A polymorphic composite component that generically displays the base of a page route.
@@ -27,14 +27,14 @@ import { Section } from "./components/Section"
  * ```tsx
  *   <Layout.Root>
  *     <Layout.Head />
- *     <Layout.Section variant="header">
+ *     <Layout.HeaderSection>
  *       <Layout.Background />
  *       <Layout.Header />
  *       <Layout.Headline />
- *     </Layout.Section>
- *     <Layout.Section variant="main">
+ *     </Layout.HeaderSection>
+ *     <Layout.MainSection>
  *       <Layout.Content />
- *     </Layout.Section>
+ *     </Layout.MainSection>
  *   </Layout.Root>
  * ```
  */
@@ -52,8 +52,9 @@ export const Layout = {
   /** `NextHead` wrapper for page metadata */
   Head,
   /**
-   * Displays an adjustable background that by default extends from top of `Section`
-   * to top of `Content`
+   * `HeaderSection` component that displays an adjustable background
+   * 
+   * By default fills the area of `HeaderSection`
    */
   Background,
   /**
@@ -62,8 +63,15 @@ export const Layout = {
   Content,
   BackButton,
   /**
-   * Header component that displays page title, description and other information
+   * `HeaderSection` component that displays page title, description and other information
    */
   Headline,
-  Section,
+  /**
+   * Wraps main page content
+   */
+  MainSection,
+  /**
+   * Wraps top-level page content
+   */
+  HeaderSection,
 }

@@ -7,10 +7,6 @@ interface SectionProps {
   children: ReactNode
 }
 
-interface GenericSection extends SectionProps {
-  variant: "main" | "header"
-}
-
 export function MainSection({ children }: SectionProps) {
   return (
     <Container
@@ -29,18 +25,4 @@ export function HeaderSection({ children }: SectionProps) {
       {children}
     </VStack>
   )
-}
-
-export function Section({ variant, ...rest }: GenericSection) {
-  switch (variant) {
-    case "header": {
-      return <HeaderSection {...rest} />
-    }
-    case "main": {
-      return <MainSection {...rest} />
-    }
-    default: {
-      throw new Error("Unhandled case:", variant)
-    }
-  }
 }

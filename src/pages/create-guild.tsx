@@ -13,14 +13,14 @@ const CreateGuildPage = (): JSX.Element => (
   <>
     <Layout.Root>
       <BoundHead />
-      <Layout.Section variant="header">
+      <Layout.HeaderSection>
         <BoundBackground />
         <Layout.Header />
         <BoundHeadline />
-      </Layout.Section>
-      <Layout.Section variant="main">
+      </Layout.HeaderSection>
+      <Layout.MainSection>
         <BoundContent />
-      </Layout.Section>
+      </Layout.MainSection>
     </Layout.Root>
     <BoundDynamicDevTool />
   </>
