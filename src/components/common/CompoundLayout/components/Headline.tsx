@@ -6,19 +6,9 @@ import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 type Props = {
   image?: JSX.Element
-  // imageUrl?: string
   title?: JSX.Element | string
-  // ogTitle?: string
-  // ogDescription?: string
   description?: JSX.Element
   action?: ReactNode | undefined
-  // background?: string
-  // backgroundProps?: BoxProps
-  // backgroundImage?: string
-  // backgroundOffset?: number
-  // backButton?: JSX.Element
-  // maxWidth?: string
-  // showFooter?: boolean
 }
 
 export const Headline = ({ image, title, description, action }: Props) => {

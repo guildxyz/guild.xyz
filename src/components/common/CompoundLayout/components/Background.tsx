@@ -5,18 +5,10 @@ import Image from "next/image"
 type Props = {
   image?: JSX.Element
   imageUrl?: string
-  // title?: JSX.Element | string
-  // ogTitle?: string
-  // ogDescription?: string
-  // description?: JSX.Element
-  // action?: ReactNode | undefined
   background?: string
   backgroundProps?: BoxProps
   backgroundImage?: string
   backgroundOffset?: number
-  // backButton?: JSX.Element
-  // maxWidth?: string
-  // showFooter?: boolean
 }
 
 export const Background = ({
@@ -25,26 +17,7 @@ export const Background = ({
   backgroundProps,
   backgroundOffset,
 }: Props) => {
-  // const childrenWrapper = useRef(null)
-  // const [bgHeight, setBgHeight] = useState("0")
   const colorContext = useThemeContext()
-
-  // useIsomorphicLayoutEffect(() => {
-  //   if ((!background && !backgroundImage) || !childrenWrapper?.current) return
-  //
-  //   const rect = childrenWrapper.current.getBoundingClientRect()
-  //   setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
-  // }, [
-  //   title,
-  //   description,
-  //   background,
-  //   backgroundImage,
-  //   childrenWrapper?.current,
-  //   action,
-  //   backgroundOffset,
-  // ])
-
-  // const { colorMode } = useColorMode()
 
   return (
     (background || backgroundImage) && (

@@ -1,24 +1,11 @@
 import { Container, VStack } from "@chakra-ui/react"
-import { PropsWithChildren } from "react"
+import { ReactNode } from "react"
 import { callCssVariable } from "../callCssVariable"
 import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
-type SectionProps = PropsWithChildren<{
-  // image?: JSX.Element
-  // imageUrl?: string
-  // title?: JSX.Element | string
-  // ogTitle?: string
-  // ogDescription?: string
-  // description?: JSX.Element
-  // action?: ReactNode | undefined
-  // background?: string
-  // backgroundProps?: BoxProps
-  // backgroundImage?: string
-  // backgroundOffset?: number
-  // backButton?: JSX.Element
-  // maxWidth?: string
-  // showFooter?: boolean
-}>
+interface SectionProps {
+  children: ReactNode
+}
 
 interface GenericSection extends SectionProps {
   variant: "main" | "header"
@@ -29,7 +16,6 @@ export function MainSection({ children }: SectionProps) {
     <Container
       position="relative"
       maxW={callCssVariable(LAYOUT_MAX_WIDTH_CSS_VAR)}
-      // pt={{ base: 6, md: 9 }}
       px={{ base: 4, sm: 6, md: 8, lg: 10 }}
     >
       {children}
