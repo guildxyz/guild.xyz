@@ -8,20 +8,11 @@ import {
   Tag,
   TagLeftIcon,
   Text,
-  Wrap,
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
 import Card from "components/common/Card"
-import {
-  CaretDown,
-  Check,
-  Copy,
-  Download,
-  MagnifyingGlass,
-  SortAscending,
-  SortDescending,
-} from "phosphor-react"
+import { CaretDown, Check, Copy, Download } from "phosphor-react"
 import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
@@ -29,7 +20,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import { ExportData, crmOrderByParams } from "./useExports"
+import ExportParamsTags from "./ExportParamsTags"
+import { ExportData } from "./useExports"
 
 const ExportCard = ({ exp }: { exp: ExportData }) => {
   const date = new Date(exp.createdAt)
@@ -56,33 +48,7 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
                   : `${since} ago`}
               </Text>
             </HStack>
-            <Wrap spacing={1}>
-              {exp.data.params.search && (
-                <Tag>
-                  <TagLeftIcon as={MagnifyingGlass} />
-                  {exp.data.params.search}
-                </Tag>
-              )}
-              {exp.data.params.roleIds.length > 0 && (
-                <Tag>
-                  {Array.isArray(exp.data.params.roleIds)
-                    ? `${exp.data.params.roleIds.length} roles`
-                    : "1 role"}
-                </Tag>
-              )}
-              {exp.data.params.order && (
-                <Tag>
-                  <TagLeftIcon
-                    as={
-                      exp.data.params.sortOrder === "desc"
-                        ? SortDescending
-                        : SortAscending
-                    }
-                  />
-                  {crmOrderByParams[exp.data.params.order]}
-                </Tag>
-              )}
-            </Wrap>
+            <ExportParamsTags {...exp.data.params} />
           </Box>
           {exp.status === "FINISHED" ? (
             <>
