@@ -13,7 +13,7 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
-import { ArrowsClockwise, Export, Info } from "phosphor-react"
+import { ArchiveBox, ArrowsClockwise, Info } from "phosphor-react"
 import ExportCard from "./ExportCard"
 import useExportMembers from "./useExportMembers"
 import useExports from "./useExports"
@@ -34,17 +34,18 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
       <ModalContent>
         <ModalCloseButton />
         <ModalHeader>Export members</ModalHeader>
-        <ModalBody>
+        <ModalBody pt="1">
           <Button
             colorScheme="blue"
             w="full"
             onClick={startExport}
             isLoading={isStartExportLoading}
             loadingText="Starting export"
-            leftIcon={<Export />}
+            leftIcon={<ArchiveBox />}
             mb="8"
             variant="subtle"
-            // borderWidth={2}
+            borderWidth={2}
+            borderColor="blue.500"
             size="xl"
           >
             Export currently filtered
