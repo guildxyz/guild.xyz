@@ -54,8 +54,6 @@ const DCServerCard = ({
 
   const isUsedInCurrentGuild = serverData.isGuilded && serverData.guildId === id
 
-  if (isUsedInCurrentGuild) return null
-
   return (
     <CardMotionWrapper>
       <OptionCard
@@ -64,13 +62,13 @@ const DCServerCard = ({
         description={serverData.owner ? "Owner" : "Admin"}
         image={serverData.img || "/default_discord_icon.png"}
       >
-        {isSelected ? (
+        {!isUsedInCurrentGuild && isSelected ? (
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
-        ) : isValidating ? (
+        ) : !isUsedInCurrentGuild && isValidating ? (
           <Button isLoading />
-        ) : serverData.isGuilded ? (
+        ) : !isUsedInCurrentGuild && serverData.isGuilded ? (
           <Button
             as={Link}
             href={`/${serverData.guildId}`}
