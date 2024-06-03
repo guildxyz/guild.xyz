@@ -16,7 +16,7 @@ const Members = ({ members }: Props): JSX.Element => {
 
   const adminsSet = useMemo(
     () => new Set(admins?.map((admin) => admin.address) ?? []),
-    [admins],
+    [admins]
   )
 
   const sortedMembers = useMemo(
@@ -36,20 +36,20 @@ const Members = ({ members }: Props): JSX.Element => {
         // Otherwise don't sort
         return -1
       }) || [],
-    [members, ownerAddress, adminsSet],
+    [members, ownerAddress, adminsSet]
   )
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
   const membersEl = useRef(null)
   const disableRendering = useMemo(
     () => members?.length <= renderedMembersCount,
-    [members, renderedMembersCount],
+    [members, renderedMembersCount]
   )
   useScrollBatchedRendering(
     BATCH_SIZE,
     membersEl,
     disableRendering,
-    setRenderedMembersCount,
+    setRenderedMembersCount
   )
 
   const renderedMembers = sortedMembers?.slice(0, renderedMembersCount) || []

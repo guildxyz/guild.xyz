@@ -54,18 +54,18 @@ const Leaderboard = () => {
       : null,
     { revalidateOnMount: true },
     false,
-    false,
+    false
   )
 
   const disableRendering = useMemo(
     () => data?.leaderboard?.length <= renderedUsersCount,
-    [data, renderedUsersCount],
+    [data, renderedUsersCount]
   )
   useScrollBatchedRendering(
     BATCH_SIZE,
     wrapperRef,
     disableRendering,
-    setRenderedUsersCount,
+    setRenderedUsersCount
   )
 
   const userData = data?.aroundUser?.find((user) => user.userId === userId)
@@ -215,7 +215,7 @@ const LeaderboardWrapper = (): JSX.Element => {
   const { guildPlatforms, error } = useGuild()
 
   const hasPointsReward = guildPlatforms?.some(
-    (gp) => gp.platformId === PlatformType.POINTS,
+    (gp) => gp.platformId === PlatformType.POINTS
   )
 
   if (error || (guildPlatforms && !hasPointsReward))

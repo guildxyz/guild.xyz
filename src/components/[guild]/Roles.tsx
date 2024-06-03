@@ -13,7 +13,7 @@ import useRoleGroup from "./hooks/useRoleGroup"
 const BATCH_SIZE = 5
 
 const DynamicAddRoleCard = dynamic(
-  () => import("components/[guild]/[group]/AddRoleCard"),
+  () => import("components/[guild]/[group]/AddRoleCard")
 )
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
@@ -23,14 +23,14 @@ const Roles = () => {
 
   const group = useRoleGroup()
   const roles = allRoles.filter((role) =>
-    !!group ? role.groupId === group.id : !role.groupId,
+    !!group ? role.groupId === group.id : !role.groupId
   )
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
     if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount,
+        (role1, role2) => role2.memberCount - role1.memberCount
       )
       return byMembers
     }
@@ -45,23 +45,23 @@ const Roles = () => {
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN,
+    (role) => role.visibility !== Visibility.HIDDEN
   )
   const hiddenRoles = sortedRoles.filter(
-    (role) => role.visibility === Visibility.HIDDEN,
+    (role) => role.visibility === Visibility.HIDDEN
   )
 
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useRef(null)
   const disableRendering = useMemo(
     () => roles?.length <= renderedRolesCount,
-    [roles, renderedRolesCount],
+    [roles, renderedRolesCount]
   )
   useScrollBatchedRendering(
     BATCH_SIZE,
     rolesEl,
     disableRendering,
-    setRenderedRolesCount,
+    setRenderedRolesCount
   )
 
   return (

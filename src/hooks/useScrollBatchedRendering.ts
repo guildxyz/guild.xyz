@@ -5,7 +5,7 @@ export function useScrollBatchedRendering(
   batchSize: number,
   scrollTarget: MutableRefObject<HTMLElement | null>,
   disableRendering: boolean,
-  setElementCount: Dispatch<SetStateAction<number>>,
+  setElementCount: Dispatch<SetStateAction<number>>
 ) {
   useScrollEffect(() => {
     if (

@@ -57,7 +57,7 @@ const useExploreGuilds = (query, guildsInitial) => {
       return url
     },
     isSuperAdmin ? fetcherWithSign : (options as any),
-    isSuperAdmin ? options : null,
+    isSuperAdmin ? options : null
   )
 }
 
@@ -78,7 +78,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   })
   const stuckTabsBg = useColorModeValue(
     "linear-gradient(white 0px, var(--chakra-colors-gray-50) 100%)",
-    "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)",
+    "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)"
   )
   // needed so there's no transparent state in dark mode when the input is becoming stuck
   const searchBg = useColorModeValue("white", "gray.800")
