@@ -86,14 +86,9 @@ const ExportControls = ({ filename }) => {
     false,
     true
   )
-  const csvContent = encodeURI("data:text/csv;charset=utf-8," + data)
 
-  const {
-    onCopy,
-    // setValue: setBackup,
-    // value: backup,
-    hasCopied,
-  } = useClipboard(data, 4000)
+  const { onCopy, hasCopied } = useClipboard(data, 4000)
+  const csvContent = encodeURI("data:text/csv;charset=utf-8," + data)
 
   return (
     <Box p="4">
