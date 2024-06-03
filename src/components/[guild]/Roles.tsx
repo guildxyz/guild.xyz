@@ -3,7 +3,7 @@ import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useScrollEffect from "hooks/useScrollEffect"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"
 import { useMemo, useRef, useState } from "react"
 import { Visibility } from "types"
@@ -13,7 +13,7 @@ import useRoleGroup from "./hooks/useRoleGroup"
 const BATCH_SIZE = 5
 
 const DynamicAddRoleCard = dynamic(
-  () => import("components/[guild]/[group]/AddRoleCard")
+  () => import("components/[guild]/[group]/AddRoleCard"),
 )
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
@@ -23,14 +23,14 @@ const Roles = () => {
 
   const group = useRoleGroup()
   const roles = allRoles.filter((role) =>
-    !!group ? role.groupId === group.id : !role.groupId
+    !!group ? role.groupId === group.id : !role.groupId,
   )
 
   // temporary, will order roles already in the SQL query in the future
   const sortedRoles = useMemo(() => {
     if (roles?.every((role) => role.position === null)) {
       const byMembers = roles?.sort(
-        (role1, role2) => role2.memberCount - role1.memberCount
+        (role1, role2) => role2.memberCount - role1.memberCount,
       )
       return byMembers
     }
@@ -45,25 +45,24 @@ const Roles = () => {
   }, [roles])
 
   const publicRoles = sortedRoles.filter(
-    (role) => role.visibility !== Visibility.HIDDEN
+    (role) => role.visibility !== Visibility.HIDDEN,
   )
   const hiddenRoles = sortedRoles.filter(
-    (role) => role.visibility === Visibility.HIDDEN
+    (role) => role.visibility === Visibility.HIDDEN,
   )
 
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
   const rolesEl = useRef(null)
-  useScrollEffect(() => {
-    if (
-      !rolesEl.current ||
-      rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      roles?.length <= renderedRolesCount
-    )
-      return
-
-    setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [roles, renderedRolesCount])
+  const disableRendering = useMemo(
+    () => roles?.length <= renderedRolesCount,
+    [roles, renderedRolesCount],
+  )
+  useScrollBatchedRendering(
+    BATCH_SIZE,
+    rolesEl,
+    disableRendering,
+    setRenderedRolesCount,
+  )
 
   return (
     <>

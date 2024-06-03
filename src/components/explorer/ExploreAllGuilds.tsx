@@ -30,6 +30,7 @@ import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 
 const BATCH_SIZE = 24
 
@@ -57,7 +58,7 @@ const useExploreGuilds = (query, guildsInitial) => {
       return url
     },
     isSuperAdmin ? fetcherWithSign : (options as any),
-    isSuperAdmin ? options : null
+    isSuperAdmin ? options : null,
   )
 }
 
@@ -78,7 +79,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   })
   const stuckTabsBg = useColorModeValue(
     "linear-gradient(white 0px, var(--chakra-colors-gray-50) 100%)",
-    "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)"
+    "linear-gradient(var(--chakra-colors-gray-800) 0px, #323237 100%)",
   )
   // needed so there's no transparent state in dark mode when the input is becoming stuck
   const searchBg = useColorModeValue("white", "gray.800")
@@ -105,18 +106,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     if (prevSearch === search || prevSearch === undefined) return
     setSize(1)
   }, [search, prevSearch, setSize])
-
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
-  useScrollEffect(() => {
-    if (
-      !ref.current ||
-      ref.current.getBoundingClientRect().bottom > window.innerHeight ||
-      isValidating
-    )
-      return
-
-    setSize((prev) => prev + 1)
-  }, [filteredGuilds, isValidating])
+  useScrollBatchedRendering(1, ref, isValidating, setSize)
 
   return (
     <Stack spacing={{ base: 8, md: 10 }}>
