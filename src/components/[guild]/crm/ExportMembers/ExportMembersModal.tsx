@@ -40,6 +40,7 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
             w="full"
             onClick={startExport}
             isLoading={isStartExportLoading}
+            loadingText="Starting export"
             leftIcon={<Export />}
             mb="8"
             variant="subtle"
@@ -55,7 +56,7 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
               <>
                 <Tooltip
                   label={
-                    "You can access your last 15 exports here from the last 7 days"
+                    "You can access your last 15 exports from the last 7 days here"
                   }
                 >
                   <Info />
@@ -84,11 +85,11 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
           />
           <Stack mb="6" mt="2" spacing={2.5}>
             {isLoading ? (
-              <Text mb="10">Loading exports</Text>
-            ) : data?.exports ? (
+              <Text>Loading exports...</Text>
+            ) : data?.exports?.length ? (
               data.exports.map((exp) => <ExportCard key={exp.id} exp={exp} />)
             ) : (
-              <Text mb="10">Your exports will appear here</Text>
+              <Text>Your exports will appear here</Text>
             )}
           </Stack>
         </ModalBody>
