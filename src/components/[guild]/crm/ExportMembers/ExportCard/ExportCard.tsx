@@ -20,8 +20,8 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { ExportData } from "../useExports"
 import ExportParamsTags from "./ExportParamsTags"
-import { ExportData } from "./useExports"
 
 const ExportCard = ({ exp }: { exp: ExportData }) => {
   const date = new Date(exp.createdAt)

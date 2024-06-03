@@ -3,7 +3,7 @@ import RoleTag from "components/[guild]/RoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { MagnifyingGlass, SortAscending, SortDescending } from "phosphor-react"
 import capitalize from "utils/capitalize"
-import { ExportData, crmOrderByParams } from "./useExports"
+import { ExportData, crmOrderByParams } from "../useExports"
 
 const ExportParamsTags = ({
   logic,
