@@ -1,4 +1,4 @@
-import { HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
+import { Fade, HStack, Icon, Text, useDisclosure } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import RequirementConnectButton from "components/[guild]/Requirements/components/ConnectRequirementPlatformButton"
 import Requirement, {
@@ -12,6 +12,7 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { ArrowSquareIn, ListPlus } from "phosphor-react"
 import { useState } from "react"
 import SearchableVirtualListModal from "requirements/common/SearchableVirtualListModal"
+import { isAddress } from "viem"
 
 function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
   return (
@@ -32,6 +33,9 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const { addresses: initialAddresses, hideAllowlist } = requirement.data
 
+  // These are not included in the schemas, as these are appended on-the-fly by the BE, when sending the response
+  const { addressCount, fileId } = requirement.data as any
+
   const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
     requirement?.roleId,
@@ -40,6 +44,11 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   )
 
   const addresses = req?.data?.addresses ?? initialAddresses
+
+  // Needed for a smooth fade, if we used 'addresses', it changes during the fade out
+  const delayedAddresses = useDebouncedState(addresses, 200)
+  const addressCountToShow =
+    search.length <= 0 ? addresses.length : delayedAddresses.length
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -50,6 +59,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const hasAccess = reqAccesses?.find(
     ({ requirementId }) => requirementId === requirement.id
   )?.access
+
+  const shouldShowSearchHints =
+    !!fileId &&
+    addressCount &&
+    ((!isEmail && !isAddress(search, { strict: false })) ||
+      (isEmail && addresses.length > 1))
 
   return (
     <Requirement
@@ -75,6 +90,23 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         </Button>
       )}
       <SearchableVirtualListModal
+        aboveList={
+          <Fade in={shouldShowSearchHints}>
+            <Text>
+              Showing <strong>{addressCountToShow}</strong>{" "}
+              {isEmail ? "email " : " "}
+              addresses from <strong>{addressCount}</strong>
+            </Text>
+          </Fade>
+        }
+        belowList={
+          <Fade in={shouldShowSearchHints}>
+            <Text fontSize={"sm"} textAlign={"center"} color="gray" mt={2}>
+              {addressCount - addressCountToShow} more addresses. Search to see if an
+              address is included
+            </Text>
+          </Fade>
+        }
         initialList={addresses}
         isOpen={isOpen}
         onClose={onClose}
