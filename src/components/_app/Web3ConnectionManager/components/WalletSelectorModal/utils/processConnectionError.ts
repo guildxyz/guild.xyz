@@ -1,3 +1,4 @@
+import Bugsnag from "@bugsnag/js"
 import { ErrorInfo } from "components/common/Error"
 import { WalletError } from "types"
 
@@ -8,6 +9,11 @@ const processConnectionError = (error: WalletError & Error): ErrorInfo => {
       title: "Connection already in progress",
       description: "Please check your wallet.",
     }
+
+  Bugsnag.notify(error, (event) => {
+    event.severity = "error"
+    event.context = "Unknown wallet connection error"
+  })
 
   return {
     title: "Error",
