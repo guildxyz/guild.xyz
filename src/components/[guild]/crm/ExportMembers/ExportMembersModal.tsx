@@ -1,4 +1,5 @@
 import {
+  Box,
   Icon,
   IconButton,
   ModalBody,
@@ -86,11 +87,11 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
           />
           <Stack mb="6" mt="2" spacing={2.5}>
             {isLoading ? (
-              <Text>Loading exports...</Text>
+              <FallbackText>Loading exports...</FallbackText>
             ) : data?.exports?.length ? (
               data.exports.map((exp) => <ExportCard key={exp.id} exp={exp} />)
             ) : (
-              <Text>Your exports will appear here</Text>
+              <FallbackText>No recent exports in the guild</FallbackText>
             )}
           </Stack>
         </ModalBody>
@@ -98,5 +99,13 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
+
+const FallbackText = ({ children }) => (
+  <Box p="5" borderWidth={2} borderStyle="dashed" borderRadius={"xl"}>
+    <Text colorScheme={"gray"} fontWeight={"medium"}>
+      {children}
+    </Text>
+  </Box>
+)
 
 export default ExportMembersModal
