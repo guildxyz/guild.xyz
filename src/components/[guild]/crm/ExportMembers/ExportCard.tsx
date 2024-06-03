@@ -26,6 +26,7 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { ExportData, crmOrderByParams } from "./ExportMembersModal"
 
@@ -35,22 +36,6 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
   const since = formatRelativeTimeFromNow(timeDifference)
 
   const { isOpen, onToggle } = useDisclosure()
-
-  const { id } = useGuild()
-  const { data, isLoading, error } = useSWRWithOptionalAuth(
-    isOpen ? `/v2/crm/guilds/${id}/exports/${exp.filename}` : null,
-    null,
-    false,
-    true
-  )
-  const csvContent = encodeURI("data:text/csv;charset=utf-8," + data)
-
-  const {
-    onCopy,
-    // setValue: setBackup,
-    // value: backup,
-    hasCopied,
-  } = useClipboard(data, 4000)
 
   return (
     <Card>
@@ -92,7 +77,7 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
               )}
             </Wrap>
           </Box>
-          <MemberCount memberCount={exp.data.memberCount} ml="auto" mt="0" />
+          <MemberCount memberCount={exp.data.count} ml="auto" mt="0" />
           <Icon
             as={CaretDown}
             aria-label="Open export"
@@ -102,43 +87,67 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
         </HStack>
       </Button>
 
-      <Collapse in={isOpen}>
-        <Box p="4">
-          <ButtonGroup
-            size="sm"
-            mt="2"
-            ml="auto"
-            spacing="1"
-            justifyContent={"flex-end"}
-            w="full"
-          >
-            <Button
-              as="a"
-              download={exp.filename}
-              href={csvContent}
-              leftIcon={<Download />}
-              aria-label={"Download export"}
-              isLoading={isLoading}
-              loadingText="Download"
-              borderRadius="lg"
-            >
-              Download
-            </Button>
-            <Button
-              leftIcon={hasCopied ? <Check /> : <Copy />}
-              aria-label={"Download export"}
-              isLoading={isLoading}
-              isDisabled={hasCopied}
-              loadingText="Copy addresses"
-              onClick={onCopy}
-              borderRadius="lg"
-            >
-              {hasCopied ? "Copied" : "Copy addresses"}
-            </Button>
-          </ButtonGroup>
-        </Box>
+      <Collapse in={isOpen} unmountOnExit>
+        <ExportControls filename={exp.filename} />
       </Collapse>
     </Card>
+  )
+}
+
+const ExportControls = ({ filename }) => {
+  const { id } = useGuild()
+  const { data, isLoading, error } = useSWRWithOptionalAuth(
+    `/v2/crm/guilds/${id}/exports/${filename}`,
+    null,
+    false,
+    true
+  )
+  const csvContent = encodeURI("data:text/csv;charset=utf-8," + data)
+
+  const {
+    onCopy,
+    // setValue: setBackup,
+    // value: backup,
+    hasCopied,
+  } = useClipboard(data, 4000)
+
+  return (
+    <Box p="4">
+      {error && <ErrorAlert label="Couldn't fetch export" />}
+      <ButtonGroup
+        size="sm"
+        mt="2"
+        ml="auto"
+        spacing="1"
+        justifyContent={"flex-end"}
+        w="full"
+      >
+        <Button
+          as="a"
+          download={filename}
+          href={csvContent}
+          leftIcon={<Download />}
+          aria-label={"Download export"}
+          isLoading={isLoading}
+          isDisabled={error}
+          loadingText="Download"
+          borderRadius="lg"
+        >
+          Download
+        </Button>
+        <Button
+          leftIcon={hasCopied ? <Check /> : <Copy />}
+          aria-label={"Download export"}
+          isLoading={isLoading}
+          isDisabled={hasCopied || error}
+          loadingText="Copy addresses"
+          onClick={onCopy}
+          borderRadius="lg"
+        >
+          {hasCopied ? "Copied" : "Copy addresses"}
+        </Button>
+      </ButtonGroup>
+    </Box>
   )
 }
 

@@ -31,7 +31,7 @@ export type ExportData = {
   filename: string
   status: "FINISHED" | "CREATED"
   data: {
-    memberCount: number
+    count: number
     params: {
       search: string
       roleIds: number[]
