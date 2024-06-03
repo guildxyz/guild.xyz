@@ -30,7 +30,6 @@ import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
-import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 import { useMemo, useRef, useState } from "react"
@@ -55,7 +54,7 @@ const Leaderboard = () => {
       : null,
     { revalidateOnMount: true },
     false,
-    false
+    false,
   )
 
   const disableRendering = useMemo(
@@ -66,7 +65,7 @@ const Leaderboard = () => {
     BATCH_SIZE,
     wrapperRef,
     disableRendering,
-    setRenderedUsersCount
+    setRenderedUsersCount,
   )
 
   const userData = data?.aroundUser?.find((user) => user.userId === userId)
@@ -216,7 +215,7 @@ const LeaderboardWrapper = (): JSX.Element => {
   const { guildPlatforms, error } = useGuild()
 
   const hasPointsReward = guildPlatforms?.some(
-    (gp) => gp.platformId === PlatformType.POINTS
+    (gp) => gp.platformId === PlatformType.POINTS,
   )
 
   if (error || (guildPlatforms && !hasPointsReward))
