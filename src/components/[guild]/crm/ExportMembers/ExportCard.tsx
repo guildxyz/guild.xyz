@@ -4,6 +4,7 @@ import {
   Collapse,
   HStack,
   Icon,
+  Spinner,
   Tag,
   TagLeftIcon,
   Text,
@@ -39,9 +40,15 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
 
   return (
     <Card>
-      <Button p="4" onClick={onToggle} variant="unstyled" h="auto">
+      <Button
+        p="4"
+        variant="unstyled"
+        h="auto"
+        onClick={exp.status === "FINISHED" ? onToggle : null}
+        cursor={exp.status === "FINISHED" ? "pointer" : "default"}
+      >
         <HStack>
-          <Box>
+          <Box mr="auto">
             <HStack mb="0.5" spacing={1}>
               <Text fontWeight={"bold"} textAlign={"left"}>
                 {isOpen
@@ -77,13 +84,24 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
               )}
             </Wrap>
           </Box>
-          <MemberCount memberCount={exp.data.count} ml="auto" mt="0" />
-          <Icon
-            as={CaretDown}
-            aria-label="Open export"
-            transform={isOpen && "rotate(180deg)"}
-            transition="transform .3s"
-          />
+          {exp.status === "FINISHED" ? (
+            <>
+              <MemberCount memberCount={exp.data.count} mt="0" />
+              <Icon
+                as={CaretDown}
+                aria-label="Open export"
+                transform={isOpen && "rotate(180deg)"}
+                transition="transform .3s"
+              />
+            </>
+          ) : exp.status === "FAILED" ? (
+            <Tag colorScheme="red">Failed</Tag>
+          ) : (
+            <Tag colorScheme="blue">
+              <TagLeftIcon as={Spinner} />
+              Creating
+            </Tag>
+          )}
         </HStack>
       </Button>
 

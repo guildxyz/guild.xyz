@@ -14,12 +14,13 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { ArrowsClockwise, Export, Info } from "phosphor-react"
-import fetcher from "utils/fetcher"
+import { useState } from "react"
+import useSWRImmutable from "swr/immutable"
+import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import ExportCard from "./ExportCard"
 
 export const crmOrderByParams = { joinedAt: "Join date", roles: "Number of roles" }
@@ -29,7 +30,7 @@ export type ExportData = {
   id: number
   bucketName: string
   filename: string
-  status: "FINISHED" | "CREATED"
+  status: "STARTED" | "FINISHED" | "FAILED"
   data: {
     count: number
     params: {
@@ -85,16 +86,31 @@ const useExportMembers = (onSuccess) => {
   }
 }
 
-const ExportMembersModal = ({ isOpen, onClose }) => {
+const useExports = () => {
   const { id } = useGuild()
+  const [shouldPoll, setShouldPoll] = useState(false)
+  const fetcherWithSign = useFetcherWithSign()
 
-  const { data, isLoading, isValidating, mutate } =
-    useSWRWithOptionalAuth<ExportsEndpoint>(
-      `/v2/crm/guilds/${id}/exports`,
-      { keepPreviousData: true },
-      null,
-      true
-    )
+  const fetchExports = (endpoint) =>
+    fetcherWithSign([endpoint, { method: "GET" }]).then((res: ExportsEndpoint) => {
+      if (res.exports.some((exp) => exp.status === "STARTED")) setShouldPoll(true)
+      else setShouldPoll(false)
+
+      return res
+    })
+
+  return useSWRImmutable<ExportsEndpoint>(
+    `/v2/crm/guilds/${id}/exports`,
+    fetchExports,
+    {
+      keepPreviousData: true,
+      refreshInterval: shouldPoll ? 500 : null,
+    }
+  )
+}
+
+const ExportMembersModal = ({ isOpen, onClose }) => {
+  const { data, isLoading, isValidating, mutate } = useExports()
 
   const { startExport, isStartExportLoading } = useExportMembers(mutate)
 
