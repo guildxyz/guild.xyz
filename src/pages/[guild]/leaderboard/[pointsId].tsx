@@ -29,10 +29,11 @@ import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import useScrollEffect from "hooks/useScrollEffect"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
-import { useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { PlatformType, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
@@ -57,16 +58,16 @@ const Leaderboard = () => {
     false
   )
 
-  useScrollEffect(() => {
-    if (
-      !wrapperRef.current ||
-      wrapperRef.current.getBoundingClientRect().bottom > window.innerHeight ||
-      data?.leaderboard?.length <= renderedUsersCount
-    )
-      return
-
-    setRenderedUsersCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [data, renderedUsersCount])
+  const disableRendering = useMemo(
+    () => data?.leaderboard?.length <= renderedUsersCount,
+    [data, renderedUsersCount],
+  )
+  useScrollBatchedRendering(
+    BATCH_SIZE,
+    wrapperRef,
+    disableRendering,
+    setRenderedUsersCount
+  )
 
   const userData = data?.aroundUser?.find((user) => user.userId === userId)
 
