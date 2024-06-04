@@ -1,5 +1,5 @@
 import { Center, Img, useColorModeValue } from "@chakra-ui/react"
-import { useConnectors, useIsConnected } from "@fuel-wallet/react"
+import { useConnectors, useIsConnected } from "@fuels/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { useEffect, useState } from "react"

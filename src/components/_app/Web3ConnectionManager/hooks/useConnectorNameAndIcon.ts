@@ -1,5 +1,5 @@
 import { useColorMode } from "@chakra-ui/react"
-import { useIsConnected } from "@fuel-wallet/react"
+import { useIsConnected } from "@fuels/react"
 import { useAccount, type Connector } from "wagmi"
 
 const CUSTOM_CONNECTOR_ICONS: Record<
