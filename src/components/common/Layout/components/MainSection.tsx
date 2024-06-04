@@ -1,6 +1,6 @@
 import { Container } from "@chakra-ui/react"
 import { ReactNode } from "react"
-import { wrapInCssVar } from "../../../../utils/callCssVariable"
+import { wrapInCssVar } from "../../../../utils/wrapInCssVar"
 import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 export interface Props {

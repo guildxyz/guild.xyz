@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, VStack } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { ReactNode } from "react"
-import { wrapInCssVar } from "../../../../utils/callCssVariable"
+import { wrapInCssVar } from "../../../../utils/wrapInCssVar"
 import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 type Props = {
