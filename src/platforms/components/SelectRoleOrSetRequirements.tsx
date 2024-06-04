@@ -8,6 +8,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
+import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -54,6 +55,17 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
     }
     setActiveTab(value)
   }
+
+  // Free req has to be set, if the modal begins with new role selection
+  useEffect(() => {
+    if (activeTab === RoleTypeToAddTo.NEW_ROLE) {
+      register("requirements", {
+        value: [{ type: "FREE" }],
+      })
+      // For some reason, the register call does not always set the value
+      setValue("requirements", [{ type: "FREE" }])
+    }
+  }, [activeTab, register, setValue])
 
   const { asRewardRestriction } = rewards[selection]
 
