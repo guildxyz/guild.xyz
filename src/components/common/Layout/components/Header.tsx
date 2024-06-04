@@ -1,8 +1,8 @@
 import { Box, Flex, useColorMode } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import ClientOnly from "components/common/ClientOnly"
-import NavMenu from "../components/NavMenu"
 import Account from "./Account"
+import NavMenu from "./NavMenu"
 
 const Header = (): JSX.Element => {
   const colorContext = useThemeContext()
