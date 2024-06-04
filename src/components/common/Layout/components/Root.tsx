@@ -4,7 +4,7 @@ import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 type Props = PropsWithChildren<{
   background?: string
-  maxWidth?: string
+  maxWidth?: `sizes.${string}`
 }>
 
 function Root({ children, background, maxWidth = "sizes.container.lg" }: Props) {
