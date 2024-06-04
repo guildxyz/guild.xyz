@@ -60,10 +60,12 @@ export default function AllowlistFormInputs({
   const requirementType = useWatch({ name: `${baseFieldPath}.type` })
 
   const uploadFileToGcs = useSubmit(async (file: File) => {
-    // TODO: Remove https://api.dev.guild-api.xyz once it works on prod as well
     const [data, body] = await Promise.all([
       fetcher(
-        `https://api.dev.guild-api.xyz/v2/third-party/google/signed-url?requirementType=${
+        `${process.env.NEXT_PUBLIC_API.replace(
+          "/v1",
+          "/v2"
+        )}/third-party/google/signed-url?requirementType=${
           requirementType || "ALLOWLIST"
         }`
       ),
