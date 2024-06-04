@@ -106,6 +106,8 @@ const useSubmitAddReward = () => {
 
     const existingDCReward = guildPlatforms?.find(
       (gp) =>
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformId ===
+          PlatformType.DISCORD &&
         data?.rolePlatforms?.[0]?.guildPlatform?.platformId === gp.platformId &&
         data?.rolePlatforms?.[0]?.guildPlatform?.platformGuildId ===
           gp.platformGuildId
