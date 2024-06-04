@@ -1,5 +1,5 @@
 import { ThemeProvider } from "components/[guild]/ThemeContext"
-import { Layout } from "components/common/CompoundLayout"
+import { Layout } from "components/common/Layout"
 import { CreateGuildBackground } from "components/create-guild/CreateGuildBackground"
 import { CreateGuildContent } from "components/create-guild/CreateGuildContent"
 import { CreateGuildProvider } from "components/create-guild/CreateGuildContext"

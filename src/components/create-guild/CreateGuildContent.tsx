@@ -1,7 +1,7 @@
 import { Stack } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { Layout } from "components/common/CompoundLayout"
+import { Layout } from "components/common/Layout"
 import CreateGuildButton from "components/create-guild/CreateGuildButton"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import CreateGuildStepper, {
