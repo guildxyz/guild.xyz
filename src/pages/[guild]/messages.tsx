@@ -9,7 +9,7 @@ import useGuildMessages from "components/[guild]/messages/hooks/useGuildMessages
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import Layout from "components/common/LegacyLayout"
 import dynamic from "next/dynamic"
 
 const DynamicSendNewMessage = dynamic(

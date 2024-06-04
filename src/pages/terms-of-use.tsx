@@ -1,6 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Heading, ListItem, OrderedList, Stack, Text } from "@chakra-ui/react"
-import Layout from "components/common/Layout"
+import Layout from "components/common/LegacyLayout"
 
 const Page = (): JSX.Element => (
   <Layout title="Terms of Use" maxWidth="container.md">
@@ -319,33 +319,32 @@ const Page = (): JSX.Element => (
 
             <OrderedList>
               <ListItem>
-                <b>Paid services</b>: The Service Provider offers both free and 
-                paid Services. Unless indicated otherwise, the Services are offered 
-                for free. However, certain transactions carried out via the Services 
-                may be subject to a fee ("Protocol Fee" and “Gas Fee”) in accordance 
-                with the Fee Schedule available on the Website.
+                <b>Paid services</b>: The Service Provider offers both free and paid
+                Services. Unless indicated otherwise, the Services are offered for
+                free. However, certain transactions carried out via the Services may
+                be subject to a fee ("Protocol Fee" and “Gas Fee”) in accordance with
+                the Fee Schedule available on the Website.
               </ListItem>
 
               <ListItem>
-                <b>Fees</b>: Customer is responsible for the payment of all fees, 
-                payment method and in the currency quoted at the time of the initiation 
-                of the transaction. 
-                (i) Protocol Fee: This fee is for the use of smart contracts that forward 
-                the transaction to the final destination. These smart contracts are deployed 
-                by Guild.xyz.
-                (ii) Gas Fee: This fee is for the Ethereum nodes to validate the transaction. 
-                It is not related to Guild. 
-                Read about it here: https://www.investopedia.com/terms/g/gas-ethereum.asp
-                Transaction fees are final and are non-refundable.
+                <b>Fees</b>: Customer is responsible for the payment of all fees,
+                payment method and in the currency quoted at the time of the
+                initiation of the transaction. (i) Protocol Fee: This fee is for the
+                use of smart contracts that forward the transaction to the final
+                destination. These smart contracts are deployed by Guild.xyz. (ii)
+                Gas Fee: This fee is for the Ethereum nodes to validate the
+                transaction. It is not related to Guild. Read about it here:
+                https://www.investopedia.com/terms/g/gas-ethereum.asp Transaction
+                fees are final and are non-refundable.
               </ListItem>
 
               <ListItem>
-                <b>Changes of fees</b>: The Service Provider reserves the right to 
-                revise and update the Fee Schedule, at any time at its sole discretion. 
-                Any such revision or updates to the fees will apply prospectively 
-                following the effective date of the fee revision or update.
+                <b>Changes of fees</b>: The Service Provider reserves the right to
+                revise and update the Fee Schedule, at any time at its sole
+                discretion. Any such revision or updates to the fees will apply
+                prospectively following the effective date of the fee revision or
+                update.
               </ListItem>
-
             </OrderedList>
           </ListItem>
         </OrderedList>

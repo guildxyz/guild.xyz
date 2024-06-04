@@ -1,6 +1,6 @@
 import { HStack, Stack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import StickyBar from "components/common/Layout/StickyBar"
+import StickyBar from "components/common/LegacyLayout/StickyBar"
 import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { useEffect } from "react"
 import { useActivityLog } from "../ActivityLogContext"

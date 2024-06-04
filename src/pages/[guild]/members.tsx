@@ -25,7 +25,7 @@ import {
 import useMembers, { Member } from "components/[guild]/crm/useMembers"
 import useGuild from "components/[guild]/hooks/useGuild"
 import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import Layout from "components/common/LegacyLayout"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"

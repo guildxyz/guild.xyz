@@ -18,7 +18,7 @@ import SmallImageAndRoleName from "components/[guild]/collect/components/SmallIm
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import Layout from "components/common/Layout"
+import Layout from "components/common/LegacyLayout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
 import { GetStaticPaths, GetStaticProps } from "next"

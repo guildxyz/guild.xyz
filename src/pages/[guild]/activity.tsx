@@ -13,7 +13,7 @@ import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleto
 import useGuild from "components/[guild]/hooks/useGuild"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
-import Layout from "components/common/Layout"
+import Layout from "components/common/LegacyLayout"
 import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {

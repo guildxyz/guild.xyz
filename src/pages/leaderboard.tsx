@@ -2,7 +2,7 @@ import { Stack, Text } from "@chakra-ui/react"
 import { kv } from "@vercel/kv"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ClientOnly from "components/common/ClientOnly"
-import Layout from "components/common/Layout"
+import Layout from "components/common/LegacyLayout"
 import Section from "components/common/Section"
 import MysteryBoxCard from "components/leaderboard/MysteryBoxCard"
 import PinLeaderboardUserCard, {

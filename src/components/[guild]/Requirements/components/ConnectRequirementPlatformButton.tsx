@@ -3,7 +3,7 @@ import useConnectPlatform from "components/[guild]/JoinModal/hooks/useConnectPla
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useUser from "components/[guild]/hooks/useUser"
 import Button from "components/common/Button"
-import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
+import { ConnectEmailButton } from "components/common/LegacyLayout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import { useRoleMembership } from "components/explorer/hooks/useMembership"
 import useToast from "hooks/useToast"
 import rewards from "platforms/rewards"
