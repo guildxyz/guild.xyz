@@ -7,8 +7,9 @@ import { Rest, RolePlatform } from "types"
 
 const DynamicTag = ({
   rolePlatform,
+  editDisabled,
   ...rest
-}: { rolePlatform: RolePlatform } & Rest) => {
+}: { rolePlatform: RolePlatform; editDisabled?: boolean } & Rest) => {
   const { isAdmin } = useGuildPermission()
 
   const { onOpen, isOpen, onClose } = useDisclosure()
@@ -60,6 +61,7 @@ const DynamicTag = ({
         isOpen={isOpen}
         rolePlatform={rolePlatform}
         linkedRequirement={linkedRequirement}
+        editDisabled={editDisabled}
       ></DynamicRewardModal>
     </>
   )
