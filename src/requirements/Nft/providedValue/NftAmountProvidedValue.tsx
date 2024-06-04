@@ -3,7 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import DataBlock from "components/common/DataBlock"
 import { ProvidedValueDisplayProps } from "requirements"
 import { GUILD_PIN_CONTRACTS } from "utils/guildCheckout/constants"
-import useNftMetadata, { useNftMetadataWithTraits } from "./useNftMetadata"
+import useNftMetadata, { useNftMetadataWithTraits } from "../hooks/useNftMetadata"
 
 export function hasOnlyTypeProperty(obj) {
   const keys = Object.keys(obj)

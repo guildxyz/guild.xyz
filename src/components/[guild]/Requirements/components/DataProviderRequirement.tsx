@@ -57,9 +57,7 @@ const DataProviderRequirement = ({
           <Text
             fontWeight={"medium"}
             sx={{ fontSize: "sm", "& *": { fontSize: "inherit" } }}
-            whiteSpace={"nowrap"}
-            textOverflow={"ellipsis"}
-            overflow={"hidden"}
+            noOfLines={1}
           >
             {requirement?.data?.customName || children}
           </Text>

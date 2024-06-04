@@ -2,7 +2,7 @@ import { HStack, Skeleton, Text } from "@chakra-ui/react"
 import DataBlock from "components/common/DataBlock"
 import { ProvidedValueDisplayProps } from "requirements"
 import { Chains } from "wagmiConfig/chains"
-import { useSymbolsOfPair } from "./useSymbolsOfPair"
+import { useSymbolsOfPair } from "../hooks/useSymbolsOfPair"
 
 const PositionsProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const {
