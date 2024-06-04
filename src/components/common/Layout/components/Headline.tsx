@@ -1,7 +1,7 @@
 import { Box, HStack, Heading, VStack } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { ReactNode } from "react"
-import { callCssVariable } from "../callCssVariable"
+import { wrapInCssVar } from "../../../../utils/callCssVariable"
 import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 type Props = {
@@ -20,7 +20,7 @@ const Headline = ({ image, title, description, action }: Props) => {
         spacing={{ base: 7, md: 10 }}
         pb={{ base: 9, md: 14 }}
         w="full"
-        maxWidth={callCssVariable(LAYOUT_MAX_WIDTH_CSS_VAR)}
+        maxWidth={wrapInCssVar(LAYOUT_MAX_WIDTH_CSS_VAR)}
         zIndex={1}
         pt={{ base: 6, md: 9 }}
         px={{ base: 4, sm: 6, md: 8, lg: 10 }}
