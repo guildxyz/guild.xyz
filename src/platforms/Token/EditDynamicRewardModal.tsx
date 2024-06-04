@@ -8,6 +8,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useToast from "hooks/useToast"
@@ -34,6 +35,7 @@ const EditDynamicRewardModal = ({
   rolePlatform: RolePlatform
 }) => {
   const toast = useToast()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { onSubmit, isLoading } = useEditRolePlatform({
     rolePlatformId: rolePlatform.id,
@@ -42,6 +44,8 @@ const EditDynamicRewardModal = ({
         status: "success",
         title: `Successfully updated reward!`,
       })
+      alert("Mtating points")
+      triggerMembershipUpdate()
       onClose()
     },
   })
