@@ -1,6 +1,7 @@
 import { ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import useGuild from "components/[guild]/hooks/useGuild"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import rewards, {
@@ -17,7 +18,8 @@ type Props = {
 }
 
 const AddRoleRewardModal = ({ append }: Props) => {
-  const { selection, step, isOpen, onClose } = useAddRewardContext()
+  const { selection, step, isOpen, onClose, targetRoleId } = useAddRewardContext()
+  const { guildPlatforms } = useGuild()
 
   const {
     isOpen: isDiscardAlertOpen,
@@ -33,7 +35,21 @@ const AddRoleRewardModal = ({ append }: Props) => {
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
 
   const handleAddReward = (data: any) => {
-    append({ ...data, visibility: roleVisibility })
+    const rolePlatformWithGuildPlatform = { ...data, visibility: roleVisibility }
+
+    const existingGuildPlatform = guildPlatforms?.find(
+      (gp) =>
+        gp.platformId === data.guildPlatform?.platformId &&
+        gp.platformGuildId === data.guildPlatform?.platformGuildId
+    )
+
+    if (existingGuildPlatform) {
+      rolePlatformWithGuildPlatform.guildPlatform = existingGuildPlatform
+      rolePlatformWithGuildPlatform.roleId = targetRoleId
+      rolePlatformWithGuildPlatform.guildPlatformId = existingGuildPlatform.id
+    }
+
+    append(rolePlatformWithGuildPlatform)
     onClose()
   }
 

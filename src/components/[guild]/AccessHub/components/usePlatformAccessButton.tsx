@@ -5,6 +5,18 @@ import useToast from "hooks/useToast"
 import rewards from "platforms/rewards"
 import { GuildPlatform, PlatformName, PlatformType } from "types"
 
+function sanitizeInviteLink(inviteLink: string) {
+  if (inviteLink.startsWith("https://")) {
+    return inviteLink
+  }
+
+  if (inviteLink.startsWith("http://")) {
+    return inviteLink.replace("http://", "https://")
+  }
+
+  return `https://${inviteLink}`
+}
+
 const usePlatformAccessButton = (
   platform: GuildPlatform
 ): { label: string } & LinkProps & ButtonProps => {
@@ -43,7 +55,7 @@ const usePlatformAccessButton = (
       label: `Go to ${rewards[platformName].gatedEntity}`,
       as: "a",
       target: "_blank",
-      href: platform.invite,
+      href: sanitizeInviteLink(platform.invite),
     }
 
   return {
