@@ -8,6 +8,9 @@ import HeaderSection from "./components/HeaderSection"
 import Headline from "./components/Headline"
 import MainSection from "./components/MainSection"
 import Root from "./components/Root"
+import LegacyLayout from "./Layout"
+
+export default LegacyLayout;
 
 /**
  * A polymorphic compound component that generically displays the base of a page
