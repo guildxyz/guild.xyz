@@ -37,6 +37,10 @@ const DCServerCard = ({
 
   const onSelect = async () => {
     try {
+      if (isUsedInCurrentGuild) {
+        onSubmit()
+      }
+
       if (error) {
         return
       }
