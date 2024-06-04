@@ -46,6 +46,7 @@ const DiscordGuildSetup = ({
   useAddRewardDiscardAlert(!!selectedServer)
 
   const { captureEvent } = usePostHogContext()
+  const { id } = useGuild()
 
   const {
     gateables: unorderedServers,
@@ -59,7 +60,13 @@ const DiscordGuildSetup = ({
       captureEvent("[discord setup] gateables failed, showing reconnect alert")
     },
   })
-  const servers = unorderedServers?.sort((a, b) => +a.isGuilded - +b.isGuilded)
+  const servers = unorderedServers?.sort(
+    (a, b) =>
+      // Order servers, which are already used in the guild to the very top, then other selectable ones, then the guilded ones
+      +a.isGuilded +
+      +(b.isGuilded && b.guildId === id) * 2 -
+      (+b.isGuilded + +(a.isGuilded && a.guildId === id) * 2)
+  )
 
   const selectedServerOption = useMemo(
     () => servers?.find((server) => server.id === selectedServer?.id),

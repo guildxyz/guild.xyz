@@ -11,6 +11,7 @@ import { defaultValues } from "../AddRewardButton"
 import useCreateReqBasedTokenReward from "../useCreateTokenReward"
 import useAddReward from "./useAddReward"
 import { useAddRewardDiscardAlert } from "./useAddRewardDiscardAlert"
+import useAddRoleRewards from "./useAddRoleRewards"
 
 const isERC20 = (data) =>
   data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
@@ -19,7 +20,7 @@ const useSubmitAddReward = () => {
   const toast = useToast()
   const { selection, onClose: onAddRewardModalClose } = useAddRewardContext()
   const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()
-  const { roles } = useGuild()
+  const { roles, guildPlatforms } = useGuild()
   const { captureEvent } = usePostHogContext()
 
   const methods = useFormContext()
@@ -60,7 +61,18 @@ const useSubmitAddReward = () => {
       },
     })
 
-  const isLoading = isAddRewardLoading || isCreateRoleLoading || erc20Loading
+  const { onSubmit: onAddRoleRewardSubmit, isLoading: isAddRoleRewardLoading } =
+    useAddRoleRewards({
+      onSuccess: () => {
+        onCloseAndClear()
+      },
+    })
+
+  const isLoading =
+    isAddRewardLoading ||
+    isCreateRoleLoading ||
+    erc20Loading ||
+    isAddRoleRewardLoading
 
   const submitERC20Reward = async (
     data: any,
@@ -92,6 +104,25 @@ const useSubmitAddReward = () => {
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
 
+    const existingDCReward = guildPlatforms?.find(
+      (gp) =>
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformId ===
+          PlatformType.DISCORD &&
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformId === gp.platformId &&
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformGuildId ===
+          gp.platformGuildId
+    )
+
+    if (existingDCReward && data.rolePlatforms[0]) {
+      data.rolePlatforms[0].guildPlatform = existingDCReward
+      data.rolePlatforms[0].guildPlatformId = existingDCReward.id
+
+      if (!data.rolePlatforms[0].platformRoleId) {
+        // Delete any falsy values
+        delete data.rolePlatforms[0].platformRoleId
+      }
+    }
+
     if (data.requirements?.length > 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
@@ -104,6 +135,11 @@ const useSubmitAddReward = () => {
           ...rp,
           visibility: roleVisibility,
         })),
+      })
+    } else if (existingDCReward) {
+      onAddRoleRewardSubmit({
+        roleIds: data?.roleIds ?? [],
+        ...data?.rolePlatforms?.[0],
       })
     } else {
       onAddRewardSubmit({

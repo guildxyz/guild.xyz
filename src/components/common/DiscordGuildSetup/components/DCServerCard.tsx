@@ -26,15 +26,21 @@ const DCServerCard = ({
 }: Props): JSX.Element => {
   const { id } = useGuild() ?? {}
 
+  const isUsedInCurrentGuild = serverData.isGuilded && serverData.guildId === id
+
   const {
     mutate,
     isValidating,
     permissions: existingPermissions,
     error,
-  } = useServerPermissions(serverData?.id)
+  } = useServerPermissions(serverData?.id, !isUsedInCurrentGuild)
 
   const onSelect = async () => {
     try {
+      if (isUsedInCurrentGuild) {
+        onSubmit()
+      }
+
       if (error) {
         return
       }
@@ -52,9 +58,18 @@ const DCServerCard = ({
     }
   }
 
-  const isUsedInCurrentGuild = serverData.isGuilded && serverData.guildId === id
-
-  if (isUsedInCurrentGuild) return null
+  const selectButton = (
+    <Button
+      h={10}
+      colorScheme="green"
+      onClick={() => {
+        onSelect()
+      }}
+      data-test="select-dc-server-button"
+    >
+      Select
+    </Button>
+  )
 
   return (
     <CardMotionWrapper>
@@ -64,7 +79,9 @@ const DCServerCard = ({
         description={serverData.owner ? "Owner" : "Admin"}
         image={serverData.img || "/default_discord_icon.png"}
       >
-        {isSelected ? (
+        {isUsedInCurrentGuild ? (
+          selectButton
+        ) : isSelected ? (
           <Button h={10} onClick={onCancel}>
             Cancel
           </Button>
@@ -82,16 +99,7 @@ const DCServerCard = ({
             Linked guild
           </Button>
         ) : (
-          <Button
-            h={10}
-            colorScheme="green"
-            onClick={() => {
-              onSelect()
-            }}
-            data-test="select-dc-server-button"
-          >
-            Select
-          </Button>
+          selectButton
         )}
       </OptionCard>
     </CardMotionWrapper>
