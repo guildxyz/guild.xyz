@@ -3,7 +3,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useController, useFormContext, useFormState } from "react-hook-form"
+import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
@@ -15,10 +15,9 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
       .map((gp) => gp.platformGuildData.formId) ?? []
-  const { data: forms, isLoading, isValidating, mutate } = useGuildForms()
+  const { data: forms, isLoading, isValidating } = useGuildForms()
 
   const { errors } = useFormState()
-  const { setValue } = useFormContext()
 
   useController({
     name: `${baseFieldPath}.data.guildId`,
@@ -33,33 +32,23 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
         value: form.id,
       })) ?? []
 
-  const handleFormAdded = (formId: number) => {
-    mutate().then(() => {
-      setValue(`${baseFieldPath}.data.id`, formId, {
-        shouldDirty: true,
-      })
-    })
-  }
-
   return (
-    <>
-      <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
-        <Flex justifyContent="space-between" w="full" alignItems={"center"}>
-          <FormLabel>Fill form:</FormLabel>
-          <AddFormButton onSuccess={handleFormAdded} />
-        </Flex>
-        <ControlledSelect
-          name={`${baseFieldPath}.data.id`}
-          isDisabled={!forms}
-          isLoading={isLoading || isValidating}
-          options={formOptions}
-        />
+    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
+      <Flex justifyContent="space-between" w="full" alignItems={"center"}>
+        <FormLabel>Fill form:</FormLabel>
+        <AddFormButton baseFieldPath={baseFieldPath} />
+      </Flex>
+      <ControlledSelect
+        name={`${baseFieldPath}.data.id`}
+        isDisabled={!forms}
+        isLoading={isLoading || isValidating}
+        options={formOptions}
+      />
 
-        <FormErrorMessage>
-          {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-        </FormErrorMessage>
-      </FormControl>
-    </>
+      <FormErrorMessage>
+        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
+      </FormErrorMessage>
+    </FormControl>
   )
 }
 export default FormForm

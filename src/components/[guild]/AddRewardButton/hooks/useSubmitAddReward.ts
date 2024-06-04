@@ -103,7 +103,7 @@ const useSubmitAddReward = ({
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
 
-    if (data.requirements?.length > 0) {
+    if (data.roleIds.length === 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({

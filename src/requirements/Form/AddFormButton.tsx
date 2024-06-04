@@ -1,4 +1,4 @@
-import { Button, Modal, ModalOverlay, Text } from "@chakra-ui/react"
+import { Button, Modal, ModalOverlay } from "@chakra-ui/react"
 import {
   AddRewardForm,
   defaultValues,
@@ -8,10 +8,10 @@ import {
   AddRewardProvider,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import CreateFormModal from "./CreateFormModal"
 
-const AddFormButton = ({ onSuccess }: { onSuccess: (formId: number) => void }) => {
+const AddFormButton = ({ baseFieldPath }: { baseFieldPath: string }) => {
   const { setSelection, step, setStep, isOpen, onOpen, onClose } =
     useAddRewardContext()
 
@@ -22,67 +22,68 @@ const AddFormButton = ({ onSuccess }: { onSuccess: (formId: number) => void }) =
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const handleOpen = () => {
-    // This order is important, as onOpen sets
-    // default step and selection as well, that
-    // we have to overwrite
+    /**
+     * This order is important, as onOpen sets default step and selection as well,
+     * that we have to overwrite
+     */
     onOpen()
     setStep("REWARD_SETUP")
     setSelection("FORM")
   }
 
+  const { setValue } = useFormContext()
+
   const handleSuccess = (res: any) => {
-    const formId = res?.platformGuildData?.formId
-    return onSuccess(formId)
+    const formId =
+      res?.platformGuildData?.formId ??
+      res?.createdGuildPlatforms?.[0]?.platformGuildData?.formId
+    setValue(`${baseFieldPath}.data.id`, formId, {
+      shouldDirty: true,
+    })
   }
 
   return (
-    <>
-      <FormProvider {...methods}>
-        <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={handleOpen}>
-          <Text colorScheme={"gray"}>Create new</Text>
-        </Button>
+    <FormProvider {...methods}>
+      <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={handleOpen}>
+        Create new
+      </Button>
 
-        {step === "REWARD_SETUP" && (
-          <CreateFormModal
-            onClose={onClose}
-            isOpen={isOpen}
-            onAdd={(createdRolePlatform) => {
-              methods.setValue("rolePlatforms.0", {
-                ...createdRolePlatform,
-                visibility,
-              })
-              if (createdRolePlatform?.requirements?.length > 0) {
-                methods.setValue("requirements", createdRolePlatform.requirements)
-              }
-              setStep("SELECT_ROLE")
-            }}
-          />
-        )}
+      {step === "REWARD_SETUP" && (
+        <CreateFormModal
+          onClose={onClose}
+          isOpen={isOpen}
+          onAdd={(createdRolePlatform) => {
+            methods.setValue("rolePlatforms.0", {
+              ...createdRolePlatform,
+              visibility,
+            })
+            if (createdRolePlatform?.requirements?.length > 0) {
+              methods.setValue("requirements", createdRolePlatform.requirements)
+            }
+            setStep("SELECT_ROLE")
+          }}
+        />
+      )}
 
-        {step === "SELECT_ROLE" && (
-          <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            size={"2xl"}
-            scrollBehavior="inside"
-            colorScheme="dark"
-          >
-            <ModalOverlay />
-            <SelectRolePanel onSuccess={handleSuccess} />
-          </Modal>
-        )}
-      </FormProvider>
-    </>
+      {step === "SELECT_ROLE" && (
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          size={"2xl"}
+          scrollBehavior="inside"
+          colorScheme="dark"
+        >
+          <ModalOverlay />
+          <SelectRolePanel onSuccess={handleSuccess} />
+        </Modal>
+      )}
+    </FormProvider>
   )
 }
 
-const AddFormButtonWrapper = ({
-  onSuccess,
-}: {
-  onSuccess: (formId: number) => void
-}) => (
+const AddFormButtonWrapper = ({ baseFieldPath }: { baseFieldPath: string }) => (
   <AddRewardProvider>
-    <AddFormButton onSuccess={onSuccess} />
+    <AddFormButton baseFieldPath={baseFieldPath} />
   </AddRewardProvider>
 )
 
