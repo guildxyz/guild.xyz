@@ -1,4 +1,4 @@
-import StickyBar from "components/common/LegacyLayout/StickyBar"
+import StickyBar from "components/common/Layout/StickyBar"
 import FiltersInput from "./components/FiltersInput"
 
 const UserActivityLogFiltersBar = (): JSX.Element => (

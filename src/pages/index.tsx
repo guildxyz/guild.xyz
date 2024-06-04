@@ -1,5 +1,5 @@
 import { Box, DarkMode } from "@chakra-ui/react"
-import NavMenu from "components/common/LegacyLayout/components/NavMenu"
+import NavMenu from "components/common/Layout/components/NavMenu"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import CallToAction from "components/index/CallToAction"
 import ComposableRequirements from "components/index/ComposableRequirements"

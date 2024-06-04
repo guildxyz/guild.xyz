@@ -10,7 +10,7 @@ import {
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
-import { accountModalAtom } from "components/common/LegacyLayout/components/Account/components/AccountModal"
+import { accountModalAtom } from "components/common/Layout/components/Account/components/AccountModal"
 import { useSetAtom } from "jotai"
 import { SignIn } from "phosphor-react"
 import useGuildPermission from "./hooks/useGuildPermission"

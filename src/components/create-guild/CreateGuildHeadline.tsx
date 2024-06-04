@@ -1,6 +1,6 @@
 import { useThemeContext } from "components/[guild]/ThemeContext"
+import { Layout } from "components/common/CompoundLayout"
 import GuildLogo from "components/common/GuildLogo"
-import { Layout } from "components/common/Layout"
 import { useWatch } from "react-hook-form"
 
 export function CreateGuildHeadline() {

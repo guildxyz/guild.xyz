@@ -20,8 +20,8 @@ import ActivityLogSkeletons from "components/[guild]/activity/ActivityLogSkeleto
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
-import Layout from "components/common/LegacyLayout"
-import BackButton from "components/common/LegacyLayout/components/BackButton"
+import Layout from "components/common/Layout"
+import BackButton from "components/common/Layout/components/BackButton"
 import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {

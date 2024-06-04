@@ -25,7 +25,7 @@ import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldS
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
-import Layout from "components/common/LegacyLayout"
+import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
 import { GetStaticPaths } from "next"

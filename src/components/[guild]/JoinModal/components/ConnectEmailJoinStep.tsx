@@ -1,6 +1,6 @@
 import { Tooltip } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { ConnectEmailButton } from "components/common/LegacyLayout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
+import { ConnectEmailButton } from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import { EnvelopeSimple } from "phosphor-react"
 import { useAccount } from "wagmi"
 import { JoinStepUI } from "./JoinStep"

@@ -4,7 +4,7 @@ import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hook
 import {
   AddressLinkParams,
   addressLinkParamsAtom,
-} from "components/common/LegacyLayout/components/Account/components/AccountModal/components/LinkAddressButton"
+} from "components/common/Layout/components/Account/components/AccountModal/components/LinkAddressButton"
 import { deleteKeyPairFromIdb, getKeyPairFromIdb } from "hooks/useSetKeyPair"
 import useSubmit from "hooks/useSubmit"
 import { SignProps } from "hooks/useSubmit/useSubmit"

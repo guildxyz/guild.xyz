@@ -1,6 +1,6 @@
 import { useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import ClientOnly from "components/common/ClientOnly"
-import Layout from "components/common/LegacyLayout"
+import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import ExploreAllGuilds from "components/explorer/ExploreAllGuilds"
 import ExplorerTabs from "components/explorer/ExplorerTabs"

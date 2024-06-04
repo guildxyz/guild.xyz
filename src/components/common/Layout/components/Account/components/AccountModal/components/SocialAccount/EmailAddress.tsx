@@ -159,9 +159,10 @@ const ConnectEmailButton = ({
         colorScheme={emails?.pending ? "orange" : rewards.EMAIL.colorScheme}
         variant={"solid"}
         size="sm"
+        isDisabled={emails?.emailAddress}
         {...props}
       >
-        {emails?.pending ? "Verify" : "Connect"}
+        {emails?.emailAddress || (emails?.pending ? "Verify" : "Connect")}
       </Button>
       <Modal isOpen={isOpen} onClose={handleOnClose} size="sm">
         <ModalOverlay />

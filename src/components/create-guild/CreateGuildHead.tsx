@@ -1,4 +1,4 @@
-import { Layout } from "components/common/Layout"
+import { Layout } from "components/common/CompoundLayout"
 import { useWatch } from "react-hook-form"
 
 export function CreateGuildHead() {

@@ -15,8 +15,8 @@ import {
   Text,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
-import { AccountSection } from "components/common/LegacyLayout/components/Account/components/AccountModal/components/AccountConnections"
-import EmailAddress from "components/common/LegacyLayout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
+import { AccountSection } from "components/common/Layout/components/Account/components/AccountModal/components/AccountConnections"
+import EmailAddress from "components/common/Layout/components/Account/components/AccountModal/components/SocialAccount/EmailAddress"
 import { ArrowSquareOut } from "phosphor-react"
 
 type ModalProps = {

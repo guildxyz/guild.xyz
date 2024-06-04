@@ -33,7 +33,6 @@ type Props = {
   showFooter?: boolean
 } & Omit<BoxProps, "title">
 
-/** @deprecated Use the new compound layout API at `/src/components/common/Layout`. */
 const Layout = ({
   image,
   imageUrl,

@@ -13,7 +13,7 @@ import {
   Tr,
   UnorderedList,
 } from "@chakra-ui/react"
-import Layout from "components/common/LegacyLayout"
+import Layout from "components/common/Layout"
 
 const Page = (): JSX.Element => (
   <Layout title="Privacy Policy" maxWidth="container.md">

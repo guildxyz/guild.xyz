@@ -3,7 +3,7 @@ import { Box, Icon, Text } from "@chakra-ui/react"
 import { ArrowSquareOut } from "phosphor-react"
 
 const Footer = (): JSX.Element => (
-  <Box as="footer" mt="auto" py="6">
+  <Box as="footer" mt="auto" py="6" pt={24}>
     <Text textAlign="center" fontSize={"sm"}>
       <Text as="span" colorScheme="gray" lineHeight={2}>
         {`This website is `}
@@ -13,7 +13,7 @@ const Footer = (): JSX.Element => (
         <Icon as={ArrowSquareOut} ml="1" />
       </Link>
       <Text as="span" colorScheme="gray" lineHeight={2}>
-        {` and built on the `}
+        {`, and built on the `}
       </Text>
       <Link href="https://www.npmjs.com/package/@guildxyz/sdk" isExternal>
         Guild SDK
