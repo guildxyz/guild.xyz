@@ -43,12 +43,12 @@ function mapPermissions(permissions: PermissionsResponse) {
   }
 }
 
-export default function useServerPermissions(serverId: string) {
-  const shouldFetch = serverId?.length > 0
+export default function useServerPermissions(serverId: string, shouldFetch = true) {
+  const shouldFetchFinal = shouldFetch && serverId?.length > 0
   const { data, error, isLoading, isValidating, mutate } = useSWRImmutable<
     ReturnType<typeof mapPermissions>
   >(
-    shouldFetch ? `/v2/discord/servers/${serverId}/permissions` : null,
+    shouldFetchFinal ? `/v2/discord/servers/${serverId}/permissions` : null,
     (url) => fetcher(url).then(mapPermissions),
     { shouldRetryOnError: false, revalidateOnMount: false }
   )

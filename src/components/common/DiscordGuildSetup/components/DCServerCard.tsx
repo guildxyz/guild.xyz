@@ -26,12 +26,14 @@ const DCServerCard = ({
 }: Props): JSX.Element => {
   const { id } = useGuild() ?? {}
 
+  const isUsedInCurrentGuild = serverData.isGuilded && serverData.guildId === id
+
   const {
     mutate,
     isValidating,
     permissions: existingPermissions,
     error,
-  } = useServerPermissions(serverData?.id)
+  } = useServerPermissions(serverData?.id, !isUsedInCurrentGuild)
 
   const onSelect = async () => {
     try {
@@ -51,8 +53,6 @@ const DCServerCard = ({
       onSelectProp()
     }
   }
-
-  const isUsedInCurrentGuild = serverData.isGuilded && serverData.guildId === id
 
   const selectButton = (
     <Button
