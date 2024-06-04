@@ -64,13 +64,20 @@ const EditDynamicRewardModal = ({
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
   const ImageComponent =
     typeof image === "string" ? (
-      <OptionImage img={image} alt={`${rewardName} image`} ml="auto" />
+      <OptionImage img={image} alt={`${rewardName} image`} />
     ) : (
       image
     )
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"lg"} colorScheme={"dark"}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={"lg"}
+      colorScheme={"dark"}
+      autoFocus={false}
+      returnFocusOnClose={false}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
