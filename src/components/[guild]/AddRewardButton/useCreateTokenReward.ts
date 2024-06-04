@@ -50,8 +50,8 @@ const useCreateReqBasedTokenReward = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: (res?: any) => void
-  onError: (err) => void
+  onSuccess: (res?: ReturnType<typeof useAddReward>["response"]) => void
+  onError: (err: any) => void
 }) => {
   const showErrorToast = useShowErrorToast()
   const { triggerMembershipUpdate } = useMembershipUpdate()

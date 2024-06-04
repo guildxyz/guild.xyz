@@ -15,7 +15,15 @@ import { useAddRewardDiscardAlert } from "./useAddRewardDiscardAlert"
 const isERC20 = (data) =>
   data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
-const useSubmitAddReward = ({ onSuccess }: { onSuccess?: (res?: any) => void }) => {
+const useSubmitAddReward = ({
+  onSuccess,
+}: {
+  onSuccess?: (
+    res?:
+      | ReturnType<typeof useCreateRole>["response"]
+      | ReturnType<typeof useAddReward>["response"]
+  ) => void
+}) => {
   const toast = useToast()
   const { selection, onClose: onAddRewardModalClose } = useAddRewardContext()
   const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()

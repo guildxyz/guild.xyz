@@ -30,8 +30,8 @@ const useCreateRole = ({
   onSuccess,
   onError,
 }: {
-  onSuccess?: (res?: any) => void
-  onError?: (error) => void
+  onSuccess?: (res?: CreateRoleResponse) => void
+  onError?: (error: any) => void
 }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
