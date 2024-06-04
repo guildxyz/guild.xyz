@@ -29,7 +29,6 @@ const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
     requirement.chain,
     requirement.address
   )
-  console.log("Hello there")
 
   const nftName = isGuildPin ? (
     <>

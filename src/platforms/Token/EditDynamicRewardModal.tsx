@@ -44,7 +44,6 @@ const EditDynamicRewardModal = ({
         status: "success",
         title: `Successfully updated reward!`,
       })
-      alert("Mtating points")
       triggerMembershipUpdate()
       onClose()
     },
