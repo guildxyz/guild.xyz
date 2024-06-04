@@ -8,7 +8,6 @@ import {
   AddRewardProvider,
   useAddRewardContext,
 } from "components/[guild]/AddRewardContext"
-import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import CreateFormModal from "./CreateFormModal"
 
@@ -23,13 +22,13 @@ const AddFormButton = ({ onSuccess }: { onSuccess: (formId: number) => void }) =
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const handleOpen = () => {
+    // This order is important, as onOpen sets
+    // default step and selection as well, that
+    // we have to overwrite
     onOpen()
     setStep("REWARD_SETUP")
-  }
-
-  useEffect(() => {
     setSelection("FORM")
-  }, [setSelection])
+  }
 
   const handleSuccess = (res: any) => {
     const formId = res?.platformGuildData?.formId
