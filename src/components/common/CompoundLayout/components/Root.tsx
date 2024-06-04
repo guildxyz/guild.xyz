@@ -1,4 +1,4 @@
-import { Box, useColorMode } from "@chakra-ui/react"
+import { Box, useColorModeValue } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
@@ -8,21 +8,20 @@ type Props = PropsWithChildren<{
 }>
 
 function Root({ children, background, maxWidth = "sizes.container.lg" }: Props) {
-  const { colorMode } = useColorMode()
+  const bgColor = useColorModeValue("gray.100", "gray.800")
+  const bgGradient = `linear(${useColorModeValue(
+    "white",
+    "var(--chakra-colors-gray-800)"
+  )} 0px, var(--chakra-colors-gray-100) 700px)`
+  const bgBlendMode = useColorModeValue("normal", "color")
 
   return (
     <Box
       sx={{ [LAYOUT_MAX_WIDTH_CSS_VAR]: maxWidth }}
       position="relative"
-      bgColor={colorMode === "light" ? "gray.100" : "gray.800"}
-      bgGradient={
-        !background
-          ? `linear(${
-              colorMode === "light" ? "white" : "var(--chakra-colors-gray-800)"
-            } 0px, var(--chakra-colors-gray-100) 700px)`
-          : undefined
-      }
-      bgBlendMode={colorMode === "light" ? "normal" : "color"}
+      bgColor={bgColor}
+      bgGradient={background ? undefined : bgGradient}
+      bgBlendMode={bgBlendMode}
       minHeight="100vh"
       display="flex"
       flexDir={"column"}
