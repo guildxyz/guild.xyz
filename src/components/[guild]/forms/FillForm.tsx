@@ -14,6 +14,7 @@ import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 import { Controller, FormProvider, useForm } from "react-hook-form"
 import { PlatformType } from "types"
 import fetcher from "utils/fetcher"
+import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
 import FillFormProgress from "./FillFormProgress"
 import SuccessfullySubmittedForm from "./SuccessfullySubmittedForm"
@@ -39,6 +40,7 @@ const FillForm = ({ form }: Props) => {
   )
 
   const { userSubmission, mutate: mutateSubmission } = useUserFormSubmission(form)
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { rewardClaimed } = useCustomPosthogEvents()
 
@@ -60,6 +62,7 @@ const FillForm = ({ form }: Props) => {
         mutateSubmission(res, {
           revalidate: false,
         })
+        triggerMembershipUpdate()
       },
       onError: (error) => showErrorToast(error),
     }
