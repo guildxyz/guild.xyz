@@ -4,14 +4,21 @@ import { useFormContext, useWatch } from "react-hook-form"
 import { ImportPoapForm } from "../AddPoapPanel"
 import UploadTxt from "./UploadTxt"
 
+const LEGACY_POAP_MINT_LINK_BASE = "http://poap.xyz/claim/"
+const POAP_MINT_LINK_BASE = "http://poap.xyz/mint/"
+
 export const validatePoapLinks = (links: string[]) =>
   links
     .filter(Boolean)
+    .map((link) => link.toLowerCase())
     .every(
       (link) =>
-        link.toLowerCase().startsWith("http://poap.xyz/claim/") &&
+        (link.startsWith(LEGACY_POAP_MINT_LINK_BASE) ||
+          link.startsWith(POAP_MINT_LINK_BASE)) &&
         /^[A-Za-z0-9]*$/i.test(
-          link.toLowerCase().replace("http://poap.xyz/claim/", "")
+          link
+            .replace(LEGACY_POAP_MINT_LINK_BASE, "")
+            .replace(POAP_MINT_LINK_BASE, "")
         )
     )
 
