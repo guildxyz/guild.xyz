@@ -15,7 +15,7 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
       .map((gp) => gp.platformGuildData.formId) ?? []
-  const { data: forms, isLoading, mutate } = useGuildForms()
+  const { data: forms, isLoading, isValidating, mutate } = useGuildForms()
 
   const { errors } = useFormState()
   const { setValue } = useFormContext()
@@ -35,6 +35,7 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
 
   const handleFormAdded = () => {
     mutate().then(() => {
+      if (!forms || forms?.length === 1) return
       setValue(`${baseFieldPath}.data.id`, forms[forms.length - 1].id, {
         shouldDirty: true,
       })
@@ -51,7 +52,7 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
         <ControlledSelect
           name={`${baseFieldPath}.data.id`}
           isDisabled={!forms}
-          isLoading={isLoading}
+          isLoading={isLoading || isValidating}
           options={formOptions}
         />
 

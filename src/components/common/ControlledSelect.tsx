@@ -1,4 +1,3 @@
-import { Skeleton } from "@chakra-ui/react"
 import { useController, UseControllerProps } from "react-hook-form"
 import { SelectOption } from "types"
 import StyledSelect from "./StyledSelect"
@@ -34,29 +33,27 @@ const ControlledSelect = ({
   })
 
   return (
-    <Skeleton isLoaded={!rest.isLoading}>
-      <StyledSelect
-        ref={ref}
-        name={name}
-        options={options}
-        defaultValue={options?.find(
-          (option: SelectOption) => option.value === defaultValue
-        )}
-        value={
-          options?.find((option: SelectOption) => option.value === value) ??
-          fallbackValue ??
-          null
-        }
-        onChange={(newValue: SelectOption) => {
-          beforeOnChange?.(newValue)
-          onChange(newValue?.value ?? null)
-          afterOnChange?.(newValue)
-        }}
-        onBlur={onBlur}
-        isCopyable={isCopyable}
-        {...rest}
-      />
-    </Skeleton>
+    <StyledSelect
+      ref={ref}
+      name={name}
+      options={options}
+      defaultValue={options?.find(
+        (option: SelectOption) => option.value === defaultValue
+      )}
+      value={
+        options?.find((option: SelectOption) => option.value === value) ??
+        fallbackValue ??
+        null
+      }
+      onChange={(newValue: SelectOption) => {
+        beforeOnChange?.(newValue)
+        onChange(newValue?.value ?? null)
+        afterOnChange?.(newValue)
+      }}
+      onBlur={onBlur}
+      isCopyable={isCopyable}
+      {...rest}
+    />
   )
 }
 
