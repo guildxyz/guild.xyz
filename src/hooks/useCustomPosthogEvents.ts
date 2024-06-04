@@ -37,6 +37,14 @@ export default function useCustomPosthogEvents() {
         platformName: PlatformType[platformId],
         guild: urlName,
         userId: id,
+        ...(platformId === PlatformType.CONTRACT_CALL
+          ? {
+              $set: {
+                mintedReward: true,
+                mintedNFT: true,
+              },
+            }
+          : {}),
       })
     },
   } as const
