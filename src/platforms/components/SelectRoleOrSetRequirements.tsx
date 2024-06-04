@@ -48,6 +48,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
         register("requirements", {
           value: [{ type: "FREE" }],
         })
+        // For some reason, the register call does not always set the value
+        setValue("requirements", [{ type: "FREE" }])
       }
     }
     setActiveTab(value)

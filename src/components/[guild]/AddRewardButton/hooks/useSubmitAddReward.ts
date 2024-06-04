@@ -15,7 +15,7 @@ import { useAddRewardDiscardAlert } from "./useAddRewardDiscardAlert"
 const isERC20 = (data) =>
   data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
-const useSubmitAddReward = () => {
+const useSubmitAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
   const toast = useToast()
   const { selection, onClose: onAddRewardModalClose } = useAddRewardContext()
   const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()
@@ -34,6 +34,7 @@ const useSubmitAddReward = () => {
     useCreateRole({
       onSuccess: () => {
         toast({ status: "success", title: "Reward successfully added" })
+        onSuccess?.()
         onCloseAndClear()
       },
     })
@@ -42,6 +43,7 @@ const useSubmitAddReward = () => {
     useCreateReqBasedTokenReward({
       onSuccess: () => {
         toast({ status: "success", title: "Reward successfully added" })
+        onSuccess?.()
         onCloseAndClear()
       },
       onError: (err) => console.error(err),
@@ -51,6 +53,7 @@ const useSubmitAddReward = () => {
     useAddReward({
       onSuccess: () => {
         captureEvent("[discord setup] successfully added to existing guild")
+        onSuccess?.()
         onCloseAndClear()
       },
       onError: (err) => {

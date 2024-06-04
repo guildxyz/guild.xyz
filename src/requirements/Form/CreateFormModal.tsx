@@ -4,7 +4,7 @@ import rewards, { modalSizeForPlatform } from "platforms/rewards"
 import { useEffect } from "react"
 
 const CreateFormModal = ({ isOpen, onClose, onAdd }) => {
-  const { setSelection, setStep } = useAddRewardContext()
+  const { setSelection } = useAddRewardContext()
 
   useEffect(() => {
     setSelection("FORM")

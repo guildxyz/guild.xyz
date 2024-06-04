@@ -1,4 +1,4 @@
-import { Button, Modal, ModalOverlay } from "@chakra-ui/react"
+import { Button, Modal, ModalOverlay, Text } from "@chakra-ui/react"
 import {
   AddRewardForm,
   defaultValues,
@@ -12,7 +12,7 @@ import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import CreateFormModal from "./CreateFormModal"
 
-const AddFormButton = () => {
+const AddFormButton = ({ onSuccess }: { onSuccess: () => void }) => {
   const { selection, setSelection, step, setStep, isOpen, onOpen, onClose } =
     useAddRewardContext()
 
@@ -22,16 +22,23 @@ const AddFormButton = () => {
 
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
+  const handleOpen = () => {
+    onOpen()
+    setStep("REWARD_SETUP")
+  }
+
   useEffect(() => {
     setSelection("FORM")
   }, [setSelection])
 
   return (
     <>
-      <Button onClick={onOpen}>Create new</Button>
-
       <FormProvider {...methods}>
-        {step === "HOME" && (
+        <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={handleOpen}>
+          <Text colorScheme={"gray"}>Create new</Text>
+        </Button>
+
+        {step === "REWARD_SETUP" && (
           <CreateFormModal
             onClose={onClose}
             isOpen={isOpen}
@@ -57,7 +64,7 @@ const AddFormButton = () => {
             colorScheme="dark"
           >
             <ModalOverlay />
-            <SelectRolePanel />
+            <SelectRolePanel onSuccess={onSuccess} />
           </Modal>
         )}
       </FormProvider>
@@ -65,9 +72,9 @@ const AddFormButton = () => {
   )
 }
 
-const AddFormButtonWrapper = () => (
+const AddFormButtonWrapper = ({ onSuccess }: { onSuccess: () => void }) => (
   <AddRewardProvider>
-    <AddFormButton />
+    <AddFormButton onSuccess={onSuccess} />
   </AddRewardProvider>
 )
 
