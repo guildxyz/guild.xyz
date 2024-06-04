@@ -4,7 +4,7 @@ interface Props {
   ogTitle?: string
   ogDescription?: string
   imageUrl?: string
-  title?: JSX.Element | string
+  title?: string
 }
 
 export const Head = ({ ogTitle, ogDescription, title, imageUrl }: Props) => (
