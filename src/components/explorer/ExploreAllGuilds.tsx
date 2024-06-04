@@ -105,7 +105,12 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     if (prevSearch === search || prevSearch === undefined) return
     setSize(1)
   }, [search, prevSearch, setSize])
-  useScrollBatchedRendering(1, ref, isValidating, setSize)
+  useScrollBatchedRendering({
+    batchSize: 1,
+    scrollTarget: ref,
+    disableRendering: isValidating,
+    setElementCount: setSize,
+  })
 
   return (
     <Stack spacing={{ base: 8, md: 10 }}>

@@ -32,7 +32,7 @@ import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { PlatformType, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
@@ -44,7 +44,6 @@ const Leaderboard = () => {
   const { id: guildId, name, imageUrl, description, socialLinks, tags } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
-  const wrapperRef = useRef(null)
 
   const relatedTokenRewards = useTokenRewards(false, Number(router.query.pointsId))
 
@@ -61,12 +60,11 @@ const Leaderboard = () => {
     () => data?.leaderboard?.length <= renderedUsersCount,
     [data, renderedUsersCount]
   )
-  useScrollBatchedRendering(
-    BATCH_SIZE,
-    wrapperRef,
+  const wrapperRef = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
     disableRendering,
-    setRenderedUsersCount
-  )
+    setElementCount: setRenderedUsersCount,
+  })
 
   const userData = data?.aroundUser?.find((user) => user.userId === userId)
 

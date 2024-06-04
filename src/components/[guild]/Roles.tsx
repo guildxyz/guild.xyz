@@ -5,7 +5,7 @@ import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { Visibility } from "types"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useRoleGroup from "./hooks/useRoleGroup"
@@ -52,17 +52,15 @@ const Roles = () => {
   )
 
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
-  const rolesEl = useRef(null)
   const disableRendering = useMemo(
     () => roles?.length <= renderedRolesCount,
     [roles, renderedRolesCount]
   )
-  useScrollBatchedRendering(
-    BATCH_SIZE,
-    rolesEl,
+  const rolesEl = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
     disableRendering,
-    setRenderedRolesCount
-  )
+    setElementCount: setRenderedRolesCount,
+  })
 
   return (
     <>
