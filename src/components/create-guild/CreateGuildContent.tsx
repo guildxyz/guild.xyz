@@ -2,24 +2,16 @@ import { Stack } from "@chakra-ui/react"
 import { useThemeContext } from "components/[guild]/ThemeContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { Layout } from "components/common/CompoundLayout"
-import GuildLogo from "components/common/GuildLogo"
 import CreateGuildButton from "components/create-guild/CreateGuildButton"
 import { useCreateGuildContext } from "components/create-guild/CreateGuildContext"
 import CreateGuildStepper, {
   STEPS,
 } from "components/create-guild/CreateGuildStepper"
-import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import GuildCreationProgress from "components/create-guild/GuildCreationProgress"
 import { useEffect } from "react"
-import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import { useWatch } from "react-hook-form"
 
-export function BoundDynamicDevTool() {
-  const { control } = useFormContext<GuildFormType>()
-  return <DynamicDevTool control={control} />
-}
-
-export function BoundContent() {
+export function CreateGuildContent() {
   const { textColor, localThemeColor } = useThemeContext()
   const {
     activeStep,
@@ -67,48 +59,5 @@ export function BoundContent() {
         {stepPart === 1 ? <CreateGuildButton /> : null}
       </GuildCreationProgress>
     </Layout.Content>
-  )
-}
-
-export function BoundHead() {
-  const name = useWatch({ name: "name" })
-  const imageUrl = useWatch({ name: "imageUrl" })
-
-  return <Layout.Head title={name || "Create Guild"} imageUrl={imageUrl} />
-}
-
-export function BoundHeadline() {
-  const name = useWatch({ name: "name" })
-  const { textColor } = useThemeContext()
-  const imageUrl = useWatch({ name: "imageUrl" })
-
-  return (
-    <Layout.Headline
-      title={name || "Create Guild"}
-      image={
-        imageUrl && (
-          <GuildLogo
-            imageUrl={imageUrl}
-            size={{ base: "56px", lg: "72px" }}
-            mt={{ base: 1, lg: 2 }}
-            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-          />
-        )
-      }
-    />
-  )
-}
-
-export function BoundBackground() {
-  const { localThemeColor, localBackgroundImage } = useThemeContext()
-  const themeColor = useWatch({ name: "theme.color" })
-  const color = localThemeColor !== themeColor ? themeColor : localThemeColor
-
-  return (
-    <Layout.Background
-      backgroundOffset={47}
-      background={color}
-      backgroundImage={localBackgroundImage}
-    />
   )
 }

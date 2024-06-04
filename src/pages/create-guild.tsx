@@ -1,28 +1,26 @@
 import { ThemeProvider } from "components/[guild]/ThemeContext"
 import { Layout } from "components/common/CompoundLayout"
-import {
-  BoundBackground,
-  BoundContent,
-  BoundDynamicDevTool,
-  BoundHead,
-  BoundHeadline,
-} from "components/create-guild/BoundComponents"
+import { CreateGuildBackground } from "components/create-guild/CreateGuildBackground"
+import { CreateGuildContent } from "components/create-guild/CreateGuildContent"
 import { CreateGuildProvider } from "components/create-guild/CreateGuildContext"
+import { CreateGuildDynamicDevTool } from "components/create-guild/CreateGuildDynamicDevTool"
+import { CreateGuildHead } from "components/create-guild/CreateGuildHead"
+import { CreateGuildHeadline } from "components/create-guild/CreateGuildHeadline"
 
 const CreateGuildPage = (): JSX.Element => (
   <>
     <Layout.Root>
-      <BoundHead />
+      <CreateGuildHead />
       <Layout.HeaderSection>
-        <BoundBackground />
+        <CreateGuildBackground />
         <Layout.Header />
-        <BoundHeadline />
+        <CreateGuildHeadline />
       </Layout.HeaderSection>
       <Layout.MainSection>
-        <BoundContent />
+        <CreateGuildContent />
       </Layout.MainSection>
     </Layout.Root>
-    <BoundDynamicDevTool />
+    <CreateGuildDynamicDevTool />
   </>
 )
 
