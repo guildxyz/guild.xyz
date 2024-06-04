@@ -50,7 +50,7 @@ const useCreateReqBasedTokenReward = ({
   onSuccess,
   onError,
 }: {
-  onSuccess: () => void
+  onSuccess: (res?: any) => void
   onError: (err) => void
 }) => {
   const showErrorToast = useShowErrorToast()
@@ -65,13 +65,13 @@ const useCreateReqBasedTokenReward = ({
   }
 
   const { onSubmit: onAddRewardSubmit, isLoading: creatingReward } = useAddReward({
-    onSuccess: () => {
+    onSuccess: (res) => {
       captureEvent(
         "createTokenReward(AddToExistingRole) Reward created",
         postHogOptions
       )
       triggerMembershipUpdate()
-      onSuccess()
+      onSuccess(res)
     },
     onError: (err) => {
       captureEvent("createTokenReward(CreateWithNewRole) Failed to create reward", {

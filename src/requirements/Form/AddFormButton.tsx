@@ -12,8 +12,8 @@ import { useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import CreateFormModal from "./CreateFormModal"
 
-const AddFormButton = ({ onSuccess }: { onSuccess: () => void }) => {
-  const { selection, setSelection, step, setStep, isOpen, onOpen, onClose } =
+const AddFormButton = ({ onSuccess }: { onSuccess: (formId: number) => void }) => {
+  const { setSelection, step, setStep, isOpen, onOpen, onClose } =
     useAddRewardContext()
 
   const methods = useForm<AddRewardForm>({
@@ -30,6 +30,11 @@ const AddFormButton = ({ onSuccess }: { onSuccess: () => void }) => {
   useEffect(() => {
     setSelection("FORM")
   }, [setSelection])
+
+  const handleSuccess = (res: any) => {
+    const formId = res?.platformGuildData?.formId
+    return onSuccess(formId)
+  }
 
   return (
     <>
@@ -64,7 +69,7 @@ const AddFormButton = ({ onSuccess }: { onSuccess: () => void }) => {
             colorScheme="dark"
           >
             <ModalOverlay />
-            <SelectRolePanel onSuccess={onSuccess} />
+            <SelectRolePanel onSuccess={handleSuccess} />
           </Modal>
         )}
       </FormProvider>
@@ -72,7 +77,11 @@ const AddFormButton = ({ onSuccess }: { onSuccess: () => void }) => {
   )
 }
 
-const AddFormButtonWrapper = ({ onSuccess }: { onSuccess: () => void }) => (
+const AddFormButtonWrapper = ({
+  onSuccess,
+}: {
+  onSuccess: (formId: number) => void
+}) => (
   <AddRewardProvider>
     <AddFormButton onSuccess={onSuccess} />
   </AddRewardProvider>

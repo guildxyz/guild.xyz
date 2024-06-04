@@ -15,7 +15,7 @@ import { useAddRewardDiscardAlert } from "./useAddRewardDiscardAlert"
 const isERC20 = (data) =>
   data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
-const useSubmitAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
+const useSubmitAddReward = ({ onSuccess }: { onSuccess?: (res?: any) => void }) => {
   const toast = useToast()
   const { selection, onClose: onAddRewardModalClose } = useAddRewardContext()
   const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()
@@ -32,18 +32,18 @@ const useSubmitAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
     useCreateRole({
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast({ status: "success", title: "Reward successfully added" })
-        onSuccess?.()
+        onSuccess?.(res)
         onCloseAndClear()
       },
     })
 
   const { submitCreate: submitCreateReqBased, isLoading: erc20Loading } =
     useCreateReqBasedTokenReward({
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast({ status: "success", title: "Reward successfully added" })
-        onSuccess?.()
+        onSuccess?.(res)
         onCloseAndClear()
       },
       onError: (err) => console.error(err),
@@ -51,9 +51,9 @@ const useSubmitAddReward = ({ onSuccess }: { onSuccess?: () => void }) => {
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
     useAddReward({
-      onSuccess: () => {
+      onSuccess: (res) => {
         captureEvent("[discord setup] successfully added to existing guild")
-        onSuccess?.()
+        onSuccess?.(res)
         onCloseAndClear()
       },
       onError: (err) => {

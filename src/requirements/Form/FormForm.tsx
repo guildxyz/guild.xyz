@@ -33,10 +33,9 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
         value: form.id,
       })) ?? []
 
-  const handleFormAdded = () => {
+  const handleFormAdded = (formId: number) => {
     mutate().then(() => {
-      if (!forms || forms?.length === 1) return
-      setValue(`${baseFieldPath}.data.id`, forms[forms.length - 1].id, {
+      setValue(`${baseFieldPath}.data.id`, formId, {
         shouldDirty: true,
       })
     })

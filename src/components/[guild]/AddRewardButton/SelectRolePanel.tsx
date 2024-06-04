@@ -22,12 +22,12 @@ import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useSubmitAddReward from "./hooks/useSubmitAddReward"
 
-const SelectRolePanel = ({ onSuccess }: { onSuccess?: () => void }) => {
+const SelectRolePanel = ({ onSuccess }: { onSuccess?: (res?: any) => void }) => {
   const { modalRef, selection, activeTab, setStep, isBackButtonDisabled } =
     useAddRewardContext()
 
   const { onSubmit, isLoading } = useSubmitAddReward({
-    onSuccess: () => onSuccess?.(),
+    onSuccess: (res?: any) => onSuccess?.(res),
   })
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")

@@ -11,7 +11,7 @@ const useAddReward = ({
   onSuccess,
   onError,
 }: {
-  onSuccess?: () => void
+  onSuccess?: (res?: any) => void
   onError?: (err: unknown) => void
 }) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
@@ -44,7 +44,7 @@ const useAddReward = ({
 
       toast({ status: "success", title: "Reward successfully added" })
       mutateGuild()
-      onSuccess?.()
+      onSuccess?.(response)
     },
   })
 }
