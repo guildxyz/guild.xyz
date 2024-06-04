@@ -11,7 +11,7 @@ type Props = {
   action?: ReactNode | undefined
 }
 
-export const Headline = ({ image, title, description, action }: Props) => {
+const Headline = ({ image, title, description, action }: Props) => {
   const { textColor } = useThemeContext()
 
   return (
@@ -52,3 +52,5 @@ export const Headline = ({ image, title, description, action }: Props) => {
     )
   )
 }
+
+export default Headline

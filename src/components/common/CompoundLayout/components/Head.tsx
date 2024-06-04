@@ -7,7 +7,7 @@ interface Props {
   title?: string
 }
 
-export const Head = ({ ogTitle, ogDescription, title, imageUrl }: Props) => (
+const Head = ({ ogTitle, ogDescription, title, imageUrl }: Props) => (
   <NextHead>
     <title>{`${ogTitle ?? title}`}</title>
     <meta property="og:title" content={`${ogTitle ?? title}`} />
@@ -20,3 +20,5 @@ export const Head = ({ ogTitle, ogDescription, title, imageUrl }: Props) => (
     )}
   </NextHead>
 )
+
+export default Head

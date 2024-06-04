@@ -1,12 +1,13 @@
 import BackButton from "./components/BackButton"
-import { Background } from "./components/Background"
-import { Content } from "./components/Content"
-import { Footer } from "./components/Footer"
-import { Head } from "./components/Head"
-import { Header } from "./components/Header"
-import { Headline } from "./components/Headline"
-import { Root } from "./components/Root"
-import { HeaderSection, MainSection } from "./components/Section"
+import Background from "./components/Background"
+import Content from "./components/Content"
+import Footer from "./components/Footer"
+import Head from "./components/Head"
+import Header from "./components/Header"
+import HeaderSection from "./components/HeaderSection"
+import Headline from "./components/Headline"
+import MainSection from "./components/MainSection"
+import Root from "./components/Root"
 
 /**
  * A polymorphic compound component that generically displays the base of a page

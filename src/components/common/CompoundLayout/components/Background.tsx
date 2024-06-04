@@ -11,7 +11,7 @@ type Props = {
   backgroundOffset?: number
 }
 
-export const Background = ({
+const Background = ({
   background,
   backgroundImage,
   backgroundProps,
@@ -54,3 +54,5 @@ export const Background = ({
     )
   )
 }
+
+export default Background

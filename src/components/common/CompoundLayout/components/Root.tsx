@@ -7,11 +7,7 @@ type Props = PropsWithChildren<{
   maxWidth?: string
 }>
 
-export function Root({
-  children,
-  background,
-  maxWidth = "sizes.container.lg",
-}: Props) {
+function Root({ children, background, maxWidth = "sizes.container.lg" }: Props) {
   const { colorMode } = useColorMode()
 
   return (
@@ -36,3 +32,5 @@ export function Root({
     </Box>
   )
 }
+
+export default Root

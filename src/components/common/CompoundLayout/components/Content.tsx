@@ -3,7 +3,7 @@ import { PropsWithChildren, useRef } from "react"
 
 type Props = PropsWithChildren<Omit<BoxProps, "title">>
 
-export const Content = ({ children, ...wrapperProps }: Props) => {
+const Content = ({ children, ...wrapperProps }: Props) => {
   const childrenWrapper = useRef(null)
 
   return (
@@ -12,3 +12,5 @@ export const Content = ({ children, ...wrapperProps }: Props) => {
     </Box>
   )
 }
+
+export default Content
