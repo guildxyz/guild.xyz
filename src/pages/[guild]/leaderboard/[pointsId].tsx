@@ -123,27 +123,29 @@ const Leaderboard = () => {
         rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
-        <Stack spacing={3}>
-          {relatedTokenRewards.map((guildPlatform) => (
-            <LeaderboardAirdropCard
-              key={guildPlatform.id}
-              guildPlatform={guildPlatform}
-            />
-          ))}
+        {(relatedTokenRewards.length || userData) && (
+          <Stack spacing={3}>
+            {relatedTokenRewards.map((guildPlatform) => (
+              <LeaderboardAirdropCard
+                key={guildPlatform.id}
+                guildPlatform={guildPlatform}
+              />
+            ))}
 
-          {userData && (
-            <LeaderboardUserCard
-              address={
-                userData.address ??
-                addresses?.find((address) => address.isPrimary).address
-              }
-              score={userData.totalPoints}
-              position={userData.rank}
-              isCurrentUser
-              tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
-            />
-          )}
-        </Stack>
+            {userData && (
+              <LeaderboardUserCard
+                address={
+                  userData.address ??
+                  addresses?.find((address) => address.isPrimary).address
+                }
+                score={userData.totalPoints}
+                position={userData.rank}
+                isCurrentUser
+                tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
+              />
+            )}
+          </Stack>
+        )}
 
         <Section
           ref={wrapperRef}
