@@ -38,7 +38,7 @@ const SetPointsAmount = ({
           },
         },
       }
-      setValue(dynamicAmountFieldPath, defaultDynamic)
+      setValue(dynamicAmountFieldPath, defaultDynamic, { shouldDirty: true })
       unregister(`${baseFieldPath}.platformRoleData`)
     }
     if (newType === "static") {
