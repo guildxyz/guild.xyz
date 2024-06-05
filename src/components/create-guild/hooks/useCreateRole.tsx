@@ -30,8 +30,8 @@ const useCreateRole = ({
   onSuccess,
   onError,
 }: {
-  onSuccess?: () => void
-  onError?: (error) => void
+  onSuccess?: (res?: CreateRoleResponse) => void
+  onError?: (error: any) => void
 }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
@@ -80,7 +80,7 @@ const useCreateRole = ({
       }))
       window.location.hash = `role-${response_.id}`
 
-      onSuccess?.()
+      onSuccess?.(response_)
     },
   })
 

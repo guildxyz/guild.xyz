@@ -223,6 +223,20 @@ export default function waasConnector(options: InitializeWaasOptions) {
         throw new WaasActionFailed(error)
       }
     },
+
+    async exportKeys(backupData: string) {
+      try {
+        await this.getProvider()
+        throwIfNoWallet()
+
+        const privateKey = await waas.wallets.wallet.exportKeys(backupData)
+
+        return privateKey
+      } catch (error) {
+        console.error(error)
+        throw new WaasActionFailed(error)
+      }
+    },
   }))
 }
 

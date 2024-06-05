@@ -11,15 +11,24 @@ import { defaultValues } from "../AddRewardButton"
 import useCreateReqBasedTokenReward from "../useCreateTokenReward"
 import useAddReward from "./useAddReward"
 import { useAddRewardDiscardAlert } from "./useAddRewardDiscardAlert"
+import useAddRoleRewards from "./useAddRoleRewards"
 
 const isERC20 = (data) =>
   data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
-const useSubmitAddReward = () => {
+const useSubmitAddReward = ({
+  onSuccess,
+}: {
+  onSuccess?: (
+    res?:
+      | ReturnType<typeof useCreateRole>["response"]
+      | ReturnType<typeof useAddReward>["response"]
+  ) => void
+}) => {
   const toast = useToast()
   const { selection, onClose: onAddRewardModalClose } = useAddRewardContext()
   const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()
-  const { roles } = useGuild()
+  const { roles, guildPlatforms } = useGuild()
   const { captureEvent } = usePostHogContext()
 
   const methods = useFormContext()
@@ -32,16 +41,18 @@ const useSubmitAddReward = () => {
 
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
     useCreateRole({
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast({ status: "success", title: "Reward successfully added" })
+        onSuccess?.(res)
         onCloseAndClear()
       },
     })
 
   const { submitCreate: submitCreateReqBased, isLoading: erc20Loading } =
     useCreateReqBasedTokenReward({
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast({ status: "success", title: "Reward successfully added" })
+        onSuccess?.(res)
         onCloseAndClear()
       },
       onError: (err) => console.error(err),
@@ -49,8 +60,9 @@ const useSubmitAddReward = () => {
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
     useAddReward({
-      onSuccess: () => {
+      onSuccess: (res) => {
         captureEvent("[discord setup] successfully added to existing guild")
+        onSuccess?.(res)
         onCloseAndClear()
       },
       onError: (err) => {
@@ -60,7 +72,18 @@ const useSubmitAddReward = () => {
       },
     })
 
-  const isLoading = isAddRewardLoading || isCreateRoleLoading || erc20Loading
+  const { onSubmit: onAddRoleRewardSubmit, isLoading: isAddRoleRewardLoading } =
+    useAddRoleRewards({
+      onSuccess: () => {
+        onCloseAndClear()
+      },
+    })
+
+  const isLoading =
+    isAddRewardLoading ||
+    isCreateRoleLoading ||
+    erc20Loading ||
+    isAddRoleRewardLoading
 
   const submitERC20Reward = async (
     data: any,
@@ -92,18 +115,42 @@ const useSubmitAddReward = () => {
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
 
-    if (data.requirements?.length > 0) {
+    const existingDCReward = guildPlatforms?.find(
+      (gp) =>
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformId ===
+          PlatformType.DISCORD &&
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformId === gp.platformId &&
+        data?.rolePlatforms?.[0]?.guildPlatform?.platformGuildId ===
+          gp.platformGuildId
+    )
+
+    if (existingDCReward && data.rolePlatforms[0]) {
+      data.rolePlatforms[0].guildPlatform = existingDCReward
+      data.rolePlatforms[0].guildPlatformId = existingDCReward.id
+
+      if (!data.rolePlatforms[0].platformRoleId) {
+        // Delete any falsy values
+        delete data.rolePlatforms[0].platformRoleId
+      }
+    }
+
+    if (!data.roleIds || data?.roleIds.length === 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
         ...data,
-        name: data.name || `New ${rewards[selection].name} role`,
+        name: data.roleName || `New ${rewards[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
         roleVisibility,
         rolePlatforms: data.rolePlatforms.map((rp) => ({
           ...rp,
           visibility: roleVisibility,
         })),
+      })
+    } else if (existingDCReward) {
+      onAddRoleRewardSubmit({
+        roleIds: data?.roleIds ?? [],
+        ...data?.rolePlatforms?.[0],
       })
     } else {
       onAddRewardSubmit({

@@ -123,7 +123,7 @@ const MembersPage = (): JSX.Element => {
   )
 
   useEffect(() => {
-    if (!isReady || !queryString) return
+    if (!isReady) return
 
     const path = asPath.split("?")[0]
     replace(`${path}?${queryString}`, null, { scroll: false })

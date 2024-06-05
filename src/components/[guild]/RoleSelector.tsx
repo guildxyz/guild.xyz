@@ -9,11 +9,13 @@ type Props = {
   roles: Role[]
   size?: "md" | "lg"
   allowMultiple?: boolean
+  isGuildPlatformAlreadyInUse?: boolean
 } & CheckboxGroupProps
 
 const DynamicNoRolesAlert = dynamic(() => import("components/[guild]/NoRolesAlert"))
 
 const RoleSelector = ({
+  isGuildPlatformAlreadyInUse = false,
   roles,
   size,
   allowMultiple = true,
@@ -24,7 +26,14 @@ const RoleSelector = ({
 
   const group = useRoleGroup()
 
-  if (!roles?.length) return <DynamicNoRolesAlert type={group ? "GROUP" : "GUILD"} />
+  if (!roles?.length) {
+    return (
+      <DynamicNoRolesAlert
+        type={group ? "GROUP" : "GUILD"}
+        areAllRolesInUse={isGuildPlatformAlreadyInUse}
+      />
+    )
+  }
 
   return (
     <CheckboxGroup

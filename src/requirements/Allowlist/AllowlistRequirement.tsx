@@ -58,7 +58,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
         isEmail ? (
           <HStack>
             {!hasAccess && <RequirementConnectButton />}
-            <HiddenAllowlistText isEmail={isEmail} />
+            {hideAllowlist && <HiddenAllowlistText isEmail={isEmail} />}
           </HStack>
         ) : (
           hideAllowlist && <HiddenAllowlistText isEmail={isEmail} />

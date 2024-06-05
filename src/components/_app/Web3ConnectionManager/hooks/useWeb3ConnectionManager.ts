@@ -3,7 +3,7 @@ import {
   useDisconnect as useFuelDisconnect,
   useIsConnected,
   useWallet,
-} from "@fuel-wallet/react"
+} from "@fuels/react"
 import parseFuelAddress from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/parseFuelAddress"
 import { atom, useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"

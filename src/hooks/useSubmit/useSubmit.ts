@@ -1,7 +1,7 @@
-import { useWallet } from "@fuel-wallet/react"
+import { useWallet } from "@fuels/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
-import { type WalletUnlocked } from "fuels"
+import { Account } from "fuels"
 import useLocalStorage from "hooks/useLocalStorage"
 import useTimeInaccuracy from "hooks/useTimeInaccuracy"
 import randomBytes from "randombytes"
@@ -272,7 +272,7 @@ export type SignProps = SignBaseProps & {
   walletClient: WalletClient
 }
 
-export type FuelSignProps = SignBaseProps & { wallet: WalletUnlocked }
+export type FuelSignProps = SignBaseProps & { wallet: Account }
 
 const createMessageParams = (
   address: `0x${string}`,

@@ -84,7 +84,10 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
 
 export type AddRewardPanelProps = {
   onAdd: (
-    data: RoleFormType["rolePlatforms"][number] & { requirements?: Requirement[] }
+    data: RoleFormType["rolePlatforms"][number] & {
+      requirements?: Requirement[]
+      roleName?: string
+    }
   ) => void
   skipSettings?: boolean
 }

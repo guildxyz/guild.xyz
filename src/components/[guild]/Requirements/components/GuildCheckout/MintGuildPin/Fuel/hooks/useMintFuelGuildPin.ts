@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useAccount, useWallet } from "@fuel-wallet/react"
+import { useAccount, useProvider, useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
-import { BaseAssetId } from "fuels"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import { useToastWithTweetButton } from "hooks/useToast"
@@ -47,6 +46,7 @@ const useMintFuelGuildPin = () => {
   const toastWithTweetButton = useToastWithTweetButton()
   const showErrorToast = useShowErrorToast()
 
+  const { provider } = useProvider()
   const { wallet } = useWallet()
   const { account } = useAccount()
   const address = parseFuelAddress(account)
@@ -111,7 +111,7 @@ const useMintFuelGuildPin = () => {
 
     await contract.functions
       .claim(contractCallParams, signature)
-      .callParams({ forward: [fee.toNumber(), BaseAssetId] })
+      .callParams({ forward: [fee.toNumber(), provider.getBaseAssetId()] })
       .call()
 
     // We can't fetch users Fuel Pins, since there isn't a method for it in the contract yet

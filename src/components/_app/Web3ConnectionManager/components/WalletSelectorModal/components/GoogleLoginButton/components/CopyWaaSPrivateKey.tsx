@@ -4,20 +4,22 @@ import useSubmit from "hooks/useSubmit"
 import useToast, { useToastWithButton } from "hooks/useToast"
 import { Check, CloudArrowDown, Copy } from "phosphor-react"
 import { useEffect } from "react"
+import { useAccount } from "wagmi"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
-const CopyCWaaSBackupData = () => {
+const CopyWaaSPrivateKey = () => {
   const { captureEvent } = usePostHogContext()
   const driveOAuth = useDriveOAuth()
   const toast = useToast()
   const toastWithButton = useToastWithButton()
   const {
     onCopy,
-    setValue: setBackup,
-    value: backup,
+    setValue: setPrivateKey,
+    value: privateKey,
     hasCopied,
   } = useClipboard("", 4000)
+  const { connector } = useAccount()
 
   useEffect(() => {
     if (!hasCopied) return
@@ -25,17 +27,18 @@ const CopyCWaaSBackupData = () => {
     toast({
       status: "success",
       title: "Copied!",
-      description: "Backup data successfully copied to the clipboard",
+      description:
+        "Private key successfully copied to the clipboard, you can now paste it into a wallet app",
     })
   }, [hasCopied, toast])
 
   // This toast is needed, because we can't copy to clipboard immediately after the submit, due to browser limitations
   useEffect(() => {
-    if (!backup) return
+    if (!privateKey) return
 
     toastWithButton({
       status: "info",
-      title: "Backup downloaded",
+      title: "Private key generated",
       description: "Click the button below to copy it to the clipboard!",
       buttonProps: {
         onClick: onCopy,
@@ -44,13 +47,13 @@ const CopyCWaaSBackupData = () => {
         children: "Copy",
       },
     })
-  }, [backup, toastWithButton, onCopy, hasCopied])
+  }, [privateKey, toastWithButton, onCopy, hasCopied])
 
   const copyBackup = useSubmit(
     async () => {
       captureEvent("[WaaS Backup] Clicked copy backup data")
 
-      if (!!backup) {
+      if (!!privateKey) {
         onCopy()
         return
       }
@@ -78,7 +81,17 @@ const CopyCWaaSBackupData = () => {
         throw new Error("No backup data found on wallet file")
       }
       captureEvent("[WaaS Backup] Backup data found")
-      setBackup(backupData)
+
+      // connector is always waas connector here
+      const pk = await (connector as any).exportKeys(backupData).catch(() => null)
+
+      if (!pk?.[0]?.ecKeyPrivate) {
+        throw new Error(
+          "Failed to export private key, make sure to authenticate with the correct Google account"
+        )
+      }
+
+      setPrivateKey(pk[0].ecKeyPrivate)
     },
     {
       onError: (error) => {
@@ -97,17 +110,17 @@ const CopyCWaaSBackupData = () => {
   )
 
   return (
-    <Tooltip label="Copy wallet backup data">
+    <Tooltip label="Export wallet private key">
       <IconButton
         size="sm"
         variant="outline"
         onClick={copyBackup.onSubmit}
         isLoading={copyBackup.isLoading}
         icon={<Icon as={hasCopied ? Check : CloudArrowDown} />}
-        aria-label="Copy wallet backup data"
+        aria-label="Export wallet private key"
       />
     </Tooltip>
   )
 }
 
-export default CopyCWaaSBackupData
+export default CopyWaaSPrivateKey
