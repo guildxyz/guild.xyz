@@ -53,12 +53,18 @@ const AddFormButton = ({ baseFieldPath }: { baseFieldPath: string }) => {
           onClose={onClose}
           isOpen={isOpen}
           onAdd={(createdRolePlatform) => {
+            const {
+              roleName = null,
+              requirements = null,
+              ...rest
+            } = createdRolePlatform
             methods.setValue("rolePlatforms.0", {
-              ...createdRolePlatform,
+              ...rest,
               visibility,
             })
-            if (createdRolePlatform?.requirements?.length > 0) {
-              methods.setValue("requirements", createdRolePlatform.requirements)
+            if (roleName) methods.setValue("name", roleName)
+            if (requirements?.length > 0) {
+              methods.setValue("requirements", requirements)
             }
             setStep("SELECT_ROLE")
           }}
