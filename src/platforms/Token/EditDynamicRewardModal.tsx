@@ -52,6 +52,7 @@ const EditDynamicRewardModal = ({
   const methods = useForm({
     defaultValues: {
       dynamicAmount: rolePlatform.dynamicAmount,
+      platformRoleData: { score: "0" },
     },
   })
 

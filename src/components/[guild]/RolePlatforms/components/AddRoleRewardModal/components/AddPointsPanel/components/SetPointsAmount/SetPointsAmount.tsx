@@ -39,7 +39,9 @@ const SetPointsAmount = ({
         },
       }
       setValue(dynamicAmountFieldPath, defaultDynamic, { shouldDirty: true })
-      unregister(`${baseFieldPath}.platformRoleData`)
+      setValue(`${baseFieldPath}.platformRoleData.score`, {
+        platformRoleData: { score: "0" },
+      })
     }
     if (newType === "static") {
       setValue(dynamicAmountFieldPath, null)
