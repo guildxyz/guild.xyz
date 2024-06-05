@@ -21,8 +21,6 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { rewardCreated } = useCustomPosthogEvents()
 
   const submit = async (data: RoleEditFormData) => {
-    console.log("Submit data: ", data)
-
     const {
       rolePlatforms,
       // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
