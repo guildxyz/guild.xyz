@@ -18,7 +18,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
-import CopyCWaaSBackupData from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyCWaaSBackupData"
+import CopyWaaSPrivateKey from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyWaaSPrivateKey"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -138,7 +138,7 @@ const AccountModal = () => {
                   />
                 </Stack>
                 <HStack spacing={1}>
-                  {connector?.id === WAAS_CONNECTOR_ID && <CopyCWaaSBackupData />}
+                  {connector?.id === WAAS_CONNECTOR_ID && <CopyWaaSPrivateKey />}
                   <Tooltip label="Disconnect">
                     <IconButton
                       size="sm"
