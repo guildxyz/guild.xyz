@@ -134,7 +134,7 @@ const useSubmitAddReward = ({
       }
     }
 
-    if (data.roleIds.length === 0) {
+    if (!data.roleIds || data?.roleIds.length === 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({

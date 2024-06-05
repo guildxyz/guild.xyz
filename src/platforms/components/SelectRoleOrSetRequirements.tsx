@@ -67,6 +67,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
         unregister("requirements")
       } else {
         register("requirements", { value: [{ type: "FREE" }] })
+        unregister("roleIds")
       }
     }
     setActiveTab(value)
