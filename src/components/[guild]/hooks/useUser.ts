@@ -105,9 +105,7 @@ const useUserPublic = (
       }
 
       // If we didn't set the keyPair field, the user either doesn't have one locally, or has an invalid one
-      const shouldOpenWalletSelectorModal = !user.keyPair
-
-      if (shouldOpenWalletSelectorModal && !ignoredRoutes.includes(router.route)) {
+      if (!user.keyPair && !ignoredRoutes.includes(router.route)) {
         setIsWalletSelectorModalOpen(true)
       }
 
