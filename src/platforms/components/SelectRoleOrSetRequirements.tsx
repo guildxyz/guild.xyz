@@ -8,7 +8,6 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
 import SetRequirements from "components/create-guild/Requirements"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
-import { useCallback, useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { PlatformName } from "types"
 
@@ -58,14 +57,6 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
     selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
 
-  const initFreeRequirement = useCallback(() => {
-    register("requirements", {
-      value: [{ type: "FREE" }],
-    })
-    // For some reason, the register call does not always set the value
-    setValue("requirements", [{ type: "FREE" }])
-  }, [register, setValue])
-
   const handleChange = (value: RoleTypeToAddTo) => {
     /**
      * This custom ERC20 condition might not be needed cause we've disabled the
@@ -75,16 +66,11 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       if (value === RoleTypeToAddTo.EXISTING_ROLE) {
         unregister("requirements")
       } else {
-        initFreeRequirement()
+        register("requirements", { value: [{ type: "FREE" }] })
       }
     }
     setActiveTab(value)
   }
-
-  // Free req has to be set, if the modal begins with new role selection
-  useEffect(() => {
-    initFreeRequirement()
-  }, [activeTab, initFreeRequirement])
 
   const { asRewardRestriction } = rewards[selection]
 

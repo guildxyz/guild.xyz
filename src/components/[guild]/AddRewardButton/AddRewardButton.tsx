@@ -18,14 +18,15 @@ import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
 export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
-  requirements?: Requirement[]
+  // TODO: use proper types, e.g. name & symbol shouldn't be required on this type
+  requirements?: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
   roleIds?: number[]
   visibility: Visibility
 }
 
 export const defaultValues: AddRewardForm = {
   rolePlatforms: [],
-  requirements: [],
+  requirements: [{ type: "FREE" }],
   roleIds: [],
   visibility: Visibility.PUBLIC,
 }
