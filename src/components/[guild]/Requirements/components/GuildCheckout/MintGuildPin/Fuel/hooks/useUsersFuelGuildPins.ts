@@ -1,4 +1,4 @@
-import { useWallet } from "@fuel-wallet/react"
+import { useWallet } from "@fuels/react"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
 import { GuildPinMetadata } from "types"
