@@ -14,7 +14,7 @@ const SetPointsAmount = ({
 }) => {
   const [type, setType] = useState(defaultDynamicAmount ? "dynamic" : "static")
 
-  const { setValue } = useFormContext()
+  const { setValue, unregister } = useFormContext()
   const { targetRoleId } = useAddRewardContext()
 
   const handleTypeChange = (newType: "dynamic" | "static") => {
@@ -38,7 +38,8 @@ const SetPointsAmount = ({
           },
         },
       }
-      setValue(dynamicAmountFieldPath, defaultDynamic)
+      setValue(dynamicAmountFieldPath, defaultDynamic, { shouldDirty: true })
+      unregister(`${baseFieldPath}.platformRoleData`)
     }
     if (newType === "static") {
       setValue(dynamicAmountFieldPath, null)
