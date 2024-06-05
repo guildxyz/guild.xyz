@@ -44,7 +44,11 @@ const useCreateGuild = ({
     onSuccess: (response_) => {
       triggerConfetti()
 
-      captureEvent("guild creation flow > guild successfully created")
+      captureEvent("guild creation flow > guild successfully created", {
+        $set: {
+          createdGuild: true,
+        },
+      })
 
       if (response_.guildPlatforms?.length > 0) {
         response_.guildPlatforms.forEach((guildPlatform) => {
