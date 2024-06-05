@@ -36,7 +36,7 @@ import useToast from "hooks/useToast"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { ArrowLeft, Check, PencilSimple } from "phosphor-react"
 import { useEffect, useRef } from "react"
-import { FormProvider, useForm } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Logic, RolePlatform, Visibility } from "types"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import DeleteRoleButton from "./components/DeleteRoleButton"
@@ -182,6 +182,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     })
     setVisibilityModalProps.onClose()
   }
+
+  const stuff = useWatch({ control })
+  console.log(stuff)
 
   return (
     <>
