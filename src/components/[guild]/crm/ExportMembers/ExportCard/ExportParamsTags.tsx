@@ -1,7 +1,8 @@
 import { Tag, TagLeftIcon, Tooltip, Wrap } from "@chakra-ui/react"
 import RoleTag from "components/[guild]/RoleTag"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { MagnifyingGlass, SortAscending, SortDescending } from "phosphor-react"
+import { SortAscending, SortDescending } from "phosphor-react"
+import MagnifyingGlassX from "static/icons/magnifying-glass-x.svg"
 import capitalize from "utils/capitalize"
 import { ExportData, crmOrderByParams } from "../useExports"
 
@@ -13,15 +14,6 @@ const ExportParamsTags = ({
   sortOrder,
 }: ExportData["data"]["params"]) => (
   <Wrap spacing={1}>
-    {search && (
-      <Tooltip label={`Contains members searched for "${search}"`} hasArrow>
-        <Tag>
-          <TagLeftIcon as={MagnifyingGlass} />
-          {search}
-        </Tag>
-      </Tooltip>
-    )}
-
     {roleIds.length > 0 && <ExportParamsRolesTag {...{ roleIds, logic }} />}
 
     {order && (
@@ -32,8 +24,23 @@ const ExportParamsTags = ({
         hasArrow
       >
         <Tag>
-          <TagLeftIcon as={sortOrder === "desc" ? SortDescending : SortAscending} />
+          <TagLeftIcon
+            as={sortOrder === "desc" ? SortDescending : SortAscending}
+            mr="1.5"
+          />
           {capitalize(crmOrderByParams[order])}
+        </Tag>
+      </Tooltip>
+    )}
+
+    {search && (
+      <Tooltip
+        label={`You've started this export searched for "${search}", but search queries are ignored for now, so it contains all members by other filters set`}
+        hasArrow
+      >
+        <Tag bg="none" borderWidth={"1px"} borderStyle={"dashed"}>
+          <TagLeftIcon as={MagnifyingGlassX} mr="1.5" />
+          {search}
         </Tag>
       </Tooltip>
     )}
