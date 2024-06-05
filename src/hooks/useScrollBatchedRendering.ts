@@ -7,20 +7,20 @@ interface CommonProps {
   setElementCount: Dispatch<SetStateAction<number>>
 }
 
-interface ScrollTargetDefined extends CommonProps {
+interface WithScrollTarget extends CommonProps {
   scrollTarget: MutableRefObject<HTMLElement | null>
 }
 
 export function useScrollBatchedRendering(props: CommonProps): MutableRefObject<null>
-export function useScrollBatchedRendering(props: ScrollTargetDefined): void
+export function useScrollBatchedRendering(props: WithScrollTarget): void
 
 export function useScrollBatchedRendering({
   batchSize,
   scrollTarget,
   disableRendering,
   setElementCount,
-}: ScrollTargetDefined) {
-  const localScrollTarget = useRef(null)
+}: WithScrollTarget) {
+  const localScrollTarget = useRef<HTMLElement>(null)
 
   useScrollEffect(() => {
     const target = scrollTarget === undefined ? localScrollTarget : scrollTarget
