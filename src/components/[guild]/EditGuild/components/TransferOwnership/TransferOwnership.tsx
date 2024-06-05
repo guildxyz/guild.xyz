@@ -26,7 +26,7 @@ const TransferOwnership = () => {
   return (
     <>
       <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={onOpen}>
-        <Text colorScheme={"gray"}>Transfer ownership</Text>
+        Transfer ownership
       </Button>
       <TransferOwnershipModal isOpen={isOpen} onClose={onClose} />
     </>

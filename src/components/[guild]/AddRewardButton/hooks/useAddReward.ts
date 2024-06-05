@@ -7,12 +7,14 @@ import useToast from "hooks/useToast"
 import { GuildPlatform, PlatformType } from "types"
 import fetcher from "utils/fetcher"
 
+type AddRewardResponse = GuildPlatform & { roleIds?: number[] }
+
 const useAddReward = ({
   onSuccess,
   onError,
 }: {
-  onSuccess?: () => void
-  onError?: (err: unknown) => void
+  onSuccess?: (res?: AddRewardResponse) => void
+  onError?: (err: any) => void
 }) => {
   const { id, urlName, memberCount, mutateGuild } = useGuild()
 
@@ -26,7 +28,7 @@ const useAddReward = ({
   const fetchData = async (signedValidation: SignedValidation) =>
     fetcher(`/v2/guilds/${id}/guild-platforms`, signedValidation)
 
-  return useSubmitWithSign<GuildPlatform & { roleIds?: number[] }>(fetchData, {
+  return useSubmitWithSign<AddRewardResponse>(fetchData, {
     onError: (error) => {
       showErrorToast(error)
       captureEvent("useAddReward error", { ...postHogOptions, error })
@@ -44,7 +46,7 @@ const useAddReward = ({
 
       toast({ status: "success", title: "Reward successfully added" })
       mutateGuild()
-      onSuccess?.()
+      onSuccess?.(response)
     },
   })
 }

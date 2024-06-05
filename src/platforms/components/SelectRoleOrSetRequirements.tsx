@@ -66,9 +66,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       if (value === RoleTypeToAddTo.EXISTING_ROLE) {
         unregister("requirements")
       } else {
-        register("requirements", {
-          value: [{ type: "FREE" }],
-        })
+        register("requirements", { value: [{ type: "FREE" }] })
+        unregister("roleIds")
       }
     }
     setActiveTab(value)

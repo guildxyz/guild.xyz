@@ -16,7 +16,15 @@ import useAddRoleRewards from "./useAddRoleRewards"
 const isERC20 = (data) =>
   data.rolePlatforms[0].guildPlatform.platformId === PlatformType.ERC20
 
-const useSubmitAddReward = () => {
+const useSubmitAddReward = ({
+  onSuccess,
+}: {
+  onSuccess?: (
+    res?:
+      | ReturnType<typeof useCreateRole>["response"]
+      | ReturnType<typeof useAddReward>["response"]
+  ) => void
+}) => {
   const toast = useToast()
   const { selection, onClose: onAddRewardModalClose } = useAddRewardContext()
   const [, setIsAddRewardPanelDirty] = useAddRewardDiscardAlert()
@@ -33,16 +41,18 @@ const useSubmitAddReward = () => {
 
   const { onSubmit: onCreateRoleSubmit, isLoading: isCreateRoleLoading } =
     useCreateRole({
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast({ status: "success", title: "Reward successfully added" })
+        onSuccess?.(res)
         onCloseAndClear()
       },
     })
 
   const { submitCreate: submitCreateReqBased, isLoading: erc20Loading } =
     useCreateReqBasedTokenReward({
-      onSuccess: () => {
+      onSuccess: (res) => {
         toast({ status: "success", title: "Reward successfully added" })
+        onSuccess?.(res)
         onCloseAndClear()
       },
       onError: (err) => console.error(err),
@@ -50,8 +60,9 @@ const useSubmitAddReward = () => {
 
   const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
     useAddReward({
-      onSuccess: () => {
+      onSuccess: (res) => {
         captureEvent("[discord setup] successfully added to existing guild")
+        onSuccess?.(res)
         onCloseAndClear()
       },
       onError: (err) => {
@@ -123,12 +134,12 @@ const useSubmitAddReward = () => {
       }
     }
 
-    if (data.requirements?.length > 0) {
+    if (!data.roleIds || data?.roleIds.length === 0) {
       const roleVisibility =
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
         ...data,
-        name: data.name || `New ${rewards[selection].name} role`,
+        name: data.roleName || `New ${rewards[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
         roleVisibility,
         rolePlatforms: data.rolePlatforms.map((rp) => ({

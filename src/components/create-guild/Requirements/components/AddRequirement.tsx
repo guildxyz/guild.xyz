@@ -50,7 +50,7 @@ import BalancyFooter from "./BalancyFooter"
 import IsNegatedPicker from "./IsNegatedPicker"
 import ProvidedValueDisplay from "./ProvidedValueDisplay"
 
-const GENERAL_REQUIREMENTS_COUNT = 12
+const GENERAL_REQUIREMENTS_COUNT = 13
 const general = REQUIREMENTS_DATA.slice(1, GENERAL_REQUIREMENTS_COUNT + 1)
 const integrations = REQUIREMENTS_DATA.slice(GENERAL_REQUIREMENTS_COUNT + 1)
 
