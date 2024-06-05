@@ -22,6 +22,7 @@ export type AddRewardForm = {
   requirements?: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
   roleIds?: number[]
   visibility: Visibility
+  roleName?: string // Name for role, if new role is created with reward
 }
 
 export const defaultValues: AddRewardForm = {
@@ -116,12 +117,18 @@ const AddRewardButton = (): JSX.Element => {
           {isRewardSetupStep && (
             <AddRewardPanel
               onAdd={(createdRolePlatform) => {
+                const {
+                  roleName = null,
+                  requirements = null,
+                  ...rest
+                } = createdRolePlatform
                 methods.setValue("rolePlatforms.0", {
-                  ...createdRolePlatform,
+                  ...rest,
                   visibility,
                 })
-                if (createdRolePlatform?.requirements?.length > 0) {
-                  methods.setValue("requirements", createdRolePlatform.requirements)
+                if (roleName) methods.setValue("roleName", roleName)
+                if (requirements?.length > 0) {
+                  methods.setValue("requirements", requirements)
                 }
                 setStep("SELECT_ROLE")
               }}
