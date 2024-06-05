@@ -1,12 +1,11 @@
 import {
   Box,
-  Icon,
-  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -14,13 +13,13 @@ import {
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
-import { ArchiveBox, ArrowsClockwise, Info } from "phosphor-react"
+import { ArchiveBox, Info } from "phosphor-react"
 import ExportCard from "./ExportCard"
 import useExportMembers from "./useExportMembers"
 import useExports from "./useExports"
 
 const ExportMembersModal = ({ isOpen, onClose }) => {
-  const { data, isLoading, isValidating, mutate } = useExports()
+  const { data, mutate } = useExports()
 
   const { startExport, isStartExportLoading } = useExportMembers(mutate)
 
@@ -55,39 +54,20 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
             title="Recent exports"
             fontSize="md"
             titleRightElement={
-              <>
-                <Tooltip
-                  label={
-                    "You can access your last 15 exports from the last 7 days here"
-                  }
-                >
-                  <Info />
-                </Tooltip>
-
-                <IconButton
-                  icon={
-                    <Icon
-                      as={ArrowsClockwise}
-                      animation={
-                        isValidating ? "rotate 1s infinite linear" : undefined
-                      }
-                    />
-                  }
-                  aria-label="Refetch exports"
-                  size="xs"
-                  variant="ghost"
-                  onClick={() => mutate()}
-                  isDisabled={isValidating}
-                  ml="auto"
-                >
-                  Refetch
-                </IconButton>
-              </>
+              <Tooltip
+                label="You can access your last 15 exports from the last 7 days here"
+                hasArrow
+              >
+                <Info />
+              </Tooltip>
             }
           />
           <Stack mb="6" mt="2" spacing={2.5}>
-            {isLoading ? (
-              <FallbackText>Loading exports...</FallbackText>
+            {!data ? (
+              <FallbackText>
+                <Spinner mr="3" mb="-2px" size="sm" />
+                Loading exports...
+              </FallbackText>
             ) : data?.exports?.length ? (
               data.exports.map((exp) => <ExportCard key={exp.id} exp={exp} />)
             ) : (
