@@ -62,7 +62,7 @@ const AddFormButton = ({ baseFieldPath }: { baseFieldPath: string }) => {
               ...rest,
               visibility,
             })
-            if (roleName) methods.setValue("name", roleName)
+            if (roleName) methods.setValue("roleName", roleName)
             if (requirements?.length > 0) {
               methods.setValue("requirements", requirements)
             }

@@ -29,7 +29,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
   useAddRewardDiscardAlert(methods.formState.isDirty)
 
   const fields = useWatch({ control: methods.control, name: "fields" })
-  const name = useWatch({ control: methods.control, name: "name" })
+  const roleName = useWatch({ control: methods.control, name: "name" })
 
   const { onSubmit: onCreateFormSubmit, isLoading } = useCreateForm(
     (createdForm) => {
@@ -44,7 +44,7 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
           } satisfies PlatformGuildData["FORM"],
         },
         isNew: true,
-        roleName: name,
+        roleName: roleName,
       })
     }
   )

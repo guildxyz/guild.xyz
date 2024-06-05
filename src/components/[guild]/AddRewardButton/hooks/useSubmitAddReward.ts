@@ -139,7 +139,7 @@ const useSubmitAddReward = ({
         saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
       onCreateRoleSubmit({
         ...data,
-        name: data.name || `New ${rewards[selection].name} role`,
+        name: data.roleName || `New ${rewards[selection].name} role`,
         imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
         roleVisibility,
         rolePlatforms: data.rolePlatforms.map((rp) => ({

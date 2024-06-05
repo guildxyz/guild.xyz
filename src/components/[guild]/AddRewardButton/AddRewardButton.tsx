@@ -21,7 +21,7 @@ export type AddRewardForm = {
   requirements?: Requirement[]
   roleIds?: number[]
   visibility: Visibility
-  name?: string // Name for role, if new role is created with reward
+  roleName?: string // Name for role, if new role is created with reward
 }
 
 export const defaultValues: AddRewardForm = {
@@ -125,7 +125,7 @@ const AddRewardButton = (): JSX.Element => {
                   ...rest,
                   visibility,
                 })
-                if (roleName) methods.setValue("name", roleName)
+                if (roleName) methods.setValue("roleName", roleName)
                 if (requirements?.length > 0) {
                   methods.setValue("requirements", requirements)
                 }
