@@ -32,7 +32,7 @@ import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
-import { useMemo, useState } from "react"
+import { useState } from "react"
 import { PlatformType, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
@@ -56,13 +56,9 @@ const Leaderboard = () => {
     false
   )
 
-  const disableRendering = useMemo(
-    () => data?.leaderboard?.length <= renderedUsersCount,
-    [data, renderedUsersCount]
-  )
   const wrapperRef = useScrollBatchedRendering({
     batchSize: BATCH_SIZE,
-    disableRendering,
+    disableRendering: data?.leaderboard?.length <= renderedUsersCount,
     setElementCount: setRenderedUsersCount,
   })
 

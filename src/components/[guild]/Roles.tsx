@@ -52,13 +52,9 @@ const Roles = () => {
   )
 
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
-  const disableRendering = useMemo(
-    () => roles?.length <= renderedRolesCount,
-    [roles, renderedRolesCount]
-  )
   const rolesEl = useScrollBatchedRendering({
     batchSize: BATCH_SIZE,
-    disableRendering,
+    disableRendering: roles?.length <= renderedRolesCount,
     setElementCount: setRenderedRolesCount,
   })
 

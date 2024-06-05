@@ -40,13 +40,9 @@ const Members = ({ members }: Props): JSX.Element => {
   )
 
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
-  const disableRendering = useMemo(
-    () => members?.length <= renderedMembersCount,
-    [members, renderedMembersCount]
-  )
   const membersEl = useScrollBatchedRendering({
     batchSize: BATCH_SIZE,
-    disableRendering,
+    disableRendering: members?.length <= renderedMembersCount,
     setElementCount: setRenderedMembersCount,
   })
 
