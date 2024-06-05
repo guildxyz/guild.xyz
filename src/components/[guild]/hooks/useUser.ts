@@ -8,10 +8,20 @@ import {
 } from "hooks/useSetKeyPair"
 import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
+import { useRouter } from "next/router"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
+
+// We don't open WaletSelectorModal on these routes
+const ignoredRoutes = [
+  "/_error",
+  "/tgauth",
+  "/oauth",
+  "/googleauth",
+  "/oauth-result",
+]
 
 const useUser = (
   userIdOrAddress?: number | string
@@ -59,6 +69,7 @@ const useUserPublic = (
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
   const { captureEvent } = usePostHogContext()
   const toast = useToast()
+  const router = useRouter()
 
   const idToUseRaw = userIdOrAddress ?? address
   const idToUse =
@@ -90,9 +101,14 @@ const useUserPublic = (
               "You've connected your account from a new device, so you have to sign a new message to stay logged in",
             duration: 5000,
           })
-
-          setIsWalletSelectorModalOpen(true)
         }
+      }
+
+      // If we didn't set the keyPair field, the user either doesn't have one locally, or has an invalid one
+      const shouldOpenWalletSelectorModal = !user.keyPair
+
+      if (shouldOpenWalletSelectorModal && !ignoredRoutes.includes(router.route)) {
+        setIsWalletSelectorModalOpen(true)
       }
 
       return user
