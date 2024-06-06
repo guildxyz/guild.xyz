@@ -144,11 +144,7 @@ export default function AllowlistFormInputs({
                 })
               }}
               leftIcon={<ArrowCounterClockwise />}
-              sx={{
-                "> .chakra-button__icon": {
-                  marginRight: 1,
-                },
-              }}
+              iconSpacing={1}
             >
               Clear
             </Button>
