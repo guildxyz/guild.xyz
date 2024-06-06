@@ -1,6 +1,5 @@
 import BackButton from "./components/BackButton"
 import Background from "./components/Background"
-import Content from "./components/Content"
 import Footer from "./components/Footer"
 import Head from "./components/Head"
 import Header from "./components/Header"
@@ -37,9 +36,7 @@ export default LegacyLayout
  *         <Layout.Header />
  *         <Layout.Headline />
  *       </Layout.HeaderSection>
- *       <Layout.MainSection>
- *         <Layout.Content />
- *       </Layout.MainSection>
+ *       <Layout.MainSection />
  *     </Layout.Root>
  *   )
  */
@@ -63,7 +60,6 @@ export const Layout = {
    * `backgroundOffset`
    */
   Background,
-  Content,
   BackButton,
   /** Displays page title, description and other information */
   Headline,

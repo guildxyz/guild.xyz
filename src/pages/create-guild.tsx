@@ -1,11 +1,11 @@
 import { ThemeProvider } from "components/[guild]/ThemeContext"
 import { Layout } from "components/common/Layout"
 import { CreateGuildBackground } from "components/create-guild/CreateGuildBackground"
-import { CreateGuildContent } from "components/create-guild/CreateGuildContent"
 import { CreateGuildProvider } from "components/create-guild/CreateGuildContext"
 import { CreateGuildDynamicDevTool } from "components/create-guild/CreateGuildDynamicDevTool"
 import { CreateGuildHead } from "components/create-guild/CreateGuildHead"
 import { CreateGuildHeadline } from "components/create-guild/CreateGuildHeadline"
+import { CreateGuildMainSection } from "components/create-guild/CreateGuildMainSection"
 
 const CreateGuildPage = (): JSX.Element => (
   <>
@@ -16,9 +16,7 @@ const CreateGuildPage = (): JSX.Element => (
         <Layout.Header />
         <CreateGuildHeadline />
       </Layout.HeaderSection>
-      <Layout.MainSection>
-        <CreateGuildContent />
-      </Layout.MainSection>
+      <CreateGuildMainSection />
     </Layout.Root>
     <CreateGuildDynamicDevTool />
   </>

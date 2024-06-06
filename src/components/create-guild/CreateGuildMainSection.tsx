@@ -11,7 +11,7 @@ import GuildCreationProgress from "components/create-guild/GuildCreationProgress
 import { useEffect } from "react"
 import { useWatch } from "react-hook-form"
 
-export function CreateGuildContent() {
+export function CreateGuildMainSection() {
   const { textColor, localThemeColor } = useThemeContext()
   const {
     activeStep,
@@ -44,7 +44,7 @@ export function CreateGuildContent() {
   }, [])
 
   return (
-    <Layout.Content>
+    <Layout.MainSection>
       <CreateGuildStepper
         {...{ color, activeStep, setActiveStep, textColor, stepPart }}
       />
@@ -58,6 +58,6 @@ export function CreateGuildContent() {
       >
         {stepPart === 1 ? <CreateGuildButton /> : null}
       </GuildCreationProgress>
-    </Layout.Content>
+    </Layout.MainSection>
   )
 }
