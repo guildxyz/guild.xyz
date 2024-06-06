@@ -21,7 +21,6 @@ const GoogleLoginButton = () => {
       <UserAgentAlert />
 
       <Button
-        isDisabled
         isLoading={isLoading}
         onClick={onSubmit}
         colorScheme="white"
