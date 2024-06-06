@@ -8,6 +8,7 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
+import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
 import useToast from "hooks/useToast"
@@ -34,6 +35,7 @@ const EditDynamicRewardModal = ({
   rolePlatform: RolePlatform
 }) => {
   const toast = useToast()
+  const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { onSubmit, isLoading } = useEditRolePlatform({
     rolePlatformId: rolePlatform.id,
@@ -42,6 +44,7 @@ const EditDynamicRewardModal = ({
         status: "success",
         title: `Successfully updated reward!`,
       })
+      triggerMembershipUpdate()
       onClose()
     },
   })
@@ -49,16 +52,32 @@ const EditDynamicRewardModal = ({
   const methods = useForm({
     defaultValues: {
       dynamicAmount: rolePlatform.dynamicAmount,
+      platformRoleData: { score: "0" },
     },
   })
 
-  const propsHook =
-    rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
-  const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
 
+  const propsHook =
+    rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
+
+  const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
+  const ImageComponent =
+    typeof image === "string" ? (
+      <OptionImage img={image} alt={`${rewardName} image`} />
+    ) : (
+      image
+    )
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={"lg"} colorScheme={"dark"}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={"lg"}
+      colorScheme={"dark"}
+      autoFocus={false}
+      returnFocusOnClose={false}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
@@ -66,7 +85,7 @@ const EditDynamicRewardModal = ({
         <ModalBody>
           <FormProvider {...methods}>
             <DynamicSetup
-              toImage={<OptionImage img={image} alt={`${rewardName} image`} />}
+              toImage={ImageComponent}
               roleId={rolePlatform.roleId}
               requirementFieldName={`dynamicAmount.operation.input[0].requirementId`}
               multiplierFieldName={`dynamicAmount.operation.params.multiplier`}

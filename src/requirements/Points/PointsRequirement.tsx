@@ -37,7 +37,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
     >
       {minAmount
         ? `Have a rank between ${minAmount} - ${maxAmount} on the `
-        : `Be in the top ${maxAmount} members on the `}
+        : `Be in the top ${maxAmount ?? ""} members on the `}
       <Link
         colorScheme={"blue"}
         fontWeight={"medium"}

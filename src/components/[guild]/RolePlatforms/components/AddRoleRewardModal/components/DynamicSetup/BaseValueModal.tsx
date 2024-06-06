@@ -16,7 +16,6 @@ import { Modal } from "components/common/Modal"
 import AddRequirement from "components/create-guild/Requirements/components/AddRequirement"
 import useCreateRequirement from "components/create-guild/Requirements/hooks/useCreateRequirement"
 import { CaretRight } from "phosphor-react"
-import { useFormContext } from "react-hook-form"
 import { REQUIREMENT_PROVIDED_VALUES } from "requirements/requirements"
 import { Requirement } from "types"
 
@@ -54,16 +53,18 @@ const BaseValueModal = ({ roleId, isOpen, onClose, onSelect }: Props) => {
     </VStack>
   )
 
-  const { setValue } = useFormContext()
-
   const handleSelect = (reqId: number) => {
-    setValue("dynamic.requirementId", reqId)
     onSelect(reqId)
   }
 
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} colorScheme={"dark"}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        colorScheme={"dark"}
+        scrollBehavior="inside"
+      >
         <ModalOverlay />
         <ModalContent>
           <ModalHeader pb={4}>Select base value</ModalHeader>

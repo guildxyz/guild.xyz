@@ -7,7 +7,8 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import parseFromObject from "utils/parseFromObject"
 import Score from "./components/Score"
 
@@ -28,7 +29,11 @@ const gitcoinPassportRequirementTypes = [
   },
 ]
 
-const GitcoinPassportForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const GitcoinPassportForm = ({
+  baseFieldPath,
+  field,
+  providerTypesOnly,
+}: RequirementFormProps) => {
   const {
     resetField,
     formState: { errors },
@@ -51,6 +56,10 @@ const GitcoinPassportForm = ({ baseFieldPath, field }: RequirementFormProps) => 
     resetField(`${baseFieldPath}.data.maxAmount`, { defaultValue: null })
   }
 
+  const options = gitcoinPassportRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
+
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.type}>
@@ -59,7 +68,7 @@ const GitcoinPassportForm = ({ baseFieldPath, field }: RequirementFormProps) => 
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={gitcoinPassportRequirementTypes}
+          options={options}
           afterOnChange={resetFields}
           isDisabled={isEditMode}
         />
