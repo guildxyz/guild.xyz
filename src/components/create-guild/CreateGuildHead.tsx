@@ -5,5 +5,5 @@ export function CreateGuildHead() {
   const name = useWatch({ name: "name" })
   const imageUrl = useWatch({ name: "imageUrl" })
 
-  return <Layout.Head title={name || "Create Guild"} imageUrl={imageUrl} />
+  return <Layout.Head ogTitle={name || "Create Guild"} imageUrl={imageUrl} />
 }
