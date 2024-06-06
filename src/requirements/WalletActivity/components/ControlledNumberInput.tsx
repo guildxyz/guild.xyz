@@ -18,6 +18,7 @@ type Props = {
   decimalsMax?: number
   replaceMin?: boolean
   replaceMax?: boolean
+  validateMinMax?: boolean
   numberInputFieldProps?: NumberInputFieldProps
 } & NumberInputProps
 
@@ -29,6 +30,7 @@ const ControlledNumberInput = ({
   numberFormat = "INT",
   adaptiveStepSize = false,
   decimalsMax = MAX_DECIMALS,
+  validateMinMax = true,
   ...props
 }: Props): JSX.Element => {
   const {
@@ -37,14 +39,16 @@ const ControlledNumberInput = ({
     name: props.name,
     rules: {
       required: props.isRequired && "This field is required",
-      min: props.min && {
-        value: props.min,
-        message: `Minimum: ${props.min}`,
-      },
-      max: props.max && {
-        value: props.max,
-        message: `Maximum: ${props.max}`,
-      },
+      ...(validateMinMax && {
+        min: props.min && {
+          value: props.min,
+          message: `Minimum: ${props.min}`,
+        },
+        max: props.max && {
+          value: props.max,
+          message: `Maximum: ${props.max}`,
+        },
+      }),
     },
     defaultValue: props.defaultValue,
   })

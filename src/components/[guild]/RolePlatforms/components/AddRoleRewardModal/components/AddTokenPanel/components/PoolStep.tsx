@@ -145,6 +145,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
               defaultValue={1}
               numberInputFieldProps={{ pr: 7, pl: 10 }}
               width={"full"}
+              validateMinMax={false}
             />
           </InputGroup>
         </FormControl>
