@@ -12,7 +12,7 @@ import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 type RegisterVaultParams = {
   owner: `0x${string}`
   token: `0x${string}`
-  fee: number
+  fee: string
   chain: Chain
 }
 
@@ -38,8 +38,8 @@ const useRegisterVault = ({
       ? CHAIN_CONFIG[Chains[chainId] as keyof typeof CHAIN_CONFIG].nativeCurrency
           .decimals
       : tokenData?.decimals
-  const feeInWei =
-    fee && tokenDecimals ? parseUnits(fee.toString(), tokenDecimals) : undefined
+
+  const feeInWei = fee && tokenDecimals ? parseUnits(fee, tokenDecimals) : undefined
 
   const registerVaultParams = [owner, token, false, BigInt(feeInWei ?? 0)] as const
 
