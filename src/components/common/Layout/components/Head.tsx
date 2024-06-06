@@ -1,16 +1,15 @@
 import NextHead from "next/head"
 
 interface Props {
-  ogTitle?: string
+  ogTitle: string
   ogDescription?: string
   imageUrl?: string
-  title?: string
 }
 
-const Head = ({ ogTitle, ogDescription, title, imageUrl }: Props) => (
+const Head = ({ ogTitle, ogDescription, imageUrl }: Props) => (
   <NextHead>
-    <title>{`${ogTitle ?? title}`}</title>
-    <meta property="og:title" content={`${ogTitle ?? title}`} />
+    <title>{ogTitle}</title>
+    <meta property="og:title" content={ogTitle} />
     <link rel="shortcut icon" href={imageUrl ?? "/guild-icon.png"} />
     {ogDescription && (
       <>
