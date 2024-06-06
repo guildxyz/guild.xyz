@@ -26,15 +26,23 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext() as Extract<
     Schemas["Requirement"],
     { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
-  >
+  > & {
+    data: {
+      // These are not included in the schemas, as these are appended on-the-fly by the BE, when sending the response
+      fileId?: string
+      addressCount?: number
+    }
+  }
 
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebouncedState(search)
 
-  const { addresses: initialAddresses, hideAllowlist } = requirement.data
-
-  // These are not included in the schemas, as these are appended on-the-fly by the BE, when sending the response
-  const { addressCount, fileId } = requirement.data as any
+  const {
+    addresses: initialAddresses,
+    hideAllowlist,
+    addressCount,
+    fileId,
+  } = requirement.data
 
   const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
