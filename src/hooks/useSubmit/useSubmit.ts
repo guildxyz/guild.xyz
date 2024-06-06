@@ -397,9 +397,7 @@ export const sign = async ({
       ? ValidationMethod.EIP1271
       : ValidationMethod.STANDARD
 
-    if (isSmartContract) {
-      params.chainId = chainId
-    }
+    params.chainId ||= chainId || `${walletClient.chain.id}`
 
     if (walletClient?.account?.type === "local") {
       // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
