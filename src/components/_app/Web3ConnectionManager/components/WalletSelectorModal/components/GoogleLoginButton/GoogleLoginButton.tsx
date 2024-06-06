@@ -21,6 +21,7 @@ const GoogleLoginButton = () => {
       <UserAgentAlert />
 
       <Button
+        isDisabled
         isLoading={isLoading}
         onClick={onSubmit}
         colorScheme="white"
@@ -38,7 +39,7 @@ const GoogleLoginButton = () => {
         loadingText={isGoogleAuthLoading ? "Confirm in popup..." : "Loading"}
         {...connectorButtonProps}
       >
-        Sign in with Google
+        Google (deprecated)
       </Button>
 
       <UserOnboardingModal

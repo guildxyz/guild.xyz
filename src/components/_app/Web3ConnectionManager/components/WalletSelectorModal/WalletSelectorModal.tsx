@@ -178,7 +178,17 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Stack spacing="0">
               {!connector && !addressLinkParams?.userId && (
                 <>
-                  <GoogleLoginButton />
+                  <ConnectorButton
+                    connector={connectors.find(
+                      (conn) => conn.id === "coinbaseWalletSDK"
+                    )}
+                    connect={connect}
+                    pendingConnector={
+                      isPending && (variables?.connector as Connector)
+                    }
+                    error={error}
+                  />
+
                   <Text
                     mt={6}
                     mb={2}
@@ -195,6 +205,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               {connectors
                 .filter(
                   (conn) =>
+                    conn.id !== "coinbaseWalletSDK" &&
                     (isInSafeContext || conn.id !== "safe") &&
                     (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
                     (shouldShowInjected || conn.id !== "injected") &&
@@ -214,6 +225,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     />
                   </CardMotionWrapper>
                 ))}
+              <GoogleLoginButton />
               <FuelConnectorButtons key="fuel" />
             </Stack>
           )}
