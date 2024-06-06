@@ -35,7 +35,8 @@ const useRegisterVault = ({
   })
   const tokenDecimals =
     token === NULL_ADDRESS
-      ? CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
+      ? CHAIN_CONFIG[Chains[chainId] as keyof typeof CHAIN_CONFIG].nativeCurrency
+          .decimals
       : tokenData?.decimals
   const feeInWei =
     fee && tokenDecimals ? parseUnits(fee.toString(), tokenDecimals) : undefined
@@ -45,7 +46,10 @@ const useRegisterVault = ({
   return useSubmitTransaction(
     {
       abi: feeCollectorAbi,
-      address: FEE_COLLECTOR_CONTRACT[Chains[chainId]],
+      address:
+        FEE_COLLECTOR_CONTRACT[
+          Chains[chainId] as keyof typeof FEE_COLLECTOR_CONTRACT
+        ],
       functionName: "registerVault",
       args: registerVaultParams,
       chainId: Chains[chain],
