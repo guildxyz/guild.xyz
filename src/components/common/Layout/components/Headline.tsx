@@ -3,9 +3,9 @@ import { useThemeContext } from "components/[guild]/ThemeContext"
 import { ReactNode } from "react"
 
 type Props = {
-  image: JSX.Element
+  image?: JSX.Element
   title: JSX.Element | string
-  description: JSX.Element
+  description?: JSX.Element
   action?: ReactNode
 }
 
