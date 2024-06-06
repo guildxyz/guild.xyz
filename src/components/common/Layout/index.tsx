@@ -10,7 +10,7 @@ import MainSection from "./components/MainSection"
 import Root from "./components/Root"
 import LegacyLayout from "./Layout"
 
-export default LegacyLayout;
+export default LegacyLayout
 
 /**
  * A polymorphic compound component that generically displays the base of a page
@@ -47,7 +47,7 @@ export const Layout = {
   /**
    * Top level component of `Layout`
    *
-   * Intended to be used on an empty page route
+   * Intended to be used on an empty page
    *
    * For specifing `maxWidth` property, use `sizes.container.<size>`
    */
@@ -57,17 +57,18 @@ export const Layout = {
   /** `NextHead` wrapper for page metadata */
   Head,
   /**
-   * `HeaderSection` component that displays an adjustable background
+   * Children of `LayoutHeaderSection` that displays an adjustable background
    *
-   * Fills the area of `HeaderSection` + `backgroundOffset`
+   * Fills the area of `Layout.HeaderSection` then extends vertically by
+   * `backgroundOffset`
    */
   Background,
   /** Main content of the page that `Layout` wraps around */
   Content,
   BackButton,
   /**
-   * `HeaderSection` component that displays page title, description and other
-   * information
+   * Children of `Layout.HeaderSection` that displays page title, description and
+   * other information
    */
   Headline,
   /** Wraps main page content */
