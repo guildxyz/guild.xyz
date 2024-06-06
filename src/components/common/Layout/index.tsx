@@ -57,19 +57,15 @@ export const Layout = {
   /** `NextHead` wrapper for page metadata */
   Head,
   /**
-   * Children of `Layout.HeaderSection` that displays an adjustable background
+   * Displays an adjustable background
    *
    * Fills the area of `Layout.HeaderSection` then extends vertically by
    * `backgroundOffset`
    */
   Background,
-  /** Main content of the page that `Layout` wraps around */
   Content,
   BackButton,
-  /**
-   * Children of `Layout.HeaderSection` that displays page title, description and
-   * other information
-   */
+  /** Displays page title, description and other information */
   Headline,
   /** Wraps main page content */
   MainSection,
