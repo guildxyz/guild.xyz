@@ -12,7 +12,6 @@ import RegisterVaultForm, {
   RegisterVaultFormType,
 } from "./components/RegisterVaultForm"
 import useRegisterVault from "./components/RegisterVaultForm/hooks/useRegisterVault"
-import useDebouncedState from "hooks/useDebouncedState"
 
 const PaymentForm = ({
   baseFieldPath,
@@ -63,12 +62,10 @@ const PaymentForm = ({
       setValue(`${baseFieldPath}.data.id`, registeredVaultId),
   })
 
-  const debouncedVaultId = useDebouncedState(vaultId, 200)
-
   useEffect(() => {
-    if (!debouncedVaultId) return
+    if (!vaultId) return
     addRequirement()
-  }, [debouncedVaultId, addRequirement])
+  }, [vaultId, addRequirement])
 
   useEffect(() => {
     if (isLoading)
