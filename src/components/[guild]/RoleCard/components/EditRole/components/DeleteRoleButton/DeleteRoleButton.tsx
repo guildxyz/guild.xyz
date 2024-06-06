@@ -38,7 +38,7 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
 
   const tokenRolePlatform = dynamicRolePlatforms.find((rp) => {
     const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
-    return guildPlatform.platformId === PlatformType.ERC20
+    return !!guildPlatform && guildPlatform.platformId === PlatformType.ERC20
   })
 
   const { onSubmit: deleteTokenReward, isLoading: tokenRewardDeleteLoading } =
