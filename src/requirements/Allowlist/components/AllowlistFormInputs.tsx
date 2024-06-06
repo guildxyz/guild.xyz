@@ -15,7 +15,7 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import useDropzone from "hooks/useDropzone"
 import useSubmit from "hooks/useSubmit"
 import { useRouter } from "next/router"
-import { Check, File } from "phosphor-react"
+import { ArrowCounterClockwise, Check, File } from "phosphor-react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import fetcher from "utils/fetcher"
 import parseFromObject from "utils/parseFromObject"
@@ -139,8 +139,14 @@ export default function AllowlistFormInputs({
                   shouldDirty: true,
                 })
               }}
+              leftIcon={<ArrowCounterClockwise />}
+              sx={{
+                "> .chakra-button__icon": {
+                  marginRight: 1,
+                },
+              }}
             >
-              clear
+              Clear
             </Button>
           )}
         </FormLabel>
