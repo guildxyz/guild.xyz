@@ -8,10 +8,6 @@ export function CreateGuildBackground() {
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
 
   return (
-    <Layout.Background
-      backgroundOffset={47}
-      background={color}
-      backgroundImage={localBackgroundImage}
-    />
+    <Layout.Background offset={47} background={color} image={localBackgroundImage} />
   )
 }
