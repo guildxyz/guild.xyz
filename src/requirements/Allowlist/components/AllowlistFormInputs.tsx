@@ -123,7 +123,11 @@ export default function AllowlistFormInputs({
             <Tooltip
               label={`Currently an address with ${addressCount} addresses is uploaded. Uploading a new file overwrites these addresses`}
             >
-              <Tag>{addressCount}</Tag>
+              <Tag>
+                {new Intl.NumberFormat("en", {
+                  notation: "standard",
+                }).format(addressCount)}
+              </Tag>
             </Tooltip>
           )}
           {uploadFileToGcs.response && (
