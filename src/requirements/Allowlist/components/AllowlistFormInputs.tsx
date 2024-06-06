@@ -121,7 +121,7 @@ export default function AllowlistFormInputs({
           Upload from file
           {addressCount && (
             <Tooltip
-              label={`Currently an address with ${addressCount} addresses is uploaded. Uploading a new file overwrites these addresses`}
+              label={`Currently an allowlist with ${addressCount} addresses is uploaded. Uploading a new file overwrites these addresses`}
             >
               <Tag>
                 {new Intl.NumberFormat("en", {
