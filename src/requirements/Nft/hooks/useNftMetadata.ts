@@ -10,8 +10,6 @@ export type NftMetadata = {
   traits?: Record<string, Array<string>>
 }
 
-const baseUrl = `/v2/third-party`
-
 const NOUNS_BACKGROUNDS = ["cool", "warm"]
 
 const useNftMetadata = (
@@ -21,7 +19,7 @@ const useNftMetadata = (
 ): { isLoading: boolean; metadata: Omit<NftMetadata, "traits" | "slug"> } => {
   const shouldFetch = chain && address && tokenId
   const { isLoading, data } = useSWRImmutable(
-    shouldFetch ? `${baseUrl}/nft/${chain}/${address}/${tokenId}` : null,
+    shouldFetch ? `/v2/third-party/nft/${chain}/${address}/${tokenId}` : null,
     {
       shouldRetryOnError: false,
     }
@@ -33,8 +31,7 @@ const useNftMetadata = (
 // Works for Ethereum Mainnet NFTs for now
 const useNftMetadataWithTraits = (
   chain: Chain,
-  address: string,
-  slug?: string
+  address: string
 ): { isLoading: boolean; metadata: NftMetadata } => {
   const isNounsContract =
     chain === "ETHEREUM" &&
@@ -43,7 +40,7 @@ const useNftMetadataWithTraits = (
 
   const { data, isLoading } = useSWRImmutable(
     chain === "ETHEREUM" && shouldFetch
-      ? `${baseUrl}/nft/${slug ? slug : `address/${address}`}`
+      ? `/v2/third-party/nft/${chain}/${address}`
       : null,
     {
       shouldRetryOnError: false,
