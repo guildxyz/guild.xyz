@@ -15,12 +15,12 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Spinner,
   Stack,
   Textarea,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
-import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -43,7 +43,6 @@ import AttributePicker from "./components/AttributePicker"
 import UploadIDs, { validateNftIds } from "./components/UploadIDs"
 import { useNftMetadataWithTraits } from "./hooks/useNftMetadata"
 import useNftType from "./hooks/useNftType"
-import useNfts from "./hooks/useNfts"
 
 type NftRequirementTypeOption = {
   label: string
@@ -93,15 +92,13 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     setValue,
     clearErrors,
     setError,
+    register,
     formState: { errors, touchedFields },
   } = useFormContext()
 
-  const {
-    field: { value: addressFieldValue, onChange: addressFieldOnChange },
-  } = useController({ name: `${baseFieldPath}.address` })
-
   const type = useWatch({ name: `${baseFieldPath}.type` })
   const chain = useWatch({ name: `${baseFieldPath}.chain` })
+  const address = useWatch({ name: `${baseFieldPath}.address` })
 
   const {
     field: { value: ids, onChange: onIDsChange, ...idsField },
@@ -125,10 +122,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
     name: `${baseFieldPath}.data.attributes`,
   })
 
-  const { nftType, isLoading: isNftTypeLoading } = useNftType(
-    addressFieldValue,
-    chain
-  )
+  const { nftType, isLoading: isNftTypeLoading } = useNftType(address, chain)
 
   useEffect(() => {
     if (isNftTypeLoading) return
@@ -141,29 +135,9 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
       setValue(`${baseFieldPath}.type`, "NOUNS")
   }, [isNftTypeLoading, nftType, type, setValue, baseFieldPath])
 
-  const [addressInput, setAddressInput] = useState("")
-  const { nfts, isLoading } = useNfts(chain)
-
-  const mappedNfts = useMemo(
-    () =>
-      nfts?.filter(Boolean)?.map((nft) => ({
-        img: nft.logoUri,
-        label: nft.name,
-        value: nft.address,
-        slug: nft.slug,
-      })),
-    [nfts]
-  )
-
-  const pickedNft = mappedNfts?.find((nft) => nft.value === addressFieldValue)
-  const nftName = pickedNft?.label
-  const nftImage = pickedNft?.img
-
-  const [pickedNftSlug, setPickedNftSlug] = useState(null)
   const { isLoading: isMetadataLoading, metadata } = useNftMetadataWithTraits(
     chain,
-    addressFieldValue,
-    pickedNftSlug
+    address
   )
 
   const nftCustomAttributeNames = useMemo(
@@ -228,66 +202,31 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
       >
-        <FormLabel>NFT:</FormLabel>
+        <FormLabel>NFT address:</FormLabel>
+
         <InputGroup>
-          {addressFieldValue && nftImage && (
+          {metadata?.image && (
             <InputLeftElement>
-              <OptionImage img={nftImage} alt={nftName} />
+              <OptionImage img={metadata.image} alt={metadata.name} />
             </InputLeftElement>
           )}
-
-          <ControlledSelect
-            name={`${baseFieldPath}.address`}
-            rules={{
-              required: "This field is required.",
-              pattern: {
-                value: ADDRESS_REGEX,
-                message:
-                  "Please input a 42 characters long, 0x-prefixed hexadecimal address.",
-              },
-            }}
-            isClearable
-            isCopyable
-            isLoading={isLoading}
-            placeholder={
-              chain === "ETHEREUM" ? "Search or paste address" : "Paste NFT address"
-            }
-            options={mappedNfts}
-            filterOption={customFilterOption}
-            fallbackValue={
-              addressFieldValue && {
-                label: nftName && nftName !== "-" ? nftName : addressFieldValue,
-                value: addressFieldValue,
-              }
-            }
-            afterOnChange={(newValue) => {
-              setPickedNftSlug(newValue?.slug)
-              setValue(`${baseFieldPath}.type`, "ERC721")
-              resetDetails()
-              setNftRequirementType("AMOUNT")
-            }}
-            onInputChange={(text, _) => {
-              if (ADDRESS_REGEX.test(text)) {
-                addressFieldOnChange(text)
-                setPickedNftSlug(null)
-              } else setAddressInput(text)
-            }}
-            menuIsOpen={
-              chain === "ETHEREUM" ? undefined : ADDRESS_REGEX.test(addressInput)
-            }
-            // Hiding the dropdown arrow in some cases
-            components={
-              chain !== "ETHEREUM" && {
-                DropdownIndicator: () => null,
-                IndicatorSeparator: () => null,
-              }
-            }
-          />
+          <Input {...register(`${baseFieldPath}.address`)} />
+          {isMetadataLoading && (
+            <InputRightElement>
+              <Spinner size="sm" />
+            </InputRightElement>
+          )}
         </InputGroup>
 
         <FormErrorMessage>
           {parseFromObject(errors, baseFieldPath)?.address?.message}
         </FormErrorMessage>
+
+        <Collapse in={!!metadata?.name}>
+          <FormHelperText>
+            {!metadata?.name || isMetadataLoading ? "Loading..." : metadata.name}
+          </FormHelperText>
+        </Collapse>
       </FormControl>
 
       <FormControl isRequired>
@@ -295,7 +234,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
 
         <StyledSelect
           isLoading={isMetadataLoading}
-          isDisabled={!addressFieldValue || isMetadataLoading}
+          isDisabled={!address || isMetadataLoading}
           options={mappedNftRequirementTypeOptions}
           value={mappedNftRequirementTypeOptions.find(
             ({ value }) => value === nftRequirementType
