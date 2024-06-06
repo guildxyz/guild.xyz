@@ -1,7 +1,6 @@
 import BackButton from "./components/BackButton"
 import Background from "./components/Background"
 import Footer from "./components/Footer"
-import Head from "./components/Head"
 import Header from "./components/Header"
 import HeaderSection from "./components/HeaderSection"
 import Headline from "./components/Headline"
@@ -30,7 +29,6 @@ export default LegacyLayout
  * @example
  *   const Page = () => (
  *     <Layout.Root>
- *       <Layout.Head />
  *       <Layout.HeaderSection>
  *         <Layout.Background />
  *         <Layout.Header />
@@ -51,8 +49,6 @@ export const Layout = {
   Root,
   Header,
   Footer,
-  /** `NextHead` wrapper for page metadata */
-  Head,
   /**
    * Displays an adjustable background
    *
@@ -61,7 +57,7 @@ export const Layout = {
    */
   Background,
   BackButton,
-  /** Displays page title, description and other information */
+  /** Displays page title, description, icon and creates page metadata */
   Headline,
   /** Wraps main page content */
   MainSection,
