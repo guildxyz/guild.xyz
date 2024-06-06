@@ -1,6 +1,6 @@
 import { Center, SimpleGrid, Spinner, Text } from "@chakra-ui/react"
-import useScrollEffect from "hooks/useScrollEffect"
-import { useMemo, useRef, useState } from "react"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
+import { useMemo, useState } from "react"
 import useGuild from "../hooks/useGuild"
 import Member from "./components/Member"
 
@@ -39,19 +39,12 @@ const Members = ({ members }: Props): JSX.Element => {
     [members, ownerAddress, adminsSet]
   )
 
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedMembersCount, setRenderedMembersCount] = useState(BATCH_SIZE)
-  const membersEl = useRef(null)
-  useScrollEffect(() => {
-    if (
-      !membersEl.current ||
-      membersEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      members?.length <= renderedMembersCount
-    )
-      return
-
-    setRenderedMembersCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [members, renderedMembersCount])
+  const membersEl = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
+    disableRendering: members?.length <= renderedMembersCount,
+    setElementCount: setRenderedMembersCount,
+  })
 
   const renderedMembers = sortedMembers?.slice(0, renderedMembersCount) || []
 
