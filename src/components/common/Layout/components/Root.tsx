@@ -1,6 +1,5 @@
 import { Box, useColorModeValue } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
-import { LAYOUT_MAX_WIDTH_CSS_VAR } from "../constants"
 
 type Props = PropsWithChildren<{
   background?: string
@@ -17,7 +16,7 @@ function Root({ children, background, maxWidth = "sizes.container.lg" }: Props) 
 
   return (
     <Box
-      sx={{ [LAYOUT_MAX_WIDTH_CSS_VAR]: maxWidth }}
+      sx={{ "--layout-max-width": maxWidth }}
       position="relative"
       bgColor={bgColor}
       bgGradient={background ? undefined : bgGradient}
