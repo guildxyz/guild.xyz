@@ -11,7 +11,7 @@ import DeleteButton from "components/[guild]/DeleteButton"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRole from "components/[guild]/hooks/useRole"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
-import { Role } from "types"
+import { PlatformType, Role } from "types"
 import useDeleteRole from "./hooks/useDeleteRole"
 
 type Props = {
@@ -32,7 +32,14 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
 
   const roleResponse = useRole(id, roleId)
   const role = roleResponse as unknown as Role
-  const tokenRolePlatform = role?.rolePlatforms.find((rp) => rp.dynamicAmount)
+  const { guildPlatforms } = useGuild(id)
+
+  const dynamicRolePlatforms = role?.rolePlatforms.filter((rp) => rp.dynamicAmount)
+
+  const tokenRolePlatform = dynamicRolePlatforms.find((rp) => {
+    const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
+    return !!guildPlatform && guildPlatform.platformId === PlatformType.ERC20
+  })
 
   const { onSubmit: deleteTokenReward, isLoading: tokenRewardDeleteLoading } =
     useRemoveGuildPlatform(tokenRolePlatform?.guildPlatformId, {

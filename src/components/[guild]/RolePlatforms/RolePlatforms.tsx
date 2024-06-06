@@ -237,6 +237,7 @@ const RolePlatformCard = ({
                 rolePlatform={
                   { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
                 }
+                editDisabled
                 mt={1}
               />
             )}

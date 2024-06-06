@@ -1373,7 +1373,7 @@ const _abi = {
 export class GuildPinContractAbi__factory {
   static readonly abi = _abi
   static createInterface(): GuildPinContractAbiInterface {
-    return new Interface(_abi) as unknown as GuildPinContractAbiInterface
+    return new Interface(_abi as any) as unknown as GuildPinContractAbiInterface
   }
   static connect(
     id: string | AbstractAddress,
@@ -1381,7 +1381,7 @@ export class GuildPinContractAbi__factory {
   ): GuildPinContractAbi {
     return new Contract(
       id,
-      _abi,
+      _abi as any,
       accountOrProvider
     ) as unknown as GuildPinContractAbi
   }
@@ -1390,7 +1390,7 @@ export class GuildPinContractAbi__factory {
     wallet: Account,
     options: DeployContractOptions = {}
   ): Promise<GuildPinContractAbi> {
-    const factory = new ContractFactory(bytecode, _abi, wallet)
+    const factory = new ContractFactory(bytecode, _abi as any, wallet)
     const contract = await factory.deployContract(options)
     return contract as unknown as GuildPinContractAbi
   }

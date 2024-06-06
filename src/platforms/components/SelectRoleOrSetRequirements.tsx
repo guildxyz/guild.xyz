@@ -23,15 +23,36 @@ const TAB_STYLE_PROPS: TabProps = {
 }
 
 const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
-  const { roles } = useGuild()
+  const { roles, guildPlatforms } = useGuild()
   const group = useRoleGroup()
+  const data = useWatch({ name: `rolePlatforms.0` })
+
+  const existingGuildPlatform = guildPlatforms?.find(
+    (gp) =>
+      gp.platformId === data?.guildPlatform?.platformId &&
+      gp.platformGuildId === data?.guildPlatform?.platformGuildId
+  )
+
+  const alreadyUsedRoles = new Set(
+    existingGuildPlatform
+      ? roles
+          ?.filter((role) =>
+            role.rolePlatforms?.some(
+              (rp) => rp.guildPlatformId === existingGuildPlatform.id
+            )
+          )
+          ?.map((role) => role.id) ?? []
+      : []
+  )
+
+  const availableRoles = roles.filter((role) => !alreadyUsedRoles.has(role.id))
+
   const relevantRoles = group
-    ? roles.filter((role) => role.groupId === group.id)
-    : roles.filter((role) => !role.groupId)
+    ? availableRoles.filter((role) => role.groupId === group.id)
+    : availableRoles.filter((role) => !role.groupId)
 
   const { register, unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
-  const data = useWatch({ name: `rolePlatforms.0` })
 
   const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
     selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
@@ -45,9 +66,8 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       if (value === RoleTypeToAddTo.EXISTING_ROLE) {
         unregister("requirements")
       } else {
-        register("requirements", {
-          value: [{ type: "FREE" }],
-        })
+        register("requirements", { value: [{ type: "FREE" }] })
+        unregister("roleIds")
       }
     }
     setActiveTab(value)
@@ -79,6 +99,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       <TabPanels>
         <TabPanel>
           <RoleSelector
+            isGuildPlatformAlreadyInUse={!!existingGuildPlatform}
             allowMultiple={
               selection !== "ERC20"
                 ? asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES

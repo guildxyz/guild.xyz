@@ -1,4 +1,4 @@
-import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/react"
+import { Flex, FormControl, FormLabel } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
@@ -7,6 +7,7 @@ import { useController, useFormState } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
+import AddFormButton from "./AddFormButton"
 
 const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { id, guildPlatforms } = useGuild()
@@ -14,7 +15,8 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
       .map((gp) => gp.platformGuildData.formId) ?? []
-  const { data: forms, isLoading } = useGuildForms()
+  const { data: forms, isLoading, isValidating } = useGuildForms()
+
   const { errors } = useFormState()
 
   useController({
@@ -32,16 +34,17 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
-      <FormLabel>Fill form:</FormLabel>
+      <Flex justifyContent="space-between" w="full" alignItems={"center"}>
+        <FormLabel>Fill form:</FormLabel>
+        <AddFormButton baseFieldPath={baseFieldPath} />
+      </Flex>
       <ControlledSelect
         name={`${baseFieldPath}.data.id`}
         isDisabled={!forms}
-        isLoading={isLoading}
+        isLoading={isLoading || isValidating}
         options={formOptions}
       />
-      <FormHelperText>
-        You can create new forms in the add reward menu
-      </FormHelperText>
+
       <FormErrorMessage>
         {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
       </FormErrorMessage>

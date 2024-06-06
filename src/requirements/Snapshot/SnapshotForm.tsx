@@ -2,7 +2,8 @@ import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import parseFromObject from "utils/parseFromObject"
 import FollowSince from "./components/FollowSince"
 import MajorityVotes from "./components/MajorityVotes"
@@ -63,6 +64,7 @@ const snapshotRequirementTypes = [
 const SnapshotForm = ({
   baseFieldPath,
   field,
+  providerTypesOnly,
 }: RequirementFormProps): JSX.Element => {
   const { resetField } = useFormContext()
 
@@ -72,6 +74,10 @@ const SnapshotForm = ({
 
   const selected = snapshotRequirementTypes.find((reqType) => reqType.value === type)
   const isEditMode = !!field?.id
+
+  const options = snapshotRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
 
   return (
     <Stack spacing={4} alignItems="start" w="full">
@@ -83,7 +89,7 @@ const SnapshotForm = ({
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={snapshotRequirementTypes}
+          options={options}
           beforeOnChange={() =>
             resetField(`${baseFieldPath}.data`, { defaultValue: "" })
           }

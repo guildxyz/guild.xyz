@@ -22,7 +22,6 @@ import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
 import { useAtom, useSetAtom } from "jotai"
-import { useRouter } from "next/router"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
@@ -43,18 +42,9 @@ type Props = {
   onOpen: () => void
 }
 
-// We don't open the modal on these routes
-const ignoredRoutes = [
-  "/_error",
-  "/tgauth",
-  "/oauth",
-  "/googleauth",
-  "/oauth-result",
-]
-
 const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
 
-const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element => {
+const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
 
   const { connectors, error, connect, variables, isPending } = useConnect()
@@ -105,19 +95,6 @@ const WalletSelectorModal = ({ isOpen, onClose, onOpen }: Props): JSX.Element =>
   useEffect(() => {
     if (keyPair && !isAddressLink) onClose()
   }, [keyPair, isAddressLink, onClose])
-
-  const router = useRouter()
-
-  useEffect(() => {
-    if (
-      ((!!id && !keyPair) || !!publicUserError) &&
-      router.isReady &&
-      !ignoredRoutes.includes(router.route) &&
-      !!connector?.connect
-    ) {
-      onOpen()
-    }
-  }, [keyPair, router, id, publicUserError, connector, onOpen])
 
   const isConnectedAndKeyPairReady = isWeb3Connected && !!id
 

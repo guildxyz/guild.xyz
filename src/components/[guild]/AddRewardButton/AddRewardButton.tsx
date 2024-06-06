@@ -18,14 +18,16 @@ import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
 export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
-  requirements?: Requirement[]
+  // TODO: use proper types, e.g. name & symbol shouldn't be required on this type
+  requirements?: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
   roleIds?: number[]
   visibility: Visibility
+  roleName?: string // Name for role, if new role is created with reward
 }
 
 export const defaultValues: AddRewardForm = {
   rolePlatforms: [],
-  requirements: [],
+  requirements: [{ type: "FREE" }],
   roleIds: [],
   visibility: Visibility.PUBLIC,
 }
@@ -115,12 +117,18 @@ const AddRewardButton = (): JSX.Element => {
           {isRewardSetupStep && (
             <AddRewardPanel
               onAdd={(createdRolePlatform) => {
+                const {
+                  roleName = null,
+                  requirements = null,
+                  ...rest
+                } = createdRolePlatform
                 methods.setValue("rolePlatforms.0", {
-                  ...createdRolePlatform,
+                  ...rest,
                   visibility,
                 })
-                if (createdRolePlatform?.requirements?.length > 0) {
-                  methods.setValue("requirements", createdRolePlatform.requirements)
+                if (roleName) methods.setValue("roleName", roleName)
+                if (requirements?.length > 0) {
+                  methods.setValue("requirements", requirements)
                 }
                 setStep("SELECT_ROLE")
               }}

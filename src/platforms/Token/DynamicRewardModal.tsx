@@ -72,11 +72,13 @@ const DynamicRewardModal = ({
   onClose,
   linkedRequirement,
   rolePlatform,
+  editDisabled,
 }: {
   isOpen: boolean
   onClose: () => void
   linkedRequirement?: Requirement
   rolePlatform: RolePlatform
+  editDisabled?: boolean
 }) => {
   const { isAdmin } = useGuildPermission()
 
@@ -96,7 +98,7 @@ const DynamicRewardModal = ({
       <Modal isOpen={isOpen} onClose={handleClose} size={"lg"} colorScheme={"dark"}>
         <ModalOverlay />
         <ModalContent>
-          {isAdmin && (
+          {isAdmin && !editDisabled && (
             <IconButton
               position={"absolute"}
               icon={<PencilSimple size={18} weight="regular" />}

@@ -119,7 +119,7 @@ const SoundRequirement = (props: RequirementProps) => {
   )
 }
 
-const ArtistLink = ({ artistData, requirement }) => (
+export const ArtistLink = ({ artistData, requirement }) => (
   <Link
     href={`https://www.sound.xyz/${requirement.data.id}`}
     isExternal

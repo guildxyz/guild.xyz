@@ -2,8 +2,9 @@ import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
 import ChainPicker from "requirements/common/ChainPicker"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import { SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import { Chain } from "wagmiConfig/chains"
@@ -79,6 +80,7 @@ const walletActivityRequirementTypes: SelectOption[] = [
 const WalletActivityForm = ({
   baseFieldPath,
   field,
+  providerTypesOnly,
 }: RequirementFormProps): JSX.Element => {
   const {
     resetField,
@@ -136,6 +138,10 @@ const WalletActivityForm = ({
     resetField(`${baseFieldPath}.data.txValue`, { defaultValue: "" })
   }
 
+  const options = walletActivityRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
+
   return (
     <Stack spacing={4} alignItems="start">
       <ChainPicker
@@ -153,7 +159,7 @@ const WalletActivityForm = ({
             <ControlledSelect
               name={`${baseFieldPath}.type`}
               rules={{ required: "It's required to select a type" }}
-              options={supportedRequirementTypes}
+              options={options}
               beforeOnChange={resetFields}
               isDisabled={isEditMode}
             />

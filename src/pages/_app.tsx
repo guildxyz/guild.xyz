@@ -1,5 +1,6 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
-import { FuelProvider } from "@fuel-wallet/react"
+import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
+import { FuelProvider } from "@fuels/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
@@ -118,7 +119,15 @@ const App = ({
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
             <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
               <QueryClientProvider client={queryClient}>
-                <FuelProvider>
+                <FuelProvider
+                  ui={false}
+                  fuelConfig={{
+                    connectors: [
+                      new FuelWalletConnector(),
+                      new FueletWalletConnector(),
+                    ],
+                  }}
+                >
                   <PostHogProvider>
                     <IntercomProvider>
                       <AppErrorBoundary>

@@ -87,7 +87,12 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
       isNew: true,
       roleId: targetRoleId,
       ...(data?.dynamicAmount
-        ? { dynamicAmount: data?.dynamicAmount as any }
+        ? {
+            dynamicAmount: data?.dynamicAmount as any,
+            platformRoleData: {
+              score: 0,
+            },
+          }
         : {
             platformRoleData: {
               score: parseInt(data.platformRoleData.score),

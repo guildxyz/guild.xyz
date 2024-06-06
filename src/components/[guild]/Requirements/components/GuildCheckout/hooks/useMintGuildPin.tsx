@@ -164,7 +164,13 @@ const useMintGuildPin = () => {
       } catch {}
     }
 
-    captureEvent("Minted Guild Pin (GuildCheckout)", postHogOptions)
+    captureEvent("Minted Guild Pin (GuildCheckout)", {
+      ...postHogOptions,
+      $set: {
+        mintedReward: true,
+        mintedGuildPin: true,
+      },
+    })
 
     try {
       const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenURI)

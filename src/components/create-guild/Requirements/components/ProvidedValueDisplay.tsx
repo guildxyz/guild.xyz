@@ -59,7 +59,9 @@ const ProvidedValueDisplay = ({
                     Dynamic value
                   </Text>
                   <Text fontWeight={"semibold"} mt={-0.5}>
-                    <ValueDisplayComponent requirement={requirement} />
+                    {!!ValueDisplayComponent && (
+                      <ValueDisplayComponent requirement={requirement} />
+                    )}
                   </Text>
                 </Stack>
 

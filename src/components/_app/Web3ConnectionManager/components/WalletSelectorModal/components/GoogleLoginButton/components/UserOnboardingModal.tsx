@@ -58,7 +58,7 @@ const UserOnboardingModal = ({
   ) as WaaSConnector
 
   // Timer to decide if resend button is disabled
-  const { seconds, start } = useCountdownSeconds(5)
+  const { seconds, start, isCountingDown } = useCountdownSeconds(5)
 
   const successPlayer = useRef<DotLottieCommonPlayer>()
 
@@ -200,14 +200,14 @@ const UserOnboardingModal = ({
               w={"full"}
               size="lg"
               colorScheme="green"
-              isDisabled={seconds > 0}
+              isDisabled={isCountingDown}
               onClick={() => {
                 connect({ connector: cwaasConnector })
                 onClose()
                 captureEvent("[WaaS] Wallet is connected")
               }}
             >
-              {seconds > 0 ? `Wait ${seconds} sec...` : "Got it"}
+              {isCountingDown ? `Wait ${seconds} sec...` : "Got it"}
             </Button>
           ) : (
             <GoogleTerms />
