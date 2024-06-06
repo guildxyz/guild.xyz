@@ -34,6 +34,15 @@ const useEditRequirement = (
 
   return useSubmit<Requirement, EditedRequirement>(editRequirement, {
     onSuccess: (editedRequirement) => {
+      if (
+        (editedRequirement.type === "ALLOWLIST" ||
+          editedRequirement.type === "ALLOWLIST_EMAIL") &&
+        editedRequirement.data?.fileId
+      ) {
+        editedRequirement.data ??= {}
+        editedRequirement.data.status = "IN-PROGRESS"
+      }
+
       toast({
         status: "success",
         title: "Successfully updated requirement",

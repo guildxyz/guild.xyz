@@ -123,15 +123,6 @@ const ExistingRequirementEditModal = ({
   const { onSubmit: onEditRequirementSubmit, isLoading: isEditRequirementLoading } =
     useEditRequirement(requirement.roleId, {
       onSuccess: (editedRequirement) => {
-        if (
-          (editedRequirement.type === "ALLOWLIST" ||
-            editedRequirement.type === "ALLOWLIST_EMAIL") &&
-          editedRequirement.data?.fileId
-        ) {
-          editedRequirement.data ??= {}
-          editedRequirement.data.status = "IN-PROGRESS"
-        }
-
         methods.reset(mapRequirement(editedRequirement))
         onClose()
       },
