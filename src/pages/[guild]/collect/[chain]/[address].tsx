@@ -19,6 +19,7 @@ import RequirementsCard from "components/[guild]/collect/components/Requirements
 import RichTextDescription from "components/[guild]/collect/components/RichTextDescription"
 import ShareAndReportButtons from "components/[guild]/collect/components/ShareAndReportButtons"
 import SmallImageAndRoleName from "components/[guild]/collect/components/SmallImageAndRoleName"
+import TiltCard from "components/[guild]/collect/components/TiltCard"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
@@ -105,7 +106,11 @@ const CollectNftPageContent = ({
           gap={{ base: 6, lg: 8 }}
         >
           <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
-            <CollectibleImage src={image} isLoading={!image} />
+            <CollectibleImage
+              src={image}
+              isLoading={!image}
+              imageWrapper={TiltCard}
+            />
 
             <Stack spacing={6}>
               <Heading
