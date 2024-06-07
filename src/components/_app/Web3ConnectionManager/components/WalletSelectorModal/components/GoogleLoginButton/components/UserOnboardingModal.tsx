@@ -101,6 +101,10 @@ const UserOnboardingModal = ({
           status: "error",
           description: error?.message || "Something went wrong, please try again",
         })
+
+        if (error?.message === WAAS_DEPRECATION_ERROR_MESSAGE) {
+          onClose()
+        }
       },
     }
   )
