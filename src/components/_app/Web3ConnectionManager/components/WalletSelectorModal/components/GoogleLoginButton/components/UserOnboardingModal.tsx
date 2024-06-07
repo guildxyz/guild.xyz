@@ -1,220 +1,241 @@
+import { Link } from "@chakra-ui/next-js"
 import {
-  Accordion,
-  AccordionButton,
-  AccordionIcon,
-  AccordionItem,
-  AccordionPanel,
-  Box,
   Center,
-  Collapse,
-  Icon,
+  Fade,
+  HStack,
+  Img,
   ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Spinner,
-  Stack,
   Text,
+  VStack,
+  useClipboard,
+  useDisclosure,
 } from "@chakra-ui/react"
-import {
-  DotLottieCommonPlayer,
-  DotLottiePlayer,
-  PlayerEvents,
-} from "@dotlottie/react-player"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
-import CopyableAddress from "components/common/CopyableAddress"
-import GuildAvatar from "components/common/GuildAvatar"
 import { Modal } from "components/common/Modal"
-import useCountdownSeconds from "hooks/useCountdownSeconds"
-import { LockSimple, Question, Wallet } from "phosphor-react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
+import useSubmit from "hooks/useSubmit"
+import useToast from "hooks/useToast"
+import { Check, Copy, Wallet } from "phosphor-react"
+import { useState } from "react"
 import { useConnect } from "wagmi"
-import { WAAS_CONNECTOR_ID, WaaSConnector } from "wagmiConfig/waasConnector"
-import GoogleTerms from "../../GoogleTerms"
+import {
+  WAAS_CONNECTOR_ID,
+  WAAS_DEPRECATION_ERROR_MESSAGE,
+  WaaSConnector,
+} from "wagmiConfig/waasConnector"
+import { connectorButtonProps } from "../../ConnectorButton"
+import useDriveOAuth from "../hooks/useDriveOAuth"
+import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
 const UserOnboardingModal = ({
-  isLoginLoading,
-  isLoginSuccess,
   onClose,
   isOpen,
-  isNewWallet,
 }: {
-  isLoginLoading: boolean
-  isLoginSuccess: boolean
   onClose: () => void
   isOpen: boolean
-  isNewWallet: boolean
 }) => {
-  const [isSuccessAnimDone, setIsSuccessAnimDone] = useState(false)
-  const [accordionIndex, setAccordionIndex] = useState(0)
-
+  const alert = useDisclosure()
   const { captureEvent } = usePostHogContext()
-
+  const googleAuth = useDriveOAuth()
   const { connectors, connect } = useConnect()
+  const toast = useToast()
+  const [hasCopiedAtLeastOnce, setHasCopiedAtLeastOnce] = useState(false)
+
   const cwaasConnector = connectors.find(
     ({ id }) => id === WAAS_CONNECTOR_ID
   ) as WaaSConnector
 
-  // Timer to decide if resend button is disabled
-  const { seconds, start, isCountingDown } = useCountdownSeconds(5)
+  const injectedConnector = connectors.find(({ id }) => id === "injected")
 
-  const successPlayer = useRef<DotLottieCommonPlayer>()
+  const {
+    response: privateKey,
+    isLoading,
+    onSubmit: onGeneratePrivateKey,
+  } = useSubmit(
+    async () => {
+      // 1) Google OAuth
+      const { authData, error } = await googleAuth.onOpen()
 
-  const isSuccess = !!isLoginSuccess && !!successPlayer
+      if (!authData || !!error) {
+        // Ignore cases, when the user cancels the OAuth
+        if (error?.error !== "access_denied") {
+          captureEvent("[WaaS] Google OAuth failed", { error })
+        } else {
+          captureEvent("[WaaS] Google OAuth denied", { error })
+        }
+        return
+      }
 
-  const avatar = useMemo(
-    () => <GuildAvatar address={cwaasConnector?.currentAddress?.address} />,
-    [cwaasConnector?.currentAddress?.address]
+      // 2) Get backup from Drive
+      const { files } = await listWalletsOnDrive(authData.access_token)
+      if (files.length <= 0) {
+        throw new Error(WAAS_DEPRECATION_ERROR_MESSAGE)
+      }
+
+      // 3) Restore wallet
+      const {
+        appProperties: { backupData },
+      } = await getDriveFileAppProperties(files[0].id, authData.access_token)
+      await cwaasConnector.restoreWallet(backupData)
+
+      // 4) Generate private key
+      const pk = await (cwaasConnector as any)
+        .exportKeys(backupData)
+        .catch(() => null)
+      if (!pk?.[0]?.ecKeyPrivate) {
+        throw new Error(
+          "Failed to export private key, make sure to authenticate with the correct Google account"
+        )
+      }
+
+      return pk[0].ecKeyPrivate
+    },
+    {
+      onError: (error) => {
+        toast({
+          status: "error",
+          description: error?.message || "Something went wrong, please try again",
+        })
+      },
+    }
   )
 
-  // Play the success animation if everything was successful, and the player is ready
-  useEffect(() => {
-    if (!isSuccess) return
-    successPlayer.current?.play()
-  }, [isSuccess])
+  const { onCopy, hasCopied } = useClipboard(privateKey, 3000)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} closeOnOverlayClick={false}>
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>
-          {isLoginLoading
-            ? isNewWallet
-              ? "Generating a wallet for you..."
-              : "Restoring your wallet..."
-            : "Your new wallet"}
-        </ModalHeader>
-        <ModalBody>
-          <Stack alignItems={"center"} gap={8}>
-            <Stack alignItems={"center"}>
-              <Box
-                backgroundColor={"blackAlpha.200"}
-                boxSize={20}
-                borderRadius={"full"}
-                position={"relative"}
-              >
-                {!isSuccess && (
-                  <>
-                    <Spinner w="full" h="full" speed="0.8s" thickness={"4px"} />
-                    <Icon
-                      as={Wallet}
-                      position={"absolute"}
-                      top={"50%"}
-                      left={"50%"}
-                      transform={"translate(-50%, -50%)"}
-                      boxSize={7}
-                    />
-                  </>
-                )}
-
-                <Collapse in={!isSuccessAnimDone}>
-                  <DotLottiePlayer
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      width: "var(--chakra-sizes-24)",
-                      height: "var(--chakra-sizes-24)",
-                    }}
-                    src="/success_lottie.json"
-                    ref={successPlayer}
-                    onEvent={(event) => {
-                      if (event !== PlayerEvents.Complete) return
-
-                      setIsSuccessAnimDone(true)
-                      setAccordionIndex(1)
-                      start()
-                    }}
-                    className="keep-colors"
-                  />
-                </Collapse>
-
-                {isSuccessAnimDone && <Center h="full">{avatar}</Center>}
-              </Box>
-
-              {isSuccessAnimDone ? (
-                <CopyableAddress
-                  decimals={5}
-                  address={cwaasConnector?.currentAddress?.address ?? ""}
-                />
-              ) : (
-                isNewWallet && <Box height="1.5rem" />
-              )}
-            </Stack>
-
-            {isNewWallet && (
-              <Accordion
-                index={accordionIndex}
-                onChange={(index: number) => {
-                  captureEvent("[WaaS] Click onboarding accordion", {
-                    index,
-                  })
-                  setAccordionIndex(index)
-                }}
-                w="full"
-              >
-                <AccordionItem borderTop={"none"} pb={2}>
-                  <AccordionButton px={0} _hover={{ bg: null }}>
-                    <Question size={18} />
-                    <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
-                      What's a wallet?
-                    </Text>
-
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4} pl={"26px"} pr={0} pt={0}>
-                    <Text colorScheme={"gray"}>
-                      A wallet lets you store your digital assets like Guild Pins,
-                      NFTs and other tokens. It's essential to have one to explore
-                      Guild and all things web3!
-                    </Text>
-                  </AccordionPanel>
-                </AccordionItem>
-
-                <AccordionItem borderBottom={"none"} pt={2}>
-                  <AccordionButton px={0} _hover={{ bg: null }}>
-                    <LockSimple size={18} />
-                    <Text fontWeight={600} ml={2} flexGrow={1} textAlign={"left"}>
-                      How can I access my wallet?
-                    </Text>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={0} pl={"26px"} pr={0} pt={0}>
-                    <Text colorScheme={"gray"}>
-                      {isLoginLoading
-                        ? "Your wallet has a private key that we'll save to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"
-                        : "Your wallet has a private key that we've saved to your Google Drive. As long as it's there, you'll be able to restore your wallet / sign in to Guild with Google. If you lose it, we won't be able to restore your account!"}
-                    </Text>
-                  </AccordionPanel>
-                </AccordionItem>
-              </Accordion>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent maxWidth={privateKey ? "2xl" : undefined}>
+          <ModalHeader>
+            {privateKey ? "Import & back up your wallet" : "Export Google wallet"}
+          </ModalHeader>
+          <ModalBody>
+            {!privateKey ? (
+              <VStack alignItems={"start"}>
+                <Text>
+                  This feature is <strong>being deprecated</strong>
+                </Text>
+                <Text>
+                  You can <strong>import</strong> your Google-based account{" "}
+                  <strong>into an external wallet</strong> by authenticating with the
+                  button below, then following the displayed steps
+                </Text>
+                <Text>
+                  If you don't have a Google-based account, or don't have any value
+                  on it, we recommend using the <strong>Smart Wallet</strong> sign-in
+                  option
+                </Text>
+              </VStack>
+            ) : (
+              <HStack alignItems={"start"}>
+                <VStack>
+                  <Text>
+                    You can now copy your private key, and import it into a wallet
+                    app, like{" "}
+                    <Link
+                      href="https://metamask.io"
+                      isExternal
+                      fontWeight={"semibold"}
+                    >
+                      MetaMask
+                    </Link>
+                  </Text>
+                  <Text>
+                    It is highly recommended to <strong>safely store</strong> the
+                    copied private key somewhere, as this export option on Guild
+                    won't be available forever
+                  </Text>
+                  <Text>
+                    <strong>Never share the private key with anyone!</strong> This
+                    key is the only way to access your wallet, and anyone, who knows
+                    the private key has access
+                  </Text>
+                </VStack>
+                <video
+                  src="/videos/import-wallet-into-metamask.webm"
+                  muted
+                  autoPlay
+                  loop
+                  width={300}
+                  style={{
+                    borderRadius: 8,
+                  }}
+                >
+                  Your browser does not support the HTML5 video tag.
+                </video>
+              </HStack>
             )}
-          </Stack>
-        </ModalBody>
-        <ModalFooter>
-          {isSuccessAnimDone ? (
-            <Button
-              w={"full"}
-              size="lg"
-              colorScheme="green"
-              isDisabled={isCountingDown}
-              onClick={() => {
-                connect({ connector: cwaasConnector })
-                onClose()
-                captureEvent("[WaaS] Wallet is connected")
-              }}
-            >
-              {isCountingDown ? `Wait ${seconds} sec...` : "Got it"}
-            </Button>
-          ) : (
-            <GoogleTerms />
-          )}
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
+          </ModalBody>
+          <ModalFooter>
+            {!privateKey ? (
+              <Button
+                onClick={onGeneratePrivateKey}
+                colorScheme={"white"}
+                borderWidth="2px"
+                isLoading={isLoading}
+                loadingText={
+                  googleAuth.isAuthenticating
+                    ? "Auhenticate in the popup"
+                    : "Generating private key"
+                }
+                leftIcon={
+                  <Center boxSize={6}>
+                    <Img
+                      src={`/walletLogos/google.svg`}
+                      maxW={6}
+                      maxH={6}
+                      alt={`Google logo`}
+                    />
+                  </Center>
+                }
+                {...connectorButtonProps}
+              >
+                Authenticate with Google
+              </Button>
+            ) : (
+              <HStack>
+                <Fade in={hasCopiedAtLeastOnce}>
+                  <Button leftIcon={<Wallet />} onClick={alert.onOpen}>
+                    Backup and import done
+                  </Button>
+                </Fade>
+
+                <Button
+                  onClick={() => {
+                    onCopy()
+                    setHasCopiedAtLeastOnce(true)
+                  }}
+                  isDisabled={hasCopied}
+                  colorScheme="white"
+                  borderWidth="2px"
+                  leftIcon={hasCopied ? <Check /> : <Copy />}
+                >
+                  {hasCopied ? "Private key copied" : "Copy private key"}
+                </Button>
+              </HStack>
+            )}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <ConfirmationAlert
+        isOpen={alert.isOpen}
+        onClose={alert.onClose}
+        onConfirm={() => {
+          alert.onClose()
+          onClose()
+          connect({ connector: injectedConnector })
+        }}
+        title="Are you sure?"
+        description="Please double check that the wallet has been imported and it is backed up safely"
+        confirmationText="I'm sure"
+      />
+    </>
   )
 }
 

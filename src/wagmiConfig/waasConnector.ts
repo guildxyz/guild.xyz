@@ -12,6 +12,8 @@ import { LocalAccount, createClient, http } from "viem"
 import { createConnector, type Connector } from "wagmi"
 
 export const WAAS_CONNECTOR_ID = "waas-connector"
+export const WAAS_DEPRECATION_ERROR_MESSAGE =
+  "Looks like you don't have an existing Google-based Guild account. We recomment signing in with the Smart Wallet option"
 
 export class WaasActionFailed extends Error {
   constructor(error: unknown) {
@@ -189,9 +191,7 @@ export default function waasConnector(options: InitializeWaasOptions) {
     },
 
     async createWallet() {
-      throw new Error(
-        "Looks like you don't have an existing Google-based Guild account. We recomment signing in with the Smart Wallet option"
-      )
+      throw new Error(WAAS_DEPRECATION_ERROR_MESSAGE)
     },
 
     async restoreWallet(backupData) {
