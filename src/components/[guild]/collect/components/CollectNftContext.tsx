@@ -58,7 +58,8 @@ const CollectNftProvider = ({
     !maxSupply && !mintableAmountPerUser
       ? false
       : mintableAmountPerUser > 0
-      ? nftBalance >= mintableAmountPerUser || totalSupply >= maxSupply
+      ? nftBalance >= mintableAmountPerUser ||
+        (maxSupply > 0 ? totalSupply >= maxSupply : false)
       : totalSupply >= maxSupply
 
   const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
