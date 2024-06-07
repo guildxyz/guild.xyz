@@ -10,8 +10,6 @@ export function CreateGuildHeadline() {
 
   return (
     <Layout.Headline
-      shortcutImageUrl={imageUrl}
-      ogTitle={name || "Create Guild"}
       title={name || "Create Guild"}
       image={
         imageUrl && (
