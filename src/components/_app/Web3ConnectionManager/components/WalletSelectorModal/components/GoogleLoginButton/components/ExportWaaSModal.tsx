@@ -14,6 +14,8 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
+import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -22,15 +24,59 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { Check, Copy, Wallet } from "phosphor-react"
 import { useState } from "react"
+import fetcher from "utils/fetcher"
 import { useConnect } from "wagmi"
-import {
-  WAAS_CONNECTOR_ID,
-  WAAS_DEPRECATION_ERROR_MESSAGE,
-  WaaSConnector,
-} from "wagmiConfig/waasConnector"
 import { connectorButtonProps } from "../../ConnectorButton"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
+
+const WAAS_DEPRECATION_ERROR_MESSAGE =
+  "Looks like you don't have an existing Google-based Guild account. We recommend signing in with the Smart Wallet option"
+
+let cwaasModule: typeof import("@coinbase/waas-sdk-web")
+const cwaasImport = async () => {
+  if (cwaasModule) return cwaasModule
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const mod = await import("@coinbase/waas-sdk-web")
+  cwaasModule = mod
+  return mod
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+let _waas: Waas
+async function getWaas() {
+  if (_waas) {
+    return _waas
+  }
+  const { InitializeWaas } = await cwaasImport()
+  _waas = await InitializeWaas({
+    provideAuthToken: async () => {
+      const token = await fetcher("/v2/third-party/coinbase/token")
+      return token
+    },
+    collectAndReportMetrics: true,
+    prod:
+      (typeof window !== "undefined" && window.origin === "https://guild.xyz") ||
+      undefined,
+  })
+  return _waas
+}
+
+async function generatePrivateKey(backupData: string) {
+  try {
+    const waas = await getWaas()
+    const { Logout } = await cwaasImport()
+    await Logout().catch(() => {})
+
+    const wallet = await waas.wallets.restoreFromBackup(backupData)
+    const pk = (await wallet.exportKeys(backupData)) as RawPrivateKey[]
+
+    return pk?.[0]?.ecKeyPrivate
+  } catch (error) {
+    console.error(error)
+    return null
+  }
+}
 
 const ExportWaasModal = ({
   onClose,
@@ -45,10 +91,6 @@ const ExportWaasModal = ({
   const { connectors, connect } = useConnect()
   const toast = useToast()
   const [hasCopiedAtLeastOnce, setHasCopiedAtLeastOnce] = useState(false)
-
-  const cwaasConnector = connectors.find(
-    ({ id }) => id === WAAS_CONNECTOR_ID
-  ) as WaaSConnector
 
   const injectedConnector = connectors.find(({ id }) => id === "injected")
 
@@ -81,19 +123,17 @@ const ExportWaasModal = ({
       const {
         appProperties: { backupData },
       } = await getDriveFileAppProperties(files[0].id, authData.access_token)
-      await cwaasConnector.restoreWallet(backupData)
 
       // 4) Generate private key
-      const pk = await (cwaasConnector as any)
-        .exportKeys(backupData)
-        .catch(() => null)
-      if (!pk?.[0]?.ecKeyPrivate) {
+      const pk = await generatePrivateKey(backupData)
+
+      if (!pk) {
         throw new Error(
           "Failed to export private key, make sure to authenticate with the correct Google account"
         )
       }
 
-      return pk[0].ecKeyPrivate
+      return pk
     },
     {
       onError: (error) => {

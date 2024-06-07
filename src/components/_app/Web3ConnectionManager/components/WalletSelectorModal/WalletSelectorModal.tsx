@@ -25,7 +25,6 @@ import { useAtom, useSetAtom } from "jotai"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
-import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import { walletLinkHelperModalAtom } from "../WalletLinkHelperModal"
 import AccountButton from "./components/AccountButton"
@@ -208,7 +207,6 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                   (conn) =>
                     conn.id !== COINBASE_WALLET_SDK_ID &&
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
                     (shouldShowInjected || conn.id !== "injected") &&
                     // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
                     conn.id !== COINBASE_INJECTED_WALLET_ID
