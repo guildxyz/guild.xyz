@@ -13,7 +13,7 @@ import { createConnector, type Connector } from "wagmi"
 
 export const WAAS_CONNECTOR_ID = "waas-connector"
 export const WAAS_DEPRECATION_ERROR_MESSAGE =
-  "Looks like you don't have an existing Google-based Guild account. We recomment signing in with the Smart Wallet option"
+  "Looks like you don't have an existing Google-based Guild account. We recommend signing in with the Smart Wallet option"
 
 export class WaasActionFailed extends Error {
   constructor(error: unknown) {
