@@ -46,16 +46,17 @@ type Props = {
 
 const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
   const {
+    control,
     register,
     setValue,
     formState: { errors },
   } = useFormContext<RegisterVaultFormType>()
-  const chain = useWatch({ name: "chain" })
-  const token = useWatch({ name: "token" })
+  const chain = useWatch({ control, name: "chain" })
+  const token = useWatch({ control, name: "token" })
 
   const { data: tokenData } = useToken({
     address: token,
-    chainId: Chains[chain as keyof typeof Chains],
+    chainId: Chains[chain],
     shouldFetch: Boolean(token !== NULL_ADDRESS && chain),
   })
   const chainId = useChainId()
