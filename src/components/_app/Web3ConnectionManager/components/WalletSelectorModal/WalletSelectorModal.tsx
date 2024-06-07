@@ -43,6 +43,7 @@ type Props = {
 }
 
 const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
+export const COINBASE_WALLET_SDK_ID = "coinbaseWalletSDK"
 
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
@@ -180,7 +181,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 <>
                   <ConnectorButton
                     connector={connectors.find(
-                      (conn) => conn.id === "coinbaseWalletSDK"
+                      (conn) => conn.id === COINBASE_WALLET_SDK_ID
                     )}
                     connect={connect}
                     pendingConnector={
@@ -205,7 +206,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               {connectors
                 .filter(
                   (conn) =>
-                    conn.id !== "coinbaseWalletSDK" &&
+                    conn.id !== COINBASE_WALLET_SDK_ID &&
                     (isInSafeContext || conn.id !== "safe") &&
                     (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
                     (shouldShowInjected || conn.id !== "injected") &&
