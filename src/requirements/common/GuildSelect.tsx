@@ -66,6 +66,9 @@ const GuildSelect = ({ baseFieldPath }) => {
         )
       )
     }
+    if (options.length <= 1 && selectedGuild?.id) {
+      options.push(convertGuildToOption(selectedGuild))
+    }
 
     return options
   }, [currentGuild, guildId, selectedGuild, guildOptions])
