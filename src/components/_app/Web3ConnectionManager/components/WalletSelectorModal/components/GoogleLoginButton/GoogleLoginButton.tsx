@@ -21,7 +21,7 @@ const GoogleLoginButton = () => {
       <Button
         isLoading={isLoading}
         onClick={onSubmit}
-        colorScheme="white"
+        variant="ghost"
         borderWidth="2px"
         leftIcon={
           <Center boxSize={6}>
