@@ -1,4 +1,4 @@
-import { Center, Img } from "@chakra-ui/react"
+import { Center, Img, Tag } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { connectorButtonProps } from "../ConnectorButton"
 import UserAgentAlert from "./components/UserAgentAlert"
@@ -18,12 +18,10 @@ const GoogleLoginButton = () => {
 
   return (
     <>
-      <UserAgentAlert />
-
       <Button
         isLoading={isLoading}
         onClick={onSubmit}
-        colorScheme="white"
+        variant="ghost"
         borderWidth="2px"
         leftIcon={
           <Center boxSize={6}>
@@ -35,11 +33,20 @@ const GoogleLoginButton = () => {
             />
           </Center>
         }
+        rightIcon={<Tag ml="auto">Deprecated</Tag>}
         loadingText={isGoogleAuthLoading ? "Confirm in popup..." : "Loading"}
         {...connectorButtonProps}
+        sx={{
+          ...connectorButtonProps.sx,
+          "> .chakra-button__icon:last-child": {
+            marginLeft: "auto!important",
+          },
+        }}
       >
-        Sign in with Google
+        Google
       </Button>
+
+      <UserAgentAlert />
 
       <UserOnboardingModal
         isNewWallet={isNewWallet}

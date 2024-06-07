@@ -196,7 +196,7 @@ export const wagmiConfig = createConfig({
         coinbaseWallet({
           appName: "Guild.xyz",
           appLogoUrl: "https://guild.xyz/guild-icon.png",
-          version: "3",
+          version: "4",
         }),
         walletConnect({
           projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,

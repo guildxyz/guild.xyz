@@ -43,6 +43,7 @@ type Props = {
 }
 
 const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
+export const COINBASE_WALLET_SDK_ID = "coinbaseWalletSDK"
 
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
@@ -178,7 +179,17 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Stack spacing="0">
               {!connector && !addressLinkParams?.userId && (
                 <>
-                  <GoogleLoginButton />
+                  <ConnectorButton
+                    connector={connectors.find(
+                      (conn) => conn.id === COINBASE_WALLET_SDK_ID
+                    )}
+                    connect={connect}
+                    pendingConnector={
+                      isPending && (variables?.connector as Connector)
+                    }
+                    error={error}
+                  />
+
                   <Text
                     mt={6}
                     mb={2}
@@ -195,6 +206,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               {connectors
                 .filter(
                   (conn) =>
+                    conn.id !== COINBASE_WALLET_SDK_ID &&
                     (isInSafeContext || conn.id !== "safe") &&
                     (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
                     (shouldShowInjected || conn.id !== "injected") &&
@@ -214,6 +226,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     />
                   </CardMotionWrapper>
                 ))}
+              <GoogleLoginButton />
               <FuelConnectorButtons key="fuel" />
             </Stack>
           )}
