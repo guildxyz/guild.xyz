@@ -1,7 +1,7 @@
 import { useColorMode } from "@chakra-ui/react"
 import { useIsConnected } from "@fuels/react"
 import { useAccount, type Connector } from "wagmi"
-import { COINBASE_WALLET_SDK_ID } from "../components/WalletSelectorModal/WalletSelectorModal"
+import { COINBASE_WALLET_SDK_ID } from "../components/WalletSelectorModal"
 
 const CUSTOM_CONNECTOR_ICONS: Record<
   string,
