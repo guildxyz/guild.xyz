@@ -16,6 +16,7 @@ import {
 } from "@chakra-ui/react"
 import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
 // eslint-disable-next-line import/no-extraneous-dependencies
+import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -25,7 +26,7 @@ import useToast from "hooks/useToast"
 import { Check, Copy, Wallet } from "phosphor-react"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
-import { useConnect } from "wagmi"
+import { useAccount, useConnect } from "wagmi"
 import { connectorButtonProps } from "../../ConnectorButton"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
@@ -91,6 +92,8 @@ const ExportWaasModal = ({
   const { connectors, connect } = useConnect()
   const toast = useToast()
   const [hasCopiedAtLeastOnce, setHasCopiedAtLeastOnce] = useState(false)
+  const { id: userId } = useUser()
+  const { address } = useAccount()
 
   const injectedConnector = connectors.find(({ id }) => id === "injected")
 
@@ -100,43 +103,59 @@ const ExportWaasModal = ({
     onSubmit: onGeneratePrivateKey,
   } = useSubmit(
     async () => {
+      captureEvent("[WaaS export] Started")
+
       // 1) Google OAuth
       const { authData, error } = await googleAuth.onOpen()
 
       if (!authData || !!error) {
         // Ignore cases, when the user cancels the OAuth
         if (error?.error !== "access_denied") {
-          captureEvent("[WaaS] Google OAuth failed", { error })
+          captureEvent("[WaaS export] [error] Google OAuth failed", { error })
+          throw new Error(error?.errorDescription ?? "Google authentication failed")
         } else {
-          captureEvent("[WaaS] Google OAuth denied", { error })
+          captureEvent("[WaaS export] [error] Google OAuth denied", { error })
+          return
         }
-        return
       }
+
+      captureEvent("[WaaS export] OAuth completed")
 
       // 2) Get backup from Drive
       const { files } = await listWalletsOnDrive(authData.access_token)
       if (files.length <= 0) {
+        captureEvent("[WaaS export] [error] Has no wallet file")
         throw new Error(WAAS_DEPRECATION_ERROR_MESSAGE)
       }
+
+      captureEvent("[WaaS export] File fetched")
 
       // 3) Restore wallet
       const {
         appProperties: { backupData },
       } = await getDriveFileAppProperties(files[0].id, authData.access_token)
 
+      captureEvent("[WaaS export] App properties fetched")
+
       // 4) Generate private key
       const pk = await generatePrivateKey(backupData)
 
       if (!pk) {
+        captureEvent("[WaaS export] [error] Couldn't generate private key")
+
         throw new Error(
           "Failed to export private key, make sure to authenticate with the correct Google account"
         )
       }
 
+      captureEvent("[WaaS export] Private key generated")
+
       return pk
     },
     {
       onError: (error) => {
+        captureEvent("[WaaS export] [error] Unexpected error", { error })
+
         toast({
           status: "error",
           description: error?.message || "Something went wrong, please try again",
@@ -253,6 +272,7 @@ const ExportWaasModal = ({
                   onClick={() => {
                     onCopy()
                     setHasCopiedAtLeastOnce(true)
+                    captureEvent("[WaaS export] Copied private key")
                   }}
                   isDisabled={hasCopied}
                   colorScheme="white"
@@ -270,6 +290,7 @@ const ExportWaasModal = ({
         isOpen={alert.isOpen}
         onClose={alert.onClose}
         onConfirm={() => {
+          captureEvent("[WaaS export] Confirmed wallet import")
           alert.onClose()
           onClose()
           connect({ connector: injectedConnector })
