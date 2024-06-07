@@ -117,23 +117,22 @@ const ExportWaasModal = ({
         <ModalOverlay />
         <ModalContent maxWidth={privateKey ? "2xl" : undefined}>
           <ModalHeader>
-            {privateKey ? "Import & back up your wallet" : "Export Google wallet"}
+            {privateKey ? "Import & back up your wallet" : "Export Google Wallet"}
           </ModalHeader>
           <ModalBody>
             {!privateKey ? (
               <VStack alignItems={"start"}>
                 <Text>
-                  This feature is <strong>being deprecated</strong>
+                  This feature is <strong>deprecated</strong>
                 </Text>
                 <Text>
-                  You can <strong>import</strong> your Google-based account{" "}
+                  <strong>Import</strong> your Google-based account{" "}
                   <strong>into an external wallet</strong> by authenticating with the
-                  button below, then following the displayed steps
+                  button below and following the steps
                 </Text>
                 <Text>
-                  If you don't have a Google-based account, or don't have any value
-                  on it, we recommend using the <strong>Smart Wallet</strong> sign-in
-                  option
+                  If you don't have a Google-based account or have no value on it,
+                  use the <strong>Smart Wallet</strong> sign-in option
                 </Text>
               </VStack>
             ) : (
