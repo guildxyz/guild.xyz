@@ -189,20 +189,9 @@ export default function waasConnector(options: InitializeWaasOptions) {
     },
 
     async createWallet() {
-      try {
-        await this.getProvider()
-        const { Logout, ProtocolFamily } = await cwaasImport()
-
-        await Logout().catch(() => {})
-
-        const wallet = await waas.wallets.create()
-        this.currentAddress = await wallet.addresses.for(ProtocolFamily.EVM)
-        const withViemAccount = await withAccount(wallet)
-        return withViemAccount
-      } catch (error) {
-        console.error(error)
-        throw new WaasActionFailed(error)
-      }
+      throw new Error(
+        "Looks like you don't have an existing Google-based Guild account. We recomment signing in with the Smart Wallet option"
+      )
     },
 
     async restoreWallet(backupData) {
