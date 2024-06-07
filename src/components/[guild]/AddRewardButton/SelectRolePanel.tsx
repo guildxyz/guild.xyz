@@ -11,6 +11,7 @@ import {
   Tooltip,
   useColorModeValue,
 } from "@chakra-ui/react"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { ArrowLeft, Info } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
@@ -18,6 +19,7 @@ import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
+import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
 import AvailabilitySetup from "./components/AvailabilitySetup"
 import useSubmitAddReward from "./hooks/useSubmitAddReward"
@@ -30,9 +32,8 @@ const SelectRolePanel = ({
   const { modalRef, selection, activeTab, setStep, isBackButtonDisabled } =
     useAddRewardContext()
 
-  const { onSubmit, isLoading } = useSubmitAddReward({
-    onSuccess: (res) => onSuccess?.(res),
-  })
+  const { urlName } = useGuild()
+  const { captureEvent } = usePostHogContext()
 
   const lightModalBgColor = useColorModeValue("white", "gray.700")
 
@@ -41,6 +42,20 @@ const SelectRolePanel = ({
 
   const requirements = useWatch({ name: "requirements", control: methods.control })
   const roleIds = useWatch({ name: "roleIds", control: methods.control })
+
+  const postHogOptions = {
+    guild: urlName,
+    type: activeTab,
+    requirements: requirements,
+    roleIds: roleIds,
+  }
+
+  const { onSubmit, isLoading } = useSubmitAddReward({
+    onSuccess: (res) => {
+      captureEvent("reward created (AddRewardButton)", postHogOptions)
+      onSuccess?.(res)
+    },
+  })
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
