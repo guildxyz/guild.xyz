@@ -126,7 +126,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
 
         <InputGroup>
           <NumberInput
-            isDisabled={isDisabled || !token || !chain}
+            isDisabled={isDisabled || !tokenData || !token || !chain}
             w="full"
             ref={feeFieldRef}
             value={feeFieldValue ?? undefined}
