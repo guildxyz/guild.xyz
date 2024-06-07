@@ -1,7 +1,6 @@
 import { Center, Img, Tag } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { connectorButtonProps } from "../ConnectorButton"
-import UserAgentAlert from "./components/UserAgentAlert"
 import UserOnboardingModal from "./components/UserOnboardingModal"
 import useLoginWithGoogle from "./hooks/useLoginWithGoogle"
 
@@ -45,8 +44,6 @@ const GoogleLoginButton = () => {
       >
         Google
       </Button>
-
-      <UserAgentAlert />
 
       <UserOnboardingModal
         isNewWallet={isNewWallet}
