@@ -7,6 +7,7 @@ import { useAtomValue, useSetAtom } from "jotai"
 import { Wallet } from "phosphor-react"
 import { useAccount, type Connector } from "wagmi"
 import { walletLinkHelperModalAtom } from "../../WalletLinkHelperModal"
+import { COINBASE_WALLET_SDK_ID } from "../WalletSelectorModal"
 
 type Props = {
   connector: Connector
@@ -74,7 +75,9 @@ const ConnectorButton = ({
       loadingText={`${connectorName} - connecting...`}
       {...connectorButtonProps}
     >
-      {connectorName}
+      {connector?.id === COINBASE_WALLET_SDK_ID
+        ? `Sign in with ${connectorName}`
+        : connectorName}
     </Button>
   )
 }

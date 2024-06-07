@@ -45,8 +45,8 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
     connectorName:
       connector?.name === "Injected"
         ? "Injected Wallet"
-        : connector?.id === COINBASE_WALLET_SDK_ID
-        ? "Sign in with Smart Wallet"
+        : connector?.id === "coinbaseWalletSDK"
+        ? "Smart Wallet"
         : connector?.name || (isFuelConnected ? "Fuel" : ""),
     connectorIcon,
   }
