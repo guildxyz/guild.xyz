@@ -1,9 +1,16 @@
 import { Box } from "@chakra-ui/react"
-import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion"
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion"
 import { PropsWithChildren, useRef } from "react"
 
-const ROTATION_RANGE = 30
-const HALF_ROTATION_RANGE = 30 / 2
+const ROTATION_RANGE = 15
+const HALF_ROTATION_RANGE = ROTATION_RANGE / 2
+const MAX_GLARE_OPACITY = 0.75
 
 const MotionBox = motion(Box)
 
@@ -16,8 +23,14 @@ const TiltCard = ({ children }: PropsWithChildren<unknown>) => {
   const xSpring = useSpring(x)
   const ySpring = useSpring(y)
 
+  const glareOpacity = useTransform(
+    xSpring,
+    [-HALF_ROTATION_RANGE, HALF_ROTATION_RANGE],
+    [0, MAX_GLARE_OPACITY]
+  )
+
   const transform = useMotionTemplate`rotateX(${xSpring}deg) rotateY(${ySpring}deg)`
-  const glareTransform = useMotionTemplate`translateY(${xSpring}%)`
+  const glareTransform = useMotionTemplate`translateY(${xSpring}%) rotate(${ySpring}deg)`
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (!ref.current) return [0, 0]
@@ -56,16 +69,22 @@ const TiltCard = ({ children }: PropsWithChildren<unknown>) => {
       >
         {children}
 
-        <Box position="absolute" inset={0} overflow="hidden" pointerEvents="none">
+        <Box
+          position="absolute"
+          inset={0}
+          overflow="hidden"
+          pointerEvents="none"
+          mixBlendMode="overlay"
+        >
           <MotionBox
             position="absolute"
-            inset={`-${ROTATION_RANGE}%`}
-            bgImage={`linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, ,rgba(255, 255, 255, 0.05) ${
-              100 - ROTATION_RANGE
-            }%, rgba(255, 255, 255, 0.15) 100%)`}
+            opacity={1}
+            inset={`-${ROTATION_RANGE * 2}%`}
+            bgImage={`linear-gradient(0deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 100%)`}
             pointerEvents="none"
             style={{
               transform: glareTransform,
+              opacity: glareOpacity,
             }}
           />
         </Box>
