@@ -56,7 +56,7 @@ const TiltCard = ({ children }: PropsWithChildren<unknown>) => {
       >
         {children}
 
-        <Box position="absolute" inset={0} overflow="hidden">
+        <Box position="absolute" inset={0} overflow="hidden" pointerEvents="none">
           <MotionBox
             position="absolute"
             inset={`-${ROTATION_RANGE}%`}
