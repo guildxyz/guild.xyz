@@ -58,18 +58,13 @@ const PaymentForm = ({
     token,
     fee,
     owner,
-    onSuccess: (registeredVaultId) =>
-      setValue(`${baseFieldPath}.data.id`, registeredVaultId),
+    onSuccess: (registeredVaultId) => {
+      setValue(`${baseFieldPath}.data.id`, registeredVaultId)
+      if (registeredVaultId) {
+        addRequirement()
+      }
+    },
   })
-
-  const isRequirementAdded = useRef(false)
-  useEffect(() => {
-    if (!vaultId) return
-    if (!isRequirementAdded.current) {
-      addRequirement()
-      isRequirementAdded.current = true
-    }
-  }, [vaultId, addRequirement])
 
   useEffect(() => {
     if (isLoading)
