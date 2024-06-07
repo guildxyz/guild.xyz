@@ -32,7 +32,7 @@ import { connectorButtonProps } from "../../ConnectorButton"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
 
-const UserOnboardingModal = ({
+const ExportWaasModal = ({
   onClose,
   isOpen,
 }: {
@@ -243,4 +243,4 @@ const UserOnboardingModal = ({
   )
 }
 
-export default UserOnboardingModal
+export default ExportWaasModal

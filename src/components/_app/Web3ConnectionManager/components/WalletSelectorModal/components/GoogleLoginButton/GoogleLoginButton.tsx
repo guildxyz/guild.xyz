@@ -1,8 +1,8 @@
 import { Center, Img, Tag, useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { connectorButtonProps } from "../ConnectorButton"
+import ExportWaaSModal from "./components/ExportWaaSModal"
 import UserAgentAlert from "./components/UserAgentAlert"
-import UserOnboardingModal from "./components/UserOnboardingModal"
 
 const GoogleLoginButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -37,7 +37,7 @@ const GoogleLoginButton = () => {
 
       <UserAgentAlert />
 
-      <UserOnboardingModal isOpen={isOpen} onClose={onClose} />
+      <ExportWaaSModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }
