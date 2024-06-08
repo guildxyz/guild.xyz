@@ -64,8 +64,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
   const validateFee = (value: string): boolean | string => {
     const tokenDecimals =
       token === NULL_ADDRESS
-        ? CHAIN_CONFIG[Chains[chainId] as keyof typeof CHAIN_CONFIG].nativeCurrency
-            .decimals
+        ? CHAIN_CONFIG[Chains[chainId] as Chain].nativeCurrency.decimals
         : tokenData?.decimals
     const lastDotIndex = value.lastIndexOf(".")
     const decimalPrecision = value.slice(lastDotIndex + 1).length

@@ -35,8 +35,7 @@ const useRegisterVault = ({
   })
   const tokenDecimals =
     token === NULL_ADDRESS
-      ? CHAIN_CONFIG[Chains[chainId] as keyof typeof CHAIN_CONFIG].nativeCurrency
-          .decimals
+      ? CHAIN_CONFIG[Chains[chainId] as Chain].nativeCurrency.decimals
       : tokenData?.decimals
 
   const feeInWei = fee && tokenDecimals ? parseUnits(fee, tokenDecimals) : undefined
