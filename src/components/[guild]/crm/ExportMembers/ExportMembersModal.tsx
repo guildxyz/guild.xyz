@@ -19,7 +19,7 @@ import useExportMembers from "./useExportMembers"
 import useExports from "./useExports"
 
 const ExportMembersModal = ({ isOpen, onClose }) => {
-  const { data, mutate } = useExports()
+  const { data: exports, mutate } = useExports()
 
   const { startExport, isStartExportLoading } = useExportMembers(mutate)
 
@@ -63,13 +63,13 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
             }
           />
           <Stack mb="6" mt="2" spacing={2.5}>
-            {!data ? (
+            {!exports ? (
               <FallbackText>
                 <Spinner mr="3" mb="-2px" size="sm" />
                 Loading exports...
               </FallbackText>
-            ) : data?.exports?.length ? (
-              data.exports.map((exp) => <ExportCard key={exp.id} exp={exp} />)
+            ) : exports?.length ? (
+              exports.map((exp) => <ExportCard key={exp.id} exp={exp} />)
             ) : (
               <FallbackText>No recent exports in the guild</FallbackText>
             )}

@@ -4,7 +4,7 @@ import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import fetcher from "utils/fetcher"
 
-const useExportMembers = (onSuccess) => {
+const useExportMembers = (mutate) => {
   const { id } = useGuild()
   const toast = useToast()
   const router = useRouter()
@@ -23,7 +23,7 @@ const useExportMembers = (onSuccess) => {
           description:
             "It might take some time to finish based on the number of members",
         })
-        onSuccess?.()
+        mutate((prevExports) => (!prevExports ? [res] : [res, ...prevExports]))
       },
       onError: (err) => {
         toast({

@@ -39,10 +39,10 @@ const useExports = () => {
       if (res.exports.some((exp) => exp.status === "STARTED")) setShouldPoll(true)
       else setShouldPoll(false)
 
-      return res
+      return res.exports
     })
 
-  return useSWRImmutable<ExportsEndpoint>(
+  return useSWRImmutable<ExportData[]>(
     `/v2/crm/guilds/${id}/exports`,
     fetchExports,
     {
