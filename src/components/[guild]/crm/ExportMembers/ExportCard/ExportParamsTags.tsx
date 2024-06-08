@@ -14,7 +14,9 @@ const ExportParamsTags = ({
   sortOrder,
 }: ExportData["data"]["params"]) => (
   <Wrap spacing={1}>
-    {roleIds.length > 0 && <ExportParamsRolesTag {...{ roleIds, logic }} />}
+    {!(Array.isArray(roleIds) && !roleIds.length) && (
+      <ExportParamsRolesTag {...{ roleIds, logic }} />
+    )}
 
     {order && (
       <Tooltip

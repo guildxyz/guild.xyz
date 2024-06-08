@@ -35,10 +35,17 @@ const useExportMembers = (onSuccess) => {
   )
 
   return {
-    startExport: () => onSubmit(router.query),
+    startExport: () =>
+      onSubmit({ ...router.query, roleIds: stringsToNumber(router.query.roleIds) }),
     isStartExportLoading: isLoading,
     ...rest,
   }
+}
+
+const stringsToNumber = (strings: string | string[]) => {
+  if (!strings) return undefined
+  if (Array.isArray(strings)) return strings.map((string) => parseInt(string))
+  return parseInt(strings)
 }
 
 export default useExportMembers
