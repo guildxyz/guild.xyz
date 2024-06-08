@@ -19,6 +19,7 @@ import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { ExportData } from "../useExports"
@@ -32,55 +33,56 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
   const { isOpen, onToggle } = useDisclosure()
 
   return (
-    <Card>
-      <Button
-        p="4"
-        variant="unstyled"
-        h="auto"
-        onClick={exp.status === "FINISHED" ? onToggle : null}
-        cursor={exp.status === "FINISHED" ? "pointer" : "default"}
-      >
-        <HStack>
-          <Box mr="auto">
-            <HStack mb="0.5" spacing={1}>
-              <Text fontWeight={"bold"} textAlign={"left"}>
-                {isOpen
-                  ? `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
-                  : `${since} ago`}
-              </Text>
-            </HStack>
-            <ExportParamsTags {...exp.data.params} />
-          </Box>
-          {exp.status === "FINISHED" ? (
-            <>
-              <MemberCount memberCount={exp.data.count} mt="0" />
-              <Icon
-                as={CaretDown}
-                aria-label="Open export"
-                transform={isOpen && "rotate(180deg)"}
-                transition="transform .3s"
-              />
-            </>
-          ) : exp.status === "FAILED" ? (
-            <Tag colorScheme="red">Failed</Tag>
-          ) : (
-            <Tooltip
-              label="It may take some time to export a lot of members. Feel free to leave the site and come back later!"
-              hasArrow
-            >
-              <Tag colorScheme="blue">
-                <TagLeftIcon as={Spinner} />
-                Creating
-              </Tag>
-            </Tooltip>
-          )}
-        </HStack>
-      </Button>
-
-      <Collapse in={isOpen} unmountOnExit>
-        <ExportControls filename={exp.filename} />
-      </Collapse>
-    </Card>
+    <CardMotionWrapper>
+      <Card>
+        <Button
+          p="4"
+          variant="unstyled"
+          h="auto"
+          onClick={exp.status === "FINISHED" ? onToggle : null}
+          cursor={exp.status === "FINISHED" ? "pointer" : "default"}
+        >
+          <HStack>
+            <Box mr="auto">
+              <HStack mb="0.5" spacing={1}>
+                <Text fontWeight={"bold"} textAlign={"left"}>
+                  {isOpen
+                    ? `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
+                    : `${since} ago`}
+                </Text>
+              </HStack>
+              <ExportParamsTags {...exp.data.params} />
+            </Box>
+            {exp.status === "FINISHED" ? (
+              <>
+                <MemberCount memberCount={exp.data.count} mt="0" />
+                <Icon
+                  as={CaretDown}
+                  aria-label="Open export"
+                  transform={isOpen && "rotate(180deg)"}
+                  transition="transform .3s"
+                />
+              </>
+            ) : exp.status === "FAILED" ? (
+              <Tag colorScheme="red">Failed</Tag>
+            ) : (
+              <Tooltip
+                label="It may take some time to export a lot of members. Feel free to leave the site and come back later!"
+                hasArrow
+              >
+                <Tag colorScheme="blue">
+                  <TagLeftIcon as={Spinner} />
+                  Creating
+                </Tag>
+              </Tooltip>
+            )}
+          </HStack>
+        </Button>
+        <Collapse in={isOpen} unmountOnExit>
+          <ExportControls filename={exp.filename} />
+        </Collapse>
+      </Card>
+    </CardMotionWrapper>
   )
 }
 
