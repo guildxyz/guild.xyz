@@ -9,8 +9,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Stack,
+  StackProps,
   Text,
   VStack,
+  useBreakpointValue,
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react"
@@ -167,6 +170,17 @@ const ExportWaasModal = ({
 
   const { onCopy, hasCopied } = useClipboard(privateKey, 3000)
 
+  const stackProps = useBreakpointValue({
+    base: {
+      alignItems: "center",
+      flexDirection: "column",
+    } as StackProps,
+    md: {
+      alignItems: "start",
+      flexDirection: "row",
+    } as StackProps,
+  })
+
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -192,7 +206,7 @@ const ExportWaasModal = ({
                 </Text>
               </VStack>
             ) : (
-              <HStack alignItems={"start"}>
+              <Stack {...stackProps}>
                 <VStack>
                   <Text>
                     You can now copy your private key, and import it into a wallet
@@ -228,7 +242,7 @@ const ExportWaasModal = ({
                 >
                   Your browser does not support the HTML5 video tag.
                 </video>
-              </HStack>
+              </Stack>
             )}
           </ModalBody>
           <ModalFooter>
