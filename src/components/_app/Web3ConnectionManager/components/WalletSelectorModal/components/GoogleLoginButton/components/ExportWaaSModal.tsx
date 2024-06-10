@@ -16,7 +16,6 @@ import {
 } from "@chakra-ui/react"
 import type { RawPrivateKey, Waas } from "@coinbase/waas-sdk-web"
 // eslint-disable-next-line import/no-extraneous-dependencies
-import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
@@ -26,7 +25,7 @@ import useToast from "hooks/useToast"
 import { Check, Copy, Wallet } from "phosphor-react"
 import { useState } from "react"
 import fetcher from "utils/fetcher"
-import { useAccount, useConnect } from "wagmi"
+import { useConnect } from "wagmi"
 import { connectorButtonProps } from "../../ConnectorButton"
 import useDriveOAuth from "../hooks/useDriveOAuth"
 import { getDriveFileAppProperties, listWalletsOnDrive } from "../utils/googleDrive"
@@ -92,8 +91,6 @@ const ExportWaasModal = ({
   const { connectors, connect } = useConnect()
   const toast = useToast()
   const [hasCopiedAtLeastOnce, setHasCopiedAtLeastOnce] = useState(false)
-  const { id: userId } = useUser()
-  const { address } = useAccount()
 
   const injectedConnector = connectors.find(({ id }) => id === "injected")
 
