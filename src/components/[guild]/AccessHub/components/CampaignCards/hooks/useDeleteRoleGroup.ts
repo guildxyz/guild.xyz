@@ -23,10 +23,11 @@ const useDeleteRoleGroup = (groupId: number) => {
         title: "Successfully deleted page",
       })
       mutateGuild(
-        (curr) => ({
-          ...curr,
-          groups: curr.groups.filter((group) => group.id !== groupId),
-        }),
+        (curr) =>
+          curr && {
+            ...curr,
+            groups: curr.groups.filter((group) => group.id !== groupId),
+          },
         { revalidate: false }
       )
     },

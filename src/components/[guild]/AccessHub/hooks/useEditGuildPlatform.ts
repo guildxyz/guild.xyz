@@ -37,7 +37,7 @@ const useEditGuildPlatform = ({
          */
         body: {
           platformGuildData: {
-            ...originalGuildPlatform.platformGuildData,
+            ...originalGuildPlatform?.platformGuildData,
             ...data.platformGuildData,
           },
         },
@@ -53,39 +53,40 @@ const useEditGuildPlatform = ({
         ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
       mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          guildPlatforms: prevGuild.guildPlatforms.map((gp) => {
-            if (gp.id === guildPlatformId) return response
-            return gp
-          }),
-          roles:
-            CAPACITY_TIME_PLATFORMS.includes(
-              PlatformType[response.platformId] as PlatformName
-            ) || isLegacyContractCallReward
-              ? prevGuild.roles.map((role) => {
-                  if (
-                    !role.rolePlatforms?.some(
-                      (rp) => rp.guildPlatformId === guildPlatformId
+        (prevGuild) =>
+          prevGuild && {
+            ...prevGuild,
+            guildPlatforms: prevGuild.guildPlatforms.map((gp) => {
+              if (gp.id === guildPlatformId) return response
+              return gp
+            }),
+            roles:
+              CAPACITY_TIME_PLATFORMS.includes(
+                PlatformType[response.platformId] as PlatformName
+              ) || isLegacyContractCallReward
+                ? prevGuild.roles.map((role) => {
+                    if (
+                      !role.rolePlatforms?.some(
+                        (rp) => rp.guildPlatformId === guildPlatformId
+                      )
                     )
-                  )
-                    return role
+                      return role
 
-                  return {
-                    ...role,
-                    rolePlatforms: role.rolePlatforms.map((rp) => {
-                      if (rp.guildPlatformId !== guildPlatformId) return rp
+                    return {
+                      ...role,
+                      rolePlatforms: role.rolePlatforms.map((rp) => {
+                        if (rp.guildPlatformId !== guildPlatformId) return rp
 
-                      return {
-                        ...rp,
-                        capacity:
-                          response.platformGuildData?.texts?.length ?? rp.capacity,
-                      }
-                    }),
-                  }
-                })
-              : prevGuild.roles,
-        }),
+                        return {
+                          ...rp,
+                          capacity:
+                            response.platformGuildData?.texts?.length ?? rp.capacity,
+                        }
+                      }),
+                    }
+                  })
+                : prevGuild.roles,
+          },
         { revalidate: false }
       )
     },

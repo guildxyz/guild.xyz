@@ -12,17 +12,15 @@ type Props = {
 
 const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
   const { guildPlatforms, roles } = useGuild()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
 
-  const guildPlatform = guildPlatforms.find(
+  const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
   const rolePlatform = roles
-    .flatMap((role) => role.rolePlatforms)
+    ?.flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform?.id)
-
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const toast = useToast()
 
   const { onSubmit, isLoading } = useEditRolePlatform({
     rolePlatformId: rolePlatform?.id,
@@ -34,6 +32,9 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
       onClose()
     },
   })
+
+  if (guildPlatform === undefined)
+    throw new Error(`Unmatched guild platform ID ${platformGuildId}`)
 
   return (
     <>

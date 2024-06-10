@@ -8,41 +8,47 @@ const useEditRolePlatform = ({
   rolePlatformId,
   onSuccess,
 }: {
-  rolePlatformId: number
+  rolePlatformId?: number
   onSuccess?: () => void
 }) => {
   const { id, roles, mutateGuild } = useGuild()
-  const roleId = roles.find(
+  const roleId = roles?.find(
     (role) => !!role.rolePlatforms.find((rp) => rp.id === rolePlatformId)
   )?.id
 
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (signedValidation: SignedValidation) =>
-    fetcher(`/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatformId}`, {
-      method: "PUT",
-      ...signedValidation,
-    })
+  const submit = async (signedValidation: SignedValidation) => {
+    if (roleId === undefined) return
+    return fetcher(
+      `/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatformId}`,
+      {
+        method: "PUT",
+        ...signedValidation,
+      }
+    )
+  }
 
   return useSubmitWithSign<RolePlatform>(submit, {
     onSuccess: (response) => {
       onSuccess?.()
 
       mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
-            if (role.id !== roleId) return role
+        (prevGuild) =>
+          prevGuild && {
+            ...prevGuild,
+            roles: prevGuild.roles.map((role) => {
+              if (role.id !== roleId) return role
 
-            return {
-              ...role,
-              rolePlatforms: role.rolePlatforms.map((rp) => {
-                if (rp.id !== rolePlatformId) return { ...rp, roleId: role.id }
-                return { ...response, roleId: role.id }
-              }),
-            }
-          }),
-        }),
+              return {
+                ...role,
+                rolePlatforms: role.rolePlatforms.map((rp) => {
+                  if (rp.id !== rolePlatformId) return { ...rp, roleId: role.id }
+                  return { ...response, roleId: role.id }
+                }),
+              }
+            }),
+          },
         { revalidate: false }
       )
     },

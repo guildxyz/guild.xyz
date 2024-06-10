@@ -24,6 +24,8 @@ export const useAccessedGuildPoints = (
   const { roleIds } = useMembership()
   const { isAdmin } = useGuildPermission()
 
+  if (roles === undefined) return []
+
   const accessedGuildPoints =
     guildPlatforms?.filter((gp) => {
       if (gp.platformId !== PlatformType.POINTS) return false
@@ -32,7 +34,11 @@ export const useAccessedGuildPoints = (
       const visibleRelatedRolePlatformsToUser = roles
         ?.flatMap((role) => role.rolePlatforms)
         ?.filter((rp) => {
-          if (rp.guildPlatformId !== gp.id || rp.visibility === "HIDDEN")
+          if (
+            rp.roleId === undefined ||
+            rp.guildPlatformId !== gp.id ||
+            rp.visibility === "HIDDEN"
+          )
             return false
 
           if (filter === "ALL" && rp.visibility === "PUBLIC") return true

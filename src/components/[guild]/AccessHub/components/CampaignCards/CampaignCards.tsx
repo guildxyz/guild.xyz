@@ -34,13 +34,14 @@ const CampaignCards = () => {
 
   const imageBgColor = useColorModeValue("gray.700", "gray.600")
 
-  if (!groups?.length || !!query.group) return null
+  if (!groups?.length || !!query.group || roles === undefined) return null
 
   return (
     <>
       {groups.map(({ id, imageUrl, name, urlName }) => {
         const groupHasRoles = roles.some((role) => role.groupId === id)
         if (!isAdmin && !groupHasRoles) return null
+        const finalImage = imageUrl ?? guildImageUrl
 
         return (
           <ColorCard
@@ -55,7 +56,9 @@ const CampaignCards = () => {
             {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
 
             <HStack spacing={3} minHeight={10} mb={5}>
-              {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
+              {finalImage === undefined ? (
+                <SkeletonCircle size="10" />
+              ) : (
                 <Circle
                   overflow={"hidden"}
                   borderRadius="full"
@@ -67,16 +70,9 @@ const CampaignCards = () => {
                   {imageUrl?.match("guildLogos") ? (
                     <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
                   ) : (
-                    <Image
-                      src={imageUrl || guildImageUrl}
-                      alt={name}
-                      fill
-                      sizes="2.5rem"
-                    />
+                    <Image src={finalImage} alt={name} fill sizes="2.5rem" />
                   )}
                 </Circle>
-              ) : (
-                <SkeletonCircle size="10" />
               )}
               <Text fontWeight="bold">{name}</Text>
             </HStack>

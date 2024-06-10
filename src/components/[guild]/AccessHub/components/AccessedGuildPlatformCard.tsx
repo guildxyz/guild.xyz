@@ -18,6 +18,8 @@ const AccessedGuildPlatformCard = ({ platform }: { platform: GuildPlatform }) =>
     cardButton: PlatformCardButton,
   } = rewards[PlatformType[platform.platformId] as PlatformName]
 
+  if (useCardProps === undefined) return null
+
   return (
     <PlatformCard
       usePlatformCardProps={useCardProps}
@@ -27,7 +29,7 @@ const AccessedGuildPlatformCard = ({ platform }: { platform: GuildPlatform }) =>
           <PlatformCardMenu platformGuildId={platform.platformGuildId} />
         ) : PlatformCardWarning ? (
           <PlatformCardWarning guildPlatform={platform} />
-        ) : null
+        ) : undefined
       }
     >
       {PlatformCardButton ? (

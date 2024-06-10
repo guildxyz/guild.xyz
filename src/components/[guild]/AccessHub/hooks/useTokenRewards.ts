@@ -9,6 +9,8 @@ export const useTokenRewards = (
   const { guildPlatforms, roles } = useGuild()
   const { roleIds } = useMembership()
 
+  if (roles === undefined) return []
+
   const tokenRewards = guildPlatforms?.filter(
     (gp) => gp.platformId === PlatformType.ERC20
   )

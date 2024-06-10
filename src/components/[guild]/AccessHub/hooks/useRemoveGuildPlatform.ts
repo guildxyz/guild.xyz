@@ -6,18 +6,20 @@ import useToast from "hooks/useToast"
 import fetcher from "utils/fetcher"
 
 const useRemoveGuildPlatform = (
-  guildPlatformId: number,
+  guildPlatformId?: number,
   { onSuccess, onError }: UseSubmitOptions<any> = {}
 ) => {
   const { id, mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (signedValidation: SignedValidation) =>
-    fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatformId}`, {
+  const submit = async (signedValidation: SignedValidation) => {
+    if (guildPlatformId === undefined) return
+    return fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatformId}`, {
       method: "DELETE",
       ...signedValidation,
     })
+  }
 
   return useSubmitWithSign<any>(submit, {
     forcePrompt: true,
@@ -28,22 +30,23 @@ const useRemoveGuildPlatform = (
       })
 
       mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          guildPlatforms:
-            prevGuild.guildPlatforms?.filter(
-              (prevGuildPlatform) => prevGuildPlatform.id !== guildPlatformId
-            ) ?? [],
-          roles:
-            prevGuild.roles?.map((prevRole) => ({
-              ...prevRole,
-              rolePlatforms:
-                prevRole.rolePlatforms?.filter(
-                  (prevRolePlatform) =>
-                    prevRolePlatform.guildPlatformId !== guildPlatformId
-                ) ?? [],
-            })) ?? [],
-        }),
+        (prevGuild) =>
+          prevGuild && {
+            ...prevGuild,
+            guildPlatforms:
+              prevGuild.guildPlatforms?.filter(
+                (prevGuildPlatform) => prevGuildPlatform.id !== guildPlatformId
+              ) ?? [],
+            roles:
+              prevGuild.roles?.map((prevRole) => ({
+                ...prevRole,
+                rolePlatforms:
+                  prevRole.rolePlatforms?.filter(
+                    (prevRolePlatform) =>
+                      prevRolePlatform.guildPlatformId !== guildPlatformId
+                  ) ?? [],
+              })) ?? [],
+          },
         { revalidate: false }
       )
       onSuccess?.(res)

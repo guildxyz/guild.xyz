@@ -13,17 +13,15 @@ type Props = {
 
 const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const color = useColorModeValue("red.600", "red.300")
   const { guildPlatforms } = useGuild()
-  const guildPlatform = guildPlatforms.find(
+  const guildPlatform = guildPlatforms?.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
-
-  const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
-
   const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
-
-  const color = useColorModeValue("red.600", "red.300")
+  if (guildPlatform === undefined)
+    throw new Error(`Unmatched guild platform ID ${platformGuildId}`)
+  const { isPlatform } = rewards[PlatformType[guildPlatform.platformId]] ?? {}
 
   return (
     <>
