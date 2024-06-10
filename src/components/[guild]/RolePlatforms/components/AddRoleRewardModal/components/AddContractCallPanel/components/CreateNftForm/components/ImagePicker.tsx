@@ -56,7 +56,7 @@ const ImagePicker = () => {
     <FormControl isInvalid={!!fileRejections?.[0] || !!errors?.image}>
       <FormLabel>Media</FormLabel>
 
-      <WrapperElement>
+      <WrapperElement borderRadius="xl">
         <AspectRatio ratio={1}>
           <Button
             p={0}

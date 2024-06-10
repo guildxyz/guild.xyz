@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react"
+import { Box, BoxProps } from "@chakra-ui/react"
 import {
   motion,
   useMotionTemplate,
@@ -14,7 +14,10 @@ const MAX_GLARE_OPACITY = 0.75
 
 const MotionBox = motion(Box)
 
-const TiltCard = ({ children }: PropsWithChildren<unknown>) => {
+const TiltCard = ({
+  borderRadius,
+  children,
+}: PropsWithChildren<Pick<BoxProps, "borderRadius">>) => {
   const ref = useRef<HTMLDivElement>(null)
 
   const x = useMotionValue(0)
@@ -62,6 +65,7 @@ const TiltCard = ({ children }: PropsWithChildren<unknown>) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         position="relative"
+        borderRadius={borderRadius}
         style={{
           transformStyle: "preserve-3d",
           transform,
@@ -75,6 +79,7 @@ const TiltCard = ({ children }: PropsWithChildren<unknown>) => {
           overflow="hidden"
           pointerEvents="none"
           mixBlendMode="overlay"
+          borderRadius={borderRadius}
         >
           <MotionBox
             position="absolute"
