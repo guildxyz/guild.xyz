@@ -63,6 +63,7 @@ import useTokenCardProps from "./Token/hooks/useTokenCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 import RewardPreview from "./components/RewardPreview"
+import { RewardCardProps } from "components/common/RewardCard"
 
 export enum PlatformAsRewardRestrictions {
   NOT_APPLICABLE, // e.g. Twitter
@@ -116,6 +117,7 @@ type RewardData = {
   cardMenuComponent?: (props) => JSX.Element
   cardWarningComponent?: (props) => JSX.Element
   cardButton?: (props) => JSX.Element
+  RewardCardComponent?: ComponentType<RewardCardProps>
   AddRewardPanel?: ComponentType<AddRewardPanelProps>
   RewardPreview?: ComponentType<PropsWithChildren<unknown>>
   RoleCardComponent?: ComponentType<RewardProps>
