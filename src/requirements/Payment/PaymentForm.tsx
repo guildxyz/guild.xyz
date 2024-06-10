@@ -2,7 +2,7 @@ import { HStack, Icon, Stack, Tooltip } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import useTriggerNetworkChange from "hooks/useTriggerNetworkChange"
 import { Check, Question } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import { FEE_COLLECTOR_CONTRACT } from "utils/guildCheckout/constants"
@@ -60,9 +60,7 @@ const PaymentForm = ({
     owner,
     onSuccess: (registeredVaultId) => {
       setValue(`${baseFieldPath}.data.id`, registeredVaultId)
-      if (registeredVaultId) {
-        addRequirement()
-      }
+      addRequirement()
     },
   })
 
