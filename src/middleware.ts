@@ -19,5 +19,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  return NextResponse.redirect(request.url.toLowerCase())
+  let transformedURL = request.url.split("?")[0].toLowerCase()
+
+  if (request.nextUrl.search) {
+    transformedURL += request.nextUrl.search
+  }
+
+  return NextResponse.redirect(transformedURL)
 }
