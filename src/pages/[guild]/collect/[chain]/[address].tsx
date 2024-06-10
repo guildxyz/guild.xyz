@@ -53,6 +53,11 @@ type Props = {
   fallback: { [x: string]: Guild }
 }
 
+const DynamicEditNFTButton = dynamic(
+  () => import("components/[guild]/collect/components/EditNftButton"),
+  { ssr: false }
+)
+
 const DynamicEditNFTDescriptionModalButton = dynamic(
   () =>
     import("components/[guild]/collect/components/EditNFTDescriptionModalButton"),
@@ -89,13 +94,17 @@ const CollectNftPageContent = ({
       <Stack spacing={4}>
         <HStack justifyContent="space-between">
           <GuildImageAndName />
-          <ShareAndReportButtons
-            isPulseMarkerHidden={totalSupply > 0}
-            shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
-            shareText={`Check out and collect this awesome ${
-              name ? `${name} ` : " "
-            }NFT on Guild!`}
-          />
+          <HStack>
+            <ShareAndReportButtons
+              isPulseMarkerHidden={totalSupply > 0}
+              shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
+              shareText={`Check out and collect this awesome ${
+                name ? `${name} ` : " "
+              }NFT on Guild!`}
+            />
+
+            {isAdmin && <DynamicEditNFTButton />}
+          </HStack>
         </HStack>
 
         <SimpleGrid
