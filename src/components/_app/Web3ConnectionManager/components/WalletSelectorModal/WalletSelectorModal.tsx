@@ -157,11 +157,12 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     return {
                       title: "Error",
                       description:
-                        err?.message ?? typeof err?.error === "string"
+                        err?.message ??
+                        (typeof err?.error === "string"
                           ? err?.error
                           : typeof err === "string"
                           ? err
-                          : err?.errors?.[0]?.msg,
+                          : err?.errors?.[0]?.msg),
                     }
                   },
                 }
