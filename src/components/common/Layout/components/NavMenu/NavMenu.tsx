@@ -94,6 +94,14 @@ const NavMenu = (): JSX.Element => {
               <NavButton leftIcon={<CircleWavyCheck />} href="/leaderboard">
                 Guild Pins leaderboard
               </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://help.guild.xyz"
+                rel="noopener"
+                leftIcon={<Info />}
+              >
+                Guide
+              </NavButton>
               <NavButton leftIcon={<Shield />} href="/privacy-policy">
                 Privacy Policy
               </NavButton>
@@ -141,14 +149,6 @@ const NavMenu = (): JSX.Element => {
                 leftIcon={<UsersThree />}
               >
                 Team
-              </NavButton>
-              <NavButton
-                target="_blank"
-                href="https://help.guild.xyz"
-                rel="noopener"
-                leftIcon={<Info />}
-              >
-                Guide
               </NavButton>
               <NavButton
                 target="_blank"
