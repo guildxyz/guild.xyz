@@ -179,16 +179,18 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Stack spacing="0">
               {!connector && !addressLinkParams?.userId && (
                 <>
-                  <ConnectorButton
-                    connector={connectors.find(
-                      (conn) => conn.id === COINBASE_WALLET_SDK_ID
-                    )}
-                    connect={connect}
-                    pendingConnector={
-                      isPending && (variables?.connector as Connector)
-                    }
-                    error={error}
-                  />
+                  <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
+                    <ConnectorButton
+                      connector={connectors.find(
+                        (conn) => conn.id === COINBASE_WALLET_SDK_ID
+                      )}
+                      connect={connect}
+                      pendingConnector={
+                        isPending && (variables?.connector as Connector)
+                      }
+                      error={error}
+                    />
+                  </CardMotionWrapper>
 
                   <Text
                     mt={6}
