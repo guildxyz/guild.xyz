@@ -1,7 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import {
   Center,
-  Fade,
   HStack,
   Img,
   ModalBody,
@@ -273,12 +272,6 @@ const ExportWaasModal = ({
               </Button>
             ) : (
               <HStack>
-                <Fade in={hasCopiedAtLeastOnce}>
-                  <Button leftIcon={<Wallet />} onClick={alert.onOpen}>
-                    Backup and import done
-                  </Button>
-                </Fade>
-
                 <Button
                   onClick={() => {
                     onCopy()
@@ -291,6 +284,15 @@ const ExportWaasModal = ({
                   leftIcon={hasCopied ? <Check /> : <Copy />}
                 >
                   {hasCopied ? "Private key copied" : "Copy private key"}
+                </Button>
+
+                <Button
+                  isDisabled={!hasCopiedAtLeastOnce}
+                  colorScheme={"green"}
+                  leftIcon={<Wallet />}
+                  onClick={alert.onOpen}
+                >
+                  Backup & import done
                 </Button>
               </HStack>
             )}
