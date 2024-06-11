@@ -1,7 +1,6 @@
 import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { platformMergeAlertAtom } from "components/_app/Web3ConnectionManager/components/PlatformMergeErrorAlert"
-import { StopExecution } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/hooks/useLoginWithGoogle"
 import usePopupWindow from "hooks/usePopupWindow"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
@@ -279,13 +278,7 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
       useSubmitOptions?.onSuccess?.()
     },
     onError: ([platformName, rawError]) => {
-      try {
-        useSubmitOptions?.onError?.([platformName, rawError])
-      } catch (err) {
-        if (err instanceof StopExecution) {
-          return
-        }
-      }
+      useSubmitOptions?.onError?.([platformName, rawError])
 
       const errorObject = {
         error: undefined,
