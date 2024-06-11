@@ -532,18 +532,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/sismo.svg",
-    name: "Sismo",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sismo/SismoRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sismo/SismoForm")
-    ),
-    types: ["SISMO"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
     displayComponent: dynamic<RequirementProps>(
@@ -568,30 +556,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/rabbithole.png",
-    name: "RabbitHole",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rabbithole/RabbitholeRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rabbithole/RabbitholeForm")
-    ),
-    types: ["RABBITHOLE"],
-    isNegatable: true,
-  },
-  {
-    icon: "/networkLogos/optimism.svg",
-    name: "OP Attestation",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Optimism/OptimismRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Optimism/OptimismForm")
-    ),
-    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/rep3.png",
     name: "Rep3",
     displayComponent: dynamic<RequirementProps>(
@@ -613,54 +577,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Parallel/ParallelForm")
     ),
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/kycdao.svg",
-    name: "kycDAO",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/KycDAO/KycDAORequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/KycDAO/KycDAOForm")
-    ),
-    types: ["KYC_DAO"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/otterspace.png",
-    name: "Otterspace",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Otterspace/OtterspaceRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Otterspace/OtterspaceForm")
-    ),
-    types: ["OTTERSPACE"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/orange.png",
-    name: "Orange",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Orange/OrangeRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Orange/OrangeForm")
-    ),
-    types: ["ORANGE"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/cask.png",
-    name: "Cask",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Cask/CaskRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Cask/CaskForm")
-    ),
-    types: ["CASK"],
     isNegatable: true,
   },
 ] as const
