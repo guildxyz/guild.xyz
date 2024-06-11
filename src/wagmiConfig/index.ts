@@ -218,59 +218,63 @@ export const wagmiConfig = createConfig({
           allowedDomains: [/gnosis-safe\.io$/, /app\.safe\.global$/],
           debug: false,
         }),
-        waasConnector({
-          provideAuthToken: async () => {
-            const connector = wagmiConfig.connectors.find(
-              (conn) => conn.id === WAAS_CONNECTOR_ID
-            ) as Connector
+        ...(typeof window === "undefined"
+          ? []
+          : [
+              waasConnector({
+                provideAuthToken: async () => {
+                  const connector = wagmiConfig.connectors.find(
+                    (conn) => conn.id === WAAS_CONNECTOR_ID
+                  ) as Connector
 
-            const walletClient = await connector
-              .getClient()
-              .catch(() => null as WalletClient)
+                  const walletClient = await connector
+                    .getClient()
+                    .catch(() => null as WalletClient)
 
-            // First we check if there is data in the cache
-            const userCheck = !!walletClient
-              ? await mutate<PublicUser>(
-                  `/v2/users/${walletClient.account.address.toLowerCase()}/profile`,
-                  (prev) => prev,
-                  { revalidate: false }
-                )
-              : null
+                  // First we check if there is data in the cache
+                  const userCheck = !!walletClient
+                    ? await mutate<PublicUser>(
+                        `/v2/users/${walletClient.account.address.toLowerCase()}/profile`,
+                        (prev) => prev,
+                        { revalidate: false }
+                      )
+                    : null
 
-            // If there isn't, we mutate
-            const user = !!walletClient
-              ? !userCheck
-                ? await mutate<PublicUser>(
-                    `/v2/users/${walletClient.account.address.toLowerCase()}/profile`
-                  )
-                : userCheck
-              : null
+                  // If there isn't, we mutate
+                  const user = !!walletClient
+                    ? !userCheck
+                      ? await mutate<PublicUser>(
+                          `/v2/users/${walletClient.account.address.toLowerCase()}/profile`
+                        )
+                      : userCheck
+                    : null
 
-            const shouldSign =
-              walletClient &&
-              walletClient?.account?.address &&
-              user?.keyPair?.keyPair
+                  const shouldSign =
+                    walletClient &&
+                    walletClient?.account?.address &&
+                    user?.keyPair?.keyPair
 
-            const token = shouldSign
-              ? await fetcherWithSign(
-                  {
-                    address: walletClient?.account?.address,
-                    publicClient: null,
-                    walletClient,
-                    keyPair: user?.keyPair?.keyPair,
-                  },
-                  "/v2/third-party/coinbase/token",
-                  { method: "GET" }
-                )
-              : await fetcher("/v2/third-party/coinbase/token")
+                  const token = shouldSign
+                    ? await fetcherWithSign(
+                        {
+                          address: walletClient?.account?.address,
+                          publicClient: null,
+                          walletClient,
+                          keyPair: user?.keyPair?.keyPair,
+                        },
+                        "/v2/third-party/coinbase/token",
+                        { method: "GET" }
+                      )
+                    : await fetcher("/v2/third-party/coinbase/token")
 
-            return token
-          },
-          collectAndReportMetrics: true,
-          prod:
-            (typeof window !== "undefined" &&
-              window.origin === "https://guild.xyz") ||
-            undefined,
-        }),
+                  return token
+                },
+                collectAndReportMetrics: true,
+                prod:
+                  (typeof window !== "undefined" &&
+                    window.origin === "https://guild.xyz") ||
+                  undefined,
+              }),
+            ]),
       ],
 })
