@@ -12,13 +12,11 @@ import { useMemo } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
-import { Chains } from "wagmiConfig/chains"
+import { Chain } from "wagmiConfig/chains"
 import ChainPicker from "../common/ChainPicker"
 import useLocks, { CHAINS_ENDPOINTS } from "./hooks/useLocks"
 
-const supportedChains = Object.keys(CHAINS_ENDPOINTS).map(
-  (chainId) => Chains[chainId]
-)
+const supportedChains = Object.keys(CHAINS_ENDPOINTS) as Chain[]
 
 const customFilterOption = (candidate, input) =>
   candidate.label?.toLowerCase().includes(input?.toLowerCase()) ||
