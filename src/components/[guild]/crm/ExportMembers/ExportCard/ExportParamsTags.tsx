@@ -50,7 +50,7 @@ const ExportParamsTags = ({
 )
 
 const ExportParamsRolesTag = ({ roleIds, logic }) => {
-  if (Array.isArray(roleIds))
+  if (roleIds.length > 1)
     return (
       <Tooltip
         label={

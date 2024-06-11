@@ -36,13 +36,13 @@ const useExportMembers = (mutate) => {
 
   return {
     startExport: () =>
-      onSubmit({ ...router.query, roleIds: stringsToNumber(router.query.roleIds) }),
+      onSubmit({ ...router.query, roleIds: stringsToNumbers(router.query.roleIds) }),
     isStartExportLoading: isLoading,
     ...rest,
   }
 }
 
-const stringsToNumber = (strings: string | string[]) => {
+const stringsToNumbers = (strings: string | string[]) => {
   if (!strings) return undefined
   if (Array.isArray(strings)) return strings.map((string) => parseInt(string))
   return parseInt(strings)
