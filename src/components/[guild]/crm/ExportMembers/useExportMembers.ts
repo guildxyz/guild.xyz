@@ -45,7 +45,7 @@ const useExportMembers = (mutate) => {
 const stringsToNumbers = (strings: string | string[]) => {
   if (!strings) return undefined
   if (Array.isArray(strings)) return strings.map((string) => parseInt(string))
-  return parseInt(strings)
+  return [parseInt(strings)]
 }
 
 export default useExportMembers
