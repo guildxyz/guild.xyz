@@ -83,15 +83,10 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
             ) : exp.status === "FAILED" ? (
               <Tag colorScheme="red">Failed</Tag>
             ) : (
-              <Tooltip
-                label="It may take some time to export a lot of members. Feel free to leave the site and come back later!"
-                hasArrow
-              >
-                <Tag colorScheme="blue">
-                  <TagLeftIcon as={Spinner} />
-                  Creating
-                </Tag>
-              </Tooltip>
+              <Tag colorScheme="blue">
+                <TagLeftIcon as={Spinner} />
+                Creating
+              </Tag>
             )}
           </HStack>
         </Button>
