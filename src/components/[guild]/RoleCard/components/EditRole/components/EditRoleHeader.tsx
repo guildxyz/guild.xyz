@@ -1,9 +1,10 @@
 import { HStack } from "@chakra-ui/react"
-import SetVisibility from "components/[guild]/SetVisibility"
+import SetVisibility, { SetVisibilityForm } from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DrawerHeader from "components/common/DrawerHeader"
-import { Visibility } from "types"
+import { useFormContext, useWatch } from "react-hook-form"
+import { RoleEditFormData } from "../hooks/useEditRoleForm"
 import DeleteRoleButton from "./DeleteRoleButton"
 
 const EditRoleHeader = ({
@@ -15,6 +16,24 @@ const EditRoleHeader = ({
 }) => {
   const setVisibilityModalProps = useVisibilityModalProps()
   const { roles } = useGuild()
+
+  const visibility = useWatch({ name: "visibility" })
+  const visibilityRoleId = useWatch({ name: "visibilityRoleId" })
+
+  const { setValue } = useFormContext<RoleEditFormData>()
+
+  const handleVisibilitySave = ({
+    visibility: newVisibility,
+    visibilityRoleId: newVisibilityRoleId,
+  }: SetVisibilityForm) => {
+    setValue("visibility", newVisibility, {
+      shouldDirty: true,
+    })
+    setValue("visibilityRoleId", newVisibilityRoleId, {
+      shouldDirty: true,
+    })
+    setVisibilityModalProps.onClose()
+  }
 
   return (
     <DrawerHeader
@@ -28,10 +47,10 @@ const EditRoleHeader = ({
         <SetVisibility
           entityType="role"
           defaultValues={{
-            visibility: Visibility.PUBLIC,
-            visibilityRoleId: roleId,
-          }} // TODO: set
-          onSave={() => {}} // TODO: handle
+            visibility: visibility,
+            visibilityRoleId: visibilityRoleId,
+          }}
+          onSave={handleVisibilitySave}
           {...setVisibilityModalProps}
         />
         {roles?.length > 1 && (

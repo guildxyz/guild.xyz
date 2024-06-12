@@ -1,6 +1,6 @@
-import { useToast } from "@chakra-ui/react"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
+import useToast from "hooks/useToast"
 import { UseFormReturn } from "react-hook-form"
 import handleSubmitDirty from "utils/handleSubmitDirty"
 import useEditRole from "./useEditRole"
