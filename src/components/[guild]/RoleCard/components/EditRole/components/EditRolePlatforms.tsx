@@ -15,6 +15,7 @@ import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
 import { AddRewardPanelProps } from "platforms/rewards"
+import useUpdateAvailability from "../hooks/useUpdateAvailability"
 import GenericRolePlatformCard from "./GenericRolePlatformCard"
 
 type Props = {
@@ -61,6 +62,8 @@ const EditRolePlatforms = ({ roleId }: Props) => {
     onAddRewardSubmit(dataToSend)
   }
 
+  const handleAvailabilityChange = useUpdateAvailability()
+
   return (
     <Section
       title="Rewards"
@@ -90,7 +93,9 @@ const EditRolePlatforms = ({ roleId }: Props) => {
               rolePlatform={rolePlatform}
               index={index}
               onRemove={(rolePlatformId) => () => {}} // TODO
-              onAvailabilityChange={() => {}} // TODO
+              onAvailabilityChange={(capacity, start, end) =>
+                handleAvailabilityChange(rolePlatform, capacity, start, end)
+              }
               onVisibilityChange={() => {}} // TODO
             />
           ))
