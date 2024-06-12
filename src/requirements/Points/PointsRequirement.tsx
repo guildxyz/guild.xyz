@@ -1,13 +1,15 @@
 import { Link } from "@chakra-ui/next-js"
 import { Skeleton } from "@chakra-ui/react"
+import { GuildReward } from "@guildxyz/types"
 import Requirement, {
   RequirementProps,
   RequirementSkeleton,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import useGuild from "components/[guild]/hooks/useGuild"
+import useGuild, { useSimpleGuild } from "components/[guild]/hooks/useGuild"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import Star from "static/icons/star.svg"
+import useSWRImmutable from "swr/immutable"
 
 const ExternalGuildLink = ({ name, urlName }) => (
   <>
@@ -23,10 +25,11 @@ const ExternalGuildLink = ({ name, urlName }) => (
 
 const PointsRank = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
-  const { guildPlatformId, guildId, minAmount, maxAmount } = requirement.data
+  const { guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName } = useGuild(guildId)
   const { id: currentGuildId } = useGuild()
-  const { guildPlatform: pointsReward } = useGuildPlatform(guildPlatformId)
+
+  const pointsReward = usePointsRewardForCurrentRequirement()
 
   if (!pointsReward) return <RequirementSkeleton />
 
@@ -66,10 +69,11 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
 
 const PointsAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
-  const { guildPlatformId, guildId, minAmount, maxAmount } = requirement.data
-  const { name, urlName } = useGuild(guildId)
+  const { guildId, minAmount, maxAmount } = requirement.data
+  const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
-  const { guildPlatform: pointsReward } = useGuildPlatform(guildPlatformId)
+
+  const pointsReward = usePointsRewardForCurrentRequirement()
 
   if (!pointsReward) return <RequirementSkeleton />
 
@@ -86,6 +90,26 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
       {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
   )
+}
+
+const usePointsRewardForCurrentRequirement = () => {
+  const {
+    data: { guildPlatformId, guildId },
+  } = useRequirementContext()
+
+  const { id: currentGuildId } = useGuild()
+  const { guildPlatform: pointsRewardInCurrentGuild } =
+    useGuildPlatform(guildPlatformId)
+
+  const { data: externalGuildPlatforms } = useSWRImmutable<GuildReward[]>(
+    guildId !== currentGuildId ? `/v2/guilds/${guildId}/guild-platforms` : null
+  )
+
+  const pointsReward =
+    pointsRewardInCurrentGuild ??
+    externalGuildPlatforms?.find((gp) => gp.id === guildPlatformId)
+
+  return pointsReward
 }
 
 const types = {
