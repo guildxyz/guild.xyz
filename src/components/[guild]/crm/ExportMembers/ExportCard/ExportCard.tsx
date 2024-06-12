@@ -22,13 +22,17 @@ import Button from "components/common/Button"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import ErrorAlert from "components/common/ErrorAlert"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
+import { atom, useAtom } from "jotai"
 import { ExportData } from "../useExports"
 import ExportParamsTags from "./ExportParamsTags"
+
+const absoluteTimeAtom = atom(false)
 
 const ExportCard = ({ exp }: { exp: ExportData }) => {
   const date = new Date(exp.createdAt)
   const timeDifference = Date.now() - date.getTime()
   const since = formatRelativeTimeFromNow(timeDifference)
+  const [isAbsoluteTime, setIsAbsoluteTime] = useAtom(absoluteTimeAtom)
 
   const { isOpen, onToggle } = useDisclosure()
 
@@ -44,13 +48,26 @@ const ExportCard = ({ exp }: { exp: ExportData }) => {
         >
           <HStack>
             <Box mr="auto">
-              <HStack mb="0.5" spacing={1}>
-                <Text fontWeight={"bold"} textAlign={"left"}>
-                  {isOpen
+              <Tooltip
+                label={isAbsoluteTime ? "Show relative time" : "Show timestamp"}
+                hasArrow
+              >
+                <Text
+                  fontWeight={"bold"}
+                  textAlign={"left"}
+                  mb="0.5"
+                  mr="auto"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setIsAbsoluteTime((prev) => !prev)
+                  }}
+                  cursor="pointer"
+                >
+                  {isAbsoluteTime
                     ? `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`
                     : `${since} ago`}
                 </Text>
-              </HStack>
+              </Tooltip>
               <ExportParamsTags {...exp.data.params} />
             </Box>
             {exp.status === "FINISHED" ? (
