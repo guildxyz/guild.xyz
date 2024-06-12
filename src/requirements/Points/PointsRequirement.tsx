@@ -26,7 +26,7 @@ const ExternalGuildLink = ({ name, urlName }) => (
 const PointsRank = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildId, minAmount, maxAmount } = requirement.data
-  const { name, urlName } = useGuild(guildId)
+  const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
 
   const pointsReward = usePointsRewardForCurrentRequirement()
@@ -54,7 +54,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
 const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { guildId, minAmount, maxAmount } = requirement.data
-  const { name, urlName } = useGuild(guildId)
+  const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
 
   return (
