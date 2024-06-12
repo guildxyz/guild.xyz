@@ -53,7 +53,7 @@ const MinMaxAmount = ({
   const handleChange = (newValue, onChange) => {
     if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
     const parsedValue = format === "INT" ? parseInt(newValue) : parseFloat(newValue)
-    return onChange(isNaN(parsedValue) ? undefined : parsedValue)
+    return onChange(isNaN(parsedValue) ? null : parsedValue)
   }
 
   return (

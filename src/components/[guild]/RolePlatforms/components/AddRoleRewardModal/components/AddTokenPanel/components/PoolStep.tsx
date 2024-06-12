@@ -22,11 +22,7 @@ import { useEffect, useState } from "react"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import ControlledNumberInput from "requirements/WalletActivity/components/ControlledNumberInput"
 import Token from "static/icons/token.svg"
-import {
-  ERC20_CONTRACTS,
-  MIN_TOKEN_AMOUNT,
-  NULL_ADDRESS,
-} from "utils/guildCheckout/constants"
+import { ERC20_CONTRACTS, NULL_ADDRESS } from "utils/guildCheckout/constants"
 import { parseUnits } from "viem"
 import { useAccount } from "wagmi"
 import { Chains } from "wagmiConfig/chains"
@@ -140,7 +136,6 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
             <ControlledNumberInput
               numberFormat="FLOAT"
               name="amount"
-              min={MIN_TOKEN_AMOUNT}
               isDisabled={skip}
               defaultValue={1}
               numberInputFieldProps={{ pr: 7, pl: 10 }}

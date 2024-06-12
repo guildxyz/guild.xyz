@@ -110,6 +110,12 @@ const useUserPublic = (
       }
 
       return user
+    },
+    {
+      shouldRetryOnError: false,
+      onError: () => {
+        setIsWalletSelectorModalOpen(true)
+      },
     }
   )
 

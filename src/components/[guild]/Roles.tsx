@@ -3,9 +3,9 @@ import CollapsibleRoleSection from "components/[guild]/CollapsibleRoleSection"
 import { RequirementErrorConfigProvider } from "components/[guild]/Requirements/RequirementErrorConfigContext"
 import RoleCard from "components/[guild]/RoleCard/RoleCard"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useScrollEffect from "hooks/useScrollEffect"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import dynamic from "next/dynamic"
-import { useMemo, useRef, useState } from "react"
+import { useMemo, useState } from "react"
 import { Visibility } from "types"
 import useGuildPermission from "./hooks/useGuildPermission"
 import useRoleGroup from "./hooks/useRoleGroup"
@@ -51,19 +51,12 @@ const Roles = () => {
     (role) => role.visibility === Visibility.HIDDEN
   )
 
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
   const [renderedRolesCount, setRenderedRolesCount] = useState(BATCH_SIZE)
-  const rolesEl = useRef(null)
-  useScrollEffect(() => {
-    if (
-      !rolesEl.current ||
-      rolesEl.current.getBoundingClientRect().bottom > window.innerHeight ||
-      roles?.length <= renderedRolesCount
-    )
-      return
-
-    setRenderedRolesCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [roles, renderedRolesCount])
+  const rolesEl = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
+    disableRendering: roles?.length <= renderedRolesCount,
+    setElementCount: setRenderedRolesCount,
+  })
 
   return (
     <>

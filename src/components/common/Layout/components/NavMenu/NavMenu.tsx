@@ -27,6 +27,8 @@ import {
   Palette,
   Plus,
   Shield,
+  Package,
+  UsersThree,
 } from "phosphor-react"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
@@ -92,6 +94,14 @@ const NavMenu = (): JSX.Element => {
               <NavButton leftIcon={<CircleWavyCheck />} href="/leaderboard">
                 Guild Pins leaderboard
               </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://help.guild.xyz"
+                rel="noopener"
+                leftIcon={<Info />}
+              >
+                Guide
+              </NavButton>
               <NavButton leftIcon={<Shield />} href="/privacy-policy">
                 Privacy Policy
               </NavButton>
@@ -126,11 +136,19 @@ const NavMenu = (): JSX.Element => {
               </NavButton>
               <NavButton
                 target="_blank"
-                href="https://help.guild.xyz"
+                href="https://github.com/guildxyz/guild-sdk"
                 rel="noopener"
-                leftIcon={<Info />}
+                leftIcon={<Package />}
               >
-                Guide
+                Guild SDK
+              </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://guildxyz.notion.site/Join-the-Guild-Team-7ffd822c4d7749cb9c1adb525c858ae1"
+                rel="noopener"
+                leftIcon={<UsersThree />}
+              >
+                Team
               </NavButton>
               <NavButton
                 target="_blank"

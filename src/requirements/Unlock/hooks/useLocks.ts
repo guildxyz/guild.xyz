@@ -1,18 +1,23 @@
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
-import { Chain, Chains } from "wagmiConfig/chains"
+import { Chain } from "wagmiConfig/chains"
 
 const CHAINS_ENDPOINTS = {
-  1: "mainnet",
-  5: "goerli",
-  10: "optimism",
-  56: "bsc",
-  100: "gnosis",
-  137: "polygon",
-  42161: "arbitrum",
-  42220: "celo",
-  43114: "avalanche",
-}
+  ETHEREUM:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-mainnet/version/latest",
+  OPTIMISM:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-optimism/version/latest",
+  BSC: "https://api.studio.thegraph.com/query/65299/unlock-protocol-bsc/version/latest",
+  GNOSIS:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-gnosis/version/latest",
+  POLYGON:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-polygon/version/latest",
+  ARBITRUM:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-arbitrum/version/latest",
+  CELO: "https://api.studio.thegraph.com/query/65299/unlock-protocol-celo/version/latest",
+  AVALANCHE:
+    "https://api.studio.thegraph.com/query/65299/unlock-protocol-avalanche/version/latest",
+} satisfies Partial<Record<Chain, string>>
 
 type Data = {
   address: string
@@ -59,12 +64,8 @@ const fetchLocks = async (endpoint: string) => {
 }
 
 const useLocks = (chain: Chain) => {
-  const chainId = Chains[chain]
-
   const { isLoading, data } = useSWRImmutable<Data[]>(
-    chainId
-      ? `https://api.thegraph.com/subgraphs/name/unlock-protocol/${CHAINS_ENDPOINTS[chainId]}-v2`
-      : null,
+    CHAINS_ENDPOINTS[chain],
     fetchLocks
   )
 

@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  usePrevious,
 } from "@chakra-ui/react"
 
 import { Link } from "@chakra-ui/next-js"
@@ -21,11 +22,11 @@ import { addressLinkParamsAtom } from "components/common/Layout/components/Accou
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtom, useSetAtom } from "jotai"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
 import { useAccount, useConnect, type Connector } from "wagmi"
-import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import useWeb3ConnectionManager from "../../hooks/useWeb3ConnectionManager"
 import { walletLinkHelperModalAtom } from "../WalletLinkHelperModal"
 import AccountButton from "./components/AccountButton"
@@ -43,9 +44,11 @@ type Props = {
 }
 
 const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
+export const COINBASE_WALLET_SDK_ID = "coinbaseWalletSDK"
 
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
+  const { isWeb3Connected, isInSafeContext, disconnect, address } =
+    useWeb3ConnectionManager()
 
   const { connectors, error, connect, variables, isPending } = useConnect()
 
@@ -61,7 +64,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const { connector, status } = useAccount()
 
-  const [addressLinkParams] = useAtom(addressLinkParamsAtom)
+  const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
 
   const closeModalAndSendAction = () => {
@@ -111,6 +114,23 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
     setIsWalletLinkHelperModalOpen(false)
   }, [isWeb3Connected, setIsWalletLinkHelperModalOpen])
 
+  const prevAddress = usePrevious(address)
+  const triesToLinkCurrentAddress =
+    isAddressLink &&
+    !shouldShowVerify &&
+    !prevAddress &&
+    address === addressLinkParams.address
+
+  const showErrorToast = useShowErrorToast()
+
+  useEffect(() => {
+    if (!triesToLinkCurrentAddress) return
+    setAddressLinkParams({ userId: undefined, address: undefined })
+    showErrorToast(
+      "You cannot link an address to itself. Please choose a different address."
+    )
+  }, [triesToLinkCurrentAddress, setAddressLinkParams, showErrorToast])
+
   return (
     <Modal
       isOpen={isOpen}
@@ -156,11 +176,12 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     return {
                       title: "Error",
                       description:
-                        err?.message ?? typeof err?.error === "string"
+                        err?.message ??
+                        (typeof err?.error === "string"
                           ? err?.error
                           : typeof err === "string"
                           ? err
-                          : err?.errors?.[0]?.msg,
+                          : err?.errors?.[0]?.msg),
                     }
                   },
                 }
@@ -178,7 +199,19 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
             <Stack spacing="0">
               {!connector && !addressLinkParams?.userId && (
                 <>
-                  <GoogleLoginButton />
+                  <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
+                    <ConnectorButton
+                      connector={connectors.find(
+                        (conn) => conn.id === COINBASE_WALLET_SDK_ID
+                      )}
+                      connect={connect}
+                      pendingConnector={
+                        isPending && (variables?.connector as Connector)
+                      }
+                      error={error}
+                    />
+                  </CardMotionWrapper>
+
                   <Text
                     mt={6}
                     mb={2}
@@ -195,8 +228,8 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
               {connectors
                 .filter(
                   (conn) =>
+                    conn.id !== COINBASE_WALLET_SDK_ID &&
                     (isInSafeContext || conn.id !== "safe") &&
-                    (!!connector || conn.id !== WAAS_CONNECTOR_ID) &&
                     (shouldShowInjected || conn.id !== "injected") &&
                     // Filtering Coinbase Wallet, since we use the `coinbaseWallet` connector for it
                     conn.id !== COINBASE_INJECTED_WALLET_ID
@@ -214,6 +247,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     />
                   </CardMotionWrapper>
                 ))}
+              <GoogleLoginButton />
               <FuelConnectorButtons key="fuel" />
             </Stack>
           )}

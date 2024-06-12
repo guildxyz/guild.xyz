@@ -24,12 +24,12 @@ import GuildCardsGrid from "components/explorer/GuildCardsGrid"
 import SearchBar from "components/explorer/SearchBar"
 import useIsStuck from "hooks/useIsStuck"
 import { useQueryState } from "hooks/useQueryState"
-import useScrollEffect from "hooks/useScrollEffect"
 import { forwardRef, useEffect } from "react"
 import useSWRInfinite from "swr/infinite"
 import { GuildBase } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import SearchBarFilters, { Filters } from "./SearchBarFilters"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 
 const BATCH_SIZE = 24
 
@@ -105,18 +105,12 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
     if (prevSearch === search || prevSearch === undefined) return
     setSize(1)
   }, [search, prevSearch, setSize])
-
-  // TODO: we use this behaviour in multiple places now, should make a useScrollBatchedRendering hook
-  useScrollEffect(() => {
-    if (
-      !ref.current ||
-      ref.current.getBoundingClientRect().bottom > window.innerHeight ||
-      isValidating
-    )
-      return
-
-    setSize((prev) => prev + 1)
-  }, [filteredGuilds, isValidating])
+  useScrollBatchedRendering({
+    batchSize: 1,
+    scrollTarget: ref,
+    disableRendering: isValidating,
+    setElementCount: setSize,
+  })
 
   return (
     <Stack spacing={{ base: 8, md: 10 }}>

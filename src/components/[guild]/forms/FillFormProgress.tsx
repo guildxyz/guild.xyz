@@ -1,5 +1,5 @@
 import { HStack, Progress, Text } from "@chakra-ui/react"
-import FloatingFooter from "components/common/FloatingFooter"
+import { StickyFooter } from "components/common/FloatingFooter"
 import { PropsWithChildren } from "react"
 import { useFormContext } from "react-hook-form"
 
@@ -15,7 +15,7 @@ const FillFormProgress = ({ children }: PropsWithChildren<unknown>) => {
   const progressText = `${isNaN(progress) ? 0 : progress}%`
 
   return (
-    <FloatingFooter maxWidth="container.md">
+    <StickyFooter>
       <HStack justify="space-between" p={3}>
         <Text colorScheme="gray" fontWeight="semibold" fontSize="sm">
           Form {progressText} completed
@@ -36,7 +36,7 @@ const FillFormProgress = ({ children }: PropsWithChildren<unknown>) => {
           },
         }}
       />
-    </FloatingFooter>
+    </StickyFooter>
   )
 }
 

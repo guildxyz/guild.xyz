@@ -2,8 +2,9 @@ import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
 import GuildSelect from "requirements/common/GuildSelect"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import parseFromObject from "utils/parseFromObject"
 import GuildAdmin from "./components/GuildAdmin"
 import MinGuilds from "./components/MinGuilds"
@@ -43,7 +44,11 @@ const guildRequirementTypes = [
   },
 ]
 
-const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element => {
+const GuildForm = ({
+  baseFieldPath,
+  field,
+  providerTypesOnly,
+}: RequirementFormProps): JSX.Element => {
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
   const {
@@ -61,6 +66,11 @@ const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
     resetField(`${baseFieldPath}.data.maxAmount`)
     resetField(`${baseFieldPath}.data.creationDate`)
   }
+
+  const options = guildRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
+
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -71,7 +81,7 @@ const GuildForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={guildRequirementTypes}
+          options={options}
           afterOnChange={resetDataFields}
           isDisabled={isEditMode}
         />

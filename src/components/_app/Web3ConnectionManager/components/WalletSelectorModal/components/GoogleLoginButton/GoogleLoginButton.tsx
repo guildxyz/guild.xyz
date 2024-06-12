@@ -1,29 +1,16 @@
-import { Center, Img } from "@chakra-ui/react"
+import { Center, Img, Tag, useDisclosure } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { connectorButtonProps } from "../ConnectorButton"
-import UserAgentAlert from "./components/UserAgentAlert"
-import UserOnboardingModal from "./components/UserOnboardingModal"
-import useLoginWithGoogle from "./hooks/useLoginWithGoogle"
+import ExportWaaSModal from "./components/ExportWaaSModal"
 
 const GoogleLoginButton = () => {
-  const {
-    isNewWallet,
-    isOpen,
-    onClose,
-    isLoading,
-    onSubmit,
-    response,
-    isGoogleAuthLoading,
-  } = useLoginWithGoogle()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
-      <UserAgentAlert />
-
       <Button
-        isLoading={isLoading}
-        onClick={onSubmit}
-        colorScheme="white"
+        onClick={onOpen}
+        variant="ghost"
         borderWidth="2px"
         leftIcon={
           <Center boxSize={6}>
@@ -35,19 +22,19 @@ const GoogleLoginButton = () => {
             />
           </Center>
         }
-        loadingText={isGoogleAuthLoading ? "Confirm in popup..." : "Loading"}
+        rightIcon={<Tag ml="auto">Deprecated</Tag>}
         {...connectorButtonProps}
+        sx={{
+          ...connectorButtonProps.sx,
+          "> .chakra-button__icon:last-child": {
+            marginLeft: "auto!important",
+          },
+        }}
       >
-        Sign in with Google
+        Google
       </Button>
 
-      <UserOnboardingModal
-        isNewWallet={isNewWallet}
-        isOpen={isOpen}
-        onClose={onClose}
-        isLoginLoading={isLoading}
-        isLoginSuccess={!!response}
-      />
+      <ExportWaaSModal isOpen={isOpen} onClose={onClose} />
     </>
   )
 }

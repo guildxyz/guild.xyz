@@ -29,10 +29,10 @@ import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
 import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
-import useScrollEffect from "hooks/useScrollEffect"
+import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
-import { useRef, useState } from "react"
+import { useState } from "react"
 import { PlatformType, SocialLinkKey } from "types"
 import parseDescription from "utils/parseDescription"
 
@@ -44,7 +44,6 @@ const Leaderboard = () => {
   const { id: guildId, name, imageUrl, description, socialLinks, tags } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
-  const wrapperRef = useRef(null)
 
   const relatedTokenRewards = useTokenRewards(false, Number(router.query.pointsId))
 
@@ -57,16 +56,11 @@ const Leaderboard = () => {
     false
   )
 
-  useScrollEffect(() => {
-    if (
-      !wrapperRef.current ||
-      wrapperRef.current.getBoundingClientRect().bottom > window.innerHeight ||
-      data?.leaderboard?.length <= renderedUsersCount
-    )
-      return
-
-    setRenderedUsersCount((prevValue) => prevValue + BATCH_SIZE)
-  }, [data, renderedUsersCount])
+  const wrapperRef = useScrollBatchedRendering({
+    batchSize: BATCH_SIZE,
+    disableRendering: data?.leaderboard?.length <= renderedUsersCount,
+    setElementCount: setRenderedUsersCount,
+  })
 
   const userData = data?.aroundUser?.find((user) => user.userId === userId)
 
@@ -123,27 +117,29 @@ const Leaderboard = () => {
         rightElement={<LeaderboardPointsSelector />}
       />
       <Stack spacing={10}>
-        <Stack spacing={3}>
-          {relatedTokenRewards.map((guildPlatform) => (
-            <LeaderboardAirdropCard
-              key={guildPlatform.id}
-              guildPlatform={guildPlatform}
-            />
-          ))}
+        {(relatedTokenRewards.length || userData) && (
+          <Stack spacing={3}>
+            {relatedTokenRewards.map((guildPlatform) => (
+              <LeaderboardAirdropCard
+                key={guildPlatform.id}
+                guildPlatform={guildPlatform}
+              />
+            ))}
 
-          {userData && (
-            <LeaderboardUserCard
-              address={
-                userData.address ??
-                addresses?.find((address) => address.isPrimary).address
-              }
-              score={userData.totalPoints}
-              position={userData.rank}
-              isCurrentUser
-              tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
-            />
-          )}
-        </Stack>
+            {userData && (
+              <LeaderboardUserCard
+                address={
+                  userData.address ??
+                  addresses?.find((address) => address.isPrimary).address
+                }
+                score={userData.totalPoints}
+                position={userData.rank}
+                isCurrentUser
+                tooltipLabel="If your score is not up-to-date, it might take up to 3 minutes for it to update"
+              />
+            )}
+          </Stack>
+        )}
 
         <Section
           ref={wrapperRef}

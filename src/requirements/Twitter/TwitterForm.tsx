@@ -11,7 +11,8 @@ import {
 } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useFormState, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import parseFromObject from "utils/parseFromObject"
 import TwitterAccountAge from "./components/TwitterAccountAge"
 import TwitterAccountAgeRelative from "./components/TwitterAccountAgeRelative"
@@ -96,7 +97,11 @@ const twitterRequirementTypes = [
   },
 ]
 
-const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const TwitterForm = ({
+  baseFieldPath,
+  field,
+  providerTypesOnly,
+}: RequirementFormProps) => {
   const { errors } = useFormState()
   const { resetField } = useFormContext()
 
@@ -110,6 +115,10 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
     resetField(`${baseFieldPath}.data.minAmount`, { defaultValue: null })
   }
 
+  const options = twitterRequirementTypes.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
+
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl
@@ -120,7 +129,7 @@ const TwitterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
         <ControlledSelect
           name={`${baseFieldPath}.type`}
           rules={{ required: "It's required to select a type" }}
-          options={twitterRequirementTypes}
+          options={options}
           beforeOnChange={resetFields}
           isDisabled={isEditMode}
         />

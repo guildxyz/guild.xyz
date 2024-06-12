@@ -144,7 +144,10 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
             forcePrompt: true,
             msg: "Sign in Guild.xyz",
             ...signProps,
-            getMessageToSign: type === "EVM" ? getSiweMessage : undefined,
+            getMessageToSign:
+              type === "EVM" || signProps?.walletClient?.account?.type === "local"
+                ? getSiweMessage
+                : undefined,
           },
         },
       ])

@@ -532,18 +532,6 @@ export const REQUIREMENTS_DATA = [
     isNegatable: true,
   },
   {
-    icon: "/requirementLogos/sismo.svg",
-    name: "Sismo",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Sismo/SismoRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Sismo/SismoForm")
-    ),
-    types: ["SISMO"],
-    isNegatable: true,
-  },
-  {
     icon: "/requirementLogos/noox.svg",
     name: "Noox",
     displayComponent: dynamic<RequirementProps>(
@@ -565,30 +553,6 @@ export const REQUIREMENTS_DATA = [
       () => import("requirements/Yup/YupForm")
     ),
     types: ["YUP"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/rabbithole.png",
-    name: "RabbitHole",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Rabbithole/RabbitholeRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Rabbithole/RabbitholeForm")
-    ),
-    types: ["RABBITHOLE"],
-    isNegatable: true,
-  },
-  {
-    icon: "/networkLogos/optimism.svg",
-    name: "OP Attestation",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Optimism/OptimismRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Optimism/OptimismForm")
-    ),
-    types: ["OPTIMISM", "OPTIMISM_ATTESTATION", "OPTIMISM_PFP"],
     isNegatable: true,
   },
   {
@@ -615,68 +579,83 @@ export const REQUIREMENTS_DATA = [
     types: ["PARALLEL_ID", "PARALLEL_SANCTIONS_SAFE", "PARALLEL_TRAIT"],
     isNegatable: true,
   },
-  {
-    icon: "/requirementLogos/kycdao.svg",
-    name: "kycDAO",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/KycDAO/KycDAORequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/KycDAO/KycDAOForm")
-    ),
-    types: ["KYC_DAO"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/otterspace.png",
-    name: "Otterspace",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Otterspace/OtterspaceRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Otterspace/OtterspaceForm")
-    ),
-    types: ["OTTERSPACE"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/orange.png",
-    name: "Orange",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Orange/OrangeRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Orange/OrangeForm")
-    ),
-    types: ["ORANGE"],
-    isNegatable: true,
-  },
-  {
-    icon: "/requirementLogos/cask.png",
-    name: "Cask",
-    displayComponent: dynamic<RequirementProps>(
-      () => import("requirements/Cask/CaskRequirement")
-    ),
-    formComponent: dynamic<RequirementFormProps>(
-      () => import("requirements/Cask/CaskForm")
-    ),
-    types: ["CASK"],
-    isNegatable: true,
-  },
 ] as const
 
 export const REQUIREMENT_PROVIDED_VALUES: Partial<
   Record<RequirementType, ComponentType<ProvidedValueDisplayProps>>
 > = {
   ERC20: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Token/TokenProvidedValue")
+    () => import("requirements/Token/providedValue/TokenProvidedValue")
   ),
   COIN: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Token/TokenProvidedValue")
+    () => import("requirements/Token/providedValue/TokenProvidedValue")
   ),
   GUILD_SNAPSHOT: dynamic<ProvidedValueDisplayProps>(
-    () => import("requirements/Airdrop/AirdropProvidedValue")
+    () => import("requirements/Airdrop/providedValue/AirdropProvidedValue")
   ),
+  UNISWAP_V3_POSITIONS: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Uniswap/providedValue/PositionsProvidedValue")
+  ),
+
+  // NFTs
+  ERC721: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Nft/providedValue/NftAmountProvidedValue")
+  ),
+  ERC1155: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Nft/providedValue/NftAmountProvidedValue")
+  ),
+  NOUNS: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Nft/providedValue/NftAmountProvidedValue")
+  ),
+
+  GUILD_MINGUILDS: () => "Guild membership count",
+
+  COVALENT_TX_COUNT: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/WalletActivity/providedValue/TxCountProvidedValue")
+  ),
+  COVALENT_TX_COUNT_RELATIVE: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/WalletActivity/providedValue/TxCountProvidedValue")
+  ),
+  COVALENT_CONTRACT_DEPLOY: dynamic<ProvidedValueDisplayProps>(
+    () =>
+      import("requirements/WalletActivity/providedValue/ContractDeployProvidedValue")
+  ),
+  COVALENT_CONTRACT_DEPLOY_RELATIVE: dynamic<ProvidedValueDisplayProps>(
+    () =>
+      import("requirements/WalletActivity/providedValue/ContractDeployProvidedValue")
+  ),
+
+  POINTS_AMOUNT: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Points/providedValue/PointsAmountProvidedValue")
+  ),
+  POINTS_TOTAL_AMOUNT: () => "Total score summing all points",
+  POINTS_RANK: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Points/providedValue/PointsRankProvidedValue")
+  ),
+
+  TWITTER_FOLLOWER_COUNT: () => "Followers on X",
+
+  FARCASTER_TOTAL_FOLLOWERS: () => "Followers on Farcaster",
+
+  LENS_TOTAL_FOLLOWERS: () => "Followers on Lens Protocol",
+  LENS_TOTAL_POSTS: () => "Number of posts",
+
+  GITCOIN_SCORE: dynamic<ProvidedValueDisplayProps>(
+    () =>
+      import("requirements/GitcoinPassport/providedValue/GitcoinScoreProvidedValue")
+  ),
+
+  SNAPSHOT_VOTES: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Snapshot/providedValue/VotesProvidedValue")
+  ),
+  SNAPSHOT_PROPOSALS: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Snapshot/providedValue/ProposalsProvidedValue")
+  ),
+
+  SOUND_TOP_COLLECTOR: dynamic<ProvidedValueDisplayProps>(
+    () => import("requirements/Sound/providedValue/TopCollectorProvidedValue")
+  ),
+  SOUND_NFTS: () => "Songs owned",
 }
 
 export const PROVIDER_TYPES = Object.keys(REQUIREMENT_PROVIDED_VALUES) as Array<

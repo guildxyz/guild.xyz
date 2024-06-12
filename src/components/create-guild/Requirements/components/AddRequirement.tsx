@@ -228,6 +228,8 @@ const AddRequirementForm = forwardRef(
       },
     })
 
+    const formType = useWatch({ name: ".type" as any, control: methods.control })
+
     const onSubmit = methods.handleSubmit((data) => {
       const requirement: Requirement = {
         type: selectedType,
@@ -264,11 +266,15 @@ const AddRequirementForm = forwardRef(
               providerTypesOnly={providerTypesOnly}
             />
 
-            {!!REQUIREMENT_PROVIDED_VALUES[selectedType] && (
+            {!!REQUIREMENT_PROVIDED_VALUES[formType ?? selectedType] && (
               <>
                 {" "}
                 <Divider mt={5} mb={3} />
-                <ProvidedValueDisplay requirement={{ type: selectedType }} />
+                <ProvidedValueDisplay
+                  requirement={{
+                    type: formType ?? (selectedType as RequirementType),
+                  }}
+                />
               </>
             )}
           </ModalBody>

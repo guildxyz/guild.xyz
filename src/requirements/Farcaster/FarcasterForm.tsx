@@ -1,7 +1,8 @@
 import { FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import ControlledSelect from "components/common/ControlledSelect"
 import { useFormContext, useWatch } from "react-hook-form"
-import { RequirementFormProps } from "requirements"
+import { RequirementFormProps, RequirementType } from "requirements"
+import { PROVIDER_TYPES } from "requirements/requirements"
 import FarcasterCastHash from "./components/FarcasterCastHash"
 import FarcasterChannel from "./components/FarcasterChannel"
 import FarcasterTextToInclude from "./components/FarcasterTextToInclude"
@@ -47,7 +48,11 @@ const typeOptions = [
   },
 ]
 
-const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const FarcasterForm = ({
+  baseFieldPath,
+  field,
+  providerTypesOnly,
+}: RequirementFormProps) => {
   const { resetField } = useFormContext()
   const type = useWatch({ name: `${baseFieldPath}.type` })
 
@@ -59,6 +64,10 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
 
   const isEditMode = !!field?.id
 
+  const options = typeOptions.filter((el) =>
+    providerTypesOnly ? PROVIDER_TYPES.includes(el.value as RequirementType) : true
+  )
+
   return (
     <Stack spacing={4} alignItems="start">
       <FormControl isRequired>
@@ -69,7 +78,7 @@ const FarcasterForm = ({ baseFieldPath, field }: RequirementFormProps) => {
           rules={{
             required: "This field is required.",
           }}
-          options={typeOptions}
+          options={options}
           placeholder="Choose type"
           afterOnChange={resetForm}
           isDisabled={isEditMode}

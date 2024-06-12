@@ -19,6 +19,7 @@ import RequirementsCard from "components/[guild]/collect/components/Requirements
 import RichTextDescription from "components/[guild]/collect/components/RichTextDescription"
 import ShareAndReportButtons from "components/[guild]/collect/components/ShareAndReportButtons"
 import SmallImageAndRoleName from "components/[guild]/collect/components/SmallImageAndRoleName"
+import TiltCard from "components/[guild]/collect/components/TiltCard"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
@@ -51,6 +52,11 @@ type Props = {
   fallbackImage?: string
   fallback: { [x: string]: Guild }
 }
+
+const DynamicEditNFTButton = dynamic(
+  () => import("components/[guild]/collect/components/EditNftButton"),
+  { ssr: false }
+)
 
 const DynamicEditNFTDescriptionModalButton = dynamic(
   () =>
@@ -88,13 +94,17 @@ const CollectNftPageContent = ({
       <Stack spacing={4}>
         <HStack justifyContent="space-between">
           <GuildImageAndName />
-          <ShareAndReportButtons
-            isPulseMarkerHidden={totalSupply > 0}
-            shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
-            shareText={`Check out and collect this awesome ${
-              name ? `${name} ` : " "
-            }NFT on Guild!`}
-          />
+          <HStack>
+            <ShareAndReportButtons
+              isPulseMarkerHidden={totalSupply > 0}
+              shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
+              shareText={`Check out and collect this awesome ${
+                name ? `${name} ` : " "
+              }NFT on Guild!`}
+            />
+
+            {isAdmin && <DynamicEditNFTButton />}
+          </HStack>
         </HStack>
 
         <SimpleGrid
@@ -105,7 +115,11 @@ const CollectNftPageContent = ({
           gap={{ base: 6, lg: 8 }}
         >
           <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
-            <CollectibleImage src={image} isLoading={!image} />
+            <CollectibleImage
+              src={image}
+              isLoading={!image}
+              imageWrapper={TiltCard}
+            />
 
             <Stack spacing={6}>
               <Heading

@@ -35,7 +35,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
       image={<Icon as={Function} boxSize={6} />}
       footer={
         <Stack direction={["column", "row"]} spacing={2} alignItems="start">
-          <BlockExplorerUrl />
+          <BlockExplorerUrl path="address" />
 
           <Popover placement="bottom">
             <PopoverTrigger>
