@@ -94,6 +94,7 @@ const ExportParamsRoleTag = ({ roleId }) => {
       name={role.name}
       imageUrl={role.imageUrl}
       mr="0.5"
+      mb="0.5"
       // the hidden styling works better in the tooltip
       isHidden
       // cherry picked intentionally, works better here than theme sizes
