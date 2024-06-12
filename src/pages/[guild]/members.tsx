@@ -29,7 +29,7 @@ import Layout from "components/common/Layout"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Visibility } from "types"
 
 const columnHelper = createColumnHelper<Member>()
@@ -136,6 +136,7 @@ const columns = [
 const MembersPage = (): JSX.Element => {
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, imageUrl } = useGuild()
+  const scrollContainerRef = useRef(null)
 
   const { isReady, query, asPath, replace } = useRouter()
   const [columnFilters, setColumnFilters] = useState(() =>
@@ -154,6 +155,7 @@ const MembersPage = (): JSX.Element => {
 
     const path = asPath.split("?")[0]
     replace(`${path}?${queryString}`, null, { scroll: false })
+    scrollContainerRef.current?.scrollTo({ top: 0 })
     // replace is intentionally left out
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady, queryString, asPath])
@@ -236,7 +238,7 @@ const MembersPage = (): JSX.Element => {
         {/* for debugging */}
         {/* {JSON.stringify(table.getState(), null, 2)} */}
         <NoPermissionToPageFallback>
-          <CrmTableWrapper {...{ isValidating, setSize }}>
+          <CrmTableWrapper {...{ isValidating, setSize, scrollContainerRef }}>
             <CrmThead {...{ table, isLoading }} />
             <CrmTbody {...{ table, isValidating, data, error }} />
           </CrmTableWrapper>

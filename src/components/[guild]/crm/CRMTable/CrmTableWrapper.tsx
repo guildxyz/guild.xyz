@@ -1,20 +1,26 @@
 import { Flex, Table, useColorModeValue } from "@chakra-ui/react"
 import Card, { useCardBg } from "components/common/Card"
 import useScrollEffect from "hooks/useScrollEffect"
-import { PropsWithChildren, memo, useEffect, useRef, useState } from "react"
+import { PropsWithChildren, RefObject, memo, useEffect, useState } from "react"
 import { TABS_HEIGHT_SM, TABS_SM_BUTTONS_STYLES } from "../../Tabs/Tabs"
 import { IDENTITIES_COLLAPSED_STYLE } from "../IdentitiesExpansionToggle"
 
 type Props = {
   isValidating: boolean
   setSize: any
+  scrollContainerRef: RefObject<any>
 }
 
 const HEADER_HEIGHT = "61px"
 const CHECKBOX_COLUMN_WIDTH = 45
 
 const CrmTableWrapper = memo(
-  ({ isValidating, setSize, children }: PropsWithChildren<Props>) => {
+  ({
+    isValidating,
+    setSize,
+    scrollContainerRef,
+    children,
+  }: PropsWithChildren<Props>) => {
     const cardBg = useCardBg()
     const theadBoxShadow = useColorModeValue("md", "xl")
 
@@ -30,7 +36,6 @@ const CrmTableWrapper = memo(
       } else setIsStuck(false)
     }, [])
 
-    const scrollContainerRef = useRef(null)
     const [isIdentityStuck, setIsIdentityStuck] = useState(false)
     useScrollEffect(
       () => {
