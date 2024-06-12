@@ -110,21 +110,9 @@ const ExportControls = ({ filename }) => {
         w="full"
       >
         <Button
-          as="a"
-          download={filename}
-          href={csvContent}
-          leftIcon={<Download />}
-          aria-label={"Download export"}
-          isLoading={isLoading}
-          isDisabled={error}
-          loadingText="Download"
-          borderRadius="lg"
-        >
-          Download
-        </Button>
-        <Button
           leftIcon={hasCopied ? <Check /> : <Copy />}
           aria-label={"Download export"}
+          variant="outline"
           isLoading={isLoading}
           isDisabled={hasCopied || error}
           loadingText="Copy addresses"
@@ -132,6 +120,20 @@ const ExportControls = ({ filename }) => {
           borderRadius="lg"
         >
           {hasCopied ? "Copied" : "Copy addresses"}
+        </Button>
+        <Button
+          as="a"
+          download={filename}
+          href={csvContent}
+          leftIcon={<Download />}
+          aria-label={"Download export"}
+          colorScheme="blue"
+          isLoading={isLoading}
+          isDisabled={error}
+          loadingText="Download"
+          borderRadius="lg"
+        >
+          Download
         </Button>
       </ButtonGroup>
     </Box>
