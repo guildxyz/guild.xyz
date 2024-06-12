@@ -2,7 +2,6 @@ import { Container } from "@chakra-ui/react"
 import { BoxProps } from "@chakra-ui/react"
 import { PropsWithChildren } from "react"
 
-
 type Props = PropsWithChildren<Omit<BoxProps, "title">>
 
 const MainSection = ({ children, ...boxProps }: Props) => (
