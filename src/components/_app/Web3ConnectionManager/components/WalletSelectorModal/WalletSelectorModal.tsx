@@ -10,6 +10,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  usePrevious,
 } from "@chakra-ui/react"
 
 import { Link } from "@chakra-ui/next-js"
@@ -21,6 +22,7 @@ import { addressLinkParamsAtom } from "components/common/Layout/components/Accou
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
+import useToast from "hooks/useToast"
 import { useAtom, useSetAtom } from "jotai"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
@@ -45,7 +47,8 @@ const COINBASE_INJECTED_WALLET_ID = "com.coinbase.wallet"
 export const COINBASE_WALLET_SDK_ID = "coinbaseWalletSDK"
 
 const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
-  const { isWeb3Connected, isInSafeContext, disconnect } = useWeb3ConnectionManager()
+  const { isWeb3Connected, isInSafeContext, disconnect, address } =
+    useWeb3ConnectionManager()
 
   const { connectors, error, connect, variables, isPending } = useConnect()
 
@@ -61,7 +64,7 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
   const { connector, status } = useAccount()
 
-  const [addressLinkParams] = useAtom(addressLinkParamsAtom)
+  const [addressLinkParams, setAddressLinkParams] = useAtom(addressLinkParamsAtom)
   const isAddressLink = !!addressLinkParams?.userId
 
   const closeModalAndSendAction = () => {
@@ -110,6 +113,26 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
     if (!isWeb3Connected) return
     setIsWalletLinkHelperModalOpen(false)
   }, [isWeb3Connected, setIsWalletLinkHelperModalOpen])
+
+  const prevAddress = usePrevious(address)
+  const triesToLinkCurrentAddress =
+    isAddressLink &&
+    !shouldShowVerify &&
+    !prevAddress &&
+    address === addressLinkParams.address
+
+  const toast = useToast()
+
+  useEffect(() => {
+    if (!triesToLinkCurrentAddress) return
+    setAddressLinkParams({ userId: undefined, address: undefined })
+    toast({
+      status: "info",
+      title: "Already connected",
+      description:
+        "You're already logged in with this address. Please make sure to pick an address in your wallet which you'd like to link to your Guild account.",
+    })
+  }, [triesToLinkCurrentAddress, setAddressLinkParams, toast])
 
   return (
     <Modal
