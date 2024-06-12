@@ -1,9 +1,9 @@
-import { HStack, Icon, IconButton } from "@chakra-ui/react"
+import { HStack } from "@chakra-ui/react"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DrawerHeader from "components/common/DrawerHeader"
-import { ArrowLeft } from "phosphor-react"
+import { Visibility } from "types"
 import DeleteRoleButton from "./DeleteRoleButton"
 
 const EditRoleHeader = ({
@@ -23,25 +23,14 @@ const EditRoleHeader = ({
       spacing={1}
       alignItems="center"
       w="full"
-      leftElement={
-        <IconButton
-          aria-label="Back"
-          icon={<Icon as={ArrowLeft} boxSize="1.1em" weight="bold" />}
-          display={{ base: "flex", md: "none" }}
-          borderRadius="full"
-          maxW={10}
-          maxH={10}
-          mr={2}
-          onClick={onClose}
-        >
-          Cancel
-        </IconButton>
-      }
     >
-      <HStack justifyContent={"space-between"} flexGrow={1}>
+      <HStack justifyContent={"space-between"} flexGrow={1} w={"fit-content"}>
         <SetVisibility
           entityType="role"
-          defaultValues={{}} // TODO: set
+          defaultValues={{
+            visibility: Visibility.PUBLIC,
+            visibilityRoleId: roleId,
+          }} // TODO: set
           onSave={() => {}} // TODO: handle
           {...setVisibilityModalProps}
         />
