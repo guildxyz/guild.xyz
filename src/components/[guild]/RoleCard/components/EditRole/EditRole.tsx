@@ -12,7 +12,6 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import RolePlatforms from "components/[guild]/RolePlatforms"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscardAlert from "components/common/DiscardAlert"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -28,6 +27,7 @@ import { useRef } from "react"
 import { FormProvider } from "react-hook-form"
 import EditRoleFooter from "./components/EditRoleFooter"
 import EditRoleHeader from "./components/EditRoleHeader"
+import EditRolePlatforms from "./components/EditRolePlatforms"
 import RoleGroupSelect from "./components/RoleGroupSelect"
 import useEditRoleForm from "./hooks/useEditRoleForm"
 import useSubmitEditRole from "./hooks/useSubmitEditRole"
@@ -100,7 +100,7 @@ const EditRole = ({ roleId }: { roleId: number }): JSX.Element => {
             <FormProvider {...methods}>
               <EditRoleHeader onClose={onCloseAndClear} roleId={roleId} />
               <VStack spacing={10} alignItems="start">
-                <RolePlatforms roleId={roleId} />
+                <EditRolePlatforms roleId={roleId} />
                 <Section title="General">
                   <Box>
                     <FormLabel>Logo and name</FormLabel>

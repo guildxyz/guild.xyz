@@ -8,8 +8,7 @@ import rewards, {
   AddRewardPanelProps,
   modalSizeForPlatform,
 } from "platforms/rewards"
-import { useWatch } from "react-hook-form"
-import { RoleFormType } from "types"
+import { Visibility } from "types"
 import SelectRewardPanel from "./SelectRewardPanel"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
@@ -29,7 +28,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
 
   const { AddRewardPanel } = rewards[selection] ?? {}
 
-  const roleVisibility = useWatch<RoleFormType, "visibility">({ name: "visibility" })
+  const roleVisibility = Visibility.PUBLIC // TODO
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
     useAddRewardDiscardAlert()
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
