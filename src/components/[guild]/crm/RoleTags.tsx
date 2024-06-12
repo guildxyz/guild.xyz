@@ -193,20 +193,24 @@ export const ClickableCrmRoleTag = memo(
     onFilter,
     shouldRenderPortal = false,
     ...tagProps
-  }: RoleTagProps & { onFilter?: () => void; shouldRenderPortal?: boolean }) => (
-    <ClickableTagPopover
-      options={
-        <>
-          <FilterByCrmRole roleId={role.id} {...{ setFilterValue, onFilter }} />
-          <ViewRole roleId={role.id} page="activity" />
-          <ViewRole roleId={role.id} />
-        </>
-      }
-      shouldRenderPortal={shouldRenderPortal}
-    >
-      <CrmRoleTag role={role} cursor="pointer" {...tagProps} />
-    </ClickableTagPopover>
-  )
+  }: RoleTagProps & { onFilter?: () => void; shouldRenderPortal?: boolean }) => {
+    if (!role) return null
+
+    return (
+      <ClickableTagPopover
+        options={
+          <>
+            <FilterByCrmRole roleId={role.id} {...{ setFilterValue, onFilter }} />
+            <ViewRole roleId={role.id} page="activity" />
+            <ViewRole roleId={role.id} />
+          </>
+        }
+        shouldRenderPortal={shouldRenderPortal}
+      >
+        <CrmRoleTag role={role} cursor="pointer" {...tagProps} />
+      </ClickableTagPopover>
+    )
+  }
 )
 
 const FilterByCrmRole = memo(({ roleId, setFilterValue, onFilter }: any) => {
