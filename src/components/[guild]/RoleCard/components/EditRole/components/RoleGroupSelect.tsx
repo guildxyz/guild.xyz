@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useController } from "react-hook-form"
-import { RoleEditFormData } from "../EditRole"
+import { RoleEditFormData } from "../hooks/useEditRoleForm"
 
 const RoleGroupSelect = () => {
   const { groups } = useGuild()
