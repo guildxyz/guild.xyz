@@ -22,7 +22,7 @@ import { addressLinkParamsAtom } from "components/common/Layout/components/Accou
 import { Modal } from "components/common/Modal"
 import ModalButton from "components/common/ModalButton"
 import useSetKeyPair from "hooks/useSetKeyPair"
-import useToast from "hooks/useToast"
+import useShowErrorToast from "hooks/useShowErrorToast"
 import { useAtom, useSetAtom } from "jotai"
 import { ArrowLeft, ArrowSquareOut } from "phosphor-react"
 import { useEffect } from "react"
@@ -121,18 +121,15 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
     !prevAddress &&
     address === addressLinkParams.address
 
-  const toast = useToast()
+  const showErrorToast = useShowErrorToast()
 
   useEffect(() => {
     if (!triesToLinkCurrentAddress) return
     setAddressLinkParams({ userId: undefined, address: undefined })
-    toast({
-      status: "info",
-      title: "Already connected",
-      description:
-        "You're already logged in with this address. Please make sure to pick an address in your wallet which you'd like to link to your Guild account.",
-    })
-  }, [triesToLinkCurrentAddress, setAddressLinkParams, toast])
+    showErrorToast(
+      "You cannot link an address to itself. Please choose a different address."
+    )
+  }, [triesToLinkCurrentAddress, setAddressLinkParams, showErrorToast])
 
   return (
     <Modal
