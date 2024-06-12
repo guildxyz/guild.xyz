@@ -7,27 +7,26 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react"
-import Card from "components/common/Card"
-import { Download } from "phosphor-react"
-import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
-
 import MemberCount from "components/[guild]/RoleCard/components/MemberCount"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Card from "components/common/Card"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { useSubmitWithSign } from "hooks/useSubmit"
 import { atom, useAtom } from "jotai"
+import { Download } from "phosphor-react"
 import fetcher from "utils/fetcher"
+import formatRelativeTimeFromNow from "utils/formatRelativeTimeFromNow"
 import { ExportData } from "../useExports"
 import ExportParamsTags from "./ExportParamsTags"
 
-const absoluteTimeAtom = atom(false)
+const isAbsoluteTimeAtom = atom(false)
 
 const ExportCard = ({ exp }: { exp: ExportData }) => {
   const date = new Date(exp.createdAt)
   const timeDifference = Date.now() - date.getTime()
   const since = formatRelativeTimeFromNow(timeDifference)
-  const [isAbsoluteTime, setIsAbsoluteTime] = useAtom(absoluteTimeAtom)
+  const [isAbsoluteTime, setIsAbsoluteTime] = useAtom(isAbsoluteTimeAtom)
   const toggleAbsoluteTime = () => setIsAbsoluteTime((prev) => !prev)
 
   return (
