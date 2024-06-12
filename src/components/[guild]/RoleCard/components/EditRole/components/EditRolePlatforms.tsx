@@ -16,6 +16,7 @@ import { atom } from "jotai"
 import { Plus } from "phosphor-react"
 import { AddRewardPanelProps } from "platforms/rewards"
 import useUpdateAvailability from "../hooks/useUpdateAvailability"
+import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 import GenericRolePlatformCard from "./GenericRolePlatformCard"
 
 type Props = {
@@ -63,6 +64,7 @@ const EditRolePlatforms = ({ roleId }: Props) => {
   }
 
   const handleAvailabilityChange = useUpdateAvailability()
+  const handleVisibilityChange = useUpdateRolePlatformVisibility()
 
   return (
     <Section
@@ -96,7 +98,9 @@ const EditRolePlatforms = ({ roleId }: Props) => {
               onAvailabilityChange={(capacity, start, end) =>
                 handleAvailabilityChange(rolePlatform, capacity, start, end)
               }
-              onVisibilityChange={() => {}} // TODO
+              onVisibilityChange={(visibility, visibilityRoleId) =>
+                handleVisibilityChange(rolePlatform, visibility, visibilityRoleId)
+              }
             />
           ))
         )}
