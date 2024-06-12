@@ -1,5 +1,4 @@
-import { SimpleGrid, Spacer } from "@chakra-ui/react"
-import useAddReward from "components/[guild]/AddRewardButton/hooks/useAddReward"
+import { Collapse, SimpleGrid, Skeleton, Spacer } from "@chakra-ui/react"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -8,13 +7,12 @@ import AddRoleRewardModal from "components/[guild]/RolePlatforms/components/AddR
 import TransitioningPlatformIcons from "components/[guild]/RolePlatforms/components/TransitioningPlatformIcons"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRole from "components/[guild]/hooks/useRole"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
-import { AddRewardPanelProps } from "platforms/rewards"
+import useAddRewardAndMutate from "../hooks/useAddRewardAndMutate"
 import useUpdateAvailability from "../hooks/useUpdateAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 import GenericRolePlatformCard from "./GenericRolePlatformCard"
@@ -27,42 +25,10 @@ export const openRewardSettingsGuildPlatformIdAtom = atom(0)
 
 const EditRolePlatforms = ({ roleId }: Props) => {
   const { onOpen } = useAddRewardContext()
-  const { id: guildId, mutateGuild } = useGuild()
+  const { id: guildId } = useGuild()
   const { rolePlatforms } = useRole(guildId, roleId)
 
-  const { captureEvent } = usePostHogContext()
-
-  const { onSubmit: onAddRewardSubmit, isLoading: isAddRewardLoading } =
-    useAddReward({
-      onSuccess: (res) => {
-        console.log(res)
-        captureEvent("reward successfully added to existing guild")
-        mutateGuild()
-      },
-      onError: (err) => {
-        captureEvent("reward failed to add to existing guild", {
-          error: err,
-        })
-      },
-    })
-
-  const handleAdd = (data: Parameters<AddRewardPanelProps["onAdd"]>[0]) => {
-    const { guildPlatform, ...rolePlatform } = data
-    const dataToSend = {
-      ...guildPlatform,
-      rolePlatforms: [
-        {
-          roleId: roleId,
-          platformRoleId: `${roleId}`, // Why a string????
-          guildPlatform: guildPlatform,
-          ...rolePlatform,
-        },
-      ],
-    }
-
-    onAddRewardSubmit(dataToSend)
-  }
-
+  const { handleAdd, isLoading: addIsLoading } = useAddRewardAndMutate()
   const handleAvailabilityChange = useUpdateAvailability()
   const handleVisibilityChange = useUpdateRolePlatformVisibility()
 
@@ -104,9 +70,13 @@ const EditRolePlatforms = ({ roleId }: Props) => {
             />
           ))
         )}
+
+        <Collapse in={addIsLoading}>
+          <Skeleton rounded={"2xl"} minH={28} w="full" h={28}></Skeleton>
+        </Collapse>
       </SimpleGrid>
 
-      <AddRoleRewardModal append={handleAdd} />
+      <AddRoleRewardModal append={(data) => handleAdd(roleId, data)} />
     </Section>
   )
 }

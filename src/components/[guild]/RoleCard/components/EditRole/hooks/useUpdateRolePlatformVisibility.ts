@@ -23,8 +23,8 @@ const useUpdateRolePlatformVisibility = () => {
       `/v2/guilds/${guildId}/roles/${rolePlatform.roleId}/role-platforms/${rolePlatform.id}`,
       { method: "PUT", body: updatedRolePlatform },
     ])
-      .then((res) => {
-        mutateGuild()
+      .then(async (res) => {
+        await mutateGuild()
       })
       .catch((error) => showErrorToast(error))
   }
