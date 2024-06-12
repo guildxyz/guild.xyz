@@ -8,12 +8,11 @@ import {
   Spinner,
   Stack,
   Text,
-  Tooltip,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import { SectionTitle } from "components/common/Section"
-import { ArchiveBox, Info } from "phosphor-react"
+import { ArchiveBox } from "phosphor-react"
 import ExportCard from "./ExportCard"
 import useExportMembers from "./useExportMembers"
 import useExports from "./useExports"
@@ -50,19 +49,11 @@ const ExportMembersModal = ({ isOpen, onClose }) => {
           >
             Export currently filtered
           </Button>
-          <SectionTitle
-            title="Recent exports"
-            fontSize="md"
-            titleRightElement={
-              <Tooltip
-                label="You can access your last 15 exports from the last 7 days here"
-                hasArrow
-              >
-                <Info />
-              </Tooltip>
-            }
-          />
-          <Stack mb="6" mt="2" spacing={2.5}>
+          <SectionTitle title="Recent exports" fontSize="md" />
+          <Text colorScheme={"gray"} mt="1" mb="3" fontSize="sm">
+            You can access your last 15 exports from the last 7 days here
+          </Text>
+          <Stack mb="6" spacing={2.5}>
             {!exports ? (
               <FallbackText>
                 <Spinner mr="3" mb="-2px" size="sm" />
