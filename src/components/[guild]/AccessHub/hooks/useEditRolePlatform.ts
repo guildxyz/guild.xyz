@@ -19,7 +19,7 @@ const useEditRolePlatform = ({
   const showErrorToast = useShowErrorToast()
 
   const submit = async (signedValidation: SignedValidation) => {
-    if (roleId === undefined) return
+    if (roleId === undefined || id === undefined || rolePlatformId === undefined) return
     return fetcher(
       `/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatformId}`,
       {

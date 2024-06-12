@@ -19,9 +19,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
     (gp) => gp.platformGuildId === platformGuildId
   )
   const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
-  if (guildPlatform === undefined)
-    throw new Error(`Unmatched guild platform ID ${platformGuildId}`)
-  const { isPlatform } = rewards[PlatformType[guildPlatform.platformId]] ?? {}
+  const platformType = guildPlatform ? rewards[PlatformType[guildPlatform.platformId]] ?? {} : {}
 
   return (
     <>
@@ -38,7 +36,7 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
         description={
           <>
             Are you sure you want to remove this reward?
-            {isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
+            {platformType?.isPlatform && <AlreadyGrantedAccessesWillRemainInfo />}
           </>
         }
         confirmationText="Remove"
