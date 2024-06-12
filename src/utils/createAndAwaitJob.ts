@@ -12,7 +12,7 @@ export default async function createAndAwaitJob<
       { method: "GET" },
     ])
 
-  const initialPollResult = await poll().catch(() => null as Job[])
+  const initialPollResult = await poll().catch(() => null as unknown as Job[])
 
   const jobAlreadyInProgress = initialPollResult?.find((job) => !job.done)
 

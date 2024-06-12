@@ -1,5 +1,6 @@
 import { Link } from "@chakra-ui/next-js"
 import { Stack, Text } from "@chakra-ui/react"
+import { ReactNode } from "react"
 
 const LINK_REGEX =
   /https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,8}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g
@@ -15,7 +16,7 @@ const parseDescription = (description?: string) => {
 
     if (!linkMatches) return p
 
-    return p.split(LINK_REGEX).reduce((acc, curr, i) => {
+    return p.split(LINK_REGEX).reduce<ReactNode[]>((acc, curr, i) => {
       acc.push(curr)
       if (linkMatches[i]) {
         acc.push(

@@ -31,6 +31,7 @@ export type GeneratedGetAssetsParams =
       ]
       value?: bigint
     }
+  | undefined
 
 const generateGetAssetsParams = (
   guildId: number,
@@ -116,14 +117,14 @@ const generateGetAssetsParams = (
   }
 }
 
-const flipPath = (pathToFlip: string): string => {
+const flipPath = (pathToFlip: string): string | undefined => {
   if (!pathToFlip?.length) return undefined
 
   const ADDRESS_LENGTH = 40
   const TICK_SPACING_LENGTH = 6
   const pathString = pathToFlip.replace("0x", "")
 
-  const pathSegments = []
+  const pathSegments: string[] = []
   let iteration = 1,
     startIndex = 0,
     endIndex = 0

@@ -2,12 +2,17 @@ import { Requirement } from "types"
 
 const mapRequirement = (requirement?: Requirement) => {
   // Using structuredClone so we don't modify the original requirement unintentionally
-  const newRequirement: Requirement = structuredClone(requirement)
+  const newRequirement = structuredClone(requirement) as Partial<Requirement>
+  if (!requirement || !newRequirement) return
 
   if (requirement.type === "COIN")
     newRequirement.address = "0x0000000000000000000000000000000000000000"
 
-  if (newRequirement.type === "CONTRACT" && Array.isArray(requirement.data.params)) {
+  if (
+    newRequirement.type === "CONTRACT" &&
+    Array.isArray(requirement?.data?.params) &&
+    newRequirement.data
+  ) {
     newRequirement.data.params = requirement.data.params.map((param) =>
       typeof param === "string"
         ? {

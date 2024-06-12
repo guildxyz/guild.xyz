@@ -73,7 +73,11 @@ const fetcher = async (
         location?.reload()
       }
 
-      if (isGuildApiCall || resource.includes(process.env.NEXT_PUBLIC_API)) {
+      if (
+        isGuildApiCall ||
+        (process.env.NEXT_PUBLIC_API &&
+          resource.includes(process.env.NEXT_PUBLIC_API))
+      ) {
         const error = res.errors?.[0]
 
         const errorMsg = error
