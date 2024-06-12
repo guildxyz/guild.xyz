@@ -37,7 +37,7 @@ const ExportParamsTags = ({
 
     {search && (
       <Tooltip
-        label={`You've started this export searched for "${search}", but search queries are ignored for now, so it contains all members by other filters set`}
+        label={`You've started this export searching for "${search}", but search queries are ignored for now, so it contains all members by other filters set`}
         hasArrow
       >
         <Tag bg="none" borderWidth={"1px"} borderStyle={"dashed"}>
