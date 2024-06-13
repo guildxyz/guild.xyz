@@ -80,11 +80,9 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                   guildPlatform: platform,
                   isNew: true,
                   roleId: targetRoleId,
-                  platformRoleId: isGoogleReward
-                    ? isForm
-                      ? "writer"
-                      : "reader"
-                    : null,
+                  ...(isGoogleReward && {
+                    platformRoleId: isForm ? "writer" : "reader",
+                  }),
                   visibility: roleVisibility,
                 })
                 if (cardSettingsComponent)

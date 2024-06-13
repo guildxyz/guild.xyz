@@ -13,11 +13,15 @@ import SelectRewardPanel from "./SelectRewardPanel"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 type Props = {
-  append: AddRewardPanelProps["onAdd"]
+  addWithExistingGuildPlatform: AddRewardPanelProps["onAdd"]
+  addWithNewGuildPlatform: (data: any) => void
 }
 
-const AddRoleRewardModal = ({ append }: Props) => {
-  const { selection, step, isOpen, onClose, targetRoleId } = useAddRewardContext()
+const AddRoleRewardModal = ({
+  addWithExistingGuildPlatform,
+  addWithNewGuildPlatform,
+}: Props) => {
+  const { selection, step, isOpen, onClose } = useAddRewardContext()
   const { guildPlatforms } = useGuild()
 
   const {
@@ -34,7 +38,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
 
   const handleAddReward = (data: any) => {
-    const rolePlatformWithGuildPlatform = { ...data, visibility: roleVisibility }
+    const rolePlatformWithVisibility = { ...data, visibility: roleVisibility }
 
     const existingGuildPlatform = guildPlatforms?.find(
       (gp) =>
@@ -42,13 +46,10 @@ const AddRoleRewardModal = ({ append }: Props) => {
         gp.platformGuildId === data.guildPlatform?.platformGuildId
     )
 
-    if (existingGuildPlatform) {
-      rolePlatformWithGuildPlatform.guildPlatform = existingGuildPlatform
-      rolePlatformWithGuildPlatform.roleId = targetRoleId
-      rolePlatformWithGuildPlatform.guildPlatformId = existingGuildPlatform.id
-    }
+    if (existingGuildPlatform)
+      return addWithExistingGuildPlatform(rolePlatformWithVisibility)
 
-    append(rolePlatformWithGuildPlatform)
+    addWithNewGuildPlatform(rolePlatformWithVisibility)
     onClose()
   }
 
@@ -90,7 +91,9 @@ const AddRoleRewardModal = ({ append }: Props) => {
         >
           <SelectExistingPlatform
             onClose={onClose}
-            onSelect={(selectedRolePlatform) => append?.(selectedRolePlatform)}
+            onSelect={(selectedRolePlatform) =>
+              addWithExistingGuildPlatform(selectedRolePlatform)
+            }
           />
           <Text fontWeight="bold" mb="3">
             Add new reward

@@ -5,36 +5,40 @@ import useToast from "hooks/useToast"
 import { RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
-const useRemoveReward = () => {
-  const fetcherWithSign = useFetcherWithSign()
+const useAddRewardWithExistingGP = () => {
   const { id, mutateGuild } = useGuild()
+  const fetcherWithSign = useFetcherWithSign()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
   const submit = async (rolePlatform: RolePlatform) =>
     fetcherWithSign([
-      `/v2/guilds/${id}/roles/${rolePlatform.roleId}/role-platforms/${rolePlatform.id}`,
-      {
-        method: "DELETE",
-        signOptions: {
-          forcePrompt: true,
-        },
-      },
+      `/v2/guilds/${id}/roles/${rolePlatform.roleId}/role-platforms`,
+      { method: "POST", body: rolePlatform },
     ])
 
   return useSubmit<RolePlatform, any>(submit, {
     onSuccess: (response) => {
       toast({
-        title: "Reward removed!",
+        title: "Reward updated!",
         status: "success",
       })
 
-      // TODO: need response from backend to execute mutate
-      mutateGuild()
-      // TODO: mutate gateables
+      mutateGuild((prevGuild) => ({
+        ...prevGuild,
+        roles: prevGuild.roles.map((role) => {
+          if (role.id === response.platformRoleId) {
+            return {
+              ...role,
+              rolePlatforms: { ...role.rolePlatforms, response },
+            }
+          }
+          return role
+        }),
+      }))
     },
     onError: (error) => showErrorToast(error),
   })
 }
 
-export default useRemoveReward
+export default useAddRewardWithExistingGP

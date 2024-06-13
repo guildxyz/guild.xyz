@@ -1,4 +1,4 @@
-import { Tag, useColorModeValue } from "@chakra-ui/react"
+import { useColorModeValue } from "@chakra-ui/react"
 import AvailabilitySetup from "components/[guild]/AddRewardButton/components/AvailabilitySetup"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import PlatformCard from "components/[guild]/RolePlatforms/components/PlatformCard"
@@ -7,7 +7,6 @@ import { RolePlatformProvider } from "components/[guild]/RolePlatforms/component
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { motion } from "framer-motion"
 import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import {
@@ -41,8 +40,6 @@ type GenericRolePlatformCardProps = {
     isUpdating: boolean
   }
 }
-
-const MotionTag = motion(Tag)
 
 const GenericRolePlatformCard = ({
   rolePlatform,

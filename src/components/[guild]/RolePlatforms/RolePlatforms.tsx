@@ -87,7 +87,10 @@ const RolePlatforms = ({ roleId }: Props) => {
         )}
       </SimpleGrid>
 
-      <AddRoleRewardModal append={append} />
+      <AddRoleRewardModal
+        addWithNewGuildPlatform={append}
+        addWithExistingGuildPlatform={append}
+      />
     </Section>
   )
 }

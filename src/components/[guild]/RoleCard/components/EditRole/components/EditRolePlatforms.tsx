@@ -14,6 +14,8 @@ import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
 import { AddRewardPanelProps } from "platforms/rewards"
+import { RolePlatform } from "types"
+import useAddRewardWithExistingGP from "../hooks/useAddRewardWithExistingGP"
 import useRemoveReward from "../hooks/useRemoveReward"
 import useUpdateAvailability from "../hooks/useUpdateAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
@@ -34,14 +36,22 @@ const EditRolePlatforms = ({ roleId }: Props) => {
     onSuccess: () => {},
     onError: () => {},
   })
+
+  const {
+    onSubmit: handleAddWithExistingGuildPlatform,
+    isLoading: addWithExistingIsLoading,
+  } = useAddRewardWithExistingGP()
+
   const { onSubmit: handleAvailabilityChange, isLoading: availabilityIsLoading } =
     useUpdateAvailability()
+
   const { onSubmit: handleVisibilityChange, isLoading: visibilityIsLoading } =
     useUpdateRolePlatformVisibility()
+
   const { onSubmit: handleRemove, isLoading: removeIsLoading } = useRemoveReward()
 
   const handleAdd = (
-    roleId: number,
+    roleId_: number,
     data: Parameters<AddRewardPanelProps["onAdd"]>[0]
   ) => {
     const { guildPlatform, ...rolePlatform } = data
@@ -49,8 +59,8 @@ const EditRolePlatforms = ({ roleId }: Props) => {
       ...guildPlatform,
       rolePlatforms: [
         {
-          roleId: roleId,
-          platformRoleId: `${roleId}`, // Why a string????
+          roleId: roleId_,
+          platformRoleId: `${roleId_}`, // Why a string????
           guildPlatform: guildPlatform,
           ...rolePlatform,
         },
@@ -109,12 +119,17 @@ const EditRolePlatforms = ({ roleId }: Props) => {
           ))
         )}
 
-        <Collapse in={addIsLoading}>
+        <Collapse in={addIsLoading || addWithExistingIsLoading}>
           <Skeleton rounded={"2xl"} minH={28} w="full" h={28}></Skeleton>
         </Collapse>
       </SimpleGrid>
 
-      <AddRoleRewardModal append={(data) => handleAdd(roleId, data)} />
+      <AddRoleRewardModal
+        addWithNewGuildPlatform={(data) => handleAdd(roleId, data)}
+        addWithExistingGuildPlatform={(data) =>
+          handleAddWithExistingGuildPlatform(data as RolePlatform)
+        }
+      />
     </Section>
   )
 }

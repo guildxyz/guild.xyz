@@ -83,8 +83,8 @@ const findAndUpdateRolePlatform = (
   capacity: number,
   startTime?: string,
   endTime?: string
-) => {
-  return rolePlatforms.map((rp) => {
+) =>
+  rolePlatforms.map((rp) => {
     if (rp.id === idToUpdate) {
       return {
         ...rp,
@@ -95,6 +95,5 @@ const findAndUpdateRolePlatform = (
     }
     return rp
   })
-}
 
 export default useUpdateAvailability

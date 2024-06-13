@@ -74,8 +74,8 @@ const findAndUpdateRolePlatform = (
   rolePlatforms: RolePlatform[],
   visibility: Visibility,
   visibilityRoleId: number
-) => {
-  return rolePlatforms.map((rp) => {
+) =>
+  rolePlatforms.map((rp) => {
     if (rp.id === idToUpdate) {
       return {
         ...rp,
@@ -85,6 +85,5 @@ const findAndUpdateRolePlatform = (
     }
     return rp
   })
-}
 
 export default useUpdateRolePlatformVisibility
