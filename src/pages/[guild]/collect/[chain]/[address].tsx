@@ -290,7 +290,11 @@ const getStaticProps = async ({ params }) => {
       fallbackImage: nftGuildReward.platformGuildData.imageUrl,
       // Pre-populating the public guild & requirements caches
       fallback: {
-        [guildPageEndpoint]: publicGuild,
+        [guildPageEndpoint]: {
+          ...publicGuild,
+          // An NFT is always public (it can be found on the blockchain), so we can add the guildPlatform to the public guild cache
+          guildPlatforms: [...publicGuild.guildPlatforms, nftGuildReward],
+        },
         [`/v2/guilds/${publicGuild.id}/roles/${nftRole.id}/requirements`]:
           publicGuild.roles.find((r) => r.id === nftRole.id)?.requirements ?? [],
         ...(!!nftDetails
