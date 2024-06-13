@@ -17,19 +17,26 @@ import { CaretDown } from "phosphor-react"
 import Star from "static/icons/star.svg"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
+import useGuildPermission from "../hooks/useGuildPermission"
 import RecalculateLeaderboardButton from "./RecalculateLeaderboardButton"
 
 const LeaderboardPointsSelector = () => {
   const { urlName } = useGuild()
   const router = useRouter()
 
+  const { isAdmin } = useGuildPermission()
+
   const pointsRewards = useAccessedGuildPoints("ALL")
-  if (pointsRewards.length < 2)
-    return (
-      <Card borderRadius="xl" flexShrink={0}>
-        <RecalculateLeaderboardButton />
-      </Card>
-    )
+  if (pointsRewards.length < 2) {
+    if (isAdmin)
+      return (
+        <Card borderRadius="xl" flexShrink={0}>
+          <RecalculateLeaderboardButton />
+        </Card>
+      )
+
+    return null
+  }
 
   const pointsRewardsData = pointsRewards.map((gp) => ({
     id: gp.id.toString(),
@@ -50,8 +57,12 @@ const LeaderboardPointsSelector = () => {
   return (
     <Card borderRadius="xl" flexShrink={0}>
       <ButtonGroup isAttached borderRadius="2xl" variant="ghost">
-        <RecalculateLeaderboardButton size="ICON" />
-        <Divider orientation="vertical" h={8} />
+        {isAdmin && (
+          <>
+            <RecalculateLeaderboardButton size="ICON" />
+            <Divider orientation="vertical" h={8} />
+          </>
+        )}
         <Menu placement="bottom-end">
           <MenuButton
             as={Button}
