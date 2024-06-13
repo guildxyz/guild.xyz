@@ -1,4 +1,4 @@
-import { Box, Spinner, Tag, useColorModeValue } from "@chakra-ui/react"
+import { Tag, useColorModeValue } from "@chakra-ui/react"
 import AvailabilitySetup from "components/[guild]/AddRewardButton/components/AvailabilitySetup"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import PlatformCard from "components/[guild]/RolePlatforms/components/PlatformCard"
@@ -23,12 +23,18 @@ import DynamicTag from "../../DynamicReward/DynamicTag"
 type GenericRolePlatformCardProps = {
   rolePlatform: RoleFormType["rolePlatforms"][number]
   handlers: {
-    onRemove: (rolePlatformId: number) => void
+    onRemove: (rolePlatform: RolePlatform) => void
     onVisibilityChange: (
+      rolePlatform: RolePlatform,
       visibility: Visibility,
       visibilityRoleId: number
     ) => Promise<any>
-    onAvailabilityChange: (capacity, startTime, endTime) => Promise<any>
+    onAvailabilityChange: (
+      rolePlatform: RolePlatform,
+      capacity?: number,
+      startTime?: string,
+      endTime?: string
+    ) => Promise<any>
   }
   loadingStates: {
     isRemoving: boolean
@@ -75,89 +81,76 @@ const GenericRolePlatformCard = ({
         guildPlatform,
       }}
     >
-      <Box position="relative" overflow={"hidden"}>
-        <PlatformCard
-          overflow="hidden"
-          usePlatformCardProps={useCardProps}
-          guildPlatform={guildPlatform}
-          isLoading
-          titleRightElement={
-            <SetVisibility
-              defaultValues={{
-                visibility: rolePlatform?.visibility,
-                visibilityRoleId: rolePlatform?.visibilityRoleId,
-              }}
-              entityType="reward"
-              onSave={async ({ visibility, visibilityRoleId }) => {
-                await onVisibilityChange(visibility, visibilityRoleId)
-                setVisibilityModalProps.onClose()
-              }}
-              isLoading={isUpdating}
-              {...setVisibilityModalProps}
-            />
-          }
-          cornerButton={
-            <RemovePlatformButton
-              {...{ removeButtonColor, isPlatform }}
-              onSubmit={() => onRemove(rolePlatform.id)}
-              isLoading={isRemoving}
-            />
-          }
-          contentRow={
-            <>
-              {CAPACITY_TIME_PLATFORMS.includes(type) ||
-              isLegacyContractCallReward ? (
-                <AvailabilitySetup
-                  platformType={type}
-                  rolePlatform={rolePlatform}
-                  defaultValues={{
-                    capacity: rolePlatform.capacity,
-                    startTime: rolePlatform.startTime,
-                    endTime: rolePlatform.endTime,
-                  }}
-                  onDone={async ({ capacity, endTime, startTime }) => {
-                    await onAvailabilityChange(capacity, startTime, endTime)
-                  }}
-                />
-              ) : type === "CONTRACT_CALL" ? (
-                <NftAvailabilityTags
-                  guildPlatform={guildPlatform}
-                  rolePlatform={rolePlatform}
-                  mt={1}
-                />
-              ) : null}
-              {!!rolePlatform.dynamicAmount && (
-                <DynamicTag
-                  rolePlatform={
-                    { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
-                  }
-                  editDisabled
-                  mt={1}
-                />
-              )}
-            </>
-          }
-        />
-        <MotionTag
-          initial={{ y: -100, opacity: 0 }}
-          animate={isUpdating ? { y: 0, opacity: 1 } : { y: -100, opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          margin={0}
-          size="md"
-          gap={2}
-          pr={3.5}
-          mx="auto"
-          left={0}
-          right={0}
-          colorScheme="blue"
-          top={3}
-          borderRadius="full"
-          width={"fit-content"}
-          position={"absolute"}
-        >
-          <Spinner size={"xs"} /> Updating
-        </MotionTag>
-      </Box>
+      <PlatformCard
+        overflow="hidden"
+        usePlatformCardProps={useCardProps}
+        guildPlatform={guildPlatform}
+        titleRightElement={
+          <SetVisibility
+            defaultValues={{
+              visibility: rolePlatform?.visibility,
+              visibilityRoleId: rolePlatform?.visibilityRoleId,
+            }}
+            entityType="reward"
+            onSave={async ({ visibility, visibilityRoleId }) => {
+              await onVisibilityChange(
+                rolePlatform as RolePlatform,
+                visibility,
+                visibilityRoleId
+              )
+              setVisibilityModalProps.onClose()
+            }}
+            isLoading={isUpdating}
+            {...setVisibilityModalProps}
+          />
+        }
+        cornerButton={
+          <RemovePlatformButton
+            {...{ removeButtonColor, isPlatform }}
+            onSubmit={() => onRemove(rolePlatform as RolePlatform)}
+            isLoading={isRemoving}
+          />
+        }
+        contentRow={
+          <>
+            {CAPACITY_TIME_PLATFORMS.includes(type) || isLegacyContractCallReward ? (
+              <AvailabilitySetup
+                platformType={type}
+                rolePlatform={rolePlatform}
+                defaultValues={{
+                  capacity: rolePlatform.capacity,
+                  startTime: rolePlatform.startTime,
+                  endTime: rolePlatform.endTime,
+                }}
+                onDone={({ capacity, endTime, startTime }) =>
+                  onAvailabilityChange(
+                    rolePlatform as RolePlatform,
+                    capacity,
+                    startTime,
+                    endTime
+                  )
+                }
+                isLoading={isUpdating}
+              />
+            ) : type === "CONTRACT_CALL" ? (
+              <NftAvailabilityTags
+                guildPlatform={guildPlatform}
+                rolePlatform={rolePlatform}
+                mt={1}
+              />
+            ) : null}
+            {!!rolePlatform.dynamicAmount && (
+              <DynamicTag
+                rolePlatform={
+                  { ...rolePlatform, guildPlatform: guildPlatform } as RolePlatform
+                }
+                editDisabled
+                mt={1}
+              />
+            )}
+          </>
+        }
+      />
     </RolePlatformProvider>
   )
 }

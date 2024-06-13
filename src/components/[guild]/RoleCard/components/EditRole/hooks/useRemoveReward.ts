@@ -10,9 +10,9 @@ const useRemoveReward = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  const submit = async (data: { roleId: number; rolePlatformId: number }) =>
+  const submit = async (rolePlatform) =>
     fetcherWithSign([
-      `/v2/guilds/${id}/roles/${data.roleId}/role-platforms/${data.rolePlatformId}`,
+      `/v2/guilds/${id}/roles/${rolePlatform.roleId}/role-platforms/${rolePlatform.id}`,
       {
         method: "DELETE",
         signOptions: {
@@ -21,7 +21,7 @@ const useRemoveReward = () => {
       },
     ])
 
-  return useSubmit<{ roleId: number; rolePlatformId: number }, any>(submit, {
+  return useSubmit<any, any>(submit, {
     onSuccess: (response) => {
       toast({
         title: "Reward removed!",

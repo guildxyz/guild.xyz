@@ -1,4 +1,5 @@
 import { Collapse, SimpleGrid, Skeleton, Spacer } from "@chakra-ui/react"
+import useAddReward from "components/[guild]/AddRewardButton/hooks/useAddReward"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -12,7 +13,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
-import useAddRewardAndMutate from "../hooks/useAddRewardAndMutate"
+import { AddRewardPanelProps } from "platforms/rewards"
 import useRemoveReward from "../hooks/useRemoveReward"
 import useUpdateAvailability from "../hooks/useUpdateAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
@@ -29,10 +30,34 @@ const EditRolePlatforms = ({ roleId }: Props) => {
   const { id: guildId } = useGuild()
   const { rolePlatforms } = useRole(guildId, roleId)
 
-  const { handleAdd, isLoading: addIsLoading } = useAddRewardAndMutate()
-  const handleAvailabilityChange = useUpdateAvailability()
-  const handleVisibilityChange = useUpdateRolePlatformVisibility()
-  const { onSubmit: handleDelete, isLoading: removeIsLoading } = useRemoveReward()
+  const { onSubmit: submitAdd, isLoading: addIsLoading } = useAddReward({
+    onSuccess: () => {},
+    onError: () => {},
+  })
+  const { onSubmit: handleAvailabilityChange, isLoading: availabilityIsLoading } =
+    useUpdateAvailability()
+  const { onSubmit: handleVisibilityChange, isLoading: visibilityIsLoading } =
+    useUpdateRolePlatformVisibility()
+  const { onSubmit: handleRemove, isLoading: removeIsLoading } = useRemoveReward()
+
+  const handleAdd = (
+    roleId: number,
+    data: Parameters<AddRewardPanelProps["onAdd"]>[0]
+  ) => {
+    const { guildPlatform, ...rolePlatform } = data
+    const dataToSend = {
+      ...guildPlatform,
+      rolePlatforms: [
+        {
+          roleId: roleId,
+          platformRoleId: `${roleId}`, // Why a string????
+          guildPlatform: guildPlatform,
+          ...rolePlatform,
+        },
+      ],
+    }
+    submitAdd(dataToSend)
+  }
 
   return (
     <Section
@@ -56,21 +81,29 @@ const EditRolePlatforms = ({ roleId }: Props) => {
         {!rolePlatforms || rolePlatforms?.length <= 0 ? (
           <AddCard title="Add reward" onClick={onOpen} />
         ) : (
-          rolePlatforms.map((rolePlatform, index) => (
+          rolePlatforms.map((rolePlatform) => (
             <GenericRolePlatformCard
               key={rolePlatform.id}
               rolePlatform={rolePlatform}
               handlers={{
-                onRemove: (rolePlatformId) =>
-                  handleDelete({ roleId: roleId, rolePlatformId: rolePlatformId }),
-                onAvailabilityChange: (capacity, start, end) =>
-                  handleAvailabilityChange(rolePlatform, capacity, start, end),
-                onVisibilityChange: (visibility, visibilityRoleId) =>
-                  handleVisibilityChange(rolePlatform, visibility, visibilityRoleId),
+                onRemove: handleRemove,
+                onAvailabilityChange: (rp, capacity, startTime, endTime) =>
+                  handleAvailabilityChange({
+                    rolePlatform: rp,
+                    capacity,
+                    startTime,
+                    endTime,
+                  }),
+                onVisibilityChange: (rp, visibility, visibilityRoleId) =>
+                  handleVisibilityChange({
+                    rolePlatform: rp,
+                    visibility,
+                    visibilityRoleId,
+                  }),
               }}
               loadingStates={{
                 isRemoving: removeIsLoading,
-                isUpdating: false,
+                isUpdating: availabilityIsLoading || visibilityIsLoading,
               }}
             />
           ))
