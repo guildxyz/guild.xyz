@@ -114,6 +114,7 @@ const useMintGuildPin = () => {
       functionName: "claim",
       args: contractCallParams,
       value: guildPinFee,
+      account: walletClient.account,
     })
 
     if (process.env.NEXT_PUBLIC_MOCK_CONNECTOR) {
