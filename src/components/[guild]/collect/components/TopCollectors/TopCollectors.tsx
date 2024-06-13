@@ -29,6 +29,7 @@ const TopCollectors = () => {
           <Tag minW="max-content" position="relative">
             {new Intl.NumberFormat("en", {
               notation: "standard",
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
             }).format(data.uniqueCollectors)}
           </Tag>
         )
@@ -52,7 +53,8 @@ const TopCollectors = () => {
             <CollectorSkeleton key={i} />
           ))}
         </SimpleGrid>
-      ) : data && !data.topCollectors.length ? (
+      ) : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      data && !data.topCollectors.length ? (
         <Text w="full" colorScheme="gray">
           No collectors yet
         </Text>
@@ -65,14 +67,17 @@ const TopCollectors = () => {
             columnGap={4}
             rowGap={5}
           >
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {shownCollectors.map(({ address, balance }) => (
               <Collector
                 key={address}
                 address={address}
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 balance={!isLegacy && balance}
               />
             ))}
           </SimpleGrid>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {shownCollectors?.length > 39 && (
             <>
               <Box
@@ -95,6 +100,7 @@ const TopCollectors = () => {
                 >
                   {`and ${new Intl.NumberFormat("en", {
                     notation: "standard",
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   }).format(Math.max(data.uniqueCollectors - 50, 0))} more`}
                 </Text>
                 <Divider borderStyle={"dotted"} borderBottomWidth={4} />

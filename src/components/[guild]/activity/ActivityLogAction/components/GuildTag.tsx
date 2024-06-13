@@ -52,6 +52,7 @@ const GuildTag = forwardRef<Props, "span">(
               <Circle bgColor={imgBgColor} size={4}>
                 <Img
                   boxSize={image?.startsWith("/guildLogos") ? 2.5 : 4}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   borderRadius={!image?.startsWith("/guildLogos") && "full"}
                   src={image}
                   alt={name}

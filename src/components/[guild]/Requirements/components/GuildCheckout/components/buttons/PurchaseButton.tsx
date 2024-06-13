@@ -21,6 +21,7 @@ const PurchaseButton = (): JSX.Element => {
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { maxPriceInWei },
     isValidating: isPriceLoading,
     error,
@@ -28,6 +29,7 @@ const PurchaseButton = (): JSX.Element => {
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     TOKEN_BUYER_CONTRACTS[Chains[chainId]]?.address
   )
 
@@ -43,11 +45,13 @@ const PurchaseButton = (): JSX.Element => {
 
   const { data: coinBalanceData, isLoading: isCoinBalanceLoading } = useBalance({
     address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[requirement?.chain],
   })
   const { data: tokenBalanceData, isLoading: isTokenBalanceLoading } =
     useTokenBalance({
       token: pickedCurrency,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       chainId: Chains[requirement?.chain],
       shouldFetch: !pickedCurrencyIsNative,
     })
@@ -58,8 +62,10 @@ const PurchaseButton = (): JSX.Element => {
     typeof maxPriceInWei === "bigint" &&
     (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
-      ? coinBalanceData?.value >= maxPriceInWei
-      : tokenBalanceData?.value >= maxPriceInWei)
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        coinBalanceData?.value >= maxPriceInWei
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        tokenBalanceData?.value >= maxPriceInWei)
 
   const errorMsg =
     (error && "Couldn't calculate price") ??
@@ -70,6 +76,7 @@ const PurchaseButton = (): JSX.Element => {
     !isConnected ||
     error ||
     !agreeWithTOS ||
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     Chains[chainId] !== requirement.chain ||
     (!pickedCurrencyIsNative &&
       (isPriceLoading ||

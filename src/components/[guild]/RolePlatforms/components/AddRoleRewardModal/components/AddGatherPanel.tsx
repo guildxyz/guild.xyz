@@ -34,6 +34,7 @@ const AddGatherPanel = ({ onAdd }: AddRewardPanelProps) => {
     control: control,
   })
   const { success: accessSuccess } = useGatherAccess(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     !errors?.gatherApiKey && apiKey,
     !errors?.gatherSpaceId && spaceUrl
   )

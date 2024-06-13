@@ -18,6 +18,7 @@ const MintFuelGuildPinButton = () => {
   const { data: fee, isValidating: isFeeValidating } = useFuelGuildPinFee()
   const { provider } = useProvider()
   const { balance, isLoading: isBalanceValidating } = useBalance({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     address: provider.getBaseAssetId(),
   })
 

@@ -28,6 +28,7 @@ const ActionSuggestons = ({ inputValue, getOptionProps }: Props): JSX.Element =>
   const actionSuggestions = useMemo(
     () =>
       ACTIVITY_LOG_ACTIONS.filter((action) => {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         const lowerCaseInputValue = inputValue.toLowerCase()
 
         const isInputMatch = action.toLowerCase().includes(lowerCaseInputValue)

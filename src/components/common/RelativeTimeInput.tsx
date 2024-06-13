@@ -31,6 +31,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
     field: { ref, name, value, onChange, onBlur },
   } = useController({
     name: fieldName,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     rules: props.isRequired && {
       validate: (newValue) => {
         if (!newValue || isNaN(newValue)) return "Invalid value."
@@ -55,6 +56,7 @@ const ControlledRelativeTimeInput = ({ fieldName, ...props }: Props) => {
 const RelativeTimeInput = forwardRef(
   (props: NumberInputProps, ref: any): JSX.Element => {
     const [value, setValue] = useState<number>(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       !isNaN(Number(props.value)) ? Number(props.value) : undefined
     )
     const [format, setFormat] = useState<Format>("DAY")
@@ -72,7 +74,9 @@ const RelativeTimeInput = forwardRef(
               typeof valueAsNumber === "number" && !isNaN(valueAsNumber)
                 ? valueAsNumber * multipliers[format]
                 : undefined
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             setValue(newValue)
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             props.onChange?.(newValue?.toString(), newValue)
           }}
           sx={{

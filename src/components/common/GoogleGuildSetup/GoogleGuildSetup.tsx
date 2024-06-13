@@ -51,6 +51,7 @@ const GoogleGuildSetup = ({
   const { isOpen, onClose, onOpen } = useDisclosure()
   const { gateables, isLoading } = useGateables(PlatformType.GOOGLE, {
     onSuccess: (data, _key, _config) => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (data?.length > gateables?.length) onClose()
     },
   })
@@ -120,6 +121,7 @@ const GoogleGuildSetup = ({
                         iconLink: file.iconLink,
                       })
 
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       if (skipSettings) handleSelect()
                     }
               }
@@ -141,12 +143,14 @@ const GoogleGuildSetup = ({
           <GridItem>
             <GoogleDocSetupCard
               fieldNameBase={fieldNameBase}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               onSubmit={handleSelect}
               permissionField={permissionField}
             />
           </GridItem>
         )}
       </SimpleGrid>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <AddDocumentModal isOpen={isOpen} onClose={onClose} />
     </>
   )
@@ -159,10 +163,12 @@ const AddDocumentModal = ({ isOpen, onClose = undefined }) => {
     (acc) => acc.platformId === PlatformType.GOOGLE
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { hasCopied, onCopy } = useClipboard(GUILD_EMAIL_ADDRESS)
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
       <ModalOverlay />
       <ModalContent minW={{ base: "auto", md: "2xl" }}>

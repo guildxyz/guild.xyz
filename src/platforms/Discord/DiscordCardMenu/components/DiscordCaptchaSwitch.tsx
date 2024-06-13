@@ -18,11 +18,13 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatform = guildPlatforms.find(
     (platform) => platform.platformGuildId === serverId
   )
 
   const submit = (signedValidation: SignedValidation) =>
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatform.id}`, {
       method: "PUT",
       ...signedValidation,
@@ -35,8 +37,10 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
         title: "Successfully updated Discord settings",
       })
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatforms: prev.guildPlatforms.map((gp) => {
             if (gp.id !== response.id) return gp
 
@@ -44,6 +48,7 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
               ...gp,
               platformGuildData: {
                 ...gp.platformGuildData,
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 needCaptcha: response.platformGuildData.needCaptcha,
               } as PlatformGuildData["DISCORD"],
             }
@@ -69,9 +74,11 @@ const DiscordCaptchaSwitch = ({ serverId }: Props): JSX.Element => {
     setIsChecked(newIsChecked)
     onSubmit({
       platformGuildData: {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         ...guildPlatform.platformGuildData,
         needCaptcha: newIsChecked,
       },
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       platformGuildId: guildPlatform.platformGuildId,
     })
   }

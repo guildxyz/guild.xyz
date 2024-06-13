@@ -26,6 +26,7 @@ const EditUniqueTextModal = ({
   guildPlatformId,
   platformGuildData,
 }: Props) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { name, imageUrl } = platformGuildData
 
   const methods = useForm<UniqueTextRewardForm>({

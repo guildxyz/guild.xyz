@@ -60,6 +60,7 @@ const Page = ({ leaderboard: initialData }: Props) => {
     setInitialAlreadyClaimed(alreadyClaimed)
   }, [alreadyClaimed, initialAlreadyClaimed])
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const showMysteryBox = mysteryBoxBalance > 0 && !initialAlreadyClaimed
 
   const {

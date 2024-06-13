@@ -53,6 +53,7 @@ const RewardCard = ({
     <Flex
       justifyContent={"space-between"}
       flexDirection={{ base: "column", md: "row" }}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mb={children && 5}
     >
       <HStack spacing={3} minHeight={10}>

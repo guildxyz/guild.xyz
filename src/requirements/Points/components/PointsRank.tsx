@@ -25,11 +25,13 @@ const PointsRank = ({ baseFieldPath, field }: Props): JSX.Element => {
       <GuildSelect baseFieldPath={baseFieldPath} />
 
       <ExistingPointsTypeSelect
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         existingPointsRewards={existingPointsRewards}
         selectedExistingId={guildPlatformId}
         isLoading={isLoading}
       />
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <MaxMinAmount baseFieldPath={baseFieldPath} field={field} label="rank" />
     </>
   )

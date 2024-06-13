@@ -55,6 +55,7 @@ const App = ({
     const handleRouteChangeStart = (url: string) => {
       const pathname = url.split("?")[0]
       if (previousPathname !== pathname) setIsRouteChangeInProgress(true)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       previousPathname = pathname
     }
     const handleRouteChangeComplete = () => setIsRouteChangeInProgress(false)
@@ -82,6 +83,7 @@ const App = ({
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
           size="invisible"
         />
@@ -99,6 +101,7 @@ const App = ({
               <Progress
                 isIndeterminate
                 w="100%"
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 bg={colorMode === "light" ? "blue.50" : null}
                 position="fixed"
                 size="xs"

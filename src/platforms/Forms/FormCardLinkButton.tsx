@@ -20,6 +20,7 @@ const FormCardLinkButton = ({ platform }: Props) => {
     platform.platformGuildData?.formId
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { userSubmission, isValidating } = useUserFormSubmission(form)
 
   if (isAdmin && !!userSubmission)

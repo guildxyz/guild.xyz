@@ -10,6 +10,7 @@ import PriceFallback from "./PriceFallback"
 const GuildPinFees = (): JSX.Element => {
   const { guildPin } = useGuild()
   const { guildPinFee, guildPinFeeError, isGuildPinFeeLoading } = useGuildPinFee()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { symbol, decimals } = CHAIN_CONFIG[guildPin.chain].nativeCurrency
 
   const guildPinFeeInFloat =

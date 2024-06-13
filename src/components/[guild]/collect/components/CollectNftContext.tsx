@@ -31,6 +31,7 @@ export type CollectNftForm = {
   amount: number
 }
 
+// @ts-expect-error TODO: fix this error originating from strictNullChecks
 const CollectNftContext = createContext<Props>(undefined)
 
 const CollectNftProvider = ({
@@ -57,10 +58,14 @@ const CollectNftProvider = ({
   const alreadyCollected =
     !maxSupply && !mintableAmountPerUser
       ? false
-      : mintableAmountPerUser > 0
-      ? nftBalance >= mintableAmountPerUser ||
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      mintableAmountPerUser > 0
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        nftBalance >= mintableAmountPerUser ||
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (maxSupply > 0 ? totalSupply >= maxSupply : false)
-      : totalSupply >= maxSupply
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        totalSupply >= maxSupply
 
   const { txHash, isTxModalOpen, onTxModalOpen } = useTransactionStatusContext()
   useEffect(() => {

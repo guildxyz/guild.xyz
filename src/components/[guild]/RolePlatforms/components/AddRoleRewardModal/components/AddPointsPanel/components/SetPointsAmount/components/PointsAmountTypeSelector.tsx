@@ -73,6 +73,7 @@ const PointsAmountTypeSelector = ({ type, setType }) => {
                 key={option.value}
                 value={option.value}
                 py="2.5"
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 borderBottomWidth={i !== options.length - 1 && 1}
                 isDisabled={!!option.disabled}
               >

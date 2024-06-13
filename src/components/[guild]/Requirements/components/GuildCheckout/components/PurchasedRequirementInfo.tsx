@@ -22,6 +22,7 @@ const PurchasedRequirementInfo = ({ rightElement, footer }: Props): JSX.Element 
 
   const {
     data: { symbol, logoURI },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useTokenData(requirement?.chain, requirement?.address)
 
   return (

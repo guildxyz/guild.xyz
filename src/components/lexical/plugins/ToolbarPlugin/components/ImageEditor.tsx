@@ -51,6 +51,7 @@ const ImageEditor = (): JSX.Element => {
         isOpen={isOpen}
         onClose={onClose}
         placement="top"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         initialFocusRef={initialFocusRef}
       >
         <PopoverTrigger>
@@ -77,6 +78,7 @@ const ImageEditor = (): JSX.Element => {
           <PopoverBody px={2}>
             <Stack>
               <Input
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 ref={initialFocusRef}
                 size="sm"
                 placeholder="Image URL"

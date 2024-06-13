@@ -44,6 +44,7 @@ const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
       <Circle size={10} bgColor={imageBgColor}>
         <Img
           src={guildPlatform.platformGuildData?.iconLink}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           alt={fileTypeNames[guildPlatform.platformGuildData?.mimeType]}
         />
       </Circle>
@@ -52,6 +53,7 @@ const useGoogleCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
     ),
     name: guildPlatform.platformGuildName,
     info: `${getFileTypeName(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildPlatform.platformGuildData?.mimeType
     )}${accessInfo}`,
   }

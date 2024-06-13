@@ -42,9 +42,11 @@ const UsersGuildPins = () => {
                 key={pin.tokenId}
                 image={pin.image}
                 name={pin.name}
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 guild={pin.attributes
                   .find((attribute) => attribute.trait_type === "guildId")
                   .value.toString()}
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 rank={pin.attributes
                   .find((attribute) => attribute.trait_type === "rank")
                   .value.toString()}

@@ -53,6 +53,7 @@ const LinkedRequirement = ({ requirement }: { requirement?: Requirement }) => (
           <RequirementDisplayComponent
             requirement={requirement as Requirement}
             dynamicDisplay
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             rightElement={null}
           />
         </Card>
@@ -126,6 +127,7 @@ const DynamicRewardModal = ({
             <Stack spacing={6}>
               <LinkedRequirement requirement={linkedRequirement} />
               <DynamicRewardCalculationTable
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 requirement={linkedRequirement}
                 rolePlatform={rolePlatform}
               />

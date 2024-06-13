@@ -201,13 +201,16 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                 <>
                   <CardMotionWrapper key={COINBASE_WALLET_SDK_ID}>
                     <ConnectorButton
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       connector={connectors.find(
                         (conn) => conn.id === COINBASE_WALLET_SDK_ID
                       )}
                       connect={connect}
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       pendingConnector={
                         isPending && (variables?.connector as Connector)
                       }
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       error={error}
                     />
                   </CardMotionWrapper>
@@ -240,9 +243,11 @@ const WalletSelectorModal = ({ isOpen, onClose }: Props): JSX.Element => {
                     <ConnectorButton
                       connector={conn}
                       connect={connect}
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       pendingConnector={
                         isPending && (variables?.connector as Connector)
                       }
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       error={error}
                     />
                   </CardMotionWrapper>

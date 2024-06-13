@@ -9,6 +9,7 @@ const useFeeInUSD = (
   const coinUSDPrice = coinData?.market_data?.current_price?.usd
 
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     feeInUSD: fee && coinUSDPrice ? fee * coinUSDPrice : undefined,
     isFeeInUSDLoading: isCoinDataLoading,
   }

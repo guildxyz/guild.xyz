@@ -51,6 +51,7 @@ const ConnectPlatform = ({ platform }: Props) => {
       account={accountName}
       icon={<Icon as={rewards[platform].icon} />}
       colorScheme={rewards[platform].colorScheme as string}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       isConnected={
         platformFromDb?.platformUserData?.username ?? platformFromDb?.platformUserId
       }
@@ -58,6 +59,7 @@ const ConnectPlatform = ({ platform }: Props) => {
       isLoading={isLoading || (!platformUsers && isLoadingUser)}
       onClick={onConnect}
       {...{ loadingText }}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       isDisabled={
         (platform === "TWITTER" ||
           platform === "TWITTER_V1" ||

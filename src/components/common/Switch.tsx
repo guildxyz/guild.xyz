@@ -23,6 +23,7 @@ const Switch = forwardRef(
       {...rest}
     >
       {(title || description) && (
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         <Box opacity={isDisabled && 0.5}>
           <Text mb="1">{title}</Text>
           {description && (

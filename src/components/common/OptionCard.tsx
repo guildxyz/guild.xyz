@@ -48,6 +48,7 @@ const OptionCard = ({
         >
           {title}
         </Text>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <Text colorScheme={"gray"} fontSize={size === "md" && "sm"}>
           {description}
         </Text>

@@ -57,6 +57,7 @@ const useMembershipUpdate = ({
 
   const { roleIds: accessedRoleIds } = useMembership()
   const accessedGuildPlatformIds = new Set(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     getGuildPlatformsOfRoles(accessedRoleIds, guild).map(({ id }) => id)
   )
 
@@ -68,6 +69,7 @@ const useMembershipUpdate = ({
         guildId: `${guild?.id}`,
       }).toString()}`,
       { method: "GET" },
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ]).catch(() => null as JoinJob[])
 
     const jobAlreadyInProgress = initialPollResult?.find((job) => !job.done)
@@ -141,6 +143,7 @@ const useMembershipUpdate = ({
 
   return {
     isLoading,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     joinProgress: mapAccessJobState(progress.data, isLoading),
     currentlyCheckedRoleIds,
     triggerMembershipUpdate: (data?) => {
@@ -149,6 +152,7 @@ const useMembershipUpdate = ({
     },
     reset: () => {
       useSubmitResponse.reset()
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       progress.mutate(null, { revalidate: false })
     },
   }

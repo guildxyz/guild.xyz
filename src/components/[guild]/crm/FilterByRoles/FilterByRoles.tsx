@@ -86,6 +86,7 @@ const FilterByRoles = ({ getFilterValue, setFilterValue }: any) => {
               <PopoverHeader
                 p="2.5"
                 pb="2 !important"
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 bg={headerBg}
                 borderTopRadius={"xl"}
               >
@@ -96,6 +97,7 @@ const FilterByRoles = ({ getFilterValue, setFilterValue }: any) => {
               </PopoverHeader>
               <PopoverBody
                 py="4"
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 bg={bodyBg}
                 borderBottomRadius={"xl"}
                 overflowY={"auto"}
@@ -118,6 +120,7 @@ const FilterByRoles = ({ getFilterValue, setFilterValue }: any) => {
                     label="Public roles"
                     selectedRoleIds={selectedRoleIds}
                     setSelectedRoleIds={setSelectedRoleIds}
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     roles={publicRoles}
                     searchValue={searchValue}
                   />
@@ -143,6 +146,7 @@ type RoleCheckboxGroupProps = {
 const RoleCheckboxGroup = memo(
   ({
     label,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     labelRightElement = null,
     roles,
     selectedRoleIds,
@@ -151,6 +155,7 @@ const RoleCheckboxGroup = memo(
   }: RoleCheckboxGroupProps) => {
     const roleIds = roles.map((role) => role.id)
     const shownRoles = roles.filter((role) =>
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       role.name.toLowerCase().includes(searchValue.toLowerCase())
     )
 
@@ -220,6 +225,7 @@ const RoleCheckbox = memo(({ role, isChecked, onChange }: RoleCheckboxProps) => 
           <Center boxSize="5">
             <Img
               src={role.imageUrl}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               filter={colorMode === "light" && "brightness(0)"}
             />
           </Center>

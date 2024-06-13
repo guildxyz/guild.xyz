@@ -27,6 +27,7 @@ const FarcasterUser = ({ baseFieldPath }: Props) => {
   const debounceSearch = useDebouncedState(search)
 
   const { data: farcasterUsers, isValidating } = useFarcasterUsers(debounceSearch)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const options: SelectOption<number>[] = farcasterUsers?.map((user) => ({
     label: user.display_name,
     details: user.username,

@@ -32,19 +32,23 @@ const PoapCardButton = ({ platform }: Props) => {
     ?.find((r) => r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.id))
     ?.rolePlatforms?.find((rp) => rp.guildPlatformId === platform?.id)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { claimed } = useClaimedReward(rolePlatform.id)
 
   return (
     <>
       <Tooltip
         isDisabled={isAvailable || claimed}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
       >
         {claimed ? (
           <DynamicShowMintLinkButton
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             rolePlatformId={rolePlatform.id}
             w="full"
             colorScheme={rewards.POAP.colorScheme}
@@ -59,12 +63,14 @@ const PoapCardButton = ({ platform }: Props) => {
             <UploadMintLinksModal
               isOpen={isOpen}
               onClose={onClose}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               guildPlatformId={platform?.id}
             />
           </>
         ) : (
           <Button
             as={Link}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             href={`/${urlName}/claim-poap/${platform.platformGuildData.fancyId}`}
             isDisabled={!isAvailable}
             w="full"

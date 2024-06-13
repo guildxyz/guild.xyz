@@ -40,6 +40,7 @@ function NotAdminError() {
 
 const DiscordGuildSetup = ({
   rolePlatforms = undefined,
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   onSubmit = undefined,
 }: Props) => {
   const [selectedServer, setSelectedServer] = useState<DiscordGateable>()
@@ -102,6 +103,7 @@ const DiscordGuildSetup = ({
     )
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (servers?.length <= 0) {
     return <NotAdminError />
   }
@@ -138,9 +140,11 @@ const DiscordGuildSetup = ({
       {debounceSelectedServer && (
         <GridItem>
           <ServerSetupCard
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             serverId={selectedServer?.id}
             onSubmit={() => {
               captureEvent("[discord setup] server added")
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               onSubmit(selectedServer)
             }}
           />

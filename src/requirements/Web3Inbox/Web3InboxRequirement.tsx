@@ -15,7 +15,9 @@ const Web3InboxRequirement = (props: RequirementProps) => {
 
   return (
     <Requirement
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       image={APP_DETAILS[data.app]?.image}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       footer={
         !isValidating &&
         !hasAccess && (
@@ -40,6 +42,7 @@ const Web3InboxRequirement = (props: RequirementProps) => {
       {...props}
     >
       <Text as="span">
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {`Subscribe to the ${APP_DETAILS[data.app]?.name} app on Web3Inbox`}
       </Text>
     </Requirement>

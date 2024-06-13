@@ -21,14 +21,17 @@ const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
       {!campaign || isLoading ? (
         <DataBlock
           isLoading={isLoading}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           error={
             !campaign && !isLoading && "API error, please contact Galxe to report."
           }
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {requirement.data.galaxyId}
         </DataBlock>
       ) : (
         <Link
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           href={`https://galxe.com/${campaign.space.alias}/campaign/${campaign.id}`}
           isExternal
           display="inline"

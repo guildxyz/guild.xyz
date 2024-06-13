@@ -30,6 +30,7 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
 
   const { onSubmit, isLoading } = useDeleteRole(roleId, onSuccess)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleResponse = useRole(id, roleId)
   const role = roleResponse as unknown as Role
   const { guildPlatforms } = useGuild(id)
@@ -37,11 +38,13 @@ const DeleteRoleButton = ({ roleId, onDrawerClose }: Props): JSX.Element => {
   const dynamicRolePlatforms = role?.rolePlatforms.filter((rp) => rp.dynamicAmount)
 
   const tokenRolePlatform = dynamicRolePlatforms.find((rp) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
     return !!guildPlatform && guildPlatform.platformId === PlatformType.ERC20
   })
 
   const { onSubmit: deleteTokenReward, isLoading: tokenRewardDeleteLoading } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     useRemoveGuildPlatform(tokenRolePlatform?.guildPlatformId, {
       onSuccess: onSubmit,
     })

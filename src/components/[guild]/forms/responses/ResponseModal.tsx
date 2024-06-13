@@ -77,6 +77,7 @@ const ResponseModal = ({ row, isOpen, onClose, onPrev, onNext }: Props) => {
         <ModalBody bg={darkBg} py={"8 !important"}>
           <Stack gap="5">
             {form?.fields?.map((field) => {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               const { DisplayComponent } = fieldTypes.find(
                 (ft) => ft.value === field.type
               )

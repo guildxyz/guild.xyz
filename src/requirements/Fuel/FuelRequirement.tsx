@@ -50,6 +50,7 @@ const FuelRequirement = (props: RequirementProps) => {
                 ) : data?.symbol ? (
                   <Text as="span">{data.symbol}</Text>
                 ) : (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <DataBlockWithCopy text={address}>
                     {shortenHex(address)}
                   </DataBlockWithCopy>
@@ -57,17 +58,29 @@ const FuelRequirement = (props: RequirementProps) => {
               </>
             )
           case "FUEL_TRANSACTIONS":
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             return (typeof data.minAmount === "number" && !data.maxAmount) ||
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               (!data.minAmount && !data.maxAmount)
-              ? `Have ${data.minAmount > 1 ? data.minAmount : "a"}${
+              ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                `Have ${data.minAmount > 1 ? data.minAmount : "a"}${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   !!data.id ? ` ${data.id}` : ""
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } transaction${data.minAmount > 1 ? "s" : ""}`
-              : typeof data.maxAmount === "number" && !data.minAmount
-              ? `Have at most ${data.maxAmount}${
+              : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+              typeof data.maxAmount === "number" && !data.minAmount
+              ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                `Have at most ${data.maxAmount}${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   !!data.id ? ` ${data.id}` : ""
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } transaction${data.minAmount > 1 ? "s" : ""}`
-              : `Have ${data.minAmount} - ${data.maxAmount}${
+              : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                `Have ${data.minAmount} - ${data.maxAmount}${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   !!data.id ? ` ${data.id}` : ""
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } transaction${data.minAmount > 1 ? "s" : ""}`
         }
       })()}

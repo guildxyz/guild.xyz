@@ -7,6 +7,7 @@ export default function useFetchUserEmail() {
   const fetcherWithSign = useFetcherWithSign()
 
   return (): Promise<User["emails"]> =>
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     fetcherWithSign([`/v2/users/${id}/emails`, { method: "GET" }])
       .then(([{ address = null, createdAt = null }] = []) => ({
         emailAddress: address,

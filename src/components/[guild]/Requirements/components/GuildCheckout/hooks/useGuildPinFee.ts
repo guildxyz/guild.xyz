@@ -34,6 +34,7 @@ const useGuildPinFee = (): {
     data: guildPinFee,
     isLoading: isGuildPinFeeLoading,
     error: guildPinFeeError,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useSWR(["fee", guildPin.chain], ([_, c]) => fetchFee(c as Chain))
 
   // const {
@@ -48,6 +49,7 @@ const useGuildPinFee = (): {
   // })
 
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPinFee,
     isGuildPinFeeLoading,
     guildPinFeeError,

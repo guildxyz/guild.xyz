@@ -58,6 +58,7 @@ const Identities = memo(
             isOpen={i === 0}
           />
         ))}
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <WalletTag zIndex={!isShared && 1}>
           {!platformUsers.length ? shortenHex(addresses[0]) : addresses?.length}
         </WalletTag>
@@ -86,6 +87,7 @@ export const IdentityTag = memo(
         colorScheme={platform.colorScheme as string}
         bg={`${platform.colorScheme}.500`}
         variant="solid"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         px={!isOpen ? "1" : null}
         className="identityTag"
         sx={{ "--stacked-margin-left": "-24px" }}

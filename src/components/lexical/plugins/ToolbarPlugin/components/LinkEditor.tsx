@@ -80,10 +80,13 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
 
     if (
       selection !== null &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       !nativeSelection.isCollapsed &&
       rootElement !== null &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       rootElement.contains(nativeSelection.anchorNode)
     ) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setLastSelection(selection)
     } else {
       setLastSelection(null)
@@ -132,6 +135,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
   return (
     <FormProvider {...methods}>
       <Popover
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         initialFocusRef={initialFocusRef}
         isOpen={isOpen}
         onClose={onClose}
@@ -165,6 +169,7 @@ const LinkEditor = ({ isOpen, onOpen, onClose, insertLink }: LinkEditorProps) =>
               <FormControl isInvalid={!!errors.link}>
                 <HStack>
                   <Input
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     ref={initialFocusRef}
                     size="sm"
                     placeholder="https://example.com"

@@ -10,6 +10,7 @@ const GuildPinOpenseaLink = (): JSX.Element => {
   const chainId = useChainId()
   const { mintedTokenId } = useMintGuildPinContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!mintedTokenId || !openseaBaseUrl[Chains[chainId]]) return null
 
   return (

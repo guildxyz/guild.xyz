@@ -115,6 +115,7 @@ const SummonMembers = () => {
               opacity: 0.5,
             }}
             ref={(instance) => {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               setPlayer(instance)
             }}
           />

@@ -22,6 +22,7 @@ const ChangingGuildPinDesignAlert = ({
   const cancelRef = useRef()
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <Alert leastDestructiveRef={cancelRef} onClose={onClose} {...rest}>
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -33,6 +34,7 @@ const ChangingGuildPinDesignAlert = ({
             Would you like to proceed?
           </AlertDialogBody>
           <AlertDialogFooter>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>

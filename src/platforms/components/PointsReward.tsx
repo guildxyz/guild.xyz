@@ -13,9 +13,11 @@ import useDynamicRewardUserAmount from "platforms/Token/hooks/useDynamicRewardUs
 
 const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { platformGuildData } = platform.guildPlatform
   const name = platformGuildData?.name || "points"
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { hasRoleAccess } = useRoleMembership(platform.roleId)
   const { dynamicUserAmount } = useDynamicRewardUserAmount(platform)
 
@@ -49,6 +51,7 @@ const PointsReward = ({ platform, withMotionImg }: RewardProps) => {
             hasArrow
           >
             <Link
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               href={`/${urlName}/leaderboard/${platform.guildPlatform.id}`}
               fontWeight={"semibold"}
             >{`${score ?? 0} ${name}`}</Link>

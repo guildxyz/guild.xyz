@@ -4,6 +4,7 @@ import useClearUrlQuery from "hooks/useClearUrlQuery"
 import { createContext, PropsWithChildren, useContext, useEffect } from "react"
 import JoinModal from "./JoinModal"
 
+// @ts-expect-error TODO: fix this error originating from strictNullChecks
 const JoinModalContext = createContext<() => void>(null)
 
 const JoinModalProvider = ({ children }: PropsWithChildren<any>): JSX.Element => {

@@ -39,6 +39,7 @@ const useDeleteRequirement = (
       setTimeout(() => {
         mutateRequirements(
           (prevRequirements) =>
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             prevRequirements.filter(
               (requirement) => requirement.id !== requirementId
             ),

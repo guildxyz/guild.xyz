@@ -4,8 +4,10 @@ import { ParsedUrlQuery } from "querystring"
 const parseFiltersFromQuery = (query: ParsedUrlQuery): ColumnFiltersState => {
   const filtersArray = []
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (query.search) filtersArray.push({ id: "identity", value: query.search })
   if (query.roleIds)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     filtersArray.push({
       id: "roles",
       value: {

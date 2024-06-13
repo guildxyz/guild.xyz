@@ -54,19 +54,23 @@ const GuildSelect = ({ baseFieldPath }) => {
     let options = []
 
     if (currentGuild?.id) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       options = [convertGuildToOption(currentGuild)]
     }
     if (guildId && selectedGuild?.id && currentGuild?.id !== guildId) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       options = [convertGuildToOption(selectedGuild), ...options]
     }
     if (guildOptions) {
       options = options.concat(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         guildOptions.filter(
           (option) => option.value !== currentGuild?.id && option.value !== guildId
         )
       )
     }
     if (options.length <= 1 && selectedGuild?.id) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       options.push(convertGuildToOption(selectedGuild))
     }
 
@@ -83,6 +87,7 @@ const GuildSelect = ({ baseFieldPath }) => {
       <InputGroup>
         {guildId && selectedGuild?.imageUrl && (
           <InputLeftElement>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <OptionImage img={selectedGuild?.imageUrl} alt={selectedGuild?.name} />
           </InputLeftElement>
         )}

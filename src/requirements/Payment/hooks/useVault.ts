@@ -32,11 +32,17 @@ const useVault = (
   const [owner, token, multiplePayments, fee, balance] = data ?? []
 
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     owner,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     token,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     multiplePayments,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     fee,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     balance,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     error,
     isLoading,
     refetch,

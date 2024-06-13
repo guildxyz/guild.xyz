@@ -76,6 +76,7 @@ const RoleTags = memo(({ roles, setFilterValue }: Props) => {
             <PopoverArrow />
             <PopoverBody>
               <Wrap>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {moreRoles?.slice(0, 15).map(({ roleId, requirementId, amount }) => (
                   <CrmRoleTag
                     key={requirementId ?? roleId}

@@ -27,6 +27,7 @@ const useNotConnectedForms = () => {
     if (!data) return
     return data.filter(
       (form) =>
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         !guildPlatforms.filter((fgp) => fgp.platformGuildData?.formId === form.id)
           .length
     )
@@ -71,6 +72,7 @@ const ContinueWithExistingFormAlert = ({ onAdd }) => {
                 })
               }
               options={notConnectedForms?.map((form) => ({
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 label: form.name,
                 value: form,
                 details: <ArrowRight />,

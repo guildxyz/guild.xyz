@@ -102,13 +102,16 @@ const useCreateReqBasedTokenReward = ({
       ...data,
       name:
         data.name ||
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         `${data.rolePlatforms[0].guildPlatform.platformGuildData.name} role`,
       imageUrl:
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         data.rolePlatforms[0].guildPlatform.platformGuildData?.imageUrl ||
         `/guildLogos/${getRandomInt(286)}.svg`,
       visibility: roleVisibility,
       rolePlatforms: [],
       logic: "AND",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildId,
     })
 

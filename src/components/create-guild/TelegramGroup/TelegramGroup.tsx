@@ -23,6 +23,7 @@ const TelegramGroup = ({ fieldName, children }: PropsWithChildren<Props>) => {
   })
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { ok: isIn, message: errorMessage },
     isValidating,
   } = useIsTGBotIn(platformId, {

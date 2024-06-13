@@ -18,6 +18,7 @@ const useGuildFee = (
   })
 
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildFee,
     isLoading,
     error,

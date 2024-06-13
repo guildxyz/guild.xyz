@@ -10,6 +10,7 @@ type Props = {
 const PointsTotalAmount = ({ baseFieldPath, field }: Props): JSX.Element => (
   <>
     <GuildSelect baseFieldPath={baseFieldPath} />
+    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
     <MinMaxAmount baseFieldPath={baseFieldPath} field={field} />
   </>
 )

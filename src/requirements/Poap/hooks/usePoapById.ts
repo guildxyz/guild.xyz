@@ -10,6 +10,7 @@ const usePoapById = (
     poapId ? `/v2/third-party/poaps/${parsedPoapId}` : null
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return { isPoapByIdLoading: isValidating, poap: data, error }
 }
 

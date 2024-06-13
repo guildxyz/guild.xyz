@@ -48,6 +48,7 @@ const DynamicAmount = () => {
       <Stack gap={0}>
         <ConversionInput
           name="multiplier"
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           toImage={logoURI ? <OptionImage img={logoURI} alt={symbol} /> : <Token />}
           fromImage={pointsPlatformImage}
           defaultMultiplier={1}

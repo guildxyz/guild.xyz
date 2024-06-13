@@ -14,11 +14,13 @@ const usePollUntilDone = (guildPlatformId: number, snapshotId: number) => {
     snapshotId &&
     `/v2/guilds/${guildId}/points/${guildPlatformId}/snapshots/${snapshotId}`
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data, error, mutate, isLoading } = useSWRWithOptionalAuth(endpoint, {
     refreshInterval: pollInterval,
     onSuccess: (res: any) => {
       if (res.status === "DONE") {
         mutate(res, false)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         setPollInterval(null)
       }
     },
@@ -48,6 +50,7 @@ const useCreateSnapshot = ({
     isLoading: snapshotIsLoading,
     done,
     error: pollError,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = usePollUntilDone(guildPlatformId, createdSnapshotId)
 
   useEffect(() => {

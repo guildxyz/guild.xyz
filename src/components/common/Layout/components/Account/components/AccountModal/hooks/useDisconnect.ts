@@ -25,6 +25,7 @@ const useDisconnect = (onSuccess?: () => void) => {
   return useSubmitWithSign<{ platformId: number }>(submit, {
     onSuccess: ({ platformId }) => {
       mutateUser(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
           platformUsers: (prev?.platformUsers ?? []).filter(
@@ -63,6 +64,7 @@ const useDisconnectAddress = (onSuccess?: () => void) => {
   return useSubmitWithSign(submit, {
     onSuccess: (deletedAddress) => {
       mutateUser(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
           addresses: (prev?.addresses ?? []).filter(
@@ -103,6 +105,7 @@ const useDisconnectEmail = (onSuccess?: () => void) => {
   }>(submit, {
     onSuccess: () => {
       mutateUser(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
           emails: undefined,

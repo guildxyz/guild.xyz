@@ -58,6 +58,7 @@ const RequirementEditableCard = ({
     )
 
   const rightElement = !isEditDisabled && (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <Button ref={editButtonRef} size="sm" onClick={onOpen}>
       Edit
     </Button>
@@ -94,6 +95,7 @@ const RequirementEditableCard = ({
               mt={-0.5}
               defaultValues={{
                 visibility: field.visibility,
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 visibilityRoleId: field.visibilityRoleId,
               }}
               onSave={({ visibility, visibilityRoleId }) => {
@@ -123,8 +125,10 @@ const RequirementEditableCard = ({
     <>
       <RequirementBaseCard>
         <RequirementProvider requirement={field}>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <InvalidRequirementErrorBoundary rightElement={rightElement}>
             <RequirementComponent
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               rightElement={rightElement}
               showViewOriginal={showViewOriginal}
               imageWrapper={RequirementImageEditorWithSetValue}
@@ -142,6 +146,7 @@ const RequirementEditableCard = ({
             requirementField={field}
             isOpen={isOpen}
             onClose={onClose}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             finalFocusRef={editButtonRef}
             footer={
               <>

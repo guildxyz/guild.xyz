@@ -26,21 +26,26 @@ const TokenRewardCard = () => {
   const { roles } = useGuild()
   const { roleIds } = useMembership()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
   const rolePlatformIds = useMemo(
     () =>
       rolePlatforms
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         .filter((rp) => roleIds?.includes(rp.roleId) || false)
         .map((rp) => rp.id),
     [rolePlatforms, roleIds]
   )
 
   const { data } = useTokenClaimedAmount(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.poolId,
     rolePlatformIds,
     token.data.decimals
   )
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const alreadyClaimed = data?.reduce((acc, res) => acc + res) || 0
 
   const bgColor = useColorModeValue("gray.700", "gray.600")
@@ -59,6 +64,7 @@ const TokenRewardCard = () => {
     <>
       <RewardCard
         label={rewards.ERC20.name}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         title={title}
         colorScheme={"gold"}
         image={
@@ -82,12 +88,14 @@ const TokenRewardCard = () => {
             {/* TODO: This will not work if multiple rewards are set */}
             <AvailabilityTags
               mt={1}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               rolePlatform={roles
                 .flatMap((role) => role.rolePlatforms)
                 .find((rp) => rp.id === rolePlatformIds[0])}
             />
           </>
         }
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         cornerButton={
           isAdmin && <DynamicTokenRewardCardEditMenu guildPlatform={guildPlatform} />
         }

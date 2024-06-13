@@ -42,7 +42,8 @@ const MultiPlatformsGrid = ({ onSelection }: Props) => {
             description={
               platform === "TWITTER"
                 ? twitterLink
-                : guildPlatforms.find(
+                : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                  guildPlatforms.find(
                     (guildPlatform) => guildPlatform.platformName === platform
                   )?.platformGuildData.name
             }

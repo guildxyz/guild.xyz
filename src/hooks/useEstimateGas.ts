@@ -35,6 +35,7 @@ const useEstimateGas = (
   } = useGasPrice()
 
   const estimateGas = () =>
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     publicClient.estimateContractGas({
       ...config,
       account: walletClient?.account,

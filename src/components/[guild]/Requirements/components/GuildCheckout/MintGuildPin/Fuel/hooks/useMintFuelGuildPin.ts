@@ -49,6 +49,7 @@ const useMintFuelGuildPin = () => {
   const { provider } = useProvider()
   const { wallet } = useWallet()
   const { account } = useAccount()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const address = parseFuelAddress(account)
 
   const [loadingText, setLoadingText] = useState("")
@@ -83,6 +84,7 @@ const useMintFuelGuildPin = () => {
 
     const contract = GuildPinContractAbi__factory.connect(
       FUEL_GUILD_PIN_CONTRACT_ID,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       wallet
     )
 
@@ -111,6 +113,7 @@ const useMintFuelGuildPin = () => {
 
     await contract.functions
       .claim(contractCallParams, signature)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       .callParams({ forward: [fee.toNumber(), provider.getBaseAssetId()] })
       .call()
 

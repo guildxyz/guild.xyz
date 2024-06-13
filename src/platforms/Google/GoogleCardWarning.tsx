@@ -23,6 +23,7 @@ const GoogleCardWarning = ({
   size = "md",
 }: Props): JSX.Element => {
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolesWithPlatform = roles.filter((role) =>
     role.rolePlatforms?.some(
       (rolePlatform) => rolePlatform.guildPlatformId === guildPlatform?.id
@@ -32,9 +33,11 @@ const GoogleCardWarning = ({
 
   // if (eligibleMembers.length < 600) return null
   if (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     roleMemberCount < 0 ||
     !rolesWithPlatform?.some((role) => role.memberCount >= 600)
   )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return null
 
   return (

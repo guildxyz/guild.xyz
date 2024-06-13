@@ -37,11 +37,16 @@ const useIntercomSettingSetup = () => {
     if (!isWeb3Connected) return
 
     addIntercomSettings({
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       address: address?.toLowerCase(),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       walletType,
       wallet: connectorName,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       userId: null,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       connectedPlatforms: null,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       managedGuilds: null,
     })
 
@@ -98,6 +103,7 @@ const triggerChat = () => {
     return
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const facade: HTMLButtonElement = document.querySelector(
     ".live-chat-loader-placeholder [role='button']"
   )
@@ -110,6 +116,7 @@ const addIntercomSettings = (newData: Window["intercomSettings"]) => {
   if (!window.intercomSettings) window.intercomSettings = {}
 
   const shouldUpdate = Object.entries(newData).some(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ([key, value]) => window.intercomSettings[key] !== value
   )
 

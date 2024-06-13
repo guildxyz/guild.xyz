@@ -18,6 +18,7 @@ const ShareAndReportButtons = ({
   shareText,
 }: Props) => {
   const { isAdmin } = useGuildPermission()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const [hasClickedShareButton, setHasClickedShareButton] = useLocalStorage(

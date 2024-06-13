@@ -48,6 +48,7 @@ const fetchENSName = async (address: `0x${string}`): Promise<string> => {
     }).catch(() => {})
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return ens
 }
 
@@ -73,6 +74,7 @@ const fetchNNSName = async (address: `0x${string}`): Promise<string> => {
     }).catch(() => {})
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return nns
 }
 
@@ -102,6 +104,7 @@ const fetchLensProtocolName = async (address: string): Promise<string> => {
     }).catch(() => {})
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return lensName
 }
 
@@ -180,6 +183,7 @@ const fetchUnstoppableName = async (address: `0x${string}`): Promise<string> => 
       pc
         .readContract({
           abi: unsRegistryAbi,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           address: UNSTOPPABLE_DOMAIN_CONTRACTS[Chains[pc.chain.id]],
           functionName: "reverseNameOf",
           args: [address],
@@ -197,6 +201,7 @@ const fetchUnstoppableName = async (address: `0x${string}`): Promise<string> => 
     }).catch(() => {})
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return unstoppable
 }
 
@@ -206,10 +211,13 @@ const fetchDomains = async ([_, account]: [string, `0x${string}`]) => {
   const lowerCaseAddress = account.toLowerCase() as `0x${string}`
 
   const idbData = await getResolvedAddressFromIdb(lowerCaseAddress).catch(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     () => null as IDBResolvedAddress
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (idbData?.createdAt > Date.now() - ONE_DAY_IN_MS) {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return idbData.resolvedAddress
   } else if (!!idbData) {
     await deleteResolvedAddressFromIdb(lowerCaseAddress).catch(() => {})
@@ -264,6 +272,7 @@ const useResolveAddress = (accountParam: string): string => {
     fetchDomains
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return data
 }
 

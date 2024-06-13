@@ -34,17 +34,22 @@ const PaymentTransactionStatusModal = () => {
 
 export const UnlockingRewards = ({ roleId }: { roleId: number }) => {
   const { roles, guildPlatforms } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) => r.id === roleId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!role.rolePlatforms?.length) return <NoReward />
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return role.rolePlatforms.map((rp) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const guildPlatform = guildPlatforms.find((gp) => gp.id === rp.guildPlatformId)
 
     return (
       <Reward
         key={rp.guildPlatformId}
         platform={{ ...rp, guildPlatform }}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         role={role}
         withMotionImg={false}
         withLink

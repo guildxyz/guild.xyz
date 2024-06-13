@@ -82,6 +82,7 @@ const useActiveMembershipUpdate = ({
         // delaying success a bit so the user has time percieving the last state
         setTimeout(() => {
           mutateMembership(
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             (prev) => ({
               guildId: prev?.guildId,
               isAdmin: prev?.isAdmin,
@@ -121,6 +122,7 @@ const useActiveMembershipUpdate = ({
     isValidating: shouldPoll,
     triggerPoll: () => {
       // this doesn't work for some reason, but leaving it here till we investigate
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       progress.mutate(null, { revalidate: false })
 
       setShouldPoll(true)

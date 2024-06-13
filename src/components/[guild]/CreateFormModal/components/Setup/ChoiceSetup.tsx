@@ -116,6 +116,7 @@ const ChoiceSetup = ({ index }: Props) => {
                 append({
                   value: e.target.value,
                 })
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 addOptionRef.current.value = ""
               }}
               bg="transparent"

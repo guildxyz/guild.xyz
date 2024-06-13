@@ -40,6 +40,7 @@ const generateGetAssetsParams = (
   priceData: FetchPriceResponse<bigint>
 ): GeneratedGetAssetsParams => {
   if (!priceData || !purchaseSupportedChains.ERC20?.includes(Chains[chainId]))
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return undefined
 
   const {
@@ -60,6 +61,7 @@ const generateGetAssetsParams = (
     !source ||
     (!path && !tokenAddressPath)
   )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return undefined
 
   const amountIn = maxPriceInWei
@@ -117,6 +119,7 @@ const generateGetAssetsParams = (
 }
 
 const flipPath = (pathToFlip: string): string => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!pathToFlip?.length) return undefined
 
   const ADDRESS_LENGTH = 40
@@ -130,6 +133,7 @@ const flipPath = (pathToFlip: string): string => {
 
   do {
     endIndex += iteration % 2 === 1 ? ADDRESS_LENGTH : TICK_SPACING_LENGTH
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     pathSegments.push(pathString.slice(startIndex, endIndex))
     startIndex = endIndex
     iteration++

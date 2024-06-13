@@ -9,6 +9,7 @@ import useNooxBadge from "./hooks/useNooxBadge"
 const NooxRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { badgeMetaData, isError, isLoading } = useNooxBadge(requirement.data.id)
 
   return (
@@ -24,12 +25,15 @@ const NooxRequirement = (props: RequirementProps) => {
       {!badgeMetaData || isLoading || isError ? (
         <DataBlock
           isLoading={isLoading}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           error={isError && "Couldn't fetch Noox badge data"}
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {`#${requirement.data.id}`}
         </DataBlock>
       ) : (
         <Link
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           href={`https://noox.world/badge/${requirement.data.id}`}
           isExternal
           display="inline"

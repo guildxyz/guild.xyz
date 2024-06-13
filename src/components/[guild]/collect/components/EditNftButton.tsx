@@ -7,10 +7,12 @@ import { useCollectNftContext } from "./CollectNftContext"
 
 const EditNftButton = () => {
   const { guildPlatform } = useCollectNftContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   if (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.function ===
     ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
   )

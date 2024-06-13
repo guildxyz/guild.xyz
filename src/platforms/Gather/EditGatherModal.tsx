@@ -29,9 +29,13 @@ const EditGatherModal = ({
   platformGuildData,
 }: Props) => {
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     gatherAffiliation: currentAffiliation,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     gatherRole: currentRole,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     gatherSpaceId: currentSpaceId,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     name: currentName,
   } = platformGuildData
 

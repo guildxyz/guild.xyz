@@ -46,6 +46,7 @@ const RoleRequirements = ({
       ? [...(data ?? []), { type: "HIDDEN", roleId: role.id } as Requirement]
       : data
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isVirtualList = requirements?.length > VIRTUAL_LIST_REQUIREMENT_LIMIT
   const sliceIndex = (requirements?.length ?? 0) - 3
   const shownRequirements = (requirements ?? []).slice(0, 3)
@@ -74,6 +75,7 @@ const RoleRequirements = ({
           {isLoading && !data ? (
             <RoleRequirementsSkeleton />
           ) : isVirtualList ? (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             <VirtualRequirements
               {...{ isExpanded, requirements, descriptionRef }}
               logic={role.logic}
@@ -168,7 +170,9 @@ const VirtualRequirements = memo(
 
         const observer = new ResizeObserver(() => {
           // Recalculating row heights, then setting new row heights
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           listRef.current.resetAfterIndex(0)
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           rowHeights.current = {
             ...rowHeights.current,
             [index]: rowRef.current?.clientHeight,

@@ -36,6 +36,7 @@ const FillForm = ({ form }: Props) => {
     .filter((field) => field.isRequired)
     .map((field) => field.id)
   const isSubmitDisabled = Object.keys(formValues).some(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     (fieldId) => requiredFieldIds.includes(fieldId) && !formValues[fieldId]
   )
 
@@ -48,6 +49,7 @@ const FillForm = ({ form }: Props) => {
   const showErrorToast = useShowErrorToast()
   const { onSubmit, isLoading } = useSubmitWithSign(
     (signedValidation) =>
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       fetcher(`/v2/guilds/${guildId}/forms/${form.id}/user-submissions`, {
         ...signedValidation,
         method: "POST",
@@ -76,16 +78,19 @@ const FillForm = ({ form }: Props) => {
     <FormProvider {...methods}>
       <Stack>
         {form.fields.map((field) => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           const { DisplayComponent } = fieldTypes.find(
             (ft) => ft.value === field.type
           )
 
           return (
             <Card p={5} key={field.id}>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <FormControl isInvalid={!!errors[field.id]}>
                 <FormFieldTitle field={field} mb={2} />
                 <Controller
                   control={control}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   name={field.id}
                   rules={{
                     required: field.isRequired && "This field is required",
@@ -96,6 +101,7 @@ const FillForm = ({ form }: Props) => {
                 />
 
                 <FormErrorMessage>
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   {errors[field.id]?.message?.toString()}
                 </FormErrorMessage>
               </FormControl>

@@ -73,6 +73,7 @@ const SnapshotSelector = () => {
   }, [snapshot, selectedPointsId, setRootValue])
 
   const getPointPlatform = (guildPlatformId: number) =>
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatforms.find((gp) => gp.id === guildPlatformId)
       ?.platformGuildData as PlatformGuildData["POINTS"]
 
@@ -93,6 +94,7 @@ const SnapshotSelector = () => {
   return (
     <>
       <ExistingPointsTypeSelect
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         existingPointsRewards={existingPointsRewards}
         selectedExistingId={selectedPointsId}
         mb={3}

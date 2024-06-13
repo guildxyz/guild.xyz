@@ -64,8 +64,10 @@ const MintableRole = ({ role }: Props) => {
         onOpen()
         mutateClaimedRoles(
           (prevClaimedRoles) => {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             if (!prevClaimedRoles.find((crData) => crData.guildId === guildId)) {
               return [
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 ...prevClaimedRoles,
                 {
                   guildId,
@@ -74,6 +76,7 @@ const MintableRole = ({ role }: Props) => {
               ]
             }
 
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             return prevClaimedRoles.map((crData) => {
               if (crData.guildId !== guildId) return crData
               return {

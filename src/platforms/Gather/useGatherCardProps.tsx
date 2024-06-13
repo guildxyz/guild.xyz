@@ -9,6 +9,7 @@ const useGatherCardProps = (guildPlatform: GuildPlatform) => {
 
   const { roles } = useGuild()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatform = roles
     .flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)

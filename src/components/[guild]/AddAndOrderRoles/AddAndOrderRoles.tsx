@@ -36,6 +36,7 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   const orderButtonRef = useRef(null)
   const { ref: addRoleButtonRef, isStuck } = useIsStuck()
   useEffect(() => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setIsStuck?.(isStuck)
   }, [isStuck, setIsStuck])
 

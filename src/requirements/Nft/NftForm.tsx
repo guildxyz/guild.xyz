@@ -207,6 +207,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
         <InputGroup>
           {metadata?.image && (
             <InputLeftElement>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <OptionImage img={metadata.image} alt={metadata.name} />
             </InputLeftElement>
           )}
@@ -262,6 +263,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
                   baseFieldPath={baseFieldPath}
                   index={traitFieldIndex}
                   isAttributesLoading={isMetadataLoading}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   attributes={metadata?.traits}
                   nftCustomAttributeNames={nftCustomAttributeNames}
                   onRemove={removeTrait}
@@ -285,6 +287,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
       )}
 
       {nftRequirementType === "AMOUNT" && (
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         <MinMaxAmount field={field} baseFieldPath={baseFieldPath} />
       )}
 
@@ -293,6 +296,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
           <Divider />
           <Accordion w="full" allowToggle>
             <AccordionItem border="none">
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <AccordionButton px={0} _hover={{ bgColor: null }}>
                 <Box mr="2" textAlign="left" fontWeight="medium" fontSize="md">
                   Advanced

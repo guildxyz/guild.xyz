@@ -99,6 +99,7 @@ const AddRoleRewardModal = ({ append }: Props) => {
         </SelectRewardPanel>
       )}
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {isRewardSetupStep && <AddRewardPanel onAdd={handleAddReward} skipSettings />}
 
       <DiscardAlert

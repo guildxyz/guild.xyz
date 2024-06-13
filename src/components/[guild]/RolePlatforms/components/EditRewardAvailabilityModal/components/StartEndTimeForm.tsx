@@ -12,6 +12,7 @@ import { DAY_IN_MS } from "utils/formatRelativeTimeFromNow"
 
 type Props<TFieldValues, TContext> = {
   // Passing control, so we can infer the proper field names for the other 2 props
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   control: Control<TFieldValues, TContext>
   startTimeField: Path<TFieldValues>
   endTimeField: Path<TFieldValues>
@@ -42,9 +43,12 @@ const StartEndTimeForm = <TFieldValues, TContext>({
   platformType,
   ...stackProps
 }: Props<TFieldValues, TContext>) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { register } = useFormContext<TFieldValues>()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const startTimeValue = useWatch({ control, name: startTimeField })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endTimeValue = useWatch({ control, name: endTimeField })
 
   return (

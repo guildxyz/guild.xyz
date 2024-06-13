@@ -29,6 +29,7 @@ const useTokenBalance = ({
         address: token,
         abi: erc20Abi,
         functionName: "balanceOf",
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         args: [userAddress],
         chainId: chainId ?? detectedChainId,
       },

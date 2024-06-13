@@ -21,11 +21,14 @@ const NftAvailabilityTags = ({
   ...wrapProps
 }: PropsWithChildren<Props>) => {
   const { maxSupply, totalSupply } = useNftDetails(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.contractAddress
   )
 
   if (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.function ===
     ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
   )

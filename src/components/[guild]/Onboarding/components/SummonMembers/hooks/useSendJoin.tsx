@@ -35,8 +35,10 @@ const useSendJoin = (onSuccess?: () => void) => {
         title: "Join button sent!",
       })
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevGuild) => ({
           ...prevGuild,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatforms: prevGuild.guildPlatforms.map((gp) => {
             if (
               gp.platformId === PlatformType.DISCORD &&

@@ -12,6 +12,7 @@ const RoleGroupSelect = () => {
     name: "groupId",
   })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!groups.length) return null
 
   return (
@@ -32,6 +33,7 @@ const RoleGroupSelect = () => {
         }}
       >
         <option>Home page</option>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {groups.map((group) => (
           <option key={group.id} value={group.id}>
             {group.name}

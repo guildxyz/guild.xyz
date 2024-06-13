@@ -39,9 +39,12 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const dataId = useWatch({ name: `${baseFieldPath}.data.id` })
   const { poap: poapDetails } = usePoap(dataId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildsPoapsFancyIDs = guildPlatforms
     .filter((gp) => gp.platformId === PlatformType.POAP)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     .map((gp) => gp.platformGuildData.fancyId)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { guildsPoaps, isGuildsPoapsLoading } = useGuildsPoaps(guildsPoapsFancyIDs)
 
   const [searchText, setSearchText] = useState("")
@@ -49,6 +52,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
   const { isLoading: isPoapsLoading, poaps } = usePoaps(debouncedSearchText)
 
   const [pastedId, setPastedId] = useState(null)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isPoapByIdLoading, poap } = usePoapById(pastedId)
 
   const isLoading = isGuildsPoapsLoading || isPoapsLoading || isPoapByIdLoading
@@ -67,6 +71,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       })) ?? []
 
     if (mappedGuildsPoaps?.length) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       options = options.concat(mappedGuildsPoaps)
     }
 
@@ -76,6 +81,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       poapDetails &&
       !mappedGuildsPoaps?.find((p) => p.value === poapDetails.fancy_id)
     )
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       poapsList.push({
         img: poapDetails.image_url,
         label: poapDetails.name,
@@ -84,6 +90,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
       })
 
     if (poap && !mappedGuildsPoaps?.find((p) => p.value === poap.fancy_id))
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       poapsList.push({
         img: poap.image_url,
         label: poap.name,
@@ -94,6 +101,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
     const guildsPoapsFancyIds = guildsPoaps?.map((p) => p.fancy_id) ?? []
 
     poapsList = poapsList.concat(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       poaps?.map((p) => {
         if (guildsPoapsFancyIds.includes(p.fancy_id)) return null
         return {
@@ -139,6 +147,7 @@ const PoapForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
             onInputChange={(text, _) => {
               const id = text?.replace("#", "")
               if (id?.length > 2 && FANCY_ID_REGEX.test(id)) {
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 setPastedId(id)
                 setSearchText("")
               } else {

@@ -51,6 +51,7 @@ const useRegisterPool = (
         showErrorToast("Couldn't find 'PoolRegistered' event")
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       const poolId = poolRegisteredEvent.args.poolId.toString()
       captureEvent("Registered pool", { ...postHogOptions, poolId: poolId })
       onSuccess(poolId)

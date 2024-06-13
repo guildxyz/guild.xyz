@@ -19,6 +19,7 @@ const Links = () => {
   return (
     <Section title="Links" spacing={3}>
       <Wrap spacingX={6} spacingY={3}>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {openseaBaseUrl[chain] && totalSupply > 0 && (
           <Link
             href={`${openseaBaseUrl[chain]}/${nftAddress}`}
@@ -61,6 +62,7 @@ const Links = () => {
         </Link>
 
         {Object.keys(socialLinks ?? {}).length > 0 &&
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           Object.entries(socialLinks).map(([type, link]) => (
             <Link
               key={type}

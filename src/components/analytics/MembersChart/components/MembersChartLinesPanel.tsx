@@ -72,6 +72,7 @@ const MembersChartLinesPanel = ({
           ))}
         </Stack>
       </CheckboxGroup>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {scrollRef.current?.scrollHeight > scrollRef.current?.clientHeight && (
         <Box
           position="absolute"

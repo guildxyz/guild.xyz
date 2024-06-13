@@ -15,6 +15,7 @@ const InfoBanner = ({
 }: PropsWithChildren<Props>): JSX.Element => {
   const { pathname } = useRouter()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (IGNORED_PATHS.includes(pathname)) return null
 
   return (

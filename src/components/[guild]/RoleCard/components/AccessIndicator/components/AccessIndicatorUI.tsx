@@ -47,6 +47,7 @@ const AccessIndicatorUI = ({
         {label}
       </TagLabel>
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <IconComponent as={isLoading ? Spinner : icon} boxSize={3} />
     </Tag>
   )

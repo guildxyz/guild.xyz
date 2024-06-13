@@ -39,6 +39,7 @@ const imageDimensionsValidator = (
   minW: number,
   minH: number
 ): FileError => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (typeof file.width !== "number" && typeof file.height !== "number") return null
 
   if (file.width < minW || file.height < minH)
@@ -47,6 +48,7 @@ const imageDimensionsValidator = (
       message: getDimensionErrorMessage(minW, minH),
     }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return null
 }
 
@@ -78,6 +80,7 @@ const PhotoUploader = ({
 
       for (const file of filesFromEvent) {
         filePromises.push(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           new Promise(async (resolve) => {
             if (file.type.includes("svg")) {
               resolve(file)
@@ -94,10 +97,12 @@ const PhotoUploader = ({
       const files = await Promise.all(filePromises)
       return files
     },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     validator: (file) =>
       (minW || minH) &&
       imageDimensionsValidator(
         file as unknown as FileWithWidthandHeight,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         minW,
         minH
       ),

@@ -103,6 +103,7 @@ const MintGuildPin = (): JSX.Element => {
               <GuildPinFees />
 
               <Stack w="full" spacing={2}>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <SwitchNetworkButton targetChainId={Chains[guildPin?.chain]} />
                 <MintGuildPinButton />
               </Stack>

@@ -28,8 +28,10 @@ const useEditRoleGroup = (groupId: number, onSuccess: () => void) => {
         title: "Successfully edited page",
       })
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (curr) => ({
           ...curr,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           groups: curr.groups.map((group) =>
             group.id !== groupId ? group : response
           ),

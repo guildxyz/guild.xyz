@@ -51,6 +51,7 @@ export type ActivityLogActionResponse = {
 const transformActivityLogInfiniteResponse = (
   rawResponse: ActivityLogActionResponse[]
 ): ActivityLogActionResponse => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!rawResponse) return undefined
 
   const transformedResponse: ActivityLogActionResponse = {
@@ -89,6 +90,7 @@ type ActivityLogContextType = Omit<
   setActionGroup: Dispatch<SetStateAction<ActivityLogActionGroup>>
 }
 
+// @ts-expect-error TODO: fix this error originating from strictNullChecks
 const ActivityLogContext = createContext<ActivityLogContextType>(undefined)
 
 type Props = {
@@ -145,6 +147,7 @@ const ActivityLogProvider = ({
               searchParams.append(key, v.toString())
             })
           } else {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             searchParams.append(key, value.toString())
           }
         }
@@ -197,6 +200,7 @@ const ActivityLogProvider = ({
 
   const value = {
     ...ogSWRInfiniteResponse,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: transformActivityLogInfiniteResponse(ogSWRInfiniteResponse.data),
     mutate: () => ogSWRInfiniteResponse.mutate(),
     activityLogType,
@@ -217,6 +221,7 @@ const ActivityLogProvider = ({
   }, [ogSWRInfiniteResponse.isValidating])
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <ActivityLogContext.Provider value={value}>
       {children}
     </ActivityLogContext.Provider>

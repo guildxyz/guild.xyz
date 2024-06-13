@@ -4,6 +4,7 @@ import { RolePlatform } from "types"
 const useDynamicRewardUserAmount = (
   rolePlatform: Pick<RolePlatform, "roleId" | "dynamicAmount">
 ) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { reqAccesses, isLoading } = useRoleMembership(rolePlatform?.roleId)
   const dynamicAmount: any = rolePlatform?.dynamicAmount
 

@@ -37,6 +37,7 @@ const CompleteCaptcha = (props: ButtonProps): JSX.Element => {
   const reqAccess = reqAccesses?.find((err) => err.requirementId === id)
   const errorType = reqAccess?.errorType
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!userId || (!!reqAccess && !errorType)) return null
 
   return (

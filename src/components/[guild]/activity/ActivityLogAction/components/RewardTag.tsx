@@ -36,7 +36,9 @@ const RewardTag = forwardRef<Props, "span">(
         ? `${role?.name ?? "Unknown role"} - ${rewardName}`
         : rewardName) ?? label
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const icon = rewards[reward?.platformName || platformType]?.icon
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const colorScheme = rewards[reward?.platformName || platformType]?.colorScheme
 
     return (

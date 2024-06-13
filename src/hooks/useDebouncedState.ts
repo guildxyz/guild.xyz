@@ -7,6 +7,7 @@ const useDebouncedState = (state: any, delayMs = 500) => {
   useEffect(() => {
     if (timeout.current) window.clearTimeout(timeout.current)
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     timeout.current = setTimeout(() => setDelayedState(state), delayMs)
   }, [state, delayMs])
 

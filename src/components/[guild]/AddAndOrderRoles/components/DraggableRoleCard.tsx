@@ -34,6 +34,7 @@ const DraggableRoleCard = ({ role }: Props) => {
             ml={-2}
             mt={0.5}
             entityVisibility={role.visibility}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             visibilityRoleId={role.visibilityRoleId}
           />
         </HStack>

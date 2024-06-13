@@ -60,6 +60,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
 
   const group = getRootProps()
   useEffect(() => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const svg = field.value?.split("/").pop().split(".")[0]
     icons.map((category, i) => {
       if (category.icons.includes(Number(svg))) {
@@ -134,6 +135,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
                       {icons.map((tab, index) => (
                         <Tab
                           border={0}
+                          // @ts-expect-error TODO: fix this error originating from strictNullChecks
                           bgColor={index === tabIndex && tabBgColor}
                           key={index}
                           minW="max-content"
@@ -145,6 +147,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
                           )}
                           <Img
                             src={`/guildLogos/${tab.logo}.svg`}
+                            // @ts-expect-error TODO: fix this error originating from strictNullChecks
                             sx={guildLogoSxProp}
                           />
                         </Tab>

@@ -46,6 +46,7 @@ const RewardPreview = ({
             alignItems="center"
             justifyContent="center"
           >
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <Icon as={rewards[type]?.icon ?? Question} size={6} />
           </Circle>
         )}
@@ -54,6 +55,7 @@ const RewardPreview = ({
       <Stack spacing={0.5} fontFamily="body">
         <Skeleton isLoaded={!isLoading}>
           <Text as="span" fontSize="lg" noOfLines={1}>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {name ?? `${rewards[type]?.name ?? "Unknown"} reward`}
           </Text>
         </Skeleton>

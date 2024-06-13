@@ -60,7 +60,9 @@ const EditRewardAvailabilityModal = ({
     mode: "all",
     defaultValues: {
       capacity: defaultValues?.capacity,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       startTime: getShortDate(defaultValues?.startTime),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       endTime: getShortDate(defaultValues?.endTime),
     },
   })
@@ -120,10 +122,12 @@ const EditRewardAvailabilityModal = ({
                     description="First come, first served. Max-cap the number of users that can claim the reward"
                     onChange={(e) => {
                       if (e.target.checked) return
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       setValue("capacity", null)
                     }}
                   >
                     <NumberInput
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       min={1 < claimedCount ? claimedCount : 1}
                       mx="px"
                       pb="px"
@@ -168,7 +172,9 @@ const EditRewardAvailabilityModal = ({
                     }
                     onChange={(e) => {
                       if (e.target.checked) return
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       setValue("startTime", null)
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       setValue("endTime", null)
                     }}
                   >
@@ -188,7 +194,9 @@ const EditRewardAvailabilityModal = ({
                 onClick={handleSubmit(({ capacity, startTime, endTime }) => {
                   onDone({
                     capacity,
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     startTime: datetimeLocalToIsoString(startTime),
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     endTime: datetimeLocalToIsoString(endTime),
                   })
                 })}

@@ -27,6 +27,7 @@ const ClaimPoapButton = ({ rolePlatform, ...rest }: Props) => {
   const roleId = roles?.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatform.id)
   )?.id
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isLoading: isAccessLoading, hasRoleAccess } = useRoleMembership(roleId)
 
   const {

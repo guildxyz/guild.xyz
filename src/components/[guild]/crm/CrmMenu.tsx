@@ -29,6 +29,7 @@ type Props = {
 
 const CrmMenu = ({ table }: Props) => {
   const { isStuck } = useIsTabsStuck()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
   const {
     isOpen: isCustomizeOpen,

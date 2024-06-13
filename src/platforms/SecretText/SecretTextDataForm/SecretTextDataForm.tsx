@@ -28,6 +28,7 @@ const SecretTextDataForm = ({
   useController({
     name: "text",
     rules: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       maxLength: shouldValidate && {
         value: 10000,
         message: "Max text length is 10000 characters",

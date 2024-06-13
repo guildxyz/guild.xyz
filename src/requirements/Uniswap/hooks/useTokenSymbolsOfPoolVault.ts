@@ -18,6 +18,7 @@ export function useTokenSymbolsOfPoolVault(
     if (!token0 || !token1) {
       return
     }
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     onSuccess?.([token0, token1, fee])
   }, [onSuccess, token0, token1, fee])
 

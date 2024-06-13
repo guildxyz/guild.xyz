@@ -33,13 +33,14 @@ type Props = {
   showFooter?: boolean
 } & Omit<BoxProps, "title">
 
-/** 
- * @deprecated Use the new compound layout API as named export from `/src/components/common/Layout`. 
- * 
- * ```ts
- * import { Layout } from "components/common/Layout"
- * ```
-*/
+/**
+ * @deprecated Use the new compound layout API as named export from
+ *   `/src/components/common/Layout`.
+ *
+ *   ```ts
+ *   import { Layout } from "components/common/Layout"
+ *   ```
+ */
 const Layout = ({
   image,
   imageUrl,
@@ -67,6 +68,7 @@ const Layout = ({
   useIsomorphicLayoutEffect(() => {
     if ((!background && !backgroundImage) || !childrenWrapper?.current) return
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const rect = childrenWrapper.current.getBoundingClientRect()
     setBgHeight(`${rect.top + (window?.scrollY ?? 0) + backgroundOffset}px`)
   }, [
@@ -148,6 +150,7 @@ const Layout = ({
           position="relative"
           maxW={maxWidth}
           pt={{ base: 6, md: 9 }}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           pb={showFooter && 24}
           px={{ base: 4, sm: 6, md: 8, lg: 10 }}
         >

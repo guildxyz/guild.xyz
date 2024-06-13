@@ -167,6 +167,7 @@ const ExportWaasModal = ({
     }
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { onCopy, hasCopied } = useClipboard(privateKey, 3000)
 
   const stackProps = useBreakpointValue({
@@ -306,6 +307,7 @@ const ExportWaasModal = ({
           captureEvent("[WaaS export] Confirmed wallet import")
           alert.onClose()
           onClose()
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           connect({ connector: injectedConnector })
         }}
         title="Are you sure?"

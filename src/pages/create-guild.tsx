@@ -17,6 +17,7 @@ function CreateGuildHead() {
 }
 
 function CreateGuildBackground() {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { localThemeColor, localBackgroundImage } = useThemeContext()
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
@@ -28,6 +29,7 @@ function CreateGuildBackground() {
 
 function CreateGuildHeadline() {
   const name = useWatch({ name: "name" })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor } = useThemeContext()
   const imageUrl = useWatch({ name: "imageUrl" })
 

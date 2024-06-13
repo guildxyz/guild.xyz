@@ -22,6 +22,7 @@ const ConnectPolygonIDJoinStep = (): JSX.Element => {
         title="Connect PolygonID"
         buttonLabel={isDone ? "Connected" : "Connect"}
         onClick={onOpen}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         isDisabled={!isWeb3Connected && "Connect wallet first"}
         isLoading={isLoading}
       />

@@ -63,6 +63,7 @@ const ActivityLogFiltersContext = createContext<{
   clearFilters: (filterTypesToClear: SupportedQueryParam[]) => void
   getFilter: (id: string) => Filter | Record<string, never>
   isActiveFilter: (filterType: SupportedQueryParam) => boolean
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 }>(undefined)
 
 const ActivityLogFiltersProvider = ({
@@ -75,6 +76,7 @@ const ActivityLogFiltersProvider = ({
   useEffect(() => {
     if (initialSetupDone || !Object.entries(router.query).length) return
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const initialFilters: Filter[] = Object.entries(router.query)
       .map(([key, value]) => {
         if (!isSupportedQueryParam(key) || !value) return null
@@ -160,6 +162,7 @@ const ActivityLogFiltersProvider = ({
       const relevantActiveFilters = activeFilters.filter((f) => f.filter === filter)
 
       if (relevantActiveFilters.length > 1) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         newQuery[filter] = relevantActiveFilters.map((f) => f.value)
       } else {
         newQuery[filter] = relevantActiveFilters[0]?.value ?? ""

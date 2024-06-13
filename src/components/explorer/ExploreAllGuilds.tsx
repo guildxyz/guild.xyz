@@ -44,6 +44,7 @@ const useExploreGuilds = (query, guildsInitial) => {
   }
 
   // sending authed request for superAdmins, so they can see unverified & hideFromExplorer guilds too
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return useSWRInfinite(
     (pageIndex, previousPageData) => {
       if (Array.isArray(previousPageData) && previousPageData.length !== BATCH_SIZE)
@@ -67,6 +68,7 @@ type Props = {
 
 const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
   const { isWeb3Connected } = useWeb3ConnectionManager()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [search, setSearch] = useQueryState<string>("search", undefined)
   const prevSearch = usePrevious(search)
   const [order, setOrder] = useQueryState<Filters>("order", "FEATURED")
@@ -125,6 +127,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
           ref={searchAreaRef}
           position="sticky"
           top={TABS_HEIGHT}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           transform={isStuck && "translateY(-12px)"}
           width="full"
           zIndex={"banner"}
@@ -139,6 +142,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
           <SearchBar
             placeholder="Search verified guilds"
             {...{ search, setSearch }}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             rightAddon={
               !isMobile && (
                 <SearchBarFilters selected={order} onSelect={onSetOrder} />
@@ -149,6 +153,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
           />
           {isMobile && <SearchBarFilters selected={order} onSelect={onSetOrder} />}
         </VStack>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {!renderedGuilds.length ? (
           isValidating ? null : !search?.length ? (
             <Text>
@@ -159,6 +164,7 @@ const ExploreAllGuilds = forwardRef(({ guildsInitial }: Props, ref: any) => {
           )
         ) : (
           <GuildCardsGrid>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {renderedGuilds.map((guild) => (
               <ExplorerCardMotionWrapper key={guild.urlName}>
                 <GuildCard guildData={guild} />

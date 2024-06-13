@@ -28,6 +28,7 @@ const ActivityLogChildAction = (): JSX.Element => {
           before={
             <RequirementDisplayComponent
               requirement={data as Requirement}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               rightElement={null}
               footer={null}
             />

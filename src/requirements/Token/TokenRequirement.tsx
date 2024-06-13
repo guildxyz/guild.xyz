@@ -16,13 +16,15 @@ type Props = RequirementProps
 const TokenRequirement = ({ ...rest }: Props) => {
   const requirement = useRequirementContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data, isValidating } = useTokenData(requirement.chain, requirement.address)
 
   return (
     <Requirement
       image={
         requirement.type === "COIN"
-          ? CHAIN_CONFIG[requirement.chain]?.nativeCurrency?.iconUrl
+          ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            CHAIN_CONFIG[requirement.chain]?.nativeCurrency?.iconUrl
           : data?.logoURI ?? (
               <Text as="span" fontWeight="bold" fontSize="xx-small">
                 ERC20
@@ -30,6 +32,7 @@ const TokenRequirement = ({ ...rest }: Props) => {
             )
       }
       isImageLoading={isValidating}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       footer={
         requirement?.type === "ERC20" ? (
           <HStack spacing="4">
@@ -53,7 +56,8 @@ const TokenRequirement = ({ ...rest }: Props) => {
           : "any amount of"
       } ${
         requirement.type === "COIN"
-          ? CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+          ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
           : data?.symbol ?? requirement.symbol
       }`}
     </Requirement>

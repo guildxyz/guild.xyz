@@ -42,6 +42,7 @@ const CreateGuildTelegram = ({ isOpen, onClose }: Props): JSX.Element => {
   })
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { ok, groupName, groupIcon },
   } = useIsTGBotIn(guildPlatformId, { refreshInterval: 5000 })
 

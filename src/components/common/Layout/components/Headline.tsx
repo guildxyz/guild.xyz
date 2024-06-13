@@ -10,6 +10,7 @@ type Props = {
 }
 
 const Headline = ({ image, title, description, action }: Props) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor } = useThemeContext()
 
   return (

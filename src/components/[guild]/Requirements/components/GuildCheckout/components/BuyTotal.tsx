@@ -15,11 +15,14 @@ const BuyTotal = (): JSX.Element => {
   const { pickedCurrency } = useGuildCheckoutContext()
 
   const { token, fee, isLoading, error } = useVault(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.data.id,
     requirement.chain
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data: tokenData } = useTokenData(requirement.chain, token)
 
   const isNativeCurrency = pickedCurrency === NULL_ADDRESS
@@ -31,6 +34,7 @@ const BuyTotal = (): JSX.Element => {
       ? parseFloat(
           formatUnits(
             estimatedGas,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
           )
         )
@@ -39,6 +43,7 @@ const BuyTotal = (): JSX.Element => {
   const priceInSellToken = fee
     ? isNativeCurrency
       ? Number(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
         )
       : tokenData?.decimals
@@ -97,6 +102,7 @@ const BuyTotal = (): JSX.Element => {
             {!estimatedGasInFloat
               ? "Couldn't estimate"
               : `${Number(estimatedGasInFloat.toFixed(8))} ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
                 }`}
           </Skeleton>

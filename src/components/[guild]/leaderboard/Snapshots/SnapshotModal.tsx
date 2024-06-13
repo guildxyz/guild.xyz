@@ -48,10 +48,14 @@ const SnapshotModal = ({ onClose, isOpen, snapshotRequirement }: Props) => {
 
   const pointData = pointsReward
     ? {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         id: pointsReward.id.toString(),
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         name: pointsReward.platformGuildData.name || "points",
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         image: pointsReward.platformGuildData.imageUrl ? (
           <Img
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             src={pointsReward.platformGuildData.imageUrl}
             boxSize={5}
             borderRadius={"full"}

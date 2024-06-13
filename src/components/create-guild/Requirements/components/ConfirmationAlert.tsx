@@ -30,12 +30,14 @@ const ConfirmationAlert = ({
   const cancelRef = useRef()
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <Alert leastDestructiveRef={cancelRef} onClose={onClose} {...rest}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader pb="5">{title}</AlertDialogHeader>
           <AlertDialogBody>{description}</AlertDialogBody>
           <AlertDialogFooter>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>

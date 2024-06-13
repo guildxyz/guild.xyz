@@ -22,6 +22,7 @@ const RoleDescription = (props: Props) => {
   const { description, descriptionRef } = props
 
   const descriptionHeight =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     descriptionRef.current?.getBoundingClientRect().height || 24
 
   if (descriptionHeight <= MAX_INITIAL_REQS_HEIGHT)
@@ -46,6 +47,7 @@ const CollapsableRoleDescription = ({
   )
 
   useEffect(() => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     if (!initialRequirementsRef.current) return
 
     const observer = new ResizeObserver((entries) => {
@@ -54,6 +56,7 @@ const CollapsableRoleDescription = ({
         setMaxInitialReqsHeight(reqsHeight - 25)
     })
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     observer.observe(initialRequirementsRef.current)
 
     return () => {
@@ -94,6 +97,7 @@ const CollapsableRoleDescription = ({
         {parseDescription(description)}
       </Box>
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <Center
         className="expand"
         pos="absolute"

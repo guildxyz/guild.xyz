@@ -40,12 +40,14 @@ const MembersChartTooltip = ({ accessors, roleColors }: Props) => {
         <Card py="2.5" px="4" boxShadow="md" borderRadius="lg" borderWidth="1px">
           <Text fontSize={"sm"} fontWeight={"semibold"} colorScheme="gray" mb="3">
             {new Date(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               accessors.xAccessor(tooltipData.nearestDatum.datum as MemberCountData)
             ).toLocaleString()}
           </Text>
           <Stack spacing={1}>
             {(() => {
               const { key, datum } =
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 tooltipData.nearestDatum as TooltipDatum<MemberCountData>
 
               if (key === "total")
@@ -66,6 +68,7 @@ const MembersChartTooltip = ({ accessors, roleColors }: Props) => {
                   count={accessors.yAccessor(datum)}
                 >
                   <SimpleRoleTag
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     roleData={roles.find((role) => role.id.toString() === key)}
                     isTruncated
                   />

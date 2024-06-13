@@ -77,6 +77,7 @@ const RequirementAccessIndicatorUI = ({
             <>
               <PopoverTrigger>
                 <Center
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   bg={`${colorScheme}.${circleBgSwatch[colorMode]}`}
                   boxSize={CIRCLE_SIZE}
                   borderRadius={8}

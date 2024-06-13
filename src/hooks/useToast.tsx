@@ -50,7 +50,9 @@ const useToastWithButton = () => {
             <Button
               bg={actionButtonBackground}
               onClick={() => {
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 onClick?.(null)
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 toast.close(toastIdRef.current)
               }}
               borderRadius="lg"
@@ -60,7 +62,9 @@ const useToastWithButton = () => {
               <Button
                 bg={actionButtonBackground}
                 onClick={() => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   secondButtonOnClick?.(null)
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   toast.close(toastIdRef.current)
                 }}
                 borderRadius="lg"

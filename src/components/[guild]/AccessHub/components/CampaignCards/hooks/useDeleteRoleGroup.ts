@@ -23,8 +23,10 @@ const useDeleteRoleGroup = (groupId: number) => {
         title: "Successfully deleted page",
       })
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (curr) => ({
           ...curr,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           groups: curr.groups.filter((group) => group.id !== groupId),
         }),
         { revalidate: false }

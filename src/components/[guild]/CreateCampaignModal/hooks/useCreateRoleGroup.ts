@@ -29,8 +29,10 @@ const useCreateRoleGroup = () => {
       })
 
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (curr) => ({
           ...curr,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           groups: [...(curr.groups ?? []), response],
         }),
         { revalidate: false }

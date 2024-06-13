@@ -50,6 +50,7 @@ const RolePlatforms = ({ roleId }: Props) => {
   const watchFieldArray = watch("rolePlatforms")
   const controlledFields = fields.map((field, index) => ({
     ...field,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ...watchFieldArray[index],
   }))
 
@@ -100,6 +101,7 @@ const RolePlatformsWrapper = (props: Props): JSX.Element => (
 
 type RolePlatformCardProps = {
   roleId?: number
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   rolePlatform: RoleFormType["rolePlatforms"][number] & { fieldId: string }
   index: number
   remove: () => void
@@ -120,12 +122,14 @@ const RolePlatformCard = ({
 
   let guildPlatform: GuildPlatformWithOptionalId, type: PlatformName
   if (rolePlatform.guildPlatformId) {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform = guildPlatforms.find(
       (platform) => platform.id === rolePlatform.guildPlatformId
     )
     type = PlatformType[guildPlatform?.platformId] as PlatformName
   } else {
     guildPlatform = rolePlatform.guildPlatform
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     type = guildPlatform?.platformName
   }
 
@@ -133,6 +137,7 @@ const RolePlatformCard = ({
 
   const isLegacyContractCallReward =
     type === "CONTRACT_CALL" &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
@@ -153,6 +158,7 @@ const RolePlatformCard = ({
       }}
     >
       <PlatformCard
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         usePlatformCardProps={useCardProps}
         guildPlatform={guildPlatform}
         /**
@@ -181,6 +187,7 @@ const RolePlatformCard = ({
         }
         cornerButton={
           !rolePlatform.isNew ? (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
           ) : (
             <CloseButton

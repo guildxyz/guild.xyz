@@ -45,6 +45,7 @@ const DisconnectAccountButton = ({
           aria-label="Disconnect account"
         />
       </Tooltip>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -55,6 +56,7 @@ const DisconnectAccountButton = ({
             </AlertDialogBody>
 
             <AlertDialogFooter>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <Button ref={alertCancelRef} onClick={onClose}>
                 Cancel
               </Button>

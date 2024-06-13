@@ -21,6 +21,7 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
     name,
     urlName,
     isLoading: isGuildLoading,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useSimpleGuild(requirement.data.guildId)
   const {
     id: roleId,
@@ -28,16 +29,20 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
     imageUrl: roleImageUrl,
     groupId,
     isLoading: isRoleLoading,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useRole(requirement.data.guildId, requirement.data.roleId)
 
   const { data: group, isLoading: isGroupLoading } = useSWRImmutable<Group>(
     groupId ? `/v2/guilds/${id}/groups/${groupId}` : null
   )
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const maxAmount = new Date(requirement.data.maxAmount)
   const filterLabel =
     requirement.type === "GUILD_ROLE_RELATIVE"
-      ? ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
-      : requirement.data.maxAmount &&
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        ` for ${formatRelativeTimeFromNow(requirement.data.maxAmount)}`
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        requirement.data.maxAmount &&
         ` since ${maxAmount.toLocaleDateString("en-US", {
           ...(maxAmount.getFullYear() !== new Date().getFullYear() && {
             year: "numeric",
@@ -79,15 +84,19 @@ const HaveRole = (props: RequirementProps): JSX.Element => {
             isLoaded={!isGuildLoading && !isRoleLoading && !isGroupLoading}
           >
             <Link
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               href={`/${urlName ?? requirement.data.guildId}${
                 group ? `/${group.urlName}` : ""
               }#role-${roleId}`}
               colorScheme="blue"
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               isExternal={requirement.data.guildId !== id}
               wordBreak="break-word"
             >
               {`${roleName ?? "unknown"} role`}
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {id !== requirement.data.guildId &&
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 ` in the ${name ?? `#${requirement.data.guildId}`} guild`}
             </Link>
             {filterLabel}
@@ -104,6 +113,7 @@ const UserSince = (props: RequirementProps): JSX.Element => {
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
       <Text as="span">{"Be a Guild.xyz user since at least "}</Text>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <DataBlockWithDate timestamp={requirement.data.creationDate} />
     </Requirement>
   )
@@ -114,6 +124,7 @@ const MinGuilds = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {`Be a member of at least ${pluralize(requirement.data.minAmount, "guild")}`}
     </Requirement>
   )
@@ -125,8 +136,10 @@ const Admin = (props: RequirementProps): JSX.Element => {
   return (
     <Requirement image="/requirementLogos/guild.png" {...props}>
       {`Be an admin of a guild${
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         requirement.data.minAmount > 0
-          ? ` with at least ${pluralize(requirement.data.minAmount, "member")}`
+          ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            ` with at least ${pluralize(requirement.data.minAmount, "member")}`
           : ""
       }`}
     </Requirement>
@@ -137,6 +150,7 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const { id } = useSimpleGuild()
   const { name, urlName, imageUrl, isLoading } = useSimpleGuild(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.data.guildId
   )
 
@@ -145,10 +159,13 @@ const GuildMember = (props: RequirementProps): JSX.Element => {
       <Text as="span">{"Be a member of the "}</Text>
       <Skeleton display="inline-block" isLoaded={!isLoading}>
         <Link
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           href={`/${urlName ?? requirement.data.guildId}`}
           colorScheme="blue"
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           isExternal={requirement.data.guildId !== id}
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {` ${name ?? `#${requirement.data.guildId}`} guild`}
         </Link>
       </Skeleton>

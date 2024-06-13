@@ -20,8 +20,10 @@ const AccessedGuildPlatformCard = ({ platform }: { platform: GuildPlatform }) =>
 
   return (
     <PlatformCard
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       usePlatformCardProps={useCardProps}
       guildPlatform={platform}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       cornerButton={
         isAdmin && isDetailed && PlatformCardMenu ? (
           <PlatformCardMenu platformGuildId={platform.platformGuildId} />

@@ -37,6 +37,7 @@ const TemplateRequirements = ({ role, isExpanded, onToggleExpanded }: Props) => 
                 requirement={requirement as Requirement}
               />
               {i < shownRequirements.length - 1 && (
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 <LogicDivider logic={role.logic} />
               )}
             </>
@@ -45,16 +46,19 @@ const TemplateRequirements = ({ role, isExpanded, onToggleExpanded }: Props) => 
         <Collapse in={isExpanded} animateOpacity={false} style={{ width: "100%" }}>
           {hiddenRequirements.map((requirement, i) => (
             <React.Fragment key={i}>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {i === 0 && <LogicDivider logic={role.logic} />}
               <RequirementDisplayComponent
                 requirement={requirement as Requirement}
                 {...(["EMAIL_VERIFIED", "TWITTER_FOLLOWER_COUNT"].includes(
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.type
                 )
                   ? { footer: null }
                   : undefined)}
               />
               {i < hiddenRequirements.length - 1 && (
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 <LogicDivider logic={role.logic} />
               )}
             </React.Fragment>
@@ -63,6 +67,7 @@ const TemplateRequirements = ({ role, isExpanded, onToggleExpanded }: Props) => 
         {hiddenRequirements.length > 0 && (
           <>
             <ExpandRequirementsButton
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               logic={role.logic}
               hiddenRequirements={hiddenRequirements.length}
               isRequirementsExpanded={isExpanded}

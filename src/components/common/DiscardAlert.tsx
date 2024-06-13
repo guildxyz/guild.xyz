@@ -18,6 +18,7 @@ const DiscardAlert = ({ onClose, onDiscard, ...rest }: Props): JSX.Element => {
   const cancelRef = useRef()
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <Alert leastDestructiveRef={cancelRef} onClose={onClose} {...rest}>
       <AlertDialogOverlay>
         <AlertDialogContent>
@@ -26,6 +27,7 @@ const DiscardAlert = ({ onClose, onDiscard, ...rest }: Props): JSX.Element => {
             There're unsaved changes that'll be lost. Do you want to proceed?
           </AlertDialogBody>
           <AlertDialogFooter>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <Button ref={cancelRef} onClick={onClose}>
               Keep editing
             </Button>

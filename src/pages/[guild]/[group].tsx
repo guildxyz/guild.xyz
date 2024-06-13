@@ -48,9 +48,11 @@ const GroupPage = (): JSX.Element => {
   const { isAdmin } = useGuildPermission()
   const { isMember } = useMembership()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const accessedGuildPlatforms = useAccessedGuildPlatforms(group.id)
 
   return (
@@ -62,13 +64,19 @@ const GroupPage = (): JSX.Element => {
       <Layout
         backButton={<GuildImageAndName />}
         action={isAdmin && <DynamicEditCampaignButton />}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         title={group.name}
         textColor={textColor}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         ogDescription={group.description}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         description={group.description && parseDescription(group.description)}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         image={
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           group.imageUrl && (
             <GuildLogo
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               imageUrl={group.imageUrl}
               size={{ base: "56px", lg: "72px" }}
               mt={{ base: 1, lg: 2 }}
@@ -76,6 +84,7 @@ const GroupPage = (): JSX.Element => {
             />
           )
         }
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         imageUrl={group.imageUrl ?? guildImageUrl}
         background={localThemeColor}
         backgroundImage={localBackgroundImage}
@@ -99,12 +108,15 @@ const GroupPage = (): JSX.Element => {
         <AccessHub />
 
         <Section
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           title={
             (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
           }
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           titleRightElement={
             isAdmin && (
               <Box my="-2 !important" ml="auto !important">
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
@@ -141,6 +153,7 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
   return (
     <>
       <LinkPreviewHead
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
       />
       <Head>
@@ -161,6 +174,7 @@ const GroupPageWrapper = ({ fallback }: Props): JSX.Element => {
 }
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endpoint = `/v2/guilds/guild-page/${params.guild?.toString()}`
 
   const data = await fetcher(endpoint).catch((_) => ({}))

@@ -10,6 +10,7 @@ import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
 
 const AnalyticsPage = (): JSX.Element => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, imageUrl } = useGuild()
 

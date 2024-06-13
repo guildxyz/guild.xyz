@@ -17,9 +17,11 @@ const PinLeaderboardUsersPositionCard = () => {
   ) : data ? (
     <CardMotionWrapper>
       <PinLeaderboardUserCard
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         address={address}
         score={data.score}
         position={data.position}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         pinMetadataArray={usersGuildPins}
       />
     </CardMotionWrapper>

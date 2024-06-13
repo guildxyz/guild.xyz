@@ -37,16 +37,19 @@ const DynamicPurchaseRequirement = () => {
   )?.access
 
   const shouldNotRenderComponent =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     !featureFlags.includes("PURCHASE_REQUIREMENT") ||
     (!isOpen &&
       !isTxModalOpen &&
       (isMembershipLoading ||
         satisfiesRequirement ||
         !PURCHASABLE_REQUIREMENT_TYPES.includes(requirement.type) ||
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         !purchaseSupportedChains[requirement.type]?.includes(requirement.chain)))
 
   if (
     !data ||
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data[Chains[requirement.chain]]?.includes(requirement.address?.toLowerCase()) ||
     shouldNotRenderComponent
   )

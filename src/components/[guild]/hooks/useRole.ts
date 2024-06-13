@@ -33,7 +33,8 @@ const useRole = (guildId: number | string, roleId: number) => {
 
   return {
     ...(isFromCurrentGuild
-      ? roles.find((role) => role.id === roleId)
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        roles.find((role) => role.id === roleId)
       : unauthenticatedData || authenticatedData),
     isLoading: isUnauthenticatedRequestLoading || isAuthenticatedRequestLoading,
   }

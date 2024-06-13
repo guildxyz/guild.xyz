@@ -10,6 +10,7 @@ import { PlatformName, RoleFormType, RolePlatform } from "types"
 
 type Props = {
   platformType: PlatformName
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   rolePlatform?: RoleFormType["rolePlatforms"][number]
   defaultValues?: RolePlatformAvailabilityForm
   onDone: (data: RolePlatformAvailabilityForm) => void

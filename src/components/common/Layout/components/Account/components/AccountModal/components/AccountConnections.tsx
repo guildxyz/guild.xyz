@@ -47,6 +47,7 @@ const AccountConnections = () => {
     <>
       <AccountSectionTitle
         title="Social accounts"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         titleRightElement={sharedSocials?.length && <SharedSocials />}
       />
       <AccountSection mb="6" divider={<Divider />}>
@@ -61,6 +62,7 @@ const AccountConnections = () => {
 
       <AccountSectionTitle
         title="Linked addresses"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         titleRightElement={
           addresses?.length > 1 && (
             <>
@@ -113,6 +115,7 @@ const AccountConnections = () => {
               <LinkedAddress key={addressData?.address} addressData={addressData} />
             ))
             .concat(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               vaults?.length ? <LinkDelegateVaultButton vaults={vaults} /> : null
             )
         )}

@@ -20,6 +20,7 @@ const GuildifyExistingRole = () => {
   const { roles: guildRoles } = useGuild()
   const { guildPlatform, index } = useRolePlatform()
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { roles: discordRoles },
   } = useServerData(guildPlatform.platformGuildId, { memberCountDetails: true })
 
@@ -56,6 +57,7 @@ const GuildifyExistingRole = () => {
             isLoading={!options}
             options={options}
             beforeOnChange={(newValue) => {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               if (defaultValues.name || dirtyFields.name) return
               setValue("name", newValue?.label, { shouldDirty: false })
             }}

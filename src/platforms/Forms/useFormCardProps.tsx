@@ -9,7 +9,9 @@ const useFormCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { isAdmin } = useGuildPermission()
   const circleBgColor = useColorModeValue("gray.700", "blackAlpha.300")
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { form } = useGuildForm(guildPlatform.platformGuildData.formId)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { userSubmission } = useUserFormSubmission(form)
 
   return {

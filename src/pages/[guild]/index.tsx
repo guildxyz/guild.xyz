@@ -102,10 +102,12 @@ const GuildPage = (): JSX.Element => {
 
   // Passing the admin addresses here to make sure that we render all admin avatars in the members list
   const members = useUniqueMembers(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     roles,
     admins?.map((admin) => admin.address)
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
@@ -133,12 +135,14 @@ const GuildPage = (): JSX.Element => {
         ogTitle={name}
         textColor={textColor}
         ogDescription={description}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         description={
           (description || Object.keys(socialLinks ?? {}).length > 0) && (
             <>
               {description && parseDescription(description)}
               {Object.keys(socialLinks ?? {}).length > 0 && (
                 <Wrap w="full" spacing={3} mt="3">
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   {Object.entries(socialLinks).map(([type, link]) => {
                     const prettyLink = link
                       .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
@@ -206,12 +210,15 @@ const GuildPage = (): JSX.Element => {
         <AccessHub />
 
         <Section
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           title={
             (isAdmin || isMember || !!accessedGuildPlatforms?.length) && "Roles"
           }
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           titleRightElement={
             isAdmin && (
               <Box my="-2 !important" ml="auto !important">
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
               </Box>
             )
@@ -275,7 +282,9 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 
     addIntercomSettings({
       guildId: guild.id,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       featureFlags: guild.featureFlags?.toString(),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       memberCount: guild.memberCount,
     })
   }, [guild])
@@ -297,6 +306,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
   return (
     <>
       <LinkPreviewHead
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         path={fallback ? Object.values(fallback)[0].urlName : guild.urlName}
       />
       <Head>
@@ -324,6 +334,7 @@ const GuildPageWrapper = ({ fallback }: Props): JSX.Element => {
 }
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endpoint = `/v2/guilds/guild-page/${params.guild?.toString()}`
 
   const data = await fetcher(endpoint).catch((_) => ({}))

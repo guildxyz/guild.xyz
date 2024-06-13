@@ -61,7 +61,9 @@ const setKeyPairToIdb = (userId: number, keys: StoredKeyPair) =>
 
 const generateKeyPair = async () => {
   const keyPair: StoredKeyPair = {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     pubKey: undefined,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     keyPair: undefined,
   }
   try {

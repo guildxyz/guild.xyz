@@ -14,7 +14,9 @@ const useHasPaid = (
     abi: feeCollectorAbi,
     address: contractAddress,
     functionName: "hasPaid",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     args: [BigInt(vaultId ?? 0), address],
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[chain],
     query: {
       enabled,

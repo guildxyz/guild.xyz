@@ -17,9 +17,11 @@ const ParallelRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`Be sanctions safe `}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.countryId ? (
                   <>
                     {` in country: `}
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <DataBlock>{requirement.data.countryId}</DataBlock>
                   </>
                 ) : (

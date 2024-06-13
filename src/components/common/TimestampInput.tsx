@@ -49,6 +49,7 @@ const TimestampInput = forwardRef(
             ? e.target.valueAsNumber
             : undefined
           setValue(newValue)
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           props.onChange?.(newValue)
         }}
         min={props.min ? new Date(props.min).toISOString().split("T")[0] : undefined}

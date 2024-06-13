@@ -30,16 +30,21 @@ function HeadingLineBreakPlugin() {
           const node = selection.anchor.getNode()
           const parent = node.getParent()
 
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           if (node.__type === "text" && parent.__type === "heading") {
             const headingParent = node.getParent() as HeadingNode
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             if (parent.getChildren().length >= 2) {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               parent.getLastChild().remove() // Remove the new text node after the new line break
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               parent.getLastChild().remove() // Remove the new line break
             }
 
             const headingNode = $createHeadingNode(headingParent.__tag)
             const textNode = $createTextNode(node.getTextContent())
             headingNode.append(textNode)
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             parent.insertAfter(headingNode)
 
             headingNode.selectStart()

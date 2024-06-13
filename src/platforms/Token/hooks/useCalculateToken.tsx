@@ -37,7 +37,9 @@ const useClaimableTokensForRolePlatform = (rolePlatform: RolePlatform) => {
 
   const dynamicAmount = rolePlatform.dynamicAmount
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { chain, poolId, tokenAddress } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     rolePlatform.guildPlatform.platformGuildData
 
   const {
@@ -48,6 +50,7 @@ const useClaimableTokensForRolePlatform = (rolePlatform: RolePlatform) => {
     chain,
     poolId,
     [rolePlatform.id],
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     decimals
   )
 
@@ -63,6 +66,7 @@ const useClaimableTokensForRolePlatform = (rolePlatform: RolePlatform) => {
   const getSum = () => {
     switch (rewardType) {
       case "STATIC":
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         return dynamicAmount.operation.input[0].value
       case "REQUIREMENT_AMOUNT":
         return calcRequirementAmount(
@@ -85,6 +89,7 @@ const useClaimableTokens = (guildPlatform: GuildPlatform) => {
   const { roles } = useGuild()
 
   const getRequirement = (roleId: number, requirementId: number) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const role: any = roles.find((r) => r.id === roleId)
     return role?.requirements?.find((req) => req.id === requirementId) || null
   }
@@ -114,19 +119,25 @@ const useClaimableTokens = (guildPlatform: GuildPlatform) => {
 
   const { roleIds } = useMembership()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id).filter(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     (rp) => roleIds?.includes(rp.roleId) || false
   )
 
   const {
     data: { decimals },
   } = useTokenData(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.tokenAddress
   )
 
   const { data: alreadyClaimedAmounts } = useTokenClaimedAmount(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.poolId,
     rolePlatforms.map((rp) => rp.id),
     decimals
@@ -140,6 +151,7 @@ const useClaimableTokens = (guildPlatform: GuildPlatform) => {
     )
 
     const alreadyClaimed =
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       alreadyClaimedAmounts?.reduce((acc, amount) => acc + amount) || 0
 
     return sum - alreadyClaimed

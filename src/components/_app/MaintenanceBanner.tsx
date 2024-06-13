@@ -49,6 +49,7 @@ const MaintenanceBanner = ({
     now < maintenanceFromDate.getTime() - TWO_DAYS_IN_MS ||
     now > maintenanceToDate.getTime()
   )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return null
 
   return (

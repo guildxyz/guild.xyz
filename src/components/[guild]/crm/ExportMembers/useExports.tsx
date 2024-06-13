@@ -42,6 +42,7 @@ const useExports = () => {
       return res.exports
     })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return useSWRImmutable<ExportData[]>(
     `/v2/crm/guilds/${id}/exports`,
     fetchExports,

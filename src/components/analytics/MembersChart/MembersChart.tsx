@@ -60,6 +60,7 @@ const MembersChart = () => {
       : null
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const sortedRoles: Role[] = useMemo(() => {
     const byMembers = roles?.sort(
       (role1, role2) => role2.memberCount - role1.memberCount
@@ -83,6 +84,7 @@ const MembersChart = () => {
       ...(shownLines.includes("total")
         ? data.total.map((dataPoint) => dataPoint.count)
         : []),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ...shownRoles?.flatMap((role) =>
         role.memberCounts.map((dataPoint) => dataPoint.count)
       ),
@@ -92,6 +94,7 @@ const MembersChart = () => {
   const minValue = Math.min(...allShownValues)
   const maxValue = Math.max(...allShownValues)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleColors: Record<number, string> = useMemo(
     () =>
       roles?.reduce((acc, curr) => {

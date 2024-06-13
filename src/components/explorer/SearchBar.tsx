@@ -46,6 +46,7 @@ const SearchBar = ({
 
   const reset = () => {
     setLocalValue("")
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     inputRef.current.focus()
   }
 
@@ -57,6 +58,7 @@ const SearchBar = ({
         <Icon color="#858585" size={20} as={MagnifyingGlass} />
       </InputLeftElement>
       <Input
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         ref={inputRef}
         placeholder={placeholder}
         overflow="hidden"

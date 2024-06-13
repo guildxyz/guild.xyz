@@ -60,8 +60,10 @@ const useCreateHiddenRole = (onSuccess?: () => void) => {
       mutateActiveStatusUpdates()
 
       await mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         async (curr) => ({
           ...curr,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           roles: [...curr.roles, response_],
         }),
         { revalidate: false }

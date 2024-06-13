@@ -39,9 +39,11 @@ const useRemovePlatform = ({ onSuccess }: any) => {
 
       // Mutation filters out deleted rolePlatforms
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevGuild) => ({
           ...prevGuild,
           roles:
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             prevGuild.roles?.map((role) =>
               role.id === roleId
                 ? {

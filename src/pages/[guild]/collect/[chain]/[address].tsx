@@ -76,10 +76,12 @@ const CollectNftPageContent = ({
   const { isAdmin } = useGuildPermission()
 
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) => r.id === roleId)
 
   const isMobile = useBreakpointValue({ base: true, md: false })
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
   const {
@@ -106,6 +108,7 @@ const CollectNftPageContent = ({
           <GuildImageAndName />
           <HStack>
             <ShareAndReportButtons
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               isPulseMarkerHidden={totalSupply > 0}
               shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
               shareText={`Check out and collect this awesome ${
@@ -126,6 +129,7 @@ const CollectNftPageContent = ({
         >
           <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
             <CollectibleImage
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               src={image}
               isLoading={!image}
               imageWrapper={TiltCard}
@@ -141,6 +145,7 @@ const CollectNftPageContent = ({
               </Heading>
 
               {isMobile && (
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 <RequirementsCard role={role}>
                   <CollectNft />
                 </RequirementsCard>
@@ -149,11 +154,13 @@ const CollectNftPageContent = ({
               <Box ref={nftDescriptionRef} lineHeight={1.75}>
                 <HStack alignItems="start" justifyContent="flex-end">
                   <RichTextDescription
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     text={guildPlatform?.platformGuildData?.description}
                   />
                   <Spacer m="0" />
                   {isAdmin && (
                     <DynamicEditNFTDescriptionModalButton
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       guildPlatform={guildPlatform}
                     />
                   )}
@@ -183,13 +190,16 @@ const CollectNftPageContent = ({
                 {shouldShowSmallImage && (
                   <SmallImageAndRoleName
                     imageElement={
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       <CollectibleImage src={image} isLoading={!image} />
                     }
                     name={name}
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     role={role}
                   />
                 )}
 
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <RequirementsCard role={role}>
                   <CollectNft />
                 </RequirementsCard>
@@ -210,6 +220,7 @@ const CollectNftPageProviderWrapper = (
 
   return (
     <CollectNftProvider
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildPlatform={guildPlatforms?.find((gp) => gp.id === guildPlatformId)}
       roleId={roleId}
       rolePlatformId={rolePlatformId}
@@ -246,6 +257,7 @@ const getStaticProps = async ({ params }) => {
     ;[publicGuild, guild] = await Promise.all([
       fetcher(guildPageEndpoint),
       fetcher(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         `${process.env.NEXT_PUBLIC_API.replace("/v1", "")}${guildPageEndpoint}`,
         {
           headers: {
@@ -264,7 +276,9 @@ const getStaticProps = async ({ params }) => {
   const nftGuildReward = guild.guildPlatforms.find(
     (gp) =>
       gp.platformId === PlatformType.CONTRACT_CALL &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       gp.platformGuildData.chain === chain &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       gp.platformGuildData.contractAddress.toLowerCase() === address
   )
 
@@ -297,6 +311,7 @@ const getStaticProps = async ({ params }) => {
       guildPlatformId: nftGuildReward.id,
       rolePlatformId: nftRoleReward.id,
       roleId: nftRole.id,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       fallbackImage: nftGuildReward.platformGuildData.imageUrl,
       // Pre-populating the public guild & requirements caches
       fallback: {

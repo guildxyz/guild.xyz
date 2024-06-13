@@ -9,6 +9,7 @@ const TelegramPreview = (): JSX.Element => {
   })
   const { data, isValidating } = useIsTGBotIn(groupId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   useSetRoleImageAndNameFromPlatformData(data?.groupIcon, data?.groupName)
 
   return (

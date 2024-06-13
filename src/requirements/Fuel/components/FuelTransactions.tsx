@@ -40,6 +40,7 @@ const FuelTransactions = ({ baseFieldPath, field }: RequirementFormProps) => {
         </FormErrorMessage>
       </FormControl>
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <MinMaxAmount field={field} baseFieldPath={baseFieldPath} />
     </>
   )

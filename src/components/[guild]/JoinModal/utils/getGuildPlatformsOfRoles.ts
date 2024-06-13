@@ -7,6 +7,7 @@ export default function getGuildPlatformsOfRoles(
   try {
     const roleIdsSet = new Set(roleIds)
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const rolePlatforms = guild.roles
       .filter((role) => roleIdsSet.has(role.id))
       .flatMap((role) => role.rolePlatforms)
@@ -15,6 +16,7 @@ export default function getGuildPlatformsOfRoles(
       rolePlatforms.map(({ guildPlatformId }) => guildPlatformId)
     )
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const guildPlatforms = guild.guildPlatforms.filter((guildPlatform) =>
       guildPlatformIds.has(guildPlatform.id)
     )

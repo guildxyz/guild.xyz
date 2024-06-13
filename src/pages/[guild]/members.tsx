@@ -108,6 +108,7 @@ const columns = [
 ]
 
 const MembersPage = (): JSX.Element => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { name, roles, imageUrl } = useGuild()
   const scrollContainerRef = useRef(null)
@@ -127,7 +128,9 @@ const MembersPage = (): JSX.Element => {
     if (!isReady) return
 
     const path = asPath.split("?")[0]
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     replace(`${path}?${queryString}`, null, { scroll: false })
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     scrollContainerRef.current?.scrollTo({ top: 0 })
     // replace is intentionally left out
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -167,10 +170,14 @@ const MembersPage = (): JSX.Element => {
       .find((col) => col.id === "hiddenRoles")
 
     if (hasHiddenRoles) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       hiddenRolesColumn.columnDef.enableHiding = true
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       hiddenRolesColumn.toggleVisibility(true)
     } else {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       hiddenRolesColumn.toggleVisibility(false)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       hiddenRolesColumn.columnDef.enableHiding = false
     }
   }, [table, hasHiddenRoles])
@@ -205,6 +212,7 @@ const MembersPage = (): JSX.Element => {
         <NoPermissionToPageFallback>
           <CrmTableWrapper {...{ isValidating, setSize, scrollContainerRef }}>
             <CrmThead {...{ table, isLoading }} />
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <CrmTbody {...{ table, isValidating, data, error }} />
           </CrmTableWrapper>
         </NoPermissionToPageFallback>

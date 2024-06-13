@@ -104,6 +104,7 @@ const RequirementNameEditor = ({
         {...getEditButtonProps({
           onClick: () => {
             resetField("customName", {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               defaultValue: !!defaultValue
                 ? defaultValue
                 : textRef.current?.textContent,
@@ -176,6 +177,7 @@ const RequirementNameEditorWrapper = ({
         w="full"
       >
         <RequirementNameEditor
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           textRef={textRef}
           isLoading={isLoading}
           rightElement={rightElement}

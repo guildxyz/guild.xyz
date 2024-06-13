@@ -25,7 +25,9 @@ const ContractCallReward = ({
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { chain, contractAddress } = platform.guildPlatform.platformGuildData ?? {}
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { name, isLoading } = useNftDetails(chain, contractAddress)
 
   return (
@@ -47,6 +49,7 @@ const ContractCallReward = ({
             rightIcon={<ArrowRight />}
             iconSpacing="1"
             maxW="full"
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             href={`/${urlName}/collect/${chain.toLowerCase()}/${contractAddress.toLowerCase()}`}
             onClick={() => {
               captureEvent(
@@ -62,6 +65,7 @@ const ContractCallReward = ({
       }
     >
       <NftAvailabilityTags
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         guildPlatform={platform.guildPlatform}
         rolePlatform={platform}
         mt={1}
@@ -88,6 +92,7 @@ const ContractCallRewardIcon = ({
   transition,
 }: RewardIconProps & { isLoading?: boolean }) => {
   const { image } = useNftDetails(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform?.platformGuildData?.chain,
     guildPlatform?.platformGuildData?.contractAddress
   )

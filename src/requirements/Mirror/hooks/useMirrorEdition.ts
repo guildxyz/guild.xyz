@@ -35,6 +35,7 @@ const useMirrorEdition = (
       },
     ],
     query: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       enabled,
     },
   })
@@ -42,7 +43,9 @@ const useMirrorEdition = (
   const [name, imageURI] = data?.map((res) => res.result) ?? []
 
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     name,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     image: imageURI ? `https://ipfs.fleek.co/ipfs/${imageURI}` : null,
     isLoading,
     error,

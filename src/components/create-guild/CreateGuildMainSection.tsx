@@ -12,19 +12,27 @@ import { useEffect } from "react"
 import { useWatch } from "react-hook-form"
 
 export function CreateGuildMainSection() {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor } = useThemeContext()
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     activeStep,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setActiveStep,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     stepPart,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     nextStep,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     nextStepIsDisabled,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setPart,
   } = useCreateGuildContext()
   const contacts = useWatch({ name: "contacts" })
   const { captureEvent } = usePostHogContext()
   const themeColor = useWatch({ name: "theme.color" })
   const color = localThemeColor !== themeColor ? themeColor : localThemeColor
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isLastSubStep = STEPS[activeStep].progress.length === stepPart + 1
 
   const nextWithPostHog = () => {
@@ -53,6 +61,7 @@ export function CreateGuildMainSection() {
       </Stack>
       <GuildCreationProgress
         next={isLastSubStep ? nextWithPostHog : () => setPart(stepPart + 1)}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         progress={STEPS[activeStep].progress[stepPart]}
         isDisabled={nextStepIsDisabled}
       >

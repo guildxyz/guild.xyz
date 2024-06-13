@@ -26,6 +26,7 @@ const AddCard = forwardRef(
       <Component
         ref={ref}
         as={onClick ? "button" : undefined}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         _hover={{
           textDecor: "none",
           bg: colorMode === "light" ? "blackAlpha.50" : "whiteAlpha.50",
@@ -38,8 +39,10 @@ const AddCard = forwardRef(
         py={link ? 9 : 7}
         borderWidth={2}
         borderColor={colorMode === "light" ? "gray.200" : "gray.600"}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         href={link}
         cursor="pointer"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onClick={onClick}
         {...(isDisabled && {
           onClick: null,
@@ -58,6 +61,7 @@ const AddCard = forwardRef(
           <Stack spacing="1" flex="1">
             <Text
               fontWeight="bold"
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               color={
                 !description && (colorMode === "light" ? "gray.400" : "gray.500")
               }

@@ -29,6 +29,7 @@ const IdentitiesSearch = ({ column }: Props) => {
 
   const reset = () => {
     setLocalValue("")
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     inputRef.current.focus()
   }
 
@@ -38,6 +39,7 @@ const IdentitiesSearch = ({ column }: Props) => {
         <Icon size={14} as={MagnifyingGlass} />
       </InputLeftElement>
       <Input
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         ref={inputRef}
         placeholder={"Search members"}
         noOfLines={1}

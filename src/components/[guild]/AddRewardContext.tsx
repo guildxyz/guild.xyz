@@ -34,6 +34,7 @@ const AddRewardContext = createContext<{
   setShouldShowCloseAlert: Dispatch<SetStateAction<boolean>>
   isBackButtonDisabled: boolean
   setIsBackButtonDisabled: Dispatch<SetStateAction<boolean>>
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 }>(undefined)
 
 const AddRewardProvider = ({
@@ -42,6 +43,7 @@ const AddRewardProvider = ({
 }: PropsWithChildren<{ targetRoleId?: number }>) => {
   const modalRef = useRef(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const scrollToTop = () => modalRef.current?.scrollTo({ top: 0 })
 
   const [selection, setSelectionOg] = useState<PlatformName>()
@@ -77,6 +79,7 @@ const AddRewardProvider = ({
         modalRef,
         isOpen,
         onOpen: () => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           setSelection(null)
           setStep("HOME")
           onOpen()
@@ -92,8 +95,10 @@ const AddRewardProvider = ({
           setIsBackButtonDisabled(false)
         },
         scrollToTop,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         selection,
         setSelection,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         step,
         setStep,
         targetRoleId,

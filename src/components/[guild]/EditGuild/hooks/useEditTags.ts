@@ -32,14 +32,18 @@ const useEditTags = () => {
   const submit = async (tags: GuildTags[]) => {
     const tagPromises = []
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     defaultTags.forEach((tag) => {
       if (!tags.includes(tag)) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         tagPromises.push(deleteTag(tag))
       }
     })
 
     tags.forEach((tag) => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (!defaultTags.includes(tag)) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         tagPromises.push(addTag(tag))
       }
     })

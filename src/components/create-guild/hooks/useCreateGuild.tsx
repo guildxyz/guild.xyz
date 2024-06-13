@@ -62,6 +62,7 @@ const useCreateGuild = ({
         })
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutateYourGuilds((prev) => mutateGuildsCache(prev, response_), {
         revalidate: false,
       })

@@ -28,18 +28,22 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
   } = useDisclosure()
 
   const isLegacy =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.function ===
     ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
   const { isAdmin } = useGuildPermission()
   const { creator } = useNftDetails(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.contractAddress
   )
   const { address: userAddress } = useWeb3ConnectionManager()
   const isNFTCreator =
     isAdmin && creator?.toLowerCase() === userAddress?.toLowerCase()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!isNFTCreator) return null
 
   return (
@@ -55,12 +59,14 @@ const ContractCallCardMenu = ({ platformGuildId }: Props): JSX.Element => {
         <EditNFTDescriptionModal
           isOpen={legacyIsOpen}
           onClose={legacyOnClose}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatform={guildPlatform}
         />
       ) : (
         <EditNftModal
           isOpen={isOpen}
           onClose={onClose}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatform={guildPlatform}
         />
       )}

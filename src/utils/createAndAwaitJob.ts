@@ -12,6 +12,7 @@ export default async function createAndAwaitJob<
       { method: "GET" },
     ])
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const initialPollResult = await poll().catch(() => null as Job[])
 
   const jobAlreadyInProgress = initialPollResult?.find((job) => !job.done)

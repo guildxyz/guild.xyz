@@ -32,6 +32,7 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
   const { roles: rolesData } = useGuild()
   const { addresses, platformUsers, roles, joinedAt, isShared } = row.original
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolesColumn = row
     .getAllCells()
     .find((cell) => cell.column.id === "publicRoles").column.parent
@@ -91,8 +92,10 @@ const MemberModal = ({ row, isOpen, onClose }: Props) => {
               .map(({ roleId, amount }) => (
                 <ClickableCrmRoleTag
                   key={roleId}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   role={rolesData.find((r) => r.id === roleId) as any}
                   amount={amount}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   setFilterValue={rolesColumn.setFilterValue}
                   onFilter={onClose}
                 />

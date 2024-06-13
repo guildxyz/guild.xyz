@@ -134,6 +134,7 @@ const CreateGuildStepper = ({
         size={"sm"}
       >
         {STEPS.map((step, index) => (
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           <StepWrapperComponent
             key={index}
             {...(shouldPassCollapseProps
@@ -192,6 +193,7 @@ const CreateGuildStepper = ({
                   <Icon
                     as={CaretDown}
                     boxSize={4}
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     transform={isOpen && "rotate(-180deg)"}
                     transition="transform .3s"
                   />

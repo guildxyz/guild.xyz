@@ -94,12 +94,14 @@ const useCollectToken = (
 
     setLoadingText("Claiming tokens...")
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const { request } = await publicClient.simulateContract({
       ...claimTransactionConfig,
       /**
        * The contract's claim method uses the caller's address, so we need to pass
        * the `walletClient.account` param here
        */
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       account: walletClient.account,
     })
 
@@ -107,11 +109,14 @@ const useCollectToken = (
       return Promise.resolve({} as TransactionReceipt)
     }
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const hash = await walletClient.writeContract({
       ...request,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       account: walletClient.account,
     })
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
       { hash }
     )
@@ -146,7 +151,8 @@ const useCollectToken = (
 
         const prettyError = err.correlationId
           ? err
-          : processViemContractError(err, (errorName) => {
+          : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            processViemContractError(err, (errorName) => {
               switch (errorName) {
                 case "AccessDenied":
                   return "You have no access to execute this action."

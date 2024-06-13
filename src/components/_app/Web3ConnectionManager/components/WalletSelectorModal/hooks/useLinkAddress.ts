@@ -29,6 +29,7 @@ const getAddressLinkProof = async (
       ? await walletClient.account.signMessage({ message })
       : await walletClient.signMessage({
           message,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           account: walletClient.account,
         })
     : await signMessage(message)
@@ -71,6 +72,7 @@ const useLinkAddress = () => {
       address,
       signProps = {},
     }: AddressLinkParams & { signProps?: Partial<SignProps> }) => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       const keys = await getKeyPairFromIdb(userId)
       if (!keys || !keys.keyPair) {
         throw new Error(
@@ -86,11 +88,14 @@ const useLinkAddress = () => {
       )
       const newAddress = await fetcherWithSign(
         {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           address,
           keyPair: keys.keyPair,
 
           // TODO: Proper method-based typing would be nice, so we wouldn't have to pass these
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           walletClient: undefined,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           publicClient: undefined,
         },
         `/v2/users/${userId}/addresses`,

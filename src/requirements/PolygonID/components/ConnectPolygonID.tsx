@@ -63,6 +63,7 @@ const ConnectPolygonID = (props: ButtonProps) => {
         onClose={onClose}
         isOpen={isOpen}
         type={(chain === "POLYGON" ? `${type}_MAIN` : type) as any}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         data={data}
       ></ConnectPolygonIDModal>
     </>

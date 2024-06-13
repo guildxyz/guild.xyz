@@ -22,6 +22,7 @@ const ChooseTemplate = (): JSX.Element => {
     setIsWalletSelectorModalOpen(true)
   }, [isWeb3Connected, isWalletSelectorModalOpen, setIsWalletSelectorModalOpen])
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { setDisabled, stepPart, setPart } = useCreateGuildContext()
 
   const { control } = useFormContext<GuildFormType>()
@@ -29,7 +30,9 @@ const ChooseTemplate = (): JSX.Element => {
   const roles = useWatch({ control, name: "roles" })
 
   useEffect(() => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setDisabled(!roles.length)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   }, [setDisabled, roles.length])
 
   return (
@@ -51,6 +54,7 @@ const ChooseTemplate = (): JSX.Element => {
           <Collapse
             in={
               stepPart === 0 ||
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               (stepPart === 1 && !!roles.find((r) => r.name === role.name))
             }
             style={{ width: "100%", padding: 1, margin: -1 }}
@@ -58,14 +62,17 @@ const ChooseTemplate = (): JSX.Element => {
           >
             <TemplateCard
               part={stepPart}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               name={role.name}
               role={role}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               selected={!!roles.find((r) => r.name === role.name)}
               {...role}
               onClick={(templateName) => {
                 if (stepPart === 0) toggleTemplate(templateName)
               }}
               onCheckReward={(rewradIndex) => {
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 toggleReward(role.name, rewradIndex)
               }}
             />

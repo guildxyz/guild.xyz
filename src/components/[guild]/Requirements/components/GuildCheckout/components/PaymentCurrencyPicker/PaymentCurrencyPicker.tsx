@@ -40,6 +40,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
 
   const currencyOptions = SUPPORTED_CURRENCIES.filter(
     (c) =>
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       c.chainId === Chains[requirement.chain] && c.address !== requirement.address
   )
 
@@ -48,6 +49,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
   useEffect(() => setPickedCurrency(currencyOptions[0].address), [])
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { estimatedPriceInSellToken },
     isValidating,
     error,
@@ -80,6 +82,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
               <HStack w="full" justifyContent="space-between">
                 {pickedCurrency ? (
                   <TokenInfo
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     chainId={Chains[requirement.chain]}
                     address={pickedCurrency}
                     requiredAmount={estimatedPriceInSellToken}
@@ -98,6 +101,7 @@ const PaymentCurrencyPicker = (): JSX.Element => {
                 <Icon
                   as={CaretDown}
                   boxSize={4}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   transform={isOpen && "rotate(-180deg)"}
                   transition="transform .3s"
                 />

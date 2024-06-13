@@ -60,6 +60,7 @@ const DateRangeInput = ({ ...chakraStyles }) => {
       : undefined
 
     if (!newTimestamp) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       removeFilter(filterToUpdate)
       return
     }
@@ -134,7 +135,9 @@ const DateRangeInput = ({ ...chakraStyles }) => {
                 size="sm"
                 variant="ghost"
                 onClick={() => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   removeFilter(beforeFilter)
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   removeFilter(afterFilter)
                 }}
                 leftIcon={<TrashSimple />}

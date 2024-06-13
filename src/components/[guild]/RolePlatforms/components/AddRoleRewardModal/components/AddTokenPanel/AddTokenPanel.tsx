@@ -77,7 +77,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     const platform = accessedTokens.find(
       (guildPlatform) =>
         guildPlatform.platformId === PlatformType.ERC20 &&
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         guildPlatform.platformGuildData.chain === _data.chain &&
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
           _data.tokenAddress?.toLowerCase()
     )
@@ -106,6 +108,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           },
         },
       }),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
     } satisfies Schemas["DynamicAmount"]
 
     const rolePlatformPart = {
@@ -160,6 +163,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
             <Step
               key={index}
               style={{ width: "100%", height: "100%" }}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               onClick={activeStep > index ? () => setActiveStep(index) : null}
             >
               <StepIndicator>
@@ -174,6 +178,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
                 w="full"
                 mt={1}
                 minH={index === steps.length - 1 ? 0 : 12}
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 _hover={activeStep > index && { cursor: "pointer" }}
               >
                 <StepTitle>{step.title}</StepTitle>

@@ -16,6 +16,7 @@ export const useTokenRewards = (
   if (!pointPlatformId && !accessedOnly) return tokenRewards || []
 
   const accessedTokenRewards = tokenRewards?.filter((gp) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const relevantRoles = roles.filter((role) =>
       role.rolePlatforms.find(
         (rp) =>

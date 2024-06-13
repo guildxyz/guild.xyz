@@ -30,6 +30,7 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
   const [search, setSearch] = useState("")
   const debouncedSearch = useDebouncedState(search)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { addresses: initialAddresses, hideAllowlist } = requirement.data
 
   const willSearchAddresses = search !== debouncedSearch

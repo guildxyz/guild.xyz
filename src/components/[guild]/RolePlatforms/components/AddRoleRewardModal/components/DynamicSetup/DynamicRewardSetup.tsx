@@ -73,6 +73,7 @@ const DynamicRewardSetup = ({
               <RequirementDisplayComponent
                 requirement={selectedRequirement}
                 dynamicDisplay
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 rightElement={null}
               />
             </Card>

@@ -24,19 +24,24 @@ import { Proposal } from "./hooks/useProposals"
 const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const strategies = requirement.data.strategies
 
   const { data: proposal } = useSWRImmutable<Proposal>(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.data.proposal
-      ? `/v2/third-party/snapshot/proposals/${requirement.data.proposal}`
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        `/v2/third-party/snapshot/proposals/${requirement.data.proposal}`
       : null
   )
 
   return (
     <Requirement
       image="/requirementLogos/snapshot.png"
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       footer={
         requirement.type === "SNAPSHOT_STRATEGY" &&
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         Object.keys(requirement.data.strategies[0].params ?? {}).length && (
           <Popover placement="bottom">
             <PopoverTrigger>
@@ -50,6 +55,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
                 <PopoverArrow />
                 <PopoverBody p={0}>
                   <StrategyParamsTable
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     params={requirement.data.strategies[0].params}
                   />
                 </PopoverBody>
@@ -68,6 +74,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
                 {"Satisfy the "}
                 <DataBlock>{strategies[0].name}</DataBlock>
                 {` Snapshot Strategy`}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.space && (
                   <>
                     {` in the `}
@@ -99,6 +106,7 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
                 {requirement.type === "SNAPSHOT_FOLLOW_SINCE" && (
                   <>
                     {` since at least `}
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <DataBlockWithDate timestamp={requirement.data.since} />
                   </>
                 )}
@@ -108,23 +116,28 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
             return (
               <>
                 {`Be a Snapshot user since at least `}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DataBlockWithDate timestamp={requirement.data.since} />
               </>
             )
           case "SNAPSHOT_VOTES":
             return (
               <>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {`Vote ${pluralize(requirement.data.minAmount, "time")}`}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.space && (
                   <>
                     {` in the `}
                     <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.proposal && (
                   <>
                     {` on proposal `}
                     <DataBlock>
+                      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                       {proposal?.title ?? requirement.data.proposal}
                     </DataBlock>
                   </>
@@ -134,27 +147,33 @@ const SnapshotRequirement = (props: RequirementProps): JSX.Element => {
           case "SNAPSHOT_PROPOSALS":
             return (
               <>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {`Make at least ${requirement.data.minAmount}${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.successfulOnly ? " successful" : ""
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } proposal${requirement.data.minAmount > 1 ? "s" : ""}`}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.space && (
                   <>
                     {` in the `}
                     <SnapshotSpaceLink requirement={requirement} />
                   </>
                 )}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.state && (
                   <>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     {` that ${requirement.data.minAmount > 1 ? "are" : "is"} `}
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <DataBlock>{requirement.data.state}</DataBlock>
                   </>
                 )}
               </>
             )
           case "SNAPSHOT_MAJORITY_VOTES":
-            return `Vote with the majority at least ${(
-              requirement.data.minRatio * 100
-            ).toFixed(0)}% of the time`
+            return `Vote with the majority at least ${// @ts-expect-error TODO: fix this error originating from strictNullChecks
+            (requirement.data.minRatio * 100).toFixed(0)}% of the time`
         }
       })()}
     </Requirement>

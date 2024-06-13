@@ -33,6 +33,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
   const { token } = useTokenRewardContext()
   const claimableAmount = useClaimableTokensForRolePlatform(rolePlatform)
   const { isAdmin } = useGuildPermission()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { hasRoleAccess } = useRoleMembership(rolePlatform.roleId)
   const { isMember } = useMembership()
   const isFromGeogatedCountry = useIsFromGeogatedCountry()
@@ -113,6 +114,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
           <AvailabilityTags rolePlatform={rolePlatform} />
           {isAdmin && (
             <PoolTag
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               poolId={BigInt(rolePlatform.guildPlatform.platformGuildData.poolId)}
             />
           )}
@@ -123,6 +125,7 @@ const TokenReward = ({ rolePlatform }: { rolePlatform: RolePlatform }) => {
 }
 
 const TokenRewardWrapper = ({ platform }: RewardProps) => (
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   <TokenRewardProvider guildPlatform={platform.guildPlatform}>
     <TokenReward rolePlatform={platform} />
   </TokenRewardProvider>

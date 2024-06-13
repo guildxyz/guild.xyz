@@ -13,20 +13,24 @@ import useWithdraw from "./hooks/useWithdraw"
 
 const WithdrawButton = (): JSX.Element => {
   const { address: vaultAddress, chain, data } = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { owner, token, balance } = useVault(vaultAddress, data?.id, chain)
   const {
     data: { symbol, decimals },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useTokenData(chain, token)
 
   const { address, chainId } = useAccount()
   const { requestNetworkChange } = useTriggerNetworkChange()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isOnVaultsChain = Chains[chain] === chainId
 
   const formattedWithdrawableAmount =
     balance && decimals && Number(formatUnits(balance, decimals)) * 0.9
 
   const { onSubmitTransaction, isPreparing, isLoading, error } = useWithdraw(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     vaultAddress,
     data?.id,
     chain
@@ -61,7 +65,8 @@ const WithdrawButton = (): JSX.Element => {
         onClick={
           isOnVaultsChain && !isPreparing
             ? onSubmitTransaction
-            : () => requestNetworkChange(Chains[chain])
+            : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+              () => requestNetworkChange(Chains[chain])
         }
       >
         {isLoading
@@ -74,7 +79,8 @@ const WithdrawButton = (): JSX.Element => {
                 ? "< 0.001"
                 : formattedWithdrawableAmount.toFixed(3)
             } ${symbol}`
-          : `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
+          : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            `Switch to ${CHAIN_CONFIG[chain].name} to withdraw`}
       </Button>
     </Tooltip>
   )

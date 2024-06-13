@@ -26,6 +26,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
 
   useEffect(() => {
     setValue("name", `${tokenName} (${tokenSymbol})`)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setValue("imageUrl", tokenLogo)
   }, [tokenSymbol, tokenName, tokenLogo, setValue])
 
@@ -94,6 +95,7 @@ const SetTokenStep = ({ onContinue }: { onContinue: () => void }) => {
                 <Button
                   variant="link"
                   fontSize="small"
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   onClick={() => setValue("imageUrl", null)}
                   leftIcon={<X />}
                 >

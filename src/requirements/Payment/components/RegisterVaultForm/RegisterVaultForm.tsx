@@ -68,6 +68,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
         : tokenData?.decimals
     const lastDotIndex = value.lastIndexOf(".")
     const decimalPrecision = value.slice(lastDotIndex + 1).length
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     if (decimalPrecision > tokenDecimals) {
       return `Decimal places must not exceed ${tokenDecimals} digits.`
     }
@@ -106,6 +107,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
 
   const { feeInUSD } = useFeeInUSD(
     feeFieldValue,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     token === NULL_ADDRESS ? coingeckoCoinIds[chain] : undefined
   )
 
@@ -114,6 +116,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
       <ChainPicker
         controlName="chain"
         supportedChains={paymentSupportedChains}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onChange={() => setValue("token", null)}
         isDisabled={isDisabled}
       />
@@ -133,6 +136,7 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
             clampValueOnBlur={false}
             onChange={(valueAsString) => handleFeeChange(valueAsString)}
             onBlur={feeFieldOnBlur}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             sx={
               feeInUSD > 0 && {
                 "> input": {

@@ -7,6 +7,7 @@ import { useCreateGuildContext } from "./CreateGuildContext"
 import MultiPlatformsGrid from "./MultiPlatformGrid"
 
 const CreateGuildIndex = (): JSX.Element => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { setDisabled } = useCreateGuildContext()
   const [whitoutPlatform, setWhitoutPlatform] = useState(false)
   const { captureEvent, startSessionRecording } = usePostHogContext()

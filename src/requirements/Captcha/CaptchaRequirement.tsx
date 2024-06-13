@@ -12,6 +12,7 @@ const CaptchaRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
   const captchaAge =
     requirement.data?.maxAmount > 0 &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     formatRelativeTimeFromNow(requirement.data.maxAmount)
 
   return (

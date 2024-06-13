@@ -17,6 +17,7 @@ const SoundRequirement = (props: RequirementProps) => {
   )
 
   const { data: songsData, isValidating: isSongsLoading } = useSWRImmutable(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     artistData && requirement.data.title
       ? `/api/sound/sound-songs?id=${artistData?.id}`
       : null
@@ -33,6 +34,7 @@ const SoundRequirement = (props: RequirementProps) => {
 
           case "SOUND_COLLECTED":
             const songImage = songsData?.filter(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               (song) => song.title == requirement.data.title
             )?.[0]?.image
             if (songImage) return <Img src={songImage} />
@@ -63,6 +65,7 @@ const SoundRequirement = (props: RequirementProps) => {
             return (
               <>
                 {`Collect any ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.tierNumber === 1 ? "limited edition" : ""
                 } song from `}
                 <ArtistLink {...{ artistData, requirement }} />
@@ -74,16 +77,20 @@ const SoundRequirement = (props: RequirementProps) => {
               <>
                 {`Collect the `}
                 <Link
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   href={`https://www.sound.xyz/${requirement.data.id}/${slugify(
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     requirement.data.title
                   )}`}
                   isExternal
                   fontWeight="medium"
                   colorScheme="blue"
                 >
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   {requirement.data.title}
                 </Link>
                 {`${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.tierNumber === 1 ? " limited edition" : ""
                 } song from `}
                 <ArtistLink {...{ artistData, requirement }} />
@@ -93,6 +100,7 @@ const SoundRequirement = (props: RequirementProps) => {
           case "SOUND_TOP_COLLECTOR":
             return (
               <>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {`Be in the top ${requirement.data.topAmount} collectors of `}
                 <ArtistLink {...{ artistData, requirement }} />
                 {` on Sound.xyz`}
@@ -101,6 +109,7 @@ const SoundRequirement = (props: RequirementProps) => {
           case "SOUND_NFTS":
             return (
               <>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {`Own at least ${requirement.data.minAmount}`}
                 {` songs on `}
                 <Link

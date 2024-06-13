@@ -26,12 +26,14 @@ const MintGuildPinButton = (): JSX.Element => {
   const alreadyMintedOnChain = data?.find(
     (pin) =>
       pin.chainId === chainId &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       +pin.attributes.find((attr) => attr.trait_type === "guildId").value === id
   )
 
   const { guildPinFee, isGuildPinFeeLoading } = useGuildPinFee()
   const { data: balanceData, isLoading: isBalanceLoading } = useBalance({
     address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[guildPin?.chain],
   })
   const isSufficientBalance =
@@ -48,6 +50,7 @@ const MintGuildPinButton = (): JSX.Element => {
   const isDisabled =
     isInvalidImage ||
     isTooSmallImage ||
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId !== Chains[guildPin.chain] ||
     !isSufficientBalance ||
     error ||

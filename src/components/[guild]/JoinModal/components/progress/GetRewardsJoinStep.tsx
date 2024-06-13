@@ -25,10 +25,12 @@ const GetRewardsJoinStep = ({ joinState }: { joinState: JoinState }) => {
    * larger amount of these two
    */
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const allRelevantRewardsCount = roles
     .filter((role) => joinState?.roleIds?.includes(role.id))
     .flatMap((role) => role.rolePlatforms)?.length
   const totalRewardsToShow = Math.max(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     joinState?.rewards?.all,
     allRelevantRewardsCount
   )

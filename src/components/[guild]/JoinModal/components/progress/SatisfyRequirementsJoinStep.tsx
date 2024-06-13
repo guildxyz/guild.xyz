@@ -39,6 +39,7 @@ const SatisfyRequirementsJoinStep = ({
       }
       status={status}
       // so we render the no access fallbackText from JoinModal in case of no access
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       total={status !== "NO_ACCESS" && joinState?.requirements?.all}
       current={
         status === "LOADING"

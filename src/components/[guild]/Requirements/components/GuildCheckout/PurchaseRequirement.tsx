@@ -44,9 +44,11 @@ const PurchaseRequirement = (): JSX.Element => {
   const { urlName, name } = useGuild()
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { estimatedPriceInUSD },
     isValidating,
     error,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = usePrice(CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol)
 
   const onClick = () => {
@@ -117,8 +119,10 @@ const PurchaseRequirement = (): JSX.Element => {
                 <ConnectWalletButton />
                 {!error && isEvmConnected && (
                   <>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <Collapse in={chainId === Chains[requirement.chain]}>
                       <TOSCheckbox>
                         {`I understand that I purchase from decentralized exchanges, not from ${name} or Guild.xyz itself`}

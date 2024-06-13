@@ -17,6 +17,7 @@ type Props = { roleId: number }
 const EditRequirements = ({ roleId }: Props) => {
   const { data: requirements } = useRequirements(roleId)
   const logic = useWatch({ name: "logic" })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const freeEntry = requirements.some(({ type }) => type === "FREE")
 
   const mappedRequirements = requirements?.map(mapRequirement)
@@ -40,6 +41,7 @@ const EditRequirements = ({ roleId }: Props) => {
               <LogicDivider logic="OR" />
             </CardMotionWrapper>
           ) : (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             mappedRequirements.map((requirement) => (
               <CardMotionWrapper key={requirement.id}>
                 <ExistingRequirementEditableCard

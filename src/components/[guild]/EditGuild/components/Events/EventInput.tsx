@@ -40,8 +40,11 @@ const validators: Record<
   Exclude<EventSourcesKey, "DISCORD">,
   (value?: string) => true | string
 > = {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   EVENTBRITE: (url) => !!url.match(/(.)+eventbrite\.com\/e\/(.)+/) || "Invalid URL",
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   LUMA: (url) => !!url.match(/(.)+lu\.ma\/u\/(.)+/) || "Invalid URL",
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   LINK3: (url) => !!url.match(/(.)+link3\.to\/(.)+/) || "Invalid URL",
 }
 
@@ -80,6 +83,7 @@ const EventInput = ({ eventSource }: Props) => {
             size="sm"
             rounded="full"
             onClick={() =>
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               setValue(`eventSources.${eventSource}`, undefined, {
                 shouldDirty: true,
               })

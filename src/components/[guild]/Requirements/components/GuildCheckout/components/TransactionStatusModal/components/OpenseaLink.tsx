@@ -10,6 +10,7 @@ const OpenseaLink = (): JSX.Element => {
   const chainId = useChainId()
   const { nftAddress } = useCollectNftContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!openseaBaseUrl[Chains[chainId]]) return null
 
   return (

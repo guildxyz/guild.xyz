@@ -21,11 +21,13 @@ const SelectorButton = (props) => {
         icon={
           <Img
             src={value}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             sx={!isChecked && colorMode === "light" && { filter: "invert(0.75)" }}
           />
         }
         aria-label="Logo option"
         colorScheme={isChecked ? "indigo" : "gray"}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         bgColor={!isChecked && colorMode === "light" && "gray.300"}
         boxSize={12}
       />

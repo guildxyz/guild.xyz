@@ -43,6 +43,7 @@ const Leaderboard = () => {
   const router = useRouter()
   const { id: userId, addresses } = useUser()
   const { id: guildId, name, imageUrl, description, socialLinks, tags } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
 
@@ -76,6 +77,7 @@ const Leaderboard = () => {
           {description && parseDescription(description)}
           {Object.keys(socialLinks ?? {}).length > 0 && (
             <Wrap w="full" spacing={3} mt="3">
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {Object.entries(socialLinks).map(([type, link]) => {
                 const prettyLink = link
                   .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
@@ -131,6 +133,7 @@ const Leaderboard = () => {
               <LeaderboardUserCard
                 address={
                   userData.address ??
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   addresses?.find((address) => address.isPrimary).address
                 }
                 score={userData.totalPoints}

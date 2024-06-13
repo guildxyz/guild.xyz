@@ -29,12 +29,14 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
   onClose,
 }) => {
   const { formState, control, handleSubmit } = useForm<{ description: string }>({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     defaultValues: { description: platformGuildData.description },
   })
 
   const toast = useToast()
 
   const { onSubmit, isLoading } = useEditGuildPlatform({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatformId: id,
     onSuccess: () => {
       toast({
@@ -48,6 +50,7 @@ const EditNFTModalContent: React.FC<ContentProps> = ({
   return (
     <>
       <ModalCloseButton />
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <ModalHeader>{platformGuildData.name} NFT</ModalHeader>
       <ModalBody pt={0}>
         <FormControl isInvalid={!!formState.errors?.description}>

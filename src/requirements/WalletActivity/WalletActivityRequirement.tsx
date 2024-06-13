@@ -111,24 +111,32 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             return (
               <>
                 {`Deployed ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } contract${requirement.data.txCount > 1 ? "s" : ""}`}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.timestamps.maxAmount &&
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 requirement.data.timestamps.minAmount ? (
                   <>
                     {" between "}
                     <DataBlockWithDate
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       timestamp={requirement.data.timestamps.minAmount}
                     />
                     {" and "}
                     <DataBlockWithDate
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       timestamp={requirement.data.timestamps.maxAmount}
                     />
                   </>
-                ) : requirement.data.timestamps.minAmount ? (
+                ) : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                requirement.data.timestamps.minAmount ? (
                   <>
                     {" before "}
                     <DataBlockWithDate
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       timestamp={requirement.data.timestamps.minAmount}
                     />
                   </>
@@ -137,17 +145,21 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             )
           case "COVALENT_CONTRACT_DEPLOY_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               requirement.data.timestamps.minAmount
             )
 
             const formattedMaxAmount = formatRelativeTimeFromNow(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               requirement.data.timestamps.maxAmount
             )
 
             return (
               <>
                 {`Deployed ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } contract${requirement.data.txCount > 1 ? "s" : ""}`}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>
@@ -169,7 +181,9 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             return (
               <>
                 {`Have ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
 
                 {requirement.address && (
@@ -181,22 +195,28 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
                   </>
                 )}
 
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {requirement.data.timestamps.maxAmount &&
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 requirement.data.timestamps.minAmount ? (
                   <>
                     {" between "}
                     <DataBlockWithDate
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       timestamp={requirement.data.timestamps.minAmount}
                     />
                     {" and "}
                     <DataBlockWithDate
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       timestamp={requirement.data.timestamps.maxAmount}
                     />
                   </>
-                ) : requirement.data.timestamps.minAmount ? (
+                ) : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                requirement.data.timestamps.minAmount ? (
                   <>
                     {" before "}
                     <DataBlockWithDate
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       timestamp={requirement.data.timestamps.minAmount}
                     />
                   </>
@@ -205,17 +225,21 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
             )
           case "COVALENT_TX_COUNT_RELATIVE": {
             const formattedMinAmount = formatRelativeTimeFromNow(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               requirement.data.timestamps.minAmount
             )
 
             const formattedMaxAmount = formatRelativeTimeFromNow(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               requirement.data.timestamps.maxAmount
             )
 
             return (
               <>
                 {`Have ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data.txCount > 1 ? requirement.data.txCount : "a"
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 } transaction${requirement.data.txCount > 1 ? "s" : ""}`}
                 {formattedMaxAmount && formattedMinAmount ? (
                   <>

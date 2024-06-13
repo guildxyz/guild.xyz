@@ -31,6 +31,7 @@ const SecretTextCardMenu = ({ platformGuildId }: Props): JSX.Element => {
       <EditSecretTextModal
         isOpen={isOpen}
         onClose={onClose}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         guildPlatformId={guildPlatform?.id}
         platformGuildData={guildPlatform?.platformGuildData}
       />

@@ -37,6 +37,7 @@ const useEditGuildPlatform = ({
          */
         body: {
           platformGuildData: {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             ...originalGuildPlatform.platformGuildData,
             ...data.platformGuildData,
           },
@@ -53,8 +54,10 @@ const useEditGuildPlatform = ({
         ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevGuild) => ({
           ...prevGuild,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatforms: prevGuild.guildPlatforms.map((gp) => {
             if (gp.id === guildPlatformId) return response
             return gp
@@ -63,7 +66,8 @@ const useEditGuildPlatform = ({
             CAPACITY_TIME_PLATFORMS.includes(
               PlatformType[response.platformId] as PlatformName
             ) || isLegacyContractCallReward
-              ? prevGuild.roles.map((role) => {
+              ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                prevGuild.roles.map((role) => {
                   if (
                     !role.rolePlatforms?.some(
                       (rp) => rp.guildPlatformId === guildPlatformId
@@ -84,7 +88,8 @@ const useEditGuildPlatform = ({
                     }),
                   }
                 })
-              : prevGuild.roles,
+              : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                prevGuild.roles,
         }),
         { revalidate: false }
       )

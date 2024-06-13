@@ -36,6 +36,7 @@ const useExportMembers = (mutate) => {
 
   return {
     startExport: () =>
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       onSubmit({ ...router.query, roleIds: stringsToNumbers(router.query.roleIds) }),
     isStartExportLoading: isLoading,
     ...rest,

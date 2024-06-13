@@ -13,6 +13,7 @@ const FormRequirement = (props: RequirementProps) => {
   const { urlName } = useGuild()
   const { data } = useRequirementContext()
   const { form } = useGuildForm(data?.id)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { userSubmission } = useUserFormSubmission(form)
 
   return (

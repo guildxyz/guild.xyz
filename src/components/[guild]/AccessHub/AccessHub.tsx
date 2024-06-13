@@ -33,12 +33,15 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
   const { roleIds } = useMembership()
 
   const relevantRoles = groupId
-    ? roles.filter((role) => role.groupId === groupId)
-    : roles.filter((role) => !role.groupId)
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      roles.filter((role) => role.groupId === groupId)
+    : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      roles.filter((role) => !role.groupId)
 
   const relevantGuildPlatformIds = relevantRoles.flatMap((role) =>
     role.rolePlatforms.map((rp) => rp.guildPlatformId)
   )
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const relevantGuildPlatforms = guildPlatforms.filter(
     (gp) =>
       relevantGuildPlatformIds.includes(gp.id) &&
@@ -56,6 +59,7 @@ export const useAccessedGuildPlatforms = (groupId?: number) => {
 
   if (!roleIds) return contractCallGuildPlatforms
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const accessedRoles = roles.filter((role) => roleIds.includes(role.id))
   const accessedRolePlatforms = accessedRoles
     .map((role) => role.rolePlatforms)
@@ -88,6 +92,7 @@ const AccessHub = (): JSX.Element => {
 
   const shouldShowGuildPin =
     !group &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     featureFlags.includes("GUILD_CREDENTIAL") &&
     ((isMember && guildPin?.isActive) || isAdmin)
 

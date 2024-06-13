@@ -28,6 +28,7 @@ const TokenRolePlatformClaimCard = ({
     isLoading: isClaiming,
     loadingText: claimLoadingText,
   } = useCollectToken(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
     rolePlatform.roleId,
     rolePlatform.id
@@ -55,10 +56,12 @@ const TokenRolePlatformClaimCard = ({
 
   const { id: guildId } = useGuild()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { imageUrl, name } = useRole(guildId, rolePlatform.roleId)
 
   const { colorMode } = useColorMode()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const hasAccess = roleIds.includes(rolePlatform.roleId)
 
   return (

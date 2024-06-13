@@ -79,6 +79,7 @@ const ConnectEmailButton = ({
   const { id: userId } = useUser()
   const toast = useToast()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [emailSentAt, setEmailSentAt] = useState<number>(null)
 
   const submitVerificationRequest = (
@@ -224,6 +225,7 @@ const ConnectEmailButton = ({
                         }
                       }}
                     >
+                      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                       <PinInputField autoFocus ref={pinInputRef} />
                       <PinInputField />
                       <PinInputField />

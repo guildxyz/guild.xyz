@@ -21,6 +21,7 @@ import { useThemeContext } from "./ThemeContext"
 const AddRewardAndCampaign = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isStuck } = useIsTabsStuck()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   return (

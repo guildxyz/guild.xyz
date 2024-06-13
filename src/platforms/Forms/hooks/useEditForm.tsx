@@ -29,7 +29,9 @@ const useEditForm = ({
 
       mutate(
         (prevForms) =>
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           prevForms.map((form) => {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             if (form.id !== response.id) return form
             return response
           }),

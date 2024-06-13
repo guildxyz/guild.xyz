@@ -71,17 +71,22 @@ const useEditNft = ({
             encoder({
               data: fields,
               dirtyData: contractData,
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               chain: guildPlatform.platformGuildData.chain,
             })
           )
         )
       ).filter(Boolean)
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       await walletClient.writeContract({
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         account: walletClient.account,
         abi: guildRewardNftAbi,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         address: guildPlatform.platformGuildData.contractAddress,
         chain: wagmiConfig.chains.find(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           (c) => c.id === Chains[guildPlatform.platformGuildData.chain]
         ),
         functionName: "multicall",
@@ -105,6 +110,7 @@ const useEditNft = ({
     },
     onError: (error) => {
       const prettyError = processViemContractError(error)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       showErrorToast(prettyError)
     },
   })
@@ -201,6 +207,7 @@ const functionEncoders: Record<
     chain: Chain
   }) => Promise<`0x${string}`>
 > = {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   setFee: async ({ dirtyData, chain }) => {
     if (typeof dirtyData.price === "undefined") return undefined
 
@@ -215,6 +222,7 @@ const functionEncoders: Record<
       args: [fee],
     })
   },
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   setLocked: async ({ dirtyData }) => {
     if (typeof dirtyData.soulbound === "undefined") return undefined
 
@@ -224,6 +232,7 @@ const functionEncoders: Record<
       args: [dirtyData.soulbound === "true"],
     })
   },
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   setMaxSupply: async ({ dirtyData }) => {
     if (typeof dirtyData.maxSupply === "undefined") return undefined
 
@@ -233,6 +242,7 @@ const functionEncoders: Record<
       args: [BigInt(dirtyData.maxSupply)],
     })
   },
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   setMintableAmountPerUser: async ({ dirtyData }) => {
     if (typeof dirtyData.mintableAmountPerUser === "undefined") return undefined
 
@@ -242,6 +252,7 @@ const functionEncoders: Record<
       args: [BigInt(dirtyData.mintableAmountPerUser)],
     })
   },
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   setTreasury: async ({ dirtyData }) => {
     if (typeof dirtyData.tokenTreasury === "undefined") return undefined
 
@@ -251,6 +262,7 @@ const functionEncoders: Record<
       args: [dirtyData.tokenTreasury],
     })
   },
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   updateTokenURI: async ({ data, dirtyData }) => {
     if (
       typeof dirtyData.image === "undefined" &&

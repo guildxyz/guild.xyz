@@ -29,6 +29,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const { targetRoleId } = useAddRewardContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const existingPointsRewards = guildPlatforms.filter(
     (gp) => gp.platformId === PlatformType.POINTS
   )
@@ -95,6 +96,7 @@ const AddPointsPanel = ({ onAdd }: AddRewardPanelProps) => {
           }
         : {
             platformRoleData: {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               score: parseInt(data.platformRoleData.score),
             },
           }),

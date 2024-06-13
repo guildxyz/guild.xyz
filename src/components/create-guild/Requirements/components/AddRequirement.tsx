@@ -84,26 +84,31 @@ const AddRequirement = ({
 
     onClose()
     setTimeout(() => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setSelectedType(null)
     }, 300)
   }
 
   useEffect(() => {
     if (selectedType) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setHeight(formRef.current?.getBoundingClientRect().height)
 
       // set height to auto after the transition is done so the content can change
       setTimeout(() => {
         // the form is always taller than 200px, and it's better than 0 for animating back
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         if (homeRef.current) homeRef.current.style.height = "200px"
         setHeight("auto")
       }, TRANSITION_DURATION_MS)
     } else {
       // set current height back to explicit value from auto so it can animate
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (formRef.current) setHeight(formRef.current.getBoundingClientRect().height)
 
       // 10ms setTimeout to ensure these happen after the setHeight above has completed
       setTimeout(() => {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         if (homeRef.current) homeRef.current.style.height = "auto"
         setHeight(HOME_MAX_HEIGHT)
       }, 10)
@@ -124,6 +129,7 @@ const AddRequirement = ({
         isOpen={isOpen}
         onClose={handleClose}
         scrollBehavior="inside"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         finalFocusRef={addCardRef}
       >
         <ModalOverlay />
@@ -139,6 +145,7 @@ const AddRequirement = ({
                   mb="-3px"
                   icon={<ArrowLeft size={20} />}
                   variant="ghost"
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   onClick={() => setSelectedType(null)}
                 />
               )}
@@ -169,6 +176,7 @@ const AddRequirement = ({
             />
             <AnimatePresence>
               {selectedType && (
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 <AddRequirementForm
                   ref={formRef}
                   {...{ onAdd, handleClose, selectedType, setOnCloseAttemptToast }}
@@ -202,6 +210,7 @@ const AddRequirementForm = forwardRef(
     }: AddRequirementFormProps,
     ref: LegacyRef<HTMLDivElement>
   ) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const FormComponent = REQUIREMENTS[selectedType].formComponent
 
     const methods = useForm<Requirement>({ mode: "all" })
@@ -232,6 +241,7 @@ const AddRequirementForm = forwardRef(
 
     const onSubmit = methods.handleSubmit((data) => {
       const requirement: Requirement = {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         type: selectedType,
         visibility: roleVisibility,
         ...data,
@@ -256,6 +266,7 @@ const AddRequirementForm = forwardRef(
       >
         <FormProvider {...methods}>
           <ModalBody>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {REQUIREMENTS[selectedType].isNegatable && (
               <IsNegatedPicker baseFieldPath="" />
             )}
@@ -322,6 +333,7 @@ const AddRequirementHome = forwardRef(
             .filter(
               (req) =>
                 req.types[0] !== "GUILD_SNAPSHOT" &&
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 (!!featureFlags.includes("PAYMENT_REQUIREMENT") ||
                   req.types[0] !== "PAYMENT") &&
                 (providerTypesOnly

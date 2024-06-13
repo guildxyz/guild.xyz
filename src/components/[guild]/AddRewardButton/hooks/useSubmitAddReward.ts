@@ -169,7 +169,8 @@ const useSubmitAddReward = ({
             visibility:
               saveAs === "DRAFT"
                 ? Visibility.HIDDEN
-                : roles.find((role) => role.id === +roleId).visibility,
+                : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                  roles.find((role) => role.id === +roleId).visibility,
           })),
       })
     }

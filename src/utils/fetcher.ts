@@ -62,6 +62,7 @@ const fetcher = async (
 
   return fetch(endpoint, options).then(async (response: Response) => {
     const contentType = response.headers.get("content-type")
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const res = contentType.includes("json")
       ? await response.json?.()
       : await response.text()
@@ -76,6 +77,7 @@ const fetcher = async (
         location?.reload()
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (isGuildApiCall || resource.includes(process.env.NEXT_PUBLIC_API)) {
         const error = res.errors?.[0]
 

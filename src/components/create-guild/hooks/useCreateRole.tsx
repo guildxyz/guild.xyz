@@ -59,23 +59,29 @@ const useCreateRole = ({
     onSuccess: async (response_) => {
       triggerConfetti()
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (response_?.createdGuildPlatforms?.length > 0) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         response_.createdGuildPlatforms.forEach((guildPlatform) => {
           rewardCreated(guildPlatform.platformId)
         })
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
         revalidate: false,
       })
       matchMutate<GuildBase[]>(
         /\/guilds\?order/,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => mutateGuildsCache(prev, id),
         { revalidate: false }
       )
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutateGuild((curr) => ({
         ...curr,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         roles: [...curr.roles, response_],
       }))
       window.location.hash = `role-${response_.id}`

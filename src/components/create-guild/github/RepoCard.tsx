@@ -34,6 +34,7 @@ const RepoCard = ({
     <CardMotionWrapper>
       <Card padding={4} h="full">
         <HStack justifyContent={"space-between"} w="full" h="full">
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {description?.length > 0 ? (
             <VStack spacing={0} alignItems="start">
               <RepoName />

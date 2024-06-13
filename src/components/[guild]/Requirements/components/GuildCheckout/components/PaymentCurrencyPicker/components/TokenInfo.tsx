@@ -74,7 +74,8 @@ const TokenInfo = ({
       tokenAddress === NULL_ADDRESS && coinBalanceData?.value
         ? formatUnits(coinBalanceData.value, coinBalanceData.decimals)
         : tokenBalanceData?.value
-        ? formatUnits(tokenBalanceData.value, tokenBalanceData.decimals)
+        ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+          formatUnits(tokenBalanceData.value, tokenBalanceData.decimals)
         : 0
     ).toFixed(3)
   )

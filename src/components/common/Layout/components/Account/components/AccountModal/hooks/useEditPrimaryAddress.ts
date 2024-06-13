@@ -30,8 +30,10 @@ const useEditPrimaryAddress = () => {
   return useSubmit<EditPrimaryAddressData, UserAddress>(submit, {
     onSuccess: (response) => {
       mutateUser(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevUser) => ({
           ...prevUser,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           addresses: prevUser.addresses.map((address) => {
             if (address.address !== response.address)
               return {

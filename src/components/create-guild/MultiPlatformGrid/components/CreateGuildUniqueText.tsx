@@ -15,6 +15,7 @@ type Props = {
 const CreateGuildUniqueText = ({ isOpen, onClose }: Props) => {
   const { id: userId } = useUser()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { nextStep } = useCreateGuildContext()
 
   const { setValue } = useFormContext<GuildFormType>()
@@ -47,6 +48,7 @@ const CreateGuildUniqueText = ({ isOpen, onClose }: Props) => {
               platformGuildData: {
                 texts: texts?.filter(Boolean) ?? [],
                 name,
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 imageUrl,
               },
             })

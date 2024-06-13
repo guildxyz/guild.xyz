@@ -26,16 +26,20 @@ const BuyButton = (): JSX.Element => {
     multiplePayments,
     isLoading: isVaultLoading,
     error,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.data.id,
     requirement.chain
   )
 
   const { allowance, isAllowanceLoading, allowanceError } = useAllowance(
     pickedCurrency,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.address
   )
 
@@ -78,14 +82,17 @@ const BuyButton = (): JSX.Element => {
     fee &&
     (coinBalanceData?.value || tokenBalanceData?.value) &&
     (pickedCurrencyIsNative
-      ? coinBalanceData?.value >= fee
-      : tokenBalanceData?.value >= fee)
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        coinBalanceData?.value >= fee
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        tokenBalanceData?.value >= fee)
 
   const isDisabled =
     !payFee ||
     error ||
     payFeeError ||
     !agreeWithTOS ||
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     Chains[chainId] !== requirement.chain ||
     (!isVaultLoading && !isHasPaidLoading && !multiplePayments && hasPaid) ||
     (!pickedCurrencyIsNative &&

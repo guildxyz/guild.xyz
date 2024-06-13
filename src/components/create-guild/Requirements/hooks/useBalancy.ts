@@ -90,6 +90,7 @@ const useBalancy = (
   inaccuracy: number
 } => {
   const requirements = useWatch({ name: "requirements" })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const requirement = useWatch({ name: baseFieldPath })
   const logic = useWatch({ name: "logic" })
 
@@ -115,8 +116,10 @@ const useBalancy = (
         ?.filter(
           ({ type, address, chain, data, balancyDecimals, isNegated }) =>
             !isNegated &&
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             address?.length > 0 &&
             BALANCY_SUPPORTED_TYPES[type] &&
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             BALANCY_SUPPORTED_CHAINS[chain] &&
             (type !== "ERC20" || typeof balancyDecimals === "number") &&
             NUMBER_REGEX.test(data?.minAmount?.toString()) &&
@@ -126,6 +129,7 @@ const useBalancy = (
           ({
             chain,
             address,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             data: { minAmount, maxAmount },
             type,
             balancyDecimals,
@@ -133,6 +137,7 @@ const useBalancy = (
             let balancyMinAmount = minAmount.toString()
             if (type === "ERC20") {
               try {
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 const wei = parseUnits(balancyMinAmount, balancyDecimals).toString()
                 balancyMinAmount = wei
               } catch {}
@@ -145,6 +150,7 @@ const useBalancy = (
                 try {
                   const wei = parseUnits(
                     balancyMaxAmount,
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     balancyDecimals
                   ).toString()
                   balancyMaxAmount = wei
@@ -174,6 +180,7 @@ const useBalancy = (
 
   const shouldFetch = !!balancyLogic && Object.keys(mappedRequirements)?.length > 0
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [holders, setHolders] = useState<BalancyResponse>(undefined)
   const { data, isValidating, error } = useSWR(
     shouldFetch ? ["balancy_holders", balancyLogic, mappedRequirements] : null,
@@ -187,6 +194,7 @@ const useBalancy = (
 
   useEffect(() => {
     if (Object.keys(mappedRequirements).length <= 0) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setHolders(undefined)
     }
   }, [mappedRequirements])
@@ -195,6 +203,7 @@ const useBalancy = (
     () =>
       renderedRequirements
         ?.filter(({ type, isNegated }) => type === "ALLOWLIST" && !isNegated)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         ?.map(({ data: { addresses } }) =>
           addresses?.map((addr) => addr.toLowerCase())
         ) ?? [],
@@ -269,6 +278,7 @@ const useBalancy = (
 
   return {
     addresses,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     holders: addresses?.length || (!!data ? 0 : undefined),
     usedLogic: holders?.usedLogic, // So we always display "at least", and "at most" according to the logic, we used to fetch holders
     isLoading: isValidating,

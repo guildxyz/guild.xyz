@@ -60,15 +60,18 @@ const PaymentForm = ({
     owner,
     onSuccess: (registeredVaultId) => {
       setValue(`${baseFieldPath}.data.id`, registeredVaultId)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       addRequirement()
     },
   })
 
   useEffect(() => {
     if (isLoading)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setOnCloseAttemptToast(
         "You can't close the modal until the transaction finishes"
       )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     else setOnCloseAttemptToast(false)
   }, [isLoading, setOnCloseAttemptToast])
 

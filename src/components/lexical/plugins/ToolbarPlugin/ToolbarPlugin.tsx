@@ -158,16 +158,20 @@ const BlockOptionsMenuList = ({
 
   const formatBulletList = () => {
     if (blockType !== "ul") {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, null)
     } else {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       editor.dispatchCommand(REMOVE_LIST_COMMAND, null)
     }
   }
 
   const formatNumberedList = () => {
     if (blockType !== "ol") {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, null)
     } else {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       editor.dispatchCommand(REMOVE_LIST_COMMAND, null)
     }
   }
@@ -277,6 +281,7 @@ const ToolbarPlugin = () => {
       const elementDOM = editor.getElementByKey(elementKey)
 
       if (elementDOM !== null) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         setSelectedElementKey(elementKey)
         if ($isListNode(element)) {
           const parentList = $getNearestNodeOfType(anchorNode, ListNode)
@@ -376,6 +381,7 @@ const ToolbarPlugin = () => {
       <IconButton
         isDisabled={!canUndo}
         onClick={() => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           editor.dispatchCommand(UNDO_COMMAND, null)
         }}
         aria-label="Undo"
@@ -384,6 +390,7 @@ const ToolbarPlugin = () => {
       <IconButton
         isDisabled={!canRedo}
         onClick={() => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           editor.dispatchCommand(REDO_COMMAND, null)
         }}
         aria-label="Redo"

@@ -63,11 +63,14 @@ const EditTokenModal = ({
 
   const { roles, urlName } = useGuild()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatforms = useRolePlatformsOfReward(id)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((rl) =>
     rl.rolePlatforms.find((rp) => rp.id === rolePlatforms?.[0]?.id)
   )
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data: requirements } = useRequirements(role?.id)
   const snapshotRequirement = requirements?.find((req) => !!req?.data?.snapshot)
   const pointsPlatformId: number = snapshotRequirement?.data?.guildPlatformId
@@ -120,6 +123,7 @@ const EditTokenModal = ({
     })
 
   const { onSubmit: submitEditRequirement, isLoading: reqIsLoading } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     useEditRequirement(role?.id, {
       onSuccess: () => {
         captureEvent("editToken(EditRequirement) Updated requirement", {
@@ -133,6 +137,7 @@ const EditTokenModal = ({
       },
     })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { onSubmit: onRequirementSubmit } = useCreateRequirement(role?.id, {
     onSuccess: () => {
       toast({
@@ -246,6 +251,7 @@ const EditTokenModal = ({
                     name="multiplier"
                     toImage={
                       imageUrl ? (
+                        // @ts-expect-error TODO: fix this error originating from strictNullChecks
                         <OptionImage img={imageUrl} alt={symbol} />
                       ) : (
                         <Token />

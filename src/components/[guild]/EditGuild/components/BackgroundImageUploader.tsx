@@ -15,6 +15,7 @@ type Props = {
 const BackgroundImageUploader = ({
   uploader: { isUploading, onUpload },
 }: Props): JSX.Element => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { localBackgroundImage, setLocalBackgroundImage } = useThemeContext()
   const [progress, setProgress] = useState<number>(0)
 

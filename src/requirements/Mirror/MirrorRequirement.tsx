@@ -12,6 +12,7 @@ const MirrorRequirement = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
 
   const { isLoading, name, image, error } = useMirrorEdition(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.address,
     requirement.chain
   )
@@ -26,6 +27,7 @@ const MirrorRequirement = (props: RequirementProps): JSX.Element => {
         )
       }
       isImageLoading={isLoading}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       footer={!error && <BlockExplorerUrl />}
       {...props}
     >

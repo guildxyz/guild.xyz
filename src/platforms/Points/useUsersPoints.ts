@@ -10,6 +10,7 @@ const useUsersPoints = (pointId?) => {
 
   const { data, ...rest } = useSWRWithOptionalAuth(
     shouldFetch ? `/v2/users/${userId}/points?guildId=${guildId}` : null,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     null,
     false,
     true

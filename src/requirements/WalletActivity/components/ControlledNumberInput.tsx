@@ -34,6 +34,7 @@ const ControlledNumberInput = ({
   const {
     field: { ref, name, value, onChange, onBlur },
   } = useController({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     name: props.name,
     rules: {
       required: props.isRequired && "This field is required",
@@ -146,6 +147,7 @@ const ControlledNumberInput = ({
       <NumberInputField
         placeholder={props.placeholder}
         {...numberInputFieldProps}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         cursor={props.isReadOnly && "default"}
       />
       <NumberInputStepper

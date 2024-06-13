@@ -11,6 +11,7 @@ export const onboardingStepAtom = atom(0)
 
 const Onboarding = (): JSX.Element => {
   const { onboardingComplete } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { localThemeColor, textColor } = useThemeContext()
   const [activeStep, setActiveStep] = useAtom(onboardingStepAtom)
   const { captureEvent } = usePostHogContext()

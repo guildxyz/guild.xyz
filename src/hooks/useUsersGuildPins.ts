@@ -46,6 +46,7 @@ const getUsersGuildPinIdsOnChain = async (
         })
       : []
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const errors: Error[] = results
     .filter((result) => result.status === "failure")
     .map((result) => result.error)
@@ -90,12 +91,14 @@ const getPinTokenURIsForPinIds = async (
         })
       : []
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const tokenInfo: TokenInfo[] = results.map((result, index) => ({
     chainId: Chains[chain],
     tokenId: Number(pinIds[index]),
     tokenUri: result.status === "success" ? (result.result as string) : null,
   }))
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const errors: Error[] = results
     .filter((res) => res.status === "failure")
     .map((res) => res.error)
@@ -115,8 +118,10 @@ const getTokenWithMetadata = (tokenInfo: {
 }): TokenWithMetadata => {
   const { chainId, tokenId, tokenUri } = tokenInfo
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenUri)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!metadata) return null
 
   return {
@@ -138,6 +143,7 @@ const fetchGuildPinsOnChain = async (
 
   let balance = null
   try {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     balance = await publicClient.readContract({
       abi: guildPinAbi,
       address: GUILD_PIN_CONTRACTS[chain],
@@ -149,6 +155,7 @@ const fetchGuildPinsOnChain = async (
   }
 
   const { pinIds, errors: pinIdFetchErrors } = await getUsersGuildPinIdsOnChain(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     balance,
     chain,
     address,
@@ -238,6 +245,7 @@ const useUsersGuildPins = (disabled = false, includeTestnets = false) => {
   return {
     ...swrData,
     data: swrData.data?.usersPins,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     error: swrData.data?.errors?.length > 0,
   }
 }

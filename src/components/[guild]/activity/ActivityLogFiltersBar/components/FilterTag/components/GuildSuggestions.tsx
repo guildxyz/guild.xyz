@@ -23,6 +23,7 @@ const GuildSuggestions = ({ inputValue, getOptionProps }: Props): JSX.Element =>
     data?.filter(
       (g) =>
         !activeGuildFilters?.includes(g.id.toString()) &&
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         g.name.toLowerCase().includes(inputValue?.trim().toLowerCase())
     ) ?? []
 

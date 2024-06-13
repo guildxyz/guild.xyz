@@ -65,6 +65,7 @@ const TokenForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element 
         rules={{ required: "This field is required" }}
       />
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <MinMaxAmount field={field} baseFieldPath={baseFieldPath} format="FLOAT" />
     </Stack>
   )

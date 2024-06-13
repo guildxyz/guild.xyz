@@ -29,6 +29,7 @@ function mapPermissions(permissions: PermissionsResponse) {
   // Only checking that it is not on the bottom
   const isRoleOrderOk =
     // TODO: Checking by roleName feels sketchy, maybe we could return a flag for each entry, which indicates the relevant role
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     permissions.roleOrders.find(({ roleName }) => roleName === GUILD_BOT_ROLE_NAME)
       .rolePosition !== 1
 

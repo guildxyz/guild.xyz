@@ -23,8 +23,10 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   const { roles } = useGuild()
   const group = useRoleGroup()
   const relevantRoles = group
-    ? roles.filter((role) => role.groupId === group.id)
-    : roles.filter((role) => !role.groupId)
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      roles.filter((role) => role.groupId === group.id)
+    : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      roles.filter((role) => !role.groupId)
 
   const {
     isOpen: isAlertOpen,
@@ -45,6 +47,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
       relevantRoles?.sort((role1, role2) => {
         if (role1.position === null) return 1
         if (role2.position === null) return -1
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         return role1.position - role2.position
       }) ?? []
     )
@@ -114,6 +117,7 @@ const OrderRolesModal = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                     style={{ position: "relative" }} // needed for the auto-applied zIndex to work
                   >
                     <DraggableRoleCard
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       role={relevantRoles?.find((role) => role.id === roleId)}
                     />
                   </Reorder.Item>

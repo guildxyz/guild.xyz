@@ -37,12 +37,15 @@ const RewardSuggestions = ({
               return {
                 rolePlatformId: rp.id,
                 platformName: PlatformType[
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   guildPlatform?.platformId
                 ] as PlatformName,
                 name:
                   guildPlatform?.platformId === PlatformType.DISCORD
-                    ? `${role.name} - ${name}`
+                    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                      `${role.name} - ${name}`
                     : name,
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 roleId: role.id,
               }
             }),

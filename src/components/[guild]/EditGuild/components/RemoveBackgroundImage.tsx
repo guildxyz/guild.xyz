@@ -6,6 +6,7 @@ import { useFormContext } from "react-hook-form"
 
 const RemoveBackgroundImage = () => {
   const { setValue } = useFormContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { setLocalBackgroundImage } = useThemeContext()
 
   const handleRemoveImage = () => {

@@ -18,6 +18,7 @@ import { useRolePlatform } from "./RolePlatformProvider"
 
 type Props = {
   SettingsComponent: CardSettingsComponent
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   rolePlatform: RoleFormType["rolePlatforms"][number]
 }
 
@@ -27,6 +28,7 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }: Props) => {
   )
   const isOpen = openGuildPlatformSettingsId === rolePlatform.guildPlatformId
   const onOpen = () => setOpenGuildPlatformSettingsId(rolePlatform.guildPlatformId)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const onClose = () => setOpenGuildPlatformSettingsId(null)
 
   const modalContentRef = useRef()
@@ -56,12 +58,14 @@ const EditRolePlatformButton = ({ SettingsComponent, rolePlatform }: Props) => {
         {...{ isOpen, onClose }}
         scrollBehavior="inside"
         colorScheme={"dark"}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         initialFocusRef={modalContentRef}
         size="xl"
         closeOnEsc={!hasError}
         closeOnOverlayClick={!hasError}
       >
         <ModalOverlay />
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <ModalContent ref={modalContentRef}>
           <ModalHeader>{`${rewardName} reward settings`}</ModalHeader>
           <ModalBody>

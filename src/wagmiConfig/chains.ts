@@ -86,6 +86,7 @@ const generateChainConfig = (
     ...chain.nativeCurrency,
     iconUrl: nativeCurrencyIconUrl,
   },
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   blockExplorerUrl: chain.blockExplorers.default.url,
 })
 

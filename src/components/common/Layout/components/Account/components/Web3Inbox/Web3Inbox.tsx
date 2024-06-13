@@ -45,6 +45,7 @@ const WEB3_INBOX_INIT_PARAMS = {
 }
 
 const Web3Inbox = () => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   initWeb3InboxClient(WEB3_INBOX_INIT_PARAMS)
   const { data } = useWeb3InboxClient()
   const isReady = !!data
@@ -55,6 +56,7 @@ const Web3Inbox = () => {
   )
 
   const { data: subscription } = useSubscription(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     account,
     WEB3_INBOX_INIT_PARAMS.domain
   )
@@ -62,13 +64,15 @@ const Web3Inbox = () => {
   const { data: messages } = useNotifications(
     5,
     false,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     account,
     WEB3_INBOX_INIT_PARAMS.domain
   )
 
   const inboxContainerRef = useRef(null)
   const isScrollable = !!inboxContainerRef.current
-    ? inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      inboxContainerRef.current.scrollHeight > inboxContainerRef.current.clientHeight
     : false
 
   if (!isReady) return <WebInboxSkeleton />
@@ -109,8 +113,10 @@ const Web3Inbox = () => {
               "linear-gradient(to bottom, transparent 0%, black 5%, black 90%, transparent 100%), linear-gradient(to left, black 0%, black 8px, transparent 8px, transparent 100%)",
           }}
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {messages?.length > 0 ? (
             <Stack pt={2} spacing={0}>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {messages
                 .sort((msgA, msgB) => msgB.sentAt - msgA.sentAt)
                 .map(({ sentAt, id, title, body, url }) => (
@@ -119,6 +125,7 @@ const Web3Inbox = () => {
                     sentAt={sentAt}
                     title={title}
                     body={body}
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     url={url}
                   />
                 ))}
@@ -149,6 +156,7 @@ const SubscribeToMessages = () => {
   const { prepareRegistration } = usePrepareRegistration()
   const { register, isLoading: isRegistering } = useRegister()
   const { subscribe, isLoading: isSubscribing } = useSubscribe(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     account,
     WEB3_INBOX_INIT_PARAMS.domain
   )

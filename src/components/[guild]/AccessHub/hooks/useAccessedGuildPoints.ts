@@ -37,9 +37,11 @@ export const useAccessedGuildPoints = (
 
           if (filter === "ALL" && rp.visibility === "PUBLIC") return true
 
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           return roleIds?.includes(rp.roleId)
         })
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       return visibleRelatedRolePlatformsToUser.length > 0
     }) || []
 

@@ -39,7 +39,9 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
   const relevantGuildPlatform = guildPlatforms?.find(
     (gp) =>
       gp.platformId === PlatformType.CONTRACT_CALL &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       gp.platformGuildData.chain === chain &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       gp.platformGuildData.contractAddress?.toLowerCase() === address?.toLowerCase()
   )
 
@@ -168,6 +170,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
         : undefined,
     maxSupply: maxSupply,
     mintableAmountPerUser,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     image: ipfsToGuildGateway(metadata?.image) || guildPlatformData?.imageUrl,
     description: metadata?.description,
     fee,

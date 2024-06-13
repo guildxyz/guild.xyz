@@ -55,7 +55,9 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
         status: "success",
       })
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (oldData) => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           const newAdmins = oldData.admins.map((admin) => ({
             ...admin,
             isOwner: admin.id === res.userId,
@@ -90,6 +92,7 @@ const TransferOwnershipModal = ({ isOpen, onClose }) => {
             Are you sure that you want to hand over your ownership? You'll remain an
             admin, but the new owner will be able to remove you anytime.
           </Text>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <FormControl isInvalid={newOwner && !isValidAddress}>
             <FormLabel>Address to transfer to</FormLabel>
             <Input

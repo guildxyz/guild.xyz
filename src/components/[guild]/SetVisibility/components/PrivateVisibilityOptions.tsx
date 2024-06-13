@@ -51,6 +51,7 @@ const PrivateVisibilityOptions = () => {
           w="full"
           borderRadius="md"
           onClick={() => {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             setValue("visibilityRoleId", null, { shouldDirty: true })
             setShouldSatisfyThisRole(true)
           }}

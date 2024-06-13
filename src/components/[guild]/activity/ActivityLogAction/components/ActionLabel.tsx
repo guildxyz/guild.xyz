@@ -34,10 +34,12 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span">by</Text>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClickableUserTag userId={ids.user} />
                   </>
                 )}
@@ -48,10 +50,12 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span"> by </Text>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClickableUserTag userId={ids.user} />
                   </>
                 )}
@@ -61,6 +65,7 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <ClickableGuildTag guildId={ids.guild} />
               </>
             )
@@ -69,7 +74,9 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}:</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <ClickableUserTag userId={ids.user} />
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {showGuildTag && <ClickableGuildTag guildId={ids.guild} />}
               </>
             )
@@ -79,12 +86,15 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{capitalizedName}</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
                   <>
                     <Text as="span">by</Text>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClickableUserTag userId={ids.user} />
                   </>
                 )}
@@ -97,10 +107,13 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRewardTag
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   roleId={ids.role}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   rolePlatformId={ids.rolePlatform}
                 />
                 <Text as="span">to role</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
               </>
             )
@@ -110,7 +123,9 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRewardTag
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   roleId={ids.role}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   rolePlatformId={ids.rolePlatform}
                 />
               </>
@@ -120,7 +135,9 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRewardTag
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   roleId={ids.role}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   rolePlatformId={ids.rolePlatform}
                 />
                 {!parentId && (
@@ -128,6 +145,7 @@ const ActionLabel = (): JSX.Element => {
                     <Center h={6}>
                       <Icon as={ArrowLeft} />
                     </Center>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClickableUserTag userId={ids.user} />
                   </>
                 )}
@@ -138,7 +156,9 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <ClickableRewardTag
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   roleId={ids.role}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   rolePlatformId={ids.rolePlatform}
                 />
                 {!parentId && (
@@ -146,6 +166,7 @@ const ActionLabel = (): JSX.Element => {
                     <Center h={6}>
                       <Icon as={ArrowRight} />
                     </Center>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClickableUserTag userId={ids.user} />
                   </>
                 )}
@@ -156,8 +177,10 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">Join Guild through website</Text>
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -166,11 +189,14 @@ const ActionLabel = (): JSX.Element => {
             return (
               <>
                 <Text as="span">{`Join Guild through ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   rewards[data.platformName].name
                 }`}</Text>
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -182,8 +208,10 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -199,6 +227,7 @@ const ActionLabel = (): JSX.Element => {
               ACTION.ClickJoinOnWeb,
               ACTION.ClickJoinOnPlatform,
               ACTION.LeaveGuild,
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
             ].includes(parentaction)
 
             return (
@@ -208,8 +237,10 @@ const ActionLabel = (): JSX.Element => {
                   {isChildOfUserStatusUpdate ? ":" : ""}
                 </Text>
                 {isChildOfUserStatusUpdate ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 ) : (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -221,11 +252,14 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {!parentId && (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 )}
                 {showGuildTag ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 ) : (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -238,15 +272,20 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {activityLogType !== "guild" && (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableGuildTag guildId={ids.guild} />
                 )}
 
                 <ClickableFormTag
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   formId={ids.form}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   guildId={ids.guild}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   userId={ids.user}
                 />
                 {activityLogType !== "user" && (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableUserTag userId={ids.user} />
                 )}
               </>
@@ -258,9 +297,12 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 <IdentityTag
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   platformName={data.platformName}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   username={data.username}
                 />
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {activityLogType != "user" && <ClickableUserTag userId={ids.user} />}
               </>
             )
@@ -270,6 +312,7 @@ const ActionLabel = (): JSX.Element => {
               <>
                 <Text as="span">{capitalizedName}</Text>
                 {ids.role ? (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <ClickableRoleTag roleId={ids.role} guildId={ids.guild} />
                 ) : ids.user ? (
                   <ClickableUserTag userId={ids.user} />

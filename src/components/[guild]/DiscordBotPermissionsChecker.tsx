@@ -150,6 +150,7 @@ const DiscordBotPermissionsChecker = () => {
         for (const [index, permissionInfo] of data.entries()) {
           const {
             platformGuildName: serverName,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             platformGuildData: { invite },
           } = discordRewards[index]
 
@@ -257,11 +258,13 @@ const DiscordBotPermissionsChecker = () => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pb={4}>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {MODAL_CONTENT[errorType]?.title ?? "Discord bot error"}
         </ModalHeader>
 
         <ModalBody>
           <Stack spacing={4}>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {MODAL_CONTENT[errorType]?.body ?? <Text>Unknown error</Text>}
           </Stack>
         </ModalBody>

@@ -67,6 +67,7 @@ const UnlockForm = ({ baseFieldPath }: RequirementFormProps): JSX.Element => {
         <InputGroup>
           {address && (
             <InputLeftElement>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <OptionImage img={pickedLock?.img} alt={pickedLock?.label} />
             </InputLeftElement>
           )}

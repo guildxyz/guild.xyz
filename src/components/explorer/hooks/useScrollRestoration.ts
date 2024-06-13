@@ -34,6 +34,7 @@ const useScrollRestoration = ({
       if (previousPathname.current != pathname)
         scrollPositions.set(router.asPath, window.scrollY)
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       previousPathname.current = pathname
     }
 

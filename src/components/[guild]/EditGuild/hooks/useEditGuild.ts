@@ -370,6 +370,7 @@ const useEditGuild = ({ onSuccess, guildId }: Props = {}) => {
       )
 
       if (guildUpdateResult?.id) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         mutateYourGuilds((prev) => mutateGuildsCache(prev, guildUpdateResult), {
           revalidate: false,
         })

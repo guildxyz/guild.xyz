@@ -68,6 +68,7 @@ const AccountModal = () => {
       })
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const domain = useResolveAddress(evmAddress)
 
   const avatarBg = useColorModeValue("gray.100", "blackAlpha.200")
@@ -114,8 +115,10 @@ const AccountModal = () => {
                         mt="-2px"
                       >
                         <Center>
+                          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                           {CHAIN_CONFIG[Chains[chainId]] ? (
                             <Img
+                              // @ts-expect-error TODO: fix this error originating from strictNullChecks
                               src={CHAIN_CONFIG[Chains[chainId]].iconUrl}
                               boxSize={4}
                             />

@@ -16,11 +16,13 @@ const CoinbaseEASRequirement = (props: RequirementProps): JSX.Element => {
       footer={<EthereumAttestationRequirementFooter />}
       {...props}
     >
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {data.schemaId === EAS_CB_VERIFIED_ACCOUNT_SCHEMA_ID ? (
         <Text as="span">Verify your account</Text>
       ) : (
         <>
           <Text as="span">Verify your country</Text>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {data.val && <CountryFlagAndName code={data.val} />}
         </>
       )}

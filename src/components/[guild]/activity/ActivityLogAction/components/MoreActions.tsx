@@ -41,6 +41,7 @@ const MoreActions = ({ actions, displayedActionCount }: Props): JSX.Element => {
     useEffect(() => {
       if (!rowRef.current) return
       // Recalculating row heights, then setting new row heights
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       listRef.current.resetAfterIndex(0)
       rowHeights.current = {
         ...rowHeights.current,

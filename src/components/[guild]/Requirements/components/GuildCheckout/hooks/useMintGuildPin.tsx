@@ -56,6 +56,7 @@ const useMintGuildPin = () => {
 
   const [loadingText, setLoadingText] = useState<string>("")
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const contractAddress = GUILD_PIN_CONTRACTS[Chains[chainId]]
 
   const { guildPinFee } = useGuildPinFee()
@@ -108,12 +109,14 @@ const useMintGuildPin = () => {
       signature,
     ] as const
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const { request } = await publicClient.simulateContract({
       abi: guildPinAbi,
       address: contractAddress,
       functionName: "claim",
       args: contractCallParams,
       value: guildPinFee,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       account: walletClient.account,
     })
 
@@ -125,13 +128,16 @@ const useMintGuildPin = () => {
       return Promise.resolve()
     }
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const hash = await walletClient.writeContract({
       ...request,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       account: walletClient.account,
     })
 
     setTxHash?.(hash)
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
       { hash }
     )
@@ -156,6 +162,7 @@ const useMintGuildPin = () => {
       try {
         tokenId = Number(transferEvent.args.tokenId)
         setMintedTokenId(tokenId)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         tokenURI = await publicClient.readContract({
           abi: guildPinAbi,
           address: contractAddress,
@@ -174,8 +181,10 @@ const useMintGuildPin = () => {
     })
 
     try {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       const metadata: GuildPinMetadata = base64ToObject<GuildPinMetadata>(tokenURI)
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutate((prevData) => {
         const newPin = {
           chainId,
@@ -183,6 +192,7 @@ const useMintGuildPin = () => {
           ...metadata,
           image: metadata.image.replace(
             "ipfs://",
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             process.env.NEXT_PUBLIC_IPFS_GATEWAY
           ),
         }

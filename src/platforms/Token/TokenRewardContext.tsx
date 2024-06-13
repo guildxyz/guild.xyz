@@ -18,6 +18,7 @@ const TokenRewardProvider = ({
   guildPlatform: GuildPlatform
 }): JSX.Element => {
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     platformGuildData: { tokenAddress, chain, imageUrl },
   } = guildPlatform || { platformGuildData: {} }
   const { amount, isLoading: isFeeLoading } = useTokenClaimFee(chain)
@@ -32,6 +33,7 @@ const TokenRewardProvider = ({
       value={{
         guildPlatform,
         token: { data: token, isLoading: isTokenLoading },
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         fee: { amount, isLoading: isFeeLoading },
         imageUrl: rewardImageUrl,
       }}
@@ -41,6 +43,7 @@ const TokenRewardProvider = ({
   )
 }
 
+// @ts-expect-error TODO: fix this error originating from strictNullChecks
 const TokenRewardContext = createContext<TokenRewardContextType>(undefined)
 const useTokenRewardContext = () => useContext(TokenRewardContext)
 

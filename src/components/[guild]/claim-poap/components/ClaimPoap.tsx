@@ -32,7 +32,9 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
     .find((rp) => rp.id === rolePlatformId)
 
   const { isAvailable: isButtonEnabled, startTimeDiff } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     getRolePlatformTimeframeInfo(rolePlatform)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { claimed } = useClaimedReward(rolePlatform.id)
 
   return (
@@ -46,6 +48,7 @@ const ClaimPoap = ({ rolePlatformId }: Props) => {
         hasArrow
         shouldWrapChildren
       >
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <ClaimPoapButton rolePlatform={rolePlatform} isDisabled={!isButtonEnabled} />
       </Tooltip>
 

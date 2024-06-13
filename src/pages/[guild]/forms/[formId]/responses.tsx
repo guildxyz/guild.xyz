@@ -15,6 +15,7 @@ import ErrorPage from "pages/_error"
 
 const FormResponses = (): JSX.Element => {
   const { imageUrl } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const router = useRouter()

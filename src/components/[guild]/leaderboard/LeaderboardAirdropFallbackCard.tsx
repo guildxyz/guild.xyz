@@ -52,6 +52,7 @@ const LeaderboardAirdropFallbackCard = ({ guildPlatform }) => {
               {`Only addresses included in snapshot are eligible. `}
               <LinkButton
                 variant="link"
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 href={`/${urlName}#role-${relevantRole.id}`}
                 color={viewRoleColor}
               >

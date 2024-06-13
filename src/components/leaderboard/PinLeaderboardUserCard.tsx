@@ -40,6 +40,7 @@ const PINS_SLICE_LENGTH = 9
 const getPinMetadata = (
   tokenUriOrMetadata: string | GuildPinMetadata
 ): GuildPinMetadata =>
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   typeof tokenUriOrMetadata === "string"
     ? base64ToObject<GuildPinMetadata>(tokenUriOrMetadata)
     : tokenUriOrMetadata
@@ -186,6 +187,7 @@ const PinLeaderboardUserCard = ({
                       <Img
                         src={pinMetadata.image.replace(
                           "ipfs://",
+                          // @ts-expect-error TODO: fix this error originating from strictNullChecks
                           process.env.NEXT_PUBLIC_IPFS_GATEWAY
                         )}
                         alt={pinMetadata.name}
@@ -244,12 +246,14 @@ const PinLeaderboardUserCard = ({
                                 <Img
                                   src={pinMetadata.image.replace(
                                     "ipfs://",
+                                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                                     process.env.NEXT_PUBLIC_IPFS_GATEWAY
                                   )}
                                   alt={pinMetadata.name}
                                   boxSize={6}
                                 />
                                 <Link
+                                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                                   href={pinMetadata.attributes
                                     .find(
                                       (attribute) =>
@@ -271,6 +275,7 @@ const PinLeaderboardUserCard = ({
                                 textTransform="uppercase"
                               >
                                 {`Rank: ${
+                                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                                   pinMetadata.attributes.find(
                                     (attr) => attr.trait_type === "rank"
                                   ).value

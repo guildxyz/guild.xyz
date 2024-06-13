@@ -71,6 +71,7 @@ const CreateGuildSecretText = ({ isOpen, onClose }: Props) => {
                 platformGuildData: {
                   text,
                   name,
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   imageUrl,
                 },
               })

@@ -6,6 +6,7 @@ import { useEditGuildDrawer } from "./EditGuildDrawerContext"
 const EditGuildButton = (): JSX.Element => {
   const { onOpen } = useEditGuildDrawer()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   return (

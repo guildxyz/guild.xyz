@@ -37,8 +37,10 @@ const ExistingPointsTypeSelect = ({
 
   const options = useMemo(() => {
     const result = existingPointsRewards?.map((gp) => ({
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       label: gp.platformGuildData.name || "points",
       value: gp.id,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       img: gp.platformGuildData.imageUrl ?? (
         <Center boxSize={5}>
           <Star />
@@ -49,6 +51,7 @@ const ExistingPointsTypeSelect = ({
     if (!showCreateNew) return result
 
     return result.concat({
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       label: "Create new",
       value: null,
       img: null,

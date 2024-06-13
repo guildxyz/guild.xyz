@@ -17,6 +17,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
   } = useTokenRewardContext()
 
   const amount = useMemo(() => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const operation: any = platform.dynamicAmount.operation
     const params = operation.params
     return Number((params?.multiplier + params?.addition).toFixed(7))
@@ -40,6 +41,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
     <>
       <Tooltip
         label={`You are rewarded ${amount} ${symbol} for each of your ${
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           pointType?.platformGuildData.name || "points"
         }.`}
         hasArrow
@@ -47,6 +49,7 @@ const TokenConversionTag = ({ platform }: { platform: RolePlatform }) => {
         <Tag width={"fit-content"} size="lg">
           {pointType !== undefined && (
             <>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {pointType?.platformGuildData.imageUrl ? (
                 <>
                   <GuildLogo

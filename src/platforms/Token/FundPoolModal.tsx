@@ -56,12 +56,14 @@ const FundPoolModal = ({
     },
     imageUrl,
     guildPlatform: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       platformGuildData: { chain, tokenAddress, poolId },
     },
   } = useTokenRewardContext()
 
   const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
   const { owner, balance: poolBalance } = poolData
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
   const methods = useForm<{ amount: string }>({
@@ -82,6 +84,7 @@ const FundPoolModal = ({
   })
 
   const pickedCurrencyIsNative = tokenAddress === NULL_ADDRESS
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isOnCorrectChain = Chains[chain] === chainId
 
   const { onSubmitTransaction: onSubmitFund, isLoading } = useFundPool(
@@ -118,6 +121,7 @@ const FundPoolModal = ({
 
           <ModalBody>
             <Stack gap={5}>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <PoolInformation balance={balance} owner={owner} symbol={symbol} />
               <Divider />
               <FormControl>

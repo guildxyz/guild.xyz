@@ -21,9 +21,11 @@ const handler: NextApiHandler<MysteryBoxGetResponse> = async (
 
   const { address: rawAddress } = req.query
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!ADDRESS_REGEX.test(rawAddress?.toString()))
     return res.status(400).json({ error: "Invalid address" })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const address = rawAddress.toString().toLowerCase()
 
   let alreadyClaimed = false

@@ -34,11 +34,13 @@ const useDeleteGuild = () => {
         status: "success",
       })
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutateYourGuilds((prev) => mutateGuildsCache(prev, guild.id), {
         revalidate: false,
       })
       matchMutate<GuildBase[]>(
         /\/guilds\?order/,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => mutateGuildsCache(prev, guild.id),
         { revalidate: false }
       )

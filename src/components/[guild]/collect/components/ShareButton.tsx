@@ -23,6 +23,7 @@ const ShareButton = ({ onClick, shareText }: Props): JSX.Element => {
       : ""
   const { onCopy, hasCopied } = useClipboard(pageLink)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   return (

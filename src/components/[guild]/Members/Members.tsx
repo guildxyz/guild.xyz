@@ -64,6 +64,7 @@ const Members = ({ members }: Props): JSX.Element => {
           {renderedMembers?.map((address) => (
             <Member
               isOwner={ownerAddress === address}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               isAdmin={admins?.some((admin) => admin?.address === address)}
               key={address}
               address={address}

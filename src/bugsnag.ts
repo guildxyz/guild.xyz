@@ -9,6 +9,7 @@ export const bugsnagStart = () => {
     return
 
   Bugsnag.start({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     apiKey: process.env.NEXT_PUBLIC_BUGSNAG_KEY,
     plugins: [],
     endpoints: {

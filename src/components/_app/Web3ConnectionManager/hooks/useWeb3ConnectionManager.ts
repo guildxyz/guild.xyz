@@ -44,6 +44,7 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   }, [isEvmConnected, evmConnector, setIsInSafeContext])
 
   const { account: fuelAccount } = useFuelAccount()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const fuelAddress = parseFuelAddress(fuelAccount)
   const { isConnected: isFuelConnected } = useIsConnected()
 
@@ -72,13 +73,16 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
     if (type === "EVM") {
       return signMessageAsync({ account: evmAddress, message })
     }
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return fuelWallet.signMessage(message)
   }
 
   return {
     isInSafeContext,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     isWeb3Connected,
     address: address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     type,
     disconnect,
     signMessage,

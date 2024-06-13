@@ -30,6 +30,7 @@ const EventImage = ({
     /cdn.discordapp.com/,
   ]
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!url && !showFallback) return null
 
   if (url) {

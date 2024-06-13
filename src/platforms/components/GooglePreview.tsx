@@ -16,6 +16,7 @@ const GooglePreview = (): JSX.Element => {
 
   const doc = gateables?.find((r) => r.platformGuildId === documentId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   useSetRoleImageAndNameFromPlatformData("/platforms/google.png", doc?.name)
 
   return (

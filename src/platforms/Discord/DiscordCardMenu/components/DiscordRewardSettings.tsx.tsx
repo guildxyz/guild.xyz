@@ -27,11 +27,13 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
   const showErrorToast = useShowErrorToast()
   const toast = useToast()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatform = guildPlatforms.find(
     (platform) => platform.platformGuildId === serverId
   )
 
   const submit = (signedValidation: SignedValidation) =>
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     fetcher(`/v2/guilds/${id}/guild-platforms/${guildPlatform.id}`, {
       method: "PUT",
       ...signedValidation,
@@ -45,8 +47,10 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
       })
       methods.reset(undefined, { keepValues: true })
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatforms: prev.guildPlatforms.map((gp) => {
             if (gp.id !== response.id) return gp
 
@@ -68,9 +72,12 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
 
   const defaultValues = {
     platformGuildData: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ...guildPlatform.platformGuildData,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       invite: guildPlatform.invite,
     },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     platformGuildId: guildPlatform.platformGuildId,
   }
 
@@ -88,6 +95,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent maxW="lg">
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <ModalHeader>{`Discord reward settings: ${guildPlatform.platformGuildName}`}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

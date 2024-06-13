@@ -37,11 +37,14 @@ export type ImportPoapForm = {
 }
 
 const defaultValues: ImportPoapForm = {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   eventId: null,
   fancyId: "",
   name: "",
   imageUrl: "",
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   startTime: null,
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   endTime: null,
   texts: [],
 }

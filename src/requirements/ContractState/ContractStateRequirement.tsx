@@ -65,6 +65,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
                     borderBottomRadius="xl"
                   >
                     <Tbody fontWeight="normal" fontSize="xs">
+                      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                       {requirement.data.params?.map((param, i) => (
                         <Tr key={i}>
                           <Td>{`${i + 1}. input param`}</Td>
@@ -73,15 +74,21 @@ const ContractStateRequirement = (props: RequirementProps) => {
                       ))}
                       <Tr fontWeight={"semibold"}>
                         <Td>{`Expected ${
+                          // @ts-expect-error TODO: fix this error originating from strictNullChecks
                           requirement.data.resultIndex !== undefined
-                            ? `${requirement.data.resultIndex + 1}. `
+                            ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                              `${requirement.data.resultIndex + 1}. `
                             : ""
                         }output`}</Td>
                         <Td>
+                          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                           {`${requirement.data.resultMatch} ${
+                            // @ts-expect-error TODO: fix this error originating from strictNullChecks
                             ADDRESS_REGEX.test(requirement.data.expected)
-                              ? shortenHex(requirement.data.expected, 3)
-                              : requirement.data.expected
+                              ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                                shortenHex(requirement.data.expected, 3)
+                              : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                                requirement.data.expected
                           }`}
                         </Td>
                       </Tr>
@@ -96,6 +103,7 @@ const ContractStateRequirement = (props: RequirementProps) => {
       {...props}
     >
       Satisfy custom query of{" "}
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <DataBlock>{requirement.data.id.split("(")[0]}</DataBlock> on the{" "}
       <DataBlock>{shortenHex(requirement.address, 3)}</DataBlock> contract
     </Requirement>

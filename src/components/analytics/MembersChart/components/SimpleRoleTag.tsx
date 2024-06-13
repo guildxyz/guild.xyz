@@ -23,12 +23,14 @@ const SimpleRoleTag = ({ roleData, isTruncated, ...rest }: Props) => {
           <Img
             src={roleData.imageUrl}
             boxSize="3"
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             filter={colorMode === "light" && "brightness(0)"}
           />
         ) : (
           <Img src={roleData.imageUrl} boxSize="5" borderRadius={"full"} />
         )}
       </Center>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <Text noOfLines={isTruncated ? 1 : null}>{roleData.name}</Text>
     </HStack>
   )

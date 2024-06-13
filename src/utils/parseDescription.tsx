@@ -16,9 +16,11 @@ const parseDescription = (description?: string) => {
     if (!linkMatches) return p
 
     return p.split(LINK_REGEX).reduce((acc, curr, i) => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       acc.push(curr)
       if (linkMatches[i]) {
         acc.push(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           <Link
             key={linkMatches[i][0]}
             href={linkMatches[i][0]}

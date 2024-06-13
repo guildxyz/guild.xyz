@@ -9,15 +9,19 @@ import NftAvailabilityTags from "./components/NftAvailabilityTags"
 const useContractCallCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { roles } = useGuild()
   const { isAdmin } = useGuildPermission()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { chain, contractAddress } = guildPlatform.platformGuildData
   const { name, image } = useNftDetails(chain, contractAddress)
 
   const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress: contractAddress,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[chain],
   })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const alreadyCollected = nftBalance > 0
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatform = roles
     .flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)

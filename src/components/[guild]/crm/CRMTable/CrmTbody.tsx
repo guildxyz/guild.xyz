@@ -73,6 +73,7 @@ const MemberRow = ({ row }) => {
 
   return (
     <CrmRow {...{ row, onOpen }}>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <MemberModal {...{ row, isOpen, onClose }} />
     </CrmRow>
   )

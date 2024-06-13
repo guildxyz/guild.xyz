@@ -15,6 +15,7 @@ const DiscordRequirement = (props: RequirementProps) => {
 
   // TODO for later: I think we don't even need to call this hook here, serverName/roleName should be always set I think (see DiscordForm for more details)
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { serverName, serverIcon, roles, isAdmin },
   } = useServerData(
     !requirement.data?.serverName ? requirement.data?.serverId : null

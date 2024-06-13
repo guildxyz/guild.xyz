@@ -62,6 +62,7 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
                 isDisabled={props.isDisabled}
                 placeholder="Other..."
                 onChange={(e) => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   onChange(e.target.value)
                 }}
                 value={isOtherActive ? value : ""}
@@ -73,6 +74,7 @@ const SingleChoice = forwardRef<Props & RadioGroupProps, "div">(
                     }
                   : {})}
                 onFocus={() => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   if (!isOtherActive) onChange("")
                 }}
                 transition={"padding .15s, height .15s"}
@@ -132,12 +134,16 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
                 isDisabled={props.isDisabled}
                 placeholder="Other..."
                 onChange={(e) => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   const otherValueIndex = valuesArray.indexOf(otherValue)
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   valuesArray[otherValueIndex] = e.target.value
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   onChange(valuesArray)
                 }}
                 onBlur={(e) => {
                   if (e.target.value === "")
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     onChange(valuesArray.filter((v) => v !== otherValue))
                 }}
                 value={otherValue || ""}
@@ -149,6 +155,7 @@ const MultipleChoice = forwardRef<Props & CheckboxGroupProps, "div">(
                     }
                   : {})}
                 onFocus={() => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   if (!otherValue) onChange([...(valuesArray ?? []), ""])
                 }}
                 transition={"padding .15s, height .15s"}

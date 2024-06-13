@@ -26,6 +26,7 @@ export const usePoap = (
 
   return {
     isLoading,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     poap: data ? { ...data, image_url: `${data.image_url}?size=small` } : undefined,
     mutatePoap: mutate,
     error,

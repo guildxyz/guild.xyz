@@ -42,7 +42,9 @@ const handler: NextApiHandler<NFTDetailsAPIResponse> = async (req, res) => {
   }
 
   const { chain: queryChain, address: queryAddress } = req.query
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const chain = validateNftChain(queryChain)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const address = validateNftAddress(queryAddress)
 
   if (!chain || !address) {
@@ -113,6 +115,7 @@ const handler: NextApiHandler<NFTDetailsAPIResponse> = async (req, res) => {
 
   // Caching for a year, because on-chain data won't change
   res.setHeader("Cache-Control", "s-maxage=31536000")
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   res.json({
     creator,
     name,

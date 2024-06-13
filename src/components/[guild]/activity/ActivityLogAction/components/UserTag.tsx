@@ -84,8 +84,10 @@ const ClickableUserTag = ({ userId }: ClickableUserTagProps): JSX.Element => {
           <ViewInCRM
             label="View user in members"
             queryKey="search"
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             queryValue={address}
           />
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <CopyAddress address={address} />
         </>
       }

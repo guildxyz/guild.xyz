@@ -94,6 +94,7 @@ const DownloadGuildPinImage = ({ pinUrl }: { pinUrl: string }): JSX.Element => {
     ([_, url]) => convertSVGToPNG(url)
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!imageAsPNG) return null
 
   return (

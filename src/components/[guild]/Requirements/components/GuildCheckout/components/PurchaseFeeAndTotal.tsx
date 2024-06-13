@@ -17,16 +17,24 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
 
   const {
     data: { symbol },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useTokenData(requirement.chain, pickedCurrency)
 
   const {
     data: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildBaseFeeInSellToken,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       estimatedGuildFeeInSellToken,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       estimatedGuildFeeInUSD,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       maxGuildFeeInSellToken,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       estimatedPriceInSellToken,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       estimatedPriceInUSD,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       maxPriceInSellToken,
     },
     isValidating,
@@ -39,6 +47,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
     ? parseFloat(
         formatUnits(
           estimatedGas,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals
         )
       )
@@ -168,6 +177,7 @@ const PurchaseFeeAndTotal = (): JSX.Element => {
               {!estimatedGasInFloat
                 ? "Couldn't estimate"
                 : `${estimatedGasInFloat.toFixed(8)} ${
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
                   }`}
             </Text>

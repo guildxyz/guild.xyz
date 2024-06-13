@@ -44,12 +44,14 @@ const useSubmit = <DataType, ResponseType>(
 ) => {
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<any>(undefined)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [response, setResponse] = useState<ResponseType>(undefined)
 
   const onSubmit = useCallback(
     (data?: DataType): Promise<ResponseType> => {
       setIsLoading(true)
       setError(undefined)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       return fetch(data)
         .then((d) => {
           onSuccess?.(d)
@@ -77,6 +79,7 @@ const useSubmit = <DataType, ResponseType>(
     reset: () => {
       setIsLoading(false)
       setError(undefined)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setResponse(undefined)
     },
   }
@@ -138,11 +141,13 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   } = {
     message: DEFAULT_MESSAGE,
     forcePrompt: false,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     keyPair: undefined,
   }
 ) => {
   const { data: peerMeta } = useSWR<any>(
     typeof window !== "undefined" ? "walletConnectPeerMeta" : null,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     () => JSON.parse(window.localStorage.getItem("walletconnect")).peerMeta,
     { refreshInterval: 200, revalidateOnMount: true }
   )
@@ -154,6 +159,7 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
     forcePrompt || !keyPair ? DEFAULT_SIGN_LOADING_TEXT : undefined
 
   const [isSigning, setIsSigning] = useState<boolean>(false)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [signLoadingText, setSignLoadingText] = useState<string>(defaultLoadingText)
 
   const { address, type } = useWeb3ConnectionManager()
@@ -165,18 +171,23 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
   const { wallet: fuelWallet } = useWallet()
 
   const useSubmitResponse = useSubmit<DataType, ResponseType>(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     async ({
       signProps: _signProps,
       ...data
     }: (DataType | Record<string, unknown>) & { signProps?: SignProps } = {}) => {
       const payload = JSON.stringify(data ?? {})
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setSignLoadingText(defaultLoadingText)
       setIsSigning(true)
 
       const [signedPayload, validation] = await (type === "EVM"
         ? sign({
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             publicClient,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             walletClient,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             address,
             payload,
             chainId: chainId.toString(),
@@ -186,7 +197,9 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
             ts: Date.now() + timeInaccuracy,
           })
         : fuelSign({
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             wallet: fuelWallet,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             address,
             payload,
             forcePrompt,
@@ -200,10 +213,13 @@ const useSubmitWithSignWithParamKeyPair = <DataType, ResponseType>(
             peerMeta?.url?.includes?.(domain)
           )
           if ((forcePrompt || !keyPair) && callbackData) {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             setSignLoadingText(callbackData.loadingText || defaultLoadingText)
             const msg = getMessage(val.params)
             await callbackData
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               .signCallback(msg, address, chainId)
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               .finally(() => setSignLoadingText(defaultLoadingText))
           }
           return [signed, val] as [string, Validation]
@@ -252,6 +268,7 @@ const useSubmitWithSign = <ResponseType>(
     message,
     forcePrompt,
     ...options,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     keyPair: keyPair?.keyPair,
   })
 }
@@ -284,6 +301,7 @@ const createMessageParams = (
   nonce: randomBytes(32).toString("hex"),
   ts: ts.toString(),
   hash: payload !== "{}" ? keccak256(stringToBytes(payload)) : undefined,
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   method: null,
   msg,
   chainId: undefined,
@@ -307,17 +325,21 @@ export const fuelSign = async ({
   msg = DEFAULT_MESSAGE,
   ts,
 }: FuelSignProps): Promise<[string, Validation]> => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const params = createMessageParams(address, ts, msg, payload)
   let sig = null
 
   if (!!keyPair && !forcePrompt) {
     params.method = ValidationMethod.KEYPAIR
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     sig = await signWithKeyPair(keyPair, params)
   } else {
     params.method = ValidationMethod.FUEL
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     sig = await wallet.signMessage(getMessage(params))
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return [payload, { params, sig }]
 }
 
@@ -378,6 +400,7 @@ export const sign = async ({
 
   if (!!keyPair && !forcePrompt) {
     params.method = ValidationMethod.KEYPAIR
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     sig = await signWithKeyPair(keyPair, params)
   } else {
     const walletChains = await chainsOfAddressWithDeployedContract(address)
@@ -385,6 +408,7 @@ export const sign = async ({
       walletChains.length > 0 ? Chains[walletChains[0]] : undefined
 
     if (walletChainId) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (walletClient.chain.id !== walletChainId) {
         await walletClient.switchChain({ id: walletChainId })
       }
@@ -397,14 +421,17 @@ export const sign = async ({
       ? ValidationMethod.EIP1271
       : ValidationMethod.STANDARD
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     params.chainId ||= chainId || `${walletClient.chain.id}`
 
     if (walletClient?.account?.type === "local") {
       // For local accounts, such as CWaaS, we request the signature on the account. Otherwise it sends a personal_sign to the rpc
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       sig = await walletClient.account.signMessage({
         message: getMessageToSign(params),
       })
     } else {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       sig = await walletClient
         .signMessage({
           account: address,
@@ -421,6 +448,7 @@ export const sign = async ({
     }
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return [payload, { params, sig }]
 }
 

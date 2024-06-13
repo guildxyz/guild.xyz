@@ -37,10 +37,12 @@ const AmountPicker = () => {
   const mintableAmountPerUser =
     typeof maxSupply === "bigint" &&
     typeof totalSupply === "bigint" &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     mintableAmountPerUserFromContract > 0
       ? Math.min(
           Math.max(Number(maxSupply - totalSupply), 0),
           Math.max(
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             Number(mintableAmountPerUserFromContract - (balance ?? BigInt(0))),
             0
           ) // Defined a fallback for balance here, so the amount picker works properly for logged out users too
@@ -99,6 +101,7 @@ const AmountPicker = () => {
         (r) => r.min <= debouncedAmount && r.max >= debouncedAmount
       )
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (rangeIndex === -1 && debouncedAmount > ranges.at(-1).max) {
         setActiveRange(ranges.length - 1)
       } else {
@@ -116,11 +119,13 @@ const AmountPicker = () => {
           Amount
         </Text>
 
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {ranges?.at(-1).max >= 10 && (
           <SimpleGrid columns={4} gap={2}>
             {ranges.map((range, index) => {
               const isDisabled =
                 (mintableAmountPerUser > 0 && mintableAmountPerUser < range.min) ||
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 (maxSupply > 0 && maxSupply - totalSupply < range.min)
               return (
                 <Button
@@ -168,6 +173,7 @@ const AmountPicker = () => {
                       <Text as="span" fontSize="xs" colorScheme="gray">
                         {index === ranges.length - 1 &&
                         (mintableAmountPerUserFromContract === BigInt(0) ||
+                          // @ts-expect-error TODO: fix this error originating from strictNullChecks
                           mintableAmountPerUserFromContract > range.max)
                           ? `${range.min}+`
                           : range.min === range.max

@@ -30,6 +30,7 @@ const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
       onSuccess?.()
 
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
           roles: prev?.roles?.filter((role) => role.id !== roleId) ?? [],
@@ -37,11 +38,13 @@ const useDeleteRole = (roleId: number, onSuccess?: () => void) => {
         { revalidate: false }
       )
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
         revalidate: false,
       })
       matchMutate<GuildBase[]>(
         /\/guilds\?order/,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => mutateGuildsCache(prev, id),
         { revalidate: false }
       )

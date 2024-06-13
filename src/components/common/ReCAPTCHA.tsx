@@ -13,6 +13,7 @@ const ReCAPTCHA = (props: ReCAPTCHAProps) => {
          * hook won't re-run if the atom changes
          */
         setRecaptcha((prev) => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           prev.ref = recaptcha
           return prev
         })

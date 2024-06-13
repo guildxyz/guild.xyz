@@ -52,6 +52,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   })
 
   const defaultValues: RoleToCreate = {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildId: id,
     name: "",
     description: "",
@@ -127,6 +128,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
       >
         <DrawerOverlay />
         <DrawerContent>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <DrawerBody ref={drawerBodyRef} className="custom-scrollbar">
             <FormProvider {...methods}>
               <DrawerHeader
@@ -140,6 +142,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
                     entityType="role"
                     defaultValues={{
                       visibility: methods.getValues("visibility"),
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       visibilityRoleId: methods.getValues("visibilityRoleId"),
                     }}
                     onSave={({ visibility, visibilityRoleId }) => {

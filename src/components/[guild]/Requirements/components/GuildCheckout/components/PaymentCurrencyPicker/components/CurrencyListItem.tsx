@@ -14,6 +14,7 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
   const hoverBgColor = useColorModeValue("gray.100", "whiteAlpha.50")
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { estimatedPriceInSellToken },
     isValidating,
     error,
@@ -31,8 +32,10 @@ const CurrencyListItem = ({ chainId, address }: Props): JSX.Element => {
       transition="background-color 0.1s ease"
       _hover={{ bgColor: hoverBgColor }}
       _focusVisible={{ bgColor: hoverBgColor }}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       onClick={() => setPickedCurrency(address)}
       chainId={chainId}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       address={address}
       requiredAmount={estimatedPriceInSellToken}
       isLoading={isValidating}

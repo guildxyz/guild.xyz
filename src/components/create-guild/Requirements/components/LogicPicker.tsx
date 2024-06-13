@@ -31,6 +31,7 @@ const LogicPicker = () => {
         borderColor={colorMode === "light" ? "blackAlpha.400" : "whiteAlpha.400"}
       />
       <Select
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         maxW={options.find((option) => option.value === field.value).size}
         flexShrink={0}
         size="xs"

@@ -37,11 +37,13 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
 
 export const validateNftChain = (value: string | string[]): Chain => {
   const valueAsString = value?.toString()?.toUpperCase()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!value || !Object.keys(alchemyApiUrl).includes(valueAsString)) return null
   return valueAsString as Chain
 }
 export const validateNftAddress = (value: string | string[]): `0x${string}` => {
   const valueAsString = value?.toString()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!ADDRESS_REGEX.test(valueAsString)) return null
   return valueAsString.toLowerCase() as `0x${string}`
 }
@@ -54,7 +56,9 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
 
   const { chain: chainFromQuery, address: addressFromQuery } = req.query
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const chain = validateNftChain(chainFromQuery)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const address = validateNftAddress(addressFromQuery)
 
   if (!chain || !address)
@@ -85,6 +89,7 @@ const handler: NextApiHandler<TopCollectorsResponse> = async (req, res) => {
 
       if (newOwners.owners?.length) owners.push(...newOwners.owners)
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       pageKey = newOwners.pageKey
       if (pageKey) searchParams.set("pageKey", pageKey)
     } catch (alchemyApiError) {

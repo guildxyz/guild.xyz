@@ -93,8 +93,10 @@ export const ExistingRequirementDeleteAlert = ({
 
 const useHasLinkedReward = (requirement) => {
   const { id: guildId } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleResponse: Partial<Role> = useRole(guildId, requirement.roleId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return roleResponse.rolePlatforms.some((rp) => {
     const dynamicAmount: any = rp.dynamicAmount
     return dynamicAmount?.operation.input[0].requirementId === requirement.id

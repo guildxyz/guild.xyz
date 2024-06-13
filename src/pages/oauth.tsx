@@ -53,6 +53,7 @@ const OAuth = () => {
       params = { ...getDataFromState(state), ...rest }
     } else {
       const { state, ...rest } = query
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       params = { ...getDataFromState(state?.toString()), ...rest }
     }
 

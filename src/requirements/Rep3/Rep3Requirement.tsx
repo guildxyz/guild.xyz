@@ -15,6 +15,7 @@ const Rep3Requirement = (props: RequirementProps): JSX.Element => {
       footer={<BlockExplorerUrl />}
       {...props}
     >
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {`Have a level ${requirement.data.id} rep3 membership NFT in DAO: `}
       <DataBlock>{requirement.name ?? shortenHex(requirement.address, 3)}</DataBlock>
     </Requirement>

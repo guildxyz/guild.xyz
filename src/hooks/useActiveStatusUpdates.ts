@@ -22,6 +22,7 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
 
   const fetcherWithSign = useFetcherWithSign()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data, isValidating, mutate } = useSWR<Response>(
     isAdmin ? `/v2/actions/status-update?guildId=${id}` : null,
     (url) =>
@@ -57,8 +58,10 @@ const useActiveStatusUpdates = (roleId?: number, onSuccess?: () => void) => {
   return {
     data: dataToReturn?.[0],
     status:
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       dataToReturn?.length > 0
-        ? dataToReturn.every((job) => job.done)
+        ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+          dataToReturn.every((job) => job.done)
           ? "DONE"
           : "STARTED"
         : null,

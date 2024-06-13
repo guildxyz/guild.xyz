@@ -14,12 +14,15 @@ const useAlreadyMinted = () => {
   const getAlreadyMinted = async () => {
     const contract = GuildPinContractAbi__factory.connect(
       FUEL_GUILD_PIN_CONTRACT_ID,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       wallet
     )
     const { value } = await contract.functions
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       .pin_id_by_user_id(userId, guildId, "Joined" as GuildActionInput)
       .simulate()
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return value.gt(0)
   }
 

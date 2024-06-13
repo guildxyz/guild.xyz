@@ -24,9 +24,13 @@ const LeaderboardPointsSelector = () => {
   if (pointsRewards.length < 2) return null
 
   const pointsRewardsData = pointsRewards.map((gp) => ({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     id: gp.id.toString(),
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     name: gp.platformGuildData.name || "points",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     image: gp.platformGuildData.imageUrl ? (
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       <Img src={gp.platformGuildData.imageUrl} boxSize={5} borderRadius={"full"} />
     ) : (
       <Center boxSize={5}>
@@ -47,8 +51,10 @@ const LeaderboardPointsSelector = () => {
           size="sm"
           variant="ghost"
           rightIcon={<CaretDown />}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           leftIcon={currentPoints.image}
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {currentPoints.name}
         </MenuButton>
         <Portal>

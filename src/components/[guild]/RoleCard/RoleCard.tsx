@@ -130,11 +130,13 @@ const RoleCard = memo(({ role }: Props) => {
               <HStack
                 flex="1 0 auto"
                 justifyContent="flex-end"
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 sx={!isOpen && { display: "none" }}
                 animation="slideFadeIn .2s"
               >
                 <RoleCardMemberCount
                   memberCount={role.memberCount}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   lastSyncedAt={role.lastSyncedAt}
                   roleId={role.id}
                 />
@@ -157,6 +159,7 @@ const RoleCard = memo(({ role }: Props) => {
                  */
                 {...(!isOpen && ({ inert: "true" } as any))}
               >
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <RoleDescription
                   description={role.description}
                   {...{
@@ -171,10 +174,12 @@ const RoleCard = memo(({ role }: Props) => {
             <ClientOnly>
               <Box p={5} pt={2} mt="auto">
                 {role.rolePlatforms?.map((platform, i) => {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   const guildPlatformType = guildPlatforms.find(
                     (gp) => gp.id === platform.guildPlatformId
                   )?.platformId
 
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   if (!rewards[PlatformType[guildPlatformType]]) return
 
                   return (
@@ -211,6 +216,7 @@ const RoleCard = memo(({ role }: Props) => {
                 )}
               </ClientOnly>
             </RoleRequirementsSectionHeader>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <RoleRequirements
               {...{
                 role,

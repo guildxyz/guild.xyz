@@ -13,9 +13,11 @@ type Props = {
 const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
   const { guildPlatforms, roles } = useGuild()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatform = roles
     .flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform?.id)
@@ -25,6 +27,7 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
   const toast = useToast()
 
   const { onSubmit, isLoading } = useEditRolePlatform({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     rolePlatformId: rolePlatform?.id,
     onSuccess: () => {
       toast({
@@ -44,6 +47,7 @@ const EditRewardAvailabilityMenuItem = ({ platformGuildId }: Props) => {
       <EditRewardAvailabilityModal
         isOpen={isOpen}
         onClose={onClose}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         platformType={PlatformType[guildPlatform.platformId] as PlatformName}
         claimedCount={rolePlatform?.claimedCount}
         defaultValues={{

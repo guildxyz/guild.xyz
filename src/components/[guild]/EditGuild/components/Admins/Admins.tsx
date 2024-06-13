@@ -48,7 +48,9 @@ const Admins = () => {
 
     const ownerOption = {
       value: ownerAddress,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       label: isValidAddress(ownerAddress) ? shortenHex(ownerAddress) : ownerAddress,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       img: <GuildAvatar address={ownerAddress} size={4} mr="2" />,
       isFixed: true,
     }
@@ -57,6 +59,7 @@ const Admins = () => {
       .filter((admin) => admin.address !== ownerAddress)
       .map((admin) => ({
         value: admin.address,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         label: isValidAddress(ownerAddress)
           ? shortenHex(admin.address)
           : admin.address,

@@ -44,6 +44,7 @@ type Props = {
 
 const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) => r.id === roleId)
   const { reqAccesses, hasRoleAccess } = useRoleMembership(roleId)
 
@@ -59,12 +60,14 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
 
   const hiddenReqsErrorMessages = [
     ...new Set<string>(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       reqAccesses
         ?.filter(
           (req) =>
             !req.access &&
             !publicReqIds.includes(req.requirementId) &&
             !["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               req.errorType
             ) &&
             !!req.errorMsg
@@ -91,6 +94,7 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
 
       if (
         ["PLATFORM_NOT_CONNECTED", "PLATFORM_CONNECT_INVALID"].includes(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           reqError.errorType
         )
       ) {
@@ -110,10 +114,13 @@ const HiddenRequirementAccessIndicator = ({ roleId }: Props) => {
   )
 
   if (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     role.logic === "AND"
       ? count.accessed === hiddenReqsAccessData.length
-      : role.logic === "ANY_OF"
-      ? count.accessed >= role.anyOfNum
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      role.logic === "ANY_OF"
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        count.accessed >= role.anyOfNum
       : count.accessed > 0
   )
     return (

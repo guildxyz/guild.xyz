@@ -110,6 +110,7 @@ const EditGuildDrawer = ({
   }
   const methods = useForm<GuildFormType>({
     mode: "all",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     defaultValues,
   })
   const { control, setValue, reset, formState } = methods
@@ -133,9 +134,13 @@ const EditGuildDrawer = ({
   })
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     localThemeColor,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setLocalThemeColor,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     localBackgroundImage,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setLocalBackgroundImage,
   } = useThemeContext()
 
@@ -228,6 +233,7 @@ const EditGuildDrawer = ({
                 <ButtonGroup>
                   {!isOwner && <LeaveButton disableColoring />}
                   {(isOwner || isSuperAdmin) && (
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     <DeleteGuildButton beforeDelete={() => reset(defaultValues)} />
                   )}
                 </ButtonGroup>

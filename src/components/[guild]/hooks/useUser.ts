@@ -41,6 +41,7 @@ const useUser = (
     { shouldRetryOnError: false }
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return {
     isLoading,
     ...data,
@@ -119,15 +120,18 @@ const useUserPublic = (
     }
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   return {
     isLoading,
     ...data,
     deleteKeys: async () => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       await mutate((prev) => ({ ...prev, keyPair: undefined }), {
         revalidate: false,
       })
     },
     setKeys: async (keyPair: StoredKeyPair) => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       await mutate((prev) => ({ ...prev, keyPair }), { revalidate: false })
     },
     mutate,

@@ -19,6 +19,7 @@ type Props = {
 }
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { getValues, watch } = useFormContext<GuildFormType["roles"][number]>()
 
   const logic = useWatch({ name: "logic" })

@@ -12,6 +12,7 @@ export function hasOnlyTypeProperty(obj) {
 
 const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const isGuildPin =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     GUILD_PIN_CONTRACTS[requirement.chain] === requirement?.address?.toLowerCase()
   const guildIdAttribute =
     isGuildPin &&
@@ -21,11 +22,13 @@ const NftAmountProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits } = useNftMetadata(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.chain,
     requirement.address,
     requirement.data?.id
   )
   const { metadata } = useNftMetadataWithTraits(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.chain,
     requirement.address
   )

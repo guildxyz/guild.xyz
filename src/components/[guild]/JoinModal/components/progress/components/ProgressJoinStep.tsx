@@ -28,6 +28,7 @@ const ProgressJoinStep = ({
     <Center h={status === "INACTIVE" ? 6 : "44px"}>
       <JoinStepIndicator
         status={status === "LOADING" && current && total ? "PROGRESS" : status}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         progress={(current / total) * 100}
       />
     </Center>

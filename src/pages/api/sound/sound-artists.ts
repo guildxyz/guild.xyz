@@ -33,6 +33,7 @@ const fetchArtists = (searchQuery: string) =>
   )
 
 const handler: NextApiHandler = async (req, res) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const searchQuery = req.query.searchQuery.toString()
 
   const soundArtists = await fetchArtists(searchQuery).then((data) =>

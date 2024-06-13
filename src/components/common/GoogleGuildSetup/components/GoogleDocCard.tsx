@@ -30,6 +30,7 @@ const GoogleDocCard = ({ file, onSelect, onCancel }: Props): JSX.Element => {
 
   const isUsedInCurrentGuild = file.isGuilded && file.guildId === id
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (isUsedInCurrentGuild) return null
 
   return (

@@ -29,6 +29,7 @@ const useEditSharedSocials = (guildId) => {
       })
       mutate(
         (prevData) => {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           prevData.sharedSocials.find(
             (sharedSocial) => sharedSocial.guildId === response.guildId
           ).isShared = response.isShared

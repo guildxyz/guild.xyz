@@ -23,6 +23,7 @@ const usePopupWindow = (
   windowFeatures: WindowFeatures = defaultWindowFeatures,
   onClose?: () => void
 ) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [windowInstance, setWindowInstance] = useState<Window>(null)
 
   const onOpen = (url?: string) => {
@@ -35,13 +36,16 @@ const usePopupWindow = (
       window.innerHeight ?? document.documentElement.clientHeight ?? screen.height
 
     const systemZoom = width / window.screen.availWidth
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const left = (width - windowFeatures.width) / 2 / systemZoom + dualScreenLeft
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const top = (height - windowFeatures.height) / 2 / systemZoom + dualScreenTop
 
     windowFeatures.left = windowFeatures.left ?? left
     windowFeatures.top = windowFeatures.top ?? top
 
     setWindowInstance(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       window.open(
         typeof url === "string" ? url : uri,
         isMobile && !url?.includes("accounts.google.com/o/oauth2")
@@ -60,6 +64,7 @@ const usePopupWindow = (
     if (!windowInstance) return
     const timer = setInterval(() => {
       if (windowInstance.closed) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         setWindowInstance(null)
         onClose?.()
       }

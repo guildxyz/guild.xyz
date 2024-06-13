@@ -13,6 +13,7 @@ import PlatformCard from "../../PlatformCard"
 type Props = {
   onClose: () => void
   onSelect: (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     selectedRolePlatform: RoleFormType["rolePlatforms"][number] & {
       requirements?: Requirement[]
     }
@@ -35,12 +36,14 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
   const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const filteredPlatforms = guildPlatforms.filter(
     (guildPlatform) =>
       (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
         PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
         !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
       // not added to the role yet
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       !rolePlatforms.find(
         (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
       )
@@ -88,6 +91,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                   visibility: roleVisibility,
                 })
                 if (cardSettingsComponent)
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   setOpenGuildPlatformSettingsId(platform.id)
 
                 onClose()

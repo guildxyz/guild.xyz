@@ -36,6 +36,7 @@ export type RewardProps = {
 }
 
 const getRewardLabel = (platform: RolePlatform) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   switch (platform.guildPlatform.platformId) {
     case PlatformType.DISCORD:
       return "Role in: "
@@ -60,6 +61,7 @@ const Reward = ({
 
   const { hasRoleAccess, isValidating } = useRoleMembership(role.id)
   const { label, ...accessButtonProps } = usePlatformAccessButton(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     platform.guildPlatform
   )
 
@@ -137,7 +139,9 @@ const Reward = ({
       rightElement={
         <>
           <Visibility
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             visibilityRoleId={platform.visibilityRoleId}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             entityVisibility={platform.visibility}
           />
 
@@ -202,6 +206,7 @@ const RewardIcon = ({
   const props = {
     src:
       guildPlatform?.platformGuildData?.imageUrl ??
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       rewards[PlatformType[guildPlatform?.platformId]]?.imageUrl,
     alt: guildPlatform?.platformGuildName,
     boxSize: 6,
@@ -223,6 +228,7 @@ const RewardIcon = ({
       return (
         <MotionCircle {...motionElementProps} {...circleProps}>
           <Icon
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
             color="white"
             boxSize={3}
@@ -233,6 +239,7 @@ const RewardIcon = ({
     return (
       <Circle {...circleProps}>
         <Icon
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
           color="white"
           boxSize={3}

@@ -31,6 +31,7 @@ const useCreateRequirement = (
     onSuccess: (response) => {
       mutateRequirements(
         (prevRequirements) => [
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           ...prevRequirements.filter((req) =>
             Array.isArray(response.deletedRequirements)
               ? !response.deletedRequirements.includes(req.id)

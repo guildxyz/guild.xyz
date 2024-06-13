@@ -33,6 +33,7 @@ const GuildEvents = (): JSX.Element => {
     socialLinks,
     tags,
   } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const { isAdmin } = useGuildPermission()
 
@@ -52,6 +53,7 @@ const GuildEvents = (): JSX.Element => {
           {description && parseDescription(description)}
           {Object.keys(socialLinks ?? {}).length > 0 && (
             <Wrap w="full" spacing={3} mt="3">
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {Object.entries(socialLinks).map(([type, link]) => {
                 const prettyLink = link
                   .replace(/(http(s)?:\/\/)*(www\.)*/i, "")
@@ -101,9 +103,12 @@ const GuildEvents = (): JSX.Element => {
           text="There aren't any upcoming events currently"
         />
       )}
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {!isValidating && data?.length > 0 && (
         <VStack gap={4}>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {data.sort(sortEventByStartDate).map((event) => (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             <EventCard key={event.title} event={event} guildId={guildId} />
           ))}
         </VStack>
@@ -111,6 +116,7 @@ const GuildEvents = (): JSX.Element => {
       {isAdmin && !isValidating && error.length ? (
         <ErrorAlert
           label={`"Couldn't fetch events from ${error
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             .map((err) => (err.type ? err.type : null))
             .join(", ")}`}
           mt={4}
@@ -119,6 +125,7 @@ const GuildEvents = (): JSX.Element => {
       {isAdmin && !isValidating && serverError.length ? (
         <ErrorAlert
           label={`"Couldn't fetch events from ${serverError
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             .map((err) => err.type)
             .join(", ")}`}
           mt={4}
@@ -139,6 +146,7 @@ const GuildEventsWrapper = ({ fallback }): JSX.Element => (
 )
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endpoint = `/v2/guilds/guild-page/${params.guild}`
   const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 

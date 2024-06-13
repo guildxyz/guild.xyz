@@ -40,6 +40,7 @@ const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
         {...{ platformUsers, isShared }}
         spacing="1"
         isOpen={isOpen.children}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         sx={
           !isOpen.children && {
             ".identityTag:not(:first-child)": {
@@ -51,6 +52,7 @@ const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
         <CollapsibleWalletTag
           {...{ addresses, platformUsers, isCollapseOpen: isOpen }}
         />
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {featureFlags.includes("CRM") && isOpen.children && (
           <LinkButton
             href={`/${urlName}/members?search=${addresses?.[0]}`}
@@ -67,6 +69,7 @@ const CollapsibleIdentityTags = ({ addresses, platformUsers, isShared }) => {
           icon={
             <Icon
               as={CaretDown}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               transform={isOpen.children && "rotate(-180deg)"}
               transition="transform .3s"
             />
@@ -90,6 +93,7 @@ const CollapsibleWalletTag = ({ addresses, platformUsers, isCollapseOpen }) => {
   return (
     <WalletTag
       tabIndex={0}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       order={!platformUsers.length && "-1"} // so it's before the "private socials" / "no connections" tag
       zIndex={"-10"} // so it's under every other tag stacked
       overflow={"hidden"}
@@ -101,6 +105,7 @@ const CollapsibleWalletTag = ({ addresses, platformUsers, isCollapseOpen }) => {
           </Center>
         )
       }
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ml={!platformUsers.length && "unset !important"}
     >
       {isOpen ? domain || shortenHex(primaryAddress ?? "") : addresses?.length}

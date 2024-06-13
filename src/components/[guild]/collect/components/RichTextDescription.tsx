@@ -20,6 +20,7 @@ export const reactMarkdownComponents: Partial<
 > = {
   a: ({ href, children, ...props }) => (
     <Link
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       href={ensureUrlProtocol(href)}
       isExternal
       colorScheme="blue"

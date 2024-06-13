@@ -6,6 +6,7 @@ import GuildLogo from "components/common/GuildLogo"
 
 const GuildImageAndName = () => {
   const { name, urlName, imageUrl } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor } = useThemeContext()
 
   return (

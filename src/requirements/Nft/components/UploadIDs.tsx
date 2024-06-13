@@ -21,11 +21,13 @@ const UploadIDs = ({ onSuccess, onError }: Props) => {
     fileReader.onload = () => {
       const lines = fileReader.result?.toString()?.split("\n")
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (!validateNftIds(lines)) {
         onError(INVALID_TOKEN_IDS_ERROR)
         return
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       onSuccess(lines)
     }
 

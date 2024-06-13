@@ -27,6 +27,7 @@ const LeaveButton = ({ disableColoring = false }) => {
   const { onSubmit, isLoading } = useLeaveGuild(onClose)
 
   const { isStuck } = useIsTabsStuck() ?? {}
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   if (!isMember) return null
@@ -49,6 +50,7 @@ const LeaveButton = ({ disableColoring = false }) => {
         />
       </Tooltip>
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <Alert leastDestructiveRef={cancelRef} onClose={onClose} isOpen={isOpen}>
         <AlertDialogOverlay />
 
@@ -59,6 +61,7 @@ const LeaveButton = ({ disableColoring = false }) => {
             requirements of at least one role in it.
           </AlertDialogBody>
           <AlertDialogFooter>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>

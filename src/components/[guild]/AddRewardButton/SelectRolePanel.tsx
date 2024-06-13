@@ -91,6 +91,7 @@ const SelectRolePanel = ({
             <Text>{`Add ${rewards[selection]?.name} reward`}</Text>
           </HStack>
 
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <RewardPreview>
             {CAPACITY_TIME_PLATFORMS.includes(selection) && (
               <AvailabilitySetup

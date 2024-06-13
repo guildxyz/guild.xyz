@@ -25,6 +25,7 @@ const CompleteCaptchaJoinStep = (): JSX.Element => {
         title="Complete CAPTCHA"
         buttonLabel={isDone ? "Completed" : "Complete"}
         onClick={onOpen}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         isDisabled={!isWeb3Connected && "Connect wallet first"}
         isLoading={isLoading}
       />

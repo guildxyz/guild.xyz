@@ -14,11 +14,13 @@ const useAutoReconnect = () => {
     let connected = false
 
     const safeConnector = connectors.find((connector) => connector.id === "safe")
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const canConnectToSafe = await safeConnector
       .getProvider()
       .then((provider) => !!provider)
       .catch(() => false)
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const recentConnectorId = await config.storage.getItem("recentConnectorId")
     if (!recentConnectorId && !canConnectToSafe) return
 
@@ -63,6 +65,7 @@ const useAutoReconnect = () => {
       connections: new Map(prevState.connections ?? []).set(
         connectorToReconnect.uid,
         {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           accounts: data.accounts,
           chainId: data.chainId,
           connector: connectorToReconnect,
@@ -78,6 +81,7 @@ const useAutoReconnect = () => {
     ) {
       // If connecting didn't succeed, set to disconnected
       if (!connected)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         config.setState((x) => ({
           ...x,
           connections: new Map(),

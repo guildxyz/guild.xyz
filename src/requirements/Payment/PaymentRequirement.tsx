@@ -34,6 +34,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     multiplePayments,
     isLoading: isVaultLoading,
     error: vaultError,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useVault(address, requirementData?.id, chain)
 
   const isNativeCurrency = token === NULL_ADDRESS
@@ -44,20 +45,23 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     isLoading: isTokenDataLoading,
   } = useToken({
     address: token,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[chain],
     shouldFetch: Boolean(!isNativeCurrency && chain),
   })
 
   const convertedFee = fee
     ? isNativeCurrency
-      ? formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
       : tokenData?.decimals
       ? formatUnits(fee, tokenData.decimals)
       : undefined
     : undefined
 
   const symbol = isNativeCurrency
-    ? CHAIN_CONFIG[chain].nativeCurrency.symbol
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      CHAIN_CONFIG[chain].nativeCurrency.symbol
     : tokenData?.symbol
 
   const { reqAccesses } = useRoleMembership(roleId ?? 0)
@@ -70,6 +74,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     <Requirement
       image={<Icon as={Coins} boxSize={6} />}
       {...props}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       rightElement={
         props?.rightElement ? (
           <GuildCheckoutProvider>
@@ -106,6 +111,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
         >
           {convertedFee && symbol ? `${convertedFee} ${symbol}` : "-"}
         </DataBlock>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <Text as="span">{` on ${CHAIN_CONFIG[chain].name}`}</Text>
       </>
     </Requirement>

@@ -84,6 +84,7 @@ const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) 
 
   const startTimeDiff = getTimeDiff(startTime)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (startTimeDiff < 0) return null
 
   return (
@@ -100,6 +101,7 @@ const StartTimeTag = ({ startTime, ...rest }: { startTime: string } & TagProps) 
       <Tag {...rest}>
         <TagLeftIcon as={Clock} mr={1} />
         <TagLabel>{`Claim starts in ${formatRelativeTimeFromNow(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           startTimeDiff
         )}`}</TagLabel>
       </Tag>
@@ -125,11 +127,14 @@ const EndTimeTag = ({ endTime, ...rest }: { endTime: string } & TagProps) => {
       <Tag {...rest}>
         <TagLeftIcon as={Clock} mr={1} />
         <TagLabel>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {endTimeDiff <= 0
             ? "Claim ended"
             : `Claim ends ${
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 endTimeDiff > DAY_IN_MS
-                  ? `in ${formatRelativeTimeFromNow(endTimeDiff)}`
+                  ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                    `in ${formatRelativeTimeFromNow(endTimeDiff)}`
                   : "today"
               }`}
         </TagLabel>

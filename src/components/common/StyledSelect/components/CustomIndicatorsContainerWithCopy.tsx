@@ -34,7 +34,9 @@ const CustomIndicatorsContainerWithCopy = ({
     <components.IndicatorsContainer {...rest}>
       {value && (
         <IconButton
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           backgroundColor={isCopied && transparentize(successIconColor, 0.12)(theme)}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           color={isCopied && successIconColor}
           icon={isCopied ? <Check /> : <Copy />}
           aria-label={"Copy"}

@@ -38,6 +38,7 @@ const DCServerCard = ({
   const onSelect = async () => {
     try {
       if (isUsedInCurrentGuild) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onSubmit()
       }
 
@@ -51,9 +52,11 @@ const DCServerCard = ({
 
       if (!permissions) return
       if (permissions.hasAllPermissions && permissions.isRoleOrderOk) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onSubmit()
       }
     } finally {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       onSelectProp()
     }
   }

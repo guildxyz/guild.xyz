@@ -22,6 +22,7 @@ const ReportGuildButton = ({
     if (!id || !name) return
     addIntercomSettings({ reportedGuildName: `${name} (#${id})` })
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return () => addIntercomSettings({ reportedGuildName: null })
   }, [id, name])
 

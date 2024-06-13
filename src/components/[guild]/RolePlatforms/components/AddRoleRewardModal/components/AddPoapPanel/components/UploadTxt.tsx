@@ -32,11 +32,13 @@ const UploadTxt = () => {
       clearErrors("texts")
       const lines = fileReader.result?.toString()?.split("\n")
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (!validatePoapLinks(lines)) {
         setError("texts", INVALID_LINKS_ERROR)
         return
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setValue("texts", lines)
     }
 

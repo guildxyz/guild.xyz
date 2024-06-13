@@ -25,6 +25,7 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
   const revalidatePermissions = useSubmit(() =>
     mutate().then((newPermissions) => {
       if (newPermissions?.hasAllPermissions && newPermissions?.isRoleOrderOk) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onSubmit()
       }
       return newPermissions
@@ -85,6 +86,7 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
               colorScheme="DISCORD"
               onClick={() => {
                 captureEvent("[discord setup] rechecking role order")
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 revalidatePermissions.onSubmit().then(({ isRoleOrderOk }) => {
                   if (!isRoleOrderOk) {
                     start()

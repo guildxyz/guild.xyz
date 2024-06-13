@@ -17,6 +17,7 @@ const useLinkVaults = () => {
           description: "Successfully linked Delegate.cash vaults!",
         })
         mutate(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           (prev) => ({ ...prev, addresses: [...prev.addresses, ...newAddresses] }),
           { revalidate: false }
         )

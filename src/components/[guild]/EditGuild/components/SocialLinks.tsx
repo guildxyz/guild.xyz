@@ -42,6 +42,7 @@ const SocialLinks = (): JSX.Element => {
             <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
               <InputGroup size="lg">
                 <InputLeftElement>
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   {socialLinkOptions.find((sl) => sl.value === key).img}
                 </InputLeftElement>
                 <Input
@@ -50,6 +51,7 @@ const SocialLinks = (): JSX.Element => {
                     required: "This field is required.",
                   })}
                   placeholder={
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     socialLinkOptions.find((sl) => sl.value === key).label
                   }
                 />
@@ -59,6 +61,7 @@ const SocialLinks = (): JSX.Element => {
                     size="sm"
                     rounded="full"
                     onClick={() =>
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       setValue(`socialLinks.${key}`, undefined, {
                         shouldDirty: true,
                       })

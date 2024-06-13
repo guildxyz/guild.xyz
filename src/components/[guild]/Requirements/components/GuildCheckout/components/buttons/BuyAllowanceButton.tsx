@@ -17,6 +17,7 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { urlName } = useGuild()
 
   const requirement = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 
@@ -25,10 +26,13 @@ const BuyAllowanceButton = (): JSX.Element => {
 
   const { data: tokenData } = useToken({
     address: pickedCurrency,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[requirement.chain],
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     shouldFetch: Boolean(!isNativeCurrencyPicked && Chains[requirement.chain]),
   })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const nativeCurrency = CHAIN_CONFIG[requirement.chain].nativeCurrency
 
   const tokenSymbol = isNativeCurrencyPicked
@@ -37,7 +41,9 @@ const BuyAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const { fee, isLoading: isVaultLoading } = useVault(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.data.id,
     requirement.chain
   )
@@ -48,6 +54,7 @@ const BuyAllowanceButton = (): JSX.Element => {
     isAllowing,
     allowanceError,
     allowSpendingTokens,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useAllowance(pickedCurrency, requirement.address)
 
   const isEnoughAllowance =

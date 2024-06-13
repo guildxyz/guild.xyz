@@ -72,6 +72,7 @@ const UniswapForm = ({
 
   const { error, isLoading } = useTokenSymbolsOfPoolVault(
     Chains[chain],
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     lpVaultAddress,
     setTokensAndFee
   )
@@ -93,6 +94,7 @@ const UniswapForm = ({
 
   const { isLoading: isFetchingFromTokenId, error: tokenIdError } = usePairOfTokenId(
     chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     tokenId,
     setTokensAndFee
   )
@@ -232,6 +234,7 @@ const UniswapForm = ({
         />
       </FormControl>
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <MinMaxAmount field={field} baseFieldPath={baseFieldPath} format="FLOAT" />
     </Stack>
   )

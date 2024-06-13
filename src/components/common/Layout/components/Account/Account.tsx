@@ -16,6 +16,7 @@ const Account = (): JSX.Element => {
   const setIsAccountModalOpen = useSetAtom(accountModalAtom)
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
 

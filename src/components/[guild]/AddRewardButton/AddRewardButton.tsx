@@ -17,6 +17,7 @@ import { useAddRewardDiscardAlert } from "./hooks/useAddRewardDiscardAlert"
 
 export type AddRewardForm = {
   // TODO: we could simplify the form - we don't need a rolePlatforms array here, we only need one rolePlatform
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   rolePlatforms: RoleFormType["rolePlatforms"][number][]
   // TODO: use proper types, e.g. name & symbol shouldn't be required on this type
   requirements?: Omit<Requirement, "id" | "roleId" | "name" | "symbol">[]
@@ -61,6 +62,7 @@ const AddRewardButton = (): JSX.Element => {
   const visibility = useWatch({ name: "visibility", control: methods.control })
 
   const { isStuck } = useIsTabsStuck()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const { AddRewardPanel } = rewards[selection] ?? {}
@@ -115,6 +117,7 @@ const AddRewardButton = (): JSX.Element => {
           {step === "HOME" && <SelectRewardPanel />}
 
           {isRewardSetupStep && (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             <AddRewardPanel
               onAdd={(createdRolePlatform) => {
                 const {

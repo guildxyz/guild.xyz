@@ -21,6 +21,7 @@ const DynamicNoMessages = dynamic(
 const DynamicMessage = dynamic(() => import("components/[guild]/messages/Message"))
 
 const Messages = () => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { name, imageUrl } = useGuild()
@@ -47,8 +48,10 @@ const Messages = () => {
     >
       <GuildTabs
         activeTab="MESSAGES"
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         rightElement={
           isAdmin &&
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           data?.length > 0 && (
             <DynamicSendNewMessage size="sm" variant="ghost" flexShrink={0} />
           )
@@ -70,7 +73,9 @@ const Messages = () => {
                 }
               />
             </Card>
-          ) : data?.length > 0 ? (
+          ) : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+          data?.length > 0 ? (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             data.map((message) => (
               <DynamicMessage key={message.id} message={message} />
             ))

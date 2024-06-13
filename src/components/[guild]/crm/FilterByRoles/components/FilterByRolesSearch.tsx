@@ -20,6 +20,7 @@ const FilterByRolesSearch = ({ searchValue, setSearchValue }: Props) => {
 
   const reset = () => {
     setSearchValue("")
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     inputRef.current.focus()
   }
 

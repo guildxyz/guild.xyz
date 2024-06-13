@@ -22,6 +22,7 @@ const Roles = () => {
   const { isAdmin } = useGuildPermission()
 
   const group = useRoleGroup()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roles = allRoles.filter((role) =>
     !!group ? role.groupId === group.id : !role.groupId
   )
@@ -39,6 +40,7 @@ const Roles = () => {
       roles?.sort((role1, role2) => {
         if (role1.position === null) return 1
         if (role2.position === null) return -1
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         return role1.position - role2.position
       }) ?? []
     )

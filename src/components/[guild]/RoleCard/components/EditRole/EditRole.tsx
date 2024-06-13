@@ -84,14 +84,21 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   } = roles?.find((role) => role.id === roleId) ?? {}
 
   const defaultValues: RoleEditFormData = {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     id,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     name,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     description,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     imageUrl,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     logic,
     anyOfNum: anyOfNum ?? 1,
     rolePlatforms: rolePlatforms ?? [],
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     visibility,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     visibilityRoleId,
     groupId,
   }
@@ -105,6 +112,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     const role = roles?.find((r) => r.id === roleId)
     if (!role) return
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     reset({
       ...role,
       rolePlatforms: role.rolePlatforms ?? [],
@@ -132,6 +140,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   }
 
   const { onSubmit, isLoading, isSigning, signLoadingText } = useEditRole(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     id,
     onSuccess
   )
@@ -174,6 +183,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
     visibility: newVisibility,
     visibilityRoleId: newVisibilityRoleId,
   }: SetVisibilityForm) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setValue("visibility", newVisibility, {
       shouldDirty: true,
     })
@@ -193,6 +203,7 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         }}
       >
         <IconButton
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           ref={btnRef}
           icon={<Icon as={PencilSimple} />}
           size="sm"
@@ -207,10 +218,12 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
         placement="left"
         size={{ base: "full", md: "lg" }}
         onClose={isDirty ? onAlertOpen : onClose}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
         <DrawerContent>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <DrawerBody ref={drawerBodyRef} className="custom-scrollbar" pb={24}>
             <FormProvider {...methods}>
               <DrawerHeader
@@ -244,7 +257,9 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
                     onSave={handleVisibilitySave}
                     {...setVisibilityModalProps}
                   />
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   {roles?.length > 1 && (
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     <DeleteRoleButton roleId={id} onDrawerClose={onClose} />
                   )}
                 </HStack>

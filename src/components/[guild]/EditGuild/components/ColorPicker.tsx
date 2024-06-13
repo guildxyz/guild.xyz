@@ -27,6 +27,7 @@ const ColorPicker = ({ fieldName }: Props): JSX.Element => {
   const pickedColor = useWatch({ name: fieldName })
   const debouncedPickedColor = useDebouncedState(pickedColor, 300)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { setLocalThemeColor } = useThemeContext()
 
   useEffect(() => {

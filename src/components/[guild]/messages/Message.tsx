@@ -48,6 +48,7 @@ const Message = ({
   const tableLeftColTextColor = useColorModeValue("gray", "whiteAlpha.600")
 
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const targetedRoles = roles.filter((role) => roleIds.includes(role.id))
   const moreRolesCount = targetedRoles.length - DISPLAYED_ROLES_COUNT
 

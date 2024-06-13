@@ -32,11 +32,13 @@ const SendDiscordJoinButtonModal = ({
 
   const { isLoading, onSubmit } = useSendJoin(() => {
     onClose()
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     onSuccess?.()
   })
 
   const { description, name } = useGuild()
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { channels },
   } = useServerData(serverId)
 

@@ -16,6 +16,7 @@ const MintPolygonIDProofContext = createContext<{
   isMintPolygonIDProofModalOpen: boolean
   onMintPolygonIDProofModalOpen: () => void
   onMintPolygonIDProofModalClose: () => void
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 }>(undefined)
 
 const MintPolygonIDProofProvider = ({ children }: PropsWithChildren<unknown>) => {
@@ -44,6 +45,7 @@ const MintPolygonIDProofProvider = ({ children }: PropsWithChildren<unknown>) =>
     >
       {children}
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {guildPlatforms.find((gp) => gp.platformId === PlatformType.POLYGON_ID) && (
         <>
           <DynamicConnectDIDModal

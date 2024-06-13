@@ -32,8 +32,10 @@ const GatherCardButton = ({ platform }: Props) => {
     response: claimed,
     isLoading,
     modalProps: { isOpen, onOpen, onClose },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useClaimGather(rolePlatform?.id)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
   const isButtonDisabled = !isAvailable && !claimed
 
@@ -54,6 +56,7 @@ const GatherCardButton = ({ platform }: Props) => {
       ) : (
         <Tooltip
           isDisabled={!isButtonDisabled}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
           hasArrow
           shouldWrapChildren
@@ -71,6 +74,7 @@ const GatherCardButton = ({ platform }: Props) => {
       )}
 
       <ClaimGatherModal
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         title={platform.platformGuildData?.name}
         isOpen={isOpen}
         onClose={onClose}

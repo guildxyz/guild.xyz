@@ -84,6 +84,7 @@ const useMembers = (queryString: string) => {
   const flattenedData = useMemo(() => data?.flat(), [data])
 
   // Mutating the data on successful status update
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   useActiveStatusUpdates(null, mutate)
 
   return {

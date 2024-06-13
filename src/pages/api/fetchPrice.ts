@@ -219,8 +219,10 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
   const { isValid, error, data: validatedParams } = validateParams(req.query)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!isValid) return res.status(400).json({ error })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { guildId, type, chain, sellToken, address, data } = validatedParams
   const minAmount = parseFloat(data.minAmount ?? 1)
 
@@ -233,6 +235,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       return null
     })
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const buyAmountInWei = parseUnits(minAmount.toFixed(decimals), decimals)
 
     const nativeCurrencyPriceInUSD = await fetchNativeCurrencyPriceInUSD(chain)
@@ -254,6 +257,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     const response = await fetch(
       `${ZEROX_API_URLS[chain]}/swap/v1/quote?${queryParams}`,
       {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         headers: {
           "0x-api-key": process.env.ZEROX_API_KEY,
         },
@@ -317,6 +321,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
       guildFeeData = await getGuildFee(
         guildId,
         sellToken,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         Chains[chain],
         nativeCurrencyPriceInUSD,
         estimatedPriceInSellToken,
@@ -343,11 +348,13 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
 
     const estimatedGuildFeeInWei = parseUnits(
       estimatedGuildFeeInSellToken.toFixed(sellTokenDecimals),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       sellTokenDecimals
     )
 
     const maxGuildFeeInWei = parseUnits(
       maxGuildFeeInSellToken.toFixed(sellTokenDecimals),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       sellTokenDecimals
     )
 
@@ -356,7 +363,9 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
     // We're sending this amount to the contract. The unused tokens will be sent back to the user during the transaction.
     const maxPriceInWei =
       ((parseUnits(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         maxPriceInSellToken.toFixed(sellTokenDecimals),
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         sellTokenDecimals
       ) -
         BigInt(100000)) /
@@ -509,6 +518,7 @@ const handler: NextApiHandler<FetchPriceResponse> = async (
   //   })
   // }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   res.json(undefined)
 }
 

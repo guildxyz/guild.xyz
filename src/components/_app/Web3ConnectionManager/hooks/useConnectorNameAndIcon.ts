@@ -37,6 +37,7 @@ const useConnectorNameAndIcon = (connectorParam?: Connector) => {
   const { colorMode } = useColorMode()
 
   const connectorIcon =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     CUSTOM_CONNECTOR_ICONS[connector?.id]?.[colorMode] ??
     connector?.icon ??
     (isFuelConnected ? "/walletLogos/fuel.svg" : null)

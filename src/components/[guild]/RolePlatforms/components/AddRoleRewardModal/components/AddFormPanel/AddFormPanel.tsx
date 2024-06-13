@@ -38,8 +38,10 @@ const AddFormPanel = ({ onAdd }: AddRewardPanelProps) => {
         guildPlatform: {
           platformName: "FORM",
           platformId: PlatformType.FORM,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           platformGuildId: `form-${createdForm.id}`,
           platformGuildData: {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             formId: createdForm.id,
           } satisfies PlatformGuildData["FORM"],
         },

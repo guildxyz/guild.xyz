@@ -56,8 +56,10 @@ const ThemeSwitcher = () => {
   }, [local])
 
   const { getRootProps, getRadioProps } = useRadioGroup({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     onChange: (newValue: ColorModeWithSystem) => {
       setColorMode(newValue)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setLocal(newValue === "system" ? undefined : newValue)
     },
     value: local ?? "system",

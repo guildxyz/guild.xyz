@@ -73,6 +73,7 @@ const GalaxyForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element
       galaxyId: c.id,
     }))
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     if (publicCampaigns?.length) allCampaigns = allCampaigns.concat(publicCampaigns)
 
     return allCampaigns

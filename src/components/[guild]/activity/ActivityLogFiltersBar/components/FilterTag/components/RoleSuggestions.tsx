@@ -23,7 +23,9 @@ const RoleSuggestions = ({
       roles?.filter((role) => {
         const lowerCaseInputValue = inputValue?.trim().toLowerCase()
         return (
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           role.name.toLowerCase().includes(lowerCaseInputValue) ||
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           "role".includes(lowerCaseInputValue)
         )
       }) ?? [],

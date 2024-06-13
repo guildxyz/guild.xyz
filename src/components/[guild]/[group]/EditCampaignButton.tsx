@@ -7,6 +7,7 @@ import useRoleGroup from "../hooks/useRoleGroup"
 const EditCampaignButton = () => {
   const group = useRoleGroup()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -26,6 +27,7 @@ const EditCampaignButton = () => {
       <EditCampaignModal
         isOpen={isOpen}
         onClose={onClose}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         groupId={group.id}
         onSuccess={onClose}
       />

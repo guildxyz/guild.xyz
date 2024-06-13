@@ -27,6 +27,7 @@ const useProposals = (
     : data
 
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     proposals,
     isProposalsLoading: isValidating,
   }

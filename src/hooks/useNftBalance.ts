@@ -16,6 +16,7 @@ const useNftBalance = ({
     chainId,
     address: nftAddress,
     functionName: "balanceOf",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     args: [address],
     query: {
       enabled: Boolean(nftAddress && address),

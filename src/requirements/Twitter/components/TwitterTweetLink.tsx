@@ -9,6 +9,7 @@ type Props = {
 export default function TwitterTweetLink({ requirement }: Props) {
   return (
     <Link
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       href={`https://x.com/x/status/${requirement.data.id}`}
       isExternal
       colorScheme={"blue"}

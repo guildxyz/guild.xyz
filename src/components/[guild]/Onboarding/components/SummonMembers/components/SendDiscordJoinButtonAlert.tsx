@@ -29,6 +29,7 @@ const SendDiscordJoinButtonAlert = ({
 
   return (
     <Alert
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       leastDestructiveRef={cancelRef}
       isOpen={isOpen}
       onClose={onClose}

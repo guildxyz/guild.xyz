@@ -28,10 +28,12 @@ const useGuildEvents = () => {
   const serverError = []
 
   if (swrResponseEvents.error)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     serverError.push({ type: "LUMA, EVENTBRITE, LINK3", ...swrResponseEvents.error })
 
   if (swrResponseEvents.data?.errors)
     error.push(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ...swrResponseEvents.data.errors.filter((err) => err.type !== "DISCORD")
     )
 

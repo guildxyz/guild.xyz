@@ -53,6 +53,7 @@ const useNftMetadataWithTraits = (
       metadata: {
         name: "Nouns",
         image: "https://storage.googleapis.com/nftimagebucket/tokensinfo/14704.png",
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         slug: null,
         traits: {
           background: NOUNS_BACKGROUNDS,

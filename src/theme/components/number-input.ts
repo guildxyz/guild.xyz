@@ -7,6 +7,7 @@ const { variants, defaultProps } = Input
 type Size = "xs" | "sm" | "md" | "lg"
 
 function getSize(size: Size): PartsStyleObject<typeof parts> {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const sizeStyle = Input.sizes[size]
 
   const radius: Record<Size, string> = {

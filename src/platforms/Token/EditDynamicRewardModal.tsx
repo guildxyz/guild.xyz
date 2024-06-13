@@ -56,9 +56,11 @@ const EditDynamicRewardModal = ({
     },
   })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
 
   const propsHook =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
 
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
@@ -86,6 +88,7 @@ const EditDynamicRewardModal = ({
           <FormProvider {...methods}>
             <DynamicSetup
               toImage={ImageComponent}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               roleId={rolePlatform.roleId}
               requirementFieldName={`dynamicAmount.operation.input[0].requirementId`}
               multiplierFieldName={`dynamicAmount.operation.params.multiplier`}

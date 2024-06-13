@@ -18,6 +18,7 @@ import { SectionTitle } from "components/common/Section"
 
 const ActivityLog = (): JSX.Element => {
   const { name, imageUrl } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { data, isValidating, isLoading, error } = useActivityLog()
@@ -48,6 +49,7 @@ const ActivityLog = (): JSX.Element => {
             title="Actions"
             mt={8}
             mb="4"
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             titleRightElement={isLoading && <Spinner size="xs" mt="4" />}
           />
           <Stack spacing={2.5}>

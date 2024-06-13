@@ -46,8 +46,10 @@ const ActivityLogAction = (): JSX.Element => {
   ].includes(action)
 
   const shouldRenderCollapse =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     children?.length > 0 ||
     (Object.keys(before ?? {}).length > 0 &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       Object.entries(before).some(([key, value]) => data[key] !== value)) ||
     (isRequirementRelatedLog && Object.entries(data ?? {}).length > 0)
 
@@ -89,6 +91,7 @@ const ActivityLogAction = (): JSX.Element => {
               icon={
                 <Icon
                   as={CaretDown}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   transform={isOpen && "rotate(-180deg)"}
                   transition="transform .3s"
                 />
@@ -120,6 +123,7 @@ const ActivityLogAction = (): JSX.Element => {
                 before={
                   <RequirementDisplayComponent
                     requirement={data as Requirement}
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     rightElement={null}
                   />
                 }
@@ -132,8 +136,10 @@ const ActivityLogAction = (): JSX.Element => {
               </ActivityLogActionProvider>
             ))}
 
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {children?.length > DISPLAYED_CHILD_ACTIONS && (
               <MoreActions
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 actions={children}
                 displayedActionCount={DISPLAYED_CHILD_ACTIONS}
               />

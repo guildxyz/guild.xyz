@@ -44,6 +44,7 @@ const FormResponsesTable = ({ form }) => {
 
     const asPath = router.asPath.split("?")[0]
     router.replace(`${asPath}?${queryString}`)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     scrollContainerRef.current?.scrollTo({ top: 0 })
     // router.replace is intentionally left out
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,6 +166,7 @@ const FormResponsesTable = ({ form }) => {
   return (
     <CrmTableWrapper {...{ isValidating, setSize, scrollContainerRef }}>
       <CrmThead {...{ table, isLoading }} />
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <FormResponsesTbody {...{ table, data, error, isValidating }} />
     </CrmTableWrapper>
   )

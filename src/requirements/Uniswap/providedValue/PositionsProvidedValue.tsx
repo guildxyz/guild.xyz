@@ -16,6 +16,7 @@ const PositionsProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   } = requirement || {}
 
   const { symbol0, symbol1 } = useSymbolsOfPair(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     Chains[chain],
     token0 as `0x${string}`,
     token1 as `0x${string}`

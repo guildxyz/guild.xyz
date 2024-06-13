@@ -380,6 +380,7 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
         {resultMatch && (
           <FormHelperText>
             {`Satisfied when the method result for the user is ${
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               resultMatchOptions.find((option) => option.value === resultMatch).text
             } ${expectedValue || "the provided value"}`}
           </FormHelperText>

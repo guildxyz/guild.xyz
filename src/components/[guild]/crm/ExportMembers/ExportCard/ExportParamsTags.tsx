@@ -86,6 +86,7 @@ const ExportParamsRolesTag = ({ roleIds, logic }) => {
 
 const ExportParamsRoleTag = ({ roleId }) => {
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) => r.id === parseInt(roleId))
   if (!role) return null
 

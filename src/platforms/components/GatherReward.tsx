@@ -22,6 +22,7 @@ import {
 } from "utils/rolePlatformHelpers"
 
 const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { platformId, platformGuildData } = platform.guildPlatform
 
   const {
@@ -32,10 +33,12 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
   } = useClaimGather(platform.id)
 
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) =>
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { hasRoleAccess, isMember } = useRoleMembership(role.id)
   const openJoinModal = useOpenJoinModal()
 
@@ -73,6 +76,7 @@ const GatherReward = ({ platform, withMotionImg }: RewardProps) => {
     }
   }, [hasRoleAccess, platform, claimed, isMember, openJoinModal])
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const spaceUrl = `https://app.gather.town/app/${platform.guildPlatform.platformGuildId.replace(
     "\\",
     "/"

@@ -34,13 +34,17 @@ const TokenAmountStep = ({ onContinue }: { onContinue: () => void }) => {
     (gp) => gp.platformId === PlatformType.ERC20
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const platformForToken = tokenPlatforms.find(
     (guildPlatform) =>
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildPlatform.platformGuildData.chain === chain &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
         address?.toLowerCase()
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatforms = useRolePlatformsOfReward(platformForToken?.id)
 
   const dynamicExists =

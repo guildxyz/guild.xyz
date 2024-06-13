@@ -124,6 +124,7 @@ const CreateSnapshotModal = ({ onClose, isOpen, onSuccess }: Props) => {
             </Text>
             <Stack gap={4}>
               <ExistingPointsTypeSelect
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 existingPointsRewards={existingPointsRewards}
                 selectedExistingId={selectedExistingId.value}
               />

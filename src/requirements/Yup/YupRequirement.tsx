@@ -9,10 +9,13 @@ const YupRequirement = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement image="/requirementLogos/yup.svg" {...props}>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {`Have a Yup Score of at least ${requirement.data.minAmount} `}
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {requirement.data.adapter && (
         <>
           {" from the "}
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <DataBlock>{requirement.data.adapter}</DataBlock>
           {" adapter"}
         </>

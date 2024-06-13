@@ -19,6 +19,7 @@ const GitPoapRequirement = (props: RequirementProps) => {
           isLoading={isLoading}
           error={error && "API error, please contact POAP to report."}
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {requirement.data.id}
         </DataBlock>
       ) : (

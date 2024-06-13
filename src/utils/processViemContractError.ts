@@ -38,6 +38,7 @@ const processViemContractError = (
 
     return (
       prettyViemError ??
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mappedError ??
       error.shortMessage ??
       error.message ??

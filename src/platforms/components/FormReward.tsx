@@ -13,12 +13,14 @@ import { useUserFormSubmission } from "platforms/Forms/hooks/useFormSubmissions"
 
 const FormReward = ({ platform, withMotionImg }: RewardProps) => {
   const { urlName } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { platformGuildData } = platform.guildPlatform
   const { form, isValidating: isFormsValidating } = useGuildForm(
     platformGuildData?.formId
   )
 
   const { userSubmission, isValidating: isUserSubmissionValidating } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     useUserFormSubmission(form)
 
   return (

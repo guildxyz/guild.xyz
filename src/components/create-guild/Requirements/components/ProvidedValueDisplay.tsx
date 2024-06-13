@@ -24,6 +24,7 @@ const ProvidedValueDisplay = ({
 }) => {
   const bg = useColorModeValue("blackAlpha.100", "whiteAlpha.100")
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const ValueDisplayComponent = REQUIREMENT_PROVIDED_VALUES[requirement.type]
 
   return (

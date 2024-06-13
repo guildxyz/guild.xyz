@@ -18,6 +18,7 @@ describe("edit guild", () => {
   it("can fetch guild id", () => {
     cy.wait("@fetchGuild")
       .then((intercept) => {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         CONTEXT.guild = intercept.response.body
         return intercept
       })
@@ -32,6 +33,7 @@ describe("edit guild", () => {
   it("can edit general guild data as a guild admin", () => {
     cy.intercept(
       "PUT",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}`
     ).as("editGuildApiCall")
 

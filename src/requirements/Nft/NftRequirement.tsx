@@ -34,8 +34,10 @@ const getNounsRequirementType = (trait: Trait) =>
   !trait
     ? undefined
     : trait.trait_type === "background"
-    ? NOUNS_BACKGROUNDS?.[trait.value]
-    : ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      NOUNS_BACKGROUNDS?.[trait.value]
+    : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      ImageData.images?.[imageDataTypeMap[trait.trait_type]]?.[+trait.value]
         ?.filename
 
 const NftRequirement = (props: RequirementProps) => {
@@ -43,6 +45,7 @@ const NftRequirement = (props: RequirementProps) => {
 
   // This is a really basic solution, and it'll only handle the "Joined Guild" NFTs. We should probably think about a better solution in the future.
   const isGuildPin =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     GUILD_PIN_CONTRACTS[requirement.chain] === requirement.address.toLowerCase()
 
   const guildIdAttribute =
@@ -58,8 +61,10 @@ const NftRequirement = (props: RequirementProps) => {
   const { name: guildPinGuildName } = useGuild(guildIdAttribute ?? "")
 
   const { metadata: metadataWithTraits, isLoading: isMetadataWithTraitsLoading } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     useNftMetadata(requirement.chain, requirement.address, requirement.data?.id)
   const { metadata, isLoading } = useNftMetadataWithTraits(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.chain,
     requirement.address
   )
@@ -82,6 +87,7 @@ const NftRequirement = (props: RequirementProps) => {
     : metadataWithTraits?.image || metadata?.image
 
   const shouldRenderImage =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ["ETHEREUM", "POLYGON"].includes(requirement.chain) &&
     (nftName || (requirement.name && requirement.name !== "-")) &&
     (nftDataLoading || nftImage)
@@ -149,6 +155,7 @@ const NftRequirement = (props: RequirementProps) => {
               <Fragment key={`${trait.trait_type}-${trait.value}`}>
                 {attributeValue
                   ? `${attributeValue} ${trait.trait_type}${
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       index < requirement.data.attributes.length - 1 ? ", " : ""
                     }`
                   : trait.minValue && trait.maxValue

@@ -49,6 +49,7 @@ const CrmTableWrapper = memo(
         }
       },
       [scrollContainerRef.current, isValidating],
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       null,
       scrollContainerRef.current
     )

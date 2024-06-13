@@ -56,6 +56,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
   const isMobile = useBreakpointValue({ base: true, md: false })
 
   const poapDescriptionRef = useRef<HTMLDivElement>(null)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const shouldShowSmallImage = useShouldShowSmallImage(poapDescriptionRef)
 
   // if (!isFallback && !guildPlatform) return <ErrorPage statusCode={404} />
@@ -83,6 +84,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
           <HStack justifyContent="space-between">
             <GuildImageAndName />
             <ShareAndReportButtons
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               isPulseMarkerHidden={rolePlatform?.claimedCount > 0}
               shareButtonLocalStorageKey={`poap_${fancyId}_hasClickedShareButton`}
               shareText={`Check out and claim the ${`${name} `}POAP on Guild!`}
@@ -109,7 +111,9 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
                 </Heading>
 
                 {isMobile && (
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   <RequirementsCard role={role}>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClaimPoap rolePlatformId={rolePlatform?.id} />
                   </RequirementsCard>
                 )}
@@ -122,6 +126,7 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
               {!!Object.keys(socialLinks ?? {}).length && (
                 <>
                   <Divider />
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   <SocialLinks socialLinks={socialLinks} />
                 </>
               )}
@@ -143,12 +148,16 @@ const Page = ({ fancyId }: Omit<Props, "fallback">) => {
                           isLoading={isPoapByIdLoading}
                         />
                       }
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       name={name}
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       role={role}
                     />
                   )}
 
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   <RequirementsCard role={role}>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <ClaimPoap rolePlatformId={rolePlatform?.id} />
                   </RequirementsCard>
                 </Stack>
@@ -171,6 +180,7 @@ const ClaimPoapPage = ({ fallback, ...rest }: Props) => (
 )
 
 const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { guild: urlName, fancyId: fancyIdFromParams } = params
 
   const fancyId = fancyIdFromParams?.toString()

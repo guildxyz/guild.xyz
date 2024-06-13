@@ -44,6 +44,7 @@ const WithdrawPoolModal = ({
       data: { decimals, symbol },
     },
     guildPlatform: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       platformGuildData: { chain, poolId, tokenAddress },
     },
   } = useTokenRewardContext()
@@ -51,9 +52,11 @@ const WithdrawPoolModal = ({
   const { data: poolData, refetch } = usePool(chain, BigInt(poolId))
 
   const { owner, balance: poolBalance } = poolData
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
 
   const { chainId, address } = useAccount()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isOnCorrectChain = Chains[chain] === chainId
 
   const toast = useToast()
@@ -86,6 +89,7 @@ const WithdrawPoolModal = ({
 
         <ModalBody>
           <Stack gap={5}>
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <PoolInformation balance={balance} owner={owner} symbol={symbol} />
             <Divider />
 

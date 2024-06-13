@@ -5,6 +5,7 @@ import { useRolePlatform } from "../../components/[guild]/RolePlatforms/componen
 
 const usePointsCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const rolePlatform = useRolePlatform()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { name, imageUrl } = guildPlatform.platformGuildData
   const { dynamicUserAmount } = useDynamicRewardUserAmount(rolePlatform)
 

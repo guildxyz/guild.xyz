@@ -15,6 +15,7 @@ const handler: NextApiHandler = async (
   const { address } = req.query
   const addressAsString = address?.toString()?.toLowerCase()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!ADDRESS_REGEX.test(addressAsString)) {
     res.status(400).json({ error: "Invalid address" })
     return

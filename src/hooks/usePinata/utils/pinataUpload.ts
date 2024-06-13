@@ -33,6 +33,7 @@ const pinFileToIPFS = ({
 }: PinToIPFSProps) =>
   new Promise<PinataPinFileResponse>(async (resolve, reject) => {
     const apiKey =
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       jwt?.length > 0
         ? { jwt, key: undefined }
         : await fetch("/api/pinata-key").then((response) =>

@@ -84,6 +84,7 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
 
 export type AddRewardPanelProps = {
   onAdd: (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: RoleFormType["rolePlatforms"][number] & {
       requirements?: Requirement[]
       roleName?: string
@@ -188,6 +189,7 @@ const rewards: Record<PlatformName, RewardData> = {
     name: "Discord",
     colorScheme: "DISCORD",
     gatedEntity: "server",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     cardPropsHook: useDiscordCardProps,
     cardSettingsComponent: DiscordCardSettings,
     cardMenuComponent: DiscordCardMenu,
@@ -255,6 +257,7 @@ const rewards: Record<PlatformName, RewardData> = {
     name: "Google Workspace",
     colorScheme: "blue",
     gatedEntity: "document",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     cardPropsHook: useGoogleCardProps,
     cardSettingsComponent: GoogleCardSettings,
     cardMenuComponent: GoogleCardMenu,
@@ -277,6 +280,7 @@ const rewards: Record<PlatformName, RewardData> = {
     isPlatform: true,
   },
   POAP: {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     icon: null,
     imageUrl: "/platforms/poap.png",
     name: "POAP",
@@ -386,6 +390,7 @@ const rewards: Record<PlatformName, RewardData> = {
     name: "PolygonID",
     colorScheme: "purple",
     gatedEntity: "",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     cardPropsHook: usePolygonIDCardProps,
     cardButton: PolygonIDCardButton,
     cardMenuComponent: PolygonIDCardMenu,
@@ -480,6 +485,7 @@ const rewards: Record<PlatformName, RewardData> = {
     colorScheme: "GATHER_TOWN",
     gatedEntity: "space",
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     cardPropsHook: useGatherCardProps,
     cardButton: GatherCardButton,
     cardMenuComponent: GatherCardMenu,

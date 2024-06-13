@@ -28,6 +28,7 @@ const EditPointsModal = ({
   guildPlatformId,
   platformGuildData,
 }: Props) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { name: currentName, imageUrl: currentImage } = platformGuildData
 
   const toast = useToast()

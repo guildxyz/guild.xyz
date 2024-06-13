@@ -6,6 +6,7 @@ const useIsWalletConnectModalActive = () => {
   const w3mModalRef = useRef(null)
   useEffect(() => {
     if (typeof window === "undefined" || w3mModalRef.current) return
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     w3mModalRef.current = document.querySelector("wcm-modal")
   })
 
@@ -13,6 +14,7 @@ const useIsWalletConnectModalActive = () => {
     if (!w3mModalRef.current) return
 
     const observerTarget =
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       w3mModalRef.current.shadowRoot?.getElementById("wcm-modal")
 
     if (!observerTarget) return

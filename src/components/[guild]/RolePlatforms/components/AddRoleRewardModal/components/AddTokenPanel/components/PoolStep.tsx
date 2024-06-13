@@ -58,6 +58,7 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
     !!amount && decimals ? parseUnits(amount, decimals) : BigInt(1)
 
   const { isLoading, onSubmitTransaction: submitRegisterPool } = useRegisterPool(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     userAddress,
     chain,
     tokenAddress,
@@ -78,12 +79,15 @@ const PoolStep = ({ onSubmit }: { onSubmit: () => void }) => {
 
   const platformForToken = accessedTokens.find(
     (guildPlatform) =>
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildPlatform.platformGuildData.chain === chain &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
         tokenAddress?.toLowerCase()
   )
 
   const continuePoolExists = () => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setValue("poolId", platformForToken.platformGuildData.poolId)
     onSubmit()
   }

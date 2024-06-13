@@ -42,6 +42,7 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse<bigint>>
   const sellAddressOrPickedCurrency = sellAddress ?? pickedCurrency
 
   const shouldFetch =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     purchaseSupportedChains[requirement?.type]?.includes(requirement?.chain) &&
     isOpen &&
     PURCHASABLE_REQUIREMENT_TYPES.includes(requirement?.type) &&
@@ -55,7 +56,8 @@ const usePrice = (sellAddress?: string): SWRResponse<FetchPriceResponse<bigint>>
           address,
           requirement,
           sellAddressOrPickedCurrency === NULL_ADDRESS
-            ? CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
+            ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+              CHAIN_CONFIG[requirement.chain].nativeCurrency.symbol
             : sellAddressOrPickedCurrency,
         ]
       : null,

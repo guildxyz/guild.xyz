@@ -110,6 +110,7 @@ const generateOptionsFromValue = (min: number, max: number): number[] => {
   const generatedArray = []
 
   for (let i = min; i <= max; i++) {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     generatedArray.push({ label: i.toString(), value: i })
   }
 

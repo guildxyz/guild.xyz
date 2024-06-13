@@ -58,7 +58,8 @@ const RoleSelector = ({
             isDisabled={
               allowMultiple
                 ? false
-                : value?.length > 0 && !value.includes(role.id.toString())
+                : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                  value?.length > 0 && !value.includes(role.id.toString())
             }
           />
         ))}

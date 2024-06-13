@@ -142,6 +142,7 @@ export const RoleCardMemberCount = ({
           </PopoverFooter>
         </MemberCountLastSyncTooltip>
       ) : isAdmin &&
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         featureFlags.includes("PERIODIC_SYNC") &&
         /* temporarily only showing for superAdmins when lastSyncedAt is null, until we know what to communicate to admins in this case */
         lastSyncedAt ? (

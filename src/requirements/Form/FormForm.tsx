@@ -14,6 +14,7 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
   const formRewardIds =
     guildPlatforms
       ?.filter((gp) => gp.platformId === PlatformType.FORM)
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       .map((gp) => gp.platformGuildData.formId) ?? []
   const { data: forms, isLoading, isValidating } = useGuildForms()
 
@@ -26,9 +27,12 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
 
   const formOptions: SelectOption<number>[] =
     forms
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ?.filter((form) => formRewardIds.includes(form.id))
       .map((form) => ({
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         label: form.name,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         value: form.id,
       })) ?? []
 

@@ -6,6 +6,7 @@ import { useRequirementContext } from "./RequirementContext"
 
 export const getDefaultVisitLinkCustomName = (
   requirementData: Requirement["data"]
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 ) => `Visit link: [${requirementData.id}]`
 
 const ResetNewRequirementButton = ({ requirement }) => {

@@ -11,6 +11,7 @@ const CreateFormModal = ({ isOpen, onClose, onAdd }) => (
     colorScheme="dark"
   >
     <ModalOverlay />
+    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
     <rewards.FORM.AddRewardPanel onAdd={onAdd} />
   </Modal>
 )

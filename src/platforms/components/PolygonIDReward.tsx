@@ -18,14 +18,17 @@ import { useMemo } from "react"
 import { PlatformType } from "types"
 
 const PolygonIDReward = ({ platform, withMotionImg }: RewardProps) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { platformId } = platform.guildPlatform
 
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) =>
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
   const { isMember } = useMembership()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { hasRoleAccess, isValidating } = useRoleMembership(role.id)
   const openJoinModal = useOpenJoinModal()
 

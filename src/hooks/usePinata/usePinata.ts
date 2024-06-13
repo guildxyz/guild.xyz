@@ -13,6 +13,7 @@ type Props<TFieldValues, TContext> = Partial<{
   onError: (error: any) => void
   fieldToSetOnSuccess?: Path<TFieldValues>
   fieldToSetOnError?: Path<TFieldValues>
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   control?: Control<TFieldValues, TContext>
 }>
 
@@ -29,11 +30,13 @@ const usePinata = <TFieldValues, TContext>({
   control: controlFromProps,
 }: Props<TFieldValues, TContext> = {}): Uploader => {
   const toast = useToast()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { control: controlFromContext } = useFormContext<TFieldValues>() ?? {}
   const control = controlFromContext ?? controlFromProps
 
   const {
     field: { onChange: successFieldOnChange },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useController<TFieldValues>({
     control,
     name: fieldToSetOnSuccess,
@@ -42,6 +45,7 @@ const usePinata = <TFieldValues, TContext>({
   const {
     field: { onChange: errorFieldOnChange },
   } = useController({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     control,
     name: fieldToSetOnError,
   })

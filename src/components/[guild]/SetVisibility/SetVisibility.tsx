@@ -60,12 +60,14 @@ const SetVisibility = ({
     name: "visibility",
   })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const visibilityRoleId: number = useWatch({
     control: methods.control,
     name: "visibilityRoleId",
   })
 
   const tooltipLabel = useVisibilityTooltipLabel(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     visibilityField.value,
     visibilityRoleId
   )
@@ -99,6 +101,7 @@ const SetVisibility = ({
           size="xs"
           leftIcon={<Icon />}
           onClick={onOpen}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           ref={buttonRef}
           {...buttonProps}
         >
@@ -126,6 +129,7 @@ const SetVisibility = ({
           methods.reset(defaultValues)
           onClose()
         }}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         finalFocusRef={buttonRef}
         size="lg"
         colorScheme="dark"

@@ -3,6 +3,7 @@ import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 const useTelegramCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { groupIcon, groupName },
   } = useIsTGBotIn(guildPlatform.platformGuildId)
 

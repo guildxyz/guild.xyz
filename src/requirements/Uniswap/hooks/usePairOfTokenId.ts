@@ -20,12 +20,14 @@ export function usePairOfTokenId(
     chainId: Chains[chain],
     abi: UNISWAP_V3_POSITIONS_NFT_ABI,
     functionName: "positions",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     args: [enabled ? BigInt(tokenId) : undefined],
     query: { enabled, staleTime: Infinity },
   })
 
   useEffect(() => {
     if (!token0 || !token1) return
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     onSuccess?.([token0, token1, fee])
   }, [token0, token1, fee, onSuccess])
 

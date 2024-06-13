@@ -12,6 +12,7 @@ const useEditRolePlatform = ({
   onSuccess?: () => void
 }) => {
   const { id, roles, mutateGuild } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleId = roles.find(
     (role) => !!role.rolePlatforms.find((rp) => rp.id === rolePlatformId)
   )?.id
@@ -29,8 +30,10 @@ const useEditRolePlatform = ({
       onSuccess?.()
 
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevGuild) => ({
           ...prevGuild,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           roles: prevGuild.roles.map((role) => {
             if (role.id !== roleId) return role
 

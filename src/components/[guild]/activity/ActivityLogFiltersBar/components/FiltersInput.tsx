@@ -103,6 +103,7 @@ const FiltersInput = (): JSX.Element => {
 
   const positionerRef = useRef<HTMLDivElement>()
   const [positionerStyle, setPositionerStyle] = useState<Record<string, string>>({})
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rawPositionerStyle = getPositionerCSSVariables(positionerRef.current)
 
   useEffect(() => {
@@ -128,6 +129,7 @@ const FiltersInput = (): JSX.Element => {
             {renderedActiveFilters?.map(({ id }) => (
               <FilterTag
                 key={id}
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 filterId={id}
                 isFiltersInputFocused={isFocused}
                 focusFiltersInput={focus}

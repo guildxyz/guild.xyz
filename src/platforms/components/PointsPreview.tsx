@@ -15,7 +15,8 @@ const PointsPreview = (): JSX.Element => {
 
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { name, imageUrl } = guildPlatformId
-    ? guildPlatform.platformGuildData ?? {}
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      guildPlatform.platformGuildData ?? {}
     : platformGuildData ?? {}
 
   return (

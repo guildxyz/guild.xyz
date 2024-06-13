@@ -14,6 +14,7 @@ const DynamicTag = ({
 
   const { onOpen, isOpen, onClose } = useDisclosure()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data: requirements } = useRequirements(rolePlatform.roleId)
 
   const dynamicAmount: any = rolePlatform.dynamicAmount

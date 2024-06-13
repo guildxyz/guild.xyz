@@ -14,6 +14,7 @@ const RoleHeader = ({ role, isOpen = true, children }: PropsWithChildren<any>) =
           fontFamily="display"
           minW={0}
           overflowWrap={"break-word"}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           noOfLines={!isOpen && 1}
           mt="-1px !important"
         >

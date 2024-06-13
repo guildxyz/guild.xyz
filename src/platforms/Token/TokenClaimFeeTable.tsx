@@ -11,6 +11,7 @@ const TokenClaimFeeTable = () => {
   const {
     fee,
     guildPlatform: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       platformGuildData: { chain },
     },
   } = useTokenRewardContext()
@@ -21,6 +22,7 @@ const TokenClaimFeeTable = () => {
   )
 
   const formattedFee =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     fee.isLoading || tokenIsLoading ? null : formatUnits(fee.amount, token.decimals)
 
   return (
@@ -33,6 +35,7 @@ const TokenClaimFeeTable = () => {
               <FeePopover />
             </HStack>
 
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <PriceFallback pickedCurrency={token.symbol} error={null}>
               <Skeleton isLoaded={formattedFee !== null}>
                 <Text as="span">

@@ -15,6 +15,7 @@ const Card = forwardRef(
     return (
       <Box
         ref={ref}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         mx={
           // using !important so styles added by wrappers like Stack don't override it
           isFullWidthOnMobile && {

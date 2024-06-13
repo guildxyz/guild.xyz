@@ -37,14 +37,17 @@ const useClaimText = (rolePlatformId: number) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { id: guildId, roles, mutateGuild, guildPlatforms } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatformId = roles
     .find((role) => role.id === roleId)
     ?.rolePlatforms?.find(({ id }) => id === rolePlatformId)?.guildPlatformId
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatform = guildPlatforms.find(({ id }) => id === guildPlatformId)
 
   const triggerConfetti = useJsConfetti()
@@ -76,6 +79,7 @@ const useClaimText = (rolePlatformId: number) => {
          * versa)
          */
         mutateCachedResponse(response)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         mutateGuild((prevGuild) => ({
           ...prevGuild,
           roles: prevGuild?.roles.map((role) => {
@@ -89,6 +93,7 @@ const useClaimText = (rolePlatformId: number) => {
 
                 return {
                   ...rp,
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   claimedCount: rp.claimedCount + 1,
                 }
               }),

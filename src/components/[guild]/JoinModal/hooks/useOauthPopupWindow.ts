@@ -40,7 +40,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const { onOpen } = usePopupWindow()
 
   const [oauthState, setOauthState] = useState<OAuthState<OAuthResponse>>({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     error: null,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     authData: null,
     isAuthenticating: false,
   })
@@ -48,7 +50,9 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
   const oauthPopupHandler = async () => {
     let result: OAuthState<OAuthResponse> = {
       isAuthenticating: true,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       authData: null,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       error: null,
     }
     setOauthState(result)
@@ -81,12 +85,14 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
           result = {
             isAuthenticating: false,
             error: data,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             authData: null,
           }
           setOauthState(result)
         } else {
           result = {
             isAuthenticating: false,
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             error: null,
             authData: data,
           }
@@ -97,6 +103,7 @@ const useOauthPopupWindow = <OAuthResponse = { code: string }>(
       }
     })
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const searchParams = new URLSearchParams({
       ...params,
       redirect_uri: redirectUri,

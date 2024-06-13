@@ -39,7 +39,8 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             `/v2/guilds/${id}/roles/${roleId}`,
             { method: "PUT", body: baseRoleData },
           ]).catch((error) => error)
-        : new Promise((resolve) => resolve(undefined))
+        : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+          new Promise((resolve) => resolve(undefined))
 
     const rolePlatformUpdates = Promise.all(
       (rolePlatforms ?? [])
@@ -143,10 +144,13 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
         .filter(Boolean)
 
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevGuild) => ({
           ...prevGuild,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guildPlatforms: [...prevGuild.guildPlatforms, ...createdGuildPlatforms],
           roles:
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             prevGuild.roles?.map((prevRole) =>
               prevRole.id === roleId
                 ? {

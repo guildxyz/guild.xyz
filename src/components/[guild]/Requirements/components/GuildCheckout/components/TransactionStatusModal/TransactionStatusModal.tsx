@@ -33,6 +33,7 @@ const TransactionStatusModal = ({
     useTransactionStatusContext()
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <Modal isOpen={isTxModalOpen} onClose={txSuccess ? onTxModalClose : undefined}>
       <ModalOverlay />
       <ModalContent>

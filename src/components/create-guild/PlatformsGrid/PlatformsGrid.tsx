@@ -44,6 +44,7 @@ const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
       platform: "GATHER_TOWN",
       description: "Manage spaces",
     },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ...(!guildPlatforms.find(
       (platform) => platform.platformId === PlatformType.POLYGON_ID
     )
@@ -69,6 +70,7 @@ const PlatformsGrid = ({ onSelection, disabledRewards, ...rest }: Props) => {
       description: "Gamification utility",
       isGeneral: true,
     },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ...(featureFlags.includes("ERC20")
       ? [
           {

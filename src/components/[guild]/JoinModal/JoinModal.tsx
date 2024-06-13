@@ -62,6 +62,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     mode: "all",
     defaultValues: {
       platforms: {},
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ...(featureFlags.includes("CRM") ? { shareSocials: true } : {}),
     },
   })
@@ -70,6 +71,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
   const renderedSteps = (requiredPlatforms ?? []).map((platform) => {
     if (platform in customJoinStep) {
       const ConnectComponent = customJoinStep[platform]
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       return <ConnectComponent key={platform} />
     }
 
@@ -105,16 +107,21 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
     })
 
   const isInDetailedProgressState =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     joinProgress?.state === "MANAGING_ROLES" ||
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     joinProgress?.state === "MANAGING_REWARDS" ||
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     joinProgress?.state === "FINISHED"
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const hasNoAccess = joinProgress?.state === "NO_ACCESS"
 
   const { roles } = useGuild()
 
   const onClick = () => {
     onClose()
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     window.location.hash = `role-${roles[0]?.id}`
   }
   // so we don't focus the TopRecheckAccessesButton button after join
@@ -140,8 +147,10 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               <Collapse in={isLoading || hasNoAccess}>
                 {!isInDetailedProgressState && <Divider mb={3} />}
                 <SatisfyRequirementsJoinStep
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   joinState={joinProgress}
                   spacing={2.5}
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   fallbackText={
                     hasNoAccess && (
                       <Text color="initial">
@@ -165,13 +174,16 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
 
             <Collapse in={isInDetailedProgressState}>
               <VStack {...JOIN_STEP_VSTACK_PROPS} spacing={2.5} mb={6}>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <GetRolesJoinStep joinState={joinProgress} />
 
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <GetRewardsJoinStep joinState={joinProgress} />
               </VStack>
             </Collapse>
 
             <Collapse in={!(isLoading || hasNoAccess)}>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               {featureFlags.includes("CRM") && <ShareSocialsCheckbox />}
             </Collapse>
 
@@ -183,6 +195,7 @@ const JoinModal = ({ isOpen, onClose }: Props): JSX.Element => {
               size={hasNoAccess ? "md" : "lg"}
               isLoading={isLoading}
               loadingText={
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 joinProgress?.state === "FINISHED"
                   ? "Finalizing results"
                   : !!joinProgress

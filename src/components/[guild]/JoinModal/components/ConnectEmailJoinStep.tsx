@@ -12,6 +12,7 @@ const ConnectEmailJoinStep = (): JSX.Element => {
   const isDone = emails?.emailAddress && !emails.pending
 
   return (
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     <JoinStepUI isDone={isDone} title="Connect email">
       <Tooltip
         label="Connect wallet first"
@@ -19,11 +20,13 @@ const ConnectEmailJoinStep = (): JSX.Element => {
         shouldWrapChildren
       >
         <ConnectEmailButton
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           isDisabled={!isConnected || isDone}
           size="md"
           leftIcon={<EnvelopeSimple />}
           flexShrink="0"
           minW="max-content"
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           maxW={isDone && "40"}
         />
       </Tooltip>

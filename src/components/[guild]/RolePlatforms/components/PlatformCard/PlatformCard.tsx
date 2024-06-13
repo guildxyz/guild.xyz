@@ -32,6 +32,7 @@ const PlatformCard = ({
       title={name}
       titleRightElement={titleRightElement}
       description={contentRow || info}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       image={image || guildPlatform.platformGuildData?.imageUrl}
       colorScheme={rewards[type].colorScheme}
       {...{ actionRow, cornerButton }}

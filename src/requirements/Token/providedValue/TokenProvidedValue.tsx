@@ -7,6 +7,7 @@ import { NULL_ADDRESS } from "utils/guildCheckout/constants"
 const TokenProvidedValue = ({ requirement }: ProvidedValueDisplayProps) => {
   const {
     data: { symbol },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useTokenData(requirement?.chain, requirement?.address ?? NULL_ADDRESS)
 
   const tagBg = useColorModeValue("blackAlpha.100", "blackAlpha.300")

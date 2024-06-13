@@ -15,6 +15,7 @@ const useGuildForms = () => {
 const useGuildForm = (formId?: number) => {
   const { data, ...rest } = useGuildForms()
   return {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     form: data?.find((form) => form.id === formId),
     ...rest,
   }

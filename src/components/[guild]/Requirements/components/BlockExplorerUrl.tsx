@@ -20,13 +20,16 @@ const BlockExplorerUrl = ({
   const { colorMode } = useColorMode()
   const { chain, type, address, data } = useRequirementContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const blockExplorerUrl = CHAIN_CONFIG[chainProp ?? chain].blockExplorerUrl
 
   if (type === "COIN" || addressProp === NULL_ADDRESS || !blockExplorerUrl)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return null
 
   // Some explorers don't support the /token path
   const path =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     pathProp ?? (["BERA_TESTNET"].includes(chainProp ?? chain) ? "address" : "token")
 
   const url =
@@ -37,6 +40,7 @@ const BlockExplorerUrl = ({
   return (
     <RequirementLinkButton
       href={url}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       imageUrl={CHAIN_CONFIG[chainProp ?? chain].blockExplorerIconUrl[colorMode]}
     >
       {label ?? "View on explorer"}

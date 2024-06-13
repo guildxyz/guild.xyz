@@ -34,9 +34,11 @@ type Props = {
 }
 
 const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { chain, contractAddress } = guildPlatform.platformGuildData
 
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatform = roles
     .flatMap((role) => role.rolePlatforms)
     .find((rp) => rp.guildPlatformId === guildPlatform.id)
@@ -73,17 +75,22 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
             </Center>
           ) : (
             <EditNftForm
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               guildPlatformId={guildPlatform.id}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               rolePlatformId={rolePlatform.id}
               defaultValues={{
                 chain: chain as ContractCallSupportedChain,
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 tokenTreasury: treasury,
                 name,
                 price: Number(
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   formatUnits(fee, CHAIN_CONFIG[chain].nativeCurrency.decimals)
                 ),
                 description,
                 image,
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 attributes: attributes?.map((attr) => ({
                   name: attr.trait_type,
                   value: attr.value,
@@ -91,7 +98,9 @@ const EditNftModal = ({ isOpen, onClose, guildPlatform }: Props) => {
                 maxSupply: Number(maxSupply),
                 mintableAmountPerUser: Number(mintableAmountPerUser),
                 soulbound: soulbound ? "true" : "false",
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 startTime: getShortDate(rolePlatform.startTime),
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 endTime: getShortDate(rolePlatform.endTime),
               }}
               onSuccess={onClose}
@@ -124,6 +133,7 @@ const EditNftForm = ({
     control: methods.control,
     name: "chain",
   })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const shouldSwitchChain = Chains[chainId] !== chain
 
   const { onSubmit, isLoading } = useEditNft({
@@ -137,7 +147,9 @@ const EditNftForm = ({
       onSubmit({
         fields: {
           ...data,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           startTime: datetimeLocalToIsoString(data.startTime),
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           endTime: datetimeLocalToIsoString(data.endTime),
         },
         dirtyFields: methods.formState.dirtyFields,

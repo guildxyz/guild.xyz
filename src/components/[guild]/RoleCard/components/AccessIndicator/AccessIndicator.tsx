@@ -30,6 +30,7 @@ type Props = {
 
 const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) => r.id === roleId)
   const { error, isValidating, reqAccesses, hasRoleAccess } =
     useRoleMembership(roleId)
@@ -54,6 +55,7 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
   )
   const errorTextFromConfig =
     requirementsWithErrors.length > 0 &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     errors[firstRequirementWithErrorFromConfig?.type.split("_")[0]]
 
   if (!isMember)
@@ -175,8 +177,10 @@ const AccessIndicator = ({ roleId, isOpen, onToggle }: Props): JSX.Element => {
       <AccessIndicatorUI
         colorScheme="gray"
         label={`No access${
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           role.logic === "ANY_OF" && typeof accessedRequirementCount === "number"
-            ? ` (${accessedRequirementCount}/${role.anyOfNum})`
+            ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+              ` (${accessedRequirementCount}/${role.anyOfNum})`
             : ""
         }`}
         icon={X}

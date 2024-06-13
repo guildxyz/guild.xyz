@@ -37,9 +37,12 @@ const TextCardButton = ({ platform }: Props) => {
     error,
     response,
     modalProps: { isOpen, onOpen, onClose },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useClaimText(rolePlatform?.id)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { claimed } = useClaimedReward(rolePlatform?.id)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isAvailable } = getRolePlatformTimeframeInfo(rolePlatform)
   const isButtonDisabled = !isAvailable && !claimed
 
@@ -47,6 +50,7 @@ const TextCardButton = ({ platform }: Props) => {
     <>
       <Tooltip
         isDisabled={!isButtonDisabled}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         label={claimTextButtonTooltipLabel[getRolePlatformStatus(rolePlatform)]}
         hasArrow
         shouldWrapChildren
@@ -68,6 +72,7 @@ const TextCardButton = ({ platform }: Props) => {
       </Tooltip>
 
       <ClaimTextModal
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         title={platform.platformGuildData.name}
         isOpen={isOpen}
         onClose={onClose}

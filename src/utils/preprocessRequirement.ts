@@ -39,17 +39,21 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
 
   if (processedRequirement.type?.startsWith("COVALENT_")) {
     if (!processedRequirement?.data?.timestamps?.minAmount) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       delete processedRequirement.data.timestamps.minAmount
     }
 
     if (!processedRequirement?.data?.timestamps?.maxAmount) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       delete processedRequirement.data.timestamps.maxAmount
     }
   }
 
   if (processedRequirement.type === "COIN") {
     processedRequirement.address = undefined
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     if (!processedRequirement.data.minAmount) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       processedRequirement.data.minAmount = 0
     }
   }
@@ -58,10 +62,13 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
     (processedRequirement.type === "ERC721" ||
       processedRequirement.type === "ERC1155" ||
       processedRequirement.type === "NOUNS") &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     !processedRequirement.data.attributes?.length &&
     !processedRequirement.data?.ids?.length
   ) {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     processedRequirement.data.attributes = undefined
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0
   }
 
@@ -70,6 +77,7 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
       processedRequirement.type === "ERC1155") &&
     processedRequirement.data?.attributes?.length
   ) {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     processedRequirement.data.attributes = requirement.data.attributes.map(
       (attribute) => ({
         ...attribute,
@@ -103,6 +111,7 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
     processedRequirement.type === "CONTRACT" &&
     Array.isArray(processedRequirement.data?.params)
   ) {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     processedRequirement.data.params = requirement.data.params.map(
       (param) => param.value
     )

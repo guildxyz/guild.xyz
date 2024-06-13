@@ -28,6 +28,7 @@ const parseConnectError = (
   const regex = /^"(\d+)".*params: ({.*}), error: (\[.*\])/
 
   try {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const [, rawNumber, rawParams, rawErrors] = error.match(regex)
     const number: number = parseInt(rawNumber)
     const params: Record<string, string> = JSON.parse(rawParams)
@@ -41,6 +42,7 @@ const parseConnectError = (
     )
       return error
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return { params: { ...params, code: undefined }, errors }
   } catch {
     return error
@@ -120,6 +122,7 @@ const useConnectPlatform = (
               ])
                 .then((newPlatformUser) => {
                   mutateUser(
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     async (prev) => {
                       /**
                        * For GOOGLE, there is a chance, that the email address got
@@ -157,6 +160,7 @@ const useConnectPlatform = (
               return
             } else {
               if (result.message?.startsWith("Before connecting your")) {
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 const [, addressOrDomain] = result.message.match(
                   /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
                 )
@@ -230,7 +234,9 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
 
     const userId =
       id ??
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       signOptions?.address?.toLowerCase() ??
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       signOptions?.walletClient?.account?.address?.toLowerCase()
 
     return fetcherWithSign([
@@ -263,6 +269,7 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
   return useSubmit(submit, {
     onSuccess: (newPlatformUser) => {
       mutateUser(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
           platformUsers: [
@@ -288,11 +295,13 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
       let toastError: string
 
       if (isAutoConnect) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         errorObject.isAutoConnect = true
       }
 
       if (typeof rawError?.error === "string") {
         const parsedError = parseConnectError(rawError.error)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         errorObject.error = parsedError
         toastError =
           typeof parsedError === "string" ? parsedError : parsedError.errors[0].msg
@@ -302,13 +311,16 @@ const useConnect = (useSubmitOptions?: UseSubmitOptions, isAutoConnect = false) 
 
       captureEvent("Platform connection error", errorObject)
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       if (toastError?.startsWith("Before connecting your")) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         const [, addressOrDomain] = toastError.match(
           /^Before connecting your (?:.*?) account, please disconnect it from this address: (.*?)$/
         )
         showPlatformMergeAlert({ addressOrDomain, platformName })
       } else {
         showErrorToast(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           toastError
             ? { error: toastError, correlationId: rawError.correlationId }
             : // temporary until we solve the X rate limit
@@ -356,6 +368,7 @@ const useConnectEmail = ({
   const { onSubmit, ...rest } = useSubmitWithSign<EmailConnectRepsonse>(submit, {
     onSuccess: (newPlatformUser = {} as any) => {
       mutateUser(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prev) => ({
           ...prev,
           emails: {

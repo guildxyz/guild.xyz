@@ -18,6 +18,7 @@ const AddDiscordPanel = ({ onAdd }: AddRewardPanelProps) => {
               platformName: "DISCORD",
               platformId: PlatformType.DISCORD,
               platformGuildId: data?.id,
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               platformGuildData: {
                 name: data?.name,
                 imageUrl: data?.img,

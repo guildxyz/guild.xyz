@@ -50,10 +50,12 @@ const BeforeAfterActions = (): JSX.Element => {
   if (action === ACTION.UpdateRequirement)
     return (
       <UpdatedDataGrid
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         before={
           before && (
             <RequirementDisplayComponent
               requirement={before as Requirement}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               rightElement={null}
             />
           )
@@ -61,6 +63,7 @@ const BeforeAfterActions = (): JSX.Element => {
         after={
           <RequirementDisplayComponent
             requirement={data as Requirement}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             rightElement={null}
           />
         }
@@ -72,6 +75,7 @@ const BeforeAfterActions = (): JSX.Element => {
     !data ||
     !Object.keys(data).some((key) => data[key] !== before[key])
   )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return null
 
   return (

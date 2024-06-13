@@ -53,14 +53,19 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   const { fee, token, guildPlatform } = useTokenRewardContext()
 
   const { refetch } = usePool(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     BigInt(guildPlatform.platformGuildData.poolId)
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const chain = guildPlatform.platformGuildData.chain
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
 
   const { onSubmit, loadingText: claimLoadingText } = useCollectToken(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chain,
     rolePlatforms[0]?.roleId,
     rolePlatforms[0]?.id,
@@ -72,13 +77,16 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
   )
 
   const { refetch: refetchClaimedAmount } = useTokenClaimedAmount(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatform.platformGuildData.poolId,
     rolePlatforms.map((rp) => rp.id),
     token.data.decimals
   )
 
   const { chainId } = useAccount()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isOnCorrectChain = Number(Chains[chain]) === chainId
 
   const { triggerMembershipUpdate: submitClaim, isLoading: membershipLoading } =
@@ -108,7 +116,9 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
 
   const { isBalanceSufficient } = useIsBalanceSufficient({
     address: NULL_ADDRESS,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chain: chain,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     amount: formattedFee,
   })
 
@@ -195,6 +205,7 @@ const ClaimTokenModal = ({ isOpen, onClose }: Props) => {
             https://github.com/chakra-ui/chakra-ui/issues/2966
             */}
 
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <SwitchNetworkButton targetChainId={Number(Chains[chain])} />
             <Collapse
               in={isOnCorrectChain}

@@ -17,6 +17,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
   const { pickedCurrency, setPickedCurrency } = useGuildCheckoutContext()
 
   const { token, fee, error, isLoading } = useVault(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement?.address,
     requirement?.data?.id,
     requirement?.chain
@@ -26,13 +27,16 @@ const PaymentFeeCurrency = (): JSX.Element => {
 
   const { data: tokenData } = useToken({
     address: token,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[requirement.chain],
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     shouldFetch: Boolean(!isNativeCurrency && Chains[requirement.chain]),
   })
 
   const convertedFee = fee
     ? isNativeCurrency
-      ? formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        formatUnits(fee, CHAIN_CONFIG[requirement.chain].nativeCurrency.decimals)
       : tokenData?.decimals
       ? formatUnits(fee, tokenData.decimals)
       : undefined
@@ -60,6 +64,7 @@ const PaymentFeeCurrency = (): JSX.Element => {
       >
         <TokenInfo
           address={pickedCurrency}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           chainId={Chains[requirement?.chain]}
           requiredAmount={Number(convertedFee)}
           isLoading={isLoading}

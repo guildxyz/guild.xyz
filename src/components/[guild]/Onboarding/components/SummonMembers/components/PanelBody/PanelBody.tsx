@@ -20,6 +20,7 @@ const PanelBody = () => {
 
   const { imageUrl, name } = useGuild()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const shouldShowGuildImage = imageUrl.includes("http")
   const guildImageDimension = shouldShowGuildImage ? 30 : 15
 

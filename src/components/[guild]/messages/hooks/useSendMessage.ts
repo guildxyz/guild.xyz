@@ -26,6 +26,7 @@ const useSendMessage = (onSuccess?: () => void) => {
         title: "Successfully sent message!",
       })
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       mutateMessages((prev) => [response.message, ...prev], {
         revalidate: false,
       })

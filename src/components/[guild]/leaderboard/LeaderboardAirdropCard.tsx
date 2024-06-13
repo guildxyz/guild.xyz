@@ -40,8 +40,10 @@ const LeaderboardAirdropCard = () => {
 
   const { roles } = useGuild()
   const { roleIds } = useMembership()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rolePlatforms = useRolePlatformsOfReward(guildPlatform.id)
   const rolePlatformIds = rolePlatforms
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     .filter((rp) => roleIds?.includes(rp.roleId) || false)
     .map((rp) => rp.id)
 
@@ -133,6 +135,7 @@ const LeaderboardAirdropCard = () => {
             </Heading>
             <HStack gap={1} display={{ lg: "inherit", base: "none" }}>
               <AvailabilityTags
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 rolePlatform={roles
                   .flatMap((role) => role.rolePlatforms)
                   .find((rp) => rp.id === rolePlatformIds[0])}

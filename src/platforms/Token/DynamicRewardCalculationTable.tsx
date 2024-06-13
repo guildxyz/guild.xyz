@@ -16,9 +16,11 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
   const { rawProvidedUserAmount, dynamicUserAmount, isLoading } =
     useDynamicRewardUserAmount(rolePlatform)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const rewardName = rolePlatform.guildPlatform.platformGuildData.name
 
   const propsHook =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     rewards[PlatformType[rolePlatform.guildPlatform.platformId]]?.cardPropsHook
 
   const { image = null } = propsHook ? propsHook(rolePlatform.guildPlatform) : {}
@@ -66,6 +68,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
           <Td
             sx={{ fontSize: "sm !important", "& *": { fontSize: "sm !important" } }}
           >
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {!!requirement && <ProvidedValueDisplay requirement={requirement} />}
           </Td>
           <Td isNumeric>{rawProvidedUserAmount ?? <JoinToCalculate />}</Td>
@@ -75,6 +78,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
           <Td>Multiplier</Td>
           <Td isNumeric>
             <Icon boxSize={3} mb={"-1px"} as={X} />{" "}
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             {(rolePlatform.dynamicAmount.operation as any).params.multiplier}
           </Td>
         </Tr>

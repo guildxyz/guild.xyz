@@ -29,6 +29,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
   const methods = useForm<CreateNftFormType>({
     mode: "all",
     defaultValues: {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       chain: getDefaultChain(chainId),
       tokenTreasury: address,
       name: "",
@@ -39,7 +40,9 @@ const CreateNftForm = ({ onSuccess }: Props) => {
       maxSupply: 0,
       mintableAmountPerUser: 0,
       soulbound: "true",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       startTime: null,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       endTime: null,
     },
   })
@@ -49,6 +52,7 @@ const CreateNftForm = ({ onSuccess }: Props) => {
     control: methods.control,
     name: "chain",
   })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const shouldSwitchChain = Chains[chainId] !== chain
 
   const { setShouldShowCloseAlert, setIsBackButtonDisabled } =

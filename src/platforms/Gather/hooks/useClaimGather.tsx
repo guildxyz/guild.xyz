@@ -20,6 +20,7 @@ const useClaimGather = (rolePlatformId: number) => {
   const { cache } = useSWRConfig()
 
   const { id: guildId, roles, mutateGuild } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleId = roles.find((role) =>
     role.rolePlatforms.some((rp) => rp.id === rolePlatformId)
   )?.id
@@ -51,6 +52,7 @@ const useClaimGather = (rolePlatformId: number) => {
          * versa)
          */
         mutateCachedResponse(response)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         mutateGuild((prevGuild) => ({
           ...prevGuild,
           roles: prevGuild?.roles.map((role) => {
@@ -64,6 +66,7 @@ const useClaimGather = (rolePlatformId: number) => {
 
                 return {
                   ...rp,
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   claimedCount: rp.claimedCount + 1,
                 }
               }),

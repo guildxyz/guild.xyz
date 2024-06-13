@@ -50,6 +50,7 @@ const getRewardLabel = (platform: Partial<GuildPlatform>) => {
       return "Role in: "
 
     case PlatformType.GOOGLE:
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       return `${capitalize(platform.platformGuildData.role ?? "reader")} access to: `
 
     default:
@@ -79,6 +80,7 @@ const TemplateCard = ({
 
   return (
     <Box
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       data-test={`role-${slugify(role.name)}`}
       shadow={part === 0 ? "sm" : "md"}
       tabIndex={0}
@@ -144,6 +146,7 @@ const TemplateCard = ({
                     const isDisabled =
                       rewards[platform.platformName].asRewardRestriction ===
                         PlatformAsRewardRestrictions.SINGLE_ROLE &&
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       roles
                         .filter((r) => r.name !== name)
                         .some((r) =>
@@ -176,6 +179,7 @@ const TemplateCard = ({
                             pt={4}
                             isDisabled={isDisabled}
                             isChecked={
+                              // @ts-expect-error TODO: fix this error originating from strictNullChecks
                               !!roles
                                 .find((r) => r.name === name)
                                 ?.rolePlatforms?.find(
@@ -196,6 +200,7 @@ const TemplateCard = ({
                             }
                             icon={
                               <RewardIcon
+                                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                                 rolePlatformId={platform.id}
                                 guildPlatform={platform as GuildPlatform}
                                 withMotionImg={false}
@@ -236,6 +241,7 @@ const TemplateCard = ({
           p={5}
           borderWidth={2}
           borderStyle={selected ? "solid" : "dashed"}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           borderColor={selected && part === 0 && "green.500"}
           borderRadius="2xl"
           pointerEvents="none"
@@ -243,6 +249,7 @@ const TemplateCard = ({
         >
           {selected ? (
             <Circle
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               data-test={`checked-role-${slugify(role.name)}`}
               bgColor="green.500"
               color="white"
@@ -271,6 +278,7 @@ const getValueToDisplay = (
     platformName: string
   }
 ): string =>
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   platform.platformGuildData.name ??
   `${rewards[platform.platformName].name} ${
     rewards[platform.platformName].gatedEntity

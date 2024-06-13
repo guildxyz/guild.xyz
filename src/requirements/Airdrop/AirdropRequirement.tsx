@@ -15,6 +15,7 @@ const AirdropRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     { type: "GUILD_SNAPSHOT" }
   >
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isHidden } = requirement?.data
 
   const { isOpen, onOpen, onClose } = useDisclosure()

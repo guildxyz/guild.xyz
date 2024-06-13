@@ -34,6 +34,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
     resolver: zodResolver(FormCreationSchema),
     defaultValues: {
       ...form,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       fields: form.fields?.map((field) => {
         if (
           field.type === "SINGLE_CHOICE" ||
@@ -61,6 +62,7 @@ const EditFormModal = ({ isOpen, onClose, form }: Props) => {
 
   const toast = useToast()
   const { onSubmit, isLoading } = useEditForm({
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     formId: form.id,
     onSuccess: () => {
       toast({

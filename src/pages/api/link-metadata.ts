@@ -21,6 +21,7 @@ const handler: NextApiHandler<LinkMetadata> = async (request, response) => {
     response.status(400).json({ error: "Missing required query param: URL" })
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const html = await fetch(url.toString()).then((res) => res.text())
   const [, , title] = new RegExp(/<title(.*)>(.*)<\/title>/gi).exec(html) ?? []
 

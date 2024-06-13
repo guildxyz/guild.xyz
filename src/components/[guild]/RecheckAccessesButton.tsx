@@ -53,6 +53,7 @@ const RecheckAccessesButton = ({
   const showErrorToast = useShowErrorToast()
   const [isFinished, setIsFinished] = useState(false)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { reqAccesses } = useRoleMembership(roleId)
   const [latestAllResendDate, setLatestAllResendDate] = useAtom(latestResendDateAtom)
 
@@ -204,6 +205,7 @@ const RecheckAccessesButton = ({
 
 const TopRecheckAccessesButton = () => {
   const { isStuck } = useIsTabsStuck()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   return (

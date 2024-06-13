@@ -24,12 +24,14 @@ const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
   const { roles, guildPlatforms } = useGuild()
   const { isLoading, error } = useClaimedRoles()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatformId = guildPlatforms.find(
     (platform) => platform.platformId === PlatformType.POLYGON_ID
   )
 
   const onlyWithPolygonIDReward = (role: Role) =>
     !!role.rolePlatforms.find(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       (rolePlatform) => rolePlatform.guildPlatformId === guildPlatformId.id
     )
 
@@ -56,6 +58,7 @@ const MintPolygonIDProofModal = ({ isOpen, onClose }: Props) => {
               <Spacer />
             </Alert>
           ) : (
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             roles
               .filter(onlyWithPolygonIDReward)
               .map((role) => <MintableRole key={role.id} role={role} />)

@@ -82,6 +82,7 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
                         borderBottomRadius="xl"
                       >
                         <Tbody fontWeight="normal" fontSize="xs">
+                          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                           {Object.entries(requirement.data)?.map(
                             ([key, value]: [string, any]) => (
                               <Tr key={key}>
@@ -120,6 +121,7 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
             return (
               <>
                 {"Have a Gitcoin Passport with the "}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DataBlock>{requirement.data.stamp}</DataBlock>
                 {" stamp"}
               </>
@@ -128,9 +130,11 @@ const GitcoinPassportRequirement = ({ ...rest }: RequirementProps): JSX.Element 
             return (
               <>
                 {"Have a Gitcoin Passport with "}
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DataBlock>{requirement.data.score}</DataBlock>
                 {" score in "}
                 <DataBlock>{`${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   scorers[requirement.data.id] ?? "unknown scorer"
                 }`}</DataBlock>
               </>

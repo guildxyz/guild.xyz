@@ -42,6 +42,7 @@ const CustomSnapshotForm = () => {
       if (accepted.length > 0) {
         const reader = new FileReader()
         reader.onload = function (e) {
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           parseAndValidateCSV(e.target.result as string)
             .then((validatedData) => {
               setValue("requirements", [

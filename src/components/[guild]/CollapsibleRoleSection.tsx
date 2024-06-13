@@ -23,6 +23,7 @@ const CollapsibleRoleSection = ({
         rightIcon={
           <Icon
             as={CaretDown}
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             transform={isOpen && "rotate(-180deg)"}
             transition="transform .3s"
           />

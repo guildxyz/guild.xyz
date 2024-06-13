@@ -8,6 +8,7 @@ const EditGuildDrawerContext = createContext<{
   isOpen: boolean
   onOpen: () => void
   onClose: () => void
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 }>(undefined)
 
 const DynamicEditGuildDrawer = dynamic(() => import("./EditGuildDrawer"))

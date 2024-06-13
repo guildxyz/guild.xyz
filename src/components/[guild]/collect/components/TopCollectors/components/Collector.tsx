@@ -13,6 +13,7 @@ type Props = {
 const Collector = ({ address, balance }: Props): JSX.Element => {
   const domain = useResolveAddress(address)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (!address) return null
 
   return (

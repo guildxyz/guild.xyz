@@ -94,6 +94,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
     control,
     name: "chain",
   })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const shouldSwitchChain = Chains[chainId] !== chain
 
   const {
@@ -251,7 +252,9 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                 title="Limit supply"
                 description="Limit the total number of NFTs and the number each user can collect. First come, first served."
                 defaultChecked={
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   defaultValues.maxSupply > 0 ||
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   defaultValues.mintableAmountPerUser > 0
                 }
                 onChange={(e) => {
@@ -280,6 +283,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
                   title="Limit claiming time"
                   description="Set a claim period for the NFT."
                   defaultChecked={
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     !!defaultValues.startTime || !!defaultValues.endTime
                   }
                   onChange={(e) => {

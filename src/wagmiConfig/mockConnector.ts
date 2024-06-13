@@ -180,9 +180,11 @@ export function mock(
 
       return custom({ request })({ retryCount: 0 })
     },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     async getClient({ chainId }) {
       const client = createWalletClient({
         transport: http(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           config.chains.find((c) => c.id === chainId).rpcUrls.default.http[0]
         ),
         account: parameters.accounts[0],

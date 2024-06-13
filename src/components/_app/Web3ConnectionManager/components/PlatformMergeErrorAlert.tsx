@@ -37,6 +37,7 @@ const PlatformMergeErrorAlert = () => {
   const { addressOrDomain, platformName } = state || {}
   const onClose = () => setState(false)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const socialAccountName = rewards[platformName]?.name ?? "social"
   const { onConnect, isLoading } = useConnectPlatform(
     platformName ?? "DISCORD",

@@ -51,8 +51,10 @@ const useIsBalanceSufficient = ({
     ? false
     : typeof formattedAmount === "bigint" &&
       (pickedCurrencyIsNative
-        ? coinBalanceData?.value >= formattedAmount
-        : tokenBalanceData?.value >= formattedAmount)
+        ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+          coinBalanceData?.value >= formattedAmount
+        : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+          tokenBalanceData?.value >= formattedAmount)
 
   return {
     isBalanceSufficient,

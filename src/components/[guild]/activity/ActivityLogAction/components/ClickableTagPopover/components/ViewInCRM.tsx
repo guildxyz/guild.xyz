@@ -16,6 +16,7 @@ const ViewInCRM = ({ label, queryKey, queryValue }: Props): JSX.Element => {
   const isCRMDisabled = !featureFlags?.includes("CRM")
   const { activityLogType } = useActivityLog()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (activityLogType === "user") return null
 
   return (

@@ -27,6 +27,7 @@ const DynamicShowMintLinkButton = dynamic(
 )
 
 const PoapReward = ({ platform: platform, withMotionImg }: RewardProps) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { platformId, platformGuildData } = platform.guildPlatform
   const { urlName } = useGuild()
   const { claimed } = useClaimedReward(platform.id)

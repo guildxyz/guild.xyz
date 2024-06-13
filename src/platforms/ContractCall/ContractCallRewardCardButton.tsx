@@ -16,16 +16,20 @@ const ContractCallRewardCardButton = ({ platform }: Props) => {
   const { captureEvent } = usePostHogContext()
   const postHogOptions = { guild: urlName }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { chain, contractAddress } = platform.platformGuildData
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) =>
     r.rolePlatforms?.find((rp) => rp.guildPlatformId === platform.id)
   )
 
   const { data: nftBalance } = useGuildRewardNftBalanceByUserId({
     nftAddress: contractAddress,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[chain],
   })
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const alreadyCollected = nftBalance > 0
 
   if (!role)

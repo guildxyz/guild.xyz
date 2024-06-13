@@ -12,7 +12,9 @@ const useIsStuck = () => {
 
   useEffect(() => {
     const cachedRef = ref.current
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const topOffsetPx = parseInt(getComputedStyle(cachedRef).top) + 1
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const bottomOffsetPx = parseInt(getComputedStyle(cachedRef).bottom) + 1
 
     const observer = new IntersectionObserver(
@@ -28,7 +30,9 @@ const useIsStuck = () => {
         rootMargin: `-${topOffsetPx || 0}px 0px 0px ${bottomOffsetPx || 0}px`,
       }
     )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     observer.observe(cachedRef)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     return () => observer.unobserve(cachedRef)
   }, [ref, isReady])
 

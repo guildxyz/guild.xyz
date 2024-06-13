@@ -37,6 +37,7 @@ const TwitterRequirement = (props: RequirementProps) => {
 
   const { data: twitterAvatar } = useSWRImmutable(
     // requirement.data?.id && TWITTER_HANDLE_REGEX.test(requirement.data.id)
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     false ? `/v2/third-party/twitter/users/${requirement.data.id}/avatar` : null
   )
 
@@ -67,6 +68,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 <Text as="span">{'Have "'}</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DataBlockWithCopy text={requirement.data.id} />
                 <Text as="span">{'" in your X username'}</Text>
               </>
@@ -75,6 +77,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 <Text as="span">{'Have "'}</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DataBlockWithCopy text={requirement.data.id} />
                 <Text as="span">{'" in your X bio'}</Text>
               </>
@@ -110,6 +113,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <Text as="span">
                 {`Have a verified ${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   requirement.data?.id !== "any" ? requirement.data.id : ""
                 } X account`}
               </Text>
@@ -127,6 +131,7 @@ const TwitterRequirement = (props: RequirementProps) => {
               <>
                 {"Follow "}
                 <TwitterIntent type="link" action="follow">
+                  {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                   @{requirement.data.id}
                 </TwitterIntent>
                 {" on X"}
@@ -184,6 +189,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             )
           case "TWITTER_ACCOUNT_AGE_RELATIVE":
             const formattedAccountAge = formatRelativeTimeFromNow(
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               requirement.data.minAmount
             )
             return (
@@ -196,6 +202,7 @@ const TwitterRequirement = (props: RequirementProps) => {
             return (
               <>
                 <Text as="span">{"Have an X account since at least "}</Text>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <DataBlockWithDate timestamp={requirement.data.minAmount} />
               </>
             )

@@ -9,6 +9,7 @@ const DiscordPreview = (): JSX.Element => {
   })
   const { data, isValidating } = useServerData(serverId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   useSetRoleImageAndNameFromPlatformData(data?.serverIcon, data?.serverName)
 
   return (

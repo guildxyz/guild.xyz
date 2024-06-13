@@ -35,6 +35,7 @@ const useSetRoleImageAndNameFromPlatformData = (
 
     setAlreadyUploaded(true)
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     if (platformImage?.startsWith(process.env.NEXT_PUBLIC_IPFS_GATEWAY)) {
       setValue("imageUrl", platformImage)
       return

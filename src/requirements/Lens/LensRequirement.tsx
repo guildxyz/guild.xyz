@@ -57,6 +57,7 @@ const LensRequirement = (props: RequirementProps) => {
           case "LENS_REACT":
             return (
               <>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {`${getReactionLabel(requirement.data.reaction)} the `}
                 <LensPostLink />
                 {` post on Lens Protocol`}
@@ -65,8 +66,10 @@ const LensRequirement = (props: RequirementProps) => {
           case "LENS_ACTION":
             return (
               <>
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {`${getActionLabel(requirement.data.action)} the `}
                 <LensPostLink />
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 {` post on ${getActionPlatform(requirement.data.publishedOn)}`}
               </>
             )
@@ -80,10 +83,12 @@ const LensRequirement = (props: RequirementProps) => {
             )
           case "LENS_TOTAL_FOLLOWERS":
             return (
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               <>{`Have at least ${requirement.data.min} followers on Lens Protocol`}</>
             )
           case "LENS_TOTAL_POSTS":
             return (
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               <>{`Have at least ${requirement.data.min} posts on Lens Protocol`}</>
             )
           default:
@@ -96,6 +101,7 @@ const LensRequirement = (props: RequirementProps) => {
 
 const LensFollowRequirement = (props: RequirementProps) => {
   const { type, data } = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data: lensProfile, isLoading } = useLensProfile(data.id)
 
   return (
@@ -125,12 +131,14 @@ const LensPostLink = () => {
 
   return (
     <Link
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       href={`${getPlatformBaseUrl(data.publishedOn)}${data.id}`}
       isExternal
       display="inline"
       colorScheme="blue"
       fontWeight="medium"
     >
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {data.id}
     </Link>
   )

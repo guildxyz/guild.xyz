@@ -70,6 +70,7 @@ const FilterTag = ({
   const [isLoading, setIsLoading] = useState(false)
   const [shouldRemove, setShouldRemove] = useState(value?.length === 0)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [inputError, setInputError] = useState<string>(null)
 
   const [state, send] = useMachine(
@@ -112,6 +113,7 @@ const FilterTag = ({
   const { size, ...filteredInputProps } = inputProps
 
   const onChange = async (e) => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setInputError(null)
     const newValue = e.target.value
 
@@ -148,6 +150,7 @@ const FilterTag = ({
     )
     const rolePlatform = role?.rolePlatforms.find((rp) => rp.id === Number(value))
     const guildPlatform = guildPlatforms?.find(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       (gp) => gp.id === rolePlatform.guildPlatformId
     )
 
@@ -156,10 +159,12 @@ const FilterTag = ({
 
     return {
       rolePlatformId: Number(value),
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       platformType: PlatformType[guildPlatform?.platformId] as PlatformName,
       label:
         guildPlatform?.platformId === PlatformType.DISCORD
-          ? `${role.name} - ${name}`
+          ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            `${role.name} - ${name}`
           : name,
       roleId: role?.id,
     }
@@ -217,6 +222,7 @@ const FilterTag = ({
                     return (
                       <ActivityLogRoleTag
                         roleId={Number(value)}
+                        // @ts-expect-error TODO: fix this error originating from strictNullChecks
                         guildId={guildId}
                         pr={6}
                         borderLeftRadius={0}
@@ -225,6 +231,7 @@ const FilterTag = ({
                   }
                   case "rolePlatformId": {
                     return (
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
                       <RewardTag
                         {...getRewardTagProps()}
                         pr={7}

@@ -23,6 +23,7 @@ export type GuildCheckoutContextType = {
   setAgreeWithTOS: Dispatch<SetStateAction<boolean>>
 }
 
+// @ts-expect-error TODO: fix this error originating from strictNullChecks
 const GuildCheckoutContext = createContext<GuildCheckoutContextType>(undefined)
 
 const GuildCheckoutProvider = ({
@@ -47,6 +48,7 @@ const GuildCheckoutProvider = ({
         isOpen,
         onOpen,
         onClose,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         pickedCurrency,
         setPickedCurrency,
         agreeWithTOS,

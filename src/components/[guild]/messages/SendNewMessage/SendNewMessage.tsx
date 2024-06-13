@@ -51,9 +51,12 @@ const DynamicMessagingRateLimitAlert = dynamic(
 const SendNewMessage = (props: ButtonProps) => {
   const { data: guildMessages } = useGuildMessages()
   const latestMessageCreatedAt =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildMessages?.length > 0
-      ? new Date(guildMessages[0].createdAt).getTime()
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        new Date(guildMessages[0].createdAt).getTime()
       : undefined
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isSendDisabled = latestMessageCreatedAt > Date.now() - DAY_IN_MS
 
   const methods = useForm<SendMessageForm>({
@@ -75,6 +78,7 @@ const SendNewMessage = (props: ButtonProps) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { isStuck } = useIsTabsStuck()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, buttonColorScheme } = useThemeContext()
 
   const { onSubmit, isLoading } = useSendMessage(() => {
@@ -114,6 +118,7 @@ const SendNewMessage = (props: ButtonProps) => {
               <Stack spacing={6}>
                 {isSendDisabled && (
                   <DynamicMessagingRateLimitAlert
+                    // @ts-expect-error TODO: fix this error originating from strictNullChecks
                     latestMessageCreatedAt={latestMessageCreatedAt}
                   />
                 )}
@@ -132,6 +137,7 @@ const SendNewMessage = (props: ButtonProps) => {
                       <Text
                         as="span"
                         fontWeight="bold"
+                        // @ts-expect-error TODO: fix this error originating from strictNullChecks
                         color={reachableUsers?.length > 0 && greenTextColor}
                       >
                         {isReachableUsersLoading ? (
@@ -142,6 +148,7 @@ const SendNewMessage = (props: ButtonProps) => {
                       </Text>
                       <Text
                         as="span"
+                        // @ts-expect-error TODO: fix this error originating from strictNullChecks
                         color={reachableUsers?.length > 0 && greenTextColor}
                       >
                         {" reachable "}

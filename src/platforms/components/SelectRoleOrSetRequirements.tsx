@@ -45,6 +45,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
       : []
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const availableRoles = roles.filter((role) => !alreadyUsedRoles.has(role.id))
 
   const relevantRoles = group

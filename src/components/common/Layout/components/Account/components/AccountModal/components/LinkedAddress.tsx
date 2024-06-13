@@ -44,6 +44,7 @@ const LinkedAddress = ({ addressData }: Props) => {
   const { address, isDelegated, isPrimary, walletType } = addressData ?? {}
   const { address: connectedAddress } = useWeb3ConnectionManager()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const isCurrent = address?.toLowerCase() === connectedAddress.toLowerCase()
 
   const {
@@ -141,6 +142,7 @@ const LinkedAddress = ({ addressData }: Props) => {
         </Menu>
       </HStack>
 
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <Alert {...{ isOpen, onClose }} leastDestructiveRef={alertCancelRef}>
         <AlertDialogOverlay>
           <AlertDialogContent>
@@ -156,6 +158,7 @@ const LinkedAddress = ({ addressData }: Props) => {
             </AlertDialogBody>
 
             <AlertDialogFooter>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <Button ref={alertCancelRef} onClick={onClose}>
                 Cancel
               </Button>

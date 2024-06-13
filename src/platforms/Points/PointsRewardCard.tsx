@@ -26,6 +26,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
     <>
       <RewardCard
         label={rewards.POINTS.name}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         title={
           isLoading
             ? null
@@ -39,6 +40,7 @@ const PointsRewardCard = ({ guildPlatform }) => {
           )
         }
         colorScheme={rewards.POINTS.colorScheme}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         cornerButton={
           isAdmin && (
             <DynamicPointsCardMenu

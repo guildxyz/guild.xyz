@@ -4,7 +4,9 @@ import { RolePlatform, RolePlatformStatus } from "types"
 export const getRolePlatformStatus = (
   rolePlatform: RolePlatform
 ): RolePlatformStatus => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime)
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime)
 
   if (
@@ -12,8 +14,10 @@ export const getRolePlatformStatus = (
     rolePlatform?.capacity === rolePlatform?.claimedCount
   ) {
     return "ALL_CLAIMED"
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } else if (startTimeDiff > 0) {
     return "NOT_STARTED"
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } else if (endTimeDiff < 0) {
     return "ENDED"
   } else {
@@ -22,7 +26,9 @@ export const getRolePlatformStatus = (
 }
 
 export const getRolePlatformTimeframeInfo = (rolePlatform: RolePlatform) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const startTimeDiff = getTimeDiff(rolePlatform?.startTime) ?? 0
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endTimeDiff = getTimeDiff(rolePlatform?.endTime) ?? 0
 
   const isAvailable =

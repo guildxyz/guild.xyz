@@ -34,6 +34,7 @@ const RoleRequirementsSectionHeader = ({
     p={5}
     pb={0}
     mb={{ base: 4, md: 6 }}
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     transform={!isOpen && "translateY(10px)"}
     transition="transform .2s"
   >

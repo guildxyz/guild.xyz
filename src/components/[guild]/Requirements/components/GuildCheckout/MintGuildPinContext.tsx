@@ -53,6 +53,7 @@ const MintGuildPinContext = createContext<
     mintedTokenId?: number
     setMintedTokenId: Dispatch<SetStateAction<number>>
   } & GuildCheckoutContextType
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 >(undefined)
 
 const MintGuildPinProviderComponent = ({
@@ -90,6 +91,7 @@ const MintGuildPinProviderComponent = ({
   }, [isPinVisible, isActivateModalOpen, guildCheckoutContext.isOpen])
 
   const shouldFetchImage =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     featureFlags.includes("GUILD_CREDENTIAL") &&
     id &&
     typeof pinType === "number" &&
@@ -102,6 +104,7 @@ const MintGuildPinProviderComponent = ({
     shouldFetchImage ? `/v2/guilds/${id}/pin?guildAction=${pinType}` : null
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [mintedTokenId, setMintedTokenId] = useState<number>(null)
 
   return (

@@ -8,13 +8,15 @@ import { useJuiceboxProject } from "./hooks/useJuicebox"
 const JuiceboxRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { project, isLoading, error } = useJuiceboxProject(requirement.data.id)
 
   return (
     <Requirement image={project?.logoUri} isImageLoading={isLoading} {...props}>
       {`Hold ${
         requirement.data?.minAmount > 0
-          ? `at least ${requirement.data.minAmount}`
+          ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            `at least ${requirement.data.minAmount}`
           : "any amount of"
       } `}
 
@@ -22,6 +24,7 @@ const JuiceboxRequirement = (props: RequirementProps) => {
         isLoading={isLoading}
         error={error && "API error, please contact Juicebox to report."}
       >
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {project?.name ?? `#${requirement.data.id}`}
       </DataBlock>
       {" ticket(s) in Juicebox"}

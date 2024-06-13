@@ -26,6 +26,7 @@ const PolygonIDRequirement = (props: RequirementProps) => {
 
   const proofAge =
     requirement.data?.maxAmount > 0 &&
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     formatRelativeTimeFromNow(requirement.data.maxAmount)
 
   if (requirement?.data?.query)

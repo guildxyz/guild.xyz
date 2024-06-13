@@ -10,6 +10,7 @@ import Input from "./input"
 const sizes: Record<string, PartsStyleObject<typeof parts>> = {
   ...Input.sizes,
   xs: {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     ...Input.sizes.xs,
     icon: { insetEnd: "0.25rem" },
   },

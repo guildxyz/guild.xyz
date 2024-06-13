@@ -17,6 +17,7 @@ const Visibility = ({
 }: Props) => {
   const VisibilityIcon = VISIBILITY_DATA[entityVisibility].Icon
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const label = useVisibilityTooltipLabel(entityVisibility, visibilityRoleId)
 
   if (entityVisibility === VisibilityType.PUBLIC) return null

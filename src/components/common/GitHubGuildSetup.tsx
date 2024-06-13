@@ -43,6 +43,7 @@ const GitHubGuildSetup = ({
   const { onConnect, isLoading: isConnecting } = useConnectPlatform(
     "GITHUB",
     () => mutateGateables.onSubmit(),
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     null,
     "creation"
   )
@@ -69,6 +70,7 @@ const GitHubGuildSetup = ({
     return <ReconnectAlert platformName="GITHUB" />
   }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   if (gateables?.length > 0) {
     return (
       <>
@@ -81,6 +83,7 @@ const GitHubGuildSetup = ({
             <RepoCard
               key={repo.platformGuildId}
               {...repo}
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               onSelection={onSelection}
             />
           ))}

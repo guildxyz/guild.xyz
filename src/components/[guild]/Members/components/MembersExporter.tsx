@@ -57,6 +57,7 @@ const MembersExporter = (): JSX.Element => {
 
   const exportMembersAsCsv = () => {
     if (!downloadAnchorRef.current) return
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     downloadAnchorRef.current.click()
   }
 
@@ -104,6 +105,7 @@ const MembersExporter = (): JSX.Element => {
               </Alert>
             ) : (
               <RoleSelector
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 roles={roles}
                 onChange={onChange}
                 colorScheme="primary"

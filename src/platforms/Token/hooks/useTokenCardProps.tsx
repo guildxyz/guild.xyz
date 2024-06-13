@@ -3,6 +3,7 @@ import { GuildPlatformWithOptionalId, PlatformName } from "types"
 
 // used in role edit drawer, for AccessHub we have TokenRewardCard
 const useTokenCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { chain, imageUrl, tokenAddress } = guildPlatform.platformGuildData
 
   const {

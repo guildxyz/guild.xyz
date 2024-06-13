@@ -27,7 +27,9 @@ import useSetImageAndNameFromPlatformData from "../hooks/useSetImageAndNameFromP
 import ContactInfo from "./components/ContactInfo"
 
 const BasicInfo = (): JSX.Element => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { setDisabled } = useCreateGuildContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { setLocalBackgroundImage } = useThemeContext()
 
   const setContinueTooltipLabel = useSetAtom(ContinueBtnTooltipLabelAtom)
@@ -45,8 +47,10 @@ const BasicInfo = (): JSX.Element => {
   const guildPlatforms = useWatch({ control, name: "guildPlatforms" })
 
   useEffect(() => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     setDisabled(!name || !contacts[0].contact || !!Object.values(errors).length)
     setContinueTooltipLabel(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       !contacts[0].contact || errors.contacts ? "Contact email required!" : ""
     )
     return () => setContinueTooltipLabel("")
@@ -57,15 +61,18 @@ const BasicInfo = (): JSX.Element => {
     fieldToSetOnError: "imageUrl",
   })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const discordPlatformData = guildPlatforms.find(
     (platform) => platform.platformName === "DISCORD"
   )?.platformGuildData
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const telegramPlatformData = guildPlatforms.find(
     (platform) => platform.platformName === "TELEGRAM"
   )?.platformGuildData
 
   useSetImageAndNameFromPlatformData(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     discordPlatformData?.imageUrl ?? telegramPlatformData?.imageUrl,
     discordPlatformData?.name ?? telegramPlatformData?.name,
     iconUploader.onUpload
@@ -97,6 +104,7 @@ const BasicInfo = (): JSX.Element => {
             <FormLabel>Logo and name</FormLabel>
             <HStack alignItems="start">
               <IconSelector uploader={iconUploader} minW={512} minH={512} />
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <Name width={null} />
             </HStack>
           </FormControl>

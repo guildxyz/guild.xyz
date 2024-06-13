@@ -44,6 +44,7 @@ const BuyPass = () => {
   const { urlName, name, roles } = useGuild()
   const role = roles?.find((r) => r.id === requirement?.roleId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isLoading: isMembershipLoading, reqAccesses } = useRoleMembership(role?.id)
 
   const userSatisfiesOtherRequirements = reqAccesses
@@ -106,6 +107,7 @@ const BuyPass = () => {
               </Alert>
             )}
 
+            {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
             <UnlockingRewards roleId={role.id} />
           </ModalBody>
 
@@ -128,8 +130,10 @@ const BuyPass = () => {
               >
                 {type === "EVM" ? (
                   <>
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <SwitchNetworkButton targetChainId={Chains[requirement.chain]} />
 
+                    {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                     <Collapse in={chainId === Chains[requirement.chain]}>
                       <TOSCheckbox>
                         I understand that if the owner changes the requirements, I

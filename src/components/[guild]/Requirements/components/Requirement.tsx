@@ -77,6 +77,7 @@ const Requirement = ({
             : requirement?.data?.customName || children}
           {!setValue ? (
             <Visibility
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               visibilityRoleId={requirement?.visibilityRoleId}
               entityVisibility={requirement?.visibility ?? VisibilityType.PUBLIC}
               ml="1"

@@ -54,6 +54,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
         shouldCreatePinHolderRole && chain !== "FUEL"
           ? () => {
               onCreateRoleSubmit({
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 guildId,
                 imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`,
                 name: "Pin Holder",

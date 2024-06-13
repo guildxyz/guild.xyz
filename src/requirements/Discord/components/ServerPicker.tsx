@@ -36,6 +36,7 @@ const ServerPicker = ({ baseFieldPath }: Props): JSX.Element => {
    * future.
    */
   const { data: serverData, isValidating: isServerDataValidating } = useServerData(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     guildPlatforms?.find((gp) => gp.platformId === PlatformType.DISCORD)
       ?.platformGuildId
   )

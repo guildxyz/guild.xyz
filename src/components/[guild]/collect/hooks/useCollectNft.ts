@@ -130,6 +130,7 @@ const useCollectNft = () => {
 
     if (isLegacyClaimArgs(claimData.args)) {
       const [address, userId, , signature] = claimData.args
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       const { request: legacyClaimRequest } = await publicClient.simulateContract({
         abi: legacyGuildRewardNftAbi,
         address: nftAddress,
@@ -142,6 +143,7 @@ const useCollectNft = () => {
 
     if (isClaimArgs(claimData.args)) {
       const [amount, address, userId, signedAt, signature] = claimData.args
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       const { request: newClaimRequest } = await publicClient.simulateContract({
         abi: guildRewardNftAbi,
         address: nftAddress,
@@ -156,13 +158,16 @@ const useCollectNft = () => {
       return Promise.resolve({} as TransactionReceipt)
     }
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const hash = await walletClient.writeContract({
       ...request,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       account: walletClient.account,
     })
 
     setTxHash(hash)
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
       { hash }
     )
@@ -189,7 +194,9 @@ const useCollectNft = () => {
         refetchNftDetails()
 
         mutateTopCollectors(
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           (prevValue) => {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             const lowerCaseUserAddress = userAddress.toLowerCase()
             const alreadyCollected = !!prevValue?.topCollectors?.find(
               (collector) => collector.address.toLowerCase() === lowerCaseUserAddress
@@ -197,6 +204,7 @@ const useCollectNft = () => {
 
             if (alreadyCollected) {
               return {
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 topCollectors: prevValue.topCollectors
                   .map((collector) => {
                     if (collector.address.toLowerCase() === lowerCaseUserAddress) {
@@ -209,6 +217,7 @@ const useCollectNft = () => {
                     return collector
                   })
                   .sort((a, b) => b.balance - a.balance),
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 uniqueCollectors: prevValue.uniqueCollectors,
               }
             }
@@ -217,6 +226,7 @@ const useCollectNft = () => {
               topCollectors: [
                 ...(prevValue?.topCollectors ?? []),
                 {
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   address: userAddress.toLowerCase(),
                   balance: Number(amount),
                 },
@@ -246,7 +256,8 @@ const useCollectNft = () => {
 
         const prettyError = error.correlationId
           ? error
-          : processViemContractError(error, (errorName) => {
+          : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+            processViemContractError(error, (errorName) => {
               if (errorName === "AlreadyClaimed")
                 return "You've already collected this NFT"
             })

@@ -33,10 +33,13 @@ const usePayFee = () => {
     multiplePayments,
     isLoading: isVaultLoading,
     refetch: refetchVault,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useVault(requirement.address, requirement.data.id, requirement.chain)
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement.data.id,
     requirement.chain
   )
@@ -45,10 +48,12 @@ const usePayFee = () => {
 
   const { data: coinBalanceData } = useBalance({
     address,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[requirement.chain],
   })
   const { data: tokenBalanceData } = useTokenBalance({
     token: pickedCurrency as `0x${string}`,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[requirement.chain],
     shouldFetch: !pickedCurrencyIsNative,
   })
@@ -57,12 +62,16 @@ const usePayFee = () => {
     fee &&
     (coinBalanceData || tokenBalanceData) &&
     (pickedCurrencyIsNative
-      ? coinBalanceData?.value >= fee
-      : tokenBalanceData?.value >= fee)
+      ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        coinBalanceData?.value >= fee
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        tokenBalanceData?.value >= fee)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { allowance } = useAllowance(pickedCurrency, requirement.address)
 
   const enabled =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     requirement?.chain === Chains[chainId] &&
     !isVaultLoading &&
     !isHasPaidLoading &&
@@ -71,14 +80,17 @@ const usePayFee = () => {
     isSufficientBalance &&
     (!pickedCurrencyIsNative
       ? typeof allowance === "bigint" && fee <= allowance
-      : fee < coinBalanceData?.value)
+      : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        fee < coinBalanceData?.value)
 
   const contractCallParams = {
     abi: feeCollectorAbi,
     address: requirement.address,
     functionName: "payFee",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     args: [BigInt(requirement.data.id)],
     value: pickedCurrencyIsNative ? fee : undefined,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     chainId: Chains[requirement.chain],
     query: {
       enabled,
@@ -88,6 +100,7 @@ const usePayFee = () => {
   const { triggerMembershipUpdate } = useMembershipUpdate()
 
   const { error, isPreparing, isLoading, estimatedGas, onSubmitTransaction } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     useSubmitTransaction(contractCallParams, {
       customErrorsMap: {
         VaultDoesNotExist: "Vault doesn't exist",

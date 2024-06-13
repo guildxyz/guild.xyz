@@ -65,6 +65,7 @@ const FarcasterCastHash = ({ baseFieldPath }: Props) => {
       </FormControl>
 
       <Collapse in={data || isLoading || error} style={{ width: "100%" }}>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         <FarcasterCast cast={data} loading={isLoading} error={!!error} />
       </Collapse>
     </>

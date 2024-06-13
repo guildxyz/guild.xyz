@@ -67,7 +67,8 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
   const isCustomName = data?.customName !== getDefaultVisitLinkCustomName(data)
   const [, first, , link, , second] = isCustomName
-    ? VISIT_LINK_REGEX.exec(data.customName) ?? []
+    ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+      VISIT_LINK_REGEX.exec(data.customName) ?? []
     : []
 
   const onVisit = () => {
@@ -75,24 +76,28 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
     onSubmit({
       requirementId,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       id: data.id,
       userId,
     })
   }
 
   const Original = () => {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const wordBreak = data.id?.startsWith("http") ? "break-all" : "break-word"
 
     return (
       <>
         {"Visit link: "}
         <Link
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           href={data.id}
           isExternal
           colorScheme="blue"
           wordBreak={wordBreak}
           onClick={onVisit}
         >
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {data.id}
         </Link>
       </>
@@ -104,6 +109,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
       image={<Icon as={LinkIcon} boxSize={6} />}
       {...props}
       showViewOriginal={false}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       footer={
         (isCustomName || !!data?.customImage) && (
           <ViewOriginalPopover>
@@ -150,6 +156,7 @@ const VisitLinkRequirement = ({ ...props }: RequirementProps) => {
 
       <LeaveGuildToExternalLinkAlert
         {...{ isOpen, onClose, onVisit }}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         url={data.id}
       />
     </Requirement>

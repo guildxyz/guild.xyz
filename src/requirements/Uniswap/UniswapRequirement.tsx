@@ -90,7 +90,8 @@ const UniswapRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
       Hold{" "}
       {maxAmount
         ? `${minAmount} - ${maxAmount}`
-        : minAmount > 0
+        : // @ts-expect-error TODO: fix this error originating from strictNullChecks
+        minAmount > 0
         ? `at least ${minAmount}`
         : "any amount of"}{" "}
       <Skeleton isLoaded={!!baseSymbol} display={"inline"}>

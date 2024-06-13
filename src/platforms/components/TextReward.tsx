@@ -26,6 +26,7 @@ import {
 import { useClaimedReward } from "../../hooks/useClaimedReward"
 
 const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { platformId, platformGuildData } = platform.guildPlatform
 
   const { claimed } = useClaimedReward(platform.id)
@@ -38,12 +39,14 @@ const SecretTextReward = ({ platform, withMotionImg }: RewardProps) => {
     modalProps: { isOpen, onOpen, onClose },
   } = useClaimText(platform.id)
   const { roles } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) =>
     r.rolePlatforms.some((rp) => rp.guildPlatformId === platform.guildPlatformId)
   )
 
   const { isMember } = useMembership()
   const { hasRoleAccess, isValidating: isAccessValidating } = useRoleMembership(
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     role.id
   )
   const openJoinModal = useOpenJoinModal()

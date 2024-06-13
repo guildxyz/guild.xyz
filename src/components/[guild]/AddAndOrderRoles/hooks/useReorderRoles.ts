@@ -28,6 +28,7 @@ const useReorderRoles = (onClose) => {
       })
       onClose()
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (oldData) => ({
           ...oldData,
           // requirements, and rolePlatforms are not returned, so we need to spread older data too

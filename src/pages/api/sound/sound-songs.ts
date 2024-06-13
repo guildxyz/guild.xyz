@@ -32,6 +32,7 @@ const fetch51Songs = (id: string, after: string) =>
   }).then((res) => res?.data?.artist?.releases)
 
 const handler: NextApiHandler = async (req, res) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const id = req.query.id.toString()
 
   const fetchSongs = async () => {
@@ -55,8 +56,11 @@ const handler: NextApiHandler = async (req, res) => {
 
   const soundSongs = await fetchSongs().then((data) =>
     data?.map((info) => ({
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       title: info?.node?.title,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       image: info?.node?.coverImage?.url,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       hasEditions: info?.node?.auctionContractType === "TIERED_EDITION",
     }))
   )

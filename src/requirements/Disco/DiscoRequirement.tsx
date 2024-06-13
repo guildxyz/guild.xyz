@@ -16,6 +16,7 @@ type DiscoParamType = {
 const DiscoRequirement = (props: RequirementProps) => {
   const requirement = useRequirementContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const param = requirement.data.params as DiscoParamType
 
   return (

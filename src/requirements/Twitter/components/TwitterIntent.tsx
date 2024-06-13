@@ -55,6 +55,7 @@ const TwitterIntent = ({
   const {
     type: requirementType,
     id: requirementId,
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { id },
     roleId,
   } = useRequirementContext()

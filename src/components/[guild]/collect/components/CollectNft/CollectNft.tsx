@@ -58,6 +58,7 @@ const CollectNft = () => {
   } = useNftDetails(chain, nftAddress)
 
   const { isAvailable: isButtonEnabled, startTimeDiff } =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     getRolePlatformTimeframeInfo(rolePlatform)
 
   const padding = { base: 5, sm: 6, lg: 7, xl: 8 }

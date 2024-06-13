@@ -29,7 +29,9 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
     guildPlatform,
   } = useTokenRewardContext()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const chain = guildPlatform.platformGuildData.chain
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { data, isLoading, error } = usePool(chain, poolId)
   const toast = useToast()
   const { colorMode } = useColorMode()
@@ -56,6 +58,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
   if (error) return <Tag>Failed to load balance</Tag>
 
   const poolBalance = data ? data.balance : undefined
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const balance = poolBalance ? Number(formatUnits(poolBalance, decimals)) : 0
   const isWithdrawDisabled = balance === 0
 
@@ -113,6 +116,7 @@ const PoolTag = ({ poolId, ...rest }: { poolId: bigint } & TagProps) => {
           }
         >
           <TagRightIcon
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             ref={finalFocusRef}
             as={DotsThreeVertical}
             opacity={0.5}

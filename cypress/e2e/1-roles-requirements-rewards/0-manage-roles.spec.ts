@@ -21,6 +21,7 @@ describe("roles", () => {
   it("can fetch guild id", () => {
     cy.wait("@fetchGuild")
       .then((intercept) => {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         CONTEXT.guild = intercept.response.body
         return intercept
       })
@@ -31,6 +32,7 @@ describe("roles", () => {
   it("can create a role without rewards", () => {
     cy.intercept(
       "POST",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles`
     ).as("createRoleApiCall")
 
@@ -66,6 +68,7 @@ describe("roles", () => {
 
     cy.intercept(
       "PUT",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
         CONTEXT.createdRoleId
       }`
@@ -89,6 +92,7 @@ describe("roles", () => {
 
     cy.intercept(
       "POST",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       `${Cypress.env("guildApiUrl")}/guilds/${CONTEXT.guild.id}/roles/${
         CONTEXT.createdRoleId
       }/requirements`

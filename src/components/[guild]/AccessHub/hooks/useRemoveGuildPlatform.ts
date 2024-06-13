@@ -28,13 +28,16 @@ const useRemoveGuildPlatform = (
       })
 
       mutateGuild(
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         (prevGuild) => ({
           ...prevGuild,
           guildPlatforms:
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             prevGuild.guildPlatforms?.filter(
               (prevGuildPlatform) => prevGuildPlatform.id !== guildPlatformId
             ) ?? [],
           roles:
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             prevGuild.roles?.map((prevRole) => ({
               ...prevRole,
               rolePlatforms:

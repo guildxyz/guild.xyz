@@ -30,6 +30,7 @@ const GuildLottieProgress = memo(({ progress }: Props) => {
   useEffect(() => {
     if (!isLottiePlayerReady || !progress) return
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     player.playSegments(
       [
         progressToLottieState(prevProgress.current ?? 0),
@@ -37,6 +38,7 @@ const GuildLottieProgress = memo(({ progress }: Props) => {
       ],
       true
     )
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     prevProgress.current = progress
   }, [isLottiePlayerReady, progress, player])
 
@@ -47,6 +49,7 @@ const GuildLottieProgress = memo(({ progress }: Props) => {
           ref={lottiePlayerBg}
           onEvent={(event) => {
             if (event === PlayerEvents.Ready) {
+              // @ts-expect-error TODO: fix this error originating from strictNullChecks
               lottiePlayerBg.current.seek(52)
               setIsLottiePlayerReady(true)
             }
@@ -69,6 +72,7 @@ const GuildLottieProgress = memo(({ progress }: Props) => {
           }}
           speed={0.5}
           ref={(instance) => {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             setPlayer(instance)
           }}
         />

@@ -12,6 +12,7 @@ const USER_REJECTED_ERROR = "User rejected the request"
 const REJECT_BY_THE_USER_ERROR = "Reject by the user"
 
 if (typeof window !== "undefined") {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: "/api/posthog",
     // Capture custom events only

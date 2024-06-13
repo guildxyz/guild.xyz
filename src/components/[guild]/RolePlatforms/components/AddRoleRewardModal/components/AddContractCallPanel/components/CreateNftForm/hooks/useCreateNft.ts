@@ -62,6 +62,7 @@ export type CreateNFTResponse = {
 export const generateGuildRewardNFTMetadata = (
   data: Pick<CreateNftFormType, "name" | "description" | "image" | "attributes">
 ) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const image = data.image?.replace(process.env.NEXT_PUBLIC_IPFS_GATEWAY, "ipfs://")
 
   return guildNftRewardMetadataSchema.parse({
@@ -115,10 +116,12 @@ const useCreateNft = (
         name: trimmedName,
         symbol: "",
         cid: metadataCID,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         tokenOwner: address,
         treasury: tokenTreasury,
         tokenFee: parseUnits(
           price.toString(),
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           CHAIN_CONFIG[Chains[chainId]].nativeCurrency.decimals
         ),
         maxSupply: BigInt(data.maxSupply),
@@ -130,10 +133,13 @@ const useCreateNft = (
       "deployConfigurableNFT"
     >["args"]
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const { request } = await publicClient.simulateContract({
       abi: guildRewardNFTFacotryAbi,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       address: GUILD_REWARD_NFT_FACTORY_ADDRESSES[Chains[chainId]],
       functionName: "deployConfigurableNFT",
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       args: contractCallParams,
     })
 
@@ -141,10 +147,12 @@ const useCreateNft = (
       return Promise.resolve({} as CreateNFTResponse)
     }
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const hash = await walletClient.writeContract({
       ...request,
     })
 
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     const receipt: TransactionReceipt = await publicClient.waitForTransactionReceipt(
       { hash }
     )
@@ -178,11 +186,14 @@ const useCreateNft = (
           argsToSign: CONTRACT_CALL_ARGS_TO_SIGN[ContractCallFunction.SIMPLE_CLAIM],
           name: trimmedName,
           imageUrl: data.image,
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           description: data.description,
         },
       },
       rolePlatform: {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         startTime: datetimeLocalToIsoString(data.startTime),
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         endTime: datetimeLocalToIsoString(data.endTime),
       },
     }
@@ -191,6 +202,7 @@ const useCreateNft = (
   return {
     ...useSubmit(createNft, {
       onSuccess: ({ guildPlatform, rolePlatform }) => {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         setLoadingText(null)
 
         toast({
@@ -198,6 +210,7 @@ const useCreateNft = (
           title: "Successfully deployed NFT contract",
         })
 
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         const { chain, contractAddress, name } = guildPlatform.platformGuildData
 
         captureEvent("Successfully created NFT", {
@@ -209,6 +222,7 @@ const useCreateNft = (
         mutate<NFTDetailsAPIResponse>(
           ["nftDetails", chain, contractAddress],
           {
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             creator: address.toLowerCase(),
             name,
             standard: "ERC-721", // TODO: we should use a dynamic value here
@@ -224,6 +238,7 @@ const useCreateNft = (
         })
       },
       onError: (error) => {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         setLoadingText(null)
 
         const prettyError = processViemContractError(error)
@@ -234,6 +249,7 @@ const useCreateNft = (
           error,
         })
 
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         showErrorToast(prettyError)
       },
     }),

@@ -46,6 +46,7 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
 
   return (
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {`Have at least ${data.min} followers on Farcaster`}
     </Requirement>
   )
@@ -67,6 +68,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
         {" this cast: "}
         <FarcasterCast
           size="sm"
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           cast={cast}
           loading={isCastLoading}
           error={castError}
@@ -84,11 +86,13 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
       {"Follow the "}
       <Link
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         href={`https://warpcast.com/~/channel/${data.id}`}
         isExternal
         colorScheme="blue"
         fontWeight="medium"
       >
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {farcasterChannel?.label ?? data.id}
         <Icon as={ArrowSquareOut} mx="1" />
       </Link>
@@ -108,6 +112,7 @@ const FarcasterIncludeText = (props: RequirementProps) => {
   return (
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
       <Text as="span">{"Have "}</Text>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <DataBlockWithCopy text={data.id} />
       <Text as="span">
         {` in your ${REQUIREMENTS.FARCASTER.name} ${PROFILE_TARGETS[type]}`}

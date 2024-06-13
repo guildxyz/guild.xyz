@@ -32,6 +32,7 @@ export default function useOAuthResultToast() {
         oauthStatus === "error" &&
         oauthMessage?.toString()?.startsWith("Before connecting your")
       ) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         const [, addressOrDomain] = oauthMessage
           ?.toString()
           .match(

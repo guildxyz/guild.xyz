@@ -58,6 +58,7 @@ const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
                   platformName: "DISCORD",
                   platformGuildId: selected?.id,
                   platformId: PlatformType.DISCORD,
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   platformGuildData: {
                     name: selected?.name,
                     imageUrl: selected?.img,

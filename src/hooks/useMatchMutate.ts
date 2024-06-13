@@ -17,6 +17,7 @@ const useMatchMutate = () => {
 
     for (const key of cache.keys()) {
       if (matcher.test(key)) {
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         keys.push(key)
       }
     }

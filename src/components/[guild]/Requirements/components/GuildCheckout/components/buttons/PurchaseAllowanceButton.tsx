@@ -17,6 +17,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const { urlName } = useGuild()
 
   const requirement = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 
@@ -24,6 +25,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
 
   const {
     data: { symbol, name },
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
   } = useTokenData(requirement.chain, pickedCurrency)
   const nativeCurrency = CHAIN_CONFIG[Chains[chainId]]?.nativeCurrency
   const isNativeCurrencyPicked = pickedCurrency === NULL_ADDRESS
@@ -32,6 +34,7 @@ const PurchaseAllowanceButton = (): JSX.Element => {
   const tokenName = isNativeCurrencyPicked ? nativeCurrency.name : name
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { maxPriceInWei },
     isValidating: isPriceLoading,
   } = usePrice()

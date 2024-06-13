@@ -34,6 +34,7 @@ const DiscordRole = ({ baseFieldPath }: RequirementFormProps) => {
   })
 
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { roles },
     isValidating: isServerDataValidating,
   } = useServerData(serverId)

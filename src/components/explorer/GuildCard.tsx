@@ -34,10 +34,12 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
   >
     <DisplayCard>
       <SimpleGrid
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         templateColumns={image ? "3rem calc(100% - 5.25rem)" : "1fr"}
         gap={4}
         alignItems="center"
       >
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {image && <GuildLogo imageUrl={guildData.imageUrl} />}
         <VStack spacing={2} alignItems="start" w="full" maxW="full" mb="0.5" mt="-1">
           <HStack spacing={1}>
@@ -100,6 +102,7 @@ const GuildCard = ({ guildData }: Props): JSX.Element => (
 const GuildSkeletonCard = () => (
   <DisplayCard h="auto">
     <SimpleGrid
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       templateColumns={image ? "3rem calc(100% - 4.25rem)" : "1fr"}
       gap={4}
       alignItems="center"

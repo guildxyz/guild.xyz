@@ -24,11 +24,14 @@ const handler = async (req, _) => {
 
   if (!urlName) return new ImageResponse(<></>, { status: 404 })
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const [guild, guildRoles]: [Guild, Guild["roles"]] = await Promise.all([
     fetch(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       `${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}`
     ).then((res) => res.json()),
     fetch(
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       `${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds/${urlName}/roles`
     ).then((res) => res.json()),
   ]).catch(() => [null, null])
@@ -202,6 +205,7 @@ const handler = async (req, _) => {
             >
               {guild.description ? (
                 `${safeGuildDescription?.slice(0, 80)}${
+                  // @ts-expect-error TODO: fix this error originating from strictNullChecks
                   safeGuildDescription?.length > 80 ? "..." : ""
                 }`
               ) : (

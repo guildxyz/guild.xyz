@@ -9,6 +9,7 @@ const useFuelGuildPinFee = () => {
   const getFee = async () => {
     const contract = GuildPinContractAbi__factory.connect(
       FUEL_GUILD_PIN_CONTRACT_ID,
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       wallet
     )
     const { value } = await contract.functions.fee().simulate()

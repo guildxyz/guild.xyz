@@ -30,6 +30,7 @@ const PoapCardMenu = ({ platformGuildId }: Props): JSX.Element => {
       <UploadMintLinksModal
         isOpen={isOpen}
         onClose={onClose}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         guildPlatformId={guildPlatform?.id}
       />
     </>

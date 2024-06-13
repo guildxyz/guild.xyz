@@ -14,6 +14,7 @@ import { useController } from "react-hook-form"
 const RoleIdsSelect = forwardRef((props: Props, ref: Ref<any>) => {
   const { roles } = useGuild()
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const roleOptions = roles.map((role) => ({
     value: role.id,
     label: role.name,
@@ -31,6 +32,7 @@ const RoleIdsSelect = forwardRef((props: Props, ref: Ref<any>) => {
 
   return (
     <StyledSelect
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       ref={ref}
       isMulti
       options={roleOptions}
@@ -47,6 +49,7 @@ const RoleIdsSelect = forwardRef((props: Props, ref: Ref<any>) => {
         }),
       }}
       value={value.map((roleId) => roleOptions.find((o) => o.value === roleId))}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       onChange={(newValue) => onChange(newValue.map((option) => option.value))}
     />
   )
@@ -62,6 +65,7 @@ const RoleIdsSelectMultiValuesContainer = ({
   const publicRoleBg = useColorModeValue("gray.700", "blackAlpha.300")
 
   const isPublic =
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     roles.find((role) => role.id === props.data.value).visibility === "PUBLIC"
 
   return (
@@ -69,8 +73,10 @@ const RoleIdsSelectMultiValuesContainer = ({
       {...props}
       sx={{
         ...props.sx,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         color: isPublic ? "white" : null,
         backgroundColor: isPublic ? publicRoleBg : undefined,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         img: isPublic && { filter: "unset" },
       }}
     >
@@ -89,6 +95,7 @@ const RoleImage = ({ imageUrl }) => {
         <Img
           src={imageUrl}
           boxSize={3.5}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           filter={colorMode === "light" && "brightness(0)"}
         />
       ) : (

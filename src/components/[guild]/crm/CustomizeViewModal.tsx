@@ -54,6 +54,7 @@ const CustomizeViewModal = ({ isOpen, onClose, table }: Props) => {
         <ModalCloseButton />
         <ModalBody>
           <ColumnSelector
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             column={columns.find((col) => col.id === "identity")}
             isDisabled={true}
           />
@@ -65,6 +66,7 @@ const CustomizeViewModal = ({ isOpen, onClose, table }: Props) => {
                 onDragEnd={setTableOrder}
                 style={{ position: "relative" }} // needed for the auto-applied zIndex to work
               >
+                {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
                 <ColumnSelector column={columns.find((col) => col.id === colId)} />
               </Reorder.Item>
             ))}
@@ -87,6 +89,7 @@ const ColumnSelector = ({ column, isDisabled }: SelectorProps) => {
       mb="2"
       bg={bg}
       borderRadius="xl"
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       cursor={!isDisabled && "grab"}
     >
       <HStack justifyContent={"space-between"}>

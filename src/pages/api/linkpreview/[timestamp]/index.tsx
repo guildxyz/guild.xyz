@@ -17,6 +17,7 @@ const handler = async (req, _) => {
 
   try {
     const [guilds, interFontData, dystopianFontData] = await Promise.all([
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       fetch(`${process.env.NEXT_PUBLIC_API.replace("v1", "v2")}/guilds`)
         .then((res) => res.json())
         .catch((_) => []),

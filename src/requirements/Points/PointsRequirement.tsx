@@ -25,6 +25,7 @@ const ExternalGuildLink = ({ name, urlName }) => (
 
 const PointsRank = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
@@ -35,6 +36,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
 
   return (
     <Requirement
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       image={pointsReward.platformGuildData.imageUrl ?? <Star />}
       {...props}
     >
@@ -45,6 +47,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
         colorScheme={"blue"}
         fontWeight={"medium"}
         href={`/${urlName}/leaderboard/${pointsReward.id}`}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
       >{`${pointsReward.platformGuildData.name} leaderboard`}</Link>
       {guildId !== currentGuildId && <ExternalGuildLink {...{ name, urlName }} />}
     </Requirement>
@@ -53,6 +56,7 @@ const PointsRank = (props: RequirementProps): JSX.Element => {
 
 const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
@@ -69,6 +73,7 @@ const PointsTotalAmount = (props: RequirementProps): JSX.Element => {
 
 const PointsAmount = (props: RequirementProps): JSX.Element => {
   const requirement = useRequirementContext()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { guildId, minAmount, maxAmount } = requirement.data
   const { name, urlName } = useSimpleGuild(guildId)
   const { id: currentGuildId } = useGuild()
@@ -77,10 +82,12 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
 
   if (!pointsReward) return <RequirementSkeleton />
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const pointsName = pointsReward.platformGuildData.name || "points"
 
   return (
     <Requirement
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       image={pointsReward.platformGuildData.imageUrl ?? <Star />}
       {...props}
     >
@@ -94,6 +101,7 @@ const PointsAmount = (props: RequirementProps): JSX.Element => {
 
 const usePointsRewardForCurrentRequirement = () => {
   const {
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     data: { guildPlatformId, guildId },
   } = useRequirementContext()
 

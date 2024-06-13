@@ -97,10 +97,12 @@ const TokenPicker = ({
         {address &&
           (tokenImage ? (
             <InputLeftElement>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <OptionImage img={tokenImage} alt={tokenName} />
             </InputLeftElement>
           ) : customImage ? (
             <InputLeftElement>
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <OptionImage img={customImage} alt={tokenName} />
             </InputLeftElement>
           ) : (

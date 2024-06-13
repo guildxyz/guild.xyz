@@ -35,6 +35,7 @@ const useJoin = ({ onSuccess, onError }: UseSubmitOptions<JoinJob>) => {
 
         if (
           pathname === "/[guild]" &&
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           guild.featureFlags.includes("GUILD_CREDENTIAL") &&
           guild.guildPin?.isActive &&
           !GUILD_PIN_MAINTENANCE

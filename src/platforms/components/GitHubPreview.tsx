@@ -14,6 +14,7 @@ const GitHubPreview = (): JSX.Element => {
 
   const repo = gateables?.find((r) => r.platformGuildId === repoId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   useSetRoleImageAndNameFromPlatformData(repo?.avatarUrl, repo?.repositoryName)
 
   return (

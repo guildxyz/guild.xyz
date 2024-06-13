@@ -183,10 +183,12 @@ const useSubmitTransaction = (
           "0x0000000000000000000000000000000000000000000000000000000000000000"
         )
         setTxSuccess(true)
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onSuccess({} as TransactionReceipt, [])
         return
       }
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       writeContract(contractCallConfig)
     },
     isPreparing: isSimulateContractLoading || isGasEstimationLoading,

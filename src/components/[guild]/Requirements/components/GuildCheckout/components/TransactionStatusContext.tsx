@@ -20,6 +20,7 @@ const TransactionStatusContext = createContext<{
   setTxError: Dispatch<SetStateAction<boolean>>
   txSuccess: boolean
   setTxSuccess: Dispatch<SetStateAction<boolean>>
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
 }>(undefined)
 
 const TransactionStatusProvider = ({

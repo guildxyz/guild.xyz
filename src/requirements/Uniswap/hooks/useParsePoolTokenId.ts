@@ -49,6 +49,7 @@ export function useParsePoolTokenId(
     const parsedChain = tryToParseChain(lpVaultInputValue)
 
     if (parsedChain) {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       onChainFound(parsedChain)
     }
 

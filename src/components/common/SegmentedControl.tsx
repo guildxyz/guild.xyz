@@ -53,6 +53,7 @@ const SegmentedControl = <TOption extends SegmentedControlOption>({
       {options.map((option) => (
         <SegmentedControlButton
           uid={uid}
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           key={option.value.toString()}
           {...getRadioProps({ value: option.value })}
           label={option.label}
@@ -115,6 +116,7 @@ const SegmentedControlButton = ({
         onKeyUp={(e) => {
           if (e.code === "Enter" || e.code === "Space") {
             e.preventDefault()
+            // @ts-expect-error TODO: fix this error originating from strictNullChecks
             inputProps.onChange(useRadioProps.value as any)
           }
         }}

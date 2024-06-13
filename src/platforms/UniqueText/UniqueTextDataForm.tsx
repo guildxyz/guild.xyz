@@ -57,9 +57,11 @@ const UniqueTextDataForm = ({
   const parseTxt = (file: File) => {
     const fileReader = new FileReader()
     fileReader.onload = () => {
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setRegexError(null)
       const lines = fileReader.result?.toString()?.split("\n")?.filter(Boolean)
 
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       setValue("texts", lines)
     }
 

@@ -44,16 +44,22 @@ const EthereumAttestationRequirement = (props: RequirementProps): JSX.Element =>
           according to schema{" "}
         </>
       )}
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       <DataBlockWithCopy text={requirement.data.schemaId}>
+        {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
         {shortenHex(requirement.data.schemaId, 3)}
       </DataBlockWithCopy>
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {requirement.data.key && (
         <>
           {" with key "}
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           <DataBlock>{requirement.data.key}</DataBlock>
+          {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
           {requirement.data.val && (
             <>
               {" and value "}
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
               <DataBlock>{requirement.data.val}</DataBlock>
             </>
           )}

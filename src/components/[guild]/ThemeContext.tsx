@@ -58,6 +58,7 @@ const ThemeProvider = memo(({ children }: PropsWithChildren<any>): JSX.Element =
       value={{
         localThemeColor,
         setLocalThemeColor,
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         localBackgroundImage,
         setLocalBackgroundImage,
         textColor,

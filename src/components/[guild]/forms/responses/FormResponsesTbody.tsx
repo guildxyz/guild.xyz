@@ -38,6 +38,7 @@ const FormResponsesTbody = ({ table, data, error, isValidating }: Props) => {
               <CrmRow
                 key={row.id}
                 row={row}
+                // @ts-expect-error TODO: fix this error originating from strictNullChecks
                 onOpen={() => setOpenResponseModalIndex(i)}
               />
             ))
@@ -77,17 +78,24 @@ const FormResponsesTbody = ({ table, data, error, isValidating }: Props) => {
         </CrmInfoRow>
       )}
       <ResponseModal
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         row={rows[openResponseModalIndex]}
         isOpen={openResponseModalIndex !== null}
         onClose={closeModal}
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onPrev={
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           openResponseModalIndex > 0
-            ? () => setOpenResponseModalIndex((curr) => curr - 1)
+            ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+              () => setOpenResponseModalIndex((curr) => curr - 1)
             : null
         }
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         onNext={
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           openResponseModalIndex < rows.length - 1
-            ? () => setOpenResponseModalIndex((curr) => curr + 1)
+            ? // @ts-expect-error TODO: fix this error originating from strictNullChecks
+              () => setOpenResponseModalIndex((curr) => curr + 1)
             : null
         }
       />

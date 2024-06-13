@@ -15,12 +15,15 @@ const RemovePlatformMenuItem = ({ platformGuildId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   const { guildPlatforms } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const guildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildId === platformGuildId
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { isPlatform } = rewards[PlatformType[guildPlatform?.platformId]] ?? {}
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { onSubmit, isLoading } = useRemoveGuildPlatform(guildPlatform?.id)
 
   const color = useColorModeValue("red.600", "red.300")

@@ -41,6 +41,7 @@ const useEditRequirement = (
 
       mutateRequirements(
         (prevRequirements) =>
+          // @ts-expect-error TODO: fix this error originating from strictNullChecks
           prevRequirements.map((requirement) => {
             if (requirement.id !== editedRequirement.id) return requirement
             // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars

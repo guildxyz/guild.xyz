@@ -25,17 +25,21 @@ type Props = {
 
 const FormPage = ({ formId }: Props) => {
   const { roles, imageUrl, guildPlatforms } = useGuild()
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
 
   const { form, error } = useGuildForm(formId)
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const relevantGuildPlatform = guildPlatforms.find(
     (gp) => gp.platformGuildData?.formId === formId
   )
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const role = roles.find((r) =>
     r.rolePlatforms.some((rp) => rp.guildPlatformId === relevantGuildPlatform?.id)
   )
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const { hasRoleAccess, isMember } = useRoleMembership(role?.id)
 
   return (
@@ -44,6 +48,7 @@ const FormPage = ({ formId }: Props) => {
       imageUrl={imageUrl}
       title={form?.name ?? "Fill form"}
       ogTitle={`Fill form${form?.name ? ` - ${form.name}` : ""}`}
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       description={!!form?.description && parseDescription(form.description)}
       ogDescription={form?.description}
       background={localThemeColor}
@@ -58,6 +63,7 @@ const FormPage = ({ formId }: Props) => {
           <ErrorAlert label="Couldn't load form" mb="0" />
         </Card>
       ) : hasRoleAccess ? (
+        // @ts-expect-error TODO: fix this error originating from strictNullChecks
         <FillForm form={form} />
       ) : (
         <FormNoAccess isMember={isMember}>
@@ -87,12 +93,14 @@ const FormPageWrapper = ({ fallback, formId }): JSX.Element => (
 )
 
 const getStaticProps: GetStaticProps = async ({ params }) => {
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const formId = +params.formId
   if (!formId)
     return {
       notFound: true,
     }
 
+  // @ts-expect-error TODO: fix this error originating from strictNullChecks
   const endpoint = `/v2/guilds/guild-page/${params.guild}`
   const guild: Guild = await fetcher(endpoint).catch((_) => ({}))
 

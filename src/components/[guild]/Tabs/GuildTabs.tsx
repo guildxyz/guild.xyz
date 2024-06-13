@@ -72,6 +72,7 @@ const GuildTabs = ({ activeTab, ...rest }: Props): JSX.Element => {
           Events
         </TabButton>
       )}
+      {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
       {isAdmin && featureFlags.includes("CRM") && (
         <TabButton href={`/${urlName}/members`} isActive={activeTab === "MEMBERS"}>
           Members

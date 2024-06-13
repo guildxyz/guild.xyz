@@ -15,6 +15,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
 
   const enabled = Boolean(
     tokenAddress &&
+      // @ts-expect-error TODO: fix this error originating from strictNullChecks
       (!requirement || requirement?.chain === Chains[chainId]) &&
       tokenAddress !== NULL_ADDRESS
   )
@@ -28,6 +29,7 @@ const useAllowance = (tokenAddress: `0x${string}`, contract: `0x${string}`) => {
     abi: erc20Abi,
     address: tokenAddress,
     functionName: "allowance",
+    // @ts-expect-error TODO: fix this error originating from strictNullChecks
     args: [address, contract],
     query: {
       enabled,
