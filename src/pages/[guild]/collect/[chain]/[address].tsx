@@ -26,6 +26,7 @@ import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldS
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
@@ -81,8 +82,17 @@ const CollectNftPageContent = ({
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const { name, image: imageFromHook, totalSupply } = useNftDetails(chain, address)
+  const {
+    name,
+    image: imageFromHook,
+    totalSupply,
+    creator,
+  } = useNftDetails(chain, address)
   const image = imageFromHook || fallbackImage
+
+  const { address: userAddress } = useWeb3ConnectionManager()
+  const isNFTCreator =
+    isAdmin && creator?.toLowerCase() === userAddress?.toLowerCase()
 
   return (
     <Layout
@@ -103,7 +113,7 @@ const CollectNftPageContent = ({
               }NFT on Guild!`}
             />
 
-            {isAdmin && <DynamicEditNFTButton />}
+            {isNFTCreator && <DynamicEditNFTButton />}
           </HStack>
         </HStack>
 
