@@ -1,54 +1,64 @@
-import { Flex, FormControl, FormLabel } from "@chakra-ui/react"
+import { Divider, FormControl, FormLabel, Stack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
 import FormErrorMessage from "components/common/FormErrorMessage"
-import { useController, useFormState } from "react-hook-form"
+import { useController, useFormState, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
-import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
-import AddFormButton from "./AddFormButton"
+import FormSelector from "./components/FormSelector"
 
-const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
-  const { id, guildPlatforms } = useGuild()
-  const formRewardIds =
-    guildPlatforms
-      ?.filter((gp) => gp.platformId === PlatformType.FORM)
-      .map((gp) => gp.platformGuildData.formId) ?? []
-  const { data: forms, isLoading, isValidating } = useGuildForms()
+const formRequirementTypes = [
+  {
+    label: "Fill form",
+    value: "FORM_SUBMISSION",
+    FormRequirement: FormSelector,
+  },
+  {
+    label: "Answer question specifically",
+    value: "FORM_SUBMISSION_DETAILED",
+    FormRequirement: FormSelector,
+  },
+]
 
+const FormForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+  const { id } = useGuild()
   const { errors } = useFormState()
+
+  const type = useWatch({ name: `${baseFieldPath}.type` })
+  const selected = formRequirementTypes.find((reqType) => reqType.value === type)
+  const isEditMode = !!field?.id
 
   useController({
     name: `${baseFieldPath}.data.guildId`,
     defaultValue: id,
   })
 
-  const formOptions: SelectOption<number>[] =
-    forms
-      ?.filter((form) => formRewardIds.includes(form.id))
-      .map((form) => ({
-        label: form.name,
-        value: form.id,
-      })) ?? []
-
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
-      <Flex justifyContent="space-between" w="full" alignItems={"center"}>
-        <FormLabel>Fill form:</FormLabel>
-        <AddFormButton baseFieldPath={baseFieldPath} />
-      </Flex>
-      <ControlledSelect
-        name={`${baseFieldPath}.data.id`}
-        isDisabled={!forms}
-        isLoading={isLoading || isValidating}
-        options={formOptions}
-      />
+    <Stack spacing={4} alignItems="start">
+      <FormControl
+        isInvalid={!!parseFromObject(errors, baseFieldPath)?.type?.message}
+      >
+        <FormLabel>Type</FormLabel>
 
-      <FormErrorMessage>
-        {parseFromObject(errors, baseFieldPath)?.data?.id?.message}
-      </FormErrorMessage>
-    </FormControl>
+        <ControlledSelect
+          name={`${baseFieldPath}.type`}
+          rules={{ required: "It's required to select a type" }}
+          options={formRequirementTypes}
+          isDisabled={isEditMode}
+        />
+
+        <FormErrorMessage>
+          {parseFromObject(errors, baseFieldPath)?.type?.message}
+        </FormErrorMessage>
+      </FormControl>
+
+      {selected?.FormRequirement && (
+        <>
+          <Divider />
+          <selected.FormRequirement baseFieldPath={baseFieldPath} />
+        </>
+      )}
+    </Stack>
   )
 }
 export default FormForm
