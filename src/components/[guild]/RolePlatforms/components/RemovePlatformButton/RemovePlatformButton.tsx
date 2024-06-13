@@ -8,19 +8,21 @@ import {
 } from "@chakra-ui/react"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import { Info } from "phosphor-react"
-import useRemovePlatform from "./hooks/useRemovePlatform"
 
 type Props = {
   removeButtonColor: string
   isPlatform: boolean
+  isLoading: boolean
+  onSubmit: () => void
 }
 
 const RemovePlatformButton = ({
   removeButtonColor,
   isPlatform,
+  isLoading,
+  onSubmit,
 }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { onSubmit, isLoading } = useRemovePlatform(onClose)
 
   return (
     <>

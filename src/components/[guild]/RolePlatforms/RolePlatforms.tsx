@@ -181,7 +181,11 @@ const RolePlatformCard = ({
         }
         cornerButton={
           !rolePlatform.isNew ? (
-            <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
+            <RemovePlatformButton
+              {...{ removeButtonColor, isPlatform }}
+              onSubmit={() => {}}
+              isLoading={false}
+            />
           ) : (
             <CloseButton
               size="sm"

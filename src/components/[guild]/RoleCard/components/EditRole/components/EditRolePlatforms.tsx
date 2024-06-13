@@ -13,6 +13,7 @@ import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
 import useAddRewardAndMutate from "../hooks/useAddRewardAndMutate"
+import useRemoveReward from "../hooks/useRemoveReward"
 import useUpdateAvailability from "../hooks/useUpdateAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 import GenericRolePlatformCard from "./GenericRolePlatformCard"
@@ -31,6 +32,7 @@ const EditRolePlatforms = ({ roleId }: Props) => {
   const { handleAdd, isLoading: addIsLoading } = useAddRewardAndMutate()
   const handleAvailabilityChange = useUpdateAvailability()
   const handleVisibilityChange = useUpdateRolePlatformVisibility()
+  const { onSubmit: handleDelete, isLoading: removeIsLoading } = useRemoveReward()
 
   return (
     <Section
@@ -57,16 +59,19 @@ const EditRolePlatforms = ({ roleId }: Props) => {
           rolePlatforms.map((rolePlatform, index) => (
             <GenericRolePlatformCard
               key={rolePlatform.id}
-              roleId={roleId}
               rolePlatform={rolePlatform}
-              index={index}
-              onRemove={(rolePlatformId) => () => {}} // TODO
-              onAvailabilityChange={(capacity, start, end) =>
-                handleAvailabilityChange(rolePlatform, capacity, start, end)
-              }
-              onVisibilityChange={(visibility, visibilityRoleId) =>
-                handleVisibilityChange(rolePlatform, visibility, visibilityRoleId)
-              }
+              handlers={{
+                onRemove: (rolePlatformId) =>
+                  handleDelete({ roleId: roleId, rolePlatformId: rolePlatformId }),
+                onAvailabilityChange: (capacity, start, end) =>
+                  handleAvailabilityChange(rolePlatform, capacity, start, end),
+                onVisibilityChange: (visibility, visibilityRoleId) =>
+                  handleVisibilityChange(rolePlatform, visibility, visibilityRoleId),
+              }}
+              loadingStates={{
+                isRemoving: removeIsLoading,
+                isUpdating: false,
+              }}
             />
           ))
         )}
