@@ -1,8 +1,9 @@
-import { HStack } from "@chakra-ui/react"
+import { HStack, Icon, IconButton } from "@chakra-ui/react"
 import SetVisibility, { SetVisibilityForm } from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
 import DrawerHeader from "components/common/DrawerHeader"
+import { ArrowLeft } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RoleEditFormData } from "../hooks/useEditRoleForm"
 import DeleteRoleButton from "./DeleteRoleButton"
@@ -42,6 +43,20 @@ const EditRoleHeader = ({
       spacing={1}
       alignItems="center"
       w="full"
+      leftElement={
+        <IconButton
+          aria-label="Back"
+          icon={<Icon as={ArrowLeft} weight="bold" />}
+          variant="ghost"
+          display={{ base: "flex", md: "none" }}
+          borderRadius="full"
+          maxW={10}
+          maxH={10}
+          onClick={onClose}
+        >
+          Cancel
+        </IconButton>
+      }
     >
       <HStack justifyContent={"space-between"} flexGrow={1} w={"fit-content"}>
         <SetVisibility
