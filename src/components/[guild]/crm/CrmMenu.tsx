@@ -11,11 +11,11 @@ import {
 } from "@chakra-ui/react"
 import { Table } from "@tanstack/react-table"
 import Button from "components/common/Button"
-import useToast from "hooks/useToast"
 import { /* CaretDown, */ Export, Sliders } from "phosphor-react"
 import { useIsTabsStuck } from "../Tabs/Tabs"
 import { useThemeContext } from "../ThemeContext"
 import CustomizeViewModal from "./CustomizeViewModal"
+import ExportMembersModal from "./ExportMembers/ExportMembersModal"
 import { Member } from "./useMembers"
 
 type Props = {
@@ -30,43 +30,29 @@ type Props = {
 const CrmMenu = ({ table }: Props) => {
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
-  const toast = useToast()
-  const { isOpen, onOpen, onClose } = useDisclosure()
-
-  const selectedAddresses = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.addresses[0])
-
-  const csvContent = encodeURI("data:text/csv;charset=utf-8," + selectedAddresses)
-
-  const isExportDisabled = !(
-    table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
-  )
+  const {
+    isOpen: isCustomizeOpen,
+    onOpen: onCustomizeOpen,
+    onClose: onCustomizeClose,
+  } = useDisclosure()
+  const {
+    isOpen: isExportOpen,
+    onOpen: onExportOpen,
+    onClose: onExportClose,
+  } = useDisclosure()
 
   const exportButtonProps = {
-    as: "a",
-    download: "members",
-    href: !isExportDisabled ? csvContent : undefined,
-    onClick: () =>
-      // beeing disabled doesn't prevent onClick automatically, because of being an anchor instead of a button
-      !isExportDisabled &&
-      toast({
-        status: "success",
-        title: "Successful export",
-        description: "Check your downloads folder",
-        duration: 2000,
-      }),
+    onClick: onExportOpen,
     leftIcon: <Export />,
     icon: <Export />,
-    isDisabled: isExportDisabled,
-    children: `Export ${selectedAddresses.length || ""} selected`,
+    children: `Export members`,
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const customizeButtonProps = {
     leftIcon: <Sliders />,
     icon: <Sliders />,
-    onClick: onOpen,
+    onClick: onCustomizeOpen,
     children: "Customize view",
   }
 
@@ -102,7 +88,12 @@ const CrmMenu = ({ table }: Props) => {
           </Portal>
         </Menu> */}
       </ButtonGroup>
-      <CustomizeViewModal {...{ isOpen, onClose, table }} />
+      <CustomizeViewModal
+        isOpen={isCustomizeOpen}
+        onClose={onCustomizeClose}
+        table={table}
+      />
+      <ExportMembersModal isOpen={isExportOpen} onClose={onExportClose} />
     </>
   )
 }

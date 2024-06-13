@@ -1,6 +1,5 @@
 import {
   Center,
-  Checkbox,
   HStack,
   Skeleton,
   Spinner,
@@ -105,10 +104,7 @@ export const CrmRow = ({ row, onOpen, children = undefined }) => (
 
 export const CrmSkeletonRow = ({ columns }) => (
   <Tr>
-    <CrmTd w="12">
-      <Checkbox mt="2px" />
-    </CrmTd>
-    {columns.slice(1).map((column) => (
+    {columns.map((column) => (
       <CrmTd
         key={column.id}
         {...(column.id === "identity" && {

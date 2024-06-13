@@ -1,4 +1,4 @@
-import { Checkbox, HStack, Text } from "@chakra-ui/react"
+import { HStack, Text } from "@chakra-ui/react"
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -36,32 +36,6 @@ const columnHelper = createColumnHelper<Member>()
 const getRowId = (row: Member) => `user_${row.userId}`
 
 const columns = [
-  {
-    id: "select",
-    size: 30,
-    header: ({ table }) => (
-      <Checkbox
-        {...{
-          isChecked: table.getIsAllRowsSelected(),
-          isIndeterminate: table.getIsSomeRowsSelected(),
-          onChange: table.getToggleAllRowsSelectedHandler(),
-        }}
-        colorScheme="primary"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        {...{
-          isChecked: row.getIsSelected(),
-          isDisabled: !row.getCanSelect(),
-          isIndeterminate: row.getIsSomeSelected(),
-          onChange: row.getToggleSelectedHandler(),
-        }}
-        colorScheme="primary"
-        mt="2px"
-      />
-    ),
-  },
   columnHelper.accessor((row) => row, {
     id: "identity",
     size: 210,
@@ -143,7 +117,6 @@ const MembersPage = (): JSX.Element => {
     parseFiltersFromQuery(query)
   )
   const [sorting, setSorting] = useState(() => parseSortingFromQuery(query))
-  const [rowSelection, setRowSelection] = useState({})
 
   const queryString = useMemo(
     () => buildQueryStringFromState(columnFilters, sorting),
@@ -163,13 +136,8 @@ const MembersPage = (): JSX.Element => {
   const { data, error, isLoading, isValidating, setSize } = useMembers(queryString)
 
   const handleSetColumnFilters = (props) => {
-    setRowSelection({})
     setSize(1)
     setColumnFilters(props)
-  }
-  const handleSetSorting = (props) => {
-    setRowSelection({})
-    setSorting(props)
   }
 
   const table = useReactTable({
@@ -178,19 +146,16 @@ const MembersPage = (): JSX.Element => {
     state: {
       columnFilters,
       sorting,
-      rowSelection,
     },
     initialState: {
       columnFilters,
       sorting,
-      rowSelection,
     },
     manualSorting: true,
     manualFiltering: true,
     enableRowSelection: true,
     onColumnFiltersChange: handleSetColumnFilters,
-    onSortingChange: handleSetSorting,
-    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getRowId,
   })

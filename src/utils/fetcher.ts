@@ -61,7 +61,10 @@ const fetcher = async (
   const endpoint = `${api}${resource}`.replace("/v1/v2/", "/v2/")
 
   return fetch(endpoint, options).then(async (response: Response) => {
-    const res = await response.json?.()
+    const contentType = response.headers.get("content-type")
+    const res = contentType.includes("json")
+      ? await response.json?.()
+      : await response.text()
 
     if (!response.ok) {
       if (
