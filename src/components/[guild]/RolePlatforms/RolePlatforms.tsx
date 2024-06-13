@@ -25,7 +25,6 @@ import AddRoleRewardModal from "./components/AddRoleRewardModal"
 import { ContractCallFunction } from "./components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import EditRolePlatformButton from "./components/EditRolePlatformButton"
 import PlatformCard from "./components/PlatformCard"
-import RemovePlatformButton from "./components/RemovePlatformButton"
 import { RolePlatformProvider } from "./components/RolePlatformProvider"
 
 type Props = {
@@ -183,26 +182,17 @@ const RolePlatformCard = ({
           />
         }
         cornerButton={
-          !rolePlatform.isNew ? (
-            <RemovePlatformButton
-              {...{ removeButtonColor, isPlatform }}
-              onSubmit={() => {}}
-              isLoading={false}
-            />
-          ) : (
-            <CloseButton
-              size="sm"
-              color={removeButtonColor}
-              rounded="full"
-              aria-label="Remove platform"
-              zIndex="1"
-              onClick={() => remove()}
-            />
-          )
+          <CloseButton
+            size="sm"
+            color={removeButtonColor}
+            rounded="full"
+            aria-label="Remove platform"
+            zIndex="1"
+            onClick={() => remove()}
+          />
         }
         actionRow={
-          cardSettingsComponent &&
-          rolePlatform.isNew && (
+          cardSettingsComponent && (
             <EditRolePlatformButton
               SettingsComponent={cardSettingsComponent}
               rolePlatform={rolePlatform}
