@@ -56,33 +56,31 @@ const CampaignCards = () => {
             {isAdmin && <DynamicCampaignCardMenu groupId={id} />}
 
             <HStack spacing={3} minHeight={10} mb={5}>
-              {
-                // @ts-expect-error TODO: fix this error originating from strictNullChecks
-                imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
-                  <Circle
-                    overflow={"hidden"}
-                    borderRadius="full"
-                    size={10}
-                    flexShrink={0}
-                    position="relative"
-                    bgColor={imageBgColor}
-                  >
-                    {imageUrl?.match("guildLogos") ? (
-                      <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
-                    ) : (
-                      <Image
-                        // @ts-expect-error TODO: fix this error originating from strictNullChecks
-                        src={imageUrl || guildImageUrl}
-                        alt={name}
-                        fill
-                        sizes="2.5rem"
-                      />
-                    )}
-                  </Circle>
-                ) : (
-                  <SkeletonCircle size="10" />
-                )
-              }
+              {/* @ts-expect-error TODO: fix this error originating from strictNullChecks */}
+              {imageUrl?.length > 0 || guildImageUrl?.length > 0 ? (
+                <Circle
+                  overflow={"hidden"}
+                  borderRadius="full"
+                  size={10}
+                  flexShrink={0}
+                  position="relative"
+                  bgColor={imageBgColor}
+                >
+                  {imageUrl?.match("guildLogos") ? (
+                    <Img src={imageUrl} alt="Guild logo" boxSize="40%" />
+                  ) : (
+                    <Image
+                      // @ts-expect-error TODO: fix this error originating from strictNullChecks
+                      src={imageUrl || guildImageUrl}
+                      alt={name}
+                      fill
+                      sizes="2.5rem"
+                    />
+                  )}
+                </Circle>
+              ) : (
+                <SkeletonCircle size="10" />
+              )}
               <Text fontWeight="bold">{name}</Text>
             </HStack>
 
