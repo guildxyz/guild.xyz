@@ -12,6 +12,13 @@ type Props = {
   endTime?: string
 }
 
+type MutateProps = {
+  id: number
+  capacity: number
+  startTime?: string
+  endTime?: string
+}
+
 const useUpdateAvailability = () => {
   const { id: guildId, mutateGuild } = useGuild()
   const toast = useToast()
@@ -33,17 +40,60 @@ const useUpdateAvailability = () => {
     ])
   }
 
+  const localMutateGuild = (data: MutateProps) => {
+    const { id, capacity, startTime, endTime } = data
+    mutateGuild(
+      (prevGuild) => ({
+        ...prevGuild,
+        roles: prevGuild.roles.map((role) => {
+          if (role.rolePlatforms.some((rp) => rp.id === id)) {
+            return {
+              ...role,
+              rolePlatforms: findAndUpdateRolePlatform(
+                id,
+                role.rolePlatforms,
+                capacity,
+                startTime,
+                endTime
+              ),
+            }
+          }
+          return role
+        }),
+      }),
+      { revalidate: false }
+    )
+  }
+
   return useSubmit<Props, any>(submit, {
     onSuccess: (response) => {
       toast({
         title: "Reward updated!",
         status: "success",
       })
-
-      mutateGuild()
-      // TODO: mutate gateables
+      localMutateGuild(response)
     },
     onError: (error) => showErrorToast(error),
+  })
+}
+
+const findAndUpdateRolePlatform = (
+  idToUpdate: number,
+  rolePlatforms: RolePlatform[],
+  capacity: number,
+  startTime?: string,
+  endTime?: string
+) => {
+  return rolePlatforms.map((rp) => {
+    if (rp.id === idToUpdate) {
+      return {
+        ...rp,
+        capacity,
+        startTime,
+        endTime,
+      }
+    }
+    return rp
   })
 }
 
