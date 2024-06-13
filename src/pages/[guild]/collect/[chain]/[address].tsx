@@ -278,6 +278,10 @@ const getStaticProps = async ({ params }) => {
     .then((res) => res.json())
     .catch(() => undefined)
 
+  const isPublicNFT = !!publicGuild.guildPlatforms.find(
+    (gp) => gp.id === nftGuildReward.id
+  )
+
   return {
     revalidate: 600, // Revalidate at most once every 10 minutes
     props: {
@@ -293,7 +297,9 @@ const getStaticProps = async ({ params }) => {
         [guildPageEndpoint]: {
           ...publicGuild,
           // An NFT is always public (it can be found on the blockchain), so we can add the guildPlatform to the public guild cache
-          guildPlatforms: [...publicGuild.guildPlatforms, nftGuildReward],
+          guildPlatforms: isPublicNFT
+            ? publicGuild.guildPlatforms
+            : [...publicGuild.guildPlatforms, nftGuildReward],
         },
         [`/v2/guilds/${publicGuild.id}/roles/${nftRole.id}/requirements`]:
           publicGuild.roles.find((r) => r.id === nftRole.id)?.requirements ?? [],
