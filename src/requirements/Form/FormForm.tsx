@@ -1,4 +1,4 @@
-import { Flex, FormControl, FormLabel } from "@chakra-ui/react"
+import { FormControl, FormLabel, HStack } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildForms from "components/[guild]/hooks/useGuildForms"
 import ControlledSelect from "components/common/ControlledSelect"
@@ -34,10 +34,10 @@ const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
 
   return (
     <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
-      <Flex justifyContent="space-between" w="full" alignItems={"center"}>
-        <FormLabel>Fill form:</FormLabel>
+      <HStack justifyContent="space-between" mb="2">
+        <FormLabel mb="0">Fill form:</FormLabel>
         <AddFormButton baseFieldPath={baseFieldPath} />
-      </Flex>
+      </HStack>
       <ControlledSelect
         name={`${baseFieldPath}.data.id`}
         isDisabled={!forms}
