@@ -11,6 +11,8 @@ type Props = {
   visibilityRoleId: number
 }
 
+type MutateProps = { id: number; visibility: Visibility; visibilityRoleId: number }
+
 const useUpdateRolePlatformVisibility = () => {
   const { id: guildId, mutateGuild } = useGuild()
   const showErrorToast = useShowErrorToast()
@@ -31,17 +33,57 @@ const useUpdateRolePlatformVisibility = () => {
     ])
   }
 
-  return useSubmit<Props, any>(submit, {
+  const localMutateGuild = (data: MutateProps) => {
+    const { id, visibility, visibilityRoleId } = data
+    mutateGuild(
+      (prevGuild) => ({
+        ...prevGuild,
+        roles: prevGuild.roles.map((role) => {
+          if (role.rolePlatforms.some((rp) => rp.id === id)) {
+            return {
+              ...role,
+              rolePlatforms: findAndUpdateRolePlatform(
+                id,
+                role.rolePlatforms,
+                visibility,
+                visibilityRoleId
+              ),
+            }
+          }
+          return role
+        }),
+      }),
+      { revalidate: false }
+    )
+  }
+
+  return useSubmit<Props, MutateProps>(submit, {
     onSuccess: (response) => {
       toast({
         title: "Reward updated!",
         status: "success",
       })
-
-      mutateGuild()
-      // TODO: mutate gateables
+      localMutateGuild(response)
     },
     onError: (error) => showErrorToast(error),
+  })
+}
+
+const findAndUpdateRolePlatform = (
+  idToUpdate: number,
+  rolePlatforms: RolePlatform[],
+  visibility: Visibility,
+  visibilityRoleId: number
+) => {
+  return rolePlatforms.map((rp) => {
+    if (rp.id === idToUpdate) {
+      return {
+        ...rp,
+        visibility,
+        visibilityRoleId,
+      }
+    }
+    return rp
   })
 }
 
