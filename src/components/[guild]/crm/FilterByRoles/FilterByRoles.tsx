@@ -115,7 +115,7 @@ const FilterByRoles = ({ getFilterValue, setFilterValue }: any) => {
                     <AddHiddenRoles />
                   )}
                   <RoleCheckboxGroup
-                    label="Public roles"
+                    label="Public/secret roles"
                     selectedRoleIds={selectedRoleIds}
                     setSelectedRoleIds={setSelectedRoleIds}
                     roles={publicRoles}
