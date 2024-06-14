@@ -13,7 +13,6 @@ const LogicFormControl = ({
   const requirementsFromFormContext = useWatch({ name: "requirements" })
   const requirements = requirementsFromProps || requirementsFromFormContext
   const requirementCount = requirements?.length ?? 0
-
   const {
     field: { onChange: logicOnChange, value: logic },
   } = useController({
@@ -55,11 +54,11 @@ const LogicFormControl = ({
             }
           }
         }}
-        defaultValue={(anyOfNum || logic === "AND" ? 0 : 1).toString()}
+        defaultValue={(logic === "AND" ? 0 : anyOfNum).toString()}
       >
         {Array.from({ length: requirementCount }, (_, i) => (
           <option value={i.toString()} key={i}>
-            {i ? i : "All"}
+            {i || "All"}
           </option>
         ))}
       </Select>
