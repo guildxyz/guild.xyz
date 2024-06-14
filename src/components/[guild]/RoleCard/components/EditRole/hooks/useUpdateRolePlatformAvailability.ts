@@ -4,6 +4,7 @@ import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+import useLocalMutateRolePlatform from "./useLocalMutateRolePlatform"
 
 type Props = {
   rolePlatform: RolePlatform
@@ -19,11 +20,12 @@ type MutateProps = {
   endTime?: string
 }
 
-const useUpdateAvailability = () => {
-  const { id: guildId, mutateGuild } = useGuild()
+const useUpdateRolePlatformAvailability = () => {
+  const { id: guildId } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+  const localMutateRolePlatform = useLocalMutateRolePlatform()
 
   const submit = async (data: Props) => {
     const { rolePlatform, capacity, startTime, endTime } = data
@@ -40,60 +42,16 @@ const useUpdateAvailability = () => {
     ])
   }
 
-  const localMutateGuild = (data: MutateProps) => {
-    const { id, capacity, startTime, endTime } = data
-    mutateGuild(
-      (prevGuild) => ({
-        ...prevGuild,
-        roles: prevGuild.roles.map((role) => {
-          if (role.rolePlatforms.some((rp) => rp.id === id)) {
-            return {
-              ...role,
-              rolePlatforms: findAndUpdateRolePlatform(
-                id,
-                role.rolePlatforms,
-                capacity,
-                startTime,
-                endTime
-              ),
-            }
-          }
-          return role
-        }),
-      }),
-      { revalidate: false }
-    )
-  }
-
-  return useSubmit<Props, any>(submit, {
+  return useSubmit<Props, MutateProps>(submit, {
     onSuccess: (response) => {
       toast({
         title: "Reward updated!",
         status: "success",
       })
-      localMutateGuild(response)
+      const { id, ...rolePlatformData } = response
+      localMutateRolePlatform(id, rolePlatformData)
     },
     onError: (error) => showErrorToast(error),
   })
 }
-
-const findAndUpdateRolePlatform = (
-  idToUpdate: number,
-  rolePlatforms: RolePlatform[],
-  capacity: number,
-  startTime?: string,
-  endTime?: string
-) =>
-  rolePlatforms.map((rp) => {
-    if (rp.id === idToUpdate) {
-      return {
-        ...rp,
-        capacity,
-        startTime,
-        endTime,
-      }
-    }
-    return rp
-  })
-
-export default useUpdateAvailability
+export default useUpdateRolePlatformAvailability

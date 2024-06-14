@@ -16,7 +16,7 @@ import {
   RolePlatform,
 } from "types"
 import DynamicTag from "../../DynamicReward/DynamicTag"
-import useUpdateAvailability from "../hooks/useUpdateAvailability"
+import useUpdateRolePlatformAvailability from "../hooks/useUpdateRolePlatformAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 
 type Props = {
@@ -40,7 +40,7 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   }
 
   const { onSubmit: onAvailabilityChange, isLoading: isAvailabilityLoading } =
-    useUpdateAvailability()
+    useUpdateRolePlatformAvailability()
   const { onSubmit: onVisibilityChange, isLoading: isVisibilityLoading } =
     useUpdateRolePlatformVisibility()
 
