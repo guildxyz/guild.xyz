@@ -1,8 +1,10 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import useUser from "components/[guild]/hooks/useUser"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { RolePlatform } from "types"
+import { useSWRConfig } from "swr"
+import { PlatformType, RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
 const useRemoveReward = () => {
@@ -10,6 +12,8 @@ const useRemoveReward = () => {
   const { id, mutateGuild } = useGuild()
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const { mutate } = useSWRConfig()
+  const { id: userId } = useUser()
 
   const submit = async (rolePlatform: RolePlatform) =>
     fetcherWithSign([
@@ -21,6 +25,10 @@ const useRemoveReward = () => {
         },
       },
     ])
+
+  const mutateGateables = (platformId: number) => {
+    mutate(`/v2/users/${userId}/platforms/${PlatformType[platformId]}/gateables`)
+  }
 
   return useSubmit<RolePlatform, any>(submit, {
     onSuccess: (response) => {
