@@ -20,7 +20,7 @@ const useAddRewardWithExistingGP = () => {
   return useSubmit<RolePlatform, any>(submit, {
     onSuccess: (response) => {
       toast({
-        title: "Reward updated!",
+        title: "Reward added!",
         status: "success",
       })
 
