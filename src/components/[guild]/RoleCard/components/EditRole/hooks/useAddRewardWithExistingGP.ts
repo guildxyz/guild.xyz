@@ -24,18 +24,21 @@ const useAddRewardWithExistingGP = () => {
         status: "success",
       })
 
-      mutateGuild((prevGuild) => ({
-        ...prevGuild,
-        roles: prevGuild.roles.map((role) => {
-          if (role.id === response.platformRoleId) {
-            return {
-              ...role,
-              rolePlatforms: [...role.rolePlatforms, response],
+      mutateGuild(
+        (prevGuild) => ({
+          ...prevGuild,
+          roles: prevGuild.roles.map((role) => {
+            if (role.id === response.platformRoleId) {
+              return {
+                ...role,
+                rolePlatforms: [...role.rolePlatforms, response],
+              }
             }
-          }
-          return role
+            return role
+          }),
         }),
-      }))
+        { revalidate: false }
+      )
     },
     onError: (error) => showErrorToast(error),
   })
