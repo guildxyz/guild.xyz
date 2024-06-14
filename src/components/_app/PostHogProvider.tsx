@@ -91,7 +91,17 @@ const CustomPostHogProvider = ({
           )
             return
 
-          ph.capture(event, options)
+          /**
+           * Saving user details to events too, just in case we decide not to use
+           * `$identify` in the future (we'll have a "plan B" in that case)
+           */
+          ph.capture(event, {
+            userId: id,
+            userAddress: address?.toLowerCase(),
+            walletType,
+            wallet: connectorName,
+            ...options,
+          })
         },
         startSessionRecording: () => ph.startSessionRecording(),
       }}
