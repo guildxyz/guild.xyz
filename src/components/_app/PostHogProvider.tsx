@@ -91,13 +91,7 @@ const CustomPostHogProvider = ({
           )
             return
 
-          ph.capture(event, {
-            userId: id,
-            userAddress: address?.toLowerCase(),
-            walletType,
-            wallet: connectorName,
-            ...options,
-          })
+          ph.capture(event, options)
         },
         startSessionRecording: () => ph.startSessionRecording(),
       }}

@@ -1,5 +1,6 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
+import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   StoredKeyPair,
@@ -28,7 +29,8 @@ const useUser = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
   const posthog = usePostHog()
-  const { address } = useWeb3ConnectionManager()
+  const { address, type: walletType } = useWeb3ConnectionManager()
+  const { connectorName } = useConnectorNameAndIcon()
   const { id } = useUserPublic()
   const { keyPair } = useUserPublic()
   const fetcherWithSign = useFetcherWithSign()
@@ -44,7 +46,10 @@ const useUser = (
       shouldRetryOnError: false,
       onSuccess: (userData) => {
         posthog.identify(userData.id.toString(), {
-          primaryAddress: userData.addresses.find((a) => a.isPrimary),
+          primaryAddress: userData.addresses.find((a) => a.isPrimary).address,
+          currentAddress: address,
+          walletType,
+          wallet: connectorName,
         })
       },
     }
