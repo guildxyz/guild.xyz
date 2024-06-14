@@ -30,7 +30,7 @@ const useAddRewardWithExistingGP = () => {
           if (role.id === response.platformRoleId) {
             return {
               ...role,
-              rolePlatforms: { ...role.rolePlatforms, response },
+              rolePlatforms: [...role.rolePlatforms, response],
             }
           }
           return role
