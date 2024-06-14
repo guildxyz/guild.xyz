@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import AddRolePlatforms from "components/[guild]/RolePlatforms/AddRolePlatforms"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -32,7 +33,6 @@ import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
 import { RoleFormType, Visibility } from "types"
 import getRandomInt from "utils/getRandomInt"
-import RolePlatforms from "../../RolePlatforms"
 import SetVisibility from "../../SetVisibility"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
@@ -113,7 +113,6 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
   )
 
   const loadingText = signLoadingText || uploadLoadingText || "Saving data"
-
   const setVisibilityModalProps = useVisibilityModalProps()
 
   return (
@@ -153,7 +152,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               </DrawerHeader>
 
               <VStack spacing={10} alignItems="start">
-                <RolePlatforms />
+                <AddRolePlatforms />
 
                 <Section title={"General"}>
                   <Box>
