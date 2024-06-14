@@ -6,23 +6,21 @@ import {
   Tooltip,
   useDisclosure,
 } from "@chakra-ui/react"
+import useRemoveReward from "components/[guild]/RoleCard/components/EditRole/hooks/useRemoveReward"
 import ConfirmationAlert from "components/create-guild/Requirements/components/ConfirmationAlert"
 import { Info } from "phosphor-react"
 
 type Props = {
   removeButtonColor: string
   isPlatform: boolean
-  isLoading: boolean
-  onSubmit: () => void
 }
 
 const RemovePlatformButton = ({
   removeButtonColor,
   isPlatform,
-  isLoading,
-  onSubmit,
 }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { onSubmit: onRemove, isLoading: isRemoving } = useRemoveReward()
 
   return (
     <>
@@ -38,10 +36,10 @@ const RemovePlatformButton = ({
       </Tooltip>
 
       <ConfirmationAlert
-        isLoading={isLoading}
+        isLoading={isRemoving}
         isOpen={isOpen}
         onClose={onClose}
-        onConfirm={onSubmit}
+        onConfirm={onRemove}
         title="Remove reward"
         description={
           <>

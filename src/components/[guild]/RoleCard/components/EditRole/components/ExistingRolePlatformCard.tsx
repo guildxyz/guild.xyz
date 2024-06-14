@@ -13,39 +13,17 @@ import {
   GuildPlatformWithOptionalId,
   PlatformName,
   PlatformType,
-  RoleFormType,
   RolePlatform,
-  Visibility,
 } from "types"
 import DynamicTag from "../../DynamicReward/DynamicTag"
+import useUpdateAvailability from "../hooks/useUpdateAvailability"
+import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 
-type GenericRolePlatformCardProps = {
-  rolePlatform: RoleFormType["rolePlatforms"][number]
-  handlers: {
-    onRemove: (rolePlatform: RolePlatform) => void
-    onVisibilityChange: (
-      rolePlatform: RolePlatform,
-      visibility: Visibility,
-      visibilityRoleId: number
-    ) => Promise<any>
-    onAvailabilityChange: (
-      rolePlatform: RolePlatform,
-      capacity?: number,
-      startTime?: string,
-      endTime?: string
-    ) => Promise<any>
-  }
-  loadingStates: {
-    isRemoving: boolean
-    isUpdating: boolean
-  }
+type Props = {
+  rolePlatform: RolePlatform
 }
 
-const GenericRolePlatformCard = ({
-  rolePlatform,
-  handlers: { onRemove, onVisibilityChange, onAvailabilityChange },
-  loadingStates: { isRemoving, isUpdating },
-}: GenericRolePlatformCardProps) => {
+const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   const { guildPlatforms } = useGuild()
   const setVisibilityModalProps = useVisibilityModalProps()
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
@@ -60,6 +38,11 @@ const GenericRolePlatformCard = ({
     guildPlatform = rolePlatform.guildPlatform
     type = guildPlatform?.platformName
   }
+
+  const { onSubmit: onAvailabilityChange, isLoading: isAvailabilityLoading } =
+    useUpdateAvailability()
+  const { onSubmit: onVisibilityChange, isLoading: isVisibilityLoading } =
+    useUpdateRolePlatformVisibility()
 
   if (!type) return null
 
@@ -90,23 +73,19 @@ const GenericRolePlatformCard = ({
             }}
             entityType="reward"
             onSave={async ({ visibility, visibilityRoleId }) => {
-              await onVisibilityChange(
-                rolePlatform as RolePlatform,
+              await onVisibilityChange({
+                rolePlatform,
                 visibility,
-                visibilityRoleId
-              )
+                visibilityRoleId,
+              })
               setVisibilityModalProps.onClose()
             }}
-            isLoading={isUpdating}
+            isLoading={isVisibilityLoading}
             {...setVisibilityModalProps}
           />
         }
         cornerButton={
-          <RemovePlatformButton
-            {...{ removeButtonColor, isPlatform }}
-            onSubmit={() => onRemove(rolePlatform as RolePlatform)}
-            isLoading={isRemoving}
-          />
+          <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
         }
         contentRow={
           <>
@@ -120,14 +99,14 @@ const GenericRolePlatformCard = ({
                   endTime: rolePlatform.endTime,
                 }}
                 onDone={({ capacity, endTime, startTime }) =>
-                  onAvailabilityChange(
-                    rolePlatform as RolePlatform,
+                  onAvailabilityChange({
+                    rolePlatform,
                     capacity,
                     startTime,
-                    endTime
-                  )
+                    endTime,
+                  })
                 }
-                isLoading={isUpdating}
+                isLoading={isAvailabilityLoading}
               />
             ) : type === "CONTRACT_CALL" ? (
               <NftAvailabilityTags
@@ -152,4 +131,4 @@ const GenericRolePlatformCard = ({
   )
 }
 
-export default GenericRolePlatformCard
+export default ExistingRolePlatformCard

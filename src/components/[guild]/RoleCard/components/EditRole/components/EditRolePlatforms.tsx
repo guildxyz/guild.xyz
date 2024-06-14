@@ -16,10 +16,7 @@ import { Plus } from "phosphor-react"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { RolePlatform } from "types"
 import useAddRewardWithExistingGP from "../hooks/useAddRewardWithExistingGP"
-import useRemoveReward from "../hooks/useRemoveReward"
-import useUpdateAvailability from "../hooks/useUpdateAvailability"
-import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
-import GenericRolePlatformCard from "./GenericRolePlatformCard"
+import ExistingRolePlatformCard from "./ExistingRolePlatformCard"
 
 type Props = {
   roleId?: number
@@ -41,14 +38,6 @@ const EditRolePlatforms = ({ roleId }: Props) => {
     onSubmit: handleAddWithExistingGuildPlatform,
     isLoading: addWithExistingIsLoading,
   } = useAddRewardWithExistingGP()
-
-  const { onSubmit: handleAvailabilityChange, isLoading: availabilityIsLoading } =
-    useUpdateAvailability()
-
-  const { onSubmit: handleVisibilityChange, isLoading: visibilityIsLoading } =
-    useUpdateRolePlatformVisibility()
-
-  const { onSubmit: handleRemove, isLoading: removeIsLoading } = useRemoveReward()
 
   const handleAdd = (
     roleId_: number,
@@ -92,29 +81,9 @@ const EditRolePlatforms = ({ roleId }: Props) => {
           <AddCard title="Add reward" onClick={onOpen} />
         ) : (
           rolePlatforms.map((rolePlatform) => (
-            <GenericRolePlatformCard
+            <ExistingRolePlatformCard
               key={rolePlatform.id}
               rolePlatform={rolePlatform}
-              handlers={{
-                onRemove: handleRemove,
-                onAvailabilityChange: (rp, capacity, startTime, endTime) =>
-                  handleAvailabilityChange({
-                    rolePlatform: rp,
-                    capacity,
-                    startTime,
-                    endTime,
-                  }),
-                onVisibilityChange: (rp, visibility, visibilityRoleId) =>
-                  handleVisibilityChange({
-                    rolePlatform: rp,
-                    visibility,
-                    visibilityRoleId,
-                  }),
-              }}
-              loadingStates={{
-                isRemoving: removeIsLoading,
-                isUpdating: availabilityIsLoading || visibilityIsLoading,
-              }}
             />
           ))
         )}
