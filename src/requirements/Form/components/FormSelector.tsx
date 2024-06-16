@@ -9,7 +9,10 @@ import { PlatformType, SelectOption } from "types"
 import parseFromObject from "utils/parseFromObject"
 import AddFormButton from "./AddFormButton"
 
-const FormSelector = ({ baseFieldPath }: RequirementFormProps) => {
+const FormSelector = ({
+  baseFieldPath,
+  isDisabled,
+}: RequirementFormProps & { isDisabled?: boolean }) => {
   const { errors } = useFormState()
   const { guildPlatforms } = useGuild()
   const formRewardIds =
@@ -27,14 +30,17 @@ const FormSelector = ({ baseFieldPath }: RequirementFormProps) => {
       })) ?? []
 
   return (
-    <FormControl isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}>
+    <FormControl
+      isInvalid={!!parseFromObject(errors, baseFieldPath)?.data?.id}
+      isDisabled={isDisabled}
+    >
       <HStack justifyContent="space-between" mb="2">
-        <FormLabel mb="0">Select form</FormLabel>
-        <AddFormButton baseFieldPath={baseFieldPath} />
+        <FormLabel mb="0">Fill form</FormLabel>
+        <AddFormButton {...{ baseFieldPath, isDisabled }} />
       </HStack>
       <ControlledSelect
         name={`${baseFieldPath}.data.id`}
-        isDisabled={!forms}
+        isDisabled={!forms || isDisabled}
         isLoading={isLoading || isValidating}
         options={formOptions}
       />

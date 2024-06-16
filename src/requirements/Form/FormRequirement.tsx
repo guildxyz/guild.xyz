@@ -40,7 +40,9 @@ const FormRequirement = (props: RequirementProps) => {
           </Link>
         </Skeleton>
       </Tooltip>
-      <Text as="span">{" form"}</Text>
+      <Text as="span">{` form ${
+        data.answers?.length ? "with specified answers" : ""
+      }`}</Text>
     </Requirement>
   )
 }
