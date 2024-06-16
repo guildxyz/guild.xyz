@@ -64,7 +64,7 @@ const Links = () => {
           Object.entries(socialLinks).map(([type, link]) => (
             <Link
               key={type}
-              href={link}
+              href={link?.startsWith("http") ? link : `https://${link}`}
               isExternal
               colorScheme="gray"
               fontWeight="medium"

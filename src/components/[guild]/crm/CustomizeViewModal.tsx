@@ -27,7 +27,7 @@ const COLUMN_NAMES = {
   identity: "Identity",
   roles: "All roles",
   hiddenRoles: "Hidden roles",
-  publicRoles: "Public roles",
+  publicRoles: "Public/secret roles",
   joinedAt: "Joined at",
 }
 

@@ -4,7 +4,7 @@ import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import { PropsWithChildren, createContext, useContext } from "react"
+import { PropsWithChildren, createContext, useContext, useEffect } from "react"
 import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
@@ -48,10 +48,16 @@ const PostHogContext = createContext<{
 const CustomPostHogProvider = ({
   children,
 }: PropsWithChildren<unknown>): JSX.Element => {
-  const { address, type: walletType } = useWeb3ConnectionManager()
+  const { isWeb3Connected, address, type: walletType } = useWeb3ConnectionManager()
   const { connectorName } = useConnectorNameAndIcon()
   const { id } = useUserPublic()
   const ph = usePostHog()
+
+  useEffect(() => {
+    if (!isWeb3Connected) {
+      ph.reset()
+    }
+  }, [isWeb3Connected, ph])
 
   return (
     <PostHogContext.Provider
@@ -85,6 +91,10 @@ const CustomPostHogProvider = ({
           )
             return
 
+          /**
+           * Saving user details to events too, just in case we decide not to use
+           * `$identify` in the future (we'll have a "plan B" in that case)
+           */
           ph.capture(event, {
             userId: id,
             userAddress: address?.toLowerCase(),

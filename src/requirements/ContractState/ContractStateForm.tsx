@@ -28,7 +28,7 @@ import ControlledSelect from "components/common/ControlledSelect"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import { Info, Plus, X } from "phosphor-react"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import { Controller, useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementFormProps } from "requirements"
 import parseFromObject from "utils/parseFromObject"
@@ -102,11 +102,6 @@ const ContractStateForm = ({ baseFieldPath }: RequirementFormProps) => {
       })),
     [methodData]
   )
-
-  useEffect(() => {
-    if (!touchedFields.data?.resultIndex) return
-    setValue(`${baseFieldPath}.data.resultIndex`, 0)
-  }, [touchedFields.data?.resultIndex, setValue, baseFieldPath, outputOptions])
 
   const outputType = outputOptions?.[resultIndex ?? 0]?.type
 
