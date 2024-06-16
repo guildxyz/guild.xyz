@@ -18,7 +18,7 @@ const useUpdateRolePlatformVisibility = () => {
   const { id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
-  const localMutateRolePlatform = useLocalMutateRolePlatform()
+  const mutateRolePlatform = useLocalMutateRolePlatform()
   const toast = useToast()
 
   const submit = async (data: Props) => {
@@ -42,7 +42,7 @@ const useUpdateRolePlatformVisibility = () => {
         status: "success",
       })
       const { id, ...rolePlatformData } = response
-      localMutateRolePlatform(id, rolePlatformData)
+      mutateRolePlatform(id, rolePlatformData)
     },
     onError: (error) => showErrorToast(error),
   })

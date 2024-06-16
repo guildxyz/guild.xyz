@@ -25,7 +25,7 @@ const useUpdateRolePlatformAvailability = () => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
-  const localMutateRolePlatform = useLocalMutateRolePlatform()
+  const mutateRolePlatform = useLocalMutateRolePlatform()
 
   const submit = async (data: Props) => {
     const { rolePlatform, capacity, startTime, endTime } = data
@@ -49,7 +49,7 @@ const useUpdateRolePlatformAvailability = () => {
         status: "success",
       })
       const { id, ...rolePlatformData } = response
-      localMutateRolePlatform(id, rolePlatformData)
+      mutateRolePlatform(id, rolePlatformData)
     },
     onError: (error) => showErrorToast(error),
   })

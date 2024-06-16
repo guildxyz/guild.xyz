@@ -15,11 +15,15 @@ const useLocalMutateRolePlatform = () => {
           if (role.rolePlatforms.some((rp) => rp.id === rolePlatformId)) {
             return {
               ...role,
-              rolePlatforms: findAndUpdateRolePlatform(
-                rolePlatformId,
-                role.rolePlatforms,
-                rolePlatformData
-              ),
+              rolePlatforms: role.rolePlatforms.map((rp) => {
+                if (rp.id === rolePlatformId) {
+                  return {
+                    ...rp,
+                    ...rolePlatformData,
+                  }
+                }
+                return rp
+              }),
             }
           }
           return role
@@ -28,21 +32,6 @@ const useLocalMutateRolePlatform = () => {
       { revalidate: false }
     )
   }
-
-  const findAndUpdateRolePlatform = (
-    idToUpdate: number,
-    rolePlatforms: RolePlatform[],
-    rolePlatformData: Partial<RolePlatform>
-  ) =>
-    rolePlatforms.map((rp) => {
-      if (rp.id === idToUpdate) {
-        return {
-          ...rp,
-          ...rolePlatformData,
-        }
-      }
-      return rp
-    })
 
   return mutateRolePlatform
 }
