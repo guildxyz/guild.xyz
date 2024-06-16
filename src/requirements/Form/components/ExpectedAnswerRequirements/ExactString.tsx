@@ -9,7 +9,7 @@ export const ExactString = () => {
     <FormControl isInvalid={!!errors?.value}>
       <FormLabel mb="0">Answer should be equal to</FormLabel>
 
-      <Input {...register("value")} />
+      <Input {...register("value", { required: "This field is required" })} />
 
       <FormErrorMessage>{errors?.value?.message as string}</FormErrorMessage>
     </FormControl>
