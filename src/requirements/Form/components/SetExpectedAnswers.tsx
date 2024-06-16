@@ -5,10 +5,13 @@ import { useFieldArray } from "react-hook-form"
 import AddExpectedAnswerModal from "./AddExpectedAnswerModal"
 import ExpectedAnswerCard from "./ExpectedAnswerCard"
 
+export type ExpectedValue =
+  | { value: string }
+  | { minAmount: number; maxAmount: number }
+
 type FieldData = {
   fieldId: string
-  value: string
-}
+} & ExpectedValue
 
 const SetExpectedAnswers = ({ isDisabled, formId, baseFieldPath }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -39,7 +42,7 @@ const SetExpectedAnswers = ({ isDisabled, formId, baseFieldPath }) => {
             <ExpectedAnswerCard
               key={field.id}
               field={form?.fields?.find((f) => f.id === field.fieldId)}
-              value={field.value}
+              {...field}
               onRemove={() => remove(index)}
             />
           ))

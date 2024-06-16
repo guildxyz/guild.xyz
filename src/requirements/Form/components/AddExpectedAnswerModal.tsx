@@ -48,7 +48,9 @@ const AddExpectedAnswerModal = ({
                 formId={formId}
                 disabledQuestions={alreadyAddedFields}
               />
-              {selectedFieldType && <selectedFieldType.ExpectedAnswerComponent />}
+              {selectedFieldType && (
+                <selectedFieldType.ExpectedAnswerComponent field={field} />
+              )}
             </Stack>
           </ModalBody>
           <ModalFooter>
