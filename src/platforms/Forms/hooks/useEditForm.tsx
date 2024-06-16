@@ -28,11 +28,14 @@ const useEditForm = ({
       onSuccess?.()
 
       mutate(
-        (prevForms) =>
+        (prevForms) => {
+          if (!prevForms) return [response]
+
           prevForms.map((form) => {
             if (form.id !== response.id) return form
             return response
-          }),
+          })
+        },
         { revalidate: false }
       )
     },
