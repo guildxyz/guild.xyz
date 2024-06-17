@@ -31,6 +31,6 @@ const rewards = {
   ...discordRewards,
   ...githubRewards,
   ...poapRewards,
-} as const satisfies Rewards
+} as const satisfies Partial<Rewards>
 
 export default rewards
