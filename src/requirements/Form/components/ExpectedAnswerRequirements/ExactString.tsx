@@ -1,15 +1,20 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
-import { useFormContext, useFormState } from "react-hook-form"
+import { Controller, useFormContext, useFormState } from "react-hook-form"
 
 export const ExactString = () => {
-  const { register } = useFormContext()
+  const { control } = useFormContext()
   const { errors } = useFormState()
 
   return (
     <FormControl isInvalid={!!errors?.value}>
       <FormLabel mb="0">Answer should be equal to</FormLabel>
 
-      <Input {...register("value", { required: "This field is required" })} />
+      <Controller
+        control={control}
+        name="value"
+        rules={{ required: "This field is required" }}
+        render={({ field }) => <Input {...field} />}
+      />
 
       <FormErrorMessage>{errors?.value?.message as string}</FormErrorMessage>
     </FormControl>
