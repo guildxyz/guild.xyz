@@ -62,6 +62,7 @@ const options = [
   {
     label: <Minus />,
     value: "ignore",
+    tooltipLabel: "Doesn't matter if selected or not",
   },
   {
     label: <X />,
