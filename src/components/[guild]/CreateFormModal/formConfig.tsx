@@ -8,9 +8,15 @@ import {
   Textbox,
 } from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
+import {
+  ExactStringDisplay,
+  ExpectedChoicesDisplay,
+  ExpectedFieldDataProps,
+  ExpectedRateDisplay,
+} from "requirements/Form/components/ExpectedAnswerCard"
 import { ExpectedChoices } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedChoices"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
-import { ExactString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExactString"
+import { ExactString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import { MultipleChoice, SingleChoice } from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
@@ -32,7 +38,8 @@ const fieldTypes: {
     isDisabled?: boolean
     value?: any
   }>
-  ExpectedAnswerComponent?: ComponentType<any> // todo type
+  ExpectedAnswerComponent?: ComponentType<{ field: Schemas["Field"] }>
+  ExpectedAnswerDisplayComponent?: ComponentType<ExpectedFieldDataProps>
 }[] = [
   {
     label: "Short text",
@@ -40,6 +47,7 @@ const fieldTypes: {
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: ShortText,
     ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerDisplayComponent: ExactStringDisplay,
   },
   {
     label: "Long text",
@@ -47,6 +55,7 @@ const fieldTypes: {
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: LongText,
     ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerDisplayComponent: ExactStringDisplay,
   },
   {
     label: "Number",
@@ -54,6 +63,7 @@ const fieldTypes: {
     img: <OptionIcon as={NumberSquareFive} />,
     DisplayComponent: Number,
     ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerDisplayComponent: ExactStringDisplay,
   },
   {
     label: "Single choice",
@@ -62,6 +72,7 @@ const fieldTypes: {
     SetupComponent: ChoiceSetup,
     DisplayComponent: SingleChoice,
     ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerDisplayComponent: ExactStringDisplay,
   },
   {
     label: "Multiple choice",
@@ -70,6 +81,7 @@ const fieldTypes: {
     SetupComponent: ChoiceSetup,
     DisplayComponent: MultipleChoice,
     ExpectedAnswerComponent: ExpectedChoices,
+    ExpectedAnswerDisplayComponent: ExpectedChoicesDisplay,
   },
   {
     label: "Rate",
@@ -78,6 +90,7 @@ const fieldTypes: {
     SetupComponent: RateSetup,
     DisplayComponent: Rate,
     ExpectedAnswerComponent: ExpectedRate,
+    ExpectedAnswerDisplayComponent: ExpectedRateDisplay,
   },
 ]
 
