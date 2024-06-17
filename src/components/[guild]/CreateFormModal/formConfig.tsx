@@ -10,11 +10,11 @@ import {
 import { ComponentType, ReactNode } from "react"
 import {
   ExactStringDisplay,
-  ExpectedChoicesDisplay,
   ExpectedFieldDataProps,
+  ExpectedMultipleChoiceDisplay,
   ExpectedRateDisplay,
 } from "requirements/Form/components/ExpectedAnswerCard"
-import { ExpectedChoices } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedChoices"
+import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
 import { ExactString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
@@ -80,8 +80,8 @@ const fieldTypes: {
     img: <OptionIcon as={CheckSquare} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: MultipleChoice,
-    ExpectedAnswerComponent: ExpectedChoices,
-    ExpectedAnswerDisplayComponent: ExpectedChoicesDisplay,
+    ExpectedAnswerComponent: ExpectedMultipleChoice,
+    ExpectedAnswerDisplayComponent: ExpectedMultipleChoiceDisplay,
   },
   {
     label: "Rate",

@@ -46,7 +46,7 @@ export const ExpectedRateDisplay = ({
   </HStack>
 )
 
-export const ExpectedChoicesDisplay = ({
+export const ExpectedMultipleChoiceDisplay = ({
   acceptedAnswers,
   rejectedAnswers,
 }: ExpectedFieldDataProps) => (

@@ -4,7 +4,7 @@ import RadioButtonGroup from "components/common/RadioButtonGroup"
 import { Check, Minus, X } from "phosphor-react"
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form"
 
-export const ExpectedChoices = ({ field }) => {
+export const ExpectedMultipleChoice = ({ field }) => {
   const { getValues } = useFormContext()
   const { errors } = useFormState()
 
