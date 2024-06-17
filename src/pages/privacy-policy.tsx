@@ -245,6 +245,10 @@ const Page = (): JSX.Element => (
             communications between you and others through our Services.
           </ListItem>
           <ListItem>
+            <b>Marketing</b>: Upon your consent, we may use your email address to send you marketing
+            communications and to provide you with updates about our services and products.
+          </ListItem>
+          <ListItem>
             <b>Security</b>: We use information about you to secure your profile,
             verify accounts, to monitor suspicious or fraudulent activity and to
             identify violations of our Terms of Use or Master Subscription Agreement.
