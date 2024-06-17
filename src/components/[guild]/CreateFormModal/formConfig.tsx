@@ -16,6 +16,7 @@ import {
 } from "requirements/Form/components/ExpectedAnswerCard"
 import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
+import ExpectedSingleChoice from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedSingleChoice"
 import { ExactString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import { MultipleChoice, SingleChoice } from "./components/Display/Choice"
@@ -71,7 +72,7 @@ const fieldTypes: {
     img: <OptionIcon as={RadioButton} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: SingleChoice,
-    ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerComponent: ExpectedSingleChoice,
     ExpectedAnswerDisplayComponent: ExactStringDisplay,
   },
   {
