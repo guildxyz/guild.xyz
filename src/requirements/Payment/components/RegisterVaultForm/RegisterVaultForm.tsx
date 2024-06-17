@@ -14,6 +14,7 @@ import {
   Text,
 } from "@chakra-ui/react"
 import FormErrorMessage from "components/common/FormErrorMessage"
+import useToken from "hooks/useToken"
 import { useController, useFormContext, useWatch } from "react-hook-form"
 import useFeeInUSD from "requirements/Payment/components/RegisterVaultForm/hooks/useFeeInUSD"
 import ChainPicker from "requirements/common/ChainPicker"
@@ -23,7 +24,8 @@ import {
   NULL_ADDRESS,
   paymentSupportedChains,
 } from "utils/guildCheckout/constants"
-import { Chain } from "wagmiConfig/chains"
+import { useChainId } from "wagmi"
+import { CHAIN_CONFIG, Chain, Chains } from "wagmiConfig/chains"
 
 const coingeckoCoinIds: Partial<Record<Chain, string>> = {
   ETHEREUM: "ethereum",
@@ -34,7 +36,7 @@ const coingeckoCoinIds: Partial<Record<Chain, string>> = {
 export type RegisterVaultFormType = {
   chain: Chain
   token: `0x${string}`
-  fee: number
+  fee: string
   owner: `0x${string}`
 }
 
@@ -44,11 +46,34 @@ type Props = {
 
 const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
   const {
+    control,
     register,
     setValue,
     formState: { errors },
   } = useFormContext<RegisterVaultFormType>()
-  const chain = useWatch({ name: "chain" })
+  const chain = useWatch({ control, name: "chain" })
+  const token = useWatch({ control, name: "token" })
+
+  const { data: tokenData } = useToken({
+    address: token,
+    chainId: Chains[chain],
+    shouldFetch: Boolean(token !== NULL_ADDRESS && chain),
+  })
+  const chainId = useChainId()
+
+  const validateFee = (value: string): boolean | string => {
+    const tokenDecimals =
+      token === NULL_ADDRESS
+        ? CHAIN_CONFIG[Chains[chainId] as Chain].nativeCurrency.decimals
+        : tokenData?.decimals
+    const lastDotIndex = value.lastIndexOf(".")
+    const decimalPrecision = value.slice(lastDotIndex + 1).length
+    if (decimalPrecision > tokenDecimals) {
+      return `Decimal places must not exceed ${tokenDecimals} digits.`
+    }
+
+    return true
+  }
 
   const {
     field: {
@@ -66,16 +91,18 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
         value: 0,
         message: "Amount must be positive",
       },
+      validate: validateFee,
     },
   })
 
-  const handleFeeChange = (newValue, onChange) => {
-    if (/^[0-9]*\.0*$/i.test(newValue)) return onChange(newValue)
-    const parsedValue = parseFloat(newValue)
-    return onChange(isNaN(parsedValue) ? "" : parsedValue)
-  }
+  const handleFeeChange = (valueAsString: string) => {
+    const legalChars = "0123456789."
+    const filteredInput = [...valueAsString]
+      .filter((char) => legalChars.includes(char))
+      .join("")
 
-  const token = useWatch({ name: "token" })
+    feeFieldOnChange(filteredInput)
+  }
 
   const { feeInUSD } = useFeeInUSD(
     feeFieldValue,
@@ -98,13 +125,14 @@ const RegisterVaultForm = ({ isDisabled }: Props): JSX.Element => {
 
         <InputGroup>
           <NumberInput
-            isDisabled={isDisabled}
+            isDisabled={isDisabled || !tokenData || !token || !chain}
             w="full"
             ref={feeFieldRef}
             value={feeFieldValue ?? undefined}
-            onChange={(newValue) => handleFeeChange(newValue, feeFieldOnChange)}
-            onBlur={feeFieldOnBlur}
             min={0}
+            clampValueOnBlur={false}
+            onChange={(valueAsString) => handleFeeChange(valueAsString)}
+            onBlur={feeFieldOnBlur}
             sx={
               feeInUSD > 0 && {
                 "> input": {

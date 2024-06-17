@@ -22,13 +22,14 @@ import LeaderboardPointsSelector from "components/[guild]/leaderboard/Leaderboar
 import LeaderboardUserCard, {
   LeaderboardUserCardSkeleton,
 } from "components/[guild]/leaderboard/LeaderboardUserCard"
+import usePointsLeaderboard from "components/[guild]/leaderboard/hooks/usePointsLeaderboard"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Card from "components/common/Card"
 import ErrorAlert from "components/common/ErrorAlert"
 import GuildLogo from "components/common/GuildLogo"
 import Layout from "components/common/Layout"
 import BackButton from "components/common/Layout/components/BackButton"
 import Section from "components/common/Section"
-import useSWRWithOptionalAuth from "hooks/useSWRWithOptionalAuth"
 import { useScrollBatchedRendering } from "hooks/useScrollBatchedRendering"
 import { useRouter } from "next/router"
 import ErrorPage from "pages/_error"
@@ -41,20 +42,13 @@ const BATCH_SIZE = 25
 const Leaderboard = () => {
   const router = useRouter()
   const { id: userId, addresses } = useUser()
-  const { id: guildId, name, imageUrl, description, socialLinks, tags } = useGuild()
+  const { name, imageUrl, description, socialLinks, tags } = useGuild()
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
   const [renderedUsersCount, setRenderedUsersCount] = useState(BATCH_SIZE)
 
   const relatedTokenRewards = useTokenRewards(false, Number(router.query.pointsId))
 
-  const { data, error } = useSWRWithOptionalAuth(
-    guildId
-      ? `/v2/guilds/${guildId}/points/${router.query.pointsId}/leaderboard`
-      : null,
-    { revalidateOnMount: true },
-    false,
-    false
-  )
+  const { data, error } = usePointsLeaderboard()
 
   const wrapperRef = useScrollBatchedRendering({
     batchSize: BATCH_SIZE,
@@ -208,13 +202,19 @@ const Leaderboard = () => {
 }
 
 const LeaderboardWrapper = (): JSX.Element => {
-  const { guildPlatforms, error } = useGuild()
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const { guildPlatforms, error, isDetailed } = useGuild()
 
   const hasPointsReward = guildPlatforms?.some(
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  if (error || (guildPlatforms && !hasPointsReward))
+  if (
+    error ||
+    (isWeb3Connected
+      ? isDetailed && !hasPointsReward
+      : Array.isArray(guildPlatforms) && !hasPointsReward)
+  )
     return <ErrorPage statusCode={404} />
 
   return (

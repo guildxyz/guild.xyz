@@ -18,7 +18,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useUser, { useUserPublic } from "components/[guild]/hooks/useUser"
-import CopyWaaSPrivateKey from "components/_app/Web3ConnectionManager/components/WalletSelectorModal/components/GoogleLoginButton/components/CopyWaaSPrivateKey"
 import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -31,7 +30,6 @@ import { useAtom } from "jotai"
 import { LinkBreak, SignOut } from "phosphor-react"
 import { useAccount } from "wagmi"
 import { CHAIN_CONFIG, Chains } from "wagmiConfig/chains"
-import { WAAS_CONNECTOR_ID } from "wagmiConfig/waasConnector"
 import { accountModalAtom } from "."
 import NetworkModal from "../NetworkModal"
 import AccountConnections from "./components/AccountConnections"
@@ -42,7 +40,7 @@ const AccountModal = () => {
   const [isOpen, setIsOpen] = useAtom(accountModalAtom)
   const onClose = () => setIsOpen(false)
 
-  const { address: evmAddress, chainId, connector } = useAccount()
+  const { address: evmAddress, chainId } = useAccount()
 
   const {
     isOpen: isNetworkModalOpen,
@@ -138,7 +136,6 @@ const AccountModal = () => {
                   />
                 </Stack>
                 <HStack spacing={1}>
-                  {connector?.id === WAAS_CONNECTOR_ID && <CopyWaaSPrivateKey />}
                   <Tooltip label="Disconnect">
                     <IconButton
                       size="sm"

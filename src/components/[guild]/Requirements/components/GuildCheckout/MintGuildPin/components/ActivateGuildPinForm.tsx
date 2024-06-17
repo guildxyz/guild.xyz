@@ -100,10 +100,11 @@ const ActivateGuildPinForm = (): JSX.Element => {
       <Stack w="full" spacing={4}>
         <ChainPicker
           controlName="chain"
-          supportedChains={[
-            ...(Object.keys(GUILD_PIN_CONTRACTS) as Chain[]),
-            "FUEL",
-          ]}
+          // supportedChains={[
+          //   ...(Object.keys(GUILD_PIN_CONTRACTS) as Chain[]),
+          //   "FUEL",
+          // ]}
+          supportedChains={Object.keys(GUILD_PIN_CONTRACTS) as Chain[]}
           showDivider={false}
           menuPlacement="top"
         />

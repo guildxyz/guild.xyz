@@ -1,5 +1,6 @@
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
+import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import {
   StoredKeyPair,
@@ -9,6 +10,7 @@ import {
 import useToast from "hooks/useToast"
 import { useSetAtom } from "jotai"
 import { useRouter } from "next/router"
+import { usePostHog } from "posthog-js/react"
 import { KeyedMutator } from "swr"
 import useSWRImmutable from "swr/immutable"
 import { User } from "types"
@@ -26,7 +28,9 @@ const ignoredRoutes = [
 const useUser = (
   userIdOrAddress?: number | string
 ): User & { isLoading: boolean; mutate: KeyedMutator<User>; error: any } => {
-  const { address } = useWeb3ConnectionManager()
+  const posthog = usePostHog()
+  const { address, type: walletType } = useWeb3ConnectionManager()
+  const { connectorName } = useConnectorNameAndIcon()
   const { id } = useUserPublic()
   const { keyPair } = useUserPublic()
   const fetcherWithSign = useFetcherWithSign()
@@ -38,7 +42,17 @@ const useUser = (
       ? [`/v2/users/${idToUse}/profile`, { method: "GET", body: {} }]
       : null,
     fetcherWithSign,
-    { shouldRetryOnError: false }
+    {
+      shouldRetryOnError: false,
+      onSuccess: (userData) => {
+        posthog.identify(userData.id.toString(), {
+          primaryAddress: userData.addresses.find((a) => a.isPrimary).address,
+          currentAddress: address,
+          walletType,
+          wallet: connectorName,
+        })
+      },
+    }
   )
 
   return {
@@ -110,6 +124,12 @@ const useUserPublic = (
       }
 
       return user
+    },
+    {
+      shouldRetryOnError: false,
+      onError: () => {
+        setIsWalletSelectorModalOpen(true)
+      },
     }
   )
 

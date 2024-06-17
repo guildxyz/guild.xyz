@@ -1,8 +1,7 @@
-import { Flex, Heading, Icon, Stack, Text } from "@chakra-ui/react"
+import { Flex, Heading, Icon, Stack } from "@chakra-ui/react"
 import IntercomProvider, { triggerChat } from "components/_app/IntercomProvider"
 import Button from "components/common/Button"
 import Head from "next/head"
-import Link from "next/link"
 import { ChatCircle, House } from "phosphor-react"
 import NotFoundIcon from "static/avatars/58.svg"
 
@@ -46,11 +45,7 @@ const Page = ({ statusCode }): JSX.Element => (
           Client-side error
         </Heading>
       )}
-      <Text fontSize="lg" mb={10} fontWeight="medium">
-        {statusCode === 404
-          ? "Please contact us on Intercom if you think you shouldn't see this page!"
-          : "Uh-oh! Something went wrong, please contact us on Intercom if you think you shouldn't see this page!"}
-      </Text>
+
       <Stack
         direction={{ base: "column", sm: "row" }}
         spacing={{ base: 2, md: 3 }}
@@ -58,7 +53,7 @@ const Page = ({ statusCode }): JSX.Element => (
         justifyContent={"center"}
       >
         <Button
-          as={Link}
+          as="a"
           href="/explorer"
           leftIcon={<House />}
           colorScheme="indigo"

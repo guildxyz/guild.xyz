@@ -1,5 +1,7 @@
 import {
+  ButtonGroup,
   Center,
+  Divider,
   Img,
   Menu,
   MenuButton,
@@ -15,13 +17,26 @@ import { CaretDown } from "phosphor-react"
 import Star from "static/icons/star.svg"
 import { useAccessedGuildPoints } from "../AccessHub/hooks/useAccessedGuildPoints"
 import useGuild from "../hooks/useGuild"
+import useGuildPermission from "../hooks/useGuildPermission"
+import RecalculateLeaderboardButton from "./RecalculateLeaderboardButton"
 
 const LeaderboardPointsSelector = () => {
   const { urlName } = useGuild()
   const router = useRouter()
 
+  const { isAdmin } = useGuildPermission()
+
   const pointsRewards = useAccessedGuildPoints("ALL")
-  if (pointsRewards.length < 2) return null
+  if (pointsRewards.length < 2) {
+    if (isAdmin)
+      return (
+        <Card borderRadius="xl" flexShrink={0}>
+          <RecalculateLeaderboardButton />
+        </Card>
+      )
+
+    return null
+  }
 
   const pointsRewardsData = pointsRewards.map((gp) => ({
     id: gp.id.toString(),
@@ -41,32 +56,39 @@ const LeaderboardPointsSelector = () => {
 
   return (
     <Card borderRadius="xl" flexShrink={0}>
-      <Menu placement="bottom-end">
-        <MenuButton
-          as={Button}
-          size="sm"
-          variant="ghost"
-          rightIcon={<CaretDown />}
-          leftIcon={currentPoints.image}
-        >
-          {currentPoints.name}
-        </MenuButton>
-        <Portal>
-          <MenuList zIndex={9999}>
-            {pointsRewardsData.map((points) => (
-              <Link
-                key={points.id}
-                passHref
-                href={`/${urlName}/leaderboard/${points.id}`}
-              >
-                <MenuItem as="a" icon={points.image}>
-                  {points.name}
-                </MenuItem>
-              </Link>
-            ))}
-          </MenuList>
-        </Portal>
-      </Menu>
+      <ButtonGroup isAttached borderRadius="2xl" variant="ghost">
+        {isAdmin && (
+          <>
+            <RecalculateLeaderboardButton size="ICON" />
+            <Divider orientation="vertical" h={8} />
+          </>
+        )}
+        <Menu placement="bottom-end">
+          <MenuButton
+            as={Button}
+            size="sm"
+            rightIcon={<CaretDown />}
+            leftIcon={currentPoints.image}
+          >
+            {currentPoints.name}
+          </MenuButton>
+          <Portal>
+            <MenuList zIndex={9999}>
+              {pointsRewardsData.map((points) => (
+                <Link
+                  key={points.id}
+                  passHref
+                  href={`/${urlName}/leaderboard/${points.id}`}
+                >
+                  <MenuItem as="a" icon={points.image}>
+                    {points.name}
+                  </MenuItem>
+                </Link>
+              ))}
+            </MenuList>
+          </Portal>
+        </Menu>
+      </ButtonGroup>
     </Card>
   )
 }

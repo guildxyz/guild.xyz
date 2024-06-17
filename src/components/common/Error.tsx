@@ -49,7 +49,9 @@ const Error = <ErrorType,>({
         <AlertIcon />
         <Stack>
           <AlertTitle>{state.title}</AlertTitle>
-          <AlertDescription>{state.description}</AlertDescription>
+          <AlertDescription wordBreak="break-word">
+            {state.description}
+          </AlertDescription>
           {children && <Box pt="1">{children}</Box>}
         </Stack>
       </Alert>

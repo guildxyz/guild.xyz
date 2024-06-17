@@ -19,12 +19,14 @@ import RequirementsCard from "components/[guild]/collect/components/Requirements
 import RichTextDescription from "components/[guild]/collect/components/RichTextDescription"
 import ShareAndReportButtons from "components/[guild]/collect/components/ShareAndReportButtons"
 import SmallImageAndRoleName from "components/[guild]/collect/components/SmallImageAndRoleName"
+import TiltCard from "components/[guild]/collect/components/TiltCard"
 import TopCollectors from "components/[guild]/collect/components/TopCollectors"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useShouldShowSmallImage from "components/[guild]/collect/hooks/useShouldShowSmallImage"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
 import { AnimatePresence } from "framer-motion"
@@ -52,6 +54,11 @@ type Props = {
   fallback: { [x: string]: Guild }
 }
 
+const DynamicEditNFTButton = dynamic(
+  () => import("components/[guild]/collect/components/EditNftButton"),
+  { ssr: false }
+)
+
 const DynamicEditNFTDescriptionModalButton = dynamic(
   () =>
     import("components/[guild]/collect/components/EditNFTDescriptionModalButton"),
@@ -75,8 +82,17 @@ const CollectNftPageContent = ({
   const nftDescriptionRef = useRef<HTMLDivElement>(null)
   const shouldShowSmallImage = useShouldShowSmallImage(nftDescriptionRef)
 
-  const { name, image: imageFromHook, totalSupply } = useNftDetails(chain, address)
+  const {
+    name,
+    image: imageFromHook,
+    totalSupply,
+    creator,
+  } = useNftDetails(chain, address)
   const image = imageFromHook || fallbackImage
+
+  const { address: userAddress } = useWeb3ConnectionManager()
+  const isNFTCreator =
+    isAdmin && creator?.toLowerCase() === userAddress?.toLowerCase()
 
   return (
     <Layout
@@ -88,13 +104,17 @@ const CollectNftPageContent = ({
       <Stack spacing={4}>
         <HStack justifyContent="space-between">
           <GuildImageAndName />
-          <ShareAndReportButtons
-            isPulseMarkerHidden={totalSupply > 0}
-            shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
-            shareText={`Check out and collect this awesome ${
-              name ? `${name} ` : " "
-            }NFT on Guild!`}
-          />
+          <HStack>
+            <ShareAndReportButtons
+              isPulseMarkerHidden={totalSupply > 0}
+              shareButtonLocalStorageKey={`${chain}_${address}_hasClickedShareButton`}
+              shareText={`Check out and collect this awesome ${
+                name ? `${name} ` : " "
+              }NFT on Guild!`}
+            />
+
+            {isNFTCreator && <DynamicEditNFTButton />}
+          </HStack>
         </HStack>
 
         <SimpleGrid
@@ -105,7 +125,11 @@ const CollectNftPageContent = ({
           gap={{ base: 6, lg: 8 }}
         >
           <Stack overflow="hidden" w="full" spacing={{ base: 6, lg: 8 }}>
-            <CollectibleImage src={image} isLoading={!image} />
+            <CollectibleImage
+              src={image}
+              isLoading={!image}
+              imageWrapper={TiltCard}
+            />
 
             <Stack spacing={6}>
               <Heading
@@ -264,6 +288,10 @@ const getStaticProps = async ({ params }) => {
     .then((res) => res.json())
     .catch(() => undefined)
 
+  const isPublicNFT = !!publicGuild.guildPlatforms.find(
+    (gp) => gp.id === nftGuildReward.id
+  )
+
   return {
     revalidate: 600, // Revalidate at most once every 10 minutes
     props: {
@@ -276,7 +304,13 @@ const getStaticProps = async ({ params }) => {
       fallbackImage: nftGuildReward.platformGuildData.imageUrl,
       // Pre-populating the public guild & requirements caches
       fallback: {
-        [guildPageEndpoint]: publicGuild,
+        [guildPageEndpoint]: {
+          ...publicGuild,
+          // An NFT is always public (it can be found on the blockchain), so we can add the guildPlatform to the public guild cache
+          guildPlatforms: isPublicNFT
+            ? publicGuild.guildPlatforms
+            : [...publicGuild.guildPlatforms, nftGuildReward],
+        },
         [`/v2/guilds/${publicGuild.id}/roles/${nftRole.id}/requirements`]:
           publicGuild.roles.find((r) => r.id === nftRole.id)?.requirements ?? [],
         ...(!!nftDetails

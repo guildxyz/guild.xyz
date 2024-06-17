@@ -19,13 +19,14 @@ import { useRouter } from "next/router"
 import useFormSubmissions, {
   FormSubmission,
 } from "platforms/Forms/hooks/useFormSubmissions"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 const columnHelper = createColumnHelper<FormSubmission>()
 const getRowId = (row: FormSubmission) => `response_${row.userId}`
 
 const FormResponsesTable = ({ form }) => {
   const router = useRouter()
+  const scrollContainerRef = useRef(null)
 
   const [columnFilters, setColumnFilters] = useState(() =>
     parseFiltersFromQuery(router.query)
@@ -43,6 +44,7 @@ const FormResponsesTable = ({ form }) => {
 
     const asPath = router.asPath.split("?")[0]
     router.replace(`${asPath}?${queryString}`)
+    scrollContainerRef.current?.scrollTo({ top: 0 })
     // router.replace is intentionally left out
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryString, router.isReady, router.asPath])
@@ -161,7 +163,7 @@ const FormResponsesTable = ({ form }) => {
   })
 
   return (
-    <CrmTableWrapper {...{ isValidating, setSize }}>
+    <CrmTableWrapper {...{ isValidating, setSize, scrollContainerRef }}>
       <CrmThead {...{ table, isLoading }} />
       <FormResponsesTbody {...{ table, data, error, isValidating }} />
     </CrmTableWrapper>

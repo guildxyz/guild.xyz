@@ -223,10 +223,6 @@ export const TEMPLATES: Array<RoleFormType> = [
         type: "SOUND_ARTIST",
         chain: "ETHEREUM",
       },
-      {
-        type: "OPTIMISM_PFP",
-        chain: "OPTIMISM",
-      },
     ],
   },
 ]
