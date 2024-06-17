@@ -1,4 +1,4 @@
-import { Tag, Text, Wrap } from "@chakra-ui/react"
+import { HStack, Tag, Text, Wrap } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
 import Card from "components/common/Card"
@@ -38,7 +38,13 @@ export const ExactStringDisplay = ({ value }: ExpectedFieldDataProps) => (
 export const ExpectedRateDisplay = ({
   minAmount,
   maxAmount,
-}: ExpectedFieldDataProps) => <Text>{`min ${minAmount} - max ${maxAmount}`}</Text>
+}: ExpectedFieldDataProps) => (
+  <HStack mt="1">
+    <Tag>{minAmount}</Tag>
+    <Text>-</Text>
+    <Tag>{maxAmount}</Tag>
+  </HStack>
+)
 
 export const ExpectedChoicesDisplay = ({
   acceptedAnswers,
