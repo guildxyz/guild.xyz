@@ -14,7 +14,7 @@ import Image from "next/image"
 import { PropsWithChildren } from "react"
 import { Rest } from "types"
 
-export type RewardCardProps = {
+type Props = {
   label: string | JSX.Element
   title: string
   titleRightElement?: JSX.Element
@@ -36,7 +36,7 @@ const RewardCard = ({
   cornerButton,
   children,
   ...rest
-}: PropsWithChildren<RewardCardProps>) => (
+}: PropsWithChildren<Props>) => (
   <ColorCard
     color={`${colorScheme}.500`}
     pt={{ base: 10, sm: 11 }}
