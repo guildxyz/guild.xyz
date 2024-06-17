@@ -21,7 +21,6 @@ import Key from "static/icons/key.svg"
 import Photo from "static/icons/photo.svg"
 import Star from "static/icons/star.svg"
 import Token from "static/icons/token.svg"
-import XLogo from "static/icons/x.svg"
 import {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -63,127 +62,8 @@ import useTokenCardProps from "./Token/hooks/useTokenCardProps"
 import UniqueTextCardMenu from "./UniqueText/UniqueTextCardMenu"
 import useUniqueTextCardProps from "./UniqueText/useUniqueTextCardProps"
 import RewardPreview from "./components/RewardPreview"
-import { RewardCardProps } from "components/common/RewardCard"
 
-export enum PlatformAsRewardRestrictions {
-  NOT_APPLICABLE, // e.g. Twitter
-  SINGLE_ROLE, // e.g. Telegram
-  MULTIPLE_ROLES, // e.g. Discord
-}
-
-/**
- * "CONTRACT_CALL" is left out intentionally, because we store its capacity in the
- * contract, so it isn't handled the same way as other platforms with capacity/time
- */
-export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
-  "TEXT",
-  "UNIQUE_TEXT",
-  "POAP",
-  "GATHER_TOWN",
-  "ERC20",
-]
-
-export type AddRewardPanelProps = {
-  onAdd: (
-    data: RoleFormType["rolePlatforms"][number] & {
-      requirements?: Requirement[]
-      roleName?: string
-    }
-  ) => void
-  skipSettings?: boolean
-}
-
-export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
-  type: PlatformName
-  name: string
-  image?: string | JSX.Element
-  info?: string | JSX.Element
-  link?: string
-  shouldHide?: boolean
-}
-
-export type CardSettingsComponent = () => JSX.Element
-
-type RewardData = {
-  icon: ForwardRefExoticComponent<IconProps & React.RefAttributes<SVGSVGElement>>
-  imageUrl?: string
-  name: string
-  colorScheme: ThemingProps["colorScheme"]
-  gatedEntity: string
-  cardPropsHook?: CardPropsHook
-  // true when the AddRewardPanel just automatically adds the platform without any user input
-  autoRewardSetup?: boolean
-  cardSettingsComponent?: CardSettingsComponent
-  cardMenuComponent?: (props) => JSX.Element
-  cardWarningComponent?: (props) => JSX.Element
-  cardButton?: (props) => JSX.Element
-  RewardCardComponent?: ComponentType<RewardCardProps>
-  AddRewardPanel?: ComponentType<AddRewardPanelProps>
-  RewardPreview?: ComponentType<PropsWithChildren<unknown>>
-  RoleCardComponent?: ComponentType<RewardProps>
-  isPlatform?: boolean
-  asRewardRestriction: PlatformAsRewardRestrictions
-}
-
-export const modalSizeForPlatform = (platform: PlatformName) => {
-  switch (platform) {
-    case "ERC20":
-    case "POINTS":
-      return "xl"
-    case "UNIQUE_TEXT":
-    case "TEXT":
-      return "2xl"
-    case "POAP":
-      return "lg"
-    case "TELEGRAM":
-      return "md"
-    case "CONTRACT_CALL":
-      return "4xl"
-    default:
-      return "3xl"
-  }
-}
-
-const AddRewardPanelLoadingSpinner = ({ height = "51vh" }: any) => (
-  <Center w="full" h={height}>
-    <Spinner size="xl" thickness="4px" />
-  </Center>
-)
-
-const rewards: Record<PlatformName, RewardData> = {
-  EMAIL: {
-    icon: EnvelopeSimple,
-    name: "Email",
-    colorScheme: "blue",
-    gatedEntity: "email",
-    isPlatform: true,
-    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-  },
-  TELEGRAM: {
-    icon: TelegramLogo,
-    imageUrl: "/platforms/telegram.png",
-    name: "Telegram",
-    colorScheme: "TELEGRAM",
-    gatedEntity: "group",
-    cardPropsHook: useTelegramCardProps,
-    cardMenuComponent: TelegramCardMenu,
-    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddRewardPanel: dynamic(
-      () =>
-        import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTelegramPanel"
-        ),
-      {
-        ssr: false,
-        loading: AddRewardPanelLoadingSpinner,
-      }
-    ),
-    RewardPreview: dynamic(() => import("platforms/components/TelegramPreview"), {
-      ssr: false,
-      loading: () => <RewardPreview isLoading />,
-    }),
-    isPlatform: true,
-  },
+const rewards = {
   DISCORD: {
     icon: DiscordLogo,
     imageUrl: "/platforms/discord.png",
@@ -233,22 +113,6 @@ const rewards: Record<PlatformName, RewardData> = {
       ssr: false,
       loading: () => <RewardPreview isLoading />,
     }),
-    isPlatform: true,
-  },
-  TWITTER: {
-    icon: XLogo,
-    imageUrl: "/platforms/x.svg",
-    name: "X",
-    colorScheme: "TWITTER",
-    gatedEntity: "account",
-    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
-  },
-  TWITTER_V1: {
-    icon: XLogo,
-    name: "X",
-    colorScheme: "TWITTER",
-    gatedEntity: "account",
-    asRewardRestriction: PlatformAsRewardRestrictions.NOT_APPLICABLE,
     isPlatform: true,
   },
   GOOGLE: {
@@ -500,32 +364,6 @@ const rewards: Record<PlatformName, RewardData> = {
       }
     ),
     RoleCardComponent: dynamic(() => import("platforms/components/GatherReward"), {
-      ssr: false,
-    }),
-  },
-  ERC20: {
-    icon: Token,
-    name: "Token",
-    gatedEntity: "",
-    colorScheme: "gold",
-    asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    cardPropsHook: useTokenCardProps,
-    cardButton: ClaimTokenButton,
-    RewardPreview: dynamic(() => import("platforms/components/TokenPreview"), {
-      ssr: false,
-      loading: () => <RewardPreview isLoading />,
-    }),
-    AddRewardPanel: dynamic(
-      () =>
-        import(
-          "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
-        ),
-      {
-        ssr: false,
-        loading: AddRewardPanelLoadingSpinner,
-      }
-    ),
-    RoleCardComponent: dynamic(() => import("platforms/components/TokenReward"), {
       ssr: false,
     }),
   },
