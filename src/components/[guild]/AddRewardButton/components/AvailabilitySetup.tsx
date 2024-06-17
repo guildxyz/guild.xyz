@@ -13,6 +13,7 @@ type Props = {
   rolePlatform?: RoleFormType["rolePlatforms"][number]
   defaultValues?: RolePlatformAvailabilityForm
   onDone: (data: RolePlatformAvailabilityForm) => void
+  isLoading?: boolean
 }
 
 const AvailabilitySetup = ({
@@ -20,6 +21,7 @@ const AvailabilitySetup = ({
   rolePlatform,
   defaultValues,
   onDone,
+  isLoading,
 }: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const showAvailabilityTags = shouldShowAvailabilityTags(rolePlatform)
@@ -35,8 +37,9 @@ const AvailabilitySetup = ({
         isOpen={isOpen}
         onClose={onClose}
         platformType={platformType}
-        onDone={(data) => {
-          onDone(data)
+        isLoading={isLoading}
+        onDone={async (data) => {
+          await onDone(data)
           onClose()
         }}
       />

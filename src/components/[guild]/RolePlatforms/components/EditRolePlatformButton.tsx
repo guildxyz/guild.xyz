@@ -13,7 +13,7 @@ import rewards, { CardSettingsComponent } from "platforms/rewards"
 import { useRef } from "react"
 import { useFormState } from "react-hook-form"
 import { PlatformType, RoleFormType } from "types"
-import { openRewardSettingsGuildPlatformIdAtom } from "../RolePlatforms"
+import { openRewardSettingsGuildPlatformIdAtom } from "../AddRolePlatforms"
 import { useRolePlatform } from "./RolePlatformProvider"
 
 type Props = {

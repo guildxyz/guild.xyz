@@ -1,7 +1,7 @@
 import { SimpleGrid, Text } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
-import { openRewardSettingsGuildPlatformIdAtom } from "components/[guild]/RolePlatforms/RolePlatforms"
+import { openRewardSettingsGuildPlatformIdAtom } from "components/[guild]/RoleCard/components/EditRole/components/EditRolePlatforms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
 import { useSetAtom } from "jotai"
@@ -80,11 +80,9 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                   guildPlatform: platform,
                   isNew: true,
                   roleId: targetRoleId,
-                  platformRoleId: isGoogleReward
-                    ? isForm
-                      ? "writer"
-                      : "reader"
-                    : null,
+                  ...(isGoogleReward && {
+                    platformRoleId: isForm ? "writer" : "reader",
+                  }),
                   visibility: roleVisibility,
                 })
                 if (cardSettingsComponent)

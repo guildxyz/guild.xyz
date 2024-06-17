@@ -9,6 +9,12 @@ import fetcher from "utils/fetcher"
 
 type AddRewardResponse = GuildPlatform & { roleIds?: number[] }
 
+/**
+ * To be used when a reward is entirely new, so the guildPlatform doesn't exist yet
+ * (the BE handles adding rolePlatforms automatically to it too by the data we send).
+ * If the guildPlatform already exists and we just want to create new rolePlatforms
+ * to it, we should use the useAddRewardWithExistingGP hook
+ */
 const useAddReward = ({
   onSuccess,
   onError,
