@@ -1,4 +1,4 @@
-import { Box, Center, Spinner, Stack, Text, useDisclosure } from "@chakra-ui/react"
+import { Box, Stack, Text, useDisclosure } from "@chakra-ui/react"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import AddCard from "components/common/AddCard"
 import { useFieldArray } from "react-hook-form"
@@ -33,20 +33,14 @@ const SetExpectedAnswers = ({ isDisabled, formId, baseFieldPath }) => {
         </Text>
       </Text>
       <Stack>
-        {isLoading ? (
-          <Center p="4" w="full">
-            <Spinner />
-          </Center>
-        ) : (
-          fields.map((field: FieldData & { id: string }, index) => (
-            <ExpectedAnswerCard
-              key={field.id}
-              field={form?.fields?.find((f) => f.id === field.fieldId)}
-              {...field}
-              onRemove={() => remove(index)}
-            />
-          ))
-        )}
+        {fields?.map((field: FieldData & { id: string }, index) => (
+          <ExpectedAnswerCard
+            key={field.id}
+            field={form?.fields?.find((f) => f.id === field.fieldId)}
+            {...field}
+            onRemove={() => remove(index)}
+          />
+        ))}
         {(!formId || fields.length < form?.fields?.length) && (
           <AddCard title="Add field" py="4" onClick={onOpen} />
         )}
