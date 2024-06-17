@@ -10,6 +10,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { ClientStateRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import AddRolePlatforms from "components/[guild]/RolePlatforms/AddRolePlatforms"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
@@ -70,23 +71,25 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
         <DrawerContent>
           <DrawerBody ref={drawerBodyRef} className="custom-scrollbar">
             <FormProvider {...methods}>
-              <AddRoleDrawerHeader />
-              <VStack spacing={10} alignItems="start">
-                <AddRolePlatforms />
+              <ClientStateRequirementHandlerProvider methods={methods}>
+                <AddRoleDrawerHeader />
+                <VStack spacing={10} alignItems="start">
+                  <AddRolePlatforms />
 
-                <Section title={"General"}>
-                  <Box>
-                    <FormLabel>Choose a logo and name for your role</FormLabel>
-                    <HStack spacing={2} alignItems="start">
-                      <IconSelector uploader={iconUploader} />
-                      <Name />
-                    </HStack>
-                  </Box>
-                  <Description />
-                </Section>
+                  <Section title={"General"}>
+                    <Box>
+                      <FormLabel>Choose a logo and name for your role</FormLabel>
+                      <HStack spacing={2} alignItems="start">
+                        <IconSelector uploader={iconUploader} />
+                        <Name />
+                      </HStack>
+                    </Box>
+                    <Description />
+                  </Section>
 
-                <SetRequirements />
-              </VStack>
+                  <SetRequirements />
+                </VStack>
+              </ClientStateRequirementHandlerProvider>
             </FormProvider>
           </DrawerBody>
 

@@ -70,7 +70,9 @@ const RequirementEditModal = ({
             {REQUIREMENTS[requirementField.type].isNegatable && (
               <IsNegatedPicker baseFieldPath={``} />
             )}
-            <FormComponent baseFieldPath={""} field={requirementField} />
+            {!!FormComponent && (
+              <FormComponent baseFieldPath={""} field={requirementField} />
+            )}
           </ModalBody>
           <ModalFooter gap="3">{footer}</ModalFooter>
         </ModalContent>

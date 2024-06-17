@@ -1,6 +1,7 @@
 import { Icon, Tag, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
+import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
+
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
-import useRequirements from "components/[guild]/hooks/useRequirements"
 import { Lightning, Warning } from "phosphor-react"
 import DynamicRewardModal from "platforms/Token/DynamicRewardModal"
 import { Rest, RolePlatform } from "types"
@@ -11,10 +12,9 @@ const DynamicTag = ({
   ...rest
 }: { rolePlatform: RolePlatform; editDisabled?: boolean } & Rest) => {
   const { isAdmin } = useGuildPermission()
+  const { requirements = null } = useRequirementHandlerContext() || {}
 
   const { onOpen, isOpen, onClose } = useDisclosure()
-
-  const { data: requirements } = useRequirements(rolePlatform.roleId)
 
   const dynamicAmount: any = rolePlatform.dynamicAmount
   const requirementId =
