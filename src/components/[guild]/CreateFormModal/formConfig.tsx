@@ -8,6 +8,7 @@ import {
   Textbox,
 } from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
+import { ExpectedChoices } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedChoices"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
 import { ExactString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExactString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
@@ -68,7 +69,7 @@ const fieldTypes: {
     img: <OptionIcon as={CheckSquare} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: MultipleChoice,
-    ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerComponent: ExpectedChoices,
   },
   {
     label: "Rate",
