@@ -29,6 +29,14 @@ const useCreateRequirement = (
     Requirement & { deletedRequirements?: number[] }
   >(createRequirement, {
     onSuccess: (response) => {
+      if (
+        (response.type === "ALLOWLIST" || response.type === "ALLOWLIST_EMAIL") &&
+        response.data?.fileId
+      ) {
+        response.data ??= {}
+        response.data.status = "IN-PROGRESS"
+      }
+
       mutateRequirements(
         (prevRequirements) => [
           ...prevRequirements.filter((req) =>
