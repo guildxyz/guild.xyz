@@ -24,11 +24,17 @@ const AvailabilitySetup = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const showAvailabilityTags = shouldShowAvailabilityTags(rolePlatform)
 
+  // If claim is already started by date, and thats the only limitation, show full the full button
+  const notCompact =
+    !rolePlatform.capacity &&
+    !rolePlatform.endTime &&
+    new Date(rolePlatform.startTime).getTime() < Date.now()
+
   return (
     <AvailabilityTags rolePlatform={rolePlatform ?? ({} as RolePlatform)}>
       <EditRewardAvailabilityButton
         onClick={onOpen}
-        isCompact={showAvailabilityTags}
+        isCompact={notCompact ? false : showAvailabilityTags}
       />
       <EditRewardAvailabilityModal
         defaultValues={defaultValues}
