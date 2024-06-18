@@ -1,36 +1,37 @@
-import twitterRewards from "platforms/Twitter"
-import emailRewards from "platforms/Email"
-import telegramRewards from "platforms/Telegram"
-import tokenRewards from "platforms/Token"
-import gatherTownRewards from "platforms/Gather"
-import formRewards from "platforms/Forms"
-import pointsRewards from "platforms/Points"
-import polygonIdRewards from "platforms/PolygonID"
-import uniqueTextRewards from "platforms/UniqueText"
-import textRewards from "platforms/SecretText"
-import contractCallRewards from "platforms/ContractCall"
-import googleRewards from "platforms/Google"
-import discordRewards from "platforms/Discord"
-import githubRewards from "platforms/Github"
-import poapRewards from "platforms/Poap"
-// import { Rewards } from "./types"
+import twitterRewardV1, { twitterReward } from "platforms/Twitter"
+import emailReward from "platforms/Email"
+import telegramReward from "platforms/Telegram"
+import tokenReward from "platforms/Token"
+import gatherTownReward from "platforms/Gather"
+import formReward from "platforms/Forms"
+import pointsReward from "platforms/Points"
+import polygonIdReward from "platforms/PolygonID"
+import uniqueTextReward from "platforms/UniqueText"
+import textReward from "platforms/SecretText"
+import contractCallReward from "platforms/ContractCall"
+import googleReward from "platforms/Google"
+import discordReward from "platforms/Discord"
+import githubReward from "platforms/Github"
+import poapReward from "platforms/Poap"
+// import { Reward } from "./types"
 
 export default {
-  ...twitterRewards,
-  ...emailRewards,
-  ...telegramRewards,
-  ...tokenRewards,
-  ...gatherTownRewards,
-  ...formRewards,
-  ...pointsRewards,
-  ...polygonIdRewards,
-  ...uniqueTextRewards,
-  ...textRewards,
-  ...contractCallRewards,
-  ...googleRewards,
-  ...discordRewards,
-  ...githubRewards,
-  ...poapRewards,
+  TWITTER_V1: twitterRewardV1,
+  TWITTER: twitterReward,
+  EMAIL: emailReward,
+  TELEGRAM: telegramReward,
+  ERC20: tokenReward,
+  GATHER_TOWN: gatherTownReward,
+  FORM: formReward,
+  POINTS: pointsReward,
+  POLYGON_ID: polygonIdReward,
+  UNIQUE_TEXT: uniqueTextReward,
+  TEXT: textReward,
+  CONTRACT_CALL: contractCallReward,
+  GOOGLE: googleReward,
+  DISCORD: discordReward,
+  GITHUB: githubReward,
+  POAP: poapReward,
 } as const satisfies Partial<Rewards>
 
 import type { PlatformName, Requirement } from "types"
