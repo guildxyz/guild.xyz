@@ -124,9 +124,7 @@ const useSubmitAddRole = ({
         `/v2/guilds/${guildId}/roles/${roleId}/role-platforms`,
         { method: "POST", body: rolePlatform },
       ])
-        .then((res) => {
-          return { status: "fulfilled", result: res }
-        })
+        .then((res) => ({ status: "fulfilled", result: res }))
         .catch((error) => {
           showErrorToast("Failed to create a reward")
           console.error(error)
