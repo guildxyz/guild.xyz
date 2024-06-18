@@ -5,7 +5,7 @@ import ContractCallCardMenu from "./ContractCallCardMenu"
 import Photo from "static/icons/photo.svg"
 import dynamic from "next/dynamic"
 import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
-import { LoadingRewardPreview } from "platforms/components/LoadingRewardPreview"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 
 export default {
   icon: Photo,
