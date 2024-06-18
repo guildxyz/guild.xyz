@@ -1,4 +1,4 @@
-import { PlatformName } from "@guildxyz/types"
+import { PlatformName } from "types"
 
 export const modalSizeForPlatform = (platform: PlatformName) => {
   switch (platform) {
