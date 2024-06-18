@@ -1,4 +1,4 @@
-import { HStack, Tag, Text, Wrap } from "@chakra-ui/react"
+import { HStack, Tag, Text, Tooltip, Wrap } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
 import Card from "components/common/Card"
@@ -53,14 +53,18 @@ export const ExpectedMultipleChoiceDisplay = ({
 }: ExpectedFieldDataProps) => (
   <Wrap mt="1" spacing={1}>
     {acceptedAnswers.map((value) => (
-      <Tag key={value} variant="subtle" colorScheme="green">
-        {value}
-      </Tag>
+      <Tooltip key={value} label="Must be selected" hasArrow>
+        <Tag variant="subtle" colorScheme="green">
+          {value}
+        </Tag>
+      </Tooltip>
     ))}
     {rejectedAnswers.map((value) => (
-      <Tag key={value} variant="subtle" colorScheme="red">
-        {value}
-      </Tag>
+      <Tooltip key={value} label="Must not be selected" hasArrow>
+        <Tag variant="subtle" colorScheme="red">
+          {value}
+        </Tag>
+      </Tooltip>
     ))}
   </Wrap>
 )
