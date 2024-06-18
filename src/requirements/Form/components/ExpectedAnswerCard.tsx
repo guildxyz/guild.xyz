@@ -31,8 +31,8 @@ const ExpectedAnswerCard = ({ field, onRemove, ...data }: Props) => {
   )
 }
 
-export const ExactStringDisplay = ({ value }: ExpectedFieldDataProps) => (
-  <Text>{value}</Text>
+export const ExpectedStringDisplay = ({ value }: ExpectedFieldDataProps) => (
+  <Text>{`"${value}"`}</Text>
 )
 
 export const ExpectedRateDisplay = ({

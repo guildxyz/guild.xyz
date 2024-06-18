@@ -9,10 +9,10 @@ import {
 } from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
 import {
-  ExactStringDisplay,
   ExpectedFieldDataProps,
   ExpectedMultipleChoiceDisplay,
   ExpectedRateDisplay,
+  ExpectedStringDisplay,
 } from "requirements/Form/components/ExpectedAnswerCard"
 import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
@@ -48,7 +48,7 @@ const fieldTypes: {
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: ShortText,
     ExpectedAnswerComponent: ExactString,
-    ExpectedAnswerDisplayComponent: ExactStringDisplay,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Long text",
@@ -56,7 +56,7 @@ const fieldTypes: {
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: LongText,
     ExpectedAnswerComponent: ExactString,
-    ExpectedAnswerDisplayComponent: ExactStringDisplay,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Number",
@@ -64,7 +64,7 @@ const fieldTypes: {
     img: <OptionIcon as={NumberSquareFive} />,
     DisplayComponent: Number,
     ExpectedAnswerComponent: ExactString,
-    ExpectedAnswerDisplayComponent: ExactStringDisplay,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Single choice",
@@ -73,7 +73,7 @@ const fieldTypes: {
     SetupComponent: ChoiceSetup,
     DisplayComponent: SingleChoice,
     ExpectedAnswerComponent: ExpectedSingleChoice,
-    ExpectedAnswerDisplayComponent: ExactStringDisplay,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Multiple choice",
