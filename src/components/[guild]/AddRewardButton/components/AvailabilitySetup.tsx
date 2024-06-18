@@ -28,6 +28,7 @@ const AvailabilitySetup = ({
   const notCompact =
     !rolePlatform.capacity &&
     !rolePlatform.endTime &&
+    rolePlatform.startTime &&
     new Date(rolePlatform.startTime).getTime() < Date.now()
 
   return (
