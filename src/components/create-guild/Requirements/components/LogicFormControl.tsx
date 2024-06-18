@@ -65,8 +65,7 @@ const LogicFormControl = ({
 
       <HStack alignItems="start" pt="px">
         <Text as="span" flexShrink={0} pt={2}>
-          {pluralize(requirementCount, "requirement", false)} out of{" "}
-          {requirementCount}
+          {pluralize(anyOfNum, "requirement", false)} out of {requirementCount}
         </Text>
       </HStack>
     </Stack>
