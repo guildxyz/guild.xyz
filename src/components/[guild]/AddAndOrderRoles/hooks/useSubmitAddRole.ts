@@ -202,6 +202,7 @@ const useSubmitAddRole = ({
       mutateAll(createdRole, createdRequirements, createdRolePlatforms)
 
       methods.reset(methods.defaultValues)
+      window.location.hash = `role-${createdRole.id}`
       onSuccess?.()
     },
     onError: (error) => {
