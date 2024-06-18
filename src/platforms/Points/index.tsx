@@ -1,9 +1,21 @@
+import { Star } from "phosphor-react"
+import {
+  CardSettingsComponent,
+  PlatformAsRewardRestrictions,
+  RewardData,
+} from "platforms/types"
+import usePointsCardProps from "./usePointsCardProps"
 import dynamic from "next/dynamic"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
-import RewardPreview from "platforms/components/RewardPreview"
-import { CardSettingsComponent } from "platforms/types"
 
-const dynamicComponents = {
+export default {
+  icon: Star,
+  name: "Points",
+  colorScheme: "gray",
+  gatedEntity: "",
+  asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
+  cardPropsHook: usePointsCardProps,
   cardSettingsComponent: dynamic(
     () => import("platforms/Points/PointsCardSettings"),
     {
@@ -13,7 +25,7 @@ const dynamicComponents = {
   ) as CardSettingsComponent,
   RewardPreview: dynamic(() => import("platforms/components/PointsPreview"), {
     ssr: false,
-    loading: () => <RewardPreview isLoading />,
+    loading: LoadingRewardPreview,
   }),
   AddRewardPanel: dynamic(
     () =>
@@ -28,6 +40,4 @@ const dynamicComponents = {
   RoleCardComponent: dynamic(() => import("platforms/components/PointsReward"), {
     ssr: false,
   }),
-}
-
-export default dynamicComponents
+} as const satisfies RewardData

@@ -4,7 +4,9 @@ import useGoogleCardProps from "./useGoogleCardProps"
 import GoogleCardSettings from "./GoogleCardSettings"
 import GoogleCardMenu from "./GoogleCardMenu"
 import GoogleCardWarning from "./GoogleCardWarning"
-import dynamicComponents from "./DynamicComponents"
+import dynamic from "next/dynamic"
+import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 
 export default {
   icon: GoogleLogo,
@@ -18,5 +20,18 @@ export default {
   cardWarningComponent: GoogleCardWarning,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
   isPlatform: true,
-  ...dynamicComponents,
+  AddRewardPanel: dynamic(
+    () =>
+      import(
+        "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddGooglePanel"
+      ),
+    {
+      ssr: false,
+      loading: AddRewardPanelLoadingSpinner,
+    }
+  ),
+  RewardPreview: dynamic(() => import("platforms/components/GooglePreview"), {
+    ssr: false,
+    loading: LoadingRewardPreview,
+  }),
 } as const satisfies RewardData

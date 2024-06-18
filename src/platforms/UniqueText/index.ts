@@ -3,7 +3,8 @@ import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 import useUniqueTextCardProps from "./useUniqueTextCardProps"
 import TextCardButton from "platforms/SecretText/TextCardButton"
 import UniqueTextCardMenu from "./UniqueTextCardMenu"
-import dynamicComponents from "./DynamicComponents"
+import dynamic from "next/dynamic"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 
 export default {
   icon: Key,
@@ -14,5 +15,11 @@ export default {
   cardButton: TextCardButton,
   cardMenuComponent: UniqueTextCardMenu,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-  ...dynamicComponents,
+  RewardPreview: dynamic(() => import("platforms/components/UniqueTextPreview"), {
+    ssr: false,
+    loading: LoadingRewardPreview,
+  }),
+  RoleCardComponent: dynamic(() => import("platforms/components/TextReward"), {
+    ssr: false,
+  }),
 } as const satisfies RewardData

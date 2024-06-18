@@ -3,7 +3,9 @@ import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 import useFormCardProps from "./useFormCardProps"
 import FormCardLinkButton from "./FormCardLinkButton"
 import FormCardMenu from "./FormCardMenu"
-import dynamicComponents from "./DynamicComponents"
+import dynamic from "next/dynamic"
+import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 
 export default {
   icon: PencilSimpleLine,
@@ -14,5 +16,21 @@ export default {
   cardPropsHook: useFormCardProps,
   cardButton: FormCardLinkButton,
   cardMenuComponent: FormCardMenu,
-  ...dynamicComponents,
+  RoleCardComponent: dynamic(() => import("platforms/components/FormReward"), {
+    ssr: false,
+  }),
+  AddRewardPanel: dynamic(
+    () =>
+      import(
+        "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
+      ),
+    {
+      ssr: false,
+      loading: AddRewardPanelLoadingSpinner,
+    }
+  ),
+  RewardPreview: dynamic(() => import("platforms/components/FormPreview"), {
+    ssr: false,
+    loading: LoadingRewardPreview,
+  }),
 } as const satisfies RewardData

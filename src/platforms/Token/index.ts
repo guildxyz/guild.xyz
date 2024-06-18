@@ -2,7 +2,9 @@ import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 import useTokenCardProps from "./hooks/useTokenCardProps"
 import ClaimTokenButton from "./ClaimTokenButton"
 import Token from "static/icons/token.svg"
-import dynamicComponents from "./DynamicComponents"
+import dynamic from "next/dynamic"
+import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 
 export default {
   icon: Token,
@@ -12,5 +14,18 @@ export default {
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
   cardPropsHook: useTokenCardProps,
   cardButton: ClaimTokenButton,
-  ...dynamicComponents,
+  AddRewardPanel: dynamic(
+    () =>
+      import(
+        "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddTokenPanel/AddTokenPanel"
+      ),
+    {
+      ssr: false,
+      loading: AddRewardPanelLoadingSpinner,
+    }
+  ),
+  RewardPreview: dynamic(() => import("platforms/components/TokenPreview"), {
+    ssr: false,
+    loading: LoadingRewardPreview,
+  }),
 } as const satisfies RewardData

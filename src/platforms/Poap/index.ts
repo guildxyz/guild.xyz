@@ -2,7 +2,8 @@ import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
 import usePoapCardProps from "./usePoapCardProps"
 import PoapCardButton from "./PoapCardButton"
 import PoapCardMenu from "./PoapCardMenu"
-import dynamicComponents from "./DynamicComponents"
+import dynamic from "next/dynamic"
+import LoadingRewardPreview from "platforms/components/LoadingRewardPreview"
 
 export default {
   icon: null,
@@ -14,5 +15,20 @@ export default {
   cardButton: PoapCardButton,
   cardMenuComponent: PoapCardMenu,
   asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-  ...dynamicComponents,
+  AddRewardPanel: dynamic(
+    () =>
+      import(
+        "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddPoapPanel"
+      ),
+    {
+      ssr: false,
+    }
+  ),
+  RewardPreview: dynamic(() => import("platforms/components/PoapPreview"), {
+    ssr: false,
+    loading: LoadingRewardPreview,
+  }),
+  RoleCardComponent: dynamic(() => import("platforms/components/PoapReward"), {
+    ssr: false,
+  }),
 } as const satisfies RewardData
