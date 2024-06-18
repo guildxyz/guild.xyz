@@ -4,8 +4,6 @@ import PoapCardButton from "./PoapCardButton"
 import PoapCardMenu from "./PoapCardMenu"
 import dynamicComponents from "./DynamicComponents"
 
-const { RoleCardComponent, RewardPreview, AddRewardPanel } = dynamicComponents
-
 const rewards = {
   POAP: {
     icon: null,
@@ -17,9 +15,7 @@ const rewards = {
     cardButton: PoapCardButton,
     cardMenuComponent: PoapCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    RoleCardComponent,
-    RewardPreview,
-    AddRewardPanel,
+    ...dynamicComponents,
   },
 } as const satisfies Partial<Rewards>
 
