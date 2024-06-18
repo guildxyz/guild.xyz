@@ -17,11 +17,7 @@
     "baseUrl": "src",
     "incremental": true,
     "sourceMap": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }],
     "strictNullChecks": false
   },
   "include": [
