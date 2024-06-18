@@ -1,25 +1,36 @@
-import type { PlatformName, Requirement } from "@guildxyz/types"
-import type { GuildPlatformWithOptionalId, RoleFormType } from "types"
+import type {
+  GuildPlatformWithOptionalId,
+  RoleFormType,
+  PlatformName,
+  Requirement,
+} from "types"
 import type { ThemingProps } from "@chakra-ui/react"
 import type { RewardProps } from "components/[guild]/RoleCard/components/Reward"
-import type {
-  IconProps,
-} from "phosphor-react"
+import type { IconProps } from "phosphor-react"
 import type {
   ComponentType,
   ForwardRefExoticComponent,
   PropsWithChildren,
-  RefAttributes
+  RefAttributes,
 } from "react"
 
 export type CardSettingsComponent = () => JSX.Element
 
 export enum PlatformAsRewardRestrictions {
-  /** @example Twitter */
+  /**
+   * @example
+   *   Twitter
+   */
   NOT_APPLICABLE,
-  /** @example Telegram */
+  /**
+   * @example
+   *   Telegram
+   */
   SINGLE_ROLE,
-  /** @example Discord */
+  /**
+   * @example
+   *   Discord
+   */
   MULTIPLE_ROLES,
 }
 
@@ -30,7 +41,10 @@ export type RewardData = {
   colorScheme: ThemingProps["colorScheme"]
   gatedEntity: string
   cardPropsHook?: CardPropsHook
-  /** true when the AddRewardPanel just automatically adds the platform without any user input */
+  /**
+   * True when the AddRewardPanel just automatically adds the platform without any
+   * user input
+   */
   autoRewardSetup?: boolean
   cardSettingsComponent?: CardSettingsComponent
   cardMenuComponent?: (props) => JSX.Element
@@ -43,10 +57,7 @@ export type RewardData = {
   asRewardRestriction: PlatformAsRewardRestrictions
 }
 
-// TODO: exclude extended union types and sync externally
-type ExtendedPlatformName = PlatformName | "EMAIL"
-
-export type Rewards = Readonly<Record<ExtendedPlatformName, RewardData>>
+export type Rewards = Readonly<Record<PlatformName, RewardData>>
 
 export type AddRewardPanelProps = {
   onAdd: (
@@ -59,7 +70,7 @@ export type AddRewardPanelProps = {
 }
 
 export type CardPropsHook = (guildPlatform: GuildPlatformWithOptionalId) => {
-  type: ExtendedPlatformName
+  type: PlatformName
   name: string
   image?: string | JSX.Element
   info?: string | JSX.Element

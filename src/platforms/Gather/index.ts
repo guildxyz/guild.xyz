@@ -5,6 +5,7 @@ import GatherCardButton from "./GatherCardButton"
 import GatherCardMenu from "./GatherCardMenu"
 import { AddRewardPanel } from "./AddRewardPanel"
 import { RoleCardComponent } from "./RoleCardComponent"
+import { RewardPreview } from "./RewardPreview"
 
 const rewards = {
   GATHER_TOWN: {

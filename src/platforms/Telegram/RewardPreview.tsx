@@ -1,7 +1,10 @@
-import dynamic from "next/dynamic";
-import OuterRewardPreview from "rewards/components/RewardPreview";
+import dynamic from "next/dynamic"
+import OuterRewardPreview from "platforms/components/RewardPreview"
 
-export const RewardPreview = dynamic(() => import("platforms/components/TelegramPreview"), {
-  ssr: false,
-  loading: () => <OuterRewardPreview isLoading />,
-})
+export const RewardPreview = dynamic(
+  () => import("platforms/components/TelegramPreview"),
+  {
+    ssr: false,
+    loading: () => <OuterRewardPreview isLoading />,
+  }
+)

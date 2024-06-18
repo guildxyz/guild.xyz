@@ -1,5 +1,5 @@
-import dynamic from 'next/dynamic'
-import { AddRewardPanelLoadingSpinner } from 'rewards/components/AddRewardPanelLoadingSpinner'
+import dynamic from "next/dynamic"
+import { AddRewardPanelLoadingSpinner } from "platforms/components/AddRewardPanelLoadingSpinner"
 
 export const AddRewardPanel = dynamic(
   () =>

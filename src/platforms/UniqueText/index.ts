@@ -1,7 +1,7 @@
 import { Key } from "phosphor-react"
 import { PlatformAsRewardRestrictions, Rewards } from "platforms/types"
 import useUniqueTextCardProps from "./useUniqueTextCardProps"
-import TextCardButton from "platforms/Text/TextCardButton"
+import TextCardButton from "platforms/SecretText/TextCardButton"
 import UniqueTextCardMenu from "./UniqueTextCardMenu"
 import dynamicComponents from "./DynamicComponents"
 

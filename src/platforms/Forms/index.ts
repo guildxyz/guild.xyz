@@ -7,7 +7,7 @@ import { RewardPreview } from "./RewardPreview"
 import { AddRewardPanel } from "./AddRewardPanel"
 import { RoleCardComponent } from "./RoleCardComponent"
 
-const rewards = {
+export default {
   FORM: {
     icon: PencilSimpleLine,
     name: "Form",
@@ -22,5 +22,3 @@ const rewards = {
     RoleCardComponent,
   },
 } as const satisfies Partial<Rewards>
-
-export default rewards
