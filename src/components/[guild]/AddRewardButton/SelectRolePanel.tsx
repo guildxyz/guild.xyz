@@ -15,6 +15,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { ArrowLeft, Info } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
+import useSubmitEverything from "platforms/components/useSubmitEverything"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -50,11 +51,16 @@ const SelectRolePanel = ({
     roleIds: roleIds,
   }
 
-  const { onSubmit, isLoading } = useSubmitAddReward({
-    onSuccess: (res) => {
-      captureEvent("reward created (AddRewardButton)", postHogOptions)
-      onSuccess?.(res)
-    },
+  // const { onSubmit, isLoading } = useSubmitAddReward({
+  //   onSuccess: (res) => {
+  //     captureEvent("reward created (AddRewardButton)", postHogOptions)
+  //     onSuccess?.(res)
+  //   },
+  // })
+
+  const { onSubmit, isLoading } = useSubmitEverything({
+    methods,
+    onSuccess: () => {},
   })
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
@@ -136,7 +142,7 @@ const SelectRolePanel = ({
           isDisabled={isAddRewardButtonDisabled}
           onClick={methods.handleSubmit((data) => {
             setSaveAsDraft(true)
-            onSubmit(data, "DRAFT")
+            onSubmit()
           })}
           isLoading={saveAsDraft && isLoading}
           rightIcon={
@@ -156,10 +162,10 @@ const SelectRolePanel = ({
         <Button
           isDisabled={isAddRewardButtonDisabled}
           colorScheme="green"
-          onClick={methods.handleSubmit((data) => {
-            setSaveAsDraft(false)
-            onSubmit(data)
-          })}
+          onClick={() => {
+            console.log("Submitting")
+            onSubmit()
+          }}
           isLoading={!saveAsDraft && isLoading}
         >
           Save

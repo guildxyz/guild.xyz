@@ -113,6 +113,8 @@ const useSubmitAddReward = ({
   }
 
   const onSubmit = async (data: any, saveAs: "DRAFT" | "PUBLIC" = "PUBLIC") => {
+    console.log(data)
+
     if (isERC20(data)) return submitERC20Reward(data, saveAs)
 
     const existingDCReward = guildPlatforms?.find(
