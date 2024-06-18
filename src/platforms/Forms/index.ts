@@ -3,9 +3,7 @@ import { PlatformAsRewardRestrictions, Rewards } from "platforms/types"
 import useFormCardProps from "./useFormCardProps"
 import FormCardLinkButton from "./FormCardLinkButton"
 import FormCardMenu from "./FormCardMenu"
-import { RewardPreview } from "./RewardPreview"
-import { AddRewardPanel } from "./AddRewardPanel"
-import { RoleCardComponent } from "./RoleCardComponent"
+import dynamicComponents from "./DynamicComponents"
 
 export default {
   FORM: {
@@ -17,8 +15,6 @@ export default {
     cardPropsHook: useFormCardProps,
     cardButton: FormCardLinkButton,
     cardMenuComponent: FormCardMenu,
-    RewardPreview,
-    AddRewardPanel,
-    RoleCardComponent,
+    ...dynamicComponents,
   },
 } as const satisfies Partial<Rewards>
