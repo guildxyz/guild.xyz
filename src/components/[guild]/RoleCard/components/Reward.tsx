@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react"
 import usePlatformAccessButton from "components/[guild]/AccessHub/components/usePlatformAccessButton"
 import { useOpenJoinModal } from "components/[guild]/JoinModal/JoinModalProvider"
-import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import Visibility from "components/[guild]/Visibility"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
@@ -261,11 +260,7 @@ const RewardWrapper = ({ platform, ...props }: RewardProps) => {
   const Component =
     rewards[PlatformType[guildPlatform?.platformId]].RoleCardComponent ?? Reward
 
-  return (
-    <ApiRequirementHandlerProvider roleId={platformWithGuildPlatform.roleId}>
-      <Component platform={platformWithGuildPlatform} {...props} />
-    </ApiRequirementHandlerProvider>
-  )
+  return <Component platform={platformWithGuildPlatform} {...props} />
 }
 
 export { Reward, RewardDisplay, RewardIcon, getRewardLabel }

@@ -1,10 +1,18 @@
 import { Icon, Tag, Tooltip, Wrap, useDisclosure } from "@chakra-ui/react"
-import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
+import {
+  ApiRequirementHandlerProvider,
+  useRequirementHandlerContext,
+} from "components/[guild]/RequirementHandlerContext"
 
 import useGuildPermission from "components/[guild]/hooks/useGuildPermission"
 import { Lightning, Warning } from "phosphor-react"
 import DynamicRewardModal from "platforms/Token/DynamicRewardModal"
 import { Rest, RolePlatform } from "types"
+
+type Props = {
+  rolePlatform: RolePlatform
+  editDisabled?: boolean
+} & Rest
 
 const DynamicTag = ({
   rolePlatform,
@@ -67,4 +75,16 @@ const DynamicTag = ({
   )
 }
 
-export default DynamicTag
+const DynamicTagWrapper = ({ rolePlatform, editDisabled, ...rest }: Props) => {
+  return (
+    <ApiRequirementHandlerProvider roleId={rolePlatform.roleId}>
+      <DynamicTag
+        rolePlatform={rolePlatform}
+        editDisabled={editDisabled}
+        {...rest}
+      />
+    </ApiRequirementHandlerProvider>
+  )
+}
+
+export default DynamicTagWrapper
