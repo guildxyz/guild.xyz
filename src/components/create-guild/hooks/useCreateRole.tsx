@@ -29,9 +29,11 @@ type CreateRoleResponse = Role & {
 const useCreateRole = ({
   onSuccess,
   onError,
+  skipMutate,
 }: {
   onSuccess?: (res?: CreateRoleResponse) => void
   onError?: (error: any) => void
+  skipMutate?: boolean
 }) => {
   const { id, mutateGuild } = useGuild()
   const group = useRoleGroup()
@@ -65,19 +67,21 @@ const useCreateRole = ({
         })
       }
 
-      mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
-        revalidate: false,
-      })
-      matchMutate<GuildBase[]>(
-        /\/guilds\?order/,
-        (prev) => mutateGuildsCache(prev, id),
-        { revalidate: false }
-      )
+      if (!skipMutate) {
+        mutateYourGuilds((prev) => mutateGuildsCache(prev, id), {
+          revalidate: false,
+        })
+        matchMutate<GuildBase[]>(
+          /\/guilds\?order/,
+          (prev) => mutateGuildsCache(prev, id),
+          { revalidate: false }
+        )
 
-      mutateGuild((curr) => ({
-        ...curr,
-        roles: [...curr.roles, response_],
-      }))
+        mutateGuild((curr) => ({
+          ...curr,
+          roles: [...curr.roles, response_],
+        }))
+      }
       window.location.hash = `role-${response_.id}`
 
       onSuccess?.(response_)
@@ -99,7 +103,7 @@ const useCreateRole = ({
   }
 }
 
-const mutateGuildsCache = (prev: GuildBase[], guildId: number) =>
+export const mutateGuildsCache = (prev: GuildBase[], guildId: number) =>
   prev?.map((guild) => {
     if (guild.id !== guildId) return guild
     return {

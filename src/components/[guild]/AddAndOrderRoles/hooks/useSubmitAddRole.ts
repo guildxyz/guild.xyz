@@ -1,12 +1,16 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useCreateRole, {
+  mutateGuildsCache,
+} from "components/create-guild/hooks/useCreateRole"
+import { useYourGuilds } from "components/explorer/YourGuilds"
+import useMatchMutate from "hooks/useMatchMutate"
 import usePinata from "hooks/usePinata"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useToast from "hooks/useToast"
 import { MutableRefObject } from "react"
-import { Requirement, Role, RolePlatform } from "types"
+import { GuildBase, Requirement, Role, RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
 
@@ -23,8 +27,12 @@ const useSubmitAddRole = ({
   const fetcherWithSign = useFetcherWithSign()
   const { id: guildId, mutateGuild } = useGuild()
   const showErrorToast = useShowErrorToast()
+  const { mutate: mutateYourGuilds } = useYourGuilds()
+  const matchMutate = useMatchMutate()
 
-  const { onSubmit, isSigning, signLoadingText } = useCreateRole({})
+  const { onSubmit, isSigning, signLoadingText } = useCreateRole({
+    skipMutate: true,
+  })
 
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
@@ -155,15 +163,47 @@ const useSubmitAddRole = ({
     return { createdRole, createdRequirements, createdRolePlatforms }
   }
 
+  const mutateAll = (
+    createdRole: Role,
+    createdRequirements: Requirement[],
+    createdRolePlatforms: RolePlatform[]
+  ) => {
+    const completeRole = {
+      ...createdRole,
+      requirements: createdRequirements,
+      rolePlatforms: createdRolePlatforms,
+    }
+
+    mutateYourGuilds((prev) => mutateGuildsCache(prev, guildId), {
+      revalidate: false,
+    })
+    matchMutate<GuildBase[]>(
+      /\/guilds\?order/,
+      (prev) => mutateGuildsCache(prev, guildId),
+      { revalidate: false }
+    )
+    mutateGuild((prev) => ({
+      ...prev,
+      roles: prev.roles.some((role) => role.id === createdRole.id)
+        ? prev.roles.map((role) =>
+            role.id === createdRole.id ? completeRole : role
+          )
+        : [...prev.roles, completeRole],
+    }))
+  }
+
   const { onSubmit: submitWrapper, isLoading } = useSubmit(submit, {
     onSuccess: (res) => {
       const { createdRole, createdRequirements, createdRolePlatforms } = res
+
       toast({
         title: "Role successfully created",
         status: "success",
       })
+
+      mutateAll(createdRole, createdRequirements, createdRolePlatforms)
+
       methods.reset(methods.defaultValues)
-      mutateGuild()
       onSuccess?.()
     },
     onError: (error) => {
