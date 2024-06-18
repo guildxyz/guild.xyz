@@ -4,7 +4,7 @@ import PoapCardButton from "./PoapCardButton"
 import PoapCardMenu from "./PoapCardMenu"
 import dynamicComponents from "./DynamicComponents"
 
-const rewards = {
+export default {
   POAP: {
     icon: null,
     imageUrl: "/platforms/poap.png",
@@ -18,5 +18,3 @@ const rewards = {
     ...dynamicComponents,
   },
 } as const satisfies Partial<Rewards>
-
-export default rewards
