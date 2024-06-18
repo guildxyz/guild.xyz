@@ -35,7 +35,7 @@ const AvailabilitySetup = ({
     <AvailabilityTags rolePlatform={rolePlatform ?? ({} as RolePlatform)}>
       <EditRewardAvailabilityButton
         onClick={onOpen}
-        isCompact={notCompact ? false : showAvailabilityTags}
+        isCompact={!notCompact && showAvailabilityTags}
       />
       <EditRewardAvailabilityModal
         defaultValues={defaultValues}
