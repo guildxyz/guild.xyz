@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "npm run snyk-protect && husky install && node ./setStrictNullChecksTo.mjs true && git update-index --assume-unchanged tsconfig.json",
+    "prepare": "npm run snyk-protect && husky install",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
