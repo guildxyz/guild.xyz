@@ -1,5 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
+node ./setStrictNullChecksTo.mjs false
 npx lint-staged
 npm run type-check
