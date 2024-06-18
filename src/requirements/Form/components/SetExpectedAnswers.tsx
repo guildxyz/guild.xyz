@@ -1,6 +1,8 @@
 import { Box, Stack, Text, useDisclosure } from "@chakra-ui/react"
 import { useGuildForm } from "components/[guild]/hooks/useGuildForms"
 import AddCard from "components/common/AddCard"
+import CardMotionWrapper from "components/common/CardMotionWrapper"
+import { AnimatePresence } from "framer-motion"
 import { useFieldArray } from "react-hook-form"
 import AddExpectedAnswerModal from "./AddExpectedAnswerModal"
 import ExpectedAnswerCard from "./ExpectedAnswerCard"
@@ -33,17 +35,22 @@ const SetExpectedAnswers = ({ isDisabled, formId, baseFieldPath }) => {
         </Text>
       </Text>
       <Stack>
-        {fields?.map((field: FieldData & { id: string }, index) => (
-          <ExpectedAnswerCard
-            key={field.id}
-            field={form?.fields?.find((f) => f.id === field.fieldId)}
-            {...field}
-            onRemove={() => remove(index)}
-          />
-        ))}
-        {(!formId || fields.length < form?.fields?.length) && (
-          <AddCard title="Add field" py="4" onClick={onOpen} />
-        )}
+        <AnimatePresence>
+          {fields?.map((field: FieldData & { id: string }, index) => (
+            <CardMotionWrapper key={field.id}>
+              <ExpectedAnswerCard
+                field={form?.fields?.find((f) => f.id === field.fieldId)}
+                {...field}
+                onRemove={() => remove(index)}
+              />
+            </CardMotionWrapper>
+          ))}
+          {(!formId || fields.length < form?.fields?.length) && (
+            <CardMotionWrapper>
+              <AddCard title="Add field" py="4" onClick={onOpen} />
+            </CardMotionWrapper>
+          )}
+        </AnimatePresence>
       </Stack>
       <AddExpectedAnswerModal
         {...{ isOpen, onClose, formId, alreadyAddedFields }}
