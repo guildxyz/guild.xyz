@@ -1,11 +1,42 @@
 import useGuild from "components/[guild]/hooks/useGuild"
-import useCreateRole from "components/create-guild/hooks/useCreateRole"
+import useCreateRole, {
+  RoleToCreate,
+} from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { Requirement, Role, RolePlatform } from "types"
+import { Requirement, RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"
+
+type SubmitData =
+  /**
+   * If RoleToCreate is provided and `roleIds` is empty, a new role will be created
+   * with the associated rolePlatforms and requirements.
+   */
+  Partial<RoleToCreate> & {
+    /**
+     * Array of role IDs. If provided, rolePlatforms and requirements will be added to
+     * all specified roles. If not provided, RoleToCreate will be used to create a new
+     * role and associate them with it.
+     */
+    roleIds?: number[]
+
+    /**
+     * Array of requirements. If referenced in a rolePlatform, the requirement should
+     * have a temporal `id` generated with Date.now() A requirementIdMap will be
+     * created to match each temporalId-roleId pair with the actual backend-created ID
+     * after creation.
+     */
+    requirements: RoleToCreate["requirements"]
+
+    /**
+     * Array of rolePlatforms. These are created last, and their `roleId` fields will
+     * be filled based on the `roleIds` array or the new role ID if a new role was
+     * created.
+     */
+    rolePlatforms: RoleToCreate["rolePlatforms"]
+  }
 
 const useSubmitEverything = ({
   methods,
@@ -23,9 +54,9 @@ const useSubmitEverything = ({
     skipMutate: true,
   })
 
-  const createRole = async (role: Role & { guildId: number }) => {
+  const createRole = async (role: RoleToCreate) => {
     try {
-      return await onSubmit({ ...role, requirements: [{ type: "FREE" }] })
+      return await onSubmit(role)
     } catch (error) {
       showErrorToast("Failed to create role")
       return null
@@ -102,13 +133,15 @@ const useSubmitEverything = ({
     }
   }
 
-  const createRolePlatforms = async (rolePlatforms: RolePlatform[]) => {
+  const createRolePlatforms = async (
+    rolePlatforms: RolePlatform[]
+  ): Promise<RolePlatform[]> => {
     const promises = rolePlatforms.map((rolePlatform) =>
       fetcherWithSign([
         `/v2/guilds/${guildId}/roles/${rolePlatform.roleId}/role-platforms`,
         { method: "POST", body: rolePlatform },
       ])
-        .then((res) => ({ status: "fulfilled", result: res }))
+        .then((res: RolePlatform) => ({ status: "fulfilled", result: res }))
         .catch((error) => {
           showErrorToast("Failed to create a reward")
           console.error(error)
@@ -122,25 +155,26 @@ const useSubmitEverything = ({
       .map((res) => res.result)
   }
 
-  const submit = async (data) => {
-    console.log(data)
-
+  const submit = async (data: SubmitData) => {
     const { requirements, rolePlatforms, roleIds: rawRoleIds = [], ...role } = data
     const roleIds = rawRoleIds.map(Number)
 
     let createdRole = null
+    const emptyRole = {
+      ...(role as RoleToCreate),
+      requirements: [{ type: "FREE" } as Requirement],
+      rolePlatforms: [],
+    }
     if (roleIds.length == 0) {
-      createdRole = await createRole(role)
+      createdRole = await createRole(emptyRole)
       if (!createdRole) return
       roleIds.push(createdRole.id)
     }
-    console.log("Created role: ", createdRole)
 
     const { createdRequirements, requirementIdMap } = await createRequirements(
       requirements,
       roleIds
     )
-    console.log("Created requirements: ", createdRequirements)
 
     const transformedRolePlatforms = roleIds.flatMap((roleId) =>
       rolePlatforms
@@ -148,23 +182,21 @@ const useSubmitEverything = ({
         .filter((rp) => rp !== null)
     )
 
-    console.log("Transformed role platforms: ", transformedRolePlatforms)
-
     const createdRolePlatforms = await createRolePlatforms(transformedRolePlatforms)
 
-    console.log("Created role platforms: ", createdRolePlatforms)
-
-    return { createdRole, createdRequirements, createdRolePlatforms }
+    return { roleIds, createdRole, createdRequirements, createdRolePlatforms }
   }
 
   const { onSubmit: submitWrapper, isLoading } = useSubmit(submit, {
     onSuccess: (res) => {
-      const { createdRole, createdRequirements, createdRolePlatforms } = res
+      const { roleIds, createdRole, createdRequirements, createdRolePlatforms } = res
 
       toast({
         title: "Role successfully created",
         status: "success",
       })
+
+      // TODO: Mutate
 
       onSuccess?.()
     },
