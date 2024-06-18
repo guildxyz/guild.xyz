@@ -55,72 +55,53 @@ const SocialLinks = (): JSX.Element => {
     <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
       {Object.entries(definedSocialLinks ?? {})
         .filter(([, value]) => typeof value !== "undefined")
-        .map(([key]) => {
-          const { onChange: urlOnChange, ...registerBindings } = register(
-            `socialLinks.${key}`,
-            {
-              required: "This field is required.",
-              validate: validateUrl,
-            }
-          )
-          return (
-            <GridItem key={key}>
-              <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
-                <InputGroup size="lg">
-                  <InputLeftElement>
-                    {socialLinkOptions.find((sl) => sl.value === key).img}
-                  </InputLeftElement>
-                  <Input
-                    type="url"
-                    {...registerBindings}
-                    onChange={(...args) => {
-                      if (key in socialLinkUserPaths) {
-                        let href: string
-                        try {
-                          href = new URL(
-                            definedSocialLinks[key],
-                            socialLinkUserPaths[key]
-                          ).href
-                        } catch {}
-                        if (href) {
-                          setValue(`socialLinks.${key}`, href)
-                        }
-                      }
-                      urlOnChange(...args)
-                    }}
-                    placeholder={
-                      socialLinkOptions.find((sl) => sl.value === key).label
+        .map(([key]) => (
+          <GridItem key={key}>
+            <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
+              <InputGroup size="lg">
+                <InputLeftElement>
+                  {socialLinkOptions.find((sl) => sl.value === key).img}
+                </InputLeftElement>
+                <Input
+                  type="url"
+                  {...register(`socialLinks.${key}`, {
+                    required: "This field is required.",
+                    validate: validateUrl,
+                  })}
+                  placeholder={
+                    socialLinkOptions.find((sl) => sl.value === key).label
+                  }
+                />
+                <InputRightElement>
+                  <CloseButton
+                    aria-label="Remove link"
+                    size="sm"
+                    rounded="full"
+                    onClick={() =>
+                      setValue(`socialLinks.${key}`, undefined, {
+                        shouldDirty: true,
+                      })
                     }
                   />
-                  <InputRightElement>
-                    <CloseButton
-                      aria-label="Remove link"
-                      size="sm"
-                      rounded="full"
-                      onClick={() =>
-                        setValue(`socialLinks.${key}`, undefined, {
-                          shouldDirty: true,
-                        })
-                      }
-                    />
-                  </InputRightElement>
-                </InputGroup>
+                </InputRightElement>
+              </InputGroup>
 
-                <FormErrorMessage>
-                  {errors?.socialLinks?.[key]?.message}
-                </FormErrorMessage>
-              </FormControl>
-            </GridItem>
-          )
-        })}
-
+              <FormErrorMessage>
+                {errors?.socialLinks?.[key]?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </GridItem>
+        ))}
       <GridItem>
         <StyledSelect
           options={socialLinkOptions.filter(
             (sl) => typeof definedSocialLinks?.[sl.value] === "undefined"
           )}
           onChange={(newValue: SelectOption) =>
-            setValue(`socialLinks.${newValue.value}`, "")
+            setValue(
+              `socialLinks.${newValue.value}`,
+              socialLinkUserPaths[newValue.value] ?? ""
+            )
           }
           placeholder="Add more"
           value=""
