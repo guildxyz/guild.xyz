@@ -38,7 +38,7 @@ export const ExpectedMultipleChoice = ({ field }) => {
                 ? "include"
                 : findIndexInArray("rejectedAnswers", option) > -1
                 ? "exclude"
-                : null
+                : "ignore"
             }
             onChange={(newValue) => onChange(option, newValue)}
           ></ExpectedChoice>
