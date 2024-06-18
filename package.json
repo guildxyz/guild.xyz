@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prepare": "npm run snyk-protect && husky install",
+    "prepare": "npm run snyk-protect && husky install && ./.husky/post-commit",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
