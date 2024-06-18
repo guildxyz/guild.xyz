@@ -1,9 +1,8 @@
-import { TelegramLogo } from "phosphor-react";
-import { PlatformAsRewardRestrictions, Rewards } from "platforms/types";
-import useTelegramCardProps from "./useTelegramCardProps";
-import TelegramCardMenu from "./TelegramCardMenu";
-import { AddRewardPanel } from "./AddRewardPanel";
-import { RewardPreview } from "./RewardPreview";
+import { TelegramLogo } from "phosphor-react"
+import { PlatformAsRewardRestrictions, Rewards } from "platforms/types"
+import useTelegramCardProps from "./useTelegramCardProps"
+import TelegramCardMenu from "./TelegramCardMenu"
+import dynamicComponents from "./DynamicComponents"
 
 const rewards = {
   TELEGRAM: {
@@ -15,10 +14,9 @@ const rewards = {
     cardPropsHook: useTelegramCardProps,
     cardMenuComponent: TelegramCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    AddRewardPanel,
-    RewardPreview,
     isPlatform: true,
-  }
+    ...dynamicComponents,
+  },
 } as const as Partial<Rewards>
 
 export default rewards

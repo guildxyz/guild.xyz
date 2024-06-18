@@ -1,9 +1,8 @@
-import { PlatformAsRewardRestrictions, Rewards } from "platforms/types";
-import useTokenCardProps from "./hooks/useTokenCardProps";
-import ClaimTokenButton from "./ClaimTokenButton";
+import { PlatformAsRewardRestrictions, Rewards } from "platforms/types"
+import useTokenCardProps from "./hooks/useTokenCardProps"
+import ClaimTokenButton from "./ClaimTokenButton"
 import Token from "static/icons/token.svg"
-import { RewardPreview } from "./RewardPreview";
-import { RoleCardComponent } from "./RoleCardComponent";
+import dynamicComponents from "./DynamicComponents"
 
 const rewards = {
   ERC20: {
@@ -14,9 +13,8 @@ const rewards = {
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
     cardPropsHook: useTokenCardProps,
     cardButton: ClaimTokenButton,
-    RewardPreview,
-    RoleCardComponent
-  }
+    ...dynamicComponents,
+  },
 } as const satisfies Partial<Rewards>
 
 export default rewards

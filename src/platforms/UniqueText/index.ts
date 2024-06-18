@@ -5,8 +5,6 @@ import TextCardButton from "platforms/SecretText/TextCardButton"
 import UniqueTextCardMenu from "./UniqueTextCardMenu"
 import dynamicComponents from "./DynamicComponents"
 
-const { RewardPreview, RoleCardComponent } = dynamicComponents
-
 const rewards = {
   UNIQUE_TEXT: {
     icon: Key,
@@ -17,8 +15,7 @@ const rewards = {
     cardButton: TextCardButton,
     cardMenuComponent: UniqueTextCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.SINGLE_ROLE,
-    RewardPreview,
-    RoleCardComponent,
+    ...dynamicComponents,
   },
 } as const satisfies Partial<Rewards>
 

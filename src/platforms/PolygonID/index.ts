@@ -5,8 +5,6 @@ import PolygonIDCardMenu from "./PolygonIDCardMenu"
 import { PlatformAsRewardRestrictions, Rewards } from "platforms/types"
 import dynamicComponents from "./DynamicComponents"
 
-const { RoleCardComponent, AddRewardPanel, RewardPreview } = dynamicComponents
-
 const rewards = {
   POLYGON_ID: {
     icon: Key,
@@ -19,11 +17,9 @@ const rewards = {
     cardMenuComponent: PolygonIDCardMenu,
     asRewardRestriction: PlatformAsRewardRestrictions.MULTIPLE_ROLES,
     autoRewardSetup: true,
-    RoleCardComponent,
-    AddRewardPanel,
-    RewardPreview,
     // Until we don't have a generalized connection flow
     isPlatform: false,
+    ...dynamicComponents,
   },
 } as const satisfies Partial<Rewards>
 

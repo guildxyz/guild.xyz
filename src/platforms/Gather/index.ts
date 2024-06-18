@@ -3,9 +3,7 @@ import { PlatformAsRewardRestrictions, Rewards } from "platforms/types"
 import useGatherCardProps from "./useGatherCardProps"
 import GatherCardButton from "./GatherCardButton"
 import GatherCardMenu from "./GatherCardMenu"
-import { AddRewardPanel } from "./AddRewardPanel"
-import { RoleCardComponent } from "./RoleCardComponent"
-import { RewardPreview } from "./RewardPreview"
+import dynamicComponents from "./DynamicComponents"
 
 const rewards = {
   GATHER_TOWN: {
@@ -18,9 +16,7 @@ const rewards = {
     cardPropsHook: useGatherCardProps,
     cardButton: GatherCardButton,
     cardMenuComponent: GatherCardMenu,
-    RoleCardComponent,
-    AddRewardPanel,
-    RewardPreview,
+    ...dynamicComponents,
   },
 } as const satisfies Partial<Rewards>
 
