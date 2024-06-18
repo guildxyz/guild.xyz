@@ -24,7 +24,7 @@ import capitalize from "utils/capitalize"
 import { z } from "zod"
 
 const socialLinkUserPaths = {
-  TWITTER: "https://twitter.com/",
+  TWITTER: "https://x.com/",
   YOUTUBE: "https://youtube.com/",
   SPOTIFY: "https://open.spotify.com/user/",
   MEDIUM: "https://medium.com/",
@@ -56,10 +56,13 @@ const SocialLinks = (): JSX.Element => {
       {Object.entries(definedSocialLinks ?? {})
         .filter(([, value]) => typeof value !== "undefined")
         .map(([key]) => {
-          const { onBlur, ...registerBindings } = register(`socialLinks.${key}`, {
-            required: "This field is required.",
-            validate: validateUrl,
-          })
+          const { onChange: urlOnChange, ...registerBindings } = register(
+            `socialLinks.${key}`,
+            {
+              required: "This field is required.",
+              validate: validateUrl,
+            }
+          )
           return (
             <GridItem key={key}>
               <FormControl isInvalid={!!errors?.socialLinks?.[key]} isRequired>
@@ -70,7 +73,7 @@ const SocialLinks = (): JSX.Element => {
                   <Input
                     type="url"
                     {...registerBindings}
-                    onBlur={(...args) => {
+                    onChange={(...args) => {
                       if (key in socialLinkUserPaths) {
                         let href: string
                         try {
@@ -83,7 +86,7 @@ const SocialLinks = (): JSX.Element => {
                           setValue(`socialLinks.${key}`, href)
                         }
                       }
-                      onBlur(...args)
+                      urlOnChange(...args)
                     }}
                     placeholder={
                       socialLinkOptions.find((sl) => sl.value === key).label
