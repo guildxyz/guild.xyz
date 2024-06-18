@@ -5,20 +5,17 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { AnimatePresence } from "framer-motion"
 import { useFieldArray } from "react-hook-form"
 import AddExpectedAnswerModal from "./AddExpectedAnswerModal"
-import ExpectedAnswerCard from "./ExpectedAnswerCard"
-
-export type ExpectedValue =
-  | { value: string }
-  | { minAmount: number; maxAmount: number }
+import ExpectedAnswerCard, { ExpectedFieldDataProps } from "./ExpectedAnswerCard"
 
 type FieldData = {
+  id: string
   fieldId: string
-} & ExpectedValue
+} & ExpectedFieldDataProps
 
 const SetExpectedAnswers = ({ isDisabled, formId, baseFieldPath }) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const { form, isLoading } = useGuildForm(formId)
+  const { form } = useGuildForm(formId)
 
   const { fields, append, remove } = useFieldArray({
     name: `${baseFieldPath}.data.answers`,
@@ -36,7 +33,7 @@ const SetExpectedAnswers = ({ isDisabled, formId, baseFieldPath }) => {
       </Text>
       <Stack>
         <AnimatePresence>
-          {fields?.map((field: FieldData & { id: string }, index) => (
+          {fields?.map((field: FieldData, index) => (
             <CardMotionWrapper key={field.id}>
               <ExpectedAnswerCard
                 field={form?.fields?.find((f) => f.id === field.fieldId)}

@@ -27,6 +27,7 @@ import ShortText from "./components/Display/ShortText"
 import ChoiceSetup from "./components/Setup/ChoiceSetup"
 import RateSetup from "./components/Setup/RateSetup"
 
+// TODO: use dynamic imports so end users don't have to download the setup components
 const fieldTypes: {
   label: string
   value: Schemas["Field"]["type"]

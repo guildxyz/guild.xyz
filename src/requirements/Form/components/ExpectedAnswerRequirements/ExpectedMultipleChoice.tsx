@@ -11,6 +11,7 @@ export const ExpectedMultipleChoice = ({ field }) => {
   const acceptedAnswers = useFieldArray({ name: `acceptedAnswers` })
   const rejectedAnswers = useFieldArray({ name: `rejectedAnswers` })
 
+  // using getValues because using just fields from the useFieldArrays above doesn't work
   const findIndexInArray = (fieldName, option) =>
     getValues(fieldName)?.findIndex((f) => f === option.toString())
 
@@ -30,7 +31,7 @@ export const ExpectedMultipleChoice = ({ field }) => {
 
       <Stack spacing={1}>
         {field?.options?.map((option) => (
-          <ExpectedChoice
+          <ExpectedChoiceOption
             key={option}
             option={option.toString()}
             value={
@@ -41,7 +42,7 @@ export const ExpectedMultipleChoice = ({ field }) => {
                 : "ignore"
             }
             onChange={(newValue) => onChange(option, newValue)}
-          ></ExpectedChoice>
+          />
         ))}
       </Stack>
 
@@ -72,14 +73,14 @@ const options = [
   },
 ]
 
-const ExpectedChoice = ({ option, value, onChange }) => (
+const ExpectedChoiceOption = ({ option, value, onChange }) => (
   <HStack>
     <RadioButtonGroup
       options={options}
       onChange={onChange}
       value={value}
       chakraStyles={{ size: "xs", isAttached: true, variant: "outline" }}
-    ></RadioButtonGroup>
+    />
     <Text>{option}</Text>
   </HStack>
 )

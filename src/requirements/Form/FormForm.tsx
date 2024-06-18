@@ -5,7 +5,7 @@ import { RequirementFormProps } from "requirements"
 import FormSelector from "./components/FormSelector"
 import SetExpectedAnswers from "./components/SetExpectedAnswers"
 
-const FormForm = ({ baseFieldPath, field }: RequirementFormProps) => {
+const FormForm = ({ baseFieldPath }: RequirementFormProps) => {
   const { id } = useGuild()
 
   const selectedFormId = useWatch({ name: `${baseFieldPath}.data.id` })

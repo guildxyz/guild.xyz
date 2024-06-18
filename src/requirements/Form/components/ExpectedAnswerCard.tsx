@@ -4,6 +4,7 @@ import { fieldTypes } from "components/[guild]/CreateFormModal/formConfig"
 import Card from "components/common/Card"
 import RemoveRequirementButton from "components/create-guild/Requirements/components/RemoveRequirementButton"
 
+// couldn't do type based props so just having all props here as optional, works well enough
 export type ExpectedFieldDataProps = {
   value?: string
   minAmount?: number

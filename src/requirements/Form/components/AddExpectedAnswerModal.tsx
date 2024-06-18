@@ -25,7 +25,6 @@ const AddExpectedAnswerModal = ({
   const { form } = useGuildForm(formId)
 
   const selectedFieldId = methods.watch(`fieldId`)
-
   const field = form?.fields?.find((f) => f.id === selectedFieldId)
   const selectedFieldType = fieldTypes.find((ft) => ft.value === field?.type)
 
