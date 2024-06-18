@@ -1,5 +1,6 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-echo "executing post commit hook"
+echo "executing post commit hook..."
 node ./setStrictNullChecksTo.mjs true
+git update-index --assume-unchanged tsconfig.json
