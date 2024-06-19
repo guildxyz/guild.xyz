@@ -1,3 +1,4 @@
+import { env } from "env"
 import { datetimeLocalToIsoString } from "components/[guild]/RolePlatforms/components/EditRewardAvailabilityModal/components/StartEndTimeForm"
 import { guildNftRewardMetadataSchema } from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -62,7 +63,7 @@ export type CreateNFTResponse = {
 export const generateGuildRewardNFTMetadata = (
   data: Pick<CreateNftFormType, "name" | "description" | "image" | "attributes">
 ) => {
-  const image = data.image?.replace(process.env.NEXT_PUBLIC_IPFS_GATEWAY, "ipfs://")
+  const image = data.image?.replace(env.NEXT_PUBLIC_IPFS_GATEWAY, "ipfs://")
 
   return guildNftRewardMetadataSchema.parse({
     name: data.name,

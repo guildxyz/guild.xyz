@@ -1,3 +1,4 @@
+import { env } from "env"
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
 import { FuelProvider } from "@fuels/react"

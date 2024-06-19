@@ -1,3 +1,4 @@
+import { env } from "env"
 import { HStack, Text, useDisclosure } from "@chakra-ui/react"
 import { ImageData } from "@nouns/assets"
 import BlockExplorerUrl from "components/[guild]/Requirements/components/BlockExplorerUrl"

@@ -1,3 +1,4 @@
+import { env } from "env"
 import { useWallet } from "@fuels/react"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { pushToIntercomSetting } from "components/_app/IntercomProvider"

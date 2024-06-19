@@ -1,3 +1,4 @@
+import { env } from "env"
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useAccount, useProvider, useWallet } from "@fuels/react"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -132,7 +133,7 @@ const useMintFuelGuildPin = () => {
     //         ...metadata,
     //         image: metadata.image.replace(
     //           "ipfs://",
-    //           process.env.NEXT_PUBLIC_IPFS_GATEWAY
+    //           env.NEXT_PUBLIC_IPFS_GATEWAY
     //         ),
     //       },
     //     ])

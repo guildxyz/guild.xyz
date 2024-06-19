@@ -1,3 +1,4 @@
+import { env } from "env"
 import { NextApiHandler } from "next"
 import fetcher from "utils/fetcher"
 

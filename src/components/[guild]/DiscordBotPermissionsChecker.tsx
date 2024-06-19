@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   ListItem,
   ModalBody,
@@ -240,7 +241,7 @@ const DiscordBotPermissionsChecker = () => {
             rightIcon: <ArrowSquareOut />,
             onClick: () =>
               window.open(
-                `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=268716145&scope=bot%20applications.commands`
+                `https://discord.com/api/oauth2/authorize?client_id=${env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&permissions=268716145&scope=bot%20applications.commands`
               ),
           },
           secondButtonProps: {

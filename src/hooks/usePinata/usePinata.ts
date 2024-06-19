@@ -1,3 +1,4 @@
+import { env } from "env"
 import useSubmit from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { useCallback } from "react"
@@ -76,9 +77,7 @@ const usePinata = <TFieldValues, TContext>({
       onSuccess?.(response)
 
       if (fieldToSetOnSuccess && successFieldOnChange) {
-        successFieldOnChange(
-          `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${response.IpfsHash}`
-        )
+        successFieldOnChange(`${env.NEXT_PUBLIC_IPFS_GATEWAY}${response.IpfsHash}`)
       }
     },
     [onSuccess, fieldToSetOnSuccess, successFieldOnChange]

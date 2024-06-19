@@ -1,3 +1,4 @@
+import { env } from "env"
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { useRouter } from "next/router"
 import { posthog } from "posthog-js"
@@ -20,7 +21,7 @@ const USER_REJECTED_ERROR = "User rejected the request"
 const REJECT_BY_THE_USER_ERROR = "Reject by the user"
 
 if (typeof window !== "undefined") {
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
+  posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: "/api/posthog",
     // Capture custom events only
     autocapture: false,
