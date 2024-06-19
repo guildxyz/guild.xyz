@@ -7,7 +7,7 @@ import useToast from "hooks/useToast"
 import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { GuildFormType, Requirement } from "types"
+import { GuildFormType, Requirement, RolePlatform } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
@@ -26,7 +26,18 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
   const { requirements, append, remove, update, freeEntry } =
     useHandleRequirementState(methods)
 
+  const rolePlatforms: RolePlatform[] = useWatch({ name: "rolePlatforms" })
+
   const toast = useToast()
+
+  const isProviderReq = (req: Requirement) => {
+    return rolePlatforms.some((rp) => {
+      if (!rp.dynamicAmount) return false
+
+      const input: any = rp.dynamicAmount.operation.input
+      return input.requirementId === req.id
+    })
+  }
 
   return (
     <Stack spacing="5" w="full">
@@ -63,18 +74,11 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
                     field={req as Requirement}
                     index={i}
                     removeRequirement={(idx) => {
-                      /**
-                       * TODO: check if the role has an ERC20 reward & only show this
-                       * toast in that case.
-                       *
-                       * We decided to leave it as is for now, because we can only
-                       * add this requirement type for ERC20 requirements.
-                       */
-                      if (type === "GUILD_SNAPSHOT") {
+                      if (isProviderReq(req)) {
                         toast({
                           status: "info",
                           title:
-                            "The snapshot requirement is necessary for dynamic token rewards, therefore cannot be removed.",
+                            "The requirement is necessary for dynamic token rewards, therefore cannot be removed.",
                         })
                         return
                       }
