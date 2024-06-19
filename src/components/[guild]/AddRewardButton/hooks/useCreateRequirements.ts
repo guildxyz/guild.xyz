@@ -1,6 +1,7 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { RequirementIdMap } from "hooks/useCreateRRR"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { RequirementIdMap } from "platforms/components/useSubmitEverything"
+
 import { Requirement } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import preprocessRequirement from "utils/preprocessRequirement"

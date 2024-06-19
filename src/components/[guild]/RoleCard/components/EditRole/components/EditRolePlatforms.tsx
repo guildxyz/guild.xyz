@@ -1,5 +1,4 @@
 import { Collapse, SimpleGrid, Skeleton, Spacer } from "@chakra-ui/react"
-import useAddReward from "components/[guild]/AddRewardButton/hooks/useAddReward"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -13,9 +12,7 @@ import Button from "components/common/Button"
 import Section from "components/common/Section"
 import { atom } from "jotai"
 import { Plus } from "phosphor-react"
-import { AddRewardPanelProps } from "platforms/rewards"
-import { RolePlatform } from "types"
-import useAddRewardWithExistingGP from "../hooks/useAddRewardWithExistingGP"
+import useAddRolePlatform from "../hooks/useAddRolePlatform"
 import ExistingRolePlatformCard from "./ExistingRolePlatformCard"
 
 type Props = {
@@ -29,34 +26,10 @@ const EditRolePlatforms = ({ roleId }: Props) => {
   const { id: guildId } = useGuild()
   const { rolePlatforms } = useRole(guildId, roleId)
 
-  const { onSubmit: submitAdd, isLoading: addIsLoading } = useAddReward({
-    onSuccess: () => {},
-    onError: () => {},
-  })
-
   const {
     onSubmit: handleAddWithExistingGuildPlatform,
     isLoading: addWithExistingIsLoading,
-  } = useAddRewardWithExistingGP()
-
-  const handleAdd = (
-    roleId_: number,
-    data: Parameters<AddRewardPanelProps["onAdd"]>[0]
-  ) => {
-    const { guildPlatform, ...rolePlatform } = data
-    const dataToSend = {
-      ...guildPlatform,
-      rolePlatforms: [
-        {
-          roleId: roleId_,
-          platformRoleId: `${roleId_}`, // Why a string????
-          guildPlatform: guildPlatform,
-          ...rolePlatform,
-        },
-      ],
-    }
-    submitAdd(dataToSend)
-  }
+  } = useAddRolePlatform(roleId)
 
   return (
     <Section
@@ -88,17 +61,12 @@ const EditRolePlatforms = ({ roleId }: Props) => {
           ))
         )}
 
-        <Collapse in={addIsLoading || addWithExistingIsLoading}>
+        <Collapse in={addWithExistingIsLoading}>
           <Skeleton rounded={"2xl"} minH={28} w="full" h={28}></Skeleton>
         </Collapse>
       </SimpleGrid>
 
-      <AddRoleRewardModal
-        addWithNewGuildPlatform={(data) => handleAdd(roleId, data)}
-        addWithExistingGuildPlatform={(data) =>
-          handleAddWithExistingGuildPlatform(data as RolePlatform)
-        }
-      />
+      <AddRoleRewardModal onAdd={handleAddWithExistingGuildPlatform} />
     </Section>
   )
 }

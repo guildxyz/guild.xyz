@@ -1,4 +1,4 @@
-import { RequirementIdMap } from "platforms/components/useSubmitEverything"
+import { RequirementIdMap } from "hooks/useCreateRRR"
 import { RolePlatform } from "types"
 
 export const mapRealRequirementIdToRolePlatform = ({
