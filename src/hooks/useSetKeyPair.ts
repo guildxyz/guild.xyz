@@ -89,8 +89,10 @@ const generateKeyPair = async () => {
 }
 
 const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
-  const { captureEvent } = usePostHogContext()
-  const { address, type } = useWeb3ConnectionManager()
+  const { identifyUser, captureEvent } = usePostHogContext()
+
+  const { address, type: walletType } = useWeb3ConnectionManager()
+
   const fetcherWithSign = useFetcherWithSign()
 
   const { id, captchaVerifiedSince, error: publicUserError } = useUserPublic()
@@ -145,7 +147,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
             msg: "Sign in Guild.xyz",
             ...signProps,
             getMessageToSign:
-              type === "EVM" || signProps?.walletClient?.account?.type === "local"
+              walletType === "EVM" ||
+              signProps?.walletClient?.account?.type === "local"
                 ? getSiweMessage
                 : undefined,
           },
@@ -179,6 +182,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
           revalidate: false,
         }
       )
+
+      identifyUser(userProfile)
 
       return { keyPair: generatedKeys, user: userProfile }
     },
