@@ -56,7 +56,7 @@ const FeesTable = ({
           whiteSpace={"normal"}
         >
           <Table variant="simple" size="sm" color="gray">
-            <Tbody maxW="100%">{children}</Tbody>
+            <Tbody>{children}</Tbody>
           </Table>
         </TableContainer>
       </Collapse>
