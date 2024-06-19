@@ -1,14 +1,16 @@
+import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { mutateGuildsCache } from "components/create-guild/hooks/useCreateRole"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useMatchMutate from "hooks/useMatchMutate"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { GuildBase, Requirement, RolePlatform } from "types"
+import { GuildBase, GuildPlatform, Requirement, RolePlatform } from "types"
+import { CreateRolePlatformResponse } from "./useCreateRolePlatforms"
 
 const groupRequirementsByRoleId = (
   roleIds: number[],
-  requirements: Requirement[]
-): { [roleId: number]: Requirement[] } =>
+  requirements: Schemas["RequirementCreateResponse"][]
+): { [roleId: number]: Schemas["RequirementCreateResponse"][] } =>
   roleIds.reduce((acc, roleId) => {
     acc[roleId] = requirements.filter((req) => req.roleId === roleId)
     return acc
@@ -38,8 +40,8 @@ const useMutateAdditionsToRoles = () => {
     roleIds.forEach((roleId) => {
       const createdRequirementsOnRole = createdRequirementsByRoleId[roleId]
       const reqIdsToDelete = createdRequirementsOnRole
-        .filter((req: any) => !!req.deletedRequirements)
-        .flatMap((req: any) => req.deletedRequirements)
+        .filter((req) => !!req.deletedRequirements)
+        .flatMap((req) => req.deletedRequirements)
 
       mutate(
         unstable_serialize([
@@ -57,8 +59,9 @@ const useMutateAdditionsToRoles = () => {
 
   const mutateAdditionsInGuild = (
     roleIds: number[],
-    createdRequirements: Requirement[],
-    createdRolePlatforms: RolePlatform[]
+    createdRequirements: Schemas["RequirementCreateResponse"][],
+    // TODO: create a RoleRewardCreateResponse schema in our types package
+    createdRolePlatforms: CreateRolePlatformResponse[]
   ) => {
     const createdRequirementsByRoleId = groupRequirementsByRoleId(
       roleIds,
@@ -68,6 +71,10 @@ const useMutateAdditionsToRoles = () => {
       roleIds,
       createdRolePlatforms
     )
+
+    const createdGuildPlatforms = createdRolePlatforms
+      .map((rp) => rp.createdGuildPlatform)
+      .filter(Boolean)
 
     mutateGuild(
       (prev) => {
@@ -81,14 +88,15 @@ const useMutateAdditionsToRoles = () => {
           const createdRolePlatformsOnRole = createdRolePlatformsByRoleId[role.id]
           const createdRequirementsOnRole = createdRequirementsByRoleId[role.id]
           const reqIdsToDelete = createdRequirementsOnRole
-            .filter((req: any) => !!req.deletedRequirements)
-            .flatMap((req: any) => req.deletedRequirements)
+            .filter((req) => !!req.deletedRequirements)
+            .flatMap((req) => req.deletedRequirements)
 
           return {
             ...role,
             requirements: [
               ...role.requirements.filter((req) => !reqIdsToDelete.includes(req.id)),
-              ...createdRequirementsOnRole,
+              // TODO: we can remove the Requirement[] cast once we start using the Guild schema from our types package in the useGuild hook
+              ...(createdRequirementsOnRole as Requirement[]),
             ],
             rolePlatforms: [...role.rolePlatforms, ...createdRolePlatformsOnRole],
           }
@@ -97,6 +105,11 @@ const useMutateAdditionsToRoles = () => {
         // Return the updated data
         return {
           ...prev,
+          // TODO: we can remove the GuildPlatform[] cast once we start using the Guild schema from our types package in the useGuild hook
+          guildPlatforms: [
+            ...prev.guildPlatforms,
+            ...(createdGuildPlatforms as GuildPlatform[]),
+          ],
           roles: updatedRoles,
         }
       },
@@ -106,8 +119,9 @@ const useMutateAdditionsToRoles = () => {
 
   const mutateAdditionsToRoles = (
     roleIds: number[],
-    createdRequirements: Requirement[],
-    createdRolePlatforms: RolePlatform[]
+    createdRequirements: Schemas["RequirementCreateResponse"][],
+    // TODO: create a RoleRewardCreateResponse schema in our types package
+    createdRolePlatforms: CreateRolePlatformResponse[]
   ) => {
     mutateYourGuilds((prev) => mutateGuildsCache(prev, guildId), {
       revalidate: false,

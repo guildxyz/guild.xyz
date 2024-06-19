@@ -1,7 +1,14 @@
+import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
+
+// TODO: create a Zod schema for this in our types package
+export type CreateRolePlatformResponse = RolePlatform & {
+  deletedRequirements?: number[]
+  createdGuildPlatform: Schemas["GuildReward"]
+}
 
 const useCreateRolePlatforms = () => {
   const { id: guildId } = useGuild()
@@ -10,7 +17,7 @@ const useCreateRolePlatforms = () => {
 
   const createRolePlatforms = async (
     rolePlatforms: RolePlatform[]
-  ): Promise<RolePlatform[]> => {
+  ): Promise<CreateRolePlatformResponse[]> => {
     const promises = rolePlatforms.map((rolePlatform) =>
       fetcherWithSign([
         `/v2/guilds/${guildId}/roles/${rolePlatform.roleId}/role-platforms`,
@@ -18,7 +25,10 @@ const useCreateRolePlatforms = () => {
       ])
         .then((res) => ({
           status: "fulfilled",
-          result: { ...res, roleId: rolePlatform.roleId },
+          result: {
+            ...res,
+            roleId: rolePlatform.roleId,
+          } as CreateRolePlatformResponse,
         }))
         .catch((error) => {
           showErrorToast("Failed to create a reward")
