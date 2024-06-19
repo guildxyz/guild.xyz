@@ -32,7 +32,7 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   ZKSYNC_ERA: "",
   LINEA: "",
   CYBER: "",
-  ARBITRUM: "",
+  ARBITRUM: `https://arb-mainnet.g.alchemy.comnft/v3/${process.env.ARBITRUM_ALCHEMY_KEY}/getOwnersForContract`,
   SCROLL: "",
   TAIKO: "",
   BLAST_MAINNET: "",
