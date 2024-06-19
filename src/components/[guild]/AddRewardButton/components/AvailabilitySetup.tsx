@@ -24,7 +24,7 @@ const AvailabilitySetup = ({
   const { isOpen, onOpen, onClose } = useDisclosure()
   const showAvailabilityTags = shouldShowAvailabilityTags(rolePlatform)
 
-  // If claim is already started by date, and thats the only limitation, show full the full button
+  // If claim is already started by date, and thats the only limitation, show the full button
   const notCompact =
     !rolePlatform.capacity &&
     !rolePlatform.endTime &&
