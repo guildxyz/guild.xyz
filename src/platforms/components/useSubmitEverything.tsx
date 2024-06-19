@@ -9,7 +9,7 @@ import useToast from "hooks/useToast"
 import { Requirement } from "types"
 import { mapRealRequirementIdsToRolePlatforms } from "utils/mapRealRequirementIdToRolePlatform"
 
-type SubmitData =
+export type SubmitData =
   /**
    * If RoleToCreate is provided and `roleIds` is empty, a new role will be created
    * with the associated rolePlatforms and requirements.
@@ -64,13 +64,7 @@ export type RequirementIdMap = {
   }
 }
 
-const useSubmitEverything = ({
-  methods,
-  onSuccess,
-}: {
-  methods: any
-  onSuccess: () => void
-}) => {
+const useSubmitEverything = ({ onSuccess }: { onSuccess: () => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -150,9 +144,7 @@ const useSubmitEverything = ({
   const loadingText = signLoadingText || "Saving data"
 
   return {
-    onSubmit: () => {
-      methods.handleSubmit(submitWrapper)()
-    },
+    onSubmit: submitWrapper,
     loadingText,
     isLoading: isLoading || isSigning,
   }

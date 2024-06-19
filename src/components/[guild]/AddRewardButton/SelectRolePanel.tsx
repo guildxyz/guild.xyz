@@ -15,10 +15,13 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { ArrowLeft, Info } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import useSubmitEverything from "platforms/components/useSubmitEverything"
+import useSubmitEverything, {
+  SubmitData,
+} from "platforms/components/useSubmitEverything"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
@@ -59,7 +62,6 @@ const SelectRolePanel = ({
   // })
 
   const { onSubmit, isLoading } = useSubmitEverything({
-    methods,
     onSuccess: () => {},
   })
 
@@ -76,6 +78,29 @@ const SelectRolePanel = ({
   const goBack = () => {
     if (!rewards[selection].autoRewardSetup) methods.reset(defaultValues)
     setStep("REWARD_SETUP")
+  }
+
+  const changeDataToDraft = (data: SubmitData): SubmitData => {
+    const { rolePlatforms, requirements, roleIds = [], ...role } = data
+    const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
+      ...rp,
+      visibility: Visibility.HIDDEN,
+    }))
+    const hiddenRequirements = requirements.map((req) =>
+      req.type === "FREE" ? req : { ...req, visibility: Visibility.HIDDEN }
+    )
+
+    let roleToCreate = role
+    if (roleIds.length === 0) {
+      roleToCreate = { ...role, visibility: Visibility.HIDDEN }
+    }
+
+    return {
+      ...roleToCreate,
+      rolePlatforms: hiddenRolePlatforms,
+      requirements: hiddenRequirements,
+      roleIds,
+    }
   }
 
   return (
@@ -142,7 +167,8 @@ const SelectRolePanel = ({
           isDisabled={isAddRewardButtonDisabled}
           onClick={methods.handleSubmit((data) => {
             setSaveAsDraft(true)
-            onSubmit()
+            const draftData = changeDataToDraft(data as SubmitData)
+            onSubmit(draftData)
           })}
           isLoading={saveAsDraft && isLoading}
           rightIcon={
@@ -162,10 +188,7 @@ const SelectRolePanel = ({
         <Button
           isDisabled={isAddRewardButtonDisabled}
           colorScheme="green"
-          onClick={() => {
-            console.log("Submitting")
-            onSubmit()
-          }}
+          onClick={methods.handleSubmit(onSubmit)}
           isLoading={!saveAsDraft && isLoading}
         >
           Save
