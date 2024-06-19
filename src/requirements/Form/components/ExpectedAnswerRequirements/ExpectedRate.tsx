@@ -27,7 +27,7 @@ export const ExpectedRate = ({ field }) => {
   return (
     <HStack alignItems={"flex-start"}>
       <FormControl isInvalid={!!errors?.minAmount}>
-        <FormLabel mb="0">Min rating</FormLabel>
+        <FormLabel>Min rating</FormLabel>
         <NumberInput min={minValue} max={maxValue}>
           <NumberInputField
             placeholder={minValue}
@@ -41,7 +41,7 @@ export const ExpectedRate = ({ field }) => {
         <FormErrorMessage>{errors?.minAmount?.message as string}</FormErrorMessage>
       </FormControl>
       <FormControl isInvalid={!!errors?.maxAmount}>
-        <FormLabel mb="0">Max rating</FormLabel>
+        <FormLabel>Max rating</FormLabel>
         <NumberInput min={minValue} max={maxValue}>
           <NumberInputField
             placeholder={maxValue}

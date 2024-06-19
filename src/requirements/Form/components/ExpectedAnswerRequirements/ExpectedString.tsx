@@ -7,7 +7,7 @@ export const ExpectedString = () => {
 
   return (
     <FormControl isInvalid={!!errors?.value}>
-      <FormLabel mb="0">Answer should be equal to</FormLabel>
+      <FormLabel>Answer should be equal to</FormLabel>
 
       <Controller
         control={control}
