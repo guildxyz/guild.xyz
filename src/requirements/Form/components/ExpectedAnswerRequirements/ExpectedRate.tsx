@@ -22,6 +22,7 @@ const ExpectedRate = ({ field }) => {
     required: "This field is required",
     min: { value: minValue, message: `Minimum value is ${minValue}` },
     max: { value: maxValue, message: `Maximum value is ${maxValue}` },
+    shouldUnregister: true,
   }
 
   return (

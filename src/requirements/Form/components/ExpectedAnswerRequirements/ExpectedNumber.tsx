@@ -21,7 +21,10 @@ const ExpectedNumber = () => {
       <NumberInput>
         <NumberInputField
           placeholder="0"
-          {...register("value", { required: "This field is required" })}
+          {...register("value", {
+            required: "This field is required",
+            shouldUnregister: true,
+          })}
         />
         <NumberInputStepper>
           <NumberIncrementStepper />
