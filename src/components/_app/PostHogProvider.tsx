@@ -35,13 +35,13 @@ if (typeof window !== "undefined") {
     persistence: "memory",
 
     // Disable in development
-    // loaded: (ph) => {
-    //   if (
-    //     process.env.NODE_ENV !== "production" ||
-    //     window.location.host !== "guild.xyz"
-    //   )
-    //     ph.opt_out_capturing()
-    // },
+    loaded: (ph) => {
+      if (
+        process.env.NODE_ENV !== "production" ||
+        window.location.host !== "guild.xyz"
+      )
+        ph.opt_out_capturing()
+    },
   })
 }
 
