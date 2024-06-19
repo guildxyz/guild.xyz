@@ -636,10 +636,10 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
   },
   TAIKO: {
     ...generateChainConfig(taiko as ViemChain, ETH_ICON),
-    iconUrl: "/networkLogos/taiko.svg",
+    iconUrl: "/networkLogos/taiko-katla.svg",
     blockExplorerIconUrl: {
-      light: "/networkLogos/taiko.svg",
-      dark: "/networkLogos/taiko.svg",
+      light: "/networkLogos/taiko-katla.svg",
+      dark: "/networkLogos/taiko-katla.svg",
     },
   },
   KLAYTN: {
