@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   beraTestnet,
   bitfinityTestnet,
@@ -184,6 +185,7 @@ export const wagmiConfig = createConfig({
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
     ? [
         mock({
+          // WARNING: environment variable probably doesn't exist
           accounts: [mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
         }),
       ]
@@ -195,7 +197,7 @@ export const wagmiConfig = createConfig({
           version: "4",
         }),
         walletConnect({
-          projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+          projectId: env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
           showQrModal: true,
           qrModalOptions: {
             explorerRecommendedWalletIds: [

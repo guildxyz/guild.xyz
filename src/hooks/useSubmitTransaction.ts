@@ -1,4 +1,3 @@
-import { env } from "env"
 import { useTransactionStatusContext } from "components/[guild]/Requirements/components/GuildCheckout/components/TransactionStatusContext"
 import { useCallback, useEffect } from "react"
 import processViemContractError from "utils/processViemContractError"

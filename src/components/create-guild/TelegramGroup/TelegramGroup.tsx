@@ -43,7 +43,7 @@ const TelegramGroup = ({ fieldName, children }: PropsWithChildren<Props>) => {
               w="full"
               as="a"
               h="var(--chakra-space-11)"
-              href={`https://t.me/${process.env.NEXT_PUBLIC_TG_BOT_USERNAME}?startgroup=true&admin=post_messages+restrict_members+invite_users`}
+              href={`https://t.me/${env.NEXT_PUBLIC_TG_BOT_USERNAME}?startgroup=true&admin=post_messages+restrict_members+invite_users`}
               target="_blank"
               rightIcon={<Icon as={ArrowSquareOut} mt="-1px" />}
               isLoading={isValidating}

@@ -182,10 +182,7 @@ const useMintGuildPin = () => {
           chainId,
           tokenId,
           ...metadata,
-          image: metadata.image.replace(
-            "ipfs://",
-            process.env.NEXT_PUBLIC_IPFS_GATEWAY
-          ),
+          image: metadata.image.replace("ipfs://", env.NEXT_PUBLIC_IPFS_GATEWAY),
         }
 
         const updatedPins = prevData?.usersPins

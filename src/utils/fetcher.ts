@@ -18,7 +18,7 @@ const fetcher = async (
 ) => {
   const isGuildApiCall = !resource.startsWith("http") && !resource.startsWith("/api")
 
-  const api = isGuildApiCall ? process.env.NEXT_PUBLIC_API : ""
+  const api = isGuildApiCall ? env.NEXT_PUBLIC_API : ""
 
   const options = {
     ...(body || signedPayload
@@ -77,7 +77,7 @@ const fetcher = async (
         location?.reload()
       }
 
-      if (isGuildApiCall || resource.includes(process.env.NEXT_PUBLIC_API)) {
+      if (isGuildApiCall || resource.includes(env.NEXT_PUBLIC_API)) {
         const error = res.errors?.[0]
 
         const errorMsg = error

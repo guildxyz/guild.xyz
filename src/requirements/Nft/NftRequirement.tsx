@@ -79,7 +79,7 @@ const NftRequirement = (props: RequirementProps) => {
     metadataWithTraits?.name || metadata?.name
   )
   const nftImage = guildPinImageCID
-    ? `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
+    ? `${env.NEXT_PUBLIC_IPFS_GATEWAY}${guildPinImageCID}`
     : metadataWithTraits?.image || metadata?.image
 
   const shouldRenderImage =

@@ -83,7 +83,7 @@ const App = ({
 
       {shouldUseReCAPTCHA && (
         <DynamicReCAPTCHA
-          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+          sitekey={env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
           size="invisible"
         />
       )}

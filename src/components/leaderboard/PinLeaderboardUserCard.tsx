@@ -187,7 +187,7 @@ const PinLeaderboardUserCard = ({
                       <Img
                         src={pinMetadata.image.replace(
                           "ipfs://",
-                          process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                          env.NEXT_PUBLIC_IPFS_GATEWAY
                         )}
                         alt={pinMetadata.name}
                       />
@@ -245,7 +245,7 @@ const PinLeaderboardUserCard = ({
                                 <Img
                                   src={pinMetadata.image.replace(
                                     "ipfs://",
-                                    process.env.NEXT_PUBLIC_IPFS_GATEWAY
+                                    env.NEXT_PUBLIC_IPFS_GATEWAY
                                   )}
                                   alt={pinMetadata.name}
                                   boxSize={6}

@@ -8,7 +8,7 @@ const useDriveOAuth = () =>
     {
       scope: `openid email profile https://www.googleapis.com/auth/drive.file`,
       response_type: "token",
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+      client_id: env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
     }
   )
 

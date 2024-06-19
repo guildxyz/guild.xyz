@@ -246,15 +246,12 @@ const getStaticProps = async ({ params }) => {
   try {
     ;[publicGuild, guild] = await Promise.all([
       fetcher(guildPageEndpoint),
-      fetcher(
-        `${process.env.NEXT_PUBLIC_API.replace("/v1", "")}${guildPageEndpoint}`,
-        {
-          headers: {
-            "x-guild-service": "APP",
-            "x-guild-auth": process.env.GUILD_API_KEY,
-          },
-        }
-      ),
+      fetcher(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${guildPageEndpoint}`, {
+        headers: {
+          "x-guild-service": "APP",
+          "x-guild-auth": env.GUILD_API_KEY,
+        },
+      }),
     ])
   } catch {
     return {
@@ -282,6 +279,7 @@ const getStaticProps = async ({ params }) => {
 
   // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
 
+  // WARNING: this environment variable probably doesn't exist
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000"

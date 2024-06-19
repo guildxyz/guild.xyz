@@ -48,7 +48,7 @@ const MintableRole = ({ role }: Props) => {
     ?.roleIds.find((roleId) => roleId === role.id)
 
   const claim = async (signedValidation: SignedValidation) =>
-    fetcher(`${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
+    fetcher(`${env.NEXT_PUBLIC_POLYGONID_API}/v1/polygon-id/claim`, {
       method: "POST",
       ...signedValidation,
     })

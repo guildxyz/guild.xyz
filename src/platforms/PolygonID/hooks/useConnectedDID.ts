@@ -6,9 +6,7 @@ const useConnectedDID = () => {
   const { id: userId } = useUser()
 
   return useSWRImmutable<string>(
-    userId
-      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id`
-      : null,
+    userId ? `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id` : null,
     {
       shouldRetryOnError: false,
     }
