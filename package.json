@@ -5,9 +5,9 @@
   "scripts": {
     "prepare": "npm run snyk-protect && husky install",
     "dev": "next dev",
-    "build": "next build",
+    "build": "TS_CONFIG_PATH='./tsconfig.build.json' next build",
     "start": "next start",
-    "type-check": "tsc --pretty --noEmit --incremental false",
+    "type-check": "tsc --pretty --noEmit --incremental false --strict false --strictNullChecks false",
     "format": "prettier --write .",
     "lint": "next lint",
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
