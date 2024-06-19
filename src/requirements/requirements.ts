@@ -202,7 +202,7 @@ export const REQUIREMENTS_DATA = [
     formComponent: dynamic<RequirementFormProps>(
       () => import("requirements/Form/FormForm")
     ),
-    types: ["FORM_SUBMISSION", "FORM_SUBMISSION_DETAILED"],
+    types: ["FORM_SUBMISSION"],
     isNegatable: true,
   },
   {
