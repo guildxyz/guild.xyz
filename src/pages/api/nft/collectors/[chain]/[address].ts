@@ -32,6 +32,16 @@ export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
   ZKSYNC_ERA: "",
   LINEA: "",
   CYBER: "",
+  ARBITRUM: "",
+  SCROLL: "",
+  TAIKO: "",
+  BLAST_MAINNET: "",
+  X1: "",
+  CORE_DAO: "",
+  METIS: "",
+  NEON_EVM: "",
+  POLYGON_ZKEVM: "",
+  ZETACHAIN: "",
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${process.env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
