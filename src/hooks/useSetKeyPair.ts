@@ -1,8 +1,10 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
+import useConnectorNameAndIcon from "components/_app/Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import { createStore, del, get, set } from "idb-keyval"
 import { useAtomValue, useSetAtom } from "jotai"
+import { usePostHog } from "posthog-js/react"
 import { useEffect } from "react"
 import { mutate } from "swr"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -89,8 +91,12 @@ const generateKeyPair = async () => {
 }
 
 const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
+  const posthog = usePostHog()
   const { captureEvent } = usePostHogContext()
-  const { address, type } = useWeb3ConnectionManager()
+
+  const { address, type: walletType } = useWeb3ConnectionManager()
+  const { connectorName } = useConnectorNameAndIcon()
+
   const fetcherWithSign = useFetcherWithSign()
 
   const { id, captchaVerifiedSince, error: publicUserError } = useUserPublic()
@@ -145,7 +151,8 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
             msg: "Sign in Guild.xyz",
             ...signProps,
             getMessageToSign:
-              type === "EVM" || signProps?.walletClient?.account?.type === "local"
+              walletType === "EVM" ||
+              signProps?.walletClient?.account?.type === "local"
                 ? getSiweMessage
                 : undefined,
           },
@@ -179,6 +186,13 @@ const useSetKeyPair = (submitOptions?: UseSubmitOptions) => {
           revalidate: false,
         }
       )
+
+      posthog.identify(userProfile.id.toString(), {
+        primaryAddress: userProfile.addresses.find((a) => a.isPrimary).address,
+        currentAddress: address,
+        walletType,
+        wallet: connectorName,
+      })
 
       return { keyPair: generatedKeys, user: userProfile }
     },
