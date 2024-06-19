@@ -1,4 +1,3 @@
-import { env } from "env"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
