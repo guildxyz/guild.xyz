@@ -54,15 +54,11 @@ const SelectRolePanel = ({
     roleIds: roleIds,
   }
 
-  // const { onSubmit, isLoading } = useSubmitAddReward({
-  //   onSuccess: (res) => {
-  //     captureEvent("reward created (AddRewardButton)", postHogOptions)
-  //     onSuccess?.(res)
-  //   },
-  // })
-
   const { onSubmit, isLoading } = useSubmitEverything({
-    onSuccess: () => {},
+    onSuccess: (res) => {
+      captureEvent("reward created (AddRewardButton)", postHogOptions)
+      onSuccess?.(res)
+    },
   })
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
@@ -81,17 +77,22 @@ const SelectRolePanel = ({
   }
 
   const changeDataToDraft = (data: SubmitData): SubmitData => {
-    const { rolePlatforms, requirements, roleIds = [], ...role } = data
+    const {
+      rolePlatforms,
+      requirements: reqs,
+      roleIds: dataRoleIds = [],
+      ...role
+    } = data
     const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
       ...rp,
       visibility: Visibility.HIDDEN,
     }))
-    const hiddenRequirements = requirements.map((req) =>
+    const hiddenRequirements = reqs.map((req) =>
       req.type === "FREE" ? req : { ...req, visibility: Visibility.HIDDEN }
     )
 
     let roleToCreate = role
-    if (roleIds.length === 0) {
+    if (dataRoleIds.length === 0) {
       roleToCreate = { ...role, visibility: Visibility.HIDDEN }
     }
 
@@ -99,7 +100,7 @@ const SelectRolePanel = ({
       ...roleToCreate,
       rolePlatforms: hiddenRolePlatforms,
       requirements: hiddenRequirements,
-      roleIds,
+      roleIds: dataRoleIds,
     }
   }
 

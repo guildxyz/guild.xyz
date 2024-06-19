@@ -30,14 +30,13 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
 
   const toast = useToast()
 
-  const isProviderReq = (req: Requirement) => {
-    return rolePlatforms.some((rp) => {
+  const isProviderReq = (req: Requirement) =>
+    rolePlatforms.some((rp) => {
       if (!rp.dynamicAmount) return false
 
       const input: any = rp.dynamicAmount.operation.input
       return input.requirementId === req.id
     })
-  }
 
   return (
     <Stack spacing="5" w="full">

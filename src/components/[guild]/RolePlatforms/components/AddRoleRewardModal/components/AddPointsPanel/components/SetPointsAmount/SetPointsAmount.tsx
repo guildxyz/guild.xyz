@@ -14,7 +14,7 @@ const SetPointsAmount = ({
 }) => {
   const [type, setType] = useState(defaultDynamicAmount ? "dynamic" : "static")
 
-  const { setValue, unregister } = useFormContext()
+  const { setValue } = useFormContext()
   const { targetRoleId } = useAddRewardContext()
 
   const handleTypeChange = (newType: "dynamic" | "static") => {

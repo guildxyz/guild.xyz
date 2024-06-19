@@ -64,7 +64,7 @@ export type RequirementIdMap = {
   }
 }
 
-const useSubmitEverything = ({ onSuccess }: { onSuccess: () => void }) => {
+const useSubmitEverything = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -133,7 +133,7 @@ const useSubmitEverything = ({ onSuccess }: { onSuccess: () => void }) => {
 
       // TODO: Mutate
 
-      onSuccess?.()
+      onSuccess?.(res)
     },
     onError: (error) => {
       showErrorToast("Failed to create role due to an unexpected error")

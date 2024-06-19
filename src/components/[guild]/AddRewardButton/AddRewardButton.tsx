@@ -81,6 +81,12 @@ const AddRewardButton = (): JSX.Element => {
     }
   }
 
+  const closeAndClear = () => {
+    methods.reset(defaultValues)
+    onAddRewardModalClose()
+    setIsAddRewardPanelDirty(false)
+  }
+
   return (
     <>
       <Button
@@ -138,7 +144,7 @@ const AddRewardButton = (): JSX.Element => {
               />
             )}
 
-            {step === "SELECT_ROLE" && <SelectRolePanel />}
+            {step === "SELECT_ROLE" && <SelectRolePanel onSuccess={closeAndClear} />}
           </ClientStateRequirementHandlerProvider>
         </Modal>
       </FormProvider>
