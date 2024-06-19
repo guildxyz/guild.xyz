@@ -1,0 +1,74 @@
+import { RequirementIdMap } from "platforms/components/useSubmitEverything"
+import { RolePlatform } from "types"
+
+export const mapRealRequirementIdToRolePlatform = ({
+  rolePlatform,
+  requirementIdMap,
+  roleId,
+  onMissingId,
+}: {
+  rolePlatform: RolePlatform
+  requirementIdMap: RequirementIdMap
+  roleId: number
+  onMissingId: () => void
+}) => {
+  if (!rolePlatform.dynamicAmount) return { ...rolePlatform, roleId: roleId }
+
+  const input: any = rolePlatform.dynamicAmount.operation.input
+  const requirementId = requirementIdMap[input.requirementId][roleId]
+
+  if (!requirementId) {
+    onMissingId?.()
+    return null
+  }
+
+  return {
+    ...rolePlatform,
+    roleId: roleId,
+    dynamicAmount: {
+      ...rolePlatform.dynamicAmount,
+      operation: {
+        ...rolePlatform.dynamicAmount.operation,
+        input: {
+          ...input,
+          requirementId,
+          roleId,
+        },
+      },
+    },
+  }
+}
+
+/**
+ * During dynamic reward setup, requirements are referenced by a temporary ID
+ * (`tempRequirementId`).
+ *
+ * After the requirements are created, these references need to be updated with the
+ * real IDs of the created requirements.
+ *
+ * This function updates these references according to the `requirementIdMap`, that
+ * keeps track of the temporary ID - real ID pairs.
+ */
+export const mapRealRequirementIdsToRolePlatforms = ({
+  roleIds,
+  rolePlatforms,
+  requirementIdMap,
+  onMissingId,
+}: {
+  roleIds: number[]
+  rolePlatforms: RolePlatform[]
+  requirementIdMap: RequirementIdMap
+  onMissingId?: () => void
+}) =>
+  roleIds.flatMap((roleId) =>
+    rolePlatforms
+      .map((rolePlatform) =>
+        mapRealRequirementIdToRolePlatform({
+          rolePlatform,
+          requirementIdMap,
+          roleId,
+          onMissingId,
+        })
+      )
+      .filter((rp) => rp !== null)
+  )
