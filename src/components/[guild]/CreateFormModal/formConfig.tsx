@@ -17,7 +17,7 @@ import {
 import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
 import ExpectedSingleChoice from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedSingleChoice"
-import { ExactString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
+import { ExpectedString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import { MultipleChoice, SingleChoice } from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
@@ -48,7 +48,7 @@ const fieldTypes: {
     value: "SHORT_TEXT",
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: ShortText,
-    ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerComponent: ExpectedString,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
@@ -56,7 +56,7 @@ const fieldTypes: {
     value: "LONG_TEXT",
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: LongText,
-    ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerComponent: ExpectedString,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
@@ -64,7 +64,7 @@ const fieldTypes: {
     value: "NUMBER",
     img: <OptionIcon as={NumberSquareFive} />,
     DisplayComponent: Number,
-    ExpectedAnswerComponent: ExactString,
+    ExpectedAnswerComponent: ExpectedString,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
