@@ -74,7 +74,7 @@ const options = [
 ]
 
 const ExpectedChoiceOption = ({ option, value, onChange }) => (
-  <HStack>
+  <HStack alignItems={"flex-start"}>
     <RadioButtonGroup
       options={options}
       onChange={onChange}
