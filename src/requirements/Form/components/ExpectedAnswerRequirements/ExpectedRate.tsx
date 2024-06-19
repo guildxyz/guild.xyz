@@ -18,6 +18,12 @@ export const ExpectedRate = ({ field }) => {
   const minValue = field.options[0]
   const maxValue = field.options.at(-1)
 
+  const inputRules = {
+    required: "This field is required",
+    min: { value: minValue, message: `Minimum value is ${minValue}` },
+    max: { value: maxValue, message: `Maximum value is ${maxValue}` },
+  }
+
   return (
     <HStack alignItems={"flex-start"}>
       <FormControl isInvalid={!!errors?.minAmount}>
@@ -25,7 +31,7 @@ export const ExpectedRate = ({ field }) => {
         <NumberInput min={minValue} max={maxValue}>
           <NumberInputField
             placeholder={minValue}
-            {...register("minAmount", { required: "This field is required" })}
+            {...register("minAmount", inputRules)}
           />
           <NumberInputStepper>
             <NumberIncrementStepper />
@@ -39,7 +45,7 @@ export const ExpectedRate = ({ field }) => {
         <NumberInput min={minValue} max={maxValue}>
           <NumberInputField
             placeholder={maxValue}
-            {...register("maxAmount", { required: "This field is required" })}
+            {...register("maxAmount", inputRules)}
           />
           <NumberInputStepper>
             <NumberIncrementStepper />
