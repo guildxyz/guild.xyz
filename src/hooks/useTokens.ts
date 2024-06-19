@@ -75,7 +75,7 @@ export const TokenApiURLs: Record<Chain, string[]> = {
   FORM_TESTNET: [],
   CYBER: [],
   TAIKO: [],
-  KLAYTN: ["https://tokens.coingecko.com/klaytn/all.json"],
+  KLAYTN: [],
 }
 
 const fetchTokens = async ([_, chain]) =>
