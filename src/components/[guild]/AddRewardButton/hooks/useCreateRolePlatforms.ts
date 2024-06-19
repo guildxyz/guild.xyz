@@ -16,7 +16,10 @@ const useCreateRolePlatforms = () => {
         `/v2/guilds/${guildId}/roles/${rolePlatform.roleId}/role-platforms`,
         { method: "POST", body: rolePlatform },
       ])
-        .then((res) => ({ status: "fulfilled", result: res }))
+        .then((res) => ({
+          status: "fulfilled",
+          result: { ...res, roleId: rolePlatform.roleId },
+        }))
         .catch((error) => {
           showErrorToast("Failed to create a reward")
           console.error(error)

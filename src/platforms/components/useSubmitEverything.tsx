@@ -1,5 +1,7 @@
 import useCreateRequirements from "components/[guild]/AddRewardButton/hooks/useCreateRequirements"
 import useCreateRolePlatforms from "components/[guild]/AddRewardButton/hooks/useCreateRolePlatforms"
+import useMutateAdditionsToRoles from "components/[guild]/AddRewardButton/hooks/useMutateAdditionsToRoles"
+import useMutateCreatedRole from "components/[guild]/AddRewardButton/hooks/useMutateCreatedRole"
 import useCreateRole, {
   RoleToCreate,
 } from "components/create-guild/hooks/useCreateRole"
@@ -68,6 +70,9 @@ const useSubmitEverything = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
+  const mutateCreatedRole = useMutateCreatedRole()
+  const mutateAdditionsToRoles = useMutateAdditionsToRoles()
+
   const { onSubmit, isSigning, signLoadingText } = useCreateRole({
     skipMutate: true,
   })
@@ -131,7 +136,10 @@ const useSubmitEverything = ({ onSuccess }: { onSuccess: (res) => void }) => {
         status: "success",
       })
 
-      // TODO: Mutate
+      if (!!createdRole)
+        mutateCreatedRole(createdRole, createdRequirements, createdRolePlatforms)
+      if (!createdRole)
+        mutateAdditionsToRoles(roleIds, createdRequirements, createdRolePlatforms)
 
       onSuccess?.(res)
     },
