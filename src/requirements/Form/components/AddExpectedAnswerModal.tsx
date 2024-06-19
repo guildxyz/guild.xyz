@@ -53,7 +53,11 @@ const AddExpectedAnswerModal = ({
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={methods.handleSubmit(onSuccess)} colorScheme="green">
+            <Button
+              onClick={methods.handleSubmit(onSuccess)}
+              colorScheme="green"
+              isDisabled={!selectedFieldId}
+            >
               Add
             </Button>
           </ModalFooter>
