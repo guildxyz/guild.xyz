@@ -1,4 +1,5 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { useRouter } from "next/router"
 import { posthog } from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
@@ -58,6 +59,19 @@ const CustomPostHogProvider = ({
       ph.reset()
     }
   }, [isWeb3Connected, ph])
+
+  const router = useRouter()
+
+  useEffect(() => {
+    // Track page views
+    const handleRouteChange = () => ph.capture("$pageview")
+    router.events.on("routeChangeComplete", handleRouteChange)
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <PostHogContext.Provider
