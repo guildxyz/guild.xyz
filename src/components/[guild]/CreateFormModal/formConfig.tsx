@@ -15,6 +15,7 @@ import {
   ExpectedStringDisplay,
 } from "requirements/Form/components/ExpectedAnswerCard"
 import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
+import ExpectedNumber from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedNumber"
 import { ExpectedRate } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
 import ExpectedSingleChoice from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedSingleChoice"
 import { ExpectedString } from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
@@ -64,7 +65,7 @@ const fieldTypes: {
     value: "NUMBER",
     img: <OptionIcon as={NumberSquareFive} />,
     DisplayComponent: Number,
-    ExpectedAnswerComponent: ExpectedString,
+    ExpectedAnswerComponent: ExpectedNumber,
     ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
