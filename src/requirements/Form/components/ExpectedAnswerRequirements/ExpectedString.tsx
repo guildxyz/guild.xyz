@@ -1,7 +1,7 @@
 import { FormControl, FormErrorMessage, FormLabel, Input } from "@chakra-ui/react"
 import { Controller, useFormContext, useFormState } from "react-hook-form"
 
-export const ExpectedString = () => {
+const ExpectedString = () => {
   const { control } = useFormContext()
   const { errors } = useFormState()
 
@@ -20,3 +20,5 @@ export const ExpectedString = () => {
     </FormControl>
   )
 }
+
+export default ExpectedString

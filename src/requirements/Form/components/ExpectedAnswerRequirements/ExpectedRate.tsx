@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react"
 import { useFormContext, useFormState } from "react-hook-form"
 
-export const ExpectedRate = ({ field }) => {
+const ExpectedRate = ({ field }) => {
   const { register } = useFormContext()
   const { errors } = useFormState()
 
@@ -57,3 +57,5 @@ export const ExpectedRate = ({ field }) => {
     </HStack>
   )
 }
+
+export default ExpectedRate
