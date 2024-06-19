@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "TS_CONFIG_PATH='./tsconfig.build.json' next build",
     "start": "next start",
-    "type-check": "tsc --pretty --noEmit --incremental false --strict false --strictNullChecks false",
+    "type-check": "tsc --pretty --noEmit --incremental false --project './tsconfig.build.json'",
     "format": "prettier --write .",
     "lint": "next lint",
     "lint-fix": "eslint --fix . --ext .ts,.tsx,.js,.jsx",
