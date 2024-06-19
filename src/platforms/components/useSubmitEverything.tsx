@@ -66,7 +66,7 @@ export type RequirementIdMap = {
   }
 }
 
-const useSubmitEverything = ({ onSuccess }: { onSuccess: (res) => void }) => {
+const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
@@ -158,4 +158,4 @@ const useSubmitEverything = ({ onSuccess }: { onSuccess: (res) => void }) => {
   }
 }
 
-export default useSubmitEverything
+export default useCreateRRR

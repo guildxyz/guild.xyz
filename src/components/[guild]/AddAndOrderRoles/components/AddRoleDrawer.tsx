@@ -23,7 +23,7 @@ import SetRequirements from "components/create-guild/Requirements"
 import usePinata from "hooks/usePinata"
 import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
-import useSubmitEverything from "platforms/components/useSubmitEverything"
+import useCreateRRR from "platforms/components/useSubmitEverything"
 import { useRef } from "react"
 import { FormProvider } from "react-hook-form"
 import useAddRoleForm from "../hooks/useAddRoleForm"
@@ -60,7 +60,7 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
 
   const drawerBodyRef = useRef<HTMLDivElement>()
 
-  const { onSubmit, isLoading, loadingText } = useSubmitEverything({
+  const { onSubmit, isLoading, loadingText } = useCreateRRR({
     onSuccess: () => {
       methods.reset(methods.defaultValues)
       onClose()

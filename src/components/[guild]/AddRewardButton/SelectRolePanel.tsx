@@ -15,9 +15,7 @@ import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { ArrowLeft, Info } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
-import useSubmitEverything, {
-  SubmitData,
-} from "platforms/components/useSubmitEverything"
+import useCreateRRR, { SubmitData } from "platforms/components/useSubmitEverything"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
@@ -54,7 +52,7 @@ const SelectRolePanel = ({
     roleIds: roleIds,
   }
 
-  const { onSubmit, isLoading } = useSubmitEverything({
+  const { onSubmit, isLoading } = useCreateRRR({
     onSuccess: (res) => {
       captureEvent("reward created (AddRewardButton)", postHogOptions)
       onSuccess?.(res)
