@@ -13,7 +13,6 @@ import googleReward from "platforms/Google"
 import discordReward from "platforms/Discord"
 import githubReward from "platforms/Github"
 import poapReward from "platforms/Poap"
-// import { Reward } from "./types"
 
 export default {
   TWITTER_V1: twitterRewardV1,
@@ -33,6 +32,8 @@ export default {
   GITHUB: githubReward,
   POAP: poapReward,
 } as const satisfies Partial<Rewards>
+
+// TODO: resolve duplication by renaming rewards.ts to index.ts and updating imports
 
 import type { PlatformName, Requirement } from "types"
 
