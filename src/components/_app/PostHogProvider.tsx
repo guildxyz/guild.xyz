@@ -5,7 +5,14 @@ import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import { PropsWithChildren, createContext, useContext, useEffect } from "react"
+import {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react"
+import { User } from "types"
 import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
@@ -39,9 +46,11 @@ if (typeof window !== "undefined") {
 }
 
 const PostHogContext = createContext<{
+  identifyUser: (userData: User) => void
   captureEvent: (event: string, options?: Record<string, any>) => void
   startSessionRecording: () => void
 }>({
+  identifyUser: () => {},
   captureEvent: () => {},
   startSessionRecording: () => {},
 })
@@ -73,9 +82,22 @@ const CustomPostHogProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const identifyUser = useCallback(
+    (userData: User) => {
+      posthog.identify(userData.id.toString(), {
+        primaryAddress: userData.addresses.find((a) => a.isPrimary).address,
+        currentAddress: address,
+        walletType,
+        wallet: connectorName,
+      })
+    },
+    [address, connectorName, walletType]
+  )
+
   return (
     <PostHogContext.Provider
       value={{
+        identifyUser,
         captureEvent: (event, options) => {
           // TODO: find a better approach here...
           const errorMessage =
