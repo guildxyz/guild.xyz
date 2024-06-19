@@ -34,6 +34,7 @@ import {
   gnosis,
   harmonyOne,
   kava,
+  klaytn,
   linea,
   liskSepolia,
   lukso,
@@ -53,6 +54,7 @@ import {
   scrollSepolia,
   sepolia,
   shimmer,
+  taiko,
   x1Testnet,
   zetachain,
   zetachainAthensTestnet,
@@ -123,6 +125,8 @@ export const wagmiConfig = createConfig({
     opBNB,
     formTestnet,
     cyber,
+    taiko,
+    klaytn,
   ],
   transports: {
     [mainnet.id]: http(),
@@ -179,6 +183,8 @@ export const wagmiConfig = createConfig({
     [opBNB.id]: http(),
     [formTestnet.id]: http(),
     [cyber.id]: http(),
+    [taiko.id]: http(),
+    [klaytn.id]: http(),
   },
   ssr: true,
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
