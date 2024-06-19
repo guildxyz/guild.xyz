@@ -2,17 +2,22 @@ import { Requirement } from "types"
 
 const mapRequirement = (requirement?: Requirement) => {
   // Using structuredClone so we don't modify the original requirement unintentionally
-  const newRequirement: Requirement = structuredClone(requirement)
+  const newRequirement = structuredClone(requirement)
+  if (!requirement || !newRequirement) return
 
   if (requirement.type === "COIN")
     newRequirement.address = "0x0000000000000000000000000000000000000000"
 
-  if (newRequirement.type === "CONTRACT" && Array.isArray(requirement.data.params)) {
+  if (
+    newRequirement.type === "CONTRACT" &&
+    Array.isArray(requirement?.data?.params) &&
+    newRequirement.data
+  ) {
     newRequirement.data.params = requirement.data.params.map((param) =>
       typeof param === "string"
         ? {
-            value: param,
-          }
+          value: param,
+        }
         : param
     )
   }
@@ -29,8 +34,6 @@ const mapRequirement = (requirement?: Requirement) => {
   // Removing attributes which we don't need inside the form
   delete newRequirement.createdAt
   delete newRequirement.updatedAt
-  delete newRequirement.symbol
-  delete newRequirement.name
 
   return newRequirement
 }

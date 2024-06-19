@@ -9,7 +9,7 @@ const processViemContractError = (
   errorNameMapper?: (errorName: string) => string
 ): string | undefined => {
   if (!error) return undefined
-  let mappedError: string
+  let mappedError: undefined | string
 
   if (error instanceof BaseError) {
     const revertError = error.walk(

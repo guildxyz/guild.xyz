@@ -12,7 +12,7 @@ const converSVGToPNG = async (svgUrl: string): Promise<string> =>
     img.setAttribute("src", "data:image/svg+xml;base64," + btoa(rawSvg))
 
     img.onload = () => {
-      ctx.drawImage(img, 0, 0, IMG_SIZE, IMG_SIZE)
+      ctx?.drawImage(img, 0, 0, IMG_SIZE, IMG_SIZE)
       const pngDataURL = canvas.toDataURL("image/png")
       resolve(pngDataURL)
     }

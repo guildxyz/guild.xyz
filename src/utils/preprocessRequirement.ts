@@ -38,18 +38,24 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
   }
 
   if (processedRequirement.type?.startsWith("COVALENT_")) {
-    if (!processedRequirement?.data?.timestamps?.minAmount) {
+    if (
+      processedRequirement.data &&
+      !processedRequirement?.data?.timestamps?.minAmount
+    ) {
       delete processedRequirement.data.timestamps.minAmount
     }
 
-    if (!processedRequirement?.data?.timestamps?.maxAmount) {
+    if (
+      processedRequirement.data &&
+      !processedRequirement?.data?.timestamps?.maxAmount
+    ) {
       delete processedRequirement.data.timestamps.maxAmount
     }
   }
 
   if (processedRequirement.type === "COIN") {
     processedRequirement.address = undefined
-    if (!processedRequirement.data.minAmount) {
+    if (processedRequirement.data && !processedRequirement.data.minAmount) {
       processedRequirement.data.minAmount = 0
     }
   }
@@ -58,11 +64,14 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
     (processedRequirement.type === "ERC721" ||
       processedRequirement.type === "ERC1155" ||
       processedRequirement.type === "NOUNS") &&
-    !processedRequirement.data.attributes?.length &&
+    !processedRequirement?.data?.attributes?.length &&
     !processedRequirement.data?.ids?.length
   ) {
-    processedRequirement.data.attributes = undefined
-    if (!requirement.data.minAmount) processedRequirement.data.minAmount = 0
+    if (processedRequirement.data) {
+      processedRequirement.data.attributes = undefined
+      if (requirement.data && !requirement.data.minAmount)
+        processedRequirement.data.minAmount = 0
+    }
   }
 
   if (
@@ -70,7 +79,7 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
       processedRequirement.type === "ERC1155") &&
     processedRequirement.data?.attributes?.length
   ) {
-    processedRequirement.data.attributes = requirement.data.attributes.map(
+    processedRequirement.data.attributes = requirement?.data?.attributes.map(
       (attribute) => ({
         ...attribute,
         minValue: attribute.minValue || undefined,
@@ -103,7 +112,7 @@ const preprocessRequirement = (requirement: Partial<Requirement>): Requirement =
     processedRequirement.type === "CONTRACT" &&
     Array.isArray(processedRequirement.data?.params)
   ) {
-    processedRequirement.data.params = requirement.data.params.map(
+    processedRequirement.data.params = requirement?.data?.params.map(
       (param) => param.value
     )
   }
