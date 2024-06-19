@@ -19,9 +19,10 @@ import {
 
 type Props = {
   rolePlatform: RolePlatform
+  remove: () => void
 }
 
-const NewRolePlatformCard = ({ rolePlatform }: Props) => {
+const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
   const { guildPlatforms } = useGuild()
   const { setValue } = useFormContext()
 
@@ -47,8 +48,6 @@ const NewRolePlatformCard = ({ rolePlatform }: Props) => {
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
   const { cardPropsHook: useCardProps } = rewards[type]
-
-  const handleRemove = () => {}
 
   return (
     <RolePlatformProvider
@@ -91,7 +90,7 @@ const NewRolePlatformCard = ({ rolePlatform }: Props) => {
             rounded="full"
             aria-label="Remove platform"
             zIndex="1"
-            onClick={handleRemove}
+            onClick={remove}
           />
         }
         contentRow={

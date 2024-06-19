@@ -12,6 +12,7 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { ApiRequirementHandlerProvider } from "components/[guild]/RequirementHandlerContext"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import DiscardAlert from "components/common/DiscardAlert"
 import OnboardingMarker from "components/common/OnboardingMarker"
@@ -98,23 +99,25 @@ const EditRole = ({ roleId }: { roleId: number }): JSX.Element => {
         <DrawerContent>
           <DrawerBody ref={drawerBodyRef} className="custom-scrollbar" pb={24}>
             <FormProvider {...methods}>
-              <EditRoleHeader onClose={onCloseAndClear} roleId={roleId} />
-              <VStack spacing={10} alignItems="start">
-                <EditRolePlatforms roleId={roleId} />
-                <Section title="General">
-                  <Box>
-                    <FormLabel>Logo and name</FormLabel>
-                    <HStack spacing={2} alignItems="start">
-                      <IconSelector uploader={iconUploader} />
-                      <Name />
-                    </HStack>
-                  </Box>
-                  <Description />
-                  <RoleGroupSelect />
-                </Section>
+              <ApiRequirementHandlerProvider roleId={roleId}>
+                <EditRoleHeader onClose={onCloseAndClear} roleId={roleId} />
+                <VStack spacing={10} alignItems="start">
+                  <EditRolePlatforms roleId={roleId} />
+                  <Section title="General">
+                    <Box>
+                      <FormLabel>Logo and name</FormLabel>
+                      <HStack spacing={2} alignItems="start">
+                        <IconSelector uploader={iconUploader} />
+                        <Name />
+                      </HStack>
+                    </Box>
+                    <Description />
+                    <RoleGroupSelect />
+                  </Section>
 
-                <EditRequirements roleId={roleId} />
-              </VStack>
+                  <EditRequirements roleId={roleId} />
+                </VStack>
+              </ApiRequirementHandlerProvider>
             </FormProvider>
           </DrawerBody>
 

@@ -17,13 +17,14 @@ const AddRolePlatforms = () => {
   const { onOpen } = useAddRewardContext()
 
   const { watch } = useFormContext<RoleFormType>()
-
-  const { fields, append } = useFieldArray<RoleFormType, "rolePlatforms", "fieldId">(
-    {
-      name: "rolePlatforms",
-      keyName: "fieldId",
-    }
-  )
+  const { fields, append, remove } = useFieldArray<
+    RoleFormType,
+    "rolePlatforms",
+    "fieldId"
+  >({
+    name: "rolePlatforms",
+    keyName: "fieldId",
+  })
   const watchFieldArray = watch("rolePlatforms")
   const controlledFields = fields.map((field, index) => ({
     ...field,
@@ -56,11 +57,11 @@ const AddRolePlatforms = () => {
             <NewRolePlatformCard
               key={rolePlatform.fieldId}
               rolePlatform={{ ...rolePlatform, id: index } as RolePlatform}
+              remove={() => remove(index)}
             />
           ))
         )}
       </SimpleGrid>
-
       <AddRoleRewardModal
         addWithNewGuildPlatform={append}
         addWithExistingGuildPlatform={append}
