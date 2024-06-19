@@ -72,7 +72,6 @@ const CustomPostHogProvider = ({
   const router = useRouter()
 
   useEffect(() => {
-    // Track page views
     const handleRouteChange = () => ph.capture("$pageview")
     router.events.on("routeChangeComplete", handleRouteChange)
 
