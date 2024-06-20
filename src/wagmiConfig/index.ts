@@ -185,7 +185,6 @@ export const wagmiConfig = createConfig({
   connectors: process.env.NEXT_PUBLIC_MOCK_CONNECTOR
     ? [
         mock({
-          // WARNING: environment variable probably doesn't exist
           accounts: [mnemonicToAccount(process.env.NEXT_PUBLIC_E2E_WALLET_MNEMONIC)],
         }),
       ]

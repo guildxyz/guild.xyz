@@ -279,7 +279,6 @@ const getStaticProps = async ({ params }) => {
 
   // Calling the serverless endpoint, so if we fetch this data for the first time, it'll be added to the Vercel cache
 
-  // WARNING: this environment variable probably doesn't exist
   const baseUrl = process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}`
     : "http://localhost:3000"
