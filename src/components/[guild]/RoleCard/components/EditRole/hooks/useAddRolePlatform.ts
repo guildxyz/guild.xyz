@@ -35,7 +35,10 @@ const useAddRolePlatform = (roleId: number) => {
               if (role.id === roleId) {
                 return {
                   ...role,
-                  rolePlatforms: [...role.rolePlatforms, response],
+                  rolePlatforms: [
+                    ...role.rolePlatforms,
+                    { ...response, roleId: roleId },
+                  ],
                 }
               }
               return role
