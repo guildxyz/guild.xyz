@@ -1,12 +1,14 @@
-import { useColorModeValue } from "@chakra-ui/react"
+import { useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import AvailabilitySetup from "components/[guild]/AddRewardButton/components/AvailabilitySetup"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import EditRolePlatformModal from "components/[guild]/RolePlatforms/components/EditRolePlatformModal"
 import PlatformCard from "components/[guild]/RolePlatforms/components/PlatformCard"
 import RemovePlatformButton from "components/[guild]/RolePlatforms/components/RemovePlatformButton"
 import { RolePlatformProvider } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import {
@@ -16,12 +18,16 @@ import {
   RolePlatform,
 } from "types"
 import DynamicTag from "../../DynamicReward/DynamicTag"
+import useUpdateRolePlatform from "../hooks/useUpdateRolePlatform"
 import useUpdateRolePlatformAvailability from "../hooks/useUpdateRolePlatformAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 
 type Props = {
   rolePlatform: RolePlatform
 }
+
+// TODO: needs backend support
+const EDIT_SUPPORTED = false
 
 const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   const { guildPlatforms } = useGuild()
@@ -44,6 +50,13 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   const { onSubmit: onVisibilityChange, isLoading: isVisibilityLoading } =
     useUpdateRolePlatformVisibility()
 
+  const { onSubmit: onEdit } = useUpdateRolePlatform()
+  const {
+    isOpen: isEditOpen,
+    onClose: onEditClose,
+    onOpen: onEditOpen,
+  } = useDisclosure()
+
   if (!type) return null
 
   const isLegacyContractCallReward =
@@ -51,7 +64,11 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
-  const { cardPropsHook: useCardProps, isPlatform } = rewards[type]
+  const {
+    cardPropsHook: useCardProps,
+    isPlatform,
+    cardSettingsComponent,
+  } = rewards[type]
 
   return (
     <RolePlatformProvider
@@ -86,6 +103,34 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
         }
         cornerButton={
           <RemovePlatformButton {...{ removeButtonColor, isPlatform }} />
+        }
+        actionRow={
+          EDIT_SUPPORTED ? (
+            cardSettingsComponent && (
+              <>
+                <Button
+                  size="sm"
+                  onClick={onEditOpen}
+                  ml={{ base: 0, md: 3 }}
+                  mt={{ base: 5, md: 0 }}
+                >
+                  Edit
+                </Button>
+                <EditRolePlatformModal
+                  SettingsComponent={cardSettingsComponent}
+                  rolePlatform={{ ...rolePlatform, guildPlatform }}
+                  isOpen={isEditOpen}
+                  onClose={onEditClose}
+                  onSubmit={(updateData) => {
+                    onEdit({ rolePlatform, updateData })
+                    onEditClose()
+                  }}
+                />
+              </>
+            )
+          ) : (
+            <></>
+          )
         }
         contentRow={
           <>

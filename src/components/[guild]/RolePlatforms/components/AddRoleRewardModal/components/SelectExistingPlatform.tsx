@@ -100,7 +100,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                 rolePlatform={rolePlatformData}
                 isOpen={isOpen}
                 onSubmit={(data) => {
-                  onSelect({ ...rolePlatformData, ...data.rolePlatforms[0] })
+                  onSelect({ ...rolePlatformData, ...data })
                   onClose()
                 }}
                 onClose={settingsOnClose}

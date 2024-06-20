@@ -42,6 +42,12 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
     type = guildPlatform?.platformName
   }
 
+  const {
+    isOpen: isEditOpen,
+    onClose: onEditClose,
+    onOpen: onEditOpen,
+  } = useDisclosure()
+
   if (!type) return null
 
   const isLegacyContractCallReward =
@@ -51,14 +57,7 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
 
   const { cardPropsHook: useCardProps, cardSettingsComponent } = rewards[type]
 
-  const {
-    isOpen: isEditOpen,
-    onClose: onEditClose,
-    onOpen: onEditOpen,
-  } = useDisclosure()
-
   const rolePlatformData = watch(`rolePlatforms.${rolePlatform.id}`)
-  console.log(rolePlatformData)
 
   return (
     <RolePlatformProvider
@@ -123,7 +122,7 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
                 onSubmit={(data) => {
                   setValue(`rolePlatforms.${rolePlatform.id}`, {
                     ...rolePlatformData,
-                    ...data.rolePlatforms[0],
+                    ...data,
                   })
                   onEditClose()
                 }}

@@ -9,7 +9,7 @@ import StaticPointsAmountForm from "./components/StaticPointsAmountForm"
 const SetPointsAmount = ({
   imageUrl,
   name,
-  baseFieldPath,
+  baseFieldPath = "",
   defaultDynamicAmount = false,
 }) => {
   const [type, setType] = useState(defaultDynamicAmount ? "dynamic" : "static")
