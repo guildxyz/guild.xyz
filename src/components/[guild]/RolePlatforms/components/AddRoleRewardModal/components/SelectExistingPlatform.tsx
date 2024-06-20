@@ -93,18 +93,20 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
                 }}
                 description={null}
                 {...DISPLAY_CARD_INTERACTIVITY_STYLES}
-              ></PlatformCard>
-
-              <EditRolePlatformModal
-                SettingsComponent={cardSettingsComponent}
-                rolePlatform={rolePlatformData}
-                isOpen={isOpen}
-                onSubmit={(data) => {
-                  onSelect({ ...rolePlatformData, ...data })
-                  onClose()
-                }}
-                onClose={settingsOnClose}
               />
+
+              {cardSettingsComponent && (
+                <EditRolePlatformModal
+                  settingsComponent={cardSettingsComponent}
+                  rolePlatform={rolePlatformData}
+                  isOpen={isOpen}
+                  onSubmit={(data) => {
+                    onSelect({ ...rolePlatformData, ...data })
+                    onClose()
+                  }}
+                  onClose={settingsOnClose}
+                />
+              )}
             </>
           )
         })}

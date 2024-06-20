@@ -1,4 +1,5 @@
 import { useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import AvailabilitySetup from "components/[guild]/AddRewardButton/components/AvailabilitySetup"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import EditRolePlatformModal from "components/[guild]/RolePlatforms/components/EditRolePlatformModal"
@@ -18,7 +19,6 @@ import {
   RolePlatform,
 } from "types"
 import DynamicTag from "../../DynamicReward/DynamicTag"
-import useUpdateRolePlatform from "../hooks/useUpdateRolePlatform"
 import useUpdateRolePlatformAvailability from "../hooks/useUpdateRolePlatformAvailability"
 import useUpdateRolePlatformVisibility from "../hooks/useUpdateRolePlatformVisibility"
 
@@ -50,7 +50,10 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
   const { onSubmit: onVisibilityChange, isLoading: isVisibilityLoading } =
     useUpdateRolePlatformVisibility()
 
-  const { onSubmit: onEdit } = useUpdateRolePlatform()
+  const { onSubmit: onEdit } = useEditRolePlatform({
+    rolePlatformId: rolePlatform.id,
+  })
+
   const {
     isOpen: isEditOpen,
     onClose: onEditClose,
@@ -117,12 +120,12 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
                   Edit
                 </Button>
                 <EditRolePlatformModal
-                  SettingsComponent={cardSettingsComponent}
+                  settingsComponent={cardSettingsComponent}
                   rolePlatform={{ ...rolePlatform, guildPlatform }}
                   isOpen={isEditOpen}
                   onClose={onEditClose}
                   onSubmit={(updateData) => {
-                    onEdit({ rolePlatform, updateData })
+                    onEdit({ ...rolePlatform, ...updateData })
                     onEditClose()
                   }}
                 />

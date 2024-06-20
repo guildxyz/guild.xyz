@@ -15,7 +15,7 @@ import { PlatformType, RoleFormType } from "types"
 import { RolePlatformProvider } from "./RolePlatformProvider"
 
 type Props = {
-  SettingsComponent: CardSettingsComponent
+  settingsComponent: CardSettingsComponent
   rolePlatform: RoleFormType["rolePlatforms"][number]
   onSubmit: (data) => void
   onClose: () => void
@@ -23,7 +23,7 @@ type Props = {
 }
 
 const EditRolePlatformModal = ({
-  SettingsComponent,
+  settingsComponent: SettingsComponent,
   rolePlatform,
   onClose,
   isOpen,

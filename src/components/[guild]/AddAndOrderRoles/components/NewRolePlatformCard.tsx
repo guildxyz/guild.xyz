@@ -11,7 +11,7 @@ import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -26,7 +26,7 @@ type Props = {
 
 const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
   const { guildPlatforms } = useGuild()
-  const { setValue, watch } = useFormContext()
+  const { setValue } = useFormContext()
 
   const setVisibilityModalProps = useVisibilityModalProps()
   const removeButtonColor = useColorModeValue("gray.700", "gray.400")
@@ -48,6 +48,8 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
     onOpen: onEditOpen,
   } = useDisclosure()
 
+  const rolePlatformData = useWatch({ name: `rolePlatforms.${rolePlatform.id}` })
+
   if (!type) return null
 
   const isLegacyContractCallReward =
@@ -56,8 +58,6 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
   const { cardPropsHook: useCardProps, cardSettingsComponent } = rewards[type]
-
-  const rolePlatformData = watch(`rolePlatforms.${rolePlatform.id}`)
 
   return (
     <RolePlatformProvider
@@ -115,15 +115,19 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
                 Edit
               </Button>
               <EditRolePlatformModal
-                SettingsComponent={cardSettingsComponent}
+                settingsComponent={cardSettingsComponent}
                 rolePlatform={rolePlatform}
                 isOpen={isEditOpen}
                 onClose={onEditClose}
                 onSubmit={(data) => {
-                  setValue(`rolePlatforms.${rolePlatform.id}`, {
-                    ...rolePlatformData,
-                    ...data,
-                  })
+                  setValue(
+                    `rolePlatforms.${rolePlatform.id}`,
+                    {
+                      ...rolePlatformData,
+                      ...data,
+                    },
+                    { shouldDirty: true }
+                  )
                   onEditClose()
                 }}
               />
