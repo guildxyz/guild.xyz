@@ -3,7 +3,6 @@ import Requirement, {
   RequirementProps,
 } from "components/[guild]/Requirements/components/Requirement"
 import { useRequirementContext } from "components/[guild]/Requirements/components/RequirementContext"
-import DataBlock from "components/common/DataBlock"
 import DataBlockWithCopy from "components/common/DataBlockWithCopy"
 import { ArrowSquareOut } from "phosphor-react"
 import REQUIREMENTS from "requirements"
@@ -33,9 +32,14 @@ const FarcasterFollowUser = (props: RequirementProps) => {
       {...props}
     >
       {type === "FARCASTER_FOLLOW" ? "Follow " : "Be followed by "}
-      <DataBlock isLoading={!farcasterUser}>
+      <Link
+        href={`https://warpcast.com/${farcasterUser?.username}`}
+        isExternal
+        colorScheme="blue"
+        fontWeight="medium"
+      >
         {farcasterUser?.display_name ?? "Loading..."}
-      </DataBlock>
+      </Link>
       {" on Farcaster"}
     </Requirement>
   )
