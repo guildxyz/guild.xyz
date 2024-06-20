@@ -16,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import useUser from "components/[guild]/hooks/useUser"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
@@ -59,6 +60,7 @@ const ConnectFarcasterButton = ({
   isReconnection: _,
   ...props
 }: ButtonProps & { onSuccess?: () => void; isReconnection?: boolean }) => {
+  const { captureEvent } = usePostHogContext()
   const { farcasterProfiles, id: userId, mutate } = useUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const fetcherWithSign = useFetcherWithSign()
@@ -66,6 +68,7 @@ const ConnectFarcasterButton = ({
   const [pollInterval, setPollInterval] = useState<NodeJS.Timeout>()
 
   const onApprove = () => {
+    captureEvent("[farcaster] request approved")
     onClose()
     toast({
       status: "success",
@@ -83,7 +86,10 @@ const ConnectFarcasterButton = ({
     signedKeyRequest.onSubmit()
   }
 
-  const { seconds, start, stop } = useCountdownSeconds(undefined, onRegenerate)
+  const { seconds, start, stop } = useCountdownSeconds(undefined, () => {
+    captureEvent("[farcaster] deadline hit")
+    onRegenerate()
+  })
   const shouldEnableRegenerateButton = seconds < ENABLE_REGENERATE_BUTTON_AT_SEC
 
   const signedKeyRequest = useSubmitWithSign(submitSignedKeyRequest, {
@@ -129,6 +135,7 @@ const ConnectFarcasterButton = ({
   })
 
   const handleOnClose = () => {
+    captureEvent("[farcaster] connect modal closed")
     stop()
     signedKeyRequest.reset()
     if (pollInterval) {
@@ -143,6 +150,7 @@ const ConnectFarcasterButton = ({
     <>
       <Button
         onClick={() => {
+          captureEvent("[farcaster] connect button clicked")
           signedKeyRequest.onSubmit()
         }}
         colorScheme={rewards.FARCASTER.colorScheme}
@@ -190,7 +198,10 @@ const ConnectFarcasterButton = ({
                     icon={<ArrowCounterClockwise />}
                     isLoading={signedKeyRequest.isLoading}
                     aria-label="Regenerate Farcaster QR code"
-                    onClick={onRegenerate}
+                    onClick={() => {
+                      captureEvent("[farcaster] manual qr regeneration")
+                      onRegenerate()
+                    }}
                   />
                 </Tooltip>
               </HStack>
@@ -203,6 +214,7 @@ const ConnectFarcasterButton = ({
 }
 
 const DisconnectFarcasterButton = () => {
+  const { captureEvent } = usePostHogContext()
   const disclosure = useDisclosure()
   const { farcasterProfiles, id, mutate } = useUser()
   const fetcherWithSign = useFetcherWithSign()
@@ -233,7 +245,10 @@ const DisconnectFarcasterButton = () => {
       },
     }
   )
-  const onConfirm = () => onSubmit(farcasterProfiles?.[0]?.fid)
+  const onConfirm = () => {
+    captureEvent("[farcaster] disconnect button clicked")
+    onSubmit(farcasterProfiles?.[0]?.fid)
+  }
 
   return (
     <DisconnectAccountButton
