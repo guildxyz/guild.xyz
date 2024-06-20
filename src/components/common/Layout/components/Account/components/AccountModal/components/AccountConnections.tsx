@@ -26,6 +26,7 @@ import LinkDelegateVaultButton from "./LinkDelegateVaultButton"
 import LinkedAddress, { LinkedAddressSkeleton } from "./LinkedAddress"
 import SharedSocials from "./SharedSocials"
 import SocialAccount, { EmailAddress } from "./SocialAccount"
+import FarcasterProfile from "./SocialAccount/FarcasterProfile"
 
 const AccountConnections = () => {
   const { isLoading, addresses, platformUsers, sharedSocials } = useUser()
@@ -53,6 +54,8 @@ const AccountConnections = () => {
         {orderedSocials.map((platform) =>
           platform === "EMAIL" ? (
             <EmailAddress key={"EMAIL"} />
+          ) : platform === "FARCASTER" ? (
+            <FarcasterProfile key={"FARCASTER"} />
           ) : (
             <SocialAccount key={platform} type={platform} />
           )

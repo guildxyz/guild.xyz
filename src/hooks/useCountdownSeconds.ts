@@ -1,11 +1,20 @@
 import { useState } from "react"
 
-const useCountdownSeconds = (seconds: number) => {
-  const [sec, setSec] = useState(seconds)
+const useCountdownSeconds = (seconds?: number, onCountdown?: () => void) => {
+  const [sec, setSec] = useState(seconds ?? 0)
+  const [countdownInterval, setCountdownInterval] = useState<NodeJS.Timeout>()
   const [isCountingDown, setIsCountingDown] = useState(false)
 
+  const stop = () => {
+    if (countdownInterval) {
+      clearInterval(countdownInterval)
+    }
+  }
+
   return {
-    start: () => {
+    start: (s?: number) => {
+      stop()
+      setSec(s)
       setIsCountingDown(true)
 
       const interval = setInterval(() => {
@@ -15,13 +24,17 @@ const useCountdownSeconds = (seconds: number) => {
             setIsCountingDown(false)
             setSec(seconds)
             clearInterval(interval)
+            onCountdown?.()
           }
           return newVal
         })
       }, 1000)
+
+      setCountdownInterval(interval)
     },
     seconds: sec,
     isCountingDown,
+    stop,
   }
 }
 
