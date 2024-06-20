@@ -36,6 +36,7 @@ import {
   goerli,
   harmonyOne,
   kava,
+  klaytn,
   linea,
   liskSepolia,
   lukso,
@@ -55,6 +56,7 @@ import {
   scrollSepolia,
   sepolia,
   shimmer,
+  taiko,
   x1Testnet,
   zetachain,
   zetachainAthensTestnet,
@@ -632,6 +634,22 @@ const CHAIN_CONFIG: Record<Chain, GuildChain> = {
       dark: "/networkLogos/cyber.svg",
     },
   },
+  TAIKO: {
+    ...generateChainConfig(taiko as ViemChain, ETH_ICON),
+    iconUrl: "/networkLogos/taiko-katla.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/taiko-katla.svg",
+      dark: "/networkLogos/taiko-katla.svg",
+    },
+  },
+  KLAYTN: {
+    ...generateChainConfig(klaytn as ViemChain, ETH_ICON),
+    iconUrl: "/networkLogos/klaytn.svg",
+    blockExplorerIconUrl: {
+      light: "/networkLogos/klaytn.svg",
+      dark: "/networkLogos/klaytn.svg",
+    },
+  },
 }
 
 enum Chains {
@@ -693,6 +711,8 @@ enum Chains {
   OP_BNB = opBNB.id,
   FORM_TESTNET = formTestnet.id,
   CYBER = cyber.id,
+  TAIKO = taiko.id,
+  KLAYTN = klaytn.id,
 }
 
 export type Chain = keyof typeof Chains
