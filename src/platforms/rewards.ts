@@ -1,18 +1,19 @@
-import twitterRewardV1, { twitterReward } from "platforms/Twitter"
+import contractCallReward from "platforms/ContractCall"
+import discordReward from "platforms/Discord"
 import emailReward from "platforms/Email"
-import telegramReward from "platforms/Telegram"
-import tokenReward from "platforms/Token"
-import gatherTownReward from "platforms/Gather"
+import farcasterReward from "platforms/Farcaster"
 import formReward from "platforms/Forms"
+import gatherTownReward from "platforms/Gather"
+import githubReward from "platforms/Github"
+import googleReward from "platforms/Google"
+import poapReward from "platforms/Poap"
 import pointsReward from "platforms/Points"
 import polygonIdReward from "platforms/PolygonID"
-import uniqueTextReward from "platforms/UniqueText"
 import textReward from "platforms/SecretText"
-import contractCallReward from "platforms/ContractCall"
-import googleReward from "platforms/Google"
-import discordReward from "platforms/Discord"
-import githubReward from "platforms/Github"
-import poapReward from "platforms/Poap"
+import telegramReward from "platforms/Telegram"
+import tokenReward from "platforms/Token"
+import twitterRewardV1, { twitterReward } from "platforms/Twitter"
+import uniqueTextReward from "platforms/UniqueText"
 
 export default {
   TWITTER_V1: twitterRewardV1,
@@ -31,6 +32,7 @@ export default {
   DISCORD: discordReward,
   GITHUB: githubReward,
   POAP: poapReward,
+  FARCASTER: farcasterReward,
 } as const satisfies Partial<Rewards>
 
 // TODO: resolve duplication by renaming rewards.ts to index.ts and updating imports
@@ -49,7 +51,6 @@ export const CAPACITY_TIME_PLATFORMS: PlatformName[] = [
   "ERC20",
 ] as const
 
-import type { GuildPlatformWithOptionalId, RoleFormType } from "types"
 import type { ThemingProps } from "@chakra-ui/react"
 import type { RewardProps } from "components/[guild]/RoleCard/components/Reward"
 import type { IconProps } from "phosphor-react"
@@ -59,6 +60,7 @@ import type {
   PropsWithChildren,
   RefAttributes,
 } from "react"
+import type { GuildPlatformWithOptionalId, RoleFormType } from "types"
 
 export type CardSettingsComponent = () => JSX.Element
 
