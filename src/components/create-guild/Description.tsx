@@ -1,9 +1,9 @@
 import { FormControl, FormLabel, Textarea } from "@chakra-ui/react"
+import { EditGuildForm } from "components/[guild]/EditGuild/EditGuildDrawer"
 import { useFormContext } from "react-hook-form"
-import { GuildFormType } from "types"
 
 const Description = ({ isDisabled = false, ...rest }): JSX.Element => {
-  const { register } = useFormContext<GuildFormType>()
+  const { register } = useFormContext<EditGuildForm>()
 
   return (
     <FormControl isDisabled={isDisabled} {...rest}>

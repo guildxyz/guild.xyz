@@ -21,7 +21,7 @@ import EntryChannel from "./EntryChannel"
 import PanelBody from "./PanelBody"
 import PanelButton from "./PanelButton"
 
-type DiscordEmbedForm = {
+export type DiscordEmbedForm = {
   channelId: string
   serverId: string
   title: string

@@ -645,34 +645,6 @@ type RoleFormType = Partial<
   } & { name: string }
 >
 
-type GuildFormType = Partial<
-  Pick<
-    Guild,
-    | "id"
-    | "urlName"
-    | "name"
-    | "imageUrl"
-    | "description"
-    | "theme"
-    | "contacts"
-    | "featureFlags"
-    | "tags"
-    | "eventSources"
-  >
-> & {
-  guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
-  roles?: Array<RoleFormType>
-  logic?: Logic
-  requirements?: Requirement[]
-  socialLinks?: Record<string, string>
-  admins?: Array<{
-    address: string
-    id?: number
-    isOwner?: boolean
-  }>
-  eventSources?: Record<EventSourcesKey, string>
-}
-
 type Group = {
   id: number
   urlName: string
@@ -830,7 +802,6 @@ export type {
   Guild,
   GuildAdmin,
   GuildBase,
-  GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
   GuildPlatformWithOptionalId,

@@ -1,4 +1,5 @@
 import { ChakraProps, Collapse, Stack, Wrap } from "@chakra-ui/react"
+import { Schemas } from "@guildxyz/types"
 import LogicDivider from "components/[guild]/LogicDivider"
 import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
@@ -7,7 +8,7 @@ import useToast from "hooks/useToast"
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { GuildFormType, Requirement } from "types"
+import { Requirement } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
@@ -19,7 +20,7 @@ type Props = {
 }
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
-  const { getValues, watch } = useFormContext<GuildFormType["roles"][number]>()
+  const { getValues, watch } = useFormContext<Schemas["RoleCreationPayload"]>()
 
   const logic = useWatch({ name: "logic" })
 
@@ -86,13 +87,14 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
             </CardMotionWrapper>
           ) : (
             controlledFields.map((field, i) => {
-              const type: RequirementType = getValues(`requirements.${i}.type`)
+              const type = getValues(`requirements.${i}.type`)
 
               return (
                 <CardMotionWrapper key={field.formFieldId}>
                   <RequirementEditableCard
-                    type={type}
-                    field={field as Requirement}
+                    // TODO: remove these type conversions once we use Zod schemas everywhere
+                    type={type as unknown as RequirementType}
+                    field={field as unknown as Requirement}
                     index={i}
                     removeRequirement={(idx) => {
                       /**

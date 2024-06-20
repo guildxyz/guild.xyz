@@ -15,6 +15,7 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
+import { GuildContact, Schemas } from "@guildxyz/types"
 import UrlName from "components/[guild]/EditGuild/components/UrlName"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { useThemeContext } from "components/[guild]/ThemeContext"
@@ -35,8 +36,9 @@ import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import dynamic from "next/dynamic"
 import { useCallback } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { GuildFormType } from "types"
+import { EventSourcesKey, GuildTags } from "types"
 import handleSubmitDirty from "utils/handleSubmitDirty"
+import { Chain } from "wagmiConfig/chains"
 import useGuildPermission from "../hooks/useGuildPermission"
 import useUser from "../hooks/useUser"
 import LeaveButton from "../LeaveButton"
@@ -46,6 +48,7 @@ import ChangingGuildPinDesignAlert from "./components/ChangingGuildPinDesignAler
 import ColorPicker from "./components/ColorPicker"
 import DeleteGuildButton from "./components/DeleteGuildButton"
 import Events from "./components/Events/Events"
+import { FeatureFlag } from "./components/FeatureFlags"
 import HideFromExplorerToggle from "./components/HideFromExplorerToggle"
 import SocialLinks from "./components/SocialLinks"
 import TagManager from "./components/TagManager"
@@ -58,6 +61,20 @@ type Props = {
 }
 
 const DynamicFeatureFlags = dynamic(() => import("./components/FeatureFlags"))
+
+export type EditGuildForm = Schemas["GuildUpdatePayload"] & {
+  admins: { address: string }[]
+  contacts: (Omit<GuildContact, "id" | "guildId"> & { id?: GuildContact["id"] })[]
+  guildPin?: {
+    chain: Chain | "FUEL"
+    isActive: boolean
+  }
+  // We can delete an event source by passing "null" to it, that's why we need this custom type here
+  eventSources?: Partial<Record<EventSourcesKey, string | null>>
+  // Superadmin-only fields
+  featureFlags?: FeatureFlag[]
+  tags?: GuildTags[]
+}
 
 const EditGuildDrawer = ({
   finalFocusRef,
@@ -96,24 +113,26 @@ const EditGuildDrawer = ({
         }
       : {},
     showMembers,
-    admins: admins ?? [],
+    admins: admins?.map(({ address }) => ({ address })) ?? [],
     urlName,
     hideFromExplorer,
-    contacts,
+    contacts: contacts || [],
     socialLinks,
     featureFlags: isSuperAdmin ? featureFlags : undefined,
     tags: savedTags,
     eventSources: {
-      EVENTBRITE: eventSources ? eventSources.EVENTBRITE : null,
-      LUMA: eventSources ? eventSources.LUMA : null,
-      LINK3: eventSources ? eventSources.LINK3 : null,
+      EVENTBRITE: eventSources?.EVENTBRITE || null,
+      LUMA: eventSources?.LUMA || null,
+      LINK3: eventSources?.LINK3 || null,
     },
-  }
-  const methods = useForm<GuildFormType>({
+  } satisfies EditGuildForm
+
+  const methods = useForm<EditGuildForm>({
     mode: "all",
     defaultValues,
   })
-  const { control, setValue, reset, formState } = methods
+
+  const { control, reset, formState } = methods
 
   const { onSubmit: onTagsSubmit } = useEditTags()
 
@@ -184,8 +203,9 @@ const EditGuildDrawer = ({
   const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
     () => {
       handleSubmitDirty(methods)((data) => {
-        onSubmit({ ...data, tags: undefined })
-        if (data.tags) onTagsSubmit(data.tags)
+        const { tags, ...dataWithoutTags } = data
+        onSubmit(dataWithoutTags)
+        if (tags) onTagsSubmit(tags)
       })()
     },
     backgroundUploader.isUploading || iconUploader.isUploading
