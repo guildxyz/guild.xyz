@@ -1,22 +1,27 @@
 import {
+  Box,
+  Center,
   FormControl,
   FormHelperText,
   FormLabel,
   HStack,
   Input,
   Stack,
+  useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react"
+import { DotLottieCommonPlayer, DotLottiePlayer } from "@dotlottie/react-player"
 import { Schemas } from "@guildxyz/types"
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
-import Button from "components/common/Button"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import usePinata from "hooks/usePinata"
+import { useRef } from "react"
 import { useFormContext } from "react-hook-form"
+import CreateGuildButton from "./CreateGuildButton"
 import IconSelector from "./IconSelector"
 import Name from "./Name"
-import useCreateGuild from "./hooks/useCreateGuild"
 
 export type CreateGuildFormType = Pick<
   Schemas["GuildCreationPayload"],
@@ -46,7 +51,6 @@ const CreateGuildForm = () => {
     register,
     setValue,
     formState: { errors },
-    handleSubmit,
   } = useFormContext<CreateGuildFormType>()
 
   const iconUploader = usePinata({
@@ -55,11 +59,34 @@ const CreateGuildForm = () => {
     control,
   })
 
-  const { onSubmit, isLoading } = useCreateGuild()
+  const bgColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
+  const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
   return (
-    <Card py={6} px={{ base: 5, md: 6 }} position="relative" overflow="hidden">
-      <Stack spacing={8}>
+    <Card
+      pt={12}
+      pb={6}
+      px={{ base: 5, md: 6 }}
+      mb={16}
+      position="relative"
+      overflow="hidden"
+      _before={{
+        content: '""',
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        bg: `radial-gradient(circle at 50% 75%, ${bgColor} 70%, transparent), url('/landing/${bgFile}')`,
+        bgSize: "100% auto, 150% auto",
+        bgRepeat: "no-repeat",
+        bgPosition: "top 0.5rem center",
+        opacity: "0.07",
+      }}
+    >
+      <Stack spacing={6}>
+        <CreateGuildAnimation />
+
         <FormControl isRequired>
           <FormLabel>Logo and name</FormLabel>
           <HStack alignItems="start">
@@ -94,19 +121,43 @@ const CreateGuildForm = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button
-          colorScheme="green"
-          ml="auto"
-          size="lg"
-          w="full"
-          isLoading={isLoading}
-          loadingText="Creating guild"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Create guild
-        </Button>
+        <CreateGuildButton />
       </Stack>
     </Card>
+  )
+}
+
+const CreateGuildAnimation = () => {
+  const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
+  const lottiePlayer = useRef<DotLottieCommonPlayer>(null)
+
+  return (
+    <Center>
+      <Box
+        maxW="max-content"
+        onMouseEnter={() => {
+          lottiePlayer.current?.setDirection(-1)
+          lottiePlayer.current?.play()
+        }}
+        onMouseLeave={() => {
+          lottiePlayer.current?.setDirection(1)
+          lottiePlayer.current?.play()
+        }}
+      >
+        <DotLottiePlayer
+          ref={lottiePlayer}
+          autoplay
+          speed={1}
+          src="/logo.lottie"
+          style={{
+            marginBottom: 24,
+            height: logoSize,
+            width: logoSize,
+            color: "white",
+          }}
+        />
+      </Box>
+    </Center>
   )
 }
 
