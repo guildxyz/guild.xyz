@@ -48,13 +48,7 @@ const FeesTable = ({
       </Button>
 
       <Collapse in={isOpen} animateOpacity>
-        <TableContainer
-          borderWidth={1}
-          borderRadius="xl"
-          mt={2}
-          bgColor={bgColor}
-          whiteSpace={"normal"}
-        >
+        <TableContainer borderWidth={1} borderRadius="xl" mt={2} bgColor={bgColor}>
           <Table variant="simple" size="sm" color="gray">
             <Tbody>{children}</Tbody>
           </Table>
