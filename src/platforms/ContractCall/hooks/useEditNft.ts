@@ -2,6 +2,7 @@ import type { ExtractAbiFunctions } from "abitype"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import { CreateNftFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/NftDataForm"
 import { generateGuildRewardNFTMetadata } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -47,6 +48,15 @@ const useEditNft = ({
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { data: walletClient } = useWalletClient()
 
+  console.log(
+    guildPlatform?.platformGuildData?.chain,
+    guildPlatform?.platformGuildData?.contractAddress
+  )
+  const { refetch } = useNftDetails(
+    guildPlatform?.platformGuildData?.chain,
+    guildPlatform?.platformGuildData?.contractAddress
+  )
+
   const editNftContractCalls = async ({
     fields,
     dirtyFields,
@@ -56,7 +66,6 @@ const useEditNft = ({
   }) => {
     const data = getNftDataFormDirtyFields(fields, dirtyFields)
 
-    console.log("editNftContractCalls", { fields, dirtyFields, data })
     const { contractData, apiData } = separateContractAndAPIData(data)
 
     if (Object.keys(contractData).length > 0) {
@@ -96,7 +105,9 @@ const useEditNft = ({
 
   const editNft = useSubmit(editNftContractCalls, {
     onSuccess: (apiData) => {
-      console.log("dat", apiData)
+      console.log("on success")
+      // refetch()
+
       if (!Object.keys(apiData.rolePlatform).length) {
         showSuccessToast()
         onSuccess()
@@ -139,7 +150,6 @@ const getNftDataFormDirtyFields = (
   if (hasDirtyAttributes) {
     filteredData.attributes = attributes
   }
-  console.log("getNftDataFormDirtyFields", { attributes, dirtyAttributes })
 
   for (const key of Object.keys(dirtyRootFields)) {
     if (!!dirtyRootFields[key]) filteredData[key] = rootFields[key]

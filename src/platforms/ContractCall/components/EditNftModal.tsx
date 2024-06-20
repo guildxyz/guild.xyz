@@ -132,18 +132,17 @@ const EditNftForm = ({
     onSuccess,
   })
 
-  useEffect(() => {
-    console.log(methods.formState.dirtyFields)
-  }, [methods.formState.dirtyFields])
-
   const handleSubmitCallback = useCallback(
     (data: CreateNftFormType) => {
       console.log("modal", { data, dirt: methods.formState.dirtyFields })
       return onSubmit({
         fields: {
           ...data,
-          startTime: datetimeLocalToIsoString(data.startTime),
-          endTime: datetimeLocalToIsoString(data.endTime),
+          startTime:
+            (data.startTime && datetimeLocalToIsoString(data.startTime)) ??
+            undefined,
+          endTime:
+            (data.endTime && datetimeLocalToIsoString(data.endTime)) ?? undefined,
         },
         dirtyFields: methods.formState.dirtyFields,
       })
