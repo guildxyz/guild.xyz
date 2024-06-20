@@ -19,7 +19,7 @@ import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { GuildPlatform } from "types"
 import { formatUnits } from "viem"
@@ -133,15 +133,20 @@ const EditNftForm = ({
   })
 
   const handleSubmitCallback = useCallback(
-    (data: CreateNftFormType) =>
-      onSubmit({
+    (data: CreateNftFormType) => {
+      console.log("modal", { data, dirt: methods.formState.dirtyFields })
+      return onSubmit({
         fields: {
           ...data,
-          startTime: datetimeLocalToIsoString(data.startTime),
-          endTime: datetimeLocalToIsoString(data.endTime),
+          startTime:
+            (data.startTime && datetimeLocalToIsoString(data.startTime)) ??
+            undefined,
+          endTime:
+            (data.endTime && datetimeLocalToIsoString(data.endTime)) ?? undefined,
         },
         dirtyFields: methods.formState.dirtyFields,
-      }),
+      })
+    },
     [methods.formState.dirtyFields, onSubmit]
   )
 

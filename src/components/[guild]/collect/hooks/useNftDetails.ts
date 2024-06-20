@@ -47,6 +47,7 @@ const useNftDetails = (chain: Chain, address: `0x${string}`) => {
     relevantGuildPlatform?.platformGuildData as PlatformGuildData["CONTRACT_CALL"]
 
   const shouldFetch = Boolean(chain && address)
+  // console.log({ shouldFetch})
 
   const {
     data: nftDetails,

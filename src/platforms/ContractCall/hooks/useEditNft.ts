@@ -2,6 +2,7 @@ import type { ExtractAbiFunctions } from "abitype"
 import useEditRolePlatform from "components/[guild]/AccessHub/hooks/useEditRolePlatform"
 import { CreateNftFormType } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/components/NftDataForm"
 import { generateGuildRewardNFTMetadata } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import pinFileToIPFS from "hooks/usePinata/utils/pinataUpload"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -46,6 +47,15 @@ const useEditNft = ({
 
   const { guildPlatform } = useGuildPlatform(guildPlatformId)
   const { data: walletClient } = useWalletClient()
+
+  console.log(
+    guildPlatform?.platformGuildData?.chain,
+    guildPlatform?.platformGuildData?.contractAddress
+  )
+  const { refetch } = useNftDetails(
+    guildPlatform?.platformGuildData?.chain,
+    guildPlatform?.platformGuildData?.contractAddress
+  )
 
   const editNftContractCalls = async ({
     fields,
@@ -95,6 +105,9 @@ const useEditNft = ({
 
   const editNft = useSubmit(editNftContractCalls, {
     onSuccess: (apiData) => {
+      console.log("on success")
+      // refetch()
+
       if (!Object.keys(apiData.rolePlatform).length) {
         showSuccessToast()
         onSuccess()
