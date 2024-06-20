@@ -65,7 +65,12 @@ const LogicFormControl = ({
 
       <HStack alignItems="start" pt="px">
         <Text as="span" flexShrink={0} pt={2}>
-          {pluralize(anyOfNum, "requirement", false)} out of {requirementCount}
+          {pluralize(
+            logic === "AND" ? requirementCount : anyOfNum,
+            "requirement",
+            false
+          )}
+          {logic === "AND" || ` out of ${requirementCount}`}
         </Text>
       </HStack>
     </Stack>
