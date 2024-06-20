@@ -61,11 +61,8 @@ const SelectRolePanel = ({
 
   const [saveAsDraft, setSaveAsDraft] = useState(false)
 
-  const isRoleSelectorDisabled = selection === "ERC20"
   const isAddRewardButtonDisabled =
-    activeTab === RoleTypeToAddTo.NEW_ROLE || isRoleSelectorDisabled
-      ? !requirements?.length
-      : !roleIds?.length
+    activeTab === RoleTypeToAddTo.NEW_ROLE ? !requirements?.length : !roleIds?.length
 
   const { RewardPreview } = rewards[selection] ?? {}
 
@@ -155,10 +152,7 @@ const SelectRolePanel = ({
         display="flex"
         flexDir="column"
       >
-        <SelectRoleOrSetRequirements
-          selectedPlatform={selection}
-          isRoleSelectorDisabled={isRoleSelectorDisabled}
-        />
+        <SelectRoleOrSetRequirements selectedPlatform={selection} />
       </ModalBody>
 
       <ModalFooter pt="6" pb="8" gap={2}>

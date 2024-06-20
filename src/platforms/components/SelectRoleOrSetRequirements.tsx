@@ -55,9 +55,6 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
   const { unregister, setValue } = useFormContext()
   const { selection, activeTab, setActiveTab } = useAddRewardContext()
 
-  const erc20Type: "REQUIREMENT_AMOUNT" | "STATIC" | null =
-    selection === "ERC20" ? data?.dynamicAmount.operation.input.type : null
-
   const handleChange = (value: RoleTypeToAddTo) => {
     if (value === RoleTypeToAddTo.NEW_ROLE) {
       unregister("roleIds")
@@ -97,11 +94,7 @@ const SelectRoleOrSetRequirements = ({ isRoleSelectorDisabled }: Props) => {
           <RoleSelector
             isGuildPlatformAlreadyInUse={!!existingGuildPlatform}
             allowMultiple={
-              selection !== "ERC20"
-                ? asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
-                : erc20Type === "STATIC"
-                ? true
-                : false
+              asRewardRestriction === PlatformAsRewardRestrictions.MULTIPLE_ROLES
             }
             roles={relevantRoles}
             onChange={(selectedRoleIds) => setValue("roleIds", selectedRoleIds)}

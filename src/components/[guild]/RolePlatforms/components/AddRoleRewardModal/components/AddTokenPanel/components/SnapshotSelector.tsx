@@ -29,7 +29,7 @@ const SnapshotSelector = () => {
     (gp) => gp.platformId === PlatformType.POINTS
   )
 
-  const { setValue: setRootValue } = useFormContext()
+  const { setValue } = useFormContext()
 
   const selectedPointsId = useWatch({ name: "data.guildPlatformId" })
 
@@ -42,7 +42,7 @@ const SnapshotSelector = () => {
 
   const handleCreateSuccess = (createdId: number) => {
     refetchSnapshots().then(() => {
-      setRootValue("snapshotId", createdId)
+      setValue("snapshotId", createdId)
     })
     onClose()
   }
@@ -60,17 +60,15 @@ const SnapshotSelector = () => {
     if (!snapshot) return
     const transformedData = transformSnapshotData(snapshot.data)
 
-    setRootValue("requirements", [
-      {
-        type: "GUILD_SNAPSHOT",
-        data: {
-          snapshot: transformedData,
-          isHidden: false,
-          guildPlatformId: selectedPointsId,
-        },
+    setValue("snapshotRequirement", {
+      type: "GUILD_SNAPSHOT",
+      data: {
+        snapshot: transformedData,
+        isHidden: false,
+        guildPlatformId: selectedPointsId,
       },
-    ])
-  }, [snapshot, selectedPointsId, setRootValue])
+    } as any)
+  }, [snapshot, selectedPointsId, setValue])
 
   const getPointPlatform = (guildPlatformId: number) =>
     guildPlatforms.find((gp) => gp.id === guildPlatformId)

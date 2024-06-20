@@ -1,3 +1,4 @@
+import { Schemas } from "@guildxyz/types"
 import { useFieldArray } from "react-hook-form"
 import { Requirement, RoleFormType } from "types"
 
@@ -24,12 +25,13 @@ const useHandleRequirementState = (methods) => {
     }
   }
 
-  const append = (req: Requirement) => {
+  const append = (req: Requirement): Schemas["RequirementCreateResponse"] => {
     const reqToAdd = { id: Date.now(), ...req }
     if (freeEntry) {
       remove(0)
     }
     addRequirement(reqToAdd)
+    return reqToAdd as any
   }
 
   return { requirements, append, remove: removeReq, update, freeEntry }

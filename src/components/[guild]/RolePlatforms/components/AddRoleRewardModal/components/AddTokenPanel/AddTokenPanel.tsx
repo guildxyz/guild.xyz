@@ -14,6 +14,8 @@ import {
 import { Schemas } from "@guildxyz/types"
 import { useTokenRewards } from "components/[guild]/AccessHub/hooks/useTokenRewards"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
+import { useAddRewardContext } from "components/[guild]/AddRewardContext"
+import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import { AddRewardPanelProps } from "platforms/rewards"
 import { FormProvider, useForm } from "react-hook-form"
 import { PlatformGuildData, PlatformType, Requirement } from "types"
@@ -46,7 +48,7 @@ export type AddTokenFormType = {
   snapshotId: number
   type: TokenRewardType
   staticValue?: number
-  requirements?: Requirement[]
+  snapshotRequirement?: Partial<Requirement>
 }
 
 const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
@@ -59,6 +61,9 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
     },
   })
   useAddRewardDiscardAlert(methods.formState.isDirty)
+
+  const { onAddRequirement } = useRequirementHandlerContext()
+  const { targetRoleId } = useAddRewardContext()
 
   const steps = [
     { title: "Set token", content: SetTokenStep },
@@ -73,7 +78,7 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
   const accessedTokens = useTokenRewards()
 
-  const constructSubmitData = (_data) => {
+  const constructSubmitData = async (_data) => {
     const platform = accessedTokens.find(
       (guildPlatform) =>
         guildPlatform.platformId === PlatformType.ERC20 &&
@@ -81,6 +86,8 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
         guildPlatform.platformGuildData.tokenAddress.toLowerCase() ===
           _data.tokenAddress?.toLowerCase()
     )
+
+    const createdRequirement = await onAddRequirement(_data.snapshotRequirement)
 
     const dynamicAmount = {
       ...(_data.type === TokenRewardType.DYNAMIC_SNAPSHOT && {
@@ -92,7 +99,8 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
           },
           input: {
             type: "REQUIREMENT_AMOUNT",
-            // Will be filled after role creation
+            roleId: targetRoleId,
+            requirementId: createdRequirement?.id || null,
           },
         },
       }),
@@ -134,15 +142,13 @@ const AddTokenPanel = ({ onAdd }: AddRewardPanelProps) => {
 
     return {
       ...guildPlatformPart,
-      ...(_data.type !== TokenRewardType.STATIC && {
-        requirements: _data.requirements,
-      }),
       ...rolePlatformPart,
     }
   }
 
-  const onSubmit = (_data) => {
-    onAdd(constructSubmitData(_data))
+  const onSubmit = async (_data) => {
+    const submitData = await constructSubmitData(_data)
+    onAdd(submitData)
   }
 
   return (

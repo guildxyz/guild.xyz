@@ -1,3 +1,4 @@
+import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRequirements from "components/[guild]/hooks/useRequirements"
 import useShowErrorToast from "hooks/useShowErrorToast"
@@ -15,7 +16,9 @@ const useCreateRequirement = (
   const showErrorToast = useShowErrorToast()
 
   const fetcherWithSign = useFetcherWithSign()
-  const createRequirement = async (body: Requirement): Promise<Requirement> =>
+  const createRequirement = async (
+    body: Requirement
+  ): Promise<Schemas["RequirementCreateResponse"]> =>
     fetcherWithSign([
       `/v2/guilds/${guildId}/roles/${roleId}/requirements`,
       {
@@ -26,7 +29,7 @@ const useCreateRequirement = (
 
   return useSubmit<
     Omit<Requirement, "id" | "roleId" | "name" | "symbol">,
-    Requirement & { deletedRequirements?: number[] }
+    Schemas["RequirementCreateResponse"]
   >(createRequirement, {
     onSuccess: (response) => {
       mutateRequirements(
@@ -36,7 +39,7 @@ const useCreateRequirement = (
               ? !response.deletedRequirements.includes(req.id)
               : true
           ),
-          response,
+          response as Requirement,
         ],
         { revalidate: false }
       )
