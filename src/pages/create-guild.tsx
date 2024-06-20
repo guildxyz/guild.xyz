@@ -8,7 +8,7 @@ import CreateGuildForm, {
   CreateGuildFormType,
 } from "components/create-guild/CreateGuildForm"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useSetAtom } from "jotai"
+import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import getRandomInt from "utils/getRandomInt"
@@ -73,12 +73,14 @@ const CreateGuildPage = (): JSX.Element => {
   })
 
   const { isWeb3Connected } = useWeb3ConnectionManager()
-  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
+  const [isWalletSelectorModalOpen, setIsWalletSelectorModalOpen] = useAtom(
+    walletSelectorModalAtom
+  )
 
   useEffect(() => {
-    if (isWeb3Connected) return
+    if (isWeb3Connected || isWalletSelectorModalOpen) return
     setIsWalletSelectorModalOpen(true)
-  }, [isWeb3Connected, setIsWalletSelectorModalOpen])
+  }, [isWeb3Connected, isWalletSelectorModalOpen, setIsWalletSelectorModalOpen])
 
   return (
     <ClientOnly>
