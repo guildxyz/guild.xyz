@@ -3,18 +3,17 @@ import {
   FormHelperText,
   FormLabel,
   HStack,
+  Input,
   Stack,
-  useBreakpointValue,
-  useColorModeValue,
 } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
+import FormErrorMessage from "components/common/FormErrorMessage"
 import usePinata from "hooks/usePinata"
 import { useFormContext } from "react-hook-form"
-import ContactInfo from "./BasicInfo/components/ContactInfo"
 import IconSelector from "./IconSelector"
 import Name from "./Name"
 import useCreateGuild from "./hooks/useCreateGuild"
@@ -42,7 +41,13 @@ const getColorByImage = (imageUrl: string) =>
   })
 
 const CreateGuildForm = () => {
-  const { control, setValue, handleSubmit } = useFormContext<CreateGuildFormType>()
+  const {
+    control,
+    register,
+    setValue,
+    formState: { errors },
+    handleSubmit,
+  } = useFormContext<CreateGuildFormType>()
 
   const iconUploader = usePinata({
     fieldToSetOnSuccess: "imageUrl",
@@ -50,39 +55,14 @@ const CreateGuildForm = () => {
     control,
   })
 
-  const bgColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
-  const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
-  const bg = useBreakpointValue({
-    md: `linear-gradient(to right, ${bgColor} 70%, transparent), url('/landing/${bgFile}')`,
-  })
-
   const { onSubmit, isLoading } = useCreateGuild()
 
   return (
-    <Card
-      py={6}
-      px={{ base: 5, md: 6 }}
-      position="relative"
-      overflow="hidden"
-      bg={bgColor}
-      _before={{
-        content: '""',
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bg,
-        bgSize: "cover",
-        bgRepeat: "no-repeat",
-        bgPosition: "top 7px right 7px",
-        opacity: "0.07",
-      }}
-    >
+    <Card py={6} px={{ base: 5, md: 6 }} position="relative" overflow="hidden">
       <Stack spacing={8}>
         <FormControl isRequired>
           <FormLabel>Logo and name</FormLabel>
-          <HStack alignItems="start" maxW={{ base: "full", sm: "md" }}>
+          <HStack alignItems="start">
             <IconSelector
               uploader={iconUploader}
               minW={512}
@@ -92,21 +72,33 @@ const CreateGuildForm = () => {
                 setValue("theme.color", generatedThemeColor)
               }}
             />
-            <Name />
+            <Name width="full" />
           </HStack>
         </FormControl>
 
-        <FormControl isRequired>
-          <FormLabel>Contact info</FormLabel>
+        <FormControl isRequired isInvalid={!!errors.contacts?.[0]?.contact}>
+          <FormLabel>E-mail address</FormLabel>
           <FormHelperText mb={4}>Only visible to the Guild Team</FormHelperText>
-          <ContactInfo />
+          <Input
+            {...register("contacts.0.contact", {
+              required: "This field is required",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Invalid e-mail format",
+              },
+            })}
+            size="lg"
+          />
+          <FormErrorMessage>
+            {errors.contacts?.[0]?.contact?.message}
+          </FormErrorMessage>
         </FormControl>
 
         <Button
           colorScheme="green"
           ml="auto"
           size="lg"
-          w={{ base: "full", sm: "max-content" }}
+          w="full"
           isLoading={isLoading}
           loadingText="Creating guild"
           onClick={handleSubmit(onSubmit)}

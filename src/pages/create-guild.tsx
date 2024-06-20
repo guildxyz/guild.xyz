@@ -69,7 +69,7 @@ const CreateGuildPage = (): JSX.Element => {
 
   return (
     <FormProvider {...methods}>
-      <Layout.Root>
+      <Layout.Root maxWidth="sizes.xl">
         <CreateGuildHead />
         <Layout.HeaderSection>
           <CreateGuildBackground />
