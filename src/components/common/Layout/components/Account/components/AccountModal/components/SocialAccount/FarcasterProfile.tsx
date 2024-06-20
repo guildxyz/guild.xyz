@@ -29,6 +29,15 @@ import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
 
+// Polling will only start after this much time
+const APPROVAL_POLL_INITIAL_DELAY_MS = 15_000
+// Delay between polls
+const APPROVAL_POLL_INTERVAL_MS = 5000
+// Poll ends, and a new QR is generated this much before the actual deadline
+const POLL_EARLY_END_SEC = 120
+// Enable the manual QR regenation button, when less than this muc seconds is left
+const ENABLE_REGENERATE_BUTTON_AT_SEC = 10 * 60
+
 const FarcasterProfile = () => {
   const { farcasterProfiles } = useUser()
   const isConnected = farcasterProfiles?.length > 0
@@ -75,12 +84,12 @@ const ConnectFarcasterButton = ({
   }
 
   const { seconds, start, stop } = useCountdownSeconds(undefined, onRegenerate)
-  const shouldEnableRegenerateButton = seconds < 10 * 60
+  const shouldEnableRegenerateButton = seconds < ENABLE_REGENERATE_BUTTON_AT_SEC
 
   const signedKeyRequest = useSubmitWithSign(submitSignedKeyRequest, {
     onSuccess: ({ deadlineRelative }) => {
       const deadline = Date.now() + deadlineRelative
-      start(Math.floor(deadlineRelative / 1000) - 120) // 2 minuter earlier just for good measure
+      start(Math.floor(deadlineRelative / 1000) - POLL_EARLY_END_SEC) // 2 minuter earlier just for good measure
 
       if (pollInterval) {
         clearInterval(pollInterval)
@@ -110,10 +119,10 @@ const ConnectFarcasterButton = ({
               }
             })
             .catch(() => {})
-        }, 5000)
+        }, APPROVAL_POLL_INTERVAL_MS)
 
         setPollInterval(interval)
-      }, 15_000)
+      }, APPROVAL_POLL_INITIAL_DELAY_MS)
 
       onOpen()
     },
