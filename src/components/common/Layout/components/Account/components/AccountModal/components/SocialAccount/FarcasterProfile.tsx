@@ -98,9 +98,12 @@ const ConnectFarcasterButton = ({
           ])
             .then((profiles) => {
               if (profiles?.length > 0) {
-                mutate((prev) => ({ ...prev, farcasterProfiles: profiles }), {
-                  revalidate: false,
-                }).then(() => {
+                mutate(
+                  (prev) => (prev ? { ...prev, farcasterProfiles: profiles } : prev),
+                  {
+                    revalidate: false,
+                  }
+                ).then(() => {
                   onApprove()
                   clearInterval(interval)
                 })
@@ -197,13 +200,17 @@ const DisconnectFarcasterButton = () => {
   const toast = useToast()
 
   const { onSubmit, isLoading } = useSubmit(
-    async (fid: number) => {
+    async (fid?: number) => {
+      if (!fid) {
+        throw new Error("Failed to disconnect Farcaster profile. FID unknown")
+      }
+
       await fetcherWithSign([
         `/v2/users/${id}/farcaster-profiles/${fid}`,
         { method: "DELETE" },
       ])
 
-      await mutate((prev) => ({ ...prev, farcasterProfiles: [] }), {
+      await mutate((prev) => (prev ? { ...prev, farcasterProfiles: [] } : prev), {
         revalidate: false,
       })
     },

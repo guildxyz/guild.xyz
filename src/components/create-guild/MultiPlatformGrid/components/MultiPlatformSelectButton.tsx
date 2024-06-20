@@ -29,7 +29,7 @@ import { CheckCircle, IconProps } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { ComponentType, RefAttributes } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, PlatformName, Rest } from "types"
+import { GuildFormType, GuildPlatform, PlatformName, Rest } from "types"
 
 export type PlatformHookType = ({
   platform,
@@ -44,19 +44,24 @@ export type PlatformHookType = ({
   rightIcon: ComponentType<IconProps & RefAttributes<SVGSVGElement>>
 }
 
+const creatablePlatforms = [
+  "DISCORD",
+  "TELEGRAM",
+  "GOOGLE",
+  "GITHUB",
+  "CONTRACT_CALL",
+  "TEXT",
+  "TWITTER",
+  "UNIQUE_TEXT",
+] as const satisfies Array<PlatformName>
+type CreatablePlatform = (typeof creatablePlatforms)[number]
+
+function isCreatablePlatform(platform: any): platform is CreatablePlatform {
+  return creatablePlatforms.includes(platform)
+}
+
 const createGuildPlatformComponents: Record<
-  Exclude<
-    PlatformName,
-    | "POAP"
-    | "TWITTER_V1"
-    | "EMAIL"
-    | "POLYGON_ID"
-    | "POINTS"
-    | "FORM"
-    | "GATHER_TOWN"
-    | "ERC20"
-    | "FARCASTER"
-  >,
+  CreatablePlatform,
   (props: { isOpen: boolean; onClose: () => void }) => JSX.Element
 > = {
   DISCORD: CreateGuildDiscord,
@@ -114,7 +119,7 @@ const MultiPlatformSelectButton = ({
     methods.setValue(
       "guildPlatforms",
       guildPlatforms.filter(
-        (guildPlatform) => guildPlatform.platformName !== platformName
+        (guildPlatform: GuildPlatform) => guildPlatform.platformName !== platformName
       )
     )
   }
@@ -132,9 +137,13 @@ const MultiPlatformSelectButton = ({
 
   const isAdded =
     (isTwitter && twitterLink) ||
-    guildPlatforms.find((platfomAdded) => platform === platfomAdded.platformName)
+    guildPlatforms.find(
+      (platfomAdded: GuildPlatform) => platform === platfomAdded.platformName
+    )
 
-  const PlatformModal = createGuildPlatformComponents[platform]
+  const PlatformModal = isCreatablePlatform(platform)
+    ? createGuildPlatformComponents[platform]
+    : null
 
   return (
     <>
@@ -229,13 +238,15 @@ const MultiPlatformSelectButton = ({
         </DisplayCard>
       </Tooltip>
 
-      <PlatformModal
-        isOpen={isOpen}
-        onClose={() => {
-          onClose()
-          captureEvent("guild creation flow > platform added", { platform })
-        }}
-      />
+      {PlatformModal && (
+        <PlatformModal
+          isOpen={isOpen}
+          onClose={() => {
+            onClose()
+            captureEvent("guild creation flow > platform added", { platform })
+          }}
+        />
+      )}
     </>
   )
 }

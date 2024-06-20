@@ -14,7 +14,9 @@ const useCountdownSeconds = (seconds?: number, onCountdown?: () => void) => {
   return {
     start: (s?: number) => {
       stop()
-      setSec(s)
+      if (typeof s === "number") {
+        setSec(s)
+      }
       setIsCountingDown(true)
 
       const interval = setInterval(() => {
@@ -22,7 +24,9 @@ const useCountdownSeconds = (seconds?: number, onCountdown?: () => void) => {
           const newVal = prev - 1
           if (newVal <= 0) {
             setIsCountingDown(false)
-            setSec(seconds)
+            if (typeof seconds === "number") {
+              setSec(seconds)
+            }
             clearInterval(interval)
             onCountdown?.()
           }
