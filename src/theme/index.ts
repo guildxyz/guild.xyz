@@ -15,9 +15,9 @@ const theme = extendTheme({
     11: "2.75rem",
   },
   fonts: {
-    body: "var(--font-inter)",
-    heading: "var(--font-inter)",
-    display: "var(--font-dystopian)",
+    body: "var(--font-inter), sans-serif",
+    heading: "var(--font-inter), sans-serif",
+    display: "var(--font-dystopian), sans-serif",
   },
   shadows: {
     outline: "0 0 0 4px rgba(170, 170, 170, 0.6)",
