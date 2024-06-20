@@ -1,6 +1,7 @@
 import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
+import ClientOnly from "components/common/ClientOnly"
 import GuildLogo from "components/common/GuildLogo"
 import { Layout } from "components/common/Layout"
 import CreateGuildForm, {
@@ -80,21 +81,23 @@ const CreateGuildPage = (): JSX.Element => {
   }, [isWeb3Connected, setIsWalletSelectorModalOpen])
 
   return (
-    <FormProvider {...methods}>
-      <Layout.Root maxWidth="sizes.xl">
-        <CreateGuildHead />
-        <Layout.HeaderSection>
-          <CreateGuildBackground />
-          <Layout.Header />
-          <CreateGuildHeadline />
-        </Layout.HeaderSection>
+    <ClientOnly>
+      <FormProvider {...methods}>
+        <Layout.Root maxWidth="sizes.xl">
+          <CreateGuildHead />
+          <Layout.HeaderSection>
+            <CreateGuildBackground />
+            <Layout.Header />
+            <CreateGuildHeadline />
+          </Layout.HeaderSection>
 
-        <Layout.MainSection>
-          <CreateGuildForm />
-        </Layout.MainSection>
-      </Layout.Root>
-      <CreateGuildDynamicDevTool />
-    </FormProvider>
+          <Layout.MainSection>
+            <CreateGuildForm />
+          </Layout.MainSection>
+        </Layout.Root>
+        <CreateGuildDynamicDevTool />
+      </FormProvider>
+    </ClientOnly>
   )
 }
 
