@@ -81,6 +81,7 @@
     "react-markdown": "^8.0.7",
     "react-papaparse": "^4.4.0",
     "react-window": "^1.8.8",
+    "remark-gfm": "^4.0.0",
     "slugify": "^1.6.5",
     "swr": "^2.2.4",
     "uuidv7": "^0.6.3",
