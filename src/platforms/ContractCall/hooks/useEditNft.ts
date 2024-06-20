@@ -56,6 +56,7 @@ const useEditNft = ({
   }) => {
     const data = getNftDataFormDirtyFields(fields, dirtyFields)
 
+    console.log("editNftContractCalls", { fields, dirtyFields, data })
     const { contractData, apiData } = separateContractAndAPIData(data)
 
     if (Object.keys(contractData).length > 0) {
@@ -95,6 +96,7 @@ const useEditNft = ({
 
   const editNft = useSubmit(editNftContractCalls, {
     onSuccess: (apiData) => {
+      console.log("dat", apiData)
       if (!Object.keys(apiData.rolePlatform).length) {
         showSuccessToast()
         onSuccess()
@@ -137,6 +139,7 @@ const getNftDataFormDirtyFields = (
   if (hasDirtyAttributes) {
     filteredData.attributes = attributes
   }
+  console.log("getNftDataFormDirtyFields", { attributes, dirtyAttributes })
 
   for (const key of Object.keys(dirtyRootFields)) {
     if (!!dirtyRootFields[key]) filteredData[key] = rootFields[key]
