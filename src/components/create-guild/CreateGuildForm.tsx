@@ -63,67 +63,67 @@ const CreateGuildForm = () => {
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
   return (
-    <Card
-      pt={12}
-      pb={6}
-      px={{ base: 5, md: 6 }}
-      mb={16}
-      position="relative"
-      overflow="hidden"
-      _before={{
-        content: '""',
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        bg: `radial-gradient(circle at 50% 75%, ${bgColor} 70%, transparent), url('/landing/${bgFile}')`,
-        bgSize: "100% auto, 150% auto",
-        bgRepeat: "no-repeat",
-        bgPosition: "top 0.5rem center",
-        opacity: "0.07",
-      }}
-    >
-      <Stack spacing={6}>
-        <CreateGuildAnimation />
+    <Stack spacing={4} mb={16}>
+      <Card
+        pt={12}
+        pb={8}
+        px={{ base: 5, md: 6 }}
+        position="relative"
+        overflow="hidden"
+        _before={{
+          content: '""',
+          position: "absolute",
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          bg: `radial-gradient(circle at 50% 75%, ${bgColor} 70%, transparent), url('/landing/${bgFile}')`,
+          bgSize: "100% auto, 150% auto",
+          bgRepeat: "no-repeat",
+          bgPosition: "top 0.5rem center",
+          opacity: "0.07",
+        }}
+      >
+        <Stack spacing={6}>
+          <CreateGuildAnimation />
 
-        <FormControl isRequired>
-          <FormLabel>Logo and name</FormLabel>
-          <HStack alignItems="start">
-            <IconSelector
-              uploader={iconUploader}
-              minW={512}
-              minH={512}
-              onGeneratedBlobChange={async (objectURL) => {
-                const generatedThemeColor = await getColorByImage(objectURL)
-                setValue("theme.color", generatedThemeColor)
-              }}
+          <FormControl isRequired>
+            <FormLabel>Logo and name</FormLabel>
+            <HStack alignItems="start">
+              <IconSelector
+                uploader={iconUploader}
+                minW={512}
+                minH={512}
+                onGeneratedBlobChange={async (objectURL) => {
+                  const generatedThemeColor = await getColorByImage(objectURL)
+                  setValue("theme.color", generatedThemeColor)
+                }}
+              />
+              <Name width="full" />
+            </HStack>
+          </FormControl>
+
+          <FormControl isRequired isInvalid={!!errors.contacts?.[0]?.contact}>
+            <FormLabel>E-mail address</FormLabel>
+            <FormHelperText mb={4}>Only visible to the Guild Team</FormHelperText>
+            <Input
+              {...register("contacts.0.contact", {
+                required: "This field is required",
+                pattern: {
+                  value: /\S+@\S+\.\S+/,
+                  message: "Invalid e-mail format",
+                },
+              })}
+              size="lg"
             />
-            <Name width="full" />
-          </HStack>
-        </FormControl>
-
-        <FormControl isRequired isInvalid={!!errors.contacts?.[0]?.contact}>
-          <FormLabel>E-mail address</FormLabel>
-          <FormHelperText mb={4}>Only visible to the Guild Team</FormHelperText>
-          <Input
-            {...register("contacts.0.contact", {
-              required: "This field is required",
-              pattern: {
-                value: /\S+@\S+\.\S+/,
-                message: "Invalid e-mail format",
-              },
-            })}
-            size="lg"
-          />
-          <FormErrorMessage>
-            {errors.contacts?.[0]?.contact?.message}
-          </FormErrorMessage>
-        </FormControl>
-
-        <CreateGuildButton />
-      </Stack>
-    </Card>
+            <FormErrorMessage>
+              {errors.contacts?.[0]?.contact?.message}
+            </FormErrorMessage>
+          </FormControl>
+        </Stack>
+      </Card>
+      <CreateGuildButton />
+    </Stack>
   )
 }
 

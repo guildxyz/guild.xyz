@@ -11,7 +11,8 @@ const CreateGuildButton = () => {
     <Button
       colorScheme="green"
       ml="auto"
-      size="lg"
+      size="xl"
+      borderRadius="2xl"
       w="full"
       isLoading={isLoading}
       loadingText="Creating guild"
