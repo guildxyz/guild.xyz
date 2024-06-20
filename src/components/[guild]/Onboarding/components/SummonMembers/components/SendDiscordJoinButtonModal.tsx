@@ -16,11 +16,18 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import { Modal } from "components/common/Modal"
 import useServerData from "hooks/useServerData"
 import { FormProvider, useForm } from "react-hook-form"
-import { SummonMembersForm } from "../SummonMembers"
 import useSendJoin from "../hooks/useSendJoin"
 import EntryChannel from "./EntryChannel"
 import PanelBody from "./PanelBody"
 import PanelButton from "./PanelButton"
+
+type DiscordEmbedForm = {
+  channelId: string
+  serverId: string
+  title: string
+  description: string
+  button: string
+}
 
 const SendDiscordJoinButtonModal = ({
   isOpen,
@@ -40,7 +47,7 @@ const SendDiscordJoinButtonModal = ({
     data: { channels },
   } = useServerData(serverId)
 
-  const methods = useForm<SummonMembersForm>({
+  const methods = useForm<DiscordEmbedForm>({
     mode: "onSubmit",
     defaultValues: {
       title: "Verify your wallet",

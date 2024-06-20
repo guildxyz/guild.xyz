@@ -18,11 +18,9 @@ import SetVisibility, {
   type SetVisibilityForm,
 } from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
-import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import DiscardAlert from "components/common/DiscardAlert"
 import DrawerHeader from "components/common/DrawerHeader"
-import OnboardingMarker from "components/common/OnboardingMarker"
 import Section from "components/common/Section"
 import Description from "components/create-guild/Description"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
@@ -67,7 +65,6 @@ const FOOTER_OFFSET = 76
 const EditRole = ({ roleId }: Props): JSX.Element => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const btnRef = useRef()
-  const { captureEvent } = usePostHogContext()
 
   const { roles } = useGuild()
   const {
@@ -185,22 +182,14 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
 
   return (
     <>
-      <OnboardingMarker
-        step={3}
-        onClick={() => {
-          captureEvent("guild creation flow > pulse marker: Edit role clicked")
-          handleOpen()
-        }}
-      >
-        <IconButton
-          ref={btnRef}
-          icon={<Icon as={PencilSimple} />}
-          size="sm"
-          rounded="full"
-          aria-label="Edit role"
-          onClick={handleOpen}
-        />
-      </OnboardingMarker>
+      <IconButton
+        ref={btnRef}
+        icon={<Icon as={PencilSimple} />}
+        size="sm"
+        rounded="full"
+        aria-label="Edit role"
+        onClick={handleOpen}
+      />
 
       <Drawer
         isOpen={isOpen}
@@ -309,14 +298,10 @@ const EditRole = ({ roleId }: Props): JSX.Element => {
   )
 }
 
-const EditRoleWrapper = ({ roleId }) => {
+const EditRoleWrapper = ({ roleId }: Props) => {
   const { isDetailed } = useGuild()
   if (!isDetailed)
-    return (
-      <OnboardingMarker step={3}>
-        <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
-      </OnboardingMarker>
-    )
+    return <IconButton size="sm" rounded="full" aria-label="Edit role" isLoading />
 
   return <EditRole roleId={roleId} />
 }
