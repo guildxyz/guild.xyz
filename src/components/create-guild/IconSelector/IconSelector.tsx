@@ -24,9 +24,9 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
-import React, { useEffect } from "react"
+import React, { ComponentProps, useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
-import { GuildFormType } from "types"
+import { CreateGuildFormType } from "../CreateGuildForm"
 import PhotoUploader from "./components/PhotoUploader"
 import SelectorButton from "./components/SelectorButton"
 import icons from "./icons.json"
@@ -36,11 +36,20 @@ type Props = {
   isDisabled?: boolean
   minW?: number
   minH?: number
+  onGeneratedBlobChange?: ComponentProps<
+    typeof PhotoUploader
+  >["onGeneratedBlobChange"]
 }
 
-const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
+const IconSelector = ({
+  uploader,
+  isDisabled,
+  minW,
+  minH,
+  onGeneratedBlobChange,
+}: Props) => {
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<CreateGuildFormType>()
 
   const { field } = useController({
     control,
@@ -60,7 +69,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
 
   const group = getRootProps()
   useEffect(() => {
-    const svg = field.value?.split("/").pop().split(".")[0]
+    const svg = field.value?.split("/").pop()?.split(".")[0]
     icons.map((category, i) => {
       if (category.icons.includes(Number(svg))) {
         setTabIndex(i)
@@ -73,7 +82,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
   const iconButtonActiveBgColor = useColorModeValue("gray.500", "blackAlpha.100")
 
   const tabBgColor = useColorModeValue("gray.100", "gray.600")
-  const guildLogoSxProp = useColorModeValue({ filter: "invert(0.75)" }, null)
+  const guildLogoSxProp = useColorModeValue({ filter: "invert(0.75)" }, {})
 
   return (
     <>
@@ -105,6 +114,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
                 closeModal={onClose}
                 minW={minW}
                 minH={minH}
+                onGeneratedBlobChange={onGeneratedBlobChange}
               />
               <LogicDivider logic="OR" px="0" my="5" />
               <FormControl>
@@ -134,7 +144,7 @@ const IconSelector = ({ uploader, isDisabled, minW, minH }: Props) => {
                       {icons.map((tab, index) => (
                         <Tab
                           border={0}
-                          bgColor={index === tabIndex && tabBgColor}
+                          bgColor={index === tabIndex ? tabBgColor : undefined}
                           key={index}
                           minW="max-content"
                         >

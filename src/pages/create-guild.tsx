@@ -1,13 +1,12 @@
-import { ThemeProvider } from "components/[guild]/ThemeContext"
-import { Layout } from "components/common/Layout"
-import { CreateGuildProvider } from "components/create-guild/CreateGuildContext"
-import { CreateGuildMainSection } from "components/create-guild/CreateGuildMainSection"
-import { useWatch } from "react-hook-form"
-import { useThemeContext } from "components/[guild]/ThemeContext"
+import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import GuildLogo from "components/common/GuildLogo"
+import { Layout } from "components/common/Layout"
+import CreateGuildForm, {
+  CreateGuildFormType,
+} from "components/create-guild/CreateGuildForm"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
-import { useFormContext } from "react-hook-form"
-import { GuildFormType } from "types"
+import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
+import getRandomInt from "utils/getRandomInt"
 
 function CreateGuildHead() {
   const name = useWatch({ name: "name" })
@@ -49,31 +48,48 @@ function CreateGuildHeadline() {
 }
 
 function CreateGuildDynamicDevTool() {
-  const { control } = useFormContext<GuildFormType>()
+  const { control } = useFormContext<CreateGuildFormType>()
   return <DynamicDevTool control={control} />
 }
 
-const CreateGuildPage = (): JSX.Element => (
-  <>
-    <Layout.Root>
-      <CreateGuildHead />
-      <Layout.HeaderSection>
-        <CreateGuildBackground />
-        <Layout.Header />
-        <CreateGuildHeadline />
-      </Layout.HeaderSection>
-      <CreateGuildMainSection />
-    </Layout.Root>
-    <CreateGuildDynamicDevTool />
-  </>
-)
+const CreateGuildPage = (): JSX.Element => {
+  const methods = useForm<CreateGuildFormType>({
+    mode: "all",
+    defaultValues: {
+      name: "",
+      imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+      contacts: [
+        {
+          type: "EMAIL",
+          contact: "",
+        },
+      ],
+    },
+  })
+
+  return (
+    <FormProvider {...methods}>
+      <Layout.Root>
+        <CreateGuildHead />
+        <Layout.HeaderSection>
+          <CreateGuildBackground />
+          <Layout.Header />
+          <CreateGuildHeadline />
+        </Layout.HeaderSection>
+
+        <Layout.MainSection>
+          <CreateGuildForm />
+        </Layout.MainSection>
+      </Layout.Root>
+      <CreateGuildDynamicDevTool />
+    </FormProvider>
+  )
+}
 
 const CreateGuildPageWrapper = (): JSX.Element => (
-  <CreateGuildProvider>
-    <ThemeProvider>
-      <CreateGuildPage />
-    </ThemeProvider>
-  </CreateGuildProvider>
+  <ThemeProvider>
+    <CreateGuildPage />
+  </ThemeProvider>
 )
 
 export default CreateGuildPageWrapper

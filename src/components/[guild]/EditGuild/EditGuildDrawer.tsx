@@ -11,6 +11,7 @@ import {
   FormLabel,
   HStack,
   Stack,
+  Text,
   useDisclosure,
   VStack,
 } from "@chakra-ui/react"
@@ -285,6 +286,10 @@ const EditGuildDrawer = ({
                 <Divider />
 
                 <Section title="Contact info" spacing="2">
+                  <Text colorScheme="gray">
+                    Only visible to the Guild Team to reach you with support and
+                    partnership initiatives if needed.
+                  </Text>
                   <ContactInfo />
                 </Section>
 

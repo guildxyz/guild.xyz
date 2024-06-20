@@ -1,3 +1,4 @@
+import { Schemas } from "@guildxyz/types"
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
@@ -10,7 +11,9 @@ import useToast from "hooks/useToast"
 import { useRouter } from "next/router"
 import { Guild, GuildBase, PlatformType } from "types"
 import fetcher from "utils/fetcher"
-import replacer from "utils/guildJsonReplacer"
+import getRandomInt from "utils/getRandomInt"
+import slugify from "utils/slugify"
+import { CreateGuildFormType } from "../CreateGuildForm"
 
 const useCreateGuild = ({
   onError,
@@ -44,7 +47,7 @@ const useCreateGuild = ({
     onSuccess: (response_) => {
       triggerConfetti()
 
-      captureEvent("guild creation flow > guild successfully created", {
+      captureEvent("Created guild", {
         $set: {
           createdGuild: true,
         },
@@ -83,8 +86,26 @@ const useCreateGuild = ({
 
   return {
     ...useSubmitResponse,
-    onSubmit: (data) =>
-      useSubmitResponse.onSubmit(JSON.parse(JSON.stringify(data, replacer))),
+    /**
+     * Temporarily creating a default Member role, later the users will be able to
+     * pick from Guild Templates
+     */
+    onSubmit: (data: CreateGuildFormType) =>
+      useSubmitResponse.onSubmit({
+        ...data,
+        urlName: slugify(data.name),
+        roles: [
+          {
+            name: "Member",
+            imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+            requirements: [
+              {
+                type: "FREE",
+              },
+            ],
+          },
+        ],
+      } satisfies Schemas["GuildCreationPayload"]),
   }
 }
 
