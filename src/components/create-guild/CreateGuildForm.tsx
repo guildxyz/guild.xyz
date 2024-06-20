@@ -128,7 +128,7 @@ const CreateGuildForm = () => {
 }
 
 const CreateGuildAnimation = () => {
-  const logoSize = useBreakpointValue({ base: 64, md: 80, lg: 112 })
+  const logoSize = useBreakpointValue({ base: 48, md: 64, lg: 80 })
   const lottiePlayer = useRef<DotLottieCommonPlayer>(null)
   const logoColor = useColorModeValue("gray.800", "white")
 
