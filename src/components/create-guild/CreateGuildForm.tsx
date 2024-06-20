@@ -1,23 +1,18 @@
 import {
-  Box,
   Center,
   FormControl,
-  FormHelperText,
   FormLabel,
-  HStack,
   Input,
   Stack,
   useBreakpointValue,
   useColorModeValue,
 } from "@chakra-ui/react"
-import { DotLottieCommonPlayer, DotLottiePlayer } from "@dotlottie/react-player"
 import { Schemas } from "@guildxyz/types"
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import usePinata from "hooks/usePinata"
-import { useRef } from "react"
 import { useFormContext } from "react-hook-form"
 import CreateGuildButton from "./CreateGuildButton"
 import IconSelector from "./IconSelector"
@@ -61,6 +56,7 @@ const CreateGuildForm = () => {
 
   const bgColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
+  const logoSize = useBreakpointValue({ base: 28, md: 40 })
 
   return (
     <Stack spacing={4} mb={16}>
@@ -85,27 +81,26 @@ const CreateGuildForm = () => {
         }}
       >
         <Stack spacing={6}>
-          <CreateGuildAnimation />
+          <Center>
+            <IconSelector
+              uploader={iconUploader}
+              minW={512}
+              minH={512}
+              onGeneratedBlobChange={async (objectURL) => {
+                const generatedThemeColor = await getColorByImage(objectURL)
+                setValue("theme.color", generatedThemeColor)
+              }}
+              boxSize={logoSize}
+            />
+          </Center>
 
           <FormControl isRequired>
-            <FormLabel>Logo and name</FormLabel>
-            <HStack alignItems="start">
-              <IconSelector
-                uploader={iconUploader}
-                minW={512}
-                minH={512}
-                onGeneratedBlobChange={async (objectURL) => {
-                  const generatedThemeColor = await getColorByImage(objectURL)
-                  setValue("theme.color", generatedThemeColor)
-                }}
-              />
-              <Name width="full" />
-            </HStack>
+            <FormLabel>Guild name</FormLabel>
+            <Name width="full" />
           </FormControl>
 
           <FormControl isRequired isInvalid={!!errors.contacts?.[0]?.contact}>
-            <FormLabel>E-mail address</FormLabel>
-            <FormHelperText mb={4}>Only visible to the Guild Team</FormHelperText>
+            <FormLabel>Your email</FormLabel>
             <Input
               {...register("contacts.0.contact", {
                 required: "This field is required",
@@ -124,41 +119,6 @@ const CreateGuildForm = () => {
       </Card>
       <CreateGuildButton />
     </Stack>
-  )
-}
-
-const CreateGuildAnimation = () => {
-  const logoSize = useBreakpointValue({ base: 48, md: 64, lg: 80 })
-  const lottiePlayer = useRef<DotLottieCommonPlayer>(null)
-  const logoColor = useColorModeValue("gray.800", "white")
-
-  return (
-    <Center>
-      <Box
-        maxW="max-content"
-        onMouseEnter={() => {
-          lottiePlayer.current?.setDirection(-1)
-          lottiePlayer.current?.play()
-        }}
-        onMouseLeave={() => {
-          lottiePlayer.current?.setDirection(1)
-          lottiePlayer.current?.play()
-        }}
-      >
-        <DotLottiePlayer
-          ref={lottiePlayer}
-          autoplay
-          speed={1}
-          src="/logo.lottie"
-          style={{
-            marginBottom: 24,
-            height: logoSize,
-            width: logoSize,
-            color: logoColor,
-          }}
-        />
-      </Box>
-    </Center>
   )
 }
 

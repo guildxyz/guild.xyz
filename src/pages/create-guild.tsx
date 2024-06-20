@@ -2,7 +2,6 @@ import { ThemeProvider, useThemeContext } from "components/[guild]/ThemeContext"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import ClientOnly from "components/common/ClientOnly"
-import GuildLogo from "components/common/GuildLogo"
 import { Layout } from "components/common/Layout"
 import CreateGuildForm, {
   CreateGuildFormType,
@@ -27,28 +26,6 @@ function CreateGuildBackground() {
 
   return (
     <Layout.Background offset={47} background={color} image={localBackgroundImage} />
-  )
-}
-
-function CreateGuildHeadline() {
-  const name = useWatch({ name: "name" })
-  const { textColor } = useThemeContext()
-  const imageUrl = useWatch({ name: "imageUrl" })
-
-  return (
-    <Layout.Headline
-      title={name || "Create Guild"}
-      image={
-        imageUrl && (
-          <GuildLogo
-            imageUrl={imageUrl}
-            size={{ base: "56px", lg: "72px" }}
-            mt={{ base: 1, lg: 2 }}
-            bgColor={textColor === "primary.800" ? "primary.800" : "transparent"}
-          />
-        )
-      }
-    />
   )
 }
 
@@ -90,7 +67,7 @@ const CreateGuildPage = (): JSX.Element => {
           <Layout.HeaderSection>
             <CreateGuildBackground />
             <Layout.Header />
-            <CreateGuildHeadline />
+            <Layout.Headline title="Begin your guild" />
           </Layout.HeaderSection>
 
           <Layout.MainSection>
