@@ -19,6 +19,12 @@ import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3Conne
 const USER_REJECTED_ERROR = "User rejected the request"
 const REJECT_BY_THE_USER_ERROR = "Reject by the user"
 
+export const isUserRejectedError = (errorMessage: any) =>
+  typeof errorMessage === "string"
+    ? errorMessage.includes(USER_REJECTED_ERROR) ||
+      errorMessage.includes(REJECT_BY_THE_USER_ERROR)
+    : false
+
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
     api_host: "/api/posthog",
@@ -121,8 +127,7 @@ const CustomPostHogProvider = ({
              * not an error actually, the user can intentionally reject a
              * transaction
              */
-            errorMessage?.includes(USER_REJECTED_ERROR) ||
-            errorMessage?.includes(REJECT_BY_THE_USER_ERROR)
+            isUserRejectedError(errorMessage)
           )
             return
 
