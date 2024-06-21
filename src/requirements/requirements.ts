@@ -327,7 +327,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/requirementLogos/poap.svg",
-    name: "Poap",
+    name: "POAP",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Poap/PoapRequirement")
     ),
