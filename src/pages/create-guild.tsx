@@ -25,7 +25,10 @@ const CreateGuildPage = (): JSX.Element => {
     },
   })
 
-  const bgColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
+  const bgColor = useColorModeValue(
+    "var(--chakra-colors-gray-400)",
+    "var(--chakra-colors-gray-700)"
+  )
   const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
 
   return (
