@@ -1,7 +1,13 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   ButtonProps,
   HStack,
+  Icon,
   IconButton,
   ModalBody,
   ModalCloseButton,
@@ -22,7 +28,7 @@ import { Modal } from "components/common/Modal"
 import useCountdownSeconds from "hooks/useCountdownSeconds"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { ArrowCounterClockwise } from "phosphor-react"
+import { ArrowCounterClockwise, DeviceMobileCamera } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { QRCodeSVG } from "qrcode.react"
 import { useState } from "react"
@@ -166,8 +172,8 @@ const ConnectFarcasterButton = ({
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
-          <ModalHeader pb={0} pr={16}>
-            Scan the QR code
+          <ModalHeader pb={0} pr={16} display={"flex"} gap={1} alignItems={"center"}>
+            <Icon boxSize={6} as={DeviceMobileCamera} /> Scan With your phone
           </ModalHeader>
           <ModalBody pt={8}>
             <VStack justifyContent="center">
@@ -182,8 +188,8 @@ const ConnectFarcasterButton = ({
                   </Box>
                 )}
               </Skeleton>
-              <HStack alignItems="center" mt={3}>
-                <Text color={"gray"}>
+              <HStack alignItems="center">
+                <Text color={"gray"} fontSize="sm">
                   The QR code will be regenerated in{" "}
                   {seconds > 60
                     ? `${Math.floor(seconds / 60)} minutes`
@@ -205,6 +211,31 @@ const ConnectFarcasterButton = ({
                   />
                 </Tooltip>
               </HStack>
+
+              <Text color={"gray"} textAlign={"center"} fontSize="sm">
+                One Farcaster account can only be connected to{" "}
+                <strong>one Guild account</strong> at a time
+              </Text>
+
+              <Accordion w="full" color="gray" allowToggle borderWidth={0}>
+                <AccordionItem borderWidth={"0 !important"}>
+                  <AccordionButton>
+                    <HStack justifyContent={"center"} w="full">
+                      <Box as="span" textAlign="center" fontSize="sm">
+                        Why does Guild request write access?
+                      </Box>
+                      <AccordionIcon />
+                    </HStack>
+                  </AccordionButton>
+                  <AccordionPanel pb={4} fontSize="sm">
+                    Guild is a Farcaster client. You can perform Farcaster actions,
+                    like follow, or recast to satisfy requirements. You can also
+                    perform these actions in external Farcaster clients, like
+                    Warpcast, but it will take some time for Guild to grant access
+                    based on actions in external clients
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
             </VStack>
           </ModalBody>
         </ModalContent>
