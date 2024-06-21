@@ -1,10 +1,7 @@
 import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { mutateGuildsCache } from "components/create-guild/hooks/useCreateRole"
-import { useYourGuilds } from "components/explorer/YourGuilds"
-import useMatchMutate from "hooks/useMatchMutate"
 import { unstable_serialize, useSWRConfig } from "swr"
-import { GuildBase, GuildPlatform, Requirement, RolePlatform } from "types"
+import { GuildPlatform, Requirement, RolePlatform } from "types"
 import { CreateRolePlatformResponse } from "./useCreateRolePlatforms"
 
 const groupRequirementsByRoleId = (
@@ -26,8 +23,6 @@ const groupRolePlatformsByRoleId = (
   }, {})
 
 const useMutateAdditionsToRoles = () => {
-  const { mutate: mutateYourGuilds } = useYourGuilds()
-  const matchMutate = useMatchMutate()
   const { mutateGuild, id: guildId } = useGuild()
   const { mutate } = useSWRConfig()
 
@@ -123,15 +118,6 @@ const useMutateAdditionsToRoles = () => {
     // TODO: create a RoleRewardCreateResponse schema in our types package
     createdRolePlatforms: CreateRolePlatformResponse[]
   ) => {
-    mutateYourGuilds((prev) => mutateGuildsCache(prev, guildId), {
-      revalidate: false,
-    })
-    matchMutate<GuildBase[]>(
-      /\/guilds\?order/,
-      (prev) => mutateGuildsCache(prev, guildId),
-      { revalidate: false }
-    )
-
     mutateRequirements(roleIds, createdRequirements)
     mutateAdditionsInGuild(roleIds, createdRequirements, createdRolePlatforms)
   }

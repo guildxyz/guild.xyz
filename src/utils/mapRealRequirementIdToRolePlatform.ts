@@ -1,17 +1,19 @@
 import { RequirementIdMap } from "hooks/useCreateRRR"
 import { RolePlatform } from "types"
 
+type Props = {
+  rolePlatform: RolePlatform
+  requirementIdMap: RequirementIdMap
+  roleId: number
+  onMissingId: () => void
+}
+
 export const mapRealRequirementIdToRolePlatform = ({
   rolePlatform,
   requirementIdMap,
   roleId,
   onMissingId,
-}: {
-  rolePlatform: RolePlatform
-  requirementIdMap: RequirementIdMap
-  roleId: number
-  onMissingId: () => void
-}) => {
+}: Props) => {
   if (!rolePlatform.dynamicAmount) return { ...rolePlatform, roleId: roleId }
 
   const input: any = rolePlatform.dynamicAmount.operation.input

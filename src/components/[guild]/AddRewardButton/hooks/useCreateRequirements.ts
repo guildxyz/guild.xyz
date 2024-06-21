@@ -1,4 +1,5 @@
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import { RequirementIdMap } from "hooks/useCreateRRR"
 import useShowErrorToast from "hooks/useShowErrorToast"
 
@@ -10,6 +11,10 @@ const useCreateRequirements = () => {
   const { id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRequirements",
+  }
 
   const createRequirements = async (
     requirements: Partial<Requirement>[],
@@ -32,7 +37,13 @@ const useCreateRequirements = () => {
             return { status: "fulfilled", result: res }
           })
           .catch((error) => {
-            showErrorToast("Failed to create a requirement")
+            showErrorToast(`Failed to create a requirement (${req.type})`)
+            captureEvent("Failed to create requirement", {
+              ...postHogOptions,
+              requirement: req,
+              roleId,
+              error,
+            })
             console.error(error)
             return { status: "rejected", result: error }
           })

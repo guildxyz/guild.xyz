@@ -1,6 +1,7 @@
 import processConnectorError from "components/[guild]/JoinModal/utils/processConnectorError"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useRoleGroup from "components/[guild]/hooks/useRoleGroup"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useJsConfetti from "components/create-guild/hooks/useJsConfetti"
 import { useYourGuilds } from "components/explorer/YourGuilds"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
@@ -45,6 +46,11 @@ const useCreateRole = ({
   const showErrorToast = useShowErrorToast()
   const triggerConfetti = useJsConfetti()
 
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRole",
+  }
+
   const fetchData = async (
     signedValidation: SignedValidation
   ): Promise<CreateRoleResponse> =>
@@ -56,6 +62,7 @@ const useCreateRole = ({
         error: processConnectorError(error_.error) ?? error_.error,
         correlationId: error_.correlationId,
       })
+      captureEvent("Failed to create role", { ...postHogOptions, error_ })
       onError?.(error_)
     },
     onSuccess: async (response_) => {

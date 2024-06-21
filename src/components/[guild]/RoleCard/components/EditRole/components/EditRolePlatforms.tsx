@@ -1,4 +1,4 @@
-import { Collapse, SimpleGrid, Skeleton, Spacer } from "@chakra-ui/react"
+import { Box, Collapse, Spacer, Spinner, Stack, Tag } from "@chakra-ui/react"
 import {
   AddRewardProvider,
   useAddRewardContext,
@@ -49,22 +49,34 @@ const EditRolePlatforms = ({ roleId }: Props) => {
         </>
       }
     >
-      <SimpleGrid spacing={{ base: 3 }}>
+      <Stack spacing={{ base: 3 }}>
         {!rolePlatforms || rolePlatforms?.length <= 0 ? (
           <AddCard title="Add reward" onClick={onOpen} />
         ) : (
           rolePlatforms.map((rolePlatform) => (
             <ExistingRolePlatformCard
               key={rolePlatform.id}
-              rolePlatform={{ ...rolePlatform, roleId: roleId }}
+              rolePlatform={{ ...rolePlatform }}
             />
           ))
         )}
-
-        <Collapse in={addWithExistingIsLoading}>
-          <Skeleton rounded={"2xl"} minH={28} w="full" h={28}></Skeleton>
-        </Collapse>
-      </SimpleGrid>
+        <Box margin={"0 auto"}>
+          <Collapse in={addWithExistingIsLoading}>
+            <Tag
+              size="lg"
+              margin={"0 auto"}
+              pr={5}
+              my={6}
+              colorScheme="blue"
+              borderRadius="full"
+              width={"fit-content"}
+            >
+              <Spinner size={"sm"} mr={2} />
+              Loading...
+            </Tag>
+          </Collapse>
+        </Box>
+      </Stack>
 
       <AddRoleRewardModal onAdd={handleAddWithExistingGuildPlatform} />
     </Section>

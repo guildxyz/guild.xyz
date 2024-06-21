@@ -24,6 +24,7 @@ import { useSWRConfig } from "swr"
 import useSWRImmutable from "swr/immutable"
 import fetcher from "utils/fetcher"
 import { useClaimedReward } from "../../../hooks/useClaimedReward"
+import remarkGfm from "remark-gfm"
 
 type ClaimResponse = {
   uniqueValue: string
@@ -147,6 +148,7 @@ const ClaimTextModal = ({
         ) : response?.uniqueValue ? (
           <Box mb="-2">
             <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
               transformLinkUri={false}
               components={reactMarkdownComponents}
             >

@@ -2,6 +2,7 @@ import useCreateRequirements from "components/[guild]/AddRewardButton/hooks/useC
 import useCreateRolePlatforms from "components/[guild]/AddRewardButton/hooks/useCreateRolePlatforms"
 import useMutateAdditionsToRoles from "components/[guild]/AddRewardButton/hooks/useMutateAdditionsToRoles"
 import useMutateCreatedRole from "components/[guild]/AddRewardButton/hooks/useMutateCreatedRole"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole, {
   RoleToCreate,
 } from "components/create-guild/hooks/useCreateRole"
@@ -69,23 +70,21 @@ export type RequirementIdMap = {
 const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRRR",
+  }
 
   const mutateCreatedRole = useMutateCreatedRole()
   const mutateAdditionsToRoles = useMutateAdditionsToRoles()
 
-  const { onSubmit, isSigning, signLoadingText } = useCreateRole({
+  const {
+    onSubmit: createRole,
+    isSigning,
+    signLoadingText,
+  } = useCreateRole({
     skipMutate: true,
   })
-
-  const createRole = async (role: RoleToCreate) => {
-    try {
-      return await onSubmit(role)
-    } catch (error) {
-      showErrorToast("Failed to create role")
-      return null
-    }
-  }
-
   const { createRequirements } = useCreateRequirements()
   const { createRolePlatforms } = useCreateRolePlatforms()
 
@@ -101,8 +100,14 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
         requirements: [{ type: "FREE" } as Requirement],
         rolePlatforms: [],
       }
-      createdRole = await createRole(emptyRole)
-      if (!createdRole) return
+
+      try {
+        createdRole = await createRole(emptyRole)
+      } catch (error) {
+        showErrorToast("Failed to create role")
+        return
+      }
+
       roleIds.push(createdRole.id)
     }
 
@@ -144,7 +149,8 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
       onSuccess?.(res)
     },
     onError: (error) => {
-      showErrorToast("Failed to create role due to an unexpected error")
+      showErrorToast("An unexpected error happened while saving your changes")
+      captureEvent("Failed to create RRR", { ...postHogOptions, error })
       console.error(error)
     },
   })

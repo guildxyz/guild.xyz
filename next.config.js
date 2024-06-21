@@ -4,6 +4,9 @@ const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
+  typescript: {
+    tsconfigPath: process.env.TS_CONFIG_PATH,
+  },
   webpack(config, options) {
     config.module.rules.push({
       test: /\.svg$/,

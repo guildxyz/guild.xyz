@@ -14,8 +14,22 @@ import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
 import { Plus } from "phosphor-react"
 import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType, SelectOption, supportedSocialLinks } from "types"
+import {
+  GuildFormType,
+  SelectOption,
+  SocialLinkKey,
+  supportedSocialLinks,
+} from "types"
 import capitalize from "utils/capitalize"
+import { z } from "zod"
+
+const socialLinkUserPaths = {
+  TWITTER: "https://x.com/",
+  YOUTUBE: "https://youtube.com/",
+  SPOTIFY: "https://open.spotify.com/user/",
+  MEDIUM: "https://medium.com/",
+  GITHUB: "https://github.com/",
+} as const satisfies Partial<Record<SocialLinkKey, string>>
 
 const socialLinkOptions: SelectOption[] = supportedSocialLinks.map((socialLink) => ({
   label: capitalize(socialLink.toLowerCase()),
@@ -33,6 +47,10 @@ const SocialLinks = (): JSX.Element => {
 
   const definedSocialLinks = useWatch({ control, name: "socialLinks" })
 
+  const validateUrl = (input: string) => {
+    const { success } = z.string().url().safeParse(input)
+    return success || "Invalid link format."
+  }
   return (
     <SimpleGrid columns={{ base: 1, md: 2 }} gap={2}>
       {Object.entries(definedSocialLinks ?? {})
@@ -48,6 +66,7 @@ const SocialLinks = (): JSX.Element => {
                   type="url"
                   {...register(`socialLinks.${key}`, {
                     required: "This field is required.",
+                    validate: validateUrl,
                   })}
                   placeholder={
                     socialLinkOptions.find((sl) => sl.value === key).label
@@ -73,14 +92,16 @@ const SocialLinks = (): JSX.Element => {
             </FormControl>
           </GridItem>
         ))}
-
       <GridItem>
         <StyledSelect
           options={socialLinkOptions.filter(
             (sl) => typeof definedSocialLinks?.[sl.value] === "undefined"
           )}
           onChange={(newValue: SelectOption) =>
-            setValue(`socialLinks.${newValue.value}`, "")
+            setValue(
+              `socialLinks.${newValue.value}`,
+              socialLinkUserPaths[newValue.value] ?? ""
+            )
           }
           placeholder="Add more"
           value=""

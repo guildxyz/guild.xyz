@@ -29,6 +29,7 @@ import {
   Shield,
   Package,
   UsersThree,
+  Book,
 } from "phosphor-react"
 import XLogo from "static/icons/x.svg"
 import NavButton from "./components/NavButton"
@@ -101,6 +102,14 @@ const NavMenu = (): JSX.Element => {
                 leftIcon={<Info />}
               >
                 Guide
+              </NavButton>
+              <NavButton
+                target="_blank"
+                href="https://help.guild.xyz/en/collections/9537762-case-studies"
+                rel="noopener"
+                leftIcon={<Book />}
+              >
+                Case studies
               </NavButton>
               <NavButton leftIcon={<Shield />} href="/privacy-policy">
                 Privacy Policy

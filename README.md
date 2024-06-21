@@ -39,6 +39,9 @@ Open source interface for Guild.xyz -- a tool for platformless membership manage
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
+> [!WARNING]
+> We've recently turned on `strict` and `strictNullChecks` tsconfig options, and decided to gradually fix the related TypeScript issues. The pre-commit hook will ignore these, but it is expected that you'll see different issues during local development. Feel free to open a PR if you fix some of them. :wink:
+
 #### For Windows users
 
 If you encounter the error `ERR_OSSL_EVP_UNSUPPORTED` you can do :

@@ -29,7 +29,7 @@ const GalaxyRequirement = (props: RequirementProps): JSX.Element => {
         </DataBlock>
       ) : (
         <Link
-          href={`https://galxe.com/${campaign.space.alias}/campaign/${campaign.id}`}
+          href={`https://app.galxe.com/quest/${campaign.space.alias}/${campaign.id}`}
           isExternal
           display="inline"
           colorScheme="blue"

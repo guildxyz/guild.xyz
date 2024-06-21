@@ -2,7 +2,10 @@ import { useTransactionStatusContext } from "components/[guild]/Requirements/com
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import useNftDetails from "components/[guild]/collect/hooks/useNftDetails"
 import useGuild from "components/[guild]/hooks/useGuild"
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import {
+  isUserRejectedError,
+  usePostHogContext,
+} from "components/_app/PostHogProvider"
 import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit"
@@ -250,6 +253,13 @@ const useCollectNft = () => {
               if (errorName === "AlreadyClaimed")
                 return "You've already collected this NFT"
             })
+
+        if (isUserRejectedError(prettyError)) {
+          captureEvent("$set", {
+            cancelledNftMinting: true,
+          })
+        }
+
         showErrorToast(prettyError)
 
         captureEvent("Mint NFT error (GuildCheckout)", {

@@ -1,5 +1,6 @@
 import { Schemas } from "@guildxyz/types"
 import useGuild from "components/[guild]/hooks/useGuild"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import { RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
@@ -14,6 +15,11 @@ const useCreateRolePlatforms = () => {
   const { id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRolePlatforms",
+  }
 
   const createRolePlatforms = async (
     rolePlatforms: RolePlatform[]
@@ -32,6 +38,11 @@ const useCreateRolePlatforms = () => {
         }))
         .catch((error) => {
           showErrorToast("Failed to create a reward")
+          captureEvent("Failed to create role platform", {
+            ...postHogOptions,
+            rolePlatform,
+            error,
+          })
           console.error(error)
           return { status: "rejected", result: error }
         })

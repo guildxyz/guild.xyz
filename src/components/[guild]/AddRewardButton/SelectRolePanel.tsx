@@ -191,4 +191,26 @@ const SelectRolePanel = ({
   )
 }
 
+const changeDataToDraft = (data: SubmitData): SubmitData => {
+  if (!data.roleIds?.length) {
+    return { ...data, visibility: Visibility.HIDDEN }
+  }
+
+  const { rolePlatforms, requirements, roleIds } = data
+
+  const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
+    ...rp,
+    visibility: Visibility.HIDDEN,
+  }))
+  const hiddenRequirements = requirements.map((req) =>
+    req.type === "FREE" ? req : { ...req, visibility: Visibility.HIDDEN }
+  )
+
+  return {
+    rolePlatforms: hiddenRolePlatforms,
+    requirements: hiddenRequirements,
+    roleIds,
+  }
+}
+
 export default SelectRolePanel

@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react"
 import { Modal } from "components/common/Modal"
 import SearchBar from "components/explorer/SearchBar"
-import { useMemo, useState } from "react"
+import { ReactNode, useMemo, useState } from "react"
 import { FixedSizeList } from "react-window"
 
 type Props = {
@@ -23,6 +23,8 @@ type Props = {
   initialList: string[]
   onSearch?: (search: string) => void
   isSearching?: boolean
+  aboveList?: ReactNode
+  belowList?: ReactNode
 }
 
 const SearchableVirtualListModal = ({
@@ -32,6 +34,8 @@ const SearchableVirtualListModal = ({
   initialList,
   onSearch,
   isSearching = false,
+  aboveList = null,
+  belowList = null,
 }: Props) => {
   const [search, setSearch] = useState("")
   const itemSize = useBreakpointValue({ base: 55, md: 25 })
@@ -65,10 +69,12 @@ const SearchableVirtualListModal = ({
                 onSearch?.(value)
               },
             }}
+            mb={"2"}
             placeholder="Search address"
           />
+          {aboveList}
           <UnorderedList
-            mt="6"
+            mt={"2"}
             ml="2"
             sx={{ "> div": { overflow: "hidden auto !important" } }}
           >
@@ -91,6 +97,7 @@ const SearchableVirtualListModal = ({
               </Text>
             )}
           </UnorderedList>
+          {belowList}
         </ModalBody>
       </ModalContent>
     </Modal>

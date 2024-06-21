@@ -1,15 +1,29 @@
 import { useUserPublic } from "components/[guild]/hooks/useUser"
+import { useRouter } from "next/router"
 import { posthog } from "posthog-js"
 import {
   PostHogProvider as DefaultPostHogProvider,
   usePostHog,
 } from "posthog-js/react"
-import { PropsWithChildren, createContext, useContext, useEffect } from "react"
+import {
+  PropsWithChildren,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+} from "react"
+import { User } from "types"
 import useConnectorNameAndIcon from "./Web3ConnectionManager/hooks/useConnectorNameAndIcon"
 import useWeb3ConnectionManager from "./Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 
 const USER_REJECTED_ERROR = "User rejected the request"
 const REJECT_BY_THE_USER_ERROR = "Reject by the user"
+
+export const isUserRejectedError = (errorMessage: any) =>
+  typeof errorMessage === "string"
+    ? errorMessage.includes(USER_REJECTED_ERROR) ||
+      errorMessage.includes(REJECT_BY_THE_USER_ERROR)
+    : false
 
 if (typeof window !== "undefined") {
   posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -38,9 +52,11 @@ if (typeof window !== "undefined") {
 }
 
 const PostHogContext = createContext<{
+  identifyUser: (userData: User) => void
   captureEvent: (event: string, options?: Record<string, any>) => void
   startSessionRecording: () => void
 }>({
+  identifyUser: () => {},
   captureEvent: () => {},
   startSessionRecording: () => {},
 })
@@ -59,9 +75,34 @@ const CustomPostHogProvider = ({
     }
   }, [isWeb3Connected, ph])
 
+  const router = useRouter()
+
+  useEffect(() => {
+    const handleRouteChange = () => ph.capture("$pageview")
+    router.events.on("routeChangeComplete", handleRouteChange)
+
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const identifyUser = useCallback(
+    (userData: User) => {
+      posthog.identify(userData.id.toString(), {
+        primaryAddress: userData.addresses.find((a) => a.isPrimary).address,
+        currentAddress: address,
+        walletType,
+        wallet: connectorName,
+      })
+    },
+    [address, connectorName, walletType]
+  )
+
   return (
     <PostHogContext.Provider
       value={{
+        identifyUser,
         captureEvent: (event, options) => {
           // TODO: find a better approach here...
           const errorMessage =
@@ -86,8 +127,7 @@ const CustomPostHogProvider = ({
              * not an error actually, the user can intentionally reject a
              * transaction
              */
-            errorMessage?.includes(USER_REJECTED_ERROR) ||
-            errorMessage?.includes(REJECT_BY_THE_USER_ERROR)
+            isUserRejectedError(errorMessage)
           )
             return
 
