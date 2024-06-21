@@ -46,7 +46,7 @@ describe("roles", () => {
         "input[name='name'] ~ .chakra-collapse .chakra-form__error-message"
       ).should("not.exist")
 
-      cy.contains("Connect your Ethereum wallet").should("exist")
+      cy.contains("Open access").should("exist")
 
       cy.getByDataTest("save-role-button").click()
 
@@ -119,7 +119,7 @@ describe("roles", () => {
         .should("eq", 201)
     })
 
-    cy.contains("Connect your Ethereum wallet").should("not.exist")
+    cy.contains("Open access").should("not.exist")
   })
 
   it("can edit requirements list", () => {
