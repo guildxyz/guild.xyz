@@ -2,10 +2,12 @@ import { Center, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
+import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import usePinata from "hooks/usePinata"
-import { useFormContext } from "react-hook-form"
+import { useEffect } from "react"
+import { useFormContext, useWatch } from "react-hook-form"
 import CreateGuildButton from "./CreateGuildButton"
 import IconSelector from "./IconSelector"
 import Name from "./Name"
@@ -37,7 +39,7 @@ const CreateGuildForm = () => {
     control,
     register,
     setValue,
-    formState: { errors },
+    formState: { errors, touchedFields },
   } = useFormContext<CreateGuildFormType>()
 
   const iconUploader = usePinata({
@@ -45,6 +47,22 @@ const CreateGuildForm = () => {
     fieldToSetOnError: "imageUrl",
     control,
   })
+
+  const { emails, platformUsers } = useUser()
+
+  const providedEmail = useWatch({ control, name: "contacts.0.contact" })
+  useEffect(() => {
+    if (!!providedEmail || touchedFields.contacts?.[0]?.contact) return
+
+    const emailAddress = emails?.emailAddress
+    const googleEmailAddress = platformUsers?.find(
+      (pu) => pu.platformName === "GOOGLE"
+    )?.platformUserId
+
+    if (!emailAddress && !googleEmailAddress) return
+
+    setValue("contacts.0.contact", emailAddress ?? googleEmailAddress)
+  }, [touchedFields.contacts, emails, platformUsers, providedEmail, setValue])
 
   return (
     <Stack spacing={4} w="full">
