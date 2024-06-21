@@ -2,6 +2,7 @@ import useCreateRequirements from "components/[guild]/AddRewardButton/hooks/useC
 import useCreateRolePlatforms from "components/[guild]/AddRewardButton/hooks/useCreateRolePlatforms"
 import useMutateAdditionsToRoles from "components/[guild]/AddRewardButton/hooks/useMutateAdditionsToRoles"
 import useMutateCreatedRole from "components/[guild]/AddRewardButton/hooks/useMutateCreatedRole"
+import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole, {
   RoleToCreate,
 } from "components/create-guild/hooks/useCreateRole"
@@ -72,6 +73,11 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
 
   const mutateCreatedRole = useMutateCreatedRole()
   const mutateAdditionsToRoles = useMutateAdditionsToRoles()
+
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRRR",
+  }
 
   const { onSubmit, isSigning, signLoadingText } = useCreateRole({
     skipMutate: true,
@@ -144,7 +150,8 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
       onSuccess?.(res)
     },
     onError: (error) => {
-      showErrorToast("Failed to create role due to an unexpected error")
+      showErrorToast("An unexpected error happened while saving your changes")
+      captureEvent("Failed to create RRR", { ...postHogOptions, error })
       console.error(error)
     },
   })
