@@ -56,7 +56,7 @@ const EditRolePlatforms = ({ roleId }: Props) => {
           rolePlatforms.map((rolePlatform) => (
             <ExistingRolePlatformCard
               key={rolePlatform.id}
-              rolePlatform={{ ...rolePlatform }}
+              rolePlatform={rolePlatform}
             />
           ))
         )}
