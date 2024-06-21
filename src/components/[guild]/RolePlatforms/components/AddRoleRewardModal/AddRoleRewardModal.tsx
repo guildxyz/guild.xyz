@@ -1,7 +1,6 @@
 import { ModalOverlay, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardDiscardAlert } from "components/[guild]/AddRewardButton/hooks/useAddRewardDiscardAlert"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
-import useGuild from "components/[guild]/hooks/useGuild"
 import DiscardAlert from "components/common/DiscardAlert"
 import { Modal } from "components/common/Modal"
 import rewards, {
@@ -14,16 +13,11 @@ import SelectRewardPanel from "./SelectRewardPanel"
 import SelectExistingPlatform from "./components/SelectExistingPlatform"
 
 type Props = {
-  addWithExistingGuildPlatform: AddRewardPanelProps["onAdd"]
-  addWithNewGuildPlatform: (data: any) => void
+  onAdd: AddRewardPanelProps["onAdd"]
 }
 
-const AddRoleRewardModal = ({
-  addWithExistingGuildPlatform,
-  addWithNewGuildPlatform,
-}: Props) => {
+const AddRoleRewardModal = ({ onAdd }: Props) => {
   const { selection, step, isOpen, onClose } = useAddRewardContext()
-  const { guildPlatforms } = useGuild()
 
   const {
     isOpen: isDiscardAlertOpen,
@@ -40,17 +34,7 @@ const AddRoleRewardModal = ({
 
   const handleAddReward = (data: any) => {
     const rolePlatformWithVisibility = { ...data, visibility: roleVisibility }
-
-    const existingGuildPlatform = guildPlatforms?.find(
-      (gp) =>
-        gp.platformId === data.guildPlatform?.platformId &&
-        gp.platformGuildId === data.guildPlatform?.platformGuildId
-    )
-
-    if (existingGuildPlatform)
-      return addWithExistingGuildPlatform(rolePlatformWithVisibility)
-
-    addWithNewGuildPlatform(rolePlatformWithVisibility)
+    onAdd(rolePlatformWithVisibility)
     onClose()
   }
 
@@ -90,12 +74,7 @@ const AddRoleRewardModal = ({
             ERC20: `Token rewards cannot be added to existing roles. Please use the "Add reward" button in the top right corner of the Guild page to create the reward with a new role.`,
           }}
         >
-          <SelectExistingPlatform
-            onClose={onClose}
-            onSelect={(selectedRolePlatform) =>
-              addWithExistingGuildPlatform(selectedRolePlatform)
-            }
-          />
+          <SelectExistingPlatform onClose={onClose} onSelect={onAdd} />
           <Text fontWeight="bold" mb="3">
             Add new reward
           </Text>

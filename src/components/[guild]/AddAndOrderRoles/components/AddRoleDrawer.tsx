@@ -20,11 +20,13 @@ import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import IconSelector from "components/create-guild/IconSelector"
 import Name from "components/create-guild/Name"
 import SetRequirements from "components/create-guild/Requirements"
+import useCreateRRR from "hooks/useCreateRRR"
+import usePinata from "hooks/usePinata"
+import useSubmitWithUpload from "hooks/useSubmitWithUpload"
 import useWarnIfUnsavedChanges from "hooks/useWarnIfUnsavedChanges"
 import { useRef } from "react"
 import { FormProvider } from "react-hook-form"
 import useAddRoleForm from "../hooks/useAddRoleForm"
-import useSubmitAddRole from "../hooks/useSubmitAddRole"
 import AddRoleDrawerHeader from "./AddRoleDrawerHeader"
 
 const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
@@ -50,13 +52,32 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
     onClose()
   }
 
+  const iconUploader = usePinata({
+    fieldToSetOnSuccess: "imageUrl",
+    fieldToSetOnError: "imageUrl",
+    control: methods.control,
+  })
+
   const drawerBodyRef = useRef<HTMLDivElement>()
 
-  const { onSubmit, isLoading, loadingText, iconUploader } = useSubmitAddRole({
-    drawerBodyRef,
-    methods,
-    onSuccess: onClose,
+  const { onSubmit, isLoading, loadingText } = useCreateRRR({
+    onSuccess: () => {
+      methods.reset(methods.defaultValues)
+      onClose()
+    },
   })
+
+  const { handleSubmit, isUploadingShown, uploadLoadingText } = useSubmitWithUpload(
+    methods.handleSubmit(onSubmit, (formErrors) => {
+      if (formErrors.requirements && drawerBodyRef.current) {
+        drawerBodyRef.current.scrollBy({
+          top: drawerBodyRef.current.scrollHeight,
+          behavior: "smooth",
+        })
+      }
+    }),
+    iconUploader.isUploading
+  )
 
   return (
     <>
@@ -98,10 +119,10 @@ const AddRoleDrawer = ({ isOpen, onClose, finalFocusRef }): JSX.Element => {
               Cancel
             </Button>
             <Button
-              isLoading={isLoading}
+              isLoading={isLoading || isUploadingShown}
               colorScheme="green"
-              loadingText={loadingText}
-              onClick={onSubmit}
+              loadingText={loadingText || uploadLoadingText}
+              onClick={handleSubmit}
               data-test="save-role-button"
             >
               Save

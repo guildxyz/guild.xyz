@@ -5,7 +5,7 @@ import useToast from "hooks/useToast"
 import { RolePlatform } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 
-const useAddRewardWithExistingGP = () => {
+const useAddRolePlatform = (roleId: number) => {
   const { id, mutateGuild } = useGuild()
   const fetcherWithSign = useFetcherWithSign()
   const toast = useToast()
@@ -13,7 +13,7 @@ const useAddRewardWithExistingGP = () => {
 
   const submit = async (rolePlatform: RolePlatform) =>
     fetcherWithSign([
-      `/v2/guilds/${id}/roles/${rolePlatform.roleId}/role-platforms`,
+      `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
       { method: "POST", body: rolePlatform },
     ])
 
@@ -25,18 +25,28 @@ const useAddRewardWithExistingGP = () => {
       })
 
       mutateGuild(
-        (prevGuild) => ({
-          ...prevGuild,
-          roles: prevGuild.roles.map((role) => {
-            if (role.id === response.platformRoleId) {
-              return {
-                ...role,
-                rolePlatforms: [...role.rolePlatforms, response],
+        (prevGuild) => {
+          const data = {
+            ...prevGuild,
+            guildPlatforms: response?.createdGuildPlatform
+              ? [...prevGuild.guildPlatforms, response?.createdGuildPlatform]
+              : prevGuild.guildPlatforms,
+            roles: prevGuild.roles.map((role) => {
+              if (role.id === roleId) {
+                return {
+                  ...role,
+                  rolePlatforms: [
+                    ...role.rolePlatforms,
+                    { ...response, roleId: roleId },
+                  ],
+                }
               }
-            }
-            return role
-          }),
-        }),
+              return role
+            }),
+          }
+
+          return data
+        },
         { revalidate: false }
       )
     },
@@ -44,4 +54,4 @@ const useAddRewardWithExistingGP = () => {
   })
 }
 
-export default useAddRewardWithExistingGP
+export default useAddRolePlatform

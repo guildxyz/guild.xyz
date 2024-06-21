@@ -1,15 +1,17 @@
-import { CloseButton, useColorModeValue } from "@chakra-ui/react"
+import { CloseButton, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import AvailabilitySetup from "components/[guild]/AddRewardButton/components/AvailabilitySetup"
 import DynamicTag from "components/[guild]/RoleCard/components/DynamicReward/DynamicTag"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
+import EditRolePlatformModal from "components/[guild]/RolePlatforms/components/EditRolePlatformModal"
 import PlatformCard from "components/[guild]/RolePlatforms/components/PlatformCard"
 import { RolePlatformProvider } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import SetVisibility from "components/[guild]/SetVisibility"
 import useVisibilityModalProps from "components/[guild]/SetVisibility/hooks/useVisibilityModalProps"
 import useGuild from "components/[guild]/hooks/useGuild"
+import Button from "components/common/Button"
 import NftAvailabilityTags from "platforms/ContractCall/components/NftAvailabilityTags"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
-import { useFormContext } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import {
   GuildPlatformWithOptionalId,
   PlatformName,
@@ -40,6 +42,14 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
     type = guildPlatform?.platformName
   }
 
+  const {
+    isOpen: isEditOpen,
+    onClose: onEditClose,
+    onOpen: onEditOpen,
+  } = useDisclosure()
+
+  const rolePlatformData = useWatch({ name: `rolePlatforms.${rolePlatform.id}` })
+
   if (!type) return null
 
   const isLegacyContractCallReward =
@@ -47,7 +57,7 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
     guildPlatform.platformGuildData.function ===
       ContractCallFunction.DEPRECATED_SIMPLE_CLAIM
 
-  const { cardPropsHook: useCardProps } = rewards[type]
+  const { cardPropsHook: useCardProps, cardSettingsComponent } = rewards[type]
 
   return (
     <RolePlatformProvider
@@ -92,6 +102,37 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
             zIndex="1"
             onClick={remove}
           />
+        }
+        actionRow={
+          cardSettingsComponent && (
+            <>
+              <Button
+                size="sm"
+                onClick={onEditOpen}
+                ml={{ base: 0, md: 3 }}
+                mt={{ base: 5, md: 0 }}
+              >
+                Edit
+              </Button>
+              <EditRolePlatformModal
+                settingsComponent={cardSettingsComponent}
+                rolePlatform={rolePlatform}
+                isOpen={isEditOpen}
+                onClose={onEditClose}
+                onSubmit={(data) => {
+                  setValue(
+                    `rolePlatforms.${rolePlatform.id}`,
+                    {
+                      ...rolePlatformData,
+                      ...data,
+                    },
+                    { shouldDirty: true }
+                  )
+                  onEditClose()
+                }}
+              />
+            </>
+          )
         }
         contentRow={
           <>
