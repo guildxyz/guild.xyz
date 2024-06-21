@@ -10,12 +10,14 @@ const Header = (): JSX.Element => {
 
   return (
     <Flex
+      as="header"
       position="relative"
       w="full"
       justifyContent="space-between"
       alignItems="center"
       p="2"
       zIndex="overlay"
+      h={14}
       // temporary
       sx={{
         ".navMenu": {

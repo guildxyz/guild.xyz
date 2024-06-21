@@ -1,12 +1,4 @@
-import {
-  Center,
-  FormControl,
-  FormLabel,
-  Input,
-  Stack,
-  useBreakpointValue,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Center, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import Color from "color"
 import ColorThief from "colorthief/dist/color-thief.mjs"
@@ -54,32 +46,9 @@ const CreateGuildForm = () => {
     control,
   })
 
-  const bgColor = useColorModeValue("white", "var(--chakra-colors-gray-700)")
-  const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
-  const logoSize = useBreakpointValue({ base: 28, md: 40 })
-
   return (
-    <Stack spacing={4} mb={16}>
-      <Card
-        pt={12}
-        pb={8}
-        px={{ base: 5, md: 6 }}
-        position="relative"
-        overflow="hidden"
-        _before={{
-          content: '""',
-          position: "absolute",
-          top: 0,
-          bottom: 0,
-          left: 0,
-          right: 0,
-          bg: `radial-gradient(circle at 50% 75%, ${bgColor} 70%, transparent), url('/landing/${bgFile}')`,
-          bgSize: "100% auto, 150% auto",
-          bgRepeat: "no-repeat",
-          bgPosition: "top 0.5rem center",
-          opacity: "0.07",
-        }}
-      >
+    <Stack spacing={4} w="full">
+      <Card pt={12} pb={8} px={{ base: 5, md: 6 }}>
         <Stack spacing={6}>
           <Center>
             <IconSelector
@@ -90,7 +59,7 @@ const CreateGuildForm = () => {
                 const generatedThemeColor = await getColorByImage(objectURL)
                 setValue("theme.color", generatedThemeColor)
               }}
-              boxSize={logoSize}
+              boxSize={28}
             />
           </Center>
 
