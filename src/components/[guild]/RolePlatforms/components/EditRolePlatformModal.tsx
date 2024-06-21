@@ -11,13 +11,13 @@ import { Modal } from "components/common/Modal"
 import rewards, { CardSettingsComponent } from "platforms/rewards"
 import { useRef } from "react"
 import { FormProvider, useForm } from "react-hook-form"
-import { PlatformType, RoleFormType } from "types"
+import { PlatformType, RoleFormType, RolePlatform } from "types"
 import { RolePlatformProvider } from "./RolePlatformProvider"
 
 type Props = {
   settingsComponent: CardSettingsComponent
   rolePlatform: RoleFormType["rolePlatforms"][number]
-  onSubmit: (data) => void
+  onSubmit: (data: Partial<RolePlatform>) => void
   onClose: () => void
   isOpen: boolean
 }
