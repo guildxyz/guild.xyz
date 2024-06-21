@@ -191,6 +191,10 @@ export type RewardIconProps = {
 const MotionImg = motion(Img)
 const MotionCircle = motion(Circle)
 
+const RewardIconFallbacks = {
+  discord: "platforms/discord.png",
+} as const satisfies Record<string, string>
+
 const RewardIcon = ({
   rolePlatformId,
   guildPlatform,
@@ -241,9 +245,24 @@ const RewardIcon = ({
     )
   }
 
-  if (withMotionImg) return <MotionImg {...motionElementProps} {...props} />
-
-  return <Img {...props} />
+  let fallbackSrc: string | undefined
+  for (const [key, value] of Object.entries(RewardIconFallbacks)) {
+    if (props.src.includes(key)) {
+      fallbackSrc = value
+      break
+    }
+  }
+  if (withMotionImg)
+    return (
+      <Circle as="picture">
+        {fallbackSrc && <source srcSet={fallbackSrc} />}
+        {withMotionImg ? (
+          <MotionImg {...motionElementProps} {...props} />
+        ) : (
+          <Img {...props} />
+        )}
+      </Circle>
+    )
 }
 
 const RewardWrapper = ({ platform, ...props }: RewardProps) => {
