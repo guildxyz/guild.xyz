@@ -11,17 +11,16 @@ const useCreateRequirements = () => {
   const { id: guildId } = useGuild()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
+  const { captureEvent } = usePostHogContext()
+  const postHogOptions = {
+    hook: "useCreateRequirements",
+  }
 
   const createRequirements = async (
     requirements: Partial<Requirement>[],
     roleIds: number[]
   ) => {
     const requirementIdMap: RequirementIdMap = {}
-
-    const { captureEvent } = usePostHogContext()
-    const postHogOptions = {
-      hook: "useCreateRequirements",
-    }
 
     const promises = roleIds.flatMap((roleId) =>
       requirements.map((req) =>
