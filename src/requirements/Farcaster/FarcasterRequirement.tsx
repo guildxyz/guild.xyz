@@ -91,7 +91,7 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
   return (
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
       {"Follow the "}
-      <Skeleton isLoaded={!!data}>
+      <Skeleton isLoaded={!!farcasterChannel}>
         <Link
           href={`https://warpcast.com/~/channel/${data?.id}`}
           isExternal
@@ -118,9 +118,7 @@ const FarcasterIncludeText = (props: RequirementProps) => {
   return (
     <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
       <Text as="span">{"Have "}</Text>
-      <Skeleton isLoaded={!!data}>
-        <DataBlockWithCopy text={data?.id ?? "Loading..."} />
-      </Skeleton>
+      <DataBlockWithCopy text={data?.id} />
       <Text as="span">
         {` in your ${REQUIREMENTS.FARCASTER.name} ${PROFILE_TARGETS[type]}`}
       </Text>
