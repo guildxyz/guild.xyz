@@ -73,19 +73,13 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
   const mutateCreatedRole = useMutateCreatedRole()
   const mutateAdditionsToRoles = useMutateAdditionsToRoles()
 
-  const { onSubmit, isSigning, signLoadingText } = useCreateRole({
+  const {
+    onSubmit: createRole,
+    isSigning,
+    signLoadingText,
+  } = useCreateRole({
     skipMutate: true,
   })
-
-  const createRole = async (role: RoleToCreate) => {
-    try {
-      return await onSubmit(role)
-    } catch (error) {
-      showErrorToast("Failed to create role")
-      return null
-    }
-  }
-
   const { createRequirements } = useCreateRequirements()
   const { createRolePlatforms } = useCreateRolePlatforms()
 
@@ -101,8 +95,14 @@ const useCreateRRR = ({ onSuccess }: { onSuccess: (res) => void }) => {
         requirements: [{ type: "FREE" } as Requirement],
         rolePlatforms: [],
       }
-      createdRole = await createRole(emptyRole)
-      if (!createdRole) return
+
+      try {
+        createdRole = await createRole(emptyRole)
+      } catch (error) {
+        showErrorToast("Failed to create role")
+        return
+      }
+
       roleIds.push(createdRole.id)
     }
 

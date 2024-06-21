@@ -16,8 +16,6 @@ const DynamicTag = ({
   const { data } = useRequirements(rolePlatform.roleId)
   const requirements = contextRequirements ?? data
 
-  console.log(rolePlatform.roleId)
-
   const { onOpen, isOpen, onClose } = useDisclosure()
 
   const dynamicAmount: any = rolePlatform.dynamicAmount
