@@ -14,12 +14,16 @@ import Button from "components/common/Button"
 import OnboardingMarker from "components/common/OnboardingMarker"
 import useIsStuck from "hooks/useIsStuck"
 import { CaretDown, ListNumbers, Plus } from "phosphor-react"
-import { useEffect, useRef } from "react"
+import { Dispatch, SetStateAction, useEffect, useRef } from "react"
 import RecheckAccessesButton from "../RecheckAccessesButton"
 import AddRoleDrawer from "./components/AddRoleDrawer"
 import OrderRolesModal from "./components/OrderRolesModal"
 
-const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
+type Props = {
+  setIsStuck?: Dispatch<SetStateAction<boolean>>
+}
+
+const AddAndOrderRoles = ({ setIsStuck }: Props): JSX.Element => {
   const { captureEvent } = usePostHogContext()
 
   const {
@@ -36,7 +40,8 @@ const AddAndOrderRoles = ({ setIsStuck = null }): JSX.Element => {
   const orderButtonRef = useRef(null)
   const { ref: addRoleButtonRef, isStuck } = useIsStuck()
   useEffect(() => {
-    setIsStuck?.(isStuck)
+    if (!setIsStuck) return
+    setIsStuck(isStuck)
   }, [isStuck, setIsStuck])
 
   return (
