@@ -104,11 +104,13 @@ const Reward = ({
   return (
     <RewardDisplay
       icon={
-        <RewardIcon
-          rolePlatformId={platform.id}
-          guildPlatform={platform?.guildPlatform}
-          withMotionImg={withMotionImg}
-        />
+        platform.guildPlatform && (
+          <RewardIcon
+            rolePlatformId={platform.id}
+            guildPlatform={platform.guildPlatform}
+            withMotionImg={withMotionImg}
+          />
+        )
       }
       label={
         <>
@@ -183,17 +185,13 @@ const RewardDisplay = ({
 
 export type RewardIconProps = {
   rolePlatformId: number
-  guildPlatform?: GuildPlatform
+  guildPlatform: GuildPlatform
   withMotionImg?: boolean
   transition?: Transition
 }
 
 const MotionImg = motion(Img)
 const MotionCircle = motion(Circle)
-
-const RewardIconFallbacks = {
-  discord: "platforms/discord.png",
-} as const satisfies Record<string, string>
 
 const RewardIcon = ({
   rolePlatformId,
@@ -205,9 +203,9 @@ const RewardIcon = ({
 
   const props = {
     src:
-      guildPlatform?.platformGuildData?.imageUrl ??
-      rewards[PlatformType[guildPlatform?.platformId]]?.imageUrl,
-    alt: guildPlatform?.platformGuildName,
+      guildPlatform.platformGuildData?.imageUrl ??
+      rewards[PlatformType[guildPlatform.platformId]].imageUrl,
+    alt: guildPlatform.platformGuildName,
     boxSize: 6,
     rounded: "full",
   }
@@ -237,7 +235,7 @@ const RewardIcon = ({
     return (
       <Circle {...circleProps}>
         <Icon
-          as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
+          as={rewards[PlatformType[guildPlatform.platformId]]?.icon}
           color="white"
           boxSize={3}
         />
@@ -245,17 +243,10 @@ const RewardIcon = ({
     )
   }
 
-  let fallbackSrc: string | undefined
-  for (const [key, value] of Object.entries(RewardIconFallbacks)) {
-    if (props.src.includes(key)) {
-      fallbackSrc = value
-      break
-    }
-  }
   if (withMotionImg)
     return (
       <Circle as="picture">
-        {fallbackSrc && <source srcSet={fallbackSrc} />}
+        <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
         {withMotionImg ? (
           <MotionImg {...motionElementProps} {...props} />
         ) : (
