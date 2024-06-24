@@ -191,7 +191,6 @@ export type RewardIconProps = {
 }
 
 const MotionImg = motion(Img)
-const MotionCircle = motion(Circle)
 
 const RewardIcon = ({
   rolePlatformId,
@@ -199,8 +198,6 @@ const RewardIcon = ({
   withMotionImg = true,
   transition,
 }: RewardIconProps) => {
-  const circleBgColor = useColorModeValue("gray.700", "gray.600")
-
   const props = {
     src:
       guildPlatform.platformGuildData?.imageUrl ??
@@ -210,50 +207,21 @@ const RewardIcon = ({
     rounded: "full",
   }
 
-  const circleProps = {
-    bgColor: circleBgColor,
-    boxSize: 6,
-  }
-
   const motionElementProps = {
     layoutId: `${rolePlatformId}_reward_img`,
     transition: { type: "spring", duration: 0.5, ...transition },
   }
 
-  if (!props.src) {
-    if (withMotionImg)
-      return (
-        <MotionCircle {...motionElementProps} {...circleProps}>
-          <Icon
-            as={rewards[PlatformType[guildPlatform?.platformId]]?.icon}
-            color="white"
-            boxSize={3}
-          />
-        </MotionCircle>
-      )
-
-    return (
-      <Circle {...circleProps}>
-        <Icon
-          as={rewards[PlatformType[guildPlatform.platformId]]?.icon}
-          color="white"
-          boxSize={3}
-        />
-      </Circle>
-    )
-  }
-
-  if (withMotionImg)
-    return (
-      <Circle as="picture">
-        <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
-        {withMotionImg ? (
-          <MotionImg {...motionElementProps} {...props} />
-        ) : (
-          <Img {...props} />
-        )}
-      </Circle>
-    )
+  return (
+    <Circle as="picture">
+      <source srcSet={rewards[PlatformType[guildPlatform.platformId]].imageUrl} />
+      {withMotionImg ? (
+        <MotionImg {...motionElementProps} {...props} />
+      ) : (
+        <Img {...props} />
+      )}
+    </Circle>
+  )
 }
 
 const RewardWrapper = ({ platform, ...props }: RewardProps) => {
