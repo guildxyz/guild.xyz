@@ -115,7 +115,6 @@ const NewRolePlatformCard = ({ rolePlatform, remove }: Props) => {
                 Edit
               </Button>
               <EditRolePlatformModal
-                settingsComponent={cardSettingsComponent}
                 rolePlatform={rolePlatform}
                 isOpen={isEditOpen}
                 onClose={onEditClose}
