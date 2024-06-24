@@ -45,11 +45,14 @@ const ApiRequirementHandlerProvider = ({
   children: ReactNode
 }) => {
   const {
-    data: requirements,
+    data,
     mutate,
     isValidating,
     isLoading: reqsLoading,
   } = useRequirements(roleId)
+
+  const requirements = data || []
+
   const { onSubmit, isLoading } = useCreateRequirement(roleId, {
     onSuccess: () => {
       mutate()

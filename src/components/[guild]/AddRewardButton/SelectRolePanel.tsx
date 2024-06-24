@@ -71,34 +71,6 @@ const SelectRolePanel = ({
     setStep("REWARD_SETUP")
   }
 
-  const changeDataToDraft = (data: SubmitData): SubmitData => {
-    const {
-      rolePlatforms,
-      requirements: reqs,
-      roleIds: dataRoleIds = [],
-      ...role
-    } = data
-    const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
-      ...rp,
-      visibility: Visibility.HIDDEN,
-    }))
-    const hiddenRequirements = reqs.map((req) =>
-      req.type === "FREE" ? req : { ...req, visibility: Visibility.HIDDEN }
-    )
-
-    let roleToCreate = role
-    if (dataRoleIds.length === 0) {
-      roleToCreate = { ...role, visibility: Visibility.HIDDEN }
-    }
-
-    return {
-      ...roleToCreate,
-      rolePlatforms: hiddenRolePlatforms,
-      requirements: hiddenRequirements,
-      roleIds: dataRoleIds,
-    }
-  }
-
   return (
     <ModalContent>
       <ModalCloseButton />

@@ -124,7 +124,7 @@ const AddRewardButton = (): JSX.Element => {
 
             {isRewardSetupStep && (
               <AddRewardPanel
-                onAdd={(createdRolePlatform) => {
+                onAdd={(createdRolePlatform: any) => {
                   const {
                     roleName = null,
                     requirements = null,
@@ -140,6 +140,10 @@ const AddRewardButton = (): JSX.Element => {
                   }
                   setStep("SELECT_ROLE")
                 }}
+                onCancel={() => {
+                  methods.reset(defaultValues)
+                  setStep("HOME")
+                }}
                 skipSettings
               />
             )}
@@ -152,7 +156,7 @@ const AddRewardButton = (): JSX.Element => {
         isOpen={isDiscardAlertOpen}
         onClose={onDiscardAlertClose}
         onDiscard={() => {
-          onAddRewardModalClose()
+          closeAndClear()
           onDiscardAlertClose()
           setIsAddRewardPanelDirty(false)
         }}
