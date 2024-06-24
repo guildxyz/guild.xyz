@@ -72,7 +72,7 @@ const EditRolePlatforms = ({ roleId }: Props) => {
               width={"fit-content"}
             >
               <Spinner size={"sm"} mr={2} />
-              Loading...
+              Adding reward...
             </Tag>
           </Collapse>
         </Box>
