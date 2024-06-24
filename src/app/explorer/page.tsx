@@ -1,19 +1,76 @@
-// import { Layout } from "components/common/Layout"
+"use client"
+
+import { PropsWithChildren } from "react"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { Button } from "@/components/ui/Button"
+import { Plus } from "@phosphor-icons/react"
+import { SignIn, MagnifyingGlass, PushPin, Sparkle } from "phosphor-react"
+import Robot from "/public/landing/robot.svg"
+import { Input } from "@/components/ui/input"
+
+function PageBoundary({ children }: PropsWithChildren) {
+  return <div className="mx-auto max-w-screen-lg">{children}</div>
+}
 
 const Page = () => {
   console.log("explorer")
-  return <div>explorer in /app</div>
-  // return <Layout.Root>
-  //   <Layout.Head ogTitle="GuildHall" />
-  //   <Layout.HeaderSection>
-  //     <Layout.Background />
-  //     <Layout.Header />
-  //     <Layout.Headline title="GuildHall" />
-  //   </Layout.HeaderSection>
-  //   <Layout.MainSection>
-  //     main
-  //   </Layout.MainSection>
-  // </Layout.Root>
+  return (
+    <div className="min-h-screen">
+      <header className="h-16 outline">header</header>
+      <PageBoundary>
+        <div className="my-16">
+          <h1 className="font-display text-5xl font-bold">Guildhall</h1>
+        </div>
+        <main>
+          <div className="flex items-start justify-between my-4">
+            <ToggleGroup type="single" className="space-x-2">
+              <ToggleGroupItem value="your-guilds">Your guilds</ToggleGroupItem>
+              <ToggleGroupItem value="explore-guilds">
+                Explore guilds
+              </ToggleGroupItem>
+            </ToggleGroup>
+            <Button variant="ghost" className="space-x-2">
+              <Plus />
+              <span>Create guild</span>
+            </Button>
+          </div>
+          <div className="font-medium p-6 my-2 bg-card rounded-lg flex justify-between items-center mb-12">
+            <div className="flex gap-4 items-center">
+              <Robot className="size-8" />
+              <span>Sign in to view your guilds / create new ones</span>
+            </div>
+            <Button className="space-x-2" size="lg">
+              <SignIn />
+              <span className="text-md font-semibold">Sign in</span>
+            </Button>
+          </div>
+          <div className="flex gap-4 flex-col">
+            <h2 className="text-lg font-bold">Explore verified guilds</h2>
+            <div className="relative flex">
+              <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 stroke-muted" />
+              <Input
+                className="text-md py-6 pr-6 pl-12 rounded-r-none grow"
+                placeholder="Search verified guilds"
+              />
+              <ToggleGroup
+                type="single"
+                className="bg-card px-4 rounded-r-lg border"
+              >
+                <ToggleGroupItem value="featured" className="space-x-2">
+                  <PushPin />
+                  <span>featured</span>
+                </ToggleGroupItem>
+                <ToggleGroupItem value="newest" className="space-x-2">
+                  <Sparkle />
+                  <span>newest</span>
+                </ToggleGroupItem>
+              </ToggleGroup>
+            </div>
+          </div>
+        </main>
+      </PageBoundary>
+    </div>
+  )
 }
 
 export default Page
