@@ -107,7 +107,7 @@ const GuildPage = (): JSX.Element => {
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
+  // const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
@@ -193,8 +193,6 @@ const GuildPage = (): JSX.Element => {
                   <JoinButton />
                 ) : !isAdmin ? (
                   <LeaveButton />
-                ) : isAddRoleStuck ? (
-                  <DynamicAddAndOrderRoles />
                 ) : (
                   <DynamicAddRewardAndCampaign />
                 )}
@@ -212,7 +210,7 @@ const GuildPage = (): JSX.Element => {
           titleRightElement={
             isAdmin && (
               <Box my="-2 !important" ml="auto !important">
-                <DynamicAddAndOrderRoles setIsStuck={setIsAddRoleStuck} />
+                <DynamicAddAndOrderRoles />
               </Box>
             )
           }
