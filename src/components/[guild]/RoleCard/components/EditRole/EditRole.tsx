@@ -122,11 +122,11 @@ const EditRole = ({ roleId }: { roleId: number }): JSX.Element => {
           </DrawerBody>
 
           <EditRoleFooter
-            isVisible={isDirty || iconUploader.isUploading}
             onClose={onCloseAndClear}
             onSubmit={onSubmit}
             isLoading={isLoading}
             loadingText={loadingText}
+            isDirty={isDirty || iconUploader.isUploading}
           />
         </DrawerContent>
         <DynamicDevTool control={control} />

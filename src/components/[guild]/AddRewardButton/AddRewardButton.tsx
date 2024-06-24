@@ -152,7 +152,7 @@ const AddRewardButton = (): JSX.Element => {
         isOpen={isDiscardAlertOpen}
         onClose={onDiscardAlertClose}
         onDiscard={() => {
-          onAddRewardModalClose()
+          closeAndClear()
           onDiscardAlertClose()
           setIsAddRewardPanelDirty(false)
         }}
