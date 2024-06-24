@@ -140,6 +140,10 @@ const AddRewardButton = (): JSX.Element => {
                   }
                   setStep("SELECT_ROLE")
                 }}
+                onCancel={() => {
+                  methods.reset(defaultValues)
+                  setStep("HOME")
+                }}
                 skipSettings
               />
             )}
