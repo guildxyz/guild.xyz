@@ -1,13 +1,12 @@
 import { Center, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
-import Color from "color"
-import ColorThief from "colorthief/dist/color-thief.mjs"
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import usePinata from "hooks/usePinata"
 import { useEffect } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import getColorByImage from "utils/getColorByImage"
 import CreateGuildButton from "./CreateGuildButton"
 import IconSelector from "./IconSelector"
 import Name from "./Name"
@@ -16,23 +15,6 @@ export type CreateGuildFormType = Pick<
   Schemas["GuildCreationPayload"],
   "name" | "imageUrl" | "contacts" | "theme"
 >
-
-const getColorByImage = (imageUrl: string) =>
-  new Promise<string>((resolve, _) => {
-    const colorThief = new ColorThief()
-
-    const imgEl = document.createElement("img")
-    imgEl.src = imageUrl
-    imgEl.width = 64
-    imgEl.height = 64
-    imgEl.crossOrigin = "anonymous"
-
-    imgEl.addEventListener("load", () => {
-      const dominantRgbColor = colorThief.getColor(imgEl)
-      const dominantHexColor = Color.rgb(dominantRgbColor).hex()
-      resolve(dominantHexColor)
-    })
-  })
 
 const CreateGuildForm = () => {
   const {
