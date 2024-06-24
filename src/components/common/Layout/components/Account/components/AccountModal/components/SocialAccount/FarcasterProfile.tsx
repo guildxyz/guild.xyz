@@ -12,6 +12,7 @@ import {
   ModalBody,
   ModalCloseButton,
   ModalContent,
+  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Skeleton,
@@ -32,6 +33,7 @@ import { ArrowCounterClockwise, DeviceMobileCamera } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { QRCodeSVG } from "qrcode.react"
 import { useState } from "react"
+import { isMobile } from "react-device-detect"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
@@ -173,12 +175,18 @@ const ConnectFarcasterButton = ({
         <ModalContent>
           <ModalCloseButton />
           <ModalHeader pb={0} pr={16} display={"flex"} gap={1} alignItems={"center"}>
-            <Icon boxSize={6} as={DeviceMobileCamera} /> Scan With your phone
+            {isMobile ? (
+              "Connect Farcaster"
+            ) : (
+              <>
+                <Icon boxSize={6} as={DeviceMobileCamera} /> Scan With your phone
+              </>
+            )}
           </ModalHeader>
           <ModalBody pt={8}>
             <VStack justifyContent="center">
               <Skeleton isLoaded={!signedKeyRequest.isLoading} borderRadius={"md"}>
-                {signedKeyRequest.response?.url && (
+                {!isMobile && signedKeyRequest.response?.url && (
                   <Box borderRadius="md" borderWidth={3} overflow="hidden">
                     <QRCodeSVG
                       value={signedKeyRequest.response.url}
@@ -190,11 +198,14 @@ const ConnectFarcasterButton = ({
               </Skeleton>
               <HStack alignItems="center">
                 <Text color={"gray"} fontSize="sm">
-                  The QR code will be regenerated in{" "}
+                  {isMobile
+                    ? "The link is active for "
+                    : "The QR code will be regenerated in "}
                   {seconds > 60
                     ? `${Math.floor(seconds / 60)} minutes`
                     : `${seconds} seconds`}
                 </Text>
+
                 <Tooltip label="Regenerate now">
                   <IconButton
                     isDisabled={!shouldEnableRegenerateButton}
@@ -238,6 +249,19 @@ const ConnectFarcasterButton = ({
               </Accordion>
             </VStack>
           </ModalBody>
+          {isMobile && (
+            <ModalFooter>
+              <Button
+                w="full"
+                as="a"
+                href={signedKeyRequest.response?.url}
+                target="_blank"
+                colorScheme="FARCASTER"
+              >
+                Connect Farcaster
+              </Button>
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
     </>
