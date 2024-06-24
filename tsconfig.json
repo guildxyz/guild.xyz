@@ -22,7 +22,10 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "paths": {
+          "@/*": ["./v2/*"]
+      }
   },
   "include": [
     "next-env.d.ts",

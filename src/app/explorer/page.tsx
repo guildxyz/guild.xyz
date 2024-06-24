@@ -1,6 +1,19 @@
+// import { Layout } from "components/common/Layout"
+
 const Page = () => {
-  console.log("ddd")
-  return <>explorer</>
+  console.log("explorer")
+  return <div>explorer in /app</div>
+  // return <Layout.Root>
+  //   <Layout.Head ogTitle="GuildHall" />
+  //   <Layout.HeaderSection>
+  //     <Layout.Background />
+  //     <Layout.Header />
+  //     <Layout.Headline title="GuildHall" />
+  //   </Layout.HeaderSection>
+  //   <Layout.MainSection>
+  //     main
+  //   </Layout.MainSection>
+  // </Layout.Root>
 }
 
 export default Page
@@ -14,17 +27,17 @@ export default Page
 // import GoToCreateGuildButton from "components/explorer/GoToCreateGuildButton"
 // import YourGuilds, { useYourGuilds } from "components/explorer/YourGuilds"
 // import useScrollRestoration from "components/explorer/hooks/useScrollRestoration"
-import { atom, useAtom } from "jotai"
-import { GetStaticProps } from "next"
+// import { atom, useAtom } from "jotai"
+// import { GetStaticProps } from "next"
 // import { useRef } from "react"
 // import { GuildBase } from "types"
-import fetcher from "utils/fetcher"
+// import fetcher from "utils/fetcher"
 //
 // type Props = {
 //   guilds: GuildBase[]
 // }
 //
-export const explorerScrollRestorationAtom = atom(true)
+// export const explorerScrollRestorationAtom = atom(true)
 //
 // const Page = ({ guilds: guildsInitial }: Props): JSX.Element => {
 //   const yourGuildsRef = useRef(null)
@@ -84,13 +97,13 @@ export const explorerScrollRestorationAtom = atom(true)
 //   )
 // }
 //
-export const getStaticProps: GetStaticProps = async () => {
-  const guilds = await fetcher(`/v2/guilds?sort=members`).catch((_) => [])
-
-  return {
-    props: { guilds },
-    revalidate: 300,
-  }
-}
+// export const getStaticProps: GetStaticProps = async () => {
+//   const guilds = await fetcher(`/v2/guilds?sort=members`).catch((_) => [])
+//
+//   return {
+//     props: { guilds },
+//     revalidate: 300,
+//   }
+// }
 //
 // export default Page
