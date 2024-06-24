@@ -68,12 +68,12 @@ const walletActivityRequirementTypes: SelectOption[] = [
     WalletActivityRequirement: CovalentContractDeployRelative,
   },
   {
-    label: "Transaction count",
+    label: "Transactions",
     value: "COVALENT_TX_COUNT",
     WalletActivityRequirement: CovalentTxCount,
   },
   {
-    label: "Transaction count (relative)",
+    label: "Transactions (relative)",
     value: "COVALENT_TX_COUNT_RELATIVE",
     WalletActivityRequirement: CovalentTxCountRelative,
   },
