@@ -12,7 +12,7 @@ const Modal = ({ children, ...rest }: ModalProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraModal motionPreset={transition} {...rest}>
+    <ChakraModal motionPreset={transition} returnFocusOnClose={false} {...rest}>
       {children}
     </ChakraModal>
   )
@@ -22,7 +22,7 @@ const Alert = ({ children, ...rest }: AlertDialogProps): JSX.Element => {
   const transition = useBreakpointValue<any>(transitionValues)
 
   return (
-    <ChakraAlert motionPreset={transition} {...rest}>
+    <ChakraAlert motionPreset={transition} returnFocusOnClose={false} {...rest}>
       {children}
     </ChakraAlert>
   )
