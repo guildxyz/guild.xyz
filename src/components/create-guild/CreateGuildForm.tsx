@@ -54,15 +54,17 @@ const CreateGuildForm = () => {
   }, [touchedFields.contacts, emails, platformUsers, providedEmail, setValue])
 
   return (
-    <Stack spacing={4} w="min(100%, var(--chakra-sizes-md))" mx="auto" px={4} pb={8}>
+    <Stack
+      spacing={4}
+      w="min(100%, var(--chakra-sizes-md))"
+      mx="auto"
+      px={4}
+      pt={16}
+      pb={8}
+    >
       <Card py={6} p={{ base: 5, md: 6 }}>
         <Stack spacing={6}>
-          <Heading
-            as="h2"
-            fontFamily="display"
-            textAlign="center"
-            fontSize={{ base: "3xl", sm: "4xl" }}
-          >
+          <Heading as="h2" fontFamily="display" textAlign="center" fontSize="2xl">
             Begin your guild
           </Heading>
 

@@ -9,7 +9,6 @@ import {
   PopoverFooter,
   PopoverTrigger,
   Text,
-  useColorMode,
   useColorModeValue,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
@@ -47,9 +46,6 @@ const NavMenu = (): JSX.Element => {
   const setExplorerScrollRestoration = useSetAtom(explorerScrollRestorationAtom)
   const router = useRouter()
 
-  const { colorMode } = useColorMode()
-  const isDarkVariant = colorMode === "light" && router.pathname === "/create-guild"
-
   return (
     <Popover placement="bottom-start">
       <PopoverTrigger>
@@ -62,9 +58,8 @@ const NavMenu = (): JSX.Element => {
           fontWeight="black"
           borderRadius="2xl"
           variant="ghost"
-          color={isDarkVariant ? "black!important" : undefined}
         >
-          <HStack spacing={"7px"}>
+          <HStack spacing="7px">
             <AnimatedLogo />
             <Text as="span">Guild</Text>
           </HStack>
@@ -73,8 +68,8 @@ const NavMenu = (): JSX.Element => {
       <PopoverContent
         w="auto"
         minW="xs"
-        borderRadius={"lg"}
-        overflow={"hidden"}
+        borderRadius="lg"
+        overflow="hidden"
         zIndex="popover"
       >
         <PopoverBody px={{ base: 2, sm: 3 }} py="4">

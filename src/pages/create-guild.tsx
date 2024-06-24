@@ -1,8 +1,7 @@
-import { Box, useColorModeValue } from "@chakra-ui/react"
+import { useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
 import ClientOnly from "components/common/ClientOnly"
 import { Layout } from "components/common/Layout"
-import Head from "components/common/Layout/components/Head"
 import CreateGuildForm, {
   CreateGuildFormType,
 } from "components/create-guild/CreateGuildForm"
@@ -24,23 +23,17 @@ const CreateGuildPage = (): JSX.Element => {
     },
   })
 
-  const bgColor = useColorModeValue(
-    "var(--chakra-colors-gray-400)",
-    "var(--chakra-colors-gray-700)"
-  )
-  const bgFile = useColorModeValue("bg_light.svg", "bg.svg")
+  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
+  const bgOpacity = useColorModeValue(0.06, 0.1)
+  const bgLinearPercentage = useBreakpointValue({ base: "50%", sm: "55%" })
 
   return (
     <>
-      <Head ogTitle="Begin your guild" />
-      <ClientOnly>
-        <FormProvider {...methods}>
-          <Box
-            display="grid"
-            gridTemplateRows="auto,1fr"
-            gap={8}
-            h="100vh"
-            position="relative"
+      <Layout.Root>
+        <Layout.Head ogTitle="Begin your guild" />
+        <Layout.HeaderSection>
+          <Layout.Background
+            opacity={1}
             _before={{
               content: '""',
               position: "absolute",
@@ -48,21 +41,25 @@ const CreateGuildPage = (): JSX.Element => {
               bottom: 0,
               left: 0,
               right: 0,
-              bg: `radial-gradient(circle at 50% 75%, ${bgColor} 60%, transparent), url('/landing/${bgFile}')`,
-              bgSize: "var(--chakra-sizes-container-md)",
-              bgPosition: "top center, top 0.5rem center",
-              opacity: "0.07",
-              zIndex: -1,
+              bg: `linear-gradient(to top right, ${bgColor} ${bgLinearPercentage}, transparent), url('/banner.png ')`,
+              bgSize: { base: "auto 100%", sm: "auto 115%" },
+              bgRepeat: "no-repeat",
+              bgPosition: "top 10px right 0px",
+              opacity: bgOpacity,
             }}
-          >
-            <Layout.Header />
+          />
+          <Layout.Header />
+        </Layout.HeaderSection>
+        <Layout.MainSection>
+          <ClientOnly>
+            <FormProvider {...methods}>
+              <CreateGuildForm />
 
-            <CreateGuildForm />
-          </Box>
-
-          <DynamicDevTool control={methods.control} />
-        </FormProvider>
-      </ClientOnly>
+              <DynamicDevTool control={methods.control} />
+            </FormProvider>
+          </ClientOnly>
+        </Layout.MainSection>
+      </Layout.Root>
     </>
   )
 }
