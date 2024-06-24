@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { ThemeProvider } from "v2/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider"
 import { inter, dystopian } from "fonts"
 import "./globals.css"
 import clsx from "clsx"
