@@ -1,5 +1,4 @@
 import { Icon, Text, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import DynamicRewardSetup from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/DynamicSetup/DynamicRewardSetup"
 import Button from "components/common/Button"
 import OptionImage from "components/common/StyledSelect/components/CustomSelectOption/components/OptionImage"
@@ -8,7 +7,6 @@ import type { ReactNode } from "react"
 import InformationModal from "../../../../DynamicSetup/InformationModal"
 
 const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
-  const { targetRoleId } = useAddRewardContext()
   const { isOpen, onClose, onOpen } = useDisclosure()
   const learnMoreOpacity = useColorModeValue(1, 0.7)
 
@@ -35,7 +33,6 @@ const DynamicPointsAmountForm = ({ imageUrl, baseFieldPath }) => {
       <InformationModal {...{ isOpen, onClose }} />
 
       <DynamicRewardSetup
-        roleId={targetRoleId as number}
         toImage={pointImage}
         multiplierFieldName={`${
           baseFieldPath ? baseFieldPath + "." : ""

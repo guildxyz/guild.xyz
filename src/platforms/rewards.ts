@@ -114,6 +114,7 @@ export type AddRewardPanelProps = {
       roleName?: string
     }
   ) => void
+  onCancel?: () => void
   skipSettings?: boolean
 }
 
