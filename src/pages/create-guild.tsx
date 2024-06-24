@@ -1,4 +1,4 @@
-import { Box, Heading, Stack, useColorModeValue } from "@chakra-ui/react"
+import { Box, useColorModeValue } from "@chakra-ui/react"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
 import ClientOnly from "components/common/ClientOnly"
 import { Layout } from "components/common/Layout"
@@ -57,23 +57,7 @@ const CreateGuildPage = (): JSX.Element => {
           >
             <Layout.Header />
 
-            <Stack
-              spacing={8}
-              pb={8}
-              px={4}
-              w="min(100%, var(--chakra-sizes-md))"
-              mx="auto"
-            >
-              <Heading
-                as="h2"
-                fontFamily="display"
-                textAlign="center"
-                fontSize={{ base: "4xl", sm: "5xl" }}
-              >
-                Begin your guild
-              </Heading>
-              <CreateGuildForm />
-            </Stack>
+            <CreateGuildForm />
           </Box>
 
           <DynamicDevTool control={methods.control} />

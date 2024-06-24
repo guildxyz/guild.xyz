@@ -1,4 +1,4 @@
-import { Collapse } from "@chakra-ui/react"
+import { Collapse, Stack } from "@chakra-ui/react"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
@@ -15,7 +15,7 @@ const CreateGuildButton = () => {
   const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   return (
-    <>
+    <Stack spacing={2}>
       <Collapse in={!isWeb3Connected}>
         <Button
           size="xl"
@@ -31,7 +31,6 @@ const CreateGuildButton = () => {
         colorScheme="green"
         ml="auto"
         size="xl"
-        borderRadius="2xl"
         w="full"
         isLoading={isLoading}
         loadingText="Creating guild"
@@ -40,7 +39,7 @@ const CreateGuildButton = () => {
       >
         Create guild
       </Button>
-    </>
+    </Stack>
   )
 }
 

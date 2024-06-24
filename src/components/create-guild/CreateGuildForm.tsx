@@ -1,4 +1,11 @@
-import { Center, FormControl, FormLabel, Input, Stack } from "@chakra-ui/react"
+import {
+  Center,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Stack,
+} from "@chakra-ui/react"
 import { Schemas } from "@guildxyz/types"
 import useUser from "components/[guild]/hooks/useUser"
 import Card from "components/common/Card"
@@ -47,9 +54,18 @@ const CreateGuildForm = () => {
   }, [touchedFields.contacts, emails, platformUsers, providedEmail, setValue])
 
   return (
-    <Stack spacing={4} w="full">
-      <Card pt={12} pb={8} px={{ base: 5, md: 6 }}>
+    <Stack spacing={4} w="min(100%, var(--chakra-sizes-md))" mx="auto" px={4} pb={8}>
+      <Card py={6} p={{ base: 5, md: 6 }}>
         <Stack spacing={6}>
+          <Heading
+            as="h2"
+            fontFamily="display"
+            textAlign="center"
+            fontSize={{ base: "3xl", sm: "4xl" }}
+          >
+            Begin your guild
+          </Heading>
+
           <Center>
             <IconSelector
               uploader={iconUploader}
@@ -84,9 +100,10 @@ const CreateGuildForm = () => {
               {errors.contacts?.[0]?.contact?.message}
             </FormErrorMessage>
           </FormControl>
+
+          <CreateGuildButton />
         </Stack>
       </Card>
-      <CreateGuildButton />
     </Stack>
   )
 }
