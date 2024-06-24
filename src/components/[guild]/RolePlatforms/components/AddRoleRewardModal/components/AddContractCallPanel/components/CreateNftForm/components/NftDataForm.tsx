@@ -411,9 +411,7 @@ const NftDataForm = ({ isEditMode, submitButton }: Props) => {
 
         <Tooltip
           label={
-            !!address
-              ? "Please switch to a supported chain"
-              : "Please connect an EVM wallet"
+            !!address ? "Switch to the selected chain" : "Connect an EVM wallet"
           }
           isDisabled={!!address && !shouldSwitchChain}
           hasArrow

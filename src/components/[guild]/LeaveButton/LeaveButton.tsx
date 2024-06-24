@@ -55,8 +55,8 @@ const LeaveButton = ({ disableColoring = false }) => {
         <AlertDialogContent>
           <AlertDialogHeader pb="5">Leave guild</AlertDialogHeader>
           <AlertDialogBody>
-            Are you sure? You'll be able to join again as long as you satisfy the
-            requirements of at least one role in it.
+            Are you sure? You'll lose all your roles and can only get them back if
+            you still meet all the requirements.
           </AlertDialogBody>
           <AlertDialogFooter>
             <Button ref={cancelRef} onClick={onClose}>
