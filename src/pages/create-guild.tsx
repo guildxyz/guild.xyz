@@ -34,6 +34,7 @@ const CreateGuildPage = (): JSX.Element => {
         <Layout.HeaderSection>
           <Layout.Background
             opacity={1}
+            bgColor={bgColor}
             _before={{
               content: '""',
               position: "absolute",
@@ -47,6 +48,7 @@ const CreateGuildPage = (): JSX.Element => {
               bgPosition: "top 10px right 0px",
               opacity: bgOpacity,
             }}
+            offset={250}
           />
           <Layout.Header />
         </Layout.HeaderSection>
