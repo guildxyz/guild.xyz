@@ -10,7 +10,7 @@ import { PlatformName, RoleFormType, RolePlatform } from "types"
 
 type Props = {
   platformType: PlatformName
-  rolePlatform?: RoleFormType["rolePlatforms"][number]
+  rolePlatform?: NonNullable<RoleFormType["rolePlatforms"]>[number]
   defaultValues?: RolePlatformAvailabilityForm
   onDone: (data: RolePlatformAvailabilityForm) => void
 }
@@ -26,9 +26,9 @@ const AvailabilitySetup = ({
 
   // If claim is already started by date, and thats the only limitation, show the full button
   const notCompact =
-    !rolePlatform.capacity &&
-    !rolePlatform.endTime &&
-    rolePlatform.startTime &&
+    !rolePlatform?.capacity &&
+    !rolePlatform?.endTime &&
+    rolePlatform?.startTime &&
     new Date(rolePlatform.startTime).getTime() < Date.now()
 
   return (

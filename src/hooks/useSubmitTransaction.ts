@@ -7,6 +7,7 @@ import {
   ContractFunctionName,
   DecodeEventLogReturnType,
   TransactionReceipt,
+  WriteContractParameters,
   decodeEventLog,
 } from "viem"
 import {
@@ -187,7 +188,8 @@ const useSubmitTransaction = (
         return
       }
 
-      writeContract(contractCallConfig)
+      // TODO: properly type this
+      writeContract(contractCallConfig as WriteContractParameters)
     },
     isPreparing: isSimulateContractLoading || isGasEstimationLoading,
     isLoading: isWaitForTransactionLoading || isContractWriteLoading,

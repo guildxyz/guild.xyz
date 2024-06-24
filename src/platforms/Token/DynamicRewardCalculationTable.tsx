@@ -65,6 +65,7 @@ const DynamicRewardCalculationTable = ({ requirement, rolePlatform }: Props) => 
         <Tr>
           <Td
             sx={{ fontSize: "sm !important", "& *": { fontSize: "sm !important" } }}
+            whiteSpace={"normal"}
           >
             {!!requirement && <ProvidedValueDisplay requirement={requirement} />}
           </Td>
