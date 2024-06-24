@@ -36,7 +36,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount === undefined)
       return (
         <>
-          {`Have a transaction before `}
+          {`Have your first transaction before `}
           <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
@@ -44,7 +44,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount === undefined && minAmount)
       return (
         <>
-          {`Have a transaction after `}
+          {`Have your first transaction after `}
           <DataBlockWithDate timestamp={minAmount} />
         </>
       )
@@ -52,7 +52,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a transaction between `}
+          {`Have your first transaction between `}
           <DataBlockWithDate timestamp={minAmount} />
           {` and `}
           <DataBlockWithDate timestamp={maxAmount} />
@@ -69,26 +69,29 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && !minAmount)
       return (
         <>
-          {`Have a transaction that is older than `}
+          {`Have a transaction more than `}
           <DataBlock>{formattedMax}</DataBlock>
+          {` old`}
         </>
       )
 
     if (!maxAmount && minAmount)
       return (
         <>
-          {`Have a transaction that is younger than `}
+          {`Have a transaction less than `}
           <DataBlock>{formattedMin}</DataBlock>
+          {` old`}
         </>
       )
 
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a transaction that is older than `}
+          {`Have a transaction that is more than `}
           <DataBlock>{formattedMax}</DataBlock>
-          {` and younger than `}
+          {` old and less than `}
           <DataBlock>{formattedMin}</DataBlock>
+          {` old`}
         </>
       )
 
