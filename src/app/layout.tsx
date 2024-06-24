@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/ThemeProvider"
 import { inter, dystopian } from "fonts"
 import "./globals.css"
 import clsx from "clsx"
@@ -10,7 +10,6 @@ interface RootLayoutProps {
 
 export const metadata: Metadata = {
   title: "Guildhall",
-  description: "Recreating a portion of guild.xyz using RadixUI",
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {

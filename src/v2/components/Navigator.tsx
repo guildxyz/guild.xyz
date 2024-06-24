@@ -10,7 +10,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
+} from "@/components/ui/NavigationMenu"
 import {
   Book,
   CircleWavyCheck,
@@ -26,8 +26,8 @@ import {
   File,
 } from "phosphor-react"
 import XLogo from "@/public/static/icons/x.svg"
-import { GuildCastle } from "./guild-castle"
-import { buttonVariants } from "./ui/button"
+import { GuildCastle } from "@/components/GuildCastle"
+import { buttonVariants } from "@/components/ui/Button"
 
 export function Navigator() {
   return (
