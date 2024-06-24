@@ -3,6 +3,7 @@ import {
   ChakraProps,
   FormControl,
   FormLabel,
+  Icon,
   IconButton,
   Img,
   ModalBody,
@@ -25,6 +26,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
+import { UploadSimple } from "phosphor-react"
 import React, { ComponentProps, useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { CreateGuildFormType } from "../CreateGuildForm"
@@ -98,7 +100,11 @@ const IconSelector = ({
         flexShrink={0}
         colorScheme="gray"
         icon={
-          <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
+          field.value ? (
+            <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
+          ) : (
+            <Icon as={UploadSimple} color="white" boxSize="35%" />
+          )
         }
         aria-label="Guild logo"
         variant="outline"

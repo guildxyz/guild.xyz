@@ -8,14 +8,13 @@ import CreateGuildForm, {
 } from "components/create-guild/CreateGuildForm"
 import DynamicDevTool from "components/create-guild/DynamicDevTool"
 import { FormProvider, useForm } from "react-hook-form"
-import getRandomInt from "utils/getRandomInt"
 
 const CreateGuildPage = (): JSX.Element => {
   const methods = useForm<CreateGuildFormType>({
     mode: "all",
     defaultValues: {
       name: "",
-      imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
+      imageUrl: "",
       contacts: [
         {
           type: "EMAIL",

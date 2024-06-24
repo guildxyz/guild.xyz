@@ -80,6 +80,7 @@ const useCreateGuild = ({
       useSubmitResponse.onSubmit({
         ...data,
         urlName: slugify(data.name),
+        imageUrl: data.imageUrl || `/guildLogos/${getRandomInt(286)}.svg`,
         roles: [
           {
             name: "Member",
