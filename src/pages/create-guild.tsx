@@ -50,8 +50,8 @@ const CreateGuildPage = (): JSX.Element => {
               left: 0,
               right: 0,
               bg: `radial-gradient(circle at 50% 75%, ${bgColor} 60%, transparent), url('/landing/${bgFile}')`,
-              bgSize: "100% auto",
-              bgPosition: "top 0.5rem center",
+              bgSize: "var(--chakra-sizes-container-md)",
+              bgPosition: "top center, top 0.5rem center",
               opacity: "0.07",
               zIndex: -1,
             }}
