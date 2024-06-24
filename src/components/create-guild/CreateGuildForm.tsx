@@ -63,48 +63,52 @@ const CreateGuildForm = () => {
       pb={8}
     >
       <Card py={6} p={{ base: 5, md: 6 }}>
-        <Stack spacing={6}>
-          <Heading as="h2" fontFamily="display" textAlign="center" fontSize="2xl">
-            Begin your guild
-          </Heading>
+        <Heading
+          as="h2"
+          fontFamily="display"
+          textAlign="center"
+          fontSize="2xl"
+          mb="7"
+        >
+          Begin your guild
+        </Heading>
 
-          <Center>
-            <IconSelector
-              uploader={iconUploader}
-              minW={512}
-              minH={512}
-              onGeneratedBlobChange={async (objectURL) => {
-                const generatedThemeColor = await getColorByImage(objectURL)
-                setValue("theme.color", generatedThemeColor)
-              }}
-              boxSize={28}
-            />
-          </Center>
+        <Center mb="6">
+          <IconSelector
+            uploader={iconUploader}
+            minW={512}
+            minH={512}
+            onGeneratedBlobChange={async (objectURL) => {
+              const generatedThemeColor = await getColorByImage(objectURL)
+              setValue("theme.color", generatedThemeColor)
+            }}
+            boxSize={28}
+          />
+        </Center>
 
-          <FormControl isRequired>
-            <FormLabel>Guild name</FormLabel>
-            <Name width="full" />
-          </FormControl>
+        <FormControl isRequired mb="4">
+          <FormLabel>Guild name</FormLabel>
+          <Name width="full" />
+        </FormControl>
 
-          <FormControl isRequired isInvalid={!!errors.contacts?.[0]?.contact}>
-            <FormLabel>Your email</FormLabel>
-            <Input
-              {...register("contacts.0.contact", {
-                required: "This field is required",
-                pattern: {
-                  value: /\S+@\S+\.\S+/,
-                  message: "Invalid e-mail format",
-                },
-              })}
-              size="lg"
-            />
-            <FormErrorMessage>
-              {errors.contacts?.[0]?.contact?.message}
-            </FormErrorMessage>
-          </FormControl>
+        <FormControl isRequired isInvalid={!!errors.contacts?.[0]?.contact} mb="10">
+          <FormLabel>Your email</FormLabel>
+          <Input
+            {...register("contacts.0.contact", {
+              required: "This field is required",
+              pattern: {
+                value: /\S+@\S+\.\S+/,
+                message: "Invalid e-mail format",
+              },
+            })}
+            size="lg"
+          />
+          <FormErrorMessage>
+            {errors.contacts?.[0]?.contact?.message}
+          </FormErrorMessage>
+        </FormControl>
 
-          <CreateGuildButton />
-        </Stack>
+        <CreateGuildButton />
       </Card>
     </Stack>
   )
