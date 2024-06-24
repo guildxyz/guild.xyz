@@ -4,8 +4,15 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
+import { useState } from "react"
 import { useWatch } from "react-hook-form"
-import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
+import {
+  PlatformType,
+  Requirement,
+  RoleFormType,
+  RolePlatform,
+  Visibility,
+} from "types"
 import EditRolePlatformModal from "../../EditRolePlatformModal"
 import PlatformCard from "../../PlatformCard"
 
@@ -31,19 +38,41 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
 
   const roleVisibility: Visibility = useWatch({ name: ".visibility" })
 
-  const filteredPlatforms = guildPlatforms.filter(
-    (guildPlatform) =>
-      (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
-        PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
-        !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
-      // not added to the role yet
-      !rolePlatforms.find(
-        (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
+  const filteredPlatforms = guildPlatforms
+    ? guildPlatforms.filter(
+        (guildPlatform) =>
+          (rewards[PlatformType[guildPlatform.platformId]].asRewardRestriction ===
+            PlatformAsRewardRestrictions.MULTIPLE_ROLES ||
+            !alreadyUsedRolePlatforms?.includes(guildPlatform.id)) &&
+          // not added to the role yet
+          !!rolePlatforms &&
+          !rolePlatforms.find(
+            (rolePlatform: any) => rolePlatform.guildPlatformId === guildPlatform.id
+          )
       )
-  )
+    : []
 
   const { targetRoleId } = useAddRewardContext()
   const { onOpen, onClose: settingsOnClose, isOpen } = useDisclosure()
+
+  const [selectedRolePlatform, setSelectedRolePlatform] = useState<
+    Partial<RolePlatform> | undefined
+  >()
+
+  const handleClick = (rolePlatformData?: Partial<RolePlatform>) => {
+    const platformId = rolePlatformData?.guildPlatform?.platformId
+    const { cardSettingsComponent = null } = platformId
+      ? rewards[PlatformType[platformId]]
+      : {}
+
+    if (cardSettingsComponent) {
+      setSelectedRolePlatform(rolePlatformData)
+      onOpen()
+    } else {
+      onSelect(rolePlatformData)
+      onClose()
+    }
+  }
 
   if (!filteredPlatforms.length) return null
 
@@ -58,7 +87,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           const platformData = rewards[PlatformType[platform.platformId]]
           if (!platformData) return null
 
-          const { cardPropsHook, cardSettingsComponent } = platformData
+          const { cardPropsHook } = platformData
 
           const isGoogleReward = platform.platformId === PlatformType.GOOGLE
           const isForm =
@@ -79,38 +108,32 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
           return (
             <>
               <PlatformCard
-                key={platform.id}
+                key={platform.platformGuildId ?? platform.id}
                 usePlatformCardProps={cardPropsHook}
                 guildPlatform={platform}
                 colSpan={1}
                 onClick={() => {
-                  if (!!cardSettingsComponent) {
-                    onOpen()
-                    return
-                  }
-                  onSelect(rolePlatformData)
-                  onClose()
+                  handleClick(rolePlatformData)
                 }}
                 description={null}
                 {...DISPLAY_CARD_INTERACTIVITY_STYLES}
               />
-
-              {cardSettingsComponent && (
-                <EditRolePlatformModal
-                  settingsComponent={cardSettingsComponent}
-                  rolePlatform={rolePlatformData}
-                  isOpen={isOpen}
-                  onSubmit={(data) => {
-                    onSelect({ ...rolePlatformData, ...data })
-                    onClose()
-                  }}
-                  onClose={settingsOnClose}
-                />
-              )}
             </>
           )
         })}
       </SimpleGrid>
+
+      {selectedRolePlatform && (
+        <EditRolePlatformModal
+          rolePlatform={selectedRolePlatform}
+          isOpen={isOpen}
+          onSubmit={(data) => {
+            onSelect({ ...selectedRolePlatform, ...data })
+            onClose()
+          }}
+          onClose={settingsOnClose}
+        />
+      )}
 
       <LogicDivider logic="OR" px="0" my="5" />
     </>

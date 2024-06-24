@@ -120,7 +120,6 @@ const ExistingRolePlatformCard = ({ rolePlatform }: Props) => {
                   Edit
                 </Button>
                 <EditRolePlatformModal
-                  settingsComponent={cardSettingsComponent}
                   rolePlatform={{ ...rolePlatform, guildPlatform }}
                   isOpen={isEditOpen}
                   onClose={onEditClose}
