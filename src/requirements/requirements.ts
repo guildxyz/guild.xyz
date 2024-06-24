@@ -292,7 +292,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/requirementLogos/uniswap.svg",
-    name: "Uniswap",
+    name: "Uniswap Liquidity",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Uniswap/UniswapRequirement")
     ),
