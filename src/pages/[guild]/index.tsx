@@ -45,7 +45,7 @@ import Head from "next/head"
 import ErrorPage from "pages/_error"
 import { Info, Users } from "phosphor-react"
 import { MintPolygonIDProofProvider } from "platforms/PolygonID/components/MintPolygonIDProofProvider"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { SWRConfig } from "swr"
 import { Guild, SocialLinkKey } from "types"
 import fetcher from "utils/fetcher"
@@ -107,7 +107,6 @@ const GuildPage = (): JSX.Element => {
   )
 
   const { textColor, localThemeColor, localBackgroundImage } = useThemeContext()
-  // const [isAddRoleStuck, setIsAddRoleStuck] = useState(false)
 
   const showOnboarding = isAdmin && !onboardingComplete
   const accessedGuildPlatforms = useAccessedGuildPlatforms()
@@ -358,8 +357,8 @@ const getStaticPaths: GetStaticPaths = async () => {
   const mapToPaths = (_: Guild[]) =>
     Array.isArray(_)
       ? _.map(({ urlName: guild }) => ({
-          params: { guild },
-        }))
+        params: { guild },
+      }))
       : []
 
   const paths = await fetcher(`/v2/guilds`).then(mapToPaths)
