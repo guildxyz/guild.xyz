@@ -3,12 +3,20 @@
 import { PropsWithChildren } from "react"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { Button } from "@/components/ui/Button"
-import { Plus } from "@phosphor-icons/react"
-import { SignIn, MagnifyingGlass, PushPin, Sparkle } from "phosphor-react"
+import {
+  Plus,
+  SignIn,
+  MagnifyingGlass,
+  PushPin,
+  Sparkle,
+  Users,
+} from "@phosphor-icons/react"
 import Robot from "/public/landing/robot.svg"
 import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
 
-function PageBoundary({ children }: PropsWithChildren) {
+export function PageBoundary({ children }: PropsWithChildren) {
   return <div className="mx-auto max-w-screen-lg">{children}</div>
 }
 
@@ -44,10 +52,10 @@ const Page = () => {
               <span className="text-md font-semibold">Sign in</span>
             </Button>
           </div>
-          <div className="flex gap-4 flex-col">
+          <div className="flex gap-4 flex-col mb-6">
             <h2 className="text-lg font-bold">Explore verified guilds</h2>
             <div className="relative flex">
-              <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 stroke-muted" />
+              <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input
                 className="text-md py-6 pr-6 pl-12 rounded-r-none grow"
                 placeholder="Search verified guilds"
@@ -56,16 +64,37 @@ const Page = () => {
                 type="single"
                 className="bg-card px-4 rounded-r-lg border"
               >
-                <ToggleGroupItem value="featured" className="space-x-2">
+                <ToggleGroupItem value="featured" className="space-x-2" size="sm">
                   <PushPin />
                   <span>featured</span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="newest" className="space-x-2">
+                <ToggleGroupItem value="newest" className="space-x-2" size="sm">
                   <Sparkle />
                   <span>newest</span>
                 </ToggleGroupItem>
               </ToggleGroup>
             </div>
+          </div>
+          <div className="grid grid-cols-3 gap-6">
+            {Array.from({ length: 32 }, (_, i) => (
+              <div
+                className="bg-card text-card-foreground rounded-lg px-6 py-7 grid grid-cols-[auto,1fr] gap-y-1 gap-x-4 items-center grid-rows-2"
+                key={i}
+              >
+                <Avatar className="row-span-2 size-12">
+                  <AvatarImage src="" alt="guild emblem" />
+                  <AvatarFallback>G</AvatarFallback>
+                </Avatar>
+                <h3 className="font-bold text-lg">Guild</h3>
+                <div className="flex gap-2">
+                  <Badge variant={"secondary"} className="space-x-2">
+                    <Users />
+                    <span>230K</span>
+                  </Badge>
+                  <Badge variant={"secondary"}>15 roles</Badge>
+                </div>
+              </div>
+            ))}
           </div>
         </main>
       </PageBoundary>

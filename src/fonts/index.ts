@@ -4,6 +4,7 @@ import localFont from "next/font/local"
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
 })
 
 const dystopian = localFont({
