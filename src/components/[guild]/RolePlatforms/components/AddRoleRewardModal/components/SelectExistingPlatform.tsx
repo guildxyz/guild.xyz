@@ -1,13 +1,12 @@
-import { SimpleGrid, Text } from "@chakra-ui/react"
+import { SimpleGrid, Text, useDisclosure } from "@chakra-ui/react"
 import { useAddRewardContext } from "components/[guild]/AddRewardContext"
 import LogicDivider from "components/[guild]/LogicDivider"
-import { openRewardSettingsGuildPlatformIdAtom } from "components/[guild]/RolePlatforms/RolePlatforms"
 import useGuild from "components/[guild]/hooks/useGuild"
 import { DISPLAY_CARD_INTERACTIVITY_STYLES } from "components/common/DisplayCard"
-import { useSetAtom } from "jotai"
 import rewards, { PlatformAsRewardRestrictions } from "platforms/rewards"
 import { useWatch } from "react-hook-form"
 import { PlatformType, Requirement, RoleFormType, Visibility } from "types"
+import EditRolePlatformModal from "../../EditRolePlatformModal"
 import PlatformCard from "../../PlatformCard"
 
 type Props = {
@@ -20,9 +19,6 @@ type Props = {
 }
 
 const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
-  const setOpenGuildPlatformSettingsId = useSetAtom(
-    openRewardSettingsGuildPlatformIdAtom
-  )
   const { guildPlatforms, roles } = useGuild()
   const alreadyUsedRolePlatforms = roles
     ?.flatMap((role) => role.rolePlatforms)
@@ -47,6 +43,7 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
   )
 
   const { targetRoleId } = useAddRewardContext()
+  const { onOpen, onClose: settingsOnClose, isOpen } = useDisclosure()
 
   if (!filteredPlatforms.length) return null
 
@@ -68,33 +65,49 @@ const SelectExistingPlatform = ({ onClose, onSelect }: Props) => {
             platform.platformGuildData?.mimeType ===
             "application/vnd.google-apps.form"
 
-          return (
-            <PlatformCard
-              key={platform.id}
-              usePlatformCardProps={cardPropsHook}
-              guildPlatform={platform}
-              colSpan={1}
-              onClick={() => {
-                onSelect({
-                  guildPlatformId: platform.id,
-                  guildPlatform: platform,
-                  isNew: true,
-                  roleId: targetRoleId,
-                  platformRoleId: isGoogleReward
-                    ? isForm
-                      ? "writer"
-                      : "reader"
-                    : null,
-                  visibility: roleVisibility,
-                })
-                if (cardSettingsComponent)
-                  setOpenGuildPlatformSettingsId(platform.id)
+          const rolePlatformData = {
+            guildPlatformId: platform.id,
+            guildPlatform: platform,
+            isNew: true,
+            roleId: targetRoleId,
+            ...(isGoogleReward && {
+              platformRoleId: isForm ? "writer" : "reader",
+            }),
+            visibility: roleVisibility,
+          }
 
-                onClose()
-              }}
-              description={null}
-              {...DISPLAY_CARD_INTERACTIVITY_STYLES}
-            ></PlatformCard>
+          return (
+            <>
+              <PlatformCard
+                key={platform.id}
+                usePlatformCardProps={cardPropsHook}
+                guildPlatform={platform}
+                colSpan={1}
+                onClick={() => {
+                  if (!!cardSettingsComponent) {
+                    onOpen()
+                    return
+                  }
+                  onSelect(rolePlatformData)
+                  onClose()
+                }}
+                description={null}
+                {...DISPLAY_CARD_INTERACTIVITY_STYLES}
+              />
+
+              {cardSettingsComponent && (
+                <EditRolePlatformModal
+                  settingsComponent={cardSettingsComponent}
+                  rolePlatform={rolePlatformData}
+                  isOpen={isOpen}
+                  onSubmit={(data) => {
+                    onSelect({ ...rolePlatformData, ...data })
+                    onClose()
+                  }}
+                  onClose={settingsOnClose}
+                />
+              )}
+            </>
           )
         })}
       </SimpleGrid>

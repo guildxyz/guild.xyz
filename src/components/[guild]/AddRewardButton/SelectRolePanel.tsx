@@ -13,11 +13,13 @@ import {
 } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
+import useCreateRRR, { SubmitData } from "hooks/useCreateRRR"
 import { ArrowLeft, Info } from "phosphor-react"
 import SelectRoleOrSetRequirements from "platforms/components/SelectRoleOrSetRequirements"
 import rewards, { CAPACITY_TIME_PLATFORMS } from "platforms/rewards"
 import { useState } from "react"
 import { useFormContext, useWatch } from "react-hook-form"
+import { Visibility } from "types"
 import { RoleTypeToAddTo, useAddRewardContext } from "../AddRewardContext"
 import useGuild from "../hooks/useGuild"
 import { defaultValues } from "./AddRewardButton"
@@ -50,7 +52,7 @@ const SelectRolePanel = ({
     roleIds: roleIds,
   }
 
-  const { onSubmit, isLoading } = useSubmitAddReward({
+  const { onSubmit, isLoading } = useCreateRRR({
     onSuccess: (res) => {
       captureEvent("reward created (AddRewardButton)", postHogOptions)
       onSuccess?.(res)
@@ -136,7 +138,8 @@ const SelectRolePanel = ({
           isDisabled={isAddRewardButtonDisabled}
           onClick={methods.handleSubmit((data) => {
             setSaveAsDraft(true)
-            onSubmit(data, "DRAFT")
+            const draftData = changeDataToDraft(data as SubmitData)
+            onSubmit(draftData)
           })}
           isLoading={saveAsDraft && isLoading}
           rightIcon={
@@ -156,10 +159,7 @@ const SelectRolePanel = ({
         <Button
           isDisabled={isAddRewardButtonDisabled}
           colorScheme="green"
-          onClick={methods.handleSubmit((data) => {
-            setSaveAsDraft(false)
-            onSubmit(data)
-          })}
+          onClick={methods.handleSubmit(onSubmit)}
           isLoading={!saveAsDraft && isLoading}
         >
           Save
@@ -167,6 +167,28 @@ const SelectRolePanel = ({
       </ModalFooter>
     </ModalContent>
   )
+}
+
+const changeDataToDraft = (data: SubmitData): SubmitData => {
+  if (!data.roleIds?.length) {
+    return { ...data, visibility: Visibility.HIDDEN }
+  }
+
+  const { rolePlatforms, requirements, roleIds } = data
+
+  const hiddenRolePlatforms = rolePlatforms.map((rp) => ({
+    ...rp,
+    visibility: Visibility.HIDDEN,
+  }))
+  const hiddenRequirements = requirements.map((req) =>
+    req.type === "FREE" ? req : { ...req, visibility: Visibility.HIDDEN }
+  )
+
+  return {
+    rolePlatforms: hiddenRolePlatforms,
+    requirements: hiddenRequirements,
+    roleIds,
+  }
 }
 
 export default SelectRolePanel
