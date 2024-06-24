@@ -36,7 +36,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount === undefined)
       return (
         <>
-          {`Have a wallet created before `}
+          {`Have a transaction before `}
           <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
@@ -44,7 +44,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount === undefined && minAmount)
       return (
         <>
-          {`Have a wallet created after `}
+          {`Have a transaction after `}
           <DataBlockWithDate timestamp={minAmount} />
         </>
       )
@@ -52,14 +52,14 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a wallet created between `}
+          {`Have a transaction between `}
           <DataBlockWithDate timestamp={minAmount} />
           {` and `}
           <DataBlockWithDate timestamp={maxAmount} />
         </>
       )
 
-    return <>Have a wallet with at least one transaction</>
+    return <>Have at least one transaction</>
   }
 
   const getFirstTxRelativeContent = () => {
@@ -69,7 +69,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && !minAmount)
       return (
         <>
-          {`Have a wallet older than `}
+          {`Have a transaction that is older than `}
           <DataBlock>{formattedMax}</DataBlock>
         </>
       )
@@ -77,7 +77,7 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (!maxAmount && minAmount)
       return (
         <>
-          {`Have a wallet younger than `}
+          {`Have a transaction that is younger than `}
           <DataBlock>{formattedMin}</DataBlock>
         </>
       )
@@ -85,14 +85,14 @@ const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
     if (maxAmount && minAmount)
       return (
         <>
-          {`Have a wallet older than `}
+          {`Have a transaction that is older than `}
           <DataBlock>{formattedMax}</DataBlock>
           {` and younger than `}
           <DataBlock>{formattedMin}</DataBlock>
         </>
       )
 
-    return <>Have a wallet with at least one transaction</>
+    return <>Have at least one transaction</>
   }
 
   return (

@@ -48,12 +48,12 @@ export const COVALENT_CHAINS = new Set<Chain>([
 
 const walletActivityRequirementTypes: SelectOption[] = [
   {
-    label: "Wallet age",
+    label: "First transaction",
     value: "COVALENT_FIRST_TX",
     WalletActivityRequirement: CovalentFirstTx,
   },
   {
-    label: "Wallet age (relative)",
+    label: "First transaction (relative)",
     value: "COVALENT_FIRST_TX_RELATIVE",
     WalletActivityRequirement: CovalentFirstTxRelative,
   },
