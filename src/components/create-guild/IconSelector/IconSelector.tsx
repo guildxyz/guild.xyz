@@ -18,6 +18,7 @@ import {
   TabPanels,
   Tabs,
   Text,
+  useColorMode,
   useColorModeValue,
   useDisclosure,
   useRadioGroup,
@@ -26,7 +27,7 @@ import LogicDivider from "components/[guild]/LogicDivider"
 import GuildLogo from "components/common/GuildLogo"
 import { Modal } from "components/common/Modal"
 import { Uploader } from "hooks/usePinata/usePinata"
-import { UploadSimple } from "phosphor-react"
+import { Image } from "phosphor-react"
 import React, { ComponentProps, useEffect } from "react"
 import { useController, useFormContext } from "react-hook-form"
 import { CreateGuildFormType } from "../CreateGuildForm"
@@ -83,6 +84,8 @@ const IconSelector = ({
     })
   }, [field.value])
 
+  const { colorMode } = useColorMode()
+
   const iconButtonBgColor = useColorModeValue("gray.700", "blackAlpha.300")
   const iconButtonHoverBgColor = useColorModeValue("gray.600", "blackAlpha.200")
   const iconButtonActiveBgColor = useColorModeValue("gray.500", "blackAlpha.100")
@@ -103,15 +106,19 @@ const IconSelector = ({
           field.value ? (
             <GuildLogo imageUrl={field.value} bgColor="transparent" size={boxSize} />
           ) : (
-            <Icon as={UploadSimple} color="white" boxSize="35%" />
+            <Icon as={Image} boxSize="35%" />
           )
         }
         aria-label="Guild logo"
         variant="outline"
         borderWidth={1}
-        bg={iconButtonBgColor}
-        _hover={{ bg: iconButtonHoverBgColor }}
-        _active={{ bg: iconButtonActiveBgColor }}
+        {...(field.value || colorMode === "dark"
+          ? {
+              bg: iconButtonBgColor,
+              _hover: { bg: iconButtonHoverBgColor },
+              _active: { bg: iconButtonActiveBgColor },
+            }
+          : {})}
         isDisabled={isDisabled}
       />
       {!isDisabled && (
