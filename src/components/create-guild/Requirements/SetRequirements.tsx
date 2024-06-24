@@ -5,61 +5,39 @@ import CardMotionWrapper from "components/common/CardMotionWrapper"
 import { SectionTitle } from "components/common/Section"
 import { AnimatePresence } from "framer-motion"
 import useToast from "hooks/useToast"
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form"
+import { useFormContext, useWatch } from "react-hook-form"
 import { RequirementType } from "requirements"
 import FreeRequirement from "requirements/Free/FreeRequirement"
-import { Requirement } from "types"
+import { Requirement, RolePlatform } from "types"
 import AddRequirement from "./components/AddRequirement"
 import BalancyCounterWithPopover from "./components/BalancyCounter"
 import LogicFormControl from "./components/LogicFormControl"
 import RequirementBaseCard from "./components/RequirementBaseCard"
 import RequirementEditableCard from "./components/RequirementEditableCard"
+import useHandleRequirementState from "./hooks/useHandleRequirementState"
 
 type Props = {
   titleSize?: ChakraProps["fontSize"]
 }
 
 const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
-  const { getValues, watch } = useFormContext<Schemas["RoleCreationPayload"]>()
-
+  const methods = useFormContext<Schemas["RoleCreationPayload"]>()
+  const { getValues } = methods
   const logic = useWatch({ name: "logic" })
+  const { requirements, append, remove, update, freeEntry } =
+    useHandleRequirementState(methods)
 
-  const {
-    fields,
-    append: appendToFieldArray,
-    update,
-    remove,
-  } = useFieldArray({
-    name: "requirements",
-    keyName: "formFieldId",
-  })
-
-  // Watching the nested fields too, so we can properly update the list
-  const watchFieldArray = watch("requirements")
-  const controlledFields = fields.map((field, index) => ({
-    ...field,
-    ...watchFieldArray?.[index],
-  }))
-  const freeEntry = !!getValues("requirements")?.some(({ type }) => type === "FREE")
-
-  const removeReq = (index: number) => {
-    if (controlledFields.length === 1) {
-      remove(0)
-      appendToFieldArray({ type: "FREE" })
-    } else {
-      remove(index)
-    }
-  }
-
-  const append = (req: Requirement) => {
-    if (freeEntry) {
-      remove(0)
-    }
-
-    appendToFieldArray(req)
-  }
+  const rolePlatforms: RolePlatform[] = useWatch({ name: "rolePlatforms" })
 
   const toast = useToast()
+
+  const isProviderReq = (req: Requirement) =>
+    rolePlatforms.some((rp) => {
+      if (!rp.dynamicAmount) return false
+
+      const input: any = rp.dynamicAmount.operation.input
+      return input.requirementId === req.id
+    })
 
   return (
     <Stack spacing="5" w="full">
@@ -86,33 +64,26 @@ const SetRequirements = ({ titleSize = undefined }: Props): JSX.Element => {
               <LogicDivider logic="OR" />
             </CardMotionWrapper>
           ) : (
-            controlledFields.map((field, i) => {
+            requirements.map((req, i) => {
               const type = getValues(`requirements.${i}.type`)
 
               return (
-                <CardMotionWrapper key={field.formFieldId}>
+                <CardMotionWrapper key={req.id}>
                   <RequirementEditableCard
                     // TODO: remove these type conversions once we use Zod schemas everywhere
                     type={type as unknown as RequirementType}
-                    field={field as unknown as Requirement}
+                    field={req as unknown as Requirement}
                     index={i}
                     removeRequirement={(idx) => {
-                      /**
-                       * TODO: check if the role has an ERC20 reward & only show this
-                       * toast in that case.
-                       *
-                       * We decided to leave it as is for now, because we can only
-                       * add this requirement type for ERC20 requirements.
-                       */
-                      if (type === "GUILD_SNAPSHOT") {
+                      if (isProviderReq(req)) {
                         toast({
                           status: "info",
                           title:
-                            "The snapshot requirement is necessary for dynamic token rewards, therefore cannot be removed.",
+                            "The requirement is necessary for dynamic token rewards, therefore cannot be removed.",
                         })
                         return
                       }
-                      removeReq(idx)
+                      remove(idx)
                     }}
                     updateRequirement={update}
                     isEditDisabled={type === "PAYMENT" || type === "GUILD_SNAPSHOT"}

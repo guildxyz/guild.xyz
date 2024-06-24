@@ -14,8 +14,10 @@ import { ReactNode } from "react"
 
 export const DefaultAddRewardPanelWrapper = ({
   children,
+  onCancel,
 }: {
   children: ReactNode
+  onCancel?: () => void
 }) => {
   const { modalRef, selection, setStep } = useAddRewardContext()
 
@@ -31,7 +33,7 @@ export const DefaultAddRewardPanelWrapper = ({
             mb="-3px"
             icon={<ArrowLeft size={20} />}
             variant="ghost"
-            onClick={() => setStep("HOME")}
+            onClick={onCancel ? onCancel : () => setStep("HOME")}
           />
           <Text>{`Add ${rewards[selection]?.name} reward`}</Text>
         </HStack>

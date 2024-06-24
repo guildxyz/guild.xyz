@@ -131,7 +131,6 @@ const EditGuildDrawer = ({
     mode: "all",
     defaultValues,
   })
-
   const { control, reset, formState } = methods
 
   const { onSubmit: onTagsSubmit } = useEditTags()

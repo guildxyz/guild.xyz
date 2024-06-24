@@ -1,5 +1,4 @@
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react"
-import { useRolePlatform } from "components/[guild]/RolePlatforms/components/RolePlatformProvider"
 import RadioSelect from "components/common/RadioSelect"
 import { ShieldCheck, Sparkle } from "phosphor-react"
 import { useController, useFormContext, useFormState } from "react-hook-form"
@@ -22,7 +21,6 @@ const roleOptions = [
 const DiscordCardSettings = (): JSX.Element => {
   const { errors } = useFormState()
   const { setValue } = useFormContext()
-  const { index } = useRolePlatform()
 
   const { field } = useController({
     name: "roleType",
@@ -31,7 +29,7 @@ const DiscordCardSettings = (): JSX.Element => {
 
   const handleChange = (value) => {
     field.onChange(value)
-    if (value === "NEW") setValue(`rolePlatforms.${index}.platformRoleId`, null)
+    if (value === "NEW") setValue(`platformRoleId`, null)
   }
 
   return (
