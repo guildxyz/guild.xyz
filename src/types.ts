@@ -644,6 +644,7 @@ type RoleFormType = Partial<
     >
   } & { name: string }
 >
+type RoleTemplateType = RoleFormType & { defaultSelected?: boolean }
 
 type GuildFormType = Partial<
   Pick<
@@ -851,6 +852,7 @@ export type {
   RoleFormType,
   RolePlatform,
   RolePlatformStatus,
+  RoleTemplateType,
   SelectOption,
   SimpleGuild,
   SimpleRole,

@@ -1,5 +1,5 @@
 import { useFieldArray, useFormContext } from "react-hook-form"
-import { GuildFormType, RoleFormType } from "types"
+import { GuildFormType, RoleTemplateType } from "types"
 import { TEMPLATES } from "../templates"
 
 const ID_AFTER_DOMAIN_REGEX = /(?<=com\/).*$/
@@ -13,7 +13,7 @@ const useTemplate = () => {
   })
 
   const buildTemplate = () => {
-    const templatesCopy: Array<RoleFormType> = structuredClone(TEMPLATES)
+    const templatesCopy: Array<RoleTemplateType> = structuredClone(TEMPLATES)
 
     return templatesCopy
       .map((template) => {
@@ -93,7 +93,7 @@ const useTemplate = () => {
       .getValues("roles")
       .findIndex((role) => role.name === roleTemplateName)
 
-    const roleClicked: RoleFormType = methods.getValues("roles")[roleIndex]
+    const roleClicked: RoleTemplateType = methods.getValues("roles")[roleIndex]
 
     const reward = roleClicked.rolePlatforms?.find(
       (rolePlatform) => rolePlatform.guildPlatformIndex === guildPlatformIndex
