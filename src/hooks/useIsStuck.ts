@@ -11,7 +11,6 @@ const useIsStuck = () => {
   const { isReady } = useRouter()
 
   useEffect(() => {
-    if (!ref.current) return
     const cachedRef = ref.current
     const topOffsetPx = parseInt(getComputedStyle(cachedRef).top) + 1
     const bottomOffsetPx = parseInt(getComputedStyle(cachedRef).bottom) + 1

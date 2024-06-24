@@ -194,7 +194,6 @@ const GuildPage = (): JSX.Element => {
                 ) : !isAdmin ? (
                   <LeaveButton />
                 ) : isAddRoleStuck ? (
-                  // <DynamicAddRewardAndCampaign />
                   <DynamicAddAndOrderRoles />
                 ) : (
                   <DynamicAddRewardAndCampaign />
