@@ -1,4 +1,3 @@
-import { env } from "env"
 import {
   Box,
   Divider,
@@ -9,6 +8,7 @@ import {
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react"
+import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { ThemeProvider } from "components/[guild]/ThemeContext"
 import CollectNft from "components/[guild]/collect/components/CollectNft"
 import { CollectNftProvider } from "components/[guild]/collect/components/CollectNftContext"
@@ -30,11 +30,11 @@ import useGuildPlatform from "components/[guild]/hooks/useGuildPlatform"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Layout from "components/common/Layout"
 import LinkPreviewHead from "components/common/LinkPreviewHead"
+import { env } from "env"
 import { AnimatePresence } from "framer-motion"
 import { GetStaticPaths } from "next"
 import dynamic from "next/dynamic"
 import {
-  alchemyApiUrl,
   validateNftAddress,
   validateNftChain,
 } from "pages/api/nft/collectors/[chain]/[address]"
@@ -65,6 +65,15 @@ const DynamicEditNFTDescriptionModalButton = dynamic(
     import("components/[guild]/collect/components/EditNFTDescriptionModalButton"),
   { ssr: false }
 )
+
+export const topCollectorsSupportedChains = [
+  "POLYGON",
+  "BASE_MAINNET",
+  "ETHEREUM",
+  "OPTIMISM",
+  "ARBITRUM",
+  "SEPOLIA",
+] as const satisfies ContractCallSupportedChain[]
 
 const CollectNftPageContent = ({
   chain,
@@ -165,7 +174,9 @@ const CollectNftPageContent = ({
             <Links />
             <Divider />
             <Details />
-            {!!alchemyApiUrl[chain] && (
+            {!!topCollectorsSupportedChains.includes(
+              chain as (typeof topCollectorsSupportedChains)[number]
+            ) && (
               <>
                 <Divider />
                 <TopCollectors />

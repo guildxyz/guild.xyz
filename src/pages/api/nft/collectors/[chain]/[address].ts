@@ -1,6 +1,6 @@
-import { ContractCallSupportedChain } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { env } from "env"
 import { NextApiHandler } from "next"
+import { topCollectorsSupportedChains } from "pages/[guild]/collect/[chain]/[address]"
 import { OneOf } from "types"
 import fetcher from "utils/fetcher"
 import { ADDRESS_REGEX } from "utils/guildCheckout/constants"
@@ -22,27 +22,15 @@ export type TopCollectorsResponse = OneOf<
   { error: string }
 >
 
-export const alchemyApiUrl: Record<ContractCallSupportedChain, string> = {
+export const alchemyApiUrl: Record<
+  (typeof topCollectorsSupportedChains)[number],
+  string
+> = {
   POLYGON: `https://polygon-mainnet.g.alchemy.com/nft/v3/${env.POLYGON_ALCHEMY_KEY}/getOwnersForContract`,
   BASE_MAINNET: `https://base-mainnet.g.alchemy.com/nft/v3/${env.BASE_ALCHEMY_KEY}/getOwnersForContract`,
   ETHEREUM: `https://eth-mainnet.g.alchemy.com/nft/v3/${env.MAINNET_ALCHEMY_KEY}/getOwnersForContract`,
   OPTIMISM: `https://opt-mainnet.g.alchemy.com/nft/v3/${env.OPTIMISM_ALCHEMY_KEY}/getOwnersForContract`,
-  BSC: "",
-  CRONOS: "",
-  MANTLE: "",
-  ZKSYNC_ERA: "",
-  LINEA: "",
-  CYBER: "",
   ARBITRUM: `https://arb-mainnet.g.alchemy.com/nft/v3/${env.ARBITRUM_ALCHEMY_KEY}/getOwnersForContract`,
-  SCROLL: "",
-  TAIKO: "",
-  BLAST_MAINNET: "",
-  X1: "",
-  CORE_DAO: "",
-  METIS: "",
-  NEON_EVM: "",
-  POLYGON_ZKEVM: "",
-  ZETACHAIN: "",
   SEPOLIA: `https://eth-sepolia.g.alchemy.com/nft/v3/${env.SEPOLIA_ALCHEMY_KEY}/getOwnersForContract`,
 }
 
