@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   RoleTypeToAddTo,
   useAddRewardContext,
@@ -35,7 +36,7 @@ const useSetRoleImageAndNameFromPlatformData = (
 
     setAlreadyUploaded(true)
 
-    if (platformImage?.startsWith(process.env.NEXT_PUBLIC_IPFS_GATEWAY)) {
+    if (platformImage?.startsWith(env.NEXT_PUBLIC_IPFS_GATEWAY)) {
       setValue("imageUrl", platformImage)
       return
     }

@@ -13,6 +13,7 @@ type Props = {
   closeModal?: () => void
   minW?: number
   minH?: number
+  onGeneratedBlobChange?: (objectURL: string) => void
 }
 
 type FileWithWidthandHeight = File & { width: number; height: number }
@@ -60,6 +61,7 @@ const PhotoUploader = ({
   closeModal,
   minW,
   minH,
+  onGeneratedBlobChange,
 }: Props): JSX.Element => {
   const { setValue } = useFormContext()
   const imageUrl = useWatch({ name: "imageUrl" })
@@ -103,7 +105,9 @@ const PhotoUploader = ({
       ),
     onDrop: (accepted) => {
       if (accepted.length > 0) {
-        setValue("imageUrl", URL.createObjectURL(accepted[0]))
+        const generatedBlob = URL.createObjectURL(accepted[0])
+        onGeneratedBlobChange?.(generatedBlob)
+        setValue("imageUrl", generatedBlob)
         closeModal?.()
         onUpload({ data: [accepted[0]] })
       }

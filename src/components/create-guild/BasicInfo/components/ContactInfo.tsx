@@ -12,11 +12,13 @@ import {
   Text,
 } from "@chakra-ui/react"
 import Button from "components/common/Button"
+import ClientOnly from "components/common/ClientOnly"
 import FormErrorMessage from "components/common/FormErrorMessage"
 import StyledSelect from "components/common/StyledSelect"
+import { CreateGuildFormType } from "components/create-guild/CreateGuildForm"
 import { ArrowSquareOut, Plus, TrashSimple } from "phosphor-react"
 import { Controller, useFieldArray, useFormContext } from "react-hook-form"
-import { GuildFormType, SelectOption } from "types"
+import { SelectOption } from "types"
 
 const contactTypeOptions: SelectOption[] = [
   { value: "EMAIL", label: "E-mail" },
@@ -35,19 +37,15 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
     getValues,
     resetField,
     formState: { errors },
-  } = useFormContext<GuildFormType>()
+  } = useFormContext<CreateGuildFormType>()
 
   const { fields, append, remove } = useFieldArray({
     name: "contacts",
   })
 
   return (
-    <>
-      <Text colorScheme="gray" mb="3">
-        Only visible to the Guild Team to reach you with support and partnership
-        initiatives if needed.
-      </Text>
-      <Stack maxW={{ base: "full", sm: "md" }}>
+    <Stack maxW={{ base: "full", sm: "md" }}>
+      <ClientOnly>
         {fields.map((contactField, index) => (
           <HStack key={contactField.id} alignItems="start">
             <Box maxW="64">
@@ -123,35 +121,35 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
             </FormControl>
           </HStack>
         ))}
+      </ClientOnly>
 
-        {showAddButton && (
-          <Button
-            id="add-contact-btn"
-            variant="outline"
-            borderStyle="dashed"
-            leftIcon={<Icon as={Plus} />}
-            onClick={() =>
-              append({
-                type: "EMAIL",
-                contact: "",
-              })
-            }
-          >
-            Add contact
-          </Button>
-        )}
+      {showAddButton && (
+        <Button
+          id="add-contact-btn"
+          variant="outline"
+          borderStyle="dashed"
+          leftIcon={<Icon as={Plus} />}
+          onClick={() =>
+            append({
+              type: "EMAIL",
+              contact: "",
+            })
+          }
+        >
+          Add contact
+        </Button>
+      )}
 
-        {!showAddButton && (
-          <Text fontSize="sm" colorScheme="gray">
-            Or{" "}
-            <Link isExternal href="https://discord.gg/KUkghUdk2G">
-              <Text as="span">join our Discord</Text>
-              <Icon ml={1} as={ArrowSquareOut} />
-            </Link>
-          </Text>
-        )}
-      </Stack>
-    </>
+      {!showAddButton && (
+        <Text fontSize="sm" colorScheme="gray">
+          Or{" "}
+          <Link isExternal href="https://discord.gg/KUkghUdk2G">
+            <Text as="span">join our Discord</Text>
+            <Icon ml={1} as={ArrowSquareOut} />
+          </Link>
+        </Text>
+      )}
+    </Stack>
   )
 }
 

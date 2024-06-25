@@ -1,4 +1,4 @@
-import { schemas, Schemas, Visibility } from "@guildxyz/types"
+import { FarcasterProfile, schemas, Schemas, Visibility } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
@@ -95,6 +95,7 @@ type PlatformName =
   | "FORM"
   | "GATHER_TOWN"
   | "ERC20"
+  | "FARCASTER"
 
 type PlatformUserData = {
   acessToken?: string
@@ -143,6 +144,8 @@ type User = {
     pending: boolean
     createdAt: Date
   }
+
+  farcasterProfiles: FarcasterProfile[]
 }
 
 type BaseUser = {
@@ -628,34 +631,6 @@ type RoleFormType = Partial<
   } & { name: string }
 >
 
-type GuildFormType = Partial<
-  Pick<
-    Guild,
-    | "id"
-    | "urlName"
-    | "name"
-    | "imageUrl"
-    | "description"
-    | "theme"
-    | "contacts"
-    | "featureFlags"
-    | "tags"
-    | "eventSources"
-  >
-> & {
-  guildPlatforms?: (Partial<GuildPlatform> & { platformName: string })[]
-  roles?: Array<RoleFormType>
-  logic?: Logic
-  requirements?: Requirement[]
-  socialLinks?: Record<string, string>
-  admins?: Array<{
-    address: string
-    id?: number
-    isOwner?: boolean
-  }>
-  eventSources?: Record<EventSourcesKey, string>
-}
-
 type Group = {
   id: number
   urlName: string
@@ -813,7 +788,6 @@ export type {
   Guild,
   GuildAdmin,
   GuildBase,
-  GuildFormType,
   GuildPinMetadata,
   GuildPlatform,
   GuildPlatformWithOptionalId,

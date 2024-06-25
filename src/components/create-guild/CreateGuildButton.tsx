@@ -1,60 +1,45 @@
-import { usePostHogContext } from "components/_app/PostHogProvider"
+import { Collapse, Stack } from "@chakra-ui/react"
+import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
+import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
 import Button from "components/common/Button"
-import { useFormContext, useWatch } from "react-hook-form"
-import { GuildFormType } from "types"
+import { useSetAtom } from "jotai"
+import { useFormContext } from "react-hook-form"
+import { CreateGuildFormType } from "./CreateGuildForm"
 import useCreateGuild from "./hooks/useCreateGuild"
 
-type Props = {
-  isDisabled?: boolean
-}
+const CreateGuildButton = () => {
+  const { handleSubmit } = useFormContext<CreateGuildFormType>()
+  const { onSubmit, isLoading } = useCreateGuild()
 
-const CreateGuildButton = ({ isDisabled }: Props): JSX.Element => {
-  const { handleSubmit } = useFormContext<GuildFormType>()
-  const roles = useWatch({ name: "roles" })
-  const guildPlatforms = useWatch({ name: "guildPlatforms" })
-  const hasDiscordReward = guildPlatforms?.some(
-    (guildPlatform) => guildPlatform?.platformName === "DISCORD"
-  )
-  const { captureEvent } = usePostHogContext()
-
-  const { onSubmit, isLoading, response, isSigning, signLoadingText } =
-    useCreateGuild({
-      onSuccess: () => {
-        if (hasDiscordReward) {
-          captureEvent("[discord setup] guild creation successful")
-        }
-      },
-      onError: (err) => {
-        captureEvent("[discord setup] guild creation failed", { error: err })
-      },
-    })
+  const { isWeb3Connected } = useWeb3ConnectionManager()
+  const setIsWalletSelectorModalOpen = useSetAtom(walletSelectorModalAtom)
 
   return (
-    <Button
-      flexShrink={0}
-      colorScheme="green"
-      isDisabled={response || isLoading || isSigning || isDisabled}
-      isLoading={isLoading || isSigning}
-      loadingText={signLoadingText || "Saving data"}
-      onClick={() => {
-        if (hasDiscordReward) {
-          captureEvent("[discord setup] clicked create guild button")
-        }
-        captureEvent("guild creation flow > templates selected", {
-          roles: roles.map((role) => role.name),
-        })
-        captureEvent("guild creation flow > number of platforms added", {
-          platformConnected: roles.reduce(
-            (acc, current) => acc + current.rolePlatforms?.length,
-            0
-          ),
-        })
-        handleSubmit(onSubmit)()
-      }}
-      data-test="create-guild-button"
-    >
-      Create Guild
-    </Button>
+    <Stack spacing={2}>
+      <Collapse in={!isWeb3Connected}>
+        <Button
+          size="xl"
+          colorScheme="blue"
+          onClick={() => setIsWalletSelectorModalOpen(true)}
+          isDisabled={isWeb3Connected}
+          w="full"
+        >
+          Connect wallet
+        </Button>
+      </Collapse>
+      <Button
+        colorScheme="green"
+        ml="auto"
+        size="xl"
+        w="full"
+        isLoading={isLoading}
+        loadingText="Creating guild"
+        onClick={handleSubmit(onSubmit)}
+        isDisabled={!isWeb3Connected}
+      >
+        Create guild
+      </Button>
+    </Stack>
   )
 }
 

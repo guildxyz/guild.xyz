@@ -1,3 +1,4 @@
+import { env } from "env"
 import { Checkbox, Stack, useColorModeValue } from "@chakra-ui/react"
 import useEditGuild from "components/[guild]/EditGuild/hooks/useEditGuild"
 import useGuild from "components/[guild]/hooks/useGuild"
@@ -54,7 +55,7 @@ const ActivateGuildPinForm = (): JSX.Element => {
           ? () => {
               onCreateRoleSubmit({
                 guildId,
-                imageUrl: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`,
+                imageUrl: `${env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`,
                 name: "Pin Holder",
                 logic: "AND",
                 requirements: [

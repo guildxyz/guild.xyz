@@ -1,3 +1,4 @@
+import { env } from "env"
 import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
@@ -42,16 +43,13 @@ const NUMBER_REGEX = /^([0-9]+\.)?[0-9]+$/
 const fetchHolders = async ([_, logic, requirements]): Promise<BalancyResponse> => {
   const holdersArrays = await Promise.all(
     Object.keys(requirements).map((chain) =>
-      fetcher(
-        `${process.env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=${Chains[chain]}`,
-        {
-          body: {
-            logic,
-            requirements: requirements[chain],
-            limit: 0,
-          },
-        }
-      ).then(({ addresses }) => addresses as string[])
+      fetcher(`${env.NEXT_PUBLIC_BALANCY_API}/xyzHolders?chain=${Chains[chain]}`, {
+        body: {
+          logic,
+          requirements: requirements[chain],
+          limit: 0,
+        },
+      }).then(({ addresses }) => addresses as string[])
     )
   )
 
