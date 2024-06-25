@@ -27,7 +27,16 @@ const requirementIcons: Record<
 }
 
 const WalletActivityRequirement = (props: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<
+    | "COVALENT_FIRST_TX"
+    | "COVALENT_FIRST_TX_RELATIVE"
+    | "COVALENT_CONTRACT_DEPLOY"
+    | "COVALENT_CONTRACT_DEPLOY_RELATIVE"
+    | "COVALENT_TX_COUNT"
+    | "COVALENT_TX_COUNT_RELATIVE"
+    | "COVALENT_TX_VALUE"
+    | "COVALENT_TX_VALUE_RELATIVE"
+  >()
 
   const maxAmount = requirement.data?.timestamps?.maxAmount
   const minAmount = requirement.data?.timestamps?.minAmount

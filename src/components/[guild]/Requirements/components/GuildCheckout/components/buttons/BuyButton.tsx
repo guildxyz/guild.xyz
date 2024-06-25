@@ -18,7 +18,7 @@ const BuyButton = (): JSX.Element => {
 
   const { address, chainId } = useAccount()
 
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"PAYMENT">()
   const { pickedCurrency, agreeWithTOS } = useGuildCheckoutContext()
 
   const {
@@ -30,7 +30,7 @@ const BuyButton = (): JSX.Element => {
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
     requirement.address,
-    requirement.data.id,
+    +requirement.data.id,
     requirement.chain
   )
 

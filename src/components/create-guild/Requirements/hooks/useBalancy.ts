@@ -2,7 +2,6 @@ import useDebouncedState from "hooks/useDebouncedState"
 import { useEffect, useMemo, useState } from "react"
 import { useWatch } from "react-hook-form"
 import useSWR from "swr"
-import { Requirement } from "types"
 import fetcher from "utils/fetcher"
 import { parseUnits } from "viem"
 import { Chain, Chains } from "wagmiConfig/chains"
@@ -99,7 +98,7 @@ const useBalancy = (
   // Fixed logic for single requirement to avoid unnecessary refetch when changing logic
   const balancyLogic = baseFieldPath !== undefined ? "OR" : logic
 
-  const renderedRequirements = useMemo<Requirement[]>(
+  const renderedRequirements = useMemo<any[]>(
     () =>
       (baseFieldPath !== undefined
         ? debouncedRequirement

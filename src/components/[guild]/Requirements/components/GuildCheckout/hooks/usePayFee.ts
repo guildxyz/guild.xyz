@@ -22,7 +22,7 @@ const usePayFee = () => {
 
   const { address, chainId } = useAccount()
 
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"PAYMENT">()
   const { pickedCurrency, onClose } = useGuildCheckoutContext()
 
   const showErrorToast = useShowErrorToast()
@@ -37,7 +37,7 @@ const usePayFee = () => {
 
   const { data: hasPaid, isLoading: isHasPaidLoading } = useHasPaid(
     requirement.address,
-    requirement.data.id,
+    +requirement.data.id,
     requirement.chain
   )
 

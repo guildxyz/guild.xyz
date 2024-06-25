@@ -2,7 +2,7 @@ import { Schemas } from "@guildxyz/types"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import useCreateRole from "components/create-guild/hooks/useCreateRole"
 import useShowErrorToast from "hooks/useShowErrorToast"
-import { PlatformType, Requirement, RolePlatform, Visibility } from "types"
+import { PlatformType, Requirement, RolePlatform } from "types"
 import getRandomInt from "utils/getRandomInt"
 import useMembershipUpdate from "../JoinModal/hooks/useMembershipUpdate"
 import useGuild from "../hooks/useGuild"
@@ -37,7 +37,7 @@ const getRewardSubmitData = (
       platformRoleId:
         data.rolePlatforms[0].guildPlatform.platformGuildId ||
         `${roleId}-${Date.now()}`,
-      visibility: saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC,
+      visibility: saveAs === "DRAFT" ? "HIDDEN" : "PUBLIC",
     },
   ],
 })
@@ -96,7 +96,7 @@ const useCreateReqBasedTokenReward = ({
   })
 
   const createWithNewRole = async (data: CreateData, saveAs: "DRAFT" | "PUBLIC") => {
-    const roleVisibility = saveAs === "DRAFT" ? Visibility.HIDDEN : Visibility.PUBLIC
+    const roleVisibility = saveAs === "DRAFT" ? "HIDDEN" : "PUBLIC"
 
     const createdRole = await onCreateRoleSubmit({
       ...data,

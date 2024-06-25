@@ -27,7 +27,8 @@ type Props = {
 const CreateGuildGoogle = ({ isOpen, onClose }: Props): JSX.Element => {
   const methods = useFormContext<GuildFormType>()
   const googleMethods = useForm()
-  const { append } = useFieldArray({
+  // Will be removed in another PR, so added an any type here
+  const { append } = useFieldArray<any>({
     control: methods.control,
     name: "guildPlatforms",
   })

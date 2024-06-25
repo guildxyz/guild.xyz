@@ -16,7 +16,8 @@ const BuyAllowanceButton = (): JSX.Element => {
   const { captureEvent } = usePostHogContext()
   const { urlName } = useGuild()
 
-  const requirement = useRequirementContext()
+  const requirement = useRequirementContext<"PAYMENT">()
+
   const requirementChainId = Chains[requirement.chain]
   const { pickedCurrency } = useGuildCheckoutContext()
 

@@ -38,9 +38,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
   } = useFormContext<GuildFormType>()
 
   const { fields, append, remove } = useFieldArray({
-    control,
     name: "contacts",
-    keyName: "formId",
   })
 
   return (
@@ -51,7 +49,7 @@ const ContactInfo = ({ showAddButton = true }: Props): JSX.Element => {
       </Text>
       <Stack maxW={{ base: "full", sm: "md" }}>
         {fields.map((contactField, index) => (
-          <HStack key={contactField.formId} alignItems="start">
+          <HStack key={contactField.id} alignItems="start">
             <Box maxW="64">
               <Controller
                 control={control}

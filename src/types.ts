@@ -1,8 +1,9 @@
-import { Schemas } from "@guildxyz/types"
+import { schemas, Schemas, Visibility } from "@guildxyz/types"
 import { FeatureFlag } from "components/[guild]/EditGuild/components/FeatureFlags"
 import { ContractCallFunction } from "components/[guild]/RolePlatforms/components/AddRoleRewardModal/components/AddContractCallPanel/components/CreateNftForm/hooks/useCreateNft"
 import { RequirementType } from "requirements"
 import type { Chain, Chains } from "wagmiConfig/chains"
+import { z } from "zod"
 
 export const FUEL_ADDRESS_REGEX = /^0x[a-f0-9]{64}$/i
 
@@ -488,26 +489,10 @@ type Trait = {
   }
 }
 
-type Requirement = {
-  id: number
-  type: RequirementType
-  address?: `0x${string}`
-  chain?: Chain
-  data?: Record<string, any>
-  roleId: number
-  name: string
-  symbol: string
-  decimals?: number
-  isNegated?: boolean
-  visibility?: Visibility
-  visibilityRoleId?: number | null
-
-  // Props used inside the forms on the UI
-  formFieldId?: number
-  balancyDecimals?: number
-  createdAt?: string
-  updatedAt?: string
-}
+type Requirement = z.output<typeof schemas.RequirementSchema>
+type RequirementCreateResponseOutput = z.output<
+  typeof schemas.RequirementCreateResponseSchema
+>
 
 type RolePlatformStatus = "ALL_CLAIMED" | "NOT_STARTED" | "ENDED" | "ACTIVE"
 
@@ -527,12 +512,6 @@ type RolePlatform = {
   startTime?: string
   endTime?: string
   dynamicAmount?: Schemas["DynamicAmount"]
-}
-
-enum Visibility {
-  PUBLIC = "PUBLIC",
-  PRIVATE = "PRIVATE",
-  HIDDEN = "HIDDEN",
 }
 
 type SimpleRole = {
@@ -633,9 +612,13 @@ type Guild = {
   parentRoles: number[]
 }
 
+type RequirementCreationPayloadWithTempID = Schemas["RequirementCreationPayload"] & {
+  id?: number
+}
+
 type RoleFormType = Partial<
   Omit<Role, "requirements" | "rolePlatforms" | "name"> & {
-    requirements: Array<Partial<Requirement>>
+    requirements: Array<Partial<RequirementCreationPayloadWithTempID>>
     rolePlatforms: Array<
       Partial<Omit<RolePlatform, "guildPlatform">> & {
         guildPlatform?: GuildPlatformWithOptionalId
@@ -816,7 +799,7 @@ type DetailedPinLeaderboardUserData = {
   pins: LeaderboardPinData[]
 }
 
-export { ValidationMethod, Visibility, supportedEventSources, supportedSocialLinks }
+export { supportedEventSources, supportedSocialLinks, ValidationMethod }
 export type {
   BaseUser,
   CoingeckoToken,
@@ -845,6 +828,8 @@ export type {
   Poap,
   RequestMintLinksForm,
   Requirement,
+  RequirementCreateResponseOutput,
+  RequirementCreationPayloadWithTempID,
   RequirementType,
   Rest,
   Role,

@@ -7,7 +7,8 @@ const ID_AFTER_DOMAIN_REGEX = /(?<=com\/).*$/
 const useTemplate = () => {
   const methods = useFormContext<GuildFormType>()
 
-  const { append, remove } = useFieldArray({
+  // will be removed in a PR soon, so added an any type here...
+  const { append, remove } = useFieldArray<any>({
     name: "roles",
     control: methods.control,
   })

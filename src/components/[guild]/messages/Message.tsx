@@ -28,7 +28,6 @@ import {
 import Card from "components/common/Card"
 import { Modal } from "components/common/Modal"
 import { Check, Question, Users } from "phosphor-react"
-import { Visibility } from "types"
 import RoleTag from "../RoleTag"
 import useGuild from "../hooks/useGuild"
 import { Message as MessageType } from "./hooks/useGuildMessages"
@@ -118,7 +117,7 @@ const Message = ({
                         key={role.id}
                         name={role.name}
                         imageUrl={role.imageUrl}
-                        isHidden={role.visibility === Visibility.HIDDEN}
+                        isHidden={role.visibility === "HIDDEN"}
                       />
                     ))}
                     {moreRolesCount > 0 && (
@@ -185,7 +184,7 @@ const Message = ({
                             key={role.id}
                             name={role.name}
                             imageUrl={role.imageUrl}
-                            isHidden={role.visibility === Visibility.HIDDEN}
+                            isHidden={role.visibility === "HIDDEN"}
                           />
                         ))}
                       </Wrap>

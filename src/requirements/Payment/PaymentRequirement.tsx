@@ -27,7 +27,7 @@ const PaymentRequirement = (props: RequirementProps): JSX.Element => {
     chain,
     address,
     data: requirementData,
-  } = useRequirementContext()
+  } = useRequirementContext<"PAYMENT">()
   const {
     token,
     fee,

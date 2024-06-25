@@ -12,7 +12,7 @@ import { useFarcasterChannel } from "./hooks/useFarcasterChannels"
 import { useFarcasterUser } from "./hooks/useFarcasterUsers"
 
 const FarcasterProfile = (props: RequirementProps) => (
-  <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+  <Requirement image={REQUIREMENTS.FARCASTER_PROFILE.icon.toString()} {...props}>
     Have a Farcaster profile
   </Requirement>
 )
@@ -51,7 +51,10 @@ const FarcasterTotalFollowers = (props: RequirementProps) => {
   const { data } = useRequirementContext()
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement
+      image={REQUIREMENTS.FARCASTER_TOTAL_FOLLOWERS.icon.toString()}
+      {...props}
+    >
       {`Have at least ${data?.min ?? "-"} followers on Farcaster`}
     </Requirement>
   )
@@ -67,7 +70,7 @@ const FarcasterLikeRecast = (props: RequirementProps) => {
   } = useFarcasterCast(data?.hash)
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement image={REQUIREMENTS.FARCASTER_LIKE.icon.toString()} {...props}>
       {type === "FARCASTER_LIKE" ? "Like" : "Recast"}
       <>
         {" this cast: "}
@@ -89,7 +92,10 @@ const FarcasterFollowChannel = (props: RequirementProps) => {
   const { data: farcasterChannel } = useFarcasterChannel(data?.id)
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement
+      image={REQUIREMENTS.FARCASTER_FOLLOW_CHANNEL.icon.toString()}
+      {...props}
+    >
       {"Follow the "}
       <Skeleton isLoaded={!!farcasterChannel}>
         <Link
@@ -116,11 +122,11 @@ const FarcasterIncludeText = (props: RequirementProps) => {
   const { type, data } = useRequirementContext()
 
   return (
-    <Requirement image={REQUIREMENTS.FARCASTER.icon.toString()} {...props}>
+    <Requirement image={REQUIREMENTS.FARCASTER_BIO.icon.toString()} {...props}>
       <Text as="span">{"Have "}</Text>
       <DataBlockWithCopy text={data?.id} />
       <Text as="span">
-        {` in your ${REQUIREMENTS.FARCASTER.name} ${PROFILE_TARGETS[type]}`}
+        {` in your ${REQUIREMENTS.FARCASTER_BIO.name} ${PROFILE_TARGETS[type]}`}
       </Text>
     </Requirement>
   )

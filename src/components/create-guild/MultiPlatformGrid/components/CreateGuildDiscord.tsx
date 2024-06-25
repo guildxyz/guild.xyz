@@ -20,7 +20,8 @@ type Props = {
 
 const CreateGuildDiscord = ({ isOpen, onClose }: Props): JSX.Element => {
   const { control } = useFormContext<GuildFormType>()
-  const { append } = useFieldArray({
+  // Will be removed in another PR, so added an any type here
+  const { append } = useFieldArray<any>({
     control,
     name: "guildPlatforms",
   })

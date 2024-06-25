@@ -23,7 +23,8 @@ function HiddenAllowlistText({ isEmail }: { isEmail: boolean }) {
 }
 
 const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
-  const requirement = useRequirementContext() as Extract<
+  const requirement = useRequirementContext<"ALLOWLIST" | "ALLOWLIST_EMAIL">()
+  const castedRequirement = requirement as unknown as Extract<
     Schemas["Requirement"],
     { type: "ALLOWLIST" | "ALLOWLIST_EMAIL" }
   > & {
@@ -42,12 +43,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
     hideAllowlist,
     addressCount,
     fileId,
-  } = requirement.data
+  } = castedRequirement.data
 
   const willSearchAddresses = search !== debouncedSearch
   const { data: req, isValidating: isSearchingAddresses } = useRequirement(
-    requirement?.roleId,
-    requirement?.id,
+    castedRequirement?.roleId,
+    castedRequirement?.id,
     debouncedSearch
   )
 
@@ -60,12 +61,12 @@ const AllowlistRequirement = ({ ...rest }: RequirementProps): JSX.Element => {
 
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  const isEmail = requirement.type === "ALLOWLIST_EMAIL"
+  const isEmail = castedRequirement.type === "ALLOWLIST_EMAIL"
 
-  const { reqAccesses } = useRoleMembership(requirement.roleId)
+  const { reqAccesses } = useRoleMembership(castedRequirement.roleId)
 
   const hasAccess = reqAccesses?.find(
-    ({ requirementId }) => requirementId === requirement.id
+    ({ requirementId }) => requirementId === castedRequirement.id
   )?.access
 
   const shouldShowSearchHints =

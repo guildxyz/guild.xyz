@@ -1,10 +1,10 @@
-import { RoleFormType, Visibility } from "types"
+import { RoleFormType } from "types"
 import getRandomInt from "utils/getRandomInt"
 
 export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Member",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
 
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
@@ -16,7 +16,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   },
   {
     name: "Not a robot",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
 
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
@@ -30,7 +30,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Socialite",
     description: "",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
     logic: "OR",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -57,7 +57,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Developer",
     description: "",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
     logic: "OR",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -107,7 +107,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Onchain Citizen",
     description: "",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
     logic: "OR",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -156,7 +156,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Discord Fellow",
     description: "",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
     logic: "AND",
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
     requirements: [
@@ -171,7 +171,7 @@ export const TEMPLATES: Array<RoleFormType> = [
   {
     name: "Sybil Resistant",
     description: "",
-    visibility: Visibility.PUBLIC,
+    visibility: "PUBLIC",
     logic: "ANY_OF",
     anyOfNum: 3,
     imageUrl: `/guildLogos/${getRandomInt(286)}.svg`,
@@ -199,7 +199,8 @@ export const TEMPLATES: Array<RoleFormType> = [
         chain: "ETHEREUM",
       },
       {
-        data: { maxAmount: 2592000000, query: "" },
+        // Safe to cast, we'll delete this in a PR soon
+        data: { maxAmount: 2592000000, query: "" } as any,
         type: "POLYGON_ID_BASIC",
         chain: "POLYGON",
       },
