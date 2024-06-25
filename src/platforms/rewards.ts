@@ -107,7 +107,7 @@ export type Rewards = Readonly<Record<PlatformName, RewardData>>
 
 export type AddRewardPanelProps = {
   onAdd: (
-    data: RoleFormType["rolePlatforms"][number] & {
+    data: NonNullable<RoleFormType["rolePlatforms"]>[number] & {
       requirements?: Requirement[]
       roleName?: string
     }

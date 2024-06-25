@@ -6,6 +6,7 @@ import useShowErrorToast from "hooks/useShowErrorToast"
 import { atom, useAtomValue } from "jotai"
 import { Plus } from "phosphor-react"
 import rewards, { modalSizeForPlatform } from "platforms/rewards"
+import { RewardData } from "platforms/types"
 import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { Requirement, RoleFormType, Visibility } from "types"
 import { AddRewardProvider, useAddRewardContext } from "../AddRewardContext"
@@ -35,7 +36,7 @@ export const defaultValues: AddRewardForm = {
 
 export const canCloseAddRewardModalAtom = atom(true)
 
-const AddRewardButton = (): JSX.Element => {
+const AddRewardButton = () => {
   const [isAddRewardPanelDirty, setIsAddRewardPanelDirty] =
     useAddRewardDiscardAlert()
   const {
@@ -64,7 +65,9 @@ const AddRewardButton = (): JSX.Element => {
   const { isStuck } = useIsTabsStuck()
   const { textColor, buttonColorScheme } = useThemeContext()
 
-  const { AddRewardPanel } = rewards[selection] ?? {}
+  // TODO: once we separate rewards from platforms, we should be able to use this without ??, and it should properly infer types too.
+  const rewardConfig = rewards[selection] ?? {}
+  const AddRewardPanel = rewardConfig.AddRewardPanel as RewardData["AddRewardPanel"]
   const showErrorToast = useShowErrorToast()
 
   const isRewardSetupStep = selection && step !== "HOME" && step !== "SELECT_ROLE"
@@ -86,6 +89,8 @@ const AddRewardButton = (): JSX.Element => {
     onAddRewardModalClose()
     setIsAddRewardPanelDirty(false)
   }
+
+  if (!AddRewardPanel) return null
 
   return (
     <>
@@ -122,9 +127,9 @@ const AddRewardButton = (): JSX.Element => {
           <ClientStateRequirementHandlerProvider methods={methods}>
             {step === "HOME" && <SelectRewardPanel />}
 
-            {isRewardSetupStep && (
+            {isRewardSetupStep && AddRewardPanel && (
               <AddRewardPanel
-                onAdd={(createdRolePlatform: any) => {
+                onAdd={(createdRolePlatform) => {
                   const {
                     roleName = null,
                     requirements = null,
@@ -135,7 +140,7 @@ const AddRewardButton = (): JSX.Element => {
                     visibility,
                   })
                   if (roleName) methods.setValue("roleName", roleName)
-                  if (requirements?.length > 0) {
+                  if (Array.isArray(requirements) && requirements.length > 0) {
                     methods.setValue("requirements", requirements)
                   }
                   setStep("SELECT_ROLE")
