@@ -11,7 +11,7 @@ import {
 import { FormProvider, useForm, useFormContext, useWatch } from "react-hook-form"
 import CreateFormModal from "./CreateFormModal"
 
-const AddFormButton = ({ baseFieldPath }: { baseFieldPath: string }) => {
+const AddFormButton = ({ baseFieldPath, isDisabled }) => {
   const { setSelection, step, setStep, isOpen, onOpen, onClose } =
     useAddRewardContext()
 
@@ -44,7 +44,13 @@ const AddFormButton = ({ baseFieldPath }: { baseFieldPath: string }) => {
 
   return (
     <FormProvider {...methods}>
-      <Button size="xs" variant="ghost" borderRadius={"lg"} onClick={handleOpen}>
+      <Button
+        size="xs"
+        variant="ghost"
+        borderRadius={"lg"}
+        onClick={handleOpen}
+        isDisabled={isDisabled}
+      >
         Create new
       </Button>
 
@@ -87,9 +93,9 @@ const AddFormButton = ({ baseFieldPath }: { baseFieldPath: string }) => {
   )
 }
 
-const AddFormButtonWrapper = ({ baseFieldPath }: { baseFieldPath: string }) => (
+const AddFormButtonWrapper = (props) => (
   <AddRewardProvider>
-    <AddFormButton baseFieldPath={baseFieldPath} />
+    <AddFormButton {...props} />
   </AddRewardProvider>
 )
 

@@ -8,6 +8,17 @@ import {
   Textbox,
 } from "phosphor-react"
 import { ComponentType, ReactNode } from "react"
+import {
+  ExpectedFieldDataProps,
+  ExpectedMultipleChoiceDisplay,
+  ExpectedRateDisplay,
+  ExpectedStringDisplay,
+} from "requirements/Form/components/ExpectedAnswerCard"
+import { ExpectedMultipleChoice } from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedMultipleChoice"
+import ExpectedNumber from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedNumber"
+import ExpectedRate from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedRate"
+import ExpectedSingleChoice from "requirements/Form/components/ExpectedAnswerRequirements/ExpectedSingleChoice"
+import ExpectedString from "../../../requirements/Form/components/ExpectedAnswerRequirements/ExpectedString"
 import { CreateForm } from "../RolePlatforms/components/AddRoleRewardModal/components/AddFormPanel"
 import { MultipleChoice, SingleChoice } from "./components/Display/Choice"
 import LongText from "./components/Display/LongText"
@@ -17,6 +28,7 @@ import ShortText from "./components/Display/ShortText"
 import ChoiceSetup from "./components/Setup/ChoiceSetup"
 import RateSetup from "./components/Setup/RateSetup"
 
+// TODO: use dynamic imports so end users don't have to download the setup components
 const fieldTypes: {
   label: string
   value: Schemas["Field"]["type"]
@@ -29,24 +41,32 @@ const fieldTypes: {
     isDisabled?: boolean
     value?: any
   }>
+  ExpectedAnswerComponent?: ComponentType<{ field: Schemas["Field"] }>
+  ExpectedAnswerDisplayComponent?: ComponentType<ExpectedFieldDataProps>
 }[] = [
   {
     label: "Short text",
     value: "SHORT_TEXT",
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: ShortText,
+    ExpectedAnswerComponent: ExpectedString,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Long text",
     value: "LONG_TEXT",
     img: <OptionIcon as={Textbox} />,
     DisplayComponent: LongText,
+    ExpectedAnswerComponent: ExpectedString,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Number",
     value: "NUMBER",
     img: <OptionIcon as={NumberSquareFive} />,
     DisplayComponent: Number,
+    ExpectedAnswerComponent: ExpectedNumber,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Single choice",
@@ -54,6 +74,8 @@ const fieldTypes: {
     img: <OptionIcon as={RadioButton} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: SingleChoice,
+    ExpectedAnswerComponent: ExpectedSingleChoice,
+    ExpectedAnswerDisplayComponent: ExpectedStringDisplay,
   },
   {
     label: "Multiple choice",
@@ -61,6 +83,8 @@ const fieldTypes: {
     img: <OptionIcon as={CheckSquare} />,
     SetupComponent: ChoiceSetup,
     DisplayComponent: MultipleChoice,
+    ExpectedAnswerComponent: ExpectedMultipleChoice,
+    ExpectedAnswerDisplayComponent: ExpectedMultipleChoiceDisplay,
   },
   {
     label: "Rate",
@@ -68,6 +92,8 @@ const fieldTypes: {
     img: <OptionIcon as={NumberCircleFive} />,
     SetupComponent: RateSetup,
     DisplayComponent: Rate,
+    ExpectedAnswerComponent: ExpectedRate,
+    ExpectedAnswerDisplayComponent: ExpectedRateDisplay,
   },
 ]
 
