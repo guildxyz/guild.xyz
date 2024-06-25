@@ -23,7 +23,7 @@ import { Transition, motion } from "framer-motion"
 import { ArrowSquareOut, LockSimple } from "phosphor-react"
 import GoogleCardWarning from "platforms/Google/GoogleCardWarning"
 import rewards from "platforms/rewards"
-import { PropsWithChildren, ReactNode, useMemo } from "react"
+import { PropsWithChildren, ReactNode, useMemo, useState } from "react"
 import { GuildPlatform, PlatformType, Role, RolePlatform } from "types"
 import capitalize from "utils/capitalize"
 
@@ -191,6 +191,7 @@ export type RewardIconProps = {
 }
 
 const MotionImg = motion(Img)
+const MotionCircle = motion(Circle)
 
 const RewardIcon = ({
   rolePlatformId,
@@ -198,6 +199,7 @@ const RewardIcon = ({
   withMotionImg = true,
   transition,
 }: RewardIconProps) => {
+  const [doIconFallback, setDoIconFallback] = useState(false)
   const props = {
     src:
       guildPlatform.platformGuildData?.imageUrl ??
@@ -205,11 +207,42 @@ const RewardIcon = ({
     alt: guildPlatform.platformGuildName,
     boxSize: 6,
     rounded: "full",
+    onError: () => {
+      setDoIconFallback(true)
+    },
   }
 
   const motionElementProps = {
     layoutId: `${rolePlatformId}_reward_img`,
     transition: { type: "spring", duration: 0.5, ...transition },
+  }
+  const circleBgColor = useColorModeValue("gray.700", "gray.600")
+  const circleProps = {
+    bgColor: circleBgColor,
+    boxSize: 6,
+  }
+
+  if (doIconFallback) {
+    if (withMotionImg) {
+      return (
+        <MotionCircle {...motionElementProps} {...circleProps}>
+          <Icon
+            as={rewards[PlatformType[guildPlatform.platformId]].icon}
+            color="white"
+            boxSize={3}
+          />
+        </MotionCircle>
+      )
+    }
+    return (
+      <Circle {...circleProps}>
+        <Icon
+          as={rewards[PlatformType[guildPlatform.platformId]].icon}
+          color="white"
+          boxSize={3}
+        />
+      </Circle>
+    )
   }
 
   return (
