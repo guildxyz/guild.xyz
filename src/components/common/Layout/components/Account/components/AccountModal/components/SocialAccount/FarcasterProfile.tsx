@@ -8,6 +8,7 @@ import {
   ButtonProps,
   HStack,
   Icon,
+  IconButton,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -16,6 +17,7 @@ import {
   ModalOverlay,
   Skeleton,
   Text,
+  Tooltip,
   VStack,
   useBreakpointValue,
   useDisclosure,
@@ -26,7 +28,7 @@ import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
-import { DeviceMobileCamera } from "phosphor-react"
+import { ArrowCounterClockwise, DeviceMobileCamera } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { QRCodeSVG } from "qrcode.react"
 import { useCallback, useEffect, useState } from "react"
@@ -211,7 +213,7 @@ const ConnectFarcasterButton = ({
                     : `${seconds} seconds`}
                 </Text>
 
-                {/* <Tooltip label="Regenerate now">
+                <Tooltip label="Regenerate now">
                   <IconButton
                     isDisabled={!shouldEnableRegenerateButton}
                     size="xs"
@@ -225,7 +227,7 @@ const ConnectFarcasterButton = ({
                       onRegenerate()
                     }}
                   />
-                </Tooltip> */}
+                </Tooltip>
               </HStack>
 
               <Text color={"gray"} textAlign={"center"} fontSize="sm">
