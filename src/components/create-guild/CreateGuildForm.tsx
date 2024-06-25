@@ -55,14 +55,12 @@ const CreateGuildForm = () => {
 
   return (
     <Stack
-      spacing={4}
       w="min(100%, var(--chakra-sizes-md))"
       mx="auto"
-      px={4}
-      pt={16}
+      pt={{ base: 8, md: 16 }}
       pb={8}
     >
-      <Card py={6} p={{ base: 5, md: 6 }}>
+      <Card py={6} p={{ base: 5, md: 6 }} mx={{ base: -3, sm: 0 }}>
         <Heading
           as="h2"
           fontFamily="display"
