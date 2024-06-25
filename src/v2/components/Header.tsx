@@ -1,6 +1,6 @@
 "use client"
 
-import { SignIn } from "phosphor-react"
+import { SignIn } from "@phosphor-icons/react"
 import { Navigator } from "./Navigator"
 import { Button } from "./ui/Button"
 

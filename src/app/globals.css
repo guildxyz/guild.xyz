@@ -54,14 +54,14 @@
     --muted: 240 5.26% 21.08%;
     --muted-foreground: 240 5.26% 41.08%;
 
-    --accent: 240 5.26% 40.08%;
-    --accent-foreground: 210 20% 98%;
+    --accent: 238.73 83.53% 66.67%;
+    --accent-foreground: 0 0% 92%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 20% 98%;
 
-    --border: 0 0% 24%;
-    --input: 0 0% 24%;
+    --border: 0 0% 100% / 16%;
+    --input: 0 0% 100% / 16%;
     --ring: 216 12.2% 83.9%;
   }
 }

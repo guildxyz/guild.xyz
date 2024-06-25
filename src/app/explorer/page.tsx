@@ -1,7 +1,7 @@
 "use client"
 
 import { PropsWithChildren } from "react"
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/ToggleGroup"
 import { Button } from "@/components/ui/Button"
 import {
   Plus,
@@ -12,9 +12,10 @@ import {
   Users,
 } from "@phosphor-icons/react"
 import Robot from "/public/landing/robot.svg"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/Input"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar"
+import { Badge } from "@/components/ui/Badge"
+import { Header } from "@/components/Header"
 
 export function PageBoundary({ children }: PropsWithChildren) {
   return (
@@ -27,10 +28,12 @@ const Page = () => {
   return (
     <div className="min-h-screen">
       <div className="relative">
-        <header className="h-16 outline">header</header>
+        <Header />
         <div className="pt-9 pb-14">
           <PageBoundary>
-            <h1 className="font-display text-4xl font-bold">Guildhall</h1>
+            <h1 className="font-display text-4xl sm:text-5xl font-bold">
+              Guildhall
+            </h1>
             <div className="absolute inset-0 -z-10 -bottom-28 bg-[hsl(240deg_2.65%_22.16%)]" />
           </PageBoundary>
         </div>
@@ -69,7 +72,7 @@ const Page = () => {
               />
               <ToggleGroup
                 type="single"
-                className="bg-card self-start sm:px-4 sm:rounded-r-lg sm:border sm:h-12"
+                className="sm:bg-card self-start sm:px-4 sm:rounded-r-lg sm:border sm:h-12 sm:border-l-0"
               >
                 <ToggleGroupItem value="featured" className="space-x-2" size="sm">
                   <PushPin />
