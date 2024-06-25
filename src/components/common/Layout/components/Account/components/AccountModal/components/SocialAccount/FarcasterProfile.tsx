@@ -26,14 +26,14 @@ import useUser from "components/[guild]/hooks/useUser"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
 import { Modal } from "components/common/Modal"
-import useCountdownSeconds from "hooks/useCountdownSeconds"
 import useSubmit, { SignedValidation, useSubmitWithSign } from "hooks/useSubmit"
 import useToast from "hooks/useToast"
 import { ArrowCounterClockwise, DeviceMobileCamera } from "phosphor-react"
 import rewards from "platforms/rewards"
 import { QRCodeSVG } from "qrcode.react"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { isMobile } from "react-device-detect"
+import { useCountdown } from "usehooks-ts"
 import fetcher, { useFetcherWithSign } from "utils/fetcher"
 import DisconnectAccountButton from "./components/DisconnectAccountButton"
 import SocialAccountUI from "./components/SocialAccountUI"
@@ -42,8 +42,6 @@ import SocialAccountUI from "./components/SocialAccountUI"
 const APPROVAL_POLL_INITIAL_DELAY_MS = 15_000
 // Delay between polls
 const APPROVAL_POLL_INTERVAL_MS = 5000
-// Poll ends, and a new QR is generated this much before the actual deadline
-const POLL_EARLY_END_SEC = 120
 // Enable the manual QR regeneration button, when less than this much seconds is left
 const ENABLE_REGENERATE_BUTTON_AT_SEC = 10 * 60
 
@@ -90,20 +88,16 @@ const ConnectFarcasterButton = ({
   ): Promise<{ url: string; deadline: number; deadlineRelative: number }> =>
     fetcher(`/v2/users/${userId}/farcaster-signed-keys`, signedPayload)
 
-  const onRegenerate = () => {
-    signedKeyRequest.onSubmit()
-  }
-
-  const { seconds, start, stop } = useCountdownSeconds(undefined, () => {
-    captureEvent("[farcaster] deadline hit")
-    onRegenerate()
+  const [seconds, { startCountdown, resetCountdown }] = useCountdown({
+    countStart: 11 * 60 - 1, // -1 Just so we don't show "11 minutes" for a second at start
   })
+
   const shouldEnableRegenerateButton = seconds < ENABLE_REGENERATE_BUTTON_AT_SEC
 
   const signedKeyRequest = useSubmitWithSign(submitSignedKeyRequest, {
     onSuccess: ({ deadlineRelative }) => {
       const deadline = Date.now() + deadlineRelative
-      start(Math.floor(deadlineRelative / 1000) - POLL_EARLY_END_SEC) // 2 minuter earlier just for good measure
+      startCountdown()
 
       if (pollInterval) {
         clearInterval(pollInterval)
@@ -141,6 +135,18 @@ const ConnectFarcasterButton = ({
       onOpen()
     },
   })
+
+  const onRegenerate = useCallback(() => {
+    resetCountdown()
+    signedKeyRequest.onSubmit()
+  }, [signedKeyRequest, resetCountdown])
+
+  useEffect(() => {
+    if (seconds > 0) return
+
+    captureEvent("[farcaster] deadline hit")
+    onRegenerate()
+  }, [seconds, resetCountdown, captureEvent, onRegenerate])
 
   const handleOnClose = () => {
     captureEvent("[farcaster] connect modal closed")
