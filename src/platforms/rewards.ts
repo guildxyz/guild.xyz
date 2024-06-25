@@ -1,6 +1,7 @@
 import contractCallReward from "platforms/ContractCall"
 import discordReward from "platforms/Discord"
 import emailReward from "platforms/Email"
+import farcasterReward from "platforms/Farcaster"
 import formReward from "platforms/Forms"
 import gatherTownReward from "platforms/Gather"
 import githubReward from "platforms/Github"
@@ -31,6 +32,7 @@ export default {
   DISCORD: discordReward,
   GITHUB: githubReward,
   POAP: poapReward,
+  FARCASTER: farcasterReward,
 } as const satisfies Partial<Rewards>
 
 // TODO: resolve duplication by renaming rewards.ts to index.ts and updating imports
