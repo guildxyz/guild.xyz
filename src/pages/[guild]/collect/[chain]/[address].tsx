@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   Box,
   Divider,
@@ -245,15 +246,12 @@ const getStaticProps = async ({ params }) => {
   try {
     ;[publicGuild, guild] = await Promise.all([
       fetcher(guildPageEndpoint),
-      fetcher(
-        `${process.env.NEXT_PUBLIC_API.replace("/v1", "")}${guildPageEndpoint}`,
-        {
-          headers: {
-            "x-guild-service": "APP",
-            "x-guild-auth": process.env.GUILD_API_KEY,
-          },
-        }
-      ),
+      fetcher(`${env.NEXT_PUBLIC_API.replace("/v1", "")}${guildPageEndpoint}`, {
+        headers: {
+          "x-guild-service": "APP",
+          "x-guild-auth": env.GUILD_API_KEY,
+        },
+      }),
     ])
   } catch {
     return {

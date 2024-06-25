@@ -1,3 +1,4 @@
+import { env } from "env"
 import { NextApiRequest, NextApiResponse } from "next"
 
 type PinataGenerateAPIKeyResponse = {
@@ -8,11 +9,11 @@ type PinataGenerateAPIKeyResponse = {
 
 const generateApiKey = async (res: NextApiResponse) => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_PINATA_API}/users/generateApiKey`,
+    `${env.NEXT_PUBLIC_PINATA_API}/users/generateApiKey`,
     {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.PINATA_ADMIN_JWT}`,
+        Authorization: `Bearer ${env.PINATA_ADMIN_JWT}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -49,27 +50,22 @@ const revokeApiKey = async (req: NextApiRequest, res: NextApiResponse) => {
   const { key: apiKey } = req.body
 
   if (
-    [
-      process.env.PINATA_ADMIN_KEY,
-      process.env.PINATA_ADMIN_JWT,
-      process.env.PINATA_ADMIN_SECRET,
-    ].includes(apiKey)
+    [env.PINATA_ADMIN_KEY, env.PINATA_ADMIN_JWT, env.PINATA_ADMIN_SECRET].includes(
+      apiKey
+    )
   ) {
     res.status(400).json({ message: "Can't revoke this API key" })
     return
   }
 
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_PINATA_API}/users/revokeApiKey`,
-    {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${process.env.PINATA_ADMIN_JWT}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ apiKey }),
-    }
-  )
+  const response = await fetch(`${env.NEXT_PUBLIC_PINATA_API}/users/revokeApiKey`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${env.PINATA_ADMIN_JWT}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ apiKey }),
+  })
 
   if (response.ok) {
     res.status(200).json(null)

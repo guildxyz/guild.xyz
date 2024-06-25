@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   Box,
   Center,
@@ -45,7 +46,7 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
   } = useSWRImmutable(
     isOpen
       ? [
-          `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`,
+          `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/auth`,
           {
             method: "GET",
           },
@@ -57,7 +58,7 @@ const ConnectDIDModal = ({ isOpen, onClose }: Props) => {
   const { mutate: mutateConnectedDID } = useConnectedDID()
   const { data: connectedDID } = useSWR<string>(
     userId && isOpen && qrCode
-      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id?poll=true`
+      ? `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id?poll=true`
       : null,
     {
       onErrorRetry: (_error, _key, _config, revalidate, _revalidateOps) => {

@@ -1,3 +1,4 @@
+import { env } from "env"
 import {
   AspectRatio,
   Box,
@@ -36,7 +37,7 @@ const GuildPinImage = (): JSX.Element => {
     [GuildAction.IS_ADMIN]: `This is an onchain proof that you're an admin of ${name} on Guild.xyz.`,
   }
 
-  const pinUrl = `${process.env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`
+  const pinUrl = `${env.NEXT_PUBLIC_IPFS_GATEWAY}${pinImage}`
 
   return (
     <>

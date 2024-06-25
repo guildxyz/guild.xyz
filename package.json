@@ -42,6 +42,7 @@
     "@lexical/utils": "^0.12.0",
     "@nouns/assets": "^0.4.2",
     "@snyk/protect": "latest",
+    "@t3-oss/env-nextjs": "^0.10.1",
     "@tanstack/react-query": "^5.26.3",
     "@tanstack/react-table": "^8.13.2",
     "@tanstack/react-virtual": "^3.5.0",

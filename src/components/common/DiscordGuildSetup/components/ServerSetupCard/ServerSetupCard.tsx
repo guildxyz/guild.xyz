@@ -1,3 +1,4 @@
+import { env } from "env"
 import { Img, Skeleton, Stack, Text, VStack } from "@chakra-ui/react"
 import { usePostHogContext } from "components/_app/PostHogProvider"
 import Button from "components/common/Button"
@@ -32,7 +33,7 @@ const ServerSetupCard = ({ onSubmit, serverId }: Props): JSX.Element => {
   )
 
   const { onOpen: openAddBotPopup, windowInstance } = usePopupWindow(
-    `https://discord.com/api/oauth2/authorize?client_id=${process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=268716145&scope=bot%20applications.commands`,
+    `https://discord.com/api/oauth2/authorize?client_id=${env.NEXT_PUBLIC_DISCORD_CLIENT_ID}&guild_id=${serverId}&permissions=268716145&scope=bot%20applications.commands`,
     undefined,
     () => revalidatePermissions.onSubmit()
   )
