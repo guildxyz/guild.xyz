@@ -1,5 +1,5 @@
-import FarcasterIcon from "platforms/components/FarcasterIcon"
 import { PlatformAsRewardRestrictions, RewardData } from "platforms/types"
+import FarcasterIcon from "static/socialIcons/farcaster.svg"
 
 export default {
   icon: FarcasterIcon,
