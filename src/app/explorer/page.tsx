@@ -17,18 +17,25 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 
 export function PageBoundary({ children }: PropsWithChildren) {
-  return <div className="mx-auto max-w-screen-lg">{children}</div>
+  return (
+    <div className="mx-auto max-w-screen-lg md:px-10 sm:px-8 px-4">{children}</div>
+  )
 }
 
 const Page = () => {
   console.log("explorer")
   return (
     <div className="min-h-screen">
-      <header className="h-16 outline">header</header>
-      <PageBoundary>
-        <div className="my-16">
-          <h1 className="font-display text-5xl font-bold">Guildhall</h1>
+      <div className="relative">
+        <header className="h-16 outline">header</header>
+        <div className="py-16">
+          <PageBoundary>
+            <h1 className="font-display text-5xl font-bold">Guildhall</h1>
+            <div className="absolute inset-0 -z-10 -bottom-28 bg-[hsl(240deg_2.65%_22.16%)]" />
+          </PageBoundary>
         </div>
+      </div>
+      <PageBoundary>
         <main>
           <div className="flex items-start justify-between my-4">
             <ToggleGroup type="single" className="space-x-2">
@@ -42,9 +49,9 @@ const Page = () => {
               <span>Create guild</span>
             </Button>
           </div>
-          <div className="font-medium p-6 my-2 bg-card rounded-lg flex justify-between items-center mb-12">
+          <div className="font-medium p-6 my-2 bg-card rounded-lg flex justify-between items-stretch sm:items-center mb-12 flex-col sm:flex-row gap-8">
             <div className="flex gap-4 items-center">
-              <Robot className="size-8" />
+              <Robot className="size-8 min-w-8" />
               <span>Sign in to view your guilds / create new ones</span>
             </div>
             <Button className="space-x-2" size="lg">
@@ -54,15 +61,15 @@ const Page = () => {
           </div>
           <div className="flex gap-4 flex-col mb-6">
             <h2 className="text-lg font-bold">Explore verified guilds</h2>
-            <div className="relative flex">
-              <MagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <div className="relative flex flex-col gap-3 sm:flex-row sm:gap-0">
+              <MagnifyingGlass className="absolute left-4 top-4 text-muted-foreground" />
               <Input
-                className="text-md py-6 pr-6 pl-12 rounded-r-none grow"
+                className="text-md pr-6 pl-12 sm:rounded-r-none rounded-lg grow border h-12"
                 placeholder="Search verified guilds"
               />
               <ToggleGroup
                 type="single"
-                className="bg-card px-4 rounded-r-lg border"
+                className="bg-card self-start sm:px-4 sm:rounded-r-lg sm:border sm:h-12"
               >
                 <ToggleGroupItem value="featured" className="space-x-2" size="sm">
                   <PushPin />
@@ -75,7 +82,7 @@ const Page = () => {
               </ToggleGroup>
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 32 }, (_, i) => (
               <div
                 className="bg-card text-card-foreground rounded-lg px-6 py-7 grid grid-cols-[auto,1fr] gap-y-1 gap-x-4 items-center grid-rows-2"
