@@ -9,7 +9,7 @@ const useFormCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
   const { isAdmin } = useGuildPermission()
   const circleBgColor = useColorModeValue("gray.700", "blackAlpha.300")
 
-  const { form } = useGuildForm(guildPlatform.platformGuildData.formId)
+  const { form, isSigned } = useGuildForm(guildPlatform.platformGuildData.formId)
   const { userSubmission } = useUserFormSubmission(form)
 
   return {
@@ -20,6 +20,12 @@ const useFormCardProps = (guildPlatform: GuildPlatformWithOptionalId) => {
       </Circle>
     ),
     name: form?.name ?? rewards.FORM.name,
+    info:
+      isSigned &&
+      isAdmin &&
+      `${new Intl.NumberFormat("en", { notation: "compact" }).format(
+        form?.submissionCount ?? 0
+      )} responses`,
     shouldHide: !isAdmin && !!userSubmission,
   }
 }
