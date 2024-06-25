@@ -13,7 +13,7 @@ const useCreateForm = (onSuccess?: (createdForm: Schemas["Form"]) => void) => {
   const toast = useToast()
   const showErrorToast = useShowErrorToast()
 
-  return useSubmitWithSign<Schemas["Form"]>(
+  return useSubmitWithSign<Schemas["Form"] & { submissionCount: number }>(
     (signedValidation: SignedValidation) =>
       fetcher(`/v2/guilds/${id}/forms`, signedValidation),
     {
