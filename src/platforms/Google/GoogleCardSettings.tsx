@@ -3,10 +3,10 @@ import PermissionSelection from "components/common/GoogleGuildSetup/components/P
 import { useController } from "react-hook-form"
 
 const GoogleCardSettings = () => {
-  const { guildPlatform, index } = useRolePlatform()
+  const { guildPlatform } = useRolePlatform()
 
   useController({
-    name: `rolePlatforms.${index}.platformRoleId`,
+    name: `platformRoleId`,
     rules: {
       value:
         guildPlatform?.platformGuildData?.mimeType ===
@@ -18,7 +18,7 @@ const GoogleCardSettings = () => {
 
   return (
     <PermissionSelection
-      fieldName={`rolePlatforms.${index}.platformRoleId`}
+      fieldName={`platformRoleId`}
       mimeType={guildPlatform?.platformGuildData?.mimeType}
     />
   )

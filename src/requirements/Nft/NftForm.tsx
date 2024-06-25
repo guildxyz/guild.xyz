@@ -202,7 +202,7 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
         isRequired
         isInvalid={!!parseFromObject(errors, baseFieldPath)?.address}
       >
-        <FormLabel>NFT address:</FormLabel>
+        <FormLabel>NFT:</FormLabel>
 
         <InputGroup>
           {metadata?.image && (
@@ -210,7 +210,10 @@ const NftForm = ({ baseFieldPath, field }: RequirementFormProps): JSX.Element =>
               <OptionImage img={metadata.image} alt={metadata.name} />
             </InputLeftElement>
           )}
-          <Input {...register(`${baseFieldPath}.address`)} />
+          <Input
+            {...register(`${baseFieldPath}.address`)}
+            placeholder="Paste NFT contract address"
+          />
           {isMetadataLoading && (
             <InputRightElement>
               <Spinner size="sm" />

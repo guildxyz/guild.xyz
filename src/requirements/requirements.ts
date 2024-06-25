@@ -6,6 +6,7 @@ import {
   ImageSquare,
   Link,
   ListChecks,
+  LockOpen,
   Parachute,
   Robot,
   Wallet,
@@ -24,7 +25,7 @@ import GuildLogo from "static/logo.svg"
 
 export const REQUIREMENTS_DATA = [
   {
-    icon: Wallet,
+    icon: LockOpen,
     name: "Free",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Free/FreeRequirement")
@@ -291,7 +292,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/requirementLogos/uniswap.svg",
-    name: "Uniswap",
+    name: "Uniswap Liquidity",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Uniswap/UniswapRequirement")
     ),
@@ -327,7 +328,7 @@ export const REQUIREMENTS_DATA = [
   },
   {
     icon: "/requirementLogos/poap.svg",
-    name: "Poap",
+    name: "POAP",
     displayComponent: dynamic<RequirementProps>(
       () => import("requirements/Poap/PoapRequirement")
     ),

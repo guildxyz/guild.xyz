@@ -88,7 +88,7 @@ const DiscordRewardSettings = ({ isOpen, onClose, serverId }) => {
     <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent maxW="lg">
-        <ModalHeader>{`Discord reward settings: ${guildPlatform.platformGuildName}`}</ModalHeader>
+        <ModalHeader>{`Customize invite: ${guildPlatform.platformGuildName}`}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormProvider {...methods}>

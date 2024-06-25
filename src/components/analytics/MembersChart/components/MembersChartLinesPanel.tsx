@@ -54,13 +54,12 @@ const MembersChartLinesPanel = ({
           pr="8"
           bg={lineSelectorBg}
         >
-          {/* temporarily removed until we get accurate member counts from BE */}
-          {/* <LineSeriesSelector
+          <LineSeriesSelector
             color="var(--chakra-colors-chakra-body-text)"
             value="total"
           >
             Total
-          </LineSeriesSelector> */}
+          </LineSeriesSelector>
           {sortedRoles?.map((role) => (
             <LineSeriesSelector
               key={role.id}

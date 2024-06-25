@@ -22,7 +22,7 @@ const useTokenData = (chain: Chain, address: string, onFinish?: () => void) => {
     if (lowerCaseAddress === ENS_ADDRESS)
       return { name: "ENS", symbol: "ENS", decimals: undefined, logoURI: undefined }
     return tokensFromApi.tokens?.find(
-      (token) => token.address?.toLowerCase() === lowerCaseAddress
+      (token) => token?.address?.toLowerCase() === lowerCaseAddress
     )
   }, [tokensFromApi, address])
 

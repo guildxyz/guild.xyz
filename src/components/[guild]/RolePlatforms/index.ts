@@ -1,1 +1,1 @@
-export { default } from "./RolePlatforms"
+export { default } from "./AddRolePlatforms"

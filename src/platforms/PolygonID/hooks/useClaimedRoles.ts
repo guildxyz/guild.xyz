@@ -1,3 +1,4 @@
+import { env } from "env"
 import useGuild from "components/[guild]/hooks/useGuild"
 import useUser from "components/[guild]/hooks/useUser"
 import useSWRImmutable from "swr/immutable"
@@ -13,7 +14,7 @@ const useClaimedRoles = () => {
     }[]
   >(
     !!userId && !!guildId
-      ? `${process.env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
+      ? `${env.NEXT_PUBLIC_POLYGONID_API}/v1/users/${userId}/polygon-id/claims?format=role&guildId=${guildId}`
       : null
   )
 }

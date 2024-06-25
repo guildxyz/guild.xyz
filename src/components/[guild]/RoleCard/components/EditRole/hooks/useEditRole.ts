@@ -1,15 +1,11 @@
 import useMembershipUpdate from "components/[guild]/JoinModal/hooks/useMembershipUpdate"
 import useGuild from "components/[guild]/hooks/useGuild"
-import useCustomPosthogEvents from "hooks/useCustomPosthogEvents"
 import useShowErrorToast from "hooks/useShowErrorToast"
 import useSubmit from "hooks/useSubmit/useSubmit"
 import { OneOf } from "types"
 import { useFetcherWithSign } from "utils/fetcher"
 import replacer from "utils/guildJsonReplacer"
-import { RoleEditFormData } from "../EditRole"
-
-const mapToObject = <T extends { id: number }>(array: T[], by: keyof T = "id") =>
-  Object.fromEntries(array.map((item) => [item[by], item]))
+import { RoleEditFormData } from "./useEditRoleForm"
 
 const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const { id, mutateGuild } = useGuild()
@@ -18,11 +14,9 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
   const errorToast = useShowErrorToast()
   const showErrorToast = useShowErrorToast()
   const fetcherWithSign = useFetcherWithSign()
-  const { rewardCreated } = useCustomPosthogEvents()
 
   const submit = async (data: RoleEditFormData) => {
     const {
-      rolePlatforms,
       // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
       id: _id,
       ...baseRoleData
@@ -41,75 +35,13 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
           ]).catch((error) => error)
         : new Promise((resolve) => resolve(undefined))
 
-    const rolePlatformUpdates = Promise.all(
-      (rolePlatforms ?? [])
-        .filter((rolePlatform) => "id" in rolePlatform)
-        .map((rolePlatform) =>
-          fetcherWithSign([
-            `/v2/guilds/${id}/roles/${roleId}/role-platforms/${rolePlatform.id}`,
-            { method: "PUT", body: rolePlatform },
-          ]).catch((error) => error)
-        )
-    )
-
-    const rolePlatformsToCreate = (rolePlatforms ?? []).filter(
-      (rolePlatform) => !("id" in rolePlatform)
-    )
-
-    const rolePlatformCreations = Promise.all(
-      rolePlatformsToCreate.map((rolePlatform) =>
-        fetcherWithSign([
-          `/v2/guilds/${id}/roles/${roleId}/role-platforms`,
-          { method: "POST", body: rolePlatform },
-        ]).catch((error) => error)
-      )
-    )
-
-    const [updatedRole, updatedRolePlatforms, createdRolePlatforms] =
-      await Promise.all([roleUpdate, rolePlatformUpdates, rolePlatformCreations])
-
-    return {
-      updatedRole,
-      updatedRolePlatforms,
-      createdRolePlatforms,
-    }
+    const updatedRole = await roleUpdate
+    return updatedRole
   }
 
   const useSubmitResponse = useSubmit(submit, {
-    onSuccess: (result) => {
-      const { updatedRole, updatedRolePlatforms, createdRolePlatforms } = result
-
-      if (createdRolePlatforms?.length > 0) {
-        createdRolePlatforms.forEach((rolePlatform) => {
-          if (rolePlatform?.createdGuildPlatform) {
-            rewardCreated(rolePlatform.createdGuildPlatform.platformId)
-          }
-        })
-      }
-
-      const [failedRolePlatformUpdatesCount, failedRolePlatformCreationsCount] = [
-        updatedRolePlatforms.filter((req) => !!req.error).length,
-        createdRolePlatforms.filter((req) => !!req.error).length,
-      ]
-
-      const [successfulRolePlatformUpdates, successfulRolePlatformCreations] = [
-        updatedRolePlatforms.filter((res) => !res.error),
-        createdRolePlatforms.filter((res) => !res.error),
-      ]
-
-      const [
-        failedRolePlatformUpdatesCorrelationId,
-        failedRolePlatformCreationsCorrelationId,
-      ] = [
-        updatedRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
-        createdRolePlatforms.filter((req) => !!req.error)[0]?.correlationId,
-      ]
-
-      if (
-        !updatedRole?.error &&
-        failedRolePlatformUpdatesCount <= 0 &&
-        failedRolePlatformCreationsCount <= 0
-      ) {
+    onSuccess: (updatedRole) => {
+      if (!updatedRole?.error) {
         onSuccess?.()
       } else {
         if (updatedRole?.error) {
@@ -118,47 +50,18 @@ const useEditRole = (roleId: number, onSuccess?: () => void) => {
             correlationId: updatedRole.correlationId,
           })
         }
-        if (failedRolePlatformUpdatesCount > 0) {
-          errorToast({
-            error: "Failed to update some rewards",
-            correlationId: failedRolePlatformUpdatesCorrelationId,
-          })
-        }
-        if (failedRolePlatformCreationsCount > 0) {
-          errorToast({
-            error: "Failed to create some rewards",
-            correlationId: failedRolePlatformCreationsCorrelationId,
-          })
-        }
       }
-
-      const updatedRolePlatformsById = mapToObject(successfulRolePlatformUpdates)
-
-      const createdRolePlatformsToMutate = successfulRolePlatformCreations.map(
-        ({ createdGuildPlatform: _, ...rest }) => ({ roleId: roleId, ...rest })
-      )
-
-      const createdGuildPlatforms = successfulRolePlatformCreations
-        .map(({ createdGuildPlatform }) => createdGuildPlatform)
-        .filter(Boolean)
 
       mutateGuild(
         (prevGuild) => ({
           ...prevGuild,
-          guildPlatforms: [...prevGuild.guildPlatforms, ...createdGuildPlatforms],
+          guildPlatforms: [...prevGuild.guildPlatforms],
           roles:
             prevGuild.roles?.map((prevRole) =>
               prevRole.id === roleId
                 ? {
                     ...prevRole,
                     ...(updatedRole ?? {}),
-                    rolePlatforms: [
-                      ...(prevRole.rolePlatforms?.map((prevRolePlatform) => ({
-                        ...prevRolePlatform,
-                        ...(updatedRolePlatformsById[prevRolePlatform.id] ?? {}),
-                      })) ?? []),
-                      ...createdRolePlatformsToMutate,
-                    ],
                   }
                 : prevRole
             ) ?? [],

@@ -8,8 +8,8 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useRequirementHandlerContext } from "components/[guild]/RequirementHandlerContext"
 import RequirementDisplayComponent from "components/[guild]/Requirements/components/RequirementDisplayComponent"
-import useRequirements from "components/[guild]/hooks/useRequirements"
 import AddCard from "components/common/AddCard"
 import Button from "components/common/Button"
 import Card from "components/common/Card"
@@ -20,23 +20,20 @@ import BaseValueModal from "./BaseValueModal"
 
 const DynamicRewardSetup = ({
   toImage,
-  roleId,
   requirementFieldName,
   multiplierFieldName,
   shouldFloor,
 }: {
   toImage: JSX.Element
   fieldName?: string
-  roleId: number
   requirementFieldName: string
   multiplierFieldName: string
   shouldFloor?: boolean
 }) => {
   const { control, setValue } = useFormContext()
+  const { requirements } = useRequirementHandlerContext()
 
   const requirementId = useWatch({ name: requirementFieldName, control })
-
-  const { data: requirements } = useRequirements(roleId)
   const selectedRequirement = requirements?.find((req) => req.id === requirementId)
 
   const multiplier = useWatch({ name: multiplierFieldName, control })
@@ -97,7 +94,6 @@ const DynamicRewardSetup = ({
       </Stack>
 
       <BaseValueModal
-        roleId={roleId}
         onClose={onClose}
         isOpen={isOpen}
         onSelect={(reqId) => {
