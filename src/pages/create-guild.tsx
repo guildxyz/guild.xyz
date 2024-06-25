@@ -30,16 +30,16 @@ const CreateGuildPage = (): JSX.Element => {
     "var(--chakra-colors-gray-100)",
     "var(--chakra-colors-gray-800)"
   )
-  const circleBgColor = useColorModeValue("#c5c5ca", "#52525b")
+  const bgPatternColor = useColorModeValue("#c5c5ca", "#52525b")
 
   return (
     <>
       <Layout.Root>
         <Box
-          bg={`radial-gradient(ellipse at center, transparent 20%, ${pageBgColor}), url("${svgToTinyDataUri(
-            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${circleBgColor}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`
+          bg={`radial-gradient(ellipse at center, transparent -250%, ${pageBgColor} 80%), url("${svgToTinyDataUri(
+            `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="${bgPatternColor}"><path d="M0 .5H31.5V32"/></svg>`
           )}")`}
-          bgPosition="top 8px left 0px"
+          bgPosition="top 16px left 0px"
           minH="100vh"
         >
           <Layout.Head ogTitle="Begin your guild" />
@@ -62,6 +62,7 @@ const CreateGuildPage = (): JSX.Element => {
               borderBottomWidth="1px"
               borderStyle="dashed"
               offset={200}
+              boxShadow="inset 1px -2px 8px 0px rgba(0, 0, 0, 0.06)"
             />
             <Layout.Header />
           </Layout.HeaderSection>

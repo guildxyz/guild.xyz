@@ -60,7 +60,7 @@ const CreateGuildForm = () => {
       pt={{ base: 8, md: 16 }}
       pb={8}
     >
-      <Card py={6} p={{ base: 5, md: 6 }} mx={{ base: -3, sm: 0 }}>
+      <Card py={6} p={{ base: 5, md: 6 }} mx={{ base: -3, sm: 0 }} boxShadow={"lg"}>
         <Heading
           as="h2"
           fontFamily="display"
