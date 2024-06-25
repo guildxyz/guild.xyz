@@ -24,7 +24,7 @@ const CreateGuildPage = (): JSX.Element => {
     },
   })
 
-  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#37373a") // dark color is from whiteAlpha.200, but without opacity so it can overlay the banner image
+  const bgColor = useColorModeValue("var(--chakra-colors-gray-800)", "#1d1d1f")
   const bgOpacity = useColorModeValue(0.06, 0.06)
   const pageBgColor = useColorModeValue(
     "var(--chakra-colors-gray-100)",
@@ -39,6 +39,7 @@ const CreateGuildPage = (): JSX.Element => {
           bg={`radial-gradient(ellipse at center, transparent 20%, ${pageBgColor}), url("${svgToTinyDataUri(
             `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" fill="none"><circle fill="${circleBgColor}" id="pattern-circle" cx="10" cy="10" r="1.6257413380501518"></circle></svg>`
           )}")`}
+          bgPosition="top 8px left 0px"
           minH="100vh"
         >
           <Layout.Head ogTitle="Begin your guild" />
@@ -55,9 +56,11 @@ const CreateGuildPage = (): JSX.Element => {
                 right: 0,
                 bg: `radial-gradient(circle at bottom, transparent 5%, ${bgColor}), url('/banner.png ')`,
                 bgSize: { base: "auto 100%", sm: "auto 115%" },
-                bgPosition: "top 10px right 0px",
+                bgPosition: "top 5px right 0px",
                 opacity: bgOpacity,
               }}
+              borderBottomWidth="1px"
+              borderStyle="dashed"
               offset={200}
             />
             <Layout.Header />
