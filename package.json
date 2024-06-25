@@ -41,6 +41,8 @@
     "@lexical/selection": "^0.12.0",
     "@lexical/utils": "^0.12.0",
     "@nouns/assets": "^0.4.2",
+    "@privy-io/react-auth": "^1.72.0",
+    "@privy-io/wagmi": "^0.2.10",
     "@snyk/protect": "latest",
     "@tanstack/react-query": "^5.26.3",
     "@tanstack/react-table": "^8.13.2",

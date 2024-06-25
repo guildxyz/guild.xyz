@@ -13,16 +13,22 @@ const useAutoReconnect = () => {
 
     let connected = false
 
+    const privyConnector = connectors.find(
+      (connector) => connector.id === "io.privy.wallet"
+    )
+
     const safeConnector = connectors.find((connector) => connector.id === "safe")
     const canConnectToSafe = await safeConnector
-      .getProvider()
+      ?.getProvider()
       .then((provider) => !!provider)
       .catch(() => false)
 
     const recentConnectorId = await config.storage.getItem("recentConnectorId")
     if (!recentConnectorId && !canConnectToSafe) return
 
-    const connectorToReconnect = canConnectToSafe
+    const connectorToReconnect = privyConnector
+      ? privyConnector
+      : canConnectToSafe
       ? safeConnector
       : connectors.find((connector) => connector.id === recentConnectorId)
 

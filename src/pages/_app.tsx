@@ -1,6 +1,8 @@
 import { Box, Progress, Slide, useColorMode } from "@chakra-ui/react"
 import { FuelWalletConnector, FueletWalletConnector } from "@fuels/connectors"
 import { FuelProvider } from "@fuels/react"
+import { PrivyProvider } from "@privy-io/react-auth"
+import { WagmiProvider } from "@privy-io/wagmi"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { bugsnagStart } from "bugsnag"
 import AppErrorBoundary from "components/_app/AppErrorBoundary"
@@ -22,7 +24,6 @@ import { SWRConfig } from "swr"
 import "theme/custom-scrollbar.css"
 import { fetcherForSWR } from "utils/fetcher"
 import { shouldUseReCAPTCHAAtom } from "utils/recaptcha"
-import { WagmiProvider } from "wagmi"
 import { wagmiConfig } from "wagmiConfig"
 
 /**
@@ -117,33 +118,38 @@ const App = ({
           }}
         >
           <SWRConfig value={{ fetcher: fetcherForSWR }}>
-            <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+            <PrivyProvider
+              appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID}
+              config={{ loginMethods: ["email", "sms", "wallet"] }}
+            >
               <QueryClientProvider client={queryClient}>
-                <FuelProvider
-                  ui={false}
-                  fuelConfig={{
-                    connectors: [
-                      new FuelWalletConnector(),
-                      new FueletWalletConnector(),
-                    ],
-                  }}
-                >
-                  <PostHogProvider>
-                    <IntercomProvider>
-                      <AppErrorBoundary>
-                        <Component {...pageProps} />
-                      </AppErrorBoundary>
+                <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
+                  <FuelProvider
+                    ui={false}
+                    fuelConfig={{
+                      connectors: [
+                        new FuelWalletConnector(),
+                        new FueletWalletConnector(),
+                      ],
+                    }}
+                  >
+                    <PostHogProvider>
+                      <IntercomProvider>
+                        <AppErrorBoundary>
+                          <Component {...pageProps} />
+                        </AppErrorBoundary>
 
-                      <ClientOnly>
-                        <AccountModal />
-                      </ClientOnly>
-                    </IntercomProvider>
+                        <ClientOnly>
+                          <AccountModal />
+                        </ClientOnly>
+                      </IntercomProvider>
 
-                    <Web3ConnectionManager />
-                  </PostHogProvider>
-                </FuelProvider>
+                      <Web3ConnectionManager />
+                    </PostHogProvider>
+                  </FuelProvider>
+                </WagmiProvider>
               </QueryClientProvider>
-            </WagmiProvider>
+            </PrivyProvider>
           </SWRConfig>
         </IconContext.Provider>
       </Chakra>

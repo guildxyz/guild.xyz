@@ -1,4 +1,5 @@
 import { ButtonGroup, Divider, HStack, Text, VStack } from "@chakra-ui/react"
+import { usePrivy } from "@privy-io/react-auth"
 import useUser from "components/[guild]/hooks/useUser"
 import { walletSelectorModalAtom } from "components/_app/Web3ConnectionManager/components/WalletSelectorModal"
 import useWeb3ConnectionManager from "components/_app/Web3ConnectionManager/hooks/useWeb3ConnectionManager"
@@ -18,12 +19,13 @@ const Account = (): JSX.Element => {
 
   const domainName = useResolveAddress(address)
   const { addresses } = useUser()
+  const { login } = usePrivy()
 
   if (!address) {
     return (
       <AccountButton
         leftIcon={<SignIn />}
-        onClick={() => setIsWalletSelectorModalOpen(true)}
+        onClick={() => login()}
         data-test="connect-wallet-button"
       >
         Sign in

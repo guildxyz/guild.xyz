@@ -4,6 +4,7 @@ import {
   useIsConnected,
   useWallet,
 } from "@fuels/react"
+import { usePrivy } from "@privy-io/react-auth"
 import parseFuelAddress from "components/[guild]/Requirements/components/GuildCheckout/MintGuildPin/Fuel/parseFuelAddress"
 import { atom, useAtom, useSetAtom } from "jotai"
 import { useRouter } from "next/router"
@@ -61,8 +62,13 @@ const useWeb3ConnectionManager = (): Web3ConnectionManagerType => {
   const { disconnect: disconnectFuel } = useFuelDisconnect()
 
   const { wallet: fuelWallet } = useWallet()
+  const { authenticated, logout } = usePrivy()
 
   const disconnect = () => {
+    if (authenticated) {
+      logout()
+    }
+
     if (type === "EVM" && typeof disconnectEvm === "function") disconnectEvm()
 
     if (type === "FUEL" && typeof disconnectFuel === "function") disconnectFuel()
